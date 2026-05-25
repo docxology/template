@@ -93,10 +93,10 @@ sudo tlmgr install multirow cleveref doi newunicodechar
 
 ```bash
 # Validate packages before rendering
-uv run python3 -m infrastructure.rendering.latex_package_validator
+uv run python -m infrastructure.rendering.latex_package_validator
 
 # Or run as part of pipeline (automatic)
-uv run python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 ```
 
 **Common issues**:
@@ -205,20 +205,20 @@ Reference in text: Figure \ref{fig:your_figure}
 ### Render to All Formats
 
 ```bash
-uv run python3 -m infrastructure.rendering.cli all manuscript.tex
+uv run python -m infrastructure.rendering.cli all manuscript.tex
 ```
 
 ### Render PDF Only
 
 ```bash
-uv run python3 -m infrastructure.rendering.cli pdf manuscript.tex
+uv run python -m infrastructure.rendering.cli pdf manuscript.tex
 ```
 
 ### Generate Slides
 
 ```bash
-uv run python3 -m infrastructure.rendering.cli slides presentation.md --format beamer
-uv run python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
+uv run python -m infrastructure.rendering.cli slides presentation.md --format beamer
+uv run python -m infrastructure.rendering.cli slides presentation.md --format revealjs
 ```
 
 ## Supported Formats
@@ -239,7 +239,7 @@ uv run python3 -m infrastructure.rendering.cli slides presentation.md --format r
 graph TD
     subgraph EntryPoints["Entry Points"]
         MANAGER_API["RenderManager API<br/>Python programmatic access<br/>render_all, render_pdf, …"]
-        CLI_INTERFACE[CLI Interface<br/>Command-line tools<br/>python3 -m infrastructure.rendering.cli]
+        CLI_INTERFACE[CLI Interface<br/>Command-line tools<br/>uv run python -m infrastructure.rendering.cli]
         PIPELINE_INTEGRATION[Pipeline Integration<br/>scripts/03_render_pdf.py<br/>Automatic rendering in build]
     end
 
@@ -477,22 +477,22 @@ manager = RenderManager(config)
 
 ```bash
 # Render to all formats
-uv run python3 -m infrastructure.rendering.cli all manuscript.tex
+uv run python -m infrastructure.rendering.cli all manuscript.tex
 
 # Render specific formats
-uv run python3 -m infrastructure.rendering.cli pdf manuscript.tex
-uv run python3 -m infrastructure.rendering.cli slides presentation.md --format beamer
-uv run python3 -m infrastructure.rendering.cli web manuscript.md
+uv run python -m infrastructure.rendering.cli pdf manuscript.tex
+uv run python -m infrastructure.rendering.cli slides presentation.md --format beamer
+uv run python -m infrastructure.rendering.cli web manuscript.md
 
 # With custom output directory
-OUTPUT_DIR=/custom/path python3 -m infrastructure.rendering.cli pdf manuscript.tex
+OUTPUT_DIR=/custom/path uv run python -m infrastructure.rendering.cli pdf manuscript.tex
 ```
 
 ### Package Validation CLI
 
 ```bash
 # Validate LaTeX packages before rendering
-uv run python3 -m infrastructure.rendering.latex_package_validator
+uv run python -m infrastructure.rendering.latex_package_validator
 
 # This will show:
 # - Which packages are available
@@ -515,7 +515,7 @@ The rendering module is deeply integrated with the build pipeline:
 # 5. Handles figure path resolution
 # 6. Performs cross-reference resolution
 
-uv run python3 scripts/03_render_pdf.py --project {project_name}
+uv run python scripts/03_render_pdf.py --project {project_name}
 ```
 
 ### Pipeline Data Flow
@@ -653,7 +653,7 @@ uv run pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-
 
 ```bash
 # Check which packages are available
-uv run python3 -m infrastructure.rendering.latex_package_validator
+uv run python -m infrastructure.rendering.latex_package_validator
 
 # Install missing packages
 sudo tlmgr install multirow cleveref doi newunicodechar
@@ -679,7 +679,7 @@ kpsewhich multirow.sty
 
 ```bash
 # Check figure discovery
-uv run python3 -c "
+uv run python -c "
 from infrastructure.rendering.manuscript_discovery import verify_figures_exist
 report = verify_figures_exist(Path('.'), Path('projects/{project_name}/manuscript'))
 print('Figure verification:', report)
@@ -834,7 +834,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
    }
    ```
 
-4. Run full build: `python3 scripts/execute_pipeline.py --core-only`
+4. Run full build: `uv run python scripts/execute_pipeline.py --core-only`
 
 ### Figures not appearing in PDF
 
@@ -853,7 +853,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 2. **Generate missing figures**:
 
    ```bash
-   uv run python3 scripts/02_run_analysis.py
+   uv run python scripts/02_run_analysis.py
    ```
 
 3. **Verify figures are in correct location**:
@@ -902,7 +902,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 1. Check preamble in `projects/{project_name}/manuscript/preamble.md` for required packages
 2. Verify all LaTeX commands are valid (use `\ref{}`, not `\ref {}`)
 3. Ensure all `\label{}` commands exist for referenced items
-4. Run validation: `python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/`
+4. Run validation: `uv run python -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/`
 
 ## Testing
 

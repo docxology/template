@@ -80,5 +80,5 @@ updated_text = inject_between_markers(
 **CLI:**
 
 ```bash
-uv run python3 -m infrastructure.documentation.generate_glossary_cli --project {name}
+uv run python -m infrastructure.documentation.generate_glossary_cli --project {name}
 ```

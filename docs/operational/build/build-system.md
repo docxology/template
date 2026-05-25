@@ -196,7 +196,7 @@ For detailed per-stage performance breakdowns, coverage tables, script execution
 
 **Solutions:**
 
-1. Check coverage: `pytest tests/ --cov=src --cov-report=term-missing`
+1. Check coverage: `uv run pytest tests/ --cov=src --cov-report=term-missing`
 2. Fix missing coverage (look for lines marked `>>>>>`)
 3. Ensure all tests pass before building
 
@@ -231,7 +231,7 @@ For detailed per-stage performance breakdowns, coverage tables, script execution
 
 **Solutions:**
 
-1. Generate coverage report: `pytest tests/ --cov=src --cov-report=term-missing`
+1. Generate coverage report: `uv run pytest tests/ --cov=src --cov-report=term-missing`
 2. Identify missing lines (marked `>>>>>`)
 3. Add tests for uncovered code paths
 4. Verify improvement

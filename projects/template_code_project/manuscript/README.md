@@ -1,6 +1,6 @@
 # `template_code_project` - The Repository Exemplar
 
-This is the **master exemplar** for the Generalized Research Template. It is a fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures.
+This is the stable code exemplar for the Research Project Template: a tested numerical optimization implementation routed through the shared infrastructure, project test suite, and manuscript renderer.
 
 It demonstrates the complete research pipeline from algorithm implementation through strict validation to multi-format result visualization.
 
@@ -8,9 +8,9 @@ It demonstrates the complete research pipeline from algorithm implementation thr
 
 This project is explicitly designed to showcase the repository's three foundational pillars:
 
-1. **`infrastructure/` Layer**: The code delegates all tracking, performance benchmarking, stability validation, and PDF rendering to the 17-package infrastructure cluster (located at the repository root).
+1. **`infrastructure/` Layer**: The code delegates tracking, performance benchmarking, stability validation, and PDF rendering to the shared infrastructure packages at the repository root. Current package counts live in [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
 2. **`tests/` Integrity**: A zero-mock suite ([`projects/template_code_project/tests/`](../tests/)) with **≥90%** coverage on `projects/template_code_project/src/`. Live test count and measured coverage: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
-3. **`docs/` Orchestration**: Adherence to the Rigorous Agentic Scientific Protocol (RASP) ensuring total documentation-to-code parity (`projects/template_code_project/docs/`).
+3. **`docs/` Orchestration**: Project documentation under `projects/template_code_project/docs/` records the operational patterns and is checked by the repository documentation lint gates.
 
 ## Manuscript Structure
 
@@ -20,7 +20,7 @@ The `manuscript/` directory contains the raw markdown files that the renderer (`
 - `01_introduction.md`: Introduction of the infrastructure pillars bridging to CI/CD files.
 - `02_methodology.md`: Mathematical methods mapping to specific python script execution lines.
 - `03_results.md`: Convergence analysis built via `infrastructure.reporting`, pointing back at itself.
-- `04_conclusion.md`: Summary of the seamless template automation asserting the PDF itself as final proof.
+- `04_conclusion.md`: Summary of the template automation and publication outputs.
 
 ## Architecture
 

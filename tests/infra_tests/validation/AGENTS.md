@@ -858,7 +858,7 @@ def validate_cross_validator_consistency():
 **Validation Dependencies Check:**
 ```bash
 # Check validation test dependencies
-uv run python3 -c "
+uv run python -c "
 # Core dependencies
 import sys
 print(f'Python: {sys.version}')

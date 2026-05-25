@@ -86,7 +86,7 @@ a list of files that do not start with `#`.
 
 ### "Coverage below 90%"
 
-**Symptom:** `pytest projects/template_prose_project/tests/` exits with
+**Symptom:** `uv run pytest projects/template_prose_project/tests/` exits with
 "coverage below 90".
 
 **Fixes:**
@@ -101,7 +101,7 @@ a list of files that do not start with `#`.
 ```
 _pytest.pathlib.ImportPathMismatchError: ('tests.conftest', ...)
 ```
-when running `pytest tests/ projects/template_prose_project/tests/` together.
+when running `uv run pytest tests/ projects/template_prose_project/tests/` together.
 
 **Cause:** Both directories are named `tests/` and pytest's import path
 discovery confuses them.

@@ -312,7 +312,7 @@ if __name__ == '__main__':
     main()
 ```
 
-**Note**: The template ships with a production CI configuration at [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) with 8 jobs: lint, verify-no-mocks, test-infra (matrix), test-project (matrix), validate manuscripts, security scan, and performance check. Study it as a reference for your own CI setup.
+**Note**: The template ships with a production CI configuration at [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) with 12 jobs, including the detect gate, lint, verify-no-mocks, infra and project test matrices, validation, security, docs lint, performance, and the two conditional jobs documented in [`.github/AGENTS.md`](../../.github/AGENTS.md). Study it as a reference for your own CI setup.
 
 ---
 
@@ -511,4 +511,3 @@ After completing this guide, you should be able to:
 **Need help?** Check the **[FAQ](../reference/faq.md)** or **[Documentation Index](../documentation-index.md)**
 
 **Quick Reference**: [Cheatsheet](../reference/quick-start-cheatsheet.md) | [Glossary](../reference/glossary.md)
-

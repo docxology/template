@@ -543,7 +543,7 @@ done
 cat projects/<name>/output/logs/pipeline.log
 
 # 2. Run analysis stage standalone to see errors:
-uv run python3 scripts/02_run_analysis.py --project <name>
+uv run python scripts/02_run_analysis.py --project <name>
 
 # 3. Run first analysis script directly with root Python:
 .venv/bin/python projects/<name>/scripts/01_*.py

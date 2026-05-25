@@ -380,7 +380,7 @@ touch projects/myresearch/tests/test_mymodule.py
 
 ```bash
 # Use the provided migration helper
-uv run python3 -c "
+uv run python -c "
 from infrastructure.project import validate_project_structure
 from pathlib import Path
 
@@ -450,7 +450,7 @@ The module includes tests in `tests/infra_tests/test_project_discovery.py`:
 
 ```bash
 # Run project discovery tests
-uv run python3 -m pytest tests/infra_tests/test_project_discovery.py -v
+uv run python -m pytest tests/infra_tests/test_project_discovery.py -v
 
 # Expected tests:
 # test_discover_projects - Finds all valid projects

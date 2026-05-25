@@ -498,7 +498,7 @@ uv run pytest tests/ --tb=no
 Before committing tests:
 
 - [ ] Coverage requirements met (60% infra, 90% project) verified
-- [ ] All tests pass (`pytest tests/`)
+- [ ] All tests pass (`uv run pytest tests/`)
 - [ ] No skipped tests (`-k "not skip"`)
 - [ ] Tests run in < 30 seconds total
 - [ ] Test names are clear and descriptive

@@ -403,7 +403,7 @@ updated_content = inject_between_markers(
 
 ```bash
 # Generate API glossary for manuscript
-uv run python3 infrastructure/documentation/generate_glossary_cli.py
+uv run python infrastructure/documentation/generate_glossary_cli.py
 
 # This updates manuscript/98_symbols_glossary.md with current API
 ```
@@ -414,12 +414,12 @@ The documentation module integrates with the build pipeline:
 
 ```bash
 # scripts/02_run_analysis.py - Figure generation and registration
-uv run python3 scripts/02_run_analysis.py --project project
+uv run python scripts/02_run_analysis.py --project project
 # - Runs project figure generation scripts
 # - Registers generated figures automatically
 
 # scripts/03_render_pdf.py - Documentation generation
-uv run python3 scripts/03_render_pdf.py --project project
+uv run python scripts/03_render_pdf.py --project project
 # - Generates API glossary
 # - Updates manuscript with current documentation
 ```
@@ -694,7 +694,7 @@ The module includes a script for generating API documentation:
 
 ```bash
 # Generate API glossary from source code
-uv run python3 infrastructure/documentation/generate_glossary_cli.py
+uv run python infrastructure/documentation/generate_glossary_cli.py
 ```
 
 This script automatically scans `projects/{name}/src/` for public APIs and updates `projects/{name}/manuscript/98_symbols_glossary.md`.

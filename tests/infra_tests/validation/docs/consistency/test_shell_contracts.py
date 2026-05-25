@@ -37,9 +37,17 @@ def test_command_convention_uv_run_is_not_flagged(tmp_path: Path) -> None:
     repo = scaffold_repo(tmp_path, n_packages=15)
     write_doc(
         repo / "docs" / "g.md",
-        "```bash\nuv run pytest tests/\nuv run python3 scripts/x.py\n```\n",
+        "```bash\nuv run pytest tests/\nuv run python scripts/x.py\n```\n",
     )
     assert check_command_conventions(repo) == []
+
+
+def test_command_convention_uv_run_python3_is_flagged(tmp_path: Path) -> None:
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(repo / "docs" / "g.md", "```bash\nuv run python3 scripts/x.py\n```\n")
+    issues = check_command_conventions(repo)
+    assert len(issues) == 1
+    assert "uv run python3" in issues[0].detail
 
 
 def test_command_convention_python_block_is_ignored(tmp_path: Path) -> None:

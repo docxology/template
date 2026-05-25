@@ -971,7 +971,7 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 - Verify all `\ref{}` and `\eqref{}` targets exist
 - Check label spelling matches exactly
 - Ensure all figures/tables/equations have labels
-- Run validation: `python3 -m infrastructure.validation.cli markdown manuscript/`
+- Run validation: `uv run python -m infrastructure.validation.cli markdown manuscript/`
 
 ### Figure/Table Placement Guidelines
 

@@ -954,7 +954,7 @@ ls projects/myproject/output/pdf/*_compile.log
 **Standalone Guarantees:**
 
 - **Tests**: Test suite validating analysis algorithms
-- **Methods**: Meta-analysis implementation in `src/`
+- **Methods**: Optimization and invariant logic in `src/`
 - **Manuscript**: Research manuscript with analysis and figures
 
 **Infrastructure Operations:**

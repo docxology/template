@@ -513,11 +513,11 @@ def debug_error_categorization():
 # CI pipeline integration
 - name: Run Reporting Tests
   run: |
-    pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting --cov-report=xml
+    uv run pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting --cov-report=xml
 
 - name: Generate Test Report
   run: |
-    python3 -m infrastructure.reporting.cli generate-report \
+    uv run python -m infrastructure.reporting.cli generate-report \
       --input pytest-results.xml \
       --format html \
       --output test-report.html
@@ -578,7 +578,7 @@ uv run pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting --cov-
 **Pre-Test Setup:**
 ```bash
 # Validate test environment
-uv run python3 -c "
+uv run python -c "
 import sys
 print(f'Python: {sys.version}')
 

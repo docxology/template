@@ -359,7 +359,7 @@ class TestModuleName:
 ```yaml
 - name: Run Core Tests
   run: |
-    pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-report=xml
+    uv run pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-report=xml
 
 - name: Coverage Check
   run: |

@@ -131,13 +131,13 @@ graph TD
 
 ```bash
 # Extract metadata
-uv run python3 -m infrastructure.publishing.cli extract-metadata manuscript/
+uv run python -m infrastructure.publishing.cli extract-metadata manuscript/
 
 # Generate citations
-uv run python3 -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
+uv run python -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
 
 # Prepare Zenodo upload
-uv run python3 -m infrastructure.publishing.cli publish-zenodo output/ --token $ZENODO_TOKEN
+uv run python -m infrastructure.publishing.cli publish-zenodo output/ --token $ZENODO_TOKEN
 ```
 
 ## Environment Variables

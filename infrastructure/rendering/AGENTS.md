@@ -882,7 +882,7 @@ This ensures:
 - Verify bibliography file exists: `manuscript/references.bib`
 - Check citation keys match exactly (case-sensitive)
 - Ensure BibTeX entries are properly formatted
-- Run full build: `python3 scripts/execute_pipeline.py --core-only`
+- Run full build: `uv run python scripts/execute_pipeline.py --core-only`
 
 **Missing bibliography entries**:
 - Check LaTeX log for BibTeX warnings
@@ -999,7 +999,7 @@ Found: 13/14 figures
    ```bash
    ls -la output/{project_name}/figures/ | grep -E "\.png|\.pdf|\.jpg"
    ```
-   Generate missing figures: `python3 scripts/02_run_analysis.py`
+   Generate missing figures: `uv run python scripts/02_run_analysis.py`
 
 3. **Verify references in markdown**:
    ```bash
@@ -1036,7 +1036,7 @@ Found: 13/14 figures
 #### Missing Figure Warnings
 
 If you see warnings about missing figures:
-- Generate the figures by running analysis scripts: `python3 scripts/02_run_analysis.py`
+- Generate the figures by running analysis scripts: `uv run python scripts/02_run_analysis.py`
 - Verify figure paths in markdown are correct
 - Check filenames match exactly (case-sensitive)
 - Figures are optional; PDF will render without them, but compilation continues
@@ -1060,4 +1060,3 @@ uv run pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py -v
 - [README.md](README.md) - Quick reference guide
 - [`core/`](../core/) - Foundation utilities
 - [`validation/`](../validation/) - Validation & quality assurance
-

@@ -1022,7 +1022,7 @@ Executive reporting can also be run manually:
 
 ```bash
 # From any directory
-uv run python3 scripts/07_generate_executive_report.py
+uv run python scripts/07_generate_executive_report.py
 
 # Or programmatically
 from infrastructure.reporting import generate_multi_project_report

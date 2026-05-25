@@ -47,20 +47,18 @@ Dependencies are defined in `pyproject.toml`:
 ```toml
 [project]
 name = "research-project-template"
-version = "2.0.0"
+version = "3.0.0"
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.22",
     "matplotlib>=3.7",
-    "pypdf>=5.0",
     "pyyaml>=6.0",
+    "pillow>=10.0",
 ]
 
-[project.scripts]
-# Development workflow scripts (run with: uv run <script-name>)
-test = "pytest tests/ --cov=infrastructure --cov=projects/project/src --cov-report=html"
-test-infra = "pytest tests/infra_tests/ --cov=infrastructure --cov-report=html"
-test-project = "pytest projects/project/tests/ --cov=projects/project/src --cov-report=html"
+# No [project.scripts] shell-command aliases are defined in the root
+# pyproject.toml. Use `uv run pytest ...` or `uv run python scripts/...`
+# directly so commands execute inside the managed environment.
 
 [dependency-groups]
 # Development dependencies
@@ -82,28 +80,26 @@ members = [
 ]
 ```
 
-### Using uv with Scripts
+### Using uv with Commands
 
-The template provides convenient scripts via `[project.scripts]` that can be run with `uv run`:
+Run repository commands through `uv run` so they use the managed environment:
 
 ```bash
-# Run test suite
-uv run test
+# Run infrastructure tests
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
-# Run infrastructure tests only
-uv run test-infra
+# Run one public project test suite
+uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
 
-# Run project tests only
-uv run test-project
+# Run type checking over the public source scope
+CI_SOURCE_PATHS="$(uv run python -m infrastructure.project.public_scope source-paths)"
+uv run mypy $CI_SOURCE_PATHS
 
-# Run type checking
-uv run type-check
-
-# Run security checks
-uv run security
+# Run the configured security scan
+uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/ -q
 ```
 
-Alternatively, execute Python scripts directly with `uv run python`:
+Execute Python scripts directly with `uv run python`:
 
 ```bash
 # Run pipeline scripts
@@ -112,18 +108,18 @@ uv run python scripts/01_run_tests.py
 uv run python scripts/02_run_analysis.py
 uv run python scripts/03_render_pdf.py
 
-# Scripts automatically use uv if available, fall back to python3 if not
+# Stage commands should be invoked from the repository root
 ```
 
-### Automatic Fallback
+### Shell Entrypoint Bootstrap
 
-All Python scripts in the template automatically detect uv availability and fall back to `python3` if uv is not installed:
+Root shell entrypoints such as `./run.sh` and `./secure_run.sh` source
+[`scripts/shell_bootstrap.sh`](../../../scripts/shell_bootstrap.sh), which
+checks for `uv` and sets up the repository command environment before handing
+off to the Python orchestration layer. Direct documentation examples should
+still use `uv run python` or `uv run pytest`.
 
-- **With uv**: Scripts use `uv run python` for consistent environments
-- **Without uv**: Scripts use `python3` directly
-- No configuration required - fallback is automatic
-
-This ensures the template works in all environments.
+Install `uv` first for development and CI parity.
 
 ### Lock File
 
@@ -565,9 +561,9 @@ def get_memory():
 
 > **Architecture Note:** The `infrastructure/__init__.py` uses per-subpackage `try/except ImportError` blocks so that only `infrastructure.core` is mandatory. Subpackages like `publishing` (which requires `requests`) and `steganography` (which requires `pypdf`) degrade gracefully when their dependencies are absent.
 
-### Scripts and Commands
+### Console Entry Points in Package Projects
 
-**Define scripts in pyproject.toml:**
+For an installable package project, define Python callable entry points in `pyproject.toml`:
 
 ```toml
 [project.scripts]
@@ -579,6 +575,8 @@ my-script = "mypackage:main"
 ```bash
 uv run my-script
 ```
+
+Do not use `[project.scripts]` for shell command aliases; keep repository workflows as explicit `uv run ...` commands or thin scripts under `scripts/`.
 
 ## Migration from Other Tools
 

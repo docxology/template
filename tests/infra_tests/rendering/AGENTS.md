@@ -337,7 +337,7 @@ def pytest_collection_modifyitems(config, items):
 **External Dependency Checks:**
 ```bash
 # Check test requirements
-uv run python3 -c "
+uv run python -c "
 import shutil
 print('LaTeX available:', bool(shutil.which('xelatex')))
 print('Pandoc available:', bool(shutil.which('pandoc')))
@@ -506,7 +506,7 @@ find . -name "*.log" -exec grep -l "Error" {} \;
 **Pre-Test Setup:**
 ```bash
 # Validate test environment
-uv run python3 -c "
+uv run python -c "
 import sys
 print(f'Python: {sys.version}')
 

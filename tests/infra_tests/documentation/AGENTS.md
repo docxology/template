@@ -361,7 +361,7 @@ uv run pytest tests/infra_tests/documentation/ --durations=5
 
 ### Coverage Status
 
-**Current Coverage:** re-measure with `pytest tests/infra_tests/documentation/ --cov=infrastructure.documentation` → [`docs/development/coverage-gaps.md`](../../../docs/development/coverage-gaps.md)
+**Current Coverage:** re-measure with `uv run pytest tests/infra_tests/documentation/ --cov=infrastructure.documentation` → [`docs/development/coverage-gaps.md`](../../../docs/development/coverage-gaps.md)
 
 ### Quality Metrics
 

@@ -25,8 +25,8 @@ issues = scan_for_issues(text)
 **CLI:**
 
 ```bash
-uv run python3 -m infrastructure.validation.cli.main pdf output/{project}/pdf/
-uv run python3 -m infrastructure.validation.cli.pdf output/{project}/pdf/
+uv run python -m infrastructure.validation.cli.main pdf output/{project}/pdf/
+uv run python -m infrastructure.validation.cli.pdf output/{project}/pdf/
 ```
 
 ## Markdown Validation (`markdown_validator.py`)
@@ -60,8 +60,8 @@ math_issues = validate_math(md_files, repo_root)
 **CLI:**
 
 ```bash
-uv run python3 -m infrastructure.validation.cli.main markdown projects/{name}/manuscript/
-uv run python3 -m infrastructure.validation.cli.markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli.main markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli.markdown projects/{name}/manuscript/
 ```
 
 ## Output Integrity (`integrity.py`)

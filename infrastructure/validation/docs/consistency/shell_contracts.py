@@ -21,6 +21,7 @@ _SHELL_FENCE_RE = re.compile(
 )
 _SHELL_LANGS: frozenset[str] = frozenset({"bash", "sh", "shell", "console", "zsh"})
 _BARE_CMD_RE = re.compile(r"^\s*(?:\$\s+)?(?P<cmd>pytest|python3)(?:\s|$)")
+_UV_RUN_PYTHON3_RE = re.compile(r"^\s*(?:\$\s+)?uv\s+run\s+python3(?:\s|$)")
 
 _EXPORT_PIPELINE_MODE_RE = re.compile(r"\bexport\s+PIPELINE_MODE\b", re.IGNORECASE)
 _RUNSH_EXPORTS_PIPELINE_MODE_RE = re.compile(
@@ -59,7 +60,7 @@ def _line_ok_for_template_search(line: str) -> bool:
 
 
 def check_command_conventions(repo_root: Path) -> list[Inconsistency]:
-    """Flag command-line ``pytest``/``python3`` in shell fences lacking ``uv run``."""
+    """Flag stale command-line Python/pytest forms in shell fences."""
     issues: list[Inconsistency] = []
     for md in iter_long_lived_docs(repo_root):
         raw = read_markdown(md)
@@ -70,6 +71,19 @@ def check_command_conventions(repo_root: Path) -> list[Inconsistency]:
                 continue
             body_start_line = raw[: fence.start("body")].count("\n") + 1
             for offset, line in enumerate(fence.group("body").splitlines()):
+                if _UV_RUN_PYTHON3_RE.match(line) and not line_has_noqa(line) and not SHELL_NOQA_RE.search(line):
+                    issues.append(
+                        Inconsistency(
+                            file=md,
+                            line=body_start_line + offset,
+                            category="command-convention",
+                            detail=(
+                                "uses `uv run python3`; repo command examples should use "
+                                "`uv run python` so the project-managed interpreter is selected"
+                            ),
+                        )
+                    )
+                    continue
                 m = _BARE_CMD_RE.match(line)
                 if not m or "uv run" in line or line_has_noqa(line) or SHELL_NOQA_RE.search(line):
                     continue

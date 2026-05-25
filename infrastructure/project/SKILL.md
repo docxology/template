@@ -85,7 +85,7 @@ result = orchestrator.run()
 ./run.sh --all-projects --pipeline
 
 # List available projects
-uv run python3 -c "
+uv run python -c "
 from infrastructure.project import discover_projects
 from pathlib import Path
 for p in discover_projects(Path('.')):

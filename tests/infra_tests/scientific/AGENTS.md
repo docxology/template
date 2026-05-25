@@ -585,7 +585,7 @@ def debug_numerical_issues():
 **Performance Debugging:**
 ```bash
 # Profile scientific computations
-uv run python3 -c "
+uv run python -c "
 import cProfile
 from tests.infrastructure.scientific.test_benchmarking import benchmark_function
 
@@ -603,7 +603,7 @@ stats.sort_stats('cumulative').print_stats(20)
 **Scientific Dependencies Check:**
 ```bash
 # Validate scientific computing environment
-uv run python3 -c "
+uv run python -c "
 import sys
 print(f'Python: {sys.version}')
 

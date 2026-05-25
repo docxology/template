@@ -122,10 +122,10 @@ Reorganize existing outputs with the provided script:
 
 ```bash
 # Preview changes
-uv run python3 scripts/organize_executive_outputs.py --dry-run
+uv run python scripts/organize_executive_outputs.py --dry-run
 
 # Apply organization
-uv run python3 scripts/organize_executive_outputs.py
+uv run python scripts/organize_executive_outputs.py
 ```
 
 ## Quick Start

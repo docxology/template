@@ -156,7 +156,7 @@ gate in the "Live state snapshot" table of `TO-DO.md` is green via
 | `infrastructure.skills check_all_exports` | ✅ 0 violations |
 | `scripts/lint_docs.py` | ✅ mermaid + links + consistency |
 | Stage-table + API-reference + architecture generators | ✅ idempotent |
-| `pytest tests/infra_tests/` (no LLM, no bench) | ✅ all pass |
+| `uv run pytest tests/infra_tests/` (no LLM, no bench) | ✅ all pass |
 
 ---
 
@@ -260,7 +260,7 @@ command (linked in that table).
 | `infrastructure.skills.check_all_exports` | ✅ 0 violations |
 | `scripts/lint_docs.py` | ✅ 0 issues across mermaid + links + consistency |
 | Stage-table & API-reference generators | ✅ idempotent |
-| `pytest tests/infra_tests/` (no LLM, no bench) | ✅ 5347 passed |
+| `uv run pytest tests/infra_tests/` (no LLM, no bench) | ✅ 5347 passed |
 
 ---
 
