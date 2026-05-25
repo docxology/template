@@ -1,12 +1,15 @@
 # Results
 
-The generated loop selected `{{ACCEPTED_CANDIDATE_ID}}` after evaluating
+The generated loop selected `{{ACCEPTED_CANDIDATE_ID}}`
+(`{{ACCEPTED_MODEL_TYPE}}`) after evaluating
 `{{EVALUATED_CANDIDATE_COUNT}}` candidate(s) from a proposed set of
-`{{CANDIDATE_COUNT}}`. The majority-class baseline reached
-`{{BASELINE_ACCURACY}}` held-out accuracy, while the accepted candidate reached
-`{{BEST_ACCURACY}}`, an absolute change of `{{ACCURACY_DELTA}}`. The candidate
-budget exhausted flag is `{{BUDGET_EXHAUSTED}}`, which means the ledger records
-at least one deferred proposal rather than expanding the run automatically.
+`{{CANDIDATE_COUNT}}`. The nearest-centroid baseline reached
+`{{BASELINE_ACCURACY}}` test accuracy, while the accepted candidate reached
+`{{BEST_ACCURACY}}`, an absolute change of `{{ACCURACY_DELTA}}`. The accepted
+model has `{{ACCEPTED_PARAMETER_COUNT}}` parameters. The transformer-candidate
+evaluated flag is `{{TRANSFORMER_EVALUATED}}`, and the candidate budget
+exhausted flag is `{{BUDGET_EXHAUSTED}}`, which means the ledger records at
+least one deferred proposal rather than expanding the run automatically.
 
 The benchmark score is `{{BENCHMARK_SCORE}}`. That score is not a model-quality
 claim by itself; it is a compact grading artifact for the methods contract:
@@ -17,8 +20,10 @@ and the machine-readable candidate ledger is summarized in
 
 | Artifact | Role |
 | --- | --- |
+| `output/data/mnist_task_config.json` | Resolved dataset, model, training, and candidate-search configuration |
 | `output/data/ml_task_results.json` | Dataset summary, baseline, evaluated candidates, accepted candidate, and metric delta |
 | `output/data/ml_candidate_ledger.json` | Proposed, evaluated, accepted, rejected, and deferred candidate lifecycle records |
+| `output/data/ml_confusion_matrix.csv` | Accepted-candidate confusion matrix on the test split |
 | `output/reports/ml_experiment_report.md` | Human-readable ML-loop experiment report |
 | `output/reports/ml_benchmark_score.json` | Benchmark-style score for the ML-loop method contract |
 | `output/figures/ml_candidate_scores.png` | Baseline and evaluated-candidate accuracy figure |

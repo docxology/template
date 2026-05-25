@@ -89,5 +89,6 @@ def test_render_ml_experiment_report_includes_candidate_ledger(project_root: Pat
     markdown = render_ml_experiment_report(result)
 
     assert "Deterministic ML-Loop Experiment" in markdown
-    assert "exp-quadratic-alpha-0p1" in markdown
+    assert "exp-mlp-relu-32" in markdown
+    assert "tiny_patch_transformer" in markdown
     assert "LLM calls used: 0" in markdown

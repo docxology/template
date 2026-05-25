@@ -42,9 +42,9 @@ def write_ml_candidate_scores_figure(figures_dir: Path, result: MLTaskResult) ->
     from matplotlib import pyplot as plt
 
     path = figures_dir / "ml_candidate_scores.png"
-    evaluated = [candidate for candidate in result.candidates if candidate.accuracy is not None]
+    evaluated = [candidate for candidate in result.candidates if candidate.test_accuracy is not None]
     labels = ["baseline", *(candidate.identifier.replace("exp-", "") for candidate in evaluated)]
-    values = [result.baseline.accuracy, *(float(candidate.accuracy or 0.0) for candidate in evaluated)]
+    values = [result.baseline.test_accuracy, *(float(candidate.test_accuracy or 0.0) for candidate in evaluated)]
     colors = ["#52525b", *("#0f766e" if candidate.status == "accepted" else "#2563eb" for candidate in evaluated)]
     fig, ax = plt.subplots(figsize=(7.0, 3.2))
     ax.bar(labels, values, color=colors)

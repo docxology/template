@@ -55,6 +55,19 @@ def compute_ml_variables(payload: object) -> dict[str, str]:
     dataset = payload.get("dataset", {})
     if not isinstance(dataset, dict):
         dataset = {}
+    accepted = payload.get("accepted_candidate", {})
+    if not isinstance(accepted, dict):
+        accepted = {}
+    transformer_evaluated = bool(payload.get("transformer_evaluated", False))
+    if not transformer_evaluated:
+        candidates = payload.get("candidates", [])
+        if isinstance(candidates, list):
+            transformer_evaluated = any(
+                isinstance(candidate, dict)
+                and candidate.get("model_type") == "tiny_patch_transformer"
+                and candidate.get("test_accuracy") is not None
+                for candidate in candidates
+            )
     return {
         "ML_TASK_SEED": _string_value(payload.get("seed", dataset.get("seed", "N/A"))),
         "CANDIDATE_COUNT": _string_value(payload.get("candidate_count", "N/A")),
@@ -67,6 +80,14 @@ def compute_ml_variables(payload: object) -> dict[str, str]:
         "BENCHMARK_SCORE": _string_value(payload.get("benchmark_score", "N/A")),
         "LLM_CALLS_USED": _string_value(payload.get("llm_calls_used", 0)),
         "COST_USD_USED": _currency_value(payload.get("cost_usd_used", 0.0)),
+        "DATASET_NAME": _string_value(payload.get("dataset_name", dataset.get("dataset_name", "N/A"))),
+        "TRAIN_SIZE": _string_value(payload.get("train_size", dataset.get("train_size", "N/A"))),
+        "TEST_SIZE": _string_value(payload.get("test_size", dataset.get("test_size", "N/A"))),
+        "ACCEPTED_MODEL_TYPE": _string_value(payload.get("accepted_model_type", accepted.get("model_type", "N/A"))),
+        "ACCEPTED_PARAMETER_COUNT": _string_value(
+            payload.get("parameter_count", accepted.get("parameter_count", "N/A"))
+        ),
+        "TRANSFORMER_EVALUATED": str(transformer_evaluated).lower(),
     }
 
 

@@ -1,6 +1,6 @@
 enabled: true
 strict: true
-topic: "Deterministic bounded AutoResearch for a tiny local ML task"
+topic: "Deterministic bounded AutoResearch for a tiny MNIST neural-network task"
 autonomy_level: proposal_only
 budget:
   max_iterations: 3
@@ -8,6 +8,7 @@ budget:
   max_llm_calls: 0
   max_cost_usd: 0.0
 edit_allowlist:
+  - projects/template_autoresearch_project/mnist_task.yaml
   - projects/template_autoresearch_project/src/
   - projects/template_autoresearch_project/manuscript/
 metric_direction: maximize
@@ -55,8 +56,10 @@ required_artifacts:
   - output/data/run_ledger.json
   - output/data/review_decisions.json
   - output/data/benchmark_scores.json
+  - output/data/mnist_task_config.json
   - output/data/ml_task_results.json
   - output/data/ml_candidate_ledger.json
+  - output/data/ml_confusion_matrix.csv
   - output/data/manuscript_variables.json
   - output/figures/autoresearch_stage_matrix.png
   - output/figures/ml_candidate_scores.png

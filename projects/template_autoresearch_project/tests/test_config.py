@@ -22,6 +22,7 @@ def test_load_loop_config_reads_questions_and_artifacts(project_root: Path) -> N
     assert config.topic.startswith("Deterministic bounded AutoResearch")
     assert len(config.research_questions) == 5
     assert "output/data/autoresearch_loop.json" in config.required_artifacts
+    assert "output/data/mnist_task_config.json" in config.required_artifacts
     assert "output/data/ml_task_results.json" in config.required_artifacts
     assert "artifact_manifest" in config.quality_checks
 

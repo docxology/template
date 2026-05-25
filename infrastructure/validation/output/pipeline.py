@@ -12,7 +12,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.pipeline.artifacts import aggregate_artifact_manifests, validate_artifact_manifest
+from infrastructure.core.pipeline.artifacts import (
+    ArtifactManifest,
+    ArtifactManifestEntry,
+    aggregate_artifact_manifests,
+    validate_artifact_manifest,
+)
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
@@ -285,6 +290,48 @@ def _project_name_from_root(project_root: Path) -> str:
     return project_root.name
 
 
+def _read_artifact_manifest(path: Path) -> ArtifactManifest:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("artifact manifest must contain a mapping")
+    raw_entries = payload.get("entries", [])
+    if not isinstance(raw_entries, list):
+        raise ValueError("artifact manifest entries must be a list")
+    entries: list[ArtifactManifestEntry] = []
+    for raw_entry in raw_entries:
+        if not isinstance(raw_entry, dict):
+            raise ValueError("artifact manifest entry must be a mapping")
+        entries.append(
+            ArtifactManifestEntry(
+                path=str(raw_entry.get("path", "")),
+                size_bytes=int(raw_entry.get("size_bytes", 0) or 0),
+                sha256=str(raw_entry.get("sha256", "")),
+                stage_num=int(raw_entry.get("stage_num", 0) or 0),
+                stage_name=str(raw_entry.get("stage_name", "")),
+                contract_match=bool(raw_entry.get("contract_match", False)),
+                timestamp=str(raw_entry.get("timestamp", "")),
+            )
+        )
+    raw_issues = payload.get("issues", [])
+    if not isinstance(raw_issues, list):
+        raise ValueError("artifact manifest issues must be a list")
+    return ArtifactManifest(entries=tuple(entries), issues=tuple(str(issue) for issue in raw_issues))
+
+
+def _current_project_manifest_if_valid(output_dir: Path, project_root: Path) -> ArtifactManifest | None:
+    """Return the project-authored manifest when it is current."""
+    manifest_path = output_dir / "reports" / "artifact_manifest.json"
+    if not manifest_path.exists():
+        return None
+    try:
+        manifest = _read_artifact_manifest(manifest_path)
+    except (OSError, json.JSONDecodeError, ValueError):
+        return None
+    if validate_artifact_manifest(manifest, project_dir=project_root).valid:
+        return manifest
+    return None
+
+
 def generate_validation_report(
     check_results: list[tuple[str, bool]],
     figure_issues: list[str],
@@ -480,7 +527,9 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
         results.append(("Project design overlays", False))
 
     try:
-        artifact_manifest = aggregate_artifact_manifests(output_dir)
+        artifact_manifest = _current_project_manifest_if_valid(output_dir, project_root)
+        if artifact_manifest is None:
+            artifact_manifest = aggregate_artifact_manifests(output_dir)
         artifact_report = validate_artifact_manifest(artifact_manifest, project_dir=project_root)
         results.append(("Artifact manifest", artifact_report.valid))
         if artifact_report.issues:

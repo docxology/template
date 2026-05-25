@@ -9,7 +9,7 @@ This project is the public exemplar for deterministic AutoResearch loops in
 
 - Business logic: `src/`
   - `loop.py` — thin orchestrator (`run_autoresearch_loop`)
-  - `ml_task.py` — fixed-seed binary classification task and bounded candidate evaluation
+  - `ml_task.py` — local MNIST subset loading, numpy neural networks, and bounded candidate evaluation
   - `models.py` — loop result dataclasses
   - `config.py` — manuscript settings + plan merge (`build_loop_config`)
   - `writers.py` — JSON/CSV/manifest I/O
@@ -21,10 +21,13 @@ This project is the public exemplar for deterministic AutoResearch loops in
 - Manuscript source: `manuscript/`
 - Human-authored program: `program.md`
 - Seed proposals: `seed_ideas.yaml`
+- Executable MNIST task config: `mnist_task.yaml`
+- Local input data: `data/`
 - Generated artifacts: `output/`
 
 The analysis stage must not perform network calls, LLM calls, generated-code
-execution, or autonomous approval. It composes existing infrastructure modules:
+execution, runtime dataset downloads, or autonomous approval. It composes
+existing infrastructure modules:
 
 - `infrastructure.autoresearch`
 - `infrastructure.validation.evidence_registry`

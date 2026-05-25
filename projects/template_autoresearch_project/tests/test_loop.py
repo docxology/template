@@ -17,7 +17,8 @@ def test_run_autoresearch_loop_writes_artifacts_and_valid_readiness(project_root
     assert len(result.stage_results) == 7
     assert result.supported_claim_count == len(result.claims)
     assert all(stage.status == "declared" for stage in result.stage_results)
-    assert result.ml_task["accepted_candidate_id"] == "exp-quadratic-alpha-0p1"
+    assert result.ml_task["accepted_candidate_id"] == "exp-mlp-relu-32"
+    assert result.ml_task["transformer_evaluated"] is True
     for rel_path in result.config.required_artifacts:
         assert (project_root / rel_path).exists()
 
@@ -40,8 +41,10 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(project_root: Pat
     assert "output/data/run_ledger.json" in payload["output_paths"]
     assert "output/data/review_decisions.json" in payload["output_paths"]
     assert "output/data/benchmark_scores.json" in payload["output_paths"]
+    assert "output/data/mnist_task_config.json" in payload["output_paths"]
     assert "output/data/ml_task_results.json" in payload["output_paths"]
     assert "output/data/ml_candidate_ledger.json" in payload["output_paths"]
+    assert "output/data/ml_confusion_matrix.csv" in payload["output_paths"]
 
 
 def test_run_autoresearch_loop_writes_bounded_method_ledgers(project_root: Path, repo_root: Path) -> None:
@@ -85,8 +88,10 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         "output/data/run_ledger.json",
         "output/data/review_decisions.json",
         "output/data/benchmark_scores.json",
+        "output/data/mnist_task_config.json",
         "output/data/ml_task_results.json",
         "output/data/ml_candidate_ledger.json",
+        "output/data/ml_confusion_matrix.csv",
         "output/reports/autoresearch_review_packet.md",
         "output/reports/autoresearch_summary.md",
         "output/reports/ml_experiment_report.md",
@@ -148,5 +153,6 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
     assert len(result.stage_results) == 7
     assert all(stage.status == "declared" for stage in result.stage_results)
     assert (project / "output" / "data" / "autoresearch_loop.json").exists()
+    assert (project / "output" / "data" / "mnist_task_config.json").exists()
     assert (project / "output" / "data" / "ml_task_results.json").exists()
     assert (project / "output" / "reports" / "artifact_manifest.json").exists()

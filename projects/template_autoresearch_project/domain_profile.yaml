@@ -22,8 +22,10 @@ artifact_expectations:
   - output/data/autoresearch_plan.json
   - output/data/autoresearch_loop.json
   - output/data/autoresearch_claims.json
+  - output/data/mnist_task_config.json
   - output/data/ml_task_results.json
   - output/data/ml_candidate_ledger.json
+  - output/data/ml_confusion_matrix.csv
   - output/data/manuscript_variables.json
   - output/figures/ml_candidate_scores.png
   - output/reports/autoresearch_loop.json

@@ -1,24 +1,24 @@
 conditions:
-  - name: majority_class_baseline
+  - name: nearest_centroid_baseline
     role: reference
-    description: Predict the training-set majority label for every held-out sample.
-  - name: bounded_ridge_candidate_loop
+    description: Classify each MNIST test image by nearest training-set class centroid.
+  - name: bounded_neural_candidate_loop
     role: proposed
-    description: Evaluate fixed linear and quadratic ridge-classifier candidates under the iteration budget.
+    description: Evaluate fixed softmax, MLP, and tiny patch-attention candidates under the iteration budget.
   - name: deferred_candidate_budget_check
     role: variant
     description: Leave candidates beyond the configured budget unevaluated and record them as deferred.
 metrics:
   primary:
-    name: heldout_accuracy
+    name: test_accuracy
     direction: maximize
-protocol: "Generate the fixed-seed nonlinear binary classification task, evaluate bounded candidate classifiers without external calls, select the highest held-out accuracy with simplicity tie-breaking, then require readiness reports and evidence-linked claims to pass."
+protocol: "Load the local balanced MNIST subset, evaluate bounded numpy neural-network candidates without external calls or runtime downloads, select the highest test accuracy with deterministic parameter-count tie-breaking, then require readiness reports and evidence-linked claims to pass."
 expected_figures:
   - fig:ml_candidate_scores
 expected_tables:
   - tbl:autoresearch-loop
   - tbl:ml-candidate-ledger
 baselines:
-  - majority_class_baseline
+  - nearest_centroid_baseline
 ablations:
   - deferred_candidate_budget_check

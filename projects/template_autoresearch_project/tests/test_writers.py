@@ -80,8 +80,10 @@ def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: 
     paths = write_ml_task_artifacts(tmp_path, result, generated_at="2026-05-25T00:00:00+00:00")
 
     expected = {
+        tmp_path / "output/data/mnist_task_config.json",
         tmp_path / "output/data/ml_task_results.json",
         tmp_path / "output/data/ml_candidate_ledger.json",
+        tmp_path / "output/data/ml_confusion_matrix.csv",
         tmp_path / "output/reports/ml_experiment_report.md",
         tmp_path / "output/reports/ml_benchmark_score.json",
         tmp_path / "output/figures/ml_candidate_scores.png",

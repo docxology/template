@@ -3,9 +3,10 @@
 This folder documents the public AutoResearch exemplar project. The project is
 designed to run through the standard template pipeline while keeping the
 AutoResearch loop deterministic, configurable, offline, and human-reviewed. It
-demonstrates a tiny fixed-seed ML task, bounded candidate evaluation,
-evidence-linked accepted ideas, review gates, benchmark-style grading, and
-explicit disclosure while deferring autonomous generated-code execution.
+demonstrates a local MNIST subset, bounded numpy neural-network candidate
+evaluation, evidence-linked accepted ideas, review gates, benchmark-style
+grading, and explicit disclosure while deferring autonomous generated-code
+execution and runtime dataset downloads.
 
 Primary command:
 

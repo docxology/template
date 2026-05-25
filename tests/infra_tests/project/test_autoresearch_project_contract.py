@@ -64,8 +64,10 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/data/run_ledger.json" in outputs
     assert "output/data/review_decisions.json" in outputs
     assert "output/data/benchmark_scores.json" in outputs
+    assert "output/data/mnist_task_config.json" in outputs
     assert "output/data/ml_task_results.json" in outputs
     assert "output/data/ml_candidate_ledger.json" in outputs
+    assert "output/data/ml_confusion_matrix.csv" in outputs
     assert "output/reports/ml_experiment_report.md" in outputs
     assert "output/reports/ml_benchmark_score.json" in outputs
 
@@ -75,9 +77,12 @@ def test_template_autoresearch_project_declares_program_and_seed_ideas() -> None
 
     program = project_root / "program.md"
     seed_ideas = project_root / "seed_ideas.yaml"
+    mnist_task = project_root / "mnist_task.yaml"
 
     assert program.is_file()
     assert "human-authored research program" in program.read_text(encoding="utf-8")
     assert seed_ideas.is_file()
     assert "accepted" in seed_ideas.read_text(encoding="utf-8")
     assert "idea-ml-loop" in seed_ideas.read_text(encoding="utf-8")
+    assert mnist_task.is_file()
+    assert "tiny_patch_transformer" in mnist_task.read_text(encoding="utf-8")

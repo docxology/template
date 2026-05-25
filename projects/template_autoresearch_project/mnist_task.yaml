@@ -1,0 +1,55 @@
+task:
+  id: mnist_tiny_neural_search
+  dataset_path: data/mnist_tiny.npz
+  provenance_path: data/mnist_tiny_provenance.json
+  seed: 20260525
+  metric_name: test_accuracy
+  metric_direction: maximize
+  max_candidates: 3
+  normalization: zero_one
+baseline:
+  id: nearest_centroid_baseline
+  type: nearest_centroid
+training_defaults:
+  batch_size: 50
+  epochs: 24
+  learning_rate: 0.25
+  l2: 0.0001
+candidate_configs:
+  - id: exp-softmax-linear
+    title: "Softmax regression"
+    model_type: softmax_regression
+    seed: 101
+    training:
+      epochs: 28
+      learning_rate: 0.35
+  - id: exp-mlp-relu-32
+    title: "One-hidden-layer ReLU MLP"
+    model_type: mlp
+    seed: 102
+    hidden_sizes:
+      - 32
+    activation: relu
+    training:
+      epochs: 32
+      learning_rate: 0.22
+  - id: exp-tiny-patch-attention
+    title: "Tiny patch-attention classifier"
+    model_type: tiny_patch_transformer
+    seed: 103
+    patch_size: 7
+    d_model: 32
+    train_attention: false
+    training:
+      epochs: 34
+      learning_rate: 0.28
+  - id: exp-mlp-tanh-64
+    title: "Deferred tanh MLP"
+    model_type: mlp
+    seed: 104
+    hidden_sizes:
+      - 64
+    activation: tanh
+    training:
+      epochs: 30
+      learning_rate: 0.18

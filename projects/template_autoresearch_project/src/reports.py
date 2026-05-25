@@ -156,10 +156,10 @@ def render_ml_experiment_report(result: MLTaskResult) -> str:
     lines = [
         "# Deterministic ML-Loop Experiment",
         "",
-        f"- Task: {result.task_name}",
-        f"- Seed: {result.dataset.seed}",
+        "- Task: tiny MNIST neural-network classification",
+        f"- Seed: {result.task_config.seed}",
         f"- Train/test size: {result.dataset.train_size}/{result.dataset.test_size}",
-        f"- Baseline accuracy: {result.baseline.accuracy:.3f}",
+        f"- Baseline accuracy: {result.baseline.test_accuracy:.3f}",
         f"- Accepted candidate: `{result.accepted_candidate_id}`",
         f"- Best accuracy: {result.best_accuracy:.3f}",
         f"- Accuracy delta: {result.accuracy_delta:.3f}",
@@ -169,15 +169,15 @@ def render_ml_experiment_report(result: MLTaskResult) -> str:
         "",
         "## Candidate Ledger",
         "",
-        "| Candidate | Status | Feature map | Alpha | Accuracy | Delta |",
+        "| Candidate | Status | Model | Parameters | Accuracy | Delta |",
         "| --- | --- | --- | ---: | ---: | ---: |",
     ]
     for candidate in result.candidates:
-        accuracy = "N/A" if candidate.accuracy is None else f"{candidate.accuracy:.3f}"
+        accuracy = "N/A" if candidate.test_accuracy is None else f"{candidate.test_accuracy:.3f}"
         delta = "N/A" if candidate.accuracy_delta_vs_baseline is None else f"{candidate.accuracy_delta_vs_baseline:.3f}"
         lines.append(
-            f"| `{candidate.identifier}` | {candidate.status} | {candidate.feature_map} | "
-            f"{candidate.alpha:g} | {accuracy} | {delta} |"
+            f"| `{candidate.identifier}` | {candidate.status} | {candidate.model_type} | "
+            f"{candidate.parameter_count} | {accuracy} | {delta} |"
         )
     lines.extend(
         [

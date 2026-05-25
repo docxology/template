@@ -17,8 +17,10 @@ Core data:
 | `output/data/run_ledger.json` | Replay ledger with budget use and stop condition |
 | `output/data/review_decisions.json` | Required human review gate decisions |
 | `output/data/benchmark_scores.json` | Benchmark-style grading status for configured tasks |
-| `output/data/ml_task_results.json` | Fixed-seed dataset summary, baseline, candidates, accepted candidate, and metric delta |
+| `output/data/mnist_task_config.json` | Resolved local MNIST dataset, baseline, training, and candidate-search configuration |
+| `output/data/ml_task_results.json` | MNIST subset summary, baseline, candidates, accepted candidate, and metric delta |
 | `output/data/ml_candidate_ledger.json` | Candidate lifecycle ledger with proposed, evaluated, accepted, rejected, and deferred states |
+| `output/data/ml_confusion_matrix.csv` | Accepted-candidate confusion matrix over the local test split |
 | `output/data/manuscript_variables.json` | Variables injected into the manuscript |
 
 Figures:
@@ -26,7 +28,7 @@ Figures:
 | Path | Role |
 | --- | --- |
 | `output/figures/autoresearch_stage_matrix.png` | Visual stage, claim, and artifact readiness matrix |
-| `output/figures/ml_candidate_scores.png` | Baseline and evaluated-candidate held-out accuracy chart |
+| `output/figures/ml_candidate_scores.png` | Baseline and evaluated-candidate test accuracy chart |
 | `output/figures/figure_registry.json` | Registered figure metadata for validation |
 
 Reports:

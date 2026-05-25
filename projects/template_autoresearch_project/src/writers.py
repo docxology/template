@@ -12,7 +12,7 @@ from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactMan
 from .config import AutoResearchLoopConfig, load_experiment_candidates, load_seed_ideas
 from .figures import figure_registry_payload, write_ml_candidate_scores_figure, write_stage_matrix_figure
 from .manuscript_variables import compute_variables_from_payload, save_variables
-from .ml_task import MLTaskResult
+from .ml_task import MLTaskResult, write_confusion_matrix_csv
 from .models import AutoResearchLoopResult, LoopStageResult
 from .reports import (
     build_review_packet,
@@ -215,8 +215,8 @@ def write_ml_task_artifacts(project_root: Path, result: MLTaskResult, *, generat
     candidate_ledger = {
         "generated_at": generated_at,
         "objective": {
-            "metric": result.objective_metric,
-            "direction": result.objective_direction,
+            "metric": result.task_config.metric_name,
+            "direction": result.task_config.metric_direction,
         },
         "budget": {
             "candidate_count": result.candidate_count,
@@ -243,8 +243,10 @@ def write_ml_task_artifacts(project_root: Path, result: MLTaskResult, *, generat
     }
 
     return [
+        write_json(data_dir / "mnist_task_config.json", result.task_config.to_dict()),
         write_json(data_dir / "ml_task_results.json", result.to_dict()),
         write_json(data_dir / "ml_candidate_ledger.json", candidate_ledger),
+        write_confusion_matrix_csv(data_dir / "ml_confusion_matrix.csv", result.accepted_candidate.confusion_matrix),
         write_text(reports_dir / "ml_experiment_report.md", render_ml_experiment_report(result)),
         write_json(reports_dir / "ml_benchmark_score.json", benchmark_score),
         write_ml_candidate_scores_figure(figures_dir, result),

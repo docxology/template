@@ -4,9 +4,10 @@ Public exemplar for a deterministic bounded AutoResearch workflow over a tiny
 local machine-learning task.
 
 This project demonstrates a file-backed AutoResearch loop that runs inside the
-normal template pipeline. The case study uses a fixed-seed nonlinear binary
-classification task, a majority-class baseline, and a bounded set of
-numpy-only ridge-classifier candidates:
+normal template pipeline. The case study uses a local balanced MNIST subset, a
+nearest-centroid baseline, and a bounded set of numpy-only neural-network
+candidates: softmax regression, a small MLP, and a tiny patch-attention
+classifier.
 
 ```bash
 ./run.sh --pipeline --project template_autoresearch_project --core-only --skip-infra
@@ -23,7 +24,8 @@ The analysis stage runs two thin scripts:
 
 Reusable behavior lives under `src/` (`loop`, `ml_task`, `models`, `config`,
 `writers`, `reports`, `figures`, `manuscript_variables`). No network calls, LLM
-calls, generated-code execution, or autonomous approval loops are used.
+calls, runtime dataset downloads, generated-code execution, or autonomous
+approval loops are used.
 
 Loop stages are recorded as **declared** (configured intent). Claims are
 **supported** only when their evidence file exists locally.
@@ -65,8 +67,10 @@ Project-specific docs live in [`docs/`](docs/).
 - `output/data/run_ledger.json`
 - `output/data/review_decisions.json`
 - `output/data/benchmark_scores.json`
+- `output/data/mnist_task_config.json`
 - `output/data/ml_task_results.json`
 - `output/data/ml_candidate_ledger.json`
+- `output/data/ml_confusion_matrix.csv`
 - `output/data/manuscript_variables.json`
 - `output/figures/autoresearch_stage_matrix.png`
 - `output/figures/ml_candidate_scores.png`

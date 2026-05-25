@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 
+from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
 import infrastructure.validation.output.pipeline as mod
 from infrastructure.validation.output.pipeline import (
     generate_validation_report,
@@ -363,3 +364,49 @@ class TestExecuteValidationPipeline:
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("# Intro\n\nContent.")
         assert isinstance(mod.execute_validation_pipeline("test"), int)
+
+    def test_prefers_current_project_manifest_over_stale_stage_snapshots(self, tmp_path):
+        project_dir = tmp_path / "projects" / "test"
+        artifact = project_dir / "output" / "data" / "result.json"
+        artifact.parent.mkdir(parents=True)
+        artifact.write_text('{"ok": true}\n')
+        manifest_path = project_dir / "output" / "reports" / "artifact_manifest.json"
+        manifest_path.parent.mkdir(parents=True)
+        manifest = ArtifactManifest(
+            entries=(
+                ArtifactManifestEntry(
+                    path="output/data/result.json",
+                    size_bytes=artifact.stat().st_size,
+                    sha256=compute_sha256(artifact),
+                    stage_num=1,
+                    stage_name="project contract",
+                    contract_match=True,
+                ),
+            )
+        )
+        manifest_path.write_text(json.dumps(manifest.to_dict(), indent=2), encoding="utf-8")
+        stale_stage = project_dir / "output" / ".pipeline" / "artifacts" / "stage-99-stale.json"
+        stale_stage.parent.mkdir(parents=True)
+        stale_stage.write_text(
+            json.dumps(
+                {
+                    "entries": [
+                        {
+                            "path": "output/data/result.json",
+                            "size_bytes": artifact.stat().st_size,
+                            "sha256": "0" * 64,
+                            "stage_num": 99,
+                            "stage_name": "stale snapshot",
+                            "contract_match": True,
+                        }
+                    ],
+                    "issues": [],
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        selected = mod._current_project_manifest_if_valid(project_dir / "output", project_dir)
+
+        assert selected is not None
+        assert selected.entries[0].stage_name == "project contract"

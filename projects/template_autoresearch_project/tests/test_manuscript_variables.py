@@ -21,9 +21,11 @@ def test_manuscript_variables_cover_all_source_tokens(project_root: Path, repo_r
     assert tokens
     assert tokens <= set(variables)
     assert variables["READINESS_STATUS"] == "passed"
-    assert variables["ACCEPTED_CANDIDATE_ID"] == "exp-quadratic-alpha-0p1"
+    assert variables["ACCEPTED_CANDIDATE_ID"] == "exp-mlp-relu-32"
+    assert variables["ACCEPTED_MODEL_TYPE"] == "mlp"
     assert variables["BASELINE_ACCURACY"].endswith("%")
     assert variables["BEST_ACCURACY"].endswith("%")
+    assert variables["TRANSFORMER_EVALUATED"] == "true"
 
 
 def test_variable_script_writes_resolved_manuscript(project_root: Path) -> None:

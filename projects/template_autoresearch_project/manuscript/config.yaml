@@ -53,7 +53,7 @@ project_config:
       question: "Can the template express a bounded AutoResearch loop without autonomous execution?"
       expected_evidence: "output/reports/autoresearch_loop.md"
     - id: rq2
-      question: "Can a deterministic candidate loop evaluate and select a tiny ML-task configuration under budget?"
+      question: "Can a deterministic candidate loop evaluate and select a tiny MNIST neural-network configuration under budget?"
       expected_evidence: "output/data/ml_task_results.json"
     - id: rq3
       question: "Are manuscript claims grounded in generated project artifacts?"

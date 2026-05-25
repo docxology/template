@@ -28,8 +28,9 @@ The command executes the standard project stages:
    contracts, thin orchestrators).
 3. Write core artifacts (plan JSON, loop markdown, stage matrix CSV, figure).
 4. Write the first evidence registry snapshot from on-disk artifacts.
-5. Run the bounded ML task and write results, candidate ledger, report,
-   benchmark score, and candidate-score figure.
+5. Run the bounded local MNIST neural-network task and write resolved config,
+   results, candidate ledger, confusion matrix, report, benchmark score, and
+   candidate-score figure.
 6. Build file-backed claims and finalize loop JSON, review packet, summary, and
    manuscript variables.
 7. Write method-contract artifacts: research program, idea ledger, run ledger,
