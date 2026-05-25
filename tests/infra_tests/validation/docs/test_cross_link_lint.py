@@ -157,6 +157,23 @@ def test_find_broken_links_excludes_skill_eval_workspace(tmp_path: Path) -> None
     assert find_broken_links([tmp_path]) == []
 
 
+def test_find_broken_links_skips_public_project_generated_output(tmp_path: Path) -> None:
+    md = tmp_path / "projects" / "template_code_project" / "manuscript" / "03_results.md"
+    _write(md, "![generated](../output/figures/performance_benchmark.png)\n")
+
+    assert find_broken_links([tmp_path]) == []
+
+
+def test_find_broken_links_reports_missing_public_project_source_link(tmp_path: Path) -> None:
+    md = tmp_path / "projects" / "template_code_project" / "manuscript" / "03_results.md"
+    _write(md, "[missing source](../src/missing.py)\n")
+
+    broken = find_broken_links([tmp_path])
+
+    assert len(broken) == 1
+    assert broken[0].target == "../src/missing.py"
+
+
 def test_find_broken_links_format_returns_string() -> None:
     bl = BrokenLink(
         file=Path("/x/y.md"),
