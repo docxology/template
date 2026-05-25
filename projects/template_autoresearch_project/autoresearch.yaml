@@ -1,6 +1,6 @@
 enabled: true
 strict: true
-topic: "Deterministic AutoResearch readiness in a reproducible template pipeline"
+topic: "Deterministic bounded AutoResearch for a tiny local ML task"
 autonomy_level: proposal_only
 budget:
   max_iterations: 3
@@ -39,6 +39,9 @@ benchmark_tasks:
   - id: readiness-smoke
     description: "Confirm the deterministic AutoResearch loop emits graded readiness artifacts."
     grading_output: output/reports/benchmark_readiness_smoke.json
+  - id: ml-loop-score
+    description: "Grade bounded ML-loop metric improvement, budget compliance, and offline execution."
+    grading_output: output/reports/ml_benchmark_score.json
 disclosure_required: true
 disclosure_text: "AI-assisted AutoResearch"
 required_artifacts:
@@ -52,12 +55,17 @@ required_artifacts:
   - output/data/run_ledger.json
   - output/data/review_decisions.json
   - output/data/benchmark_scores.json
+  - output/data/ml_task_results.json
+  - output/data/ml_candidate_ledger.json
   - output/data/manuscript_variables.json
   - output/figures/autoresearch_stage_matrix.png
+  - output/figures/ml_candidate_scores.png
   - output/figures/figure_registry.json
   - output/reports/autoresearch_loop.json
   - output/reports/autoresearch_loop.md
   - output/reports/autoresearch_review_packet.md
   - output/reports/autoresearch_summary.md
+  - output/reports/ml_experiment_report.md
+  - output/reports/ml_benchmark_score.json
   - output/reports/artifact_manifest.json
   - output/reports/benchmark_readiness_smoke.json

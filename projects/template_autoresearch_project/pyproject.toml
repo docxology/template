@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "template_autoresearch_project"
 version = "0.1.0"
-description = "Deterministic AutoResearch loop exemplar for the template repository."
+description = "Deterministic bounded AutoResearch ML-loop exemplar for the template repository."
 requires-python = ">=3.10"
-dependencies = ["pyyaml>=6.0"]
+dependencies = ["numpy>=1.26", "pyyaml>=6.0"]
 
 [tool.pytest.ini_options]
 pythonpath = ["../..", ".", "src"]

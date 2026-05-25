@@ -5,9 +5,12 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from pathlib import Path
 
+from infrastructure.autoresearch import BudgetPolicy
+
 from src.config import AutoResearchLoopConfig
+from src.ml_task import run_bounded_ml_task
 from src.models import AutoResearchLoopResult, LoopStageResult
-from src.reports import render_loop_markdown, render_stage_matrix_csv
+from src.reports import render_loop_markdown, render_ml_experiment_report, render_stage_matrix_csv
 from src.writers import write_json, write_text
 
 
@@ -78,3 +81,13 @@ def test_write_json_and_text_create_files(tmp_path: Path) -> None:
 
     assert json_path.exists()
     assert text_path.read_text(encoding="utf-8") == "# Demo"
+
+
+def test_render_ml_experiment_report_includes_candidate_ledger(project_root: Path) -> None:
+    result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=3))
+
+    markdown = render_ml_experiment_report(result)
+
+    assert "Deterministic ML-Loop Experiment" in markdown
+    assert "exp-quadratic-alpha-0p1" in markdown
+    assert "LLM calls used: 0" in markdown

@@ -21,6 +21,9 @@ def test_manuscript_variables_cover_all_source_tokens(project_root: Path, repo_r
     assert tokens
     assert tokens <= set(variables)
     assert variables["READINESS_STATUS"] == "passed"
+    assert variables["ACCEPTED_CANDIDATE_ID"] == "exp-quadratic-alpha-0p1"
+    assert variables["BASELINE_ACCURACY"].endswith("%")
+    assert variables["BEST_ACCURACY"].endswith("%")
 
 
 def test_variable_script_writes_resolved_manuscript(project_root: Path) -> None:
@@ -47,3 +50,4 @@ def test_compute_variables_handles_malformed_payload_sections() -> None:
     assert variables["LOOP_STAGE_COUNT"] == "1"
     assert variables["SUPPORTED_CLAIM_COUNT"] == "1"
     assert variables["READINESS_STATUS"] == "requires review"
+    assert variables["ACCEPTED_CANDIDATE_ID"] == "N/A"

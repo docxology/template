@@ -1,22 +1,24 @@
 conditions:
-  - name: baseline_template_pipeline
+  - name: majority_class_baseline
     role: reference
-    description: Existing deterministic template pipeline controls.
-  - name: autoresearch_readiness_loop
+    description: Predict the training-set majority label for every held-out sample.
+  - name: bounded_ridge_candidate_loop
     role: proposed
-    description: Explicit plan, evidence, claim, artifact, and readiness loop.
-  - name: strict_readiness_without_agent_execution
+    description: Evaluate fixed linear and quadratic ridge-classifier candidates under the iteration budget.
+  - name: deferred_candidate_budget_check
     role: variant
-    description: Strict readiness validation with no autonomous execution.
+    description: Leave candidates beyond the configured budget unevaluated and record them as deferred.
 metrics:
   primary:
-    name: readiness_pass
+    name: heldout_accuracy
     direction: maximize
-protocol: "Run the project through the standard template pipeline and require deterministic AutoResearch readiness reports to pass."
-expected_figures: []
+protocol: "Generate the fixed-seed nonlinear binary classification task, evaluate bounded candidate classifiers without external calls, select the highest held-out accuracy with simplicity tie-breaking, then require readiness reports and evidence-linked claims to pass."
+expected_figures:
+  - fig:ml_candidate_scores
 expected_tables:
   - tbl:autoresearch-loop
+  - tbl:ml-candidate-ledger
 baselines:
-  - baseline_template_pipeline
+  - majority_class_baseline
 ablations:
-  - strict_readiness_without_agent_execution
+  - deferred_candidate_budget_check

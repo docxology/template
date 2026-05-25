@@ -6,15 +6,17 @@ import json
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
 from infrastructure.autoresearch import ResearchProgram, RunLedger
+from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
 
 from .config import AutoResearchLoopConfig, load_experiment_candidates, load_seed_ideas
-from .figures import figure_registry_payload, write_stage_matrix_figure
+from .figures import figure_registry_payload, write_ml_candidate_scores_figure, write_stage_matrix_figure
 from .manuscript_variables import compute_variables_from_payload, save_variables
+from .ml_task import MLTaskResult
 from .models import AutoResearchLoopResult, LoopStageResult
 from .reports import (
     build_review_packet,
+    render_ml_experiment_report,
     render_loop_markdown,
     render_review_packet_markdown,
     render_stage_matrix_csv,
@@ -122,6 +124,7 @@ def write_method_contract_artifacts(
     config: AutoResearchLoopConfig,
     *,
     generated_at: str,
+    ml_result: MLTaskResult | None = None,
 ) -> list[Path]:
     """Write bounded-loop method artifacts used by readiness validation."""
     output = project_root / "output"
@@ -139,12 +142,20 @@ def write_method_contract_artifacts(
     )
     ideas = load_seed_ideas(project_root)
     candidates = load_experiment_candidates(project_root)
+    iterations_used = (
+        ml_result.evaluated_candidate_count if ml_result is not None else config.budget_policy.max_iterations
+    )
+    budget_exhausted = bool(ml_result.budget_exhausted) if ml_result is not None else True
     run_ledger = RunLedger(
         budget_policy=config.budget_policy,
-        iterations_used=config.budget_policy.max_iterations,
-        wall_clock_minutes_used=config.budget_policy.max_wall_clock_minutes,
-        budget_exhausted=True,
-        exhaustion_reason="iteration budget reached",
+        iterations_used=iterations_used,
+        wall_clock_minutes_used=0,
+        llm_calls_used=0,
+        cost_usd_used=0.0,
+        budget_exhausted=budget_exhausted,
+        exhaustion_reason="candidate iteration budget reached"
+        if budget_exhausted
+        else "candidate loop completed within budget",
     )
     review_decisions = {
         "generated_at": generated_at,
@@ -152,8 +163,8 @@ def write_method_contract_artifacts(
             {
                 "gate": gate.name,
                 "required": gate.required,
-                "decision": "approved",
-                "rationale": "Deterministic public exemplar artifact.",
+                "decision": "deferred",
+                "rationale": "Generated packet is ready for human review; it does not approve itself.",
             }
             for gate in config.review_gates
         ],
@@ -167,6 +178,7 @@ def write_method_contract_artifacts(
                 "description": task.description,
                 "grading_output_path": task.grading_output,
                 "status": "graded" if (project_root / task.grading_output).exists() else "missing",
+                "score": _benchmark_score(project_root / task.grading_output),
             }
             for task in config.benchmark_tasks
         ],
@@ -189,6 +201,55 @@ def write_method_contract_artifacts(
     ]
     paths.extend(benchmark_report_paths)
     return paths
+
+
+def write_ml_task_artifacts(project_root: Path, result: MLTaskResult, *, generated_at: str) -> list[Path]:
+    """Write deterministic ML task artifacts."""
+    output = project_root / "output"
+    data_dir = output / "data"
+    reports_dir = output / "reports"
+    figures_dir = output / "figures"
+    for directory in (data_dir, reports_dir, figures_dir):
+        directory.mkdir(parents=True, exist_ok=True)
+
+    candidate_ledger = {
+        "generated_at": generated_at,
+        "objective": {
+            "metric": result.objective_metric,
+            "direction": result.objective_direction,
+        },
+        "budget": {
+            "candidate_count": result.candidate_count,
+            "evaluated_candidate_count": result.evaluated_candidate_count,
+            "budget_exhausted": result.budget_exhausted,
+            "llm_calls_used": result.llm_calls_used,
+            "cost_usd_used": result.cost_usd_used,
+        },
+        "baseline": result.baseline.to_dict(),
+        "accepted_candidate_id": result.accepted_candidate_id,
+        "candidates": [candidate.to_dict() for candidate in result.candidates],
+    }
+    benchmark_score = {
+        "id": "ml-loop-score",
+        "description": "Grade bounded ML-loop metric improvement, budget compliance, and offline execution.",
+        "score": result.benchmark_score,
+        "status": "graded",
+        "evidence": {
+            "results": "output/data/ml_task_results.json",
+            "candidate_ledger": "output/data/ml_candidate_ledger.json",
+            "accepted_candidate_id": result.accepted_candidate_id,
+            "accuracy_delta": round(result.accuracy_delta, 6),
+        },
+    }
+
+    return [
+        write_json(data_dir / "ml_task_results.json", result.to_dict()),
+        write_json(data_dir / "ml_candidate_ledger.json", candidate_ledger),
+        write_text(reports_dir / "ml_experiment_report.md", render_ml_experiment_report(result)),
+        write_json(reports_dir / "ml_benchmark_score.json", benchmark_score),
+        write_ml_candidate_scores_figure(figures_dir, result),
+        write_json(figures_dir / "figure_registry.json", figure_registry_payload()),
+    ]
 
 
 def finalize_loop_payloads(
@@ -222,6 +283,7 @@ def update_result_payloads(project_root: Path, result: AutoResearchLoopResult) -
     loop_payload = result.to_dict()
     return [
         write_json(data_dir / "autoresearch_loop.json", loop_payload),
+        write_json(data_dir / "autoresearch_claims.json", [claim.to_dict() for claim in result.claims]),
         write_json(data_dir / "autoresearch_review_packet.json", build_review_packet(result)),
         write_json(reports_dir / "autoresearch_loop.json", loop_payload),
         write_text(reports_dir / "autoresearch_loop.md", render_loop_markdown(result)),
@@ -267,6 +329,10 @@ def _program_summary(project_root: Path) -> str:
 def _write_benchmark_grading_reports(project_root: Path, config: AutoResearchLoopConfig) -> list[Path]:
     paths: list[Path] = []
     for task in config.benchmark_tasks:
+        path = project_root / task.grading_output
+        if path.exists():
+            paths.append(path)
+            continue
         payload = {
             "id": task.identifier,
             "description": task.description,
@@ -274,5 +340,18 @@ def _write_benchmark_grading_reports(project_root: Path, config: AutoResearchLoo
             "status": "graded",
             "evidence": "All deterministic AutoResearch method-contract artifacts were emitted.",
         }
-        paths.append(write_json(project_root / task.grading_output, payload))
+        paths.append(write_json(path, payload))
     return paths
+
+
+def _benchmark_score(path: Path) -> float | None:
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    score = payload.get("score")
+    return float(score) if isinstance(score, int | float) else None

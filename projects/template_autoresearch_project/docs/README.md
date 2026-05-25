@@ -2,10 +2,10 @@
 
 This folder documents the public AutoResearch exemplar project. The project is
 designed to run through the standard template pipeline while keeping the
-AutoResearch loop deterministic, configurable, and human-reviewed.
-It demonstrates bounded proposal ledgers, evidence-linked accepted ideas,
-review gates, benchmark-style grading status, and explicit disclosure while
-deferring autonomous generated-code execution.
+AutoResearch loop deterministic, configurable, offline, and human-reviewed. It
+demonstrates a tiny fixed-seed ML task, bounded candidate evaluation,
+evidence-linked accepted ideas, review gates, benchmark-style grading, and
+explicit disclosure while deferring autonomous generated-code execution.
 
 Primary command:
 

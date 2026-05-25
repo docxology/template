@@ -1,7 +1,8 @@
 domain: autoresearch
-display_name: Deterministic AutoResearch Loop
+display_name: Deterministic Bounded AutoResearch ML Loop
 required_packages:
   - pytest
+  - numpy
   - pyyaml
 preferred_outputs:
   - pdf
@@ -21,6 +22,15 @@ artifact_expectations:
   - output/data/autoresearch_plan.json
   - output/data/autoresearch_loop.json
   - output/data/autoresearch_claims.json
+  - output/data/ml_task_results.json
+  - output/data/ml_candidate_ledger.json
   - output/data/manuscript_variables.json
+  - output/figures/ml_candidate_scores.png
   - output/reports/autoresearch_loop.json
   - output/reports/autoresearch_loop.md
+  - output/reports/ml_experiment_report.md
+  - output/reports/ml_benchmark_score.json
+benchmark_rubric:
+  metric_improvement: "Accepted candidate accuracy is compared against the majority-class baseline."
+  budget_compliance: "Evaluated candidate count must stay within the configured iteration budget."
+  offline_execution: "LLM calls and cost must remain zero for the default public run."

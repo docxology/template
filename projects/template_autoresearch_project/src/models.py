@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from .config import AutoResearchLoopConfig
@@ -47,6 +47,7 @@ class AutoResearchLoopResult:
     claims: tuple[AutoResearchClaim, ...]
     readiness_valid: bool
     output_paths: tuple[str, ...]
+    ml_task: dict[str, object] = field(default_factory=dict)
 
     @property
     def supported_claim_count(self) -> int:
@@ -67,5 +68,6 @@ class AutoResearchLoopResult:
                 "required_artifact_count": len(self.config.required_artifacts),
                 "readiness_valid": self.readiness_valid,
             },
+            "ml_task": dict(self.ml_task),
             "output_paths": list(self.output_paths),
         }

@@ -1,7 +1,9 @@
 # Configuration
 
 `template_autoresearch_project` splits configuration between infrastructure
-readiness and manuscript loop settings.
+readiness, the human-authored AutoResearch program, and manuscript loop
+settings. The central case study is a tiny deterministic ML task, but the
+default run remains offline and proposal-only.
 
 ## `autoresearch.yaml` (infrastructure readiness)
 
@@ -28,8 +30,15 @@ into `build_autoresearch_plan()`:
 
 `program.md` is the human-authored research program. `seed_ideas.yaml` records
 the deterministic proposal set used to produce accepted, rejected, and deferred
-idea ledgers. Accepted ideas must carry evidence links; candidates must keep
-their `touched_paths` inside `edit_allowlist`.
+idea ledgers. The accepted ML-loop idea declares candidate feature maps, ridge
+penalties, complexity scores, expected artifacts, and touched paths. Accepted
+ideas must carry evidence links; candidates must keep their `touched_paths`
+inside `edit_allowlist`.
+
+The ML-loop candidate parameters are consumed by `src.ml_task.load_candidate_specs`.
+The configured iteration budget decides how many candidates are evaluated; any
+remaining candidates are written as deferred rather than executed later by an
+autonomous process.
 
 ## `manuscript/config.yaml` (loop settings)
 
@@ -44,6 +53,16 @@ Loaded by `src.config.load_manuscript_loop_settings`:
 Runtime loop configuration is merged in `src.config.build_loop_config(plan,
 settings)` so `required_artifacts` and `quality_checks` come from the composed
 plan, not a second parse of `autoresearch.yaml` in project code.
+
+## ML task implementation
+
+`src/ml_task.py` uses `numpy` only. It generates a fixed-seed nonlinear binary
+classification dataset, evaluates a majority-class baseline, scores bounded
+linear and quadratic ridge-classifier candidates by held-out accuracy, and
+selects the best result with deterministic simplicity tie-breaking. The task
+writes `ml_task_results.json`, `ml_candidate_ledger.json`,
+`ml_experiment_report.md`, `ml_benchmark_score.json`, and
+`ml_candidate_scores.png` through `src.writers`.
 
 ## Scripts
 

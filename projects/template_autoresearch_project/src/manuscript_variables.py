@@ -13,7 +13,13 @@ def compute_variables(project_root: Path) -> dict[str, str]:
     payload = json.loads(payload_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("autoresearch_loop.json must contain a mapping")
-    return compute_variables_from_payload(payload)
+    variables = compute_variables_from_payload(payload)
+    ml_path = project_root / "output" / "data" / "ml_task_results.json"
+    if ml_path.exists():
+        ml_payload = json.loads(ml_path.read_text(encoding="utf-8"))
+        if isinstance(ml_payload, dict):
+            variables.update(compute_ml_variables(ml_payload))
+    return variables
 
 
 def compute_variables_from_payload(payload: dict[str, Any]) -> dict[str, str]:
@@ -38,7 +44,48 @@ def compute_variables_from_payload(payload: dict[str, Any]) -> dict[str, str]:
         "REQUIRED_ARTIFACT_COUNT": str(required_artifact_count),
         "READINESS_STATUS": readiness_status,
         "READINESS_VALID": str(readiness_valid).lower(),
+        **compute_ml_variables(payload.get("ml_task", {})),
     }
+
+
+def compute_ml_variables(payload: object) -> dict[str, str]:
+    """Compute manuscript variables from an ML task payload or summary."""
+    if not isinstance(payload, dict):
+        payload = {}
+    dataset = payload.get("dataset", {})
+    if not isinstance(dataset, dict):
+        dataset = {}
+    return {
+        "ML_TASK_SEED": _string_value(payload.get("seed", dataset.get("seed", "N/A"))),
+        "CANDIDATE_COUNT": _string_value(payload.get("candidate_count", "N/A")),
+        "EVALUATED_CANDIDATE_COUNT": _string_value(payload.get("evaluated_candidate_count", "N/A")),
+        "ACCEPTED_CANDIDATE_ID": _string_value(payload.get("accepted_candidate_id", "N/A")),
+        "BASELINE_ACCURACY": _percent_value(payload.get("baseline_accuracy")),
+        "BEST_ACCURACY": _percent_value(payload.get("best_accuracy")),
+        "ACCURACY_DELTA": _percent_value(payload.get("accuracy_delta")),
+        "BUDGET_EXHAUSTED": str(bool(payload.get("budget_exhausted", False))).lower(),
+        "BENCHMARK_SCORE": _string_value(payload.get("benchmark_score", "N/A")),
+        "LLM_CALLS_USED": _string_value(payload.get("llm_calls_used", 0)),
+        "COST_USD_USED": _currency_value(payload.get("cost_usd_used", 0.0)),
+    }
+
+
+def _string_value(value: object) -> str:
+    if isinstance(value, float):
+        return f"{value:g}"
+    return str(value)
+
+
+def _percent_value(value: object) -> str:
+    if not isinstance(value, int | float):
+        return "N/A"
+    return f"{float(value) * 100:.1f}%"
+
+
+def _currency_value(value: object) -> str:
+    if not isinstance(value, int | float):
+        return "N/A"
+    return f"{float(value):.2f}"
 
 
 def save_variables(variables: dict[str, str], path: Path) -> Path:

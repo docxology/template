@@ -1,4 +1,73 @@
 ideas:
+  - id: idea-ml-loop
+    title: "Bounded deterministic ML candidate loop"
+    rationale: "A tractable AutoResearch exemplar needs an objective local metric, a baseline, bounded candidates, and a keep/reject/defer ledger."
+    status: accepted
+    evidence_links:
+      - claim_id: rq2
+        evidence_path: output/data/ml_task_results.json
+        evidence_type: artifact
+      - claim_id: rq5
+        evidence_path: output/reports/ml_benchmark_score.json
+        evidence_type: artifact
+    candidates:
+      - id: exp-linear-alpha-1
+        title: "Linear ridge classifier, alpha 1"
+        status: proposed
+        metric_name: heldout_accuracy
+        metric_direction: maximize
+        touched_paths:
+          - projects/template_autoresearch_project/src/ml_task.py
+        expected_artifacts:
+          - output/data/ml_task_results.json
+          - output/data/ml_candidate_ledger.json
+        parameters:
+          feature_map: linear
+          alpha: 1.0
+          complexity: 1
+      - id: exp-linear-alpha-0p1
+        title: "Linear ridge classifier, alpha 0.1"
+        status: proposed
+        metric_name: heldout_accuracy
+        metric_direction: maximize
+        touched_paths:
+          - projects/template_autoresearch_project/src/ml_task.py
+        expected_artifacts:
+          - output/data/ml_task_results.json
+          - output/data/ml_candidate_ledger.json
+        parameters:
+          feature_map: linear
+          alpha: 0.1
+          complexity: 1
+      - id: exp-quadratic-alpha-0p1
+        title: "Quadratic ridge classifier, alpha 0.1"
+        status: proposed
+        metric_name: heldout_accuracy
+        metric_direction: maximize
+        touched_paths:
+          - projects/template_autoresearch_project/src/ml_task.py
+        expected_artifacts:
+          - output/data/ml_task_results.json
+          - output/data/ml_candidate_ledger.json
+          - output/figures/ml_candidate_scores.png
+        parameters:
+          feature_map: quadratic
+          alpha: 0.1
+          complexity: 2
+      - id: exp-quadratic-alpha-1
+        title: "Quadratic ridge classifier, alpha 1"
+        status: proposed
+        metric_name: heldout_accuracy
+        metric_direction: maximize
+        touched_paths:
+          - projects/template_autoresearch_project/src/ml_task.py
+        expected_artifacts:
+          - output/data/ml_task_results.json
+          - output/data/ml_candidate_ledger.json
+        parameters:
+          feature_map: quadratic
+          alpha: 1.0
+          complexity: 2
   - id: idea-contract-ledgers
     title: "File-backed proposal ledgers"
     rationale: "Bounded research loops need replayable proposal state."

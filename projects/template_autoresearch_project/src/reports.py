@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import io
 
+from .ml_task import MLTaskResult
 from .models import AutoResearchLoopResult
 
 
@@ -18,9 +19,20 @@ def render_loop_markdown(result: AutoResearchLoopResult) -> str:
         f"- Readiness valid: `{str(result.readiness_valid).lower()}`",
         f"- Supported claims: {result.supported_claim_count}",
         "",
-        "## Stages",
-        "",
     ]
+    if result.ml_task:
+        lines.extend(
+            [
+                "## ML Task",
+                "",
+                f"- Accepted candidate: `{result.ml_task.get('accepted_candidate_id', 'N/A')}`",
+                f"- Baseline accuracy: {result.ml_task.get('baseline_accuracy', 'N/A')}",
+                f"- Best accuracy: {result.ml_task.get('best_accuracy', 'N/A')}",
+                f"- Accuracy delta: {result.ml_task.get('accuracy_delta', 'N/A')}",
+                "",
+            ]
+        )
+    lines.extend(["## Stages", ""])
     for stage in result.stage_results:
         lines.append(f"- `{stage.name}`: {stage.status} - {stage.evidence}")
     lines.extend(["", "## Claims", ""])
@@ -120,14 +132,59 @@ def render_review_packet_markdown(result: AutoResearchLoopResult) -> str:
 
 def render_summary_markdown(result: AutoResearchLoopResult) -> str:
     """Render the short project summary."""
-    return "\n".join(
+    lines = [
+        "# AutoResearch Summary",
+        "",
+        f"`{result.project_name}` declared {len(result.stage_results)} AutoResearch loop stages.",
+        f"Readiness status: `{str(result.readiness_valid).lower()}`.",
+        f"Supported claims: {result.supported_claim_count} of {len(result.claims)}.",
+        f"Required artifacts: {len(result.config.required_artifacts)}.",
+    ]
+    if result.ml_task:
+        lines.extend(
+            [
+                f"Accepted ML-loop candidate: `{result.ml_task.get('accepted_candidate_id', 'N/A')}`.",
+                f"Accuracy delta over baseline: `{result.ml_task.get('accuracy_delta', 'N/A')}`.",
+            ]
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def render_ml_experiment_report(result: MLTaskResult) -> str:
+    """Render the deterministic ML-loop experiment report."""
+    lines = [
+        "# Deterministic ML-Loop Experiment",
+        "",
+        f"- Task: {result.task_name}",
+        f"- Seed: {result.dataset.seed}",
+        f"- Train/test size: {result.dataset.train_size}/{result.dataset.test_size}",
+        f"- Baseline accuracy: {result.baseline.accuracy:.3f}",
+        f"- Accepted candidate: `{result.accepted_candidate_id}`",
+        f"- Best accuracy: {result.best_accuracy:.3f}",
+        f"- Accuracy delta: {result.accuracy_delta:.3f}",
+        f"- Candidate budget exhausted: `{str(result.budget_exhausted).lower()}`",
+        f"- LLM calls used: {result.llm_calls_used}",
+        f"- Cost used: {result.cost_usd_used:.2f}",
+        "",
+        "## Candidate Ledger",
+        "",
+        "| Candidate | Status | Feature map | Alpha | Accuracy | Delta |",
+        "| --- | --- | --- | ---: | ---: | ---: |",
+    ]
+    for candidate in result.candidates:
+        accuracy = "N/A" if candidate.accuracy is None else f"{candidate.accuracy:.3f}"
+        delta = "N/A" if candidate.accuracy_delta_vs_baseline is None else f"{candidate.accuracy_delta_vs_baseline:.3f}"
+        lines.append(
+            f"| `{candidate.identifier}` | {candidate.status} | {candidate.feature_map} | "
+            f"{candidate.alpha:g} | {accuracy} | {delta} |"
+        )
+    lines.extend(
         [
-            "# AutoResearch Summary",
             "",
-            f"`{result.project_name}` declared {len(result.stage_results)} AutoResearch loop stages.",
-            f"Readiness status: `{str(result.readiness_valid).lower()}`.",
-            f"Supported claims: {result.supported_claim_count} of {len(result.claims)}.",
-            f"Required artifacts: {len(result.config.required_artifacts)}.",
+            "This report is generated from deterministic local data. It does not call an external model, "
+            "execute generated code, or approve the manuscript.",
             "",
         ]
     )
+    return "\n".join(lines)

@@ -14,9 +14,10 @@ def test_run_autoresearch_loop_writes_artifacts_and_valid_readiness(project_root
     result = run_autoresearch_loop(project_root, repo_root)
 
     assert result.readiness_valid is True
-    assert len(result.stage_results) == 6
-    assert result.supported_claim_count >= 2
+    assert len(result.stage_results) == 7
+    assert result.supported_claim_count == len(result.claims)
     assert all(stage.status == "declared" for stage in result.stage_results)
+    assert result.ml_task["accepted_candidate_id"] == "exp-quadratic-alpha-0p1"
     for rel_path in result.config.required_artifacts:
         assert (project_root / rel_path).exists()
 
@@ -29,15 +30,18 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(project_root: Pat
     run_autoresearch_loop(project_root, repo_root)
     payload = json.loads((project_root / "output" / "data" / "autoresearch_loop.json").read_text())
 
-    assert payload["metrics"]["stage_count"] == 6
-    assert payload["metrics"]["supported_claim_count"] >= 2
+    assert payload["metrics"]["stage_count"] == 7
+    assert payload["metrics"]["supported_claim_count"] == 5
     assert payload["metrics"]["readiness_valid"] is True
+    assert payload["ml_task"]["best_accuracy"] > payload["ml_task"]["baseline_accuracy"]
     assert "output/reports/autoresearch_loop.md" in payload["output_paths"]
     assert "output/data/research_program.json" in payload["output_paths"]
     assert "output/data/idea_ledger.json" in payload["output_paths"]
     assert "output/data/run_ledger.json" in payload["output_paths"]
     assert "output/data/review_decisions.json" in payload["output_paths"]
     assert "output/data/benchmark_scores.json" in payload["output_paths"]
+    assert "output/data/ml_task_results.json" in payload["output_paths"]
+    assert "output/data/ml_candidate_ledger.json" in payload["output_paths"]
 
 
 def test_run_autoresearch_loop_writes_bounded_method_ledgers(project_root: Path, repo_root: Path) -> None:
@@ -57,10 +61,14 @@ def test_run_autoresearch_loop_writes_bounded_method_ledgers(project_root: Path,
     assert {idea["status"] for idea in idea_ledger["ideas"]} >= {"accepted", "rejected", "deferred"}
     accepted = [idea for idea in idea_ledger["ideas"] if idea["status"] == "accepted"]
     assert accepted and all(idea["evidence_links"] for idea in accepted)
+    assert run_ledger["iterations_used"] == 3
+    assert run_ledger["llm_calls_used"] == 0
+    assert run_ledger["cost_usd_used"] == 0.0
     assert run_ledger["budget_exhausted"] is True
-    assert run_ledger["exhaustion_reason"] == "iteration budget reached"
-    assert {row["decision"] for row in review_decisions["decisions"]} == {"approved"}
-    assert benchmark_scores["tasks"][0]["status"] == "graded"
+    assert run_ledger["exhaustion_reason"] == "candidate iteration budget reached"
+    assert {row["decision"] for row in review_decisions["decisions"]} == {"deferred"}
+    assert {task["id"] for task in benchmark_scores["tasks"]} == {"readiness-smoke", "ml-loop-score"}
+    assert all(task["status"] == "graded" for task in benchmark_scores["tasks"])
 
 
 def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
@@ -77,8 +85,12 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         "output/data/run_ledger.json",
         "output/data/review_decisions.json",
         "output/data/benchmark_scores.json",
+        "output/data/ml_task_results.json",
+        "output/data/ml_candidate_ledger.json",
         "output/reports/autoresearch_review_packet.md",
         "output/reports/autoresearch_summary.md",
+        "output/reports/ml_experiment_report.md",
+        "output/reports/ml_benchmark_score.json",
     }
     assert expected_paths <= set(result.output_paths)
 
@@ -102,7 +114,9 @@ def test_run_autoresearch_loop_writes_stage_matrix_figure(project_root: Path, re
 
     assert figure_path.exists()
     assert figure_path.stat().st_size > 1000
+    assert (project_root / "output" / "figures" / "ml_candidate_scores.png").exists()
     assert registry["fig:autoresearch_stage_matrix"]["filename"] == "autoresearch_stage_matrix.png"
+    assert registry["fig:ml_candidate_scores"]["filename"] == "ml_candidate_scores.png"
 
 
 def test_build_claims_only_supports_existing_files(project_root: Path, repo_root: Path) -> None:
@@ -131,7 +145,8 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
 
     result = run_autoresearch_loop(project, repo_root)
 
-    assert len(result.stage_results) == 6
+    assert len(result.stage_results) == 7
     assert all(stage.status == "declared" for stage in result.stage_results)
     assert (project / "output" / "data" / "autoresearch_loop.json").exists()
+    assert (project / "output" / "data" / "ml_task_results.json").exists()
     assert (project / "output" / "reports" / "artifact_manifest.json").exists()

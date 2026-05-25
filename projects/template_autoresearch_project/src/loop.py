@@ -18,6 +18,7 @@ from infrastructure.validation.evidence_registry import (
 )
 
 from .config import AutoResearchLoopConfig, build_loop_config, load_manuscript_loop_settings
+from .ml_task import run_bounded_ml_task
 from .models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
 from .writers import (
     finalize_loop_payloads,
@@ -25,6 +26,7 @@ from .writers import (
     update_result_payloads,
     write_artifact_manifest,
     write_core_loop_artifacts,
+    write_ml_task_artifacts,
     write_method_contract_artifacts,
 )
 
@@ -64,6 +66,8 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
             build_project_evidence_registry(project_root),
         )
     )
+    ml_result = run_bounded_ml_task(project_root, config.budget_policy)
+    output_paths.extend(write_ml_task_artifacts(project_root, ml_result, generated_at=generated_at))
 
     claims = build_claims(config, project_root)
     provisional = AutoResearchLoopResult(
@@ -74,9 +78,12 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         claims=claims,
         readiness_valid=False,
         output_paths=(),
+        ml_task=ml_result.to_summary_dict(),
     )
     output_paths.extend(finalize_loop_payloads(project_root, provisional))
-    output_paths.extend(write_method_contract_artifacts(project_root, config, generated_at=generated_at))
+    output_paths.extend(
+        write_method_contract_artifacts(project_root, config, generated_at=generated_at, ml_result=ml_result)
+    )
 
     final_paths = _final_output_path_payload(project_root, output_paths)
     final = AutoResearchLoopResult(
@@ -87,6 +94,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         claims=claims,
         readiness_valid=False,
         output_paths=final_paths,
+        ml_task=ml_result.to_summary_dict(),
     )
     output_paths.extend(update_result_payloads(project_root, final))
     output_paths.append(write_artifact_manifest(project_root, output_paths))
@@ -95,6 +103,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
     readiness_valid = readiness_pre.valid and readiness_post.valid
     readiness_report = _combine_readiness_reports(readiness_pre, readiness_post, plan.project_name)
     output_paths.extend(write_autoresearch_report(project_root, readiness_report))
+    claims = build_claims(config, project_root)
 
     final_paths = _final_output_path_payload(project_root, output_paths)
     final = AutoResearchLoopResult(
@@ -105,6 +114,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         claims=claims,
         readiness_valid=readiness_valid,
         output_paths=final_paths,
+        ml_task=ml_result.to_summary_dict(),
     )
     output_paths.extend(update_result_payloads(project_root, final))
     output_paths.append(
@@ -122,6 +132,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         claims=claims,
         readiness_valid=readiness_valid,
         output_paths=tuple(dict.fromkeys(relative_path(project_root, path) for path in output_paths)),
+        ml_task=ml_result.to_summary_dict(),
     )
 
 
@@ -130,6 +141,7 @@ def build_stage_results(config: AutoResearchLoopConfig, *, plan_stage_count: int
     stage_actions = {
         "plan": f"Declared {plan_stage_count} pipeline stage contract(s).",
         "gate": "Declared exact stage-gate names from autoresearch.yaml.",
+        "experiment": "Ran the fixed-seed bounded ML-loop candidate evaluation.",
         "evidence": "Declared local domain, experiment, pipeline, and output evidence targets.",
         "claims": "Mapped configured questions to on-disk evidence paths.",
         "artifacts": "Declared machine-readable data and human-readable report outputs.",
@@ -175,6 +187,8 @@ def _final_output_path_payload(project_root: Path, output_paths: list[Path]) -> 
         "output/data/run_ledger.json",
         "output/data/review_decisions.json",
         "output/data/benchmark_scores.json",
+        "output/data/ml_task_results.json",
+        "output/data/ml_candidate_ledger.json",
         "output/data/manuscript_variables.json",
         "output/reports/autoresearch_loop.json",
         "output/reports/autoresearch_loop.md",
@@ -185,6 +199,9 @@ def _final_output_path_payload(project_root: Path, output_paths: list[Path]) -> 
         "output/reports/artifact_manifest.json",
         "output/reports/evidence_registry.json",
         "output/reports/benchmark_readiness_smoke.json",
+        "output/reports/ml_experiment_report.md",
+        "output/reports/ml_benchmark_score.json",
+        "output/figures/ml_candidate_scores.png",
     )
     return tuple(
         dict.fromkeys(

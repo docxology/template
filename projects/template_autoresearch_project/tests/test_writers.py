@@ -5,9 +5,12 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from pathlib import Path
 
+from infrastructure.autoresearch import BudgetPolicy
+
 from src.config import AutoResearchLoopConfig
+from src.ml_task import run_bounded_ml_task
 from src.models import AutoResearchLoopResult, LoopStageResult
-from src.writers import write_loop_payloads
+from src.writers import write_loop_payloads, write_ml_task_artifacts
 
 
 def test_write_loop_payloads_writes_core_and_finalize_artifacts(tmp_path: Path) -> None:
@@ -69,3 +72,20 @@ def test_write_loop_payloads_writes_core_and_finalize_artifacts(tmp_path: Path) 
     assert expected <= {path.resolve() for path in paths}
     loop_payload = (tmp_path / "output/data/autoresearch_loop.json").read_text(encoding="utf-8")
     assert '"readiness_valid": false' in loop_payload
+
+
+def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: Path, tmp_path: Path) -> None:
+    result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=3))
+
+    paths = write_ml_task_artifacts(tmp_path, result, generated_at="2026-05-25T00:00:00+00:00")
+
+    expected = {
+        tmp_path / "output/data/ml_task_results.json",
+        tmp_path / "output/data/ml_candidate_ledger.json",
+        tmp_path / "output/reports/ml_experiment_report.md",
+        tmp_path / "output/reports/ml_benchmark_score.json",
+        tmp_path / "output/figures/ml_candidate_scores.png",
+        tmp_path / "output/figures/figure_registry.json",
+    }
+    assert expected <= {path.resolve() for path in paths}
+    assert (tmp_path / "output/figures/ml_candidate_scores.png").stat().st_size > 1000

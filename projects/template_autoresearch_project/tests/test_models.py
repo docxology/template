@@ -80,4 +80,5 @@ def test_loop_result_serializes_metrics_and_nested_models(project_root: Path) ->
         "required_artifact_count": len(config.required_artifacts),
         "readiness_valid": True,
     }
+    assert payload["ml_task"] == {}
     assert payload["output_paths"] == ["output/data/autoresearch_loop.json"]

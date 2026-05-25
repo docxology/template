@@ -17,6 +17,8 @@ Core data:
 | `output/data/run_ledger.json` | Replay ledger with budget use and stop condition |
 | `output/data/review_decisions.json` | Required human review gate decisions |
 | `output/data/benchmark_scores.json` | Benchmark-style grading status for configured tasks |
+| `output/data/ml_task_results.json` | Fixed-seed dataset summary, baseline, candidates, accepted candidate, and metric delta |
+| `output/data/ml_candidate_ledger.json` | Candidate lifecycle ledger with proposed, evaluated, accepted, rejected, and deferred states |
 | `output/data/manuscript_variables.json` | Variables injected into the manuscript |
 
 Figures:
@@ -24,6 +26,7 @@ Figures:
 | Path | Role |
 | --- | --- |
 | `output/figures/autoresearch_stage_matrix.png` | Visual stage, claim, and artifact readiness matrix |
+| `output/figures/ml_candidate_scores.png` | Baseline and evaluated-candidate held-out accuracy chart |
 | `output/figures/figure_registry.json` | Registered figure metadata for validation |
 
 Reports:
@@ -34,6 +37,8 @@ Reports:
 | `output/reports/autoresearch_loop.md` | Human-readable loop report |
 | `output/reports/autoresearch_review_packet.md` | Human review packet with required actions |
 | `output/reports/autoresearch_summary.md` | Short project summary |
+| `output/reports/ml_experiment_report.md` | Human-readable deterministic ML-loop report |
+| `output/reports/ml_benchmark_score.json` | Grading output for metric improvement, budget compliance, offline execution, and selection status |
 | `output/reports/autoresearch_readiness.json` | Structured readiness validation result |
 | `output/reports/autoresearch_readiness.md` | Human-readable readiness validation result |
 | `output/reports/benchmark_readiness_smoke.json` | Deterministic grading output for the exemplar benchmark task |
