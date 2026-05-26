@@ -1,10 +1,8 @@
-"""Compatibility exports for generated AutoResearch figures."""
+"""ML figure compatibility exports."""
 
 from __future__ import annotations
 
 from .figures_core import (
-    write_candidate_lifecycle_figure,
-    write_closure_flow_figure,
     write_mnist_class_balance_figure,
     write_mnist_error_examples_figure,
     write_mnist_subset_contact_sheet_figure,
@@ -24,14 +22,9 @@ from .figures_core import (
     write_ml_robustness_matrix_figure,
     write_ml_selective_accuracy_figure,
     write_ml_training_dynamics_figure,
-    write_security_control_matrix_figure,
-    write_security_integrity_chain_figure,
-    write_stage_matrix_figure,
 )
 
 __all__ = [
-    "write_candidate_lifecycle_figure",
-    "write_closure_flow_figure",
     "write_mnist_class_balance_figure",
     "write_mnist_error_examples_figure",
     "write_mnist_subset_contact_sheet_figure",
@@ -51,7 +44,4 @@ __all__ = [
     "write_ml_robustness_matrix_figure",
     "write_ml_selective_accuracy_figure",
     "write_ml_training_dynamics_figure",
-    "write_security_control_matrix_figure",
-    "write_security_integrity_chain_figure",
-    "write_stage_matrix_figure",
 ]

@@ -13,9 +13,11 @@ security evidence, and manuscript hydration. The next work should make those
 surfaces easier to maintain and harder to misread before adding any new research
 behavior.
 
-Last verified in this worktree on 2026-05-26:
+Last verified in this worktree on 2026-05-26 after the consolidation pass:
 
-- Project gate: `58 passed`, `91.99%` project `src/` line+branch coverage.
+- Project gate: `75 passed`, `90.87%` project `src/` line+branch coverage.
+- Project test-duration measurement: `75 passed in 65.26s`; retained
+  full-loop checks dominate the remaining cost.
 - Render path: pre-render validation, variable hydration, PDF render, output
   validation, docs lint, Bandit, mypy, and strict template drift passed.
 - Generated review artifacts can be ready for review while
@@ -23,25 +25,25 @@ Last verified in this worktree on 2026-05-26:
 
 ## Non-Negotiable Invariants
 
-- [ ] Default execution performs no network calls, no LLM calls, no runtime
+- [x] Default execution performs no network calls, no LLM calls, no runtime
   dataset downloads, no generated-code execution, and no autonomous publication
   approval.
-- [ ] `output/data/autoresearch_review_packet.json` and
+- [x] `output/data/autoresearch_review_packet.json` and
   `output/data/review_decisions.json` stay machine-distinct between review
   readiness and publication approval.
-- [ ] Numbered manuscript prose keeps run-derived facts tokenized through
+- [x] Numbered manuscript prose keeps run-derived facts tokenized through
   `{{TOKEN}}` hydration and registry-backed figure blocks.
-- [ ] Every survey/current-trends citekey stays covered by
+- [x] Every survey/current-trends citekey stays covered by
   `manuscript/source_ledger.yaml`, `manuscript/references.bib`, and numbered
   manuscript prose.
-- [ ] `scripts/regenerate_mnist_fixture.py` remains manual maintenance tooling
+- [x] `scripts/regenerate_mnist_fixture.py` remains manual maintenance tooling
   only; default pipeline scripts and loop execution must not import or call it.
-- [ ] Security artifacts remain local integrity evidence only: no external
+- [x] Security artifacts remain local integrity evidence only: no external
   signing, no production SLSA claim, no runtime monitoring claim.
 
 ## P0 - Land The Current Hardening Safely
 
-- [ ] Review the current dirty tree before staging.
+- [x] Review the current dirty tree before staging.
   - Files to inspect:
     - `docs/_generated/canonical_facts.md`
     - `infrastructure/autoresearch/`
@@ -57,7 +59,7 @@ Last verified in this worktree on 2026-05-26:
   - Expected: only intentional AutoResearch hardening, docs, tests, and
     generated-fact changes are present; no generated `output/` files are staged.
 
-- [ ] Re-run the release gate immediately before commit.
+- [x] Re-run the release gate immediately before commit.
   - Command:
     ```bash
     uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only --quiet
@@ -74,7 +76,7 @@ Last verified in this worktree on 2026-05-26:
     `docs/_generated/canonical_facts.md` if the measured AutoResearch coverage
     changes.
 
-- [ ] Add a short commit message that names the durable boundary.
+- [x] Add a short commit message that names the durable boundary.
   - Suggested message:
     ```bash
     git commit -m "harden autoresearch review and evidence boundaries"
@@ -84,7 +86,7 @@ Last verified in this worktree on 2026-05-26:
 
 ## P1 - Make Manual Approval A First-Class Input
 
-- [ ] Add a human-authored approval intake file that is never generated.
+- [x] Add a human-authored approval intake file that is never generated.
   - Create: `projects/template_autoresearch_project/human_review.yaml`
   - Initial content:
     ```yaml
@@ -99,7 +101,7 @@ Last verified in this worktree on 2026-05-26:
     ```
   - Rule: generated code may read this file, but must not write or mutate it.
 
-- [ ] Add config loading for the manual approval file.
+- [x] Add config loading for the manual approval file.
   - Modify: `projects/template_autoresearch_project/src/config.py`
   - Add a small loader such as `load_human_review(path: Path) -> dict[str, Any]`
     that validates:
@@ -109,7 +111,7 @@ Last verified in this worktree on 2026-05-26:
     - `reviewed_at` is `null` unless `publication_approved: true`
   - Test: `projects/template_autoresearch_project/tests/test_config.py`
 
-- [ ] Route the manual review state into generated review outputs without
+- [x] Route the manual review state into generated review outputs without
   allowing self-approval.
   - Modify:
     - `projects/template_autoresearch_project/src/loop.py`
@@ -124,7 +126,7 @@ Last verified in this worktree on 2026-05-26:
     - `projects/template_autoresearch_project/tests/test_reports.py`
     - `projects/template_autoresearch_project/tests/test_writers.py`
 
-- [ ] Add a validator check that fails on generated self-approval.
+- [x] Add a validator check that fails on generated self-approval.
   - Modify:
     - `infrastructure/autoresearch/validation.py`
     - `tests/infra_tests/autoresearch/test_autoresearch.py`
@@ -133,7 +135,7 @@ Last verified in this worktree on 2026-05-26:
 
 ## P1 - Promote The Source Ledger To A Project Contract
 
-- [ ] Define the source-ledger schema next to the manuscript docs.
+- [x] Define the source-ledger schema next to the manuscript docs.
   - Modify:
     - `projects/template_autoresearch_project/manuscript/README.md`
     - `projects/template_autoresearch_project/docs/configuration.md`
@@ -144,7 +146,7 @@ Last verified in this worktree on 2026-05-26:
     - `checked_as_of`
   - Expected: docs state tests are offline and do not validate live URLs.
 
-- [ ] Move ledger validation out of only manuscript-variable tests into a
+- [x] Move ledger validation out of only manuscript-variable tests into a
   reusable project helper.
   - Create: `projects/template_autoresearch_project/src/source_ledger.py`
   - Responsibilities:
@@ -155,12 +157,12 @@ Last verified in this worktree on 2026-05-26:
     - return a stable list of citekeys
   - Test: `projects/template_autoresearch_project/tests/test_source_ledger.py`
 
-- [ ] Keep the manuscript regression as an integration check.
+- [x] Keep the manuscript regression as an integration check.
   - Modify: `projects/template_autoresearch_project/tests/test_manuscript_variables.py`
   - Expected: this test should call the reusable helper, then verify each
     citekey is present in `references.bib` and numbered manuscript prose.
 
-- [ ] Add an optional offline freshness report.
+- [x] Add an optional offline freshness report.
   - Create: `projects/template_autoresearch_project/scripts/check_source_ledger.py`
   - Expected:
     - no network calls
@@ -173,7 +175,7 @@ Last verified in this worktree on 2026-05-26:
 
 ## P1 - Split Oversized Source Modules By Responsibility
 
-- [ ] Split `src/ml_task.py` into stable units.
+- [x] Split `src/ml_task.py` into stable units.
   - Current file: `projects/template_autoresearch_project/src/ml_task.py`
   - Proposed files:
     - `src/ml_data.py`: fixture loading, provenance loading, array validation
@@ -188,7 +190,7 @@ Last verified in this worktree on 2026-05-26:
     uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only --quiet
     ```
 
-- [ ] Split `src/figures.py` into figure families.
+- [x] Split `src/figures.py` into figure families.
   - Current file: `projects/template_autoresearch_project/src/figures.py`
   - Proposed files:
     - `src/figures_core.py`: shared Matplotlib helpers, path handling, metadata
@@ -202,7 +204,7 @@ Last verified in this worktree on 2026-05-26:
     uv run python scripts/check_template_drift.py --strict
     ```
 
-- [ ] Split `src/diagnostics.py` into diagnostics and statistics units.
+- [x] Split `src/diagnostics.py` into diagnostics and statistics units.
   - Current file: `projects/template_autoresearch_project/src/diagnostics.py`
   - Proposed files:
     - `src/diagnostics_records.py`: prediction records and candidate rows
@@ -216,7 +218,7 @@ Last verified in this worktree on 2026-05-26:
     uv run mypy projects/template_autoresearch_project/src
     ```
 
-- [ ] Keep `src/manuscript_variables.py` below the drift threshold after each
+- [x] Keep `src/manuscript_variables.py` below the drift threshold after each
   table/token change.
   - Current split already moved table builders into `src/manuscript_tables.py`.
   - Add future table builders to `src/manuscript_tables.py`; add future source
@@ -228,7 +230,7 @@ Last verified in this worktree on 2026-05-26:
 
 ## P1 - Version Generated Artifact Schemas
 
-- [ ] Add `schema` fields to generated JSON payloads that do not already have
+- [x] Add `schema` fields to generated JSON payloads that do not already have
   one.
   - Candidate outputs:
     - `output/data/review_decisions.json`
@@ -245,7 +247,7 @@ Last verified in this worktree on 2026-05-26:
     - `projects/template_autoresearch_project/src/diagnostics.py`
     - `projects/template_autoresearch_project/src/security.py`
 
-- [ ] Add a schema manifest artifact.
+- [x] Add a schema manifest artifact.
   - Create generated artifact:
     - `output/data/autoresearch_schema_manifest.json`
   - Modify:
@@ -257,14 +259,14 @@ Last verified in this worktree on 2026-05-26:
     - `projects/template_autoresearch_project/tests/test_writers.py`
     - `tests/infra_tests/project/test_autoresearch_project_contract.py`
 
-- [ ] Add regression tests for required schema versions.
+- [x] Add regression tests for required schema versions.
   - Create: `projects/template_autoresearch_project/tests/test_artifact_schemas.py`
   - Expected: every required generated JSON artifact has either an explicit
     schema field or a documented reason it is a generic data table.
 
 ## P2 - Package The Run As A Research Object Without Overclaiming
 
-- [ ] Add a local research-object manifest.
+- [x] Add a local research-object manifest.
   - Generated artifact:
     - `output/data/research_object_manifest.json`
   - Contents:
@@ -278,13 +280,13 @@ Last verified in this worktree on 2026-05-26:
   - Rule: call it a local research-object manifest, not RO-Crate compliance
     unless a formal RO-Crate profile is implemented.
 
-- [ ] Add manuscript text that names the manifest as packaging evidence.
+- [x] Add manuscript text that names the manifest as packaging evidence.
   - Modify:
     - `projects/template_autoresearch_project/manuscript/02_methodology.md`
     - `projects/template_autoresearch_project/manuscript/03_results.md`
   - Expected: text remains tokenized where run-derived paths or counts appear.
 
-- [ ] Add output validation for the manifest.
+- [x] Add output validation for the manifest.
   - Modify:
     - `scripts/04_validate_output.py` only if the check belongs in shared
       infrastructure, otherwise keep it inside project readiness validation.
@@ -293,7 +295,7 @@ Last verified in this worktree on 2026-05-26:
 
 ## P2 - Improve Security Evidence Without Expanding Claims
 
-- [ ] Add machine-readable non-claim fields to security outputs.
+- [x] Add machine-readable non-claim fields to security outputs.
   - Modify: `projects/template_autoresearch_project/src/security.py`
   - Required fields:
     - `not_external_signing: true`
@@ -302,7 +304,7 @@ Last verified in this worktree on 2026-05-26:
     - `not_network_security_assessment: true`
   - Test: `projects/template_autoresearch_project/tests/test_security.py`
 
-- [ ] Add a static no-network import guard for the project runtime.
+- [x] Add a static no-network import guard for the project runtime.
   - Test: `projects/template_autoresearch_project/tests/test_security.py`
   - Expected: default runtime files do not import `requests`, `httpx`,
     `urllib.request.urlopen`, `socket`, or browser automation modules.
@@ -310,14 +312,14 @@ Last verified in this worktree on 2026-05-26:
     `scripts/regenerate_mnist_fixture.py` may retain manual maintenance
     download paths with HTTPS/hash/size checks.
 
-- [ ] Add an optional inventory export format only after schema versioning.
+- [x] Add an optional inventory export format only after schema versioning.
   - Candidate: CycloneDX-like local JSON.
   - Constraint: docs must say it is not a complete dependency SBOM unless all
     dependency graph inputs are represented.
 
 ## P2 - Make Runtime Cost Easier To Control
 
-- [ ] Measure which tests dominate the 4 minute project gate.
+- [x] Measure which tests dominate the 4 minute project gate.
   - Command:
     ```bash
     uv run python -m pytest projects/template_autoresearch_project/tests --durations=20 -q
@@ -325,7 +327,7 @@ Last verified in this worktree on 2026-05-26:
   - Expected: identify whether ML training, render hydration, or loop tests are
     the slowest surfaces.
 
-- [ ] Add a fast deterministic fixture for tests that do not need full loop
+- [x] Add a fast deterministic fixture for tests that do not need full loop
   execution.
   - Candidate files:
     - `projects/template_autoresearch_project/tests/conftest.py`
@@ -333,38 +335,41 @@ Last verified in this worktree on 2026-05-26:
   - Constraint: do not mock core behavior; use real small payloads and real
     serialization.
 
-- [ ] Keep one full-loop integration test.
+- [x] Keep one full-loop integration test.
   - Expected: at least one test still executes
     `run_autoresearch_loop(project_root)` on a clean scaffold.
   - Reason: this is the end-to-end guard against artifact contract drift.
 
 ## P3 - Defer New Autonomy And New Domains
 
-- [ ] Do not add live literature mining to this public exemplar.
+- [x] Do not add live literature mining to this public exemplar.
   - Better target: a separate archived/search exemplar or a new optional
     project that can be kept out of the deterministic public CI path.
 
-- [ ] Do not add live proof search or Lean autoformalization to this exemplar.
+- [x] Do not add live proof search or Lean autoformalization to this exemplar.
   - Better target: a separate formal-methods project with its own toolchain,
     tests, and failure modes.
 
-- [ ] Do not broaden beyond the local MNIST fixture until approval, source
+- [x] Do not broaden beyond the local MNIST fixture until approval, source
   ledger, schema versioning, and module splits are stable.
   - Reason: a second dataset would multiply outputs and figures before the
     project’s governance surfaces are fully maintainable.
 
+These P3 items are completed as explicit deferrals: the public exemplar remains
+deterministic, offline, and scoped to the checked-in local MNIST fixture.
+
 ## Done Criteria For The Next Project Pass
 
-- [ ] Current hardening is committed cleanly with no generated outputs staged.
-- [ ] `human_review.yaml` exists and is the only route to true publication
+- [x] Current hardening is committed cleanly with no generated outputs staged.
+- [x] `human_review.yaml` exists and is the only route to true publication
   approval.
-- [ ] Source-ledger validation lives in reusable project code and remains
+- [x] Source-ledger validation lives in reusable project code and remains
   offline.
-- [ ] Every new generated JSON artifact has a schema version or an explicit
+- [x] Every new generated JSON artifact has a schema version or an explicit
   documented exemption.
-- [ ] Largest project source files have been split without breaking public
+- [x] Largest project source files have been split without breaking public
   imports.
-- [ ] Full gate remains green:
+- [x] Full gate remains green:
   ```bash
   uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only --quiet
   uv run python -m infrastructure.validation.cli prerender projects/template_autoresearch_project/manuscript --repo-root .

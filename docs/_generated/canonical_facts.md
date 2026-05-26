@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-26 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**425**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**170**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**7** passed), exemplar `pytest --collect-only` (209 + 76 + 60), drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-05-26 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**425**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**170**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**7** passed), exemplar `pytest --collect-only` (209 + 76 + 75), drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -103,7 +103,7 @@ Result: 65 passed in ~0.75s (real symlinks and file-backed HITL state, no mocks)
 |---------|-----------------|----------------------------|
 | `template_code_project` | 209 | 98.83 % |
 | `template_prose_project` | 76 | 100.00 % |
-| `template_autoresearch_project` | 60 | 91.98 % |
+| `template_autoresearch_project` | 75 | 90.87 % |
 
 Collection was refreshed with per-project `uv run pytest tests/ --collect-only -q --no-cov` runs. Coverage values come from the latest project coverage gates; re-run the per-project coverage command after changing project `src/` or tests. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
