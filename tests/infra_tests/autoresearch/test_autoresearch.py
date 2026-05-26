@@ -150,6 +150,13 @@ benchmark_tasks:
     grading_output: output/reports/benchmark_smoke.json
 disclosure_required: true
 disclosure_text: "AI-assisted AutoResearch"
+security_profile:
+  enabled: true
+  mode: local_deterministic
+  threat_model_frameworks: [STRIDE, MITRE_ATT&CK_T1195]
+  integrity_algorithm: sha256
+  network_policy: default_offline
+  external_signing: false
 """,
         encoding="utf-8",
     )
@@ -169,6 +176,32 @@ disclosure_text: "AI-assisted AutoResearch"
     assert config.benchmark_tasks[0].grading_output == "output/reports/benchmark_smoke.json"
     assert config.disclosure_required is True
     assert config.disclosure_text == "AI-assisted AutoResearch"
+    assert config.security_profile.enabled is True
+    assert config.security_profile.mode == "local_deterministic"
+    assert config.security_profile.threat_model_frameworks == ("STRIDE", "MITRE_ATT&CK_T1195")
+    assert config.security_profile.external_signing is False
+
+
+def test_load_config_rejects_unsupported_security_profile(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import load_autoresearch_config
+
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "autoresearch.yaml").write_text(
+        """
+security_profile:
+  enabled: true
+  mode: external_signing
+""",
+        encoding="utf-8",
+    )
+
+    try:
+        load_autoresearch_config(project)
+    except ValueError as exc:
+        assert "security_profile.mode" in str(exc)
+    else:
+        raise AssertionError("unsupported security profile mode was accepted")
 
 
 def test_autoresearch_method_models_serialize_stable_payloads() -> None:
@@ -181,6 +214,7 @@ def test_autoresearch_method_models_serialize_stable_payloads() -> None:
         ResearchProgram,
         ReviewGate,
         RunLedger,
+        SecurityProfile,
     )
 
     evidence = EvidenceLink(
@@ -224,6 +258,7 @@ def test_autoresearch_method_models_serialize_stable_payloads() -> None:
     assert candidate.to_dict()["touched_paths"] == ["projects/demo/src/loop.py"]
     assert ledger.to_dict()["budget_exhausted"] is True
     assert ReviewGate(name="proposal_review").to_dict()["decision"] == ""
+    assert SecurityProfile(enabled=True).to_dict()["mode"] == "local_deterministic"
     assert (
         BenchmarkTask(identifier="smoke", description="Smoke", grading_output="out.json").to_dict()["grading_output"]
         == "out.json"
@@ -283,6 +318,56 @@ required_artifacts: [output/data/missing.csv]
         "AUTORESEARCH.ARTIFACT_MISSING",
     }
     assert report.summary["errors"] >= 2
+
+
+def test_validation_checks_enabled_security_profile(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import build_autoresearch_plan, validate_autoresearch_plan
+
+    repo_root = _write_repo_scaffold(tmp_path)
+    project = repo_root / "projects" / "demo"
+    (project / "output" / "figures").mkdir(parents=True, exist_ok=True)
+    (project / "autoresearch.yaml").write_text(
+        """
+strict: true
+quality_checks: [security_profile]
+security_profile:
+  enabled: true
+  mode: local_deterministic
+  threat_model_frameworks: [STRIDE, MITRE_ATT&CK_T1195]
+  integrity_algorithm: sha256
+  network_policy: default_offline
+  external_signing: false
+""",
+        encoding="utf-8",
+    )
+    (project / "output" / "data" / "autoresearch_security_profile.json").write_text(
+        json.dumps(
+            {
+                "enabled": True,
+                "mode": "local_deterministic",
+                "integrity_algorithm": "sha256",
+                "network_policy": "default_offline",
+                "external_signing": False,
+            }
+        ),
+        encoding="utf-8",
+    )
+    for name in ("autoresearch_threat_model.json", "autoresearch_supply_chain_inventory.json"):
+        (project / "output" / "data" / name).write_text("{}\n", encoding="utf-8")
+    attestation = project / "output" / "data" / "autoresearch_integrity_attestation.json"
+    attestation.write_text(json.dumps({"status": "passed"}), encoding="utf-8")
+    (project / "output" / "reports" / "autoresearch_security_review.md").write_text("# Review\n", encoding="utf-8")
+    for name in ("autoresearch_security_control_matrix.png", "autoresearch_integrity_chain.png"):
+        (project / "output" / "figures" / name).write_bytes(b"png")
+
+    plan = build_autoresearch_plan(repo_root, "demo")
+    report = validate_autoresearch_plan(plan, project, phase="extrinsic")
+    assert report.valid is True
+
+    attestation.write_text(json.dumps({"status": "failed"}), encoding="utf-8")
+    failed = validate_autoresearch_plan(plan, project, phase="extrinsic")
+    assert failed.valid is False
+    assert any(issue.code == "AUTORESEARCH.SECURITY_ATTESTATION_FAILED" for issue in failed.issues)
 
 
 def test_external_method_contract_validation_passes_with_declared_artifacts(tmp_path: Path) -> None:

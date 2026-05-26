@@ -20,6 +20,7 @@ __all__ = [
     "ResearchProgram",
     "ReviewGate",
     "RunLedger",
+    "SecurityProfile",
     "ValidationPhase",
     "build_autoresearch_plan",
     "load_autoresearch_config",
@@ -42,6 +43,7 @@ _EXPORTS = {
     "ResearchProgram": ("infrastructure.autoresearch.models", "ResearchProgram"),
     "ReviewGate": ("infrastructure.autoresearch.models", "ReviewGate"),
     "RunLedger": ("infrastructure.autoresearch.models", "RunLedger"),
+    "SecurityProfile": ("infrastructure.autoresearch.models", "SecurityProfile"),
     "build_autoresearch_plan": ("infrastructure.autoresearch.planner", "build_autoresearch_plan"),
     "EXTRINSIC_QUALITY_CHECKS": (
         "infrastructure.autoresearch.validation",

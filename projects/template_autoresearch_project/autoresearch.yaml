@@ -24,6 +24,16 @@ quality_checks:
   - review_gates
   - benchmark_tasks
   - ai_disclosure
+  - security_profile
+security_profile:
+  enabled: true
+  mode: local_deterministic
+  threat_model_frameworks:
+    - STRIDE
+    - MITRE_ATT&CK_T1195
+  integrity_algorithm: sha256
+  network_policy: default_offline
+  external_signing: false
 stage_gates:
   - Project Tests
   - Project Analysis
@@ -73,6 +83,12 @@ required_artifacts:
   - output/data/ml_paired_comparison.json
   - output/data/ml_statistical_summary.json
   - output/data/ml_training_diagnostics.json
+  - output/data/ml_candidate_selection_audit.json
+  - output/data/ml_diagnostic_boundary.json
+  - output/data/autoresearch_security_profile.json
+  - output/data/autoresearch_threat_model.json
+  - output/data/autoresearch_supply_chain_inventory.json
+  - output/data/autoresearch_integrity_attestation.json
   - output/data/manuscript_variables.json
   - output/data/manuscript_variable_provenance.json
   - output/data/manuscript_figure_blocks.json
@@ -98,6 +114,8 @@ required_artifacts:
   - output/figures/mnist_class_balance.png
   - output/figures/mnist_subset_contact_sheet.png
   - output/figures/autoresearch_closure_flow.png
+  - output/figures/autoresearch_security_control_matrix.png
+  - output/figures/autoresearch_integrity_chain.png
   - output/figures/figure_registry.json
   - output/reports/autoresearch_loop.json
   - output/reports/autoresearch_loop.md
@@ -106,4 +124,5 @@ required_artifacts:
   - output/reports/ml_experiment_report.md
   - output/reports/ml_benchmark_score.json
   - output/reports/artifact_manifest.json
+  - output/reports/autoresearch_security_review.md
   - output/reports/benchmark_readiness_smoke.json

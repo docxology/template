@@ -101,6 +101,8 @@ def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: 
         tmp_path / "output/data/ml_paired_comparison.json",
         tmp_path / "output/data/ml_statistical_summary.json",
         tmp_path / "output/data/ml_training_diagnostics.json",
+        tmp_path / "output/data/ml_candidate_selection_audit.json",
+        tmp_path / "output/data/ml_diagnostic_boundary.json",
         tmp_path / "output/reports/ml_experiment_report.md",
         tmp_path / "output/reports/ml_benchmark_score.json",
         tmp_path / "output/figures/ml_candidate_scores.png",
@@ -176,3 +178,11 @@ def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: 
     assert registry["fig:ml_training_dynamics"]["metadata"]["source"] == "output/data/ml_training_diagnostics.json"
     assert registry["fig:ml_candidate_scores"]["metadata"]["source"] == "output/data/ml_candidate_intervals.json"
     assert registry["fig:mnist_class_balance"]["metadata"]["source"] == "output/data/ml_class_balance.json"
+    assert (
+        registry["fig:autoresearch_security_control_matrix"]["metadata"]["source"]
+        == "output/data/autoresearch_threat_model.json"
+    )
+    assert (
+        registry["fig:autoresearch_integrity_chain"]["metadata"]["source"]
+        == "output/data/autoresearch_integrity_attestation.json"
+    )

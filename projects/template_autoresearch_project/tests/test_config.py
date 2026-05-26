@@ -20,11 +20,14 @@ def test_load_loop_config_reads_questions_and_artifacts(project_root: Path) -> N
     config = load_loop_config(project_root, plan)
 
     assert config.topic.startswith("Deterministic bounded AutoResearch")
-    assert len(config.research_questions) == 5
+    assert len(config.research_questions) == 6
     assert "output/data/autoresearch_loop.json" in config.required_artifacts
     assert "output/data/mnist_task_config.json" in config.required_artifacts
     assert "output/data/ml_task_results.json" in config.required_artifacts
     assert "artifact_manifest" in config.quality_checks
+    assert "security_profile" in config.quality_checks
+    assert config.security_profile.enabled is True
+    assert config.security_profile.mode == "local_deterministic"
 
 
 def test_build_loop_config_uses_plan_required_artifacts(project_root: Path) -> None:
@@ -36,6 +39,7 @@ def test_build_loop_config_uses_plan_required_artifacts(project_root: Path) -> N
     assert config.required_artifacts == plan.required_artifacts
     assert config.quality_checks == plan.quality_checks
     assert config.topic == plan.config.topic
+    assert config.security_profile == plan.config.security_profile
 
 
 def test_load_loop_config_rejects_missing_questions(tmp_path: Path) -> None:

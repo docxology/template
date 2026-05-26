@@ -159,6 +159,16 @@ not treated as automatically best on every diagnostic axis.
 
 {{ML_CANDIDATE_LEDGER_TABLE}}
 
+The candidate-selection audit separates the objective ranking from descriptive
+diagnostics. It records the configured metric, Wilson interval, probability
+quality, parameter count, and deterministic tie-break context for each
+evaluated candidate. The diagnostic-boundary table states what each generated
+surface supports and what it does not support.
+
+{{CANDIDATE_SELECTION_AUDIT_TABLE}}
+
+{{DIAGNOSTIC_BOUNDARY_TABLE}}
+
 ## Readiness And Review Artifacts {#sec:readiness-review-artifacts}
 
 The broader AutoResearch run writes the reproducibility, benchmark, review, and
@@ -173,6 +183,23 @@ manuscript-hydration surfaces summarized below.
 {{REVIEW_GATE_TABLE}}
 
 {{BENCHMARK_SCORE_TABLE}}
+
+## Security Readiness And Integrity Evidence {#sec:security-readiness-integrity}
+
+The local security profile reports attestation status
+`{{SECURITY_ATTESTATION_STATUS}}` after checking
+`{{SECURITY_ATTESTATION_CHECKED_COUNT}}` file record(s), with
+`{{SECURITY_ATTESTATION_MISSING_COUNT}}` missing record(s) and
+`{{SECURITY_ATTESTATION_MISMATCH_COUNT}}` checksum mismatch(es). The inventory
+contains `{{SECURITY_INVENTORY_INPUT_COUNT}}` input record(s) and
+`{{SECURITY_INVENTORY_ARTIFACT_COUNT}}` generated-artifact record(s). The
+integrity-chain figure is {{FIGURE_REF_INTEGRITY_CHAIN}}. These values support
+local artifact-integrity claims only; they do not claim external signing,
+production SLSA compliance, or runtime security monitoring.
+
+{{FIGURE_BLOCK_INTEGRITY_CHAIN}}
+
+{{SECURITY_INTEGRITY_TABLE}}
 
 ## Manuscript Hydration Provenance {#sec:manuscript-hydration-provenance}
 

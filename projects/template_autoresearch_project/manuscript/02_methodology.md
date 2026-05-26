@@ -91,6 +91,32 @@ Disclosure: `{{DISCLOSURE_TEXT}}` status is declared for this exemplar
 because it models machine-produced plans, ledgers, reports, and manuscript
 variables as review inputs rather than autonomous approval.
 
+## Adversarial And Supply-Chain Controls {#sec:adversarial-supply-chain-controls}
+
+The security layer is configured as `{{SECURITY_PROFILE_MODE}}` with network
+policy `{{SECURITY_NETWORK_POLICY}}`, integrity algorithm
+`{{SECURITY_INTEGRITY_ALGORITHM}}`, external signing
+`{{SECURITY_EXTERNAL_SIGNING}}`, and framework labels
+`{{SECURITY_FRAMEWORKS}}`. Its scope is `{{SECURITY_CLAIM_SCOPE}}`. These
+values are generated from `{{AUTORESEARCH_SECURITY_PROFILE_PATH}}`; the default
+run remains offline and deterministic.
+
+The local threat model covers `{{SECURITY_ASSET_COUNT}}` asset(s),
+`{{SECURITY_THREAT_COUNT}}` threat row(s), and
+`{{SECURITY_CONTROL_COUNT}}` control row(s). The security artifacts are written
+to `{{AUTORESEARCH_THREAT_MODEL_PATH}}`,
+`{{AUTORESEARCH_SUPPLY_CHAIN_INVENTORY_PATH}}`,
+`{{AUTORESEARCH_INTEGRITY_ATTESTATION_PATH}}`, and
+`{{AUTORESEARCH_SECURITY_REVIEW_PATH}}`. The control-matrix figure is
+{{FIGURE_REF_SECURITY_CONTROL_MATRIX}}. The table and figure are generated from
+the threat model and inventory, not manually maintained.
+
+{{FIGURE_BLOCK_SECURITY_CONTROL_MATRIX}}
+
+{{SECURITY_ARTIFACT_TABLE}}
+
+{{SECURITY_THREAT_MODEL_TABLE}}
+
 ## Positioning Against Autonomous Science Systems {#sec:positioning-autonomous-science}
 
 The implementation should be read as a bounded local analogue of current

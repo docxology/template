@@ -385,6 +385,102 @@ def training_diagnostics(result: MLTaskResult) -> dict[str, object]:
     }
 
 
+def candidate_selection_audit(project_root: Path, result: MLTaskResult) -> dict[str, object]:
+    """Return ranking and tie-break evidence for evaluated candidate selection."""
+    intervals = candidate_accuracy_intervals(result)
+    statistical = statistical_summary(project_root, result)
+    interval_by_id = {
+        str(row.get("candidate_id", "")): row for row in _mapping_list(intervals.get("rows")) if row.get("candidate_id")
+    }
+    quality_by_id = {
+        str(row.get("candidate_id", "")): row
+        for row in _mapping_list(statistical.get("candidate_probability_quality"))
+        if row.get("candidate_id")
+    }
+    ranked = sorted(
+        _evaluated_candidates(result),
+        key=lambda candidate: (
+            -float(candidate.test_accuracy or 0.0),
+            candidate.parameter_count,
+            candidate.identifier,
+        ),
+    )
+    rows: list[dict[str, object]] = []
+    for rank, candidate in enumerate(ranked, start=1):
+        interval = _mapping(interval_by_id.get(candidate.identifier))
+        quality = _mapping(quality_by_id.get(candidate.identifier))
+        rows.append(
+            {
+                "rank": rank,
+                "candidate_id": candidate.identifier,
+                "status": candidate.status,
+                "objective_metric": result.task_config.metric_name,
+                "test_accuracy": round(float(candidate.test_accuracy or 0.0), 6),
+                "wilson_ci_low": _float_value(interval.get("ci_low")),
+                "wilson_ci_high": _float_value(interval.get("ci_high")),
+                "brier_score": _float_value(quality.get("brier_score")),
+                "negative_log_likelihood": _float_value(quality.get("negative_log_likelihood")),
+                "parameter_count": candidate.parameter_count,
+                "tie_break_key": f"{candidate.parameter_count}:{candidate.identifier}",
+                "accepted": candidate.identifier == result.accepted_candidate_id,
+            }
+        )
+    return {
+        "accepted_candidate_id": result.accepted_candidate_id,
+        "metric": result.task_config.metric_name,
+        "direction": result.task_config.metric_direction,
+        "tie_break_order": ["metric", "lower_parameter_count", "candidate_id"],
+        "rows": rows,
+        "claim_boundary": "Selection is based on the configured objective metric; diagnostics are audit context.",
+    }
+
+
+def diagnostic_boundary_report(result: MLTaskResult) -> dict[str, object]:
+    """Return claim-boundary rows separating selection, diagnostics, robustness, and non-claims."""
+    rows = [
+        {
+            "surface": "objective_selection",
+            "source_artifact": "output/data/ml_task_results.json",
+            "method": "rank evaluated candidates by configured held-out metric and deterministic tie-breaks",
+            "supports": "accepted-candidate selection within this fixed local task",
+            "does_not_support": "full MNIST state-of-the-art, external benchmark leadership, or universal model quality",
+        },
+        {
+            "surface": "descriptive_diagnostics",
+            "source_artifact": "output/data/ml_classification_diagnostics.json",
+            "method": "per-class metrics, calibration, probability quality, and paired comparison",
+            "supports": "local error analysis and uncertainty description",
+            "does_not_support": "population-level certification or deployment readiness",
+        },
+        {
+            "surface": "robustness_smoke_test",
+            "source_artifact": "output/data/ml_robustness_report.json",
+            "method": "deterministic no-retrain transforms applied to the fixed test split",
+            "supports": "small perturbation smoke-test evidence",
+            "does_not_support": "adversarial robustness or distribution-shift robustness",
+        },
+        {
+            "surface": "artifact_integrity",
+            "source_artifact": "output/data/autoresearch_integrity_attestation.json",
+            "method": "local SHA-256 checks over declared inputs and generated artifacts",
+            "supports": "local artifact integrity evidence for the run",
+            "does_not_support": "external signing, production SLSA compliance, or runtime intrusion detection",
+        },
+        {
+            "surface": "review_governance",
+            "source_artifact": "output/data/review_decisions.json",
+            "method": "deferred generated review decisions with human review required",
+            "supports": "readiness for human review",
+            "does_not_support": "machine self-approval or publication acceptance",
+        },
+    ]
+    return {
+        "accepted_candidate_id": result.accepted_candidate_id,
+        "rows": rows,
+        "claim_boundary": "Each diagnostic surface declares what it can and cannot support.",
+    }
+
+
 def write_prediction_records_json(path: Path, project_root: Path, result: MLTaskResult) -> Path:
     """Write probability-aware prediction records."""
     return _write_json(path, prediction_records(project_root, result))
@@ -438,6 +534,16 @@ def write_statistical_summary_json(path: Path, project_root: Path, result: MLTas
 def write_training_diagnostics_json(path: Path, result: MLTaskResult) -> Path:
     """Write configured-training dynamics."""
     return _write_json(path, training_diagnostics(result))
+
+
+def write_candidate_selection_audit_json(path: Path, project_root: Path, result: MLTaskResult) -> Path:
+    """Write candidate-selection audit context."""
+    return _write_json(path, candidate_selection_audit(project_root, result))
+
+
+def write_diagnostic_boundary_json(path: Path, result: MLTaskResult) -> Path:
+    """Write diagnostic claim-boundary rows."""
+    return _write_json(path, diagnostic_boundary_report(result))
 
 
 def _evaluated_candidates(result: MLTaskResult) -> tuple[CandidateResult, ...]:
@@ -758,6 +864,10 @@ def _exact_mcnemar_p(accepted_only: int, baseline_only: int) -> float:
 
 def _mapping_list(value: object) -> list[dict[str, Any]]:
     return [row for row in value if isinstance(row, dict)] if isinstance(value, list) else []
+
+
+def _mapping(value: object) -> dict[str, Any]:
+    return value if isinstance(value, dict) else {}
 
 
 def _float_value(value: object) -> float:

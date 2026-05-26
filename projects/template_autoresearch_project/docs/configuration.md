@@ -23,6 +23,10 @@ into `build_autoresearch_plan()`:
 - `benchmark_tasks`: declares grading outputs for benchmark-style checks.
 - `disclosure_required` / `disclosure_text`: requires AI-assisted status prose
   in the manuscript.
+- `security_profile`: enables the local deterministic security layer. The
+  public exemplar uses `local_deterministic`, `default_offline`, SHA-256
+  integrity checks, STRIDE plus MITRE ATT&CK T1195 labels, and
+  `external_signing: false`.
 - `required_artifacts`: lists files that must exist after analysis (merged with
   `domain_profile.yaml` `artifact_expectations` in the plan).
 
@@ -83,7 +87,8 @@ best result with deterministic parameter-count tie-breaking. The task writes
 `ml_calibration_report.json`, `ml_robustness_report.json`,
 `ml_probability_diagnostics.json`, `ml_bootstrap_intervals.json`,
 `ml_paired_comparison.json`, `ml_statistical_summary.json`,
-`ml_training_diagnostics.json`,
+`ml_training_diagnostics.json`, `ml_candidate_selection_audit.json`,
+`ml_diagnostic_boundary.json`,
 `ml_calibration_reliability.png`,
 `ml_classification_metrics_heatmap.png`, `ml_confusion_pairs.png`,
 `ml_generalization_gap.png`, `ml_robustness_matrix.png`,
@@ -122,8 +127,20 @@ records through a generated figure-method table.
 
 The manuscript scholarship connects those local artifacts to FAIR data,
 research-object packaging, Workflow Run RO-Crate provenance, Datasheets for
-Datasets, and Model Cards. The project borrows the documentation discipline,
-not the full packaging standard.
+Datasets, Model Cards, zero-trust architecture, SSDF, SLSA, and ATT&CK supply
+chain compromise. The project borrows the documentation and artifact-integrity
+discipline, not the full packaging, signing, deployment, or monitoring
+standards.
+
+## Security artifacts
+
+`src.security` emits `autoresearch_security_profile.json`,
+`autoresearch_threat_model.json`, `autoresearch_supply_chain_inventory.json`,
+`autoresearch_integrity_attestation.json`, `autoresearch_security_review.md`,
+`autoresearch_security_control_matrix.png`, and
+`autoresearch_integrity_chain.png`. The inventory is SBOM-style local metadata,
+not SPDX or CycloneDX; the attestation is local SHA-256 evidence, not Sigstore
+or SLSA signed provenance.
 
 ## Scripts
 
@@ -139,7 +156,8 @@ not the full packaging standard.
 - `intrinsic` — domain profile, experiment plan, pipeline contracts, thin
   orchestrators, AI-assisted disclosure
 - `extrinsic` — evidence registry, artifact manifest, method ledgers, review
-  decisions, and benchmark grading outputs (post-write surfaces)
+  decisions, benchmark grading outputs, and enabled security artifacts
+  (post-write surfaces)
 - `all` — default; runs every configured check
 
 The readiness validator only checks local deterministic surfaces. It does not

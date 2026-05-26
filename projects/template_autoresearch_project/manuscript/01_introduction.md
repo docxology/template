@@ -220,3 +220,15 @@ autonomy emphasizes organizational closure and self-maintenance
 [@moreno_mossio_biological_autonomy_2015]. This paper uses those ideas only as
 disciplined analogies for configured scientific workflows whose artifacts help
 reproduce, constrain, and evaluate subsequent artifacts.
+
+Security and supply-chain references enter with the same restraint. NIST's
+zero-trust architecture treats verification as explicit and continuous rather
+than inherited from a trusted perimeter [@nist_sp800_207_zero_trust]. The NIST
+Secure Software Development Framework emphasizes repeatable practices for
+reducing software vulnerability risk [@nist_sp800_218_ssdf]. SLSA frames
+software-artifact provenance and supply-chain integrity as a graded assurance
+problem [@slsa_spec_latest], while MITRE ATT&CK T1195 names supply-chain
+compromise as a concrete adversary technique [@mitre_attack_t1195]. This
+exemplar borrows those frameworks as disciplined analogies for local research
+artifact integrity: checksums, inventories, review gates, and explicit
+non-claims, not production deployment certification.

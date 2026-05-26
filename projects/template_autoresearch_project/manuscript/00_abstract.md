@@ -17,9 +17,11 @@ negative log likelihood `{{ACCEPTED_NEGATIVE_LOG_LIKELIHOOD}}`, top-2 accuracy
 `{{ACCEPTED_TOP2_ACCURACY}}`, and exact McNemar p-value `{{MCNEMAR_P_VALUE}}`.
 The same pipeline writes proposal, candidate, run, review, benchmark, evidence,
 figure, confusion-matrix, statistical-summary, probability-quality, and
-manuscript-variable artifacts from declared output contracts; uses
+security-integrity artifacts from declared output contracts; uses
 `{{LLM_CALLS_USED}}` LLM calls at USD `{{COST_USD_USED}}` cost; and records
 `{{LOOP_STAGE_COUNT}}` configured stages, `{{SUPPORTED_CLAIM_COUNT}}` supported
 local-artifact claims, and `{{REQUIRED_ARTIFACT_COUNT}}` required artifacts.
-The final readiness status is `{{READINESS_STATUS}}`, with review gates
-deferred to a human rather than self-approved by the generated run.
+The local security attestation status is `{{SECURITY_ATTESTATION_STATUS}}`,
+with `{{SECURITY_ATTESTATION_MISMATCH_COUNT}}` checksum mismatch(es). The final
+readiness status is `{{READINESS_STATUS}}`, with review gates deferred to a
+human rather than self-approved by the generated run.

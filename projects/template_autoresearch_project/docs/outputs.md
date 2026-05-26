@@ -35,6 +35,12 @@ Core data:
 | `output/data/ml_paired_comparison.json` | Matched baseline-vs-accepted correctness counts and exact McNemar summary |
 | `output/data/ml_statistical_summary.json` | Accepted-candidate Brier, NLL, top-2, kappa, selective-accuracy, and candidate probability-quality summary |
 | `output/data/ml_training_diagnostics.json` | Configured learning-rate, gradient-clipping, best-epoch, loss-reduction, and train-test gap diagnostics |
+| `output/data/ml_candidate_selection_audit.json` | Candidate ranking audit with objective metric, Wilson interval, probability quality, parameters, and tie-break context |
+| `output/data/ml_diagnostic_boundary.json` | Generated claim-boundary table separating objective selection, diagnostics, robustness, integrity, and review governance |
+| `output/data/autoresearch_security_profile.json` | Local deterministic security profile, network policy, integrity algorithm, framework labels, and explicit non-claims |
+| `output/data/autoresearch_threat_model.json` | STRIDE and ATT&CK-scoped local artifact threat model with assets, threats, controls, and residual risks |
+| `output/data/autoresearch_supply_chain_inventory.json` | SBOM-style local input and generated-artifact inventory with SHA-256 hashes |
+| `output/data/autoresearch_integrity_attestation.json` | Local checksum attestation over required inventory records |
 | `output/data/manuscript_variables.json` | Variables injected into the manuscript |
 | `output/data/manuscript_variable_provenance.json` | Source artifact and JSON-pointer mapping for injected variables and fragments |
 | `output/data/manuscript_figure_blocks.json` | Registry-backed Pandoc figure blocks inserted into the hydrated manuscript |
@@ -65,6 +71,8 @@ Figures:
 | `output/figures/mnist_class_balance.png` | Train/test class-count diagnostic for the local MNIST fixture |
 | `output/figures/mnist_subset_contact_sheet.png` | Deterministic contact sheet from the local fixed data subset and provenance file |
 | `output/figures/autoresearch_closure_flow.png` | File-backed research-process closure figure |
+| `output/figures/autoresearch_security_control_matrix.png` | Local security control matrix generated from the threat model |
+| `output/figures/autoresearch_integrity_chain.png` | Local checksum integrity-chain figure generated from the attestation |
 | `output/figures/figure_registry.json` | Registered figure metadata, captions with generation-method sentences, source artifacts, validation hooks, alt text, and claim boundaries |
 
 Reports:
@@ -75,6 +83,7 @@ Reports:
 | `output/reports/autoresearch_loop.md` | Human-readable loop report |
 | `output/reports/autoresearch_review_packet.md` | Human review packet with required actions |
 | `output/reports/autoresearch_summary.md` | Short project summary |
+| `output/reports/autoresearch_security_review.md` | Adversarial local security review packet for human assessment |
 | `output/reports/ml_experiment_report.md` | Human-readable deterministic ML-loop report |
 | `output/reports/ml_benchmark_score.json` | Grading output for metric improvement, budget compliance, offline execution, and selection status |
 | `output/reports/autoresearch_readiness.json` | Structured readiness validation result |

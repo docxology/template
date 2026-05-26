@@ -35,6 +35,10 @@ inspectable without claiming autonomous discovery.
 Each registered figure carries a source artifact, generation method, validation
 hook, alt text, caption, and claim boundary; manuscript figure blocks and the
 figure-method table are hydrated from that registry.
+The local security layer adds a deterministic threat model, SBOM-style
+inventory, checksum attestation, and adversarial review packet. These artifacts
+support local research-artifact integrity claims only; the default run performs
+no external signing and does not claim production SLSA compliance.
 
 Loop stages are recorded as **declared** (configured intent). Claims are
 **supported** only when their evidence file exists locally.
@@ -54,17 +58,20 @@ flowchart TB
   ml --> claims[build_claims + finalize_loop_payloads]
   claims --> methods[write_method_contract_artifacts]
   methods --> update1[update_result_payloads provisional]
-  update1 --> manifest1[write_artifact_manifest]
+  update1 --> security1[write_security_artifacts]
+  security1 --> manifest1[write_artifact_manifest]
   manifest1 --> extrinsic[validate phase=extrinsic]
   extrinsic --> readiness[write_autoresearch_report combined]
   readiness --> update2[update_result_payloads final]
   update2 --> visuals[write_final_visual_artifacts]
   visuals --> hydrate[write_manuscript_hydration_artifacts]
   hydrate --> registry2[write_evidence_registry_report refresh]
-  registry2 --> manifest2[write_artifact_manifest final]
+  registry2 --> security2[write_security_artifacts final]
+  security2 --> manifest2[write_artifact_manifest final]
 ```
 
 Project-specific docs live in [`docs/`](docs/).
+The project-level next-work roadmap lives in [`TODO.md`](TODO.md).
 
 ## Outputs
 
@@ -95,6 +102,12 @@ Project-specific docs live in [`docs/`](docs/).
 - `output/data/ml_paired_comparison.json`
 - `output/data/ml_statistical_summary.json`
 - `output/data/ml_training_diagnostics.json`
+- `output/data/ml_candidate_selection_audit.json`
+- `output/data/ml_diagnostic_boundary.json`
+- `output/data/autoresearch_security_profile.json`
+- `output/data/autoresearch_threat_model.json`
+- `output/data/autoresearch_supply_chain_inventory.json`
+- `output/data/autoresearch_integrity_attestation.json`
 - `output/data/manuscript_variables.json`
 - `output/data/manuscript_variable_provenance.json`
 - `output/data/manuscript_figure_blocks.json`
@@ -120,11 +133,14 @@ Project-specific docs live in [`docs/`](docs/).
 - `output/figures/mnist_class_balance.png`
 - `output/figures/mnist_subset_contact_sheet.png`
 - `output/figures/autoresearch_closure_flow.png`
+- `output/figures/autoresearch_security_control_matrix.png`
+- `output/figures/autoresearch_integrity_chain.png`
 - `output/figures/figure_registry.json`
 - `output/reports/autoresearch_loop.json`
 - `output/reports/autoresearch_loop.md`
 - `output/reports/autoresearch_review_packet.md`
 - `output/reports/autoresearch_summary.md`
+- `output/reports/autoresearch_security_review.md`
 - `output/reports/ml_experiment_report.md`
 - `output/reports/ml_benchmark_score.json`
 - `output/reports/autoresearch_readiness.json`

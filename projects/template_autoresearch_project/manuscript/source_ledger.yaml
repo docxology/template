@@ -1,0 +1,96 @@
+# Local citation source ledger for the AutoResearch current-trends survey.
+# This is an offline audit artifact: tests validate shape and manuscript/BibTeX
+# coverage, but do not call the network.
+sources:
+  - citekey: baulin_discovery_engine_2025
+    canonical_url: https://arxiv.org/abs/2505.17500
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: hao_ai_tools_focus_2026
+    canonical_url: https://www.nature.com/articles/s41586-025-09922-y
+    source_tier: peer_reviewed_article
+    checked_as_of: 2026-05-26
+  - citekey: asai_openscholar_2026
+    canonical_url: https://www.nature.com/articles/s41586-025-10072-4
+    source_tier: peer_reviewed_article
+    checked_as_of: 2026-05-26
+  - citekey: skarlinski_paperqa2_2024
+    canonical_url: https://arxiv.org/abs/2409.13740
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: futurehouse_platform_2025
+    canonical_url: https://www.futurehouse.org/research-announcements/launching-futurehouse-platform-ai-agents
+    source_tier: organizational_announcement
+    checked_as_of: 2026-05-26
+  - citekey: lu_ai_scientist_nature_2026
+    canonical_url: https://www.nature.com/articles/s41586-026-10265-5
+    source_tier: peer_reviewed_article
+    checked_as_of: 2026-05-26
+  - citekey: yamada_ai_scientist_v2_2025
+    canonical_url: https://arxiv.org/abs/2504.08066
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: ghareeb_robin_2026
+    canonical_url: https://www.nature.com/articles/s41586-026-10652-y
+    source_tier: peer_reviewed_article
+    checked_as_of: 2026-05-26
+  - citekey: kong_ai_auto_research_2026
+    canonical_url: https://arxiv.org/abs/2605.18661
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: hasib_exhyte_2025
+    canonical_url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12776506/
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: wei_agentic_science_2025
+    canonical_url: https://arxiv.org/abs/2508.14111
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: gridach_agentic_science_2025
+    canonical_url: https://arxiv.org/abs/2503.08979
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: hubert_alphaproof_2025
+    canonical_url: https://www.nature.com/articles/s41586-025-09833-y
+    source_tier: peer_reviewed_article
+    checked_as_of: 2026-05-26
+  - citekey: lu_process_driven_autoformalization_2024
+    canonical_url: https://arxiv.org/abs/2406.01940
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: apollo_lean_collaboration_2025
+    canonical_url: https://arxiv.org/abs/2505.05758
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: romera_paredes_alphaevolve_2025
+    canonical_url: https://arxiv.org/abs/2506.13131
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: deepevolve_2025
+    canonical_url: https://arxiv.org/abs/2510.06056
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: active_inference_science_2025
+    canonical_url: https://arxiv.org/abs/2506.21329
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: graphrag_bench_2026
+    canonical_url: https://arxiv.org/abs/2506.02404
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: brink_kg_rag_2026
+    canonical_url: https://arxiv.org/abs/2508.08344
+    source_tier: scholarly_preprint
+    checked_as_of: 2026-05-26
+  - citekey: heddes_hdc_2024
+    canonical_url: https://link.springer.com/article/10.1186/s40537-024-01010-8
+    source_tier: peer_reviewed_article
+    checked_as_of: 2026-05-26
+  - citekey: balazevic_tucker_2019
+    canonical_url: https://aclanthology.org/D19-1522/
+    source_tier: conference_proceeding
+    checked_as_of: 2026-05-26
+  - citekey: yusupov_mixed_geometry_2025
+    canonical_url: https://proceedings.mlr.press/v258/yusupov25a.html
+    source_tier: conference_proceeding
+    checked_as_of: 2026-05-26

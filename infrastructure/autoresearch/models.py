@@ -21,6 +21,7 @@ METHOD_QUALITY_CHECKS = (
     "review_gates",
     "benchmark_tasks",
     "ai_disclosure",
+    "security_profile",
 )
 
 KNOWN_QUALITY_CHECKS = frozenset((*DEFAULT_QUALITY_CHECKS, *METHOD_QUALITY_CHECKS))
@@ -189,6 +190,29 @@ class RunLedger:
 
 
 @dataclass(frozen=True)
+class SecurityProfile:
+    """Local security posture declared for deterministic AutoResearch artifacts."""
+
+    enabled: bool = False
+    mode: str = "local_deterministic"
+    threat_model_frameworks: tuple[str, ...] = ()
+    integrity_algorithm: str = "sha256"
+    network_policy: str = "default_offline"
+    external_signing: bool = False
+
+    def to_dict(self) -> dict[str, object]:
+        """Serialize to a JSON-safe payload."""
+        return {
+            "enabled": self.enabled,
+            "mode": self.mode,
+            "threat_model_frameworks": list(self.threat_model_frameworks),
+            "integrity_algorithm": self.integrity_algorithm,
+            "network_policy": self.network_policy,
+            "external_signing": self.external_signing,
+        }
+
+
+@dataclass(frozen=True)
 class AutoResearchConfig:
     """Optional project-local AutoResearch readiness configuration."""
 
@@ -205,6 +229,7 @@ class AutoResearchConfig:
     benchmark_tasks: tuple[BenchmarkTask, ...] = ()
     disclosure_required: bool = False
     disclosure_text: str = "AI-assisted AutoResearch"
+    security_profile: SecurityProfile = SecurityProfile()
     quality_checks: tuple[str, ...] = DEFAULT_QUALITY_CHECKS
     stage_gates: tuple[str, ...] = ()
     required_artifacts: tuple[str, ...] = ()
@@ -216,6 +241,7 @@ class AutoResearchConfig:
         payload["budget_policy"] = self.budget_policy.to_dict()
         payload["review_gates"] = [gate.to_dict() for gate in self.review_gates]
         payload["benchmark_tasks"] = [task.to_dict() for task in self.benchmark_tasks]
+        payload["security_profile"] = self.security_profile.to_dict()
         payload["edit_allowlist"] = list(self.edit_allowlist)
         payload["source_manifests"] = list(self.source_manifests)
         payload["quality_checks"] = list(self.quality_checks)

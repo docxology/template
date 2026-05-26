@@ -20,6 +20,7 @@ keywords:
   - "machine learning benchmark"
   - "artifact readiness"
   - "human review"
+  - "local artifact integrity"
 
 metadata:
   license: "MIT"
@@ -64,3 +65,6 @@ project_config:
     - id: rq5
       question: "Does the benchmark ledger record metric improvement, budget compliance, and offline execution?"
       expected_evidence: "output/reports/ml_benchmark_score.json"
+    - id: rq6
+      question: "Does the local security layer record artifact-integrity evidence without claiming external signing?"
+      expected_evidence: "output/data/autoresearch_integrity_attestation.json"

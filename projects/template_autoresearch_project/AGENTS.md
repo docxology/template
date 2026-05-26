@@ -11,11 +11,12 @@ This project is the public exemplar for deterministic AutoResearch loops in
   - `loop.py` — thin orchestrator (`run_autoresearch_loop`)
   - `ml_task.py` — local MNIST subset loading, numpy neural networks, bounded candidate evaluation, configurable SGD schedules, training histories, probabilities, robustness rows, and error examples
   - `diagnostics.py` — prediction records, class metrics, candidate intervals, class balance, calibration, confusion-pair, generalization-gap, robustness, bootstrap, probability-margin, paired-comparison, statistical-summary, and training-dynamics reports
+  - `security.py` — local deterministic security profile, threat model, SBOM-style inventory, checksum attestation, and security review packet
   - `models.py` — loop result dataclasses
   - `config.py` — manuscript settings + plan merge (`build_loop_config`)
   - `writers.py` — JSON/CSV/manifest I/O and final visual artifact refresh
   - `reports.py` — markdown and review-packet renderers
-  - `figures.py` — stage matrix, candidate score, confusion matrix, learning-curve, training-dynamics, complexity, per-class, error-example, calibration, class-metric, confusion-pair, generalization-gap, robustness, probability-margin, bootstrap-interval, paired-correctness, selective-accuracy, probability-quality, lifecycle, class-balance, contact-sheet, closure-flow figures + registry metadata
+  - `figures.py` — stage matrix, candidate score, confusion matrix, learning-curve, training-dynamics, complexity, per-class, error-example, calibration, class-metric, confusion-pair, generalization-gap, robustness, probability-margin, bootstrap-interval, paired-correctness, selective-accuracy, probability-quality, lifecycle, class-balance, contact-sheet, closure-flow, security-control, and integrity-chain figures + registry metadata
   - `manuscript_variables.py` — strict render-time token hydration, figure blocks, and provenance sidecars
 - Thin scripts: `scripts/`
 - Project docs: `docs/`
@@ -41,23 +42,26 @@ existing infrastructure modules:
 2. `validate_autoresearch_plan(..., phase="intrinsic")` — domain, experiment, pipeline, scripts
 3. `write_core_loop_artifacts()` — plan JSON, loop markdown, stage matrix CSV, figure
 4. `write_evidence_registry_report()` — first registry snapshot from on-disk artifacts
-5. `run_bounded_ml_task()` + `write_ml_task_artifacts()` — deterministic ML results, candidate ledger, report, benchmark score, figures
+5. `run_bounded_ml_task()` + `write_ml_task_artifacts()` — deterministic ML results, candidate ledger, diagnostics, selection audit, boundary report, benchmark score, figures
 6. `build_claims()` + `finalize_loop_payloads()` — file-backed claims and loop JSON/review payloads
 7. `write_method_contract_artifacts()` — research program, idea ledger, run ledger, deferred review decisions, benchmark scores
 8. `update_result_payloads()` — provisional refresh (`readiness_valid=False`)
-9. `write_artifact_manifest()` — first manifest pass
-10. `validate_autoresearch_plan(..., phase="extrinsic")` — evidence, artifacts, method ledgers, review gates, benchmarks
+9. `write_security_artifacts()` + `write_artifact_manifest()` — local security profile, threat model, inventory, attestation, review, and first manifest pass
+10. `validate_autoresearch_plan(..., phase="extrinsic")` — evidence, artifacts, method ledgers, review gates, benchmarks, security artifacts
 11. `write_autoresearch_report()` — combined intrinsic + extrinsic readiness
 12. `build_claims()` + `update_result_payloads()` — final refresh with `readiness_valid`, readiness evidence, and output paths
 13. `write_final_visual_artifacts()` — regenerate captions and figures from the final validated loop state
 14. `write_manuscript_hydration_artifacts()` — write variables, figure-blocks, and token provenance sidecars
-15. `write_evidence_registry_report()` + `write_artifact_manifest()` — final registry and manifest
+15. `write_evidence_registry_report()` + `write_security_artifacts()` + `write_artifact_manifest()` — final registry, local security evidence, and manifest
 
 Loop stages use status `declared` (intent only — not pipeline execution proof).
 Claims are `supported` only when the configured evidence path exists on disk.
 Accepted seed ideas require evidence links; candidate `touched_paths` must stay
 inside `autoresearch.yaml` `edit_allowlist`. The ML-loop candidate budget is
 finite; candidates beyond it are recorded as deferred.
+Security artifacts are local-only integrity evidence: no network calls, no
+external signing, no production SLSA compliance claim, and no runtime security
+monitoring are part of the default exemplar.
 
 ## Run Commands
 

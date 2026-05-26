@@ -63,4 +63,6 @@ _FIGURE_METHODS = {
     "fig:autoresearch_candidate_lifecycle": "Candidate lifecycle status-count bar chart.",
     "fig:mnist_subset_contact_sheet": "Class-balanced contact sheet from fixed local MNIST arrays.",
     "fig:mnist_class_balance": "Grouped train/test class-count bars from the local MNIST fixture.",
+    "fig:autoresearch_security_control_matrix": "Structured control matrix from local threat-model controls.",
+    "fig:autoresearch_integrity_chain": "Local checksum attestation chain with checked, missing, and mismatch counts.",
 }

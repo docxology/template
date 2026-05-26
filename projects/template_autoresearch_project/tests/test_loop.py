@@ -54,7 +54,7 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(
     payload = json.loads((project_root / "output" / "data" / "autoresearch_loop.json").read_text())
 
     assert payload["metrics"]["stage_count"] == 7
-    assert payload["metrics"]["supported_claim_count"] == 5
+    assert payload["metrics"]["supported_claim_count"] == 6
     assert payload["metrics"]["readiness_valid"] is True
     assert payload["ml_task"]["best_accuracy"] > payload["ml_task"]["baseline_accuracy"]
     assert "output/reports/autoresearch_loop.md" in payload["output_paths"]
@@ -79,6 +79,12 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(
     assert "output/data/ml_bootstrap_intervals.json" in payload["output_paths"]
     assert "output/data/ml_paired_comparison.json" in payload["output_paths"]
     assert "output/data/ml_statistical_summary.json" in payload["output_paths"]
+    assert "output/data/ml_candidate_selection_audit.json" in payload["output_paths"]
+    assert "output/data/ml_diagnostic_boundary.json" in payload["output_paths"]
+    assert "output/data/autoresearch_security_profile.json" in payload["output_paths"]
+    assert "output/data/autoresearch_threat_model.json" in payload["output_paths"]
+    assert "output/data/autoresearch_supply_chain_inventory.json" in payload["output_paths"]
+    assert "output/data/autoresearch_integrity_attestation.json" in payload["output_paths"]
     assert "output/data/manuscript_variable_provenance.json" in payload["output_paths"]
     assert "output/data/manuscript_figure_blocks.json" in payload["output_paths"]
     assert "output/figures/ml_confusion_matrix.png" in payload["output_paths"]
@@ -100,6 +106,9 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(
     assert "output/figures/mnist_class_balance.png" in payload["output_paths"]
     assert "output/figures/mnist_subset_contact_sheet.png" in payload["output_paths"]
     assert "output/figures/autoresearch_closure_flow.png" in payload["output_paths"]
+    assert "output/figures/autoresearch_security_control_matrix.png" in payload["output_paths"]
+    assert "output/figures/autoresearch_integrity_chain.png" in payload["output_paths"]
+    assert "output/reports/autoresearch_security_review.md" in payload["output_paths"]
 
 
 def test_run_autoresearch_loop_writes_bounded_method_ledgers(
@@ -125,6 +134,7 @@ def test_run_autoresearch_loop_writes_bounded_method_ledgers(
     assert run_ledger["cost_usd_used"] == 0.0
     assert run_ledger["budget_exhausted"] is True
     assert run_ledger["exhaustion_reason"] == "candidate iteration budget reached"
+    assert review_decisions["publication_approved"] is False
     assert {row["decision"] for row in review_decisions["decisions"]} == {"deferred"}
     assert {task["id"] for task in benchmark_scores["tasks"]} == {"readiness-smoke", "ml-loop-score"}
     assert all(task["status"] == "graded" for task in benchmark_scores["tasks"])
@@ -158,6 +168,12 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         "output/data/ml_bootstrap_intervals.json",
         "output/data/ml_paired_comparison.json",
         "output/data/ml_statistical_summary.json",
+        "output/data/ml_candidate_selection_audit.json",
+        "output/data/ml_diagnostic_boundary.json",
+        "output/data/autoresearch_security_profile.json",
+        "output/data/autoresearch_threat_model.json",
+        "output/data/autoresearch_supply_chain_inventory.json",
+        "output/data/autoresearch_integrity_attestation.json",
         "output/data/manuscript_variable_provenance.json",
         "output/data/manuscript_figure_blocks.json",
         "output/reports/autoresearch_review_packet.md",
@@ -185,7 +201,10 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         "output/figures/mnist_class_balance.png",
         "output/figures/mnist_subset_contact_sheet.png",
         "output/figures/autoresearch_closure_flow.png",
+        "output/figures/autoresearch_security_control_matrix.png",
+        "output/figures/autoresearch_integrity_chain.png",
         "output/figures/figure_registry.json",
+        "output/reports/autoresearch_security_review.md",
     }
     assert expected_paths <= set(autoresearch_loop_result.output_paths)
 
@@ -199,6 +218,7 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         autoresearch_loop_result.readiness_valid
         and autoresearch_loop_result.supported_claim_count == len(autoresearch_loop_result.claims)
     )
+    assert review_packet["human_review"]["publication_approved"] is False
 
 
 def test_run_autoresearch_loop_writes_stage_matrix_figure(
@@ -232,6 +252,8 @@ def test_run_autoresearch_loop_writes_stage_matrix_figure(
     assert (project_root / "output" / "figures" / "mnist_class_balance.png").exists()
     assert (project_root / "output" / "figures" / "mnist_subset_contact_sheet.png").exists()
     assert (project_root / "output" / "figures" / "autoresearch_closure_flow.png").exists()
+    assert (project_root / "output" / "figures" / "autoresearch_security_control_matrix.png").exists()
+    assert (project_root / "output" / "figures" / "autoresearch_integrity_chain.png").exists()
     assert registry["fig:autoresearch_stage_matrix"]["filename"] == "autoresearch_stage_matrix.png"
     assert registry["fig:ml_candidate_scores"]["filename"] == "ml_candidate_scores.png"
     assert registry["fig:ml_confusion_matrix"]["filename"] == "ml_confusion_matrix.png"
@@ -253,6 +275,11 @@ def test_run_autoresearch_loop_writes_stage_matrix_figure(
     assert registry["fig:mnist_class_balance"]["filename"] == "mnist_class_balance.png"
     assert registry["fig:mnist_subset_contact_sheet"]["filename"] == "mnist_subset_contact_sheet.png"
     assert registry["fig:autoresearch_closure_flow"]["filename"] == "autoresearch_closure_flow.png"
+    assert (
+        registry["fig:autoresearch_security_control_matrix"]["filename"]
+        == "autoresearch_security_control_matrix.png"
+    )
+    assert registry["fig:autoresearch_integrity_chain"]["filename"] == "autoresearch_integrity_chain.png"
     for record in registry.values():
         assert record["metadata"]["source"].startswith(("output/", "data/"))
         assert record["metadata"]["alt_text"]

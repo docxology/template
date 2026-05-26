@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 import hashlib
 import json
 import gzip
@@ -12,13 +13,15 @@ import numpy as np
 import pytest
 from infrastructure.autoresearch import BudgetPolicy
 
-from src import mnist_fixture
+from src import diagnostics as diagnostics_module, mnist_fixture
 from src.diagnostics import (
     bootstrap_intervals,
     calibration_report,
     candidate_accuracy_intervals,
+    candidate_selection_audit,
     class_balance_report,
     classification_diagnostics,
+    diagnostic_boundary_report,
     paired_comparison_report,
     probability_diagnostics,
     prediction_records,
@@ -122,6 +125,98 @@ def test_mnist_fixture_helpers_are_offline_and_deterministic(tmp_path: Path) -> 
     bad_source.write_bytes(b"too small")
     with pytest.raises(ValueError, match="unexpected MNIST source size"):
         mnist_fixture._verified_source(cache_dir, "train_labels")
+
+
+def test_mnist_fixture_regeneration_uses_verified_local_maintenance_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    labels = np.arange(10, dtype=np.int64)
+    images = np.arange(10 * 28 * 28, dtype=np.uint8).reshape(10, 28, 28)
+
+    monkeypatch.setattr(mnist_fixture, "_verified_source", lambda _cache_dir, key: Path(f"{key}.gz"))
+    monkeypatch.setattr(mnist_fixture, "_read_idx_images", lambda _path: images)
+    monkeypatch.setattr(mnist_fixture, "_read_idx_labels", lambda _path: labels)
+
+    fixture_path, provenance_path = mnist_fixture.regenerate_mnist_fixture(
+        tmp_path,
+        train_per_class=1,
+        test_per_class=1,
+        seed=17,
+    )
+
+    provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
+    assert fixture_path.name == "mnist_small.npz"
+    assert provenance["train_per_class"] == 1
+    assert provenance["test_per_class"] == 1
+    assert provenance["x_train_shape"] == [10, 28, 28]
+    assert provenance["npz_sha256"] == hashlib.sha256(fixture_path.read_bytes()).hexdigest()
+
+    with pytest.raises(ValueError, match="not enough examples"):
+        mnist_fixture._stratified_indices(labels, per_class=2, seed=17)
+
+
+def test_mnist_fixture_download_guard_requires_fixed_https_source(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    payload = b"tiny verified payload"
+    monkeypatch.setitem(
+        mnist_fixture.SOURCE_FILES,
+        "tiny",
+        {
+            "filename": "tiny.gz",
+            "sha256": hashlib.sha256(payload).hexdigest(),
+            "size_bytes": len(payload),
+        },
+    )
+
+    class _Response:
+        def __enter__(self) -> "_Response":
+            return self
+
+        def __exit__(self, *_args: object) -> None:
+            return None
+
+        def read(self) -> bytes:
+            return payload
+
+    captured: dict[str, object] = {}
+
+    def fake_urlopen(url: str, *, timeout: int) -> _Response:
+        captured["url"] = url
+        captured["timeout"] = timeout
+        return _Response()
+
+    monkeypatch.setattr(mnist_fixture, "urlopen", fake_urlopen)
+    path = mnist_fixture._verified_source(tmp_path, "tiny")
+
+    assert path.read_bytes() == payload
+    assert captured == {"url": "https://storage.googleapis.com/cvdf-datasets/mnist/tiny.gz", "timeout": 60}
+
+    monkeypatch.setattr(mnist_fixture, "SOURCE_BASE_URL", "http://example.com/mnist")
+    with pytest.raises(ValueError, match="unexpected MNIST source URL"):
+        mnist_fixture._source_url("tiny.gz")
+
+
+def test_mnist_fixture_regeneration_is_manual_maintenance_only(project_root: Path) -> None:
+    maintenance_script = project_root / "scripts" / "regenerate_mnist_fixture.py"
+    assert "explicit maintenance utility" in maintenance_script.read_text(encoding="utf-8")
+
+    default_execution_paths = (
+        project_root / "scripts" / "run_autoresearch_loop.py",
+        project_root / "scripts" / "z_generate_manuscript_variables.py",
+        project_root / "src" / "loop.py",
+        project_root / "src" / "ml_task.py",
+    )
+    forbidden_snippets = (
+        "regenerate_mnist_fixture(",
+        "from src.mnist_fixture",
+        "import src.mnist_fixture",
+    )
+    for path in default_execution_paths:
+        source = path.read_text(encoding="utf-8")
+        assert all(snippet not in source for snippet in forbidden_snippets), path
 
 
 def test_load_mnist_task_config_reads_candidate_search(project_root: Path) -> None:
@@ -344,6 +439,105 @@ def test_training_diagnostics_match_epoch_history(project_root: Path) -> None:
         assert row["final_learning_rate"] == pytest.approx(final_history["learning_rate"])
         assert float(row["test_accuracy_stability_last5"]) >= 0.0
     assert accepted["candidate_id"] == result.accepted_candidate_id
+
+
+def test_candidate_selection_audit_and_boundary_are_source_scoped(project_root: Path) -> None:
+    result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=4))
+    audit = candidate_selection_audit(project_root, result)
+    boundary = diagnostic_boundary_report(result)
+
+    rows = audit["rows"]
+    assert isinstance(rows, list)
+    assert len(rows) == result.evaluated_candidate_count
+    assert rows[0]["candidate_id"] == result.accepted_candidate_id
+    assert audit["tie_break_order"] == ["metric", "lower_parameter_count", "candidate_id"]
+    assert all(0.0 <= float(row["wilson_ci_low"]) <= float(row["wilson_ci_high"]) <= 1.0 for row in rows)
+    assert all(float(row["brier_score"]) >= 0.0 for row in rows)
+
+    boundary_rows = boundary["rows"]
+    assert isinstance(boundary_rows, list)
+    surfaces = {row["surface"] for row in boundary_rows if isinstance(row, dict)}
+    assert "objective_selection" in surfaces
+    assert "artifact_integrity" in surfaces
+    assert all(row["does_not_support"] for row in boundary_rows if isinstance(row, dict))
+
+
+def test_diagnostic_json_writers_persist_audit_payloads(project_root: Path, tmp_path: Path) -> None:
+    result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=4))
+    writer_specs = (
+        (diagnostics_module.write_prediction_records_json, (tmp_path / "prediction.json", project_root, result)),
+        (diagnostics_module.write_classification_diagnostics_json, (tmp_path / "classification.json", result)),
+        (diagnostics_module.write_candidate_accuracy_intervals_json, (tmp_path / "intervals.json", result)),
+        (diagnostics_module.write_class_balance_json, (tmp_path / "balance.json", project_root, result)),
+        (diagnostics_module.write_calibration_report_json, (tmp_path / "calibration.json", project_root, result)),
+        (diagnostics_module.write_robustness_report_json, (tmp_path / "robustness.json", result)),
+        (diagnostics_module.write_probability_diagnostics_json, (tmp_path / "probability.json", project_root, result)),
+        (diagnostics_module.write_bootstrap_intervals_json, (tmp_path / "bootstrap.json", project_root, result)),
+        (diagnostics_module.write_paired_comparison_json, (tmp_path / "paired.json", project_root, result)),
+        (diagnostics_module.write_statistical_summary_json, (tmp_path / "statistical.json", project_root, result)),
+        (diagnostics_module.write_training_diagnostics_json, (tmp_path / "training.json", result)),
+        (diagnostics_module.write_candidate_selection_audit_json, (tmp_path / "selection.json", project_root, result)),
+        (diagnostics_module.write_diagnostic_boundary_json, (tmp_path / "boundary.json", result)),
+    )
+
+    for writer, args in writer_specs:
+        path = writer(*args)
+        assert path.exists()
+        assert json.loads(path.read_text(encoding="utf-8"))
+
+
+def test_diagnostic_helpers_cover_error_and_empty_branches(project_root: Path) -> None:
+    result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=4))
+    candidate = result.accepted_candidate
+
+    with pytest.raises(ValueError, match="probability rows have unexpected shape"):
+        diagnostics_module._candidate_probabilities(replace(candidate, test_probabilities=()), expected_rows=1)
+
+    invalid_probabilities = tuple(tuple([0.2] * 10) for _ in range(result.dataset.test_size))
+    with pytest.raises(ValueError, match="probability rows do not sum to one"):
+        diagnostics_module._candidate_probabilities(
+            replace(candidate, test_probabilities=invalid_probabilities),
+            expected_rows=result.dataset.test_size,
+        )
+
+    with pytest.raises(ValueError, match="prediction rows have unexpected shape"):
+        diagnostics_module._candidate_predictions(replace(candidate, test_predictions=()), expected_rows=1)
+    with pytest.raises(ValueError, match="record probability rows have unexpected shape"):
+        diagnostics_module._record_probabilities([], expected_rows=1)
+    with pytest.raises(ValueError, match="record prediction rows have unexpected shape"):
+        diagnostics_module._record_predictions([], expected_rows=1)
+
+    empty_history = diagnostics_module._training_row(replace(candidate, training_history=()))
+    assert empty_history["best_epoch"] == 0
+    assert diagnostics_module._wilson_interval(0, 0) == (0.0, 0.0)
+    assert diagnostics_module._rounded_gap(None, 1.0) == 0.0
+    assert diagnostics_module._masked_mean(np.asarray([1.0]), np.asarray([False])) == 0.0
+    assert diagnostics_module._cohen_kappa(np.zeros((2, 2), dtype=float)) == 0.0
+    assert diagnostics_module._interval_summary({"intervals": []}, "missing")["observed"] == 0.0
+    assert diagnostics_module._exact_mcnemar_p(0, 0) == 1.0
+
+    matrix = np.zeros((2, 2), dtype=float)
+    matrix[0, 1] = 2
+    pairs = diagnostics_module._top_confusion_pairs(matrix)
+    assert pairs[0]["count"] == 2
+
+    histogram = diagnostics_module._histogram_payload(
+        np.asarray([0.1, 1.0]),
+        np.asarray([True, False]),
+        bin_count=2,
+    )
+    assert histogram[-1]["error_count"] == 1
+
+    y_true = np.arange(10)
+    probabilities = np.eye(10, dtype=float)
+    predictions = np.arange(10)
+    assert diagnostics_module._macro_f1(y_true, predictions) == 1.0
+    assert diagnostics_module._negative_log_likelihood(probabilities, y_true) == 0.0
+    assert diagnostics_module._brier_score(probabilities, y_true) == 0.0
+    assert diagnostics_module._top_k_accuracy(probabilities, y_true, k=2) == 1.0
+    coverage = diagnostics_module._coverage_curve(probabilities, predictions, y_true, (0.0, 1.1))
+    assert coverage[0]["retained_count"] == 10
+    assert coverage[1]["retained_count"] == 0
 
 
 def test_select_accepted_candidate_tie_breaks_by_parameter_count() -> None:

@@ -13,10 +13,14 @@ from infrastructure.autoresearch.models import (
     BudgetPolicy,
     DEFAULT_QUALITY_CHECKS,
     ReviewGate,
+    SecurityProfile,
 )
 
 _AUTONOMY_LEVELS = frozenset({"proposal_only", "human_approved", "sandboxed_execute"})
 _METRIC_DIRECTIONS = frozenset({"maximize", "minimize", "target"})
+_SECURITY_MODES = frozenset({"local_deterministic"})
+_INTEGRITY_ALGORITHMS = frozenset({"sha256"})
+_NETWORK_POLICIES = frozenset({"default_offline"})
 
 _CONFIG_KEYS = frozenset(
     {
@@ -33,6 +37,7 @@ _CONFIG_KEYS = frozenset(
         "topic",
         "quality_checks",
         "review_gates",
+        "security_profile",
         "source_manifests",
         "stage_gates",
         "required_artifacts",
@@ -76,6 +81,7 @@ def load_autoresearch_config(project_root: Path) -> AutoResearchConfig:
         benchmark_tasks=_parse_benchmark_tasks(payload.get("benchmark_tasks")),
         disclosure_required=_bool_value(payload.get("disclosure_required", False), "disclosure_required"),
         disclosure_text=str(payload.get("disclosure_text", "AI-assisted AutoResearch") or ""),
+        security_profile=_parse_security_profile(payload.get("security_profile")),
         quality_checks=parse_string_sequence(payload.get("quality_checks"), default=DEFAULT_QUALITY_CHECKS),
         stage_gates=parse_string_sequence(payload.get("stage_gates"), default=()),
         required_artifacts=parse_string_sequence(payload.get("required_artifacts"), default=()),
@@ -174,6 +180,33 @@ def _parse_benchmark_tasks(value: Any) -> tuple[BenchmarkTask, ...]:
             )
         )
     return tuple(tasks)
+
+
+def _parse_security_profile(value: Any) -> SecurityProfile:
+    if value is None:
+        return SecurityProfile()
+    if not isinstance(value, dict):
+        raise ValueError("autoresearch security_profile must be a mapping")
+    return SecurityProfile(
+        enabled=_bool_value(value.get("enabled", False), "security_profile.enabled"),
+        mode=_choice_value(
+            value.get("mode", "local_deterministic"),
+            "security_profile.mode",
+            _SECURITY_MODES,
+        ),
+        threat_model_frameworks=parse_string_sequence(value.get("threat_model_frameworks"), default=()),
+        integrity_algorithm=_choice_value(
+            value.get("integrity_algorithm", "sha256"),
+            "security_profile.integrity_algorithm",
+            _INTEGRITY_ALGORITHMS,
+        ),
+        network_policy=_choice_value(
+            value.get("network_policy", "default_offline"),
+            "security_profile.network_policy",
+            _NETWORK_POLICIES,
+        ),
+        external_signing=_bool_value(value.get("external_signing", False), "security_profile.external_signing"),
+    )
 
 
 def parse_string_sequence(value: Any, *, default: tuple[str, ...]) -> tuple[str, ...]:

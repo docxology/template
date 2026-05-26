@@ -39,6 +39,12 @@ artifact_expectations:
   - output/data/ml_paired_comparison.json
   - output/data/ml_statistical_summary.json
   - output/data/ml_training_diagnostics.json
+  - output/data/ml_candidate_selection_audit.json
+  - output/data/ml_diagnostic_boundary.json
+  - output/data/autoresearch_security_profile.json
+  - output/data/autoresearch_threat_model.json
+  - output/data/autoresearch_supply_chain_inventory.json
+  - output/data/autoresearch_integrity_attestation.json
   - output/data/manuscript_variables.json
   - output/data/manuscript_variable_provenance.json
   - output/data/manuscript_figure_blocks.json
@@ -63,6 +69,8 @@ artifact_expectations:
   - output/figures/mnist_class_balance.png
   - output/figures/mnist_subset_contact_sheet.png
   - output/figures/autoresearch_closure_flow.png
+  - output/figures/autoresearch_security_control_matrix.png
+  - output/figures/autoresearch_integrity_chain.png
   - output/figures/figure_registry.json
   - output/reports/autoresearch_loop.json
   - output/reports/autoresearch_loop.md
@@ -72,3 +80,4 @@ benchmark_rubric:
   metric_improvement: "Accepted candidate accuracy is compared against the nearest-centroid baseline."
   budget_compliance: "Evaluated candidate count must stay within the configured iteration budget."
   offline_execution: "LLM calls and cost must remain zero for the default public run."
+  security_integrity: "Local security artifacts must report offline policy, inventory hashes, and checksum attestation without claiming external signing."

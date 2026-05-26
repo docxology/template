@@ -6,7 +6,9 @@ import json
 import re
 from collections import Counter
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
+
+from .manuscript_tables import build_table_specs, variable_provenance_table
 
 _TOKEN_RE = re.compile(r"\{\{[A-Z][A-Z0-9_]*\}\}")
 _FIGURE_BLOCK_KEYS = frozenset(
@@ -33,6 +35,8 @@ _FIGURE_BLOCK_KEYS = frozenset(
         "FIGURE_BLOCK_DATASET_CLASS_BALANCE",
         "FIGURE_BLOCK_DATASET_CONTACT_SHEET",
         "FIGURE_BLOCK_CLOSURE_FLOW",
+        "FIGURE_BLOCK_SECURITY_CONTROL_MATRIX",
+        "FIGURE_BLOCK_INTEGRITY_CHAIN",
     }
 )
 _STRICT_VALUE_TOKENS = frozenset(
@@ -50,7 +54,11 @@ _STRICT_VALUE_TOKENS = frozenset(
     ACCEPTED_NEGATIVE_LOG_LIKELIHOOD ACCEPTED_TRAIN_TEST_GAP ACCEPTED_TOP2_ACCURACY ACCEPTED_COHEN_KAPPA
     GRADIENT_CLIP_NORM LEARNING_RATE_DECAY SELECTIVE_HIGH_CONFIDENCE_COVERAGE
     SELECTIVE_HIGH_CONFIDENCE_ACCURACY TASK_IDENTIFIER TOP_CONFUSION_PAIR TRANSFORMER_CANDIDATE_ID
-    TRANSFORMER_CANDIDATE_TITLE
+    TRANSFORMER_CANDIDATE_TITLE SECURITY_PROFILE_MODE SECURITY_NETWORK_POLICY SECURITY_INTEGRITY_ALGORITHM
+    SECURITY_EXTERNAL_SIGNING SECURITY_FRAMEWORKS SECURITY_THREAT_COUNT SECURITY_CONTROL_COUNT SECURITY_ASSET_COUNT
+    SECURITY_INVENTORY_INPUT_COUNT SECURITY_INVENTORY_ARTIFACT_COUNT SECURITY_ATTESTATION_STATUS
+    SECURITY_ATTESTATION_CHECKED_COUNT SECURITY_ATTESTATION_MISSING_COUNT SECURITY_ATTESTATION_MISMATCH_COUNT
+    SECURITY_CLAIM_SCOPE
     """.split()
 )
 
@@ -235,6 +243,14 @@ def _load_project_artifacts(project_root: Path, *, require_valid: bool) -> dict[
         "paired_comparison": _load_optional_json_mapping(output / "data" / "ml_paired_comparison.json"),
         "statistical_summary": _load_optional_json_mapping(output / "data" / "ml_statistical_summary.json"),
         "training_diagnostics": _load_optional_json_mapping(output / "data" / "ml_training_diagnostics.json"),
+        "candidate_selection_audit": _load_optional_json_mapping(output / "data" / "ml_candidate_selection_audit.json"),
+        "diagnostic_boundary": _load_optional_json_mapping(output / "data" / "ml_diagnostic_boundary.json"),
+        "security_profile": _load_optional_json_mapping(output / "data" / "autoresearch_security_profile.json"),
+        "security_threat_model": _load_optional_json_mapping(output / "data" / "autoresearch_threat_model.json"),
+        "security_inventory": _load_optional_json_mapping(output / "data" / "autoresearch_supply_chain_inventory.json"),
+        "security_attestation": _load_optional_json_mapping(
+            output / "data" / "autoresearch_integrity_attestation.json"
+        ),
     }
 
 
@@ -256,6 +272,12 @@ def _build_variables(project_root: Path, artifacts: dict[str, Any]) -> tuple[dic
     paired = _mapping(artifacts.get("paired_comparison"))
     statistical = _mapping(artifacts.get("statistical_summary"))
     training = _mapping(artifacts.get("training_diagnostics"))
+    candidate_selection = _mapping(artifacts.get("candidate_selection_audit"))
+    diagnostic_boundary = _mapping(artifacts.get("diagnostic_boundary"))
+    security_profile = _mapping(artifacts.get("security_profile"))
+    security_threat_model = _mapping(artifacts.get("security_threat_model"))
+    security_inventory = _mapping(artifacts.get("security_inventory"))
+    security_attestation = _mapping(artifacts.get("security_attestation"))
     config = _mapping(loop.get("config"))
     ml_task_summary = _mapping(loop.get("ml_task"))
     task_config = _mapping(ml.get("task_config"))
@@ -580,6 +602,13 @@ def _build_variables(project_root: Path, artifacts: dict[str, Any]) -> tuple[dic
         "output/data/autoresearch_loop.json",
         "/config/benchmark_tasks",
     )
+    _put_security_variables(
+        put,
+        security_profile,
+        security_threat_model,
+        security_inventory,
+        security_attestation,
+    )
     _put_artifact_path_variables(put)
     _put_figure_blocks(project_root, variables, provenance, registry)
     _put_tables(
@@ -600,11 +629,17 @@ def _build_variables(project_root: Path, artifacts: dict[str, Any]) -> tuple[dic
         paired,
         statistical,
         training,
+        candidate_selection,
+        diagnostic_boundary,
+        security_profile,
+        security_threat_model,
+        security_inventory,
+        security_attestation,
     )
     put(
         "MANUSCRIPT_VARIABLE_COUNT", len(variables) + 1, "output/data/manuscript_variable_provenance.json", "/variables"
     )
-    variables["VARIABLE_PROVENANCE_TABLE"] = _variable_provenance_table(provenance)
+    variables["VARIABLE_PROVENANCE_TABLE"] = variable_provenance_table(provenance)
     provenance["VARIABLE_PROVENANCE_TABLE"] = {
         "source": "output/data/manuscript_variable_provenance.json",
         "pointer": "/variables",
@@ -617,6 +652,11 @@ def _put_artifact_path_variables(put: Any) -> None:
         "ARTIFACT_MANIFEST_PATH": "output/reports/artifact_manifest.json",
         "AUTORESEARCH_CLAIMS_PATH": "output/data/autoresearch_claims.json",
         "AUTORESEARCH_LOOP_PATH": "output/data/autoresearch_loop.json",
+        "AUTORESEARCH_SECURITY_PROFILE_PATH": "output/data/autoresearch_security_profile.json",
+        "AUTORESEARCH_THREAT_MODEL_PATH": "output/data/autoresearch_threat_model.json",
+        "AUTORESEARCH_SUPPLY_CHAIN_INVENTORY_PATH": "output/data/autoresearch_supply_chain_inventory.json",
+        "AUTORESEARCH_INTEGRITY_ATTESTATION_PATH": "output/data/autoresearch_integrity_attestation.json",
+        "AUTORESEARCH_SECURITY_REVIEW_PATH": "output/reports/autoresearch_security_review.md",
         "BENCHMARK_SCORES_PATH": "output/data/benchmark_scores.json",
         "EVIDENCE_REGISTRY_PATH": "output/reports/evidence_registry.json",
         "FIGURE_BLOCKS_PATH": "output/data/manuscript_figure_blocks.json",
@@ -638,6 +678,8 @@ def _put_artifact_path_variables(put: Any) -> None:
         "ML_PAIRED_COMPARISON_PATH": "output/data/ml_paired_comparison.json",
         "ML_STATISTICAL_SUMMARY_PATH": "output/data/ml_statistical_summary.json",
         "ML_TRAINING_DIAGNOSTICS_PATH": "output/data/ml_training_diagnostics.json",
+        "ML_CANDIDATE_SELECTION_AUDIT_PATH": "output/data/ml_candidate_selection_audit.json",
+        "ML_DIAGNOSTIC_BOUNDARY_PATH": "output/data/ml_diagnostic_boundary.json",
         "ML_RESULTS_PATH": "output/data/ml_task_results.json",
         "READINESS_REPORT_PATH": "output/reports/autoresearch_readiness.json",
         "RESEARCH_PROGRAM_PATH": "output/data/research_program.json",
@@ -647,6 +689,106 @@ def _put_artifact_path_variables(put: Any) -> None:
     }
     for token, path in path_tokens.items():
         put(token, path, "output/data/autoresearch_loop.json", "/output_paths")
+
+
+def _put_security_variables(
+    put: Any,
+    security_profile: dict[str, Any],
+    threat_model: dict[str, Any],
+    inventory: dict[str, Any],
+    attestation: dict[str, Any],
+) -> None:
+    summary = _mapping(threat_model.get("summary"))
+    put(
+        "SECURITY_PROFILE_MODE",
+        security_profile.get("mode", "N/A"),
+        "output/data/autoresearch_security_profile.json",
+        "/mode",
+    )
+    put(
+        "SECURITY_NETWORK_POLICY",
+        security_profile.get("network_policy", "N/A"),
+        "output/data/autoresearch_security_profile.json",
+        "/network_policy",
+    )
+    put(
+        "SECURITY_INTEGRITY_ALGORITHM",
+        security_profile.get("integrity_algorithm", "N/A"),
+        "output/data/autoresearch_security_profile.json",
+        "/integrity_algorithm",
+    )
+    put(
+        "SECURITY_EXTERNAL_SIGNING",
+        str(bool(security_profile.get("external_signing", False))).lower(),
+        "output/data/autoresearch_security_profile.json",
+        "/external_signing",
+    )
+    put(
+        "SECURITY_FRAMEWORKS",
+        ", ".join(str(value) for value in security_profile.get("threat_model_frameworks", []) if value),
+        "output/data/autoresearch_security_profile.json",
+        "/threat_model_frameworks",
+    )
+    put(
+        "SECURITY_CLAIM_SCOPE",
+        security_profile.get("claim_scope", "N/A"),
+        "output/data/autoresearch_security_profile.json",
+        "/claim_scope",
+    )
+    put(
+        "SECURITY_ASSET_COUNT",
+        summary.get("asset_count", "N/A"),
+        "output/data/autoresearch_threat_model.json",
+        "/summary/asset_count",
+    )
+    put(
+        "SECURITY_THREAT_COUNT",
+        summary.get("threat_count", "N/A"),
+        "output/data/autoresearch_threat_model.json",
+        "/summary/threat_count",
+    )
+    put(
+        "SECURITY_CONTROL_COUNT",
+        summary.get("control_count", "N/A"),
+        "output/data/autoresearch_threat_model.json",
+        "/summary/control_count",
+    )
+    put(
+        "SECURITY_INVENTORY_INPUT_COUNT",
+        len(_mapping_list(inventory.get("inputs"))),
+        "output/data/autoresearch_supply_chain_inventory.json",
+        "/inputs",
+    )
+    put(
+        "SECURITY_INVENTORY_ARTIFACT_COUNT",
+        len(_mapping_list(inventory.get("generated_artifacts"))),
+        "output/data/autoresearch_supply_chain_inventory.json",
+        "/generated_artifacts",
+    )
+    put(
+        "SECURITY_ATTESTATION_STATUS",
+        attestation.get("status", "N/A"),
+        "output/data/autoresearch_integrity_attestation.json",
+        "/status",
+    )
+    put(
+        "SECURITY_ATTESTATION_CHECKED_COUNT",
+        attestation.get("checked_count", "N/A"),
+        "output/data/autoresearch_integrity_attestation.json",
+        "/checked_count",
+    )
+    put(
+        "SECURITY_ATTESTATION_MISSING_COUNT",
+        attestation.get("missing_count", "N/A"),
+        "output/data/autoresearch_integrity_attestation.json",
+        "/missing_count",
+    )
+    put(
+        "SECURITY_ATTESTATION_MISMATCH_COUNT",
+        attestation.get("mismatch_count", "N/A"),
+        "output/data/autoresearch_integrity_attestation.json",
+        "/mismatch_count",
+    )
 
 
 def _put_figure_blocks(
@@ -678,6 +820,8 @@ def _put_figure_blocks(
         "FIGURE_BLOCK_DATASET_CLASS_BALANCE": "fig:mnist_class_balance",
         "FIGURE_BLOCK_DATASET_CONTACT_SHEET": "fig:mnist_subset_contact_sheet",
         "FIGURE_BLOCK_CLOSURE_FLOW": "fig:autoresearch_closure_flow",
+        "FIGURE_BLOCK_SECURITY_CONTROL_MATRIX": "fig:autoresearch_security_control_matrix",
+        "FIGURE_BLOCK_INTEGRITY_CHAIN": "fig:autoresearch_integrity_chain",
     }
     for token, label in labels.items():
         block = _figure_block(project_root, registry, label)
@@ -706,6 +850,8 @@ def _put_figure_blocks(
         "FIGURE_REF_DATASET_CLASS_BALANCE": "fig:mnist_class_balance",
         "FIGURE_REF_DATASET_CONTACT_SHEET": "fig:mnist_subset_contact_sheet",
         "FIGURE_REF_CLOSURE_FLOW": "fig:autoresearch_closure_flow",
+        "FIGURE_REF_SECURITY_CONTROL_MATRIX": "fig:autoresearch_security_control_matrix",
+        "FIGURE_REF_INTEGRITY_CHAIN": "fig:autoresearch_integrity_chain",
     }
     for token, label in reference_tokens.items():
         variables[token] = f"@{label}"
@@ -730,470 +876,39 @@ def _put_tables(
     paired: dict[str, Any],
     statistical: dict[str, Any],
     training: dict[str, Any],
+    candidate_selection: dict[str, Any],
+    diagnostic_boundary: dict[str, Any],
+    security_profile: dict[str, Any],
+    security_threat_model: dict[str, Any],
+    security_inventory: dict[str, Any],
+    security_attestation: dict[str, Any],
 ) -> None:
-    table_specs = {
-        "FIGURE_METHOD_TABLE": (
-            _figure_method_table(registry),
-            "output/figures/figure_registry.json",
-            "/",
-        ),
-        "ML_CANDIDATE_LEDGER_TABLE": (
-            _candidate_ledger_table(candidate_ledger),
-            "output/data/ml_candidate_ledger.json",
-            "/candidates",
-        ),
-        "AUTORESEARCH_ARTIFACT_TABLE": (
-            _artifact_manifest_table(artifact_manifest),
-            "output/reports/artifact_manifest.json",
-            "/entries",
-        ),
-        "REVIEW_GATE_TABLE": (
-            _review_gate_table(review_decisions),
-            "output/data/review_decisions.json",
-            "/decisions",
-        ),
-        "BENCHMARK_SCORE_TABLE": (
-            _benchmark_score_table(benchmark_scores),
-            "output/data/benchmark_scores.json",
-            "/tasks",
-        ),
-        "CLASSIFICATION_DIAGNOSTICS_TABLE": (
-            _classification_diagnostics_table(classification),
-            "output/data/ml_classification_diagnostics.json",
-            "/per_class",
-        ),
-        "CANDIDATE_INTERVAL_TABLE": (
-            _candidate_interval_table(candidate_intervals),
-            "output/data/ml_candidate_intervals.json",
-            "/rows",
-        ),
-        "CLASS_BALANCE_TABLE": (
-            _class_balance_table(class_balance),
-            "output/data/ml_class_balance.json",
-            "/rows",
-        ),
-        "CALIBRATION_BIN_TABLE": (
-            _calibration_bin_table(calibration),
-            "output/data/ml_calibration_report.json",
-            "/bins",
-        ),
-        "CONFUSION_PAIR_TABLE": (
-            _confusion_pair_table(classification),
-            "output/data/ml_classification_diagnostics.json",
-            "/top_confusion_pairs",
-        ),
-        "ROBUSTNESS_SCORE_TABLE": (
-            _robustness_score_table(robustness),
-            "output/data/ml_robustness_report.json",
-            "/rows",
-        ),
-        "PROBABILITY_DIAGNOSTICS_TABLE": (
-            _probability_diagnostics_table(probability),
-            "output/data/ml_probability_diagnostics.json",
-            "/",
-        ),
-        "BOOTSTRAP_INTERVAL_TABLE": (
-            _bootstrap_interval_table(bootstrap),
-            "output/data/ml_bootstrap_intervals.json",
-            "/intervals",
-        ),
-        "PAIRED_COMPARISON_TABLE": (
-            _paired_comparison_table(paired),
-            "output/data/ml_paired_comparison.json",
-            "/",
-        ),
-        "STATISTICAL_SUMMARY_TABLE": (
-            _statistical_summary_table(statistical),
-            "output/data/ml_statistical_summary.json",
-            "/",
-        ),
-        "SELECTIVE_ACCURACY_TABLE": (
-            _selective_accuracy_table(statistical),
-            "output/data/ml_statistical_summary.json",
-            "/coverage_curve",
-        ),
-        "PROBABILITY_QUALITY_TABLE": (
-            _probability_quality_table(statistical),
-            "output/data/ml_statistical_summary.json",
-            "/candidate_probability_quality",
-        ),
-        "TRAINING_DIAGNOSTICS_TABLE": (
-            _training_diagnostics_table(training),
-            "output/data/ml_training_diagnostics.json",
-            "/rows",
-        ),
-    }
+    table_specs = build_table_specs(
+        registry,
+        candidate_ledger,
+        review_decisions,
+        benchmark_scores,
+        artifact_manifest,
+        classification,
+        candidate_intervals,
+        class_balance,
+        calibration,
+        robustness,
+        probability,
+        bootstrap,
+        paired,
+        statistical,
+        training,
+        candidate_selection,
+        diagnostic_boundary,
+        security_profile,
+        security_threat_model,
+        security_inventory,
+        security_attestation,
+    )
     for token, (value, source, pointer) in table_specs.items():
         variables[token] = value
         provenance[token] = {"source": source, "pointer": pointer}
-
-
-def _candidate_ledger_table(candidate_ledger: dict[str, Any]) -> str:
-    baseline = _mapping(candidate_ledger.get("baseline"))
-    candidates = _mapping_list(candidate_ledger.get("candidates"))
-    rows = [
-        (
-            _candidate_display_label(baseline.get("identifier", "baseline")),
-            _model_type_label(baseline.get("model_type", "N/A")),
-            "baseline",
-            _percent_value(baseline.get("test_accuracy")),
-            _string_value(baseline.get("parameter_count", "N/A")),
-        )
-    ]
-    for candidate in candidates:
-        rows.append(
-            (
-                _candidate_display_label(candidate.get("identifier", "N/A")),
-                _model_type_label(candidate.get("model_type", "N/A")),
-                _string_value(candidate.get("status", "N/A")),
-                _percent_value(candidate.get("test_accuracy")),
-                _string_value(candidate.get("parameter_count", "N/A")),
-            )
-        )
-    return _markdown_table(
-        ("Candidate", "Model", "Status", "Test accuracy", "Parameters"),
-        rows,
-        "Candidate lifecycle ledger from `output/data/ml_candidate_ledger.json`. {#tbl:ml-candidate-ledger}",
-    )
-
-
-def _figure_method_table(registry: dict[str, Any]) -> str:
-    rows = []
-    for label, record in sorted(registry.items()):
-        if not isinstance(record, dict):
-            continue
-        metadata = _mapping(record.get("metadata"))
-        rows.append(
-            (
-                f"@{_string_value(label)}",
-                _artifact_markdown_link(_string_value(metadata.get("source", "N/A"))),
-                _short_scope(_string_value(metadata.get("method", "N/A")), limit=84),
-                _short_scope(_string_value(metadata.get("claim_boundary", "N/A"))),
-            )
-        )
-    return _pdf_small_table(
-        ("Figure", "Source", "Method", "Scope"),
-        rows,
-        "Registry-backed figure methods from [`figure_registry.json`](../figures/figure_registry.json); full validation hooks, alt text, and claim boundaries remain in the registry. {#tbl:figure-methods}",
-    )
-
-
-def _candidate_interval_table(candidate_intervals: dict[str, Any]) -> str:
-    rows = [
-        (
-            _candidate_display_label(row.get("candidate_id", "N/A")),
-            _string_value(row.get("status", "N/A")),
-            f"{_string_value(row.get('successes', 'N/A'))}/{_string_value(row.get('test_size', 'N/A'))}",
-            _percent_value(row.get("accuracy")),
-            f"{_percent_value(row.get('ci_low'))} to {_percent_value(row.get('ci_high'))}",
-        )
-        for row in _mapping_list(candidate_intervals.get("rows"))
-    ]
-    return _markdown_table(
-        ("Candidate", "Status", "Correct/test", "Accuracy", "Wilson 95% interval"),
-        rows,
-        "Candidate accuracy intervals from `output/data/ml_candidate_intervals.json`; intervals describe the fixed local test split. {#tbl:candidate-intervals}",
-    )
-
-
-def _class_balance_table(class_balance: dict[str, Any]) -> str:
-    rows = [
-        (
-            _string_value(row.get("split", "N/A")),
-            _string_value(row.get("class_label", "N/A")),
-            _string_value(row.get("count", "N/A")),
-            _percent_value(row.get("fraction")),
-        )
-        for row in _mapping_list(class_balance.get("rows"))
-    ]
-    return _markdown_table(
-        ("Split", "Class", "Count", "Fraction"),
-        rows,
-        "Local fixture class-balance table from `output/data/ml_class_balance.json`; counts describe the offline fixture used by this run. {#tbl:class-balance}",
-    )
-
-
-def _artifact_manifest_table(artifact_manifest: dict[str, Any]) -> str:
-    entries = _mapping_list(artifact_manifest.get("entries"))
-    rows = [
-        (
-            _string_value(entry.get("path", "N/A")),
-            _artifact_role(_string_value(entry.get("path", ""))),
-            _string_value(entry.get("size_bytes", "N/A")),
-        )
-        for entry in entries
-    ]
-    return _markdown_table(
-        ("Artifact", "Role", "Bytes"),
-        rows,
-        "Generated artifact manifest from `output/reports/artifact_manifest.json`. {#tbl:autoresearch-loop}",
-    )
-
-
-def _review_gate_table(review_decisions: dict[str, Any]) -> str:
-    rows = [
-        (
-            _string_value(row.get("gate", "N/A")),
-            _string_value(row.get("required", "N/A")),
-            _string_value(row.get("decision", "N/A")),
-            _string_value(row.get("rationale", "N/A")),
-        )
-        for row in _mapping_list(review_decisions.get("decisions"))
-    ]
-    return _markdown_table(
-        ("Gate", "Required", "Decision", "Rationale"),
-        rows,
-        "Review-gate decisions from `output/data/review_decisions.json`. {#tbl:review-gates}",
-    )
-
-
-def _benchmark_score_table(benchmark_scores: dict[str, Any]) -> str:
-    rows = [
-        (
-            _string_value(row.get("id", "N/A")),
-            _string_value(row.get("status", "N/A")),
-            _string_value(row.get("score", "N/A")),
-            _string_value(row.get("grading_output_path", "N/A")),
-        )
-        for row in _mapping_list(benchmark_scores.get("tasks"))
-    ]
-    return _markdown_table(
-        ("Benchmark task", "Status", "Score", "Grading output"),
-        rows,
-        "Benchmark grading table from `output/data/benchmark_scores.json`. {#tbl:benchmark-scores}",
-    )
-
-
-def _classification_diagnostics_table(classification: dict[str, Any]) -> str:
-    rows = [
-        (
-            _string_value(row.get("class_label", "N/A")),
-            _percent_value(row.get("precision")),
-            _percent_value(row.get("recall")),
-            _percent_value(row.get("f1")),
-            _string_value(row.get("support", "N/A")),
-        )
-        for row in _mapping_list(classification.get("per_class"))
-    ]
-    return _markdown_table(
-        ("Class", "Precision", "Recall", "F1", "Support"),
-        rows,
-        "Accepted-candidate class diagnostics from `output/data/ml_classification_diagnostics.json`. {#tbl:classification-diagnostics}",
-    )
-
-
-def _calibration_bin_table(calibration: dict[str, Any]) -> str:
-    rows = [
-        (
-            f"{_string_value(row.get('lower', 'N/A'))}-{_string_value(row.get('upper', 'N/A'))}",
-            _string_value(row.get("count", "N/A")),
-            _percent_value(row.get("accuracy")),
-            _percent_value(row.get("mean_confidence")),
-            _percent_value(row.get("absolute_gap")),
-        )
-        for row in _mapping_list(calibration.get("bins"))
-    ]
-    return _markdown_table(
-        ("Confidence bin", "Count", "Accuracy", "Mean confidence", "Gap"),
-        rows,
-        "Calibration bins from `output/data/ml_calibration_report.json`. {#tbl:calibration-bins}",
-    )
-
-
-def _confusion_pair_table(classification: dict[str, Any]) -> str:
-    rows = [
-        (
-            f"{_string_value(row.get('true_label', 'N/A'))} -> {_string_value(row.get('predicted_label', 'N/A'))}",
-            _string_value(row.get("count", "N/A")),
-            _percent_value(row.get("true_class_error_rate")),
-        )
-        for row in _mapping_list(classification.get("top_confusion_pairs"))
-    ]
-    return _markdown_table(
-        ("Pair", "Count", "True-class error rate"),
-        rows,
-        "Top non-diagonal confusion pairs from `output/data/ml_classification_diagnostics.json`. {#tbl:confusion-pairs}",
-    )
-
-
-def _robustness_score_table(robustness: dict[str, Any]) -> str:
-    rows = [
-        (
-            _candidate_display_label(row.get("candidate_id", "N/A")),
-            _string_value(row.get("transform", "N/A")),
-            _percent_value(row.get("accuracy")),
-            _string_value(row.get("sample_count", "N/A")),
-        )
-        for row in _mapping_list(robustness.get("rows"))
-    ]
-    return _markdown_table(
-        ("Candidate", "Transform", "Accuracy", "Samples"),
-        rows,
-        "Deterministic no-retrain robustness smoke test from `output/data/ml_robustness_report.json`. {#tbl:robustness-scores}",
-    )
-
-
-def _probability_diagnostics_table(probability: dict[str, Any]) -> str:
-    rows = [
-        ("Mean confidence", _percent_value(probability.get("mean_confidence"))),
-        ("Mean correct confidence", _percent_value(probability.get("mean_correct_confidence"))),
-        ("Mean error confidence", _percent_value(probability.get("mean_error_confidence"))),
-        ("Mean margin", _percent_value(probability.get("mean_margin"))),
-        ("Mean correct margin", _percent_value(probability.get("mean_correct_margin"))),
-        ("Mean error margin", _percent_value(probability.get("mean_error_margin"))),
-        ("Low-margin count", _string_value(probability.get("low_margin_count", "N/A"))),
-    ]
-    return _markdown_table(
-        ("Statistic", "Value"),
-        rows,
-        "Accepted-candidate probability diagnostics from `output/data/ml_probability_diagnostics.json`. {#tbl:probability-diagnostics}",
-    )
-
-
-def _bootstrap_interval_table(bootstrap: dict[str, Any]) -> str:
-    rows = [
-        (
-            _metric_label(row.get("metric", "N/A")),
-            _percent_value(row.get("observed")),
-            _percent_value(row.get("ci_low")),
-            _percent_value(row.get("ci_high")),
-            _percent_value(row.get("resample_mean")),
-        )
-        for row in _mapping_list(bootstrap.get("intervals"))
-    ]
-    return _markdown_table(
-        ("Metric", "Observed", "CI low", "CI high", "Resample mean"),
-        rows,
-        "Deterministic percentile-bootstrap intervals from `output/data/ml_bootstrap_intervals.json`. {#tbl:bootstrap-intervals}",
-    )
-
-
-def _paired_comparison_table(paired: dict[str, Any]) -> str:
-    rows = [
-        ("Both correct", _string_value(paired.get("both_correct", "N/A"))),
-        ("Accepted only correct", _string_value(paired.get("accepted_only_correct", "N/A"))),
-        ("Baseline only correct", _string_value(paired.get("baseline_only_correct", "N/A"))),
-        ("Both wrong", _string_value(paired.get("both_wrong", "N/A"))),
-        ("Discordant examples", _string_value(paired.get("discordant_count", "N/A"))),
-        ("Exact McNemar p", _p_value(paired.get("exact_mcnemar_p"))),
-        ("Net accuracy gain", _percent_value(paired.get("net_accuracy_gain"))),
-    ]
-    return _markdown_table(
-        ("Matched comparison statistic", "Value"),
-        rows,
-        "Accepted-candidate versus baseline paired comparison from `output/data/ml_paired_comparison.json`. {#tbl:paired-comparison}",
-    )
-
-
-def _statistical_summary_table(statistical: dict[str, Any]) -> str:
-    rows = [
-        ("Accuracy", _percent_value(statistical.get("accuracy"))),
-        ("Balanced accuracy", _percent_value(statistical.get("balanced_accuracy"))),
-        ("Macro F1", _percent_value(statistical.get("macro_f1"))),
-        ("Top-2 accuracy", _percent_value(statistical.get("top2_accuracy"))),
-        ("Cohen kappa", _decimal_value(statistical.get("cohen_kappa"))),
-        ("Brier score", _decimal_value(statistical.get("brier_score"))),
-        ("Negative log likelihood", _decimal_value(statistical.get("negative_log_likelihood"))),
-        ("Expected calibration error", _percent_value(statistical.get("expected_calibration_error"))),
-    ]
-    return _markdown_table(
-        ("Statistic", "Value"),
-        rows,
-        "Accepted-candidate statistical summary from `output/data/ml_statistical_summary.json`. {#tbl:statistical-summary}",
-    )
-
-
-def _selective_accuracy_table(statistical: dict[str, Any]) -> str:
-    rows = [
-        (
-            _percent_value(row.get("threshold")),
-            _percent_value(row.get("coverage")),
-            _percent_value(row.get("selective_accuracy")),
-            _string_value(row.get("retained_count", "N/A")),
-            _string_value(row.get("error_count", "N/A")),
-        )
-        for row in _mapping_list(statistical.get("coverage_curve"))
-    ]
-    return _markdown_table(
-        ("Confidence threshold", "Coverage", "Selective accuracy", "Retained", "Errors"),
-        rows,
-        "Selective-accuracy threshold table from `output/data/ml_statistical_summary.json`. {#tbl:selective-accuracy}",
-    )
-
-
-def _probability_quality_table(statistical: dict[str, Any]) -> str:
-    rows = [
-        (
-            _candidate_display_label(row.get("candidate_id", "N/A")),
-            _percent_value(row.get("accuracy")),
-            _percent_value(row.get("top2_accuracy")),
-            _decimal_value(row.get("brier_score")),
-            _decimal_value(row.get("negative_log_likelihood")),
-            _percent_value(row.get("mean_confidence")),
-        )
-        for row in _mapping_list(statistical.get("candidate_probability_quality"))
-    ]
-    return _markdown_table(
-        ("Candidate", "Accuracy", "Top-2 accuracy", "Brier", "NLL", "Mean confidence"),
-        rows,
-        "Candidate probability-quality table from `output/data/ml_statistical_summary.json`. {#tbl:probability-quality}",
-    )
-
-
-def _training_diagnostics_table(training: dict[str, Any]) -> str:
-    rows = [
-        (
-            _candidate_display_label(row.get("candidate_id", "N/A")),
-            _string_value(row.get("status", "N/A")),
-            _string_value(row.get("best_epoch", "N/A")),
-            _percent_value(row.get("best_test_accuracy")),
-            _percent_value(row.get("final_test_accuracy")),
-            _percent_value(row.get("train_test_accuracy_gap")),
-            _decimal_value(row.get("loss_reduction")),
-            _decimal_value(row.get("final_learning_rate")),
-        )
-        for row in _mapping_list(training.get("rows"))
-    ]
-    return _markdown_table(
-        (
-            "Candidate",
-            "Status",
-            "Best epoch",
-            "Best test accuracy",
-            "Final test accuracy",
-            "Train-test gap",
-            "Loss reduction",
-            "Final learning rate",
-        ),
-        rows,
-        "Configured-training diagnostics from `output/data/ml_training_diagnostics.json`. {#tbl:training-diagnostics}",
-    )
-
-
-def _variable_provenance_table(provenance: dict[str, dict[str, str]]) -> str:
-    counts = Counter(row["source"] for row in provenance.values())
-    rows = [(source, str(count)) for source, count in sorted(counts.items())]
-    return _markdown_table(
-        ("Source artifact", "Injected variables or fragments"),
-        rows,
-        "Variable provenance summary from `output/data/manuscript_variable_provenance.json`. {#tbl:variable-provenance}",
-    )
-
-
-def _markdown_table(headers: Sequence[str], rows: Sequence[Sequence[str]], caption: str) -> str:
-    safe_rows = rows or tuple(("N/A",) * len(headers) for _ in range(1))
-    lines = [
-        "| " + " | ".join(headers) + " |",
-        "| " + " | ".join("---" for _ in headers) + " |",
-    ]
-    for row in safe_rows:
-        lines.append("| " + " | ".join(_escape_table_cell(cell) for cell in row) + " |")
-    lines.extend(("", f": {caption}"))
-    return "\n".join(lines)
-
-
-def _pdf_small_table(headers: Sequence[str], rows: Sequence[Sequence[str]], caption: str) -> str:
-    return "\n".join(("\\begingroup\\footnotesize", _markdown_table(headers, rows, caption), "\\endgroup"))
 
 
 def _figure_block(project_root: Path, registry: dict[str, Any], label: str) -> str:
@@ -1417,6 +1132,8 @@ def _artifact_role(path: str) -> str:
         return "Benchmark grading"
     if "review" in path:
         return "Review packet"
+    if "security" in path or "threat_model" in path or "attestation" in path or "inventory" in path:
+        return "Security evidence"
     if "ledger" in path:
         return "Run or candidate ledger"
     if "readiness" in path:

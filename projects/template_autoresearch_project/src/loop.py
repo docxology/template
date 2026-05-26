@@ -31,6 +31,7 @@ from .writers import (
     write_ml_task_artifacts,
     write_method_contract_artifacts,
 )
+from .security import write_security_artifacts
 
 __all__ = [
     "AutoResearchClaim",
@@ -99,9 +100,14 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         ml_task=ml_result.to_summary_dict(),
     )
     output_paths.extend(update_result_payloads(project_root, final))
+    if config.security_profile.enabled:
+        output_paths.extend(write_security_artifacts(project_root, config, output_paths, generated_at=generated_at))
     output_paths.extend(write_final_visual_artifacts(project_root, final, ml_result))
     output_paths.extend(write_manuscript_hydration_artifacts(project_root, require_valid=False))
     output_paths.append(_write_readiness_manifest(project_root, output_paths))
+    if config.security_profile.enabled:
+        output_paths.extend(write_security_artifacts(project_root, config, output_paths, generated_at=generated_at))
+        output_paths.append(_write_readiness_manifest(project_root, output_paths))
 
     readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
     if _only_changed_artifact_manifest_issues(readiness_post):
@@ -132,6 +138,8 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         )
     )
     output_paths.extend(write_manuscript_hydration_artifacts(project_root, require_valid=True))
+    if config.security_profile.enabled:
+        output_paths.extend(write_security_artifacts(project_root, config, output_paths, generated_at=generated_at))
     output_paths.append(write_artifact_manifest(project_root, output_paths))
     return AutoResearchLoopResult(
         project_name=project_name,
@@ -213,6 +221,12 @@ def _final_output_path_payload(project_root: Path, output_paths: list[Path]) -> 
         "output/data/ml_paired_comparison.json",
         "output/data/ml_statistical_summary.json",
         "output/data/ml_training_diagnostics.json",
+        "output/data/ml_candidate_selection_audit.json",
+        "output/data/ml_diagnostic_boundary.json",
+        "output/data/autoresearch_security_profile.json",
+        "output/data/autoresearch_threat_model.json",
+        "output/data/autoresearch_supply_chain_inventory.json",
+        "output/data/autoresearch_integrity_attestation.json",
         "output/data/manuscript_variables.json",
         "output/data/manuscript_variable_provenance.json",
         "output/data/manuscript_figure_blocks.json",
@@ -249,7 +263,10 @@ def _final_output_path_payload(project_root: Path, output_paths: list[Path]) -> 
         "output/figures/mnist_class_balance.png",
         "output/figures/mnist_subset_contact_sheet.png",
         "output/figures/autoresearch_closure_flow.png",
+        "output/figures/autoresearch_security_control_matrix.png",
+        "output/figures/autoresearch_integrity_chain.png",
         "output/figures/figure_registry.json",
+        "output/reports/autoresearch_security_review.md",
     )
     return tuple(
         dict.fromkeys(

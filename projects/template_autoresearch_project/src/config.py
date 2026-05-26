@@ -16,6 +16,7 @@ from infrastructure.autoresearch import (
     ExperimentCandidate,
     ResearchIdea,
     ReviewGate,
+    SecurityProfile,
     parse_string_sequence,
 )
 
@@ -63,6 +64,7 @@ class AutoResearchLoopConfig:
     disclosure_text: str = "AI-assisted AutoResearch"
     review_gates: tuple[ReviewGate, ...] = ()
     benchmark_tasks: tuple[BenchmarkTask, ...] = ()
+    security_profile: SecurityProfile = SecurityProfile()
 
     def to_dict(self) -> dict[str, object]:
         """Serialize to a JSON-safe mapping."""
@@ -80,6 +82,7 @@ class AutoResearchLoopConfig:
             "disclosure_text": self.disclosure_text,
             "review_gates": [gate.to_dict() for gate in self.review_gates],
             "benchmark_tasks": [task.to_dict() for task in self.benchmark_tasks],
+            "security_profile": self.security_profile.to_dict(),
         }
 
 
@@ -118,6 +121,7 @@ def build_loop_config(plan: AutoResearchPlan, settings: ManuscriptLoopSettings) 
         disclosure_text=plan.config.disclosure_text,
         review_gates=plan.config.review_gates,
         benchmark_tasks=plan.config.benchmark_tasks,
+        security_profile=plan.config.security_profile,
     )
 
 

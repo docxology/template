@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import date
 import hashlib
 import json
 import re
@@ -11,6 +12,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 from src.manuscript_variables import (
     compute_variables,
@@ -25,6 +27,40 @@ def _candidate_display_label(value: object) -> str:
     if text == "nearest_centroid_baseline":
         return "baseline"
     return text.removeprefix("exp-").replace("-", " ")
+
+
+SURVEY_CITEKEYS = {
+    "baulin_discovery_engine_2025",
+    "hao_ai_tools_focus_2026",
+    "asai_openscholar_2026",
+    "skarlinski_paperqa2_2024",
+    "futurehouse_platform_2025",
+    "lu_ai_scientist_nature_2026",
+    "yamada_ai_scientist_v2_2025",
+    "ghareeb_robin_2026",
+    "kong_ai_auto_research_2026",
+    "hasib_exhyte_2025",
+    "wei_agentic_science_2025",
+    "gridach_agentic_science_2025",
+    "hubert_alphaproof_2025",
+    "lu_process_driven_autoformalization_2024",
+    "apollo_lean_collaboration_2025",
+    "romera_paredes_alphaevolve_2025",
+    "deepevolve_2025",
+    "active_inference_science_2025",
+    "graphrag_bench_2026",
+    "brink_kg_rag_2026",
+    "heddes_hdc_2024",
+    "balazevic_tucker_2019",
+    "yusupov_mixed_geometry_2025",
+}
+
+SECURITY_CITEKEYS = {
+    "nist_sp800_207_zero_trust",
+    "nist_sp800_218_ssdf",
+    "slsa_spec_latest",
+    "mitre_attack_t1195",
+}
 
 
 def test_manuscript_variables_cover_all_source_tokens(
@@ -65,6 +101,8 @@ def test_manuscript_variables_cover_all_source_tokens(
     assert "fig:autoresearch_candidate_lifecycle" in variables["FIGURE_BLOCK_CANDIDATE_LIFECYCLE"]
     assert "fig:mnist_class_balance" in variables["FIGURE_BLOCK_DATASET_CLASS_BALANCE"]
     assert "fig:mnist_subset_contact_sheet" in variables["FIGURE_BLOCK_DATASET_CONTACT_SHEET"]
+    assert "fig:autoresearch_security_control_matrix" in variables["FIGURE_BLOCK_SECURITY_CONTROL_MATRIX"]
+    assert "fig:autoresearch_integrity_chain" in variables["FIGURE_BLOCK_INTEGRITY_CHAIN"]
     assert variables["TRAIN_PER_CLASS_COUNT"] == "200"
     assert variables["TEST_PER_CLASS_COUNT"] == "50"
     assert variables["ACCEPTED_MACRO_F1"].endswith("%")
@@ -104,10 +142,22 @@ def test_manuscript_variables_cover_all_source_tokens(
     assert variables["SELECTIVE_ACCURACY_TABLE"].startswith("| Confidence threshold |")
     assert variables["PROBABILITY_QUALITY_TABLE"].startswith("| Candidate |")
     assert variables["TRAINING_DIAGNOSTICS_TABLE"].startswith("| Candidate |")
+    assert variables["CANDIDATE_SELECTION_AUDIT_TABLE"].startswith("| Rank |")
+    assert variables["DIAGNOSTIC_BOUNDARY_TABLE"].startswith("\\begingroup\\footnotesize")
+    assert variables["SECURITY_ARTIFACT_TABLE"].startswith("| Security artifact |")
+    assert variables["SECURITY_THREAT_MODEL_TABLE"].startswith("\\begingroup\\footnotesize")
+    assert variables["SECURITY_INTEGRITY_TABLE"].startswith("| Integrity field |")
+    assert variables["SECURITY_PROFILE_MODE"] == "local_deterministic"
+    assert variables["SECURITY_NETWORK_POLICY"] == "default_offline"
+    assert variables["SECURITY_INTEGRITY_ALGORITHM"] == "sha256"
+    assert variables["SECURITY_EXTERNAL_SIGNING"] == "false"
+    assert variables["SECURITY_ATTESTATION_STATUS"] == "passed"
+    assert variables["SECURITY_ATTESTATION_MISSING_COUNT"] == "0"
+    assert variables["SECURITY_ATTESTATION_MISMATCH_COUNT"] == "0"
     assert variables["FIGURE_METHOD_TABLE"].startswith("\\begingroup\\footnotesize")
     assert "| Figure | Source | Method | Scope |" in variables["FIGURE_METHOD_TABLE"]
     assert "@fig:ml_candidate_scores" in variables["FIGURE_METHOD_TABLE"]
-    assert "[ml_candidate_intervals.json](../data/ml_candidate_intervals.json)" in variables["FIGURE_METHOD_TABLE"]
+    assert "[candidate intervals](../data/ml_candidate_intervals.json)" in variables["FIGURE_METHOD_TABLE"]
     assert variables["AUTORESEARCH_ARTIFACT_TABLE"].startswith("| Artifact |")
     assert variables["REVIEW_GATE_TABLE"].startswith("| Gate |")
     assert variables["BENCHMARK_SCORE_TABLE"].startswith("| Benchmark task |")
@@ -182,6 +232,8 @@ def test_generated_figure_blocks_match_registry(
         "FIGURE_BLOCK_DATASET_CLASS_BALANCE": "fig:mnist_class_balance",
         "FIGURE_BLOCK_DATASET_CONTACT_SHEET": "fig:mnist_subset_contact_sheet",
         "FIGURE_BLOCK_CLOSURE_FLOW": "fig:autoresearch_closure_flow",
+        "FIGURE_BLOCK_SECURITY_CONTROL_MATRIX": "fig:autoresearch_security_control_matrix",
+        "FIGURE_BLOCK_INTEGRITY_CHAIN": "fig:autoresearch_integrity_chain",
     }.items():
         block = variables[token]
         record = registry[label]
@@ -211,6 +263,12 @@ def test_generated_tables_are_backed_by_ledgers(
     paired = json.loads((project_root / "output" / "data" / "ml_paired_comparison.json").read_text())
     statistical = json.loads((project_root / "output" / "data" / "ml_statistical_summary.json").read_text())
     training = json.loads((project_root / "output" / "data" / "ml_training_diagnostics.json").read_text())
+    selection = json.loads((project_root / "output" / "data" / "ml_candidate_selection_audit.json").read_text())
+    boundary = json.loads((project_root / "output" / "data" / "ml_diagnostic_boundary.json").read_text())
+    threat_model = json.loads((project_root / "output" / "data" / "autoresearch_threat_model.json").read_text())
+    attestation = json.loads(
+        (project_root / "output" / "data" / "autoresearch_integrity_attestation.json").read_text()
+    )
     registry = json.loads((project_root / "output" / "figures" / "figure_registry.json").read_text())
 
     assert _candidate_display_label(candidate_ledger["accepted_candidate_id"]) in variables["ML_CANDIDATE_LEDGER_TABLE"]
@@ -249,6 +307,13 @@ def test_generated_tables_are_backed_by_ledgers(
         str(row["retained_count"]) in variables["SELECTIVE_ACCURACY_TABLE"] for row in statistical["coverage_curve"]
     )
     assert str(training["accepted"]["best_epoch"]) in variables["TRAINING_DIAGNOSTICS_TABLE"]
+    assert all(
+        _candidate_display_label(row["candidate_id"]) in variables["CANDIDATE_SELECTION_AUDIT_TABLE"]
+        for row in selection["rows"]
+    )
+    assert all(row["surface"].replace("_", " ") in variables["DIAGNOSTIC_BOUNDARY_TABLE"] for row in boundary["rows"])
+    assert all(row["stride_category"] in variables["SECURITY_THREAT_MODEL_TABLE"] for row in threat_model["threats"])
+    assert str(attestation["checked_count"]) in variables["SECURITY_INTEGRITY_TABLE"]
     assert all(f"@{label}" in variables["FIGURE_METHOD_TABLE"] for label in registry)
     assert all(
         len(cell) <= 120
@@ -275,31 +340,40 @@ def test_new_scholarship_citekeys_are_present_and_referenced(project_root: Path)
         "efron1993bootstrap",
         "brier1950verification",
         "cohen1960coefficient",
-        "baulin_discovery_engine_2025",
-        "hao_ai_tools_focus_2026",
-        "asai_openscholar_2026",
-        "skarlinski_paperqa2_2024",
-        "futurehouse_platform_2025",
-        "lu_ai_scientist_nature_2026",
-        "yamada_ai_scientist_v2_2025",
-        "ghareeb_robin_2026",
-        "kong_ai_auto_research_2026",
-        "hasib_exhyte_2025",
-        "wei_agentic_science_2025",
-        "gridach_agentic_science_2025",
-        "hubert_alphaproof_2025",
-        "lu_process_driven_autoformalization_2024",
-        "apollo_lean_collaboration_2025",
-        "romera_paredes_alphaevolve_2025",
-        "deepevolve_2025",
-        "active_inference_science_2025",
-        "graphrag_bench_2026",
-        "brink_kg_rag_2026",
-        "heddes_hdc_2024",
-        "balazevic_tucker_2019",
-        "yusupov_mixed_geometry_2025",
+        *SURVEY_CITEKEYS,
+        *SECURITY_CITEKEYS,
     }:
         assert f"{{{citekey}," in references
+        assert f"@{citekey}" in manuscript
+
+
+def test_survey_source_ledger_covers_current_trend_citations(project_root: Path) -> None:
+    references = (project_root / "manuscript" / "references.bib").read_text(encoding="utf-8")
+    manuscript = "\n".join(
+        path.read_text(encoding="utf-8") for path in sorted((project_root / "manuscript").glob("[0-9][0-9]_*.md"))
+    )
+    ledger = yaml.safe_load((project_root / "manuscript" / "source_ledger.yaml").read_text(encoding="utf-8"))
+    assert isinstance(ledger, dict)
+    rows = ledger.get("sources")
+    assert isinstance(rows, list)
+
+    by_key = {row["citekey"]: row for row in rows if isinstance(row, dict)}
+    assert set(by_key) == SURVEY_CITEKEYS
+    allowed_tiers = {
+        "conference_proceeding",
+        "organizational_announcement",
+        "peer_reviewed_article",
+        "scholarly_preprint",
+    }
+    for citekey in SURVEY_CITEKEYS:
+        row = by_key[citekey]
+        checked_as_of = date.fromisoformat(str(row["checked_as_of"]))
+        canonical_url = str(row["canonical_url"])
+        assert checked_as_of <= date.today()
+        assert canonical_url.startswith("https://")
+        assert row["source_tier"] in allowed_tiers
+        assert f"{{{citekey}," in references
+        assert canonical_url in references
         assert f"@{citekey}" in manuscript
 
 

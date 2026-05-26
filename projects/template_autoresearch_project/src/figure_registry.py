@@ -110,6 +110,16 @@ def figure_registry_payload(
         "Configured-training dynamics from output/data/ml_training_diagnostics.json, comparing final and "
         "best-epoch held-out accuracy plus train-test accuracy gaps for evaluated candidates."
     )
+    security_control_caption = (
+        "Local security-control matrix from output/data/autoresearch_threat_model.json; controls map "
+        "NIST, SLSA, and ATT&CK-inspired safeguards to deterministic evidence surfaces without claiming "
+        "production security certification. Generation method: structured control matrix with separate "
+        "control, evidence, framework, and status columns."
+    )
+    integrity_chain_caption = (
+        "Local integrity chain from output/data/autoresearch_integrity_attestation.json; checksums summarize "
+        "the observed run artifacts and remain unsigned local evidence."
+    )
     if result is not None:
         stage_caption = (
             f"Validated AutoResearch run with {len(result.stage_results)} stages, "
@@ -566,6 +576,37 @@ def figure_registry_payload(
                 "source_provenance": "data/mnist_small_provenance.json",
                 "alt_text": "Two-row grid with one local handwritten digit example for each class zero through nine.",
                 "claim_boundary": "The sheet illustrates the local fixed subset and is not a statistical sample claim.",
+            },
+        },
+        "fig:autoresearch_security_control_matrix": {
+            "figure_id": "figure_024",
+            "filename": "autoresearch_security_control_matrix.png",
+            "caption": security_control_caption,
+            "label": "fig:autoresearch_security_control_matrix",
+            "section": "Methodology",
+            "width": "0.84\\textwidth",
+            "placement": "h",
+            "generated_by": "src.figures.write_security_control_matrix_figure",
+            "metadata": {
+                "source": "output/data/autoresearch_threat_model.json",
+                "alt_text": "Matrix of local security controls mapped to framework-inspired evidence surfaces and status.",
+                "claim_boundary": "Controls are local research-artifact safeguards, not production security certification.",
+            },
+        },
+        "fig:autoresearch_integrity_chain": {
+            "figure_id": "figure_025",
+            "filename": "autoresearch_integrity_chain.png",
+            "caption": integrity_chain_caption,
+            "label": "fig:autoresearch_integrity_chain",
+            "section": "Results",
+            "width": "0.84\\textwidth",
+            "placement": "h",
+            "generated_by": "src.figures.write_security_integrity_chain_figure",
+            "metadata": {
+                "source": "output/data/autoresearch_integrity_attestation.json",
+                "source_inventory": "output/data/autoresearch_supply_chain_inventory.json",
+                "alt_text": "Process-chain diagram and bar chart summarizing checked, missing, and mismatched local artifact records.",
+                "claim_boundary": "Integrity checks are local SHA-256 observations and are not externally signed provenance.",
             },
         },
     }

@@ -51,6 +51,12 @@ def test_template_autoresearch_project_declares_exact_stage_gates() -> None:
     assert "output/data/ml_paired_comparison.json" in plan.required_artifacts
     assert "output/data/ml_statistical_summary.json" in plan.required_artifacts
     assert "output/data/ml_training_diagnostics.json" in plan.required_artifacts
+    assert "output/data/ml_candidate_selection_audit.json" in plan.required_artifacts
+    assert "output/data/ml_diagnostic_boundary.json" in plan.required_artifacts
+    assert "output/data/autoresearch_security_profile.json" in plan.required_artifacts
+    assert "output/data/autoresearch_threat_model.json" in plan.required_artifacts
+    assert "output/data/autoresearch_supply_chain_inventory.json" in plan.required_artifacts
+    assert "output/data/autoresearch_integrity_attestation.json" in plan.required_artifacts
     assert "output/figures/ml_probability_margin_distribution.png" in plan.required_artifacts
     assert "output/figures/ml_bootstrap_intervals.png" in plan.required_artifacts
     assert "output/figures/ml_paired_correctness.png" in plan.required_artifacts
@@ -61,6 +67,11 @@ def test_template_autoresearch_project_declares_exact_stage_gates() -> None:
     assert "output/figures/mnist_class_balance.png" in plan.required_artifacts
     assert "output/figures/mnist_subset_contact_sheet.png" in plan.required_artifacts
     assert "output/figures/autoresearch_closure_flow.png" in plan.required_artifacts
+    assert "output/figures/autoresearch_security_control_matrix.png" in plan.required_artifacts
+    assert "output/figures/autoresearch_integrity_chain.png" in plan.required_artifacts
+    assert "output/reports/autoresearch_security_review.md" in plan.required_artifacts
+    assert plan.config.security_profile.enabled is True
+    assert plan.config.security_profile.external_signing is False
 
 
 def test_template_autoresearch_project_has_project_docs_contract() -> None:
@@ -110,6 +121,12 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/data/ml_paired_comparison.json" in outputs
     assert "output/data/ml_statistical_summary.json" in outputs
     assert "output/data/ml_training_diagnostics.json" in outputs
+    assert "output/data/ml_candidate_selection_audit.json" in outputs
+    assert "output/data/ml_diagnostic_boundary.json" in outputs
+    assert "output/data/autoresearch_security_profile.json" in outputs
+    assert "output/data/autoresearch_threat_model.json" in outputs
+    assert "output/data/autoresearch_supply_chain_inventory.json" in outputs
+    assert "output/data/autoresearch_integrity_attestation.json" in outputs
     assert "output/data/manuscript_variable_provenance.json" in outputs
     assert "output/data/manuscript_figure_blocks.json" in outputs
     assert "output/figures/ml_confusion_matrix.png" in outputs
@@ -132,8 +149,11 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/figures/mnist_class_balance.png" in outputs
     assert "output/figures/mnist_subset_contact_sheet.png" in outputs
     assert "output/figures/autoresearch_closure_flow.png" in outputs
+    assert "output/figures/autoresearch_security_control_matrix.png" in outputs
+    assert "output/figures/autoresearch_integrity_chain.png" in outputs
     assert "output/reports/ml_experiment_report.md" in outputs
     assert "output/reports/ml_benchmark_score.json" in outputs
+    assert "output/reports/autoresearch_security_review.md" in outputs
 
     project_readme = (project_root / "README.md").read_text(encoding="utf-8")
     assert "output/data/manuscript_variable_provenance.json" in project_readme
@@ -149,6 +169,12 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/data/ml_paired_comparison.json" in project_readme
     assert "output/data/ml_statistical_summary.json" in project_readme
     assert "output/data/ml_training_diagnostics.json" in project_readme
+    assert "output/data/ml_candidate_selection_audit.json" in project_readme
+    assert "output/data/ml_diagnostic_boundary.json" in project_readme
+    assert "output/data/autoresearch_security_profile.json" in project_readme
+    assert "output/data/autoresearch_threat_model.json" in project_readme
+    assert "output/data/autoresearch_supply_chain_inventory.json" in project_readme
+    assert "output/data/autoresearch_integrity_attestation.json" in project_readme
     assert "output/figures/autoresearch_closure_flow.png" in project_readme
     assert "output/figures/ml_confusion_matrix.png" in project_readme
     assert "output/figures/ml_per_class_accuracy.png" in project_readme
@@ -169,6 +195,9 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/figures/autoresearch_candidate_lifecycle.png" in project_readme
     assert "output/figures/mnist_class_balance.png" in project_readme
     assert "output/figures/mnist_subset_contact_sheet.png" in project_readme
+    assert "output/figures/autoresearch_security_control_matrix.png" in project_readme
+    assert "output/figures/autoresearch_integrity_chain.png" in project_readme
+    assert "output/reports/autoresearch_security_review.md" in project_readme
 
     agent_notes = (project_root / "AGENTS.md").read_text(encoding="utf-8")
     assert "write_final_visual_artifacts()" in agent_notes

@@ -41,6 +41,7 @@ EXTRINSIC_QUALITY_CHECKS = frozenset(
         "method_contracts",
         "review_gates",
         "benchmark_tasks",
+        "security_profile",
     }
 )
 _REVIEW_DECISIONS = frozenset({"approved", "revised", "blocked", "deferred"})
@@ -103,6 +104,8 @@ def validate_autoresearch_plan(
         _validate_benchmark_tasks(project_root, plan, issues)
     if "ai_disclosure" in active_checks:
         _validate_ai_disclosure(project_root, plan, issues)
+    if "security_profile" in active_checks:
+        _validate_security_profile(project_root, plan, issues)
 
     valid = not any(issue.severity == "error" for issue in issues)
     return AutoResearchReport(project_name=plan.project_name, valid=valid, issues=tuple(issues), plan=plan)
@@ -546,6 +549,87 @@ def _validate_ai_disclosure(
 
 def _contains_disclosure_or_token(text: str, disclosure: str) -> bool:
     return disclosure in text or "{{DISCLOSURE_TEXT}}" in text
+
+
+def _validate_security_profile(
+    project_root: Path,
+    plan: AutoResearchPlan,
+    issues: list[AutoResearchIssue],
+) -> None:
+    profile = plan.config.security_profile
+    if not profile.enabled:
+        return
+    severity = _strict_severity(plan)
+    paths = {
+        "profile": project_root / "output" / "data" / "autoresearch_security_profile.json",
+        "threat_model": project_root / "output" / "data" / "autoresearch_threat_model.json",
+        "inventory": project_root / "output" / "data" / "autoresearch_supply_chain_inventory.json",
+        "attestation": project_root / "output" / "data" / "autoresearch_integrity_attestation.json",
+        "review": project_root / "output" / "reports" / "autoresearch_security_review.md",
+        "control_matrix": project_root / "output" / "figures" / "autoresearch_security_control_matrix.png",
+        "integrity_chain": project_root / "output" / "figures" / "autoresearch_integrity_chain.png",
+    }
+    for label, path in paths.items():
+        if not path.exists():
+            issues.append(
+                _issue(
+                    severity,
+                    "AUTORESEARCH.SECURITY_ARTIFACT_MISSING",
+                    f"security artifact is missing: {label}",
+                    str(path),
+                    "Run the AutoResearch loop to regenerate local security artifacts.",
+                )
+            )
+    if any(not path.exists() for path in paths.values()):
+        return
+
+    payload = _read_json_mapping(
+        paths["profile"],
+        issues,
+        severity,
+        "AUTORESEARCH.SECURITY_PROFILE_INVALID",
+    )
+    if payload is None:
+        return
+    expected = profile.to_dict()
+    for key in ("mode", "integrity_algorithm", "network_policy", "external_signing"):
+        if payload.get(key) != expected[key]:
+            issues.append(
+                _issue(
+                    severity,
+                    "AUTORESEARCH.SECURITY_PROFILE_MISMATCH",
+                    f"security profile {key} does not match autoresearch.yaml",
+                    str(paths["profile"]),
+                    "Regenerate security artifacts from the configured profile.",
+                )
+            )
+    if payload.get("enabled") is not True:
+        issues.append(
+            _issue(
+                severity,
+                "AUTORESEARCH.SECURITY_PROFILE_DISABLED",
+                "security_profile.enabled is true in config but generated profile is disabled",
+                str(paths["profile"]),
+                "Regenerate security artifacts from the configured profile.",
+            )
+        )
+
+    attestation = _read_json_mapping(
+        paths["attestation"],
+        issues,
+        severity,
+        "AUTORESEARCH.SECURITY_ATTESTATION_INVALID",
+    )
+    if attestation is not None and attestation.get("status") != "passed":
+        issues.append(
+            _issue(
+                severity,
+                "AUTORESEARCH.SECURITY_ATTESTATION_FAILED",
+                f"integrity attestation status is {attestation.get('status')!s}",
+                str(paths["attestation"]),
+                "Refresh artifacts or resolve checksum mismatches before publication review.",
+            )
+        )
 
 
 def _artifact_path(project_root: Path, artifact: str) -> Path:

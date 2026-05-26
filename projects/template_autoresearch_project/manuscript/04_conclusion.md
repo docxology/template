@@ -6,7 +6,8 @@ by design, but it exercises the method surfaces that matter for a public
 default: a declared research program, local input-data provenance, bounded
 candidate families (`{{MODEL_FAMILY_LABELS}}`), objective scoring, budget and
 cost ledgers, evidence-linked claims, generated figures, benchmark grading,
-manuscript-variable hydration, validation, and human review gates.
+manuscript-variable hydration, validation, local integrity attestation
+(`{{SECURITY_ATTESTATION_STATUS}}`), and human review gates.
 
 The broader field is converging across five related trends. Autoresearch systems
 seek end-to-end automation of ideation, experiment execution, writing, and
@@ -24,7 +25,9 @@ mutate arbitrary code, coordinate external agents, or approve its own paper.
 Instead it demonstrates governance infrastructure for automated research
 workflows: every important claim is hydrated from run artifacts, every generated
 figure is registry-bound, every budget and candidate decision is recorded, and
-review state remains outside generated self-approval.
+review state remains outside generated self-approval. The security layer adds
+local inventory and checksum evidence while keeping external signing and
+production deployment claims out of scope.
 
 The durable product is therefore not only the `{{DATASET_SHORT_NAME}}` metric.
 It is a reproducible research process whose data, claims, captions, figures,

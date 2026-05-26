@@ -74,6 +74,7 @@ def build_review_packet(result: AutoResearchLoopResult) -> dict[str, object]:
         "human_review": {
             "policy": result.config.review_policy,
             "ready_for_review": result.readiness_valid and all_claims_supported,
+            "publication_approved": False,
             "required_review_decision": "approve, revise, or block before publication",
         },
         "configuration": result.config.to_dict(),
@@ -116,6 +117,7 @@ def render_review_packet_markdown(result: AutoResearchLoopResult) -> str:
         f"- Topic: {result.config.topic}",
         f"- Policy: `{human_review['policy']}`",
         f"- Ready for review: `{str(human_review['ready_for_review']).lower()}`",
+        f"- Publication approved: `{str(human_review['publication_approved']).lower()}`",
         "",
         "## Review Questions",
         "",

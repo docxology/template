@@ -49,8 +49,10 @@ from .diagnostics import (
     write_bootstrap_intervals_json,
     write_calibration_report_json,
     write_candidate_accuracy_intervals_json,
+    write_candidate_selection_audit_json,
     write_class_balance_json,
     write_classification_diagnostics_json,
+    write_diagnostic_boundary_json,
     write_paired_comparison_json,
     write_probability_diagnostics_json,
     write_prediction_records_json,
@@ -230,6 +232,7 @@ def write_method_contract_artifacts(
     )
     review_decisions = {
         "generated_at": generated_at,
+        "publication_approved": False,
         "decisions": [
             {
                 "gate": gate.name,
@@ -341,6 +344,8 @@ def write_ml_task_artifacts(project_root: Path, result: MLTaskResult, *, generat
         write_paired_comparison_json(data_dir / "ml_paired_comparison.json", project_root, result),
         write_statistical_summary_json(data_dir / "ml_statistical_summary.json", project_root, result),
         write_training_diagnostics_json(data_dir / "ml_training_diagnostics.json", result),
+        write_candidate_selection_audit_json(data_dir / "ml_candidate_selection_audit.json", project_root, result),
+        write_diagnostic_boundary_json(data_dir / "ml_diagnostic_boundary.json", result),
         write_text(reports_dir / "ml_experiment_report.md", render_ml_experiment_report(result)),
         write_json(reports_dir / "ml_benchmark_score.json", benchmark_score),
         write_ml_candidate_scores_figure(figures_dir, result, candidate_intervals_payload),

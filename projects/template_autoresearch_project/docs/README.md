@@ -5,8 +5,9 @@ designed to run through the standard template pipeline while keeping the
 AutoResearch loop deterministic, configurable, offline, and human-reviewed. It
 demonstrates a local MNIST subset, bounded numpy neural-network candidate
 evaluation, evidence-linked accepted ideas, review gates, benchmark-style
-grading, and explicit disclosure while deferring autonomous generated-code
-execution and runtime dataset downloads.
+grading, local security integrity artifacts, and explicit disclosure while
+deferring autonomous generated-code execution, runtime dataset downloads, and
+external signing.
 
 Primary command:
 
