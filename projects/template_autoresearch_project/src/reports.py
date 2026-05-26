@@ -156,7 +156,7 @@ def render_ml_experiment_report(result: MLTaskResult) -> str:
     lines = [
         "# Deterministic ML-Loop Experiment",
         "",
-        "- Task: tiny MNIST neural-network classification",
+        f"- Task: {result.task_config.name}",
         f"- Seed: {result.task_config.seed}",
         f"- Train/test size: {result.dataset.train_size}/{result.dataset.test_size}",
         f"- Baseline accuracy: {result.baseline.test_accuracy:.3f}",
@@ -181,6 +181,17 @@ def render_ml_experiment_report(result: MLTaskResult) -> str:
         )
     lines.extend(
         [
+            "",
+            "## Training Diagnostics",
+            "",
+            "Epoch-level metrics are written to `output/data/ml_training_history.csv`; training summaries "
+            "are written to `output/data/ml_training_diagnostics.json`; accepted-candidate error examples "
+            "are written to `output/data/ml_error_examples.json`. Probability records, "
+            "classification diagnostics, calibration bins, and robustness smoke-test rows are written to "
+            "`output/data/ml_prediction_records.json`, `output/data/ml_classification_diagnostics.json`, "
+            "`output/data/ml_calibration_report.json`, `output/data/ml_robustness_report.json`, "
+            "`output/data/ml_probability_diagnostics.json`, `output/data/ml_bootstrap_intervals.json`, and "
+            "`output/data/ml_paired_comparison.json`, plus `output/data/ml_statistical_summary.json`.",
             "",
             "This report is generated from deterministic local data. It does not call an external model, "
             "execute generated code, or approve the manuscript.",

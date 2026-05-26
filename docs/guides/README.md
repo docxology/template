@@ -19,6 +19,7 @@ The `guides/` directory contains skill-level specific usage guides that progress
 | [`new-project-setup.md`](new-project-setup.md) | New project checklist (pitfalls and venv) | All levels |
 | [`new-project-one-shot-prompt.md`](new-project-one-shot-prompt.md) | Copy-paste LLM prompt (positive controls: template_code_project + template) | All levels |
 | [`methods-orchestration.md`](methods-orchestration.md) | Methods-to-pipeline contracts, artifacts, evidence, validation commands | Advanced |
+| [`codegraph-local.md`](codegraph-local.md) | Optional local CodeGraph indexing for agent code navigation, with scope guards | Advanced |
 | [`llm-integration-guide.md`](llm-integration-guide.md) | AI-assisted research with Ollama (LLM review, translation) | Expert |
 | [`publishing-guide.md`](publishing-guide.md) | Publishing workflow (DOI, Zenodo, arXiv, citations) | Expert |
 | [`secure-research-guide.md`](secure-research-guide.md) | PDF watermarking, provenance, and integrity | Expert |
@@ -58,6 +59,7 @@ The `guides/` directory contains skill-level specific usage guides that progress
 - **[`new-project-setup.md`](new-project-setup.md)** — step-by-step checklist before first pipeline run
 - **[`new-project-one-shot-prompt.md`](new-project-one-shot-prompt.md)** — one-shot scaffold prompt for AI-assisted projects
 - **[`methods-orchestration.md`](methods-orchestration.md)** — keep methods prose, pipeline contracts, artifacts, and evidence aligned
+- **[`codegraph-local.md`](codegraph-local.md)** — optional local code graph indexing for source navigation and impact checks
 - **[`../core/how-to-use.md`](../core/how-to-use.md)** - usage guide (navigation hub)
 - **[`../usage/`](../usage/)** - Usage examples and patterns
 - **[`../reference/common-workflows.md`](../reference/common-workflows.md)** - Step-by-step recipes

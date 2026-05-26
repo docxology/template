@@ -1,6 +1,6 @@
 ideas:
   - id: idea-ml-loop
-    title: "Bounded deterministic MNIST neural-network loop"
+    title: "Bounded deterministic small MNIST neural-network loop"
     rationale: "A tractable AutoResearch exemplar needs a real local digit-classification task, objective metrics, neural candidates, transformer-style comparison, and a keep/reject/defer ledger."
     status: accepted
     evidence_links:
@@ -50,7 +50,18 @@ ideas:
           - output/data/ml_confusion_matrix.csv
           - output/figures/ml_candidate_scores.png
       - id: exp-mlp-tanh-64
-        title: "Deferred tanh MLP"
+        title: "One-hidden-layer tanh MLP"
+        status: proposed
+        metric_name: test_accuracy
+        metric_direction: maximize
+        touched_paths:
+          - projects/template_autoresearch_project/mnist_task.yaml
+          - projects/template_autoresearch_project/src/ml_task.py
+        expected_artifacts:
+          - output/data/ml_task_results.json
+          - output/data/ml_candidate_ledger.json
+      - id: exp-mlp-relu-64-deferred
+        title: "Deferred wider ReLU MLP"
         status: proposed
         metric_name: test_accuracy
         metric_direction: maximize

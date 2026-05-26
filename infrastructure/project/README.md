@@ -20,11 +20,44 @@ projects = discover_projects(repo_root)
 is_valid, message = validate_project_structure(Path("projects/my_research"))
 ```
 
+### Optional CodeGraph Helpers
+
+CodeGraph integration is local-only and optional. The helpers live here because
+they reuse the public project scope and confidentiality guard rules.
+
+```python
+from pathlib import Path
+from infrastructure.project import (
+    build_codegraph_init_command,
+    verify_codegraph_scope_payload,
+)
+
+command = build_codegraph_init_command(Path("."))
+print(command.display)
+
+unexpected = verify_codegraph_scope_payload(codegraph_files_json)
+```
+
+Use [`docs/guides/codegraph-local.md`](../../docs/guides/codegraph-local.md)
+for the runbook.
+
 If your repository uses “program directories” (a top-level folder containing multiple projects),
 use `ProjectInfo.qualified_name` for display/selection. Nested projects will be returned as
 `program/name`.
 
 ## Key Functions
+
+### CodeGraph Local Integration
+
+```python
+from infrastructure.project import build_codegraph_init_command, build_codegraph_files_command
+
+init = build_codegraph_init_command(Path("."))
+files = build_codegraph_files_command(Path("."))
+```
+
+These helpers only build commands or verify JSON payloads. They do not install
+CodeGraph, start MCP servers, or mutate the repository.
 
 ### Project Discovery
 

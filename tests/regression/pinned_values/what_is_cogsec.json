@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "project_name": "what_is_cogsec",
+    "scaffolded_on": "2026-05-26",
+    "note": "Private passive project under projects_in_progress/what_is_cogsec — not git-tracked in the public template. Populate figures/tables as regression tiers mature; see docs/maintenance/regression-testing.md."
+  },
+  "corpus_row_count": {
+    "manuscript_section": "Abstract / corpus scope",
+    "claim_text": "Curated corpus retains 124 rows",
+    "value": 124,
+    "verifier_function": "src.analysis.corpus_stats.summarize_corpus",
+    "verifier_args": {},
+    "pinned_on": "2026-05-26",
+    "pinned_by": "what_is_cogsec remediation plan",
+    "_provenance": "manuscript_variables.json RESULT_N_SOURCES after 2026-05-26 pipeline"
+  },
+  "figure_registry_count": {
+    "manuscript_section": "Abstract / figures",
+    "claim_text": "Manuscript registers twenty-eight figures",
+    "value": 28,
+    "verifier_function": "src.data.figure_manifest.figure_manifest_ids",
+    "verifier_args": {},
+    "pinned_on": "2026-05-26",
+    "pinned_by": "what_is_cogsec remediation plan",
+    "_provenance": "len(figure_manifest_ids()) == RESULT_FIGURE_COUNT"
+  },
+  "earliest_dated_year": {
+    "manuscript_section": "Background / intellectual-security antecedents",
+    "claim_text": "Earliest dated retained row is 1807 (de Coetlogon provisional candidate)",
+    "value": 1807,
+    "verifier_function": "src.analysis.corpus_stats.summarize_corpus",
+    "verifier_args": {},
+    "pinned_on": "2026-05-26",
+    "pinned_by": "what_is_cogsec remediation plan",
+    "_provenance": "summarize_corpus()['year_min'] from live citations.json"
+  },
+  "cognitive_security_quote_count": {
+    "manuscript_section": "Results / phrase coverage",
+    "claim_text": "99 corpus rows carry exact cognitive security in quotation field",
+    "value": 99,
+    "verifier_function": "src.literature.quote_extraction.verify_phrase_in_text",
+    "verifier_args": {"phrase": "cognitive security"},
+    "pinned_on": "2026-05-26",
+    "pinned_by": "what_is_cogsec remediation plan",
+    "_provenance": "RESULT_COGNITIVE_QUOTE_COUNT from manuscript_variables.json"
+  }
+}

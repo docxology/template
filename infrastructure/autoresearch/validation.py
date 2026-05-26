@@ -521,8 +521,18 @@ def _validate_ai_disclosure(
         if not directory.exists():
             continue
         for path in directory.glob("*.md"):
-            if disclosure in path.read_text(encoding="utf-8"):
+            if _contains_disclosure_or_token(path.read_text(encoding="utf-8"), disclosure):
                 return
+    variables_path = project_root / "output" / "data" / "manuscript_variables.json"
+    if variables_path.exists():
+        variables = _read_json_mapping(
+            variables_path,
+            issues,
+            _strict_severity(plan),
+            "AUTORESEARCH.AI_DISCLOSURE_VARIABLES_MALFORMED",
+        )
+        if variables is not None and variables.get("DISCLOSURE_TEXT") == disclosure:
+            return
     issues.append(
         _issue(
             _strict_severity(plan),
@@ -532,6 +542,10 @@ def _validate_ai_disclosure(
             "Add the configured disclosure to the manuscript source or generated manuscript.",
         )
     )
+
+
+def _contains_disclosure_or_token(text: str, disclosure: str) -> bool:
+    return disclosure in text or "{{DISCLOSURE_TEXT}}" in text
 
 
 def _artifact_path(project_root: Path, artifact: str) -> Path:

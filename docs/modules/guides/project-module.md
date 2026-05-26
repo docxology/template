@@ -16,6 +16,8 @@
   but expected for normal pipeline/rendering workflows.
 - **Metadata Extraction**: Reads project configuration (title, authors, DOI, testing thresholds)
 - **Multi-Project Support**: Enables N independent projects within a single repository
+- **Local CodeGraph Helpers**: Builds optional CodeGraph commands and verifies
+  template-root indexes do not include private project paths
 
 ---
 
@@ -57,6 +59,20 @@ print(f"Title: {metadata.title}")
 print(f"Authors: {metadata.authors}")
 ```
 
+### Build CodeGraph Commands
+
+```python
+from pathlib import Path
+from infrastructure.project import build_codegraph_init_command
+
+command = build_codegraph_init_command(Path("."))
+print(command.display)
+```
+
+Use the runbook in
+[`docs/guides/codegraph-local.md`](../../guides/codegraph-local.md) before
+initializing indexes in a checkout with private symlinked projects.
+
 ---
 
 ## Discovery Rules
@@ -80,6 +96,8 @@ project workflows, but it is not the low-level discovery predicate.
 |--------|------|---------|
 | `ProjectInfo` | Dataclass | Project metadata container |
 | `discover_projects` | Function | Find all valid projects |
+| `build_codegraph_init_command` | Function | Build local CodeGraph init command |
+| `verify_codegraph_scope_payload` | Function | Check CodeGraph files JSON for private project paths |
 | `get_project_metadata` | Function | Extract config.yaml metadata |
 | `validate_project_structure` | Function | Verify directory structure |
 

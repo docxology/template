@@ -37,6 +37,7 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `gates/module_line_count_check.py` - line-count gate via `infrastructure.validation.line_count` (infra/scripts + `projects/*/scripts/`)
 - `check_tracked_projects.py` - confidentiality guard via `infrastructure.project.git_guards`
 - `08_executable_bundle.py` - bundle stage via `infrastructure.publishing.executable_bundle`
+- `codegraph_local.py` - optional local CodeGraph command/scope helper via `infrastructure.project.codegraph`
 
 **Setup / workspace / helpers:**
 
@@ -143,6 +144,7 @@ orchestrator:
 | `show_project_info.py` | `infrastructure.project.info.collect_project_info` | |
 | `check_tracked_projects.py` | `infrastructure.project.git_guards.offending_tracked_projects` | |
 | `check_tracked_generated_artifacts.py` | `infrastructure.project.git_guards.tracked_generated_artifacts` | |
+| `codegraph_local.py` | `infrastructure.project.codegraph` | Optional local-only index helper; never a pipeline dependency |
 | `08_executable_bundle.py` | `infrastructure.publishing.executable_bundle.bundle_project` | |
 | `check_template_drift.py` | `infrastructure.project.drift` (+ thin-orchestrator script checks) | |
 | `manage_workspace.py` | `infrastructure.project.workspace` | |

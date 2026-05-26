@@ -17,7 +17,6 @@ python_functions = ["test_*"]
 addopts = "-v --tb=short --strict-markers"
 
 [tool.coverage.run]
-source = ["src"]
 branch = true
 omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
 

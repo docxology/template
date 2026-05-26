@@ -8,7 +8,7 @@ Runtime discovery still uses `infrastructure.project.discovery.discover_projects
 
 Human-written documentation should **not** copy this list into RUN_GUIDE, PAI, or other guides; link here instead. For concrete paths, commands, and layout examples, default to the stable exemplar [`projects/template_code_project/`](../../projects/template_code_project/) unless a doc explicitly compares layouts.
 
-Generated at (UTC): `2026-05-25T02:22:14+00:00`
+Generated at (UTC): `2026-05-26T14:20:47+00:00`
 
 Current entries:
 

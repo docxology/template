@@ -3,7 +3,7 @@
 `template_autoresearch_project` splits configuration between infrastructure
 readiness, the human-authored AutoResearch program, the MNIST neural-network
 task, and manuscript loop settings. The central case study is a tiny
-deterministic MNIST task, but the default run remains offline and proposal-only.
+deterministic small MNIST task, but the default run remains offline and proposal-only.
 
 ## `autoresearch.yaml` (infrastructure readiness)
 
@@ -37,12 +37,20 @@ Accepted ideas must carry evidence links; candidates must keep their
 
 ## `mnist_task.yaml`
 
-`mnist_task.yaml` is the executable experiment contract. It declares the local
-MNIST subset path, provenance path, seed, metric direction, candidate budget,
-baseline, training defaults, and each candidate model configuration. The
+`mnist_task.yaml` is the executable experiment contract. It declares the task
+identifier, display name, local MNIST subset path, provenance path, seed,
+metric direction, candidate budget, baseline, training defaults, and each
+candidate model configuration. The
 configured iteration budget decides how many candidates are evaluated; any
 remaining candidates are written as deferred rather than executed later by an
 autonomous process.
+
+Training defaults and per-candidate overrides include batch size, epoch count,
+learning rate, learning-rate decay, gradient-clipping norm, and L2 penalty. The
+resolved values are serialized to `mnist_task_config.json`; epoch-level learning
+rates and train/test metrics are serialized to `ml_training_history.csv`; and
+best-epoch, final-rate, loss-reduction, and train-test gap summaries are
+serialized to `ml_training_diagnostics.json`.
 
 ## `manuscript/config.yaml` (loop settings)
 
@@ -66,13 +74,63 @@ or a fixed patch-attention representation plus softmax head, and selects the
 best result with deterministic parameter-count tie-breaking. The task writes
 `mnist_task_config.json`, `ml_task_results.json`, `ml_candidate_ledger.json`,
 `ml_confusion_matrix.csv`, `ml_experiment_report.md`,
-`ml_benchmark_score.json`, and `ml_candidate_scores.png` through `src.writers`.
+`ml_benchmark_score.json`, `ml_candidate_scores.png`,
+`ml_confusion_matrix.png`, `ml_per_class_accuracy.png`,
+`ml_training_history.csv`, `ml_error_examples.json`, `ml_learning_curves.png`,
+`ml_complexity_accuracy.png`, `mnist_error_examples.png`,
+`ml_prediction_records.json`, `ml_classification_diagnostics.json`,
+`ml_candidate_intervals.json`, `ml_class_balance.json`,
+`ml_calibration_report.json`, `ml_robustness_report.json`,
+`ml_probability_diagnostics.json`, `ml_bootstrap_intervals.json`,
+`ml_paired_comparison.json`, `ml_statistical_summary.json`,
+`ml_training_diagnostics.json`,
+`ml_calibration_reliability.png`,
+`ml_classification_metrics_heatmap.png`, `ml_confusion_pairs.png`,
+`ml_generalization_gap.png`, `ml_robustness_matrix.png`,
+`ml_probability_margin_distribution.png`, `ml_bootstrap_intervals.png`,
+`ml_paired_correctness.png`, `ml_selective_accuracy.png`,
+`ml_probability_quality.png`, `ml_training_dynamics.png`,
+`autoresearch_candidate_lifecycle.png`,
+`mnist_class_balance.png`, `mnist_subset_contact_sheet.png`, and final registry metadata through
+`src.writers`.
+
+`mnist_task.yaml` also configures the statistical diagnostic policy:
+calibration bin count, deterministic bootstrap resamples and seed offset,
+low-margin and high-confidence thresholds, selective-accuracy coverage
+thresholds, and the no-retrain robustness transforms.
+
+## Manuscript hydration and figures
+
+`src.manuscript_variables` treats run-derived names, paths, metrics, figure
+captions, and generated tables as validated variables. It reads the final
+`autoresearch_loop.json`, ML result payload, candidate ledger, review decisions,
+benchmark scores, artifact manifest, and figure registry. It then writes:
+
+- `output/data/manuscript_variables.json`
+- `output/data/manuscript_variable_provenance.json`
+- `output/data/manuscript_figure_blocks.json`
+
+Numbered manuscript files should use uppercase token placeholders for
+run-derived facts. The hydration script rejects raw accepted-candidate IDs,
+model labels, dataset labels, artifact paths, metric values, and registry
+captions when they should be injected. Figure blocks are generated from
+`output/figures/figure_registry.json`, so captions and image paths stay
+synchronized with the final validated run.
+The same registry records a generation method, validation hook, source artifact,
+alt text, and claim boundary for each figure; manuscript hydration exposes those
+records through a generated figure-method table.
+
+The manuscript scholarship connects those local artifacts to FAIR data,
+research-object packaging, Workflow Run RO-Crate provenance, Datasheets for
+Datasets, and Model Cards. The project borrows the documentation discipline,
+not the full packaging standard.
 
 ## Scripts
 
 - `scripts/run_autoresearch_loop.py` calls `src.loop.run_autoresearch_loop`.
 - `scripts/z_generate_manuscript_variables.py` calls
-  `src.manuscript_variables` helpers and writes resolved manuscript files.
+  `src.manuscript_variables` helpers, writes resolved manuscript files, and
+  enforces strict tokenization for numbered manuscript sources.
 
 ## Validation phases
 

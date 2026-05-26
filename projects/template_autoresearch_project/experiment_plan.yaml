@@ -12,7 +12,7 @@ metrics:
   primary:
     name: test_accuracy
     direction: maximize
-protocol: "Load the local balanced MNIST subset, evaluate bounded numpy neural-network candidates without external calls or runtime downloads, select the highest test accuracy with deterministic parameter-count tie-breaking, then require readiness reports and evidence-linked claims to pass."
+protocol: "Load the local balanced small MNIST subset, evaluate bounded numpy neural-network candidates without external calls or runtime downloads, select the highest test accuracy with deterministic parameter-count tie-breaking, then require readiness reports and evidence-linked claims to pass."
 expected_figures:
   - fig:ml_candidate_scores
 expected_tables:

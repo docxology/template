@@ -84,11 +84,11 @@ def test_write_json_and_text_create_files(tmp_path: Path) -> None:
 
 
 def test_render_ml_experiment_report_includes_candidate_ledger(project_root: Path) -> None:
-    result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=3))
+    result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=4))
 
     markdown = render_ml_experiment_report(result)
 
     assert "Deterministic ML-Loop Experiment" in markdown
-    assert "exp-mlp-relu-32" in markdown
+    assert result.accepted_candidate_id in markdown
     assert "tiny_patch_transformer" in markdown
     assert "LLM calls used: 0" in markdown

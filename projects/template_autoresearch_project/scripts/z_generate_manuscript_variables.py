@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -15,17 +16,27 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
 
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree  # noqa: E402
 from src.loop import run_autoresearch_loop  # noqa: E402
-from src.manuscript_variables import compute_variables, save_variables  # noqa: E402
+from src.manuscript_variables import compute_variables, write_manuscript_hydration_artifacts  # noqa: E402
+from src.writers import write_artifact_manifest  # noqa: E402
 
 
 def main() -> int:
     """Write manuscript variables and resolved manuscript sources."""
     if not (PROJECT_ROOT / "output" / "data" / "autoresearch_loop.json").exists():
         run_autoresearch_loop(PROJECT_ROOT, REPO_ROOT)
+    paths = write_manuscript_hydration_artifacts(
+        PROJECT_ROOT,
+        require_valid=True,
+        validate_sources=True,
+    )
     variables = compute_variables(PROJECT_ROOT)
-    out_path = save_variables(variables, PROJECT_ROOT / "output" / "data" / "manuscript_variables.json")
     write_resolved_manuscript_tree(PROJECT_ROOT, variables)
-    print(out_path)
+    loop_payload = json.loads((PROJECT_ROOT / "output" / "data" / "autoresearch_loop.json").read_text())
+    declared_paths = [
+        PROJECT_ROOT / str(path) for path in loop_payload.get("output_paths", []) if isinstance(path, str)
+    ]
+    write_artifact_manifest(PROJECT_ROOT, [*declared_paths, *paths])
+    print(paths[0])
     return 0
 
 

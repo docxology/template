@@ -1,9 +1,9 @@
 enabled: true
 strict: true
-topic: "Deterministic bounded AutoResearch for a tiny MNIST neural-network task"
+topic: "Deterministic bounded AutoResearch for a small MNIST neural-network task"
 autonomy_level: proposal_only
 budget:
-  max_iterations: 3
+  max_iterations: 4
   max_wall_clock_minutes: 20
   max_llm_calls: 0
   max_cost_usd: 0.0
@@ -60,9 +60,44 @@ required_artifacts:
   - output/data/ml_task_results.json
   - output/data/ml_candidate_ledger.json
   - output/data/ml_confusion_matrix.csv
+  - output/data/ml_training_history.csv
+  - output/data/ml_error_examples.json
+  - output/data/ml_prediction_records.json
+  - output/data/ml_classification_diagnostics.json
+  - output/data/ml_candidate_intervals.json
+  - output/data/ml_class_balance.json
+  - output/data/ml_calibration_report.json
+  - output/data/ml_robustness_report.json
+  - output/data/ml_probability_diagnostics.json
+  - output/data/ml_bootstrap_intervals.json
+  - output/data/ml_paired_comparison.json
+  - output/data/ml_statistical_summary.json
+  - output/data/ml_training_diagnostics.json
   - output/data/manuscript_variables.json
+  - output/data/manuscript_variable_provenance.json
+  - output/data/manuscript_figure_blocks.json
   - output/figures/autoresearch_stage_matrix.png
   - output/figures/ml_candidate_scores.png
+  - output/figures/ml_confusion_matrix.png
+  - output/figures/ml_per_class_accuracy.png
+  - output/figures/ml_learning_curves.png
+  - output/figures/ml_complexity_accuracy.png
+  - output/figures/mnist_error_examples.png
+  - output/figures/ml_calibration_reliability.png
+  - output/figures/ml_classification_metrics_heatmap.png
+  - output/figures/ml_confusion_pairs.png
+  - output/figures/ml_generalization_gap.png
+  - output/figures/ml_robustness_matrix.png
+  - output/figures/ml_probability_margin_distribution.png
+  - output/figures/ml_bootstrap_intervals.png
+  - output/figures/ml_paired_correctness.png
+  - output/figures/ml_selective_accuracy.png
+  - output/figures/ml_probability_quality.png
+  - output/figures/ml_training_dynamics.png
+  - output/figures/autoresearch_candidate_lifecycle.png
+  - output/figures/mnist_class_balance.png
+  - output/figures/mnist_subset_contact_sheet.png
+  - output/figures/autoresearch_closure_flow.png
   - output/figures/figure_registry.json
   - output/reports/autoresearch_loop.json
   - output/reports/autoresearch_loop.md

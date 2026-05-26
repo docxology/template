@@ -15,9 +15,11 @@ ALLOWED_PROJECT_DIRS: tuple[str, ...] = (
 ALLOWED_PROJECTS_TOPLEVEL = re.compile(r"^projects/[^/]+\.md$")
 
 GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
+    ".codegraph/*",
     ".coverage",
     ".coverage.*",
     ".DS_Store",
+    "*/.codegraph/*",
     "*/.DS_Store",
     "*.egg-info/*",
     "*/.egg-info/*",

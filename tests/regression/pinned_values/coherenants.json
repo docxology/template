@@ -1,0 +1,51 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "project_name": "coherenants",
+    "scaffolded_on": "2026-05-26",
+    "note": "Private passive project at projects/passive/cohereants — not git-tracked in the public template. Pins sensor-spec outputs from detection_limits_spec.json and manuscript_variables; see docs/maintenance/regression-testing.md."
+  },
+  "biomimetic_ir_band_low_um": {
+    "manuscript_section": "03_experimental_results / Melanophila sensor characteristics",
+    "claim_text": "Biomimetic IR band lower bound 2.8 um from manuscript_fixtures (Schmitz & Trenner 2003)",
+    "value": 2.8,
+    "abs_tolerance": 1e-9,
+    "verifier_function": "manuscript_fixtures.BIOMIMETIC_IR_BAND_UM",
+    "verifier_args": {},
+    "pinned_on": "2026-05-26",
+    "pinned_by": "engineering remediation scaffold",
+    "_provenance": "src/manuscript_fixtures.py BIOMIMETIC_IR_BAND_UM[0] (literature-aligned 2026-05-26)"
+  },
+  "biomimetic_threshold_high_mw_cm2": {
+    "manuscript_section": "02_methodology / Melanophila literature threshold",
+    "claim_text": "Melanophila upper literature threshold 17.3 mW/cm2 (Hammer 2001)",
+    "value": 17.3,
+    "abs_tolerance": 1e-9,
+    "verifier_function": "manuscript_fixtures.BIOMIMETIC_RESPONSE_THRESHOLD_MW_CM2",
+    "verifier_args": {},
+    "pinned_on": "2026-05-26",
+    "pinned_by": "scholarship integration",
+    "_provenance": "src/manuscript_fixtures.py BIOMIMETIC_RESPONSE_THRESHOLD_MW_CM2[1]"
+  },
+  "detection_limits_snr_operating_db": {
+    "manuscript_section": "02_methodology / protocol specification",
+    "claim_text": "Model SNR operating point from output/data/detection_limits_spec.json",
+    "value": 10.0,
+    "abs_tolerance": 0.5,
+    "verifier_function": "output.data.detection_limits_spec.snr_operating_db",
+    "verifier_args": {},
+    "pinned_on": "2026-05-26",
+    "pinned_by": "engineering remediation scaffold",
+    "_provenance": "output/data/detection_limits_spec.json"
+  },
+  "protocol_min_preregistered_n": {
+    "manuscript_section": "02_methodology / Experimental Protocol Specification",
+    "claim_text": "Minimum preregistered sample size N>=50",
+    "value": 50,
+    "verifier_function": "manuscript_fixtures.PROTOCOL_MIN_PREREGISTERED_N",
+    "verifier_args": {},
+    "pinned_on": "2026-05-26",
+    "pinned_by": "engineering remediation scaffold",
+    "_provenance": "src/manuscript_fixtures.py"
+  }
+}

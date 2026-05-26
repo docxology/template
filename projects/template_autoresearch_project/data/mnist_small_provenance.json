@@ -12,7 +12,8 @@
     9
   ],
   "dataset": "MNIST handwritten digit database",
-  "npz_sha256": "b2a298566cd5c1c1a43356992bb665a8e625919d005aa09d05a6e9c5beef3936",
+  "fixture_id": "mnist_small",
+  "npz_sha256": "9d321bc102455ce611c5672ecb2edc771efedee02c1437fddcf55635d1cc54e5",
   "source_base_url": "https://storage.googleapis.com/cvdf-datasets/mnist",
   "source_files": {
     "test_images": {
@@ -37,15 +38,15 @@
     }
   },
   "subset_seed": 20260525,
-  "test_per_class": 10,
-  "train_per_class": 30,
+  "test_per_class": 50,
+  "train_per_class": 200,
   "x_test_shape": [
-    100,
+    500,
     28,
     28
   ],
   "x_train_shape": [
-    300,
+    2000,
     28,
     28
   ]

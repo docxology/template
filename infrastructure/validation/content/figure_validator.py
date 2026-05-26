@@ -14,12 +14,14 @@ from infrastructure.core.logging.utils import get_logger, log_substep, log_succe
 logger = get_logger(__name__)
 
 
-_FIGURE_REF_PATTERN = re.compile(r"\\(?:ref|label)\{(fig:[^}]+)\}")
+_LATEX_FIGURE_REF_PATTERN = re.compile(r"\\(?:ref|label)\{(fig:[^}]+)\}")
+_PANDOC_FIGURE_REF_PATTERN = re.compile(r"(?<![\w:-])@((?:fig):[-A-Za-z0-9_.:]+)")
+_PANDOC_IMAGE_LABEL_PATTERN = re.compile(r"\{#(fig:[-A-Za-z0-9_.:]+)(?:\s[^}]*)?\}")
 _SKIP_DOCS = frozenset(["AGENTS.md", "README.md"])
 
 
 def _scan_manuscript_references(manuscript_dir: Path) -> set[str]:
-    """Return all \\ref{fig:…} and \\label{fig:…} keys found in numbered manuscript files."""
+    """Return all figure labels and references found in manuscript files."""
     referenced: set[str] = set()
     if not manuscript_dir.exists():
         return referenced
@@ -28,14 +30,21 @@ def _scan_manuscript_references(manuscript_dir: Path) -> set[str]:
             continue
         try:
             text = "\n".join(line for line in md_file.read_text().splitlines() if not line.lstrip().startswith("%"))
-            referenced.update(_FIGURE_REF_PATTERN.findall(text))
+            referenced.update(_normalise_figure_label(label) for label in _LATEX_FIGURE_REF_PATTERN.findall(text))
+            referenced.update(_normalise_figure_label(label) for label in _PANDOC_FIGURE_REF_PATTERN.findall(text))
+            referenced.update(_normalise_figure_label(label) for label in _PANDOC_IMAGE_LABEL_PATTERN.findall(text))
         except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Could not read {md_file.name}: {e}")
     return referenced
 
 
-def _load_registry(registry_path: Path) -> tuple[set[str] | None, str | None]:
-    """Load the figure registry JSON; return (registered_labels, error_msg).
+def _normalise_figure_label(label: str) -> str:
+    """Drop trailing prose punctuation accidentally captured after @fig labels."""
+    return label.rstrip(".,;:")
+
+
+def _load_registry(registry_path: Path) -> tuple[dict[str, dict[str, object]] | None, str | None]:
+    """Load the figure registry JSON; return (registry_entries, error_msg).
 
     Two shapes are accepted, both encoding the same set of figure labels:
 
@@ -56,13 +65,13 @@ def _load_registry(registry_path: Path) -> tuple[set[str] | None, str | None]:
         with open(registry_path) as f:
             registry = json.load(f)
         if isinstance(registry, dict):
-            registered = set(registry.keys())
+            registered = {str(label): item if isinstance(item, dict) else {} for label, item in registry.items()}
         elif isinstance(registry, list):
-            registered = set()
+            registered = {}
             unlabeled = 0
             for item in registry:
                 if isinstance(item, dict) and "label" in item:
-                    registered.add(item["label"])
+                    registered[str(item["label"])] = item
                 else:
                     unlabeled += 1
             if unlabeled:
@@ -112,7 +121,9 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple
         logger.warning(f"  Found {len(referenced_figures)} figure reference(s) in manuscript")
         return False, [issue]
 
-    issues = [f"Unregistered figure reference: {ref}" for ref in sorted(referenced_figures - registered_figures)]
+    registered_labels = set(registered_figures)
+    issues = [f"Unregistered figure reference: {ref}" for ref in sorted(referenced_figures - registered_labels)]
+    issues.extend(_missing_generated_figure_issues(registry_path, registered_figures, referenced_figures))
 
     if issues:
         logger.warning(f"  Found {len(issues)} figure issue(s)")
@@ -122,3 +133,23 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple
         log_success(f"All {len(referenced_figures)} figure references verified", logger)
 
     return len(issues) == 0, issues
+
+
+def _missing_generated_figure_issues(
+    registry_path: Path,
+    registered_figures: dict[str, dict[str, object]],
+    referenced_figures: set[str],
+) -> list[str]:
+    """Return missing-file issues for referenced generated registry entries."""
+    issues: list[str] = []
+    for label in sorted(referenced_figures & set(registered_figures)):
+        record = registered_figures[label]
+        filename = record.get("filename")
+        if not isinstance(filename, str) or not filename:
+            continue
+        if "generated_by" not in record:
+            continue
+        figure_path = registry_path.parent / filename
+        if not figure_path.exists():
+            issues.append(f"Registered generated figure file is missing for {label}: {filename}")
+    return issues

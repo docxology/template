@@ -15,6 +15,7 @@ Technical guide for `docs/guides/` — skill-level progression guides from begin
 | `new-project-setup.md` | All levels | Complete setup checklist with pitfalls |
 | `new-project-one-shot-prompt.md` | All levels | LLM one-shot scaffold; primary exemplar `projects/template_code_project/`; active names in `_generated/active_projects.md` |
 | `methods-orchestration.md` | Advanced | Methods-to-pipeline provenance and validation |
+| `codegraph-local.md` | Advanced | Optional local CodeGraph index with public/private scope guards |
 | `llm-integration-guide.md` | Levels 11-12 | AI-assisted research: Ollama setup, LLM review, templates, programmatic usage |
 | `publishing-guide.md` | Levels 11-12 | Academic publishing: DOI, Zenodo, arXiv, citations (BibTeX/APA/MLA) |
 | `secure-research-guide.md` | Level 11 | PDF steganography: watermarks, QR codes, SHA-256 hashing, provenance |
@@ -25,6 +26,7 @@ Technical guide for `docs/guides/` — skill-level progression guides from begin
 ## Key Conventions
 
 - **Paths in examples**: [`projects/template_code_project/`](../../projects/template_code_project/) as control-positive; other active workspaces → [_generated/active_projects.md](../_generated/active_projects.md).
+- CodeGraph examples must keep `.codegraph/` local-only and verify that private symlinked projects are absent from the template-root index.
 - Guides follow a progressive skill-level structure (1-12)
 - Each guide builds on the previous — prerequisites are clearly stated
 - All code examples use real, working commands (no placeholders)

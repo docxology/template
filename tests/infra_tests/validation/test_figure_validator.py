@@ -162,6 +162,54 @@ class TestValidateFigureRegistry:
         assert success is True
         assert len(issues) == 0
 
+    def test_validate_pandoc_image_labels_and_prose_references(self, tmp_path):
+        """Pandoc-crossref labels and @fig references resolve through the registry."""
+        registry_path = tmp_path / "registry.json"
+        registry_path.write_text(
+            json.dumps(
+                {
+                    "fig:result": {"filename": "result.png", "caption": "Result"},
+                    "fig:process-flow": {"filename": "process.png", "caption": "Process"},
+                }
+            )
+        )
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "03_results.md").write_text(
+            "![Result](../figures/result.png){#fig:result width=80%}\n\n"
+            "The process is summarized in @fig:process-flow.\n"
+        )
+
+        success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is True
+        assert issues == []
+
+    def test_validate_missing_generated_figure_files(self, tmp_path):
+        """Referenced generated figures must exist next to the registry."""
+        registry_path = tmp_path / "registry.json"
+        registry_path.write_text(
+            json.dumps(
+                {
+                    "fig:generated": {
+                        "filename": "missing.png",
+                        "caption": "Generated figure",
+                        "generated_by": "src.figures.write_missing",
+                    }
+                }
+            )
+        )
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "03_results.md").write_text("See @fig:generated.\n")
+
+        success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is False
+        assert any("missing.png" in issue for issue in issues)
+
     def test_validate_ignores_latex_comment_reference_examples(self, tmp_path):
         """Preamble comments may document label syntax without referencing a figure."""
         registry_path = tmp_path / "registry.json"

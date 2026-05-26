@@ -18,6 +18,7 @@ from infrastructure.validation.evidence_registry import (
 )
 
 from .config import AutoResearchLoopConfig, build_loop_config, load_manuscript_loop_settings
+from .manuscript_variables import write_manuscript_hydration_artifacts
 from .ml_task import run_bounded_ml_task
 from .models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
 from .writers import (
@@ -26,6 +27,7 @@ from .writers import (
     update_result_payloads,
     write_artifact_manifest,
     write_core_loop_artifacts,
+    write_final_visual_artifacts,
     write_ml_task_artifacts,
     write_method_contract_artifacts,
 )
@@ -97,9 +99,14 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         ml_task=ml_result.to_summary_dict(),
     )
     output_paths.extend(update_result_payloads(project_root, final))
-    output_paths.append(write_artifact_manifest(project_root, output_paths))
+    output_paths.extend(write_final_visual_artifacts(project_root, final, ml_result))
+    output_paths.extend(write_manuscript_hydration_artifacts(project_root, require_valid=False))
+    output_paths.append(_write_readiness_manifest(project_root, output_paths))
 
     readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
+    if _only_changed_artifact_manifest_issues(readiness_post):
+        output_paths.append(_write_readiness_manifest(project_root, output_paths))
+        readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
     readiness_valid = readiness_pre.valid and readiness_post.valid
     readiness_report = _combine_readiness_reports(readiness_pre, readiness_post, plan.project_name)
     output_paths.extend(write_autoresearch_report(project_root, readiness_report))
@@ -117,12 +124,14 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         ml_task=ml_result.to_summary_dict(),
     )
     output_paths.extend(update_result_payloads(project_root, final))
+    output_paths.extend(write_final_visual_artifacts(project_root, final, ml_result))
     output_paths.append(
         write_evidence_registry_report(
             project_root / "output",
             build_project_evidence_registry(project_root),
         )
     )
+    output_paths.extend(write_manuscript_hydration_artifacts(project_root, require_valid=True))
     output_paths.append(write_artifact_manifest(project_root, output_paths))
     return AutoResearchLoopResult(
         project_name=project_name,
@@ -191,7 +200,22 @@ def _final_output_path_payload(project_root: Path, output_paths: list[Path]) -> 
         "output/data/ml_task_results.json",
         "output/data/ml_candidate_ledger.json",
         "output/data/ml_confusion_matrix.csv",
+        "output/data/ml_training_history.csv",
+        "output/data/ml_error_examples.json",
+        "output/data/ml_prediction_records.json",
+        "output/data/ml_classification_diagnostics.json",
+        "output/data/ml_candidate_intervals.json",
+        "output/data/ml_class_balance.json",
+        "output/data/ml_calibration_report.json",
+        "output/data/ml_robustness_report.json",
+        "output/data/ml_probability_diagnostics.json",
+        "output/data/ml_bootstrap_intervals.json",
+        "output/data/ml_paired_comparison.json",
+        "output/data/ml_statistical_summary.json",
+        "output/data/ml_training_diagnostics.json",
         "output/data/manuscript_variables.json",
+        "output/data/manuscript_variable_provenance.json",
+        "output/data/manuscript_figure_blocks.json",
         "output/reports/autoresearch_loop.json",
         "output/reports/autoresearch_loop.md",
         "output/reports/autoresearch_readiness.json",
@@ -203,7 +227,29 @@ def _final_output_path_payload(project_root: Path, output_paths: list[Path]) -> 
         "output/reports/benchmark_readiness_smoke.json",
         "output/reports/ml_experiment_report.md",
         "output/reports/ml_benchmark_score.json",
+        "output/figures/autoresearch_stage_matrix.png",
         "output/figures/ml_candidate_scores.png",
+        "output/figures/ml_confusion_matrix.png",
+        "output/figures/ml_per_class_accuracy.png",
+        "output/figures/ml_learning_curves.png",
+        "output/figures/ml_complexity_accuracy.png",
+        "output/figures/mnist_error_examples.png",
+        "output/figures/ml_calibration_reliability.png",
+        "output/figures/ml_classification_metrics_heatmap.png",
+        "output/figures/ml_confusion_pairs.png",
+        "output/figures/ml_generalization_gap.png",
+        "output/figures/ml_robustness_matrix.png",
+        "output/figures/ml_probability_margin_distribution.png",
+        "output/figures/ml_bootstrap_intervals.png",
+        "output/figures/ml_paired_correctness.png",
+        "output/figures/ml_selective_accuracy.png",
+        "output/figures/ml_probability_quality.png",
+        "output/figures/ml_training_dynamics.png",
+        "output/figures/autoresearch_candidate_lifecycle.png",
+        "output/figures/mnist_class_balance.png",
+        "output/figures/mnist_subset_contact_sheet.png",
+        "output/figures/autoresearch_closure_flow.png",
+        "output/figures/figure_registry.json",
     )
     return tuple(
         dict.fromkeys(
@@ -229,3 +275,19 @@ def _combine_readiness_reports(
         issues=tuple(issues),
         plan=plan,
     )
+
+
+def _only_changed_artifact_manifest_issues(report: AutoResearchReport) -> bool:
+    """Return true when readiness only needs a manifest checksum refresh."""
+    if report.valid or not report.issues:
+        return False
+    return all(
+        issue.code == "AUTORESEARCH.ARTIFACT_MANIFEST_ISSUE" and issue.message.startswith("changed artifact:")
+        for issue in report.issues
+    )
+
+
+def _write_readiness_manifest(project_root: Path, output_paths: list[Path]) -> Path:
+    """Refresh the pre-readiness manifest after generated artifacts settle."""
+    manifest_path = write_artifact_manifest(project_root, output_paths, exclude_volatile=True)
+    return write_artifact_manifest(project_root, [*output_paths, manifest_path], exclude_volatile=True)

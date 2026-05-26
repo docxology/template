@@ -1,7 +1,8 @@
 # Outputs
 
 Running `template_autoresearch_project` creates machine-readable data,
-human-readable reports, manuscript variables, and review material.
+human-readable reports, registry-backed figures, manuscript variables,
+variable provenance, and review material.
 
 Core data:
 
@@ -21,7 +22,22 @@ Core data:
 | `output/data/ml_task_results.json` | MNIST subset summary, baseline, candidates, accepted candidate, and metric delta |
 | `output/data/ml_candidate_ledger.json` | Candidate lifecycle ledger with proposed, evaluated, accepted, rejected, and deferred states |
 | `output/data/ml_confusion_matrix.csv` | Accepted-candidate confusion matrix over the local test split |
+| `output/data/ml_training_history.csv` | Epoch-level train/test accuracy and loss for evaluated candidates |
+| `output/data/ml_error_examples.json` | Accepted-candidate test-set error examples for qualitative review |
+| `output/data/ml_prediction_records.json` | Per-candidate probability, confidence, margin, prediction, and correctness records |
+| `output/data/ml_classification_diagnostics.json` | Accepted-candidate class metrics, confusion pairs, confidence interval, and train/test gaps |
+| `output/data/ml_candidate_intervals.json` | Baseline and evaluated-candidate Wilson accuracy intervals |
+| `output/data/ml_class_balance.json` | Train/test class counts for the local offline MNIST fixture |
+| `output/data/ml_calibration_report.json` | Accepted-candidate calibration bins, expected calibration error, and high-confidence errors |
+| `output/data/ml_robustness_report.json` | Deterministic no-retrain perturbation scores for evaluated candidates |
+| `output/data/ml_probability_diagnostics.json` | Accepted-candidate confidence, margin, entropy, and correctness histogram diagnostics |
+| `output/data/ml_bootstrap_intervals.json` | Deterministic bootstrap intervals for accepted-candidate accuracy and macro F1 |
+| `output/data/ml_paired_comparison.json` | Matched baseline-vs-accepted correctness counts and exact McNemar summary |
+| `output/data/ml_statistical_summary.json` | Accepted-candidate Brier, NLL, top-2, kappa, selective-accuracy, and candidate probability-quality summary |
+| `output/data/ml_training_diagnostics.json` | Configured learning-rate, gradient-clipping, best-epoch, loss-reduction, and train-test gap diagnostics |
 | `output/data/manuscript_variables.json` | Variables injected into the manuscript |
+| `output/data/manuscript_variable_provenance.json` | Source artifact and JSON-pointer mapping for injected variables and fragments |
+| `output/data/manuscript_figure_blocks.json` | Registry-backed Pandoc figure blocks inserted into the hydrated manuscript |
 
 Figures:
 
@@ -29,7 +45,27 @@ Figures:
 | --- | --- |
 | `output/figures/autoresearch_stage_matrix.png` | Visual stage, claim, and artifact readiness matrix |
 | `output/figures/ml_candidate_scores.png` | Baseline and evaluated-candidate test accuracy chart |
-| `output/figures/figure_registry.json` | Registered figure metadata for validation |
+| `output/figures/ml_confusion_matrix.png` | Accepted-candidate confusion matrix figure |
+| `output/figures/ml_per_class_accuracy.png` | Per-class diagnostic derived from the accepted-candidate confusion matrix |
+| `output/figures/ml_learning_curves.png` | Candidate held-out accuracy curves over training epochs |
+| `output/figures/ml_complexity_accuracy.png` | Parameter-count versus held-out accuracy diagnostic |
+| `output/figures/mnist_error_examples.png` | Accepted-candidate error example grid from the local test split |
+| `output/figures/ml_calibration_reliability.png` | Reliability curve and confidence-bin count diagnostic |
+| `output/figures/ml_classification_metrics_heatmap.png` | Per-class precision, recall, and F1 heatmap |
+| `output/figures/ml_confusion_pairs.png` | Ranked non-diagonal confusion-pair chart |
+| `output/figures/ml_generalization_gap.png` | Train/test accuracy and loss comparison by evaluated candidate |
+| `output/figures/ml_robustness_matrix.png` | Candidate accuracy under deterministic identity, shift, and low-contrast transforms |
+| `output/figures/ml_probability_margin_distribution.png` | Confidence and prediction-margin distributions by correctness |
+| `output/figures/ml_bootstrap_intervals.png` | Deterministic bootstrap interval chart for accepted-candidate metrics |
+| `output/figures/ml_paired_correctness.png` | Matched accepted-vs-baseline correctness heatmap |
+| `output/figures/ml_selective_accuracy.png` | Coverage versus selective accuracy at configured confidence thresholds |
+| `output/figures/ml_probability_quality.png` | Candidate Brier score and negative log likelihood comparison |
+| `output/figures/ml_training_dynamics.png` | Final versus best-epoch accuracy and train-test gap chart for evaluated candidates |
+| `output/figures/autoresearch_candidate_lifecycle.png` | Candidate lifecycle counts from the proposal and candidate ledger |
+| `output/figures/mnist_class_balance.png` | Train/test class-count diagnostic for the local MNIST fixture |
+| `output/figures/mnist_subset_contact_sheet.png` | Deterministic contact sheet from the local fixed data subset and provenance file |
+| `output/figures/autoresearch_closure_flow.png` | File-backed research-process closure figure |
+| `output/figures/figure_registry.json` | Registered figure metadata, captions with generation-method sentences, source artifacts, validation hooks, alt text, and claim boundaries |
 
 Reports:
 

@@ -26,13 +26,49 @@ artifact_expectations:
   - output/data/ml_task_results.json
   - output/data/ml_candidate_ledger.json
   - output/data/ml_confusion_matrix.csv
+  - output/data/ml_training_history.csv
+  - output/data/ml_error_examples.json
+  - output/data/ml_prediction_records.json
+  - output/data/ml_classification_diagnostics.json
+  - output/data/ml_candidate_intervals.json
+  - output/data/ml_class_balance.json
+  - output/data/ml_calibration_report.json
+  - output/data/ml_robustness_report.json
+  - output/data/ml_probability_diagnostics.json
+  - output/data/ml_bootstrap_intervals.json
+  - output/data/ml_paired_comparison.json
+  - output/data/ml_statistical_summary.json
+  - output/data/ml_training_diagnostics.json
   - output/data/manuscript_variables.json
+  - output/data/manuscript_variable_provenance.json
+  - output/data/manuscript_figure_blocks.json
   - output/figures/ml_candidate_scores.png
+  - output/figures/ml_confusion_matrix.png
+  - output/figures/ml_per_class_accuracy.png
+  - output/figures/ml_learning_curves.png
+  - output/figures/ml_complexity_accuracy.png
+  - output/figures/mnist_error_examples.png
+  - output/figures/ml_calibration_reliability.png
+  - output/figures/ml_classification_metrics_heatmap.png
+  - output/figures/ml_confusion_pairs.png
+  - output/figures/ml_generalization_gap.png
+  - output/figures/ml_robustness_matrix.png
+  - output/figures/ml_probability_margin_distribution.png
+  - output/figures/ml_bootstrap_intervals.png
+  - output/figures/ml_paired_correctness.png
+  - output/figures/ml_selective_accuracy.png
+  - output/figures/ml_probability_quality.png
+  - output/figures/ml_training_dynamics.png
+  - output/figures/autoresearch_candidate_lifecycle.png
+  - output/figures/mnist_class_balance.png
+  - output/figures/mnist_subset_contact_sheet.png
+  - output/figures/autoresearch_closure_flow.png
+  - output/figures/figure_registry.json
   - output/reports/autoresearch_loop.json
   - output/reports/autoresearch_loop.md
   - output/reports/ml_experiment_report.md
   - output/reports/ml_benchmark_score.json
 benchmark_rubric:
-  metric_improvement: "Accepted candidate accuracy is compared against the majority-class baseline."
+  metric_improvement: "Accepted candidate accuracy is compared against the nearest-centroid baseline."
   budget_compliance: "Evaluated candidate count must stay within the configured iteration budget."
   offline_execution: "LLM calls and cost must remain zero for the default public run."

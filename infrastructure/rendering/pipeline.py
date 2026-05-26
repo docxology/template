@@ -103,8 +103,13 @@ def _run_override_script(project_root: Path, override_script: Path) -> int:
         return 1
 
 
-def _run_manuscript_variable_script(project_root: Path) -> int:
+def _run_manuscript_variable_script(
+    project_root: Path,
+    template_repo_root: Path | None = None,
+) -> int:
     """Hydrate project manuscript variables before rendering, when available."""
+    import os
+
     from infrastructure.core.runtime.environment import get_python_command
 
     script = project_root / "scripts" / "z_generate_manuscript_variables.py"
@@ -113,8 +118,17 @@ def _run_manuscript_variable_script(project_root: Path) -> int:
 
     logger.info("Hydrating manuscript variables before render: %s", script.name)
     cmd = get_python_command() + [str(script)]
+    env = os.environ.copy()
+    if template_repo_root is not None:
+        env.setdefault("TEMPLATE_REPO_ROOT", str(template_repo_root))
     try:
-        result = subprocess.run(cmd, cwd=str(project_root), check=False, timeout=300)  # nosec B603
+        result = subprocess.run(  # nosec B603
+            cmd,
+            cwd=str(project_root),
+            env=env,
+            check=False,
+            timeout=300,
+        )
     except (subprocess.SubprocessError, OSError) as exc:
         logger.error("Manuscript variable hydration failed to execute: %s", exc)
         return 1
@@ -460,7 +474,7 @@ def _render_pipeline_impl(project_name: str = "project") -> int:
     )
     reporter.clear_report()
 
-    if _run_manuscript_variable_script(project_root) != 0:
+    if _run_manuscript_variable_script(project_root, template_repo_root=repo_root) != 0:
         return 1
 
     manuscript_dir = _resolve_manuscript_dir(project_root)

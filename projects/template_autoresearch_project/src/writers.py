@@ -10,9 +10,59 @@ from infrastructure.autoresearch import ResearchProgram, RunLedger
 from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
 
 from .config import AutoResearchLoopConfig, load_experiment_candidates, load_seed_ideas
-from .figures import figure_registry_payload, write_ml_candidate_scores_figure, write_stage_matrix_figure
-from .manuscript_variables import compute_variables_from_payload, save_variables
-from .ml_task import MLTaskResult, write_confusion_matrix_csv
+from .figure_registry import figure_registry_payload
+from .figures import (
+    write_ml_bootstrap_intervals_figure,
+    write_ml_calibration_reliability_figure,
+    write_candidate_lifecycle_figure,
+    write_closure_flow_figure,
+    write_mnist_class_balance_figure,
+    write_mnist_error_examples_figure,
+    write_ml_candidate_scores_figure,
+    write_ml_classification_metrics_heatmap,
+    write_ml_complexity_accuracy_figure,
+    write_ml_confusion_matrix_figure,
+    write_ml_confusion_pairs_figure,
+    write_ml_generalization_gap_figure,
+    write_ml_learning_curve_figure,
+    write_ml_paired_correctness_figure,
+    write_ml_per_class_accuracy_figure,
+    write_ml_probability_quality_figure,
+    write_ml_probability_margin_figure,
+    write_ml_robustness_matrix_figure,
+    write_ml_selective_accuracy_figure,
+    write_ml_training_dynamics_figure,
+    write_mnist_subset_contact_sheet_figure,
+    write_stage_matrix_figure,
+)
+from .diagnostics import (
+    bootstrap_intervals,
+    calibration_report,
+    candidate_accuracy_intervals,
+    class_balance_report,
+    classification_diagnostics,
+    paired_comparison_report,
+    probability_diagnostics,
+    robustness_report,
+    statistical_summary,
+    training_diagnostics,
+    write_bootstrap_intervals_json,
+    write_calibration_report_json,
+    write_candidate_accuracy_intervals_json,
+    write_class_balance_json,
+    write_classification_diagnostics_json,
+    write_paired_comparison_json,
+    write_probability_diagnostics_json,
+    write_prediction_records_json,
+    write_robustness_report_json,
+    write_statistical_summary_json,
+    write_training_diagnostics_json,
+)
+from .manuscript_variables import (
+    compute_variables_from_payload,
+    save_variables,
+)
+from .ml_task import MLTaskResult, write_confusion_matrix_csv, write_error_examples_json, write_training_history_csv
 from .models import AutoResearchLoopResult, LoopStageResult
 from .reports import (
     build_review_packet,
@@ -23,11 +73,26 @@ from .reports import (
     render_summary_markdown,
 )
 
-_VOLATILE_VALIDATION_REPORTS = frozenset(
+_ALWAYS_MANIFEST_EXCLUSIONS = frozenset(
     {
+        "output/figures/autoresearch_stage_matrix.png",
+        "output/figures/figure_registry.json",
+        "output/reports/autoresearch_loop.md",
         "output/reports/autoresearch_readiness.json",
         "output/reports/autoresearch_readiness.md",
         "output/reports/evidence_registry.json",
+    }
+)
+_VOLATILE_LOOP_STATE_ARTIFACTS = frozenset(
+    {
+        "output/data/autoresearch_loop.json",
+        "output/data/autoresearch_review_packet.json",
+        "output/data/manuscript_variables.json",
+        "output/figures/autoresearch_stage_matrix.png",
+        "output/reports/autoresearch_loop.json",
+        "output/reports/autoresearch_loop.md",
+        "output/reports/autoresearch_review_packet.md",
+        "output/reports/autoresearch_summary.md",
     }
 )
 
@@ -54,7 +119,12 @@ def relative_path(project_root: Path, path: Path) -> str:
         return str(path)
 
 
-def write_artifact_manifest(project_root: Path, paths: list[Path]) -> Path:
+def write_artifact_manifest(
+    project_root: Path,
+    paths: list[Path],
+    *,
+    exclude_volatile: bool = False,
+) -> Path:
     """Write the artifact manifest for declared loop outputs."""
     manifest_path = (project_root / "output" / "reports" / "artifact_manifest.json").resolve()
     entries = []
@@ -65,7 +135,8 @@ def write_artifact_manifest(project_root: Path, paths: list[Path]) -> Path:
                 for path in paths
                 if path.exists()
                 and path.resolve() != manifest_path
-                and relative_path(project_root, path) not in _VOLATILE_VALIDATION_REPORTS
+                and relative_path(project_root, path) not in _ALWAYS_MANIFEST_EXCLUSIONS
+                and (not exclude_volatile or relative_path(project_root, path) not in _VOLATILE_LOOP_STATE_ARTIFACTS)
             }
         ),
         start=1,
@@ -115,7 +186,7 @@ def write_core_loop_artifacts(
         write_text(reports_dir / "autoresearch_loop.md", render_loop_markdown(provisional)),
         write_text(data_dir / "autoresearch_stage_matrix.csv", render_stage_matrix_csv(provisional)),
         figure_path,
-        write_json(figures_dir / "figure_registry.json", figure_registry_payload()),
+        write_json(figures_dir / "figure_registry.json", figure_registry_payload(provisional)),
     ]
 
 
@@ -241,16 +312,103 @@ def write_ml_task_artifacts(project_root: Path, result: MLTaskResult, *, generat
             "accuracy_delta": round(result.accuracy_delta, 6),
         },
     }
+    classification_payload = classification_diagnostics(result)
+    calibration_payload = calibration_report(project_root, result)
+    robustness_payload = robustness_report(result)
+    probability_payload = probability_diagnostics(project_root, result)
+    bootstrap_payload = bootstrap_intervals(project_root, result)
+    paired_payload = paired_comparison_report(project_root, result)
+    statistical_payload = statistical_summary(project_root, result)
+    training_payload = training_diagnostics(result)
+    candidate_intervals_payload = candidate_accuracy_intervals(result)
+    class_balance_payload = class_balance_report(project_root, result)
 
     return [
         write_json(data_dir / "mnist_task_config.json", result.task_config.to_dict()),
         write_json(data_dir / "ml_task_results.json", result.to_dict()),
         write_json(data_dir / "ml_candidate_ledger.json", candidate_ledger),
         write_confusion_matrix_csv(data_dir / "ml_confusion_matrix.csv", result.accepted_candidate.confusion_matrix),
+        write_training_history_csv(data_dir / "ml_training_history.csv", result),
+        write_error_examples_json(data_dir / "ml_error_examples.json", project_root, result),
+        write_prediction_records_json(data_dir / "ml_prediction_records.json", project_root, result),
+        write_classification_diagnostics_json(data_dir / "ml_classification_diagnostics.json", result),
+        write_candidate_accuracy_intervals_json(data_dir / "ml_candidate_intervals.json", result),
+        write_class_balance_json(data_dir / "ml_class_balance.json", project_root, result),
+        write_calibration_report_json(data_dir / "ml_calibration_report.json", project_root, result),
+        write_robustness_report_json(data_dir / "ml_robustness_report.json", result),
+        write_probability_diagnostics_json(data_dir / "ml_probability_diagnostics.json", project_root, result),
+        write_bootstrap_intervals_json(data_dir / "ml_bootstrap_intervals.json", project_root, result),
+        write_paired_comparison_json(data_dir / "ml_paired_comparison.json", project_root, result),
+        write_statistical_summary_json(data_dir / "ml_statistical_summary.json", project_root, result),
+        write_training_diagnostics_json(data_dir / "ml_training_diagnostics.json", result),
         write_text(reports_dir / "ml_experiment_report.md", render_ml_experiment_report(result)),
         write_json(reports_dir / "ml_benchmark_score.json", benchmark_score),
-        write_ml_candidate_scores_figure(figures_dir, result),
-        write_json(figures_dir / "figure_registry.json", figure_registry_payload()),
+        write_ml_candidate_scores_figure(figures_dir, result, candidate_intervals_payload),
+        write_ml_confusion_matrix_figure(figures_dir, result),
+        write_ml_per_class_accuracy_figure(figures_dir, result),
+        write_ml_learning_curve_figure(figures_dir, result),
+        write_ml_complexity_accuracy_figure(figures_dir, result),
+        write_mnist_error_examples_figure(project_root, figures_dir, result),
+        write_ml_calibration_reliability_figure(figures_dir, calibration_payload),
+        write_ml_classification_metrics_heatmap(figures_dir, classification_payload),
+        write_ml_confusion_pairs_figure(figures_dir, classification_payload),
+        write_ml_generalization_gap_figure(figures_dir, classification_payload),
+        write_ml_robustness_matrix_figure(figures_dir, robustness_payload),
+        write_ml_probability_margin_figure(figures_dir, probability_payload),
+        write_ml_bootstrap_intervals_figure(figures_dir, bootstrap_payload),
+        write_ml_paired_correctness_figure(figures_dir, paired_payload),
+        write_ml_selective_accuracy_figure(figures_dir, statistical_payload),
+        write_ml_probability_quality_figure(figures_dir, statistical_payload),
+        write_ml_training_dynamics_figure(figures_dir, training_payload),
+        write_candidate_lifecycle_figure(figures_dir, result),
+        write_mnist_class_balance_figure(figures_dir, class_balance_payload),
+        write_mnist_subset_contact_sheet_figure(project_root, figures_dir, result),
+        write_json(figures_dir / "figure_registry.json", figure_registry_payload(ml_result=result)),
+    ]
+
+
+def write_final_visual_artifacts(
+    project_root: Path,
+    result: AutoResearchLoopResult,
+    ml_result: MLTaskResult,
+) -> list[Path]:
+    """Regenerate final figures and registry from the current loop state."""
+    figures_dir = project_root / "output" / "figures"
+    figures_dir.mkdir(parents=True, exist_ok=True)
+    classification_payload = classification_diagnostics(ml_result)
+    calibration_payload = calibration_report(project_root, ml_result)
+    robustness_payload = robustness_report(ml_result)
+    probability_payload = probability_diagnostics(project_root, ml_result)
+    bootstrap_payload = bootstrap_intervals(project_root, ml_result)
+    paired_payload = paired_comparison_report(project_root, ml_result)
+    statistical_payload = statistical_summary(project_root, ml_result)
+    training_payload = training_diagnostics(ml_result)
+    candidate_intervals_payload = candidate_accuracy_intervals(ml_result)
+    class_balance_payload = class_balance_report(project_root, ml_result)
+    return [
+        write_stage_matrix_figure(figures_dir, result),
+        write_ml_candidate_scores_figure(figures_dir, ml_result, candidate_intervals_payload),
+        write_ml_confusion_matrix_figure(figures_dir, ml_result),
+        write_ml_per_class_accuracy_figure(figures_dir, ml_result),
+        write_ml_learning_curve_figure(figures_dir, ml_result),
+        write_ml_complexity_accuracy_figure(figures_dir, ml_result),
+        write_mnist_error_examples_figure(project_root, figures_dir, ml_result),
+        write_ml_calibration_reliability_figure(figures_dir, calibration_payload),
+        write_ml_classification_metrics_heatmap(figures_dir, classification_payload),
+        write_ml_confusion_pairs_figure(figures_dir, classification_payload),
+        write_ml_generalization_gap_figure(figures_dir, classification_payload),
+        write_ml_robustness_matrix_figure(figures_dir, robustness_payload),
+        write_ml_probability_margin_figure(figures_dir, probability_payload),
+        write_ml_bootstrap_intervals_figure(figures_dir, bootstrap_payload),
+        write_ml_paired_correctness_figure(figures_dir, paired_payload),
+        write_ml_selective_accuracy_figure(figures_dir, statistical_payload),
+        write_ml_probability_quality_figure(figures_dir, statistical_payload),
+        write_ml_training_dynamics_figure(figures_dir, training_payload),
+        write_candidate_lifecycle_figure(figures_dir, ml_result),
+        write_mnist_class_balance_figure(figures_dir, class_balance_payload),
+        write_mnist_subset_contact_sheet_figure(project_root, figures_dir, ml_result),
+        write_closure_flow_figure(figures_dir, result),
+        write_json(figures_dir / "figure_registry.json", figure_registry_payload(result, ml_result)),
     ]
 
 
@@ -283,7 +441,7 @@ def update_result_payloads(project_root: Path, result: AutoResearchLoopResult) -
     data_dir = output / "data"
     reports_dir = output / "reports"
     loop_payload = result.to_dict()
-    return [
+    paths = [
         write_json(data_dir / "autoresearch_loop.json", loop_payload),
         write_json(data_dir / "autoresearch_claims.json", [claim.to_dict() for claim in result.claims]),
         write_json(data_dir / "autoresearch_review_packet.json", build_review_packet(result)),
@@ -291,11 +449,14 @@ def update_result_payloads(project_root: Path, result: AutoResearchLoopResult) -
         write_text(reports_dir / "autoresearch_loop.md", render_loop_markdown(result)),
         write_text(reports_dir / "autoresearch_review_packet.md", render_review_packet_markdown(result)),
         write_text(reports_dir / "autoresearch_summary.md", render_summary_markdown(result)),
+    ]
+    paths.append(
         save_variables(
             compute_variables_from_payload(loop_payload),
             data_dir / "manuscript_variables.json",
-        ),
-    ]
+        )
+    )
+    return paths
 
 
 def write_loop_payloads(

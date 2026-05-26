@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-25 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**424**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**162**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**6** passed), exemplar `pytest --collect-only` (209 + 76 + 14), drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-05-26 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**425**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**170**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**7** passed), exemplar `pytest --collect-only` (209 + 76 + 47), drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -73,7 +73,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **424** on 2026-05-25 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **425** on 2026-05-26 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -89,27 +89,27 @@ Current discovery/docs command:
 uv run pytest tests/infra_tests/project/test_discovery.py tests/infra_tests/test_docs_discovery_consistency.py -q
 ```
 
-Result: 60 passed in ~0.63s (real data, no mocks). Link-sync and pipeline-control command:
+Result: 63 passed in ~0.30s (real data, no mocks). Link-sync and pipeline-control command:
 
 ```bash
 uv run pytest tests/infra_tests/project/test_linking.py tests/infra_tests/core/test_pipeline_control_extensions.py -q
 ```
 
-Result: 62 passed in ~0.46s (real symlinks and file-backed HITL state, no mocks).
+Result: 65 passed in ~0.75s (real symlinks and file-backed HITL state, no mocks).
 
-**Exemplar `pytest --collect-only` totals** (2026-05-25):
+**Exemplar `pytest --collect-only` totals** (2026-05-26):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
 | `template_code_project` | 209 | 98.83 % |
 | `template_prose_project` | 76 | 100.00 % |
-| `template_autoresearch_project` | 14 | 98.61 % |
+| `template_autoresearch_project` | 47 | 91.66 % |
 
-Measured from `projects/template_code_project/` with `uv run pytest tests/ --cov=src --cov-fail-under=90 -q`. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
+Collection was refreshed with per-project `uv run pytest tests/ --collect-only -q --no-cov` runs. Coverage values come from the latest project coverage gates; re-run the per-project coverage command after changing project `src/` or tests. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
 Drift-checker self-tests (separate suite at `tests/infra_tests/test_check_template_drift.py`): **20 passed**, gating **9 per-exemplar detectors** on public canonical exemplars plus **2 repo-level checks** (`check_repo_docs_hardcoded_counts`, `check_repo_thin_orchestrator_scripts` / `check_project_scripts` for `projects/*/scripts/`). Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** (`test_thin_orchestrator_drift.py`). Per-exemplar detectors: function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead link, oversize `src/*.py`, blanket `except Exception`, mocks in tests, canonical-file presence.
 
-**Thin-orchestrator gates** (measured 2026-05-25):
+**Thin-orchestrator gates** (measured 2026-05-26):
 
 | Gate | Command | Threshold |
 | --- | --- | --- |

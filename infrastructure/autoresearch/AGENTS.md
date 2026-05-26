@@ -64,7 +64,7 @@ The module validates only file-backed deterministic surfaces:
 - `output/data/run_ledger.json`
 - `output/data/review_decisions.json`
 - `output/data/benchmark_scores.json`
-- configured disclosure text in manuscript Markdown
+- configured disclosure text or `{{DISCLOSURE_TEXT}}` token in manuscript Markdown
 
 ## Configuration Rules
 

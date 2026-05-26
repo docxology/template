@@ -803,7 +803,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | # | Job (`id`) | `needs` | Runs when | Purpose |
 | - | --- | --- | --- | --- |
 | 1 | `detect` | — | always | Emits presence flags (`setup_hook`, `fep_lean`) for the optional jobs |
-| 2 | `lint` | — | always | `ruff check` + `ruff format` + `mypy` (CI scope) + `__all__` audit + tracked-generated-artifact guard + **confidentiality guard** (`check_tracked_projects.py` — only public template projects may be tracked) |
+| 2 | `lint` | — | always | `ruff check` + `ruff format` + `mypy` (CI scope) + `__all__` audit + tracked-generated-artifact guard (`output/`, `.codegraph/`, package metadata) + **confidentiality guard** (`check_tracked_projects.py` — only public template projects may be tracked) |
 | 3 | `health` | `lint` | always | Unified health report (informational, non-blocking) |
 | 4 | `verify-no-mocks` | `lint` | always | Enforces the zero-mock policy (`scripts/verify_no_mocks.py`) |
 | 5 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |

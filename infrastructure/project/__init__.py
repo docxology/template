@@ -19,6 +19,13 @@ Usage::
 
 from typing import TYPE_CHECKING, Any
 
+from infrastructure.project.codegraph import (
+    CodeGraphCommand,
+    build_codegraph_files_command,
+    build_codegraph_init_command,
+    build_scope_check_command,
+    verify_codegraph_scope_payload,
+)
 from infrastructure.project.discovery import discover_projects, resolve_project_root
 from infrastructure.project.metadata import get_project_metadata
 from infrastructure.project.project_info import ProjectInfo
@@ -58,6 +65,10 @@ def __getattr__(name: str) -> Any:
 __all__ = [
     "ProjectInfo",
     "PUBLIC_PROJECT_NAMES",
+    "CodeGraphCommand",
+    "build_codegraph_files_command",
+    "build_codegraph_init_command",
+    "build_scope_check_command",
     "discover_projects",
     "find_setup_hook",
     "get_project_metadata",
@@ -68,4 +79,5 @@ __all__ = [
     "resolve_project_root",
     "run_project_setup_hook",
     "validate_project_structure",
+    "verify_codegraph_scope_payload",
 ]

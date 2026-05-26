@@ -19,7 +19,7 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 | `guides/integrity-module.md` | Integrity verification module |
 | `guides/llm-module.md` | LLM integration module |
 | `guides/methods-module.md` | Methods orchestration module |
-| `guides/project-module.md` | Project discovery module |
+| `guides/project-module.md` | Project discovery module plus local CodeGraph helpers |
 | `guides/publishing-module.md` | Academic publishing module |
 | `guides/rendering-module.md` | Multi-format rendering module |
 | `guides/reporting-module.md` | Pipeline reporting module |

@@ -821,6 +821,46 @@ Validate a user-supplied project slug against discovered projects.
 
 ## Package: `infrastructure.project`
 
+### `build_codegraph_files_command`
+
+*function — defined in `infrastructure.project.codegraph`*
+
+```python
+build_codegraph_files_command(path: Path) -> CodeGraphCommand
+```
+
+Build a JSON file-list command for scope verification.
+
+### `build_codegraph_init_command`
+
+*function — defined in `infrastructure.project.codegraph`*
+
+```python
+build_codegraph_init_command(path: Path, *, index: bool=True) -> CodeGraphCommand
+```
+
+Build the recommended CodeGraph initialization command for ``path``.
+
+### `build_scope_check_command`
+
+*function — defined in `infrastructure.project.codegraph`*
+
+```python
+build_scope_check_command(path: Path) -> CodeGraphCommand
+```
+
+Build the first command in the CodeGraph scope verification workflow.
+
+### `CodeGraphCommand`
+
+*class — defined in `infrastructure.project.codegraph`*
+
+```python
+class CodeGraphCommand
+```
+
+A shell command recommendation without executing it.
+
 ### `discover_projects`
 
 *function — defined in `infrastructure.project.discovery`*
@@ -916,6 +956,16 @@ validate_project_structure(project_dir: Path) -> tuple[bool, str]
 ```
 
 Validate that project has required directory structure.
+
+### `verify_codegraph_scope_payload`
+
+*function — defined in `infrastructure.project.codegraph`*
+
+```python
+verify_codegraph_scope_payload(payload: str) -> list[str]
+```
+
+Return private/local project paths found in a CodeGraph files payload.
 
 ## Package: `infrastructure.prose`
 

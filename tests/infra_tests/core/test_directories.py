@@ -101,6 +101,22 @@ class TestVerifySourceStructure:
         assert link.is_symlink()
         assert verify_source_structure(repo_root, "linkedproj") is True
 
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+    def test_wip_symlink_outside_repo(self, tmp_path):
+        """WIP trees under projects_in_progress/ pass source-structure checks."""
+        repo_root = tmp_path / "repo"
+        (repo_root / "infrastructure").mkdir(parents=True)
+
+        external = tmp_path / "private" / "passive" / "wipproj"
+        (external / "src").mkdir(parents=True)
+        (external / "tests").mkdir()
+
+        wip_link = repo_root / "projects_in_progress" / "wipproj"
+        wip_link.parent.mkdir(parents=True)
+        wip_link.symlink_to(external, target_is_directory=True)
+
+        assert verify_source_structure(repo_root, "wipproj") is True
+
 
 class TestValidateDirectoryStructure:
     def test_all_missing(self, tmp_path):

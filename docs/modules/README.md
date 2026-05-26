@@ -29,7 +29,7 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 | Integrity | [`guides/integrity-module.md`](guides/integrity-module.md) | File integrity, cross-reference validation |
 | LLM | [`guides/llm-module.md`](guides/llm-module.md) | Ollama integration, research templates |
 | Methods | [`guides/methods-module.md`](guides/methods-module.md) | Methods orchestration plans |
-| Project | [`guides/project-module.md`](guides/project-module.md) | Multi-project discovery, validation |
+| Project | [`guides/project-module.md`](guides/project-module.md) | Multi-project discovery, validation, CodeGraph helpers |
 | Publishing | [`guides/publishing-module.md`](guides/publishing-module.md) | DOI validation, citation generation |
 | Rendering | [`guides/rendering-module.md`](guides/rendering-module.md) | PDF, slides, web output |
 | Reporting | [`guides/reporting-module.md`](guides/reporting-module.md) | Pipeline reports, error aggregation |

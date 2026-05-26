@@ -50,6 +50,23 @@ metadata = get_project_metadata(project_path)
 print(metadata.get("title"), metadata["version"], metadata["authors"])
 ```
 
+## Optional CodeGraph Helpers
+
+CodeGraph is a local-only agent navigation index. Use these helpers to print
+safe commands and verify that a template-root index did not include private
+symlinked projects:
+
+```python
+from pathlib import Path
+from infrastructure.project import build_codegraph_init_command, verify_codegraph_scope_payload
+
+print(build_codegraph_init_command(Path(".")).display)
+offenders = verify_codegraph_scope_payload(codegraph_files_json)
+```
+
+The index directory `.codegraph/` is generated local state and must remain
+untracked.
+
 ## Active vs Archived Projects
 
 - **Active:** `projects/` — Discovered and executed by infrastructure
@@ -101,3 +118,5 @@ for p in discover_projects(Path('.')):
 | `validate_project_structure` | Function |
 | `get_project_metadata` | Function |
 | `ProjectInfo` | Dataclass |
+| `build_codegraph_init_command` | Function |
+| `verify_codegraph_scope_payload` | Function |

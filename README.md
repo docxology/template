@@ -429,6 +429,8 @@ counts drift, so it is not duplicated here). Top-level entry points:
   [`infrastructure/AGENTS.md`](infrastructure/AGENTS.md)
 - **Quality / testing:** [`tests/AGENTS.md`](tests/AGENTS.md),
   [`docs/development/testing/testing-guide.md`](docs/development/testing/testing-guide.md)
+- **Agent code navigation:** [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md)
+  (optional local CodeGraph index; never a committed artifact)
 - **Best practices:** [`docs/best-practices/best-practices.md`](docs/best-practices/best-practices.md)
 - **Live facts (auto-derived):** [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md),
   [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)

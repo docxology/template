@@ -291,7 +291,7 @@ def test_external_method_contract_validation_passes_with_declared_artifacts(tmp_
     repo_root = _write_repo_scaffold(tmp_path)
     project = repo_root / "projects" / "demo"
     (project / "manuscript" / "02_methodology.md").write_text(
-        "This manuscript uses AI-assisted AutoResearch with human review.\n",
+        "This manuscript declares {{DISCLOSURE_TEXT}} with human review.\n",
         encoding="utf-8",
     )
     (project / "autoresearch.yaml").write_text(

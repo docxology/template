@@ -28,6 +28,9 @@ def _repo_visible_project_path(repo_root: Path | str, project_name: str) -> Path
     try:
         return project_root.relative_to(repo_root.resolve())
     except ValueError:
+        wip = repo_root / "projects_in_progress" / project_name
+        if wip.is_dir():
+            return Path("projects_in_progress") / project_name
         return Path("projects") / project_name
 
 

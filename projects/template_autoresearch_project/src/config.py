@@ -60,6 +60,7 @@ class AutoResearchLoopConfig:
     budget_policy: BudgetPolicy = BudgetPolicy()
     edit_allowlist: tuple[str, ...] = ()
     acceptance_policy: str = ""
+    disclosure_text: str = "AI-assisted AutoResearch"
     review_gates: tuple[ReviewGate, ...] = ()
     benchmark_tasks: tuple[BenchmarkTask, ...] = ()
 
@@ -76,6 +77,7 @@ class AutoResearchLoopConfig:
             "budget_policy": self.budget_policy.to_dict(),
             "edit_allowlist": list(self.edit_allowlist),
             "acceptance_policy": self.acceptance_policy,
+            "disclosure_text": self.disclosure_text,
             "review_gates": [gate.to_dict() for gate in self.review_gates],
             "benchmark_tasks": [task.to_dict() for task in self.benchmark_tasks],
         }
@@ -113,6 +115,7 @@ def build_loop_config(plan: AutoResearchPlan, settings: ManuscriptLoopSettings) 
         budget_policy=plan.config.budget_policy,
         edit_allowlist=plan.config.edit_allowlist,
         acceptance_policy=plan.config.acceptance_policy,
+        disclosure_text=plan.config.disclosure_text,
         review_gates=plan.config.review_gates,
         benchmark_tasks=plan.config.benchmark_tasks,
     )

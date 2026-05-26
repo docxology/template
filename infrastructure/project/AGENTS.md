@@ -38,6 +38,20 @@ The `infrastructure/project/` module provides project discovery, validation, and
 - `is_generated_artifact_path(path)` — path classifier for generated outputs
 - Used by `scripts/check_tracked_projects.py` and `scripts/check_tracked_generated_artifacts.py`
 
+### CodeGraph Local Integration (`codegraph.py`)
+
+- `build_codegraph_init_command(path)` — build the recommended local
+  `codegraph init <path> --index` command without executing it.
+- `build_codegraph_files_command(path)` — build the JSON file-list command used
+  for scope checks.
+- `verify_codegraph_scope_payload(payload)` — parse CodeGraph file JSON and
+  report any indexed non-template path under `projects/`.
+- Used by `scripts/codegraph_local.py`; see
+  [`docs/guides/codegraph-local.md`](../../docs/guides/codegraph-local.md).
+
+CodeGraph indexes (`.codegraph/`) are generated local state and must never be
+committed. The generated-artifact guard treats `.codegraph/*` as an offender.
+
 **Project pyproject.toml flags (`[tool.template]`):**
 
 ```toml

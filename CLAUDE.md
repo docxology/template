@@ -43,6 +43,7 @@ This is a research project template with a test-driven development workflow, aut
 | Repo-wide doc linter | `uv run python scripts/lint_docs.py` |
 | Exemplar drift checker | `uv run python scripts/check_template_drift.py` (add `--strict` for focused gates) |
 | Module line count gate | `uv run python scripts/gates/module_line_count_check.py` |
+| CodeGraph local commands | `uv run python scripts/codegraph_local.py commands .` (optional; see [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md)) |
 | Unified health CLI | `uv run python -m infrastructure.core.health` (optional `--gates=module-line-count`) |
 | Opt-in security scan | `uv run python scripts/gates/security_scan.py` (not default pipeline/CI; missing tools report `skipped`, not clean) |
 
@@ -130,6 +131,11 @@ uv run python -m infrastructure.validation.cli pdf output/{project_name}/pdf/
 ollama serve
 ollama pull gemma3:4b
 uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
+
+# Optional local CodeGraph index (not a CI or publication dependency)
+uv run python scripts/codegraph_local.py commands .
+codegraph init "$(pwd)" --index
+codegraph files "$(pwd)" --json | uv run python scripts/codegraph_local.py verify-scope
 
 # Generate API documentation
 uv run python -m infrastructure.documentation.generate_glossary_cli --project {project_name}

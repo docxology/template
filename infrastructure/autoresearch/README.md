@@ -94,7 +94,7 @@ Unknown quality checks fail validation. In non-strict mode, readiness defects
 that are not configuration errors are warnings. The extended method checks are
 file-backed only: they validate allowlists, evidence-linked accepted ideas,
 budget stop reasons, human review decisions, benchmark grading outputs, and
-configured AI-assisted disclosure text.
+configured AI-assisted disclosure text or its manuscript injection token.
 
 ## CLI
 
