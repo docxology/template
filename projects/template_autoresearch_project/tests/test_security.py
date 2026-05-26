@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import shutil
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from src.security import (
     integrity_attestation_payload,
     render_security_review_markdown,
     security_profile_payload,
+    local_inventory_export_payload,
     supply_chain_inventory_payload,
     threat_model_payload,
     write_security_artifacts,
@@ -44,6 +46,10 @@ def test_security_profile_and_threat_model_payloads_are_bounded() -> None:
     assert profile["enabled"] is True
     assert profile["network_policy"] == "default_offline"
     assert profile["external_signing"] is False
+    assert profile["not_external_signing"] is True
+    assert profile["not_slsa_certification"] is True
+    assert profile["not_runtime_monitoring"] is True
+    assert profile["not_network_security_assessment"] is True
     assert "No formal SBOM standard is emitted; the inventory is SBOM-style local metadata." in profile["non_claims"]
     assert threat_model["frameworks"] == ["STRIDE", "MITRE_ATT&CK_T1195"]
     assert threat_model["summary"]["asset_count"] == 7
@@ -69,8 +75,15 @@ def test_inventory_and_attestation_report_pass_missing_and_mismatch_cases(
     )
     assert inventory["formal_sbom"] is False
     assert inventory["external_signing"] is False
+    assert inventory["not_slsa_certification"] is True
+    assert inventory["not_network_security_assessment"] is True
     assert any(row["id"] == "mnist_fixture" and row["exists"] for row in inventory["inputs"])
     assert inventory["generated_artifacts"]
+    export = local_inventory_export_payload(inventory, generated_at="2026-05-26T00:00:00+00:00")
+    assert export["schema"] == "template-autoresearch-local-inventory-export-v1"
+    assert export["formal_sbom"] is False
+    assert export["cyclonedx_complete"] is False
+    assert export["component_count"] == len(export["components"])
 
     attestation = integrity_attestation_payload(
         project_root,
@@ -80,6 +93,8 @@ def test_inventory_and_attestation_report_pass_missing_and_mismatch_cases(
     assert attestation["status"] == "passed"
     assert attestation["checked_count"] > 0
     assert attestation["external_signature"] is False
+    assert attestation["not_external_signing"] is True
+    assert attestation["not_runtime_monitoring"] is True
 
     observed = tmp_path / "observed.txt"
     observed.write_text("changed", encoding="utf-8")
@@ -129,9 +144,8 @@ def test_write_security_artifacts_generates_local_review_and_figures(
 
     relative_paths = {path.relative_to(sandbox_project).as_posix() for path in paths}
     assert set(SECURITY_ARTIFACTS) == relative_paths
-    assert (
-        sandbox_project / "output" / "figures" / "autoresearch_security_control_matrix.png"
-    ).stat().st_size > 1000
+    assert (sandbox_project / "output" / "data" / "autoresearch_inventory_export.json").exists()
+    assert (sandbox_project / "output" / "figures" / "autoresearch_security_control_matrix.png").stat().st_size > 1000
     assert (sandbox_project / "output" / "figures" / "autoresearch_integrity_chain.png").stat().st_size > 1000
 
     profile = security_profile_payload(config, generated_at="2026-05-26T00:00:00+00:00")
@@ -149,3 +163,23 @@ def test_write_security_artifacts_generates_local_review_and_figures(
     markdown = render_security_review_markdown(profile, threat_model, inventory, attestation)
     assert "External signature: `false`" in markdown
     assert "No live network, LLM, or generated-code execution is part of the default path." in markdown
+
+
+def test_default_runtime_files_do_not_import_network_clients(project_root: Path) -> None:
+    exempt = {
+        project_root / "src" / "mnist_fixture.py",
+        project_root / "scripts" / "regenerate_mnist_fixture.py",
+    }
+    disallowed_modules = {"httpx", "requests", "selenium", "playwright", "socket", "urllib.request"}
+    for path in [*sorted((project_root / "src").glob("*.py")), *sorted((project_root / "scripts").glob("*.py"))]:
+        if path in exempt:
+            continue
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                imported = {alias.name for alias in node.names}
+                assert disallowed_modules.isdisjoint(imported), f"{path} imports network/client module {imported}"
+            if isinstance(node, ast.ImportFrom) and node.module:
+                assert node.module not in disallowed_modules, f"{path} imports from {node.module}"
+            if isinstance(node, ast.Attribute):
+                assert node.attr != "urlopen", f"{path} calls urlopen outside fixture maintenance tooling"

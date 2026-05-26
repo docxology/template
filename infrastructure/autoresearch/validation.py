@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any, Literal
 
+import yaml
+
 from infrastructure.autoresearch.models import (
     KNOWN_QUALITY_CHECKS,
     AutoResearchIssue,
@@ -44,7 +46,8 @@ EXTRINSIC_QUALITY_CHECKS = frozenset(
         "security_profile",
     }
 )
-_REVIEW_DECISIONS = frozenset({"approved", "revised", "blocked", "deferred"})
+_REVIEW_DECISIONS = frozenset({"approved", "revised", "blocked", "deferred", "rejected"})
+_HUMAN_REVIEW_SCHEMA = "template-autoresearch-human-review-v1"
 
 
 def validate_autoresearch_plan(
@@ -424,6 +427,8 @@ def _validate_review_gates(
             )
         )
         return
+    if payload.get("publication_approved") is True:
+        _validate_publication_approval_source(project_root, path, issues)
     decisions = _review_decision_map(payload)
     for gate in required_gates:
         decision = decisions.get(gate.name, "").strip()
@@ -434,9 +439,51 @@ def _validate_review_gates(
                     "AUTORESEARCH.REVIEW_GATE_PENDING",
                     f"required review gate has no final decision: {gate.name}",
                     str(path),
-                    "Use one of: approved, revised, blocked, deferred.",
+                    "Use one of: approved, revised, blocked, deferred, rejected.",
                 )
             )
+
+
+def _validate_publication_approval_source(
+    project_root: Path,
+    generated_path: Path,
+    issues: list[AutoResearchIssue],
+) -> None:
+    source_path = project_root / "human_review.yaml"
+    try:
+        payload = yaml.safe_load(source_path.read_text(encoding="utf-8")) if source_path.exists() else None
+    except (OSError, yaml.YAMLError) as exc:
+        issues.append(
+            _issue(
+                "error",
+                "AUTORESEARCH.REVIEW_SELF_APPROVAL",
+                f"generated approval cannot be verified from human_review.yaml: {exc}",
+                str(generated_path),
+                "Use a valid human_review.yaml as the approval source.",
+            )
+        )
+        return
+    if not isinstance(payload, dict) or payload.get("schema") != _HUMAN_REVIEW_SCHEMA:
+        issues.append(
+            _issue(
+                "error",
+                "AUTORESEARCH.REVIEW_SELF_APPROVAL",
+                "generated outputs claim publication approval without a valid human_review.yaml source",
+                str(generated_path),
+                "Add a human-authored human_review.yaml or keep publication_approved false.",
+            )
+        )
+        return
+    if payload.get("publication_approved") is not True:
+        issues.append(
+            _issue(
+                "error",
+                "AUTORESEARCH.REVIEW_SELF_APPROVAL",
+                "generated outputs claim publication approval but human_review.yaml is unapproved",
+                str(generated_path),
+                "Only copy publication approval from a human-authored approval file.",
+            )
+        )
 
 
 def _review_decision_map(payload: dict[str, Any]) -> dict[str, str]:
@@ -564,6 +611,7 @@ def _validate_security_profile(
         "profile": project_root / "output" / "data" / "autoresearch_security_profile.json",
         "threat_model": project_root / "output" / "data" / "autoresearch_threat_model.json",
         "inventory": project_root / "output" / "data" / "autoresearch_supply_chain_inventory.json",
+        "inventory_export": project_root / "output" / "data" / "autoresearch_inventory_export.json",
         "attestation": project_root / "output" / "data" / "autoresearch_integrity_attestation.json",
         "review": project_root / "output" / "reports" / "autoresearch_security_review.md",
         "control_matrix": project_root / "output" / "figures" / "autoresearch_security_control_matrix.png",

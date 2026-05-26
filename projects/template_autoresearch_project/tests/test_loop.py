@@ -84,7 +84,10 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(
     assert "output/data/autoresearch_security_profile.json" in payload["output_paths"]
     assert "output/data/autoresearch_threat_model.json" in payload["output_paths"]
     assert "output/data/autoresearch_supply_chain_inventory.json" in payload["output_paths"]
+    assert "output/data/autoresearch_inventory_export.json" in payload["output_paths"]
     assert "output/data/autoresearch_integrity_attestation.json" in payload["output_paths"]
+    assert "output/data/autoresearch_schema_manifest.json" in payload["output_paths"]
+    assert "output/data/research_object_manifest.json" in payload["output_paths"]
     assert "output/data/manuscript_variable_provenance.json" in payload["output_paths"]
     assert "output/data/manuscript_figure_blocks.json" in payload["output_paths"]
     assert "output/figures/ml_confusion_matrix.png" in payload["output_paths"]
@@ -135,6 +138,8 @@ def test_run_autoresearch_loop_writes_bounded_method_ledgers(
     assert run_ledger["budget_exhausted"] is True
     assert run_ledger["exhaustion_reason"] == "candidate iteration budget reached"
     assert review_decisions["publication_approved"] is False
+    assert review_decisions["schema"] == "template-autoresearch-review-decisions-v1"
+    assert review_decisions["human_review_source"] == "human_review.yaml"
     assert {row["decision"] for row in review_decisions["decisions"]} == {"deferred"}
     assert {task["id"] for task in benchmark_scores["tasks"]} == {"readiness-smoke", "ml-loop-score"}
     assert all(task["status"] == "graded" for task in benchmark_scores["tasks"])
@@ -173,7 +178,10 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         "output/data/autoresearch_security_profile.json",
         "output/data/autoresearch_threat_model.json",
         "output/data/autoresearch_supply_chain_inventory.json",
+        "output/data/autoresearch_inventory_export.json",
         "output/data/autoresearch_integrity_attestation.json",
+        "output/data/autoresearch_schema_manifest.json",
+        "output/data/research_object_manifest.json",
         "output/data/manuscript_variable_provenance.json",
         "output/data/manuscript_figure_blocks.json",
         "output/reports/autoresearch_review_packet.md",
@@ -219,6 +227,7 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         and autoresearch_loop_result.supported_claim_count == len(autoresearch_loop_result.claims)
     )
     assert review_packet["human_review"]["publication_approved"] is False
+    assert review_packet["schema"] == "template-autoresearch-review-packet-v1"
 
 
 def test_run_autoresearch_loop_writes_stage_matrix_figure(
@@ -276,8 +285,7 @@ def test_run_autoresearch_loop_writes_stage_matrix_figure(
     assert registry["fig:mnist_subset_contact_sheet"]["filename"] == "mnist_subset_contact_sheet.png"
     assert registry["fig:autoresearch_closure_flow"]["filename"] == "autoresearch_closure_flow.png"
     assert (
-        registry["fig:autoresearch_security_control_matrix"]["filename"]
-        == "autoresearch_security_control_matrix.png"
+        registry["fig:autoresearch_security_control_matrix"]["filename"] == "autoresearch_security_control_matrix.png"
     )
     assert registry["fig:autoresearch_integrity_chain"]["filename"] == "autoresearch_integrity_chain.png"
     for record in registry.values():
@@ -381,6 +389,8 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
     assert (project / "output" / "data" / "autoresearch_loop.json").exists()
     assert (project / "output" / "data" / "mnist_task_config.json").exists()
     assert (project / "output" / "data" / "ml_task_results.json").exists()
+    assert (project / "output" / "data" / "autoresearch_schema_manifest.json").exists()
+    assert (project / "output" / "data" / "research_object_manifest.json").exists()
     assert (project / "output" / "data" / "manuscript_variable_provenance.json").exists()
     assert (project / "output" / "reports" / "artifact_manifest.json").exists()
 

@@ -1,0 +1,8 @@
+schema: template-autoresearch-human-review-v1
+publication_approved: false
+reviewer: ""
+reviewed_at: null
+decisions:
+  proposal_review: deferred
+  evidence_review: deferred
+notes: ""

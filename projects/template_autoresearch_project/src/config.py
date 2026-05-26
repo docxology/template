@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -19,6 +19,9 @@ from infrastructure.autoresearch import (
     SecurityProfile,
     parse_string_sequence,
 )
+
+HUMAN_REVIEW_SCHEMA = "template-autoresearch-human-review-v1"
+HUMAN_REVIEW_DECISIONS = frozenset({"approved", "deferred", "rejected"})
 
 
 @dataclass(frozen=True)
@@ -48,6 +51,38 @@ class ManuscriptLoopSettings:
 
 
 @dataclass(frozen=True)
+class HumanReviewState:
+    """Human-authored publication review state loaded from human_review.yaml."""
+
+    schema: str = HUMAN_REVIEW_SCHEMA
+    publication_approved: bool = False
+    reviewer: str = ""
+    reviewed_at: str | None = None
+    decisions: dict[str, str] = field(
+        default_factory=lambda: {
+            "proposal_review": "deferred",
+            "evidence_review": "deferred",
+        }
+    )
+    notes: str = ""
+    source_path: str = "human_review.yaml"
+    source_exists: bool = False
+
+    def to_dict(self) -> dict[str, object]:
+        """Serialize to a JSON-safe mapping."""
+        return {
+            "schema": self.schema,
+            "publication_approved": self.publication_approved,
+            "reviewer": self.reviewer,
+            "reviewed_at": self.reviewed_at,
+            "decisions": dict(self.decisions),
+            "notes": self.notes,
+            "source_path": self.source_path,
+            "source_exists": self.source_exists,
+        }
+
+
+@dataclass(frozen=True)
 class AutoResearchLoopConfig:
     """Project-local deterministic AutoResearch loop configuration."""
 
@@ -65,6 +100,7 @@ class AutoResearchLoopConfig:
     review_gates: tuple[ReviewGate, ...] = ()
     benchmark_tasks: tuple[BenchmarkTask, ...] = ()
     security_profile: SecurityProfile = SecurityProfile()
+    human_review: HumanReviewState = HumanReviewState()
 
     def to_dict(self) -> dict[str, object]:
         """Serialize to a JSON-safe mapping."""
@@ -83,6 +119,7 @@ class AutoResearchLoopConfig:
             "review_gates": [gate.to_dict() for gate in self.review_gates],
             "benchmark_tasks": [task.to_dict() for task in self.benchmark_tasks],
             "security_profile": self.security_profile.to_dict(),
+            "human_review": self.human_review.to_dict(),
         }
 
 
@@ -105,7 +142,52 @@ def load_manuscript_loop_settings(project_root: Path) -> ManuscriptLoopSettings:
     )
 
 
-def build_loop_config(plan: AutoResearchPlan, settings: ManuscriptLoopSettings) -> AutoResearchLoopConfig:
+def load_human_review(path: Path) -> HumanReviewState:
+    """Load the human-authored publication review state."""
+    if not path.is_file():
+        return HumanReviewState(source_path=path.name, source_exists=False)
+    payload = _load_yaml(path)
+    schema = str(payload.get("schema", "") or "")
+    if schema != HUMAN_REVIEW_SCHEMA:
+        raise ValueError(f"human_review.yaml schema must be {HUMAN_REVIEW_SCHEMA}")
+    publication_approved = payload.get("publication_approved")
+    if not isinstance(publication_approved, bool):
+        raise ValueError("human_review.yaml publication_approved must be a boolean")
+    reviewer = str(payload.get("reviewer", "") or "").strip()
+    reviewed_at_raw = payload.get("reviewed_at")
+    reviewed_at = None if reviewed_at_raw is None else str(reviewed_at_raw).strip()
+    if not publication_approved and reviewed_at:
+        raise ValueError("human_review.yaml reviewed_at must be null unless publication_approved is true")
+    if publication_approved and (not reviewer or not reviewed_at):
+        raise ValueError("human_review.yaml approvals require reviewer and reviewed_at")
+    raw_decisions = payload.get("decisions", {})
+    if not isinstance(raw_decisions, dict):
+        raise ValueError("human_review.yaml decisions must be a mapping")
+    decisions: dict[str, str] = {}
+    for gate, decision in raw_decisions.items():
+        gate_name = str(gate).strip()
+        decision_text = str(decision).strip()
+        if decision_text not in HUMAN_REVIEW_DECISIONS:
+            allowed = ", ".join(sorted(HUMAN_REVIEW_DECISIONS))
+            raise ValueError(f"human_review.yaml decision for {gate_name} must be one of: {allowed}")
+        decisions[gate_name] = decision_text
+    return HumanReviewState(
+        publication_approved=publication_approved,
+        reviewer=reviewer,
+        reviewed_at=reviewed_at,
+        decisions=decisions or HumanReviewState().decisions,
+        notes=str(payload.get("notes", "") or ""),
+        source_path=path.name,
+        source_exists=True,
+    )
+
+
+def build_loop_config(
+    plan: AutoResearchPlan,
+    settings: ManuscriptLoopSettings,
+    *,
+    human_review: HumanReviewState | None = None,
+) -> AutoResearchLoopConfig:
     """Merge plan metadata with manuscript loop settings."""
     return AutoResearchLoopConfig(
         topic=plan.config.topic,
@@ -122,6 +204,7 @@ def build_loop_config(plan: AutoResearchPlan, settings: ManuscriptLoopSettings) 
         review_gates=plan.config.review_gates,
         benchmark_tasks=plan.config.benchmark_tasks,
         security_profile=plan.config.security_profile,
+        human_review=human_review or HumanReviewState(),
     )
 
 
@@ -133,7 +216,7 @@ def load_loop_config(project_root: Path, plan: AutoResearchPlan | None = None) -
 
         repo_root = project_root.parents[1]
         plan = build_autoresearch_plan(repo_root, project_root.name)
-    return build_loop_config(plan, settings)
+    return build_loop_config(plan, settings, human_review=load_human_review(project_root / "human_review.yaml"))
 
 
 def _load_yaml(path: Path) -> dict[str, Any]:

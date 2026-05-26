@@ -41,7 +41,8 @@ The command executes the standard project stages:
 7. Write method-contract artifacts: research program, idea ledger, run ledger,
    deferred review decisions, benchmark grading report, and benchmark scores.
 8. Refresh loop payloads provisionally (`readiness_valid=False`) and write the
-   first local security artifacts plus the first artifact manifest.
+   first local security artifacts, schema manifest, local research-object
+   manifest, and artifact manifest.
 9. Run extrinsic readiness checks (evidence registry, artifact manifest,
    required artifacts, method ledgers, review gates, benchmark outputs, and
    enabled security artifacts).
@@ -59,7 +60,8 @@ The command executes the standard project stages:
    chain.
 13. Write manuscript variables, registry-backed figure blocks, and variable
    provenance sidecars.
-14. Rewrite the evidence registry, security artifacts, and artifact manifest.
+14. Rewrite the evidence registry, security artifacts, schema manifest, local
+   research-object manifest, and artifact manifest.
 
 Targeted checks:
 
@@ -76,6 +78,9 @@ generated outputs as publication-ready. The exemplar records review readiness;
 it does not approve itself.
 Also review `output/reports/autoresearch_security_review.md`; it is local
 artifact-integrity evidence, not an external security certification.
+Use `output/data/autoresearch_schema_manifest.json` to confirm schema-versioned
+JSON governance payloads and `output/data/research_object_manifest.json` to
+review the local package of observed paths and checksums.
 
 ## Fixture maintenance
 

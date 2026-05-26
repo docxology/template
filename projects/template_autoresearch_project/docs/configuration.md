@@ -39,6 +39,21 @@ patch-attention candidate identifiers, expected artifacts, and touched paths.
 Accepted ideas must carry evidence links; candidates must keep their
 `touched_paths` inside `edit_allowlist`.
 
+## `human_review.yaml`
+
+`human_review.yaml` is the only route to a true generated
+`publication_approved` value. The file is human-authored and uses schema
+`template-autoresearch-human-review-v1`:
+
+- `publication_approved`: boolean, default `false`.
+- `reviewer`: non-empty only for a true approval.
+- `reviewed_at`: `null` unless `publication_approved: true`.
+- `decisions`: review-gate decisions, each one of `approved`, `deferred`, or
+  `rejected`.
+
+Generated review packets and decisions may copy this state, but readiness alone
+does not approve publication.
+
 ## `mnist_task.yaml`
 
 `mnist_task.yaml` is the executable experiment contract. It declares the task
@@ -72,10 +87,12 @@ plan, not a second parse of `autoresearch.yaml` in project code.
 
 ## ML task implementation
 
-`src/ml_task.py` uses `numpy` only. It loads the local MNIST subset, evaluates a
-nearest-centroid baseline, trains bounded neural candidates by deterministic SGD
-or a fixed patch-attention representation plus softmax head, and selects the
-best result with deterministic parameter-count tie-breaking. The task writes
+`src/ml_training.py` uses `numpy` only, with compatibility exports through
+`src/ml_task.py`, `src/ml_data.py`, `src/ml_models.py`, and
+`src/ml_selection.py`. It loads the local MNIST subset, evaluates a
+nearest-centroid baseline, trains bounded neural candidates by deterministic
+SGD or a fixed patch-attention representation plus softmax head, and selects
+the best result with deterministic parameter-count tie-breaking. The task writes
 `mnist_task_config.json`, `ml_task_results.json`, `ml_candidate_ledger.json`,
 `ml_confusion_matrix.csv`, `ml_experiment_report.md`,
 `ml_benchmark_score.json`, `ml_candidate_scores.png`,
@@ -132,19 +149,30 @@ chain compromise. The project borrows the documentation and artifact-integrity
 discipline, not the full packaging, signing, deployment, or monitoring
 standards.
 
+The manuscript also maintains `manuscript/source_ledger.yaml` with schema
+`template-autoresearch-source-ledger-v1`. Each current-trends citation declares
+`citekey`, `canonical_url`, `source_tier`, and `checked_as_of`. Tests and
+`scripts/check_source_ledger.py` validate the ledger offline; they check shape,
+HTTPS URLs, allowed source tiers, non-future ISO dates, BibTeX coverage, and
+manuscript references without making live web calls.
+
 ## Security artifacts
 
 `src.security` emits `autoresearch_security_profile.json`,
 `autoresearch_threat_model.json`, `autoresearch_supply_chain_inventory.json`,
-`autoresearch_integrity_attestation.json`, `autoresearch_security_review.md`,
+`autoresearch_inventory_export.json`, `autoresearch_integrity_attestation.json`,
+`autoresearch_security_review.md`,
 `autoresearch_security_control_matrix.png`, and
 `autoresearch_integrity_chain.png`. The inventory is SBOM-style local metadata,
-not SPDX or CycloneDX; the attestation is local SHA-256 evidence, not Sigstore
-or SLSA signed provenance.
+not SPDX or CycloneDX; the compact inventory export is still not a complete
+dependency SBOM; and the attestation is local SHA-256 evidence, not Sigstore or
+SLSA signed provenance.
 
 ## Scripts
 
 - `scripts/run_autoresearch_loop.py` calls `src.loop.run_autoresearch_loop`.
+- `scripts/check_source_ledger.py` validates `manuscript/source_ledger.yaml`
+  offline and prints source-tier counts.
 - `scripts/z_generate_manuscript_variables.py` calls
   `src.manuscript_variables` helpers, writes resolved manuscript files, and
   enforces strict tokenization for numbered manuscript sources.

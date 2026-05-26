@@ -56,7 +56,10 @@ def test_template_autoresearch_project_declares_exact_stage_gates() -> None:
     assert "output/data/autoresearch_security_profile.json" in plan.required_artifacts
     assert "output/data/autoresearch_threat_model.json" in plan.required_artifacts
     assert "output/data/autoresearch_supply_chain_inventory.json" in plan.required_artifacts
+    assert "output/data/autoresearch_inventory_export.json" in plan.required_artifacts
     assert "output/data/autoresearch_integrity_attestation.json" in plan.required_artifacts
+    assert "output/data/autoresearch_schema_manifest.json" in plan.required_artifacts
+    assert "output/data/research_object_manifest.json" in plan.required_artifacts
     assert "output/figures/ml_probability_margin_distribution.png" in plan.required_artifacts
     assert "output/figures/ml_bootstrap_intervals.png" in plan.required_artifacts
     assert "output/figures/ml_paired_correctness.png" in plan.required_artifacts
@@ -126,7 +129,10 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/data/autoresearch_security_profile.json" in outputs
     assert "output/data/autoresearch_threat_model.json" in outputs
     assert "output/data/autoresearch_supply_chain_inventory.json" in outputs
+    assert "output/data/autoresearch_inventory_export.json" in outputs
     assert "output/data/autoresearch_integrity_attestation.json" in outputs
+    assert "output/data/autoresearch_schema_manifest.json" in outputs
+    assert "output/data/research_object_manifest.json" in outputs
     assert "output/data/manuscript_variable_provenance.json" in outputs
     assert "output/data/manuscript_figure_blocks.json" in outputs
     assert "output/figures/ml_confusion_matrix.png" in outputs
@@ -174,7 +180,10 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/data/autoresearch_security_profile.json" in project_readme
     assert "output/data/autoresearch_threat_model.json" in project_readme
     assert "output/data/autoresearch_supply_chain_inventory.json" in project_readme
+    assert "output/data/autoresearch_inventory_export.json" in project_readme
     assert "output/data/autoresearch_integrity_attestation.json" in project_readme
+    assert "output/data/autoresearch_schema_manifest.json" in project_readme
+    assert "output/data/research_object_manifest.json" in project_readme
     assert "output/figures/autoresearch_closure_flow.png" in project_readme
     assert "output/figures/ml_confusion_matrix.png" in project_readme
     assert "output/figures/ml_per_class_accuracy.png" in project_readme

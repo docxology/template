@@ -7,12 +7,18 @@ from datetime import UTC, datetime
 from pathlib import Path
 import shutil
 
-from infrastructure.autoresearch import BudgetPolicy
+from infrastructure.autoresearch import BudgetPolicy, ReviewGate
 
-from src.config import AutoResearchLoopConfig
+from src.config import AutoResearchLoopConfig, HumanReviewState
 from src.ml_task import run_bounded_ml_task
 from src.models import AutoResearchLoopResult, LoopStageResult
-from src.writers import write_loop_payloads, write_ml_task_artifacts
+from src.writers import (
+    write_loop_payloads,
+    write_method_contract_artifacts,
+    write_ml_task_artifacts,
+    write_research_object_manifest,
+    write_schema_manifest,
+)
 
 
 def test_write_loop_payloads_writes_core_and_finalize_artifacts(tmp_path: Path) -> None:
@@ -74,6 +80,78 @@ def test_write_loop_payloads_writes_core_and_finalize_artifacts(tmp_path: Path) 
     assert expected <= {path.resolve() for path in paths}
     loop_payload = (tmp_path / "output/data/autoresearch_loop.json").read_text(encoding="utf-8")
     assert '"readiness_valid": false' in loop_payload
+    review_packet = json.loads((tmp_path / "output/data/autoresearch_review_packet.json").read_text(encoding="utf-8"))
+    assert review_packet["schema"] == "template-autoresearch-review-packet-v1"
+
+
+def test_write_method_contract_artifacts_uses_human_review_state(tmp_path: Path) -> None:
+    config = AutoResearchLoopConfig(
+        topic="Demo",
+        review_policy="human_review_required",
+        research_questions=(),
+        loop_stages=("readiness",),
+        required_artifacts=(),
+        quality_checks=(),
+        review_gates=(ReviewGate(name="proposal_review", required=True),),
+        human_review=HumanReviewState(
+            publication_approved=True,
+            reviewer="Human Reviewer",
+            reviewed_at="2026-05-26",
+            decisions={"proposal_review": "approved"},
+            source_exists=True,
+        ),
+    )
+    (tmp_path / "program.md").write_text("# Program\n\nHuman-authored research program.", encoding="utf-8")
+    (tmp_path / "seed_ideas.yaml").write_text("ideas: []\n", encoding="utf-8")
+
+    paths = write_method_contract_artifacts(tmp_path, config, generated_at="2026-05-26T00:00:00+00:00")
+
+    assert tmp_path / "output/data/review_decisions.json" in paths
+    payload = json.loads((tmp_path / "output/data/review_decisions.json").read_text(encoding="utf-8"))
+    assert payload["schema"] == "template-autoresearch-review-decisions-v1"
+    assert payload["publication_approved"] is True
+    assert payload["human_review_source_exists"] is True
+    assert payload["decisions"][0]["decision"] == "approved"
+
+
+def test_schema_and_research_object_manifests_are_local(project_root: Path, tmp_path: Path) -> None:
+    sample = tmp_path / "output" / "data" / "sample.json"
+    sample.parent.mkdir(parents=True)
+    sample.write_text('{"schema": "sample-v1", "ok": true}\n', encoding="utf-8")
+    review = tmp_path / "output" / "data" / "review_decisions.json"
+    review.write_text(
+        json.dumps(
+            {
+                "schema": "template-autoresearch-review-decisions-v1",
+                "publication_approved": False,
+                "human_review_source": "human_review.yaml",
+                "human_review_source_exists": True,
+                "decisions": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    (manuscript / "source_ledger.yaml").write_text(
+        (project_root / "manuscript" / "source_ledger.yaml").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+
+    schema_path = write_schema_manifest(tmp_path, [sample, review], generated_at="2026-05-26T00:00:00+00:00")
+    object_path = write_research_object_manifest(
+        tmp_path,
+        [sample, review, schema_path],
+        generated_at="2026-05-26T00:00:00+00:00",
+    )
+
+    schema_manifest = json.loads(schema_path.read_text(encoding="utf-8"))
+    research_object = json.loads(object_path.read_text(encoding="utf-8"))
+    assert schema_manifest["schema"] == "template-autoresearch-schema-manifest-v1"
+    assert not schema_manifest["missing_schema_artifacts"]
+    assert research_object["schema"] == "template-autoresearch-research-object-manifest-v1"
+    assert research_object["approval_state"]["publication_approved"] is False
+    assert "RO-Crate" in research_object["claim_boundary"]
 
 
 def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: Path, tmp_path: Path) -> None:

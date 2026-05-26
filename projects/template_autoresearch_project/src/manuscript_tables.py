@@ -554,6 +554,11 @@ def _security_artifact_table(
             f"{len(_mapping_list(security_inventory.get('inputs')))} inputs",
         ),
         (
+            "inventory export",
+            _artifact_markdown_link("output/data/autoresearch_inventory_export.json"),
+            "local non-SBOM export",
+        ),
+        (
             "attestation",
             _artifact_markdown_link("output/data/autoresearch_integrity_attestation.json"),
             _string_value(security_attestation.get("status", "N/A")),

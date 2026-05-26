@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import date
 import hashlib
 import json
 import re
@@ -12,7 +11,6 @@ import sys
 from pathlib import Path
 
 import pytest
-import yaml
 
 from src.manuscript_variables import (
     compute_variables,
@@ -20,6 +18,7 @@ from src.manuscript_variables import (
     compute_variables_from_payload,
 )
 from src.models import AutoResearchLoopResult
+from src.source_ledger import load_source_ledger
 
 
 def _candidate_display_label(value: object) -> str:
@@ -266,9 +265,7 @@ def test_generated_tables_are_backed_by_ledgers(
     selection = json.loads((project_root / "output" / "data" / "ml_candidate_selection_audit.json").read_text())
     boundary = json.loads((project_root / "output" / "data" / "ml_diagnostic_boundary.json").read_text())
     threat_model = json.loads((project_root / "output" / "data" / "autoresearch_threat_model.json").read_text())
-    attestation = json.loads(
-        (project_root / "output" / "data" / "autoresearch_integrity_attestation.json").read_text()
-    )
+    attestation = json.loads((project_root / "output" / "data" / "autoresearch_integrity_attestation.json").read_text())
     registry = json.loads((project_root / "output" / "figures" / "figure_registry.json").read_text())
 
     assert _candidate_display_label(candidate_ledger["accepted_candidate_id"]) in variables["ML_CANDIDATE_LEDGER_TABLE"]
@@ -352,28 +349,13 @@ def test_survey_source_ledger_covers_current_trend_citations(project_root: Path)
     manuscript = "\n".join(
         path.read_text(encoding="utf-8") for path in sorted((project_root / "manuscript").glob("[0-9][0-9]_*.md"))
     )
-    ledger = yaml.safe_load((project_root / "manuscript" / "source_ledger.yaml").read_text(encoding="utf-8"))
-    assert isinstance(ledger, dict)
-    rows = ledger.get("sources")
-    assert isinstance(rows, list)
-
-    by_key = {row["citekey"]: row for row in rows if isinstance(row, dict)}
+    entries = load_source_ledger(project_root / "manuscript" / "source_ledger.yaml")
+    by_key = {entry.citekey: entry for entry in entries}
     assert set(by_key) == SURVEY_CITEKEYS
-    allowed_tiers = {
-        "conference_proceeding",
-        "organizational_announcement",
-        "peer_reviewed_article",
-        "scholarly_preprint",
-    }
     for citekey in SURVEY_CITEKEYS:
         row = by_key[citekey]
-        checked_as_of = date.fromisoformat(str(row["checked_as_of"]))
-        canonical_url = str(row["canonical_url"])
-        assert checked_as_of <= date.today()
-        assert canonical_url.startswith("https://")
-        assert row["source_tier"] in allowed_tiers
         assert f"{{{citekey}," in references
-        assert canonical_url in references
+        assert row.canonical_url in references
         assert f"@{citekey}" in manuscript
 
 

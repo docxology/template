@@ -1,6 +1,7 @@
 # Local citation source ledger for the AutoResearch current-trends survey.
 # This is an offline audit artifact: tests validate shape and manuscript/BibTeX
 # coverage, but do not call the network.
+schema: template-autoresearch-source-ledger-v1
 sources:
   - citekey: baulin_discovery_engine_2025
     canonical_url: https://arxiv.org/abs/2505.17500

@@ -77,6 +77,14 @@ review packet keeps human decisions outside generated approval. This is a
 minimal local analogue of machine-readable provenance rather than a claim of
 full research-object packaging.
 
+The generated schema manifest at `{{AUTORESEARCH_SCHEMA_MANIFEST_PATH}}`
+records `{{SCHEMA_MANIFEST_SCHEMA_COUNT}}` schema-versioned governance
+payload(s) plus documented generic-table exemptions. The local research-object
+manifest at `{{RESEARCH_OBJECT_MANIFEST_PATH}}` packages observed project paths,
+hashes, the evidence registry, the source ledger, the schema manifest, and the
+manual approval state. It is deliberately named a local research-object
+manifest, not RO-Crate or SLSA compliance.
+
 ## Safety Controls {#sec:safety-controls}
 
 The default autonomy level is `{{AUTONOMY_LEVEL}}`. The run ledger records
@@ -86,6 +94,11 @@ plus the task configuration file, and the pipeline never executes
 generated code. Review gates are emitted with deferred decisions so that
 validation can confirm the gates exist without pretending that the machine
 approved publication.
+
+Publication approval is a non-generated input. The run may read
+`human_review.yaml` and copy its state into review payloads, but generated
+readiness cannot set publication approval by itself; the default local review
+state remains `{{RESEARCH_OBJECT_APPROVAL_STATE}}`.
 
 Disclosure: `{{DISCLOSURE_TEXT}}` status is declared for this exemplar
 because it models machine-produced plans, ledgers, reports, and manuscript

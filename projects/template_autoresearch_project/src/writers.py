@@ -9,6 +9,7 @@ from typing import Any
 from infrastructure.autoresearch import ResearchProgram, RunLedger
 from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
 
+from .artifact_schemas import schema_manifest_payload
 from .config import AutoResearchLoopConfig, load_experiment_candidates, load_seed_ideas
 from .figure_registry import figure_registry_payload
 from .figures import (
@@ -66,6 +67,7 @@ from .manuscript_variables import (
 )
 from .ml_task import MLTaskResult, write_confusion_matrix_csv, write_error_examples_json, write_training_history_csv
 from .models import AutoResearchLoopResult, LoopStageResult
+from .research_object import research_object_manifest_payload
 from .reports import (
     build_review_packet,
     render_ml_experiment_report,
@@ -231,14 +233,17 @@ def write_method_contract_artifacts(
         else "candidate loop completed within budget",
     )
     review_decisions = {
+        "schema": "template-autoresearch-review-decisions-v1",
         "generated_at": generated_at,
-        "publication_approved": False,
+        "publication_approved": config.human_review.publication_approved,
+        "human_review_source": config.human_review.source_path,
+        "human_review_source_exists": config.human_review.source_exists,
         "decisions": [
             {
                 "gate": gate.name,
                 "required": gate.required,
-                "decision": "deferred",
-                "rationale": "Generated packet is ready for human review; it does not approve itself.",
+                "decision": config.human_review.decisions.get(gate.name, "deferred"),
+                "rationale": "Decision is read from human_review.yaml when present; generated readiness is not approval.",
             }
             for gate in config.review_gates
         ],
@@ -462,6 +467,22 @@ def update_result_payloads(project_root: Path, result: AutoResearchLoopResult) -
         )
     )
     return paths
+
+
+def write_schema_manifest(project_root: Path, paths: list[Path], *, generated_at: str) -> Path:
+    """Write the schema-version manifest for generated JSON artifacts."""
+    return write_json(
+        project_root / "output" / "data" / "autoresearch_schema_manifest.json",
+        schema_manifest_payload(project_root, paths, generated_at=generated_at),
+    )
+
+
+def write_research_object_manifest(project_root: Path, paths: list[Path], *, generated_at: str) -> Path:
+    """Write the local research-object manifest."""
+    return write_json(
+        project_root / "output" / "data" / "research_object_manifest.json",
+        research_object_manifest_payload(project_root, paths, generated_at=generated_at),
+    )
 
 
 def write_loop_payloads(

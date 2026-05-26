@@ -15,6 +15,7 @@ SECURITY_ARTIFACTS = (
     "output/data/autoresearch_security_profile.json",
     "output/data/autoresearch_threat_model.json",
     "output/data/autoresearch_supply_chain_inventory.json",
+    "output/data/autoresearch_inventory_export.json",
     "output/data/autoresearch_integrity_attestation.json",
     "output/reports/autoresearch_security_review.md",
     "output/figures/autoresearch_security_control_matrix.png",
@@ -40,6 +41,7 @@ def write_security_artifacts(
     profile = security_profile_payload(config, generated_at=generated_at)
     threat_model = threat_model_payload(config, generated_at=generated_at)
     inventory = supply_chain_inventory_payload(project_root, output_paths, generated_at=generated_at)
+    inventory_export = local_inventory_export_payload(inventory, generated_at=generated_at)
     attestation = integrity_attestation_payload(project_root, inventory, generated_at=generated_at)
     review_markdown = render_security_review_markdown(profile, threat_model, inventory, attestation)
 
@@ -47,6 +49,7 @@ def write_security_artifacts(
         _write_json(data_dir / "autoresearch_security_profile.json", profile),
         _write_json(data_dir / "autoresearch_threat_model.json", threat_model),
         _write_json(data_dir / "autoresearch_supply_chain_inventory.json", inventory),
+        _write_json(data_dir / "autoresearch_inventory_export.json", inventory_export),
         _write_json(data_dir / "autoresearch_integrity_attestation.json", attestation),
         _write_text(reports_dir / "autoresearch_security_review.md", review_markdown),
         write_security_control_matrix_figure(figures_dir, threat_model),
@@ -68,6 +71,10 @@ def security_profile_payload(config: AutoResearchLoopConfig, *, generated_at: st
         "integrity_algorithm": profile.integrity_algorithm,
         "network_policy": profile.network_policy,
         "external_signing": profile.external_signing,
+        "not_external_signing": True,
+        "not_slsa_certification": True,
+        "not_runtime_monitoring": True,
+        "not_network_security_assessment": True,
         "claim_scope": "Local research-artifact integrity evidence for this deterministic public exemplar",
         "non_claims": [
             "No external signing or Sigstore verification is performed by the default run.",
@@ -195,6 +202,10 @@ def threat_model_payload(config: AutoResearchLoopConfig, *, generated_at: str) -
     return {
         "schema": "template-autoresearch-threat-model-v1",
         "generated_at": generated_at,
+        "not_external_signing": True,
+        "not_slsa_certification": True,
+        "not_runtime_monitoring": True,
+        "not_network_security_assessment": True,
         "frameworks": frameworks,
         "assets": assets,
         "threats": threats,
@@ -221,6 +232,7 @@ def supply_chain_inventory_payload(
         ("project_pyproject", project_root / "pyproject.toml", False),
         ("project_uv_lock", project_root / "uv.lock", False),
         ("autoresearch_config", project_root / "autoresearch.yaml", True),
+        ("human_review", project_root / "human_review.yaml", True),
         ("domain_profile", project_root / "domain_profile.yaml", True),
         ("experiment_plan", project_root / "experiment_plan.yaml", True),
         ("program", project_root / "program.md", True),
@@ -241,6 +253,10 @@ def supply_chain_inventory_payload(
         "inventory_type": "SBOM-style local dependency and artifact inventory",
         "formal_sbom": False,
         "external_signing": False,
+        "not_external_signing": True,
+        "not_slsa_certification": True,
+        "not_runtime_monitoring": True,
+        "not_network_security_assessment": True,
         "algorithm": "sha256",
         "inputs": [
             _file_record(project_root, identifier, path, required=required)
@@ -297,9 +313,42 @@ def integrity_attestation_payload(
         "missing_count": missing_count,
         "mismatch_count": mismatch_count,
         "external_signature": False,
+        "not_external_signing": True,
+        "not_slsa_certification": True,
+        "not_runtime_monitoring": True,
+        "not_network_security_assessment": True,
         "local_attestation": True,
         "checks": checks,
         "claim_boundary": "Checksums attest local files observed by this run; they are not externally signed provenance.",
+    }
+
+
+def local_inventory_export_payload(inventory: dict[str, object], *, generated_at: str) -> dict[str, object]:
+    """Return a compact local inventory export without claiming SBOM completeness."""
+    components = [
+        {
+            "id": str(row.get("id", "")),
+            "path": str(row.get("path", "")),
+            "kind": "input" if source == "inputs" else "generated_artifact",
+            "sha256": str(row.get("sha256", "")),
+            "required": bool(row.get("required", True)),
+        }
+        for source in ("inputs", "generated_artifacts")
+        for row in _inventory_rows({source: inventory.get(source, [])})
+    ]
+    return {
+        "schema": "template-autoresearch-local-inventory-export-v1",
+        "generated_at": generated_at,
+        "format": "template_autoresearch_local_inventory",
+        "formal_sbom": False,
+        "cyclonedx_complete": False,
+        "not_external_signing": True,
+        "not_slsa_certification": True,
+        "not_runtime_monitoring": True,
+        "not_network_security_assessment": True,
+        "component_count": len(components),
+        "components": components,
+        "claim_boundary": "Local inventory export for project artifacts only; it is not a complete dependency SBOM.",
     }
 
 

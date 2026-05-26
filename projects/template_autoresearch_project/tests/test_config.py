@@ -9,6 +9,7 @@ from infrastructure.autoresearch import build_autoresearch_plan, parse_string_se
 
 from src.config import (
     build_loop_config,
+    load_human_review,
     load_loop_config,
     load_manuscript_loop_settings,
 )
@@ -28,6 +29,8 @@ def test_load_loop_config_reads_questions_and_artifacts(project_root: Path) -> N
     assert "security_profile" in config.quality_checks
     assert config.security_profile.enabled is True
     assert config.security_profile.mode == "local_deterministic"
+    assert config.human_review.publication_approved is False
+    assert config.human_review.source_exists is True
 
 
 def test_build_loop_config_uses_plan_required_artifacts(project_root: Path) -> None:
@@ -40,6 +43,74 @@ def test_build_loop_config_uses_plan_required_artifacts(project_root: Path) -> N
     assert config.quality_checks == plan.quality_checks
     assert config.topic == plan.config.topic
     assert config.security_profile == plan.config.security_profile
+    assert config.human_review.publication_approved is False
+
+
+def test_load_human_review_defaults_when_missing(tmp_path: Path) -> None:
+    state = load_human_review(tmp_path / "human_review.yaml")
+
+    assert state.publication_approved is False
+    assert state.source_exists is False
+    assert state.decisions["proposal_review"] == "deferred"
+
+
+def test_load_human_review_accepts_human_approval(tmp_path: Path) -> None:
+    path = tmp_path / "human_review.yaml"
+    path.write_text(
+        """
+schema: template-autoresearch-human-review-v1
+publication_approved: true
+reviewer: Human Reviewer
+reviewed_at: 2026-05-26
+decisions:
+  proposal_review: approved
+  evidence_review: approved
+notes: approved after inspection
+""",
+        encoding="utf-8",
+    )
+
+    state = load_human_review(path)
+
+    assert state.publication_approved is True
+    assert state.reviewer == "Human Reviewer"
+    assert state.decisions["evidence_review"] == "approved"
+
+
+def test_load_human_review_rejects_generated_like_self_approval(tmp_path: Path) -> None:
+    path = tmp_path / "human_review.yaml"
+    path.write_text(
+        """
+schema: template-autoresearch-human-review-v1
+publication_approved: true
+reviewer: ""
+reviewed_at: null
+decisions:
+  proposal_review: approved
+""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="approvals require reviewer"):
+        load_human_review(path)
+
+
+def test_load_human_review_rejects_stale_reviewed_at_when_unapproved(tmp_path: Path) -> None:
+    path = tmp_path / "human_review.yaml"
+    path.write_text(
+        """
+schema: template-autoresearch-human-review-v1
+publication_approved: false
+reviewer: Human Reviewer
+reviewed_at: 2026-05-26
+decisions:
+  proposal_review: deferred
+""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="reviewed_at must be null"):
+        load_human_review(path)
 
 
 def test_load_loop_config_rejects_missing_questions(tmp_path: Path) -> None:

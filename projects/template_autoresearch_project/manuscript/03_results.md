@@ -172,7 +172,11 @@ surface supports and what it does not support.
 ## Readiness And Review Artifacts {#sec:readiness-review-artifacts}
 
 The broader AutoResearch run writes the reproducibility, benchmark, review, and
-manuscript-hydration surfaces summarized below.
+manuscript-hydration surfaces summarized below. The schema manifest records
+`{{SCHEMA_MANIFEST_SCHEMA_COUNT}}` schema-versioned governance payload(s), and
+the local research-object manifest records `{{RESEARCH_OBJECT_ARTIFACT_COUNT}}`
+observed artifact record(s) with checksums and approval state
+`{{RESEARCH_OBJECT_APPROVAL_STATE}}`.
 
 {{FIGURE_BLOCK_STAGE_MATRIX}}
 

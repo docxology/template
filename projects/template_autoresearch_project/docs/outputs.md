@@ -40,7 +40,10 @@ Core data:
 | `output/data/autoresearch_security_profile.json` | Local deterministic security profile, network policy, integrity algorithm, framework labels, and explicit non-claims |
 | `output/data/autoresearch_threat_model.json` | STRIDE and ATT&CK-scoped local artifact threat model with assets, threats, controls, and residual risks |
 | `output/data/autoresearch_supply_chain_inventory.json` | SBOM-style local input and generated-artifact inventory with SHA-256 hashes |
+| `output/data/autoresearch_inventory_export.json` | Compact local inventory export; not a complete dependency SBOM or CycloneDX claim |
 | `output/data/autoresearch_integrity_attestation.json` | Local checksum attestation over required inventory records |
+| `output/data/autoresearch_schema_manifest.json` | Schema-version manifest for generated JSON governance payloads, with explicit generic-table exemptions |
+| `output/data/research_object_manifest.json` | Local research-object manifest with project paths, checksums, source ledger, schema manifest, and approval state |
 | `output/data/manuscript_variables.json` | Variables injected into the manuscript |
 | `output/data/manuscript_variable_provenance.json` | Source artifact and JSON-pointer mapping for injected variables and fragments |
 | `output/data/manuscript_figure_blocks.json` | Registry-backed Pandoc figure blocks inserted into the hydrated manuscript |

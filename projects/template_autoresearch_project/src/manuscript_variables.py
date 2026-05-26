@@ -58,7 +58,8 @@ _STRICT_VALUE_TOKENS = frozenset(
     SECURITY_EXTERNAL_SIGNING SECURITY_FRAMEWORKS SECURITY_THREAT_COUNT SECURITY_CONTROL_COUNT SECURITY_ASSET_COUNT
     SECURITY_INVENTORY_INPUT_COUNT SECURITY_INVENTORY_ARTIFACT_COUNT SECURITY_ATTESTATION_STATUS
     SECURITY_ATTESTATION_CHECKED_COUNT SECURITY_ATTESTATION_MISSING_COUNT SECURITY_ATTESTATION_MISMATCH_COUNT
-    SECURITY_CLAIM_SCOPE
+    SECURITY_CLAIM_SCOPE RESEARCH_OBJECT_ARTIFACT_COUNT RESEARCH_OBJECT_APPROVAL_STATE
+    SCHEMA_MANIFEST_SCHEMA_COUNT
     """.split()
 )
 
@@ -251,6 +252,8 @@ def _load_project_artifacts(project_root: Path, *, require_valid: bool) -> dict[
         "security_attestation": _load_optional_json_mapping(
             output / "data" / "autoresearch_integrity_attestation.json"
         ),
+        "schema_manifest": _load_optional_json_mapping(output / "data" / "autoresearch_schema_manifest.json"),
+        "research_object_manifest": _load_optional_json_mapping(output / "data" / "research_object_manifest.json"),
     }
 
 
@@ -278,6 +281,8 @@ def _build_variables(project_root: Path, artifacts: dict[str, Any]) -> tuple[dic
     security_threat_model = _mapping(artifacts.get("security_threat_model"))
     security_inventory = _mapping(artifacts.get("security_inventory"))
     security_attestation = _mapping(artifacts.get("security_attestation"))
+    schema_manifest = _mapping(artifacts.get("schema_manifest"))
+    research_object_manifest = _mapping(artifacts.get("research_object_manifest"))
     config = _mapping(loop.get("config"))
     ml_task_summary = _mapping(loop.get("ml_task"))
     task_config = _mapping(ml.get("task_config"))
@@ -609,6 +614,7 @@ def _build_variables(project_root: Path, artifacts: dict[str, Any]) -> tuple[dic
         security_inventory,
         security_attestation,
     )
+    _put_research_object_variables(put, schema_manifest, research_object_manifest)
     _put_artifact_path_variables(put)
     _put_figure_blocks(project_root, variables, provenance, registry)
     _put_tables(
@@ -656,6 +662,8 @@ def _put_artifact_path_variables(put: Any) -> None:
         "AUTORESEARCH_THREAT_MODEL_PATH": "output/data/autoresearch_threat_model.json",
         "AUTORESEARCH_SUPPLY_CHAIN_INVENTORY_PATH": "output/data/autoresearch_supply_chain_inventory.json",
         "AUTORESEARCH_INTEGRITY_ATTESTATION_PATH": "output/data/autoresearch_integrity_attestation.json",
+        "AUTORESEARCH_SCHEMA_MANIFEST_PATH": "output/data/autoresearch_schema_manifest.json",
+        "RESEARCH_OBJECT_MANIFEST_PATH": "output/data/research_object_manifest.json",
         "AUTORESEARCH_SECURITY_REVIEW_PATH": "output/reports/autoresearch_security_review.md",
         "BENCHMARK_SCORES_PATH": "output/data/benchmark_scores.json",
         "EVIDENCE_REGISTRY_PATH": "output/reports/evidence_registry.json",
@@ -788,6 +796,32 @@ def _put_security_variables(
         attestation.get("mismatch_count", "N/A"),
         "output/data/autoresearch_integrity_attestation.json",
         "/mismatch_count",
+    )
+
+
+def _put_research_object_variables(
+    put: Any,
+    schema_manifest: dict[str, Any],
+    research_object_manifest: dict[str, Any],
+) -> None:
+    approval_state = _mapping(research_object_manifest.get("approval_state"))
+    put(
+        "SCHEMA_MANIFEST_SCHEMA_COUNT",
+        len(_mapping_list(schema_manifest.get("schema_artifacts"))),
+        "output/data/autoresearch_schema_manifest.json",
+        "/schema_artifacts",
+    )
+    put(
+        "RESEARCH_OBJECT_ARTIFACT_COUNT",
+        research_object_manifest.get("artifact_count", "N/A"),
+        "output/data/research_object_manifest.json",
+        "/artifact_count",
+    )
+    put(
+        "RESEARCH_OBJECT_APPROVAL_STATE",
+        str(bool(approval_state.get("publication_approved", False))).lower(),
+        "output/data/research_object_manifest.json",
+        "/approval_state/publication_approved",
     )
 
 

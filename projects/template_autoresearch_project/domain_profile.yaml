@@ -44,7 +44,10 @@ artifact_expectations:
   - output/data/autoresearch_security_profile.json
   - output/data/autoresearch_threat_model.json
   - output/data/autoresearch_supply_chain_inventory.json
+  - output/data/autoresearch_inventory_export.json
   - output/data/autoresearch_integrity_attestation.json
+  - output/data/autoresearch_schema_manifest.json
+  - output/data/research_object_manifest.json
   - output/data/manuscript_variables.json
   - output/data/manuscript_variable_provenance.json
   - output/data/manuscript_figure_blocks.json

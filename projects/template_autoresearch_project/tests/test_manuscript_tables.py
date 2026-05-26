@@ -33,9 +33,7 @@ def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() ->
         ],
     }
     review_decisions = {
-        "decisions": [
-            {"gate": "human_review", "required": True, "decision": "deferred", "rationale": "review"}
-        ]
+        "decisions": [{"gate": "human_review", "required": True, "decision": "deferred", "rationale": "review"}]
     }
     benchmark_scores = {
         "tasks": [
@@ -91,9 +89,7 @@ def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() ->
         "low_margin_count": 9,
     }
     bootstrap = {
-        "intervals": [
-            {"metric": "macro_f1", "observed": 0.7, "ci_low": 0.62, "ci_high": 0.76, "resample_mean": 0.69}
-        ]
+        "intervals": [{"metric": "macro_f1", "observed": 0.7, "ci_low": 0.62, "ci_high": 0.76, "resample_mean": 0.69}]
     }
     paired = {
         "both_correct": 200,

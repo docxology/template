@@ -16,8 +16,9 @@ classifier.
 The analysis stage runs two thin scripts:
 
 - `scripts/run_autoresearch_loop.py` builds the ML-loop result, plan, claims,
-  stage matrix, review packet, method ledgers, benchmark scores, final figures,
-  evidence registry snapshot, artifact manifest, readiness report, and
+stage matrix, review packet, method ledgers, benchmark scores, final figures,
+  evidence registry snapshot, schema manifest, local research-object manifest,
+  artifact manifest, readiness report, and
   manuscript-hydration sidecars through `src.loop.run_autoresearch_loop`.
 - `scripts/z_generate_manuscript_variables.py` hydrates manuscript variables
   into `output/manuscript/` for rendering and fails when strict run-derived
@@ -45,7 +46,8 @@ Loop stages are recorded as **declared** (configured intent). Claims are
 Accepted seed ideas require evidence links, candidate edits are bounded by
 `edit_allowlist`, and configured review gates are recorded as human-review
 inputs rather than self-approval. The generated review decisions are `deferred`
-so a human reviewer still owns publication approval.
+so a human reviewer still owns publication approval. A true publication
+approval can only be read from the human-authored `human_review.yaml` file.
 
 ## Loop orchestration
 
@@ -107,7 +109,10 @@ The project-level next-work roadmap lives in [`TODO.md`](TODO.md).
 - `output/data/autoresearch_security_profile.json`
 - `output/data/autoresearch_threat_model.json`
 - `output/data/autoresearch_supply_chain_inventory.json`
+- `output/data/autoresearch_inventory_export.json`
 - `output/data/autoresearch_integrity_attestation.json`
+- `output/data/autoresearch_schema_manifest.json`
+- `output/data/research_object_manifest.json`
 - `output/data/manuscript_variables.json`
 - `output/data/manuscript_variable_provenance.json`
 - `output/data/manuscript_figure_blocks.json`

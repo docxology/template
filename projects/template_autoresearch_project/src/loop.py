@@ -17,7 +17,7 @@ from infrastructure.validation.evidence_registry import (
     write_evidence_registry_report,
 )
 
-from .config import AutoResearchLoopConfig, build_loop_config, load_manuscript_loop_settings
+from .config import AutoResearchLoopConfig, build_loop_config, load_human_review, load_manuscript_loop_settings
 from .manuscript_variables import write_manuscript_hydration_artifacts
 from .ml_task import run_bounded_ml_task
 from .models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
@@ -30,6 +30,8 @@ from .writers import (
     write_final_visual_artifacts,
     write_ml_task_artifacts,
     write_method_contract_artifacts,
+    write_research_object_manifest,
+    write_schema_manifest,
 )
 from .security import write_security_artifacts
 
@@ -50,7 +52,8 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
     project_name = project_root.name
     plan = build_autoresearch_plan(repo_root, project_name)
     settings = load_manuscript_loop_settings(project_root)
-    config = build_loop_config(plan, settings)
+    human_review = load_human_review(project_root / "human_review.yaml")
+    config = build_loop_config(plan, settings, human_review=human_review)
     readiness_pre = validate_autoresearch_plan(plan, project_root, phase="intrinsic")
     stage_results = build_stage_results(config, plan_stage_count=len(plan.stages))
     generated_at = datetime.now(UTC).isoformat(timespec="seconds")
@@ -107,7 +110,9 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
     output_paths.append(_write_readiness_manifest(project_root, output_paths))
     if config.security_profile.enabled:
         output_paths.extend(write_security_artifacts(project_root, config, output_paths, generated_at=generated_at))
-        output_paths.append(_write_readiness_manifest(project_root, output_paths))
+    output_paths.append(write_schema_manifest(project_root, output_paths, generated_at=generated_at))
+    output_paths.append(write_research_object_manifest(project_root, output_paths, generated_at=generated_at))
+    output_paths.append(_write_readiness_manifest(project_root, output_paths))
 
     readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
     if _only_changed_artifact_manifest_issues(readiness_post):
@@ -140,6 +145,8 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
     output_paths.extend(write_manuscript_hydration_artifacts(project_root, require_valid=True))
     if config.security_profile.enabled:
         output_paths.extend(write_security_artifacts(project_root, config, output_paths, generated_at=generated_at))
+    output_paths.append(write_schema_manifest(project_root, output_paths, generated_at=generated_at))
+    output_paths.append(write_research_object_manifest(project_root, output_paths, generated_at=generated_at))
     output_paths.append(write_artifact_manifest(project_root, output_paths))
     return AutoResearchLoopResult(
         project_name=project_name,
@@ -226,7 +233,10 @@ def _final_output_path_payload(project_root: Path, output_paths: list[Path]) -> 
         "output/data/autoresearch_security_profile.json",
         "output/data/autoresearch_threat_model.json",
         "output/data/autoresearch_supply_chain_inventory.json",
+        "output/data/autoresearch_inventory_export.json",
         "output/data/autoresearch_integrity_attestation.json",
+        "output/data/autoresearch_schema_manifest.json",
+        "output/data/research_object_manifest.json",
         "output/data/manuscript_variables.json",
         "output/data/manuscript_variable_provenance.json",
         "output/data/manuscript_figure_blocks.json",

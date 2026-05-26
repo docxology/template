@@ -67,15 +67,21 @@ def render_stage_matrix_csv(result: AutoResearchLoopResult) -> str:
 def build_review_packet(result: AutoResearchLoopResult) -> dict[str, object]:
     """Build the machine-readable human review packet."""
     all_claims_supported = all(claim.supported for claim in result.claims)
+    human_review_state = result.config.human_review
     return {
+        "schema": "template-autoresearch-review-packet-v1",
         "project_name": result.project_name,
         "generated_at": result.generated_at,
         "topic": result.config.topic,
         "human_review": {
             "policy": result.config.review_policy,
             "ready_for_review": result.readiness_valid and all_claims_supported,
-            "publication_approved": False,
-            "required_review_decision": "approve, revise, or block before publication",
+            "publication_approved": human_review_state.publication_approved,
+            "decision_source": human_review_state.source_path,
+            "decision_source_exists": human_review_state.source_exists,
+            "reviewer": human_review_state.reviewer,
+            "reviewed_at": human_review_state.reviewed_at,
+            "required_review_decision": "approve, defer, or reject before publication",
         },
         "configuration": result.config.to_dict(),
         "stage_results": [stage.to_dict() for stage in result.stage_results],
@@ -118,6 +124,7 @@ def render_review_packet_markdown(result: AutoResearchLoopResult) -> str:
         f"- Policy: `{human_review['policy']}`",
         f"- Ready for review: `{str(human_review['ready_for_review']).lower()}`",
         f"- Publication approved: `{str(human_review['publication_approved']).lower()}`",
+        f"- Decision source: `{human_review['decision_source']}`",
         "",
         "## Review Questions",
         "",

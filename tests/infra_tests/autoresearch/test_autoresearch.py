@@ -352,7 +352,11 @@ security_profile:
         ),
         encoding="utf-8",
     )
-    for name in ("autoresearch_threat_model.json", "autoresearch_supply_chain_inventory.json"):
+    for name in (
+        "autoresearch_threat_model.json",
+        "autoresearch_supply_chain_inventory.json",
+        "autoresearch_inventory_export.json",
+    ):
         (project / "output" / "data" / name).write_text("{}\n", encoding="utf-8")
     attestation = project / "output" / "data" / "autoresearch_integrity_attestation.json"
     attestation.write_text(json.dumps({"status": "passed"}), encoding="utf-8")
@@ -503,6 +507,54 @@ disclosure_text: "AI-assisted AutoResearch"
         "AUTORESEARCH.BENCHMARK_GRADING_MISSING",
         "AUTORESEARCH.AI_DISCLOSURE_MISSING",
     }
+
+
+def test_review_validation_blocks_generated_self_approval(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import build_autoresearch_plan, validate_autoresearch_plan
+
+    repo_root = _write_repo_scaffold(tmp_path)
+    project = repo_root / "projects" / "demo"
+    (project / "autoresearch.yaml").write_text(
+        """
+strict: true
+quality_checks: [review_gates]
+review_gates:
+  - name: proposal_review
+    required: true
+""",
+        encoding="utf-8",
+    )
+    (project / "output" / "data" / "review_decisions.json").write_text(
+        json.dumps(
+            {
+                "publication_approved": True,
+                "decisions": [{"gate": "proposal_review", "decision": "approved"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    plan = build_autoresearch_plan(repo_root, "demo")
+    report = validate_autoresearch_plan(plan, project, phase="extrinsic")
+
+    assert report.valid is False
+    assert "AUTORESEARCH.REVIEW_SELF_APPROVAL" in {issue.code for issue in report.issues}
+
+    (project / "human_review.yaml").write_text(
+        """
+schema: template-autoresearch-human-review-v1
+publication_approved: true
+reviewer: Human Reviewer
+reviewed_at: 2026-05-26
+decisions:
+  proposal_review: approved
+notes: approved after inspection
+""",
+        encoding="utf-8",
+    )
+
+    approved = validate_autoresearch_plan(plan, project, phase="extrinsic")
+    assert approved.valid is True
 
 
 def test_write_report_outputs_json_and_markdown(tmp_path: Path) -> None:
