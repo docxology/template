@@ -12,6 +12,17 @@ edit_allowlist:
   - projects/template_autoresearch_project/src/
   - projects/template_autoresearch_project/manuscript/
 metric_direction: maximize
+grading:
+  # Knobs for the readiness-benchmark auto-grade (consumed by src/writers._load_grading_settings).
+  # min_accuracy_delta: the smallest ML improvement over baseline that counts as a real result.
+  min_accuracy_delta: 0.005
+  # core_artifacts: the artifacts that must be substantive for the readiness benchmark to pass.
+  core_artifacts:
+    - output/data/autoresearch_loop.json
+    - output/data/autoresearch_plan.json
+    - output/data/autoresearch_claims.json
+    - output/data/autoresearch_stage_matrix.csv
+    - output/data/ml_task_results.json
 acceptance_policy: "Accepted ideas require local evidence links and human review."
 quality_checks:
   - domain_profile

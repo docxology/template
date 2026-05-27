@@ -1,0 +1,32 @@
+# Visualization style for every generated figure.
+#
+# Loaded by src/figure_style.py (load_figure_style) and applied through the
+# apply_style() context manager in src/writers.py, so a single edit here restyles
+# all 25 figures at once. Full reference: docs/configuration.md.
+#
+# Every key is OPTIONAL. The values below reproduce the historical figure
+# appearance exactly, so the exemplar renders byte-identically out of the box.
+# Delete this file (or any key) to fall back to the built-in defaults.
+#
+# Determinism is guaranteed for the default PNG output. The palette is
+# colourblind-safe (Okabe-Ito aligned). A partial `palette:` is MERGED over the
+# full built-in palette, so overriding one role leaves every other role intact.
+
+dpi: 160                  # output resolution in dots-per-inch (positive integer)
+transparent: false        # transparent figure background
+font_scale: 1.0           # multiplies the base font size (positive number)
+grid: true                # draw axis grids on charts
+heatmap_colormap: Blues   # confusion-matrix colormap (any matplotlib colormap name)
+metrics_colormap: YlGnBu  # per-class precision/recall/F1 heatmap colormap
+
+palette:                  # semantic role -> hex colour ("#rgb" or "#rrggbb")
+  baseline: "#52525b"     # baseline candidate
+  accepted: "#0072b2"     # accepted candidate
+  rejected: "#56b4e9"     # rejected candidate
+  evaluated: "#56b4e9"    # evaluated-but-not-accepted candidate
+  positive: "#0f766e"     # positive / test / "good" accent
+  warning: "#a16207"      # warning / deferred accent
+  negative: "#7c2d12"     # negative / error accent
+  accent: "#2563eb"       # primary chart accent / train series
+  # Remaining roles (accent2, highlight, grid, annotation, box_face, box_edge,
+  # arrow, ink, ok_fill, ...) inherit the built-in colourblind-safe defaults.

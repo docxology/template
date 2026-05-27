@@ -79,17 +79,18 @@ class TestZenodoApi:
 
         config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
-        # upload_file should not raise for a valid server response
-        client.upload_file("bucket123", str(pdf))
+        deposition = client.create_deposition({"title": "Test"})
+        client.upload_file(deposition.bucket_url, str(pdf))
 
     def test_create_zenodo_deposition(self, zenodo_test_server):
-        """ZenodoClient.create_deposition() returns the deposition ID string."""
+        """ZenodoClient.create_deposition() returns a DepositionResult."""
         from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
 
         config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
         result = client.create_deposition({"title": "Test"})
-        assert result == "12345"
+        assert result.deposition_id == "12345"
+        assert result.bucket_url.endswith("/files/bucket123")
 
     def test_zenodo_publish(self, zenodo_test_server):
         """ZenodoClient.publish() returns the DOI string."""
@@ -259,7 +260,7 @@ class TestZenodoClient:
 
         result = client.create_deposition({"title": "Test"})
 
-        assert result == "12345"
+        assert result.deposition_id == "12345"
 
     def test_create_deposition_failure(self):
         """Test deposition creation failure."""
@@ -284,8 +285,8 @@ class TestZenodoClient:
         test_file = tmp_path / "test.pdf"
         test_file.write_bytes(b"%PDF content")
 
-        # Should not raise
-        client.upload_file("bucket123", str(test_file))
+        deposition = client.create_deposition({"title": "Test"})
+        client.upload_file(deposition.bucket_url, str(test_file))
 
     def test_upload_file_not_found(self, tmp_path):
         """Test upload with missing file."""
@@ -295,7 +296,7 @@ class TestZenodoClient:
         client = ZenodoClient(config)
 
         with pytest.raises(UploadError):
-            client.upload_file("123", str(tmp_path / "missing.pdf"))
+            client.upload_file("http://example/bucket", str(tmp_path / "missing.pdf"))
 
     def test_publish_success(self, zenodo_test_server):
         """Test successful publication."""
@@ -337,10 +338,9 @@ class TestPublishingApiIntegrationFromPublishingApi:
         test_file = tmp_path / "paper.pdf"
         test_file.write_bytes(b"%PDF content")
 
-        # Use real HTTP requests to test server
-        dep_id = client.create_deposition({"title": "Test"})
-        client.upload_file("bucket123", str(test_file))
-        doi = client.publish(dep_id)
+        deposition = client.create_deposition({"title": "Test"})
+        client.upload_file(deposition.bucket_url, str(test_file))
+        doi = client.publish(deposition.deposition_id)
 
-        assert dep_id == "12345"
+        assert deposition.deposition_id == "12345"
         assert "10.5281" in doi

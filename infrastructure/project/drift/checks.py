@@ -32,7 +32,7 @@ def _rel(p: Path, repo_root: Path) -> str:
 
 
 def _find_check_function_names(pipeline_py: Path) -> set[str]:
-    """Return the actual `_check_*` function names declared in a `pipeline.py`."""
+    """Return the actual `_check_*` function names declared in a pipeline module."""
     pat = re.compile(r"^def (_check_[A-Za-z0-9_]+)\s*\(", re.MULTILINE)
     return set(pat.findall(_read(pipeline_py)))
 
@@ -50,15 +50,19 @@ def _doc_check_function_refs(docs_dir: Path) -> dict[str, list[Path]]:
 
 
 def check_function_name_drift(project_root: Path, report: Report, project: str) -> None:
-    """Every `_check_<name>` referenced in docs must exist in src/pipeline.py.
+    """Every `_check_<name>` referenced in docs must exist in the pipeline checks source.
 
     Catches: 4-doc drift in template_prose_project where docs referenced
     `_check_headings` / `_check_bibliography_consistency` — neither function
-    exists in src/pipeline.py.
+    exists in the pipeline checks source.
     """
-    pipeline = project_root / "src" / "pipeline.py"
-    if not pipeline.exists():
-        return  # e.g. template_code_project has no pipeline.py — N/A
+    candidates = (
+        project_root / "src" / "pipeline" / "checks.py",
+        project_root / "src" / "pipeline.py",
+    )
+    pipeline = next((candidate for candidate in candidates if candidate.exists()), None)
+    if pipeline is None:
+        return  # e.g. template_code_project has no configured prose-check pipeline — N/A
     real_names = _find_check_function_names(pipeline)
     doc_refs = _doc_check_function_refs(project_root / "docs")
     for name, paths in doc_refs.items():
@@ -68,7 +72,10 @@ def check_function_name_drift(project_root: Path, report: Report, project: str) 
                     "ERROR",
                     project,
                     "function_name_drift",
-                    f"docs reference `{name}` but src/pipeline.py has {sorted(real_names)}; in {_rel(p, project_root)}",
+                    (
+                        f"docs reference `{name}` but {_rel(pipeline, project_root)} "
+                        f"has {sorted(real_names)}; in {_rel(p, project_root)}"
+                    ),
                 )
 
 

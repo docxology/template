@@ -1,6 +1,6 @@
 ---
 name: infrastructure-publishing
-description: Skill for the publishing infrastructure module providing academic publishing workflows including citation generation (BibTeX, APA, MLA), DOI management, Zenodo publication, arXiv submission preparation, GitHub releases, and publication readiness validation. Use when publishing research, generating citations, minting DOIs, or preparing submissions.
+description: Skill for the publishing infrastructure module providing academic publishing workflows including BibTeX CLI citation generation, APA/MLA citation helper functions, DOI management, Zenodo publication, arXiv submission preparation, GitHub releases, and publication readiness validation. Use when publishing research, generating citations, minting DOIs, or preparing submissions.
 ---
 
 # Publishing Module
@@ -26,6 +26,10 @@ metadata = extract_publication_metadata([Path("manuscript/01_introduction.md")])
 ```
 
 ## Citation generation
+
+The Python API exposes BibTeX, APA, and MLA helpers. The
+`infrastructure.publishing.cli generate-citation` command currently exposes
+BibTeX only.
 
 ```python
 from infrastructure.publishing import (

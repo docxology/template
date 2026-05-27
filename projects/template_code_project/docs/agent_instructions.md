@@ -122,7 +122,7 @@ Do not apply code-style rules to manuscript prose, and do not apply manuscript s
 The entire `projects/template_code_project/output/` tree is written by the pipeline and overwritten on every run. Editing a file in `output/` has zero lasting effect and will confuse future agents.
 
 If you need to change what a generated file contains, change the **generator**:
-- To change `output/data/optimization_results.csv` → modify `src/analysis.py` (re-run via `scripts/optimization_analysis.py`)
+- To change `output/data/optimization_results.csv` → modify `src/analysis/` (re-run via `scripts/optimization_analysis.py`)
 - To change `output/manuscript/03_results.md` → modify `manuscript/03_results.md` (the template) and/or `scripts/z_generate_manuscript_variables.py` (the variable definitions)
 - To change `output/pdf/template_code_project_combined.pdf` → modify the manuscript source files, then re-render
 
@@ -146,7 +146,7 @@ grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
 
 # 3. The mathematical primitives (optimizer.py, invariants.py) have no infrastructure imports.
 #    These two files MUST remain infrastructure-free so they are copy-pasteable into any
-#    Python environment without the pipeline installed. Other `src/` modules (`analysis.py`,
+#    Python environment without the pipeline installed. Other `src/` modules (`analysis/`,
 #    `dashboard.py`, `manuscript_variables.py`) are orchestration layers and may import
 #    `infrastructure.*` behind try/except fallbacks; that is intentional and documented in
 #    `src/AGENTS.md` and `architecture.md`.

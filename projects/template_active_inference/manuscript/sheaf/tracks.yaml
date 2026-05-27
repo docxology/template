@@ -1,0 +1,57 @@
+# Sheaf fragment registry (order, renderer, optional flags).
+# Pipeline gates + artifact contract: ../../tracks.yaml
+
+schema_version: 1
+
+defaults:
+  missing_track: skip  # skip | warn | error
+
+tracks:
+  prose:
+    order: 10
+    renderer: markdown
+    label: Narrative prose
+  formalism:
+    order: 20
+    renderer: markdown
+    label: Mathematical formalism
+  simulation:
+    order: 30
+    renderer: markdown
+    label: Analytical simulation notes
+  layers:
+    order: 35
+    renderer: layers_report
+    label: Sheaf layers tables
+    optional: true
+  pymdp:
+    order: 40
+    renderer: markdown
+    label: pymdp harness artifacts
+  visualization:
+    order: 50
+    renderer: section_figures
+    label: Figure references
+  lean:
+    order: 60
+    renderer: markdown
+    label: Lean boundary fragment
+  gnn:
+    order: 70
+    renderer: markdown
+    label: GNN notation fragment
+  ontology:
+    order: 80
+    renderer: ontology_yaml
+    label: Active Inference Ontology bindings
+  animation:
+    order: 90
+    renderer: markdown
+    label: Animation fragment
+    optional: true
+
+renderers:
+  markdown:
+    suffixes: [".md", ".markdown"]
+  ontology_yaml:
+    suffixes: [".yaml", ".yml"]

@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import math
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 
 from .diagnostics_records import _candidate_predictions, _evaluated_candidates
+from .json_coerce import mapping_list
 from .ml_task import CandidateResult, MLTaskResult, load_mnist_arrays, load_mnist_task_config
 
 
@@ -269,7 +269,7 @@ def _interval_row(metric: str, observed: float, values: list[float]) -> dict[str
 
 
 def _interval_summary(bootstrap: dict[str, object], metric: str) -> dict[str, float | str]:
-    for row in _mapping_list(bootstrap.get("intervals")):
+    for row in mapping_list(bootstrap.get("intervals")):
         if row.get("metric") == metric:
             return {
                 "metric": metric,
@@ -293,10 +293,6 @@ def _float_value(value: object) -> float:
     return float(value) if isinstance(value, int | float | str) else 0.0
 
 
-def _mapping_list(value: object) -> list[dict[str, Any]]:
-    return [row for row in value if isinstance(row, dict)] if isinstance(value, list) else []
-
-
 __all__ = [
     "candidate_accuracy_intervals",
     "bootstrap_intervals",
@@ -311,5 +307,4 @@ __all__ = [
     "_interval_summary",
     "_exact_mcnemar_p",
     "_float_value",
-    "_mapping_list",
 ]

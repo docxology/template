@@ -89,7 +89,7 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 
 To add a new figure or data product:
 
-1. **Add the generator** in `src/figures.py` and wire it through `src/analysis.py` (script entry: `scripts/optimization_analysis.py`) — write to `output/figures/` or `output/data/` with a fixed, predictable filename.
+1. **Add the generator** in `src/figures/` and wire it through `src/analysis/` (script entry: `scripts/optimization_analysis.py`) — write to `output/figures/` or `output/data/` with a fixed, predictable filename.
 2. **Update `docs/output_inventory.md`** — add an entry to the file inventory table (see below).
 3. **Update manuscript references** — reference the new file via `\\ref{fig:label}` or data table as appropriate.
 4. **Re-run the pipeline** (steps 2–5 above).

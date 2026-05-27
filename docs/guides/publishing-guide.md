@@ -42,6 +42,10 @@ keywords:
 
 ## Generating Citations
 
+The Python API exposes BibTeX, APA, and MLA helpers. The
+`infrastructure.publishing.cli generate-citation` command currently exposes
+BibTeX only.
+
 ```python
 from infrastructure.publishing import (
     generate_citation_bibtex,
@@ -75,7 +79,7 @@ print(bibtex)
 ```python
 from infrastructure.publishing import generate_citations_markdown
 
-# Creates a markdown block with BibTeX, APA, and MLA
+# Creates a markdown block with BibTeX, APA, and MLA through the Python API
 citations_md = generate_citations_markdown(metadata)
 ```
 

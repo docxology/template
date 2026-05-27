@@ -11,7 +11,7 @@ flowchart TB
 
     subgraph L2 [Layer 2 - Project orchestration]
         CFG["src/config.py<br/>typed YAML loader"]
-        PIPE["src/pipeline.py<br/>read → analyse → check"]
+        PIPE["src/pipeline/<br/>read → analyse → check"]
         FIG["src/figures.py<br/>matplotlib renderers"]
         MV["src/manuscript_variables.py<br/>abstract substitution"]
         REP["src/report.py<br/>markdown review report"]

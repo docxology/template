@@ -34,9 +34,8 @@ project's `tests/` in **its own** `pytest` invocation — pointing pytest at
 every project ships a `tests/conftest.py`.
 
 Additional siblings under `projects/` today are real projects for this
-checkout, not permanent fixtures. They are usually symlinks from the sibling
-private lifecycle repo at `/Users/4d/Documents/GitHub/projects/active/`; inspect
-planned syncs with
+checkout, not permanent fixtures. They are usually symlinks from an external
+private lifecycle repo's `active/` tree; inspect planned syncs with
 `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
 ### In-progress projects (under `projects_in_progress/`)
@@ -109,24 +108,24 @@ mv projects_archive/myproject projects/myproject
 # Project will be automatically discovered on next run.sh execution
 ```
 
-For confidential work, prefer the sibling private lifecycle repo:
-`/Users/4d/Documents/GitHub/projects/active/` is linked into this directory,
-`passive/` is linked into `../projects_in_progress/`, and `archive/` is linked
-into `../projects_archive/`. Only this directory is discovered/rendered by
-default; the passive/archive mirrors are for inspection or explicit targeted
-work. Move private work between lifecycle folders instead of committing it here.
+For confidential work, prefer the configured external private lifecycle repo:
+`active/` is linked into this directory, `passive/` is linked into
+`../projects_in_progress/`, and `archive/` is linked into `../projects_archive/`.
+Only this directory is discovered/rendered by default; the passive/archive
+mirrors are for inspection or explicit targeted work. Move private work between
+lifecycle folders instead of committing it here.
 
 | Directory            | Role                      | Tests | Coverage |
 |----------------------|---------------------------|-------|----------|
+| `template_active_inference/` | Active Inference multi-track exemplar (analytical + pymdp + sheaf manuscript) | see canonical facts | see canonical facts |
 | `template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
 | `template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | see canonical facts | see canonical facts |
 | `template_autoresearch_project/` | AutoResearch exemplar (deterministic readiness loop) | see canonical facts | see canonical facts |
 
 The permanent exemplars share the same per-directory `AGENTS.md` + `README.md` convention and the same `src/`, `tests/`, `scripts/`, `manuscript/`, and `output/` boundaries.
 
-**Private lifecycle projects** live under `/Users/4d/Documents/GitHub/projects/`
-and are linked into the corresponding local lifecycle mirrors automatically by
-`run.sh`/orchestration.
+**Private lifecycle projects** live outside this public repo and are linked into
+the corresponding local lifecycle mirrors automatically by `run.sh`/orchestration.
 Set `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root` to use another
 private repo; set `TEMPLATE_SKIP_LINK_SYNC=1` to skip one auto-sync.
 **In-progress projects** live in `projects_in_progress/` (including private

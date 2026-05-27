@@ -71,7 +71,7 @@ flowchart LR
     OUT --> FIG[/figures/<br/>Generated plots · PNG · 300 DPI/]
     OUT --> DAT[/data/<br/>Numerical results · CSV · NPZ/]
     OUT --> REP[/reports/<br/>Analysis reports · JSON · HTML/]
-    OUT --> CIT[/citations/<br/>Generated citations · BibTeX · APA/]
+    OUT --> CIT[/citations/<br/>Generated citations · BibTeX · APA · MLA/]
     OUT --> LOG[/logs/<br/>Pipeline logs/]
     OUT --> DOC[/docs/<br/>Generated API documentation/]
 

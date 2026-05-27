@@ -1,0 +1,6 @@
+location: HiddenState
+observation: ObservationLikelihood
+policy: PolicyPosterior
+expected_free_energy: ExpectedFreeEnergy
+belief_entropy: BeliefEntropy
+sheaf_track: SheafFragment

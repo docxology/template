@@ -1,0 +1,4 @@
+location: HiddenState
+observation: ObservationLikelihood
+policy: PolicyPosterior
+expected_free_energy: ExpectedFreeEnergy

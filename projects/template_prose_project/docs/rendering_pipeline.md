@@ -83,16 +83,16 @@ uv run python projects/template_prose_project/scripts/z_generate_manuscript_vari
 **Inputs**: `output/manuscript_report.json` (produced by Phase 1) +
 `manuscript/config.yaml` for the variables script.
 
-**What `y_generate_prose_figures.py` does**: Loads the `ManuscriptReport`
-JSON via `src/figures.py::load_manuscript_report`, then calls
-`generate_all_figures` to write three diagnostic PNGs.
+**What `y_generate_prose_figures.py` does**: Loads the typed
+`ManuscriptReport` JSON via
+`infrastructure.prose.report.load_report_json`, then calls
+`src/figures.py::generate_all_figures` to write three diagnostic PNGs.
 
-**What `z_generate_manuscript_variables.py` does**: Loads the
-`ManuscriptReport` JSON, calls
-`src/manuscript_variables.py::compute_variables` to derive the eleven
-substitution values, writes them to `output/data/manuscript_variables.json`,
-and produces token-substituted copies of every `manuscript/*.md` under
-`output/manuscript/`.
+**What `z_generate_manuscript_variables.py` does**: Loads the raw report
+JSON via `src/manuscript_variables.py::load_report_payload`, calls
+`compute_variables` to derive the eleven substitution values, writes them
+to `output/data/manuscript_variables.json`, and produces token-substituted
+copies of every `manuscript/*.md` under `output/manuscript/`.
 
 **Outputs**:
 
@@ -160,14 +160,14 @@ Every knob lives in `projects/template_prose_project/manuscript/config.yaml`:
 | `paper.title` | PDF title page, page headers, `{{CONFIG_TITLE}}` token | `pdf_renderer.py`, `manuscript_variables.py` |
 | `authors[*]` | Author list on title page | `pdf_renderer.py` |
 | `publication.doi` | DOI on title page | `pdf_renderer.py` |
-| `prose.target_grade_level_min` / `_max` | FKGL band for `grade_level_in_band` check | `_check_grade_level` in `src/pipeline.py` |
+| `prose.target_grade_level_min` / `_max` | FKGL band for `grade_level_in_band` check | `_check_grade_level` in `src/pipeline/checks.py` |
 | `prose.long_sentence_threshold` | Word count above which sentences are flagged | `infrastructure.prose.analyze_quality` (via `analyze_manuscript`) |
-| `prose.citation_density_min_per_1000` | Floor for `citation_density_above_floor` check | `_check_citation_density` in `src/pipeline.py` |
-| `prose.require_h1_per_section` | Toggle `every_file_has_h1` check | `_check_h1_per_file` in `src/pipeline.py` |
-| `prose.forbid_skipped_levels` | Toggle `no_skipped_heading_levels` check | `_check_no_skipped_levels` in `src/pipeline.py` |
-| `bibliography.references_path` | Path to BibTeX file | `parse_bibfile` in `src/pipeline.py` |
-| `bibliography.fail_on_missing` | Fail if a `[@key]` is not in the bib | `_check_bibliography` in `src/pipeline.py` |
-| `bibliography.fail_on_unused` | Fail if a bib entry is never cited | `_check_bibliography` in `src/pipeline.py` |
+| `prose.citation_density_min_per_1000` | Floor for `citation_density_above_floor` check | `_check_citation_density` in `src/pipeline/checks.py` |
+| `prose.require_h1_per_section` | Toggle `every_file_has_h1` check | `_check_h1_per_file` in `src/pipeline/checks.py` |
+| `prose.forbid_skipped_levels` | Toggle `no_skipped_heading_levels` check | `_check_no_skipped_levels` in `src/pipeline/checks.py` |
+| `bibliography.references_path` | Path to BibTeX file | `parse_bibfile` in `src/pipeline/checks.py` |
+| `bibliography.fail_on_missing` | Fail if a `[@key]` is not in the bib | `_check_bibliography` in `src/pipeline/checks.py` |
+| `bibliography.fail_on_unused` | Fail if a bib entry is never cited | `_check_bibliography` in `src/pipeline/checks.py` |
 
 ## Troubleshooting
 

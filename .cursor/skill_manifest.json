@@ -3,7 +3,7 @@
   "skills": [
     {
       "name": "gauss-open-gauss-cli",
-      "description": "Open Gauss in this workspace is the math-inc/OpenGauss gauss CLI for Lean session tooling—not Huawei OpenGauss DBMS. See docs/reference/opengauss-naming.md; when projects/fep_lean exists, see projects/fep_lean/AGENTS.md and projects/fep_lean/src/gauss/.",
+      "description": "Open Gauss in this workspace is the math-inc/OpenGauss gauss CLI for Lean session tooling—not Huawei OpenGauss DBMS. See docs/reference/opengauss-naming.md; for the public Lean exemplar see projects/template_active_inference/lean/.",
       "path": ".cursor/skills/gauss/SKILL.md",
       "cursor_at": ".cursor/skills/gauss/SKILL.md"
     },
@@ -536,7 +536,7 @@
     },
     {
       "name": "infrastructure-publishing",
-      "description": "Skill for the publishing infrastructure module providing academic publishing workflows including citation generation (BibTeX, APA, MLA), DOI management, Zenodo publication, arXiv submission preparation, GitHub releases, and publication readiness validation. Use when publishing research, generating citations, minting DOIs, or preparing submissions.",
+      "description": "Skill for the publishing infrastructure module providing academic publishing workflows including BibTeX CLI citation generation, APA/MLA citation helper functions, DOI management, Zenodo publication, arXiv submission preparation, GitHub releases, and publication readiness validation. Use when publishing research, generating citations, minting DOIs, or preparing submissions.",
       "path": "infrastructure/publishing/SKILL.md",
       "cursor_at": "infrastructure/publishing/SKILL.md"
     },

@@ -115,7 +115,7 @@ flowchart LR
 flowchart LR
     SC[/projects/template_code_project/scripts//]
     SC --> PF[00_preflight.py<br/>chrome-headless-shell preflight]
-    SC --> OA[optimization_analysis.py<br/>main analysis pipeline · thin wrapper around src/analysis.py]
+    SC --> OA[optimization_analysis.py<br/>main analysis pipeline · thin wrapper around src/analysis/]
     SC --> BD[build_dashboard.py<br/>numerical-invariants HTML dashboard]
     SC --> GD[generate_api_docs.py<br/>API documentation generator]
     SC --> ZG[z_generate_manuscript_variables.py<br/>variable token substitution · runs LAST]
@@ -126,11 +126,10 @@ flowchart LR
     class PF,OA,BD,GD,ZG f
 ```
 
-The May 2026 hardening pass split `src/analysis.py` (was 1,718 lines)
-into `src/analysis.py` (orchestration, ~960 lines) and `src/figures.py`
-(the six `generate_*` plot functions + `apply_visualization_style` +
-`VIZ_CONFIG`, ~870 lines). `analysis.py` re-exports every public name
-from `figures.py` through a try/except shim so the existing
+The May 2026 hardening pass split the former flat analysis module into
+`src/analysis/` (orchestration) and `src/figures/` (the six `generate_*`
+plot functions plus `apply_visualization_style` and `VIZ_CONFIG`).
+`src/analysis/__init__.py` re-exports the public analysis names so the existing
 `scripts/optimization_analysis.py` and infrastructure-dependent test
 classes keep working without changes.
 

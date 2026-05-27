@@ -3,45 +3,14 @@
 This file is **generated** by
 `scripts/generate_coverage_history.py`. Do not edit by hand.
 
-> **Status:** awaiting CI artifact population. `generate_coverage_history.py`
-> needs either `--from-dir <dir>` (a directory of historical coverage.xml
-> files) or `--from-gh --days N` (with `gh` authenticated to the
-> `docxology/template` repo to pull artifacts from the workflow runs).
-> Neither input is configured locally; the table below is therefore
-> empty by design until CI begins archiving coverage artifacts in a
-> readable shape. For current live coverage per exemplar, use
-> [`canonical_facts.md`](canonical_facts.md) instead.
-
-Last verified: 2026-05-05
-Rolling window: 30 day(s) — 2026-04-06 → 2026-05-05
+Last verified: 2026-05-27
+Rolling window: 30 day(s) — 2026-04-28 → 2026-05-27
 Suites observed: (none)
 
 ## Daily coverage table
 
 | Date |
 | --- |
-| 2026-04-06 |
-| 2026-04-07 |
-| 2026-04-08 |
-| 2026-04-09 |
-| 2026-04-10 |
-| 2026-04-11 |
-| 2026-04-12 |
-| 2026-04-13 |
-| 2026-04-14 |
-| 2026-04-15 |
-| 2026-04-16 |
-| 2026-04-17 |
-| 2026-04-18 |
-| 2026-04-19 |
-| 2026-04-20 |
-| 2026-04-21 |
-| 2026-04-22 |
-| 2026-04-23 |
-| 2026-04-24 |
-| 2026-04-25 |
-| 2026-04-26 |
-| 2026-04-27 |
 | 2026-04-28 |
 | 2026-04-29 |
 | 2026-04-30 |
@@ -50,6 +19,28 @@ Suites observed: (none)
 | 2026-05-03 |
 | 2026-05-04 |
 | 2026-05-05 |
+| 2026-05-06 |
+| 2026-05-07 |
+| 2026-05-08 |
+| 2026-05-09 |
+| 2026-05-10 |
+| 2026-05-11 |
+| 2026-05-12 |
+| 2026-05-13 |
+| 2026-05-14 |
+| 2026-05-15 |
+| 2026-05-16 |
+| 2026-05-17 |
+| 2026-05-18 |
+| 2026-05-19 |
+| 2026-05-20 |
+| 2026-05-21 |
+| 2026-05-22 |
+| 2026-05-23 |
+| 2026-05-24 |
+| 2026-05-25 |
+| 2026-05-26 |
+| 2026-05-27 |
 
 ## Trend sparklines
 

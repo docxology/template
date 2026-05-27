@@ -19,6 +19,17 @@ def _sample_report():
     )
 
 
+def _flagged_prose_report():
+    """Manuscript slice engineered to trigger all quality-flag heuristics."""
+    long_sentence = " ".join(f"token{i}" for i in range(36))
+    body = (
+        "The manuscript was examined by reviewers who might perhaps find "
+        "that the evidence suggests a possibly incomplete argument. "
+        f"{long_sentence}."
+    )
+    return analyze_files({"01_flagged.md": f"# Flagged\n\n{body}"})
+
+
 def test_basic_report(tmp_path: Path):
     report = _sample_report()
     checks = [
@@ -66,7 +77,7 @@ def test_outline_section(tmp_path: Path):
 
 
 def test_quality_flags_section(tmp_path: Path):
-    report = _sample_report()
+    report = _flagged_prose_report()
     out = write_review_report(
         tmp_path / "r.md",
         title="X",
@@ -74,9 +85,13 @@ def test_quality_flags_section(tmp_path: Path):
         checks=[],
         include_quality_flags=True,
     )
-    # We can't guarantee that this prose will trigger flags, but the
-    # report should at least not error out and should produce a file.
-    assert out.exists()
+    text = out.read_text(encoding="utf-8")
+    assert "## Quality flags" in text
+    assert "01_flagged.md" in text
+    assert "long sentence" in text
+    assert "passive-voice" in text
+    assert "hedge word" in text
+    assert "perhaps" in text
 
 
 def test_minimal_report(tmp_path: Path):

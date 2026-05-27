@@ -1,0 +1,5 @@
+experiment_id: template_active_inference_demo
+hypothesis: Multi-track sheaf manuscript binds analytical, pymdp SI, GNN, ontology, Lean, and figures.
+metrics:
+  - invariants_all_pass
+  - si_tmaze_summary_present

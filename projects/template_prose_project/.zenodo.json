@@ -1,0 +1,21 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for Editorial Quality at Scale: A Reproducible Prose-Review Pipeline (2026).",
+  "keywords": [
+    "prose analysis",
+    "readability",
+    "editorial review",
+    "reproducible research",
+    "manuscript quality"
+  ],
+  "license": "MIT",
+  "title": "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline",
+  "upload_type": "software",
+  "version": "0.2"
+}

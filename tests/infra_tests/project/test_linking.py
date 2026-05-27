@@ -476,7 +476,13 @@ def test_import_resolves_through_symlink(tmp_path: Path) -> None:
 
 @pytest.mark.parametrize("name", sorted(PROTECTED_NAMES))
 def test_protected_names_are_public_exemplars(name: str) -> None:
-    assert name in {"template_code_project", "template_prose_project", "template_autoresearch_project"}
+    assert name in {
+        "template_active_inference",
+        "template_code_project",
+        "template_prose_project",
+        "template_autoresearch_project",
+        "template_template",
+    }
 
 
 def test_legacy_sync_active_links_wrapper_syncs_all_lifecycles(tmp_path: Path) -> None:

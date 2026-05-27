@@ -3,17 +3,17 @@
 paper:
   title: "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline"
   subtitle: "Readability, structural, and citation-density gating for research manuscripts"
-  version: "0.2"
+  version: "0.4.0"
 
 authors:
-  - name: "Research Template Author"
-    orcid: "0000-0000-0000-1234"
-    email: "author@research-template.org"
-    affiliation: "Research Template Institute"
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
     corresponding: true
 
 publication:
-  doi: ""
+  doi: "10.5281/zenodo.20417105"
   year: "2026"
   github_repository: "docxology/template_prose_project"
   transmission_bookends:

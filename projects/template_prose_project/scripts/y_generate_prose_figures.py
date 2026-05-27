@@ -25,7 +25,9 @@ sys.path.insert(0, str(_REPO_ROOT))
 
 from infrastructure.core.logging.utils import get_logger  # noqa: E402
 
-from src.figures import generate_all_figures, load_manuscript_report  # noqa: E402
+from infrastructure.prose.report import load_report_json  # noqa: E402
+
+from src.figures import generate_all_figures  # noqa: E402
 
 logger = get_logger(__name__)
 
@@ -48,7 +50,7 @@ def main(argv: list[str] | None = None) -> int:
     if not report_path.exists():
         logger.warning("No %s; run run_prose_pipeline.py first.", report_path)
         return 2
-    report = load_manuscript_report(report_path)
+    report = load_report_json(report_path)
     figures_dir = project_root / "output" / "figures"
     paths = generate_all_figures(report, figures_dir)
     for p in paths:

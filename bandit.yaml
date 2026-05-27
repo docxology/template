@@ -17,7 +17,7 @@ exclude_dirs:
   # exemplar security floor (the same documented rotating-project exception
   # that applies to coverage and mypy). The security gate stays strict on
   # `infrastructure/`, `scripts/`, and the canonical exemplars
-  # (`template_code_project` / `template_prose_project` — all clean); rotating
+  # (`template_active_inference` / `template_code_project` / `template_prose_project` — all clean); rotating
   # research code must not block every contributor's push/CI. Harmless no-op
   # when a name is absent on a given checkout (these rotate to the already-
   # excluded `projects_archive/` / `projects_in_progress/`).

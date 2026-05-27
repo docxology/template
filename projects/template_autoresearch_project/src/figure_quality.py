@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 
 from .artifact_content import is_substantive_artifact
+from .json_coerce import mapping
 
 
 FIGURE_QUALITY_SCHEMA = "template-autoresearch-figure-quality-report-v1"
@@ -30,7 +30,7 @@ def figure_quality_report_payload(
         figure_path = figures_dir / filename
         if not figure_path.exists() and not require_all_registered:
             continue
-        metadata = _mapping(record.get("metadata"))
+        metadata = mapping(record.get("metadata"))
         image_metrics = _image_metrics(figure_path)
         source = str(metadata.get("source", ""))
         rows.append(
@@ -136,7 +136,3 @@ def _has_positive_dimensions(row: dict[str, object]) -> bool:
     width = row.get("width_px")
     height = row.get("height_px")
     return isinstance(width, int) and isinstance(height, int) and width > 0 and height > 0
-
-
-def _mapping(value: object) -> dict[str, Any]:
-    return value if isinstance(value, dict) else {}

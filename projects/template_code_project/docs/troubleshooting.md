@@ -241,7 +241,7 @@ zero collected tests is not a pass.**
 `source`/`omit` are *project-relative* and do not resolve when pytest runs
 from the repo root; the canonical command and the runner both measure
 against the **repo-root** `pyproject.toml` config — that is the number the
-90% gate enforces (≈99% for this exemplar; `src/analysis.py` and
+90% gate enforces (≈99% for this exemplar; `src/analysis/` and
 `src/dashboard.py` are intentionally omitted there).
 
 ## See also

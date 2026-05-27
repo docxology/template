@@ -286,3 +286,30 @@ def test_claim_ledger_ingestion_preserves_claim_metadata_and_freshness(tmp_path:
     assert fact.source_tier == "claim_ledger"
     assert fact.stale is True
     assert '"freshness_warnings"' in payload
+
+
+def test_trusted_number_tiers_rejects_self_referential_metric() -> None:
+    registry = VerifiedEvidenceRegistry()
+    # A strict-zone number that traces ONLY to the run's own generated output.
+    registry.add(
+        EvidenceFact(kind="number", value="0.873", source="output/data/ml_task.json", source_tier="generated_metric")
+    )
+    text = "## Results\n\nThe held-out accuracy was 0.873 on the test set.\n"
+    trusted = frozenset({"bibliography", "data_source", "claim_ledger"})
+
+    # Opt-in tier filter: a strict number tracing only to generated_metric is an error.
+    strict_report = validate_text_against_registry(text, registry, trusted_number_tiers=trusted)
+    assert any(issue.kind == "number" and issue.value == "0.873" for issue in strict_report.errors)
+
+    # Default (None) preserves the historical behavior — the number is accepted.
+    default_report = validate_text_against_registry(text, registry)
+    assert not any(issue.value == "0.873" for issue in default_report.errors)
+
+
+def test_trusted_number_tiers_accepts_external_source() -> None:
+    registry = VerifiedEvidenceRegistry()
+    # The same number, but tagged as coming from an input data source (external truth).
+    registry.add(EvidenceFact(kind="number", value="0.873", source="data/input.json", source_tier="data_source"))
+    text = "## Results\n\nThe held-out accuracy was 0.873 on the test set.\n"
+    report = validate_text_against_registry(text, registry, trusted_number_tiers=frozenset({"data_source"}))
+    assert not any(issue.value == "0.873" for issue in report.errors)

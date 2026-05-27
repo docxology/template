@@ -174,20 +174,16 @@ def risky_operation():
 
 ## Module-Specific Configuration
 
-### fep_lean (optional Open Gauss CLI)
-> **Note:** The `fep_lean` project is currently archived under `projects_archive/`. The following documentation describes its configuration when that project is checked out.
+### Lean (public exemplar)
 
-
-When present under **`projects/fep_lean/`**, it is discovered like any other active project (see [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)). Project-specific Open Gauss orchestration lives in that local checkout under `src/gauss/` and related modules.
+The tracked [`projects/template_active_inference/`](../../../projects/template_active_inference/) project ships a minimal `lake build` tree under `lean/`. Optional math-inc Open Gauss CLI workflows use the same naming disambiguation as [`docs/reference/opengauss-naming.md`](../../reference/opengauss-naming.md).
 
 | Variable | Default | Description |
 | -------- | ------- | ----------- |
-| `FEP_LEAN_REQUIRE_GAUSS` | (unset) | If truthy, pipeline validation fails when `gauss` is missing or `gauss doctor` fails |
-| `FEP_LEAN_GAUSS_WORKFLOWS` | (unset) | If truthy, analysis runs Hermes + Lean workflows; `lake build` targets `projects/fep_lean/lean/` when invoked |
-| `FEP_LEAN_TEST_GAUSS_DOCTOR` | (unset) | If set, enables an opt-in pytest that runs a real `gauss doctor` |
+| `FEP_LEAN_GAUSS_WORKFLOWS` | (unset) | **Legacy alias** retained by `run.sh` / `secure_run.sh`; when truthy, enables Lean-heavy analysis paths. Prefer `./run.sh --no-lean-workflows` to disable. Not specific to any single project name. |
 | `GAUSS_HOME` | `~/.gauss` | Writable directory checked for math-inc tooling layout |
 
-Name disambiguation (always available): [`docs/reference/opengauss-naming.md`](../../reference/opengauss-naming.md). When `projects/fep_lean/` is checked out, see also `projects/fep_lean/AGENTS.md` and `projects/fep_lean/src/gauss/`.
+Name disambiguation: [`docs/reference/opengauss-naming.md`](../../reference/opengauss-naming.md). Lean build: [`projects/template_active_inference/lean/`](../../../projects/template_active_inference/lean/).
 
 ### Literature Search
 
@@ -401,7 +397,6 @@ The registry is process-local. Tests should call
 - [Troubleshooting Guide](../troubleshooting/) - Common issues and solutions
 - [Build System](../../RUN_GUIDE.md) - Build configuration
 - [Performance Optimization](performance-optimization.md) - Performance tuning
-
 
 
 

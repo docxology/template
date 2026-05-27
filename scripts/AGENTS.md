@@ -37,6 +37,8 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `gates/module_line_count_check.py` - line-count gate via `infrastructure.validation.line_count` (infra/scripts + `projects/*/scripts/`)
 - `check_tracked_projects.py` - confidentiality guard via `infrastructure.project.git_guards`
 - `08_executable_bundle.py` - bundle stage via `infrastructure.publishing.executable_bundle`
+- `09_archive_publication.py` - multi-target archival stage via `infrastructure.publishing.archival`
+- `publish_project_release.py` - unified GitHub + Zenodo release via `infrastructure.publishing.release_workflow` (opt-in)
 - `codegraph_local.py` - optional local CodeGraph command/scope helper via `infrastructure.project.codegraph`
 
 **Setup / workspace / helpers:**

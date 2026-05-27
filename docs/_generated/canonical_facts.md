@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-26 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**435**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**170**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**7** passed), exemplar `pytest --collect-only` (209 + 77 + 76), drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-05-27 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**457**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**178**), publishing suite collection/full run (**362**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -8,6 +8,7 @@ This file aggregates verifiable facts from discovery scripts, CI configuration, 
 
 **Always-present canonical exemplars** (the public exemplar projects guaranteed to live under `projects/`):
 
+- `template_active_inference`
 - `template_autoresearch_project`
 - `template_code_project`
 - `template_prose_project`
@@ -18,13 +19,14 @@ Private lifecycle projects live outside this public repo in a separate external 
 
 **Public CI/documentation project scope** (`projects/`, filtered through `infrastructure.project.public_scope`; authoritative snapshot → [`active_projects.md`](active_projects.md)):
 
+- `template_active_inference`
 - `template_autoresearch_project`
 - `template_code_project`
 - `template_prose_project`
 
 `projects/_test_project/` is a stub layout used by validation tests only — omitted from `discover_projects()` (path may be absent in sparse checkouts; not a tracked exemplar tree).
 
-**In-progress projects** (`projects_in_progress/`, not discovered until moved under `projects/`): local-only roster omitted from public docs; in Daniel's checkout this includes symlinks to private `passive/` projects.
+**In-progress projects** (`projects_in_progress/`, not discovered until moved under `projects/`): local-only roster omitted from public docs.
 
 **Archived projects** (`projects_archive/`, preserved but not executed): local-only symlinks to the private repo's `archive/` projects (roster omitted from public docs) — list with `ls projects_archive/`.
 
@@ -73,7 +75,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **435** on 2026-05-26 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **457** on 2026-05-27 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -83,33 +85,29 @@ See `infrastructure/AGENTS.md` for module-specific function signatures and entry
 uv run pytest tests/infra_tests/project/test_discovery.py -q
 ```
 
-Current discovery/docs command:
+Current collection commands:
 
 ```bash
-uv run pytest tests/infra_tests/project/test_discovery.py tests/infra_tests/test_docs_discovery_consistency.py -q
+uv run pytest tests/infra_tests/project/ --collect-only -q --no-cov
+uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 ```
 
-Result: 63 passed in ~0.30s (real data, no mocks). Link-sync and pipeline-control command:
+Result: **178** project-scope infrastructure tests collected and **362** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-```bash
-uv run pytest tests/infra_tests/project/test_linking.py tests/infra_tests/core/test_pipeline_control_extensions.py -q
-```
-
-Result: 65 passed in ~0.75s (real symlinks and file-backed HITL state, no mocks).
-
-**Exemplar `pytest --collect-only` totals** (2026-05-26):
+**Exemplar `pytest --collect-only` totals** (2026-05-27):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_code_project` | 209 | 98.83 % |
+| `template_active_inference` | 141 | 91.35 % |
+| `template_autoresearch_project` | 217 | 91.56 % |
+| `template_code_project` | 209 | 98.25 % |
 | `template_prose_project` | 76 | 100.00 % |
-| `template_autoresearch_project` | 77 | 90.53 % |
 
 Collection was refreshed with per-project `uv run pytest tests/ --collect-only -q --no-cov` runs. Coverage values come from the latest project coverage gates; re-run the per-project coverage command after changing project `src/` or tests. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
-Drift-checker self-tests (separate suite at `tests/infra_tests/test_check_template_drift.py`): **20 passed**, gating **9 per-exemplar detectors** on public canonical exemplars plus **2 repo-level checks** (`check_repo_docs_hardcoded_counts`, `check_repo_thin_orchestrator_scripts` / `check_project_scripts` for `projects/*/scripts/`). Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** (`test_thin_orchestrator_drift.py`). Per-exemplar detectors: function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead link, oversize `src/*.py`, blanket `except Exception`, mocks in tests, canonical-file presence.
+Drift-checker coverage: `uv run python scripts/check_template_drift.py --strict` completed with no drift on 2026-05-27. Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** through the thin-orchestrator detectors. Per-exemplar detectors include function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead links, oversize `src/*.py`, blanket `except Exception`, mocks in tests, and canonical-file presence.
 
-**Thin-orchestrator gates** (measured 2026-05-26):
+**Thin-orchestrator gates** (measured 2026-05-27):
 
 | Gate | Command | Threshold |
 | --- | --- | --- |
@@ -119,31 +117,18 @@ Drift-checker self-tests (separate suite at `tests/infra_tests/test_check_templa
 | Tracked projects | `uv run python scripts/check_tracked_projects.py` | non-exemplar paths under `projects/` |
 | Generated artifacts | `uv run python scripts/check_tracked_generated_artifacts.py` | disposable `output/` trees |
 
+Current line-count result: no failing modules; `infrastructure/rendering/_pdf_combined_renderer.py` is a warning at 861 lines.
+
 Coverage gates (enforced in CI):
 
 - infrastructure/ : >= 60% (measured baseline → [`docs/development/coverage-gaps.md`](../development/coverage-gaps.md))
 - public template project `src/` trees : >= 90% (matrix project tests; public lint/type paths come from `uv run python -m infrastructure.project.public_scope source-paths`)
-- `projects/fep_lean/src/` : >= 89% (dedicated CI job `fep_lean (gauss + lake)` when `projects/fep_lean/lean/lean-toolchain` exists)
 
 Run full suite with:
 
 ```bash
 uv run python scripts/01_run_tests.py --project template_code_project
 ```
-
-### fep_lean (archived — `projects_archive/fep_lean/`)
-
-`fep_lean` is currently archived and not executed by the active pipeline. When present under `projects/`, it has its own coverage gate (≥89 %) and isolated `pyproject.toml`. Historical run from the archive tree:
-
-```bash
-cd projects_archive/fep_lean
-uv run pytest tests/ --collect-only -q
-uv run pytest tests/ -q --cov=src --cov-fail-under=89
-```
-
-Last historical collection: **285** tests across **28** modules (adds `tests/test_hermes_error_paths.py` — 9 `pytest-httpserver`-backed tests covering `HermesExplainer.preflight()` and `HermesConfig.fallback_models`). Parallelism: optional `FEP_LEAN_PREFETCH`, Stage 4 `ThreadPoolExecutor`, figure `ProcessPoolExecutor` (spawn; `FEP_LEAN_FIGURES_MP=0` forces serial); `pytest-xdist` and `pytest-httpserver` are dev dependencies. See `projects_archive/fep_lean/tests/AGENTS.md` and `projects_archive/fep_lean/docs/pipeline.md`.
-
-**Hermes resilience (new):** `HermesConfig.fallback_models` is a first-class user-supplied OpenRouter chain (overrides `_FREE_MODEL_CHAIN`); `HermesExplainer.preflight()` runs one `max_tokens=1` probe at the start of Stage 4, flipping `cfg.enabled=False` on 4xx so credential failures surface in <10 s instead of ~12 min into the batch. Actionable 403 logs link to `https://openrouter.ai/settings/keys` and the Anthropic-direct fallback (`HERMES_API_BASE=https://api.anthropic.com/v1` + `ANTHROPIC_API_KEY`). See `projects/fep_lean/docs/troubleshooting.md#hermes-http-403--key-limit-exceeded`.
 
 ## Command Conventions
 

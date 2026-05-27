@@ -114,6 +114,42 @@ def test_write_method_contract_artifacts_uses_human_review_state(tmp_path: Path)
     assert payload["decisions"][0]["decision"] == "approved"
 
 
+def test_refresh_loop_payloads_matches_legacy_aliases(tmp_path: Path) -> None:
+    from src.writers import finalize_loop_payloads, refresh_loop_payloads, update_result_payloads
+
+    config = AutoResearchLoopConfig(
+        topic="Demo",
+        review_policy="human_review_required",
+        research_questions=(),
+        loop_stages=("plan",),
+        required_artifacts=(),
+        quality_checks=(),
+    )
+    result = AutoResearchLoopResult(
+        project_name="demo",
+        generated_at="2026-05-26T00:00:00+00:00",
+        config=config,
+        stage_results=(),
+        claims=(),
+        readiness_valid=False,
+        output_paths=(),
+    )
+    refresh_paths = {path.resolve() for path in refresh_loop_payloads(tmp_path, result)}
+    assert refresh_paths == {path.resolve() for path in finalize_loop_payloads(tmp_path, result)}
+    assert refresh_paths == {path.resolve() for path in update_result_payloads(tmp_path, result)}
+
+
+def test_build_figure_render_context_reuses_diagnostics(project_root: Path) -> None:
+    from src.diagnostics import diagnostic_bundle
+    from src.ml_task import run_bounded_ml_task
+    from src.writers import build_figure_render_context
+
+    ml_result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=4))
+    bundle = diagnostic_bundle(project_root, ml_result)
+    ctx = build_figure_render_context(project_root, ml_result, diagnostics=bundle)
+    assert ctx.diagnostics is bundle
+
+
 def test_schema_and_research_object_manifests_are_local(project_root: Path, tmp_path: Path) -> None:
     sample = tmp_path / "output" / "data" / "sample.json"
     sample.parent.mkdir(parents=True)

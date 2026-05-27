@@ -27,7 +27,7 @@ Files (`projects/template_prose_project/tests/`):
 - `test_figures.py` — covers `src/figures.py` matplotlib renderers (approximately 6 tests).
 - `test_manuscript_variables.py` — covers `src/manuscript_variables.py`
   substitution (approximately 9 tests).
-- `test_pipeline.py` — covers `src/pipeline.py` checks and
+- `test_pipeline.py` — covers `src/pipeline/` checks and
   `run_prose_pipeline` (~35 tests across `TestRunProsePipeline`,
   `TestOptionalChecks`, `TestCheckUnits` (covers every `_check_<name>` in
   isolation — `_check_grade_level`, `_check_citation_density`,
@@ -117,7 +117,7 @@ The zero-mock constraint is self-enforcing when the architecture is correct:
 
 - **`src/config.py`, `src/manuscript_variables.py`, `src/figures.py`,
   `src/report.py`** — pure modules → testable with real data.
-- **`src/pipeline.py`** — orchestrates `infrastructure.prose` and
+- **`src/pipeline/`** — orchestrates `infrastructure.prose` and
   `infrastructure.reference.citation` → testable with real Markdown and
   real BibTeX in `tmp_path`.
 - **`scripts/*.py`** — CLI shims → tested via `subprocess.run` in

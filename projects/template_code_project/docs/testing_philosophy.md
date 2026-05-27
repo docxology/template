@@ -88,20 +88,20 @@ Before submitting any test, verify all boxes are checked:
 
 ## Infrastructure-Dependent Test Pattern
 
-`TestStabilityAnalysis` and `TestPerformanceBenchmarking` in `test_analysis_integration.py` call `src/analysis.py` and `src/figures.py` directly. When figure modules import cleanly, tests run real stability/benchmark paths and validate PNG output. When imports fail, tests skip cleanly — this is not a mock.
+`TestStabilityAnalysis` and `TestPerformanceBenchmarking` in `test_analysis_integration.py` call `src/analysis/` and `src/figures/` directly. When figure modules import cleanly, tests run real stability/benchmark paths and validate PNG output. When imports fail, tests skip cleanly — this is not a mock.
 
 ## Coverage inventory (`test_analysis_coverage.py`)
 
-Branch and error-path tests for `src/analysis.py`: `TestFallbackLogging`, `TestValidateOutputs`, `TestSaveValidationReport`, `TestStabilityScoreBranches`, `TestScientificInfraPaths`, `TestExtractMetadataExtended`, `TestCitationsExtended`, `TestPublishingExtended`, `TestMainBranches`, `TestMainErrors`, `TestRegisterFigure`, `TestImportFallback`.
+Branch and error-path tests for `src/analysis/`: `TestFallbackLogging`, `TestValidateOutputs`, `TestSaveValidationReport`, `TestStabilityScoreBranches`, `TestScientificInfraPaths`, `TestExtractMetadataExtended`, `TestCitationsExtended`, `TestPublishingExtended`, `TestMainBranches`, `TestMainErrors`, `TestRegisterFigure`, `TestImportFallback`.
 
 ## Orchestration Branch Testing
 
-Orchestration modules (`analysis.py`, `dashboard.py`, `figures.py`, `manuscript_variables.py`) may use **`pytest.MonkeyPatch`** on module attributes and **subprocess import isolation** to hit error paths and infrastructure fallbacks. That is not the same as mocking algorithm output: real code runs with redirected boundaries. See [`../tests/PATTERNS.md`](../tests/PATTERNS.md) and [`test_analysis_coverage.py`](../tests/test_analysis_coverage.py).
+Orchestration modules (`analysis/`, `dashboard.py`, `figures/`, `manuscript_variables.py`) may use **`pytest.MonkeyPatch`** on module attributes and **subprocess import isolation** to hit error paths and infrastructure fallbacks. That is not the same as mocking algorithm output: real code runs with redirected boundaries. See [`../tests/PATTERNS.md`](../tests/PATTERNS.md) and [`test_analysis_coverage.py`](../tests/test_analysis_coverage.py).
 
 ## Structural Rule: If You Need a Mock, Move the Code
 
 - **`src/optimizer.py`, `src/invariants.py`, `src/experiment_config.py`** — Pure or config-only; no infrastructure imports
-- **`src/analysis.py`, `src/figures.py`, `src/dashboard.py`, `src/manuscript_variables.py`** — Orchestration; may import `infrastructure.*` behind try/except
+- **`src/analysis/`, `src/figures/`, `src/dashboard.py`, `src/manuscript_variables.py`** — Orchestration; may import `infrastructure.*` behind try/except
 - **`scripts/*.py`** — CLI wrappers only
 
 ## Running the Gate

@@ -39,7 +39,7 @@ flowchart TB
 * `src/config.py::ProjectConfig` — every knob is here. Add a new check
   by adding a field to `ProseAnalysisConfig`, parsing it in
   `from_dict`, and wiring it into `pipeline.run_prose_pipeline`.
-* `src/pipeline.py::run_prose_pipeline` — the only function that
+* `src/pipeline/__init__.py::run_prose_pipeline` — the only function that
   touches `infrastructure.prose.*` or
   `infrastructure.reference.citation.*`. Returns a
   :class:`ProseRunArtifacts` so the script knows where every artefact
@@ -93,7 +93,7 @@ mocks.
 To add a new check:
 
 1. Edit `src/config.py::ProseAnalysisConfig` to add the new field.
-2. Add a `_check_<name>` function in `src/pipeline.py`.
+2. Add a `_check_<name>` function in `src/pipeline/checks.py`.
 3. Wire it into `run_prose_pipeline` so it appears in `artifacts.checks`.
 4. Add a test in `tests/test_pipeline.py` covering both `passed=True`
    and `passed=False` outcomes (the existing `TestCheckUnits` class

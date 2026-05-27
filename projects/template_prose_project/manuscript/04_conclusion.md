@@ -5,7 +5,7 @@
 The permanent exemplars and optional search add-on share a single house style:
 
 * `manuscript/config.yaml` is the only place run policy lives.
-* `src/pipeline.py` is the only place the project touches `infrastructure/`.
+* `src/pipeline/` is the only place the project touches `infrastructure/`.
 * Scripts in `scripts/` do only filesystem I/O and CLI argument handling.
 * Every artefact in `output/` is regeneratable; `manuscript/references.bib` is the only artefact in the manuscript directory that may be auto-populated (only by the optional search add-on; this project validates but never writes).
 

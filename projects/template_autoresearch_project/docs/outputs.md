@@ -4,6 +4,12 @@ Running `template_autoresearch_project` creates machine-readable data,
 human-readable reports, registry-backed figures, manuscript variables,
 variable provenance, and review material.
 
+How these artifacts are *validated* (which gates bind their truth, which are hard
+gates vs. opt-in) is documented in [validation-architecture.md](validation-architecture.md).
+The integrity attestation and research-object manifest now surface present-but-empty
+artifacts (`empty` / `empty_artifact_count`); the schema manifest fails the run on a
+nonconforming governance payload.
+
 Core data:
 
 | Path | Role |
@@ -40,7 +46,8 @@ Core data:
 | `output/data/ml_candidate_selection_audit.json` | Candidate ranking audit with objective metric, Wilson interval, probability quality, parameters, and tie-break context |
 | `output/data/ml_diagnostic_boundary.json` | Generated claim-boundary table separating objective selection, diagnostics, robustness, integrity, and review governance |
 | `output/data/autoresearch_phase_ledger.json` | Ordered loop-settlement ledger for intrinsic checks, artifact writes, readiness settlement, and final manifests |
-| `output/data/figure_quality_report.json` | Local registry/source/pixel checks for generated figures |
+| `output/data/figure_quality_report.json` | Local checks for generated figures: registry binding, source-data substance (non-empty/parseable), nonblank pixels, alt text, and dimensions |
+| `output/data/figure_style.json` | Style provenance for the run — dpi, colormaps, fonts, and resolved colour palette used to render every figure (schema `template-autoresearch-figure-style-v1`; configured via `figures.yaml`) |
 | `output/data/autoresearch_security_profile.json` | Local deterministic security profile, network policy, integrity algorithm, framework labels, and explicit non-claims |
 | `output/data/autoresearch_threat_model.json` | STRIDE and ATT&CK-scoped local artifact threat model with assets, threats, controls, and residual risks |
 | `output/data/autoresearch_supply_chain_inventory.json` | SBOM-style local input and generated-artifact inventory with SHA-256 hashes |
@@ -96,7 +103,7 @@ Reports:
 | `output/reports/ml_benchmark_score.json` | Grading output for metric improvement, budget compliance, offline execution, and selection status |
 | `output/reports/autoresearch_readiness.json` | Structured readiness validation result |
 | `output/reports/autoresearch_readiness.md` | Human-readable readiness validation result |
-| `output/reports/benchmark_readiness_smoke.json` | Deterministic grading output for the exemplar benchmark task |
+| `output/reports/benchmark_readiness_smoke.json` | Measured readiness grade (auto-graded): fraction of checks passing — core artifacts substantive, ≥1 supported claim, ML accuracy improved over baseline; scores below 1.0 and is flagged `incomplete` on a hollow/degraded run |
 | `output/reports/evidence_registry.json` | Compact evidence-registry summary with fact counts, source tiers, freshness warnings, and a bounded fact sample |
 | `output/reports/artifact_manifest.json` | Artifact manifest with sizes and checksums |
 

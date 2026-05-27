@@ -334,6 +334,10 @@ module = "projects.template_prose_project.*"
 ignore_errors = true
 
 [[tool.mypy.overrides]]
+module = "projects.template_active_inference.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
 module = "projects.template_search_project.*"
 ignore_errors = true
 

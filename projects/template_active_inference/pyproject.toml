@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "template_active_inference"
+version = "0.1.0"
+description = "Multi-track Active Inference exemplar: analytical + pymdp + sheaf manuscript + Lean/GNN/ontology (7 pipeline tracks, 10 sheaf fragment types)"
+authors = [{ name = "Daniel Ari Friedman", email = "daniel@activeinference.institute" }]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24.0",
+    "matplotlib>=3.7.0",
+    "pyyaml>=6.0",
+    "scipy>=1.11.0",
+    "inferactively-pymdp==1.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "requires_pymdp: tests that import inferactively-pymdp",
+]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = ["tests/*", "*/__init__.py"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+precision = 2
+
+[tool.uv]

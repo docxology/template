@@ -29,6 +29,17 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 - **Automated Analysis Pipeline**: Script-driven data generation and visualization
 - **Executive Reporting**: Multi-project comparative analysis capabilities
 
+### Production publishing (`docxology/template_code_project`)
+
+Double publish (Zenodo + GitHub) via `scripts/publish_project_release.py`. Manuscript config enables transmission bookends, steganography profile documentation, and metadata-driven deposit filenames (`Author_2026_Convergence_{hash8}.pdf` — local working PDF remains `template_code_project_combined.pdf`).
+
+| Release | Zenodo | GitHub |
+| --- | --- | --- |
+| v2.1.0 (current) | [10.5281/zenodo.20416267](https://doi.org/10.5281/zenodo.20416267) | [v2.1.0](https://github.com/docxology/template_code_project/releases/tag/v2.1.0) |
+| v2.0.0 | [10.5281/zenodo.20416203](https://doi.org/10.5281/zenodo.20416203) | [v2.0.0](https://github.com/docxology/template_code_project/releases/tag/v2.0.0) |
+
+Workflow reference: [`docs/guides/publishing-guide.md`](../../docs/guides/publishing-guide.md) (transmission bookends + deposit filename sections). Render/stego path: [`docs/rendering_pipeline.md`](docs/rendering_pipeline.md).
+
 ### Scientific Validation & Analysis
 
 - **Numerical Stability Assessment**: Automated stability testing across input ranges
@@ -59,7 +70,7 @@ flowchart TB
     P --> PY[pyproject.toml<br/>Pytest/coverage config · project metadata]
     P --> DP[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 
-    SRC --> SRC_F[__init__.py · optimizer.py · invariants.py ·<br/>experiment_config.py · analysis.py · figures.py ·<br/>dashboard.py · manuscript_variables.py ·<br/>STYLE.md · AGENTS.md · README.md]
+    SRC --> SRC_F[__init__.py · optimizer.py · invariants.py ·<br/>experiment_config.py · analysis/ · figures/ ·<br/>dashboard.py · manuscript_variables.py ·<br/>STYLE.md · AGENTS.md · README.md]
     SC --> SC_F[optimization_analysis.py · build_dashboard.py ·<br/>00_preflight.py · generate_api_docs.py ·<br/>z_generate_manuscript_variables.py ·<br/>CONVENTIONS.md · AGENTS.md · README.md]
     T --> T_F[conftest.py · test_optimizer.py · test_analysis_integration.py ·<br/>test_analysis_coverage.py · test_experiment_config.py ·<br/>test_figures_orchestration.py · test_dashboard_config.py ·<br/>test_invariants.py · test_invariants_and_dashboard.py ·<br/>test_manuscript_variables.py · test_documentation.py ·<br/>test_scripts_smoke.py ·<br/>PATTERNS.md · AGENTS.md · README.md]
     DOCS --> DOCS_F[AGENTS.md · README.md · agent_instructions.md ·<br/>architecture.md · testing_philosophy.md ·<br/>rendering_pipeline.md · style_guide.md · syntax_guide.md]
@@ -275,7 +286,7 @@ def simulate_trajectory(
 
 ### optimization_analysis.py
 
-Thin orchestrator (~65 lines) — runs the full pipeline via `main()`. **Function signatures:** [`src/AGENTS.md`](src/AGENTS.md) (`analysis.py`, `figures.py`, `optimizer.py`, `dashboard.py`). Do not duplicate API blocks here.
+Thin orchestrator (~65 lines) — runs the full pipeline via `main()`. **Function signatures:** [`src/AGENTS.md`](src/AGENTS.md) (`analysis/`, `figures/`, `optimizer.py`, `dashboard.py`). Do not duplicate API blocks here.
 
 ### build_dashboard.py
 

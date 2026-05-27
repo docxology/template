@@ -15,7 +15,7 @@ def zenodo_test_server():
         {
             "id": 12345,
             "links": {
-                "bucket": f"{server.url_for('')}/api/files/bucket123",
+                "bucket": f"{server.url_for('')}/files/bucket123",
                 "publish": f"{server.url_for('')}/api/deposit/depositions/12345/actions/publish",
             },
             "metadata": {
@@ -50,6 +50,32 @@ def zenodo_test_server():
         }
     )
 
+    server.expect_request(
+        "/files/bucket123/test_release_combined.pdf",
+        method="PUT",
+    ).respond_with_json(
+        {
+            "key": "test_release_combined.pdf",
+            "mimetype": "application/pdf",
+            "checksum": "md5:release123",
+            "size": 4321,
+            "links": {"self": f"{server.url_for('')}/api/files/bucket123/test_release_combined.pdf"},
+        }
+    )
+
+    server.expect_request(
+        "/files/bucket123/Author_2026_Release_6b134896.pdf",
+        method="PUT",
+    ).respond_with_json(
+        {
+            "key": "Author_2026_Release_6b134896.pdf",
+            "mimetype": "application/pdf",
+            "checksum": "md5:release123",
+            "size": 4321,
+            "links": {"self": f"{server.url_for('')}/api/files/bucket123/Author_2026_Release_6b134896.pdf"},
+        }
+    )
+
     # Mock publish endpoint
     server.expect_request("/deposit/depositions/12345/actions/publish", method="POST").respond_with_json(
         {
@@ -62,6 +88,97 @@ def zenodo_test_server():
             "metadata": {"doi": "10.5281/zenodo.12345", "title": "Test Publication"},
             "state": "done",
             "submitted": True,
+        }
+    )
+
+    try:
+        yield server
+    finally:
+        server.stop()
+
+
+@pytest.fixture
+def zenodo_release_test_server(zenodo_test_server):
+    """Zenodo server with post-publish description patch support."""
+    zenodo_test_server.expect_request(
+        "/deposit/depositions/12345",
+        method="PUT",
+    ).respond_with_json({"id": 12345, "metadata": {"description": "patched"}})
+    yield zenodo_test_server
+
+
+@pytest.fixture
+def zenodo_version_test_server():
+    """Zenodo server with deposition lookup and new-version endpoints."""
+    server = HTTPServer()
+    server.start()
+    base = server.url_for("")
+
+    server.expect_request("/deposit/depositions", method="GET").respond_with_json(
+        {
+            "hits": {
+                "hits": [{"id": 999, "metadata": {"doi": "10.5281/zenodo.11111"}}],
+            }
+        }
+    )
+
+    server.expect_request(
+        "/deposit/depositions/999/actions/newversion",
+        method="POST",
+    ).respond_with_json(
+        {
+            "id": 54321,
+            "links": {"bucket": f"{base}/files/bucket999"},
+            "metadata": {"title": "New version"},
+            "state": "unsubmitted",
+        }
+    )
+
+    server.expect_request("/deposit/depositions/54321", method="PUT").respond_with_json(
+        {"id": 54321, "metadata": {"title": "Updated"}},
+    )
+    server.expect_request("/deposit/depositions/54321", method="PUT").respond_with_json(
+        {"id": 54321, "metadata": {"description": "patched after publish"}},
+    )
+
+    server.expect_request("/deposit/depositions/54321", method="GET").respond_with_json(
+        {
+            "id": 54321,
+            "state": "unsubmitted",
+            "files": [
+                {
+                    "id": "legacy-file-id",
+                    "filename": "test_release_combined.pdf",
+                    "links": {
+                        "self": f"{base}/deposit/depositions/54321/files/legacy-file-id",
+                    },
+                }
+            ],
+        }
+    )
+
+    server.expect_request(
+        "/deposit/depositions/54321/files/legacy-file-id",
+        method="DELETE",
+    ).respond_with_json({})
+
+    server.expect_request(
+        "/files/bucket999/test_release_combined.pdf",
+        method="PUT",
+    ).respond_with_json({"key": "test_release_combined.pdf"})
+
+    server.expect_request(
+        "/files/bucket999/Author_2026_Release_6b134896.pdf",
+        method="PUT",
+    ).respond_with_json({"key": "Author_2026_Release_6b134896.pdf"})
+
+    server.expect_request(
+        "/deposit/depositions/54321/actions/publish",
+        method="POST",
+    ).respond_with_json(
+        {
+            "doi": "10.5281/zenodo.54321",
+            "state": "done",
         }
     )
 

@@ -14,7 +14,7 @@ not its own algorithm.
 | Readability metric (FKGL / FRE / Gunning Fog) implementation | `infrastructure/prose/` |
 | BibTeX parsing / `BibDatabase` construction | `infrastructure/reference/citation/` |
 | Token-substitution + manuscript-tree write | `infrastructure/rendering/manuscript_injection` |
-| **Project-specific threshold checks** (`grade_level_in_band`, etc.) | `src/pipeline.py` (`_check_<name>` functions) |
+| **Project-specific threshold checks** (`grade_level_in_band`, etc.) | `src/pipeline/checks.py` (`_check_<name>` functions) |
 | **Project-specific report assembly** | `src/report.py` |
 | **Project-specific figure renderers** | `src/figures.py` |
 | **Project-specific {{TOKEN}} derivation** | `src/manuscript_variables.py` |
@@ -36,7 +36,7 @@ def _check_grade_level(report: ManuscriptReport, lo: float, hi: float) -> CheckR
     return CheckResult(name="grade_level_in_band", passed=lo <= g <= hi, ...)
 ```
 
-The intentional exception is `src/pipeline.py::run_prose_pipeline`
+The intentional exception is `src/pipeline/__init__.py::run_prose_pipeline`
 itself: it writes JSON + markdown + figures to disk when
 `write_outputs=True`. That branch is the documented I/O frontier; every
 other function in `src/` stays pure.
@@ -78,7 +78,7 @@ def write_review_report(
 
     Args:
         report: Aggregated ManuscriptReport from infrastructure.prose.
-        checks: List of CheckResult objects produced by src/pipeline.py.
+        checks: List of CheckResult objects produced by src/pipeline/.
         output_path: Where the markdown will be written.
         include_per_file_table: Render the per-file metrics table.
         include_outline: Render heading outlines per file.

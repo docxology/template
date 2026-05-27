@@ -22,14 +22,15 @@ This project is the public exemplar for deterministic AutoResearch loops in
   - `security.py` — local deterministic security profile, threat model, SBOM-style inventory, checksum attestation, and security review packet
   - `models.py` — loop result dataclasses
   - `config.py` — manuscript settings + plan merge (`build_loop_config`)
-  - `writers.py` — JSON/CSV/manifest I/O and final visual artifact refresh
+  - `writers.py` — JSON/CSV/manifest I/O; delegates figure batching to `writers_figure_dispatch.py` and benchmark grading to `writers_benchmark.py`
   - `reports.py` — markdown and review-packet renderers
-  - `figures_core.py` — shared figure helper functions only
-  - `figures_ml.py` — ML, MNIST, calibration, probability, uncertainty, and rank-stability figures
+  - `figures_core.py` — shared chart primitives (bar panels, matrix annotations)
+  - `figures_ml.py` — compatibility barrel; implementations in `figures_ml_{candidates,calibration,matrices,mnist}.py`
   - `figures_process.py` — stage matrix, candidate lifecycle, and closure-flow figures
   - `figures_security.py` — security-control and integrity-chain figures
   - `figures.py` — compatibility exports by figure family
-  - `manuscript_variables.py` — strict render-time token hydration, figure blocks, and provenance sidecars
+  - `manuscript_variables.py` — facade; token logic in `manuscript_tokens_{core,ml,figures,format}.py`
+  - `manuscript_tables.py` — facade; builders in `manuscript_tables_{builders,format}.py`
   - `source_ledger.py`, `artifact_schemas.py`, `research_object.py` — offline source-ledger validation, schema manifest generation, and local research-object manifest packaging
 - Thin scripts: `scripts/`
 - Project docs: `docs/`
@@ -68,7 +69,12 @@ existing infrastructure modules:
 15. `write_evidence_registry_report()` + `write_security_artifacts()` + phase ledger + schema/research-object manifests + `write_artifact_manifest()` — final registry, local security evidence, settlement ledger, and manifests
 
 Loop stages use status `declared` (intent only — not pipeline execution proof).
-Claims are `supported` only when the configured evidence path exists on disk.
+Claims are `supported` only when the configured evidence path points at
+substantive content on disk — a non-empty, parseable artifact (an empty file,
+`{}`/`[]`, an all-null JSON tree, or a header-only CSV does not support a claim).
+This substance binding is shared with the figure-quality and benchmark gates via
+`src/artifact_content.is_substantive_artifact` and is locked by negative-control
+tests in `tests/test_gate_negative_controls.py`.
 Accepted seed ideas require evidence links; candidate `touched_paths` must stay
 inside `autoresearch.yaml` `edit_allowlist`. The ML-loop candidate budget is
 finite; candidates beyond it are recorded as deferred.
@@ -87,14 +93,13 @@ uv run python -m infrastructure.autoresearch.cli validate --project template_aut
 ## Editing Rules
 
 - Keep `scripts/` as orchestrators only.
-- Add orchestration in `src/loop.py`; add I/O in `src/writers.py`; add renderers in `src/reports.py`.
+- Add orchestration in `src/loop.py`; add I/O in `src/writers.py` (or `writers_figure_dispatch.py` / `writers_benchmark.py` when the surface grows); add renderers in `src/reports.py`.
 - Keep ML task logic in `src/ml_data.py`, `src/ml_models.py`,
   `src/ml_training.py`, and `src/ml_selection.py`; do not move model evaluation
   into scripts.
 - Keep true publication approval in the human-authored `human_review.yaml`.
   Generated readiness may never self-approve publication.
-- Add manuscript tokens, generated tables, figure blocks, and provenance through
-  `src/manuscript_variables.py` and tests.
+- Add manuscript tokens in `src/manuscript_tokens_*.py` (re-export via `manuscript_variables.py`), tables in `manuscript_tables_builders.py`, figure blocks, and provenance — then extend tests.
 - Register every generated figure with source artifact, alt text, and claim
   boundary metadata before inserting it into numbered manuscript files.
 - Keep figure generation methods in `output/figures/figure_registry.json`; the

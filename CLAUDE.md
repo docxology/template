@@ -39,6 +39,7 @@ This is a research project template with a test-driven development workflow, aut
 | Executable bundle (opt-in Stage 10) | `uv run python scripts/08_executable_bundle.py --project {name}` |
 | Archive publication dry-run (opt-in Stage 11) | `uv run python scripts/09_archive_publication.py --project {name}` |
 | Archive publication real deposit | `uv run python scripts/09_archive_publication.py --project {name} --providers zenodo software_heritage ipfs_pinata --commit` (requires credentials — see [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md)) |
+| Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publishing-guide.md`](docs/guides/publishing-guide.md)) |
 | Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
 | Repo-wide doc linter | `uv run python scripts/lint_docs.py` |
 | Exemplar drift checker | `uv run python scripts/check_template_drift.py` (add `--strict` for focused gates) |
@@ -162,6 +163,7 @@ uv run python -c "from infrastructure.project.discovery import discover_projects
 
 **🔒 CONFIDENTIALITY INVARIANT (public repo).** Only these public canonical
 exemplars are ever git-tracked/pushed:
+- [`projects/template_active_inference/`](projects/template_active_inference/) — Active Inference multi-track template (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
 - [`projects/template_autoresearch_project/`](projects/template_autoresearch_project/) — deterministic AutoResearch template
 - [`projects/template_code_project/`](projects/template_code_project/) — code-centric template
 - [`projects/template_prose_project/`](projects/template_prose_project/) — prose-centric template

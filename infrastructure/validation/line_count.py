@@ -82,3 +82,29 @@ def scan_project_scripts(
         warnings.extend(part_warnings)
         failures.extend(part_failures)
     return warnings, failures
+
+
+def scan_project_src(
+    repo_root: Path,
+    *,
+    allowlist: frozenset[str] = frozenset(),
+) -> tuple[list[tuple[str, int]], list[tuple[str, int]]]:
+    """Scan ``projects/*/src/`` with the same thresholds as Layer 1."""
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+    warnings: list[tuple[str, int]] = []
+    failures: list[tuple[str, int]] = []
+    for name in PUBLIC_PROJECT_NAMES:
+        src_dir = repo_root / "projects" / name / "src"
+        if not src_dir.is_dir():
+            continue
+        rel_root = src_dir.relative_to(repo_root).as_posix()
+        part_warnings, part_failures = scan_line_counts(
+            repo_root,
+            (rel_root,),
+            thresholds=DEFAULT_INFRA_THRESHOLDS,
+            allowlist=allowlist,
+        )
+        warnings.extend(part_warnings)
+        failures.extend(part_failures)
+    return warnings, failures

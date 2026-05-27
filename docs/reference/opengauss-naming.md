@@ -1,13 +1,15 @@
-# Open Gauss naming (disambiguation)
+# Open Gauss naming in this repository
 
-In this repository, **Open Gauss** almost always means the **[math-inc OpenGauss](https://github.com/math-inc/OpenGauss)** project and its **`gauss` CLI** for Lean session tooling (for example as used from the `fep_lean` project when that tree is present under `projects/`).
+In this repository, **Open Gauss** almost always means the **[math-inc OpenGauss](https://github.com/math-inc/OpenGauss)** project and its **`gauss` CLI** for Lean session tooling.
 
-It does **not** mean **Huawei OpenGauss**, the open-source database product, unless a document explicitly discusses databases or DB operations.
+**Not** the Huawei OpenGauss relational database.
 
-- **This page** is the hub-visible disambiguation; it does not depend on having `projects/fep_lean/` in the working tree.
-- **Project detail** (Hermes, SQLite, `lake` layout): when `projects/fep_lean/` is present, see `projects/fep_lean/AGENTS.md` and `projects/fep_lean/src/gauss/`.
+## Where to look
 
+- **This page** — hub-visible disambiguation; does not require any rotating project in the working tree.
+- **Public Lean exemplar** — [`projects/template_active_inference/lean/`](../../projects/template_active_inference/lean/) (`lake build`, minimal witnesses).
+- **Archived Lean-heavy projects** — under `projects_archive/` when present locally; not part of public CI scope.
 
-## See Also
+## Related docs
 
-- **[Configuration](../operational/config/configuration.md)** — Configuration system (including fep_lean env vars)
+- **[Configuration](../operational/config/configuration.md)** — Configuration system (optional Lean workflow env vars)

@@ -30,7 +30,7 @@ metadata:
 ## Inputs to confirm
 
 - **Research topic** — objectives, methods, expected contributions (user provides).
-- **Exemplar** — default [`projects/template_code_project/`](../../../projects/template_code_project/); prose → `template_prose_project`; AutoResearch/readiness loop → `template_autoresearch_project`; search → local `template_search_project` from archive.
+- **Exemplar** — default [`projects/template_code_project/`](../../../projects/template_code_project/); Active Inference multi-track → `template_active_inference`; prose → `template_prose_project`; AutoResearch/readiness loop → `template_autoresearch_project`; search → local `template_search_project` from archive.
 - **Cross-ref style** — Pandoc-crossref vs registry tokens (pick one; see [manuscript-cross-references](../manuscript-cross-references/SKILL.md)).
 
 ## Workflow

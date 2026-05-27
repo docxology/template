@@ -7,7 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from src.dashboard import _compute_payload, _load_yaml_defaults, _parse_args, CFG_DEFAULT
+from scripts.build_dashboard import _parse_args, main as dashboard_main
+from src.dashboard import _compute_payload, _load_yaml_defaults, CFG_DEFAULT
 from src.experiment_config import ExperimentConfig, load_experiment_config
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -37,7 +38,7 @@ class TestDashboardParseArgs:
 
     def test_rejects_empty_default_step_sizes(self, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setattr(
-            "src.dashboard._load_yaml_defaults",
+            "scripts.build_dashboard._load_yaml_defaults",
             lambda _path: ExperimentConfig(step_sizes=()),
         )
         with pytest.raises(SystemExit):
@@ -117,8 +118,6 @@ class TestDashboardPayload:
         assert True in sweep["diverged"]
 
     def test_main_prints_output_paths(self, tmp_path: Path, capsys: pytest.CaptureFixture[str]):
-        from src.dashboard import main as dashboard_main
-
         html = tmp_path / "dash.html"
         js = tmp_path / "dash.json"
         inv = tmp_path / "inv.txt"
@@ -145,8 +144,6 @@ class TestDashboardPayload:
     def test_main_exits_on_failed_invariants(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
     ):
-        from src.dashboard import main as dashboard_main
-
         class _FailedDashboard:
             def write(self, **kwargs: object) -> dict[str, str]:
                 return {
@@ -159,7 +156,7 @@ class TestDashboardPayload:
             def evaluate_invariants(self) -> list[dict[str, object]]:
                 return [{"name": "bad_invariant", "passed": False}]
 
-        monkeypatch.setattr("src.dashboard._build_dashboard", lambda _args, _payload: _FailedDashboard())
+        monkeypatch.setattr("scripts.build_dashboard._build_dashboard", lambda _args, _payload: _FailedDashboard())
         html = tmp_path / "dash.html"
         js = tmp_path / "dash.json"
         with pytest.raises(SystemExit) as exc:

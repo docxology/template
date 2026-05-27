@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `src/` directory contains the importable project logic for the research project. The mathematical layer (`optimizer.py`, `invariants.py`) remains pure and deterministic; generated-output workflows (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`, `documentation.py`) live here so scripts stay thin CLI wrappers. Experiment parameters are loaded once from `manuscript/config.yaml` → `experiment:` via `experiment_config.py` and shared by analysis, figures, dashboard, and manuscript variable generation.
+The `src/` directory contains the importable project logic for the research project. The mathematical layer (`optimizer.py`, `invariants.py`) remains pure and deterministic; generated-output workflows (`analysis/`, `figures/`, `dashboard.py`, `manuscript_variables.py`, `documentation.py`) live here so scripts stay thin CLI wrappers. Experiment parameters are loaded once from `manuscript/config.yaml` → `experiment:` via `experiment_config.py` and shared by analysis, figures, dashboard, and manuscript variable generation.
 
 ## Key Concepts
 
@@ -23,9 +23,11 @@ flowchart LR
     SRC --> INIT[__init__.py<br/>Module exports]
     SRC --> OPT[optimizer.py<br/>Core optimization · quadratic_optimum]
     SRC --> INV[invariants.py<br/>Numerical invariant builders]
-    SRC --> ANA[analysis.py<br/>Experiment orchestration]
-    SRC --> FIG[figures.py<br/>Matplotlib visualizations]
-    SRC --> DASH[dashboard.py<br/>Plotly dashboard payload + HTML]
+    SRC --> ANA[analysis/<br/>Experiment orchestration]
+    SRC --> FIG[figures/<br/>Matplotlib visualizations]
+    SRC --> RUN[_runtime.py<br/>Shared figure/path helpers]
+    SRC --> DASH[dashboard.py<br/>Facade · build_dashboard_html]
+    SRC --> DP[dashboard_payload.py · dashboard_panels.py]
     SRC --> VARS["manuscript_variables.py<br/>template variable substitution map"]
     SRC --> DOC[documentation.py<br/>API reference builder]
     SRC --> AG[AGENTS.md · README.md · STYLE.md]
@@ -55,7 +57,7 @@ This module uses standard scientific Python libraries:
 
 ## Infrastructure Integration
 
-The optimizer core is **infrastructure-independent**: `optimizer.py` and `invariants.py` must not import `infrastructure.*`. Coupling to infrastructure (logging configuration, benchmarking, stability analysis, validation, rendering) belongs in importable workflow modules such as `analysis.py` and `dashboard.py`, with `scripts/` acting as wrappers.
+The optimizer core is **infrastructure-independent**: `optimizer.py` and `invariants.py` must not import `infrastructure.*`. Coupling to infrastructure (logging configuration, benchmarking, stability analysis, validation, rendering) belongs in importable workflow modules such as `analysis/` and `dashboard.py`, with `scripts/` acting as wrappers.
 
 ### Available Infrastructure Capabilities
 
@@ -185,7 +187,37 @@ uv run pytest ../tests/ --cov=. --cov-report=html
 #### ExperimentConfig (frozen dataclass)
 
 Loaded from `manuscript/config.yaml` → `experiment:` by `load_experiment_config(project_root)`.
-Shared by `analysis.py`, `figures.py`, `dashboard.py`, and `manuscript_variables.py`.
+Shared by `analysis/`, `figures/`, `sweeps.py`, `dashboard.py`, and `manuscript_variables.py`.
+
+### sweeps.py
+
+Unified α-sweep and stability matrix used by `figures/sensitivity.py`, `dashboard.py`,
+and `invariants.py` — do not duplicate sweep logic elsewhere.
+
+### figures/ package
+
+- `viz_config.py` — `VIZ_CONFIG`, `apply_visualization_style`, `agency_category`
+- `figures/convergence.py`, `figures/sensitivity.py`, `figures/scientific.py` (barrel → `scientific_complexity.py`, `scientific_stability.py`)
+- `figures/_common.py` — shim to `_runtime.py` for `project_root`, `get_logger`, `experiment_config`, `save_figure_data`
+- `figures/__init__.py` — re-export barrel (`from src.figures import …`)
+
+### analysis/ package
+
+- `workflow.py` — full `run_analysis_pipeline` / `main` orchestration (tests import via `src.analysis.main`)
+- `pipeline.py` — composable step exports only (no full-run orchestration)
+- `experiments.py`, `scientific_reports.py`, `publishing.py`
+- CLI lives in `../scripts/optimization_analysis.py` (thin wrapper)
+
+### dashboard modules
+
+- `dashboard_payload.py` — `compute_payload`, `load_yaml_defaults`, `to_diagonal_A`
+- `dashboard_panels.py` — `build_dashboard`, Plotly panel assembly
+- `dashboard.py` — facade re-exports + `build_dashboard_html(project_root) -> Path`
+- CLI in `../scripts/build_dashboard.py`
+
+### _runtime.py
+
+Shared helpers for figure generators: `project_root(caller)`, `get_logger`, `experiment_config`, `save_figure_data`. Analysis infra/logging remain in `analysis/_infra.py` and `analysis/_logging.py`.
 
 Key fields: `step_sizes`, `quadratic_A`, `quadratic_b`, `initial_point`, `max_iterations`,
 `tolerance`, `convergence_tolerance`, `stability_starting_points`, `stability_step_sizes`,

@@ -188,7 +188,7 @@ def test_zenodo_success_against_local_server(httpserver: HTTPServer, bundle_dir:
     receipt = provider.deposit(bundle_dir, dry_run=False)
     assert receipt.status == "ok", receipt.error
     assert receipt.identifier == "10.5281/zenodo.999999"
-    assert receipt.url == "https://zenodo.org/record/999999"
+    assert receipt.url == "https://doi.org/10.5281/zenodo.999999"
 
 
 def test_zenodo_http_error_returns_error_receipt(httpserver: HTTPServer, bundle_dir: Path) -> None:

@@ -62,7 +62,7 @@ the short version:
 | Class | Examples | Action |
 |---|---|---|
 | REQUIRED — pipeline gate | `src/optimizer.py` and `invariants.py` (math primitives), all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
-| REQUIRED — orchestration | `src/analysis.py`, `src/figures.py`, `src/dashboard.py`, `src/manuscript_variables.py`, all `scripts/*.py` | May import `infrastructure.*`; exercised by the end-to-end pipeline run |
+| REQUIRED — orchestration | `src/analysis/`, `src/figures/`, `src/dashboard.py`, `src/manuscript_variables.py`, all `scripts/*.py` | May import `infrastructure.*`; exercised by the end-to-end pipeline run |
 | AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/check_template_drift.py` and audits; aspire to update them when code changes |
 
 ## Concrete first steps after fork
@@ -72,7 +72,7 @@ Edit `src/optimizer.py` with your real algorithm. Keep it
 **infrastructure-free** (no `from infrastructure import ...`) — the
 math-primitive purity is what lets you copy `src/optimizer.py` into any
 Python environment without the pipeline installed. The orchestration
-modules (`analysis.py`, `figures.py`, etc.) are the right place for
+modules (`analysis/`, `figures/`, etc.) are the right place for
 infrastructure-coupled code.
 
 ### 2. Update the manuscript variables

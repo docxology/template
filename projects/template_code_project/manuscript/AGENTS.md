@@ -20,7 +20,7 @@ Repository-wide agent rules for this exemplar live in [`../docs/agent_instructio
 | `05_experimental_setup.md` | Configuration parameters, software environment | `CONFIG_QUADRATIC_A`, `CONFIG_QUADRATIC_B`, `RESULT_OPTIMUM_X`, `RESULT_OPTIMUM_F`, `CONFIG_NUM_STEP_SIZES`, `CONFIG_STEP_SIZES_BULLETS`, `CONFIG_INITIAL_POINT`, `CONFIG_CONVERGENCE_TOL`, `CONFIG_MAX_ITERATIONS`, `CONFIG_NUM_STABILITY_STARTS`, `CONFIG_NUM_STABILITY_STEPS`, `CONFIG_STABILITY_CELLS`, `CONFIG_BENCHMARK_DIMS`, `CONFIG_BENCHMARK_MIN_DIM`, `CONFIG_BENCHMARK_MAX_DIM`, `PYTHON_VERSION`, `NUMPY_VERSION`, `PLATFORM`, `GENERATION_TIMESTAMP` | None |
 | `06_reproducibility.md` | Config hash, artifact inventory, test results | `CONFIG_HASH`, `CONFIG_VERSION`, `CONFIG_FIRST_AUTHOR`, `CONFIG_KEYWORDS` (comma-joined string, not a count), `ARTIFACT_FIGURES`, `ARTIFACT_DATA_FILES` | None |
 | `07_scope_and_related_work.md` | Scope limitations, related literature | None | None |
-| `config.yaml` | Paper metadata and all experiment parameters | — | — |
+| `config.yaml` | Paper metadata, experiment parameters, `publication.transmission_bookends`, `publication.deposit_filename`, `steganography` profile | — | — |
 | `config.yaml.example` | Reference copy for new projects; shows all configurable fields | — | — |
 | `preamble.md` | LaTeX injections shared by PDF output | — | — |
 | `references.bib` | BibTeX bibliography | — | — |
@@ -58,7 +58,7 @@ See [`../docs/syntax_guide.md`](../docs/syntax_guide.md) for the complete token 
 
 All six figures must be referenced via Pandoc-crossref `[@fig:label]`, never with hardcoded numbers or raw `\ref{}`:
 
-| Label | PNG Filename | Generator in `src/figures.py` (orchestrated via `src/analysis.py` / `scripts/optimization_analysis.py`) |
+| Label | PNG Filename | Generator in `src/figures/` (orchestrated via `src/analysis/` / `scripts/optimization_analysis.py`) |
 |---|---|---|
 | `{#fig:convergence}` | `output/figures/convergence_plot.png` | `generate_convergence_plot()` |
 | `{#fig:step_sensitivity}` | `output/figures/step_size_sensitivity.png` | `generate_step_size_sensitivity_plot()` |
@@ -68,7 +68,7 @@ All six figures must be referenced via Pandoc-crossref `[@fig:label]`, never wit
 | `{#fig:stability}` | `output/figures/stability_analysis.png` | `generate_stability_visualization()` |
 
 **To add a new figure**:
-1. Add a generator function to `src/figures.py` and wire it through `src/analysis.py` (script entry: `scripts/optimization_analysis.py`).
+1. Add a generator function to `src/figures/` and wire it through `src/analysis/` (script entry: `scripts/optimization_analysis.py`).
 2. In the appropriate manuscript section, add a Pandoc image line (alt, relative path under `../output/figures/`, and `{#fig:…}`) by copying the structure of any figure in `03_results.md` and updating the path to match the file your generator writes.
 3. Reference in prose: `[@fig:new_label]` (parenthetical) or `@fig:new_label` (narrative)
 4. Document in [`../docs/output_inventory.md`](../docs/output_inventory.md) regeneration table

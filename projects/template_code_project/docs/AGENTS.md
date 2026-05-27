@@ -27,7 +27,7 @@ Technical guide for `projects/template_code_project/docs/` — the operational r
 
 **Read-first protocol**: AI agents must read `agent_instructions.md` before modifying any project file. Skipping this document is the most common source of errors in this project — agents who skip it tend to: introduce mocks (violating Rule 1), write math in `scripts/` (violating Rule 3), or hardcode numbers in manuscript prose (violating Rule 4 of `style_guide.md`). The consequence of any one violation is a CI failure or a misleading exemplar for future users.
 
-**Architecture isolation**: the **mathematical primitives** in `src/` (`optimizer.py`, `invariants.py`) are pure logic with no `infrastructure.*` imports; the **orchestration modules** (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) live in `src/` for testability but may import `infrastructure.*` behind try/except fallbacks; `scripts/` is glue (no math); `infrastructure/` is operations (cross-cutting). The dependency arrow remains one-directional: `scripts/` → `src/`; `scripts/` → `infrastructure/`; `tests/` → `src/`. Nothing imports upward. The math-primitive purity is the load-bearing claim: `optimizer.py` and `invariants.py` can be lifted into any Python environment without the pipeline installed.
+**Architecture isolation**: the **mathematical primitives** in `src/` (`optimizer.py`, `invariants.py`) are pure logic with no `infrastructure.*` imports; the **orchestration modules** (`analysis/`, `figures/`, `dashboard.py`, `manuscript_variables.py`) live in `src/` for testability but may import `infrastructure.*` behind try/except fallbacks; `scripts/` is glue (no math); `infrastructure/` is operations (cross-cutting). The dependency arrow remains one-directional: `scripts/` → `src/`; `scripts/` → `infrastructure/`; `tests/` → `src/`. Nothing imports upward. The math-primitive purity is the load-bearing claim: `optimizer.py` and `invariants.py` can be lifted into any Python environment without the pipeline installed.
 
 **Zero-mock enforcement**: No `unittest.mock`, `MagicMock`, `@patch`, or `create_autospec` anywhere in `tests/`. CI enforces this via `scripts/verify_no_mocks.py` before the test stage runs. The enforcement exists because mock tests can pass even when the actual mathematical logic is wrong — they test call signatures, not convergence.
 
@@ -59,7 +59,7 @@ grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
     projects/template_code_project/tests/ || echo "Clean"
 
 # Mathematical primitives (optimizer.py, invariants.py) have no infrastructure imports
-# (orchestration modules analysis.py / dashboard.py / manuscript_variables.py are allowed
+# (orchestration modules analysis/ / dashboard.py / manuscript_variables.py are allowed
 # to import infrastructure behind try/except fallbacks — see src/AGENTS.md).
 grep -nE "^(from|import) infrastructure" \
     projects/template_code_project/src/optimizer.py \
@@ -80,8 +80,8 @@ viable project.
 | `src/optimizer.py` | REQUIRED | Coverage gate; `tests/test_optimizer.py` |
 | `src/invariants.py` | REQUIRED | `tests/test_invariants.py` + dashboard invariants check |
 | `src/experiment_config.py` | REQUIRED | `load_experiment_config()`; shared by analysis, figures, dashboard, manuscript_variables; `tests/test_experiment_config.py` |
-| `src/analysis.py` | REQUIRED (orchestration) | Exercised by `scripts/optimization_analysis.py`; `tests/test_analysis_integration.py`, `tests/test_analysis_coverage.py` |
-| `src/figures.py` | REQUIRED (orchestration) | Six `generate_*` plot functions; `tests/test_figures_orchestration.py` + stability/benchmark viz in `tests/test_analysis_integration.py` |
+| `src/analysis/` | REQUIRED (orchestration) | Exercised by `scripts/optimization_analysis.py`; `tests/test_analysis_integration.py`, `tests/test_analysis_coverage.py` |
+| `src/figures/` | REQUIRED (orchestration) | Six `generate_*` plot functions; `tests/test_figures_orchestration.py` + stability/benchmark viz in `tests/test_analysis_integration.py` |
 | `src/dashboard.py` | REQUIRED (orchestration) | Exercised by `scripts/build_dashboard.py`; `tests/test_invariants_and_dashboard.py`, `tests/test_dashboard_config.py` |
 | `src/manuscript_variables.py` | REQUIRED | `tests/test_manuscript_variables.py` + live `{{TOKEN}}` cross-reference; reads config via `load_experiment_config()` |
 | `tests/` (all `test_*.py`) | REQUIRED | 90% coverage gate (per-project and root pipeline) |

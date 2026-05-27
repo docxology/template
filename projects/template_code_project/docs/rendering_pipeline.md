@@ -131,7 +131,7 @@ uv run python scripts/05_copy_outputs.py --project template_code_project
 | `authors[*]` | Author list on title page | `pdf_renderer.py` + `{{CONFIG_FIRST_AUTHOR}}` |
 | `publication.doi` | DOI on title page and citations | `pdf_renderer.py` |
 | `keywords` | `{{CONFIG_KEYWORDS}}` count | `src/manuscript_variables.py` |
-| `experiment.*` | Step sizes, tolerances, A/b, stability/benchmark grids | `src/experiment_config.py::load_experiment_config()` → `analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py` |
+| `experiment.*` | Step sizes, tolerances, A/b, stability/benchmark grids | `src/experiment_config.py::load_experiment_config()` → `analysis/`, `figures/`, `dashboard.py`, `manuscript_variables.py` |
 | `llm.translations.enabled` | Whether to run LLM translation step | `execute_pipeline.py` |
 
 ## Troubleshooting

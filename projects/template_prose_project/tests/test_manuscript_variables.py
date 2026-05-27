@@ -11,7 +11,7 @@ import pytest
 
 from src.manuscript_variables import (
     compute_variables,
-    load_manuscript_report,
+    load_report_payload,
     substitute_in_text,
     write_resolved_manuscript_tree,
     write_variables,
@@ -103,10 +103,10 @@ def test_write_variables_round_trip(tmp_path: Path):
     assert payload["config_title"] == "X"
 
 
-def test_load_manuscript_report(tmp_path: Path):
+def test_load_report_payload(tmp_path: Path):
     src = tmp_path / "r.json"
     src.write_text(json.dumps(_payload()), encoding="utf-8")
-    payload = load_manuscript_report(src)
+    payload = load_report_payload(src)
     assert payload["total_paragraphs"] == 5
 
 

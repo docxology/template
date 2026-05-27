@@ -160,6 +160,55 @@ The manuscript also maintains `manuscript/source_ledger.yaml` with schema
 HTTPS URLs, allowed source tiers, non-future ISO dates, BibTeX coverage, and
 manuscript references without making live web calls.
 
+## `figures.yaml` (visualization style)
+
+Every generated figure resolves its visual style from a single
+`FigureStyleConfig` (`src/figure_style.py`). The optional project-local
+`figures.yaml` overrides any of its fields; missing keys — and a missing file —
+fall back to the built-in defaults, which reproduce the historical figure
+appearance **byte-for-byte**. A dedicated file is used rather than
+`autoresearch.yaml` because the AutoResearch readiness loader rejects
+unrecognised keys.
+
+| Key | Type | Default | Effect |
+| --- | --- | --- | --- |
+| `dpi` | positive int | `160` | Output resolution (pixels = figure size × dpi). |
+| `transparent` | bool | `false` | Transparent PNG background. |
+| `font_scale` | positive number | `1.0` | Multiplies the base font size; title/label/tick sizes scale with it. |
+| `grid` | bool | `true` | Draw axis grids on charts. |
+| `heatmap_colormap` | matplotlib colormap | `Blues` | Confusion-matrix / paired-correctness colormap. |
+| `metrics_colormap` | matplotlib colormap | `YlGnBu` | Per-class precision/recall/F1 and robustness heatmaps. |
+| `palette` | mapping role → hex | colourblind-safe | Semantic colours (see below). Merged over the built-in palette, so a partial map only overrides named roles. |
+
+`load_figure_style(project_root)` parses the file; `writers.py` wraps figure
+generation in `apply_style(...)`, a context manager that activates the config and
+scopes a matplotlib `rc_context`, restoring both on exit (so nothing leaks across
+the batch). The exact style used for a run is recorded at
+`output/data/figure_style.json` (schema `template-autoresearch-figure-style-v1`)
+for provenance.
+
+The default `palette` is **colourblind-safe** (Okabe-Ito aligned). Roles include
+`baseline`, `accepted`, `rejected`, `evaluated`, `deferred`, `positive`,
+`warning`, `negative`, `accent`, `accent2`, `highlight`, `reference`, `grid`,
+`annotation`, `connector`, `muted`, `rule`, `box_face`, `box_edge`, `arrow`,
+`ink`, plus the security control-matrix badge roles (`row_alt`, `row_edge`,
+`ok_face`, `ok_fill`, `ok_ink`, `warn_fill`, `warn_ink`). The MNIST digit images
+intentionally stay grayscale and are not palette-driven.
+
+Determinism is guaranteed for the default PNG output: the figure writers contain
+no global RNG or out-of-context rcParams mutation, and identical inputs produce
+byte-identical PNGs regardless of generation order or process.
+
+Unknown style keys and unknown palette roles are rejected with a `ValueError`
+rather than silently ignored, so a typo'd knob (`transperent`, `acccent`) fails
+loudly. The configurable surface is intentionally scoped to **dpi, transparency,
+font scale, grid, colormaps, and the semantic palette**. Per-figure geometry
+(`figsize`), absolute annotation font sizes, and the automatic
+high-contrast white text on dark heatmap cells are deliberately *not* exposed —
+they are layout decisions out of scope for the style config (see the ISA "Out of
+Scope"). `apply_style` is single-threaded by design; figure generation must not
+be parallelised without a per-thread guard.
+
 ## Security artifacts
 
 `src.security` emits `autoresearch_security_profile.json`,

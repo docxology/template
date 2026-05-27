@@ -16,6 +16,7 @@ from typing import Any
 import numpy as np
 
 from .figure_style import FigureStyleConfig, get_active_style
+from .json_coerce import mapping_list as _mapping_list
 
 # Candidate-status roles resolved from the palette; any other status falls back to
 # the muted colour (matching the historical default for unknown statuses).
@@ -71,10 +72,6 @@ def _first_label_index(labels: np.ndarray, label: int) -> int:
     return int(matches[0])
 
 
-def _mapping_list(value: object) -> list[dict[str, Any]]:
-    return [row for row in value if isinstance(row, dict)] if isinstance(value, list) else []
-
-
 def _float_value(value: object) -> float:
     return float(value) if isinstance(value, int | float | str) else 0.0
 
@@ -102,3 +99,172 @@ def _class_balance_count(rows: list[dict[str, Any]], split: str, label: int) -> 
         if row.get("split") == split and int(row.get("class_label", -1)) == label:
             return int(row.get("count", 0))
     return 0
+
+
+def annotate_imshow_matrix(
+    ax: Any,
+    matrix: np.ndarray,
+    row_labels: list[str] | None,
+    col_labels: list[str] | None,
+    *,
+    vmin: float | None = 0.0,
+    vmax: float | None = 1.0,
+    cmap: str | None = None,
+    cell_text: np.ndarray | list[list[str]] | None = None,
+    color_threshold: float | None = None,
+    fontsize: float = 8.0,
+    style: FigureStyleConfig | None = None,
+) -> Any:
+    """Render a heatmap with optional axis labels and per-cell annotations."""
+    style = style or get_active_style()
+    colormap = cmap or style.metrics_colormap
+    imshow_kwargs: dict[str, Any] = {"cmap": colormap}
+    if vmin is not None:
+        imshow_kwargs["vmin"] = vmin
+    if vmax is not None:
+        imshow_kwargs["vmax"] = vmax
+    image = ax.imshow(matrix, **imshow_kwargs)
+    if color_threshold is None:
+        color_threshold = float(np.max(matrix)) / 2.0 if matrix.size else 0.5
+    if col_labels is not None:
+        ax.set_xticks(range(len(col_labels)), labels=col_labels)
+    if row_labels is not None:
+        ax.set_yticks(range(len(row_labels)), labels=row_labels)
+    if cell_text is not None:
+        text_grid = np.asarray(cell_text, dtype=object)
+        for row_index in range(matrix.shape[0]):
+            for col_index in range(matrix.shape[1]):
+                value = matrix[row_index, col_index]
+                label = str(text_grid[row_index, col_index])
+                text_color = (
+                    "white" if float(value) > color_threshold else palette_color("text_dark", "#111827", style=style)
+                )
+                ax.text(
+                    col_index,
+                    row_index,
+                    label,
+                    ha="center",
+                    va="center",
+                    fontsize=fontsize,
+                    color=text_color,
+                )
+    return image
+
+
+def horizontal_bar_panel(
+    ax: Any,
+    labels: list[str],
+    values: list[float],
+    *,
+    annotations: list[str] | None = None,
+    color: str | None = None,
+    invert_y: bool = True,
+    style: FigureStyleConfig | None = None,
+) -> Any:
+    """Draw a horizontal bar chart with optional value annotations."""
+    style = style or get_active_style()
+    bar_color = color or palette_color("negative", "#7c2d12", style=style)
+    bars = ax.barh(labels, values, color=bar_color)
+    if invert_y:
+        ax.invert_yaxis()
+    if annotations:
+        for bar, annotation in zip(bars, annotations, strict=True):
+            ax.text(
+                bar.get_width() + 0.05,
+                bar.get_y() + bar.get_height() / 2.0,
+                annotation,
+                va="center",
+                fontsize=8,
+            )
+    return bars
+
+
+def dual_vertical_bars(
+    fig: Any,
+    rows: list[dict[str, Any]],
+    metric_pairs: tuple[
+        tuple[tuple[str, str, str], tuple[str, str, str]],
+        tuple[tuple[str, str, str], tuple[str, str, str]],
+    ],
+    *,
+    label_key: str = "candidate_id",
+    label_formatter: Any | None = None,
+    sharex: bool = True,
+) -> tuple[Any, Any]:
+    """Create two stacked subplots with paired vertical bar groups per row."""
+    format_label = label_formatter or (lambda value: str(value))
+    labels = [format_label(row.get(label_key, "candidate")) for row in rows]
+    x_positions = np.arange(len(rows), dtype=float)
+    width = 0.34
+    axes = fig.subplots(2, 1, sharex=sharex)
+    for axis, (left_spec, right_spec) in zip(axes, metric_pairs, strict=True):
+        left_key, left_role, left_fallback = left_spec
+        right_key, right_role, right_fallback = right_spec
+        axis.bar(
+            x_positions - width / 2.0,
+            [float(row.get(left_key, 0.0)) for row in rows],
+            width,
+            color=palette_color(left_role, left_fallback),
+            label="train" if "train" in left_key else left_key.replace("_", " "),
+        )
+        axis.bar(
+            x_positions + width / 2.0,
+            [float(row.get(right_key, 0.0)) for row in rows],
+            width,
+            color=palette_color(right_role, right_fallback),
+            label="test" if "test" in right_key else right_key.replace("_", " "),
+        )
+        styled_grid(axis, "y")
+        axis.set_axisbelow(True)
+        axis.legend(loc="lower right" if axis is axes[0] else "upper right", frameon=False, fontsize=8)
+        for spine in axis.spines.values():
+            spine.set_visible(False)
+    axes[-1].set_xticks(x_positions, labels=labels, rotation=18, ha="right")
+    return axes[0], axes[1]
+
+
+def grouped_vertical_bars(
+    ax: Any,
+    x_positions: np.ndarray,
+    series: list[tuple[list[float], str, str, str | None]],
+    *,
+    width: float = 0.38,
+    annotate: bool = False,
+    style: FigureStyleConfig | None = None,
+) -> list[Any]:
+    """Draw side-by-side vertical bar groups for multiple series at each x position."""
+    style = style or get_active_style()
+    bar_groups: list[Any] = []
+    for index, (values, role, fallback, label) in enumerate(series):
+        positions = x_positions + ((index - (len(series) - 1) / 2.0) * width)
+        bar_kwargs: dict[str, Any] = {"width": width, "color": palette_color(role, fallback, style=style)}
+        if label is not None:
+            bar_kwargs["label"] = label
+        bars = ax.bar(positions, values, **bar_kwargs)
+        bar_groups.append(bars)
+        if annotate:
+            for bar in bars:
+                height = int(bar.get_height())
+                ax.text(bar.get_x() + bar.get_width() / 2.0, height + 3, str(height), ha="center", fontsize=7.5)
+    return bar_groups
+
+
+def hide_spines(ax: Any) -> None:
+    """Hide all axis spines (common figure finish)."""
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+
+__all__ = [
+    "_float_value",
+    "_mapping_list",
+    "_short_candidate_label",
+    "annotate_imshow_matrix",
+    "dual_vertical_bars",
+    "grouped_vertical_bars",
+    "hide_spines",
+    "horizontal_bar_panel",
+    "palette_color",
+    "save_figure",
+    "styled_grid",
+]

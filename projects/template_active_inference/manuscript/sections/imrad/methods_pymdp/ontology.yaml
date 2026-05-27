@@ -1,0 +1,4 @@
+loc: HiddenState
+obs: ObservationLikelihood
+pi: PolicyPosterior
+belief_entropy: BeliefEntropy

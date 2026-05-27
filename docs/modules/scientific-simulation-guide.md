@@ -321,8 +321,8 @@ integration.validate_manuscript()
 ### Analysis pipeline (`projects/template_code_project/scripts/optimization_analysis.py`)
 
 Demonstrates the code-exemplar analysis workflow:
-1. Run convergence experiments via `src/analysis.py`
-2. Generate figures via `src/figures.py`
+1. Run convergence experiments via `src/analysis/`
+2. Generate figures via `src/figures/`
 3. Write CSV/JSON reports under `output/`
 
 **Run:**
@@ -380,4 +380,3 @@ The scientific simulation system integrates seamlessly with the existing build p
 - [`../core/architecture.md`](../core/architecture.md) - system architecture overview
 - [`visualization-guide.md`](../usage/visualization-guide.md) - Visualization best practices
 - [`image-management.md`](../usage/image-management.md) - Image management guide
-

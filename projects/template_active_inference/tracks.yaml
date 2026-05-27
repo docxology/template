@@ -1,0 +1,63 @@
+# Pipeline track gates and artifact contract.
+# Sheaf fragment registry (compose order/renderers): manuscript/sheaf/tracks.yaml
+
+sheaf:
+  registry: manuscript/sheaf/tracks.yaml
+  manifest: manuscript/sheaf/manifest.yaml
+  composer: scripts/compose_manuscript.py
+
+tracks:
+  - id: lean
+    label: Lean boundary fragment
+    paths: [lean/TemplateActiveInference]
+    gate: build_lean
+    required: true
+  - id: analytical
+    label: Python analytical companion
+    paths: [src/analytical]
+    gate: validate_outputs
+    required: true
+  - id: pymdp
+    label: pymdp sophisticated-inference harness
+    paths: [src/simulation]
+    gate: validate_outputs
+    required: true
+  - id: gnn
+    label: Generalized Notation Notation
+    paths: [src/gnn, gnn]
+    gate: validate_outputs
+    required: true
+  - id: ontology
+    label: Active Inference Ontology concordance
+    paths: [src/ontology]
+    gate: validate_manuscript
+    required: true
+  - id: visualizations
+    label: Figures and optional animation
+    paths: [src/visualizations]
+    gate: validate_outputs
+    required: true
+  - id: visualization
+    label: Sheaf fragment alias for figures
+    sheaf_track: visualization
+    paths: [src/visualizations]
+    gate: validate_outputs
+    required: false
+  - id: manuscript
+    label: Sheaf composer and registry
+    paths: [src/manuscript, manuscript/refs, manuscript/sheaf]
+    gate: validate_manuscript
+    required: true
+
+extension_tracks:
+  - id: animation
+    label: Belief trajectory animation (opt-in)
+    sheaf_track: animation
+    artifact: output/figures/si_belief_trajectory.gif
+    script: render_animation.py
+    required: false
+  - id: graph_world
+    label: pymdp graph-world SI extension (opt-in)
+    artifact: output/data/si_graph_world_summary.json
+    script: simulate_si_graph_world.py
+    required: false

@@ -114,7 +114,7 @@ cat projects/template_code_project/output/data/optimization_results.csv
 
 ```mermaid
 graph TD
-    A[scripts/optimization_analysis.py] --> B[src/analysis.py]
+    A[scripts/optimization_analysis.py] --> B[src/analysis/]
     B --> C[src/optimizer.py]
     B --> D[Scientific Analysis]
     B --> E[Generate Figures]

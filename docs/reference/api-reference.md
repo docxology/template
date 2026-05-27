@@ -91,6 +91,10 @@ The per-package symbol listings below the
 
 *symbol — defined in `infrastructure.autoresearch`*
 
+### `SecurityProfile`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
 ### `validate_autoresearch_plan`
 
 *symbol — defined in `infrastructure.autoresearch`*
@@ -1109,6 +1113,16 @@ is_complex_word(word: str) -> bool
 
 A "complex word" for Gunning Fog: ≥3 syllables, not proper noun,
 
+### `load_report_json`
+
+*function — defined in `infrastructure.prose.report`*
+
+```python
+load_report_json(path: Path | str) -> ManuscriptReport
+```
+
+Load a :class:`ManuscriptReport` from on-disk JSON.
+
 ### `ManuscriptReport`
 
 *class — defined in `infrastructure.prose.report`*
@@ -1313,10 +1327,10 @@ Create academic profile data for ORCID, ResearchGate, etc.
 
 ### `create_github_release`
 
-*function — defined in `infrastructure.publishing.platforms`*
+*function — defined in `infrastructure.publishing.github.release`*
 
 ```python
-create_github_release(tag_name: str, release_name: str, description: str, assets: list[Path], token: str, repo: str, *, base_url: str='https://api.github.com') -> str
+create_github_release(tag_name: str, release_name: str, description: str, assets: list[Path], token: str, repo: str, *, base_url: str='https://api.github.com', target_commitish: str='main') -> str
 ```
 
 Create a GitHub release with attached assets.
@@ -1453,7 +1467,7 @@ Generate a publication summary for repository README.
 
 ### `prepare_arxiv_submission`
 
-*function — defined in `infrastructure.publishing.platforms`*
+*function — defined in `infrastructure.publishing.arxiv.submission`*
 
 ```python
 prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) -> Path
@@ -1473,13 +1487,13 @@ Container for publication metadata.
 
 ### `publish_to_zenodo`
 
-*function — defined in `infrastructure.publishing.platforms`*
+*function — defined in `infrastructure.publishing.zenodo.publish`*
 
 ```python
-publish_to_zenodo(metadata: PublicationMetadata, file_paths: list[Path], access_token: str, sandbox: bool=True) -> str
+publish_to_zenodo(metadata: PublicationMetadata, file_paths: list[Path], access_token: str, sandbox: bool=True, *, base_url: str | None=None) -> PublishResult
 ```
 
-Publish research artifacts to Zenodo repository.
+Publish research artifacts to Zenodo and return DOI plus deposition id.
 
 ### `validate_doi`
 
@@ -1503,17 +1517,17 @@ Validate that the project is ready for publication.
 
 ### `ZenodoClient`
 
-*class — defined in `infrastructure.publishing.api`*
+*class — defined in `infrastructure.publishing.zenodo.client`*
 
 ```python
 class ZenodoClient(config: ZenodoConfig)
 ```
 
-Client for Zenodo API.
+Client for the Zenodo Deposit REST API.
 
 ### `ZenodoConfig`
 
-*class — defined in `infrastructure.publishing.api`*
+*class — defined in `infrastructure.publishing.zenodo.config`*
 
 ```python
 class ZenodoConfig

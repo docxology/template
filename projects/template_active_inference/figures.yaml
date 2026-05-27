@@ -1,0 +1,133 @@
+# Visualization style for template_active_inference figures.
+# Loaded by src/visualizations/figure_style.py via apply_style().
+
+dpi: 160
+transparent: false
+font_scale: 1.0
+grid: true
+
+palette:
+  primary: "#111827"
+  secondary: "#2563eb"
+  accent: "#0f766e"
+  grid: "#d4d4d8"
+  muted: "#64748b"
+  reference: "#52525b"
+
+figures:
+  ising_mi_curve:
+    filename: ising_mi_curve.png
+    alt: >-
+      Two-panel plot of mutual information versus coupling strength lambda for the
+      symmetric Bernoulli-Ising toy. Left panel shows closed-form curve (solid dark
+      line) and Monte Carlo estimates (dashed blue line) with lambda on the x-axis
+      and mutual information in nats on the y-axis. Right panel shows Monte Carlo
+      minus closed-form residuals versus lambda with a zero reference line.
+    caption: >-
+      Closed-form and Monte Carlo mutual information I(λ) for the symmetric Bernoulli-Ising
+      toy across {{param_sweep_grid_points}} grid points up to λ_max = {{lambda_max}}; grid
+      maximum {{ising_mi_saturation}} nats on the measured sweep.
+    width: 0.9
+  free_energy_curve:
+    filename: free_energy_curve.png
+    alt: >-
+      Line plot of free energy in nats versus coupling strength lambda for the
+      entangled posterior relative to a mean-field prior. A single dark curve traces
+      free energy across the sweep; the minimum is marked with a teal scatter point
+      and labeled with the argmin lambda value.
+    caption: >-
+      Free energy of the entangled posterior relative to the mean-field prior across
+      the hyperparameter sweep (grid points {{param_sweep_grid_points}}).
+    width: 0.9
+  si_tmaze_actions:
+    filename: si_tmaze_actions.png
+    alt: >-
+      Step plot of discrete action index versus timestep for the pymdp
+      sophisticated-inference T-maze rollout. Actions change at each timestep with
+      light fill under the step trace; policy depth is {{si_tmaze_policy_len}} steps.
+    caption: >-
+      Discrete action index over time for the pymdp T-maze rollout (policy length
+      {{si_tmaze_policy_len}}).
+    width: 0.9
+  si_belief_entropy_curve:
+    filename: si_belief_entropy_curve.png
+    alt: >-
+      Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout.
+      Entropy ranges from {{si_entropy_min}} to {{si_entropy_max}} nats across
+      {{si_tmaze_steps}} steps in {{pymdp_mode}} mode.
+    caption: >-
+      Belief entropy over time for the T-maze rollout (mean {{si_tmaze_mean_belief_entropy_formatted}} nats).
+    width: 0.9
+  si_obs_action_trace:
+    filename: si_obs_action_trace.png
+    alt: >-
+      Dual-panel plot of observation index and action index versus timestep for the
+      pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel
+      shows actions. Goal reached flag is {{si_goal_reached}}.
+    caption: >-
+      Observation and action traces for the T-maze rollout (action diversity
+      {{si_action_diversity}}).
+    width: 0.9
+  sheaf_coverage_heatmap:
+    filename: sheaf_coverage_heatmap.png
+    alt: >-
+      Heatmap matrix of IMRAD manuscript rows versus {{sheaf_track_count}} sheaf
+      fragment track columns. Black cells mean the track is bound and the fragment
+      file exists; white cells mean the track is not bound; gray cells mean bound
+      but missing. Rows are grouped by IMRAD block with indented subsection labels;
+      column headers list track ids.
+    caption: >-
+      Sheaf track coverage matrix: {{imrad_manifest_rows}} IMRAD rows ×
+      {{sheaf_track_count}} fragment columns. Black = present (P), white = absent (—),
+      gray = missing (M). Counts: {{coverage_present}} present / {{coverage_bound}} bound /
+      {{coverage_missing}} missing.
+    width: 0.95
+  sheaf_layers_overview:
+    filename: sheaf_layers_overview.png
+    alt: >-
+      Two-panel overview of sheaf fragment layers. Left panel shows
+      {{sheaf_track_count}} composable track types in registry compose order with
+      labels and renderer ids. Right panel shows the IMRAD section binding heatmap
+      with black present, white absent, and gray missing cells across
+      {{imrad_manifest_rows}} manifest rows and {{sheaf_track_count}} tracks.
+    caption: >-
+      Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding
+      heatmap for {{sheaf_track_count}} fragment types across {{imrad_manifest_rows}} manifest
+      rows ({{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}}
+      missing).
+    width: 0.98
+
+section_figures:
+  coverage_page:
+    - id: sheaf_coverage_heatmap
+      caption_prefix: "Coverage overview. "
+  methods_analytical:
+    - id: ising_mi_curve
+      number: 1
+      caption_prefix: "Figure 1 (methods). "
+  results_mi_sweep:
+    - id: ising_mi_curve
+      number: 2
+      caption_prefix: "Figure 2 (results). "
+  results_free_energy:
+    - id: free_energy_curve
+      number: 3
+      caption_prefix: "Figure 3 (results). "
+  results_si_tmaze:
+    - id: si_belief_entropy_curve
+      caption_prefix: "Figure 3a (results). "
+    - id: si_obs_action_trace
+      caption_prefix: "Figure 3b (results). "
+    - id: si_tmaze_actions
+      caption_prefix: "Figure 3c (results). "
+  methods_sheaf:
+    - id: sheaf_layers_overview
+      number: 6
+      caption_prefix: "Figure 6 (methods). "
+  appendix_full_sheaf:
+    - id: ising_mi_curve
+      caption_prefix: "Figure A1 (appendix). "
+    - id: si_tmaze_actions
+      caption_prefix: "Figure A2 (appendix). "
+    - id: sheaf_coverage_heatmap
+      number: 4

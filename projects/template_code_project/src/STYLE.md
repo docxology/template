@@ -187,7 +187,7 @@ __all__ = [
 ]
 ```
 
-`src/analysis.py`, `src/dashboard.py`, `src/figures.py`,
+`src/analysis/`, `src/dashboard.py`, `src/figures/`,
 `src/experiment_config.py`, and `src/manuscript_variables.py`
 expose their public callables directly via deep imports
 (`from src.analysis import generate_convergence_plot`,

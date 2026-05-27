@@ -15,9 +15,9 @@ manuscript directory and the project's configuration.
 |---|---|
 | `__init__.py` | Public re-exports. |
 | `config.py` | `ProjectConfig` typed YAML loader (`ProseAnalysisConfig`, `BibliographyConfig`, `ReportConfig`). |
-| `pipeline.py` | `run_prose_pipeline` — read manuscript → analyse → cross-check bib → evaluate checks → write JSON. |
-| `figures.py` | `plot_section_word_counts`, `plot_readability_radar`, `plot_citation_density`, `generate_all_figures`, `load_manuscript_report`. |
-| `manuscript_variables.py` | `compute_variables`, `substitute_in_text`, `write_variables` for abstract substitution. |
+| `pipeline/` | `run_prose_pipeline` plus `pipeline/checks.py` (`CHECK_REGISTRY`) — read manuscript, analyse, cross-check bib, evaluate checks, write JSON. |
+| `figures.py` | `plot_section_word_counts`, `plot_readability_radar`, `plot_citation_density`, `generate_all_figures`. Scripts load typed reports via `infrastructure.prose.report.load_report_json`. |
+| `manuscript_variables.py` | `load_report_payload`, `compute_variables`, `substitute_in_text`, `write_variables` for abstract substitution. |
 | `report.py` | `write_review_report` — assemble the markdown review. |
 
 ## Module graph
@@ -25,7 +25,7 @@ manuscript directory and the project's configuration.
 ```mermaid
 flowchart LR
     CFG[config.py<br/>ProjectConfig]
-    PIPE[pipeline.py<br/>run_prose_pipeline]
+    PIPE[pipeline/<br/>run_prose_pipeline]
     FIG[figures.py<br/>matplotlib]
     MV[manuscript_variables.py]
     REP[report.py<br/>write_review_report]
@@ -49,9 +49,9 @@ flowchart LR
 
 ## Invariants
 
-* **Only `pipeline.py` touches `infrastructure.prose.*` or
+* **Only `pipeline/` touches `infrastructure.prose.*` or
   `infrastructure.reference.citation.*`.** Other modules stay framework-free.
-* **No I/O outside `pipeline.py`'s `write_outputs=True` branch and
+* **No I/O outside `pipeline/__init__.py`'s `write_outputs=True` branch and
   `figures.py`/`manuscript_variables.py`/`report.py`'s explicit write
   helpers.** Tests must be able to drive the logic without touching the
   filesystem.
@@ -65,7 +65,7 @@ flowchart LR
 ## Editing checklist
 
 - [ ] Added a new check → add field to `ProseAnalysisConfig`, parse in
-  `from_dict`, add `_check_<name>` to `pipeline.py`, append to the
+  `from_dict`, add `_check_<name>` to `pipeline/checks.py`, append to the
   checks list, add a test in `tests/test_pipeline.py`.
 - [ ] Added a new figure → add `plot_<name>(report, output_dir) -> Path`
   in `figures.py`, append to `generate_all_figures`, add a test in

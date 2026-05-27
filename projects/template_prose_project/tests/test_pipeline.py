@@ -14,12 +14,14 @@ from src.config import (
 )
 from src.pipeline import (
     CheckResult,
+    run_prose_pipeline,
+)
+from src.pipeline.checks import (
     _check_bibliography,
     _check_citation_density,
     _check_grade_level,
     _check_h1_per_file,
     _check_no_skipped_levels,
-    run_prose_pipeline,
 )
 
 
@@ -266,7 +268,8 @@ class TestCheckUnits:
     def test_grade_level_positive(self):
         # Generous band — passes for any reasonable text.
         report = self._report()
-        result = _check_grade_level(report, lo=-10.0, hi=30.0)
+        config = _config(prose={"target_grade_level_min": -10.0, "target_grade_level_max": 30.0})
+        result = _check_grade_level(report, config)
         assert result.passed is True
         assert result.name == "grade_level_in_band"
         assert "min" in result.details and "max" in result.details
@@ -274,45 +277,48 @@ class TestCheckUnits:
     def test_grade_level_negative(self):
         # Impossible band — fails.
         report = self._report()
-        result = _check_grade_level(report, lo=100.0, hi=200.0)
+        config = _config(prose={"target_grade_level_min": 100.0, "target_grade_level_max": 200.0})
+        result = _check_grade_level(report, config)
         assert result.passed is False
         assert result.details["value"] < 100.0
 
     def test_citation_density_positive(self):
         # Floor of 0 always passes.
         report = self._report("# A\n\n[@k1] body. [@k2] body body.")
-        result = _check_citation_density(report, threshold=0.0)
+        config = _config(prose={"citation_density_min_per_1000": 0.0})
+        result = _check_citation_density(report, config)
         assert result.passed is True
         assert result.details["citation_count"] == 2
 
     def test_citation_density_negative(self):
         report = self._report("# A\n\n" + ("word " * 200))
-        result = _check_citation_density(report, threshold=10.0)
+        config = _config(prose={"citation_density_min_per_1000": 10.0})
+        result = _check_citation_density(report, config)
         assert result.passed is False
         assert result.details["density_per_1000"] < 10.0
 
     def test_no_skipped_levels_positive(self):
         # Contiguous levels — passes.
         report = self._report("# A\n\nbody.\n\n## B\n\nbody.\n\n### C\n\nbody.")
-        result = _check_no_skipped_levels(report)
+        result = _check_no_skipped_levels(report, _config())
         assert result.passed is True
         assert result.details["offending_files"] == []
 
     def test_no_skipped_levels_negative(self):
         report = self._report("# A\n\nbody.\n\n#### Skipped\n\nbody.")
-        result = _check_no_skipped_levels(report)
+        result = _check_no_skipped_levels(report, _config())
         assert result.passed is False
         assert "f.md" in result.details["offending_files"]
 
     def test_h1_per_file_positive(self):
         report = self._report("# Heading\n\nbody.")
-        result = _check_h1_per_file(report)
+        result = _check_h1_per_file(report, _config())
         assert result.passed is True
         assert result.details["offending_files"] == []
 
     def test_h1_per_file_negative(self):
         report = self._report("## Only Subheading\n\nbody.")
-        result = _check_h1_per_file(report)
+        result = _check_h1_per_file(report, _config())
         assert result.passed is False
         assert "f.md" in result.details["offending_files"]
 
@@ -320,9 +326,8 @@ class TestCheckUnits:
         bib = tmp_path / "refs.bib"
         bib.write_text("@article{k1, title={A}, year={2020}, author={X}}\n", encoding="utf-8")
         report = self._report("# A\n\nCite [@k1].")
-        result = _check_bibliography(
-            report, bib, fail_on_missing=True, fail_on_unused=True
-        )
+        config = _config(bibliography={"fail_on_missing": True, "fail_on_unused": True})
+        result = _check_bibliography(report, config, bib_path=bib)
         assert result.passed is True
         assert result.details["missing"] == []
         assert result.details["unused"] == []
@@ -331,9 +336,8 @@ class TestCheckUnits:
         bib = tmp_path / "refs.bib"
         bib.write_text("@article{other, title={A}, year={2020}, author={X}}\n", encoding="utf-8")
         report = self._report("# A\n\nCite [@nope].")
-        result = _check_bibliography(
-            report, bib, fail_on_missing=True, fail_on_unused=False
-        )
+        config = _config(bibliography={"fail_on_missing": True, "fail_on_unused": False})
+        result = _check_bibliography(report, config, bib_path=bib)
         assert result.passed is False
         assert "nope" in result.details["missing"]
 
@@ -341,18 +345,19 @@ class TestCheckUnits:
         bib = tmp_path / "refs.bib"
         bib.write_text("@article{lonely, title={A}, year={2020}, author={X}}\n", encoding="utf-8")
         report = self._report("# A\n\nNo citations.")
-        result = _check_bibliography(
-            report, bib, fail_on_missing=True, fail_on_unused=True
-        )
+        config = _config(bibliography={"fail_on_missing": True, "fail_on_unused": True})
+        result = _check_bibliography(report, config, bib_path=bib)
         assert result.passed is False
         assert "lonely" in result.details["unused"]
 
     def test_bibliography_missing_file_lenient(self, tmp_path: Path):
         # No bib file; fail_on_missing=False → check passes.
         report = self._report()
+        config = _config(bibliography={"fail_on_missing": False, "fail_on_unused": False})
         result = _check_bibliography(
-            report, tmp_path / "absent.bib",
-            fail_on_missing=False, fail_on_unused=False,
+            report,
+            config,
+            bib_path=tmp_path / "absent.bib",
         )
         assert result.passed is True
         assert "not found" in result.message

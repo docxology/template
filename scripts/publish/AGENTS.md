@@ -112,7 +112,8 @@ Example GitHub Actions step:
 
 ## File Locations
 
-- `scripts/publish/test_pypi.py` — TestPyPI integration test
+- `infrastructure/publishing/pypi_release.py` — TestPyPI build/upload helpers (imported by script below)
+- `scripts/publish/test_pypi.py` — TestPyPI integration test orchestrator
 - `scripts/publish/verify_install.py` — Post-publish verification
 - `scripts/publish/README.md` — Human-readable usage guide
 

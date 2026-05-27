@@ -122,8 +122,8 @@ Thin wrapper (~65 lines) — re-exports and `main()` only. **All API signatures 
 
 | Concern | Module |
 | --- | --- |
-| Convergence experiments, stability, benchmarking | [`src/analysis.py`](../src/analysis.py) |
-| Matplotlib figures | [`src/figures.py`](../src/figures.py) |
+| Convergence experiments, stability, benchmarking | [`src/analysis/`](../src/analysis/) |
+| Matplotlib figures | [`src/figures/`](../src/figures/) |
 | Core optimizer | [`src/optimizer.py`](../src/optimizer.py) |
 | Dashboard HTML | [`src/dashboard.py`](../src/dashboard.py) via `build_dashboard.py` |
 

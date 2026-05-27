@@ -109,7 +109,7 @@ file in this project):
 
 | Class | Covers |
 |---|---|
-| `TestRunProsePipeline` | end-to-end `src/pipeline.py::run_prose_pipeline` calls, JSON/MD artifact emission |
+| `TestRunProsePipeline` | end-to-end `src/pipeline/__init__.py::run_prose_pipeline` calls, JSON/MD artifact emission |
 | `TestOptionalChecks` | `prose.require_h1_per_section` / `prose.forbid_skipped_levels` opt-out paths |
 | `TestCheckUnits` | every `_check_<name>` function in isolation — `_check_grade_level`, `_check_citation_density`, `_check_no_skipped_levels`, `_check_h1_per_file`, `_check_bibliography` |
 | `TestCitationExtractionViaPipeline` | citation-key extraction wired through `analyze_manuscript` |

@@ -1,0 +1,18 @@
+report:
+  title: "Sheaf Track Coverage"
+  show_imrad_headers: true
+  show_summary_stats: true
+  show_track_legend: true
+  heatmap_figure_path: "../output/figures/sheaf_coverage_heatmap.png"
+
+heatmap:
+  indent_prefix: "  "
+  group_separator: true
+  row_height: 0.42
+  dpi: 160
+  show_row_coverage_pct: true
+
+colors:
+  present: "#111827"
+  absent: "#ffffff"
+  missing: "#94a3b8"

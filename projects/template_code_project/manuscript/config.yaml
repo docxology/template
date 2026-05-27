@@ -15,19 +15,15 @@ paper:
 
 # Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
 authors:
-  - name: "Research Template Author"
-    orcid: "0000-0000-0000-1234"
-    email: "author@research-template.org"
-    affiliation: "Research Template Institute"
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
     corresponding: true
-  - name: "Co-Author"
-    orcid: "0000-0000-0000-5678"
-    email: "coauthor@research-template.org"
-    affiliation: "Department of Computational Mathematics"
 
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
-  doi: "" # Written back by scripts/publish_project_release.py after Zenodo mint; cleared after release smoke
+  doi: "10.5281/zenodo.20417137" # Written back by scripts/publish_project_release.py after Zenodo mint; cleared after release smoke
   github_repository: "docxology/template_code_project"
   transmission_bookends:
     enabled: true

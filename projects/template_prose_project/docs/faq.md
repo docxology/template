@@ -19,7 +19,7 @@ configuration file.
 The thin-orchestrator pattern still applies, just at a different level:
 
 - `scripts/*.py` are CLI shims around `src/*.py`.
-- `src/pipeline.py` is the single point of contact with infrastructure
+- `src/pipeline/` is the single point of contact with infrastructure
   operations.
 - `src/figures.py`, `src/report.py`, `src/manuscript_variables.py`,
   `src/config.py` are pure: matplotlib + stdlib only, plus type-only
@@ -41,7 +41,7 @@ Files in `scripts/` are CLI shims:
 
 If you find yourself writing analysis logic — regex over manuscript prose,
 threshold evaluation, BibTeX parsing — inside `scripts/`, stop. Move it
-to a `_check_<name>` function in `src/pipeline.py` and write a test for it.
+to a `_check_<name>` function in `src/pipeline/checks.py` and write a test for it.
 
 ### Why are mocks forbidden?
 
@@ -158,7 +158,7 @@ The promotion step is `scripts/05_copy_outputs.py --project template_prose_proje
 
 Remove the call. `src/figures.py` may import the *type* `ManuscriptReport`
 for type hints, but it must not call any analysis function. Pre-compute
-the report in `src/pipeline.py` and pass the resulting `ManuscriptReport`
+the report in `src/pipeline/` and pass the resulting `ManuscriptReport`
 into the figure renderer. The boundary is documented in
 [`style_guide.md`](style_guide.md) Rule 2.
 
@@ -215,7 +215,7 @@ Adding a check is a four-step process documented in
 `projects/template_prose_project/AGENTS.md` ("Extending"):
 
 1. Add the field to `src/config.py::ProseAnalysisConfig`.
-2. Add a `_check_<name>` function in `src/pipeline.py`.
+2. Add a `_check_<name>` function in `src/pipeline/checks.py`.
 3. Append it to the `checks` list inside `run_prose_pipeline`.
 4. Add a test in `tests/test_pipeline.py` covering both `passed=True` and
    `passed=False` outcomes.

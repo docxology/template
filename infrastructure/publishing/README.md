@@ -2,6 +2,9 @@
 
 Tools for academic publishing, citations, and platform integration.
 
+The Python API exposes BibTeX, APA, and MLA citation helpers. The
+`generate-citation` CLI subcommand currently exposes BibTeX only.
+
 ## Quick Start
 
 ```python
@@ -94,7 +97,7 @@ graph TD
 - `generate_citation_bibtex()` - BibTeX format
 - `generate_citation_apa()` - APA format
 - `generate_citation_mla()` - MLA format
-- `generate_citations_markdown()` - All formats with markdown
+- `generate_citations_markdown()` - BibTeX, APA, and MLA markdown through the Python API
 
 ### Publication Checklists
 - `create_submission_checklist()` - Journal/conference submission

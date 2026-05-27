@@ -12,7 +12,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | --- | --- |
 | `metadata.py` / `_metadata_*.py` | Publication metadata extraction and reporting |
 | `models.py` | `PublicationMetadata`, `AuthorRecord`, `CitationStyle` |
-| `citations.py` | BibTeX, APA, MLA citation generation |
+| `citations.py` | Citation helpers: BibTeX CLI target plus APA/MLA library helpers |
 | `package.py` | Publication package, checklist, readiness re-exports |
 | `metadata_from_config.py` | `publication_metadata_from_config`, `load_publication_release_context` — single-parse metadata + deposit context + prior DOI from `config.yaml` |
 | `abstract_plaintext.py` | Plaintext abstract + cross-link footer for Zenodo/GitHub (`build_deposit_description`, `build_github_release_body`) |

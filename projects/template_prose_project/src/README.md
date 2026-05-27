@@ -5,7 +5,7 @@ Domain orchestration: pure functions over `infrastructure/prose/` and
 
 ```mermaid
 flowchart LR
-    CFG[config.py] --> PIPE[pipeline.py<br/>run_prose_pipeline]
+    CFG[config.py] --> PIPE[pipeline/<br/>run_prose_pipeline]
     PIPE --> REP[report.py<br/>write_review_report]
     PIPE -. ManuscriptReport .-> FIG[figures.py]
     PIPE -. ManuscriptReport .-> MV[manuscript_variables.py]
@@ -39,9 +39,9 @@ write_review_report(
 | Module | Public exports |
 |---|---|
 | `config.py` | `ProjectConfig`, `ProseAnalysisConfig`, `BibliographyConfig`, `ReportConfig`, `load_project_config`. |
-| `pipeline.py` | `run_prose_pipeline`, `ProseRunArtifacts`, `CheckResult`. |
-| `figures.py` | `plot_section_word_counts`, `plot_readability_radar`, `plot_citation_density`, `generate_all_figures`, `load_manuscript_report`. |
-| `manuscript_variables.py` | `ManuscriptVariables`, `compute_variables`, `substitute_in_text`, `write_variables`. |
+| `pipeline/` | `run_prose_pipeline`, `ProseRunArtifacts`, `CheckResult`, and configured check functions. |
+| `figures.py` | `plot_section_word_counts`, `plot_readability_radar`, `plot_citation_density`, `generate_all_figures`. |
+| `manuscript_variables.py` | `ManuscriptVariables`, `load_report_payload`, `compute_variables`, `substitute_in_text`, `write_variables`. |
 | `report.py` | `write_review_report`. |
 
 See [AGENTS.md](AGENTS.md) for invariants and the editing checklist.

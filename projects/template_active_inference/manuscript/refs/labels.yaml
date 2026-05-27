@@ -1,0 +1,15 @@
+figures:
+  ising_mi_curve:
+    path: output/figures/ising_mi_curve.png
+    caption: Closed-form vs empirical Ising mutual information across the lambda sweep.
+    short: Ising MI curve
+  si_tmaze_actions:
+    path: output/figures/si_tmaze_actions.png
+    caption: Action trace from the pymdp sophisticated-inference T-maze rollout.
+    short: SI T-maze actions
+  free_energy_curve:
+    path: output/figures/free_energy_curve.png
+    caption: Free energy vs coupling strength for the Bernoulli toy.
+    short: Free energy curve
+
+equations: {}

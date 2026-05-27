@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 
@@ -13,6 +12,7 @@ from .diagnostics_intervals import (
     bootstrap_intervals,
     paired_comparison_report,
 )
+from .json_coerce import mapping_list
 from .diagnostics_records import (
     _candidate_predictions,
     _candidate_records,
@@ -110,7 +110,7 @@ def calibration_report(
     records_payload = records_payload or prediction_records(project_root, result)
     records = [
         row
-        for row in _mapping_list(records_payload.get("records"))
+        for row in mapping_list(records_payload.get("records"))
         if row.get("candidate_id") == result.accepted_candidate_id
     ]
     if not records:
@@ -168,7 +168,7 @@ def calibration_bin_intervals(
     """Return Wilson intervals for calibration-bin empirical accuracies."""
     payload = calibration or calibration_report(project_root, result)
     rows: list[dict[str, int | float]] = []
-    for row in _mapping_list(payload.get("bins")):
+    for row in mapping_list(payload.get("bins")):
         count = int(row.get("count", 0))
         accuracy = _float_value(row.get("accuracy"))
         successes = int(round(accuracy * count)) if count else 0
@@ -226,7 +226,7 @@ def probability_diagnostics(
     records_payload = records_payload or prediction_records(project_root, result)
     records = [
         row
-        for row in _mapping_list(records_payload.get("records"))
+        for row in mapping_list(records_payload.get("records"))
         if row.get("candidate_id") == result.accepted_candidate_id
     ]
     probabilities = np.asarray([row["probabilities"] for row in records], dtype=float)
@@ -537,16 +537,8 @@ def _coverage_curve(
     return rows
 
 
-def _mapping(value: object) -> dict[str, Any]:
-    return value if isinstance(value, dict) else {}
-
-
 def _float_value(value: object) -> float:
     return float(value) if isinstance(value, int | float | str) else 0.0
-
-
-def _mapping_list(value: object) -> list[dict[str, Any]]:
-    return [row for row in value if isinstance(row, dict)] if isinstance(value, list) else []
 
 
 __all__ = [
@@ -571,7 +563,5 @@ __all__ = [
     "_top_k_accuracy",
     "_cohen_kappa",
     "_coverage_curve",
-    "_mapping",
     "_float_value",
-    "_mapping_list",
 ]

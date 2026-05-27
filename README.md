@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/<project>/pdf/`. Logs in `output/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars: `template_autoresearch_project`, `template_code_project`, `template_prose_project`. The search exemplar is an optional add-on under `projects_archive/template_search_project/`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars: `template_active_inference`, `template_autoresearch_project`, `template_code_project`, `template_prose_project`. The search exemplar is an optional add-on under `projects_archive/template_search_project/`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -115,6 +115,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 
 | Exemplar | Shape | Tests | Coverage |
 |---|---|---|---|
+| [`projects/template_active_inference/`](projects/template_active_inference/) | Active Inference multi-track (analytical + pymdp + sheaf manuscript + Lean/GNN/ontology) | see canonical facts | see canonical facts |
 | [`projects/template_autoresearch_project/`](projects/template_autoresearch_project/) | AutoResearch-centric (deterministic plan/evidence/claim/artifact/readiness loop) | see canonical facts | see canonical facts |
 | [`projects/template_code_project/`](projects/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
 | [`projects/template_prose_project/`](projects/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | see canonical facts | see canonical facts |

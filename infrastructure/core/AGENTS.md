@@ -30,6 +30,11 @@ The Core module provides fundamental foundation utilities used across the entire
 - Environment variable export
 - Translation language configuration
 
+**text_slug.py**
+- Shared ASCII slug helpers: `slugify_token`, `extract_surname`, `title_key_word`, `pascal_case_token`
+- Used by citation-key generation (`infrastructure/reference/citation/converter.py`) and deposit upload filenames (`infrastructure/publishing/deposit_filename.py`)
+- `TITLE_STOP_WORDS` — stop-word set for title tokenization
+
 **credentials.py**
 - Credential management from .env and YAML config files
 - Environment variable loading

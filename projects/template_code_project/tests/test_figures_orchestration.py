@@ -54,8 +54,18 @@ def figure_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 class TestFiguresOrchestration:
     def test_convergence_plot_uses_objective_history(self, figure_root: Path):
         cfg = load_experiment_config(PROJECT_ROOT)
-        plot_path = generate_convergence_plot(_sample_results(cfg), config=cfg)
+        results = _sample_results(cfg)
+        _, f_star = quadratic_optimum(cfg.A_array(), cfg.b_array())
+        plot_path = generate_convergence_plot(results, config=cfg)
         assert plot_path.exists()
+
+        companion = figure_root / "output" / "data" / "convergence_plot.json"
+        assert companion.exists()
+        payload = json.loads(companion.read_text(encoding="utf-8"))
+        stable = payload["0.1"]
+        final_objective = stable["objectives"][-1]
+        assert isinstance(final_objective, (int, float))
+        assert final_objective == pytest.approx(f_star, rel=1e-6, abs=1e-6)
 
     def test_rate_plot_errors_match_optimum(self, figure_root: Path):
         cfg = ExperimentConfig(

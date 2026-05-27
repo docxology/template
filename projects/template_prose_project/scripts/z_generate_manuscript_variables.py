@@ -31,7 +31,7 @@ from infrastructure.core.logging.utils import get_logger  # noqa: E402
 from src.config import load_project_config  # noqa: E402
 from src.manuscript_variables import (  # noqa: E402
     compute_variables,
-    load_manuscript_report,
+    load_report_payload,
     write_resolved_manuscript_tree,
     write_variables,
 )
@@ -67,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     config = load_project_config(config_path)
-    payload = load_manuscript_report(report_path)
+    payload = load_report_payload(report_path)
     variables = compute_variables(
         config_title=config.title,
         manuscript_report=payload,

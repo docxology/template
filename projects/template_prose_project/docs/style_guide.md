@@ -68,18 +68,18 @@ types, pure helpers, and operations as needed; logic must stay in
 | File | May import from infrastructure | Must NOT do |
 |---|---|---|
 | `src/config.py` | (does not currently import infrastructure) | re-implement YAML parsing or schema validation |
-| `src/pipeline.py` | `infrastructure.prose.{ManuscriptReport, analyze_manuscript, write_report}`, `infrastructure.reference.citation.parse_bibfile` | I/O outside the documented `write_outputs=True` branch |
-| `src/figures.py` | `infrastructure.prose.ManuscriptReport` (top-level) **and** deep `infrastructure.prose.report.*` / `infrastructure.prose.analysis.*` inside `load_manuscript_report` | re-implement readability/structure analysis; figure code may rehydrate types from JSON, never recompute them |
+| `src/pipeline/` | `infrastructure.prose.{ManuscriptReport, analyze_manuscript, write_report}`, `infrastructure.reference.citation.parse_bibfile` | I/O outside the documented `write_outputs=True` branch |
+| `src/figures.py` | `infrastructure.prose.ManuscriptReport` (top-level type only) | re-implement readability/structure analysis; plot over a typed report, never recompute metrics |
 | `src/report.py` | `infrastructure.prose.{ManuscriptReport, render_outline}` (type + pure helper) | `analyze_*`, `parse_*`, `write_*` |
-| `src/manuscript_variables.py` | `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` for the {{TOKEN}} substitution path | re-implement substitution; reads JSON written by `pipeline.py`, delegates writes to infrastructure |
+| `src/manuscript_variables.py` | `load_report_payload` (raw JSON dict) and `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` for the {{TOKEN}} substitution path | re-implement substitution; reads JSON written by `pipeline.py`, delegates writes to infrastructure |
+| `scripts/y_generate_prose_figures.py` | `infrastructure.prose.report.load_report_json` → typed `ManuscriptReport` for `src/figures.py` | inline analysis logic |
 | `scripts/run_prose_pipeline.py` | `src.pipeline`, `src.config`, `src.report` | inline analysis logic, regex over prose, BibTeX parsing |
-| `scripts/y_generate_prose_figures.py` | `src.figures` | inline analysis logic |
-| `scripts/z_generate_manuscript_variables.py` | `src.manuscript_variables` | inline analysis logic |
+| `scripts/z_generate_manuscript_variables.py` | `src.manuscript_variables` (`load_report_payload`) | inline analysis logic |
 | `tests/test_*.py` | `src.*`, `infrastructure.*` (real) | `unittest.mock.*` |
 
 **Verify the boundary** (no analysis re-implemented under `src/`):
 ```bash
-# Operations originate from src/pipeline.py and src/manuscript_variables.py only;
+# Operations originate from src/pipeline/ and src/manuscript_variables.py only;
 # figures.py loads infrastructure types from JSON but does not call analyze_*/parse_*/write_*.
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
     projects/template_prose_project/src/figures.py \
@@ -98,7 +98,7 @@ or variable derivation that already exists in `src/`.
 
 **Forbidden** — re-implementing a check inside a script:
 ```python
-# BAD — check evaluation belongs in src/pipeline.py, not in run_prose_pipeline.py
+# BAD — check evaluation belongs in src/pipeline/, not in run_prose_pipeline.py
 from infrastructure.prose import analyze_manuscript
 
 def main():
@@ -122,7 +122,7 @@ def main():
 
 **Decision rule**: if a line of code in `scripts/` evaluates a manuscript
 property (heading hierarchy, citation density, FKGL band), move that logic
-to a `_check_<name>` function in `src/pipeline.py` and write a test for it.
+to a `_check_<name>` function in `src/pipeline/checks.py` and write a test for it.
 
 ---
 
@@ -137,9 +137,9 @@ agents must be able to find the referenced code.
 Our pipeline computes readability and validates citations automatically.
 ```
 
-**Correct (concrete, anchored to `src/pipeline.py`)**:
+**Correct (concrete, anchored to `src/pipeline/`)**:
 ```markdown
-`projects/template_prose_project/src/pipeline.py::run_prose_pipeline` computes
+`projects/template_prose_project/src/pipeline/__init__.py::run_prose_pipeline` computes
 readability via `infrastructure.prose.analyze_manuscript` and validates
 citation keys against `manuscript/references.bib` parsed by
 `infrastructure.reference.citation.parse_bibfile`. The thresholds applied
@@ -153,7 +153,7 @@ Two additional BAD/GOOD pairs:
 | BAD (vague) | GOOD (concrete) |
 |---|---|
 | "The manuscript reads at a college level." | "The manuscript's weighted Flesch-Kincaid Grade Level is `{{AVG_GRADE_LEVEL}}`, falling inside the configured band `[prose.target_grade_level_min, prose.target_grade_level_max]` defined in `manuscript/config.yaml`." |
-| "We validated the bibliography." | "`_check_bibliography` in `src/pipeline.py` confirmed that all `{{CITATION_COUNT}}` cited keys appear in `manuscript/references.bib`; the `bibliography_consistency` entry of `output/checks.json` records `passed: true`." |
+| "We validated the bibliography." | "`_check_bibliography` in `src/pipeline/checks.py` confirmed that all `{{CITATION_COUNT}}` cited keys appear in `manuscript/references.bib`; the `bibliography_consistency` entry of `output/checks.json` records `passed: true`." |
 
 ---
 
@@ -168,7 +168,7 @@ multiple sibling exemplars.
 
 | Short Name | Absolute Path (from repo root) |
 |---|---|
-| pipeline orchestrator | `projects/template_prose_project/src/pipeline.py` |
+| pipeline orchestrator | `projects/template_prose_project/src/pipeline/` |
 | config loader | `projects/template_prose_project/src/config.py` |
 | figures module | `projects/template_prose_project/src/figures.py` |
 | variables module | `projects/template_prose_project/src/manuscript_variables.py` |
@@ -195,7 +195,7 @@ output/figures/    # Relative to what?
 
 **Correct (absolute from repo root)**:
 ```
-projects/template_prose_project/src/pipeline.py
+projects/template_prose_project/src/pipeline/
 projects/template_prose_project/output/figures/section_word_counts.png
 ```
 
@@ -203,7 +203,7 @@ projects/template_prose_project/output/figures/section_word_counts.png
 
 ## 6. Dataclass and Type Hint Standards
 
-Follow the patterns established in `src/config.py` and `src/pipeline.py`:
+Follow the patterns established in `src/config.py` and `src/pipeline/`:
 
 - Use Python 3.10+ union syntax: `Path | None`, not `Optional[Path]`.
 - Configuration dataclasses (`ProseAnalysisConfig`, `BibliographyConfig`, `ReportConfig`, `ProjectConfig`) are **mutable** because YAML parsing populates them after construction. `ManuscriptVariables` is `frozen=True` because it represents a fully-resolved substitution payload. The rule of thumb: freeze immutable result-types; leave config containers mutable.
@@ -249,7 +249,7 @@ raise ValueError("Config invalid")
 raise FileNotFoundError("File not found")
 ```
 
-**Correct** (following the pattern in `src/config.py` and `src/pipeline.py`):
+**Correct** (following the pattern in `src/config.py` and `src/pipeline/`):
 ```python
 raise FileNotFoundError(f"manuscript_dir does not exist: {manuscript_dir}")
 raise ValueError(

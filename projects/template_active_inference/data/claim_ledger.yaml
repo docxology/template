@@ -1,0 +1,49 @@
+claims:
+  - id: sheaf_registry
+    statement: Sheaf track registry is present and drives compose order.
+    path: manuscript/sheaf/tracks.yaml
+  - id: sheaf_manifest
+    statement: IMRAD section manifest binds track fragments for composition.
+    path: manuscript/sheaf/manifest.yaml
+  - id: sheaf_coverage_config
+    statement: Coverage report and heatmap settings are configurable.
+    path: manuscript/sheaf/coverage.yaml
+  - id: sheaf_coverage_matrix
+    statement: Coverage matrix JSON reflects manifest track bindings with IMRAD metadata.
+    path: output/data/sheaf_coverage_matrix.json
+  - id: sheaf_coverage_heatmap
+    statement: B/W/G coverage heatmap PNG is generated for the first manuscript page.
+    path: output/figures/sheaf_coverage_heatmap.png
+  - id: coverage_no_gray
+    statement: Coverage matrix JSON has zero gray cells on a clean tree.
+    path: output/data/sheaf_coverage_matrix.json
+  - id: composed_intro_motivation
+    statement: Composed IMRAD introduction subsection exists for PDF pipeline.
+    path: manuscript/02_intro_motivation.md
+  - id: composed_methods_analytical
+    statement: Composed Methods analytical subsection exists for PDF pipeline.
+    path: manuscript/05_methods_analytical.md
+  - id: composed_results_mi
+    statement: Composed Results MI sweep subsection exists for PDF pipeline.
+    path: manuscript/10_results_mi_sweep.md
+  - id: composed_appendix_full_sheaf
+    statement: Appendix binds and composes appendix_sheaf_track_count fragment track types from the live manifest.
+    path: manuscript/16_appendix_full_sheaf.md
+  - id: si_tmaze_summary
+    statement: pymdp T-maze summary JSON records measured rollout statistics.
+    path: output/data/si_tmaze_summary.json
+  - id: si_tmaze_trace
+    statement: pymdp T-maze trace JSON records per-step beliefs and actions.
+    path: output/data/si_tmaze_trace.json
+  - id: si_belief_entropy_figure
+    statement: Belief entropy curve figure is generated from the SI trace.
+    path: output/figures/si_belief_entropy_curve.png
+  - id: composed_discussion
+    statement: Discussion outlook section binds simulation and ontology tracks.
+    path: manuscript/15_discussion_outlook.md
+  - id: sheaf_layers_overview
+    statement: Main-body sheaf layers overview figure combines registry stack and binding heatmap.
+    path: output/figures/sheaf_layers_overview.png
+  - id: composed_methods_sheaf
+    statement: Methods sheaf section binds figure and generated layer tables in the main body.
+    path: manuscript/08_methods_sheaf.md

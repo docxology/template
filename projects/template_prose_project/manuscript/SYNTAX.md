@@ -19,7 +19,7 @@ Pipeline behaviour:
 * `bibliography.fail_on_missing: true` — a `[@key]` whose key is not in `references.bib` makes the `bibliography_consistency` check fail.
 * `bibliography.fail_on_unused: false` — bib entries with no citations only produce warnings.
 
-The [`citation_density_above_floor`](../src/pipeline.py) check (`_check_citation_density` in `src/pipeline.py`) enforces ≥ `prose.citation_density_min_per_1000` citations per 1000 words.
+The [`citation_density_above_floor`](../src/pipeline/checks.py) check (`_check_citation_density` in `src/pipeline/checks.py`) enforces ≥ `prose.citation_density_min_per_1000` citations per 1000 words.
 
 ## Section labels
 

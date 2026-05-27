@@ -41,8 +41,8 @@ Live test count and coverage: [`docs/_generated/canonical_facts.md`](../../../do
 graph TD
     OPT[test_optimizer.py] --> MATH[src/optimizer.py]
     CFG[test_experiment_config.py] --> EC[src/experiment_config.py]
-    INT[test_analysis_integration.py] --> ANA[src/analysis.py]
-    FIG[test_figures_orchestration.py] --> FIGS[src/figures.py]
+    INT[test_analysis_integration.py] --> ANA[src/analysis/]
+    FIG[test_figures_orchestration.py] --> FIGS[src/figures/]
     COV[test_analysis_coverage.py] --> ANA
     TINV[test_invariants.py] --> INVM[src/invariants.py]
     DASH[test_invariants_and_dashboard.py] --> DB[src/dashboard.py]

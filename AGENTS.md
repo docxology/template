@@ -56,32 +56,13 @@ Generic, Layer-1 facts for working in this repository.
 
 ## Confidentiality invariant (this is a PUBLIC repo)
 
-`.gitignore` ignores `projects/*` and negates **only** `projects/template_autoresearch_project/`, `projects/template_code_project/`, and `projects/template_prose_project/` (plus the repo-level `projects/*.md` docs). Those public canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in a **separate, external private repository** whose location is configured with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; `run.sh`/`infrastructure.orchestration` sync that repo's `active/*` into `projects/*`, `passive/*` into `projects_in_progress/*`, and `archive/*` into `projects_archive/*` as symlinks before discovery. Only `projects/*` is discovered/rendered by default.
+`.gitignore` ignores `projects/*` and negates **only** `projects/template_active_inference/`, `projects/template_autoresearch_project/`, `projects/template_code_project/`, and `projects/template_prose_project/` (plus the repo-level `projects/*.md` docs). Those public canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in a **separate, external private repository** whose location is configured with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; `run.sh`/`infrastructure.orchestration` sync that repo's `active/*` into `projects/*`, `passive/*` into `projects_in_progress/*`, and `archive/*` into `projects_archive/*` as symlinks before discovery. Only `projects/*` is discovered/rendered by default.
 
 Every non-template project visible under `projects/` — rotating research, client/confidential work, symlinked active work, and the optional `template_search_project` literature-search exemplar — is **local-only and must never be committed**. This is enforced, not conventional: `scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any project path in docs.
 
 Operational gotchas: running **all** `projects/*/tests/` in **one** pytest process fails when projects each ship `tests/conftest` under the `tests.conftest` package name — run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage), or follow `.github/workflows/ci.yml`. `resolve_project_root` prefers `projects/<name>/` when that tree has `src/`, `tests/`, `scripts/`, and `manuscript/`; otherwise the same name under `projects_in_progress/`.
 
 **Agent skills hub:** [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) (`template-workflows`); regenerate via `uv run python -m infrastructure.skills write`.
-
-## Learned User Preferences
-
-- Delegate `thermo-nuclear-code-quality-review` for comprehensive audits covering maintainability, documentation accuracy, and manuscript claim binding—not code structure alone.
-- When educational or factual manuscript content is in scope, pair that review with the Research skill (Standard mode by default) to verify claims and links.
-- On "implement the plan" requests: execute the attached plan end-to-end; do not edit the plan file; advance existing todos (`in_progress` → `completed`) without recreating them.
-- Treat "proceed with all", "do it all", and "everything in scope" as authorization to complete full remediation without further confirmation prompts.
-- Push full pipeline runs and evidence outputs to the private projects repository only when the user explicitly approves.
-- Run repo-wide tests and deep README/AGENTS.md contract checks before declaring work complete on exemplars or promoted projects.
-- Create git commits only when the user explicitly asks.
-- Prefer measured counts from [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) over invented statistics in documentation.
-
-## Learned Workspace Facts
-
-- Symlinked rotating work (educational, agent-framework, and formal-methods research trees) appears under `projects/` or `projects_in_progress/`; specific names rotate and are never hard-coded in docs.
-- Private manuscript projects symlinked under `projects_in_progress/` are audited for historical claims, figures, and registry-backed variables.
-- `template_autoresearch_project` is the primary public AutoResearch exemplar (figure registry, phase ledger, diagnostics, gate negative controls).
-- Reorganizing `infrastructure/publishing` with a Zenodo API-focused subfolder is an active direction aligned with [developers.zenodo.org](https://developers.zenodo.org/).
-- Continual-learning memory updates use `.cursor/hooks/state/continual-learning-index.json` for incremental transcript processing.
 
 ## 📋 Table of Contents
 
@@ -273,9 +254,10 @@ Each directory contains documentation for easy navigation:
 | --------- | --------- | --------- | ------- |
 | [`projects/template_code_project/`](projects/template_code_project/) | [AGENTS.md](projects/template_code_project/AGENTS.md) | [README.md](projects/template_code_project/README.md) | Code-centric exemplar (canonical, always present) |
 | [`projects/template_prose_project/`](projects/template_prose_project/) | [AGENTS.md](projects/template_prose_project/AGENTS.md) | [README.md](projects/template_prose_project/README.md) | Prose-centric exemplar (canonical, always present) |
+| [`projects/template_active_inference/`](projects/template_active_inference/) | [AGENTS.md](projects/template_active_inference/AGENTS.md) | [README.md](projects/template_active_inference/README.md) | Active Inference multi-track exemplar (canonical, always present) |
 | [`projects/template_autoresearch_project/`](projects/template_autoresearch_project/) | [AGENTS.md](projects/template_autoresearch_project/AGENTS.md) | [README.md](projects/template_autoresearch_project/README.md) | AutoResearch exemplar (canonical, always present) |
 | [`projects_archive/template_search_project/`](projects_archive/template_search_project/) | [AGENTS.md](projects_archive/template_search_project/AGENTS.md) | [README.md](projects_archive/template_search_project/README.md) | Literature-search exemplar — **local-only, NOT git-tracked**; copy under `projects/` locally to run, never commit |
-| Rotating projects (e.g. `fep_lean`, `actinf_policy_entanglement_lean`) | see project tree when checked out under `projects/` | see project tree when checked out under `projects/` | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current roster; rotates between `projects_in_progress/` and `projects_archive/` |
+| Rotating projects (e.g. `actinf_policy_entanglement_lean`, private symlinked workspaces) | see project tree when checked out under `projects/` | see project tree when checked out under `projects/` | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current roster; rotates between `projects_in_progress/` and `projects_archive/` |
 
 **In-progress projects** live under [`projects_in_progress/`](projects_in_progress/) and are not executed by the pipeline until promoted to `projects/`. The roster rotates every checkout, so it is deliberately **not** hard-coded here (cf. the rotation rule above — hard-coding rotating project paths is the recurring staleness defect this guidance prevents): run `ls projects_in_progress/` for the live set, and see [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for the active `projects/` roster.
 
@@ -1055,7 +1037,7 @@ Automated publishing to academic platforms.
 
 - `core.py` - Publication metadata extraction, DOI validation, citation generation
 - `api.py` - Platform API clients (Zenodo, arXiv, GitHub)
-- `citations.py` - Citation format generation (BibTeX, APA, MLA)
+- `citations.py` - Citation helpers (BibTeX CLI target plus APA/MLA library helpers)
 - `metadata.py` - Publication metadata management
 - `platforms.py` - Platform-specific integration logic
 
@@ -1081,7 +1063,8 @@ from infrastructure.publishing import (
 metadata = extract_publication_metadata([Path("manuscript.md")])
 
 # Publish to Zenodo
-doi = publish_to_zenodo(metadata, files, token)
+result = publish_to_zenodo(metadata, files, token)
+print(result.doi)
 
 # Create GitHub release
 release = create_github_release(metadata, files, token)

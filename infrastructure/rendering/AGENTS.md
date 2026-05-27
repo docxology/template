@@ -520,7 +520,22 @@ def ensure_setmathfont(preamble: str, math_font: str = "latinmodern-math.otf") -
     preamble string unchanged in those cases."""
 ```
 
-### prevalidate_source_markdown (function — `_pdf_combined_renderer.py`)
+### Combined PDF helpers (`_pdf_combined_*.py`)
+
+`PDFRenderer.render_combined()` delegates to focused modules (re-exported from
+`_pdf_combined_renderer.py` for backward compatibility):
+
+| Module | Role |
+| --- | --- |
+| `_pdf_combined_markdown.py` | Mermaid, figure paths, dotted-key `manuscript_vars.yaml` substitution (`{{maturity.real}}`, etc.) — not UPPER_SNAKE project tokens (see `manuscript_injection.py`) |
+| `_pdf_combined_pandoc.py` | Pandoc CLI construction and subprocess execution |
+| `_pdf_combined_latex.py` | Starred-heading hyperref repair, post-Pandoc LaTeX normalisation |
+| `_pdf_combined_preamble.py` | `preamble.md` + title page injection |
+| `_pdf_combined_bibliography.py` | Multi-`.bib` discovery and `\bibliography{}` placement |
+| `_pdf_combined_prevalidate.py` | Figure reference checks, markdown/citation hard gate |
+| `_pdf_combined_transmission.py` | Transmission bookend TOC relocation helpers |
+
+### prevalidate_source_markdown (function — `_pdf_combined_prevalidate.py`)
 ```python
 def prevalidate_source_markdown(
     source: Path | list[Path] | list[str],
@@ -544,7 +559,7 @@ def prevalidate_source_markdown(
     """
 ```
 
-### fix_starred_section_nameref_labels (function — `_pdf_combined_renderer.py`)
+### fix_starred_section_nameref_labels (function — `_pdf_combined_latex.py`)
 ```python
 def fix_starred_section_nameref_labels(tex_content: str) -> tuple[str, int]:
     """Repair hyperref anchors and ``\\nameref`` titles for starred headings.
@@ -825,7 +840,7 @@ The rendering system automatically processes citations in your manuscript using 
 
 ### Citation Workflow
 
-1. **Markdown Processing**: Pandoc converts `[@key]` Markdown citations to LaTeX `\cite{}`/`\citep{}`/`\citet{}` commands using `--natbib` (see `_pdf_combined_renderer.py`).
+1. **Markdown Processing**: Pandoc converts `[@key]` Markdown citations to LaTeX `\cite{}`/`\citep{}`/`\citet{}` commands using `--natbib` (see `_pdf_combined_pandoc.py`).
 2. **Cross-references**: The `pandoc-crossref` filter resolves `[@fig:label]`, `[@tbl:label]`, `[@eq:label]`, `[@sec:label]` to numbered LaTeX cross-references.
 3. **Bibliography Processing**: BibTeX runs to match citations with `references.bib` entries.
 4. **Reference Resolution**: Additional LaTeX passes resolve all citation and cross-reference numbers.

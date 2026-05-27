@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from src.artifact_loader import LoopArtifacts
 from src.manuscript_tables import build_table_specs, variable_provenance_table
 
 
@@ -245,31 +246,37 @@ def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() ->
     }
 
     tables = build_table_specs(
-        registry,
-        candidate_ledger,
-        review_decisions,
-        benchmark_scores,
-        artifact_manifest,
-        classification,
-        candidate_intervals,
-        class_balance,
-        calibration,
-        calibration_intervals,
-        robustness,
-        probability,
-        bootstrap,
-        paired,
-        statistical,
-        training,
-        rank_stability,
-        candidate_selection,
-        diagnostic_boundary,
-        phase_ledger,
-        figure_quality,
-        security_profile,
-        security_threat_model,
-        security_inventory,
-        security_attestation,
+        LoopArtifacts(
+            loop={},
+            ml={},
+            candidate_ledger=candidate_ledger,
+            review_decisions=review_decisions,
+            benchmark_scores=benchmark_scores,
+            artifact_manifest=artifact_manifest,
+            figure_registry=registry,
+            classification_diagnostics=classification,
+            candidate_intervals=candidate_intervals,
+            class_balance=class_balance,
+            calibration_report=calibration,
+            calibration_bin_intervals=calibration_intervals,
+            robustness_report=robustness,
+            probability_diagnostics=probability,
+            bootstrap_intervals=bootstrap,
+            paired_comparison=paired,
+            statistical_summary=statistical,
+            training_diagnostics=training,
+            candidate_rank_stability=rank_stability,
+            candidate_selection_audit=candidate_selection,
+            diagnostic_boundary=diagnostic_boundary,
+            phase_ledger=phase_ledger,
+            figure_quality=figure_quality,
+            security_profile=security_profile,
+            security_threat_model=security_threat_model,
+            security_inventory=security_inventory,
+            security_attestation=security_attestation,
+            schema_manifest={},
+            research_object_manifest={},
+        )
     )
 
     assert set(tables) >= {"FIGURE_METHOD_TABLE", "CANDIDATE_SELECTION_AUDIT_TABLE", "SECURITY_THREAT_MODEL_TABLE"}

@@ -714,12 +714,12 @@ class TestDissemination:
             "creators": [{"name": "Test Author"}],
         }
 
-        deposition_id = client.create_deposition(metadata)
-        assert deposition_id == "12345"
+        deposition = client.create_deposition(metadata)
+        assert deposition.deposition_id == "12345"
 
-        client.upload_file("bucket123", str(file_path))
+        client.upload_file(deposition.bucket_url, str(file_path))
 
-        doi = client.publish(deposition_id)
+        doi = client.publish(deposition.deposition_id)
         assert doi == "10.5281/zenodo.12345"
 
     def test_prepare_arxiv_submission(self, tmp_path):

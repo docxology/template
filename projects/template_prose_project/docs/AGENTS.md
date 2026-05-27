@@ -40,7 +40,7 @@ documentation, determinism, the style/syntax-guide split, and the
 disposability of `output/`.
 
 **Architecture isolation.** The `src/` boundary is fine-grained for this
-project. `src/pipeline.py` is the **only** module that performs
+project. `src/pipeline/` is the **only** module that performs
 infrastructure operations (`analyze_manuscript`, `parse_bibfile`,
 `write_report`); other `src/` modules may import infrastructure *types*
 (`ManuscriptReport`, `render_outline`) but not call analysis or I/O
@@ -56,7 +56,7 @@ suite runs well above the 90% gate.
 
 **Show-not-tell.** Manuscript references must use explicit file paths and
 function names, not vague descriptions. A reader of `02_methodology.md`
-should be able to open `src/pipeline.py` and find the exact check being
+should be able to open `src/pipeline/` and find the exact check being
 discussed within ten seconds.
 
 **Every diagram must be Mermaid.** No ASCII art (project-wide rule).
@@ -118,7 +118,7 @@ viable project.
 
 | Path | Status | Enforcing gate / source of truth |
 |------|--------|---------------------------------|
-| `src/pipeline.py` | REQUIRED | Coverage gate; every `_check_<name>` is exercised by `tests/test_pipeline.py` |
+| `src/pipeline/` | REQUIRED | Coverage gate; every `_check_<name>` is exercised by `tests/test_pipeline.py` |
 | `src/config.py` | REQUIRED | `tests/test_config.py` |
 | `src/figures.py` | REQUIRED | `tests/test_figures.py` |
 | `src/manuscript_variables.py` | REQUIRED | `tests/test_manuscript_variables.py` + the live `{{TOKEN}}` cross-reference test |

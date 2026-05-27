@@ -13,7 +13,10 @@ configuration, loop, artifact, and script execution paths.
 - `test_reports.py` — markdown/CSV renderers and basic writer helpers
 - `test_writers.py` — `write_loop_payloads()` core + finalize wrapper
 - `test_manuscript_variables.py` — manuscript token hydration from loop outputs
-- `test_models.py` — result dataclass serialization
+- `test_manuscript_tables.py` — registry-backed table builders
+- `test_figures.py` — figure registry and ML figure writers
+- `test_gate_negative_controls.py` — substance-binding negative controls for claims/benchmarks
+- `test_ml_task.py` — bounded ML task orchestration
 - `test_scripts.py` — thin script smoke tests
 
 ## Commands

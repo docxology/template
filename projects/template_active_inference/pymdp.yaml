@@ -1,0 +1,22 @@
+# pymdp / T-maze sophisticated-inference harness configuration.
+# Analytical sweep parameters remain in src/analytical/hyperparameters.py.
+
+horizon: 2
+steps: 2
+random_seed: 0
+mode: state_inference  # state_inference | policy_inference
+
+tmaze:
+  num_states: 2
+  num_obs: 2
+  num_actions: 2
+  likelihood_diag: 0.9
+  preference_goal: 2.0
+
+agent:
+  inference_algo: fpi
+  action_selection: deterministic
+
+logging:
+  enabled: true
+  path: output/logs/pymdp_runs.jsonl

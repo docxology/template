@@ -10,8 +10,8 @@
 | Your work shape | Fork this exemplar | Detailed walkthrough |
 |---|---|---|
 | Deterministic plan/evidence/claim/artifact readiness loops | [`projects/template_autoresearch_project/`](../../projects/template_autoresearch_project/) — AutoResearchClaw-inspired readiness checks without autonomous research execution; live test count + coverage in [`canonical_facts.md`](../_generated/canonical_facts.md) | [`README.md`](../../projects/template_autoresearch_project/README.md) |
-| Numerical / algorithmic research with figures, dashboards, manuscript | [`projects/template_code_project/`](../../projects/template_code_project/) — has its own gradient-descent algorithm in `src/optimizer.py`, six figure generators in `src/figures.py`; live test count + coverage in [`canonical_facts.md`](../_generated/canonical_facts.md) | [`forking_guide.md`](../../projects/template_code_project/docs/forking_guide.md) |
-| Editorial / prose review pipeline — readability, structure, BibTeX validation | [`projects/template_prose_project/`](../../projects/template_prose_project/) — no algorithm of its own; `src/pipeline.py` delegates to `infrastructure/prose/` + `infrastructure/reference/citation/`; live test count + coverage in [`canonical_facts.md`](../_generated/canonical_facts.md) | [`forking_guide.md`](../../projects/template_prose_project/docs/forking_guide.md) |
+| Numerical / algorithmic research with figures, dashboards, manuscript | [`projects/template_code_project/`](../../projects/template_code_project/) — has its own gradient-descent algorithm in `src/optimizer.py`, six figure generators in `src/figures/`; live test count + coverage in [`canonical_facts.md`](../_generated/canonical_facts.md) | [`forking_guide.md`](../../projects/template_code_project/docs/forking_guide.md) |
+| Editorial / prose review pipeline — readability, structure, BibTeX validation | [`projects/template_prose_project/`](../../projects/template_prose_project/) — no algorithm of its own; `src/pipeline/` delegates to `infrastructure/prose/` + `infrastructure/reference/citation/`; live test count + coverage in [`canonical_facts.md`](../_generated/canonical_facts.md) | [`forking_guide.md`](../../projects/template_prose_project/docs/forking_guide.md) |
 
 The walkthroughs follow the same shape: 4-line copy-paste TL;DR (`cp -r`
 + `sed` rename + `uv run pytest`), an explicit statement of the
@@ -52,7 +52,7 @@ fork should grow into. Detectors:
 
 | Rule | Catches |
 |---|---|
-| `function_name_drift` | docs reference a `_check_<name>` that no longer exists in `src/pipeline.py` |
+| `function_name_drift` | docs reference a `_check_<name>` that no longer exists in `src/pipeline/checks.py` or `src/pipeline.py` |
 | `test_class_drift` | docs reference a `TestXxx` that no longer exists in `tests/` |
 | `__all___doc_drift` | `src/STYLE.md` or `docs/AGENTS.md` ships an `__all__` block that disagrees with `src/__init__.py` |
 | `coverage_floor_drift` | docs claim a `fail_under = N` value that disagrees with `pyproject.toml` |
@@ -72,10 +72,10 @@ breadth with silent gaps.
 Five things landed during the May 2026 audit pass that a forker
 benefits from but might not discover from the older docs:
 
-1. `template_code_project/src/analysis.py` was split from 1,718 lines
-   into `analysis.py` (~960 lines, orchestration) + `figures.py` (~870
-   lines, the six `generate_*` plot functions). `analysis.py`
-   re-exports every public name from `figures.py` via a try/except
+1. `template_code_project/src/analysis.py` was split into
+   `src/analysis/` (orchestration) and `src/figures/` (the six
+   `generate_*` plot functions). `src/analysis/__init__.py`
+   re-exports the public analysis names via a try/except
    shim — your `from src.analysis import generate_convergence_plot`
    keeps working.
 2. `template_prose_project/src/config.py` now **strictly** rejects

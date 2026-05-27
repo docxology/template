@@ -20,8 +20,8 @@ Hyperlinks must be informative. Never use placeholder text.
 For internal cross-references, prefer relative paths to files inside the
 repository:
 
-- **BAD**: See `https://github.com/docxology/template/blob/main/projects/template_prose_project/src/pipeline.py`
-- **GOOD**: See [`projects/template_prose_project/src/pipeline.py`](../src/pipeline.py).
+- **BAD**: See `https://github.com/docxology/template/blob/main/projects/template_prose_project/src/pipeline/`
+- **GOOD**: See [`projects/template_prose_project/src/pipeline/`](../src/pipeline/).
 
 ---
 
@@ -146,7 +146,7 @@ uv run pytest projects/template_prose_project/tests/ -v
 ````
 
 For inline code referencing file paths, use single backticks:
-`projects/template_prose_project/src/pipeline.py`.
+`projects/template_prose_project/src/pipeline/`.
 
 ---
 
@@ -163,7 +163,7 @@ matches the code-project style:
 | `every_file_has_h1` | true | `prose.require_h1_per_section` |
 | `bibliography_consistency` | true | `bibliography.fail_on_missing` |
 
-: Configurable checks evaluated by `src/pipeline.py`. {#tbl:checks}
+: Configurable checks evaluated by `src/pipeline/checks.py`. {#tbl:checks}
 ```
 
 Do not use `Table:` prefix — Pandoc infers the type from placement. Do not

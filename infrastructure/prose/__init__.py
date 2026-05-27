@@ -49,6 +49,7 @@ from infrastructure.prose.report import (
     analyze_files,
     analyze_manuscript,
     analyze_text,
+    load_report_json,
     write_report,
 )
 
@@ -89,4 +90,5 @@ __all__ = [
     "analyze_files",
     "analyze_manuscript",
     "write_report",
+    "load_report_json",
 ]

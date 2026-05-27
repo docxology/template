@@ -477,18 +477,17 @@ def _block_infra(name, globals=None, locals=None, fromlist=(), level=0):
     return real_import(name, globals, locals, fromlist, level)
 
 builtins.__import__ = _block_infra
+sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
 spec = importlib.util.spec_from_file_location(
-    "analysis_isolated",
-    project_root / "src" / "analysis.py",
+    "analysis_infra_isolated",
+    project_root / "src" / "analysis" / "_infra.py",
 )
 mod = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
 spec.loader.exec_module(mod)
 assert mod.INFRASTRUCTURE_AVAILABLE is False
-logger = mod._get_logger()
-assert "optimization_analysis" in logger.name
 """
         result = subprocess.run(
             [sys.executable, "-c", code, str(project_root)],

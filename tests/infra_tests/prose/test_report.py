@@ -11,6 +11,7 @@ from infrastructure.prose.report import (
     analyze_files,
     analyze_manuscript,
     analyze_text,
+    load_report_json,
     write_report,
 )
 
@@ -67,3 +68,26 @@ class TestAnalyzeManuscript:
         payload = json.loads(out_path.read_text(encoding="utf-8"))
         assert payload["total_words"] == report.total_words
         assert "files" in payload
+
+
+class TestManuscriptReportRoundTrip:
+    def test_from_dict_matches_analyze_files(self):
+        files = {
+            "a.md": "# A\n\none two three four five.",
+            "b.md": "# B\n\nsix seven eight [@k1].",
+        }
+        report = analyze_files(files)
+        payload = json.loads(report.to_json())
+        loaded = ManuscriptReport.from_dict(payload)
+        assert loaded.total_words == report.total_words
+        assert loaded.citation_keys == report.citation_keys
+        assert len(loaded.files) == len(report.files)
+
+    def test_load_report_json(self, tmp_path: Path):
+        files = {"intro.md": "# Hello\n\nA body of text."}
+        report = analyze_files(files)
+        path = tmp_path / "report.json"
+        path.write_text(report.to_json(), encoding="utf-8")
+        loaded = load_report_json(path)
+        assert loaded.total_words == report.total_words
+        assert loaded.files[0].name == "intro.md"

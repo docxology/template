@@ -65,7 +65,7 @@ they are what the repo's gates enforce:
 
 | Invariant | Where it's taught | How it's enforced |
 |---|---|---|
-| Thin-orchestrator: only `src/pipeline.py` touches `infrastructure/`; `scripts/` are CLI shims | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/` infra-import grep |
+| Thin-orchestrator: only `src/pipeline/` touches `infrastructure/`; `scripts/` are CLI shims | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/` infra-import grep |
 | Zero mocks: real Markdown + real BibTeX in `tmp_path` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/verify_no_mocks.py` |
 | ≥90% project coverage on `src/` (live % → [`canonical_facts.md`](../../../docs/_generated/canonical_facts.md)) | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` (canonical command below) |
 | `manuscript/config.yaml` is the single source of run policy | [`rendering_pipeline.md`](rendering_pipeline.md) | the prose pipeline |

@@ -12,7 +12,7 @@ flowchart LR
     subgraph TRUSTED [Trusted - inside the project process]
         CFG[manuscript/config.yaml]
         SCRIPT[run_search_pipeline.py]
-        PIPE[src/pipeline.py]
+        PIPE[src/pipeline/]
         FETCH[AbstractFetcher · FulltextFetcher]
         CACHE[(output/cache<br/>SearchCache + abs/pdf)]
     end

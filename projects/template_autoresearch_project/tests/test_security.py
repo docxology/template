@@ -111,10 +111,15 @@ def test_inventory_and_attestation_report_pass_missing_and_mismatch_cases(
         generated_at="2026-05-26T00:00:00+00:00",
     )
     assert failed["status"] == "failed"
-    assert failed["checked_count"] == 1
+    # observed.txt (mismatch) + the project's MNIST provenance cross-check (passes).
+    assert failed["checked_count"] == 2
+    assert any(
+        check["path"] == "data/mnist_small.npz" and check["status"] == "passed" for check in failed["checks"]
+    )
     assert failed["missing_count"] == 1
     assert failed["mismatch_count"] == 1
-    assert {row["status"] for row in failed["checks"]} == {"missing", "mismatch"}
+    # "passed" is the project's MNIST provenance cross-check, appended to every attestation.
+    assert {row["status"] for row in failed["checks"]} == {"missing", "mismatch", "passed"}
 
 
 def test_write_security_artifacts_generates_local_review_and_figures(
@@ -135,11 +140,17 @@ def test_write_security_artifacts_generates_local_review_and_figures(
     assert autoresearch_loop_result.readiness_valid is True
     output_paths = [sample_output]
 
+    from infrastructure.autoresearch import BudgetPolicy
+
+    from src.ml_task import run_bounded_ml_task
+
+    ml_result = run_bounded_ml_task(sandbox_project, BudgetPolicy(max_iterations=4))
     paths = write_security_artifacts(
         sandbox_project,
         config,
         output_paths,
         generated_at="2026-05-26T00:00:00+00:00",
+        ml_result=ml_result,
     )
 
     relative_paths = {path.relative_to(sandbox_project).as_posix() for path in paths}

@@ -136,8 +136,12 @@ projects/*
 !projects/template_code_project/**
 !projects/template_prose_project/
 !projects/template_prose_project/**
+!projects/template_active_inference/
+!projects/template_active_inference/**
 !projects/template_autoresearch_project/
 !projects/template_autoresearch_project/**
+!projects/template_template/
+!projects/template_template/**
 projects/*/.DS_Store
 projects/*/output/
 projects/*/output/**

@@ -42,7 +42,7 @@ flowchart TB
     LLM --> LLM_F[core · templates · validation · review · prompts]
     METH --> METH_F[models · orchestration · cli]
     REND --> REND_F[core · pdf_renderer · slides_renderer ·<br/>web_renderer · preflight · latex_utils · cli]
-    PUB --> PUB_F[api · citations · metadata · executable_bundle ·<br/>package · platforms · cli · publish_cli]
+    PUB --> PUB_F[zenodo · github · arxiv · citations · metadata ·<br/>archival · executable_bundle · cli]
     REP --> REP_F[report_generator · error_aggregator · executive_reporter ·<br/>_dashboard_matplotlib · _dashboard_charts ·<br/>_dashboard_health · _dashboard_pipeline ·<br/>_dashboard_outputs · _dashboard_codebase · _dashboard_csv]
     STEG --> STEG_F[core · config · overlays · barcodes ·<br/>metadata · hashing · encryption]
     SEARCH --> SEARCH_F[literature/ · models · backends ·<br/>client · cache · fulltext · cli]
@@ -268,23 +268,36 @@ Tracked after the P0 composability pass (stage registry, unified markdown discov
 
 ### Publishing Module
 
-#### core.py
+#### metadata.py / `_metadata_extraction.py`
 
-- `def extract_publication_metadata(markdown_files: List[Path]) -> Dict[str, Any]:`
-- `def validate_metadata(metadata: Dict[str, Any]) -> List[str]:`
-- `def format_publication_metadata(metadata: Dict[str, Any]) -> str:`
+- `def extract_publication_metadata(markdown_files: list[Path]) -> PublicationMetadata:`
+- `def validate_doi(doi: str) -> bool:`
 
-#### api.py
+#### zenodo/ (re-exported via `api.py`, `platforms.py`)
 
-- `def publish_to_zenodo(metadata: Dict[str, Any], files: List[Path], ...) -> str:`
-- `def create_github_release(metadata: Dict[str, Any], files: List[Path], ...) -> str:`
-- `def prepare_arxiv_submission(metadata: Dict[str, Any], files: List[Path]) -> Path:`
+- `class ZenodoClient(config: ZenodoConfig)`
+- `class ZenodoConfig(access_token: str, sandbox: bool = True, base_url: str | None = None)`
+- `class DepositionResult(deposition_id: str, bucket_url: str)`
+- `def publish_to_zenodo(metadata, file_paths, access_token, sandbox=True, *, base_url=None) -> PublishResult:`
+
+#### github/release.py (re-exported via `platforms.py`)
+
+- `def create_github_release(tag_name, release_name, description, assets, token, repo, *, base_url=...) -> str:`
+
+#### arxiv/submission.py (re-exported via `platforms.py`)
+
+- `def prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) -> Path:`
+
+#### archival.py / executable_bundle.py
+
+- `def archive_publication(bundle, *, providers, dry_run=True, ...) -> ArchivalRun:`
+- `def bundle_project(project_root, output_dir, ...) -> Path:`
 
 #### citations.py
 
-- `def generate_citation_bibtex(metadata: Dict[str, Any]) -> str:`
-- `def generate_citation_apa(metadata: Dict[str, Any]) -> str:`
-- `def validate_doi(doi: str) -> bool:`
+- `def generate_citation_bibtex(metadata: PublicationMetadata) -> str:`
+- `def generate_citation_apa(metadata: PublicationMetadata) -> str:`
+- `def generate_citation_mla(metadata: PublicationMetadata) -> str:`
 
 ### Scientific Module
 
@@ -631,7 +644,7 @@ aggregator.save_report(Path("output/reports"))
 Features:
 
 - Publication metadata extraction
-- Citation generation (BibTeX, APA, MLA)
+- Citation generation (BibTeX from the CLI; BibTeX, APA, and MLA through Python helpers)
 - Zenodo integration with DOI minting
 - arXiv submission preparation
 - GitHub release automation
@@ -642,7 +655,14 @@ Features:
 uv run python -m infrastructure.publishing.cli extract-metadata manuscript/
 uv run python -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
 uv run python -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
-uv run python -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOKEN
+
+# GitHub release wrapper (expects output/pdf/*.pdf in cwd)
+uv run python -m infrastructure.publishing.publish_cli \
+  --token $GITHUB_TOKEN --repo owner/repo --tag v1.0.0 --name "Release 1.0.0"
+
+# Archival dry-run (Stage 11)
+uv run python -m infrastructure.publishing.archival_cli \
+  --bundle output/template_code_project/executable_bundle --providers zenodo
 ```
 
 ## Design Principles
@@ -776,8 +796,8 @@ print(f"Quality issues: {report['issues']['total_issues']}")
 
 # 5. Publish to Zenodo
 from infrastructure.publishing import publish_to_zenodo
-doi = publish_to_zenodo(metadata, [pdf], token)
-print(f"Published with DOI: {doi}")
+result = publish_to_zenodo(metadata, [pdf], token)
+print(f"Published with DOI: {result.doi}")
 ```
 
 ### CLI Example: Full Workflow
@@ -795,9 +815,12 @@ uv run python infrastructure/documentation/generate_glossary_cli.py \
 # Render to multiple formats
 uv run python -m infrastructure.rendering.cli all manuscript.tex
 
-# Publish release
+# Publish to Zenodo
 uv run python -m infrastructure.publishing.cli publish-zenodo output/{project_name}/ --title "My Research"
-uv run python -m infrastructure.publishing.cli create-release v1.0 output/{project_name}/ $GITHUB_TOKEN
+
+# GitHub release
+uv run python -m infrastructure.publishing.publish_cli \
+  --token $GITHUB_TOKEN --repo owner/repo --tag v1.0.0 --name "Release 1.0.0"
 ```
 
 ## Testing

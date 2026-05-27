@@ -4,7 +4,7 @@ tests for academic publishing infrastructure.
 
 ## Overview
 
-Tests for publishing module including platform API clients (Zenodo, arXiv, GitHub), citation generation, metadata extraction, and CLI interfaces.
+Tests for publishing module including platform API clients (Zenodo, arXiv, GitHub), citation generation, metadata extraction, release workflow, transmission bookends, and CLI interfaces. Current collect-only total: **362 tests**.
 
 ## Quick Start
 
@@ -92,7 +92,7 @@ Error conditions and boundaries:
 
 ```bash
 # Error handling tests
-uv run pytest tests/infra_tests/publishing/test_publishing_edge_cases.py -v
+uv run pytest tests/infra_tests/publishing/test_publishing.py::TestPublishingEdgeCases -v
 ```
 
 ## Common Test Patterns
@@ -102,7 +102,7 @@ uv run pytest tests/infra_tests/publishing/test_publishing_edge_cases.py -v
 ```python
 # test_api.py pattern
 def test_zenodo_client():
-    client = ZenodoClient(token="test_token")
+    client = ZenodoClient(ZenodoConfig(access_token="test_token", sandbox=True))
     # Test API operations...
 ```
 

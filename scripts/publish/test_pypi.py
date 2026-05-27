@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import sys
 
-from infrastructure.publishing.test_pypi import run_test_pypi_release
+from infrastructure.publishing.pypi_release import run_test_pypi_release
 
 
 def main() -> None:

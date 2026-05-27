@@ -8,6 +8,8 @@ This directory mixes **one script-generated file** with **maintainer-written** h
 | [architecture_overview.svg](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/generate_architecture_overview.py` |
 | [coverage_history.md](coverage_history.md) | **Generated** — `uv run python scripts/generate_coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
 | [canonical_facts.md](canonical_facts.md) | **Maintained** — ground-truthed test counts, gates, and roster notes (refresh with measured `pytest` + `generate_active_projects_doc.py`; see file footer) |
+| [hermes_knowledge_audit.json](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; superseded by current generated facts |
+| [publication_records.md](publication_records.md) | **Maintained snapshot** — dated external DOI/GitHub verification evidence; re-check URLs before citing as current |
 | [skills_index.md](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |
 | [last-run-summary.md](last-run-summary.md) | **Generated** — auto-written by `infrastructure.core.pipeline.multi_project` on every `./run.sh --pipeline` invocation (best-effort). Schema: [`../operational/logging/output-design.md`](../operational/logging/output-design.md) |
 | `README.md`, `AGENTS.md` | **Maintainer** — policy and conventions for linking to generated content |
@@ -37,7 +39,9 @@ uv run python scripts/generate_coverage_history.py --from-dir=./_artefacts --day
 uv run python scripts/generate_coverage_history.py --from-gh --days=30
 ```
 
-**Canonical factsheet** — when CI gates, project counts, or fep_lean scale change, re-run the measurements cited in [`canonical_facts.md`](canonical_facts.md) (discovery tests, `projects/fep_lean` `pytest --collect-only`, optional full `pytest` with coverage) and edit that file so numbers stay ground-truthed.
+**Canonical factsheet** — when CI gates, project counts, publishing tests, or public exemplar coverage changes, re-run the measurements cited in [`canonical_facts.md`](canonical_facts.md) and edit that file so numbers stay ground-truthed.
+
+**Publication records snapshot** — when citing repository/DOI publication status, re-run the external checks and edit [`publication_records.md`](publication_records.md) with the verification timestamp and observed status values.
 
 **Skills index** — after adding/removing `SKILL.md` descriptors:
 

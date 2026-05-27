@@ -25,7 +25,7 @@ point lives in
 
 ```mermaid
 flowchart LR
-    CFG[manuscript/config.yaml] --> READ[src/pipeline.py · read manuscript]
+    CFG[manuscript/config.yaml] --> READ[src/pipeline/ · read manuscript]
     READ --> PROSE[infrastructure.prose<br/>metrics · structure · quality]
     READ --> BIB[infrastructure.reference<br/>BibTeX validation]
     PROSE --> CHECKS[evaluate threshold checks]
@@ -133,7 +133,7 @@ experiments, mutate prompts, or run autonomous review agents.
 ## Architecture
 
 * `src/config.py` — typed YAML loader.
-* `src/pipeline.py` — read manuscript → analyse → cross-check bibliography → evaluate checks. **Pure orchestration over `infrastructure/`.**
+* `src/pipeline/` — read manuscript → analyse → cross-check bibliography → evaluate checks. **Pure orchestration over `infrastructure/`.**
 * `src/figures.py` — matplotlib renderers (no business logic).
 * `src/manuscript_variables.py` — abstract substitution variables.
 * `src/report.py` — markdown review-report assembly.

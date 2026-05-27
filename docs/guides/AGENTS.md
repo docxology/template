@@ -17,7 +17,7 @@ Technical guide for `docs/guides/` — skill-level progression guides from begin
 | `methods-orchestration.md` | Advanced | Methods-to-pipeline provenance and validation |
 | `codegraph-local.md` | Advanced | Optional local CodeGraph index with public/private scope guards |
 | `llm-integration-guide.md` | Levels 11-12 | AI-assisted research: Ollama setup, LLM review, templates, programmatic usage |
-| `publishing-guide.md` | Levels 11-12 | Academic publishing: DOI, Zenodo, arXiv, citations (BibTeX/APA/MLA) |
+| `publishing-guide.md` | Levels 11-12 | Academic publishing: DOI, Zenodo, arXiv, citations (BibTeX CLI; APA/MLA helpers) |
 | `secure-research-guide.md` | Level 11 | PDF steganography: watermarks, QR codes, SHA-256 hashing, provenance |
 | `fork-an-exemplar.md` | All levels | Fork-readiness walkthrough for canonical exemplars |
 | `literature-workflow-guide.md` | Levels 7-12 | Literature search → references workflow |

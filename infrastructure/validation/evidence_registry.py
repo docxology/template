@@ -181,8 +181,19 @@ def validate_text_against_registry(
     registry: VerifiedEvidenceRegistry,
     *,
     strict: bool = False,
+    trusted_number_tiers: frozenset[str] | None = None,
 ) -> EvidenceValidationReport:
-    """Validate citation and number tokens in ``text`` against ``registry``."""
+    """Validate citation and number tokens in ``text`` against ``registry``.
+
+    ``trusted_number_tiers`` (opt-in; ``None`` preserves the historical behavior of
+    accepting a number that matches any registered fact): when provided, a number in
+    a STRICT zone must match at least one fact whose ``source_tier`` is in the
+    trusted set. This closes the self-referential gap where a manuscript number that
+    traces ONLY to the run's own ``generated_metric`` outputs validated against
+    itself; a caller passes e.g.
+    ``frozenset({"bibliography", "data_source", "claim_ledger"})`` to require strict
+    numbers to trace to an external/input/declared source rather than self-output.
+    """
     errors: list[EvidenceIssue] = []
     warnings: list[EvidenceIssue] = []
     seen_numbers: set[str] = set()
@@ -210,6 +221,10 @@ def validate_text_against_registry(
             seen_numbers.add(number)
             if not registry.has("number", number):
                 bucket.append(EvidenceIssue(kind="number", value=number, severity=severity, zone=line_zone))
+            elif trusted_number_tiers is not None and line_zone == "strict":
+                facts = registry.lookup("number", number)
+                if facts and not any(fact.source_tier in trusted_number_tiers for fact in facts):
+                    bucket.append(EvidenceIssue(kind="number", value=number, severity=severity, zone=line_zone))
         for citation in _CITATION_RE.findall(claim_line):
             if citation in seen_citations:
                 continue

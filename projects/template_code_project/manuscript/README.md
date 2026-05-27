@@ -79,4 +79,4 @@ If you are an AI agent operating in this repository, you **MUST** read [`AGENTS.
 ## See also
 
 - [`SYNTAX.md`](SYNTAX.md) — Pandoc citation / cross-reference conventions for this manuscript.
-- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by the permanent exemplars (`template_autoresearch_project`, `template_code_project`, `template_prose_project`) and the optional search add-on (`projects_archive/template_search_project`).
+- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by the permanent exemplars (`template_active_inference`, `template_autoresearch_project`, `template_code_project`, `template_prose_project`) and the optional search add-on (`projects_archive/template_search_project`).

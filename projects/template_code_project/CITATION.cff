@@ -1,0 +1,21 @@
+authors:
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
+cff-version: 1.2.0
+date-released: '2026-05-27'
+keywords:
+- optimization algorithms
+- gradient descent
+- convergence analysis
+- numerical methods
+- mathematical programming
+- reproducible research
+- infrastructure automation
+license: MIT
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template_code_project
+title: Convergence Analysis of Gradient Descent Optimization
+type: software
+version: '2.3'

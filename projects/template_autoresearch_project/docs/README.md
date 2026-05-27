@@ -32,3 +32,4 @@ Documentation map:
 | [configuration.md](configuration.md) | Project knobs and how they feed the loop |
 | [outputs.md](outputs.md) | Generated data, reports, and review artifacts |
 | [runbook.md](runbook.md) | End-to-end operation through `run.sh` |
+| [validation-architecture.md](validation-architecture.md) | Veridicality gates: what each binds, hard vs opt-in, negative-control testing |

@@ -9,7 +9,10 @@ from typing import Any
 from infrastructure.core.pipeline.artifacts import compute_sha256
 
 from .config import AutoResearchLoopConfig
-from .figures import write_security_control_matrix_figure, write_security_integrity_chain_figure
+from .json_coerce import mapping, mapping_list
+from .ml_task import MLTaskResult
+from .writers import write_json, write_text
+from .writers_figure_dispatch import FigureRenderContext, render_security_figures
 
 SECURITY_ARTIFACTS = (
     "output/data/autoresearch_security_profile.json",
@@ -29,6 +32,7 @@ def write_security_artifacts(
     output_paths: list[Path],
     *,
     generated_at: str,
+    ml_result: MLTaskResult,
 ) -> list[Path]:
     """Write local security profile, threat model, inventory, attestation, report, and figures."""
     output = project_root / "output"
@@ -46,15 +50,21 @@ def write_security_artifacts(
     review_markdown = render_security_review_markdown(profile, threat_model, inventory, attestation)
 
     paths = [
-        _write_json(data_dir / "autoresearch_security_profile.json", profile),
-        _write_json(data_dir / "autoresearch_threat_model.json", threat_model),
-        _write_json(data_dir / "autoresearch_supply_chain_inventory.json", inventory),
-        _write_json(data_dir / "autoresearch_inventory_export.json", inventory_export),
-        _write_json(data_dir / "autoresearch_integrity_attestation.json", attestation),
-        _write_text(reports_dir / "autoresearch_security_review.md", review_markdown),
-        write_security_control_matrix_figure(figures_dir, threat_model),
-        write_security_integrity_chain_figure(figures_dir, attestation),
+        write_json(data_dir / "autoresearch_security_profile.json", profile),
+        write_json(data_dir / "autoresearch_threat_model.json", threat_model),
+        write_json(data_dir / "autoresearch_supply_chain_inventory.json", inventory),
+        write_json(data_dir / "autoresearch_inventory_export.json", inventory_export),
+        write_json(data_dir / "autoresearch_integrity_attestation.json", attestation),
+        write_text(reports_dir / "autoresearch_security_review.md", review_markdown),
     ]
+    figure_ctx = FigureRenderContext(
+        project_root=project_root,
+        figures_dir=figures_dir,
+        loop_result=None,
+        ml_result=ml_result,
+        diagnostics={},
+    )
+    paths.extend(render_security_figures(figure_ctx))
     return paths
 
 
@@ -412,7 +422,7 @@ def render_security_review_markdown(
     attestation: dict[str, object],
 ) -> str:
     """Render the generated security review packet."""
-    summary = _mapping(threat_model.get("summary"))
+    summary = mapping(threat_model.get("summary"))
     lines = [
         "# AutoResearch Security Review",
         "",
@@ -440,8 +450,8 @@ def render_security_review_markdown(
         "",
         "## Inventory Summary",
         "",
-        f"- Input records: `{len(_mapping_list(inventory.get('inputs')))}`",
-        f"- Generated artifact records: `{len(_mapping_list(inventory.get('generated_artifacts')))}`",
+        f"- Input records: `{len(mapping_list(inventory.get('inputs')))}`",
+        f"- Generated artifact records: `{len(mapping_list(inventory.get('generated_artifacts')))}`",
         "",
         "## Non-Claims",
         "",
@@ -521,15 +531,7 @@ def _file_record(
 
 
 def _inventory_rows(inventory: dict[str, object]) -> list[dict[str, Any]]:
-    return [*_mapping_list(inventory.get("inputs")), *_mapping_list(inventory.get("generated_artifacts"))]
-
-
-def _mapping(value: object) -> dict[str, Any]:
-    return value if isinstance(value, dict) else {}
-
-
-def _mapping_list(value: object) -> list[dict[str, Any]]:
-    return [row for row in value if isinstance(row, dict)] if isinstance(value, list) else []
+    return [*mapping_list(inventory.get("inputs")), *mapping_list(inventory.get("generated_artifacts"))]
 
 
 def _project_relative_path(project_root: Path, path: Path) -> str:
@@ -537,15 +539,3 @@ def _project_relative_path(project_root: Path, path: Path) -> str:
         return str(path.resolve().relative_to(project_root))
     except ValueError:
         return str(path)
-
-
-def _write_json(path: Path, payload: object) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return path
-
-
-def _write_text(path: Path, text: str) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8")
-    return path

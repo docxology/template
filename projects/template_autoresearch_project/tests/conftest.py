@@ -12,30 +12,9 @@ import pytest
 
 from src.models import AutoResearchLoopResult
 
-_FIGURE_WRITER_NAMES = (
-    "write_candidate_lifecycle_figure",
-    "write_closure_flow_figure",
-    "write_mnist_class_balance_figure",
-    "write_mnist_error_examples_figure",
-    "write_mnist_subset_contact_sheet_figure",
-    "write_ml_bootstrap_intervals_figure",
-    "write_ml_calibration_reliability_figure",
-    "write_ml_candidate_rank_stability_figure",
-    "write_ml_candidate_scores_figure",
-    "write_ml_classification_metrics_heatmap",
-    "write_ml_complexity_accuracy_figure",
-    "write_ml_confusion_matrix_figure",
-    "write_ml_confusion_pairs_figure",
-    "write_ml_generalization_gap_figure",
-    "write_ml_learning_curve_figure",
-    "write_ml_paired_correctness_figure",
-    "write_ml_per_class_accuracy_figure",
-    "write_ml_probability_margin_figure",
-    "write_ml_probability_quality_figure",
-    "write_ml_robustness_matrix_figure",
-    "write_ml_selective_accuracy_figure",
-    "write_ml_training_dynamics_figure",
-    "write_stage_matrix_figure",
+_FIGURE_RENDER_HOOKS = (
+    ("src.writers", "render_figure_batch"),
+    ("src.figures_process", "write_stage_matrix_figure"),
 )
 
 
@@ -75,14 +54,17 @@ def repo_root(project_root: Path) -> Path:
 @pytest.fixture(scope="session")
 def autoresearch_loop_result(project_root: Path, repo_root: Path) -> AutoResearchLoopResult:
     """Run the full deterministic loop once for read-only output assertions."""
-    from src.loop import run_autoresearch_loop
-    import src.writers as writers
+    from importlib import import_module
 
-    originals = {name: getattr(writers, name) for name in _FIGURE_WRITER_NAMES}
-    for name, function in originals.items():
-        setattr(writers, name, _without_coverage(function))
+    from src.loop import run_autoresearch_loop
+
+    originals: dict[tuple[str, str], object] = {}
+    for module_name, attribute in _FIGURE_RENDER_HOOKS:
+        module = import_module(module_name)
+        originals[(module_name, attribute)] = getattr(module, attribute)
+        setattr(module, attribute, _without_coverage(getattr(module, attribute)))
     try:
         return run_autoresearch_loop(project_root, repo_root)
     finally:
-        for name, function in originals.items():
-            setattr(writers, name, function)
+        for (module_name, attribute), function in originals.items():
+            setattr(import_module(module_name), attribute, function)

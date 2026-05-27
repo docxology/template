@@ -51,7 +51,38 @@ freshness warnings, and a bounded fact sample. Set
 `output/reports/evidence_registry_full.json` dump is needed.
 
 Loop stages are recorded as **declared** (configured intent). Claims are
-**supported** only when their evidence file exists locally.
+**supported** only when their evidence file exists locally **and carries
+substantive (non-empty, parseable) content** — an empty or hollow placeholder
+does not support a claim. The same substance check guards the figure-quality and
+benchmark gates, so a structurally-complete-but-hollow run is scored as
+incomplete rather than silently certified.
+
+**Validation boundary.** The claim, figure-quality, and benchmark gates bind to
+substantive content and are exercised by fault-injecting negative-control tests
+(`tests/test_gate_negative_controls.py`, `tests/test_gate_improvements.py`) that
+prove each one fails closed. The former self-referential gates are now hardened
+into production gates:
+
+- The **schema manifest** validates field/type *conformance* for the governance
+  schemas; a nonconforming payload is a **hard gate** — `write_schema_manifest`
+  raises and aborts the loop rather than writing a green manifest.
+- The **security/integrity attestation** fails a present-but-empty required file
+  and cross-checks the input MNIST fixture against its *committed declared* hash
+  (external truth, failing closed if that declared hash is absent).
+
+One check is deliberately **opt-in, not default-enforced**, for a principled
+reason: the **evidence registry** can require strict-zone manuscript numbers to
+trace to trusted source tiers (external/input/declared, not the run's own
+`generated_metric` output) via `validate_text_against_registry(...,
+trusted_number_tiers=...)`. But an AutoResearch manuscript legitimately *reports
+its own run's metrics* — the hydrated manuscript contains ~285 such strict-zone
+numbers — so forcing this check on would reject the paper's own findings. The
+**default** evidence gate already fails any manuscript number that matches *no*
+generated artifact (fabrication); the strict-tier check is provided for
+manuscripts that cite external numbers, and the registry's `source_tiers` field
+discloses the provenance mix. The **research-object manifest** remains a
+path/size/checksum inventory by design.
+
 Accepted seed ideas require evidence links, candidate edits are bounded by
 `edit_allowlist`, and configured review gates are recorded as human-review
 inputs rather than self-approval. The generated review decisions are `deferred`

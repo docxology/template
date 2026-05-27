@@ -1,0 +1,28 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "author": [
+    {
+      "@id": "https://orcid.org/0000-0001-6232-9096",
+      "@type": "Person",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Active Inference Institute"
+      },
+      "familyName": "Friedman",
+      "givenName": "Daniel Ari"
+    }
+  ],
+  "codeRepository": "https://github.com/docxology/template_prose_project",
+  "dateModified": "2026-05-27",
+  "keywords": [
+    "prose analysis",
+    "readability",
+    "editorial review",
+    "reproducible research",
+    "manuscript quality"
+  ],
+  "license": "https://spdx.org/licenses/MIT",
+  "name": "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline",
+  "version": "0.2"
+}

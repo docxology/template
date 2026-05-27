@@ -67,8 +67,12 @@ def compute_variables(
     )
 
 
-def load_manuscript_report(path: Path | str) -> dict:
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+def load_report_payload(path: Path | str) -> dict[str, object]:
+    """Load raw manuscript-report JSON for variable substitution."""
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Manuscript report JSON must be an object: {path}")
+    return payload
 
 
 def write_variables(variables: ManuscriptVariables, output_path: Path | str) -> Path:

@@ -1,0 +1,6 @@
+pi1: Stream1PolicyVector
+pi2: Stream2PolicyVector
+J: CrossStreamCouplingPotential
+lam: EntanglementDeformationParameter
+gamma: SophisticationWeight
+q_joint: EntangledJointPosterior

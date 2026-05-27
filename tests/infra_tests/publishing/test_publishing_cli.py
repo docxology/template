@@ -130,6 +130,39 @@ class TestGenerateCitationCommand:
 class TestPublishZenodoCommand:
     """Test suite for publish_zenodo_command argument validation."""
 
+    def test_publish_zenodo_command_success(
+        self,
+        tmp_path,
+        zenodo_test_server,
+        capsys,
+        monkeypatch,
+    ):
+        """Publish PDFs through the CLI command against a local Zenodo server."""
+        pdf_file = tmp_path / "paper.pdf"
+        pdf_file.write_bytes(b"%PDF-1.4")
+
+        original_config = cli.ZenodoConfig
+
+        def config_with_test_url(*args, **kwargs):
+            kwargs["base_url"] = zenodo_test_server.url_for("")
+            return original_config(*args, **kwargs)
+
+        monkeypatch.setattr(cli, "ZenodoConfig", config_with_test_url)
+
+        args = argparse.Namespace(
+            output_dir=str(tmp_path),
+            token="test_token",
+            title="Test Publication",
+            authors="Author One,Author Two",
+            description="Test description",
+            production=True,
+        )
+
+        cli.publish_zenodo_command(args)
+
+        captured = capsys.readouterr()
+        assert "10.5281/zenodo.12345" in captured.out
+
     def test_publish_zenodo_validates_pdf_files(self, tmp_path, capsys):
         """Test that publish command finds PDF files."""
         # Create test PDF
@@ -149,19 +182,104 @@ class TestPublishZenodoCommand:
         assert len(pdfs) == 1
         assert pdfs[0].name == "paper.pdf"
 
-    def test_publish_zenodo_no_pdfs_error(self, tmp_path, capsys):
-        """Test error when no PDFs exist."""
+    def test_publish_zenodo_no_token_exits(self, tmp_path, monkeypatch):
+        """Missing token should exit before any network call."""
+        pdf_file = tmp_path / "paper.pdf"
+        pdf_file.write_bytes(b"%PDF-1.4")
+        monkeypatch.delenv("ZENODO_TOKEN", raising=False)
+        monkeypatch.delenv("ZENODO_PROD_TOKEN", raising=False)
+
+        args = argparse.Namespace(
+            output_dir=str(tmp_path),
+            token=None,
+            title="Test",
+            authors=None,
+            description=None,
+            production=False,
+        )
+
+        with pytest.raises(SystemExit) as exc_info:
+            cli.publish_zenodo_command(args)
+        assert exc_info.value.code == 1
+
+    def test_publish_zenodo_missing_output_dir_exits(self, tmp_path, monkeypatch):
+        """Missing output directory should exit before any network call."""
+        missing = tmp_path / "missing"
+        args = argparse.Namespace(
+            output_dir=str(missing),
+            token="test_token",
+            title="Test",
+            authors=None,
+            description=None,
+            production=False,
+        )
+        with pytest.raises(SystemExit) as exc_info:
+            cli.publish_zenodo_command(args)
+        assert exc_info.value.code == 1
+
+    def test_publish_zenodo_no_pdfs_error(self, tmp_path):
+        """Empty output directory should exit when no PDFs are found."""
         args = argparse.Namespace(
             output_dir=str(tmp_path),
             token="test_token",
             title="Test",
             authors=None,
             description=None,
+            production=False,
         )
+        with pytest.raises(SystemExit) as exc_info:
+            cli.publish_zenodo_command(args)
+        assert exc_info.value.code == 1
 
-        # Test that function would exit with error (real validation)
-        pdfs = list(Path(args.output_dir).glob("*.pdf"))
-        assert len(pdfs) == 0  # No PDFs found
+    def test_publish_zenodo_upload_failure_exits(
+        self,
+        tmp_path,
+        monkeypatch,
+        caplog,
+    ):
+        """PublishingError during upload should exit with code 1."""
+        from pytest_httpserver import HTTPServer
+
+        pdf_file = tmp_path / "paper.pdf"
+        pdf_file.write_bytes(b"%PDF-1.4")
+
+        server = HTTPServer()
+        server.start()
+        try:
+            server.expect_request("/deposit/depositions", method="POST").respond_with_json(
+                {
+                    "id": 1,
+                    "links": {"bucket": f"{server.url_for('')}/files/bucket1"},
+                }
+            )
+            server.expect_request("/files/bucket1/paper.pdf", method="PUT").respond_with_data(
+                "fail",
+                status=500,
+            )
+
+            original_config = cli.ZenodoConfig
+
+            def config_with_test_url(*args, **kwargs):
+                kwargs["base_url"] = server.url_for("")
+                return original_config(*args, **kwargs)
+
+            monkeypatch.setattr(cli, "ZenodoConfig", config_with_test_url)
+
+            args = argparse.Namespace(
+                output_dir=str(tmp_path),
+                token="test_token",
+                title="Test",
+                authors=None,
+                description=None,
+                production=True,
+            )
+
+            with caplog.at_level(logging.ERROR):
+                with pytest.raises(SystemExit) as exc_info:
+                    cli.publish_zenodo_command(args)
+            assert exc_info.value.code == 1
+        finally:
+            server.stop()
 
     def test_publish_zenodo_validates_token(self):
         """Test token validation logic."""
@@ -173,6 +291,35 @@ class TestPublishZenodoCommand:
 
 class TestMainCli:
     """Test suite for main CLI entry point."""
+
+    def test_main_unhandled_command_exception(self, monkeypatch, caplog):
+        """Unexpected exceptions from subcommands should exit with code 1."""
+
+        def failing_command(_args):
+            raise RuntimeError("simulated failure")
+
+        monkeypatch.setattr(
+            cli,
+            "publish_zenodo_command",
+            failing_command,
+        )
+
+        original_argv = sys.argv
+        try:
+            sys.argv = [
+                "cli.py",
+                "publish-zenodo",
+                str(Path("output")),
+                "--token",
+                "test",
+            ]
+            with caplog.at_level(logging.ERROR):
+                with pytest.raises(SystemExit) as exc_info:
+                    cli.main()
+            assert exc_info.value.code == 1
+            assert "simulated failure" in caplog.text
+        finally:
+            sys.argv = original_argv
 
     def test_main_without_command(self):
         """Test main without any subcommand."""

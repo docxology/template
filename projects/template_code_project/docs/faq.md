@@ -55,7 +55,7 @@ not installed. See [`testing_philosophy.md`](testing_philosophy.md).
 
 ### How do I add a new figure?
 
-1. Add a generator function to `src/figures.py` and wire it through `src/analysis.py`
+1. Add a generator function to `src/figures/` and wire it through `src/analysis/`
    (script entry: `scripts/optimization_analysis.py`) that writes a PNG to
    `output/figures/` with a fixed filename (e.g. `convergence_plot.png`).
 2. In `manuscript/03_results.md`, add a Pandoc image line:
@@ -99,7 +99,7 @@ output/template_code_project/template_code_project_combined.pdf
 
 ### I imported `infrastructure` in `src/` and tests broke
 
-Pure-math modules (`src/optimizer.py`, `src/invariants.py`) must stay infrastructure-free. Orchestration modules (`src/analysis.py`, `src/figures.py`, `src/dashboard.py`, `src/manuscript_variables.py`) may import `infrastructure.*` behind try/except fallbacks. If you added infrastructure to a math primitive, move that code to an orchestration module or `scripts/`.
+Pure-math modules (`src/optimizer.py`, `src/invariants.py`) must stay infrastructure-free. Orchestration modules (`src/analysis/`, `src/figures/`, `src/dashboard.py`, `src/manuscript_variables.py`) may import `infrastructure.*` behind try/except fallbacks. If you added infrastructure to a math primitive, move that code to an orchestration module or `scripts/`.
 
 ### My test uses `unittest.mock` and coverage dropped
 

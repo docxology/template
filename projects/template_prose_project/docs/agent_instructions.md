@@ -66,17 +66,18 @@ sub-module level inside `src/`:
 
 | File | May call infrastructure operations | Notes |
 |---|---|---|
-| `src/pipeline.py` | **Yes** — the primary infra-operations entry point | Calls `analyze_manuscript`, `write_report`, `parse_bibfile` |
-| `src/figures.py` | **Yes** — `infrastructure.prose.ManuscriptReport` (top-level) and a deep load helper that reconstructs `FileReport`/`ProseMetrics`/`StructureReport`/etc. from JSON for the figure renderers (`load_manuscript_report`, ~lines 139-198) | Must not re-implement analysis — load + plot only |
+| `src/pipeline/` | **Yes** — the primary infra-operations entry point | Calls `analyze_manuscript`, `write_report`, `parse_bibfile` |
+| `src/figures.py` | **Yes** — `infrastructure.prose.ManuscriptReport` (top-level type only) | Must not re-implement analysis — plot only over a typed report |
 | `src/report.py` | **Yes** — `infrastructure.prose.{ManuscriptReport, render_outline}` (type + pure helper) | No `analyze_*`, no `parse_*`, no I/O into infrastructure |
-| `src/manuscript_variables.py` | **Yes** — calls `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` inside `write_resolved_manuscript_tree` and the `{{TOKEN}}` substitution path | Reads JSON written by `pipeline.py`; rendering helpers are pure delegations to infrastructure |
+| `src/manuscript_variables.py` | **Yes** — `load_report_payload` for raw JSON; calls `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` inside `write_resolved_manuscript_tree` and the `{{TOKEN}}` substitution path | Reads JSON written by `pipeline.py`; rendering helpers are pure delegations to infrastructure |
+| `scripts/y_generate_prose_figures.py` | **Yes** — `infrastructure.prose.report.load_report_json` rehydrates a typed `ManuscriptReport` before calling `src/figures.py` | No inline analysis logic |
 | `src/config.py` | No | Pure YAML loading + dataclasses |
 | `scripts/*.py` | No analysis logic — only CLI shim | `run_prose_pipeline.py` is a wrapper around `src.pipeline.run_prose_pipeline` |
 
 **The boundary test**: if you find yourself writing a regex over
 manuscript prose, computing readability, or parsing BibTeX inside `scripts/`
 or inside `src/figures.py`, stop. That work belongs in `infrastructure/prose/`
-or `infrastructure/reference/`, called from `src/pipeline.py`.
+or `infrastructure/reference/`, called from `src/pipeline/`.
 
 ---
 
@@ -92,7 +93,7 @@ The pipeline analyses the manuscript using standard readability metrics.
 
 **GOOD** (concrete, linkable):
 ```markdown
-`projects/template_prose_project/src/pipeline.py::run_prose_pipeline` calls
+`projects/template_prose_project/src/pipeline/__init__.py::run_prose_pipeline` calls
 `infrastructure.prose.analyze_manuscript` to compute Flesch-Kincaid Grade
 Level, Flesch Reading Ease, and Gunning Fog from the files under
 `manuscript/`, then validates citations against `manuscript/references.bib`
@@ -106,7 +107,7 @@ The bibliography is automatically validated.
 
 **GOOD** (concrete):
 ```markdown
-`_check_bibliography` in `src/pipeline.py` cross-references the
+`_check_bibliography` in `src/pipeline/checks.py` cross-references the
 `[@key]` citations extracted by `infrastructure.prose` against the
 `BibDatabase` returned by `infrastructure.reference.citation.parse_bibfile`,
 emitting a `CheckResult` with `name="bibliography_consistency"` whose
@@ -155,9 +156,9 @@ lasting effect and will confuse future agents.
 
 If you need to change what a generated file contains, change the **generator**:
 - To change `output/manuscript_report.json` → modify `infrastructure.prose`
-  or the wiring in `src/pipeline.py`.
+  or the wiring in `src/pipeline/`.
 - To change `output/checks.json` → add or adjust a `_check_<name>` function
-  in `src/pipeline.py`.
+  in `src/pipeline/`.
 - To change `output/review_report.md` → modify `src/report.py`.
 - To change `output/figures/*.png` → modify `src/figures.py`.
 - To change `output/manuscript/*.md` (token-substituted copies) → modify the

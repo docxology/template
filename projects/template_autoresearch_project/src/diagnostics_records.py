@@ -7,6 +7,7 @@ from typing import Any
 
 import numpy as np
 
+from .json_coerce import mapping_list
 from .ml_task import CandidateResult, MLTaskResult, load_mnist_arrays, load_mnist_task_config
 
 
@@ -73,7 +74,7 @@ def _candidate_predictions(candidate: CandidateResult, *, expected_rows: int) ->
 
 
 def _candidate_records(records_payload: dict[str, object], candidate_id: str) -> list[dict[str, Any]]:
-    return [row for row in _mapping_list(records_payload.get("records")) if row.get("candidate_id") == candidate_id]
+    return [row for row in mapping_list(records_payload.get("records")) if row.get("candidate_id") == candidate_id]
 
 
 def _record_probabilities(records: list[dict[str, Any]], *, expected_rows: int) -> np.ndarray:
@@ -90,10 +91,6 @@ def _record_predictions(records: list[dict[str, Any]], *, expected_rows: int) ->
     return predictions
 
 
-def _mapping_list(value: object) -> list[dict[str, Any]]:
-    return [row for row in value if isinstance(row, dict)] if isinstance(value, list) else []
-
-
 __all__ = [
     "prediction_records",
     "_evaluated_candidates",
@@ -102,5 +99,4 @@ __all__ = [
     "_candidate_records",
     "_record_probabilities",
     "_record_predictions",
-    "_mapping_list",
 ]

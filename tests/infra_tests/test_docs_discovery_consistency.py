@@ -73,6 +73,56 @@ def test_canonical_facts_infrastructure_python_count_matches_tree() -> None:
     )
 
 
+def test_generated_docs_use_skills_index_command() -> None:
+    """Generated-doc hubs must point at the command that writes skills_index.md."""
+    root = _repo_root()
+    for rel_path in ("docs/_generated/README.md", "docs/_generated/AGENTS.md"):
+        text = (root / rel_path).read_text(encoding="utf-8")
+        assert "uv run python -m infrastructure.skills write-index" in text, rel_path
+        assert not re.search(
+            r"skills_index\.md.*uv run python -m infrastructure\.skills write(?!-index)",
+            text,
+            flags=re.DOTALL,
+        ), rel_path
+
+
+def test_root_agents_is_public_repo_contract_not_personal_memory() -> None:
+    """Public AGENTS.md must not carry local learned-preference memory blocks."""
+    root = _repo_root()
+    text = (root / "AGENTS.md").read_text(encoding="utf-8")
+    forbidden = (
+        "## Learned User Preferences",
+        "## Learned Workspace Facts",
+        "thermo-nuclear-code-quality-review",
+    )
+    for phrase in forbidden:
+        assert phrase not in text
+
+
+def test_publishing_cli_docs_do_not_advertise_apa_mla_formats() -> None:
+    """The CLI supports BibTeX only; APA/MLA are programmatic helpers."""
+    root = _repo_root()
+    docs_to_check = [
+        root / "infrastructure" / "publishing" / "README.md",
+        root / "docs" / "guides" / "publishing-guide.md",
+        root / "docs" / "modules" / "guides" / "publishing-module.md",
+        root / "infrastructure" / "publishing" / "AGENTS.md",
+    ]
+    for doc_path in docs_to_check:
+        text = doc_path.read_text(encoding="utf-8")
+        assert not re.search(r"generate-citation[^\n`]*--format\s+(apa|mla)\b", text, re.IGNORECASE), doc_path
+        assert "`--format`,\n        choices=[\"bibtex\"]" not in text, doc_path
+
+
+def test_api_reference_publish_to_zenodo_return_type() -> None:
+    """Generated API docs must show the current PublishResult return contract."""
+    root = _repo_root()
+    text = (root / "docs" / "reference" / "api-reference.md").read_text(encoding="utf-8")
+    match = re.search(r"### `publish_to_zenodo`.*?```python\n(?P<sig>.*?)\n```", text, re.DOTALL)
+    assert match, "publish_to_zenodo section missing from generated API reference"
+    assert "-> PublishResult" in match.group("sig")
+
+
 def test_pipeline_control_docs_describe_file_backed_hitl_boundary() -> None:
     """Agent/HITL docs must not imply an autonomous approval service exists."""
     root = _repo_root()

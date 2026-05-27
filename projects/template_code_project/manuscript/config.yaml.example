@@ -30,6 +30,14 @@ authors:
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
   doi: ""  # Add when formally published
+  github_repository: ""  # Pre-release bookends; e.g. docxology/template_code_project
+  transmission_bookends:
+    enabled: false
+    max_prior_releases: 5
+    show_steganography: true
+  deposit_filename:
+    enabled: true
+    topic: ""  # optional; default = first significant title word
   journal: ""
   volume: ""
   pages: ""
@@ -43,6 +51,16 @@ keywords:
 metadata:
   license: "Apache-2.0"
   language: "en"
+
+steganography:
+  enabled: true
+  overlays_enabled: true
+  barcodes_enabled: true
+  metadata_enabled: true
+  hashing_enabled: true
+  encryption_enabled: false
+  overlay_mode: "text"
+  overlay_text: "CONFIDENTIAL"
 
 # Consumed by: `infrastructure.llm.LLMClient` (in `infrastructure/llm/core/client.py`)
 llm:

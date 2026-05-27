@@ -72,7 +72,7 @@ def _scaffold_minimal_project(tmp_path: Path, name: str = "fake_project") -> Pat
 
 
 def test_function_name_drift_catches_invented_check(drift_module, tmp_path):
-    """A `_check_invented` reference in docs/* but absent from src/pipeline.py
+    """A `_check_invented` reference in docs/* but absent from pipeline checks
     must raise an ERROR."""
     root = _scaffold_minimal_project(tmp_path)
     (root / "src" / "pipeline.py").write_text("def _check_real(report): return None\n", encoding="utf-8")
@@ -93,6 +93,23 @@ def test_function_name_drift_clean_when_names_match(drift_module, tmp_path):
     rep = drift_module.Report()
     drift_module.check_function_name_drift(root, rep, "fake_project")
     assert rep.findings == []
+
+
+def test_function_name_drift_supports_pipeline_package(drift_module, tmp_path):
+    """The detector must handle src/pipeline/checks.py packages."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "src" / "pipeline").mkdir()
+    (root / "src" / "pipeline" / "__init__.py").write_text("", encoding="utf-8")
+    (root / "src" / "pipeline" / "checks.py").write_text("def _check_real(report): return None\n", encoding="utf-8")
+    (root / "docs" / "rules.md").write_text(
+        "The check is `_check_missing` in `src/pipeline/checks.py`.",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_function_name_drift(root, rep, "fake_project")
+    errors = rep.errors()
+    assert any("function_name_drift" == e.rule for e in errors), [(e.severity, e.rule, e.message) for e in rep.findings]
+    assert any("src/pipeline/checks.py" in e.message for e in errors)
 
 
 def test_test_class_drift_catches_invented_class(drift_module, tmp_path):

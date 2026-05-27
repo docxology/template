@@ -13,6 +13,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from infrastructure.validation.line_count import (  # noqa: E402
     scan_infrastructure_and_scripts,
     scan_project_scripts,
+    scan_project_src,
 )
 
 
@@ -35,6 +36,10 @@ def main(argv: list[str] | None = None) -> int:
     proj_warn, proj_fail = scan_project_scripts(args.repo_root)
     warnings.extend(proj_warn)
     failures.extend(proj_fail)
+
+    src_warn, src_fail = scan_project_src(args.repo_root)
+    warnings.extend(src_warn)
+    failures.extend(src_fail)
 
     for rel, count in sorted(warnings):
         print(f"WARN {rel}: {count} lines")

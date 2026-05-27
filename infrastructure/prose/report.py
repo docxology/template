@@ -5,6 +5,8 @@ a :class:`ManuscriptReport` whose JSON form is suitable for CI artefacts
 or downstream rendering.
 """
 
+from __future__ import annotations
+
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -19,6 +21,28 @@ from infrastructure.prose.analysis import (
     compute_metrics,
 )
 from infrastructure.prose.markdown import normalise_for_prose, read_manuscript_dir
+
+
+def _as_int(value: object, default: int = 0) -> int:
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value)
+    if isinstance(value, str):
+        return int(value)
+    return default
+
+
+def _as_float(value: object, default: float = 0.0) -> float:
+    if isinstance(value, bool):
+        return float(value)
+    if isinstance(value, int | float):
+        return float(value)
+    if isinstance(value, str):
+        return float(value)
+    return default
 
 
 @dataclass
@@ -66,6 +90,103 @@ class ManuscriptReport:
 
     def to_json(self, *, indent: int = 2) -> str:
         return json.dumps(self.to_dict(), indent=indent, ensure_ascii=False)
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, object]) -> ManuscriptReport:
+        """Reconstruct a report from :meth:`to_dict` / on-disk JSON."""
+        from infrastructure.prose.analysis import (
+            Heading,
+            ProseMetrics,
+            QualityReport,
+            Section,
+            StructureReport,
+        )
+
+        files: list[FileReport] = []
+        raw_files = payload.get("files")
+        if not isinstance(raw_files, list):
+            raw_files = []
+        for f in raw_files:
+            if not isinstance(f, Mapping):
+                continue
+            metrics_raw = f.get("metrics")
+            if not isinstance(metrics_raw, Mapping):
+                continue
+            metrics = ProseMetrics(**dict(metrics_raw))
+            s_data = f.get("structure")
+            if not isinstance(s_data, Mapping):
+                s_data = {}
+            headings = [Heading(**dict(h)) for h in s_data.get("headings") or [] if isinstance(h, Mapping)]
+            sections: list[Section] = []
+            raw_sections = s_data.get("sections")
+            if not isinstance(raw_sections, list):
+                raw_sections = []
+            for sec, hd in zip(raw_sections, headings):
+                if not isinstance(sec, Mapping):
+                    continue
+                sections.append(
+                    Section(
+                        heading=hd,
+                        body="",
+                        word_count=int(sec.get("word_count", 0)),
+                    )
+                )
+            struct = StructureReport(
+                headings=headings,
+                sections=sections,
+                total_words=int(s_data.get("total_words", 0)),
+                max_depth=int(s_data.get("max_depth", 0)),
+                has_h1=bool(s_data.get("has_h1", False)),
+                has_skipped_level=bool(s_data.get("has_skipped_level", False)),
+            )
+            q_data = f.get("quality")
+            if not isinstance(q_data, Mapping):
+                q_data = {}
+            quality = QualityReport(
+                passive_count=int(q_data.get("passive_count", 0)),
+                passive_sentences=[str(x) for x in q_data.get("passive_sentences") or []],
+                hedge_count=int(q_data.get("hedge_count", 0)),
+                hedge_words=[str(x) for x in q_data.get("hedge_words") or []],
+                citation_count=int(q_data.get("citation_count", 0)),
+                citation_keys=[str(x) for x in q_data.get("citation_keys") or []],
+                long_sentence_count=int(q_data.get("long_sentence_count", 0)),
+                long_sentences=[str(x) for x in q_data.get("long_sentences") or []],
+                word_count=int(q_data.get("word_count", 0)),
+                citation_density_per_1000=float(q_data.get("citation_density_per_1000", 0.0)),
+                hedge_density_per_1000=float(q_data.get("hedge_density_per_1000", 0.0)),
+                passive_density_per_1000=float(q_data.get("passive_density_per_1000", 0.0)),
+            )
+            files.append(
+                FileReport(
+                    name=str(f.get("name", "")),
+                    metrics=metrics,
+                    structure=struct,
+                    quality=quality,
+                )
+            )
+
+        citation_keys_raw = payload.get("citation_keys")
+        if not isinstance(citation_keys_raw, list):
+            citation_keys_raw = []
+
+        return cls(
+            files=files,
+            total_words=_as_int(payload.get("total_words")),
+            total_sentences=_as_int(payload.get("total_sentences")),
+            total_paragraphs=_as_int(payload.get("total_paragraphs")),
+            avg_flesch_reading_ease=_as_float(payload.get("avg_flesch_reading_ease")),
+            avg_flesch_kincaid_grade=_as_float(payload.get("avg_flesch_kincaid_grade")),
+            avg_gunning_fog=_as_float(payload.get("avg_gunning_fog")),
+            citation_keys=[str(x) for x in citation_keys_raw],
+        )
+
+
+def load_report_json(path: Path | str) -> ManuscriptReport:
+    """Load a :class:`ManuscriptReport` from on-disk JSON."""
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Manuscript report JSON must be an object: {path}")
+    return ManuscriptReport.from_dict(payload)
 
 
 def analyze_text(

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
 
+from .json_coerce import mapping, mapping_list
 from .diagnostics_intervals import (
     bootstrap_intervals,
     candidate_accuracy_intervals,
@@ -37,11 +37,11 @@ def candidate_selection_audit(
     intervals = intervals or candidate_accuracy_intervals(result)
     statistical_payload = statistical or statistical_summary(project_root, result)
     interval_by_id = {
-        str(row.get("candidate_id", "")): row for row in _mapping_list(intervals.get("rows")) if row.get("candidate_id")
+        str(row.get("candidate_id", "")): row for row in mapping_list(intervals.get("rows")) if row.get("candidate_id")
     }
     quality_by_id = {
         str(row.get("candidate_id", "")): row
-        for row in _mapping_list(statistical_payload.get("candidate_probability_quality"))
+        for row in mapping_list(statistical_payload.get("candidate_probability_quality"))
         if row.get("candidate_id")
     }
     ranked = sorted(
@@ -54,8 +54,8 @@ def candidate_selection_audit(
     )
     rows: list[dict[str, object]] = []
     for rank, candidate in enumerate(ranked, start=1):
-        interval = _mapping(interval_by_id.get(candidate.identifier))
-        quality = _mapping(quality_by_id.get(candidate.identifier))
+        interval = mapping(interval_by_id.get(candidate.identifier))
+        quality = mapping(quality_by_id.get(candidate.identifier))
         rows.append(
             {
                 "rank": rank,
@@ -259,14 +259,6 @@ def _write_json(path: Path, payload: object) -> Path:
     return path
 
 
-def _mapping_list(value: object) -> list[dict[str, Any]]:
-    return [row for row in value if isinstance(row, dict)] if isinstance(value, list) else []
-
-
-def _mapping(value: object) -> dict[str, Any]:
-    return value if isinstance(value, dict) else {}
-
-
 def _float_value(value: object) -> float:
     return float(value) if isinstance(value, int | float | str) else 0.0
 
@@ -291,7 +283,5 @@ __all__ = [
     "write_candidate_selection_audit_json",
     "write_diagnostic_boundary_json",
     "_write_json",
-    "_mapping_list",
-    "_mapping",
     "_float_value",
 ]

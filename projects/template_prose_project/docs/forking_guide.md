@@ -48,7 +48,7 @@ add -f` it. Read [`../../../CLAUDE.md`](../../../CLAUDE.md)
 ## What you're forking
 
 This template is a **prose-review pipeline**: it has **no algorithm of
-its own** — instead, `src/pipeline.py` calls
+its own** — instead, `src/pipeline/` calls
 `infrastructure.prose.analyze_manuscript` and
 `infrastructure.reference.citation.parse_bibfile`, applies five
 threshold checks (grade-level band, citation density, H1-per-file,
@@ -106,7 +106,7 @@ The loader rejects unknown YAML keys and enforces invariants
 
 1. Add a field to `ProseAnalysisConfig` in `src/config.py` (and to the
    `_KNOWN_PROSE_KEYS` registry).
-2. Add a `_check_<name>` function in `src/pipeline.py`.
+2. Add a `_check_<name>` function in `src/pipeline/checks.py`.
 3. Wire it into `run_prose_pipeline` so it appears in
    `artifacts.checks`.
 4. Add a test in `tests/test_pipeline.py` covering both

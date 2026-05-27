@@ -52,11 +52,11 @@ Full API and smoke-test notes: [`AGENTS.md`](AGENTS.md).
 
 ```mermaid
 graph TD
-    OA[optimization_analysis.py] --> SA[src/analysis.py]
+    OA[optimization_analysis.py] --> SA[src/analysis/]
     BD[build_dashboard.py] --> SD[src/dashboard.py]
     ZGEN[z_generate_manuscript_variables.py] --> MV[src/manuscript_variables.py]
     SA --> OPT[src/optimizer.py]
-    SA --> FIG[src/figures.py]
+    SA --> FIG[src/figures/]
     GD[generate_api_docs.py] --> DOC[src/documentation.py]
     PF[00_preflight.py] --> INFRA[infrastructure.rendering.preflight]
 ```

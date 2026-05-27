@@ -13,47 +13,25 @@ skipped so titles like *On Convex Optimization* still produce ``…convex``
 rather than ``…on``.
 """
 
-import re
-import unicodedata
 from collections import OrderedDict
 from typing import TYPE_CHECKING
 
+from infrastructure.core.text_slug import (
+    TITLE_STOP_WORDS,
+    extract_surname,
+    slugify_token,
+    title_key_word,
+)
 from infrastructure.reference.citation.models import BibEntry
 
 if TYPE_CHECKING:
     from infrastructure.search.literature.models import Paper
 
-# Words skipped when picking the title-word component of the citation key.
-_TITLE_STOP_WORDS: frozenset[str] = frozenset(
-    {
-        "a",
-        "an",
-        "the",
-        "and",
-        "or",
-        "but",
-        "nor",
-        "of",
-        "on",
-        "in",
-        "at",
-        "to",
-        "from",
-        "for",
-        "with",
-        "by",
-        "is",
-        "are",
-        "was",
-        "were",
-        "be",
-        "been",
-        "being",
-        "as",
-        "into",
-        "via",
-    }
-)
+# Backward-compatible aliases for internal call sites in this module.
+_TITLE_STOP_WORDS = TITLE_STOP_WORDS
+_slugify_token = slugify_token
+_surname = extract_surname
+_title_key_word = title_key_word
 
 # Map literature-source / venue type → BibTeX entry type.
 _SOURCE_TO_ENTRY_TYPE: dict[str, str] = {
@@ -77,40 +55,6 @@ _SOURCE_TO_ENTRY_TYPE: dict[str, str] = {
     "dataset": "dataset",
     "online": "online",
 }
-
-
-def _slugify_token(text: str) -> str:
-    """ASCII-fold *text* and strip non-alphanumerics. Lowercased."""
-    if not text:
-        return ""
-    nfkd = unicodedata.normalize("NFKD", text)
-    ascii_text = nfkd.encode("ascii", "ignore").decode("ascii")
-    return re.sub(r"[^a-z0-9]", "", ascii_text.lower())
-
-
-def _surname(author: str) -> str:
-    """Extract the surname from a free-form author string.
-
-    Handles both ``"Lastname, Firstname"`` and ``"Firstname Lastname"`` forms.
-    """
-    if not author:
-        return ""
-    if "," in author:
-        # "Cauchy, Augustin-Louis" → "Cauchy"
-        return author.split(",", 1)[0].strip()
-    parts = [p for p in re.split(r"\s+", author.strip()) if p]
-    return parts[-1] if parts else ""
-
-
-def _title_key_word(title: str) -> str:
-    """Pick the first non-stop-word from *title* for the citation key."""
-    if not title:
-        return ""
-    for raw in re.split(r"\s+", title.strip()):
-        slug = _slugify_token(raw)
-        if slug and slug not in _TITLE_STOP_WORDS:
-            return slug
-    return ""
 
 
 def generate_citation_key(

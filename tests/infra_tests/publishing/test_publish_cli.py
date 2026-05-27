@@ -8,12 +8,59 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 
 from infrastructure.publishing import publish_cli
 
 
 class TestPublishCliMain:
     """Test suite for publish_cli main function."""
+
+    def test_main_creates_github_release(
+        self,
+        tmp_path,
+        github_test_server,
+        monkeypatch,
+        capsys,
+    ):
+        """Exercise main() with a local GitHub API server."""
+        pdf_dir = tmp_path / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / "test.pdf").write_bytes(b"%PDF-1.4\n%EOF")
+
+        monkeypatch.chdir(tmp_path)
+
+        real_release = publish_cli.publishing.create_github_release
+
+        def release_with_local_api(*args, **kwargs):
+            kwargs["base_url"] = github_test_server.url_for("")
+            return real_release(*args, **kwargs)
+
+        monkeypatch.setattr(
+            publish_cli.publishing,
+            "create_github_release",
+            release_with_local_api,
+        )
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            [
+                "publish_cli.py",
+                "--token",
+                "test-token",
+                "--repo",
+                "testuser/testrepo",
+                "--tag",
+                "v1.0.0",
+                "--name",
+                "Test Release",
+            ],
+        )
+
+        publish_cli.main()
+
+        captured = capsys.readouterr()
+        assert "github.com" in captured.out
 
     def test_main_basic_publish_argument_parsing(self, tmp_path):
         """Test basic argument parsing without actual publishing."""

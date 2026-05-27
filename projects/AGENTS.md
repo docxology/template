@@ -34,10 +34,11 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 
 ## Permanent Canonical Exemplars and Optional Search Add-On
 
-Three projects under `projects/` are **permanent canonical exemplars**: `template_code_project`, `template_prose_project`, and `template_autoresearch_project`. These are the public project trees allowed by `.gitignore`, `infrastructure.project.public_scope`, and `scripts/check_tracked_projects.py`. **CONFIDENTIALITY INVARIANT (public repo):** every other project under `projects/` (rotating research, client/confidential work, the search exemplar) is **local-only and must never be committed**. The guard runs in pre-push and CI, and a `git add -f` cannot bypass it. Together the permanent exemplars cover the computational, prose-review, and deterministic AutoResearch paths. The `template_search_project` literature-search exemplar is local-only, rests under `projects_archive/template_search_project/`, and is copied under `projects/` *locally only* to run literature-search workflows (never committed):
+Four projects under `projects/` are **permanent canonical exemplars**: `template_active_inference`, `template_code_project`, `template_prose_project`, and `template_autoresearch_project`. These are the public project trees allowed by `.gitignore`, `infrastructure.project.public_scope`, and `scripts/check_tracked_projects.py`. **CONFIDENTIALITY INVARIANT (public repo):** every other project under `projects/` (rotating research, client/confidential work, the search exemplar) is **local-only and must never be committed**. The guard runs in pre-push and CI, and a `git add -f` cannot bypass it. Together the permanent exemplars cover Active Inference multi-track research, computational, prose-review, and deterministic AutoResearch paths. The `template_search_project` literature-search exemplar is local-only, rests under `projects_archive/template_search_project/`, and is copied under `projects/` *locally only* to run literature-search workflows (never committed):
 
 | Exemplar | Shape | Algorithm? | Bibliography | Figures embedded | Tests | Coverage |
 |---|---|---|---|---|---|---|
+| [`template_active_inference/`](template_active_inference/) | Active Inference multi-track (analytical + pymdp + sheaf manuscript + Lean/GNN/ontology) | yes (`src/analytical/*`, `src/simulation/*`) | curated read-only | registry-backed | see canonical facts | see canonical facts |
 | [`template_code_project/`](template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/optimizer.py`, `src/invariants.py`) | curated read-only | 6 figures | see canonical facts | see canonical facts |
 | [`template_prose_project/`](template_prose_project/) | Prose-centric (editorial review) | no (orchestration over `infrastructure/prose`, `infrastructure/reference`) | curated read-only (validated, never written) | 0 (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
 | [`template_autoresearch_project/`](template_autoresearch_project/) | AutoResearch-centric (plan/evidence/claim/artifact/readiness loop) | yes (`src/loop.py`) | curated read-only (validated, never written) | 0 | see canonical facts | see canonical facts |
@@ -71,11 +72,10 @@ Active projects in the `projects/` directory are:
 - **Validated** by `04_validate_output.py`
 - **Copied** to `output/{name}/` by `05_copy_outputs.py`
 
-Private lifecycle projects normally live in
-`/Users/4d/Documents/GitHub/projects/`: `active/*` is symlinked into this
-directory before discovery/rendering, while `passive/*` and `archive/*` are
-symlinked into `../projects_in_progress/` and `../projects_archive/` for
-non-rendered inspection. Preview with
+Private lifecycle projects normally live in an external private repository:
+`active/*` is symlinked into this directory before discovery/rendering, while
+`passive/*` and `archive/*` are symlinked into `../projects_in_progress/` and
+`../projects_archive/` for non-rendered inspection. Preview with
 `uv run python -m infrastructure.orchestration link-projects --dry-run`;
 override the private root with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root`; disable one auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.

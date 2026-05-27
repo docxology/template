@@ -1,0 +1,22 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task (2026).",
+  "keywords": [
+    "autoresearch",
+    "reproducible research",
+    "machine learning benchmark",
+    "artifact readiness",
+    "human review",
+    "local artifact integrity"
+  ],
+  "license": "MIT",
+  "title": "Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task",
+  "upload_type": "software",
+  "version": "0.1"
+}

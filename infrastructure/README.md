@@ -179,7 +179,7 @@ flowchart TD
     H --> HH[api.py<br/>Platform API clients]
     H --> II[package.py<br/>Submission packaging]
     H --> JJ[platforms.py<br/>Release automation]
-    H --> KK[citations.py<br/>BibTeX/APA/MLA]
+    H --> KK[citations.py<br/>BibTeX CLI target<br/>APA/MLA helpers]
 
     I --> LL[benchmarking.py<br/>Performance analysis]
     I --> MM[validation.py<br/>Scientific standards]

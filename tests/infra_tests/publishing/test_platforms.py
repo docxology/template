@@ -9,8 +9,10 @@ from __future__ import annotations
 import tarfile
 from pathlib import Path
 
+import pytest
 from pytest_httpserver import HTTPServer
 
+from infrastructure.core.exceptions import PublishingError
 from infrastructure.publishing.models import PublicationMetadata
 from infrastructure.publishing.platforms import (
     create_github_release,
@@ -278,5 +280,52 @@ class TestCreateGithubRelease:
 
 
 class TestPublishToZenodo:
-    def test_callable(self):
-        assert callable(publish_to_zenodo)
+    def test_end_to_end_via_platforms_shim(
+        self,
+        tmp_path: Path,
+        zenodo_test_server,
+    ) -> None:
+        paper = tmp_path / "paper.pdf"
+        paper.write_bytes(b"%PDF")
+
+        metadata = _make_metadata()
+        doi = publish_to_zenodo(
+            metadata,
+            [paper],
+            access_token="test-token",
+            sandbox=True,
+            base_url=zenodo_test_server.url_for(""),
+        )
+        assert doi.doi == "10.5281/zenodo.12345"
+
+
+class TestCreateGithubReleaseImportGuard:
+    def test_requires_requests_package(self, monkeypatch) -> None:
+        import infrastructure.publishing.github.release as github_release
+
+        monkeypatch.setattr(github_release, "_requests_available", False)
+        with pytest.raises(PublishingError, match="requests package is required"):
+            create_github_release(
+                tag_name="v1.0",
+                release_name="Release",
+                description="Test",
+                assets=[],
+                token="token",
+                repo="owner/repo",
+            )
+
+    def test_http_failure_raises_publishing_error(self, httpserver: HTTPServer) -> None:
+        httpserver.expect_request("/repos/owner/repo/releases", method="POST").respond_with_data(
+            "error",
+            status=500,
+        )
+        with pytest.raises(PublishingError, match="GitHub release failed"):
+            create_github_release(
+                tag_name="v1.0",
+                release_name="Release",
+                description="Test",
+                assets=[],
+                token="token",
+                repo="owner/repo",
+                base_url=httpserver.url_for(""),
+            )

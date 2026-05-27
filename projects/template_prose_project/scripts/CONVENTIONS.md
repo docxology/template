@@ -36,7 +36,7 @@ def main():
 
 If a script line evaluates a manuscript property (readability,
 heading hierarchy, citation density, BibTeX coverage), the work belongs
-in `src/pipeline.py` as a `_check_<name>` function — write it there and
+in `src/pipeline/checks.py` as a `_check_<name>` function — write it there and
 test it.
 
 ## File Naming Convention
@@ -167,7 +167,7 @@ except FileNotFoundError as e:
 
 Before submitting a new or modified script:
 
-- [ ] All analysis lives in `src/pipeline.py` or `infrastructure/`, not
+- [ ] All analysis lives in `src/pipeline/` or `infrastructure/`, not
   in the script.
 - [ ] Uses `logger`, never bare `print()` (except for stdout output paths
   consumed by the pipeline manifest collector).

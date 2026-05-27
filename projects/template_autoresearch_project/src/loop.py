@@ -19,23 +19,24 @@ from infrastructure.validation.evidence_registry import (
 
 from .artifact_content import is_substantive_artifact
 from .config import AutoResearchLoopConfig, build_loop_config, load_human_review, load_manuscript_loop_settings
-from .manuscript_variables import write_manuscript_hydration_artifacts
-from .ml_task import run_bounded_ml_task
+from .loop_phases import (
+    build_loop_context,
+    run_final_payload_and_visual_phase,
+    run_pre_readiness_visual_phase,
+    run_provisional_payload_phase,
+    run_settlement_manifest_phase,
+)
+from .ml_task import MLTaskResult, run_bounded_ml_task
 from .models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
 from .writers import (
-    finalize_loop_payloads,
     relative_path,
-    update_result_payloads,
-    write_autoresearch_phase_ledger,
     write_artifact_manifest,
     write_core_loop_artifacts,
-    write_final_visual_artifacts,
-    write_ml_task_artifacts,
     write_method_contract_artifacts,
+    write_ml_task_artifacts,
     write_research_object_manifest,
     write_schema_manifest,
 )
-from .security import write_security_artifacts
 
 __all__ = [
     "AutoResearchClaim",
@@ -60,13 +61,16 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
     stage_results = build_stage_results(config, plan_stage_count=len(plan.stages))
     generated_at = datetime.now(UTC).isoformat(timespec="seconds")
 
-    output_paths = write_core_loop_artifacts(
-        project_root,
-        plan.to_dict(),
-        config,
-        stage_results,
-        generated_at,
-        project_name,
+    output_paths: list[Path] = []
+    output_paths.extend(
+        write_core_loop_artifacts(
+            project_root,
+            plan.to_dict(),
+            config,
+            stage_results,
+            generated_at,
+            project_name,
+        )
     )
     output_paths.append(
         write_evidence_registry_report(
@@ -77,97 +81,97 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
     ml_result = run_bounded_ml_task(project_root, config.budget_policy)
     output_paths.extend(write_ml_task_artifacts(project_root, ml_result, generated_at=generated_at))
 
+    ctx = build_loop_context(
+        project_root,
+        repo_root,
+        project_name,
+        plan,
+        config,
+        stage_results,
+        generated_at,
+        ml_result,
+        output_paths,
+    )
+
     claims = build_claims(config, project_root)
-    provisional = AutoResearchLoopResult(
-        project_name=project_name,
-        generated_at=generated_at,
-        config=config,
-        stage_results=stage_results,
-        claims=claims,
+    provisional = _loop_result(
+        project_name,
+        generated_at,
+        config,
+        stage_results,
+        claims,
         readiness_valid=False,
         output_paths=(),
-        ml_task=ml_result.to_summary_dict(),
+        ml_result=ml_result,
     )
-    output_paths.extend(finalize_loop_payloads(project_root, provisional))
-    output_paths.extend(
+    run_provisional_payload_phase(ctx, provisional)
+    ctx.output_paths.extend(
         write_method_contract_artifacts(project_root, config, generated_at=generated_at, ml_result=ml_result)
     )
 
-    final_paths = _final_output_path_payload(project_root, output_paths, config.required_artifacts)
-    final = AutoResearchLoopResult(
-        project_name=project_name,
-        generated_at=generated_at,
-        config=config,
-        stage_results=stage_results,
-        claims=claims,
+    pre_readiness = _loop_result(
+        project_name,
+        generated_at,
+        config,
+        stage_results,
+        claims,
         readiness_valid=False,
-        output_paths=final_paths,
-        ml_task=ml_result.to_summary_dict(),
+        output_paths=_final_output_path_payload(project_root, ctx.output_paths, config.required_artifacts),
+        ml_result=ml_result,
     )
-    output_paths.extend(update_result_payloads(project_root, final))
-    if config.security_profile.enabled:
-        output_paths.extend(write_security_artifacts(project_root, config, output_paths, generated_at=generated_at))
-    output_paths.extend(write_final_visual_artifacts(project_root, final, ml_result))
-    output_paths.extend(write_manuscript_hydration_artifacts(project_root, require_valid=False))
-    output_paths.append(_write_readiness_manifest(project_root, output_paths))
-    if config.security_profile.enabled:
-        output_paths.extend(write_security_artifacts(project_root, config, output_paths, generated_at=generated_at))
-    output_paths.append(write_schema_manifest(project_root, output_paths, generated_at=generated_at))
-    output_paths.append(write_research_object_manifest(project_root, output_paths, generated_at=generated_at))
-    output_paths.append(
-        write_autoresearch_phase_ledger(
-            project_root,
-            final,
-            output_paths,
-            generated_at=generated_at,
-            settlement_pass_count=2,
-        )
-    )
-    output_paths.append(_write_readiness_manifest(project_root, output_paths))
+    run_provisional_payload_phase(ctx, pre_readiness)
+    run_pre_readiness_visual_phase(ctx, pre_readiness)
+    ctx.output_paths.append(_write_readiness_manifest(project_root, ctx.output_paths))
+    ctx.output_paths.append(write_schema_manifest(project_root, ctx.output_paths, generated_at=generated_at))
+    ctx.output_paths.append(write_research_object_manifest(project_root, ctx.output_paths, generated_at=generated_at))
+    run_settlement_manifest_phase(ctx, pre_readiness, settlement_pass_count=2, write_final_manifest=False)
+    ctx.output_paths.append(_write_readiness_manifest(project_root, ctx.output_paths))
 
     readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
     if _only_changed_artifact_manifest_issues(readiness_post):
-        output_paths.append(_write_readiness_manifest(project_root, output_paths))
+        ctx.output_paths.append(_write_readiness_manifest(project_root, ctx.output_paths))
         readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
     readiness_valid = readiness_pre.valid and readiness_post.valid
     readiness_report = _combine_readiness_reports(readiness_pre, readiness_post, plan.project_name)
-    output_paths.extend(write_autoresearch_report(project_root, readiness_report))
+    ctx.output_paths.extend(write_autoresearch_report(project_root, readiness_report))
     claims = build_claims(config, project_root)
 
-    final_paths = _final_output_path_payload(project_root, output_paths, config.required_artifacts)
-    final = AutoResearchLoopResult(
-        project_name=project_name,
-        generated_at=generated_at,
-        config=config,
-        stage_results=stage_results,
-        claims=claims,
+    final = _loop_result(
+        project_name,
+        generated_at,
+        config,
+        stage_results,
+        claims,
         readiness_valid=readiness_valid,
-        output_paths=final_paths,
-        ml_task=ml_result.to_summary_dict(),
+        output_paths=_final_output_path_payload(project_root, ctx.output_paths, config.required_artifacts),
+        ml_result=ml_result,
     )
-    output_paths.extend(update_result_payloads(project_root, final))
-    output_paths.extend(write_final_visual_artifacts(project_root, final, ml_result))
-    output_paths.append(
-        write_evidence_registry_report(
-            project_root / "output",
-            build_project_evidence_registry(project_root),
-        )
+    run_final_payload_and_visual_phase(ctx, final)
+    run_settlement_manifest_phase(ctx, final, settlement_pass_count=3, write_final_manifest=True)
+
+    return _loop_result(
+        project_name,
+        generated_at,
+        config,
+        stage_results,
+        claims,
+        readiness_valid=readiness_valid,
+        output_paths=tuple(dict.fromkeys(relative_path(project_root, path) for path in ctx.output_paths)),
+        ml_result=ml_result,
     )
-    output_paths.extend(write_manuscript_hydration_artifacts(project_root, require_valid=True))
-    if config.security_profile.enabled:
-        output_paths.extend(write_security_artifacts(project_root, config, output_paths, generated_at=generated_at))
-    output_paths.append(
-        write_autoresearch_phase_ledger(
-            project_root,
-            final,
-            output_paths,
-            generated_at=generated_at,
-            settlement_pass_count=3,
-        )
-    )
-    output_paths.append(write_schema_manifest(project_root, output_paths, generated_at=generated_at))
-    output_paths.append(write_research_object_manifest(project_root, output_paths, generated_at=generated_at))
-    output_paths.append(write_artifact_manifest(project_root, output_paths))
+
+
+def _loop_result(
+    project_name: str,
+    generated_at: str,
+    config: AutoResearchLoopConfig,
+    stage_results: tuple[LoopStageResult, ...],
+    claims: tuple[AutoResearchClaim, ...],
+    *,
+    readiness_valid: bool,
+    output_paths: tuple[str, ...] | tuple[()],
+    ml_result: MLTaskResult,
+) -> AutoResearchLoopResult:
     return AutoResearchLoopResult(
         project_name=project_name,
         generated_at=generated_at,
@@ -175,7 +179,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         stage_results=stage_results,
         claims=claims,
         readiness_valid=readiness_valid,
-        output_paths=tuple(dict.fromkeys(relative_path(project_root, path) for path in output_paths)),
+        output_paths=output_paths,
         ml_task=ml_result.to_summary_dict(),
     )
 
@@ -205,14 +209,7 @@ def build_stage_results(config: AutoResearchLoopConfig, *, plan_stage_count: int
 
 
 def build_claims(config: AutoResearchLoopConfig, project_root: Path) -> tuple[AutoResearchClaim, ...]:
-    """Build claims supported only by evidence files that carry real content.
-
-    Support is bound to substance, not existence: an empty, header-only, or
-    unparseable evidence file does not support its claim (see
-    ``is_substantive_artifact``). This closes the prior fail-open where any
-    present file — even a 0-byte placeholder — marked a research question
-    "supported".
-    """
+    """Build claims supported only by evidence files that carry real content."""
     claims: list[AutoResearchClaim] = []
     for question in config.research_questions:
         evidence_path = question.expected_evidence
@@ -230,18 +227,7 @@ def build_claims(config: AutoResearchLoopConfig, project_root: Path) -> tuple[Au
 def _final_output_path_payload(
     project_root: Path, output_paths: list[Path], required_artifacts: tuple[str, ...]
 ) -> tuple[str, ...]:
-    """Return stable output paths for the JSON loop payload.
-
-    The expected set is derived from the project's declared ``required_artifacts``
-    contract (``autoresearch.yaml``) — the single source of truth — rather than a
-    hand-maintained tuple. This eliminates the drift class where the loop's
-    self-reported paths silently diverged from what validation actually requires.
-
-    Contract artifacts are included only if they actually exist on disk, so the
-    self-report cannot overclaim a required artifact that was never written; a
-    genuinely-missing artifact is therefore absent here (and still independently
-    caught by the readiness gate and manifest consumers that re-check existence).
-    """
+    """Return stable output paths for the JSON loop payload."""
     return tuple(
         dict.fromkeys(
             (

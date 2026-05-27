@@ -14,7 +14,7 @@ Every test must exercise real algorithms with real data.
 
 ### Orchestration boundary testing (allowed)
 
-For **`src/analysis.py`**, **`src/dashboard.py`**, **`src/figures.py`**, and **`src/manuscript_variables.py`** only:
+For **`src/analysis/`**, **`src/dashboard.py`**, **`src/figures/`**, and **`src/manuscript_variables.py`** only:
 
 - **`pytest.MonkeyPatch`** on module attributes (`project_root`, `verify_output_integrity`, `_get_logger`, etc.) — real functions run; I/O boundaries are redirected, not faked
 - **Subprocess import isolation** — block `infrastructure.*` at import time to exercise fallback paths (see `TestImportFallback` in `test_analysis_coverage.py` and `test_manuscript_variables.py`)

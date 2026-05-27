@@ -32,6 +32,7 @@ _CONFIG_KEYS = frozenset(
         "disclosure_text",
         "edit_allowlist",
         "enabled",
+        "grading",
         "metric_direction",
         "strict",
         "topic",
