@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from infrastructure.prose.markdown import (
+    links_to_label_paren_url,
+    normalise_for_deposit,
     normalise_for_prose,
     read_manuscript_dir,
     strip_fences,
@@ -55,6 +57,19 @@ class TestStripping:
         assert "code()" not in out
         assert "fenced" not in out
         assert "Pandoc" in out
+
+    def test_normalise_for_deposit(self):
+        text = (
+            "# Abstract {#sec:abstract}\n\n"
+            "See **bold** and `inline` in [Docs](https://example.com/doc).\n"
+        )
+        out = normalise_for_deposit(text)
+        assert "{#sec:abstract}" not in out
+        assert "**" not in out
+        assert "`inline`" not in out
+        assert "inline" in out
+        assert "Docs (https://example.com/doc)" in out
+        assert links_to_label_paren_url("[A](https://a.test)") == "A (https://a.test)"
 
 
 class TestReadManuscriptDir:

@@ -10,9 +10,16 @@ from pathlib import Path
 
 _FRONT_MATTER_RE = re.compile(r"^\s*---\s*\n.*?\n\s*---\s*\n", re.DOTALL)
 _FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
-_INLINE_CODE_RE = re.compile(r"`[^`\n]+`")
-_LINK_RE = re.compile(r"\[([^\]]+)\]\([^\)]+\)")
+_INLINE_CODE_RE = re.compile(r"`([^`\n]+)`")
+_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^\)]+)\)")
 _IMAGE_RE = re.compile(r"!\[([^\]]*)\]\([^\)]+\)")
+_MARKDOWN_HEADER_RE = re.compile(r"^#+\s*", re.MULTILINE)
+_PANDOC_ATTR_RE = re.compile(r"\s*\{#[^}]+\}")
+_PANDOC_CARET_ATTR_RE = re.compile(r"\s*\{\^[^}]+\}")
+_EMPHASIS_RE = re.compile(r"\*\*([^*]+)\*\*|\*([^*]+)\*|__([^_]+)__|_([^_]+)_")
+_CITATION_RE = re.compile(r"\[@([^\]]+)\]")
+_WHITESPACE_RE = re.compile(r"[ \t]+\n")
+_MULTI_NEWLINE_RE = re.compile(r"\n{3,}")
 
 
 def strip_front_matter(text: str) -> str:
@@ -30,11 +37,87 @@ def strip_inline_code(text: str) -> str:
     return _INLINE_CODE_RE.sub("", text)
 
 
+def unwrap_inline_code(text: str) -> str:
+    """Replace inline code spans with their inner text."""
+    return _INLINE_CODE_RE.sub(r"\1", text)
+
+
 def strip_links_to_text(text: str) -> str:
     """Replace ``[label](url)`` with ``label`` and drop ``![alt](url)``."""
     text = _IMAGE_RE.sub("", text)
     text = _LINK_RE.sub(r"\1", text)
     return text
+
+
+def links_to_label_paren_url(text: str) -> str:
+    """Replace ``[label](url)`` with ``label (url)`` and drop images."""
+    text = _IMAGE_RE.sub("", text)
+
+    def _replace(match: re.Match[str]) -> str:
+        label = match.group(1).strip()
+        url = match.group(2).strip()
+        return f"{label} ({url})"
+
+    return _LINK_RE.sub(_replace, text)
+
+
+def strip_pandoc_attributes(text: str) -> str:
+    """Remove Pandoc header/span attribute blocks such as ``{#id}`` or ``{^fn}``."""
+    text = _PANDOC_ATTR_RE.sub("", text)
+    return _PANDOC_CARET_ATTR_RE.sub("", text)
+
+
+def strip_markdown_headers(text: str) -> str:
+    """Remove ATX markdown header markers."""
+    return _MARKDOWN_HEADER_RE.sub("", text)
+
+
+def strip_emphasis_asterisk(text: str) -> str:
+    """Remove ``*`` / ``**`` emphasis markers, keeping inner text."""
+
+    def _replace(match: re.Match[str]) -> str:
+        for group in match.groups():
+            if group is not None:
+                return group
+        return match.group(0)
+
+    return re.sub(r"\*\*([^*]+)\*\*|\*([^*]+)\*", _replace, text)
+
+
+def strip_emphasis(text: str) -> str:
+    """Remove bold/italic markers, keeping inner text."""
+
+    def _replace(match: re.Match[str]) -> str:
+        for group in match.groups():
+            if group is not None:
+                return group
+        return match.group(0)
+
+    return _EMPHASIS_RE.sub(_replace, text)
+
+
+def strip_citations(text: str) -> str:
+    """Remove Pandoc citation markers ``[@key]``."""
+    return _CITATION_RE.sub("", text)
+
+
+def collapse_whitespace(text: str) -> str:
+    """Normalise trailing spaces and excessive blank lines."""
+    text = _WHITESPACE_RE.sub("\n", text)
+    return _MULTI_NEWLINE_RE.sub("\n\n", text).strip()
+
+
+def normalise_for_deposit(text: str) -> str:
+    """Convert manuscript markdown to plaintext suitable for Zenodo/GitHub deposits."""
+    out = strip_front_matter(text)
+    out = strip_fences(out)
+    out = strip_markdown_headers(out)
+    out = strip_pandoc_attributes(out)
+    out = unwrap_inline_code(out)
+    out = links_to_label_paren_url(out)
+    out = strip_emphasis_asterisk(out)
+    out = strip_citations(out)
+    return collapse_whitespace(out)
 
 
 def normalise_for_prose(text: str) -> str:
