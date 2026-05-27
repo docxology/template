@@ -25,7 +25,7 @@ from infrastructure.publishing.abstract_plaintext import (
     resolve_variables_path,
     zenodo_record_url_from_doi,
 )
-from infrastructure.publishing.config_doi import update_publication_doi
+from infrastructure.publishing.config_doi import update_publication_after_zenodo_deposit
 from infrastructure.publishing.deposit_filename import build_deposit_filename
 from infrastructure.publishing.github.release import create_github_release
 from infrastructure.publishing.metadata_from_config import (
@@ -449,7 +449,7 @@ def run_release_workflow(
 
     if doi and doi != existing_doi:
         try:
-            config_updated = update_publication_doi(
+            config_updated = update_publication_after_zenodo_deposit(
                 config_path,
                 doi,
                 dry_run=request.dry_run,

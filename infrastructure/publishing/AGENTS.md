@@ -16,7 +16,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `package.py` | Publication package, checklist, readiness re-exports |
 | `metadata_from_config.py` | `publication_metadata_from_config`, `load_publication_release_context` — single-parse metadata + deposit context + prior DOI from `config.yaml` |
 | `abstract_plaintext.py` | Plaintext abstract + cross-link footer for Zenodo/GitHub (`build_deposit_description`, `build_github_release_body`) |
-| `config_doi.py` | `update_publication_doi`, `read_publication_doi` — comment-preserving DOI write-back |
+| `config_doi.py` | `update_publication_doi`, `read_publication_doi`, `update_publication_after_zenodo_deposit` — comment-preserving DOI write-back (concept DOI preserved when `version_doi` is declared) |
 | `release_workflow.py` | Unified GitHub + Zenodo + DOI + re-render orchestration |
 | `deposit_filename.py` | `build_deposit_filename`, `DepositPublishContext`, `deposit_context_from_config` — metadata-driven Zenodo/GitHub upload basename |
 | `publication_ledger.py` | Append-only release ledger for transmission bookends |

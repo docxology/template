@@ -8,7 +8,13 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.exceptions import MetadataError, PublishingError
-from infrastructure.publishing.config_doi import read_publication_doi, update_publication_doi
+from infrastructure.publishing.config_doi import (
+    read_publication_doi,
+    read_publication_version_doi,
+    update_publication_after_zenodo_deposit,
+    update_publication_doi,
+    uses_split_zenodo_doi_fields,
+)
 from infrastructure.publishing.metadata_from_config import (
     load_publication_release_context,
     publication_metadata_from_config,
@@ -113,6 +119,26 @@ class TestConfigDoi:
         config_path.write_text("publication:\n  journal: x\n", encoding="utf-8")
         with pytest.raises(MetadataError):
             update_publication_doi(config_path, "not-a-doi")
+
+    def test_split_zenodo_fields_keep_concept_doi(self, tmp_path: Path) -> None:
+        config_path = tmp_path / "config.yaml"
+        config_path.write_text(
+            "publication:\n"
+            '  doi: "10.5281/zenodo.11111"\n'
+            '  version_doi: "10.5281/zenodo.22222"\n'
+            '  version_record: "https://zenodo.org/records/22222"\n',
+            encoding="utf-8",
+        )
+        assert uses_split_zenodo_doi_fields(config_path) is True
+        assert read_publication_doi(config_path) == "10.5281/zenodo.11111"
+        assert read_publication_version_doi(config_path) == "10.5281/zenodo.22222"
+        assert update_publication_after_zenodo_deposit(config_path, "10.5281/zenodo.33333") is True
+        text = config_path.read_text(encoding="utf-8")
+        assert 'doi: "10.5281/zenodo.11111"' in text
+        assert 'version_doi: "10.5281/zenodo.33333"' in text
+        assert 'version_record: "https://zenodo.org/records/33333"' in text
+        assert read_publication_doi(config_path) == "10.5281/zenodo.11111"
+        assert read_publication_version_doi(config_path) == "10.5281/zenodo.33333"
 
 
 class TestMetadataFromConfig:
