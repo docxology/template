@@ -81,7 +81,7 @@ class TestBuildModuleInventoryTable:
         modules = [
             ModuleInfo(
                 name="core",
-                path=Path("/tmp/core"),
+                path=Path("infrastructure/core"),
                 python_file_count=10,
                 has_init=True,
                 has_agents_md=True,
@@ -90,7 +90,7 @@ class TestBuildModuleInventoryTable:
             ),
             ModuleInfo(
                 name="validation",
-                path=Path("/tmp/validation"),
+                path=Path("infrastructure/validation"),
                 python_file_count=7,
                 has_init=True,
                 has_agents_md=False,

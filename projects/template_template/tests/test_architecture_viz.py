@@ -24,7 +24,7 @@ def _sample_modules() -> list[ModuleInfo]:
     return [
         ModuleInfo(
             name="core",
-            path=Path("/tmp/core"),
+            path=REPO_ROOT / "infrastructure/core",
             python_file_count=10,
             has_init=True,
             has_agents_md=True,
@@ -33,7 +33,7 @@ def _sample_modules() -> list[ModuleInfo]:
         ),
         ModuleInfo(
             name="validation",
-            path=Path("/tmp/validation"),
+            path=REPO_ROOT / "infrastructure/validation",
             python_file_count=7,
             has_init=True,
             has_agents_md=True,
@@ -47,7 +47,7 @@ def _sample_projects() -> list[ProjectAnalysis]:
     return [
         ProjectAnalysis(
             name="template_code_project",
-            path=Path("/tmp/template_code_project"),
+            path=REPO_ROOT / "projects/template_code_project",
             has_manuscript=True,
             chapter_count=8,
             has_tests=True,
@@ -58,7 +58,7 @@ def _sample_projects() -> list[ProjectAnalysis]:
         ),
         ProjectAnalysis(
             name="template",
-            path=Path("/tmp/template"),
+            path=PROJECT_DIR,
             has_manuscript=True,
             chapter_count=8,
             has_tests=True,
@@ -72,9 +72,24 @@ def _sample_projects() -> list[ProjectAnalysis]:
 
 def _sample_stages() -> list[PipelineStage]:
     return [
-        PipelineStage(number=0, name="Setup", script_name="00_setup_environment.py", script_path=Path("/tmp/00_setup_environment.py")),
-        PipelineStage(number=1, name="Run Tests", script_name="01_run_tests.py", script_path=Path("/tmp/01_run_tests.py")),
-        PipelineStage(number=2, name="Run Analysis", script_name="02_run_analysis.py", script_path=Path("/tmp/02_run_analysis.py")),
+        PipelineStage(
+            number=0,
+            name="Setup",
+            script_name="00_setup_environment.py",
+            script_path=REPO_ROOT / "scripts/00_setup_environment.py",
+        ),
+        PipelineStage(
+            number=1,
+            name="Run Tests",
+            script_name="01_run_tests.py",
+            script_path=REPO_ROOT / "scripts/01_run_tests.py",
+        ),
+        PipelineStage(
+            number=2,
+            name="Run Analysis",
+            script_name="02_run_analysis.py",
+            script_path=REPO_ROOT / "scripts/02_run_analysis.py",
+        ),
     ]
 
 
