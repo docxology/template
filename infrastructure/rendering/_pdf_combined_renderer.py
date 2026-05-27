@@ -520,6 +520,8 @@ def postprocess_latex(tex_content: str) -> str:
 def inject_latex_preamble(
     tex_content: str,
     manuscript_dir: Path,
+    *,
+    skip_title_page: bool = False,
 ) -> str:
     """Extract preamble from preamble.md and config.yaml, inject before \\begin{document}."""
     preamble_file = manuscript_dir / "preamble.md"
@@ -579,6 +581,13 @@ def inject_latex_preamble(
         logger.debug(f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}")
 
     # Insert title page body after \begin{document}
+    if skip_title_page:
+        if begin_doc_idx <= 0:
+            return tex_content
+        tex_content = _inject_toc_after_begin_transmission(tex_content, begin_doc_idx)
+        logger.info("✓ Skipped auto title page (transmission bookends); TOC after begin bookend")
+        return tex_content
+
     if not title_page_body or begin_doc_idx <= 0:
         return tex_content
 
@@ -601,22 +610,93 @@ def inject_latex_preamble(
     return tex_preamble + tex_body
 
 
+_BEGIN_TRANSMISSION_LABEL = r"\label{beginning-of-transmission}"
+_END_TRANSMISSION_SECTION = r"\section*{END OF TRANSMISSION}"
+_END_TRANSMISSION_SECTION_NUMBERED = r"\section{END OF TRANSMISSION}"
+_TRANSMISSION_END_BOOKEND_MARKER = r"% transmission-end-bookend"
+
+
+def _inject_toc_after_begin_transmission(tex_content: str, begin_doc_idx: int) -> str:
+    """Insert table of contents immediately after the begin transmission bookend closes."""
+    label_idx = tex_content.find(_BEGIN_TRANSMISSION_LABEL, begin_doc_idx)
+    if label_idx < 0:
+        logger.warning("⚠️  Begin transmission label not found; TOC not relocated")
+        return tex_content
+
+    samepage_end = tex_content.find(r"\end{samepage}", label_idx)
+    if samepage_end < 0:
+        logger.warning("⚠️  Begin transmission samepage envelope not found; TOC not relocated")
+        return tex_content
+
+    newpage_idx = tex_content.find(r"\newpage", samepage_end)
+    if newpage_idx < 0:
+        logger.warning("⚠️  Begin transmission closing newpage not found; TOC not relocated")
+        return tex_content
+
+    insert_at = newpage_idx + len(r"\newpage")
+    toc_block = "\n\n\\tableofcontents\n\\newpage\n"
+    if "\\tableofcontents" in tex_content[begin_doc_idx : insert_at + 200]:
+        return tex_content
+    return tex_content[:insert_at] + toc_block + tex_content[insert_at:]
+
+
 def discover_manuscript_bib_paths(manuscript_dir: Path) -> list[Path]:
     """Return sorted ``*.bib`` paths beside the manuscript (multi-database projects)."""
     return sorted(manuscript_dir.glob("*.bib"))
 
 
-def inject_bibliography(tex_content: str, bib_exists: bool, bib_stems: str = "references") -> str:
+def inject_bibliography(
+    tex_content: str,
+    bib_exists: bool,
+    bib_stems: str = "references",
+    *,
+    before_end_transmission: bool = False,
+) -> str:
     """Ensure bibliography starts on a new page; set ``\\bibliography{stems}``.
 
     ``bib_stems`` is a comma-separated list of database names without ``.bib``
     (e.g. ``references`` or ``references,references_deep``).
+
+    When ``before_end_transmission`` is true, insert before the END bookend section
+    instead of before ``\\end{document}``.
     """
     bib_marker = "\\bibliography{"
     if not bib_exists:
         return tex_content
 
     replacement = r"\bibliography{" + bib_stems + "}"
+    insertion = f"\n\n\\clearpage\n\n{replacement}\n"
+
+    if before_end_transmission:
+        end_idx = tex_content.find(_TRANSMISSION_END_BOOKEND_MARKER)
+        if end_idx < 0:
+            end_idx = tex_content.find(_END_TRANSMISSION_SECTION)
+        if end_idx < 0:
+            end_idx = tex_content.find(_END_TRANSMISSION_SECTION_NUMBERED)
+        if end_idx < 0:
+            end_idx = tex_content.find(r"\label{end-of-transmission}")
+        if end_idx < 0:
+            logger.warning("⚠️  END transmission section not found; bibliography stays at document end")
+            before_end_transmission = False
+        elif bib_marker in tex_content:
+            tex_content = re.sub(
+                r"\\bibliography\{[^}]*\}",
+                lambda _m: replacement,
+                tex_content,
+                count=1,
+            )
+            idx = tex_content.find(bib_marker)
+            if idx > end_idx:
+                tex_content = tex_content.replace(f"\\clearpage\n\n{replacement}\n", "", 1)
+                tex_content = tex_content.replace(f"\n\n\\clearpage\n\n{replacement}\n", "", 1)
+                tex_content = tex_content[:end_idx] + insertion + tex_content[end_idx:]
+                logger.info("✓ Moved \\bibliography{...} before END OF TRANSMISSION")
+            return tex_content
+        else:
+            tex_content = tex_content[:end_idx] + insertion + tex_content[end_idx:]
+            logger.info("✓ Inserted \\bibliography{...} before END OF TRANSMISSION")
+            return tex_content
+
     if bib_marker in tex_content:
         tex_content = re.sub(
             r"\\bibliography\{[^}]*\}",

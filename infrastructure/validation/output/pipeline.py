@@ -60,6 +60,25 @@ def _project_relative_path(project_name: str, child: str = "") -> str:
         return str(path)
 
 
+def validate_transmission_bookends(project_name: str = "project") -> bool:
+    """Validate transmission bookend single-page contract when enabled."""
+    from infrastructure.publishing.transmission_bookends import transmission_bookends_enabled
+    from infrastructure.publishing.transmission_page_check import validate_transmission_bookend_pages
+
+    project_root = _project_root(project_name)
+    config_path = project_root / "manuscript" / "config.yaml"
+    if not transmission_bookends_enabled(config_path):
+        return True
+
+    combined_pdf = project_root / "output" / "pdf" / f"{project_name}_combined.pdf"
+    if not combined_pdf.is_file():
+        logger.warning("Transmission bookends enabled but combined PDF missing: %s", combined_pdf)
+        return False
+
+    log_substep("Validating transmission bookend page span...", logger)
+    return validate_transmission_bookend_pages(combined_pdf)
+
+
 def validate_pdfs(project_name: str = "project") -> bool:
     """Validate generated PDF files.
 
@@ -369,6 +388,15 @@ def generate_validation_report(
                         "file": "output/pdf/*_compile.log",
                     }
                 )
+            elif check_name == "Transmission bookends":
+                recommendations.append(
+                    {
+                        "priority": "high",
+                        "issue": "Transmission bookend page-span validation failed",
+                        "action": "Compact bookend content or reduce QR strip so BEGIN/END each fit one page",
+                        "file": _project_relative_path(project_name, f"output/pdf/{project_name}_combined.pdf"),
+                    }
+                )
             elif check_name == "Markdown validation":
                 recommendations.append(
                     {
@@ -466,6 +494,7 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
 
     checks = [
         ("PDF validation", lambda: validate_pdfs(project_name)),
+        ("Transmission bookends", lambda: validate_transmission_bookends(project_name)),
         ("Markdown validation", lambda: validate_manuscript_output_markdown(project_name)),
     ]
 
@@ -573,6 +602,10 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
             logger.info(f"  {status}: {check_name}")
         else:
             if check_name == "PDF validation":
+                status = "❌ FAIL"
+                critical_count += 1
+                all_passed = False
+            elif check_name == "Transmission bookends":
                 status = "❌ FAIL"
                 critical_count += 1
                 all_passed = False

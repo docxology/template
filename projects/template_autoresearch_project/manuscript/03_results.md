@@ -18,23 +18,31 @@ automatically.
 The benchmark score is `{{BENCHMARK_SCORE}}`. That score is not a model-quality
 claim by itself; it is a compact grading artifact for the methods contract:
 metric improvement, budget compliance, offline execution, and selected-candidate
-recording. The candidate score figure is registered as
+recording. Rank-stability diagnostics report that the selected candidate is top
+ranked in `{{ACCEPTED_TOP_RANK_FREQUENCY}}` of deterministic bootstrap
+resamples, with runner-up `{{RANK_STABILITY_RUNNER_UP_ID}}`. The candidate
+score figure is registered as
 {{FIGURE_REF_CANDIDATE_SCORES}}, the confusion matrix as
 {{FIGURE_REF_CONFUSION_MATRIX}}, the per-class diagnostic as
 {{FIGURE_REF_PER_CLASS_ACCURACY}}, the learning curves as
 {{FIGURE_REF_LEARNING_CURVES}}, the complexity diagnostic as
 {{FIGURE_REF_COMPLEXITY_ACCURACY}}, the selected-candidate error examples as
 {{FIGURE_REF_ERROR_EXAMPLES}}, the candidate lifecycle diagnostic as
-{{FIGURE_REF_CANDIDATE_LIFECYCLE}}, the training-dynamics diagnostic as
+{{FIGURE_REF_CANDIDATE_LIFECYCLE}}, rank stability as
+{{FIGURE_REF_CANDIDATE_RANK_STABILITY}}, the training-dynamics diagnostic as
 {{FIGURE_REF_TRAINING_DYNAMICS}}, the final readiness matrix as
 {{FIGURE_REF_STAGE_MATRIX}}, and the process closure as
 {{FIGURE_REF_CLOSURE_FLOW}}.
 
 {{CANDIDATE_INTERVAL_TABLE}}
 
+{{CANDIDATE_RANK_STABILITY_TABLE}}
+
 ## Run-Derived Figures {#sec:run-derived-figures}
 
 {{FIGURE_BLOCK_CANDIDATE_SCORES}}
+
+{{FIGURE_BLOCK_CANDIDATE_RANK_STABILITY}}
 
 {{FIGURE_BLOCK_CONFUSION_MATRIX}}
 
@@ -89,6 +97,8 @@ preserve the same values for audit and downstream comparison.
 {{CLASSIFICATION_DIAGNOSTICS_TABLE}}
 
 {{CALIBRATION_BIN_TABLE}}
+
+{{CALIBRATION_BIN_INTERVAL_TABLE}}
 
 {{CONFUSION_PAIR_TABLE}}
 
@@ -176,7 +186,10 @@ manuscript-hydration surfaces summarized below. The schema manifest records
 `{{SCHEMA_MANIFEST_SCHEMA_COUNT}}` schema-versioned governance payload(s), and
 the local research-object manifest records `{{RESEARCH_OBJECT_ARTIFACT_COUNT}}`
 observed artifact record(s) with checksums and approval state
-`{{RESEARCH_OBJECT_APPROVAL_STATE}}`.
+`{{RESEARCH_OBJECT_APPROVAL_STATE}}`. The phase ledger records
+`{{PHASE_LEDGER_SETTLEMENT_PASS_COUNT}}` settlement pass(es), while the
+figure-quality report covers `{{FIGURE_QUALITY_FIGURE_COUNT}}` registered
+figure(s) with validity `{{FIGURE_QUALITY_VALID}}`.
 
 {{FIGURE_BLOCK_STAGE_MATRIX}}
 
@@ -187,6 +200,10 @@ observed artifact record(s) with checksums and approval state
 {{REVIEW_GATE_TABLE}}
 
 {{BENCHMARK_SCORE_TABLE}}
+
+{{PHASE_LEDGER_TABLE}}
+
+{{FIGURE_QUALITY_TABLE}}
 
 ## Security Readiness And Integrity Evidence {#sec:security-readiness-integrity}
 

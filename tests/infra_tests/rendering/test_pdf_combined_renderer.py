@@ -416,6 +416,21 @@ class TestInjectBibliography:
         result = inject_bibliography(tex, bib_exists=True, bib_stems="references,references_deep")
         assert "\\bibliography{references,references_deep}" in result
 
+    def test_before_end_transmission_inserts_bibliography_before_end_section(self):
+        tex = (
+            "Body\n"
+            "\\section{BEGINNING OF TRANSMISSION}\\label{beginning-of-transmission}\n"
+            "More\n"
+            "\\section{END OF TRANSMISSION}\\label{end-of-transmission}\n"
+            "\\end{document}"
+        )
+        result = inject_bibliography(tex, bib_exists=True, before_end_transmission=True)
+        bib_idx = result.find("\\bibliography{references}")
+        end_idx = result.find("\\section{END OF TRANSMISSION}")
+        assert bib_idx >= 0
+        assert end_idx >= 0
+        assert bib_idx < end_idx
+
     def test_discover_manuscript_bib_paths_sorted(self, tmp_path):
         m = tmp_path / "manuscript"
         m.mkdir()
@@ -539,6 +554,27 @@ class TestInjectLatexPreamble:
         tex = "\\documentclass{article}\n\\begin{document}\n\\maketitle\nContent here\n\\end{document}"
         result = inject_latex_preamble(tex, manuscript_dir)
         assert isinstance(result, str)
+
+    def test_skip_title_page_inserts_toc_after_begin_transmission(self, tmp_path):
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        config_yaml = manuscript_dir / "config.yaml"
+        config_yaml.write_text("paper:\n  title: Test\nauthors:\n  - name: Alice\n")
+
+        tex = (
+            "\\documentclass{article}\n\\begin{document}\n"
+            "\\section{BEGINNING OF TRANSMISSION}\\label{beginning-of-transmission}\n"
+            "Bookend body\n\\end{samepage}\n\\newpage\n"
+            "\\section{Abstract}\nBody\n\\end{document}"
+        )
+        result = inject_latex_preamble(tex, manuscript_dir, skip_title_page=True)
+        begin_idx = result.find("\\section{BEGINNING OF TRANSMISSION}")
+        toc_idx = result.find("\\tableofcontents")
+        abstract_idx = result.find("\\section{Abstract}")
+        assert begin_idx >= 0
+        assert toc_idx > begin_idx
+        assert abstract_idx > toc_idx
+        assert "\\maketitle" not in result
 
 
 class TestPrevalidateSourceMarkdown:

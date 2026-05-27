@@ -34,6 +34,10 @@ from typing import Final, Protocol, runtime_checkable
 
 import requests
 
+from infrastructure.core.exceptions import PublishingError, UploadError
+from infrastructure.publishing.zenodo.client import ZenodoClient
+from infrastructure.publishing.zenodo.config import ZenodoConfig
+
 __all__ = [
     "ArchivalError",
     "ArchivalReceipt",
@@ -251,6 +255,9 @@ class ZenodoProvider:
     Creates a new deposition, uploads each file in the bundle, publishes, and
     returns the assigned DOI. For dry_run, returns a receipt that includes
     what would have been deposited.
+
+    Archival deposits use empty deposition metadata (bundle mirror only). Use
+    ``publish_to_zenodo`` or ``cli.publish_zenodo_command`` for rich metadata.
     """
 
     name: str = "zenodo"
@@ -260,13 +267,9 @@ class ZenodoProvider:
         token: str | None,
         *,
         base_url: str = "https://zenodo.org/api",
-        session: requests.Session | None = None,
-        timeout: float = 30.0,
     ) -> None:
         self._token = token
         self._base_url = base_url.rstrip("/")
-        self._session = session if session is not None else requests.Session()
-        self._timeout = timeout
 
     def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
         sha = _bundle_sha256(bundle)
@@ -286,47 +289,29 @@ class ZenodoProvider:
             return _missing_credential_receipt(self.name, "ZENODO_API_TOKEN")
 
         try:
-            create_resp = self._session.post(
-                f"{self._base_url}/deposit/depositions",
-                params={"access_token": self._token},
-                json={},
-                timeout=self._timeout,
-            )
-            create_resp.raise_for_status()
-            deposition = create_resp.json()
-            deposition_id = deposition["id"]
-            bucket_url = deposition["links"]["bucket"]
+            client = ZenodoClient(ZenodoConfig(access_token=self._token, base_url=self._base_url))
+            deposition = client.create_deposition()
 
             for file_path in self._iter_files(bundle):
-                with file_path.open("rb") as fh:
-                    upload_resp = self._session.put(
-                        f"{bucket_url}/{file_path.relative_to(bundle.parent)}",
-                        params={"access_token": self._token},
-                        data=fh,
-                        timeout=self._timeout,
-                    )
-                upload_resp.raise_for_status()
+                object_key = str(file_path.relative_to(bundle.parent))
+                client.upload_file(
+                    deposition.bucket_url,
+                    file_path,
+                    object_key=object_key,
+                )
 
-            publish_resp = self._session.post(
-                f"{self._base_url}/deposit/depositions/{deposition_id}/actions/publish",
-                params={"access_token": self._token},
-                timeout=self._timeout,
-            )
-            publish_resp.raise_for_status()
-            published = publish_resp.json()
-            doi = str(published.get("doi") or published.get("conceptdoi") or "")
-            url = str(published.get("links", {}).get("record_html", ""))
+            doi = client.publish(deposition.deposition_id)
 
             return ArchivalReceipt(
                 provider=self.name,
                 status="ok",
                 identifier=doi or None,
-                url=url or None,
+                url=f"https://doi.org/{doi}" if doi else None,
                 timestamp_utc=_now_utc_iso(),
                 bundle_sha256=sha,
-                extra={"deposition_id": str(deposition_id)},
+                extra={"deposition_id": deposition.deposition_id},
             )
-        except requests.RequestException as exc:
+        except (PublishingError, UploadError, requests.RequestException) as exc:
             return ArchivalReceipt(
                 provider=self.name,
                 status="error",

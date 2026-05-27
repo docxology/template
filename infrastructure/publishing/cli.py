@@ -9,7 +9,7 @@ from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
 
-from .api import ZenodoClient, ZenodoConfig
+from .zenodo import ZenodoClient, ZenodoConfig
 from infrastructure.core.exceptions import PublishingError, UploadError
 from .citations import generate_citation_bibtex
 from .metadata import extract_publication_metadata
@@ -159,12 +159,12 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
     }
 
     try:
-        deposition_id = client.create_deposition(zenodo_metadata)
-        logger.info(f"Created Zenodo deposition: {deposition_id}")
+        deposition = client.create_deposition(zenodo_metadata)
+        logger.info(f"Created Zenodo deposition: {deposition.deposition_id}")
         for pdf in pdfs:
-            client.upload_file(deposition_id, str(pdf))
+            client.upload_file(deposition.bucket_url, str(pdf))
             logger.info(f"Uploaded: {pdf.name}")
-        doi = client.publish(deposition_id)
+        doi = client.publish(deposition.deposition_id)
         print(f"Published successfully! DOI: {doi}")
     except (PublishingError, UploadError) as e:
         logger.error(f"Zenodo upload failed: {e}")
@@ -177,7 +177,7 @@ def main() -> None:
     Parses command-line arguments and dispatches to the appropriate
     subcommand handler. Available commands:
         - extract-metadata: Extract publication metadata from manuscript files.
-        - generate-citation: Generate citations in various formats.
+        - generate-citation: Generate a BibTeX citation.
         - publish-zenodo: Upload and publish to Zenodo repository.
 
     Returns:

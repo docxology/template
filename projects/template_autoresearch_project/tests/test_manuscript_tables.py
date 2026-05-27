@@ -76,6 +76,20 @@ def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() ->
             }
         ]
     }
+    calibration_intervals = {
+        "bins": [
+            {
+                "bin_index": 0,
+                "lower": 0.8,
+                "upper": 1.0,
+                "count": 12,
+                "accuracy": 0.75,
+                "ci_low": 0.47,
+                "ci_high": 0.91,
+                "empty_bin": False,
+            }
+        ]
+    }
     robustness = {
         "rows": [{"candidate_id": "exp-mlp-tanh-64", "transform": "identity", "accuracy": 0.72, "sample_count": 500}]
     }
@@ -137,6 +151,22 @@ def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() ->
             }
         ]
     }
+    rank_stability = {
+        "rank_frequencies": [
+            {
+                "candidate_id": "exp-mlp-tanh-64",
+                "observed_rank": 1,
+                "rank_1_frequency": 0.91,
+                "mean_rank": 1.09,
+                "test_accuracy": 0.72,
+            }
+        ],
+        "accepted_vs_runner_up_delta_interval": {
+            "observed_delta": 0.04,
+            "ci_low": 0.01,
+            "ci_high": 0.08,
+        },
+    }
     candidate_selection = {
         "rows": [
             {
@@ -162,6 +192,32 @@ def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() ->
                 "does_not_support": "general MNIST performance",
             }
         ]
+    }
+    phase_ledger = {
+        "phases": [
+            {
+                "phase": "ml_task",
+                "order": 5,
+                "status": "completed",
+                "artifact_group": "ml",
+                "artifact_count": 8,
+                "readiness_settlement_pass": 1,
+                "claim_boundary": "local diagnostics only",
+            }
+        ]
+    }
+    figure_quality = {
+        "figure_count": 1,
+        "valid": True,
+        "figures": [
+            {
+                "label": "fig:ml_candidate_scores",
+                "exists": True,
+                "nonblank": True,
+                "source_exists": True,
+                "has_alt_text": True,
+            }
+        ],
     }
     security_profile = {"mode": "local_deterministic", "network_policy": "default_offline"}
     security_threat_model = {
@@ -198,14 +254,18 @@ def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() ->
         candidate_intervals,
         class_balance,
         calibration,
+        calibration_intervals,
         robustness,
         probability,
         bootstrap,
         paired,
         statistical,
         training,
+        rank_stability,
         candidate_selection,
         diagnostic_boundary,
+        phase_ledger,
+        figure_quality,
         security_profile,
         security_threat_model,
         security_inventory,

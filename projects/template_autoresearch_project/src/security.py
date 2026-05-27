@@ -270,6 +270,44 @@ def supply_chain_inventory_payload(
     }
 
 
+def _provenance_integrity_check(project_root: Path) -> dict[str, object] | None:
+    """Verify the MNIST fixture matches its COMMITTED declared provenance hash.
+
+    Unlike the inventory checks (which compare a file against a hash this same run
+    computed for it — self-consistency), this binds the input dataset to the
+    `npz_sha256` recorded in the committed `mnist_small_provenance.json`. A
+    tampered or substituted fixture is therefore caught even though its
+    self-recomputed hash would always match.
+    """
+    provenance_path = project_root / "data" / "mnist_small_provenance.json"
+    fixture_path = project_root / "data" / "mnist_small.npz"
+    if not provenance_path.is_file() or not fixture_path.is_file():
+        return None
+    try:
+        declared = str(json.loads(provenance_path.read_text(encoding="utf-8")).get("npz_sha256", "") or "")
+    except (OSError, json.JSONDecodeError):
+        return None
+    actual = compute_sha256(fixture_path)
+    source = "data/mnist_small_provenance.json (committed declared provenance)"
+    if not declared:
+        # A PRESENT provenance file that declares no hash must fail closed — otherwise
+        # blanking one committed field would silently disable the external-truth check.
+        return {
+            "path": "data/mnist_small.npz",
+            "expected_sha256": "",
+            "actual_sha256": actual,
+            "status": "missing_declared_hash",
+            "source": source,
+        }
+    return {
+        "path": "data/mnist_small.npz",
+        "expected_sha256": declared,
+        "actual_sha256": actual,
+        "status": "passed" if actual == declared else "mismatch",
+        "source": source,
+    }
+
+
 def integrity_attestation_payload(
     project_root: Path,
     inventory: dict[str, object],
@@ -293,9 +331,15 @@ def integrity_attestation_payload(
             missing_count += 1
         else:
             actual = compute_sha256(path)
-            status = "passed" if actual == expected else "mismatch"
             checked_count += 1
-            mismatch_count += 0 if status == "passed" else 1
+            if path.stat().st_size == 0:
+                # A present-but-empty required artifact is an integrity failure, not a
+                # pass: a self-consistent hash of zero bytes must not certify as intact.
+                status = "empty"
+                mismatch_count += 1
+            else:
+                status = "passed" if actual == expected else "mismatch"
+                mismatch_count += 0 if status == "passed" else 1
         checks.append(
             {
                 "path": path_text,
@@ -304,6 +348,15 @@ def integrity_attestation_payload(
                 "status": status,
             }
         )
+    # External-truth binding: verify the input dataset matches its COMMITTED declared
+    # provenance hash, not a hash this run recomputed for itself. This catches a
+    # tampered/substituted fixture that self-consistent attestation would miss.
+    provenance_check = _provenance_integrity_check(project_root)
+    if provenance_check is not None:
+        checks.append(provenance_check)
+        checked_count += 1
+        if provenance_check["status"] != "passed":
+            mismatch_count += 1
     return {
         "schema": "template-autoresearch-integrity-attestation-v1",
         "generated_at": generated_at,

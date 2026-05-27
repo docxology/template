@@ -87,12 +87,13 @@ plan, not a second parse of `autoresearch.yaml` in project code.
 
 ## ML task implementation
 
-`src/ml_training.py` uses `numpy` only, with compatibility exports through
-`src/ml_task.py`, `src/ml_data.py`, `src/ml_models.py`, and
-`src/ml_selection.py`. It loads the local MNIST subset, evaluates a
-nearest-centroid baseline, trains bounded neural candidates by deterministic
-SGD or a fixed patch-attention representation plus softmax head, and selects
-the best result with deterministic parameter-count tie-breaking. The task writes
+The executable task is split across `src/ml_data.py`, `src/ml_models.py`,
+`src/ml_training.py`, and `src/ml_selection.py`, with compatibility exports
+through `src/ml_task.py`. The implementation uses `numpy` only. It loads the
+local MNIST subset, evaluates a nearest-centroid baseline, trains bounded
+neural candidates by deterministic SGD or a fixed patch-attention
+representation plus softmax head, and selects the best result with
+deterministic parameter-count tie-breaking. The task writes
 `mnist_task_config.json`, `ml_task_results.json`, `ml_candidate_ledger.json`,
 `ml_confusion_matrix.csv`, `ml_experiment_report.md`,
 `ml_benchmark_score.json`, `ml_candidate_scores.png`,
@@ -104,14 +105,17 @@ the best result with deterministic parameter-count tie-breaking. The task writes
 `ml_calibration_report.json`, `ml_robustness_report.json`,
 `ml_probability_diagnostics.json`, `ml_bootstrap_intervals.json`,
 `ml_paired_comparison.json`, `ml_statistical_summary.json`,
-`ml_training_diagnostics.json`, `ml_candidate_selection_audit.json`,
-`ml_diagnostic_boundary.json`,
+`ml_training_diagnostics.json`, `ml_calibration_bin_intervals.json`,
+`ml_candidate_rank_stability.json`, `ml_candidate_selection_audit.json`,
+`ml_diagnostic_boundary.json`, `autoresearch_phase_ledger.json`,
+`figure_quality_report.json`,
 `ml_calibration_reliability.png`,
 `ml_classification_metrics_heatmap.png`, `ml_confusion_pairs.png`,
 `ml_generalization_gap.png`, `ml_robustness_matrix.png`,
 `ml_probability_margin_distribution.png`, `ml_bootstrap_intervals.png`,
 `ml_paired_correctness.png`, `ml_selective_accuracy.png`,
 `ml_probability_quality.png`, `ml_training_dynamics.png`,
+`ml_candidate_rank_stability.png`,
 `autoresearch_candidate_lifecycle.png`,
 `mnist_class_balance.png`, `mnist_subset_contact_sheet.png`, and final registry metadata through
 `src.writers`.

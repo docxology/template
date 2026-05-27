@@ -16,23 +16,26 @@ classifier.
 The analysis stage runs two thin scripts:
 
 - `scripts/run_autoresearch_loop.py` builds the ML-loop result, plan, claims,
-stage matrix, review packet, method ledgers, benchmark scores, final figures,
+  stage matrix, review packet, method ledgers, benchmark scores, final figures,
   evidence registry snapshot, schema manifest, local research-object manifest,
-  artifact manifest, readiness report, and
+  phase ledger, figure-quality report, artifact manifest, readiness report, and
   manuscript-hydration sidecars through `src.loop.run_autoresearch_loop`.
 - `scripts/z_generate_manuscript_variables.py` hydrates manuscript variables
   into `output/manuscript/` for rendering and fails when strict run-derived
   manuscript values are not tokenized.
 
-Reusable behavior lives under `src/` (`loop`, `ml_task`, `models`, `config`,
-`writers`, `reports`, `figures`, `manuscript_variables`). No network calls, LLM
-calls, runtime dataset downloads, generated-code execution, or autonomous
-approval loops are used.
+Reusable behavior lives under `src/` (`loop`, `ml_data`, `ml_models`,
+`ml_training`, `ml_selection`, `ml_task`, `diagnostics_records`,
+`diagnostics_metrics`, `diagnostics_intervals`, `diagnostics_reports`,
+`models`, `config`, `writers`, `reports`, `figures`, `manuscript_variables`).
+No network calls, LLM calls, runtime dataset downloads, generated-code
+execution, or autonomous approval loops are used.
 
 The manuscript frames the exemplar as a bounded research-object analogue:
 machine-readable ledgers, artifact manifests, figure registry metadata,
-variable provenance, and deferred review gates make the research process itself
-inspectable without claiming autonomous discovery.
+variable provenance, phase-settlement records, figure-quality checks, and
+deferred review gates make the research process itself inspectable without
+claiming autonomous discovery.
 Each registered figure carries a source artifact, generation method, validation
 hook, alt text, caption, and claim boundary; manuscript figure blocks and the
 figure-method table are hydrated from that registry.
@@ -40,6 +43,12 @@ The local security layer adds a deterministic threat model, SBOM-style
 inventory, checksum attestation, and adversarial review packet. These artifacts
 support local research-artifact integrity claims only; the default run performs
 no external signing and does not claim production SLSA compliance.
+The reviewer-facing evidence registry report is compact by default: validation
+still builds the full in-memory fact registry, while
+`output/reports/evidence_registry.json` records counts, source tiers,
+freshness warnings, and a bounded fact sample. Set
+`TEMPLATE_EVIDENCE_REGISTRY_FULL=1` only for local debugging when a full
+`output/reports/evidence_registry_full.json` dump is needed.
 
 Loop stages are recorded as **declared** (configured intent). Claims are
 **supported** only when their evidence file exists locally.
@@ -61,15 +70,15 @@ flowchart TB
   claims --> methods[write_method_contract_artifacts]
   methods --> update1[update_result_payloads provisional]
   update1 --> security1[write_security_artifacts]
-  security1 --> manifest1[write_artifact_manifest]
-  manifest1 --> extrinsic[validate phase=extrinsic]
+  security1 --> phase1[write_phase_ledger + write_artifact_manifest]
+  phase1 --> extrinsic[validate phase=extrinsic]
   extrinsic --> readiness[write_autoresearch_report combined]
   readiness --> update2[update_result_payloads final]
   update2 --> visuals[write_final_visual_artifacts]
   visuals --> hydrate[write_manuscript_hydration_artifacts]
   hydrate --> registry2[write_evidence_registry_report refresh]
   registry2 --> security2[write_security_artifacts final]
-  security2 --> manifest2[write_artifact_manifest final]
+  security2 --> phase2[write_phase_ledger + write_artifact_manifest final]
 ```
 
 Project-specific docs live in [`docs/`](docs/).
@@ -98,14 +107,18 @@ The project-level next-work roadmap lives in [`TODO.md`](TODO.md).
 - `output/data/ml_candidate_intervals.json`
 - `output/data/ml_class_balance.json`
 - `output/data/ml_calibration_report.json`
+- `output/data/ml_calibration_bin_intervals.json`
 - `output/data/ml_robustness_report.json`
 - `output/data/ml_probability_diagnostics.json`
 - `output/data/ml_bootstrap_intervals.json`
 - `output/data/ml_paired_comparison.json`
 - `output/data/ml_statistical_summary.json`
 - `output/data/ml_training_diagnostics.json`
+- `output/data/ml_candidate_rank_stability.json`
 - `output/data/ml_candidate_selection_audit.json`
 - `output/data/ml_diagnostic_boundary.json`
+- `output/data/autoresearch_phase_ledger.json`
+- `output/data/figure_quality_report.json`
 - `output/data/autoresearch_security_profile.json`
 - `output/data/autoresearch_threat_model.json`
 - `output/data/autoresearch_supply_chain_inventory.json`
@@ -134,6 +147,7 @@ The project-level next-work roadmap lives in [`TODO.md`](TODO.md).
 - `output/figures/ml_selective_accuracy.png`
 - `output/figures/ml_probability_quality.png`
 - `output/figures/ml_training_dynamics.png`
+- `output/figures/ml_candidate_rank_stability.png`
 - `output/figures/autoresearch_candidate_lifecycle.png`
 - `output/figures/mnist_class_balance.png`
 - `output/figures/mnist_subset_contact_sheet.png`
@@ -153,6 +167,10 @@ The project-level next-work roadmap lives in [`TODO.md`](TODO.md).
 - `output/reports/benchmark_readiness_smoke.json`
 - `output/reports/evidence_registry.json`
 - `output/reports/artifact_manifest.json`
+
+`output/reports/evidence_registry.json` is intentionally a compact summary, not
+the full validation registry. Full fact serialization is opt-in with
+`TEMPLATE_EVIDENCE_REGISTRY_FULL=1` and is not a required artifact.
 
 ## Tests
 

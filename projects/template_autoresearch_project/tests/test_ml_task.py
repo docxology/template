@@ -17,10 +17,13 @@ from src import diagnostics as diagnostics_module, mnist_fixture
 from src.diagnostics import (
     bootstrap_intervals,
     calibration_report,
+    calibration_bin_intervals,
     candidate_accuracy_intervals,
+    candidate_rank_stability,
     candidate_selection_audit,
     class_balance_report,
     classification_diagnostics,
+    diagnostic_bundle,
     diagnostic_boundary_report,
     paired_comparison_report,
     probability_diagnostics,
@@ -409,6 +412,55 @@ def test_probability_bootstrap_and_paired_diagnostics_are_deterministic(project_
     assert len(quality_rows) == result.evaluated_candidate_count
 
 
+def test_rank_stability_calibration_intervals_and_bundle_are_bounded(project_root: Path) -> None:
+    result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=4))
+    rank = candidate_rank_stability(project_root, result, resamples=100)
+    calibration_intervals = calibration_bin_intervals(project_root, result)
+    bundle = diagnostic_bundle(project_root, result, resamples=100)
+
+    assert rank["schema"] == "template-autoresearch-candidate-rank-stability-v1"
+    assert rank["accepted_candidate_id"] == result.accepted_candidate_id
+    assert rank["runner_up_id"] == "exp-mlp-relu-32"
+    assert 0.0 <= float(rank["accepted_top_rank_frequency"]) <= 1.0
+    assert int(rank["resamples"]) == 100
+    assert rank["seed"] == result.task_config.seed + result.task_config.diagnostics.bootstrap_seed_offset + 97
+    rank_rows = rank["rank_frequencies"]
+    pairwise_rows = rank["pairwise_win_rates"]
+    delta = rank["accepted_vs_runner_up_delta_interval"]
+    assert isinstance(rank_rows, list)
+    assert len(rank_rows) == result.evaluated_candidate_count
+    assert sum(float(row["rank_1_frequency"]) for row in rank_rows) == pytest.approx(1.0)
+    assert isinstance(pairwise_rows, list)
+    assert any(
+        row["candidate_id"] == result.accepted_candidate_id and row["opponent_id"] == "exp-mlp-relu-32"
+        for row in pairwise_rows
+    )
+    assert float(delta["ci_low"]) <= float(delta["observed_delta"]) <= float(delta["ci_high"])
+
+    assert calibration_intervals["schema"] == "template-autoresearch-calibration-bin-intervals-v1"
+    assert calibration_intervals["source_calibration"] == "output/data/ml_calibration_report.json"
+    rows = calibration_intervals["bins"]
+    assert isinstance(rows, list)
+    assert len(rows) == result.task_config.diagnostics.calibration_bins
+    for row in rows:
+        assert 0.0 <= float(row["ci_low"]) <= float(row["ci_high"]) <= 1.0
+        if int(row["count"]) == 0:
+            assert row["accuracy"] == 0.0
+            assert row["ci_low"] == 0.0
+            assert row["ci_high"] == 0.0
+        else:
+            assert float(row["ci_low"]) <= float(row["accuracy"]) <= float(row["ci_high"])
+
+    assert bundle["prediction_records"]["schema"] == "template-autoresearch-prediction-records-v1"
+    assert bundle["bootstrap_intervals"]["resamples"] == 100
+    assert bundle["candidate_rank_stability"]["resamples"] == 100
+    assert bundle["calibration_bin_intervals"]["schema"] == "template-autoresearch-calibration-bin-intervals-v1"
+    assert (
+        bundle["candidate_selection_audit"]["rank_stability_source"]
+        == "output/data/ml_candidate_rank_stability.json"
+    )
+
+
 def test_training_diagnostics_match_epoch_history(project_root: Path) -> None:
     result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=4))
     payload = training_diagnostics(result)
@@ -470,12 +522,20 @@ def test_diagnostic_json_writers_persist_audit_payloads(project_root: Path, tmp_
         (diagnostics_module.write_candidate_accuracy_intervals_json, (tmp_path / "intervals.json", result)),
         (diagnostics_module.write_class_balance_json, (tmp_path / "balance.json", project_root, result)),
         (diagnostics_module.write_calibration_report_json, (tmp_path / "calibration.json", project_root, result)),
+        (
+            diagnostics_module.write_calibration_bin_intervals_json,
+            (tmp_path / "calibration_intervals.json", project_root, result),
+        ),
         (diagnostics_module.write_robustness_report_json, (tmp_path / "robustness.json", result)),
         (diagnostics_module.write_probability_diagnostics_json, (tmp_path / "probability.json", project_root, result)),
         (diagnostics_module.write_bootstrap_intervals_json, (tmp_path / "bootstrap.json", project_root, result)),
         (diagnostics_module.write_paired_comparison_json, (tmp_path / "paired.json", project_root, result)),
         (diagnostics_module.write_statistical_summary_json, (tmp_path / "statistical.json", project_root, result)),
         (diagnostics_module.write_training_diagnostics_json, (tmp_path / "training.json", result)),
+        (
+            diagnostics_module.write_candidate_rank_stability_json,
+            (tmp_path / "rank.json", project_root, result),
+        ),
         (diagnostics_module.write_candidate_selection_audit_json, (tmp_path / "selection.json", project_root, result)),
         (diagnostics_module.write_diagnostic_boundary_json, (tmp_path / "boundary.json", result)),
     )

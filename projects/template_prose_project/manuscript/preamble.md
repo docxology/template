@@ -16,7 +16,7 @@ multi-page tables will likely need everything below.
 \usepackage{geometry}
 \usepackage{float}
 \usepackage{graphicx}
-\geometry{margin=1in}
+\geometry{margin=0.25in}
 
 % Tables (longtable is required for any review-report table that crosses pages)
 \usepackage{booktabs}

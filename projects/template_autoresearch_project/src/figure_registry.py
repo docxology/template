@@ -106,6 +106,10 @@ def figure_registry_payload(
         "Candidate probability-quality diagnostics from output/data/ml_statistical_summary.json, comparing "
         "Brier score and negative log likelihood for evaluated candidates."
     )
+    rank_stability_caption = (
+        "Candidate rank-stability diagnostics from output/data/ml_candidate_rank_stability.json, comparing "
+        "top-rank frequencies and mean ranks under deterministic local bootstrap resampling."
+    )
     training_dynamics_caption = (
         "Configured-training dynamics from output/data/ml_training_diagnostics.json, comparing final and "
         "best-epoch held-out accuracy plus train-test accuracy gaps for evaluated candidates."
@@ -234,6 +238,11 @@ def figure_registry_payload(
             "Brier score and negative log likelihood for evaluated candidates from "
             "output/data/ml_statistical_summary.json; lower values indicate better probability quality "
             "within the configured local run, and the accepted candidate is highlighted."
+        )
+        rank_stability_caption = (
+            f"Rank-stability summary for {ml_result.accepted_candidate_id} from "
+            "output/data/ml_candidate_rank_stability.json; deterministic local bootstrap resampling "
+            "shows how often each evaluated candidate ranks first under the fixed test split."
         )
         training_dynamics_caption = (
             "Configured-training dynamics for evaluated candidates from "
@@ -528,6 +537,22 @@ def figure_registry_payload(
                 "source_history": "output/data/ml_training_history.csv",
                 "alt_text": "Two-panel chart showing final versus best held-out accuracy and train-test accuracy gaps by candidate.",
                 "claim_boundary": "Training dynamics diagnose this configured deterministic run only.",
+            },
+        },
+        "fig:ml_candidate_rank_stability": {
+            "figure_id": "figure_026",
+            "filename": "ml_candidate_rank_stability.png",
+            "caption": rank_stability_caption,
+            "label": "fig:ml_candidate_rank_stability",
+            "section": "Results",
+            "width": "0.82\\textwidth",
+            "placement": "h",
+            "generated_by": "src.figures.write_ml_candidate_rank_stability_figure",
+            "metadata": {
+                "source": "output/data/ml_candidate_rank_stability.json",
+                "source_results": "output/data/ml_task_results.json",
+                "alt_text": "Two-panel chart of candidate top-rank frequency and mean rank under deterministic bootstrap resampling.",
+                "claim_boundary": "Rank stability describes local resampling behavior, not model-selection certainty.",
             },
         },
         "fig:autoresearch_candidate_lifecycle": {

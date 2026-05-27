@@ -17,6 +17,7 @@ from infrastructure.validation.evidence_registry import (
     write_evidence_registry_report,
 )
 
+from .artifact_content import is_substantive_artifact
 from .config import AutoResearchLoopConfig, build_loop_config, load_human_review, load_manuscript_loop_settings
 from .manuscript_variables import write_manuscript_hydration_artifacts
 from .ml_task import run_bounded_ml_task
@@ -25,6 +26,7 @@ from .writers import (
     finalize_loop_payloads,
     relative_path,
     update_result_payloads,
+    write_autoresearch_phase_ledger,
     write_artifact_manifest,
     write_core_loop_artifacts,
     write_final_visual_artifacts,
@@ -91,7 +93,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         write_method_contract_artifacts(project_root, config, generated_at=generated_at, ml_result=ml_result)
     )
 
-    final_paths = _final_output_path_payload(project_root, output_paths)
+    final_paths = _final_output_path_payload(project_root, output_paths, config.required_artifacts)
     final = AutoResearchLoopResult(
         project_name=project_name,
         generated_at=generated_at,
@@ -112,6 +114,15 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         output_paths.extend(write_security_artifacts(project_root, config, output_paths, generated_at=generated_at))
     output_paths.append(write_schema_manifest(project_root, output_paths, generated_at=generated_at))
     output_paths.append(write_research_object_manifest(project_root, output_paths, generated_at=generated_at))
+    output_paths.append(
+        write_autoresearch_phase_ledger(
+            project_root,
+            final,
+            output_paths,
+            generated_at=generated_at,
+            settlement_pass_count=2,
+        )
+    )
     output_paths.append(_write_readiness_manifest(project_root, output_paths))
 
     readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
@@ -123,7 +134,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
     output_paths.extend(write_autoresearch_report(project_root, readiness_report))
     claims = build_claims(config, project_root)
 
-    final_paths = _final_output_path_payload(project_root, output_paths)
+    final_paths = _final_output_path_payload(project_root, output_paths, config.required_artifacts)
     final = AutoResearchLoopResult(
         project_name=project_name,
         generated_at=generated_at,
@@ -145,6 +156,15 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
     output_paths.extend(write_manuscript_hydration_artifacts(project_root, require_valid=True))
     if config.security_profile.enabled:
         output_paths.extend(write_security_artifacts(project_root, config, output_paths, generated_at=generated_at))
+    output_paths.append(
+        write_autoresearch_phase_ledger(
+            project_root,
+            final,
+            output_paths,
+            generated_at=generated_at,
+            settlement_pass_count=3,
+        )
+    )
     output_paths.append(write_schema_manifest(project_root, output_paths, generated_at=generated_at))
     output_paths.append(write_research_object_manifest(project_root, output_paths, generated_at=generated_at))
     output_paths.append(write_artifact_manifest(project_root, output_paths))
@@ -185,7 +205,14 @@ def build_stage_results(config: AutoResearchLoopConfig, *, plan_stage_count: int
 
 
 def build_claims(config: AutoResearchLoopConfig, project_root: Path) -> tuple[AutoResearchClaim, ...]:
-    """Build claims supported only by files that exist on disk."""
+    """Build claims supported only by evidence files that carry real content.
+
+    Support is bound to substance, not existence: an empty, header-only, or
+    unparseable evidence file does not support its claim (see
+    ``is_substantive_artifact``). This closes the prior fail-open where any
+    present file — even a 0-byte placeholder — marked a research question
+    "supported".
+    """
     claims: list[AutoResearchClaim] = []
     for question in config.research_questions:
         evidence_path = question.expected_evidence
@@ -194,95 +221,32 @@ def build_claims(config: AutoResearchLoopConfig, project_root: Path) -> tuple[Au
                 identifier=question.identifier,
                 statement=f"{question.question} Evidence is grounded in `{evidence_path}`.",
                 evidence_path=evidence_path,
-                supported=(project_root / evidence_path).exists(),
+                supported=is_substantive_artifact(project_root / evidence_path),
             )
         )
     return tuple(claims)
 
 
-def _final_output_path_payload(project_root: Path, output_paths: list[Path]) -> tuple[str, ...]:
-    """Return stable output paths for the JSON loop payload."""
-    expected_final_paths = (
-        "output/data/autoresearch_loop.json",
-        "output/data/autoresearch_claims.json",
-        "output/data/autoresearch_review_packet.json",
-        "output/data/research_program.json",
-        "output/data/idea_ledger.json",
-        "output/data/run_ledger.json",
-        "output/data/review_decisions.json",
-        "output/data/benchmark_scores.json",
-        "output/data/mnist_task_config.json",
-        "output/data/ml_task_results.json",
-        "output/data/ml_candidate_ledger.json",
-        "output/data/ml_confusion_matrix.csv",
-        "output/data/ml_training_history.csv",
-        "output/data/ml_error_examples.json",
-        "output/data/ml_prediction_records.json",
-        "output/data/ml_classification_diagnostics.json",
-        "output/data/ml_candidate_intervals.json",
-        "output/data/ml_class_balance.json",
-        "output/data/ml_calibration_report.json",
-        "output/data/ml_robustness_report.json",
-        "output/data/ml_probability_diagnostics.json",
-        "output/data/ml_bootstrap_intervals.json",
-        "output/data/ml_paired_comparison.json",
-        "output/data/ml_statistical_summary.json",
-        "output/data/ml_training_diagnostics.json",
-        "output/data/ml_candidate_selection_audit.json",
-        "output/data/ml_diagnostic_boundary.json",
-        "output/data/autoresearch_security_profile.json",
-        "output/data/autoresearch_threat_model.json",
-        "output/data/autoresearch_supply_chain_inventory.json",
-        "output/data/autoresearch_inventory_export.json",
-        "output/data/autoresearch_integrity_attestation.json",
-        "output/data/autoresearch_schema_manifest.json",
-        "output/data/research_object_manifest.json",
-        "output/data/manuscript_variables.json",
-        "output/data/manuscript_variable_provenance.json",
-        "output/data/manuscript_figure_blocks.json",
-        "output/reports/autoresearch_loop.json",
-        "output/reports/autoresearch_loop.md",
-        "output/reports/autoresearch_readiness.json",
-        "output/reports/autoresearch_readiness.md",
-        "output/reports/autoresearch_review_packet.md",
-        "output/reports/autoresearch_summary.md",
-        "output/reports/artifact_manifest.json",
-        "output/reports/evidence_registry.json",
-        "output/reports/benchmark_readiness_smoke.json",
-        "output/reports/ml_experiment_report.md",
-        "output/reports/ml_benchmark_score.json",
-        "output/figures/autoresearch_stage_matrix.png",
-        "output/figures/ml_candidate_scores.png",
-        "output/figures/ml_confusion_matrix.png",
-        "output/figures/ml_per_class_accuracy.png",
-        "output/figures/ml_learning_curves.png",
-        "output/figures/ml_complexity_accuracy.png",
-        "output/figures/mnist_error_examples.png",
-        "output/figures/ml_calibration_reliability.png",
-        "output/figures/ml_classification_metrics_heatmap.png",
-        "output/figures/ml_confusion_pairs.png",
-        "output/figures/ml_generalization_gap.png",
-        "output/figures/ml_robustness_matrix.png",
-        "output/figures/ml_probability_margin_distribution.png",
-        "output/figures/ml_bootstrap_intervals.png",
-        "output/figures/ml_paired_correctness.png",
-        "output/figures/ml_selective_accuracy.png",
-        "output/figures/ml_probability_quality.png",
-        "output/figures/ml_training_dynamics.png",
-        "output/figures/autoresearch_candidate_lifecycle.png",
-        "output/figures/mnist_class_balance.png",
-        "output/figures/mnist_subset_contact_sheet.png",
-        "output/figures/autoresearch_closure_flow.png",
-        "output/figures/autoresearch_security_control_matrix.png",
-        "output/figures/autoresearch_integrity_chain.png",
-        "output/figures/figure_registry.json",
-        "output/reports/autoresearch_security_review.md",
-    )
+def _final_output_path_payload(
+    project_root: Path, output_paths: list[Path], required_artifacts: tuple[str, ...]
+) -> tuple[str, ...]:
+    """Return stable output paths for the JSON loop payload.
+
+    The expected set is derived from the project's declared ``required_artifacts``
+    contract (``autoresearch.yaml``) — the single source of truth — rather than a
+    hand-maintained tuple. This eliminates the drift class where the loop's
+    self-reported paths silently diverged from what validation actually requires.
+
+    Contract artifacts are included only if they actually exist on disk, so the
+    self-report cannot overclaim a required artifact that was never written; a
+    genuinely-missing artifact is therefore absent here (and still independently
+    caught by the readiness gate and manifest consumers that re-check existence).
+    """
     return tuple(
         dict.fromkeys(
             (
                 *(relative_path(project_root, path) for path in output_paths),
-                *expected_final_paths,
+                *(artifact for artifact in required_artifacts if (project_root / artifact).is_file()),
             )
         )
     )

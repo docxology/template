@@ -5,9 +5,11 @@ designed to run through the standard template pipeline while keeping the
 AutoResearch loop deterministic, configurable, offline, and human-reviewed. It
 demonstrates a local MNIST subset, bounded numpy neural-network candidate
 evaluation, evidence-linked accepted ideas, review gates, benchmark-style
-grading, local security integrity artifacts, and explicit disclosure while
-deferring autonomous generated-code execution, runtime dataset downloads, and
-external signing.
+grading, phase-settlement ledgers, figure-quality checks, local security
+integrity artifacts, and explicit disclosure while deferring autonomous
+generated-code execution, runtime dataset downloads, and external signing.
+The generated evidence-registry report is compact by default; the full fact
+dump is an opt-in local debug artifact via `TEMPLATE_EVIDENCE_REGISTRY_FULL=1`.
 
 Primary command:
 

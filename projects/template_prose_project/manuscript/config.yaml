@@ -3,7 +3,7 @@
 paper:
   title: "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline"
   subtitle: "Readability, structural, and citation-density gating for research manuscripts"
-  version: "0.1"
+  version: "0.2"
 
 authors:
   - name: "Research Template Author"
@@ -15,6 +15,11 @@ authors:
 publication:
   doi: ""
   year: "2026"
+  github_repository: "docxology/template_prose_project"
+  transmission_bookends:
+    enabled: true
+    max_prior_releases: 5
+    show_steganography: true
 
 keywords:
   - "prose analysis"

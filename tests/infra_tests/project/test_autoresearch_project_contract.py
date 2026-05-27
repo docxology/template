@@ -46,13 +46,17 @@ def test_template_autoresearch_project_declares_exact_stage_gates() -> None:
     assert "output/figures/ml_robustness_matrix.png" in plan.required_artifacts
     assert "output/data/ml_candidate_intervals.json" in plan.required_artifacts
     assert "output/data/ml_class_balance.json" in plan.required_artifacts
+    assert "output/data/ml_calibration_bin_intervals.json" in plan.required_artifacts
     assert "output/data/ml_probability_diagnostics.json" in plan.required_artifacts
     assert "output/data/ml_bootstrap_intervals.json" in plan.required_artifacts
     assert "output/data/ml_paired_comparison.json" in plan.required_artifacts
     assert "output/data/ml_statistical_summary.json" in plan.required_artifacts
     assert "output/data/ml_training_diagnostics.json" in plan.required_artifacts
+    assert "output/data/ml_candidate_rank_stability.json" in plan.required_artifacts
     assert "output/data/ml_candidate_selection_audit.json" in plan.required_artifacts
     assert "output/data/ml_diagnostic_boundary.json" in plan.required_artifacts
+    assert "output/data/autoresearch_phase_ledger.json" in plan.required_artifacts
+    assert "output/data/figure_quality_report.json" in plan.required_artifacts
     assert "output/data/autoresearch_security_profile.json" in plan.required_artifacts
     assert "output/data/autoresearch_threat_model.json" in plan.required_artifacts
     assert "output/data/autoresearch_supply_chain_inventory.json" in plan.required_artifacts
@@ -66,6 +70,7 @@ def test_template_autoresearch_project_declares_exact_stage_gates() -> None:
     assert "output/figures/ml_selective_accuracy.png" in plan.required_artifacts
     assert "output/figures/ml_probability_quality.png" in plan.required_artifacts
     assert "output/figures/ml_training_dynamics.png" in plan.required_artifacts
+    assert "output/figures/ml_candidate_rank_stability.png" in plan.required_artifacts
     assert "output/figures/autoresearch_candidate_lifecycle.png" in plan.required_artifacts
     assert "output/figures/mnist_class_balance.png" in plan.required_artifacts
     assert "output/figures/mnist_subset_contact_sheet.png" in plan.required_artifacts
@@ -118,14 +123,18 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/data/ml_class_balance.json" in outputs
     assert "output/data/ml_classification_diagnostics.json" in outputs
     assert "output/data/ml_calibration_report.json" in outputs
+    assert "output/data/ml_calibration_bin_intervals.json" in outputs
     assert "output/data/ml_robustness_report.json" in outputs
     assert "output/data/ml_probability_diagnostics.json" in outputs
     assert "output/data/ml_bootstrap_intervals.json" in outputs
     assert "output/data/ml_paired_comparison.json" in outputs
     assert "output/data/ml_statistical_summary.json" in outputs
     assert "output/data/ml_training_diagnostics.json" in outputs
+    assert "output/data/ml_candidate_rank_stability.json" in outputs
     assert "output/data/ml_candidate_selection_audit.json" in outputs
     assert "output/data/ml_diagnostic_boundary.json" in outputs
+    assert "output/data/autoresearch_phase_ledger.json" in outputs
+    assert "output/data/figure_quality_report.json" in outputs
     assert "output/data/autoresearch_security_profile.json" in outputs
     assert "output/data/autoresearch_threat_model.json" in outputs
     assert "output/data/autoresearch_supply_chain_inventory.json" in outputs
@@ -151,6 +160,7 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/figures/ml_selective_accuracy.png" in outputs
     assert "output/figures/ml_probability_quality.png" in outputs
     assert "output/figures/ml_training_dynamics.png" in outputs
+    assert "output/figures/ml_candidate_rank_stability.png" in outputs
     assert "output/figures/autoresearch_candidate_lifecycle.png" in outputs
     assert "output/figures/mnist_class_balance.png" in outputs
     assert "output/figures/mnist_subset_contact_sheet.png" in outputs
@@ -169,14 +179,18 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/data/ml_class_balance.json" in project_readme
     assert "output/data/ml_classification_diagnostics.json" in project_readme
     assert "output/data/ml_calibration_report.json" in project_readme
+    assert "output/data/ml_calibration_bin_intervals.json" in project_readme
     assert "output/data/ml_robustness_report.json" in project_readme
     assert "output/data/ml_probability_diagnostics.json" in project_readme
     assert "output/data/ml_bootstrap_intervals.json" in project_readme
     assert "output/data/ml_paired_comparison.json" in project_readme
     assert "output/data/ml_statistical_summary.json" in project_readme
     assert "output/data/ml_training_diagnostics.json" in project_readme
+    assert "output/data/ml_candidate_rank_stability.json" in project_readme
     assert "output/data/ml_candidate_selection_audit.json" in project_readme
     assert "output/data/ml_diagnostic_boundary.json" in project_readme
+    assert "output/data/autoresearch_phase_ledger.json" in project_readme
+    assert "output/data/figure_quality_report.json" in project_readme
     assert "output/data/autoresearch_security_profile.json" in project_readme
     assert "output/data/autoresearch_threat_model.json" in project_readme
     assert "output/data/autoresearch_supply_chain_inventory.json" in project_readme
@@ -201,6 +215,7 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
     assert "output/figures/ml_selective_accuracy.png" in project_readme
     assert "output/figures/ml_probability_quality.png" in project_readme
     assert "output/figures/ml_training_dynamics.png" in project_readme
+    assert "output/figures/ml_candidate_rank_stability.png" in project_readme
     assert "output/figures/autoresearch_candidate_lifecycle.png" in project_readme
     assert "output/figures/mnist_class_balance.png" in project_readme
     assert "output/figures/mnist_subset_contact_sheet.png" in project_readme

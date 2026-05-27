@@ -3,7 +3,8 @@
 The loop is implemented through the project source surface summarized by the
 validated run artifacts. The project scripts remain thin dispatchers; reusable
 behavior writes `{{AUTORESEARCH_LOOP_PATH}}`, `{{ML_RESULTS_PATH}}`,
-`{{FIGURE_REGISTRY_PATH}}`, and `{{VARIABLE_PROVENANCE_PATH}}`.
+`{{FIGURE_REGISTRY_PATH}}`, `{{AUTORESEARCH_PHASE_LEDGER_PATH}}`, and
+`{{VARIABLE_PROVENANCE_PATH}}`.
 
 ## Task And Data {#sec:task-data}
 
@@ -64,7 +65,8 @@ constrains proposals; proposal records feed the bounded evaluation; evaluation
 writes `{{ML_CANDIDATE_LEDGER_PATH}}` and `{{RUN_LEDGER_PATH}}`; ledgers support
 artifact-linked claims; claims hydrate the manuscript through
 `{{MANUSCRIPT_VARIABLES_PATH}}`; readiness validation writes
-`{{READINESS_REPORT_PATH}}`; and review state is captured in
+`{{READINESS_REPORT_PATH}}`; loop settlement is recorded in
+`{{AUTORESEARCH_PHASE_LEDGER_PATH}}`; and review state is captured in
 `{{REVIEW_DECISIONS_PATH}}`. The loop therefore maintains an inspectable
 research process around a small metric result without making the process
 self-approving or opaque.
@@ -147,23 +149,27 @@ The experiment writes `{{ML_RESULTS_PATH}}`, `{{ML_CANDIDATE_LEDGER_PATH}}`,
 `{{ML_ERROR_EXAMPLES_PATH}}`, `{{ML_PREDICTION_RECORDS_PATH}}`,
 `{{ML_CLASSIFICATION_DIAGNOSTICS_PATH}}`, `{{ML_CANDIDATE_INTERVALS_PATH}}`,
 `{{ML_CLASS_BALANCE_PATH}}`, `{{ML_CALIBRATION_REPORT_PATH}}`,
-`{{ML_ROBUSTNESS_REPORT_PATH}}`, `{{ML_PROBABILITY_DIAGNOSTICS_PATH}}`,
-`{{ML_BOOTSTRAP_INTERVALS_PATH}}`, `{{ML_PAIRED_COMPARISON_PATH}}`,
+`{{ML_CALIBRATION_BIN_INTERVALS_PATH}}`, `{{ML_ROBUSTNESS_REPORT_PATH}}`,
+`{{ML_PROBABILITY_DIAGNOSTICS_PATH}}`, `{{ML_BOOTSTRAP_INTERVALS_PATH}}`,
+`{{ML_PAIRED_COMPARISON_PATH}}`, `{{ML_CANDIDATE_RANK_STABILITY_PATH}}`,
 `{{ML_STATISTICAL_SUMMARY_PATH}}`, `{{ML_TRAINING_DIAGNOSTICS_PATH}}`,
-`{{ML_BENCHMARK_SCORE_PATH}}`, and registered figures through
+`{{ML_BENCHMARK_SCORE_PATH}}`, `{{FIGURE_QUALITY_REPORT_PATH}}`, and
+registered figures through
 `{{FIGURE_REGISTRY_PATH}}`. The diagnostic payloads preserve probabilities,
 confidence and margin summaries, class metrics, calibration bins,
 confusion-pair summaries, train/test gaps, deterministic no-retrain
 perturbation scores, bootstrap intervals, paired baseline comparison,
-selective accuracy thresholds, Brier score, negative log likelihood, top-2
-accuracy, probability-quality comparisons, learning-rate traces, best-epoch
-markers, final learning rates, and train-test gap summaries without serializing
-model weights. The benchmark score combines metric
+rank-stability frequencies, calibration-bin Wilson intervals, selective
+accuracy thresholds, Brier score, negative log likelihood, top-2 accuracy,
+probability-quality comparisons, learning-rate traces, best-epoch markers,
+final learning rates, and train-test gap summaries without serializing model
+weights. The benchmark score combines metric
 improvement, budget compliance, offline execution, transformer-candidate
 coverage, and candidate-selection status. Manuscript variables are hydrated from
 these artifacts, and readiness validation checks `{{EVIDENCE_REGISTRY_PATH}}`,
 `{{ARTIFACT_MANIFEST_PATH}}`, method ledgers, review gates, benchmark outputs,
-and AI-assisted disclosure before rendering is treated as ready for review.
+the phase ledger, figure-quality report, and AI-assisted disclosure before
+rendering is treated as ready for review.
 The generated tables and figure blocks used in @sec:results are sourced through
 `{{VARIABLE_PROVENANCE_PATH}}` and `{{FIGURE_BLOCKS_PATH}}`, so captions,
 artifact tables, and run-derived result statements share the same validated

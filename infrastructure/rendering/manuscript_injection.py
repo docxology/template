@@ -142,4 +142,13 @@ def write_resolved_manuscript_tree(
         out_dir,
         f"; {len(all_unresolved)} unresolved token(s)" if all_unresolved else "",
     )
+
+    try:
+        from infrastructure.publishing.transmission_bookends import write_transmission_bookends
+
+        repo_root = root.parent.parent if root.parent.name == "projects" else root.parent
+        write_transmission_bookends(root, root.name, repo_root=repo_root)
+    except Exception as exc:  # noqa: BLE001 — bookends must not block hydration
+        logger.warning("Transmission bookend generation skipped: %s", exc)
+
     return out_dir

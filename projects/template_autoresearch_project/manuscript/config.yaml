@@ -1,18 +1,23 @@
 paper:
   title: "Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task"
-  subtitle: "A public exemplar for metric loops, evidence ledgers, review gates, and template orchestration"
-  version: "0.1"
+  subtitle: "A public exemplar for autoresearch, metric loops, evidence ledgers, review gates, and template orchestration"
+  version: "0.2"
 
 authors:
-  - name: "Research Template Author"
-    orcid: "0000-0000-0000-1234"
-    email: "author@research-template.org"
-    affiliation: "Research Template Institute"
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
     corresponding: true
 
 publication:
   doi: ""
   year: "2026"
+  github_repository: "docxology/template_autoresearch_project"
+  transmission_bookends:
+    enabled: true
+    max_prior_releases: 5
+    show_steganography: true
 
 keywords:
   - "autoresearch"

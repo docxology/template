@@ -13,6 +13,7 @@ This file contains LaTeX packages and commands that are automatically injected i
 
 % Document layout
 \usepackage{geometry}
+\geometry{margin=0.25in}
 \usepackage{float}
 \usepackage{graphicx}
 

@@ -7,107 +7,104 @@ description: Skill for the publishing infrastructure module providing academic p
 
 Academic publishing and dissemination tools for research projects.
 
-## Publication Metadata (`core.py`)
+## Platform subpackages
+
+| Path | Use when |
+| --- | --- |
+| `infrastructure.publishing.zenodo` | Zenodo deposit, upload, publish, DOI |
+| `infrastructure.publishing.github` | GitHub release + assets |
+| `infrastructure.publishing.arxiv` | arXiv tarball from manuscript tree |
+
+Root exports (`infrastructure.publishing`) and `platforms.py` / `api.py` remain for backwards compatibility.
+
+## Publication metadata
 
 ```python
 from infrastructure.publishing import PublicationMetadata, extract_publication_metadata
 
-# Extract metadata from project config
-metadata = extract_publication_metadata(config_path)
-
-# Access publication details
-print(metadata.title, metadata.authors, metadata.doi)
+metadata = extract_publication_metadata([Path("manuscript/01_introduction.md")])
 ```
 
-## Citation Generation
+## Citation generation
 
 ```python
 from infrastructure.publishing import (
-    generate_citation_bibtex, generate_citation_apa, generate_citation_mla,
-    generate_citations_markdown, CitationStyle,
-    extract_citations_from_markdown,
+    generate_citation_bibtex,
+    generate_citation_apa,
+    generate_citation_mla,
 )
 
-# Generate citations in different formats
 bibtex = generate_citation_bibtex(metadata)
-apa = generate_citation_apa(metadata)
-mla = generate_citation_mla(metadata)
-
-# Generate full citations markdown
-citations_md = generate_citations_markdown(metadata)
-
-# Extract existing citations from manuscript
-existing = extract_citations_from_markdown(manuscript_text)
 ```
 
-## DOI Management
+## Zenodo publication
 
 ```python
-from infrastructure.publishing import validate_doi, generate_doi_badge
+from infrastructure.publishing.zenodo import publish_to_zenodo, ZenodoClient, ZenodoConfig
 
-is_valid = validate_doi("10.5281/zenodo.12345678")
-badge_md = generate_doi_badge("10.5281/zenodo.12345678")
-```
+result = publish_to_zenodo(metadata, [Path("output/paper.pdf")], access_token="...", sandbox=True)
+print(result.doi)
 
-## Zenodo Publication
-
-```python
-from infrastructure.publishing import publish_to_zenodo, ZenodoClient, ZenodoConfig
-
-# Quick publish
-result = publish_to_zenodo(metadata, files_dir)
-
-# Advanced usage with client
-config = ZenodoConfig(access_token="...")
+config = ZenodoConfig(access_token="...", sandbox=True)
 client = ZenodoClient(config)
-deposition = client.create_deposition(metadata)
-client.upload_files(deposition, files_dir)
-client.publish(deposition)
+dep = client.create_deposition({"title": metadata.title, "upload_type": "publication"})
+client.upload_file(dep.bucket_url, Path("paper.pdf"))
+doi = client.publish(dep.deposition_id)
 ```
 
-## arXiv Submission
+## arXiv submission
 
 ```python
-from infrastructure.publishing import prepare_arxiv_submission
+from infrastructure.publishing.arxiv import prepare_arxiv_submission
 
-# Prepare submission package
-package = prepare_arxiv_submission(manuscript_dir, output_dir)
+package = prepare_arxiv_submission(output_dir, metadata)
 ```
 
-## GitHub Releases
+## GitHub releases
 
 ```python
-from infrastructure.publishing import create_github_release
+from infrastructure.publishing.github import create_github_release
 
-release = create_github_release(
-    repo="user/repo",
-    tag="v1.0.0",
-    title="Release 1.0.0",
-    body=release_notes,
+url = create_github_release(
+    "v1.0.0", "Release 1.0.0", "Notes", [Path("paper.pdf")], token, "owner/repo"
 )
 ```
 
-## Publication Readiness
+## Publication readiness
 
 ```python
-from infrastructure.publishing import (
-    validate_publication_readiness, create_submission_checklist,
-    generate_publication_summary, generate_publication_metrics,
-    create_publication_package, create_publication_announcement,
-    create_academic_profile_data, create_repository_metadata,
-    calculate_complexity_score,
-)
-from infrastructure.core.files.operations import calculate_file_hash
+from infrastructure.publishing import validate_publication_readiness, create_submission_checklist
 
-# Check if ready to publish
 readiness = validate_publication_readiness(project_path)
-
-# Generate submission checklist
 checklist = create_submission_checklist(metadata)
-
-# Create publication package
-package = create_publication_package(project_path, output_dir)
-
-# Generate metrics
-metrics = generate_publication_metrics(project_path)
 ```
+
+## Executable bundle (Stage 10)
+
+```python
+from infrastructure.publishing.executable_bundle import bundle_project
+
+manifest_path = bundle_project(project_root, output_dir)
+```
+
+## Multi-target archival (Stage 11)
+
+```python
+from infrastructure.publishing.archival import ZenodoProvider, archive_publication
+
+run = archive_publication(
+    Path("output/project/executable_bundle"),
+    providers=[ZenodoProvider(token=None)],
+    dry_run=True,
+)
+```
+
+CLI dry-run:
+
+```bash
+uv run python -m infrastructure.publishing.archival_cli \
+  --bundle output/template_code_project/executable_bundle \
+  --providers zenodo
+```
+
+See [`archival/README.md`](archival/README.md) and `scripts/09_archive_publication.py`.

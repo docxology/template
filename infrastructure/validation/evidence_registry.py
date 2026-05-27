@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -16,6 +17,10 @@ from pathlib import Path
 from typing import Any, Iterable
 
 import yaml
+
+EVIDENCE_REGISTRY_REPORT_SCHEMA = "template-evidence-registry-report-v1"
+EVIDENCE_REGISTRY_FULL_ENV = "TEMPLATE_EVIDENCE_REGISTRY_FULL"
+DEFAULT_COMPACT_SAMPLE_LIMIT = 200
 
 
 @dataclass(frozen=True)
@@ -135,17 +140,25 @@ class VerifiedEvidenceRegistry:
         return {
             "facts": facts,
             "source_tiers": _source_tier_counts(self.facts()),
-            "freshness_warnings": [
-                {
-                    "kind": fact.kind,
-                    "value": fact.value,
-                    "source": fact.source,
-                    "source_path": fact.source_path,
-                    "source_field": fact.source_field,
-                }
-                for fact in self.facts()
-                if fact.stale or not fact.active
-            ],
+            "freshness_warnings": _freshness_warnings(self.facts()),
+        }
+
+    def to_compact_dict(self, sample_limit: int = DEFAULT_COMPACT_SAMPLE_LIMIT) -> dict[str, Any]:
+        """Serialize a bounded reviewer-facing summary of the registry."""
+        facts = self.facts()
+        bounded_limit = max(0, sample_limit)
+        sample_facts = [asdict(fact) for fact in facts[:bounded_limit]]
+        return {
+            "schema": EVIDENCE_REGISTRY_REPORT_SCHEMA,
+            "fact_count": len(facts),
+            "kind_counts": _fact_kind_counts(facts),
+            "source_tiers": _source_tier_counts(facts),
+            "freshness_warnings": _freshness_warnings(facts),
+            "sample_facts": sample_facts,
+            "omitted_fact_count": max(0, len(facts) - len(sample_facts)),
+            "claim_boundary": (
+                "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output."
+            ),
         }
 
 
@@ -220,26 +233,33 @@ def validate_text_against_registry(
 
 
 def write_evidence_registry_report(project_output_dir: Path, registry: VerifiedEvidenceRegistry) -> Path:
-    """Write ``output/reports/evidence_registry.json`` for inspection."""
+    """Write compact ``output/reports/evidence_registry.json`` for inspection."""
     report_dir = project_output_dir / "reports"
     report_dir.mkdir(parents=True, exist_ok=True)
     path = report_dir / "evidence_registry.json"
-    payload = registry.to_dict()
+    payload = registry.to_compact_dict()
     _preserve_existing_checked_at(path, payload)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    _write_optional_full_registry_report(report_dir, registry)
     return path
+
+
+def _write_optional_full_registry_report(report_dir: Path, registry: VerifiedEvidenceRegistry) -> None:
+    full_path = report_dir / "evidence_registry_full.json"
+    if os.environ.get(EVIDENCE_REGISTRY_FULL_ENV) != "1":
+        if full_path.exists():
+            full_path.unlink()
+        return
+    payload = registry.to_dict()
+    _preserve_existing_checked_at(full_path, payload)
+    full_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def _preserve_existing_checked_at(path: Path, payload: dict[str, Any]) -> None:
     existing = _existing_checked_at_by_fact(path)
     if not existing:
         return
-    facts = payload.get("facts", [])
-    if not isinstance(facts, list):
-        return
-    for row in facts:
-        if not isinstance(row, dict):
-            continue
+    for row in _fact_rows(payload):
         checked_at = existing.get(_fact_identity(row))
         if checked_at:
             row["checked_at"] = checked_at
@@ -254,17 +274,21 @@ def _existing_checked_at_by_fact(path: Path) -> dict[tuple[str, str, str, str, s
         return {}
     if not isinstance(payload, dict):
         return {}
-    facts = payload.get("facts", [])
-    if not isinstance(facts, list):
-        return {}
     checked_at_by_fact: dict[tuple[str, str, str, str, str], str] = {}
-    for row in facts:
-        if not isinstance(row, dict):
-            continue
+    for row in _fact_rows(payload):
         checked_at = row.get("checked_at")
         if isinstance(checked_at, str) and checked_at:
             checked_at_by_fact.setdefault(_fact_identity(row), checked_at)
     return checked_at_by_fact
+
+
+def _fact_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for key in ("facts", "sample_facts"):
+        value = payload.get(key, [])
+        if isinstance(value, list):
+            rows.extend(row for row in value if isinstance(row, dict))
+    return rows
 
 
 def _fact_identity(row: dict[str, Any]) -> tuple[str, str, str, str, str]:
@@ -570,7 +594,28 @@ def _source_tier_counts(facts: Iterable[EvidenceFact]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for fact in facts:
         counts[fact.source_tier] = counts.get(fact.source_tier, 0) + 1
-    return counts
+    return dict(sorted(counts.items()))
+
+
+def _fact_kind_counts(facts: Iterable[EvidenceFact]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for fact in facts:
+        counts[fact.kind] = counts.get(fact.kind, 0) + 1
+    return dict(sorted(counts.items()))
+
+
+def _freshness_warnings(facts: Iterable[EvidenceFact]) -> list[dict[str, str]]:
+    return [
+        {
+            "kind": fact.kind,
+            "value": fact.value,
+            "source": fact.source,
+            "source_path": fact.source_path,
+            "source_field": fact.source_field,
+        }
+        for fact in facts
+        if fact.stale or not fact.active
+    ]
 
 
 def _zone_for_heading(line: str) -> str:

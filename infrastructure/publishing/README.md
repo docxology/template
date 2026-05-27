@@ -19,12 +19,12 @@ bibtex = generate_citation_bibtex(metadata)
 print(bibtex)
 
 # Publish to Zenodo
-doi = publish_to_zenodo(
+result = publish_to_zenodo(
     metadata,
     [Path("output/{project_name}/pdf/{project_name}_combined.pdf")],
     os.getenv("ZENODO_TOKEN")
 )
-print(f"Published with DOI: {doi}")
+print(f"Published with DOI: {result.doi}")
 ```
 
 ## Modules
@@ -33,54 +33,37 @@ print(f"Published with DOI: {doi}")
 graph TD
     subgraph Metadata["Metadata Management"]
         EXTRACT[extract_publication_metadata<br/>Extract from markdown<br/>Parse config.yaml]
-        VALIDATE[validate_metadata<br/>Check completeness<br/>Format validation]
-        FORMAT[format_metadata<br/>Standardize format<br/>Citation preparation]
+        READINESS[validate_publication_readiness<br/>Pre-flight checks]
+        PACKAGE[create_publication_package<br/>Bundle files + metadata]
     end
 
     subgraph Citations["Citation Generation"]
-        BIBTEX[generate_citation_bibtex<br/>BibTeX format<br/>Academic bibliography]
-        APA[generate_citation_apa<br/>APA style<br/>Social sciences]
-        MLA[generate_citation_mla<br/>MLA style<br/>Humanities]
+        BIBTEX[generate_citation_bibtex<br/>BibTeX format]
+        APA[generate_citation_apa<br/>APA style]
+        MLA[generate_citation_mla<br/>MLA style]
     end
 
     subgraph Platforms["Platform Publishing"]
-        ZENODO[publish_to_zenodo<br/>DOI minting<br/>Data/code archiving]
-        ARXIV[prepare_arxiv_submission<br/>Preprint package<br/>Academic sharing]
-        GITHUB[create_github_release<br/>Version tagging<br/>Code distribution]
+        ZENODO[publish_to_zenodo<br/>DOI minting]
+        ARXIV[prepare_arxiv_submission<br/>Preprint tarball]
+        GITHUB[create_github_release<br/>Release + assets]
     end
 
-    subgraph Workflow["Publishing Workflow"]
-        PREPARE[Prepare Materials<br/>Gather files<br/>Validate formats]
-        METADATA_PROC[Process Metadata<br/>Extract & format<br/>Generate citations]
-        UPLOAD[Upload to Platforms<br/>Zenodo, arXiv, GitHub<br/>DOI management]
-        TRACK[Track Publication<br/>Monitor status<br/>Update records]
+    subgraph Archival["Long-horizon Archival"]
+        BUNDLE[bundle_project<br/>Stage 10 executable bundle]
+        ARCHIVE[archive_publication<br/>Multi-target mirror]
     end
 
     Metadata --> Citations
     Metadata --> Platforms
-
-    Citations --> Workflow
-    Platforms --> Workflow
-
-    EXTRACT --> VALIDATE --> FORMAT
-    FORMAT --> BIBTEX
-    FORMAT --> APA
-    FORMAT --> MLA
-
-    FORMAT --> ZENODO
-    FORMAT --> ARXIV
-    FORMAT --> GITHUB
-
-    PREPARE --> METADATA_PROC --> UPLOAD --> TRACK
-
-    class Metadata metadata
-    class Citations citations
-    class Platforms platforms
-    class Workflow workflow
+    Platforms --> Archival
 ```
 
-- **core** - Publishing workflows and metadata management
-- **api** - Platform API clients (Zenodo, arXiv, GitHub)
+- **core** - Metadata, citations, packages, readiness
+- **zenodo/** - [Zenodo REST API](https://developers.zenodo.org/) client and publish workflow
+- **github/** - GitHub Releases API
+- **arxiv/** - arXiv submission tarball preparation
+- **platforms.py** / **api.py** - Backwards-compatible re-exports
 
 ## Key Classes
 
@@ -93,9 +76,11 @@ graph TD
 - `journal` - Optional journal name
 - `license` - License type
 
-### API Clients
-- `ZenodoClient` - Zenodo platform integration
-- `ZenodoConfig` - Zenodo configuration
+### API clients
+
+- `ZenodoClient` / `ZenodoConfig` — [`zenodo/`](zenodo/) (also via `infrastructure.publishing.api`)
+- `DepositionResult` — create-deposition result (id + bucket URL)
+- `PublishResult` — high-level Zenodo publish result (DOI + deposition id)
 
 ## Key Functions
 
@@ -133,11 +118,20 @@ graph TD
 # Extract metadata
 uv run python -m infrastructure.publishing.cli extract-metadata manuscript/
 
-# Generate citations
+# Generate citations (the CLI currently exposes BibTeX only)
 uv run python -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
 
-# Prepare Zenodo upload
+# Publish to Zenodo (sandbox by default; pass --production for zenodo.org)
 uv run python -m infrastructure.publishing.cli publish-zenodo output/ --token $ZENODO_TOKEN
+
+# GitHub release wrapper (expects output/pdf/*.pdf in cwd)
+uv run python -m infrastructure.publishing.publish_cli \
+  --token $GITHUB_TOKEN --repo owner/repo --tag v1.0.0 --name "Release 1.0.0"
+
+# Archival dry-run (Stage 11; default is safe — no real deposits)
+uv run python -m infrastructure.publishing.archival_cli \
+  --bundle output/template_code_project/executable_bundle \
+  --providers zenodo software_heritage ipfs_pinata ipfs_web3storage
 ```
 
 ## Environment Variables
@@ -150,8 +144,7 @@ export GITHUB_TOKEN="your-token"
 ## Testing
 
 ```bash
-uv run pytest tests/infra_tests/test_publishing/
+uv run pytest tests/infra_tests/publishing/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).
-

@@ -29,14 +29,18 @@ Core data:
 | `output/data/ml_candidate_intervals.json` | Baseline and evaluated-candidate Wilson accuracy intervals |
 | `output/data/ml_class_balance.json` | Train/test class counts for the local offline MNIST fixture |
 | `output/data/ml_calibration_report.json` | Accepted-candidate calibration bins, expected calibration error, and high-confidence errors |
+| `output/data/ml_calibration_bin_intervals.json` | Wilson intervals for empirical accuracy inside each calibration bin, including empty-bin markers |
 | `output/data/ml_robustness_report.json` | Deterministic no-retrain perturbation scores for evaluated candidates |
 | `output/data/ml_probability_diagnostics.json` | Accepted-candidate confidence, margin, entropy, and correctness histogram diagnostics |
 | `output/data/ml_bootstrap_intervals.json` | Deterministic bootstrap intervals for accepted-candidate accuracy and macro F1 |
 | `output/data/ml_paired_comparison.json` | Matched baseline-vs-accepted correctness counts and exact McNemar summary |
 | `output/data/ml_statistical_summary.json` | Accepted-candidate Brier, NLL, top-2, kappa, selective-accuracy, and candidate probability-quality summary |
 | `output/data/ml_training_diagnostics.json` | Configured learning-rate, gradient-clipping, best-epoch, loss-reduction, and train-test gap diagnostics |
+| `output/data/ml_candidate_rank_stability.json` | Deterministic bootstrap rank-stability frequencies and accepted-vs-runner-up delta interval |
 | `output/data/ml_candidate_selection_audit.json` | Candidate ranking audit with objective metric, Wilson interval, probability quality, parameters, and tie-break context |
 | `output/data/ml_diagnostic_boundary.json` | Generated claim-boundary table separating objective selection, diagnostics, robustness, integrity, and review governance |
+| `output/data/autoresearch_phase_ledger.json` | Ordered loop-settlement ledger for intrinsic checks, artifact writes, readiness settlement, and final manifests |
+| `output/data/figure_quality_report.json` | Local registry/source/pixel checks for generated figures |
 | `output/data/autoresearch_security_profile.json` | Local deterministic security profile, network policy, integrity algorithm, framework labels, and explicit non-claims |
 | `output/data/autoresearch_threat_model.json` | STRIDE and ATT&CK-scoped local artifact threat model with assets, threats, controls, and residual risks |
 | `output/data/autoresearch_supply_chain_inventory.json` | SBOM-style local input and generated-artifact inventory with SHA-256 hashes |
@@ -70,6 +74,7 @@ Figures:
 | `output/figures/ml_selective_accuracy.png` | Coverage versus selective accuracy at configured confidence thresholds |
 | `output/figures/ml_probability_quality.png` | Candidate Brier score and negative log likelihood comparison |
 | `output/figures/ml_training_dynamics.png` | Final versus best-epoch accuracy and train-test gap chart for evaluated candidates |
+| `output/figures/ml_candidate_rank_stability.png` | Bootstrap top-rank frequency and mean-rank diagnostic for evaluated candidates |
 | `output/figures/autoresearch_candidate_lifecycle.png` | Candidate lifecycle counts from the proposal and candidate ledger |
 | `output/figures/mnist_class_balance.png` | Train/test class-count diagnostic for the local MNIST fixture |
 | `output/figures/mnist_subset_contact_sheet.png` | Deterministic contact sheet from the local fixed data subset and provenance file |
@@ -92,8 +97,13 @@ Reports:
 | `output/reports/autoresearch_readiness.json` | Structured readiness validation result |
 | `output/reports/autoresearch_readiness.md` | Human-readable readiness validation result |
 | `output/reports/benchmark_readiness_smoke.json` | Deterministic grading output for the exemplar benchmark task |
-| `output/reports/evidence_registry.json` | Evidence registry for artifact-backed facts |
+| `output/reports/evidence_registry.json` | Compact evidence-registry summary with fact counts, source tiers, freshness warnings, and a bounded fact sample |
 | `output/reports/artifact_manifest.json` | Artifact manifest with sizes and checksums |
 
 Pipeline rendering also produces manuscript, PDF, HTML, and slide outputs when
 the standard `run.sh` path reaches render and copy stages.
+
+The evidence-registry validator still builds the complete in-memory registry
+for manuscript checks. The default report is compact to keep reviewer artifacts
+small; set `TEMPLATE_EVIDENCE_REGISTRY_FULL=1` only for local debugging to emit
+`output/reports/evidence_registry_full.json`, which is not a required artifact.

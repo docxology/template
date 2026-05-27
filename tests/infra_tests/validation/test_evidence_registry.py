@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
+import pytest
+
 from infrastructure.validation.evidence_registry import (
+    EVIDENCE_REGISTRY_REPORT_SCHEMA,
     EvidenceFact,
     VerifiedEvidenceRegistry,
     build_project_evidence_registry,
@@ -172,8 +176,12 @@ def test_write_evidence_registry_report(tmp_path: Path) -> None:
 
     report_path = write_evidence_registry_report(tmp_path, registry)
 
-    payload = report_path.read_text(encoding="utf-8")
-    assert '"smith2026"' in payload
+    payload = json.loads(report_path.read_text(encoding="utf-8"))
+    assert payload["schema"] == EVIDENCE_REGISTRY_REPORT_SCHEMA
+    assert payload["fact_count"] == 1
+    assert payload["kind_counts"] == {"citation": 1}
+    assert payload["omitted_fact_count"] == 0
+    assert payload["sample_facts"][0]["value"] == "smith2026"
     assert report_path == tmp_path / "reports" / "evidence_registry.json"
 
 
@@ -202,6 +210,51 @@ def test_write_evidence_registry_report_preserves_stable_fact_timestamps(tmp_pat
     write_evidence_registry_report(tmp_path, second)
 
     assert report_path.read_text(encoding="utf-8") == first_payload
+
+
+def test_compact_registry_report_caps_samples_and_summarizes_facts() -> None:
+    registry = VerifiedEvidenceRegistry(
+        EvidenceFact(kind="citation", value=f"smith{i}", source="references.bib", source_tier="bibliography")
+        for i in range(250)
+    )
+    registry.add(
+        EvidenceFact(
+            kind="number",
+            value="88",
+            source="output/data/results.json",
+            source_tier="generated_metric",
+            stale=True,
+        )
+    )
+
+    payload = registry.to_compact_dict(sample_limit=3)
+
+    assert payload["schema"] == EVIDENCE_REGISTRY_REPORT_SCHEMA
+    assert payload["fact_count"] == 252
+    assert payload["kind_counts"] == {"citation": 250, "number": 2}
+    assert payload["source_tiers"] == {"bibliography": 250, "generated_metric": 2}
+    assert len(payload["sample_facts"]) == 3
+    assert payload["omitted_fact_count"] == 249
+    assert payload["freshness_warnings"][0]["value"] == "88"
+
+
+def test_full_registry_report_is_explicit_debug_opt_in(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    registry = VerifiedEvidenceRegistry()
+    registry.add(EvidenceFact(kind="citation", value="smith2026", source="manuscript/references.bib"))
+    full_path = tmp_path / "reports" / "evidence_registry_full.json"
+
+    monkeypatch.delenv("TEMPLATE_EVIDENCE_REGISTRY_FULL", raising=False)
+    write_evidence_registry_report(tmp_path, registry)
+    assert full_path.exists() is False
+
+    monkeypatch.setenv("TEMPLATE_EVIDENCE_REGISTRY_FULL", "1")
+    write_evidence_registry_report(tmp_path, registry)
+    full_payload = json.loads(full_path.read_text(encoding="utf-8"))
+    assert full_payload["facts"][0]["value"] == "smith2026"
+
+    monkeypatch.delenv("TEMPLATE_EVIDENCE_REGISTRY_FULL", raising=False)
+    write_evidence_registry_report(tmp_path, registry)
+    assert full_path.exists() is False
 
 
 def test_claim_ledger_ingestion_preserves_claim_metadata_and_freshness(tmp_path: Path) -> None:

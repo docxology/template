@@ -25,6 +25,7 @@ from infrastructure.rendering.manuscript_discovery import (
 from infrastructure.rendering.latex_package_validator import validate_preamble_packages
 from infrastructure.rendering.latex_validation import ValidationReport
 from infrastructure.project.discovery import resolve_project_root
+from infrastructure.publishing.transmission_bookends import is_transmission_bookend
 
 # Re-exports for backwards compatibility
 from infrastructure.rendering._pipeline_summary import (  # noqa: F401
@@ -242,6 +243,13 @@ def _render_individual_files(
     for i, source_file in enumerate(source_files, 1):
         progress.start_substage(i, source_file.name)
         try:
+            if is_transmission_bookend(source_file):
+                logger.debug(
+                    "Skipping per-file render for transmission bookend (combined PDF only): %s",
+                    source_file.name,
+                )
+                progress.complete_substage()
+                continue
             outputs = manager.render_all(source_file)
             if outputs:
                 for output_path in outputs:
@@ -478,6 +486,13 @@ def _render_pipeline_impl(project_name: str = "project") -> int:
         return 1
 
     manuscript_dir = _resolve_manuscript_dir(project_root)
+
+    try:
+        from infrastructure.publishing.transmission_bookends import write_transmission_bookends
+
+        write_transmission_bookends(project_root, project_name, repo_root=repo_root)
+    except Exception as exc:  # noqa: BLE001 — bookends must not block rendering
+        logger.warning("Transmission bookend generation skipped: %s", exc)
 
     override_script = project_root / "scripts" / "_render_pdf_override.py"
     if override_script.exists():

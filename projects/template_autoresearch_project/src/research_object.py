@@ -25,6 +25,7 @@ def research_object_manifest_payload(
         "generated_at": generated_at,
         "project_name": project_root.name,
         "artifact_count": len(artifacts),
+        "empty_artifact_count": sum(1 for artifact in artifacts if artifact.get("empty")),
         "artifacts": artifacts,
         "manuscript_outputs": [
             _expected_file_record(project_root, "output/pdf/template_autoresearch_project_combined.pdf"),
@@ -66,10 +67,14 @@ def _existing_project_paths(project_root: Path, paths: list[Path]) -> tuple[Path
 
 def _file_record(project_root: Path, path: Path) -> dict[str, object]:
     rel_path = _relative_path(project_root, path)
+    size_bytes = path.stat().st_size if path.exists() else 0
     return {
         "path": rel_path,
         "exists": path.exists(),
-        "size_bytes": path.stat().st_size if path.exists() else 0,
+        "size_bytes": size_bytes,
+        # Surface present-but-empty artifacts so the inventory binds to substance,
+        # not just presence (consistent with the integrity gate that fails them).
+        "empty": path.exists() and size_bytes == 0,
         "sha256": compute_sha256(path) if path.exists() else "",
     }
 

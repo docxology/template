@@ -173,14 +173,17 @@ def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: 
         tmp_path / "output/data/ml_candidate_intervals.json",
         tmp_path / "output/data/ml_class_balance.json",
         tmp_path / "output/data/ml_calibration_report.json",
+        tmp_path / "output/data/ml_calibration_bin_intervals.json",
         tmp_path / "output/data/ml_robustness_report.json",
         tmp_path / "output/data/ml_probability_diagnostics.json",
         tmp_path / "output/data/ml_bootstrap_intervals.json",
         tmp_path / "output/data/ml_paired_comparison.json",
         tmp_path / "output/data/ml_statistical_summary.json",
         tmp_path / "output/data/ml_training_diagnostics.json",
+        tmp_path / "output/data/ml_candidate_rank_stability.json",
         tmp_path / "output/data/ml_candidate_selection_audit.json",
         tmp_path / "output/data/ml_diagnostic_boundary.json",
+        tmp_path / "output/data/figure_quality_report.json",
         tmp_path / "output/reports/ml_experiment_report.md",
         tmp_path / "output/reports/ml_benchmark_score.json",
         tmp_path / "output/figures/ml_candidate_scores.png",
@@ -200,6 +203,7 @@ def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: 
         tmp_path / "output/figures/ml_selective_accuracy.png",
         tmp_path / "output/figures/ml_probability_quality.png",
         tmp_path / "output/figures/ml_training_dynamics.png",
+        tmp_path / "output/figures/ml_candidate_rank_stability.png",
         tmp_path / "output/figures/autoresearch_candidate_lifecycle.png",
         tmp_path / "output/figures/mnist_class_balance.png",
         tmp_path / "output/figures/mnist_subset_contact_sheet.png",
@@ -223,6 +227,7 @@ def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: 
     assert (tmp_path / "output/figures/ml_selective_accuracy.png").stat().st_size > 1000
     assert (tmp_path / "output/figures/ml_probability_quality.png").stat().st_size > 1000
     assert (tmp_path / "output/figures/ml_training_dynamics.png").stat().st_size > 1000
+    assert (tmp_path / "output/figures/ml_candidate_rank_stability.png").stat().st_size > 1000
     assert (tmp_path / "output/figures/autoresearch_candidate_lifecycle.png").stat().st_size > 1000
     assert (tmp_path / "output/figures/mnist_class_balance.png").stat().st_size > 1000
     assert (tmp_path / "output/figures/mnist_subset_contact_sheet.png").stat().st_size > 1000
@@ -254,6 +259,9 @@ def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: 
     assert registry["fig:ml_selective_accuracy"]["metadata"]["source"] == "output/data/ml_statistical_summary.json"
     assert registry["fig:ml_probability_quality"]["metadata"]["source"] == "output/data/ml_statistical_summary.json"
     assert registry["fig:ml_training_dynamics"]["metadata"]["source"] == "output/data/ml_training_diagnostics.json"
+    assert registry["fig:ml_candidate_rank_stability"]["metadata"]["source"] == (
+        "output/data/ml_candidate_rank_stability.json"
+    )
     assert registry["fig:ml_candidate_scores"]["metadata"]["source"] == "output/data/ml_candidate_intervals.json"
     assert registry["fig:mnist_class_balance"]["metadata"]["source"] == "output/data/ml_class_balance.json"
     assert (
@@ -264,3 +272,8 @@ def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: 
         registry["fig:autoresearch_integrity_chain"]["metadata"]["source"]
         == "output/data/autoresearch_integrity_attestation.json"
     )
+    figure_quality = json.loads((tmp_path / "output/data/figure_quality_report.json").read_text(encoding="utf-8"))
+    assert figure_quality["schema"] == "template-autoresearch-figure-quality-report-v1"
+    assert figure_quality["valid"] is True
+    assert figure_quality["unregistered_pngs"] == []
+    assert all(row["exists"] and row["source_exists"] for row in figure_quality["figures"])

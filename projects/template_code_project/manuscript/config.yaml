@@ -10,7 +10,7 @@ paper:
   # RASP Standard: Title must be descriptive and objective
   title: "Convergence Analysis of Gradient Descent Optimization"
   subtitle: "Theoretical Bounds and Empirical Performance in Quadratic Minimization"
-  version: "2.0"
+  version: "2.3"
   date: "" # Auto-generated via `infrastructure/validation/output/validator.py` if empty
 
 # Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
@@ -27,7 +27,15 @@ authors:
 
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
-  doi: "10.5281/zenodo.12345678" # Checked by validation gates
+  doi: "" # Written back by scripts/publish_project_release.py after Zenodo mint; cleared after release smoke
+  github_repository: "docxology/template_code_project"
+  transmission_bookends:
+    enabled: true
+    max_prior_releases: 5
+    show_steganography: true
+  deposit_filename:
+    enabled: true
+    topic: ""  # optional; default = first significant title word
   journal: "Journal of Optimization Methods"
   volume: "15"
   pages: "1-25"
@@ -45,6 +53,18 @@ keywords:
 metadata:
   license: "MIT"
   language: "en"
+
+# Steganography profile for secure_run.sh and transmission bookend summary.
+# Precedence: infrastructure/config/secure_config.yaml < this block.
+steganography:
+  enabled: true
+  overlays_enabled: true
+  barcodes_enabled: true
+  metadata_enabled: true
+  hashing_enabled: true
+  encryption_enabled: false
+  overlay_mode: "text"
+  overlay_text: "CONFIDENTIAL"
 
 # Render format toggles — gate per-renderer in infrastructure/rendering/pipeline.py.
 # Defaults: pdf/html/slides on, docx/epub off. Setting `false` makes the pipeline

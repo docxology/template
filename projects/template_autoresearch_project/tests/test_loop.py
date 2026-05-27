@@ -46,6 +46,28 @@ def test_run_autoresearch_loop_writes_artifacts_and_valid_readiness(
     assert readiness["summary"]["errors"] == 0
 
 
+def test_evidence_registry_report_is_compact_by_default(
+    project_root: Path,
+    autoresearch_loop_result: AutoResearchLoopResult,
+) -> None:
+    assert autoresearch_loop_result.readiness_valid is True
+    report_path = project_root / "output" / "reports" / "evidence_registry.json"
+    full_debug_path = project_root / "output" / "reports" / "evidence_registry_full.json"
+    payload = json.loads(report_path.read_text(encoding="utf-8"))
+    reports_size = sum(
+        path.stat().st_size for path in (project_root / "output" / "reports").rglob("*") if path.is_file()
+    )
+
+    assert payload["schema"] == "template-evidence-registry-report-v1"
+    assert payload["fact_count"] > len(payload["sample_facts"])
+    assert len(payload["sample_facts"]) <= 200
+    assert payload["omitted_fact_count"] == payload["fact_count"] - len(payload["sample_facts"])
+    assert report_path.stat().st_size < 1024 * 1024
+    assert reports_size < 10 * 1024 * 1024
+    assert full_debug_path.exists() is False
+    assert "output/reports/evidence_registry_full.json" not in autoresearch_loop_result.output_paths
+
+
 def test_loop_payload_contains_claims_metrics_and_output_paths(
     project_root: Path,
     autoresearch_loop_result: AutoResearchLoopResult,
@@ -74,13 +96,17 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(
     assert "output/data/ml_candidate_intervals.json" in payload["output_paths"]
     assert "output/data/ml_class_balance.json" in payload["output_paths"]
     assert "output/data/ml_calibration_report.json" in payload["output_paths"]
+    assert "output/data/ml_calibration_bin_intervals.json" in payload["output_paths"]
     assert "output/data/ml_robustness_report.json" in payload["output_paths"]
     assert "output/data/ml_probability_diagnostics.json" in payload["output_paths"]
     assert "output/data/ml_bootstrap_intervals.json" in payload["output_paths"]
     assert "output/data/ml_paired_comparison.json" in payload["output_paths"]
     assert "output/data/ml_statistical_summary.json" in payload["output_paths"]
     assert "output/data/ml_candidate_selection_audit.json" in payload["output_paths"]
+    assert "output/data/ml_candidate_rank_stability.json" in payload["output_paths"]
     assert "output/data/ml_diagnostic_boundary.json" in payload["output_paths"]
+    assert "output/data/autoresearch_phase_ledger.json" in payload["output_paths"]
+    assert "output/data/figure_quality_report.json" in payload["output_paths"]
     assert "output/data/autoresearch_security_profile.json" in payload["output_paths"]
     assert "output/data/autoresearch_threat_model.json" in payload["output_paths"]
     assert "output/data/autoresearch_supply_chain_inventory.json" in payload["output_paths"]
@@ -105,6 +131,7 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(
     assert "output/figures/ml_paired_correctness.png" in payload["output_paths"]
     assert "output/figures/ml_selective_accuracy.png" in payload["output_paths"]
     assert "output/figures/ml_probability_quality.png" in payload["output_paths"]
+    assert "output/figures/ml_candidate_rank_stability.png" in payload["output_paths"]
     assert "output/figures/autoresearch_candidate_lifecycle.png" in payload["output_paths"]
     assert "output/figures/mnist_class_balance.png" in payload["output_paths"]
     assert "output/figures/mnist_subset_contact_sheet.png" in payload["output_paths"]
@@ -168,13 +195,17 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         "output/data/ml_candidate_intervals.json",
         "output/data/ml_class_balance.json",
         "output/data/ml_calibration_report.json",
+        "output/data/ml_calibration_bin_intervals.json",
         "output/data/ml_robustness_report.json",
         "output/data/ml_probability_diagnostics.json",
         "output/data/ml_bootstrap_intervals.json",
         "output/data/ml_paired_comparison.json",
         "output/data/ml_statistical_summary.json",
         "output/data/ml_candidate_selection_audit.json",
+        "output/data/ml_candidate_rank_stability.json",
         "output/data/ml_diagnostic_boundary.json",
+        "output/data/autoresearch_phase_ledger.json",
+        "output/data/figure_quality_report.json",
         "output/data/autoresearch_security_profile.json",
         "output/data/autoresearch_threat_model.json",
         "output/data/autoresearch_supply_chain_inventory.json",
@@ -205,6 +236,7 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         "output/figures/ml_paired_correctness.png",
         "output/figures/ml_selective_accuracy.png",
         "output/figures/ml_probability_quality.png",
+        "output/figures/ml_candidate_rank_stability.png",
         "output/figures/autoresearch_candidate_lifecycle.png",
         "output/figures/mnist_class_balance.png",
         "output/figures/mnist_subset_contact_sheet.png",
@@ -257,6 +289,7 @@ def test_run_autoresearch_loop_writes_stage_matrix_figure(
     assert (project_root / "output" / "figures" / "ml_paired_correctness.png").exists()
     assert (project_root / "output" / "figures" / "ml_selective_accuracy.png").exists()
     assert (project_root / "output" / "figures" / "ml_probability_quality.png").exists()
+    assert (project_root / "output" / "figures" / "ml_candidate_rank_stability.png").exists()
     assert (project_root / "output" / "figures" / "autoresearch_candidate_lifecycle.png").exists()
     assert (project_root / "output" / "figures" / "mnist_class_balance.png").exists()
     assert (project_root / "output" / "figures" / "mnist_subset_contact_sheet.png").exists()
@@ -280,6 +313,7 @@ def test_run_autoresearch_loop_writes_stage_matrix_figure(
     assert registry["fig:ml_paired_correctness"]["filename"] == "ml_paired_correctness.png"
     assert registry["fig:ml_selective_accuracy"]["filename"] == "ml_selective_accuracy.png"
     assert registry["fig:ml_probability_quality"]["filename"] == "ml_probability_quality.png"
+    assert registry["fig:ml_candidate_rank_stability"]["filename"] == "ml_candidate_rank_stability.png"
     assert registry["fig:autoresearch_candidate_lifecycle"]["filename"] == "autoresearch_candidate_lifecycle.png"
     assert registry["fig:mnist_class_balance"]["filename"] == "mnist_class_balance.png"
     assert registry["fig:mnist_subset_contact_sheet"]["filename"] == "mnist_subset_contact_sheet.png"
@@ -341,6 +375,9 @@ def test_run_derived_visual_diagnostics_match_source_artifacts(
     assert registry["fig:ml_paired_correctness"]["metadata"]["source"] == "output/data/ml_paired_comparison.json"
     assert registry["fig:ml_selective_accuracy"]["metadata"]["source"] == "output/data/ml_statistical_summary.json"
     assert registry["fig:ml_probability_quality"]["metadata"]["source"] == "output/data/ml_statistical_summary.json"
+    assert registry["fig:ml_candidate_rank_stability"]["metadata"]["source"] == (
+        "output/data/ml_candidate_rank_stability.json"
+    )
     assert registry["fig:autoresearch_candidate_lifecycle"]["metadata"]["source"] == (
         "output/data/ml_candidate_ledger.json"
     )
@@ -391,19 +428,28 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
     assert (project / "output" / "data" / "ml_task_results.json").exists()
     assert (project / "output" / "data" / "autoresearch_schema_manifest.json").exists()
     assert (project / "output" / "data" / "research_object_manifest.json").exists()
+    assert (project / "output" / "data" / "autoresearch_phase_ledger.json").exists()
+    assert (project / "output" / "data" / "figure_quality_report.json").exists()
     assert (project / "output" / "data" / "manuscript_variable_provenance.json").exists()
     assert (project / "output" / "reports" / "artifact_manifest.json").exists()
+    assert (project / "output" / "reports" / "evidence_registry_full.json").exists() is False
 
 
-def test_run_autoresearch_loop_is_repeatable_after_manifest_refresh(
+def test_phase_ledger_records_manifest_settlement_without_self_approval(
     project_root: Path,
-    repo_root: Path,
     autoresearch_loop_result: AutoResearchLoopResult,
 ) -> None:
     assert autoresearch_loop_result.readiness_valid is True
 
-    repeated = run_autoresearch_loop(project_root, repo_root)
-
-    assert repeated.readiness_valid is True
-    payload = json.loads((project_root / "output" / "data" / "autoresearch_loop.json").read_text(encoding="utf-8"))
-    assert payload["metrics"]["readiness_valid"] is True
+    ledger = json.loads(
+        (project_root / "output" / "data" / "autoresearch_phase_ledger.json").read_text(encoding="utf-8")
+    )
+    assert ledger["schema"] == "template-autoresearch-phase-ledger-v1"
+    assert ledger["project_name"] == "template_autoresearch_project"
+    assert ledger["settlement_pass_count"] >= 2
+    assert ledger["publication_approved"] is False
+    phase_names = [row["phase"] for row in ledger["phases"]]
+    assert phase_names[:4] == ["intrinsic_readiness", "core_artifacts", "evidence_registry", "ml_task"]
+    assert "extrinsic_readiness" in phase_names
+    assert "final_schema_manifest" in phase_names
+    assert all(row["artifact_group"] for row in ledger["phases"])

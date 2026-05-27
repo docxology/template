@@ -17,14 +17,18 @@ def build_table_specs(
     candidate_intervals: dict[str, Any],
     class_balance: dict[str, Any],
     calibration: dict[str, Any],
+    calibration_intervals: dict[str, Any],
     robustness: dict[str, Any],
     probability: dict[str, Any],
     bootstrap: dict[str, Any],
     paired: dict[str, Any],
     statistical: dict[str, Any],
     training: dict[str, Any],
+    rank_stability: dict[str, Any],
     candidate_selection: dict[str, Any],
     diagnostic_boundary: dict[str, Any],
+    phase_ledger: dict[str, Any],
+    figure_quality: dict[str, Any],
     security_profile: dict[str, Any],
     security_threat_model: dict[str, Any],
     security_inventory: dict[str, Any],
@@ -77,6 +81,11 @@ def build_table_specs(
             "output/data/ml_calibration_report.json",
             "/bins",
         ),
+        "CALIBRATION_BIN_INTERVAL_TABLE": (
+            _calibration_bin_interval_table(calibration_intervals),
+            "output/data/ml_calibration_bin_intervals.json",
+            "/bins",
+        ),
         "CONFUSION_PAIR_TABLE": (
             _confusion_pair_table(classification),
             "output/data/ml_classification_diagnostics.json",
@@ -122,6 +131,11 @@ def build_table_specs(
             "output/data/ml_training_diagnostics.json",
             "/rows",
         ),
+        "CANDIDATE_RANK_STABILITY_TABLE": (
+            _candidate_rank_stability_table(rank_stability),
+            "output/data/ml_candidate_rank_stability.json",
+            "/rank_frequencies",
+        ),
         "CANDIDATE_SELECTION_AUDIT_TABLE": (
             _candidate_selection_audit_table(candidate_selection),
             "output/data/ml_candidate_selection_audit.json",
@@ -131,6 +145,16 @@ def build_table_specs(
             _diagnostic_boundary_table(diagnostic_boundary),
             "output/data/ml_diagnostic_boundary.json",
             "/rows",
+        ),
+        "PHASE_LEDGER_TABLE": (
+            _phase_ledger_table(phase_ledger),
+            "output/data/autoresearch_phase_ledger.json",
+            "/phases",
+        ),
+        "FIGURE_QUALITY_TABLE": (
+            _figure_quality_table(figure_quality),
+            "output/data/figure_quality_report.json",
+            "/figures",
         ),
         "SECURITY_ARTIFACT_TABLE": (
             _security_artifact_table(security_profile, security_inventory, security_attestation),
@@ -323,6 +347,25 @@ def _calibration_bin_table(calibration: dict[str, Any]) -> str:
     )
 
 
+def _calibration_bin_interval_table(calibration_intervals: dict[str, Any]) -> str:
+    rows = [
+        (
+            f"{_string_value(row.get('lower', 'N/A'))}-{_string_value(row.get('upper', 'N/A'))}",
+            _string_value(row.get("count", "N/A")),
+            _string_value(row.get("successes", "N/A")),
+            _percent_value(row.get("accuracy")),
+            f"{_percent_value(row.get('ci_low'))} to {_percent_value(row.get('ci_high'))}",
+            _string_value(row.get("empty_bin", "N/A")),
+        )
+        for row in _mapping_list(calibration_intervals.get("bins"))
+    ]
+    return _markdown_table(
+        ("Confidence bin", "Count", "Correct", "Accuracy", "Wilson 95%", "Empty"),
+        rows,
+        "Calibration-bin Wilson intervals from `output/data/ml_calibration_bin_intervals.json`; empty bins are reported explicitly. {#tbl:calibration-bin-intervals}",
+    )
+
+
 def _confusion_pair_table(classification: dict[str, Any]) -> str:
     rows = [
         (
@@ -493,6 +536,24 @@ def _training_diagnostics_table(training: dict[str, Any]) -> str:
     )
 
 
+def _candidate_rank_stability_table(rank_stability: dict[str, Any]) -> str:
+    rows = [
+        (
+            _candidate_display_label(row.get("candidate_id", "N/A")),
+            _string_value(row.get("observed_rank", "N/A")),
+            _percent_value(row.get("rank_1_frequency")),
+            _decimal_value(row.get("mean_rank")),
+            _percent_value(row.get("test_accuracy")),
+        )
+        for row in _mapping_list(rank_stability.get("rank_frequencies"))
+    ]
+    return _markdown_table(
+        ("Candidate", "Observed rank", "Top-rank frequency", "Mean rank", "Accuracy"),
+        rows,
+        "Candidate rank-stability table from `output/data/ml_candidate_rank_stability.json`; frequencies are deterministic local bootstrap summaries. {#tbl:candidate-rank-stability}",
+    )
+
+
 def _candidate_selection_audit_table(candidate_selection: dict[str, Any]) -> str:
     rows = [
         (
@@ -530,6 +591,43 @@ def _diagnostic_boundary_table(diagnostic_boundary: dict[str, Any]) -> str:
         rows,
         "Diagnostic claim-boundary table from `output/data/ml_diagnostic_boundary.json`. {#tbl:diagnostic-boundary}",
     )
+
+
+def _phase_ledger_table(phase_ledger: dict[str, Any]) -> str:
+    rows = [
+        (
+            _string_value(row.get("phase", "N/A")).replace("_", " "),
+            _string_value(row.get("order", "N/A")),
+            _string_value(row.get("artifact_group", "N/A")),
+            _string_value(row.get("observed_artifact_count", "N/A")),
+            _short_scope(_string_value(row.get("description", "N/A")), limit=80),
+        )
+        for row in _mapping_list(phase_ledger.get("phases"))
+    ]
+    return _markdown_table(
+        ("Phase", "Order", "Group", "Observed artifacts", "Description"),
+        rows,
+        "Deterministic phase ledger from `output/data/autoresearch_phase_ledger.json`; settlement order is not an autonomy claim. {#tbl:phase-ledger}",
+    )
+
+
+def _figure_quality_table(figure_quality: dict[str, Any]) -> str:
+    rows = [
+        (
+            _string_value(row.get("label", "N/A")),
+            _string_value(row.get("width_px", "N/A")) + "x" + _string_value(row.get("height_px", "N/A")),
+            _decimal_value(row.get("pixel_variance")),
+            _string_value(row.get("source_exists", "N/A")),
+            _string_value(row.get("nonblank", "N/A")),
+        )
+        for row in _mapping_list(figure_quality.get("figures"))
+    ]
+    caption = (
+        "Figure-quality checks from `output/data/figure_quality_report.json`; "
+        f"{_string_value(figure_quality.get('figure_count', 'N/A'))} registered figure(s) were checked. "
+        "{#tbl:figure-quality}"
+    )
+    return _markdown_table(("Figure", "Pixels", "Variance", "Source exists", "Nonblank"), rows, caption)
 
 
 def _security_artifact_table(

@@ -31,18 +31,19 @@ The command executes the standard project stages:
 5. Run the bounded local MNIST neural-network task and write resolved config,
    results, candidate ledger, confusion matrix, training history, error
    examples, probability records, classification diagnostics, calibration
-   report, candidate accuracy intervals, class-balance counts, robustness
-   report, probability diagnostics, bootstrap intervals, paired baseline
-   comparison, statistical summary, training diagnostics, report, benchmark
-   score, candidate-selection audit, diagnostic-boundary report, and
-   candidate-score figure.
+   report, calibration-bin intervals, candidate accuracy intervals,
+   class-balance counts, robustness report, probability diagnostics, bootstrap
+   intervals, paired baseline comparison, statistical summary, training
+   diagnostics, candidate rank-stability diagnostics, report, benchmark score,
+   candidate-selection audit, diagnostic-boundary report, candidate-score
+   figure, rank-stability figure, and figure-quality report.
 6. Build file-backed claims and finalize loop JSON, review packet, summary, and
    manuscript variables.
 7. Write method-contract artifacts: research program, idea ledger, run ledger,
    deferred review decisions, benchmark grading report, and benchmark scores.
 8. Refresh loop payloads provisionally (`readiness_valid=False`) and write the
    first local security artifacts, schema manifest, local research-object
-   manifest, and artifact manifest.
+   manifest, phase ledger, and artifact manifest.
 9. Run extrinsic readiness checks (evidence registry, artifact manifest,
    required artifacts, method ledgers, review gates, benchmark outputs, and
    enabled security artifacts).
@@ -55,13 +56,21 @@ The command executes the standard project stages:
    classification metrics, confusion pairs, generalization gaps, robustness
    matrix, probability and margin distributions, bootstrap intervals, paired
    correctness, selective accuracy, probability quality, training dynamics,
-   candidate lifecycle, local class balance, local data contact sheet,
-   readiness matrix, closure flow, security-control matrix, and integrity
-   chain.
+   candidate rank stability, candidate lifecycle, local class balance, local
+   data contact sheet, readiness matrix, closure flow, security-control matrix,
+   and integrity chain.
 13. Write manuscript variables, registry-backed figure blocks, and variable
    provenance sidecars.
-14. Rewrite the evidence registry, security artifacts, schema manifest, local
-   research-object manifest, and artifact manifest.
+14. Rewrite the compact evidence-registry report, security artifacts, phase
+   ledger, schema manifest, local research-object manifest, figure-quality
+   report, and artifact manifest.
+
+The evidence registry is validated in memory. By default,
+`output/reports/evidence_registry.json` is a compact reviewer-facing summary
+with counts and a bounded fact sample. To debug individual registry facts
+locally, run the loop with `TEMPLATE_EVIDENCE_REGISTRY_FULL=1`; this additionally
+writes `output/reports/evidence_registry_full.json`, which is not part of the
+required artifact contract.
 
 Targeted checks:
 

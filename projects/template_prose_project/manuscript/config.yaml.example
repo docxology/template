@@ -5,22 +5,36 @@
 # citation floor 0.0) so the exemplar's own prose passes its own gate;
 # this example shows the *stricter* defaults a real editorial review
 # typically uses.
+#
+# Release workflow (Zenodo + GitHub): see docs/guides/publishing-guide.md
+# for the full config → API mapping and cross-link contract.
 
 paper:
   title: "Your Manuscript Title"
   subtitle: "Optional Subtitle"
-  version: "1.0"
+  version: "1.0"   # Zenodo version field; GitHub release body version line
+  # date: "2026-05-27"  # Optional; Zenodo publication_date (overrides publication.year)
 
 authors:
   - name: "Your Name"
-    orcid: "0000-0000-0000-0000"   # Get one at https://orcid.org/
+    orcid: "0000-0000-0000-0000"   # Zenodo creator ORCID — placeholder values are omitted at deposit
     email: "you@your.institution"
-    affiliation: "Your Institution"
+    affiliation: "Your Institution"   # Zenodo creator affiliation
     corresponding: true
 
 publication:
-  doi: ""    # Add after deposit (e.g., Zenodo)
-  year: "2026"
+  doi: ""    # Written back by scripts/publish_project_release.py after Zenodo mint
+  year: "2026"   # Zenodo publication_date when paper.date is absent
+  repository_url: ""  # Optional; Zenodo related_identifiers when distinct from GitHub release
+  zenodo_description: ""  # Optional override; skip auto plaintext render (footer still appended)
+  github_repository: ""  # Optional; shown on transmission bookends before first GitHub release
+  transmission_bookends:
+    enabled: false  # Inject 00_00_transmission_begin.md / 99_zz_transmission_end.md into combined PDF
+    max_prior_releases: 5  # Ledger cap; end bookend shows min(max_prior_releases, 3) rows for single-page fit
+    show_steganography: true  # Summarize steganography config on bookend pages
+  # deposit_filename:
+  #   enabled: true  # Rename Zenodo/GitHub upload to Author_Year_Topic_hash8.pdf
+  #   topic: ""  # optional override for the topic segment
 
 keywords:
   - "your"
@@ -28,8 +42,11 @@ keywords:
   - "keywords"
 
 metadata:
-  license: "MIT"
+  license: "MIT"   # Zenodo license; also PDF publishing block
   language: "en"
+
+# Abstract for deposits: manuscript/00_abstract.md (hydrated copy preferred from
+# output/manuscript/00_abstract.md after analysis). Not a config key.
 
 # Path to the manuscript directory, relative to project root.
 manuscript_dir: "manuscript"

@@ -20,6 +20,7 @@ _FIGURE_WRITER_NAMES = (
     "write_mnist_subset_contact_sheet_figure",
     "write_ml_bootstrap_intervals_figure",
     "write_ml_calibration_reliability_figure",
+    "write_ml_candidate_rank_stability_figure",
     "write_ml_candidate_scores_figure",
     "write_ml_classification_metrics_heatmap",
     "write_ml_complexity_accuracy_figure",

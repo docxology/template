@@ -11,6 +11,7 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging.utils import get_logger, log_success
+from infrastructure.publishing.transmission_bookends import BEGIN_FILENAME, END_FILENAME
 
 logger = get_logger(__name__)
 
@@ -257,6 +258,10 @@ def discover_manuscript_files(manuscript_dir: Path) -> list[Path]:
     4. References: 99_*.md (always last)
     5. LaTeX files: *.tex (appended after markdown)
 
+    Generated transmission bookends (when ``publication.transmission_bookends.enabled``)
+    use ``00_00_transmission_begin.md`` (first) and ``99_zz_transmission_end.md`` (after
+    ``99_references.md``). They are written to ``output/manuscript/`` by the render pipeline.
+
     When any digit-prefixed ``NN_*.md`` section exists, ``complete.md`` is omitted — it is an
     assembled copy of section files and would duplicate figure labels in combined PDF/HTML.
 
@@ -318,8 +323,14 @@ def discover_manuscript_files(manuscript_dir: Path) -> list[Path]:
     other.sort(key=lambda x: x.stem)
 
     # Combine in order: main -> supplemental -> glossary -> other -> references
-    # References must always be last
+    # References must always be last (except transmission end bookend).
     ordered_files = main_sections + supplemental + glossary + other + references
+
+    begin_bookends = [path for path in ordered_files if path.name == BEGIN_FILENAME]
+    end_bookends = [path for path in ordered_files if path.name == END_FILENAME]
+    if begin_bookends or end_bookends:
+        middle = [path for path in ordered_files if path.name not in {BEGIN_FILENAME, END_FILENAME}]
+        ordered_files = begin_bookends + middle + end_bookends
 
     # Log discovery with full details - ALWAYS show filenames
     logger.info(f"Discovered {len(ordered_files)} manuscript file(s):")

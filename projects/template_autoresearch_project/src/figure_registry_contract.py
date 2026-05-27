@@ -60,6 +60,7 @@ _FIGURE_METHODS = {
     "fig:ml_selective_accuracy": "Confidence-threshold coverage and selective-accuracy line chart.",
     "fig:ml_probability_quality": "Brier score and negative-log-likelihood bar comparison.",
     "fig:ml_training_dynamics": "Final and best-epoch accuracy bars plus train-test gap bars.",
+    "fig:ml_candidate_rank_stability": "Bootstrap top-rank frequency and mean-rank comparison.",
     "fig:autoresearch_candidate_lifecycle": "Candidate lifecycle status-count bar chart.",
     "fig:mnist_subset_contact_sheet": "Class-balanced contact sheet from fixed local MNIST arrays.",
     "fig:mnist_class_balance": "Grouped train/test class-count bars from the local MNIST fixture.",

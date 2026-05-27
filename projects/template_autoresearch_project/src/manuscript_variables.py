@@ -31,6 +31,7 @@ _FIGURE_BLOCK_KEYS = frozenset(
         "FIGURE_BLOCK_SELECTIVE_ACCURACY",
         "FIGURE_BLOCK_PROBABILITY_QUALITY",
         "FIGURE_BLOCK_TRAINING_DYNAMICS",
+        "FIGURE_BLOCK_CANDIDATE_RANK_STABILITY",
         "FIGURE_BLOCK_CANDIDATE_LIFECYCLE",
         "FIGURE_BLOCK_DATASET_CLASS_BALANCE",
         "FIGURE_BLOCK_DATASET_CONTACT_SHEET",
@@ -59,7 +60,8 @@ _STRICT_VALUE_TOKENS = frozenset(
     SECURITY_INVENTORY_INPUT_COUNT SECURITY_INVENTORY_ARTIFACT_COUNT SECURITY_ATTESTATION_STATUS
     SECURITY_ATTESTATION_CHECKED_COUNT SECURITY_ATTESTATION_MISSING_COUNT SECURITY_ATTESTATION_MISMATCH_COUNT
     SECURITY_CLAIM_SCOPE RESEARCH_OBJECT_ARTIFACT_COUNT RESEARCH_OBJECT_APPROVAL_STATE
-    SCHEMA_MANIFEST_SCHEMA_COUNT
+    SCHEMA_MANIFEST_SCHEMA_COUNT ACCEPTED_TOP_RANK_FREQUENCY RANK_STABILITY_RUNNER_UP_ID
+    PHASE_LEDGER_SETTLEMENT_PASS_COUNT FIGURE_QUALITY_FIGURE_COUNT FIGURE_QUALITY_VALID
     """.split()
 )
 
@@ -238,14 +240,18 @@ def _load_project_artifacts(project_root: Path, *, require_valid: bool) -> dict[
         "candidate_intervals": _load_optional_json_mapping(output / "data" / "ml_candidate_intervals.json"),
         "class_balance": _load_optional_json_mapping(output / "data" / "ml_class_balance.json"),
         "calibration_report": _load_optional_json_mapping(output / "data" / "ml_calibration_report.json"),
+        "calibration_bin_intervals": _load_optional_json_mapping(output / "data" / "ml_calibration_bin_intervals.json"),
         "robustness_report": _load_optional_json_mapping(output / "data" / "ml_robustness_report.json"),
         "probability_diagnostics": _load_optional_json_mapping(output / "data" / "ml_probability_diagnostics.json"),
         "bootstrap_intervals": _load_optional_json_mapping(output / "data" / "ml_bootstrap_intervals.json"),
         "paired_comparison": _load_optional_json_mapping(output / "data" / "ml_paired_comparison.json"),
         "statistical_summary": _load_optional_json_mapping(output / "data" / "ml_statistical_summary.json"),
         "training_diagnostics": _load_optional_json_mapping(output / "data" / "ml_training_diagnostics.json"),
+        "candidate_rank_stability": _load_optional_json_mapping(output / "data" / "ml_candidate_rank_stability.json"),
         "candidate_selection_audit": _load_optional_json_mapping(output / "data" / "ml_candidate_selection_audit.json"),
         "diagnostic_boundary": _load_optional_json_mapping(output / "data" / "ml_diagnostic_boundary.json"),
+        "phase_ledger": _load_optional_json_mapping(output / "data" / "autoresearch_phase_ledger.json"),
+        "figure_quality": _load_optional_json_mapping(output / "data" / "figure_quality_report.json"),
         "security_profile": _load_optional_json_mapping(output / "data" / "autoresearch_security_profile.json"),
         "security_threat_model": _load_optional_json_mapping(output / "data" / "autoresearch_threat_model.json"),
         "security_inventory": _load_optional_json_mapping(output / "data" / "autoresearch_supply_chain_inventory.json"),
@@ -269,14 +275,18 @@ def _build_variables(project_root: Path, artifacts: dict[str, Any]) -> tuple[dic
     candidate_intervals = _mapping(artifacts.get("candidate_intervals"))
     class_balance = _mapping(artifacts.get("class_balance"))
     calibration = _mapping(artifacts.get("calibration_report"))
+    calibration_intervals = _mapping(artifacts.get("calibration_bin_intervals"))
     robustness = _mapping(artifacts.get("robustness_report"))
     probability = _mapping(artifacts.get("probability_diagnostics"))
     bootstrap = _mapping(artifacts.get("bootstrap_intervals"))
     paired = _mapping(artifacts.get("paired_comparison"))
     statistical = _mapping(artifacts.get("statistical_summary"))
     training = _mapping(artifacts.get("training_diagnostics"))
+    rank_stability = _mapping(artifacts.get("candidate_rank_stability"))
     candidate_selection = _mapping(artifacts.get("candidate_selection_audit"))
     diagnostic_boundary = _mapping(artifacts.get("diagnostic_boundary"))
+    phase_ledger = _mapping(artifacts.get("phase_ledger"))
+    figure_quality = _mapping(artifacts.get("figure_quality"))
     security_profile = _mapping(artifacts.get("security_profile"))
     security_threat_model = _mapping(artifacts.get("security_threat_model"))
     security_inventory = _mapping(artifacts.get("security_inventory"))
@@ -602,6 +612,36 @@ def _build_variables(project_root: Path, artifacts: dict[str, Any]) -> tuple[dic
         "/accepted/train_test_accuracy_gap",
     )
     put(
+        "ACCEPTED_TOP_RANK_FREQUENCY",
+        _percent_value(rank_stability.get("accepted_top_rank_frequency")),
+        "output/data/ml_candidate_rank_stability.json",
+        "/accepted_top_rank_frequency",
+    )
+    put(
+        "RANK_STABILITY_RUNNER_UP_ID",
+        rank_stability.get("runner_up_id", "N/A"),
+        "output/data/ml_candidate_rank_stability.json",
+        "/runner_up_id",
+    )
+    put(
+        "PHASE_LEDGER_SETTLEMENT_PASS_COUNT",
+        phase_ledger.get("settlement_pass_count", "N/A"),
+        "output/data/autoresearch_phase_ledger.json",
+        "/settlement_pass_count",
+    )
+    put(
+        "FIGURE_QUALITY_FIGURE_COUNT",
+        figure_quality.get("figure_count", "N/A"),
+        "output/data/figure_quality_report.json",
+        "/figure_count",
+    )
+    put(
+        "FIGURE_QUALITY_VALID",
+        str(bool(figure_quality.get("valid", False))).lower(),
+        "output/data/figure_quality_report.json",
+        "/valid",
+    )
+    put(
         "BENCHMARK_TASK_IDS",
         _benchmark_task_ids(config),
         "output/data/autoresearch_loop.json",
@@ -629,14 +669,18 @@ def _build_variables(project_root: Path, artifacts: dict[str, Any]) -> tuple[dic
         candidate_intervals,
         class_balance,
         calibration,
+        calibration_intervals,
         robustness,
         probability,
         bootstrap,
         paired,
         statistical,
         training,
+        rank_stability,
         candidate_selection,
         diagnostic_boundary,
+        phase_ledger,
+        figure_quality,
         security_profile,
         security_threat_model,
         security_inventory,
@@ -662,7 +706,9 @@ def _put_artifact_path_variables(put: Any) -> None:
         "AUTORESEARCH_THREAT_MODEL_PATH": "output/data/autoresearch_threat_model.json",
         "AUTORESEARCH_SUPPLY_CHAIN_INVENTORY_PATH": "output/data/autoresearch_supply_chain_inventory.json",
         "AUTORESEARCH_INTEGRITY_ATTESTATION_PATH": "output/data/autoresearch_integrity_attestation.json",
+        "AUTORESEARCH_PHASE_LEDGER_PATH": "output/data/autoresearch_phase_ledger.json",
         "AUTORESEARCH_SCHEMA_MANIFEST_PATH": "output/data/autoresearch_schema_manifest.json",
+        "FIGURE_QUALITY_REPORT_PATH": "output/data/figure_quality_report.json",
         "RESEARCH_OBJECT_MANIFEST_PATH": "output/data/research_object_manifest.json",
         "AUTORESEARCH_SECURITY_REVIEW_PATH": "output/reports/autoresearch_security_review.md",
         "BENCHMARK_SCORES_PATH": "output/data/benchmark_scores.json",
@@ -680,12 +726,14 @@ def _put_artifact_path_variables(put: Any) -> None:
         "ML_CANDIDATE_INTERVALS_PATH": "output/data/ml_candidate_intervals.json",
         "ML_CLASS_BALANCE_PATH": "output/data/ml_class_balance.json",
         "ML_CALIBRATION_REPORT_PATH": "output/data/ml_calibration_report.json",
+        "ML_CALIBRATION_BIN_INTERVALS_PATH": "output/data/ml_calibration_bin_intervals.json",
         "ML_ROBUSTNESS_REPORT_PATH": "output/data/ml_robustness_report.json",
         "ML_PROBABILITY_DIAGNOSTICS_PATH": "output/data/ml_probability_diagnostics.json",
         "ML_BOOTSTRAP_INTERVALS_PATH": "output/data/ml_bootstrap_intervals.json",
         "ML_PAIRED_COMPARISON_PATH": "output/data/ml_paired_comparison.json",
         "ML_STATISTICAL_SUMMARY_PATH": "output/data/ml_statistical_summary.json",
         "ML_TRAINING_DIAGNOSTICS_PATH": "output/data/ml_training_diagnostics.json",
+        "ML_CANDIDATE_RANK_STABILITY_PATH": "output/data/ml_candidate_rank_stability.json",
         "ML_CANDIDATE_SELECTION_AUDIT_PATH": "output/data/ml_candidate_selection_audit.json",
         "ML_DIAGNOSTIC_BOUNDARY_PATH": "output/data/ml_diagnostic_boundary.json",
         "ML_RESULTS_PATH": "output/data/ml_task_results.json",
@@ -850,6 +898,7 @@ def _put_figure_blocks(
         "FIGURE_BLOCK_SELECTIVE_ACCURACY": "fig:ml_selective_accuracy",
         "FIGURE_BLOCK_PROBABILITY_QUALITY": "fig:ml_probability_quality",
         "FIGURE_BLOCK_TRAINING_DYNAMICS": "fig:ml_training_dynamics",
+        "FIGURE_BLOCK_CANDIDATE_RANK_STABILITY": "fig:ml_candidate_rank_stability",
         "FIGURE_BLOCK_CANDIDATE_LIFECYCLE": "fig:autoresearch_candidate_lifecycle",
         "FIGURE_BLOCK_DATASET_CLASS_BALANCE": "fig:mnist_class_balance",
         "FIGURE_BLOCK_DATASET_CONTACT_SHEET": "fig:mnist_subset_contact_sheet",
@@ -880,6 +929,7 @@ def _put_figure_blocks(
         "FIGURE_REF_SELECTIVE_ACCURACY": "fig:ml_selective_accuracy",
         "FIGURE_REF_PROBABILITY_QUALITY": "fig:ml_probability_quality",
         "FIGURE_REF_TRAINING_DYNAMICS": "fig:ml_training_dynamics",
+        "FIGURE_REF_CANDIDATE_RANK_STABILITY": "fig:ml_candidate_rank_stability",
         "FIGURE_REF_CANDIDATE_LIFECYCLE": "fig:autoresearch_candidate_lifecycle",
         "FIGURE_REF_DATASET_CLASS_BALANCE": "fig:mnist_class_balance",
         "FIGURE_REF_DATASET_CONTACT_SHEET": "fig:mnist_subset_contact_sheet",
@@ -904,14 +954,18 @@ def _put_tables(
     candidate_intervals: dict[str, Any],
     class_balance: dict[str, Any],
     calibration: dict[str, Any],
+    calibration_intervals: dict[str, Any],
     robustness: dict[str, Any],
     probability: dict[str, Any],
     bootstrap: dict[str, Any],
     paired: dict[str, Any],
     statistical: dict[str, Any],
     training: dict[str, Any],
+    rank_stability: dict[str, Any],
     candidate_selection: dict[str, Any],
     diagnostic_boundary: dict[str, Any],
+    phase_ledger: dict[str, Any],
+    figure_quality: dict[str, Any],
     security_profile: dict[str, Any],
     security_threat_model: dict[str, Any],
     security_inventory: dict[str, Any],
@@ -927,14 +981,18 @@ def _put_tables(
         candidate_intervals,
         class_balance,
         calibration,
+        calibration_intervals,
         robustness,
         probability,
         bootstrap,
         paired,
         statistical,
         training,
+        rank_stability,
         candidate_selection,
         diagnostic_boundary,
+        phase_ledger,
+        figure_quality,
         security_profile,
         security_threat_model,
         security_inventory,

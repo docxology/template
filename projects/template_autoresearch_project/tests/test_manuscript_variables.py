@@ -97,6 +97,7 @@ def test_manuscript_variables_cover_all_source_tokens(
     assert "fig:ml_selective_accuracy" in variables["FIGURE_BLOCK_SELECTIVE_ACCURACY"]
     assert "fig:ml_probability_quality" in variables["FIGURE_BLOCK_PROBABILITY_QUALITY"]
     assert "fig:ml_training_dynamics" in variables["FIGURE_BLOCK_TRAINING_DYNAMICS"]
+    assert "fig:ml_candidate_rank_stability" in variables["FIGURE_BLOCK_CANDIDATE_RANK_STABILITY"]
     assert "fig:autoresearch_candidate_lifecycle" in variables["FIGURE_BLOCK_CANDIDATE_LIFECYCLE"]
     assert "fig:mnist_class_balance" in variables["FIGURE_BLOCK_DATASET_CLASS_BALANCE"]
     assert "fig:mnist_subset_contact_sheet" in variables["FIGURE_BLOCK_DATASET_CONTACT_SHEET"]
@@ -141,6 +142,10 @@ def test_manuscript_variables_cover_all_source_tokens(
     assert variables["SELECTIVE_ACCURACY_TABLE"].startswith("| Confidence threshold |")
     assert variables["PROBABILITY_QUALITY_TABLE"].startswith("| Candidate |")
     assert variables["TRAINING_DIAGNOSTICS_TABLE"].startswith("| Candidate |")
+    assert variables["CANDIDATE_RANK_STABILITY_TABLE"].startswith("| Candidate |")
+    assert variables["CALIBRATION_BIN_INTERVAL_TABLE"].startswith("| Confidence bin |")
+    assert variables["FIGURE_QUALITY_TABLE"].startswith("| Figure |")
+    assert variables["PHASE_LEDGER_TABLE"].startswith("| Phase |")
     assert variables["CANDIDATE_SELECTION_AUDIT_TABLE"].startswith("| Rank |")
     assert variables["DIAGNOSTIC_BOUNDARY_TABLE"].startswith("\\begingroup\\footnotesize")
     assert variables["SECURITY_ARTIFACT_TABLE"].startswith("| Security artifact |")
@@ -161,6 +166,10 @@ def test_manuscript_variables_cover_all_source_tokens(
     assert variables["REVIEW_GATE_TABLE"].startswith("| Gate |")
     assert variables["BENCHMARK_SCORE_TABLE"].startswith("| Benchmark task |")
     assert variables["VARIABLE_PROVENANCE_TABLE"].startswith("| Source artifact |")
+    assert variables["AUTORESEARCH_PHASE_LEDGER_PATH"] == "output/data/autoresearch_phase_ledger.json"
+    assert variables["FIGURE_QUALITY_REPORT_PATH"] == "output/data/figure_quality_report.json"
+    assert variables["ML_CANDIDATE_RANK_STABILITY_PATH"] == "output/data/ml_candidate_rank_stability.json"
+    assert variables["ML_CALIBRATION_BIN_INTERVALS_PATH"] == "output/data/ml_calibration_bin_intervals.json"
 
 
 def test_variable_script_writes_resolved_manuscript(project_root: Path) -> None:
@@ -227,6 +236,7 @@ def test_generated_figure_blocks_match_registry(
         "FIGURE_BLOCK_SELECTIVE_ACCURACY": "fig:ml_selective_accuracy",
         "FIGURE_BLOCK_PROBABILITY_QUALITY": "fig:ml_probability_quality",
         "FIGURE_BLOCK_TRAINING_DYNAMICS": "fig:ml_training_dynamics",
+        "FIGURE_BLOCK_CANDIDATE_RANK_STABILITY": "fig:ml_candidate_rank_stability",
         "FIGURE_BLOCK_CANDIDATE_LIFECYCLE": "fig:autoresearch_candidate_lifecycle",
         "FIGURE_BLOCK_DATASET_CLASS_BALANCE": "fig:mnist_class_balance",
         "FIGURE_BLOCK_DATASET_CONTACT_SHEET": "fig:mnist_subset_contact_sheet",
@@ -254,6 +264,9 @@ def test_generated_tables_are_backed_by_ledgers(
     benchmark_scores = json.loads((project_root / "output" / "data" / "benchmark_scores.json").read_text())
     diagnostics = json.loads((project_root / "output" / "data" / "ml_classification_diagnostics.json").read_text())
     calibration = json.loads((project_root / "output" / "data" / "ml_calibration_report.json").read_text())
+    calibration_intervals = json.loads(
+        (project_root / "output" / "data" / "ml_calibration_bin_intervals.json").read_text()
+    )
     candidate_intervals = json.loads((project_root / "output" / "data" / "ml_candidate_intervals.json").read_text())
     class_balance = json.loads((project_root / "output" / "data" / "ml_class_balance.json").read_text())
     robustness = json.loads((project_root / "output" / "data" / "ml_robustness_report.json").read_text())
@@ -262,8 +275,11 @@ def test_generated_tables_are_backed_by_ledgers(
     paired = json.loads((project_root / "output" / "data" / "ml_paired_comparison.json").read_text())
     statistical = json.loads((project_root / "output" / "data" / "ml_statistical_summary.json").read_text())
     training = json.loads((project_root / "output" / "data" / "ml_training_diagnostics.json").read_text())
+    rank_stability = json.loads((project_root / "output" / "data" / "ml_candidate_rank_stability.json").read_text())
     selection = json.loads((project_root / "output" / "data" / "ml_candidate_selection_audit.json").read_text())
     boundary = json.loads((project_root / "output" / "data" / "ml_diagnostic_boundary.json").read_text())
+    phase_ledger = json.loads((project_root / "output" / "data" / "autoresearch_phase_ledger.json").read_text())
+    figure_quality = json.loads((project_root / "output" / "data" / "figure_quality_report.json").read_text())
     threat_model = json.loads((project_root / "output" / "data" / "autoresearch_threat_model.json").read_text())
     attestation = json.loads((project_root / "output" / "data" / "autoresearch_integrity_attestation.json").read_text())
     registry = json.loads((project_root / "output" / "figures" / "figure_registry.json").read_text())
@@ -275,6 +291,9 @@ def test_generated_tables_are_backed_by_ledgers(
         str(row["class_label"]) in variables["CLASSIFICATION_DIAGNOSTICS_TABLE"] for row in diagnostics["per_class"]
     )
     assert all(str(row["count"]) in variables["CALIBRATION_BIN_TABLE"] for row in calibration["bins"])
+    assert all(
+        str(row["count"]) in variables["CALIBRATION_BIN_INTERVAL_TABLE"] for row in calibration_intervals["bins"]
+    )
     assert all(str(row["successes"]) in variables["CANDIDATE_INTERVAL_TABLE"] for row in candidate_intervals["rows"])
     assert all(str(row["count"]) in variables["CLASS_BALANCE_TABLE"] for row in class_balance["rows"])
     assert all(
@@ -304,10 +323,15 @@ def test_generated_tables_are_backed_by_ledgers(
         str(row["retained_count"]) in variables["SELECTIVE_ACCURACY_TABLE"] for row in statistical["coverage_curve"]
     )
     assert str(training["accepted"]["best_epoch"]) in variables["TRAINING_DIAGNOSTICS_TABLE"]
+    assert rank_stability["runner_up_id"].replace("exp-", "").replace("-", " ") in variables[
+        "CANDIDATE_RANK_STABILITY_TABLE"
+    ]
     assert all(
         _candidate_display_label(row["candidate_id"]) in variables["CANDIDATE_SELECTION_AUDIT_TABLE"]
         for row in selection["rows"]
     )
+    assert all(row["phase"].replace("_", " ") in variables["PHASE_LEDGER_TABLE"] for row in phase_ledger["phases"])
+    assert str(figure_quality["figure_count"]) in variables["FIGURE_QUALITY_TABLE"]
     assert all(row["surface"].replace("_", " ") in variables["DIAGNOSTIC_BOUNDARY_TABLE"] for row in boundary["rows"])
     assert all(row["stride_category"] in variables["SECURITY_THREAT_MODEL_TABLE"] for row in threat_model["threats"])
     assert str(attestation["checked_count"]) in variables["SECURITY_INTEGRITY_TABLE"]

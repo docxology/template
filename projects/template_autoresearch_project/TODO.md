@@ -13,15 +13,26 @@ security evidence, and manuscript hydration. The next work should make those
 surfaces easier to maintain and harder to misread before adding any new research
 behavior.
 
-Last verified in this worktree on 2026-05-26 after the consolidation pass:
+Last verified in this worktree on 2026-05-26 after the compact evidence-report
+and loop/statistics consolidation pass:
 
-- Project gate: `75 passed`, `90.87%` project `src/` line+branch coverage.
-- Project test-duration measurement: `75 passed in 65.26s`; retained
-  full-loop checks dominate the remaining cost.
+- Project gate: `77 passed`, `90.53%` project `src/` line+branch coverage.
+- Project test-duration measurement: `77 passed in 41.67s`; retained
+  schema-fixture setup and the clean-scaffold full-loop check dominate the
+  remaining cost.
 - Render path: pre-render validation, variable hydration, PDF render, output
-  validation, docs lint, Bandit, mypy, and strict template drift passed.
+  validation, docs lint, strict template drift, Bandit, mypy, `git diff
+  --check`, and manuscript hygiene greps passed.
+- Report-size guard: default `output/reports/evidence_registry.json` is `88,889`
+  bytes, total `output/reports/` is `229,204` bytes, and
+  `output/reports/evidence_registry_full.json` is absent unless explicitly
+  requested with `TEMPLATE_EVIDENCE_REGISTRY_FULL=1`.
 - Generated review artifacts can be ready for review while
   `publication_approved` remains `false`.
+- Loop settlement is now recorded in `output/data/autoresearch_phase_ledger.json`;
+  figure quality is recorded in `output/data/figure_quality_report.json`; local
+  rank-stability and calibration-bin interval diagnostics are generated from the
+  shared diagnostic bundle.
 
 ## Non-Negotiable Invariants
 

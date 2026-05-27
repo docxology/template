@@ -549,3 +549,17 @@ class TestDiscoverManuscriptFiles:
         result = discover_manuscript_files(manuscript_dir)
 
         assert [f.name for f in result] == ["complete.md"]
+
+    def test_discover_transmission_bookends_order(self, tmp_path):
+        """Generated transmission bookends sort first and last."""
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "00_abstract.md").write_text("# Abstract")
+        (manuscript_dir / "99_references.md").write_text("# References")
+        (manuscript_dir / "00_00_transmission_begin.md").write_text("# Begin")
+        (manuscript_dir / "99_zz_transmission_end.md").write_text("# End")
+
+        result = discover_manuscript_files(manuscript_dir)
+
+        assert result[0].name == "00_00_transmission_begin.md"
+        assert result[-1].name == "99_zz_transmission_end.md"

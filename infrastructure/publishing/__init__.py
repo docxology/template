@@ -8,8 +8,11 @@ Modules:
     metadata: Publication metadata extraction and management
     models: Data models (PublicationMetadata, CitationStyle)
     package: Publication package creation, checklists, and readiness validation
-    platforms: Academic platform integrations (Zenodo, arXiv, GitHub)
-    api: API clients for Zenodo, arXiv, GitHub
+    zenodo: Zenodo REST API client and publish workflow
+    github: GitHub Releases API
+    arxiv: arXiv submission tarball preparation
+    platforms: Backwards-compatible platform re-exports
+    api: Backwards-compatible Zenodo re-exports
 """
 
 from .api import ZenodoClient, ZenodoConfig

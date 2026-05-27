@@ -19,6 +19,7 @@ from infrastructure.rendering._pdf_combined_renderer import (
     run_pandoc_conversion,
     verify_figure_references,
 )
+from infrastructure.publishing.transmission_bookends import transmission_bookends_enabled
 from infrastructure.rendering._pdf_tex_transforms import fix_figure_paths
 from infrastructure.rendering._pdf_latex_pipeline import (
     compile_latex_manuscript,
@@ -214,10 +215,17 @@ class PDFRenderer:
         tex_content = fix_figure_paths(tex_content, manuscript_dir, output_dir)
 
         # Step 6: Inject preamble and title page
-        tex_content = inject_latex_preamble(tex_content, manuscript_dir)
+        config_path = manuscript_dir / "config.yaml"
+        bookends_enabled = transmission_bookends_enabled(config_path) if config_path.is_file() else False
+        tex_content = inject_latex_preamble(tex_content, manuscript_dir, skip_title_page=bookends_enabled)
 
         # Step 7: Inject bibliography
-        tex_content = inject_bibliography(tex_content, bib_exists, bib_stems=bib_stems)
+        tex_content = inject_bibliography(
+            tex_content,
+            bib_exists,
+            bib_stems=bib_stems,
+            before_end_transmission=bookends_enabled,
+        )
 
         # Step 8: Repair starred-section \\nameref titles after preamble injection
         # (titlesec from preamble.md must be present before the guard runs).

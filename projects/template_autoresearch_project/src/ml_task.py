@@ -2,34 +2,38 @@
 
 from __future__ import annotations
 
-from .ml_training import (
-    BaselineResult,
-    CandidateResult,
+from .ml_data import (
     CandidateSpec,
     DatasetSummary,
     DiagnosticConfig,
-    MLTaskResult,
     MNISTTaskConfig,
     RobustnessTransformSpec,
     TrainingConfig,
-    accepted_error_examples,
+    load_mnist_arrays,
+    load_mnist_task_config,
+    summarize_dataset,
+)
+from .ml_models import (
+    BaselineResult,
+    CandidateResult,
     confusion_matrix,
     cross_entropy,
-    deferred_candidate,
     evaluate_candidate,
     evaluate_nearest_centroid,
     evaluate_robustness,
     features_for_candidate,
     flatten_images,
-    load_mnist_arrays,
-    load_mnist_task_config,
-    run_bounded_ml_task,
-    select_accepted_candidate,
     softmax,
-    summarize_dataset,
     tiny_patch_attention_features,
     train_mlp_classifier,
     train_softmax_classifier,
+)
+from .ml_selection import (
+    MLTaskResult,
+    accepted_error_examples,
+    deferred_candidate,
+    run_bounded_ml_task,
+    select_accepted_candidate,
     write_confusion_matrix_csv,
     write_error_examples_json,
     write_training_history_csv,

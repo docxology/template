@@ -78,14 +78,18 @@ required_artifacts:
   - output/data/ml_candidate_intervals.json
   - output/data/ml_class_balance.json
   - output/data/ml_calibration_report.json
+  - output/data/ml_calibration_bin_intervals.json
   - output/data/ml_robustness_report.json
   - output/data/ml_probability_diagnostics.json
   - output/data/ml_bootstrap_intervals.json
   - output/data/ml_paired_comparison.json
   - output/data/ml_statistical_summary.json
   - output/data/ml_training_diagnostics.json
+  - output/data/ml_candidate_rank_stability.json
   - output/data/ml_candidate_selection_audit.json
   - output/data/ml_diagnostic_boundary.json
+  - output/data/autoresearch_phase_ledger.json
+  - output/data/figure_quality_report.json
   - output/data/autoresearch_security_profile.json
   - output/data/autoresearch_threat_model.json
   - output/data/autoresearch_supply_chain_inventory.json
@@ -114,6 +118,7 @@ required_artifacts:
   - output/figures/ml_selective_accuracy.png
   - output/figures/ml_probability_quality.png
   - output/figures/ml_training_dynamics.png
+  - output/figures/ml_candidate_rank_stability.png
   - output/figures/autoresearch_candidate_lifecycle.png
   - output/figures/mnist_class_balance.png
   - output/figures/mnist_subset_contact_sheet.png
