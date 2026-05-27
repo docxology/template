@@ -35,8 +35,21 @@ GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
 )
 
 ALLOWED_TRACKED_OUTPUT_PREFIXES: tuple[str, ...] = (
+    # Public exemplar rendered output is tracked as living render-proof (the
+    # published papers). Scoped to the five PUBLIC_PROJECT_NAMES only — every
+    # other project's output (confidential/rotating) stays ignored and is NEVER
+    # listed here. Both the repo-level output/<name>/ (pipeline copy target) and
+    # the project-local projects/<name>/output/ (bare render target) are tracked.
+    "output/template_active_inference/",
+    "output/template_autoresearch_project/",
     "output/template_code_project/",
     "output/template_prose_project/",
+    "output/template_template/",
+    "projects/template_active_inference/output/",
+    "projects/template_autoresearch_project/output/",
+    "projects/template_code_project/output/",
+    "projects/template_prose_project/output/",
+    "projects/template_template/output/",
 )
 
 

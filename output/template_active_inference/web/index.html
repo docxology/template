@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>_combined_manuscript</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+
+<style>
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: #2c3e50;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#sheaf-track-coverage" id="toc-sheaf-track-coverage"><span
+class="toc-section-number">1</span> Sheaf Track Coverage</a>
+<ul>
+<li><a href="#introduction" id="toc-introduction"><span
+class="toc-section-number">1.1</span> Introduction</a></li>
+</ul></li>
+<li><a href="#abstract" id="toc-abstract"><span
+class="toc-section-number">2</span> Abstract</a></li>
+<li><a href="#motivation-and-active-inference-scope"
+id="toc-motivation-and-active-inference-scope"><span
+class="toc-section-number">3</span> Motivation and Active Inference
+scope</a></li>
+<li><a href="#exemplar-contributions"
+id="toc-exemplar-contributions"><span
+class="toc-section-number">4</span> Exemplar contributions</a>
+<ul>
+<li><a href="#ontology-bindings" id="toc-ontology-bindings"><span
+class="toc-section-number">4.0.1</span> Ontology bindings</a></li>
+</ul></li>
+<li><a href="#analytical-bernoulliising-toy"
+id="toc-analytical-bernoulliising-toy"><span
+class="toc-section-number">5</span> Analytical Bernoulli–Ising toy</a>
+<ul>
+<li><a href="#ontology-bindings-1" id="toc-ontology-bindings-1"><span
+class="toc-section-number">5.0.1</span> Ontology bindings</a></li>
+</ul></li>
+<li><a href="#pymdp-sophisticated-inference-harness"
+id="toc-pymdp-sophisticated-inference-harness"><span
+class="toc-section-number">6</span> pymdp sophisticated inference
+harness</a>
+<ul>
+<li><a href="#ontology-bindings-2" id="toc-ontology-bindings-2"><span
+class="toc-section-number">6.0.1</span> Ontology bindings</a></li>
+</ul></li>
+<li><a href="#lean-boundary-witnesses"
+id="toc-lean-boundary-witnesses"><span
+class="toc-section-number">7</span> Lean boundary witnesses</a></li>
+<li><a href="#sheaf-composition-pipeline"
+id="toc-sheaf-composition-pipeline"><span
+class="toc-section-number">8</span> Sheaf composition pipeline</a>
+<ul>
+<li><a href="#sheaf-fragment-track-registry"
+id="toc-sheaf-fragment-track-registry"><span
+class="toc-section-number">8.1</span> Sheaf fragment track
+registry</a></li>
+<li><a href="#imrad-binding-matrix" id="toc-imrad-binding-matrix"><span
+class="toc-section-number">8.2</span> IMRAD binding matrix</a></li>
+</ul></li>
+<li><a href="#mutual-information-sweep"
+id="toc-mutual-information-sweep"><span
+class="toc-section-number">9</span> Mutual information sweep</a></li>
+<li><a href="#free-energy-decomposition"
+id="toc-free-energy-decomposition"><span
+class="toc-section-number">10</span> Free energy decomposition</a></li>
+<li><a href="#t-maze-sophisticated-inference-rollout"
+id="toc-t-maze-sophisticated-inference-rollout"><span
+class="toc-section-number">11</span> T-maze sophisticated inference
+rollout</a></li>
+<li><a href="#invariant-gate-summary"
+id="toc-invariant-gate-summary"><span
+class="toc-section-number">12</span> Invariant gate summary</a></li>
+<li><a href="#limitations-and-extensions"
+id="toc-limitations-and-extensions"><span
+class="toc-section-number">13</span> Limitations and extensions</a>
+<ul>
+<li><a href="#ontology-bindings-3" id="toc-ontology-bindings-3"><span
+class="toc-section-number">13.0.1</span> Ontology bindings</a></li>
+</ul></li>
+<li><a href="#full-sheaf-track-coverage-proof"
+id="toc-full-sheaf-track-coverage-proof"><span
+class="toc-section-number">14</span> Full sheaf track coverage
+(proof)</a>
+<ul>
+<li><a href="#ontology-bindings-4" id="toc-ontology-bindings-4"><span
+class="toc-section-number">14.0.1</span> Ontology bindings</a></li>
+</ul></li>
+<li><a href="#conclusion" id="toc-conclusion"><span
+class="toc-section-number">15</span> Conclusion</a></li>
+<li><a href="#references" id="toc-references"><span
+class="toc-section-number">16</span> References</a></li>
+</ul>
+</nav>
+<p><strong>State:</strong> unpublished / pending pairing</p>
+<ul>
+<li><strong>Title:</strong> Active Inference Multi-Track Exemplar</li>
+<li><strong>Version:</strong> 0.2.0</li>
+<li><strong>DOI:</strong> 10.5281/zenodo.20417021</li>
+<li><strong>GitHub:</strong> docxology/template_active_inference</li>
+<li><strong>Zenodo:</strong> https://zenodo.org/records/20417021</li>
+<li><strong>SHA-256:</strong>
+<code>e8b54ee92a09e8f23ebecae00b0057a2b6d37318f050d5326a40b8af0c999574</code></li>
+<li><strong>SHA-512:</strong>
+<code>887a6f4f526c90c85d51db57d8205e8c9358e1a6352a58620db1c16842628ca7c028c3a16b4b05eb831b6eec1de47f98b5dcf8a21573552f270c28764fda9f26</code></li>
+</ul>
+<p><strong>Pairing:</strong> pending — unresolved: - ✗ GitHub release
+URL: <code>pending</code></p>
+<figure>
+<img src="../figures/transmission_integrity_strip.png"
+style="width:98.0%" alt="Integrity QR strip" />
+<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+</figure>
+<pre><code>title=Active Inference Multi-Track Exemplar
+version=0.2.0 doi=10.5281/zenodo.20417021
+sha256=e8b54ee92a09e8f2… manifest={&quot;t&quot;:&quot;Active Inference Multi-T&quot;,&quot;v&quot;:&quot;0.2.0&quot;,&quot;d&quot;:&quot;10.5281/zenodo.20417021&quot;,&quot;s&quot;:&quot;e8b54ee92a09e8f2&quot;}</code></pre>
+<p>Structured manifest:
+<code>../data/transmission_manifest.json</code></p>
+<figure>
+<img src="../figures/transmission_pairing.png" style="width:35.0%"
+alt="Publication pairing flow" />
+<figcaption aria-hidden="true">Publication pairing flow</figcaption>
+</figure>
+<p><strong>Stego:</strong> off | overlays text | barcodes on | XMP on |
+manifest on → <code>./secure_run.sh</code></p>
+<!-- BEGINNING OF TRANSMISSION -->
+<hr />
+<h1 data-number="1" id="sheaf-track-coverage"><span
+class="header-section-number">1</span> Sheaf Track Coverage</h1>
+<p>This page summarizes which <strong>sheaf fragment tracks</strong> are
+bound for each IMRAD row in <code>manuscript/sheaf/manifest.yaml</code>.
+The matrix is regenerated at compose time.</p>
+<p><strong>Totals:</strong> 42 present / 42 bound / 0 missing
+(gray).</p>
+<table>
+<thead>
+<tr>
+<th>Color</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Black</td>
+<td>Track <strong>present</strong> (bound and fragment exists)</td>
+</tr>
+<tr>
+<td>White</td>
+<td><strong>Absent</strong> (not bound for this row)</td>
+</tr>
+<tr>
+<td>Gray</td>
+<td><strong>Missing</strong> (bound but fragment file absent)</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="1.1" id="introduction"><span
+class="header-section-number">1.1</span> Introduction</h2>
+<ul>
+<li><p><strong>Introduction</strong> <em>(group)</em></p></li>
+<li><p><strong>Motivation and Active Inference scope</strong></p></li>
+<li><p><strong>Exemplar contributions</strong> ## Methods</p></li>
+<li><p><strong>Methods</strong> <em>(group)</em></p></li>
+<li><p><strong>Analytical Bernoulli–Ising toy</strong></p></li>
+<li><p><strong>pymdp sophisticated inference harness</strong></p></li>
+<li><p><strong>Lean boundary witnesses</strong></p></li>
+<li><p><strong>Sheaf composition pipeline</strong> ## Results</p></li>
+<li><p><strong>Results</strong> <em>(group)</em></p></li>
+<li><p><strong>Mutual information sweep</strong></p></li>
+<li><p><strong>Free energy decomposition</strong></p></li>
+<li><p><strong>T-maze sophisticated inference rollout</strong></p></li>
+<li><p><strong>Invariant gate summary</strong> ## Discussion</p></li>
+<li><p><strong>Discussion</strong> <em>(group)</em></p></li>
+<li><p><strong>Limitations and extensions</strong> ## Appendix</p></li>
+<li><p><strong>Full sheaf track coverage (proof)</strong></p></li>
+</ul>
+<figure>
+<img src="../figures/sheaf_coverage_heatmap.png"
+alt="Heatmap matrix of IMRAD manuscript rows versus 10 sheaf fragment track columns. Black cells mean the track is bound and the fragment file exists; white cells mean the track is not bound; gray cells mean bound but missing. Rows are grouped by IMRAD block with indented subsection labels; column headers list track ids." />
+<figcaption aria-hidden="true">Heatmap matrix of IMRAD manuscript rows
+versus 10 sheaf fragment track columns. Black cells mean the track is
+bound and the fragment file exists; white cells mean the track is not
+bound; gray cells mean bound but missing. Rows are grouped by IMRAD
+block with indented subsection labels; column headers list track
+ids.</figcaption>
+</figure>
+<p><em>Coverage overview. Sheaf track coverage matrix: 16 IMRAD rows ×
+10 fragment columns. Black = present (P), white = absent (—), gray =
+missing (M). Counts: 42 present / 42 bound / 0 missing.</em></p>
+<p>Appendix row <code>16_appendix_full_sheaf.md</code> binds 9 fragment
+track types as a composability proof (registry defines 10 types;
+optional <code>layers</code> is methods-only).</p>
+<hr />
+<h1 data-number="2" id="abstract"><span
+class="header-section-number">2</span> Abstract</h1>
+<p>This public exemplar binds <strong>7 pipeline tracks</strong> — Lean,
+analytical Python, pymdp sophisticated inference, GNN, ontology
+concordance, visualizations, and the sheaf manuscript composer —
+declared in <a href="../tracks.yaml"><code>tracks.yaml</code></a>. Flat
+manuscript sections follow an <strong>IMRAD outline</strong>
+(Introduction, Methods, Results, Discussion, plus appendix) assembled
+from <strong>10 sheaf fragment types</strong> registered in <a
+href="sheaf/tracks.yaml"><code>manuscript/sheaf/tracks.yaml</code></a>.</p>
+<p>The first page (<a
+href="00_00_sheaf_coverage.md"><code>00_00_sheaf_coverage.md</code></a>)
+shows a <strong>16-row coverage matrix</strong> (4 IMRAD group headers
+and 12 composed subsections, including a full-track appendix proof)
+regenerated from the live manifest at compose time.</p>
+<p>The T-maze demo aligns with <a
+href="https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference">pymdp
+sophisticated_inference examples</a>.</p>
+<p>Measured invariant checks: 12 / 12 passed. SI planning horizon: 2
+steps.</p>
+<hr />
+<h1 data-number="3" id="motivation-and-active-inference-scope"><span
+class="header-section-number">3</span> Motivation and Active Inference
+scope</h1>
+<!-- sheaf-track:prose -->
+<p>This public exemplar demonstrates a <strong>sheaf-composed</strong>
+Active Inference manuscript: flat sections bind optional fragment tracks
+(prose, formalism, simulation, pymdp, visualization, Lean, GNN,
+ontology) under an IMRAD outline. The first page heatmap summarizes
+which tracks are bound per section.</p>
+<p>The pymdp track follows the <a
+href="https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference">pymdp
+sophisticated_inference examples</a> with a minimal T-maze and planning
+horizon <code>policy_len = 2</code>.</p>
+<hr />
+<h1 data-number="4" id="exemplar-contributions"><span
+class="header-section-number">4</span> Exemplar contributions</h1>
+<!-- sheaf-track:prose -->
+<p>This exemplar contributes:</p>
+<ol type="1">
+<li><strong>7 pipeline tracks</strong> (<code>tracks.yaml</code>) —
+analytical Python, pymdp, GNN, ontology, Lean, visualizations, and sheaf
+composition — each with artifact gates.</li>
+<li><strong>10 sheaf fragment types</strong> registered in
+<code>manuscript/sheaf/tracks.yaml</code> (including optional
+<code>layers</code> and <code>animation</code>).</li>
+<li>A <strong>16-row IMRAD coverage matrix</strong> on the first page,
+regenerated from the live manifest at compose time.</li>
+<li>Registry-backed <strong>invariant checks</strong> (12 / 12 passed)
+and measured SI rollout metrics.</li>
+</ol>
+<!-- sheaf-track:ontology -->
+<h3 data-number="4.0.1" id="ontology-bindings"><span
+class="header-section-number">4.0.1</span> Ontology bindings</h3>
+<ul>
+<li><code>expected_free_energy</code> →
+<strong>ExpectedFreeEnergy</strong></li>
+<li><code>location</code> → <strong>HiddenState</strong></li>
+<li><code>observation</code> →
+<strong>ObservationLikelihood</strong></li>
+<li><code>policy</code> → <strong>PolicyPosterior</strong></li>
+</ul>
+<hr />
+<h1 data-number="5" id="analytical-bernoulliising-toy"><span
+class="header-section-number">5</span> Analytical Bernoulli–Ising
+toy</h1>
+<!-- sheaf-track:prose -->
+<p>We study a minimal <strong>K=2 Bernoulli / Ising</strong> coupling as
+the analytical companion to multi-track verification. Closed-form mutual
+information <span class="math inline">\(I(\lambda)\)</span> provides an
+oracle for empirical checks and GNN round-trips.</p>
+<p>Measured sweep grid points: 21. Invariants passed: 12 / 12.</p>
+<!-- sheaf-track:formalism -->
+<p>The entangled joint over binary policies satisfies</p>
+<p><span class="math display">\[q_\lambda(\pi) \propto
+E(\pi)\,\exp(\lambda J(\pi)),\]</span></p>
+<p>with symmetric Ising coupling <span class="math inline">\(J\)</span>
+and deformation parameter <span class="math inline">\(\lambda\)</span>.
+Mutual information is <span class="math inline">\(I(\lambda)=\log 2 -
+H_b(\sigma(\lambda))\)</span>.</p>
+<!-- sheaf-track:simulation -->
+<p>The analytical track writes
+<code>output/data/parameter_sweep.csv</code> comparing closed-form and
+empirical mutual information across <span class="math inline">\(\lambda
+\in [0, 4]\)</span>.</p>
+<!-- sheaf-track:visualization -->
+<figure>
+<img src="../figures/ising_mi_curve.png"
+alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows closed-form curve (solid dark line) and Monte Carlo estimates (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows Monte Carlo minus closed-form residuals versus lambda with a zero reference line." />
+<figcaption aria-hidden="true">Two-panel plot of mutual information
+versus coupling strength lambda for the symmetric Bernoulli-Ising toy.
+Left panel shows closed-form curve (solid dark line) and Monte Carlo
+estimates (dashed blue line) with lambda on the x-axis and mutual
+information in nats on the y-axis. Right panel shows Monte Carlo minus
+closed-form residuals versus lambda with a zero reference
+line.</figcaption>
+</figure>
+<p><em>Figure 1 (methods). Closed-form and Monte Carlo mutual
+information I(λ) for the symmetric Bernoulli-Ising toy across 21 grid
+points up to λ_max = 4; grid maximum 0.6031 nats on the measured
+sweep.</em></p>
+<!-- sheaf-track:gnn -->
+<p>The Bernoulli toy is also declared in
+<code>gnn/bernoulli_toy.gnn.md</code> (GNN v1.1). Ontology annotations
+bind framework symbols to Active Inference Ontology terms.</p>
+<!-- sheaf-track:ontology -->
+<h3 data-number="5.0.1" id="ontology-bindings-1"><span
+class="header-section-number">5.0.1</span> Ontology bindings</h3>
+<ul>
+<li><code>J</code> → <strong>CrossStreamCouplingPotential</strong></li>
+<li><code>gamma</code> → <strong>SophisticationWeight</strong></li>
+<li><code>lam</code> →
+<strong>EntanglementDeformationParameter</strong></li>
+<li><code>pi1</code> → <strong>Stream1PolicyVector</strong></li>
+<li><code>pi2</code> → <strong>Stream2PolicyVector</strong></li>
+<li><code>q_joint</code> → <strong>EntangledJointPosterior</strong></li>
+</ul>
+<hr />
+<h1 data-number="6" id="pymdp-sophisticated-inference-harness"><span
+class="header-section-number">6</span> pymdp sophisticated inference
+harness</h1>
+<!-- sheaf-track:prose -->
+<p><strong>Sophisticated inference (planning horizon).</strong> This
+section documents a <strong>real pymdp state-inference harness</strong>
+on a minimal T-maze with planning horizon <code>policy_len = 2</code>.
+Default mode is <code>state_inference</code> (T-maze rollout via
+<code>simulate_si_tmaze.py</code>). The Agent constructs a multi-step
+policy set (<code>num_policies</code> logged in artifacts); per-step
+<strong>belief entropy</strong> is recorded in
+<code>output/logs/pymdp_runs.jsonl</code> and aggregated as
+<code>mean_belief_entropy</code>.</p>
+<p>Graph-world <code>infer_policies</code> is an opt-in extension stub —
+see <code>tracks.yaml</code> <code>extension_tracks.graph_world</code>
+and <code>scripts/simulate_si_graph_world.py</code>. Reference
+notebooks: <a
+href="https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference">pymdp
+sophisticated_inference</a>.</p>
+<p>Mean belief entropy across steps: 0.3251.</p>
+<!-- sheaf-track:formalism -->
+<p>Given generative matrices <span
+class="math inline">\(A,B,C,D\)</span>, pymdp computes state beliefs
+<span class="math inline">\(q(s)\)</span> via variational inference
+(<code>infer_states</code>). The Agent is configured with planning
+horizon <span class="math inline">\(H =\)</span> 2, which defines the
+<strong>policy depth</strong> used when constructing candidate policies
+(logged as <code>num_policies</code> in
+<code>output/data/si_tmaze_summary.json</code>).</p>
+<p>This exemplar records belief entropy per step; extending to full
+expected-free-energy policy selection (<code>infer_policies</code>) is
+documented as a follow-on track.</p>
+<!-- sheaf-track:pymdp -->
+<p>Artifact paths:</p>
+<ul>
+<li><code>output/logs/pymdp_runs.jsonl</code> — append-only JSONL run
+log</li>
+<li><code>output/data/si_tmaze_summary.json</code> — step count,
+actions, mean belief entropy</li>
+<li><code>output/data/si_tmaze_trace.json</code> — rollout trace</li>
+</ul>
+<p>Steps recorded: 2.</p>
+<!-- sheaf-track:gnn -->
+<p>See <code>gnn/si_tmaze.gnn.md</code> for a GNN view of the T-maze
+hidden state, observation, and policy variables with ontology
+bindings.</p>
+<!-- sheaf-track:ontology -->
+<h3 data-number="6.0.1" id="ontology-bindings-2"><span
+class="header-section-number">6.0.1</span> Ontology bindings</h3>
+<ul>
+<li><code>belief_entropy</code> → <strong>BeliefEntropy</strong></li>
+<li><code>loc</code> → <strong>HiddenState</strong></li>
+<li><code>obs</code> → <strong>ObservationLikelihood</strong></li>
+<li><code>pi</code> → <strong>PolicyPosterior</strong></li>
+</ul>
+<hr />
+<h1 data-number="7" id="lean-boundary-witnesses"><span
+class="header-section-number">7</span> Lean boundary witnesses</h1>
+<!-- sheaf-track:prose -->
+<p>The Lean track provides minimal boundary witnesses checked by
+<code>lake build</code> under
+<code>lean/TemplateActiveInference/</code>. Fragments cite theorem names
+without duplicating proof scripts in prose.</p>
+<p>See the Lean fragment for module references aligned with the
+analytical toy.</p>
+<!-- sheaf-track:lean -->
+<p>Lean module
+<code>TemplateActiveInference.SophisticatedInference</code> declares the
+planning horizon parameter and a witness that horizon <span
+class="math inline">\(&gt; 1\)</span> distinguishes sophisticated from
+myopic inference.</p>
+<p>Build via <code>lake build</code> under <code>lean/</code>.</p>
+<hr />
+<h1 data-number="8" id="sheaf-composition-pipeline"><span
+class="header-section-number">8</span> Sheaf composition pipeline</h1>
+<!-- sheaf-track:prose -->
+<p>Sheaf composition glues registered fragment tracks into flat
+manuscript sections using <code>manuscript/sheaf/manifest.yaml</code>
+and <code>manuscript/sheaf/tracks.yaml</code>.</p>
+<p>The layers overview figure (registry caption in
+<code>figures.yaml</code> <code>section_figures.methods_sheaf</code>)
+summarizes the 10 fragment layer types and their IMRAD bindings in one
+panel (registry stack plus binding heatmap). The tables below list every
+track definition and section×track binding from the live manifest at
+compose time.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/compose_manuscript.py</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/compose_manuscript.py <span class="at">--validate-only</span> <span class="at">--strict</span></span></code></pre></div>
+<p>Each compose run emits
+<code>output/data/sheaf_coverage_matrix.json</code> and regenerates
+coverage artifacts. Partial compose (<code>--section</code>) is
+draft-only; the matrix always reflects the full manifest.</p>
+<p>Coverage semantics: <strong>black / P</strong> = present (bound and
+file exists); <strong>white / —</strong> = absent (not bound);
+<strong>gray / M</strong> = missing (bound but file absent). Discussion
+limitations reference the same matrix counts (<code>42</code> /
+<code>42</code> / <code>0</code>).</p>
+<!-- sheaf-track:formalism -->
+<p>Each fragment track <span class="math inline">\(t \in
+\mathcal{T}\)</span> maps to renderer <span
+class="math inline">\(R(t)\)</span> and compose-order index <span
+class="math inline">\(\pi(t)\)</span> from
+<code>manuscript/sheaf/tracks.yaml</code>. For manifest row <span
+class="math inline">\(s\)</span>, cell <span
+class="math inline">\(B(s,t) \in \{\mathrm{P}, \mathrm{—},
+\mathrm{M}\}\)</span> follows the coverage matrix regenerated at compose
+time (42 present / 42 bound / 0 missing).</p>
+<p>Registry size: <span class="math inline">\(|\mathcal{T}| =
+10\)</span> types across 16 IMRAD manifest rows. Formal track
+definitions and section×track bindings appear in the generated tables
+below.</p>
+<!-- sheaf-track:visualization -->
+<figure>
+<img src="../figures/sheaf_layers_overview.png"
+alt="Two-panel overview of sheaf fragment layers. Left panel shows 10 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 16 manifest rows and 10 tracks." />
+<figcaption aria-hidden="true">Two-panel overview of sheaf fragment
+layers. Left panel shows 10 composable track types in registry compose
+order with labels and renderer ids. Right panel shows the IMRAD section
+binding heatmap with black present, white absent, and gray missing cells
+across 16 manifest rows and 10 tracks.</figcaption>
+</figure>
+<p><em>Figure 6 (methods). Sheaf layers overview: registry stack
+(compose order, renderer ids) and IMRAD binding heatmap for 10 fragment
+types across 16 manifest rows (42 present / 42 bound / 0
+missing).</em></p>
+<!-- sheaf-track:layers -->
+<!-- sheaf-layers:registry -->
+<h2 data-number="8.1" id="sheaf-fragment-track-registry"><span
+class="header-section-number">8.1</span> Sheaf fragment track
+registry</h2>
+<p>Compose order and renderer bindings from
+<code>manuscript/sheaf/tracks.yaml</code>.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">Order</th>
+<th>Track id</th>
+<th>Label</th>
+<th>Renderer</th>
+<th>Optional</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">10</td>
+<td><code>prose</code></td>
+<td>Narrative prose</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td><code>formalism</code></td>
+<td>Mathematical formalism</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">30</td>
+<td><code>simulation</code></td>
+<td>Analytical simulation notes</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">35</td>
+<td><code>layers</code></td>
+<td>Sheaf layers tables</td>
+<td><code>layers_report</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td><code>pymdp</code></td>
+<td>pymdp harness artifacts</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">50</td>
+<td><code>visualization</code></td>
+<td>Figure references</td>
+<td><code>section_figures</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">60</td>
+<td><code>lean</code></td>
+<td>Lean boundary fragment</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">70</td>
+<td><code>gnn</code></td>
+<td>GNN notation fragment</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
+<td><code>ontology</code></td>
+<td>Active Inference Ontology bindings</td>
+<td><code>ontology_yaml</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">90</td>
+<td><code>animation</code></td>
+<td>Animation fragment</td>
+<td><code>markdown</code></td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Track count:</strong> 10 registered fragment types.</p>
+<!-- sheaf-layers:binding-matrix -->
+<h2 data-number="8.2" id="imrad-binding-matrix"><span
+class="header-section-number">8.2</span> IMRAD binding matrix</h2>
+<p>Section rows versus fragment track columns. <strong>P</strong> =
+present (bound and file exists); <strong>—</strong> = absent (not
+bound); <strong>M</strong> = missing (bound, file absent).</p>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr>
+<th>Section</th>
+<th>prose</th>
+<th>formalism</th>
+<th>simulation</th>
+<th>layers</th>
+<th>pymdp</th>
+<th>visualization</th>
+<th>lean</th>
+<th>gnn</th>
+<th>ontology</th>
+<th>animation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Introduction (group)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Motivation and Active Inference scope</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Exemplar contributions</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Methods (group)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Analytical Bernoulli–Ising toy</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+</tr>
+<tr>
+<td>pymdp sophisticated inference harness</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Lean boundary witnesses</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Sheaf composition pipeline</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Results (group)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Mutual information sweep</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Free energy decomposition</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>T-maze sophisticated inference rollout</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Invariant gate summary</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Discussion (group)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Limitations and extensions</td>
+<td>P</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Full sheaf track coverage (proof)</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Totals:</strong> 42 present / 42 bound / 0 missing.</p>
+<!-- sheaf-layers:legend -->
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Coverage color</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P</td>
+<td>Black</td>
+<td>Track <strong>present</strong> (bound and fragment exists)</td>
+</tr>
+<tr>
+<td>—</td>
+<td>White</td>
+<td><strong>Absent</strong> (not bound for this section)</td>
+</tr>
+<tr>
+<td>M</td>
+<td>Gray</td>
+<td><strong>Missing</strong> (bound but fragment file absent)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 data-number="9" id="mutual-information-sweep"><span
+class="header-section-number">9</span> Mutual information sweep</h1>
+<!-- sheaf-track:prose -->
+<p>We sweep coupling strength <span
+class="math inline">\(\lambda\)</span> on a grid of 21 points up to
+<span class="math inline">\(\lambda_{\max} = 4\)</span>. Closed-form
+mutual information <span class="math inline">\(I(\lambda)\)</span> is
+compared to Monte Carlo estimates from the analytical module.</p>
+<p>Measured invariant checks: 12 / 12 passed on the clean tree.</p>
+<!-- sheaf-track:formalism -->
+<p>The entangled joint over binary policies satisfies</p>
+<p><span class="math display">\[q_\lambda(\pi) \propto
+E(\pi)\,\exp(\lambda J(\pi)),\]</span></p>
+<p>with symmetric Ising coupling <span class="math inline">\(J\)</span>
+and deformation parameter <span class="math inline">\(\lambda\)</span>.
+Mutual information is <span class="math inline">\(I(\lambda)=\log 2 -
+H_b(\sigma(\lambda))\)</span>.</p>
+<!-- sheaf-track:simulation -->
+<p>Empirical MI estimates use fixed seed 0 and share the same <span
+class="math inline">\(\lambda\)</span> grid as the closed-form sweep in
+<code>output/data/parameter_sweep.csv</code>.</p>
+<!-- sheaf-track:visualization -->
+<figure>
+<img src="../figures/ising_mi_curve.png"
+alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows closed-form curve (solid dark line) and Monte Carlo estimates (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows Monte Carlo minus closed-form residuals versus lambda with a zero reference line." />
+<figcaption aria-hidden="true">Two-panel plot of mutual information
+versus coupling strength lambda for the symmetric Bernoulli-Ising toy.
+Left panel shows closed-form curve (solid dark line) and Monte Carlo
+estimates (dashed blue line) with lambda on the x-axis and mutual
+information in nats on the y-axis. Right panel shows Monte Carlo minus
+closed-form residuals versus lambda with a zero reference
+line.</figcaption>
+</figure>
+<p><em>Figure 2 (results). Closed-form and Monte Carlo mutual
+information I(λ) for the symmetric Bernoulli-Ising toy across 21 grid
+points up to λ_max = 4; grid maximum 0.6031 nats on the measured
+sweep.</em></p>
+<hr />
+<h1 data-number="10" id="free-energy-decomposition"><span
+class="header-section-number">10</span> Free energy decomposition</h1>
+<!-- sheaf-track:prose -->
+<p>Free energy against the entangled prior is evaluated along the same
+<span class="math inline">\(\lambda\)</span> grid used for the MI sweep.
+The curve highlights how deformation strength trades off prior alignment
+and coupling energy in the analytical toy.</p>
+<p>Saturation MI (grid maximum on the measured λ sweep): 0.6031
+nats.</p>
+<!-- sheaf-track:visualization -->
+<figure>
+<img src="../figures/free_energy_curve.png"
+alt="Line plot of free energy in nats versus coupling strength lambda for the entangled posterior relative to a mean-field prior. A single dark curve traces free energy across the sweep; the minimum is marked with a teal scatter point and labeled with the argmin lambda value." />
+<figcaption aria-hidden="true">Line plot of free energy in nats versus
+coupling strength lambda for the entangled posterior relative to a
+mean-field prior. A single dark curve traces free energy across the
+sweep; the minimum is marked with a teal scatter point and labeled with
+the argmin lambda value.</figcaption>
+</figure>
+<p><em>Figure 3 (results). Free energy of the entangled posterior
+relative to the mean-field prior across the hyperparameter sweep (grid
+points 21).</em></p>
+<hr />
+<h1 data-number="11" id="t-maze-sophisticated-inference-rollout"><span
+class="header-section-number">11</span> T-maze sophisticated inference
+rollout</h1>
+<!-- sheaf-track:prose -->
+<p>The pymdp harness rolls out a T-maze sophisticated-inference agent
+with planning horizon 2. Summary metrics land in
+<code>output/data/si_tmaze_summary.json</code>.</p>
+<p>Steps recorded: 2. Mean belief entropy: 0.3251.</p>
+<!-- sheaf-track:pymdp -->
+<p>Rollout trace: <code>output/data/si_tmaze_trace.json</code>. JSONL
+run log: <code>output/logs/pymdp_runs.jsonl</code>.</p>
+<!-- sheaf-track:visualization -->
+<figure>
+<img src="../figures/si_belief_entropy_curve.png"
+alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251 to 0.3251 nats across 2 steps in state_inference mode." />
+<figcaption aria-hidden="true">Line plot of belief entropy in nats
+versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251
+to 0.3251 nats across 2 steps in state_inference mode.</figcaption>
+</figure>
+<p><em>Figure 3a (results). Belief entropy over time for the T-maze
+rollout (mean 0.3251 nats).</em></p>
+<figure>
+<img src="../figures/si_obs_action_trace.png"
+alt="Dual-panel plot of observation index and action index versus timestep for the pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel shows actions. Goal reached flag is 1." />
+<figcaption aria-hidden="true">Dual-panel plot of observation index and
+action index versus timestep for the pymdp T-maze rollout. The upper
+panel shows discrete observations; the lower panel shows actions. Goal
+reached flag is 1.</figcaption>
+</figure>
+<p><em>Figure 3b (results). Observation and action traces for the T-maze
+rollout (action diversity 2).</em></p>
+<figure>
+<img src="../figures/si_tmaze_actions.png"
+alt="Step plot of discrete action index versus timestep for the pymdp sophisticated-inference T-maze rollout. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps." />
+<figcaption aria-hidden="true">Step plot of discrete action index versus
+timestep for the pymdp sophisticated-inference T-maze rollout. Actions
+change at each timestep with light fill under the step trace; policy
+depth is 2 steps.</figcaption>
+</figure>
+<p><em>Figure 3c (results). Discrete action index over time for the
+pymdp T-maze rollout (policy length 2).</em></p>
+<hr />
+<h1 data-number="12" id="invariant-gate-summary"><span
+class="header-section-number">12</span> Invariant gate summary</h1>
+<!-- sheaf-track:prose -->
+<p>The analytical invariant registry (<code>src/invariants.py</code>)
+runs before PDF rendering. On a clean checkout <strong>12 / 12</strong>
+analytical checks pass in the merged report at
+<code>output/reports/invariants.json</code>, which also records
+simulation invariants when the pymdp harness ran.</p>
+<p>Per-domain SI checks live in
+<code>output/reports/si_invariants.json</code> before merge. Failures
+block publication artifacts.</p>
+<hr />
+<h1 data-number="13" id="limitations-and-extensions"><span
+class="header-section-number">13</span> Limitations and extensions</h1>
+<!-- sheaf-track:prose -->
+<p><strong>Limitations.</strong> The Bernoulli–Ising toy and T-maze
+harness are pedagogical — they validate pipeline wiring, not empirical
+claims about biological agents. Default pymdp mode is
+<code>state_inference</code> with planning horizon 2; full policy
+inference remains an opt-in extension.</p>
+<p><strong>Sheaf audit.</strong> The coverage heatmap and appendix
+9-track proof make binding state auditable: 42 present / 42 bound / 0
+missing cells across 16 manifest rows. Strict compose validation fails
+on gray cells so downstream PDF rendering inherits an honest matrix.</p>
+<p><strong>Extensions.</strong> Opt-in pipeline extensions in
+<code>tracks.yaml</code> <code>extension_tracks</code> (belief GIF via
+<code>render_animation.py</code>, graph-world SI stub) add artifacts
+outside the default analysis DAG. The default IMRAD manifest already
+binds an <code>animation</code> <strong>sheaf fragment</strong> on the
+appendix row; extension scripts are for richer media, not extra manifest
+rows. Promote a private project by copying the sheaf manifest pattern
+under <code>manuscript/sections/imrad/</code>.</p>
+<!-- sheaf-track:simulation -->
+<p>Measured pymdp rollout (<code>state_inference</code>, config hash
+<code>ea4b126a9c22f22f</code>): mean belief entropy 0.3251 nats over 2
+steps; goal reached flag 1; action diversity 2.</p>
+<p>Analytical sweep residual RMSE 0 nats (max residual 0). Coverage
+audit: 42 present / 42 bound / 0 missing cells on the IMRAD matrix.</p>
+<!-- sheaf-track:ontology -->
+<h3 data-number="13.0.1" id="ontology-bindings-3"><span
+class="header-section-number">13.0.1</span> Ontology bindings</h3>
+<ul>
+<li><code>coverage_semantics</code> → <strong>Coverage matrix
+semantics</strong></li>
+<li><code>pedagogical_scope</code> → <strong>Pedagogical
+scope</strong></li>
+<li><code>state_inference_mode</code> → <strong>State inference
+harness</strong></li>
+</ul>
+<hr />
+<h1 data-number="14" id="full-sheaf-track-coverage-proof"><span
+class="header-section-number">14</span> Full sheaf track coverage
+(proof)</h1>
+<!-- sheaf-track:prose -->
+<p>This section is the <strong>composability proof</strong>: all 9
+appendix-bound fragment tracks are rendered in one flat manuscript
+section. The registry defines 10 composable types; optional
+<code>layers</code> is methods-only and excluded from this row. The
+<code>animation</code> fragment is bound here (optional type in the
+registry) alongside prose, formalism, simulation, pymdp, visualization,
+lean, gnn, and ontology tracks.</p>
+<!-- sheaf-track:formalism -->
+<p>For each track <span class="math inline">\(t \in
+\mathcal{T}_{\mathrm{Full}}\)</span>, the manifest binds a fragment path
+<span class="math inline">\(f(t)\)</span> and the composer emits
+<code>&lt;!-- sheaf-track:t --&gt;</code> before the rendered body.</p>
+<p><span class="math display">\[
+|\mathcal{T}_{\mathrm{Full}}| = 9
+\]</span></p>
+<p>The fragment registry defines 10 composable track types; optional
+<code>layers</code> is bound on the methods sheaf section only. Optional
+<code>animation</code> is bound in this appendix proof; the opt-in GIF
+extension in <code>tracks.yaml</code> <code>extension_tracks</code> is
+separate from this fragment slot.</p>
+<!-- sheaf-track:simulation -->
+<p>Analytical artifacts: <code>output/data/parameter_sweep.csv</code>
+and <code>output/reports/invariants.json</code> from the Bernoulli/Ising
+sweep track.</p>
+<!-- sheaf-track:pymdp -->
+<p>pymdp harness summary: <code>output/data/si_tmaze_summary.json</code>
+(mean belief entropy, action trace). Full log:
+<code>output/logs/pymdp_runs.jsonl</code>.</p>
+<!-- sheaf-track:visualization -->
+<figure>
+<img src="../figures/ising_mi_curve.png"
+alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows closed-form curve (solid dark line) and Monte Carlo estimates (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows Monte Carlo minus closed-form residuals versus lambda with a zero reference line." />
+<figcaption aria-hidden="true">Two-panel plot of mutual information
+versus coupling strength lambda for the symmetric Bernoulli-Ising toy.
+Left panel shows closed-form curve (solid dark line) and Monte Carlo
+estimates (dashed blue line) with lambda on the x-axis and mutual
+information in nats on the y-axis. Right panel shows Monte Carlo minus
+closed-form residuals versus lambda with a zero reference
+line.</figcaption>
+</figure>
+<p><em>Figure A1 (appendix). Closed-form and Monte Carlo mutual
+information I(λ) for the symmetric Bernoulli-Ising toy across 21 grid
+points up to λ_max = 4; grid maximum 0.6031 nats on the measured
+sweep.</em></p>
+<figure>
+<img src="../figures/si_tmaze_actions.png"
+alt="Step plot of discrete action index versus timestep for the pymdp sophisticated-inference T-maze rollout. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps." />
+<figcaption aria-hidden="true">Step plot of discrete action index versus
+timestep for the pymdp sophisticated-inference T-maze rollout. Actions
+change at each timestep with light fill under the step trace; policy
+depth is 2 steps.</figcaption>
+</figure>
+<p><em>Figure A2 (appendix). Discrete action index over time for the
+pymdp T-maze rollout (policy length 2).</em></p>
+<figure>
+<img src="../figures/sheaf_coverage_heatmap.png"
+alt="Heatmap matrix of IMRAD manuscript rows versus 10 sheaf fragment track columns. Black cells mean the track is bound and the fragment file exists; white cells mean the track is not bound; gray cells mean bound but missing. Rows are grouped by IMRAD block with indented subsection labels; column headers list track ids." />
+<figcaption aria-hidden="true">Heatmap matrix of IMRAD manuscript rows
+versus 10 sheaf fragment track columns. Black cells mean the track is
+bound and the fragment file exists; white cells mean the track is not
+bound; gray cells mean bound but missing. Rows are grouped by IMRAD
+block with indented subsection labels; column headers list track
+ids.</figcaption>
+</figure>
+<p><em>Figure 4. Sheaf track coverage matrix: 16 IMRAD rows × 10
+fragment columns. Black = present (P), white = absent (—), gray =
+missing (M). Counts: 42 present / 42 bound / 0 missing.</em></p>
+<!-- sheaf-track:lean -->
+<p>Lean modules under <code>lean/TemplateActiveInference/</code> declare
+horizon and coupling witnesses. Build with <code>lake build</code> in
+<code>lean/</code>; some lemmas remain <code>sorry</code> by design in
+this exemplar.</p>
+<!-- sheaf-track:gnn -->
+<p>GNN declarations: <code>gnn/bernoulli_toy.gnn.md</code> and
+<code>gnn/si_tmaze.gnn.md</code>. Ontology concordance is validated
+against Active Inference Ontology bindings.</p>
+<!-- sheaf-track:ontology -->
+<h3 data-number="14.0.1" id="ontology-bindings-4"><span
+class="header-section-number">14.0.1</span> Ontology bindings</h3>
+<ul>
+<li><code>belief_entropy</code> → <strong>BeliefEntropy</strong></li>
+<li><code>expected_free_energy</code> →
+<strong>ExpectedFreeEnergy</strong></li>
+<li><code>location</code> → <strong>HiddenState</strong></li>
+<li><code>observation</code> →
+<strong>ObservationLikelihood</strong></li>
+<li><code>policy</code> → <strong>PolicyPosterior</strong></li>
+<li><code>sheaf_track</code> → <strong>SheafFragment</strong></li>
+</ul>
+<!-- sheaf-track:animation -->
+<p>Animation <strong>sheaf fragment</strong> (bound in this appendix
+row): documents the optional registry track and points at static SI
+figure output.</p>
+<p>Static frame artifact: <code>../figures/si_tmaze_actions.png</code>
+(from the default SI figure pipeline).</p>
+<p>Opt-in <strong>extension</strong> GIF: run
+<code>scripts/render_animation.py</code> to write
+<code>../figures/si_belief_trajectory.gif</code> (placeholder loop from
+the belief-entropy curve until a true frame sequence lands under
+<code>../figures/animation/</code>).</p>
+<hr />
+<h1 data-number="15" id="conclusion"><span
+class="header-section-number">15</span> Conclusion</h1>
+<p>This exemplar shows how pipeline tracks, sheaf fragment registries,
+and IMRAD manuscript sections fit together: analytical oracles and pymdp
+rollouts produce measured artifacts; composition binds 12 flat sections
+from 10 fragment tracks; coverage JSON and the first-page heatmap report
+42 present / 42 bound / 0 missing cells.</p>
+<p>Strict validation
+(<code>compose_manuscript.py --validate-only --strict</code>) fails on
+gray matrix cells, keeping the appendix full-track proof and Results
+sections trustworthy for downstream PDF rendering. The T-maze harness
+runs in <code>state_inference</code> mode with config hash
+<code>ea4b126a9c22f22f</code>; sweep RMSE 0 nats bounds
+analytical–empirical agreement on the toy.</p>
+<hr />
+<h1 data-number="16" id="references"><span
+class="header-section-number">16</span> References</h1>
+<p>See <code>manuscript/references.bib</code> for bibliography entries
+cited in the composed sections.</p>
+<hr />
+<p><strong>Release:</strong> v0.2.0 · DOI
+<code>10.5281/zenodo.20417021</code> · SHA-256
+<code>e8b54ee92a09…</code> · pairing pending</p>
+<figure>
+<img src="../figures/transmission_integrity_strip.png"
+style="width:88.0%" alt="Integrity QR strip" />
+<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+</figure>
+<p><strong>Prior:</strong> <em>No prior releases.</em></p>
+<!-- END OF TRANSMISSION -->
+</body>
+</html>

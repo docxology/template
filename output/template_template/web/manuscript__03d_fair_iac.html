@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03d_fair_iac</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h2 id="fair-alignment-and-research-infrastructure-as-code">FAIR
+Alignment and Research Infrastructure as Code</h2>
+<p>The template’s design aligns with both the original FAIR principles
+<span class="citation"
+data-cites="wilkinson2016fair">[@wilkinson2016fair]</span> and the FAIR
+for Research Software (FAIR4RS) principles <span class="citation"
+data-cites="barker2022fair4rs">[@barker2022fair4rs]</span> at the
+repository level. FAIR4RS recognizes that software has requirements
+distinct from data—executability, composability, and dependency
+management—and the template addresses each.</p>
+<h3 id="principle-by-principle-alignment">Principle-by-Principle
+Alignment</h3>
+<p><strong>Findability.</strong> Outputs are <em>Findable</em> through
+standardized directory structures, manifest files, and machine-readable
+metadata embedded in PDFs. Every project’s <code>config.yaml</code>
+provides structured metadata (title, authors, DOIs, keywords) in a
+format parseable by both Pandoc and external indexing services. The
+<code>metrics.json</code> output provides a machine-readable inventory
+of all generated artifacts, their locations, and their provenance
+hashes.</p>
+<p><strong>Accessibility.</strong> Outputs are <em>Accessible</em> via
+open-source distribution on GitHub, with metadata embedded in the
+artifact itself rather than in a separate registry. The steganographic
+layer embeds provenance information directly in the PDF—including
+SHA-256 content hashes, build timestamps, and QR-encoded
+metadata—ensuring accessibility even when the PDF circulates outside the
+repository.</p>
+<p><strong>Interoperability.</strong> <em>Interoperability</em> is
+achieved through standard formats (PDF, JSON, BibTeX, YAML) and
+well-defined module APIs that enable cross-project composition. The
+Pandoc rendering pipeline accepts any Markdown-with-LaTeX input
+conforming to the template’s section numbering conventions, allowing
+seamless migration of manuscripts from other Pandoc-based workflows.</p>
+<p><strong>Reusability.</strong> <em>Reusability</em> is ensured by the
+Standalone Project Paradigm—any project can be extracted and reused
+independently—and by the Documentation Duality standard, which satisfies
+FAIRsoft’s inspectability and documentation quality indicators <span
+class="citation"
+data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span>. The
+pipeline’s automated testing and coverage enforcement directly
+operationalize the FAIR4RS executability requirement: software that
+cannot pass its own test suite cannot produce publishable output.</p>
+<h3 id="infrastructure-as-code-for-research">Infrastructure as Code for
+Research</h3>
+<p>At a higher level of abstraction, <code>template/</code> applies the
+DevOps principle of <em>Infrastructure as Code</em> (IaC) to the
+research lifecycle. In production software engineering, IaC means that
+server configuration is version-controlled, automatically provisioned,
+and independently reproducible <span class="citation"
+data-cites="wilson2017good">[@wilson2017good]</span>.
+<code>template/</code> extends this principle to the research
+manuscript: the document is not authored in a word processor and emailed
+to collaborators, but <em>built</em> from version-controlled Markdown
+sources, <em>tested</em> against formal coverage thresholds, and
+<em>deployed</em> to a provenance-embedded PDF.</p>
+<p>Every component of the research pipeline—the test suite, the analysis
+scripts, the rendering configuration, and the steganographic
+watermark—is specified in code, committed to git, and reproducible from
+a clean checkout. This deterministic build property means that any
+researcher can clone the repository, run
+<code>./run.sh --pipeline</code>, and produce a byte-for-byte identical
+manuscript (modulo timestamps in the steganographic metadata).</p>
+<p>Software Heritage <span class="citation"
+data-cites="cosmo2020softwareheritage">[@cosmo2020softwareheritage]</span>
+provides persistent SWHIDs (Software Hash Identifiers) for source code
+snapshots, enabling stable citation of any specific version of
+<code>template/</code> as a discrete software artifact—closing the loop
+from research infrastructure to citable scientific contribution.
+Combined with Zenodo DOI registration (supported by
+<code>infrastructure.publishing</code>), this creates a dual-identifier
+citation chain: SWHID for source provenance, DOI for publication
+metadata <span class="citation"
+data-cites="katz2021software">[@katz2021software]</span>.</p>
+</body>
+</html>

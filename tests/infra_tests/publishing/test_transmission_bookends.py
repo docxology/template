@@ -9,6 +9,8 @@ from infrastructure.publishing.transmission_barcode_strip import STRIP_FILENAME
 from infrastructure.publishing.transmission_bookends import (
     BEGIN_FILENAME,
     END_FILENAME,
+    FIGURE_WIDTH,
+    STRIP_WIDTH,
     build_transmission_context,
     is_transmission_bookend,
     render_transmission_markdown,
@@ -74,7 +76,14 @@ class TestTransmissionBookends:
         assert "BEGINNING OF TRANSMISSION" in markdown
         assert "pending pairing" in markdown
         assert "\\scriptsize" in markdown
-        assert "width=0.35" in markdown
+        assert f"width={FIGURE_WIDTH}" in markdown
+        assert f"width={STRIP_WIDTH}" in markdown
+        assert "width=0.35" not in markdown
+        assert "width=0.98}" not in markdown
+        assert r"\subsubsection*{Release metadata}" in markdown
+        assert r"\subsubsection*{Transmission manifest}" in markdown
+        assert "### Release metadata" not in markdown
+        assert "### Transmission manifest" not in markdown
 
     def test_published_context_from_ledger(self, tmp_path: Path) -> None:
         project_root = tmp_path / "demo"

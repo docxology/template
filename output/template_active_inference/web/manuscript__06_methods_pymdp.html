@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>06_methods_pymdp</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="pymdp-sophisticated-inference-harness">pymdp sophisticated
+inference harness</h1>
+<!-- sheaf-track:prose -->
+<p><strong>Sophisticated inference (planning horizon).</strong> This
+section documents a <strong>real pymdp state-inference harness</strong>
+on a minimal T-maze with planning horizon <code>policy_len = 2</code>.
+Default mode is <code>state_inference</code> (T-maze rollout via
+<code>simulate_si_tmaze.py</code>). The Agent constructs a multi-step
+policy set (<code>num_policies</code> logged in artifacts); per-step
+<strong>belief entropy</strong> is recorded in
+<code>output/logs/pymdp_runs.jsonl</code> and aggregated as
+<code>mean_belief_entropy</code>.</p>
+<p>Graph-world <code>infer_policies</code> is an opt-in extension stub —
+see <code>tracks.yaml</code> <code>extension_tracks.graph_world</code>
+and <code>scripts/simulate_si_graph_world.py</code>. Reference
+notebooks: <a
+href="https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference">pymdp
+sophisticated_inference</a>.</p>
+<p>Mean belief entropy across steps: 0.3251.</p>
+<!-- sheaf-track:formalism -->
+<p>Given generative matrices <span
+class="math inline">\(A,B,C,D\)</span>, pymdp computes state beliefs
+<span class="math inline">\(q(s)\)</span> via variational inference
+(<code>infer_states</code>). The Agent is configured with planning
+horizon <span class="math inline">\(H =\)</span> 2, which defines the
+<strong>policy depth</strong> used when constructing candidate policies
+(logged as <code>num_policies</code> in
+<code>output/data/si_tmaze_summary.json</code>).</p>
+<p>This exemplar records belief entropy per step; extending to full
+expected-free-energy policy selection (<code>infer_policies</code>) is
+documented as a follow-on track.</p>
+<!-- sheaf-track:pymdp -->
+<p>Artifact paths:</p>
+<ul>
+<li><code>output/logs/pymdp_runs.jsonl</code> — append-only JSONL run
+log</li>
+<li><code>output/data/si_tmaze_summary.json</code> — step count,
+actions, mean belief entropy</li>
+<li><code>output/data/si_tmaze_trace.json</code> — rollout trace</li>
+</ul>
+<p>Steps recorded: 2.</p>
+<!-- sheaf-track:gnn -->
+<p>See <code>gnn/si_tmaze.gnn.md</code> for a GNN view of the T-maze
+hidden state, observation, and policy variables with ontology
+bindings.</p>
+<!-- sheaf-track:ontology -->
+<h3 id="ontology-bindings">Ontology bindings</h3>
+<ul>
+<li><code>belief_entropy</code> → <strong>BeliefEntropy</strong></li>
+<li><code>loc</code> → <strong>HiddenState</strong></li>
+<li><code>obs</code> → <strong>ObservationLikelihood</strong></li>
+<li><code>pi</code> → <strong>PolicyPosterior</strong></li>
+</ul>
+</body>
+</html>

@@ -34,8 +34,11 @@ END_FILENAME = "99_zz_transmission_end.md"
 FIGURE_NAME = "transmission_pairing.png"
 TRANSMISSION_BOOKEND_FILENAMES = frozenset({BEGIN_FILENAME, END_FILENAME})
 END_PAGE_MAX_PRIOR_ROWS = 3
-FIGURE_WIDTH = 0.35
-STRIP_WIDTH = 0.98
+# Pandoc image-width attributes MUST carry a unit. Bare decimals (e.g. ``0.35``)
+# are parsed by pandoc as ~0.35px ≈ 0in → the bookend images render at zero width
+# (invisible). Percentages map to a fraction of \textwidth and render correctly.
+FIGURE_WIDTH = "35%"
+STRIP_WIDTH = "98%"
 
 
 def is_transmission_bookend(path: Path) -> bool:
@@ -400,7 +403,9 @@ def render_transmission_markdown(context: TransmissionContext, *, boundary: Lite
         body_parts.extend([f"**State:** {status}", ""])
         body_parts.extend(
             [
-                "### Release metadata",
+                "```{=latex}",
+                r"\subsubsection*{Release metadata}",
+                "```",
                 "",
                 *_format_metadata_lines(context),
                 "",
@@ -408,7 +413,9 @@ def render_transmission_markdown(context: TransmissionContext, *, boundary: Lite
                 "",
                 context.integrity_strip_markdown,
                 "",
-                "### Transmission manifest",
+                "```{=latex}",
+                r"\subsubsection*{Transmission manifest}",
+                "```",
                 "",
                 context.manifest_snippet,
                 "",
@@ -424,7 +431,7 @@ def render_transmission_markdown(context: TransmissionContext, *, boundary: Lite
             [
                 _current_release_one_liner(context),
                 "",
-                context.integrity_strip_markdown.replace(f"width={STRIP_WIDTH}", "width=0.88"),
+                context.integrity_strip_markdown.replace(f"width={STRIP_WIDTH}", "width=88%"),
                 "",
                 f"**Prior:** {context.prior_compact}",
             ]

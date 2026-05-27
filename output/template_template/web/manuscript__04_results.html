@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_results</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="results">Results</h1>
+<p><code>template/</code> was evaluated through multi-project pipeline
+execution, measuring test coverage, pipeline timing, output integrity,
+and steganographic performance across the canonical exemplars under
+<code>projects/</code>.</p>
+<h2 id="multi-project-pipeline-execution">Multi-Project Pipeline
+Execution</h2>
+<p>Runs used the <code>./run.sh</code> interactive orchestrator (“all
+projects core (fast)” / menu key <strong><code>d</code></strong>)
+skipping infrastructure replication and optional LLM stages orchestrated
+via <code>python -m infrastructure.orchestration</code>.
+<strong>Note:</strong> lone menu <strong><code>d</code></strong> returns
+after success without redrawing the TUI banner.</p>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 34%" />
+<col style="width: 25%" />
+<col style="width: 12%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr>
+<th>Project</th>
+<th>Effective core stages¹</th>
+<th>Approx. duration</th>
+<th>Tests²</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>template_code_project</code></td>
+<td>8</td>
+<td>~40 s</td>
+<td>196/196</td>
+<td>90%+</td>
+</tr>
+<tr>
+<td><code>template_prose_project</code></td>
+<td>8</td>
+<td>~35 s</td>
+<td>76/76</td>
+<td>90%+</td>
+</tr>
+<tr>
+<td><code>template_autoresearch_project</code></td>
+<td>8</td>
+<td>~30 s</td>
+<td>151/151</td>
+<td>90%+</td>
+</tr>
+</tbody>
+</table>
+<p>¹“Core-only” disables LLM-tagged YAML stages; durations exclude
+optional network-heavy LLM or long-running retrieval scripts when run
+with cached fixtures.</p>
+<p>²Counts show passing tests versus discovered tests for the sampled
+configuration.</p>
+<p>³<code>template_search_project</code> lives under
+<code>projects_archive/</code> (local-only literature-search exemplar);
+it is not part of the public CI roster.</p>
+<p><strong><em>Overall success:</em></strong> 100 % pipeline completion
+for sampled runs.</p>
+<p><em>Timing illustrative (Apple Silicon workstation, SSD, fixed
+seeds).</em></p>
+<p>Search-stage overhead dwarfs the optimization exemplar’s
+runtime—confirming Stage 02 remains the bottleneck for outbound API
+traffic while retaining Zero-Mock subprocess + filesystem checks
+downstream.</p>
+<h2 id="infrastructure-test-suite">Infrastructure Test Suite</h2>
+<table>
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test files</td>
+<td>367+</td>
+</tr>
+<tr>
+<td>Total tests</td>
+<td>~7,024</td>
+</tr>
+<tr>
+<td>Infrastructure coverage gate</td>
+<td>≥60 % (repo ≥80 %+ during recent audits)</td>
+</tr>
+<tr>
+<td>Zero-mock imports</td>
+<td>Verified via static scanning</td>
+</tr>
+</tbody>
+</table>
+<p>Exercises Pandoc/XeLaTeX paths, steganography hashing, telemetry,
+YAML-driven pipeline DAG resolution, HTTPS-bound optional suites
+(<code>pytest-httpserver</code>), and local Ollama-gated subsets.</p>
+<h2 id="infrastructure-module-inventory">Infrastructure Module
+Inventory</h2>
+<p>The introspection module (<code>template.introspection</code>) emits
+the authoritative table below—every row reflects
+<code>discover_infrastructure_modules(REPO_ROOT)</code>.</p>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 20%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Module</th>
+<th style="text-align: center;">Python Files</th>
+<th style="text-align: center;">Has AGENTS.md</th>
+<th style="text-align: center;">Has README.md</th>
+<th>Key Exports</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>autoresearch</code></td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>build_autoresearch_plan</code>, readiness validation CLI</td>
+</tr>
+<tr>
+<td><code>benchmark</code></td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Template harness scoring + comparative gates</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Repository defaults + hardened templates</td>
+</tr>
+<tr>
+<td><code>core</code></td>
+<td style="text-align: center;">97</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>get_logger</code>, <code>load_config</code>,
+<code>TemplateError</code></td>
+</tr>
+<tr>
+<td><code>docker</code></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Containerisation scaffolding</td>
+</tr>
+<tr>
+<td><code>doctor</code></td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Checkout diagnose/fix/undo repairs</td>
+</tr>
+<tr>
+<td><code>documentation</code></td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>FigureManager</code>, <code>generate_glossary</code></td>
+</tr>
+<tr>
+<td><code>llm</code></td>
+<td style="text-align: center;">53</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Ollama helpers, sanitization, review + translation pipelines</td>
+</tr>
+<tr>
+<td><code>logrotate.d</code></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Rotation snippets (documentation-first)</td>
+</tr>
+<tr>
+<td><code>methods</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>build_methods_orchestration_plan</code>, methods-stage
+contracts + validation</td>
+</tr>
+<tr>
+<td><code>orchestration</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>PipelineRunner</code>, entry point for
+<code>./run.sh</code></td>
+</tr>
+<tr>
+<td><code>project</code></td>
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>discover_projects</code>, workspace management</td>
+</tr>
+<tr>
+<td><code>prose</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Markdown readability + prose tooling</td>
+</tr>
+<tr>
+<td><code>publishing</code></td>
+<td style="text-align: center;">42</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Zenodo, executable bundle, archival targets</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>BibTeX models, parsers, converters</td>
+</tr>
+<tr>
+<td><code>rendering</code></td>
+<td style="text-align: center;">45</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>PDF/HTML/slide rendering, Pandoc filters</td>
+</tr>
+<tr>
+<td><code>reporting</code></td>
+<td style="text-align: center;">51</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Coverage parsers, dashboards, executive artefacts</td>
+</tr>
+<tr>
+<td><code>scientific</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>check_numerical_stability</code>,
+<code>benchmark_function</code></td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>infrastructure.search.literature</code> clients + cache</td>
+</tr>
+<tr>
+<td><code>skills</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>discover_skills</code>, SKILL manifest regeneration</td>
+</tr>
+<tr>
+<td><code>steganography</code></td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Watermark overlays + hash manifests</td>
+</tr>
+<tr>
+<td><code>validation</code></td>
+<td style="text-align: center;">61</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>PDF + Markdown + integrity CLIs</td>
+</tr>
+</tbody>
+</table>
+<p>All 22 enumerated subdirectories carry Tier‑1/<code>README.md</code>
+and Tier‑2/<code>AGENTS.md</code> coverage wherever the Documentation
+Duality standard applies; subsets ship Tier‑3 <code>SKILL.md</code>
+descriptors for MCP routing (<code>infrastructure/skills</code> manifest
+generation).</p>
+<h2 id="agentic-skill-documentation-coverage">Agentic Skill
+Documentation Coverage</h2>
+<table>
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System prompts</td>
+<td>Root <code>CLAUDE.md</code>, README policy</td>
+</tr>
+<tr>
+<td>Structural</td>
+<td><code>AGENTS.md</code> directories</td>
+</tr>
+<tr>
+<td>Skills</td>
+<td>Optional <code>SKILL.md</code> manifests + generated
+<code>.cursor/skill_manifest.json</code></td>
+</tr>
+<tr>
+<td>PAI capsule</td>
+<td>Repository level <code>PAI.md</code> narratives</td>
+</tr>
+</tbody>
+</table>
+<p><code>351+</code> Markdown shards under <code>docs/</code> capture
+operational knowledge without duplicating auto-generated
+inventories.</p>
+<h2 id="dag-reference-declarative-executor">DAG Reference (Declarative
+Executor)</h2>
+<p>Stages below mirror <code>pipeline.yaml</code> (executor-topological
+order—not strict numeric script filenames). Scripts live under
+<code>scripts/</code>.</p>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 37%" />
+<col style="width: 25%" />
+<col style="width: 28%" />
+</colgroup>
+<thead>
+<tr>
+<th>Name</th>
+<th>Typical script / method</th>
+<th>Responsibility</th>
+<th>Failure semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clean Output Directories</td>
+<td><code>_run_clean_outputs</code></td>
+<td>Deletes stale <code>output/</code> trees</td>
+<td>Blocking</td>
+</tr>
+<tr>
+<td>Environment Setup</td>
+<td><code>00_setup_environment.py</code></td>
+<td>Validates tooling, PYTHONPATH scaffolding</td>
+<td>Blocking</td>
+</tr>
+<tr>
+<td>Infrastructure Tests</td>
+<td><code>01_run_tests.py --infra-only</code></td>
+<td>Infra pytest + coverage gates</td>
+<td>Tunable thresholds</td>
+</tr>
+<tr>
+<td>Project Tests</td>
+<td><code>01_run_tests.py --project-only</code></td>
+<td>Project pytest + coverage gates</td>
+<td>Zero failures default</td>
+</tr>
+<tr>
+<td>Project Analysis</td>
+<td><code>02_run_analysis.py</code></td>
+<td>Executes <code>projects/&lt;name&gt;/scripts/*.py</code></td>
+<td>Blocking</td>
+</tr>
+<tr>
+<td>PDF Rendering</td>
+<td><code>03_render_pdf.py</code></td>
+<td>Pandoc → XeLaTeX manuscripts</td>
+<td>Blocking</td>
+</tr>
+<tr>
+<td>Output Validation</td>
+<td><code>04_validate_output.py</code></td>
+<td>Structural PDF/markdown probes</td>
+<td>Blocking / warnings</td>
+</tr>
+<tr>
+<td>LLM Scientific Review</td>
+<td><code>06_llm_review.py --reviews-only</code></td>
+<td>Local Ollama reviews</td>
+<td>Skippable / exit 2 tolerated</td>
+</tr>
+<tr>
+<td>LLM Translations</td>
+<td><code>06_llm_review.py --translations-only</code></td>
+<td>Optional translations</td>
+<td>Skippable</td>
+</tr>
+<tr>
+<td>Copy Outputs</td>
+<td><code>05_copy_outputs.py</code></td>
+<td>Mirrors deliverables → <code>output/&lt;project&gt;/</code></td>
+<td>Soft-fail surfaced in logs</td>
+</tr>
+</tbody>
+</table>
+<p><code>scripts/07_generate_executive_report.py</code> is
+<strong>multi-project orchestration glue</strong> invoked after
+iterating active projects—not a tenth DAG node for single-repo runs
+(<code>execute_pipeline.py</code>).</p>
+<h2 id="steganographic-performance">Steganographic Performance</h2>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 20%" />
+<col style="width: 12%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th>Project</th>
+<th style="text-align: center;">Pages (approx.)</th>
+<th style="text-align: center;">Metadata</th>
+<th style="text-align: center;">SHA-256</th>
+<th style="text-align: center;">Overlay</th>
+<th style="text-align: center;">QR Code</th>
+<th style="text-align: center;">Total (approx.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>template_code_project</code></td>
+<td style="text-align: center;">~20</td>
+<td style="text-align: center;">&lt;0.3 s</td>
+<td style="text-align: center;">&lt;0.05 s</td>
+<td style="text-align: center;">&lt;0.8 s</td>
+<td style="text-align: center;">&lt;0.4 s</td>
+<td style="text-align: center;">&lt;1.5 s</td>
+</tr>
+<tr>
+<td><code>template_prose_project</code></td>
+<td style="text-align: center;">~25</td>
+<td style="text-align: center;">&lt;0.3 s</td>
+<td style="text-align: center;">&lt;0.05 s</td>
+<td style="text-align: center;">&lt;0.9 s</td>
+<td style="text-align: center;">&lt;0.4 s</td>
+<td style="text-align: center;">&lt;1.6 s</td>
+</tr>
+<tr>
+<td><code>template_autoresearch_project</code></td>
+<td style="text-align: center;">~25</td>
+<td style="text-align: center;">&lt;0.2 s</td>
+<td style="text-align: center;">&lt;0.04 s</td>
+<td style="text-align: center;">&lt;0.9 s</td>
+<td style="text-align: center;">&lt;0.3 s</td>
+<td style="text-align: center;">&lt;1.5 s</td>
+</tr>
+</tbody>
+</table>
+<p>Measurements single-thread Apple Silicon; dominated by watermark
+overlay complexity.</p>
+<h2 id="self-referential-analysis">Self-Referential Analysis</h2>
+<p>Rendered via <code>projects_in_progress/template</code>
+(<code>generate_manuscript_metrics.py</code> → injected tokens such as
+<code>22</code>). Architecture figures stem from <a
+href="../../src/template/architecture_viz.py"><code>template.architecture_viz</code></a>—font
+sizes constrained by §QA.</p>
+<p><img src="figures/architecture_overview.png"
+alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live
+Two-Layer graph with documentation badges <code>[ARSP]</code> and
+per-module file counts derived from introspection snapshots.</p>
+<p><img src="figures/pipeline_stages.png" alt="Pipeline Stage Flow" />
+<strong>Figure 2.</strong> Pipeline DAG with 12 YAML-declared stages
+(core, LLM, bundle, archival tags).</p>
+<p><img src="figures/module_inventory.png"
+alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
+File-count histogram for each infrastructure subdirectory.</p>
+<h2 id="comparative-feature-analysis">Comparative Feature Analysis</h2>
+<p>Figure 4 summarizes the Appendix F capability matrix.</p>
+<p><img src="figures/comparative_feature_matrix.png"
+alt="Comparative Feature Analysis Heatmap" /> <strong>Figure 4.</strong>
+14 × 10 heatmap annotated in appendix text—green <strong>✓</strong> full
+native capability, yellow <strong>◐</strong> partial / plugin-hosted,
+red <strong>—</strong> unavailable. Rows group <em>Core Pipeline</em>,
+<em>Quality &amp; Security</em>, then <em>Ecosystem</em>.</p>
+<p>¹ Nextflow 25.04.0: lineage records exist at workflow scope, not per
+rendered PDF citation graph.</p>
+<p>² DVC: content-addressed artifacts without native prose
+rendering.</p>
+<p>³ DVC: remote object stores (S3, GCS, Azure) without turnkey CI
+manuscript gates.</p>
+<h2 id="test-quality-metrics">Test Quality Metrics</h2>
+<ul>
+<li><p><strong>Zero mocks:</strong> repository policy bans
+<code>unittest.mock</code> / patching frameworks in tests.</p></li>
+<li><p><strong>Filesystem + subprocess realism:</strong> ephemeral
+directories + actual CLI binaries.</p></li>
+<li><p><strong>HTTP realism:</strong> infra suites favour
+<code>pytest-httpserver</code>; literature tests hit recorded
+fixtures.</p></li>
+<li><p><strong><code>template_code_project</code></strong> focuses on
+numerical reproducibility assertions.</p></li>
+<li><p><strong><code>template_autoresearch_project</code></strong>
+exercises the AutoResearch readiness planner
+(<code>infrastructure/autoresearch/</code>).
+<strong><code>template_search_project</code></strong> remains
+archive-only for literature-search workflows.</p></li>
+</ul>
+</body>
+</html>

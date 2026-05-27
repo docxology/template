@@ -84,8 +84,8 @@ def inject_latex_preamble(
     if skip_title_page:
         if begin_doc_idx <= 0:
             return tex_content
-        tex_content = _inject_toc_after_begin_transmission(tex_content, begin_doc_idx)
-        logger.info("✓ Skipped auto title page (transmission bookends); TOC after begin bookend")
+        tex_content = _inject_toc_after_begin_transmission(tex_content, begin_doc_idx, title_page_body)
+        logger.info("✓ Cover/title page as page 2 + TOC after begin transmission bookend")
         return tex_content
 
     if not title_page_body or begin_doc_idx <= 0:
