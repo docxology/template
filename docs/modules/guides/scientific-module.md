@@ -62,15 +62,19 @@ print(f"Memory Usage: {result.memory_usage or 'Not measured'} MB")
 
 ---
 
-## CLI Integration
+## Programmatic API
 
-```bash
-# Validate scientific code quality
-uv run python -m infrastructure.scientific.cli validate-code src/  # noqa: docs-lint
+The scientific module is used as a Python library — it ships no standalone CLI. Import the helpers directly:
 
-# Generate performance reports
-uv run python -m infrastructure.scientific.cli benchmark src/algorithms.py  # noqa: docs-lint
+```python
+from infrastructure.scientific import (
+    benchmark_function,
+    check_numerical_stability,
+    validate_scientific_implementation,
+)
 ```
+
+See the examples above and [`infrastructure/scientific/SKILL.md`](../../../infrastructure/scientific/SKILL.md) for the full exported surface.
 
 ---
 

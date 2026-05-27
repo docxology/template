@@ -179,7 +179,7 @@ copy it under `projects/` **locally** to exercise the literature-search
 workflow, then never commit it.
 
 Private work lives outside this public repo at
-`/Users/4d/Documents/GitHub/projects/{active,passive,archive}`. `run.sh` and
+`$TEMPLATE_PRIVATE_PROJECTS_ROOT/{active,passive,archive}` (a separate private repo). `run.sh` and
 `python -m infrastructure.orchestration` auto-sync private lifecycle folders as
 symlinks: `active/*` into `template/projects/*` for discovery/rendering,
 `passive/*` into `template/projects_in_progress/*`, and `archive/*` into

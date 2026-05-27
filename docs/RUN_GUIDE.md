@@ -128,7 +128,7 @@ Archived and in-progress work lives under `projects_archive/` and
 `projects/`.
 
 Private active work normally lives in the sibling repo
-`/Users/4d/Documents/GitHub/projects/active/`. `run.sh` auto-syncs those
+`$TEMPLATE_PRIVATE_PROJECTS_ROOT/active/`. `run.sh` auto-syncs those
 directories into `template/projects/` as symlinks before discovery, so they
 appear in the menu and run/render like native projects without being tracked by
 this public repository. Use

@@ -54,15 +54,15 @@ def test_public_scope_excludes_local_private_symlink(tmp_path: Path) -> None:
     _scaffold_project(tmp_path, "template_code_project")
     _scaffold_project(tmp_path, "template_prose_project")
 
-    external = tmp_path / "private" / "active" / "biology_textbook"
+    external = tmp_path / "private" / "active" / "example_private_project"
     (external / "src").mkdir(parents=True)
     (external / "tests").mkdir()
     (external / "src" / "__init__.py").write_text("", encoding="utf-8")
-    (tmp_path / "projects" / "biology_textbook").symlink_to(external, target_is_directory=True)
+    (tmp_path / "projects" / "example_private_project").symlink_to(external, target_is_directory=True)
 
     discovered = {project.qualified_name for project in discover_projects(tmp_path)}
 
-    assert "biology_textbook" in discovered
+    assert "example_private_project" in discovered
     assert public_project_names(tmp_path) == [
         "template_autoresearch_project",
         "template_code_project",

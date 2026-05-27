@@ -37,7 +37,7 @@ A system for research and development projects. This template provides a test-dr
 
 ## 🧭 Positioning (honest framing)
 
-> This is primarily **Daniel Ari Friedman's research operating system**, made public and MIT-licensed so other researchers can fork it if helpful. It is not a one-size-fits-all template — it is opinionated, Python+pytest+LaTeX-flavored, and tuned to the kind of work Daniel does (Active Inference, computational biology, cognitive security). Honest framing ages better than wishful adoption metrics.
+> This is primarily **Daniel Ari Friedman's research operating system**, made public and Apache 2.0-licensed so other researchers can fork it if helpful. It is not a one-size-fits-all template — it is opinionated, Python+pytest+LaTeX-flavored, and tuned to the kind of work Daniel does (Active Inference, computational biology, cognitive security). Honest framing ages better than wishful adoption metrics.
 >
 > If your workflow looks similar (TDD-on-research-code, Markdown→PDF, multi-project monorepo, optional local-LLM draft assistance, deterministic + watermarked outputs, Zenodo DOI publishing), the template will probably save you time. If it doesn't look similar, a lighter alternative (Quarto, MyST, Cookiecutter-data-science) may serve you better. See [`MAINTAINERS.md`](MAINTAINERS.md) for ownership and [`STATUS.md`](STATUS.md) for per-subsystem freshness so you can judge what's actively maintained vs dormant.
 >
@@ -143,7 +143,7 @@ autonomous agents.
 > discovery, then never commit it.
 
 **Private lifecycle projects.** In Daniel's working checkout, confidential
-projects live outside this public repo at `/Users/4d/Documents/GitHub/projects/`
+projects live outside this public repo at `$TEMPLATE_PRIVATE_PROJECTS_ROOT`
 with the lifecycle folders `active/`, `passive/`, and `archive/`. `run.sh` and
 `python -m infrastructure.orchestration` auto-sync `active/*` into
 `template/projects/*` for listing, selecting, running, and rendering; `passive/*`

@@ -45,7 +45,7 @@ class ProjectInfo:
         """Full path-like name for display and selection.
 
         Returns:
-            For standalone projects: just the name (e.g., "act_inf_metaanalysis")
+            For standalone projects: just the name (e.g., "example_project")
             For nested projects: program/name (e.g., "cognitive_integrity/cogsec_multiagent_1_theory")
         """
         if self.program:

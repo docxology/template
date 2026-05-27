@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-26 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**425**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**170**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**7** passed), exemplar `pytest --collect-only` (209 + 76 + 75), drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-05-26 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**435**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**170**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**7** passed), exemplar `pytest --collect-only` (209 + 77 + 76), drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -14,7 +14,7 @@ This file aggregates verifiable facts from discovery scripts, CI configuration, 
 
 Optional add-on: `projects_archive/template_search_project` can be restored under `projects/` for literature-search workflows.
 
-Private lifecycle projects live outside this public repo at `/Users/4d/Documents/GitHub/projects/{active,passive,archive}/` by default. `run.sh`/`infrastructure.orchestration` symlinks `active/*` into `template/projects/*` before discovery/rendering, `passive/*` into `template/projects_in_progress/*`, and `archive/*` into `template/projects_archive/*` for non-rendered inspection. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
+Private lifecycle projects live outside this public repo in a separate external repository (location set via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`), organized into `active/`, `passive/`, and `archive/`. `run.sh`/`infrastructure.orchestration` symlinks `active/*` into `template/projects/*` before discovery/rendering, `passive/*` into `template/projects_in_progress/*`, and `archive/*` into `template/projects_archive/*` for non-rendered inspection. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
 **Public CI/documentation project scope** (`projects/`, filtered through `infrastructure.project.public_scope`; authoritative snapshot → [`active_projects.md`](active_projects.md)):
 
@@ -26,7 +26,7 @@ Private lifecycle projects live outside this public repo at `/Users/4d/Documents
 
 **In-progress projects** (`projects_in_progress/`, not discovered until moved under `projects/`): local-only roster omitted from public docs; in Daniel's checkout this includes symlinks to private `passive/` projects.
 
-**Archived projects** (`projects_archive/`, preserved but not executed): in Daniel's checkout this includes symlinks to private `archive/` projects such as `fep_lean`, `act_inf_metaanalysis`, `cognitive_integrity`, and others — list with `ls projects_archive/`.
+**Archived projects** (`projects_archive/`, preserved but not executed): local-only symlinks to the private repo's `archive/` projects (roster omitted from public docs) — list with `ls projects_archive/`.
 
 Regenerate [`active_projects.md`](active_projects.md) with:
 
@@ -73,7 +73,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **425** on 2026-05-26 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **435** on 2026-05-26 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -103,7 +103,7 @@ Result: 65 passed in ~0.75s (real symlinks and file-backed HITL state, no mocks)
 |---------|-----------------|----------------------------|
 | `template_code_project` | 209 | 98.83 % |
 | `template_prose_project` | 76 | 100.00 % |
-| `template_autoresearch_project` | 75 | 90.87 % |
+| `template_autoresearch_project` | 77 | 90.53 % |
 
 Collection was refreshed with per-project `uv run pytest tests/ --collect-only -q --no-cov` runs. Coverage values come from the latest project coverage gates; re-run the per-project coverage command after changing project `src/` or tests. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
@@ -200,7 +200,7 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ```mermaid
 flowchart TD
-    Root[Root] --> Infra[infrastructure/ <br/>18 importable packages]
+    Root[Root] --> Infra[infrastructure/ <br/>19 importable packages]
     Root --> Projects[projects/ <br/>see active_projects.md]
     Root --> Tests[tests/infra_tests/]
     Infra --> Core[core/ <br/>pipeline, logging, files, config]

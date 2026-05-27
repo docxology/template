@@ -16,21 +16,21 @@ Scope: local `~/.claude` PAI upgrade and template-repo PAI-facing documentation 
 - Existing `~/.claude` was a dirty git checkout on `main`, with `origin` at `https://github.com/docxology/pai.git` and `upstream` at `https://github.com/danielmiessler/Personal_AI_Infrastructure.git`.
 - Pre-install HEAD was `9791ca6`.
 - Local evidence matched the older PRD-era loop: Algorithm `v1.5.0`, no visible `PAI_SYSTEM_PROMPT.md`, no Pulse `31337` markers, and no Algorithm `v6.3.0`/ISA-first structure.
-- Existing preflight backup path already present: `/Users/4d/.claude.backup-20260512`.
+- Existing preflight backup path already present: `$HOME/.claude.backup-20260512`.
 
 ## Installer Run
 
 - First official installer attempt stopped before modifying `~/.claude` because `bun` was not on `PATH`.
-- Second attempt ran with `/Users/4d/.bun/bin` on `PATH` and completed through the official installer wizard.
-- The installer moved the prior install to `/Users/4d/.claude.backup-20260515-105316`.
-- The installer also created `/Users/4d/.claude.backup-2026-05-15T18-21-36-469Z` during its bundled migration flow.
-- Three timestamped backups remained available after cutover: `/Users/4d/.claude.backup-20260512`, `/Users/4d/.claude.backup-20260515-105316`, and `/Users/4d/.claude.backup-2026-05-15T18-21-36-469Z`.
+- Second attempt ran with `$HOME/.bun/bin` on `PATH` and completed through the official installer wizard.
+- The installer moved the prior install to `$HOME/.claude.backup-20260515-105316`.
+- The installer also created `$HOME/.claude.backup-2026-05-15T18-21-36-469Z` during its bundled migration flow.
+- Three timestamped backups remained available after cutover: `$HOME/.claude.backup-20260512`, `$HOME/.claude.backup-20260515-105316`, and `$HOME/.claude.backup-2026-05-15T18-21-36-469Z`.
 - Installer identity setup selected principal `Daniel`, DA name `PAI`, project directory `~/Documents/GitHub`, Pulse install enabled, and macOS notification fallback for voice because no ElevenLabs API key was configured.
 
 ## Migration
 
 - No old hooks or skills were overlaid into v5.
-- Durable TELOS files missing from the v5 tree were restored additively from `/Users/4d/.claude.backup-20260515-105316/PAI/USER/TELOS/` into `/Users/4d/.claude/PAI/USER/TELOS/` with `--ignore-existing`.
+- Durable TELOS files missing from the v5 tree were restored additively from `$HOME/.claude.backup-20260515-105316/PAI/USER/TELOS/` into `$HOME/.claude/PAI/USER/TELOS/` with `--ignore-existing`.
 - Existing v5 identity files such as `PAI/USER/PRINCIPAL_IDENTITY.md` and `PAI/USER/DA_IDENTITY.md` were preserved.
 - The old backup did not contain a `MEMORY/KNOWLEDGE` directory, so broad old MEMORY history remains in the backup for explicit future migration rather than being copied into the new v5 layout.
 
@@ -42,7 +42,7 @@ Scope: local `~/.claude` PAI upgrade and template-repo PAI-facing documentation 
 - `rg "v6\\.3\\.0|Ideal State Artifact|Pulse|31337" ~/.claude/PAI ~/.claude/skills` returns v5 markers.
 - Pulse health succeeds at `http://127.0.0.1:31337/api/pulse/health`.
 - Pulse notify succeeds with `POST http://127.0.0.1:31337/notify`.
-- The Life Dashboard serves HTML from `http://127.0.0.1:31337/` after setting `dashboard_dir` to `/Users/4d/.claude/PAI/PULSE/Observability/out`.
+- The Life Dashboard serves HTML from `http://127.0.0.1:31337/` after setting `dashboard_dir` to `$HOME/.claude/PAI/PULSE/Observability/out`.
 
 ## Local Pulse Notes
 
@@ -50,15 +50,15 @@ Scope: local `~/.claude` PAI upgrade and template-repo PAI-facing documentation 
 - Observability is enabled for the dashboard.
 - Voice is enabled with desktop notifications; ElevenLabs API use is not configured.
 - `subsystems.cron.jobs` originally showed a prior `assistant-tasks` error result. After adding and manually validating the assistant scaffold, that historical state row was cleared while DA assistant jobs remained disabled.
-- Post-review hardening added a zero-AI-cost `pulse-self-audit` job at 06:00 daily. It records the latest local readiness report at `/Users/4d/.claude/PAI/MEMORY/PAISYSTEMUPDATES/pulse-self-audit.json` and blocks staged re-enablement when configured job targets are missing.
+- Post-review hardening added a zero-AI-cost `pulse-self-audit` job at 06:00 daily. It records the latest local readiness report at `$HOME/.claude/PAI/MEMORY/PAISYSTEMUPDATES/pulse-self-audit.json` and blocks staged re-enablement when configured job targets are missing.
 - Pulse process management now runs the same self-audit before `start` and `install`, so critical readiness failures prevent daemon launch instead of becoming delayed cron failures.
 - The Life Dashboard now exposes a `Ready` route at `http://127.0.0.1:31337/readiness`, backed by `GET /api/pulse/self-audit`.
 - A conservative `PULSE/Assistant/` scaffold now provides backing files for Phase 1 assistant jobs without enabling them automatically.
-- The local Codex skill mirror at `/Users/4d/.agents/skills/PAI/SKILL.md` now starts with an active PAI v5 runtime override so future Codex sessions do not treat the legacy Algorithm `v1.5.0` material as current doctrine.
+- The local Codex skill mirror at `$HOME/.agents/skills/PAI/SKILL.md` now starts with an active PAI v5 runtime override so future Codex sessions do not treat the legacy Algorithm `v1.5.0` material as current doctrine.
 - Deep review found `~/.claude/settings.json` still reporting Algorithm `6.2.0` while `PAI/ALGORITHM/LATEST` reported `6.3.0`; settings now reports `6.3.0`, and the self-audit checks this pointer alignment.
 - The self-audit also checks that the three timestamped rollback backups remain present.
 - The readiness report now groups findings by rollout phase. Current status is baseline ready, doctrine ready, runtime ready, Phase 1 assistant ready, Phase 2 monitors attention, and Phase 3 communications ready.
-- `PULSE/Assistant/checks/growth.ts` now writes phase-aware next actions to `/Users/4d/.claude/PAI/MEMORY/PAISYSTEMUPDATES/assistant-growth-readiness.md`.
+- `PULSE/Assistant/checks/growth.ts` now writes phase-aware next actions to `$HOME/.claude/PAI/MEMORY/PAISYSTEMUPDATES/assistant-growth-readiness.md`.
 
 ## Template Alignment
 

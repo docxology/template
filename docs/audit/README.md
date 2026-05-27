@@ -33,7 +33,6 @@ hardening pass:
 - `filepath-audit-report-2026-05-16.md`
 - `literature-modules-audit-2026-05-01.md` (`infrastructure/search/` + `infrastructure/reference/`)
 - `pai-v5-upgrade-audit-2026-05-15.md` (PAI v5.0.0 upgrade alignment)
-- `act_inf_metaanalysis_v2_comprehensive_review-2026-04-26.md` (project-specific review previously misfiled in `docs/plans/`)
 
 When generating a new snapshot, suffix the filename with the generation
 date and archive it directly — don't park it at the top level where it

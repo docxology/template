@@ -17,7 +17,7 @@ Always-present permanent exemplars under `projects/`:
 | `template_code_project` | Optimization research exemplar | ✅ Permanent exemplar |
 | `template_prose_project` | Prose-review exemplar | ✅ Permanent exemplar |
 
-Rotating projects (e.g. `actinf_policy_entanglement_lean`, `crescent_city`) appear under `projects/` in some checkouts and under `projects_archive/` or `projects_in_progress/` in others. `fep_lean` and `act_inf_metaanalysis` are currently archived.
+Rotating projects appear under `projects/` in some checkouts and under `projects_archive/` or `projects_in_progress/` in others; specific names rotate, so consult the generated roster rather than hard-coding them.
 
 Authoritative active roster: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerated from `discover_projects()`).
 

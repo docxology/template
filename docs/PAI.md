@@ -26,12 +26,12 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 
 ## PAI v5 Alignment
 
-As of 2026-05-15, this repository treats upstream PAI `v5.0.0` as the current Life Operating System doctrine: DA-centered operation, Pulse on port `31337`, Algorithm `v6.3.0`, and ISA-first execution. For non-trivial work, articulate the Ideal State Artifact before implementation; PRD language is historical only and should not be presented as current PAI doctrine.
+As of 2026-05-15, this repository treats upstream PAI `v5.0.0` as the current Life Operating System doctrine: DA-centered operation, Pulse on port `31337`, Algorithm `v6.5.0`, and ISA-first execution. For non-trivial work, articulate the Ideal State Artifact before implementation; PRD language is historical only and should not be presented as current PAI doctrine.
 
 Operational smoke checks for the local PAI install live outside this template's Python APIs:
 
 - `~/.claude/PAI/PAI_SYSTEM_PROMPT.md`
-- `~/.claude/PAI/ALGORITHM/v6.3.0.md`
+- `~/.claude/PAI/ALGORITHM/v6.5.0.md`
 - `~/.claude/skills/ISA/SKILL.md`
 - `http://localhost:31337/api/pulse/health`
 - `http://localhost:31337/readiness`

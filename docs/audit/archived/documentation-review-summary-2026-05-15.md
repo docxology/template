@@ -94,7 +94,7 @@ Following the comprehensive review, the following corrections were applied:
 Repo-wide documentation audit driven by the `scripts/lint_docs.py` harness (mermaid + cross-link + consistency + doc-pair) plus 11 parallel zone auditors covering `docs/`, `infrastructure/`, `tests/`, root and folder-level `AGENTS.md`/`README.md`.
 
 ### Objective defects fixed
-- Root `AGENTS.md`: 3 absolute-path links `[PAI config](/Users/4d/.claude/PAI/PULSE/PULSE.toml)` → `the PAI Pulse config (\`PULSE.toml\`, outside this repo)` (broken-link harness defect).
+- Root `AGENTS.md`: 3 absolute-path links `[PAI config]($HOME/.claude/PAI/PULSE/PULSE.toml)` → `the PAI Pulse config (\`PULSE.toml\`, outside this repo)` (broken-link harness defect).
 - `docs/documentation-index.md`: 55 list lines carrying a stray leading `|` (markdown render bug from the `operations`→`operational` rename) normalized to clean `- ` items; mermaid/`[!IMPORTANT]` blocks intact.
 - `docs/_generated/active_projects.md` regenerated via `scripts/generate_active_projects_doc.py`.
 

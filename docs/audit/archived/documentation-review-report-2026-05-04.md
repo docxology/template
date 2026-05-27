@@ -4,7 +4,7 @@
 **Review Date:** 2026-04-27
 **Last verified:** 2026-05-04
 **Reviewer:** Hermes Agent (automated deep review)
-**Scope:** `/Users/4d/Documents/GitHub/template/docs` (all Markdown documentation)
+**Scope:** `$HOME/Documents/GitHub/template/docs` (all Markdown documentation)
 
 > **Status (2026-05-04):** All findings in this report have been
 > remediated. Verification was re-run on 2026-05-04: every broken-link

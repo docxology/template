@@ -13,7 +13,7 @@ Usage:
     # or
     eval "$(python3 infrastructure/core/config_cli.py)"
     # or with project specification
-    eval "$(python3 infrastructure/core/config_cli.py --project act_inf_metaanalysis)"
+    eval "$(python3 infrastructure/core/config_cli.py --project example_project)"
 """
 
 import argparse
@@ -49,7 +49,7 @@ Examples:
   eval "$(python3 infrastructure/core/config_cli.py)"
 
   # Export config for specific project
-  eval "$(python3 infrastructure/core/config_cli.py --project act_inf_metaanalysis)"
+  eval "$(python3 infrastructure/core/config_cli.py --project example_project)"
 
   # Use in bash script
   source <(python3 infrastructure/core/config_cli.py)

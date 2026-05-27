@@ -235,7 +235,7 @@ find /backups/daily -type f -mtime +30 -delete
 find /backups/monthly -type f -mtime +365 -delete
 ```
 
-### Verification
+### Verification {#backup-verification}
 
 Run verification monthly (see [Runbook - Monthly Operations](#monthly-operations)).
 
@@ -296,6 +296,27 @@ For detailed procedures and the full script, see [Runbook - Health Check Script]
 
 ---
 
+## Weekly Operations {#weekly-operations}
+
+Run once per week (typically at the start of the work week).
+
+- **Full multi-project pipeline:** `./run.sh --all-projects --pipeline` (or `uv run python scripts/execute_multi_project.py`) to confirm every active project still builds end-to-end.
+
+### Gate Duration Monitoring {#gate-duration-monitoring}
+
+Track how long the test and pipeline gates take so build-time regressions surface early.
+
+- Review per-stage timings in `output/<project>/reports/` and the multi-project executive report.
+- Investigate any stage whose wall-clock time grows materially week over week.
+
+### Security Scan Review {#security-scan-review}
+
+- Dependency advisories: `uv pip audit` (triage any reported CVEs).
+- Static analysis: `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/`.
+- Optional deeper scan: `uv run python scripts/gates/security_scan.py` (missing tools report `skipped`, not clean).
+
+---
+
 ## Monthly Operations {#monthly-operations}
 
 For detailed procedures, see [Runbook - Monthly Operations](../operational/runbook.md#monthly-operations).
@@ -308,4 +329,14 @@ For detailed procedures, see [Runbook - Monthly Operations](../operational/runbo
 
 ---
 
-*Last updated: 2026-04-27*
+## Disaster Recovery Drill {#disaster-recovery-drill}
+
+Run quarterly to verify that backups can actually be restored — not merely that they exist.
+
+1. Restore the most recent backup (see [Backup Strategy](#backup-strategy) and [Verification](#backup-verification)) into a scratch location.
+2. Run the health check (`./run.sh --help && echo OK`) and a smoke pipeline (`uv run python scripts/execute_pipeline.py --project template_code_project --core-only`) against the restored tree.
+3. Record restore time and any gaps; file follow-ups for anything that did not restore cleanly.
+
+---
+
+*Last updated: 2026-05-27*

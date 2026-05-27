@@ -59,7 +59,7 @@ def discover_projects(
         >>> projects = discover_projects(Path("/path/to/template"))
         >>> for project in projects:
         ...     print(f"{project.qualified_name}: {project.path}")
-        act_inf_metaanalysis: /path/to/template/projects/act_inf_metaanalysis
+        example_project: /path/to/template/projects/example_project
         cognitive_integrity/cogsec_multiagent_1_theory: /path/to/template/projects/cognitive_integrity/cogsec_multiagent_1_theory
     """
     if isinstance(repo_root, str):

@@ -77,16 +77,16 @@ class TestSuggestedCitationDoi:
                         "edition": "1.0",
                         "year": 2026,
                     },
-                    "publication": {"doi": "10.5281/zenodo.20286478"},
+                    "publication": {"doi": "10.5281/zenodo.1234567"},
                 }
             ),
             encoding="utf-8",
         )
         body = generate_title_page_body(manuscript_dir)
         assert "Suggested citation:" in body
-        assert "10.5281/zenodo.20286478" in body
-        assert "https://doi.org/10.5281/zenodo.20286478" in body
-        assert r"{\small DOI: \href{https://doi.org/10.5281/zenodo.20286478}" in body
+        assert "10.5281/zenodo.1234567" in body
+        assert "https://doi.org/10.5281/zenodo.1234567" in body
+        assert r"{\small DOI: \href{https://doi.org/10.5281/zenodo.1234567}" in body
 
     def test_suggested_citation_separates_repository_and_doi(self, tmp_path):
         manuscript_dir = tmp_path / "manuscript"
@@ -97,7 +97,7 @@ class TestSuggestedCitationDoi:
                 {
                     "book": {"title": "T", "author": "A", "edition": "1.0", "year": 2026},
                     "publication": {
-                        "doi": "10.5281/zenodo.20286478",
+                        "doi": "10.5281/zenodo.1234567",
                         "repository_url": "https://github.com/docxology/biology_textbook",
                     },
                 }
@@ -107,7 +107,7 @@ class TestSuggestedCitationDoi:
         body = generate_title_page_body(manuscript_dir)
         assert "Suggested citation:" in body
         assert r"\href{https://github.com/docxology/biology_textbook}" in body
-        assert r"\href{https://doi.org/10.5281/zenodo.20286478}{https://doi.org/10.5281/zenodo.20286478}." in body
+        assert r"\href{https://doi.org/10.5281/zenodo.1234567}{https://doi.org/10.5281/zenodo.1234567}." in body
 
 
 class TestExtractPreamble:
@@ -385,7 +385,7 @@ class TestGenerateTitlePageBody:
                         "license": "CC BY 4.0",
                     },
                     "publication": {
-                        "doi": "10.5281/zenodo.20286478",
+                        "doi": "10.5281/zenodo.1234567",
                         "repository_url": "https://github.com/docxology/biology_textbook",
                         "repository_label": "Source repository",
                     },
@@ -396,8 +396,8 @@ class TestGenerateTitlePageBody:
         result = generate_title_page_body(tmp_path)
 
         assert "Publishing Information" in result
-        assert r"\href{https://doi.org/10.5281/zenodo.20286478}" in result
-        assert r"{\small DOI: \href{https://doi.org/10.5281/zenodo.20286478}" in result
+        assert r"\href{https://doi.org/10.5281/zenodo.1234567}" in result
+        assert r"{\small DOI: \href{https://doi.org/10.5281/zenodo.1234567}" in result
         assert r"\href{https://github.com/docxology/biology_textbook}" in result
         assert "Source repository" in result
         assert "via the source repository linked above." in result

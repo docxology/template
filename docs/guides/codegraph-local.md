@@ -51,7 +51,7 @@ the JSON file list contains a non-template path under `projects/`.
 For a private or rotating project, work from the project repository itself:
 
 ```bash
-cd /Users/4d/Documents/GitHub/projects/active/<project-name>
+cd "$TEMPLATE_PRIVATE_PROJECTS_ROOT/active/<project-name>"
 codegraph init "$(pwd)" --index
 codegraph status "$(pwd)"
 ```

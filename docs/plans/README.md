@@ -10,12 +10,9 @@ plans live under `projects/{name}/docs/` (active) or
 live under [`../audit/archived/`](../audit/archived/) with
 `-YYYY-MM-DD.md` date suffixes.
 
-The previous tenant of this directory
-(`act_inf_metaanalysis_v2_comprehensive_review.md`, a project-specific
-plan that had been parked here) was moved to
-[`../audit/archived/act_inf_metaanalysis_v2_comprehensive_review-2026-04-26.md`](../audit/archived/act_inf_metaanalysis_v2_comprehensive_review-2026-04-26.md)
-in the May 2026 hardening pass so it lives alongside the dated audit
-snapshots rather than in the active-plans hub.
+A project-specific review that had been parked in this directory was
+relocated to its own (private) project repository during the May 2026
+hardening pass, so this hub holds only repo-wide plans.
 
 ## Quick Navigation
 
