@@ -268,7 +268,13 @@ def manifest_matches_discovery(
     if on_disk.get("version") != expected["version"]:
         return False, "manifest version mismatch"
     if on_disk.get("skills") != expected["skills"]:
-        return False, "manifest skills list out of date (run: uv run python -m infrastructure.skills write)"
+        return False, (
+            "manifest skills list out of date — either run "
+            "`uv run python -m infrastructure.skills write` to regenerate, "
+            "or commit any uncommitted SKILL.md edits first (pre-commit stashes "
+            "unstaged changes before pre-push hooks, so a manifest written from "
+            "edited-but-uncommitted SKILL.md content will fail this check)"
+        )
     return True, "ok"
 
 

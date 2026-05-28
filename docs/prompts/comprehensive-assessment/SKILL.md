@@ -7,7 +7,7 @@ description: |
   exemplars — even without naming docs/prompts or a skill. Not for single failing stage only.
 metadata:
   version: "1.0.0"
-  last_updated: "2026-05-25"
+  last_updated: "2026-05-27"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -23,7 +23,7 @@ metadata:
 
 ## Natural invoke
 
-- "Audit the whole repo for template_active_inference, template_autoresearch_project, template_code_project, and template_prose_project"
+- "Audit the whole repo for template_active_inference, template_autoresearch_project, template_code_project, template_prose_project, and template_template"
 - "Full health check — tests, docs, manuscript, pipeline"
 - "What's broken across all active projects?"
 
