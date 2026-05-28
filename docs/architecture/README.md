@@ -6,7 +6,7 @@
 
 ## Purpose
 
-The `architecture/` directory contains detailed documentation about the system architecture, design patterns, and implementation decisions. Examples that need a concrete `projects/{name}/` path should use **`projects/template_code_project/`** only; [`projects/`](../../projects/README.md) is otherwise a rotating set (see [`../_generated/active_projects.md`](../_generated/active_projects.md)).
+The `architecture/` directory contains detailed documentation about the system architecture, design patterns, and implementation decisions. Examples that need a concrete `projects/{name}/` path should use **`projects/templates/template_code_project/`** only; [`projects/`](../../projects/README.md) is otherwise a rotating set (see [`../_generated/active_projects.md`](../_generated/active_projects.md)).
 
 ## Contents
 

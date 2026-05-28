@@ -731,8 +731,8 @@ class TestValidateOutputStructure:
         assert len(result["missing_files"]) == 0
 
     def test_validate_wip_source_output_structure(self, tmp_path):
-        """Source output validation detects projects_in_progress/ project names."""
-        project_output_dir = tmp_path / "projects_in_progress" / "draft_project" / "output"
+        """Source output validation detects projects/working/ project names."""
+        project_output_dir = tmp_path / "projects" / "working" / "draft_project" / "output"
         pdf_dir = project_output_dir / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "draft_project_combined.pdf").write_bytes(b"PDF" * 10000)

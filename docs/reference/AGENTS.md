@@ -21,7 +21,7 @@ Technical guide for `docs/reference/` — API docs, glossary, FAQ, workflows, an
 
 ## Key Conventions
 
-- **Layer 2 examples**: prefer paths under [`projects/template_code_project/`](../../projects/template_code_project/); other active projects → [_generated/active_projects.md](../_generated/active_projects.md).
+- **Layer 2 examples**: prefer paths under [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/); other active projects → [_generated/active_projects.md](../_generated/active_projects.md).
 - `api-reference.md` covers both Layer 1 (infrastructure) and Layer 2 (project) modules
 - FAQ answers are kept concise with links to detailed guides
 - Workflow recipes follow consistent format: context → steps → verification

@@ -2903,5 +2903,5 @@ All infrastructure modules:
 
 - [Modules Guide](../modules/modules-guide.md) — Usage examples
 - [Infrastructure Docs](../../infrastructure/AGENTS.md) — Infrastructure module implementation
-- [Project Source Docs](../../projects/template_code_project/src/AGENTS.md) — Project module implementation
+- [Project Source Docs](../../projects/templates/template_code_project/src/AGENTS.md) — Project module implementation
 - [Best Practices](../best-practices/best-practices.md) — Usage recommendations

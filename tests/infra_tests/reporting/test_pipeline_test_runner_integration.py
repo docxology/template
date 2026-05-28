@@ -20,7 +20,7 @@ from infrastructure.reporting.pipeline_test_runner import (
 
 def _write_minimal_project(repo_root: Path, name: str = "demo") -> Path:
     """Scaffold a discoverable project with one passing test."""
-    project_root = repo_root / "projects" / name
+    project_root = repo_root / "projects" / "active" / name
     for sub in ("src", "tests", "scripts", "manuscript", "output"):
         (project_root / sub).mkdir(parents=True)
     (project_root / "src" / "__init__.py").write_text("")

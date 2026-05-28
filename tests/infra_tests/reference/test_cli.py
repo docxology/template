@@ -20,7 +20,7 @@ def _run(args: list[str]) -> subprocess.CompletedProcess[str]:
 
 
 def test_cli_validate_passes_on_exemplar():
-    bibfile = REPO_ROOT / "projects" / "template_code_project" / "manuscript" / "references.bib"
+    bibfile = REPO_ROOT / "projects" / "templates" / "template_code_project" / "manuscript" / "references.bib"
     result = _run(["validate", str(bibfile)])
     assert result.returncode == 0, result.stderr
 

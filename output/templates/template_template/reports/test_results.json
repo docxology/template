@@ -1,0 +1,76 @@
+{
+  "timestamp": "2026-05-27T15:13:35.677003",
+  "infrastructure": {},
+  "project": {
+    "passed": 84,
+    "failed": 0,
+    "skipped": 0,
+    "total": 84,
+    "warnings": 0,
+    "exit_code": 0,
+    "discovery_count": 84,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 21.97,
+      "collection": 21.97,
+      "execution": 21.97
+    },
+    "test_categories": {},
+    "coverage_percent": 91.52777777777777,
+    "failed_tests": []
+  },
+  "summary": {
+    "total_passed": 84,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 84,
+    "all_passed": true,
+    "project_coverage": 91.52777777777777
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 92.76094276094277,
+      "total_executed": 551,
+      "total_missing": 43,
+      "total_excluded": 0,
+      "total_lines": 594,
+      "file_coverage": {
+        "projects/template_template/src/template_template/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 6,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 6
+        },
+        "projects/template_template/src/template_template/architecture_viz.py": {
+          "coverage_percent": 98.5576923076923,
+          "executed_lines": 205,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 208
+        },
+        "projects/template_template/src/template_template/inject_metrics.py": {
+          "coverage_percent": 87.64044943820225,
+          "executed_lines": 78,
+          "missing_lines": 11,
+          "excluded_lines": 0,
+          "total_lines": 89
+        },
+        "projects/template_template/src/template_template/introspection.py": {
+          "coverage_percent": 90.69767441860465,
+          "executed_lines": 195,
+          "missing_lines": 20,
+          "excluded_lines": 0,
+          "total_lines": 215
+        },
+        "projects/template_template/src/template_template/metrics.py": {
+          "coverage_percent": 88.1578947368421,
+          "executed_lines": 67,
+          "missing_lines": 9,
+          "excluded_lines": 0,
+          "total_lines": 76
+        }
+      }
+    }
+  }
+}

@@ -180,7 +180,7 @@ jobs:
 
     - name: Run tests
       run: |
-        uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=xml --cov-fail-under=90
+        uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=xml --cov-fail-under=90
 
     - name: Upload coverage
       uses: codecov/codecov-action@v6.0.1
@@ -289,7 +289,7 @@ def generate_markdown_docs(module_name, info):
 
 def main():
     """Generate documentation for all projects/{name}/src/ modules."""
-    src_dir = 'projects/template_code_project/src'
+    src_dir = 'projects/templates/template_code_project/src'
     output_dir = 'output/api_docs'
     os.makedirs(output_dir, exist_ok=True)
 
@@ -342,7 +342,7 @@ Generate citations, mint DOIs, and publish to Zenodo:
 from infrastructure.publishing import generate_citation_bibtex, extract_publication_metadata
 from pathlib import Path
 
-metadata = extract_publication_metadata(Path("projects/template_code_project/manuscript/config.yaml"))
+metadata = extract_publication_metadata(Path("projects/templates/template_code_project/manuscript/config.yaml"))
 print(generate_citation_bibtex(metadata))
 ```
 
@@ -351,7 +351,7 @@ See the [Publishing Guide](publishing-guide.md) for the full workflow.
 ### Literature Review Integration
 
 ```python
-# projects/template_code_project/scripts/literature_analysis.py
+# projects/templates/template_code_project/scripts/literature_analysis.py
 #!/usr/bin/env python3
 """Analyze research trends from literature."""
 import requests
@@ -402,14 +402,14 @@ def generate_trend_report(trends):
 git checkout -b feature/new-algorithm
 
 # Make changes
-vim projects/template_code_project/src/new_algorithm.py
-vim projects/template_code_project/tests/test_new_algorithm.py
+vim projects/templates/template_code_project/src/new_algorithm.py
+vim projects/templates/template_code_project/tests/test_new_algorithm.py
 
 # Ensure coverage requirements met
-uv run pytest projects/template_code_project/tests/ --cov=projects.template_code_project.src --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects.template_code_project.src --cov-report=term-missing
 
 # Commit with conventional commit messages
-git add projects/template_code_project/src/new_algorithm.py projects/template_code_project/tests/test_new_algorithm.py
+git add projects/templates/template_code_project/src/new_algorithm.py projects/templates/template_code_project/tests/test_new_algorithm.py
 git commit -m "feat: add new optimization algorithm
 
 - Implements gradient-free optimization

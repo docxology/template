@@ -58,10 +58,16 @@ class TestTransmissionPageCheck:
         assert result.valid is False
 
     @pytest.mark.skipif(
-        not Path("projects/template_code_project/output/pdf/template_code_project_combined.pdf").is_file(),
+        not Path(
+            "projects/templates/template_code_project/output/pdf/"
+            "template_code_project_combined.pdf"
+        ).is_file(),
         reason="Rendered combined PDF not present",
     )
     def test_template_code_project_combined_pdf_when_present(self) -> None:
-        pdf_path = Path("projects/template_code_project/output/pdf/template_code_project_combined.pdf")
+        pdf_path = Path(
+            "projects/templates/template_code_project/output/pdf/"
+            "template_code_project_combined.pdf"
+        )
         result = check_transmission_bookend_pages(pdf_path)
         assert result.valid is True, result.issues

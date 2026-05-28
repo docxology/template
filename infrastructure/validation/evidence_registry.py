@@ -167,6 +167,7 @@ def build_project_evidence_registry(project_root: Path) -> VerifiedEvidenceRegis
     registry = VerifiedEvidenceRegistry()
     project_root = project_root.resolve()
 
+    _register_config_numbers(project_root, registry)
     _register_json_numbers(project_root, registry)
     _register_tabular_numbers(project_root, registry)
     _register_claim_ledgers(project_root, registry)
@@ -327,6 +328,47 @@ _LATEX_EQUATION_LABEL_RE = re.compile(r"\\label\{(eq:[A-Za-z0-9_:-]+)\}")
 _STRICT_HEADINGS = frozenset({"abstract", "results", "evaluation", "findings", "experiments", "analysis"})
 _LENIENT_HEADINGS = frozenset({"introduction", "background", "related work", "discussion", "conclusion"})
 _ALWAYS_ALLOWED_NUMBERS = frozenset({"0", "1", "2", "3", "4", "5", "10", "100"})
+
+
+def _register_config_numbers(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
+    """Register numeric facts from manuscript-facing project configuration."""
+    config_paths = (
+        project_root / "figures.yaml",
+        project_root / "tracks.yaml",
+        project_root / "manuscript" / "sheaf" / "tracks.yaml",
+        project_root / "manuscript" / "sheaf" / "manifest.yaml",
+        project_root / "manuscript" / "sheaf" / "coverage.yaml",
+    )
+    for yaml_path in config_paths:
+        _register_numbers_from_yaml(yaml_path, project_root, registry)
+
+
+def _register_numbers_from_yaml(
+    yaml_path: Path,
+    project_root: Path,
+    registry: VerifiedEvidenceRegistry,
+) -> None:
+    if not yaml_path.exists():
+        return
+    try:
+        payload = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError):
+        return
+    relative = _relative_to_project(yaml_path, project_root)
+    for value_path, value in _walk_json(payload):
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, int | float):
+            registry.add(
+                EvidenceFact(
+                    kind="number",
+                    value=_number_to_string(value),
+                    source=f"{relative}:{value_path}",
+                    source_path=str(relative),
+                    source_field=value_path,
+                    source_tier="configuration",
+                )
+            )
 
 
 def _register_json_numbers(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:

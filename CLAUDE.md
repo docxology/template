@@ -159,41 +159,47 @@ uv run python scripts/execute_multi_project.py --no-llm
 uv run python -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** Authoritative list → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`discover_projects()`).
+**Public active projects:** Authoritative list → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`infrastructure.project.public_scope`). Runtime `discover_projects()` may include local private symlinks.
 
 **🔒 CONFIDENTIALITY INVARIANT (public repo).** Only these public canonical
-exemplars are ever git-tracked/pushed:
-- [`projects/template_active_inference/`](projects/template_active_inference/) — Active Inference multi-track template (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
-- [`projects/template_autoresearch_project/`](projects/template_autoresearch_project/) — deterministic AutoResearch template
-- [`projects/template_code_project/`](projects/template_code_project/) — code-centric template
-- [`projects/template_prose_project/`](projects/template_prose_project/) — prose-centric template
+exemplars — all under the git-tracked `projects/templates/` typed subfolder — are
+ever git-tracked/pushed:
+- [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) — Active Inference multi-track template (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
+- [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) — deterministic AutoResearch template
+- [`projects/templates/template_code_project/`](projects/templates/template_code_project/) — code-centric template
+- [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
+- [`projects/templates/template_template/`](projects/templates/template_template/) — autopoietic meta-template (introspects infrastructure and public exemplar roster)
 
-`.gitignore` ignores `projects/*` and negates **only** those public exemplars (plus the
-repo-level `projects/*.md` docs). **Every other project under `projects/` —
-rotating research, client/confidential work, and the optional
+`.gitignore` ignores `projects/*` and negates **only** `projects/templates/`
+(the public exemplars) plus the repo-level `projects/*.md` docs. **Every other
+path under `projects/` — the `active/` hot-seat render set, the `working/`,
+`published/`, `archive/`, and `other/` lifecycle folders, plus the optional
 `template_search_project` literature-search exemplar — is LOCAL-ONLY and must
 never be committed.** This is enforced, not conventional:
 `scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push
 `pre-push-quick` hook on any non-template tracked project (a `git add -f`
 cannot slip past it). `template_search_project` rests in
-[`projects_archive/template_search_project/`](projects_archive/template_search_project/);
-copy it under `projects/` **locally** to exercise the literature-search
+[`projects/archive/template_search_project/`](projects/archive/template_search_project/);
+copy it under `projects/active/` **locally** to exercise the literature-search
 workflow, then never commit it.
 
 Private work lives outside this public repo at
-`$TEMPLATE_PRIVATE_PROJECTS_ROOT/{active,passive,archive}` (a separate private repo). `run.sh` and
-`python -m infrastructure.orchestration` auto-sync private lifecycle folders as
-symlinks: `active/*` into `template/projects/*` for discovery/rendering,
-`passive/*` into `template/projects_in_progress/*`, and `archive/*` into
-`template/projects_archive/*` for local inspection. Inspect with
+`$TEMPLATE_PRIVATE_PROJECTS_ROOT/{active,working,published,archive,other}` (a
+separate private repo). `run.sh` and `python -m infrastructure.orchestration`
+auto-sync the private lifecycle folders as symlinks into matching typed
+subfolders under `projects/`: `active/*` → `projects/active/*` (discovered +
+rendered alongside the `templates/` exemplars), and `working/*`, `published/*`,
+`archive/*`, `other/*` → `projects/{working,published,archive,other}/*` (linked
+for local inspection, never rendered). Inspect with
 `uv run python -m infrastructure.orchestration link-projects --dry-run`;
 override the root with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root`; disable one command with `TEMPLATE_SKIP_LINK_SYNC=1`.
-Other rotating projects move between the private lifecycle repo,
-`projects_in_progress/`, `projects/`, and `projects_archive/` as work
-progresses; never hard-code their paths in long-lived docs — consult
-`_generated/active_projects.md` instead.
-**Backburner & archived projects:** remain non-rendered unless promoted to `active/`; their local symlinks exist only for inspection or explicit targeted work (see [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md)).
+Rotating projects move between the private lifecycle folders (and thus between
+the typed subfolders under `projects/`) as work progresses; never hard-code
+their paths in long-lived docs — consult `_generated/active_projects.md` instead.
+**Backburner & archived projects:** remain non-rendered unless promoted to the
+private `active/` (→ `projects/active/`); their local symlinks exist only for
+inspection or explicit targeted work (see [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md)).
 
 ## Architecture
 
@@ -260,17 +266,24 @@ avg = calculate_average(data)  # Use tested method
 
 ## Project Structure
 
-### Active vs Archived Projects
+### Typed Subfolders under `projects/`
 
-- **`projects/`** — the public exemplars, plus `active/` projects from the private repo symlinked in (discovered + rendered).
-- **`projects_in_progress/`** — non-rendered symlinks to the private repo's `passive/` projects.
-- **`projects_archive/`** — non-rendered symlinks to the private repo's `archive/` projects.
-- **Private `docxology/projects` repo** — the primary home for real projects: `active/` (rendered every run), `passive/` (backburner), `archive/` (retired). See [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md).
+All project lifecycle state is expressed as typed subfolders under `projects/`:
+
+- **`projects/templates/`** — the five public exemplars, git-tracked in this repo (discovered + rendered).
+- **`projects/active/`** — the hot-seat render set: symlinks to the private repo's `active/` projects (discovered + rendered alongside the exemplars).
+- **`projects/working/`** — non-rendered symlinks to the private repo's `working/` projects (backburner / in-progress).
+- **`projects/published/`** — non-rendered symlinks to the private repo's `published/` projects.
+- **`projects/archive/`** — non-rendered symlinks to the private repo's `archive/` projects (retired).
+- **`projects/other/`** — non-rendered symlinks to the private repo's `other/` projects.
+- **Private `docxology/projects` repo** — the primary home for real projects, with matching lifecycle folders: `active/` (rendered every run), `working/`, `published/`, `archive/`, `other/`. See [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md).
+
+Discovery renders only `projects/templates/*` and `projects/active/*` (qualified names `templates/<name>` and `active/<name>`); the `working/`, `published/`, `archive/`, and `other/` subfolders are linked for inspection but never rendered.
 
 **Current active projects:** See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (do not hard-code names in docs).
-**Backburner / archived projects:** in the private repo's `passive/` and `archive/`.
+**Backburner / archived projects:** in the private repo's `working/`, `published/`, `archive/`, and `other/` folders.
 
-To make a private project render: move it into the private repo's `active/`, then `./run.sh` (auto-syncs the symlink).
+To make a private project render: move it into the private repo's `active/`, then `./run.sh` (auto-syncs the symlink into `projects/active/`).
 To retire one: move it into the private repo's `archive/`.
 
 ### Standard Project Layout

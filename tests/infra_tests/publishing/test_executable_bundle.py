@@ -7,19 +7,18 @@ import json
 from pathlib import Path
 
 from infrastructure.publishing.executable_bundle import bundle_project
+from tests._support.projects import make_project, write_doc
 
 
 def _scaffold_bundle_project(root: Path, name: str) -> None:
-    project = root / "projects" / name
-    for sub in ("src", "scripts", "manuscript", "tests"):
-        (project / sub).mkdir(parents=True)
+    project = make_project(root, name, with_manuscript=True, with_scripts=True)
     (project / "src" / "demo.py").write_text("def run() -> int:\n    return 0\n")
     (project / "manuscript" / "config.yaml").write_text(
         "publication:\n  doi: '10.5281/zenodo.12345678'\n",
         encoding="utf-8",
     )
-    (root / "pyproject.toml").write_text("[project]\nname = 'demo'\n")
-    (root / "uv.lock").write_text("# lock\n")
+    write_doc(root / "pyproject.toml", "[project]\nname = 'demo'\n")
+    write_doc(root / "uv.lock", "# lock\n")
     pinned = root / "tests" / "regression" / "pinned_values"
     pinned.mkdir(parents=True)
     (pinned / f"{name}.json").write_text(json.dumps({"claims": []}))

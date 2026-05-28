@@ -1,0 +1,217 @@
+{
+  "claim_boundary": "Schemas version generated governance payload shapes; payloads of schemas with a registered field contract are checked for field/type conformance; exemptions are generic tables.",
+  "contracted_schema_count": 7,
+  "generated_at": "2026-05-27T23:33:29+00:00",
+  "generic_table_exemptions": [
+    {
+      "path": "output/data/autoresearch_claims.json",
+      "reason": "list of generated claim rows"
+    },
+    {
+      "path": "output/data/autoresearch_loop.json",
+      "reason": "project loop payload serialized from the public result model"
+    },
+    {
+      "path": "output/data/autoresearch_plan.json",
+      "reason": "infrastructure AutoResearch plan payload"
+    },
+    {
+      "path": "output/data/autoresearch_stage_matrix.csv",
+      "reason": "CSV table, not JSON"
+    },
+    {
+      "path": "output/data/benchmark_scores.json",
+      "reason": "benchmark task table"
+    },
+    {
+      "path": "output/data/idea_ledger.json",
+      "reason": "idea and candidate table"
+    },
+    {
+      "path": "output/data/manuscript_figure_blocks.json",
+      "reason": "token-to-Markdown figure block table"
+    },
+    {
+      "path": "output/data/manuscript_variables.json",
+      "reason": "token-to-value table"
+    },
+    {
+      "path": "output/data/ml_candidate_ledger.json",
+      "reason": "candidate ledger table"
+    },
+    {
+      "path": "output/data/ml_confusion_matrix.csv",
+      "reason": "CSV table, not JSON"
+    },
+    {
+      "path": "output/data/ml_error_examples.json",
+      "reason": "error-example row table"
+    },
+    {
+      "path": "output/data/ml_task_results.json",
+      "reason": "ML task result payload serialized from the public result model"
+    },
+    {
+      "path": "output/data/ml_training_history.csv",
+      "reason": "CSV table, not JSON"
+    },
+    {
+      "path": "output/data/mnist_task_config.json",
+      "reason": "task configuration snapshot"
+    },
+    {
+      "path": "output/data/research_program.json",
+      "reason": "human-authored program snapshot"
+    },
+    {
+      "path": "output/data/run_ledger.json",
+      "reason": "run budget ledger table"
+    },
+    {
+      "path": "output/figures/figure_registry.json",
+      "reason": "figure-label keyed registry"
+    },
+    {
+      "path": "output/reports/artifact_manifest.json",
+      "reason": "pipeline artifact manifest table"
+    },
+    {
+      "path": "output/reports/autoresearch_loop.json",
+      "reason": "project loop payload serialized from the public result model"
+    },
+    {
+      "path": "output/reports/autoresearch_readiness.json",
+      "reason": "infrastructure readiness report payload"
+    },
+    {
+      "path": "output/reports/benchmark_readiness_smoke.json",
+      "reason": "benchmark grading row"
+    },
+    {
+      "path": "output/reports/ml_benchmark_score.json",
+      "reason": "benchmark grading row"
+    }
+  ],
+  "missing_schema_artifacts": [],
+  "nonconforming_schema_artifacts": [],
+  "schema": "template-autoresearch-schema-manifest-v1",
+  "schema_artifacts": [
+    {
+      "path": "output/data/autoresearch_integrity_attestation.json",
+      "schema": "template-autoresearch-integrity-attestation-v1"
+    },
+    {
+      "path": "output/data/autoresearch_inventory_export.json",
+      "schema": "template-autoresearch-local-inventory-export-v1"
+    },
+    {
+      "path": "output/data/autoresearch_phase_ledger.json",
+      "schema": "template-autoresearch-phase-ledger-v1"
+    },
+    {
+      "path": "output/data/autoresearch_review_packet.json",
+      "schema": "template-autoresearch-review-packet-v1"
+    },
+    {
+      "path": "output/data/autoresearch_schema_manifest.json",
+      "schema": "template-autoresearch-schema-manifest-v1"
+    },
+    {
+      "path": "output/data/autoresearch_security_profile.json",
+      "schema": "template-autoresearch-security-profile-v1"
+    },
+    {
+      "path": "output/data/autoresearch_supply_chain_inventory.json",
+      "schema": "template-autoresearch-supply-chain-inventory-v1"
+    },
+    {
+      "path": "output/data/autoresearch_threat_model.json",
+      "schema": "template-autoresearch-threat-model-v1"
+    },
+    {
+      "path": "output/data/figure_quality_report.json",
+      "schema": "template-autoresearch-figure-quality-report-v1"
+    },
+    {
+      "path": "output/data/figure_style.json",
+      "schema": "template-autoresearch-figure-style-v1"
+    },
+    {
+      "path": "output/data/manuscript_variable_provenance.json",
+      "schema": "template-autoresearch-manuscript-provenance-v1"
+    },
+    {
+      "path": "output/data/ml_bootstrap_intervals.json",
+      "schema": "template-autoresearch-bootstrap-intervals-v1"
+    },
+    {
+      "path": "output/data/ml_calibration_bin_intervals.json",
+      "schema": "template-autoresearch-calibration-bin-intervals-v1"
+    },
+    {
+      "path": "output/data/ml_calibration_report.json",
+      "schema": "template-autoresearch-calibration-report-v1"
+    },
+    {
+      "path": "output/data/ml_candidate_intervals.json",
+      "schema": "template-autoresearch-candidate-intervals-v1"
+    },
+    {
+      "path": "output/data/ml_candidate_rank_stability.json",
+      "schema": "template-autoresearch-candidate-rank-stability-v1"
+    },
+    {
+      "path": "output/data/ml_candidate_selection_audit.json",
+      "schema": "template-autoresearch-candidate-selection-audit-v1"
+    },
+    {
+      "path": "output/data/ml_class_balance.json",
+      "schema": "template-autoresearch-class-balance-v1"
+    },
+    {
+      "path": "output/data/ml_classification_diagnostics.json",
+      "schema": "template-autoresearch-classification-diagnostics-v1"
+    },
+    {
+      "path": "output/data/ml_diagnostic_boundary.json",
+      "schema": "template-autoresearch-diagnostic-boundary-v1"
+    },
+    {
+      "path": "output/data/ml_paired_comparison.json",
+      "schema": "template-autoresearch-paired-comparison-v1"
+    },
+    {
+      "path": "output/data/ml_prediction_records.json",
+      "schema": "template-autoresearch-prediction-records-v1"
+    },
+    {
+      "path": "output/data/ml_probability_diagnostics.json",
+      "schema": "template-autoresearch-probability-diagnostics-v1"
+    },
+    {
+      "path": "output/data/ml_robustness_report.json",
+      "schema": "template-autoresearch-robustness-report-v1"
+    },
+    {
+      "path": "output/data/ml_statistical_summary.json",
+      "schema": "template-autoresearch-statistical-summary-v1"
+    },
+    {
+      "path": "output/data/ml_training_diagnostics.json",
+      "schema": "template-autoresearch-training-diagnostics-v1"
+    },
+    {
+      "path": "output/data/research_object_manifest.json",
+      "schema": "template-autoresearch-research-object-manifest-v1"
+    },
+    {
+      "path": "output/data/review_decisions.json",
+      "schema": "template-autoresearch-review-decisions-v1"
+    },
+    {
+      "path": "output/reports/evidence_registry.json",
+      "schema": "template-evidence-registry-report-v1"
+    }
+  ],
+  "valid": true
+}

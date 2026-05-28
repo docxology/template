@@ -243,6 +243,18 @@ class TestGenerateTitlePagePreamble:
         result = generate_title_page_preamble(tmp_path)
         assert "\\title{My Research}" in result
 
+    def test_subtitle_not_embedded_in_title_command(self, tmp_path):
+        """Subtitle renders on the title page body, not inside \\title{} metadata."""
+        self._write_config(
+            tmp_path,
+            {"paper": {"title": "Main Title", "subtitle": "A Subtitle"}},
+        )
+        preamble = generate_title_page_preamble(tmp_path)
+        body = generate_title_page_body(tmp_path)
+        assert r"\title{Main Title}" in preamble
+        assert r"\\normalsize" not in preamble
+        assert r"{\large A Subtitle" in body
+
     def test_includes_author_command(self, tmp_path):
         """\\author{} appears when authors defined."""
         self._write_config(

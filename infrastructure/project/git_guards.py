@@ -8,12 +8,13 @@ import subprocess
 from pathlib import Path
 
 ALLOWED_PROJECT_DIRS: tuple[str, ...] = (
-    "projects/template_active_inference/",
-    "projects/template_autoresearch_project/",
-    "projects/template_code_project/",
-    "projects/template_prose_project/",
-    "projects/template_template/",
+    "projects/templates/template_active_inference/",
+    "projects/templates/template_autoresearch_project/",
+    "projects/templates/template_code_project/",
+    "projects/templates/template_prose_project/",
+    "projects/templates/template_template/",
 )
+# Repo-level navigation docs may live directly under projects/ (projects/*.md).
 ALLOWED_PROJECTS_TOPLEVEL = re.compile(r"^projects/[^/]+\.md$")
 
 GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
@@ -40,11 +41,11 @@ ALLOWED_TRACKED_OUTPUT_PREFIXES: tuple[str, ...] = (
     # other project's output (confidential/rotating) stays ignored and is NEVER
     # listed here. Only repo-level output/<name>/ is allowed; project-local
     # projects/<name>/output/ remains a disposable working tree.
-    "output/template_active_inference/",
-    "output/template_autoresearch_project/",
-    "output/template_code_project/",
-    "output/template_prose_project/",
-    "output/template_template/",
+    "output/templates/template_active_inference/",
+    "output/templates/template_autoresearch_project/",
+    "output/templates/template_code_project/",
+    "output/templates/template_prose_project/",
+    "output/templates/template_template/",
 )
 
 

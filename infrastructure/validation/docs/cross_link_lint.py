@@ -23,38 +23,64 @@ from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, ite
 logger = get_logger(__name__)
 
 # Project dirs that are tracked in this PUBLIC repo. Everything else under
-# projects/ — plus all of projects_archive/ and projects_in_progress/ — is
-# intentionally absent from a clean checkout (confidential / rotating WIP,
-# enforced by .gitignore + scripts/check_tracked_projects.py). Docs may
-# legitimately reference those as "optional / restore-when-needed", so a link
-# into one of those areas is "absent by design", NOT a broken link.
+# projects/ — including the non-rendered typed subfolders (working/published/
+# archive/other) holding confidential / rotating WIP — is intentionally absent
+# from a clean checkout (enforced by .gitignore + scripts/check_tracked_projects.py).
+# Docs may legitimately reference those as "optional / restore-when-needed", so a
+# link into one of those areas is "absent by design", NOT a broken link.
 _TRACKED_PROJECT_DIRS = frozenset(PUBLIC_PROJECT_NAMES)
+
+#: Typed subfolders whose contents are deliberately absent from a clean checkout.
+_ABSENT_TYPED_SUBDIRS: frozenset[str] = frozenset({"working", "published", "archive", "other"})
+#: All typed subfolders that sit between ``projects/`` and a project dir.
+_TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset({"active", "working", "published", "archive", "other", "templates"})
+
+
+def _qualified_project_segments(parts: tuple[str, ...]) -> tuple[str, int] | None:
+    """Return ``(qualified_name, name_end_index)`` for a path under ``projects/``.
+
+    Collapses an optional typed-subfolder prefix into the qualified name, so
+    ``projects/templates/template_code_project/output`` yields
+    (``"templates/template_code_project"``, index-just-past-the-name).
+    """
+    if "projects" not in parts:
+        return None
+    i = parts.index("projects")
+    if i + 1 >= len(parts):
+        return None
+    first = parts[i + 1]
+    if first in _TYPED_PROJECT_SUBDIRS:
+        if i + 2 >= len(parts):
+            return None
+        return f"{first}/{parts[i + 2]}", i + 3
+    return first, i + 2
 
 
 def _is_intentionally_absent_project(md_file: Path, decoded: str) -> bool:
     """True when *decoded* points into a deliberately-untracked project area."""
     parts = Path(os.path.normpath(str(md_file.parent / decoded))).parts
-    if "projects_archive" in parts or "projects_in_progress" in parts:
+    if "projects" not in parts:
+        return False
+    i = parts.index("projects")
+    if i + 1 < len(parts) and parts[i + 1] in _ABSENT_TYPED_SUBDIRS:
         return True
-    if "projects" in parts:
-        i = parts.index("projects")
-        if i + 1 < len(parts):
-            name = parts[i + 1]
-            if name not in _TRACKED_PROJECT_DIRS and not name.endswith(".md"):
-                return True
+    resolved = _qualified_project_segments(parts)
+    if resolved is not None:
+        qualified, _ = resolved
+        leaf = qualified.split("/")[-1]
+        if qualified not in _TRACKED_PROJECT_DIRS and not leaf.endswith(".md"):
+            return True
     return False
 
 
 def _is_generated_project_output(md_file: Path, decoded: str) -> bool:
     """True when *decoded* points under a public project's generated output."""
     parts = Path(os.path.normpath(str(md_file.parent / decoded))).parts
-    if "projects" not in parts:
+    resolved = _qualified_project_segments(parts)
+    if resolved is None:
         return False
-    i = parts.index("projects")
-    if i + 2 >= len(parts):
-        return False
-    project_name = parts[i + 1]
-    return project_name in _TRACKED_PROJECT_DIRS and parts[i + 2] == "output"
+    qualified, name_end = resolved
+    return qualified in _TRACKED_PROJECT_DIRS and name_end < len(parts) and parts[name_end] == "output"
 
 
 _DEFAULT_EXCLUDE_PARTS = DEFAULT_EXCLUDE_PARTS
@@ -195,10 +221,10 @@ def find_broken_links(
                 # Allow inline `<!-- noqa: docs-lint -->` on the source line.
                 if 0 < line <= len(raw_lines) and _NOQA_RE.search(raw_lines[line - 1]):
                     continue
-                # A link into a deliberately-untracked project area
-                # (projects_archive/, projects_in_progress/, non-template
-                # projects/) is absent BY DESIGN in a public/confidential
-                # checkout — not a broken link.
+                # A link into a deliberately-untracked project area (the
+                # non-rendered typed subfolders projects/working|published|
+                # archive|other/, or any non-exemplar projects/ name) is absent
+                # BY DESIGN in a public/confidential checkout — not a broken link.
                 _base = unquote(target.split("#", 1)[0].split("?", 1)[0])
                 if _base and _is_intentionally_absent_project(md, _base):
                     continue

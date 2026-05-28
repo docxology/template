@@ -6,7 +6,7 @@
 
 This directory is **intentionally empty** at the moment. Per-project
 plans live under `projects/{name}/docs/` (active) or
-`projects_archive/{name}/docs/` (historical). Repo-wide audit snapshots
+`projects/archive/{name}/docs/` (historical). Repo-wide audit snapshots
 live under [`../audit/archived/`](../audit/archived/) with
 `-YYYY-MM-DD.md` date suffixes.
 
@@ -20,7 +20,7 @@ hardening pass, so this hub holds only repo-wide plans.
   header. Project-specific plans belong under `projects/{name}/docs/`,
   not this directory.
 - **Looking for completed plans?** — Check `projects/{name}/docs/` or
-  the project archive at `projects_archive/{name}/`.
+  the project archive at `projects/archive/{name}/`.
 
 ## See Also
 

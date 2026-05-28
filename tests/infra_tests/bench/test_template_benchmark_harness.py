@@ -148,8 +148,8 @@ def test_rubric_weighted_scoring_and_markdown_output(tmp_path: Path) -> None:
 
 def test_write_default_manifest_uses_canonical_projects_and_profile_rubric(tmp_path: Path) -> None:
     repo_root = tmp_path
-    code_project = repo_root / "projects" / "template_code_project"
-    prose_project = repo_root / "projects" / "template_prose_project"
+    code_project = repo_root / "projects" / "templates" / "template_code_project"
+    prose_project = repo_root / "projects" / "templates" / "template_prose_project"
     rotating_project = repo_root / "projects" / "rotating_private"
     code_project.mkdir(parents=True)
     prose_project.mkdir(parents=True)
@@ -171,7 +171,7 @@ benchmark_rubric:
     manifest = write_default_manifest(repo_root=repo_root, output_path=manifest_path)
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
 
-    assert manifest.projects == ("template_code_project", "template_prose_project")
+    assert manifest.projects == ("templates/template_code_project", "templates/template_prose_project")
     assert "rotating_private" not in payload["projects"]
     assert manifest.rubric is not None
     assert manifest.rubric.name == "code-rubric"

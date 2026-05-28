@@ -6,7 +6,7 @@ Technical guide for `docs/plans/` — repo-wide planning documents and phased co
 
 ## Current status
 
-This directory is **intentionally empty**. Per-project plans live under `projects/{name}/docs/` (active) or `projects_archive/{name}/docs/` (historical). Repo-wide audit snapshots live under [`../audit/archived/`](../audit/archived/) with `-YYYY-MM-DD.md` suffixes.
+This directory is **intentionally empty**. Per-project plans live under `projects/{name}/docs/` (active) or `projects/archive/{name}/docs/` (historical). Repo-wide audit snapshots live under [`../audit/archived/`](../audit/archived/) with `-YYYY-MM-DD.md` suffixes.
 
 A project-specific review that previously lived here was relocated to its own (private) project repository during the May 2026 hardening pass; repo-wide audit snapshots remain under [`../audit/archived/`](../audit/archived/).
 

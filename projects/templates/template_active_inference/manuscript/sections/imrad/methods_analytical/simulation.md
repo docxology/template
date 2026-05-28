@@ -1,0 +1,1 @@
+The analytical track writes a parameter sweep comparing closed-form and empirical mutual information across $\lambda \in [0, {{lambda_max}}]$ on {{param_sweep_grid_points}} grid points ([@sec:results_mi_sweep], [@fig:ising_mi_curve]).

@@ -202,7 +202,8 @@ def _maybe_sync_links(repo_root: Path) -> None:
     """Best-effort: sync private lifecycle project symlinks.
 
     Runs on every CLI invocation so ``run.sh`` renders active projects as native
-    and keeps passive/archive projects visible in non-rendered mirrors.
+    and keeps working/published/archive/other projects visible in non-rendered
+    mirrors.
     Deliberately non-fatal: a missing/unreadable private repo must never break
     the pipeline, so failures print a visible warning (not silently swallowed)
     and the CLI continues. Disable with ``$TEMPLATE_SKIP_LINK_SYNC`` or when no

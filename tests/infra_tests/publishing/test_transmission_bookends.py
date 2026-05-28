@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from infrastructure.publishing.transmission_barcode_strip import STRIP_FILENAME
+from infrastructure.publishing.transmission_barcode_strip import MIN_STRIP_HEIGHT, MIN_STRIP_WIDTH, STRIP_FILENAME
 from infrastructure.publishing.transmission_bookends import (
     BEGIN_FILENAME,
     END_FILENAME,
@@ -81,9 +81,9 @@ class TestTransmissionBookends:
         assert "width=0.35" not in markdown
         assert "width=0.98}" not in markdown
         assert r"\subsubsection*{Release metadata}" in markdown
-        assert r"\subsubsection*{Transmission manifest}" in markdown
+        assert r"\subsubsection*{How to verify}" in markdown
         assert "### Release metadata" not in markdown
-        assert "### Transmission manifest" not in markdown
+        assert "### How to verify" not in markdown
 
     def test_published_context_from_ledger(self, tmp_path: Path) -> None:
         project_root = tmp_path / "demo"
@@ -165,8 +165,9 @@ class TestTransmissionBookends:
         from PIL import Image
 
         with Image.open(strip_path) as image:
-            assert image.width > 400
-            assert image.height > 100
+            assert image.width >= MIN_STRIP_WIDTH
+            assert image.height >= MIN_STRIP_HEIGHT
+            assert strip_path.stat().st_size > 5000
         begin_markdown = render_transmission_markdown(context, boundary="begin")
         assert "Integrity QR strip" in begin_markdown
         assert STRIP_FILENAME in begin_markdown
@@ -182,4 +183,5 @@ class TestTransmissionBookends:
         assert payload["title"] == "Transmission Demo"
         assert payload["published"] is False
         begin_markdown = render_transmission_markdown(context, boundary="begin")
-        assert "Transmission manifest" in begin_markdown
+        assert "How to verify" in begin_markdown
+        assert STRIP_FILENAME in begin_markdown

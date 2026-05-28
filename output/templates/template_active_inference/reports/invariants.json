@@ -1,0 +1,19 @@
+{
+  "invariants": {
+    "ising_mi_at_zero": true,
+    "ising_mi_saturates": true,
+    "empirical_matches_closed_form": true,
+    "decomposition_identity": true,
+    "joint_is_pmf": true,
+    "mean_field_at_lambda_zero": true
+  },
+  "all_pass": true,
+  "simulation": {
+    "belief_entropy_finite": true,
+    "actions_length_matches_steps": true,
+    "observations_in_obs_space": true,
+    "policy_len_matches_config": true,
+    "goal_reached": true,
+    "trace_step_count_matches_summary": true
+  }
+}

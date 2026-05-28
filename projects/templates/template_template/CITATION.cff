@@ -1,0 +1,20 @@
+authors:
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
+cff-version: 1.2.0
+date-released: '2026-05-27'
+doi: 10.5281/zenodo.20419007
+keywords:
+- reproducible research
+- infrastructure-as-code
+- thin orchestrator
+- two-layer architecture
+- publication integrity
+license: Apache-2.0
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template_template
+title: 'A template/ approach to Reproducible Generative Research'
+type: software
+version: '1.0.6'

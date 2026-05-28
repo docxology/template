@@ -23,6 +23,8 @@ from types import SimpleNamespace
 
 import pytest
 
+from tests._support.projects import make_project, write_doc
+
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
@@ -45,29 +47,25 @@ def drift_module():
         check_no_blanket_except_in_src=checks.check_no_blanket_except_in_src,
         check_mocks_absent_from_tests=checks.check_mocks_absent_from_tests,
         check_required_files_exist=checks.check_required_files_exist,
+        check_publication_metadata_consistency=checks.check_publication_metadata_consistency,
         check_project=lambda project, report: checks.check_project(REPO_ROOT, project, report),
     )
 
 
 def _scaffold_minimal_project(tmp_path: Path, name: str = "fake_project") -> Path:
     """Write the minimum file set every detector expects to find."""
-    root = tmp_path / "projects" / name
-    (root / "src").mkdir(parents=True)
-    (root / "tests").mkdir()
+    root = make_project(tmp_path, name, with_manuscript=True)
     (root / "docs").mkdir()
-    (root / "manuscript").mkdir()
-
-    (root / "README.md").write_text("# Fake\n", encoding="utf-8")
-    (root / "AGENTS.md").write_text("# Fake AGENTS\n", encoding="utf-8")
-    (root / "pyproject.toml").write_text("[tool.coverage.report]\nfail_under = 90\n", encoding="utf-8")
-    (root / ".gitignore").write_text("output/\n", encoding="utf-8")
-    (root / "src" / "__init__.py").write_text('"""Pkg."""\n\n__all__ = ["a", "b"]\n', encoding="utf-8")
-    (root / "tests" / "__init__.py").write_text("", encoding="utf-8")
-    (root / "tests" / "conftest.py").write_text("", encoding="utf-8")
-    (root / "manuscript" / "config.yaml").write_text("{}\n", encoding="utf-8")
-    (root / "manuscript" / "references.bib").write_text("", encoding="utf-8")
-    (root / "manuscript" / "preamble.md").write_text("", encoding="utf-8")
-    (root / "docs" / "AGENTS.md").write_text("# Docs\n", encoding="utf-8")
+    write_doc(root / "README.md", "# Fake\n")
+    write_doc(root / "AGENTS.md", "# Fake AGENTS\n")
+    write_doc(root / "pyproject.toml", "[tool.coverage.report]\nfail_under = 90\n")
+    write_doc(root / ".gitignore", "output/\n")
+    write_doc(root / "src" / "__init__.py", '"""Pkg."""\n\n__all__ = ["a", "b"]\n')
+    write_doc(root / "tests" / "conftest.py", "")
+    write_doc(root / "manuscript" / "config.yaml", "{}\n")
+    write_doc(root / "manuscript" / "references.bib", "")
+    write_doc(root / "manuscript" / "preamble.md", "")
+    write_doc(root / "docs" / "AGENTS.md", "# Docs\n")
     return root
 
 
@@ -289,6 +287,31 @@ def test_required_files_exist_flags_missing_pyproject(drift_module, tmp_path):
     rep = drift_module.Report()
     drift_module.check_required_files_exist(root, rep, "fake_project")
     assert any(f.severity == "ERROR" and f.rule == "missing_canonical_file" for f in rep.findings)
+
+
+def test_publication_metadata_flags_doi_collision(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper:\n  version: '1.0'\npublication:\n"
+        "  doi: '10.5281/zenodo.11111'\n"
+        "  version_doi: '10.5281/zenodo.11111'\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_publication_metadata_consistency(root, rep, "fake_project")
+    assert any(f.rule == "publication_split_doi_collision" for f in rep.findings)
+
+
+def test_publication_metadata_flags_cff_version_drift(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper:\n  version: '2.0'\npublication:\n  doi: '10.5281/zenodo.11111'\n",
+        encoding="utf-8",
+    )
+    (root / "CITATION.cff").write_text("version: '1.0'\ndoi: 10.5281/zenodo.11111\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_publication_metadata_consistency(root, rep, "fake_project")
+    assert any(f.rule == "publication_cff_version_drift" for f in rep.findings)
 
 
 def test_end_to_end_run_on_live_exemplars_is_clean(drift_module):

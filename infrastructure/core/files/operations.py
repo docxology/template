@@ -152,7 +152,7 @@ def copy_final_deliverables(
         project_name: Name of project in projects/ directory (default: "project")
         project_dir: Resolved project directory. When provided, this overrides
             ``project_root / "projects" / project_name`` so WIP projects under
-            ``projects_in_progress/`` can be copied without creating an
+            ``projects/working/`` can be copied without creating an
             output-only shadow under ``projects/``.
 
     Returns:

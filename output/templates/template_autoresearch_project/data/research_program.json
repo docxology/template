@@ -1,0 +1,16 @@
+{
+  "autonomy_level": "proposal_only",
+  "budget_policy": {
+    "max_cost_usd": 0.0,
+    "max_iterations": 4,
+    "max_llm_calls": 0,
+    "max_wall_clock_minutes": 20
+  },
+  "edit_allowlist": [
+    "projects/template_autoresearch_project/mnist_task.yaml",
+    "projects/template_autoresearch_project/src/",
+    "projects/template_autoresearch_project/manuscript/"
+  ],
+  "path": "program.md",
+  "summary": "This human-authored research program constrains the exemplar to a bounded, proposal-only AutoResearch loop over a small fixed-seed MNIST digit classification task. The loop may propose a finite set of neural-network configurations, evaluate softmax, MLP, and tiny patch-attention candidates against a nearest-centroid baseline, keep the best result by a declared metric, and write ledgers, review packets, benchmark status, and evidence-linked claims. It does not execute generated code or approve its own manuscript claims."
+}

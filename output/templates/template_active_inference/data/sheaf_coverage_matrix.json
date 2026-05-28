@@ -1,0 +1,1296 @@
+{
+  "tracks": [
+    "prose",
+    "formalism",
+    "simulation",
+    "layers",
+    "pymdp",
+    "visualization",
+    "lean",
+    "gnn",
+    "ontology",
+    "animation"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "Introduction",
+      "kind": "group",
+      "imrad": "introduction",
+      "depth": 0,
+      "compose": false,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "intro_motivation",
+      "title": "Motivation and scope",
+      "kind": "section",
+      "imrad": "introduction",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/intro_motivation/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "intro_contributions",
+      "title": "Contributions",
+      "kind": "section",
+      "imrad": "introduction",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/intro_contributions/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": true,
+          "path": "manuscript/sections/imrad/intro_contributions/visualization.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": true,
+          "path": "manuscript/sections/imrad/intro_contributions/ontology.yaml",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "methods",
+      "title": "Methods",
+      "kind": "group",
+      "imrad": "methods",
+      "depth": 0,
+      "compose": false,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "methods_analytical",
+      "title": "Bernoulli\u2013Ising analytical model",
+      "kind": "section",
+      "imrad": "methods",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_analytical/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_analytical/formalism.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "simulation",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_analytical/simulation.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_analytical/visualization.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_analytical/gnn.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "ontology",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_analytical/ontology.yaml",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "methods_pymdp",
+      "title": "pymdp simulation harness",
+      "kind": "section",
+      "imrad": "methods",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_pymdp/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_pymdp/formalism.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_pymdp/pymdp.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "visualization",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_pymdp/visualization.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_pymdp/gnn.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "ontology",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_pymdp/ontology.yaml",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "methods_lean",
+      "title": "Lean formalization boundary",
+      "kind": "section",
+      "imrad": "methods",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_lean/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_lean/visualization.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "lean",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_lean/lean.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "methods_sheaf",
+      "title": "Sheaf composition",
+      "kind": "section",
+      "imrad": "methods",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/formalism.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/layers.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/visualization.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "results",
+      "title": "Results",
+      "kind": "group",
+      "imrad": "results",
+      "depth": 0,
+      "compose": false,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "results_mi_sweep",
+      "title": "Mutual-information parameter sweep",
+      "kind": "section",
+      "imrad": "results",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_mi_sweep/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_mi_sweep/formalism.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "simulation",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_mi_sweep/simulation.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_mi_sweep/visualization.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "results_free_energy",
+      "title": "Free-energy decomposition",
+      "kind": "section",
+      "imrad": "results",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_free_energy/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_free_energy/visualization.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "results_si_tmaze",
+      "title": "T-maze sophisticated inference",
+      "kind": "section",
+      "imrad": "results",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_si_tmaze/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_si_tmaze/pymdp.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "visualization",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_si_tmaze/visualization.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "results_invariants",
+      "title": "Validation invariants",
+      "kind": "section",
+      "imrad": "results",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_invariants/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_invariants/simulation.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_invariants/visualization.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "discussion",
+      "title": "Discussion",
+      "kind": "group",
+      "imrad": "discussion",
+      "depth": 0,
+      "compose": false,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "discussion_outlook",
+      "title": "Limitations and outlook",
+      "kind": "section",
+      "imrad": "discussion",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/discussion_outlook/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": true,
+          "path": "manuscript/sections/imrad/discussion_outlook/simulation.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": true,
+          "path": "manuscript/sections/imrad/discussion_outlook/ontology.yaml",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "appendix_full_sheaf",
+      "title": "Appendix: full track coverage",
+      "kind": "section",
+      "imrad": "appendix",
+      "depth": 1,
+      "compose": true,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/prose.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "formalism",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/formalism.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "simulation",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/simulation.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/pymdp.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "visualization",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/visualization.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "lean",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/lean.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "gnn",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/gnn.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "ontology",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/ontology.yaml",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "animation",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/animation.md",
+          "status": "present",
+          "color": "black"
+        }
+      ]
+    }
+  ]
+}

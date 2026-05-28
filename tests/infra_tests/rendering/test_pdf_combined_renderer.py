@@ -569,12 +569,14 @@ class TestInjectLatexPreamble:
         )
         result = inject_latex_preamble(tex, manuscript_dir, skip_title_page=True)
         begin_idx = result.find("\\section{BEGINNING OF TRANSMISSION}")
+        title_idx = result.find("\\maketitle")
         toc_idx = result.find("\\tableofcontents")
         abstract_idx = result.find("\\section{Abstract}")
         assert begin_idx >= 0
+        assert title_idx > begin_idx
         assert toc_idx > begin_idx
+        assert toc_idx > title_idx
         assert abstract_idx > toc_idx
-        assert "\\maketitle" not in result
 
 
 class TestPrevalidateSourceMarkdown:

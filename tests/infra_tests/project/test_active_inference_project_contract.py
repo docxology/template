@@ -16,15 +16,15 @@ def _repo_root() -> Path:
 
 
 def _project_root() -> Path:
-    return _repo_root() / "projects" / "template_active_inference"
+    return _repo_root() / "projects" / "templates" / "template_active_inference"
 
 
 def test_template_active_inference_is_public_and_discoverable() -> None:
     repo_root = _repo_root()
     names = {p.qualified_name for p in discover_projects(repo_root)}
-    assert "template_active_inference" in names
-    assert "template_active_inference" in public_project_names(repo_root)
-    assert "projects/template_active_inference/" in ALLOWED_PROJECT_DIRS
+    assert "templates/template_active_inference" in names
+    assert "templates/template_active_inference" in public_project_names(repo_root)
+    assert "projects/templates/template_active_inference/" in ALLOWED_PROJECT_DIRS
 
 
 def test_required_project_layout() -> None:
@@ -155,4 +155,4 @@ def test_z_generate_writes_resolved_manuscript_without_tokens() -> None:
     assert resolved_dir.is_dir()
     abstract = (resolved_dir / "00_abstract.md").read_text(encoding="utf-8")
     assert "{{" not in abstract
-    assert "pipeline tracks" in abstract.lower()
+    assert "fragment tracks" in abstract.lower()

@@ -83,7 +83,7 @@ from pathlib import Path
 
 # Generate a structured review of a manuscript
 result, metrics = generate_review_with_metrics(
-    manuscript_path=Path("projects/template_code_project/output/manuscript/"),
+    manuscript_path=Path("projects/templates/template_code_project/output/manuscript/"),
     review_type="quality_review",
 )
 print(result)

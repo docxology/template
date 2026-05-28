@@ -112,7 +112,7 @@ def iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]:
             except ValueError:
                 rel_path = p
             # Skip vendored / tool-managed skill trees (.venv, site-packages,
-            # .claude, .agents, projects_archive, …) so discovery only sees
+            # .claude, .agents, projects/archive, …) so discovery only sees
             # first-party repo skills — same scope convention as doc scanning.
             if should_exclude_path(rel_path, DEFAULT_EXCLUDE_PARTS):
                 continue

@@ -161,7 +161,7 @@ Glossary generation simplified:
 ```bash
 # Run glossary generation (example: template_code_project)
 uv run python infrastructure/documentation/generate_glossary_cli.py \
-  projects/template_code_project/src/ projects/template_code_project/manuscript/98_symbols_glossary.md
+  projects/templates/template_code_project/src/ projects/templates/template_code_project/manuscript/98_symbols_glossary.md
 ```
 
 **Effect:** Generates glossary directly in `manuscript/98_symbols_glossary.md` - no intermediate files or copy steps needed.

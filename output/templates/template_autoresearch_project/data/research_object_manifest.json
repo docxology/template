@@ -1,0 +1,626 @@
+{
+  "approval_state": {
+    "decision_source": "human_review.yaml",
+    "decision_source_exists": true,
+    "publication_approved": false
+  },
+  "artifact_count": 81,
+  "artifacts": [
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_claims.json",
+      "sha256": "471b9b4711e81f5092ee5cbbeb709e2f83ef6e88759d5d786c5f3024fe8b5665",
+      "size_bytes": 1766
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_integrity_attestation.json",
+      "sha256": "2f1837fa66f9cc46dcbec2c63afab9c5527dc8a76ed13cddeb2044b31ad1abe4",
+      "size_bytes": 21905
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_inventory_export.json",
+      "sha256": "847641d3c535ccfb8b91f2ca41b62f91a2fd1078051da00f02637668be895241",
+      "size_bytes": 19464
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_loop.json",
+      "sha256": "300c50ac3b8ddf0a27ec4216c94e98d86bc34a34801eff9bbf003eb38047588f",
+      "size_bytes": 15901
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_phase_ledger.json",
+      "sha256": "bdd6888c0a1d1cae52b90454b3b6daee9782c5de08d8f4bdab3cce0239c851d6",
+      "size_bytes": 3779
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_plan.json",
+      "sha256": "9aa9522ec10a349ede02409250d002cccad04fe64f2814b1208cfd805723a08c",
+      "size_bytes": 17222
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_review_packet.json",
+      "sha256": "509c8260d7b77ae990b0516059eec642499370ec0afda68d82ac5d447b2f70a1",
+      "size_bytes": 16020
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_schema_manifest.json",
+      "sha256": "1f20258f01233db38b5a4d42da5bacf56634735f581fb02baaf6188a83d004c5",
+      "size_bytes": 6959
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_security_profile.json",
+      "sha256": "a91a8c352cdb2fe96c421132e6bdea3284a8db399fe1487bc3e11b347e584f87",
+      "size_bytes": 1537
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_stage_matrix.csv",
+      "sha256": "fa5aeb54737a9366fc11e361aa8a533495818b133fe7ca0925cb6b39a257c043",
+      "size_bytes": 749
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_supply_chain_inventory.json",
+      "sha256": "df46eb4aed829c86586e78fd9ee1677dd8f480537c7867a2b989307afbc57961",
+      "size_bytes": 20683
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/autoresearch_threat_model.json",
+      "sha256": "a042ed1ace49e4f4a97d4f1d4c3bf8f60ab97ef4eee93f1f35a2648a8ef2c763",
+      "size_bytes": 6370
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/benchmark_scores.json",
+      "sha256": "de56f74f932f4b73ef43ecc053361eea441cf9495b7150d3ce99cb7ec58129a3",
+      "size_bytes": 621
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/figure_quality_report.json",
+      "sha256": "ab7958ffaa3015f97acec7f89771ad95e26500ce5b6a07cb3b0365f066e28385",
+      "size_bytes": 16040
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/figure_style.json",
+      "sha256": "a5e4cb96aebff04e5a8f5f48f8317c1d2708319b72ec00e21abc790bf2d87bd8",
+      "size_bytes": 1117
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/idea_ledger.json",
+      "sha256": "fd8c7dba293f9fe71c8d39ec513255086369d7d87cdf5aa96c7ec835679d15e8",
+      "size_bytes": 5113
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/manuscript_figure_blocks.json",
+      "sha256": "2c3b05b5d24821e97c2145d089b60f9c62ef94942cda945a44119a6e8bf4fd2d",
+      "size_bytes": 13062
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/manuscript_variable_provenance.json",
+      "sha256": "7e1ad3e5cb5c4312d5fd521d4b495e13a12113115488e71919bb9228d4ab02f1",
+      "size_bytes": 30625
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/manuscript_variables.json",
+      "sha256": "d75649d4a1689cfbaef35dfa866fddaffd4e2a2bd38d0adfbe980c2f8070f0b1",
+      "size_bytes": 54159
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_bootstrap_intervals.json",
+      "sha256": "c2f064d5b9fcbeacf22161e0f5d71e55d1c62336110f9056ce5d44eaa79034ca",
+      "size_bytes": 615
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_calibration_bin_intervals.json",
+      "sha256": "3c4bfd9647d4ef142a91f4b02dc0f2588e6c0d513dbd457fb1c73d0964aaa046",
+      "size_bytes": 2879
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_calibration_report.json",
+      "sha256": "66688f17c65f73a241c546a9c6088b0f9e3104d80671b257ce2b3639d001a729",
+      "size_bytes": 2201
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_candidate_intervals.json",
+      "sha256": "4a9a962e02ede0683c331008d3af6ccd1b13f5603a8bb3df356b5b7ca1829b8d",
+      "size_bytes": 1577
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_candidate_ledger.json",
+      "sha256": "c5a17805d729fe94a7541954dfd7d16534d7ff2efe74672cce86e727b5c3e836",
+      "size_bytes": 570872
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_candidate_rank_stability.json",
+      "sha256": "0ec9b7d69a77b3b34a0c260b6bf17cac4ef9a961b10f7c3c28202fd62bd3d6c2",
+      "size_bytes": 3135
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_candidate_selection_audit.json",
+      "sha256": "403b4c03b19df06aa578adced842ae730afa36983907c84ba9cb3a584422c912",
+      "size_bytes": 2145
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_class_balance.json",
+      "sha256": "f963ea4157257905e8fced1ff25c3020ad6c02a939dcf1fc14fb03e357b3908d",
+      "size_bytes": 2393
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_classification_diagnostics.json",
+      "sha256": "18c47e9219b48feb1f3fe4f968e1dc96356eb5096ee4b83741f6ab1c7078c784",
+      "size_bytes": 4246
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_confusion_matrix.csv",
+      "sha256": "1fb05684e12e2e7b822e19112b9c372aeda465cd5bed276e7bcafe7b3ac88acc",
+      "size_bytes": 271
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_diagnostic_boundary.json",
+      "sha256": "7e8a24d59f69fa81862740053cbb9a49db2b8ff604359108bc9c6ed32a723a2b",
+      "size_bytes": 2064
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_error_examples.json",
+      "sha256": "661c834edecaff3e4ee048e92732d4be452d97399353500cb3c2aef3df3a6e7b",
+      "size_bytes": 989
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_paired_comparison.json",
+      "sha256": "5b653f3b4ab801faec1f654f23a4ca0dd73348f87f344724076f8e9abe6f706a",
+      "size_bytes": 470
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_prediction_records.json",
+      "sha256": "776042f500647b929d3813dea6f7b372656c6adca3f27bdf074061eb3cf619fc",
+      "size_bytes": 989913
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_probability_diagnostics.json",
+      "sha256": "586e106d87a8acac55f4867796b724fd44e14fd9a8cea81f8869017d0b149373",
+      "size_bytes": 3045
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_robustness_report.json",
+      "sha256": "6c352cc10bf38e1b0e28589f27272192a7f73f70895ba930cb013b682541a366",
+      "size_bytes": 3758
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_statistical_summary.json",
+      "sha256": "8be7a0af61d556c49b283ee1e5c5c6d513c8e51906ed10415d63cf8e449d997b",
+      "size_bytes": 3032
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_task_results.json",
+      "sha256": "5a282269047ca90cce1176551807971eee71115025fc1f82369305d42825da7e",
+      "size_bytes": 703566
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_training_diagnostics.json",
+      "sha256": "93f0a3fa095bcfc1dcaa0bd5b1450cde4ddc6f1162ef85a2af990df11534a74b",
+      "size_bytes": 2968
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/ml_training_history.csv",
+      "sha256": "54d2600b742fd9a651da220944460d8d14d8b5cbfa79a6d3288e4f6818f5c1ad",
+      "size_bytes": 6775
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/mnist_task_config.json",
+      "sha256": "087ea62556a9315b8be8e53b12e5f569cf5116fa83e981a5e63ea69206d3ad13",
+      "size_bytes": 3926
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/research_program.json",
+      "sha256": "8fee17675e8c5e50441c3251ddc02074dabdc3cfe8a63b45bb09729a5805298b",
+      "size_bytes": 935
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/review_decisions.json",
+      "sha256": "531a83022bf70404744a47be4d7cbed566069917ded78ae78f8f34a3ae9268e3",
+      "size_bytes": 669
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/data/run_ledger.json",
+      "sha256": "617db1e431fbaa53ccd97199f28a444716f6af4e0ab00b3212724d62e6defbd9",
+      "size_bytes": 328
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/autoresearch_candidate_lifecycle.png",
+      "sha256": "354dc0441db875b66363f49aa61463bb74d97ba2c6d55c27d72efab8d6a9a3e8",
+      "size_bytes": 28053
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/autoresearch_closure_flow.png",
+      "sha256": "00c3cc768fa8a09a99a7024b852cd7b37675c04e4bfec942434d2bf2466c764c",
+      "size_bytes": 40410
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/autoresearch_integrity_chain.png",
+      "sha256": "e3ee8e56b9ce930a1156330200ec4b9b078214992e663aa1970ee4aa43a3e822",
+      "size_bytes": 46980
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/autoresearch_security_control_matrix.png",
+      "sha256": "6629296fbd39f2eac64efd1d2d406f3798459abcd38b2397fb8ea04f5d246586",
+      "size_bytes": 86574
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/autoresearch_stage_matrix.png",
+      "sha256": "dd822dda0570f6b12c6b281c6b586961751bad4ccc074443d64167e391f48d26",
+      "size_bytes": 23476
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/figure_registry.json",
+      "sha256": "92a25316845b13fdef0e67d8b12efa7075135fc1af455dc2040353f7538add31",
+      "size_bytes": 30674
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_bootstrap_intervals.png",
+      "sha256": "d3d091eebf234c989d071aa95b7ca2a4748bb1398b5249a8652c2292cb73c668",
+      "size_bytes": 21834
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_calibration_reliability.png",
+      "sha256": "e9bc3de9ed2158d485c1ad2e7353016614cb267843dff24cd420aab2f6fd6ab1",
+      "size_bytes": 73889
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_candidate_rank_stability.png",
+      "sha256": "3cd9a24d312d89820c0853ef39bee65731589d1c43025c9d91c2122b8d2ef952",
+      "size_bytes": 43692
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_candidate_scores.png",
+      "sha256": "2305c1114b3472bacadb35c5d5b906b61b0d26d0027b8572d6a6f2e8f94b58cc",
+      "size_bytes": 59953
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_classification_metrics_heatmap.png",
+      "sha256": "4c820e0a89f3be3b782887c94ddd17296690df5b44303c54633b0b2f138ce981",
+      "size_bytes": 55092
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_complexity_accuracy.png",
+      "sha256": "e23f67ede57fe940e461a2a4f084c091dbedb420ce5614f90f6c2dc22dbba2a7",
+      "size_bytes": 35135
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_confusion_matrix.png",
+      "sha256": "4336dd89e7526d5e7c533eea14f0535d7a51c88eedc0bf0b7c0127fc75e2c77b",
+      "size_bytes": 65820
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_confusion_pairs.png",
+      "sha256": "60fe19e6faa3bbd839f9e3c8d263e4afb12f54fa6d6197b74867359a7d56f843",
+      "size_bytes": 33982
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_generalization_gap.png",
+      "sha256": "32fe2408de8264302f1e33dc35702496e7b12231fb420afa4ed6dbc5d62af197",
+      "size_bytes": 48512
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_learning_curves.png",
+      "sha256": "089b17151fcadc9f774009d1d3d505a9684dbaba93d0e892ed6cefae77eeeb45",
+      "size_bytes": 59258
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_paired_correctness.png",
+      "sha256": "5150d3babec3156f603fcd6ab9d9c7e6a4fae16bde7222102f25522128f5f8f5",
+      "size_bytes": 43309
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_per_class_accuracy.png",
+      "sha256": "fa4f61e3db8bf755f00307b1233632de5973745862a889626f5d8bf265abb644",
+      "size_bytes": 34800
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_probability_margin_distribution.png",
+      "sha256": "e99d309275992555e638f012fc1de2851ddb957d82a58d09fffbfff31a487337",
+      "size_bytes": 41754
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_probability_quality.png",
+      "sha256": "72976993e66a6a09f5ef0ab2177ecc969fa370bb04695a5a5956ca9d6e56db1e",
+      "size_bytes": 38071
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_robustness_matrix.png",
+      "sha256": "4942489709a2cc818bc3eb2c20b2569cc6a20fc007f74a72c2307be863d708dd",
+      "size_bytes": 51332
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_selective_accuracy.png",
+      "sha256": "e36565ad26907a266a316a2f14a1e4ddcbc68e8474edc138d6c1c5d7a0e98f65",
+      "size_bytes": 48274
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/ml_training_dynamics.png",
+      "sha256": "48303b3ea34d5c8eea5d34e080294df3338c8dbd18bb01ab8c43b8dddfcb5082",
+      "size_bytes": 51004
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/mnist_class_balance.png",
+      "sha256": "cec99fcdfc647a462981d97e64a3ca8b9974b3c00032751108ecaadb1ca05831",
+      "size_bytes": 27059
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/mnist_error_examples.png",
+      "sha256": "904cf74239219fa74eafe4cdef5ea4b9493a809d1c124cfa1affa4da9b87fbd6",
+      "size_bytes": 28431
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/figures/mnist_subset_contact_sheet.png",
+      "sha256": "1866523ca6835151b35426e11c5bf456a5908fcebe8b8d481ecb1a008fd0a8a3",
+      "size_bytes": 23617
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "17d7218e21e432daca147b3330ad8f8ec5ef2587c1e504b80c370bf4fb0c3e04",
+      "size_bytes": 22300
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/autoresearch_loop.json",
+      "sha256": "300c50ac3b8ddf0a27ec4216c94e98d86bc34a34801eff9bbf003eb38047588f",
+      "size_bytes": 15901
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/autoresearch_loop.md",
+      "sha256": "727e6861c9005595b7b93c8e5464d9b8338440020f89b242aeb152b63780548c",
+      "size_bytes": 1982
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/autoresearch_readiness.json",
+      "sha256": "8afe23c49a459ffb20645d136c68eb6f8d705ddd10f51eff2d988205419f3041",
+      "size_bytes": 18345
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/autoresearch_readiness.md",
+      "sha256": "3e49b3096c8eb611ba58b9f87bdae985e24b7d96bafccf601e92952cc8520cc2",
+      "size_bytes": 500
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/autoresearch_review_packet.md",
+      "sha256": "f8469b3bee2826ba8084fb2ebb8451e5e891e031c3babc78260afe80e6472b2b",
+      "size_bytes": 912
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/autoresearch_security_review.md",
+      "sha256": "e2f293ed019b6c90afea6dc0648d1ce20483536961846d2ba964394c555cff31",
+      "size_bytes": 1104
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/autoresearch_summary.md",
+      "sha256": "d0d47636e27fed27f9ed7825ea040944fb5904d85626bba26ab3790b8fe182b3",
+      "size_bytes": 255
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/benchmark_readiness_smoke.json",
+      "sha256": "a3e8b2cd314a9f669ea1cd13a90e6baff1441921eac7583e7578945e39cbb7f2",
+      "size_bytes": 778
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/evidence_registry.json",
+      "sha256": "0ad167365fb42a90015c38d7087193771ae3ceddc759af4eb909aecdc0342566",
+      "size_bytes": 88889
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/ml_benchmark_score.json",
+      "sha256": "228e3d3db32e7dbf547b7c6ded6e32ba103cd2d1a3f406b71e1f6a3551a4c003",
+      "size_bytes": 382
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/reports/ml_experiment_report.md",
+      "sha256": "9f13a07f6bf2d6051722f6548305e52889a7b45c08e93536dfeb9e6506018d7e",
+      "size_bytes": 1687
+    }
+  ],
+  "claim_boundary": "Local research-object manifest for paths and checksums only; it does not claim RO-Crate, SLSA, external signing, or runtime monitoring compliance.",
+  "empty_artifact_count": 0,
+  "evidence_registry": {
+    "empty": false,
+    "exists": true,
+    "path": "output/reports/evidence_registry.json",
+    "sha256": "0ad167365fb42a90015c38d7087193771ae3ceddc759af4eb909aecdc0342566",
+    "size_bytes": 88889
+  },
+  "generated_at": "2026-05-27T23:33:29+00:00",
+  "manuscript_outputs": [
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/pdf/template_autoresearch_project_combined.pdf",
+      "sha256": "5a2e9988c32cf22445e16039baba422044ee529c5c19eba38dcef9d89f2cd5f8",
+      "size_bytes": 1330155
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/web/index.html",
+      "sha256": "f45e9ed2fc7e4103257b6d734319255ad53a8caa807da8032b8f995930a9946f",
+      "size_bytes": 132381
+    },
+    {
+      "empty": false,
+      "exists": true,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "470d61e36035d7ff26a50ce49ba91dec4128fb34127c976e206292ba49c965d3",
+      "size_bytes": 1451
+    }
+  ],
+  "project_name": "template_autoresearch_project",
+  "schema": "template-autoresearch-research-object-manifest-v1",
+  "schema_manifest": {
+    "empty": false,
+    "exists": true,
+    "path": "output/data/autoresearch_schema_manifest.json",
+    "sha256": "1f20258f01233db38b5a4d42da5bacf56634735f581fb02baaf6188a83d004c5",
+    "size_bytes": 6959
+  },
+  "source_ledger": {
+    "empty": false,
+    "exists": true,
+    "path": "manuscript/source_ledger.yaml",
+    "sha256": "9b14cbdb58118bdec9d96af20f41597addd50a9d2e7a81d80a53ef58a2792a2c",
+    "size_bytes": 4090
+  }
+}

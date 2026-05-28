@@ -5,8 +5,13 @@
 # of thousands of `.py` files otherwise). Same policy in CI (harmless no-ops
 # when those dirs are absent on a clean checkout).
 exclude_dirs:
-  - "projects_archive"
-  - "projects_in_progress"
+  # Non-rendered typed project subfolders hold private/rotating WIP — not held
+  # to the exemplar security floor. Keep in sync with
+  # infrastructure.project.discovery.NON_RENDERED_SUBDIRS.
+  - "projects/working"
+  - "projects/published"
+  - "projects/archive"
+  - "projects/other"
   - ".venv"
   - "site-packages"
   # Vendored Lean/Lake package cache (e.g. actinf_policy_entanglement_lean's
@@ -20,7 +25,7 @@ exclude_dirs:
   # (`template_active_inference` / `template_code_project` / `template_prose_project` — all clean); rotating
   # research code must not block every contributor's push/CI. Harmless no-op
   # when a name is absent on a given checkout (these rotate to the already-
-  # excluded `projects_archive/` / `projects_in_progress/`).
+  # excluded typed subfolders `projects/working/` … `projects/archive/`).
   - "projects/BeeStack"
   - "projects/cogant"
   - "projects/crescent_city"

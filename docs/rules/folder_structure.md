@@ -23,8 +23,8 @@ load-bearing for the conventions they encode:
 | `PATTERNS.md` | `tests/` | Copy-pasteable test patterns (fixtures, parametrize, error-paths) |
 | `CONVENTIONS.md` | `scripts/` | Thin-orchestrator rules + CLI / output / exit-code contracts |
 
-The code and prose exemplars (`projects/template_code_project/`,
-`projects/template_prose_project/`) ship all three at the appropriate
+The code and prose exemplars (`projects/templates/template_code_project/`,
+`projects/templates/template_prose_project/`) ship all three at the appropriate
 locations as of the May 2026 sibling-parity hardening pass; new
 projects should mirror that layout when they need the full docs/style pattern.
 

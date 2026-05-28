@@ -28,7 +28,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 
 ## Key Conventions
 
-- **`projects/` rotates:** only [`projects/template_code_project/`](../projects/template_code_project/) is guaranteed as the stable control-positive exemplar; current names → [`_generated/active_projects.md`](_generated/active_projects.md).
+- **`projects/` rotates:** only [`projects/templates/template_code_project/`](../projects/templates/template_code_project/) is guaranteed as the stable control-positive exemplar; current names → [`_generated/active_projects.md`](_generated/active_projects.md).
 - **CodeGraph is local-only:** `.codegraph/` is generated agent-navigation state; see [`guides/codegraph-local.md`](guides/codegraph-local.md) before documenting or initializing it.
 - Each sub-directory has a `README.md` (user-facing index) and `AGENTS.md` (technical guide)
 - `documentation-index.md` is the comprehensive flat index of all files
@@ -66,7 +66,7 @@ If a project in `projects/<name>/` has its own `pyproject.toml` but **no `.venv/
 
 | Scope | Notes |
 | --- | --- |
-| [`projects/template_code_project/`](../projects/template_code_project/) | Stable exemplar; often uses a local `projects/template_code_project/.venv/`. |
+| [`projects/templates/template_code_project/`](../projects/templates/template_code_project/) | Stable exemplar; often uses a local `projects/templates/template_code_project/.venv/`. |
 | Any other `projects/{name}/` | Listed in [_generated/active_projects.md](_generated/active_projects.md). If that project has **no** `.venv/`, every package in its `pyproject.toml` must also appear in the **root** `pyproject.toml`. |
 | Plotting | `matplotlib` must be in root `[project.dependencies]` (not only optional groups) when analysis needs it under the root interpreter. |
 
@@ -101,14 +101,14 @@ Projects are tracked across three sibling directories:
 | Directory | Purpose | Discovered by `./run.sh`? |
 | ---------- | ------- | ------------------------ |
 | `projects/` | **Active** projects for the current pipeline run | ✅ Yes |
-| `projects_in_progress/` | Work-in-progress projects not yet ready for rendering | ❌ No |
-| `projects_archive/` | Completed or paused projects kept for reference | ❌ No |
+| `projects/working/` | Work-in-progress projects not yet ready for rendering | ❌ No |
+| `projects/archive/` | Completed or paused projects kept for reference | ❌ No |
 
 **Movement rules:**
 
 - Only projects under `projects/` are discovered and rendered by `./run.sh`.
 - Move a project **into** `projects/` when it is ready for a full pipeline run.
-- Move a project **out** to `projects_in_progress/` or `projects_archive/` when it is not the current focus, to keep pipeline output clean and fast.
+- Move a project **out** to `projects/working/` or `projects/archive/` when it is not the current focus, to keep pipeline output clean and fast.
 - Projects in archive/in-progress directories retain their structure so they can be moved back at any time without modification.
 
 **Configuring the active directory (advanced):**
@@ -123,7 +123,7 @@ from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 config = PipelineConfig(
     project_name="my_wip_project",
     repo_root=Path("."),
-    projects_dir="projects_in_progress",  # override the default "projects"
+    projects_dir="projects/working",  # override the default "projects"
 )
 executor = PipelineExecutor(config)
 executor.execute_core_pipeline()

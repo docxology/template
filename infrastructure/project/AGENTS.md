@@ -11,7 +11,7 @@ The `infrastructure/project/` module provides project discovery, validation, and
 **Core Functions:**
 
 - `discover_projects(repo_root, projects_dir="projects")` - Find all valid projects in the active projects directory
-- `resolve_project_root(repo_root, project_name)` - Resolve `projects/<name>` if present, else `projects_in_progress/<name>` (used by PDF rendering for WIP trees)
+- `resolve_project_root(repo_root, project_name)` - Resolve a project root. A qualified `<subfolder>/<name>` path (head in `templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) resolves directly under `projects/<subfolder>/<name>`. A bare name prefers `projects/active/<name>` (if it carries project markers), then `projects/working/<name>`, then a flat standalone `projects/<name>`, falling back to `projects/active/<name>`
 - `validate_project_structure(project_dir)` - Validate required directories exist
 - `get_project_metadata(project_dir)` - Extract configuration from pyproject.toml and config.yaml (includes `[tool.template]` flags such as `skip_combined_pytest`)
 
@@ -176,31 +176,32 @@ flowchart TB
 
 ## Discovery Scope and Project Organization
 
-### Active vs Archived Projects
+### Rendered vs Non-Rendered Subfolders
 
-The infrastructure distinguishes between **active projects** and **archived projects**:
+All projects live under typed subfolders of `projects/`. The infrastructure distinguishes between **rendered subfolders** (`templates/`, `active/`) and **non-rendered subfolders** (`working/`, `published/`, `archive/`, `other/`):
 
-#### ✅ **Active Projects (`projects/`)**
-- **Scanned** by `discover_projects()` function
+#### ✅ **Rendered Subfolders (`projects/templates/`, `projects/active/`)**
+- **Scanned** by `discover_projects()` as program directories (projects get qualified names `templates/<name>`, `active/<name>`)
 - **Validated** for structure requirements
 - **Listed** in `run.sh` interactive menu
 - **Executed** by pipeline scripts
 
-#### ❌ **Archived Projects (`projects_archive/`)**
-- **NOT scanned** by `discover_projects()` function
+#### ❌ **Non-Rendered Subfolders (`projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/`)**
+- **NOT scanned** by `discover_projects()` (skipped via `NON_RENDERED_SUBDIRS`)
 - **NOT validated** by infrastructure
 - **NOT listed** in `run.sh` menu
 - **NOT executed** by pipeline scripts
-- **Preserved** for historical reference
+- **Preserved** for backburner, published, retired, or miscellaneous work
 
 ### Discovery Behavior
 
 ```python
-# discover_projects() scans the active projects directory (default: projects/)
+# discover_projects() scans projects/ and treats templates/ + active/ as program directories;
+# working/, published/, archive/, other/ are skipped (NON_RENDERED_SUBDIRS).
 projects = discover_projects(repo_root)
 
 # Advanced: scan a different directory explicitly
-wip_projects = discover_projects(repo_root, projects_dir="projects_in_progress")
+working_projects = discover_projects(repo_root, projects_dir="projects/working")
 ```
 
 ### Nested Projects (“program directories”)

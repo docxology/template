@@ -600,18 +600,16 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
         authors = config.get("authors", [])
 
         title = _latex_text(metadata["title"])
-        subtitle = _latex_text(metadata["subtitle"])
         date = metadata["date"]
         publication = config.get("publication", {}) or {}
         doi = publication.get("doi", "") if isinstance(publication, dict) else ""
 
-        # Build preamble commands (must be before \begin{document})
+        # Build preamble commands (must be before \begin{document}).
+        # Keep \title{} to the main title only so PDF metadata/bookmarks stay clean;
+        # subtitle is rendered on the title page body, not embedded in \title{}.
         preamble_lines = [
             f"\\title{{{title}}}",
         ]
-        # Add subtitle if present
-        if subtitle:
-            preamble_lines[-1] = f"\\title{{{title}\\\\\\normalsize {subtitle}}}"
 
         # Add authors with proper formatting (including email, affiliation, ORCID)
         if authors:
@@ -700,11 +698,33 @@ def generate_title_page_body(manuscript_dir: Path) -> str:
             logger.debug("Generated book-style title, publishing, and contents opening")
             return body
 
-        # Build body commands (must be after \begin{document})
-        body_lines = [
-            "\\maketitle",
-            "\\thispagestyle{empty}",
-        ]
+        metadata = _metadata_from_config(config)
+        title = _latex_text(metadata["title"])
+        subtitle = _latex_text(metadata["subtitle"])
+
+        if subtitle:
+            body_lines = [
+                r"\begin{titlepage}",
+                r"\centering",
+                r"\vspace*{2cm}",
+                r"{\LARGE\bfseries " + title + r"\par}",
+                r"\vspace{0.75em}",
+                r"{\large " + subtitle + r"\par}",
+                r"\vfill",
+                r"\makeatletter",
+                r"{\@author\par}",
+                r"\vspace{1em}",
+                r"{\@date\par}",
+                r"\makeatother",
+                r"\vfill",
+                r"\end{titlepage}",
+                r"\thispagestyle{empty}",
+            ]
+        else:
+            body_lines = [
+                "\\maketitle",
+                "\\thispagestyle{empty}",
+            ]
 
         logger.debug(f"Generated title page body with {len(body_lines)} commands")
         return "\n".join(body_lines)

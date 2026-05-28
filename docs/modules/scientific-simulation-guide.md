@@ -4,7 +4,7 @@
 
 This guide provides documentation for the scientific simulation, analysis, reporting, validation, visualization, and image management system integrated into the research template.
 
-**Repository layout:** The snippets below use **illustrative** module names (`simulation.py`, `parameters.py`, …) at a generic `src/` root. In this template, domain code lives under **`projects/{name}/src/`** (see [`projects/template_code_project/`](../../projects/template_code_project/)), thin orchestration in **`projects/{name}/scripts/`**, and reusable numerics or benchmarking helpers in **[`infrastructure/scientific/`](../../infrastructure/scientific/)** and **[`docs/modules/guides/scientific-module.md`](guides/scientific-module.md)**.
+**Repository layout:** The snippets below use **illustrative** module names (`simulation.py`, `parameters.py`, …) at a generic `src/` root. In this template, domain code lives under **`projects/{name}/src/`** (see [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/)), thin orchestration in **`projects/{name}/scripts/`**, and reusable numerics or benchmarking helpers in **[`infrastructure/scientific/`](../../infrastructure/scientific/)** and **[`docs/modules/guides/scientific-module.md`](guides/scientific-module.md)**.
 
 ## Architecture
 
@@ -318,7 +318,7 @@ integration.validate_manuscript()
 
 ## Example Scripts
 
-### Analysis pipeline (`projects/template_code_project/scripts/optimization_analysis.py`)
+### Analysis pipeline (`projects/templates/template_code_project/scripts/optimization_analysis.py`)
 
 Demonstrates the code-exemplar analysis workflow:
 1. Run convergence experiments via `src/analysis/`
@@ -327,7 +327,7 @@ Demonstrates the code-exemplar analysis workflow:
 
 **Run:**
 ```bash
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 ```
 
 ### Generic project script (`projects/{name}/scripts/<analysis>.py`)

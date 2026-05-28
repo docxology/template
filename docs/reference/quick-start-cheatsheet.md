@@ -21,13 +21,13 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ### Daily Workflow Commands
 ```bash
 # Run tests only
-uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=html
 
 # Generate figures only
 uv run python scripts/02_run_analysis.py --project template_code_project
 
 # Validate markdown
-uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
 
 # Open manuscript
 open output/template_code_project/pdf/template_code_project_combined.pdf  # Top-level output (example project)
@@ -79,10 +79,10 @@ flowchart TB
 ### Create a New Document Section
 ```bash
 # 1. Create markdown file
-vim projects/template_code_project/manuscript/07_new_section.md
+vim projects/templates/template_code_project/manuscript/07_new_section.md
 
 # 2. Add content with section label
-echo "# New Section {#sec:new_section}" > projects/template_code_project/manuscript/07_new_section.md
+echo "# New Section {#sec:new_section}" > projects/templates/template_code_project/manuscript/07_new_section.md
 
 # 3. Rebuild
 uv run python scripts/execute_pipeline.py --project {name} --core-only
@@ -91,7 +91,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ### Add a New Figure
 ```bash
 # 1. Create script in project's scripts/ directory
-vim projects/template_code_project/scripts/my_figure.py
+vim projects/templates/template_code_project/scripts/my_figure.py
 
 # 2. Import from src/ (thin orchestrator pattern)
 # from src.optimizer import gradient_descent
@@ -104,13 +104,13 @@ vim projects/template_code_project/scripts/my_figure.py
 ### Add New Source Code
 ```bash
 # 1. Create module
-vim projects/template_code_project/src/my_module.py
+vim projects/templates/template_code_project/src/my_module.py
 
 # 2. Create tests (90% minimum coverage required)
-vim projects/template_code_project/tests/test_my_module.py
+vim projects/templates/template_code_project/tests/test_my_module.py
 
 # 3. Run tests
-uv run pytest projects/template_code_project/tests/test_my_module.py --cov=projects/template_code_project/src/my_module
+uv run pytest projects/templates/template_code_project/tests/test_my_module.py --cov=projects/templates/template_code_project/src/my_module
 
 # 4. Use in scripts (thin orchestrator pattern)
 # from projects.template_code_project.src.my_module import my_function
@@ -119,7 +119,7 @@ uv run pytest projects/template_code_project/tests/test_my_module.py --cov=proje
 ### Fix Test Coverage
 ```bash
 # 1. Check coverage
-uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=term-missing
 
 # 2. Find missing lines (marked with ">>>>>")
 # 3. Add tests for uncovered code
@@ -165,8 +165,8 @@ Reference it: \ref{fig:my_figure}
 
 | Problem | Quick Fix |
 |---------|-----------|
-| **Tests fail** | `uv run pytest projects/template_code_project/tests/ -v` to see details |
-| **Coverage below gate** | `uv run pytest --cov=projects/template_code_project/src --cov-report=term-missing --cov-fail-under=90` |
+| **Tests fail** | `uv run pytest projects/templates/template_code_project/tests/ -v` to see details |
+| **Coverage below gate** | `uv run pytest --cov=projects/templates/template_code_project/src --cov-report=term-missing --cov-fail-under=90` |
 | **Import errors** | Check `PYTHONPATH` or use `uv run` |
 | **PDF fails** | Check `pandoc --version` and `xelatex --version` |
 | **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project template_code_project` first |
@@ -206,7 +206,7 @@ Reference it: \ref{fig:my_figure}
 
 ## 💡 Pro Tips
 
-1. **Always run tests first**: `uv run pytest projects/template_code_project/tests/` before building
+1. **Always run tests first**: `uv run pytest projects/templates/template_code_project/tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `projects/{name}/src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
 4. **Run pipeline**: `uv run python scripts/execute_pipeline.py --project {name} --core-only` executes all stages

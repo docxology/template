@@ -21,7 +21,7 @@ Technical guide for `docs/development/` — contribution guidelines, testing, se
 
 ## Key Conventions
 
-- **Project layout reference**: [`projects/template_code_project/`](../../projects/template_code_project/); discoverable names → [_generated/active_projects.md](../_generated/active_projects.md).
+- **Project layout reference**: [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/); discoverable names → [_generated/active_projects.md](../_generated/active_projects.md).
 - All contributions require tests (90% project, 60% infrastructure coverage)
 - No mocks — all tests use real numerical examples
 - Thin orchestrator pattern enforced for all scripts

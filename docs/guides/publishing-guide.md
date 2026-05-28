@@ -3,13 +3,13 @@
 > **From manuscript to DOI: citations, Zenodo, arXiv, and GitHub Releases**
 
 **Skill Level**: 11-12
-**Quick Reference:** [Modules Guide](../modules/modules-guide.md) | [Publishing Module](../modules/guides/publishing-module.md)
+**Quick Reference:** [Modules Guide](../modules/modules-guide.md) | [Publishing Module](../modules/guides/publishing-module.md) | [Zenodo DOI strategy](zenodo-doi-strategy.md)
 
 ---
 
 ## Setting Up Publication Metadata
 
-Configure your project's `manuscript/config.yaml`:
+Configure your project's `manuscript/config.yaml`. For the split **concept vs version DOI** layout (recommended for all releases after the first deposit), see [Zenodo DOI strategy](zenodo-doi-strategy.md).
 
 ```yaml
 paper:
@@ -28,7 +28,10 @@ authors:
     affiliation: "Other Institution"
 
 publication:
-  doi: "10.5281/zenodo.12345678"
+  doi: "10.5281/zenodo.12345678"          # concept DOI — PDF cover and CITATION.cff
+  version_doi: "10.5281/zenodo.87654321" # latest deposit (updated by publish_project_release.py)
+  version_record: "https://zenodo.org/records/87654321"
+  github_repository: "owner/repo"
   journal: "Zenodo"
   volume: "1"
   year: "2026"
@@ -58,7 +61,7 @@ from infrastructure.publishing import (
 from infrastructure.publishing.metadata_from_config import publication_metadata_from_config
 from pathlib import Path
 
-metadata = publication_metadata_from_config(Path("projects/template_code_project/manuscript/config.yaml"))
+metadata = publication_metadata_from_config(Path("projects/templates/template_code_project/manuscript/config.yaml"))
 
 # Generate citations in multiple formats
 bibtex = generate_citation_bibtex(metadata)
@@ -154,7 +157,7 @@ metadata = PublicationMetadata(
     keywords=["research"],
 )
 
-output_dir = Path("projects/template_code_project/output")
+output_dir = Path("projects/templates/template_code_project/output")
 tarball = prepare_arxiv_submission(output_dir, metadata)
 print(f"Submission package: {tarball}")
 ```
@@ -338,39 +341,33 @@ Structured manifest: `output/data/transmission_manifest.json` (`title`, `version
 
 Dual-row integrity strip (`output/figures/transmission_integrity_strip.png`): row 1 — Metadata, Citation, Contact, Integrity; row 2 — Zenodo URL, GitHub URL, Manifest JSON; Code128 raster from `python-barcode` encodes the steganography payload hash block.
 
-**`template_code_project` production target:** `publication.github_repository: docxology/template_code_project` with bookends enabled in `projects/template_code_project/manuscript/config.yaml`. Example production release (clear `publication.doi` before the first mint; restore to `""` in tracked config after verification):
+**`template_code_project` production target:** `publication.github_repository: docxology/template_code_project` with bookends enabled in `projects/templates/template_code_project/manuscript/config.yaml`. Example production release (choose a tag from `paper.version`; keep `publication.doi` as the concept DOI and let the publish flow update `version_doi` / `version_record`):
 
 ```bash
 uv run python scripts/execute_pipeline.py --project template_code_project --core-only
 ./secure_run.sh --steganography-only --project template_code_project --deterministic
 uv run python scripts/publish_project_release.py \
   --project template_code_project \
-  --tag v2.1.0 \
+  --tag vX.Y.Z \
   --repo docxology/template_code_project \
-  --release-name "Convergence Analysis of Gradient Descent Optimization (v2.1.0)" \
+  --release-name "Convergence Analysis of Gradient Descent Optimization (vX.Y.Z)" \
   --production \
   --new-version   # when publication.doi is already set from a prior mint
 uv run python scripts/03_render_pdf.py --project template_code_project
 ```
 
-Historical production records captured on 2026-05-27 (re-check before citing as current):
+Current production records: see the generated live matrix in [`../_generated/publication_records.md`](../_generated/publication_records.md) and each exemplar's `manuscript/config.yaml` (`publication.doi` = concept DOI for citations and PDF cover; `publication.version_doi` = latest deposit).
 
-| Project | Version | Zenodo | GitHub | Deposit filename |
-| --- | --- | --- | --- | --- |
-| `template_code_project` | v2.3.0 | [10.5281/zenodo.20416936](https://doi.org/10.5281/zenodo.20416936) | [release](https://github.com/docxology/template_code_project/releases/tag/v2.3.0) | `Author_2026_Convergence_b08688ce.pdf` |
-| `template_prose_project` | v0.2.0 | [10.5281/zenodo.20417011](https://doi.org/10.5281/zenodo.20417011) | [release](https://github.com/docxology/template_prose_project/releases/tag/v0.2.0) | `Author_2026_Editorial_72e603df.pdf` |
-| `template_autoresearch_project` | v0.2.0 | [10.5281/zenodo.20417017](https://doi.org/10.5281/zenodo.20417017) | [release](https://github.com/docxology/template_autoresearch_project/releases/tag/v0.2.0) | `Friedman_2026_Bounded_922d1242.pdf` |
-| `template_active_inference` | v0.2.0 | [10.5281/zenodo.20417022](https://doi.org/10.5281/zenodo.20417022) | [release](https://github.com/docxology/template_active_inference/releases/tag/v0.2.0) | `Friedman_2026_Active_d7e8d4b8.pdf` |
+**Superseded `template_code_project` version DOIs** (archival reference only — do not cite as current):
 
-Prior `template_code_project` records:
+| Version | Version DOI | GitHub tag |
+| --- | --- | --- |
+| v2.0.0 | [10.5281/zenodo.20416203](https://doi.org/10.5281/zenodo.20416203) | [release](https://github.com/docxology/template_code_project/releases/tag/v2.0.0) |
+| v2.1.0 | [10.5281/zenodo.20416267](https://doi.org/10.5281/zenodo.20416267) | [release](https://github.com/docxology/template_code_project/releases/tag/v2.1.0) |
+| v2.2.0 | [10.5281/zenodo.20416565](https://doi.org/10.5281/zenodo.20416565) | [release](https://github.com/docxology/template_code_project/releases/tag/v2.2.0) |
+| v2.3.0 | [10.5281/zenodo.20416936](https://doi.org/10.5281/zenodo.20416936) | [release](https://github.com/docxology/template_code_project/releases/tag/v2.3.0) |
 
-| Version | Zenodo | GitHub | Deposit filename |
-| --- | --- | --- | --- |
-| v2.0.0 | [10.5281/zenodo.20416203](https://doi.org/10.5281/zenodo.20416203) | [release](https://github.com/docxology/template_code_project/releases/tag/v2.0.0) | `template_code_project_combined.pdf` |
-| v2.1.0 | [10.5281/zenodo.20416267](https://doi.org/10.5281/zenodo.20416267) | [release](https://github.com/docxology/template_code_project/releases/tag/v2.1.0) | `Author_2026_Convergence_b591a0ce.pdf` (dual inherited + deposit file on record) |
-| v2.2.0 | [10.5281/zenodo.20416565](https://doi.org/10.5281/zenodo.20416565) | [release](https://github.com/docxology/template_code_project/releases/tag/v2.2.0) | `Author_2026_Convergence_b08688ce.pdf` (single file; inherited cleanup verified) |
-
-Concept DOI (all versions): [10.5281/zenodo.20416202](https://doi.org/10.5281/zenodo.20416202).
+Superseded concept DOI for the pre-split series: [10.5281/zenodo.20416202](https://doi.org/10.5281/zenodo.20416202). Current concept DOI: [10.5281/zenodo.20417136](https://doi.org/10.5281/zenodo.20417136).
 
 ### Deposit upload filename
 
@@ -403,7 +400,9 @@ Set `publication.deposit_filename.enabled: false` to keep `{project}_combined.pd
 | `authors[].orcid` | No | Zenodo creator ORCID |
 | `authors[].affiliation` | No | Zenodo creator affiliation |
 | `authors[].email` | No | Manuscript metadata (not sent to Zenodo API) |
-| `publication.doi` | No | Written back after Zenodo mint; seeds footer on versioned releases |
+| `publication.doi` | No | **Concept DOI** — stable citation; PDF cover, CITATION.cff; not overwritten on re-deposit when `version_doi` is set |
+| `publication.version_doi` | No | Latest Zenodo **version** DOI; updated by `update_publication_after_zenodo_deposit()` |
+| `publication.version_record` | No | Latest Zenodo record URL (`https://zenodo.org/records/{id}`) |
 | `publication.year` | No | Zenodo `publication_date` when `paper.date` absent |
 | `publication.repository_url` | No | Extra Zenodo `related_identifiers` (`references`) when distinct from GitHub release URL |
 | `publication.zenodo_description` | No | Override abstract body for deposits (footer still appended) |
@@ -426,7 +425,7 @@ Set `publication.deposit_filename.enabled: false` to keep `{project}_combined.pd
 | GitHub token | `--github-token` or `GITHUB_TOKEN` | GitHub API |
 | Zenodo token | `--zenodo-token`, `ZENODO_PROD_TOKEN`, or `ZENODO_SANDBOX_TOKEN` | Zenodo deposit API |
 
-Full mapping table and exemplar template: [`projects/template_prose_project/manuscript/config.yaml.example`](../../projects/template_prose_project/manuscript/config.yaml.example).
+Full mapping table, exemplar DOI matrix, and split-field workflow: [Zenodo DOI strategy](zenodo-doi-strategy.md) and [`projects/templates/template_prose_project/manuscript/config.yaml.example`](../../projects/templates/template_prose_project/manuscript/config.yaml.example).
 
 **Zenodo web form → config/API mapping:**
 
@@ -465,7 +464,7 @@ from pathlib import Path
 from infrastructure.publishing.executable_bundle import bundle_project
 
 manifest = bundle_project(
-    Path("projects/template_code_project"),
+    Path("projects/templates/template_code_project"),
     Path("output/template_code_project/executable_bundle"),
 )
 print(manifest)
@@ -504,7 +503,7 @@ from infrastructure.publishing import (
 
 # Check if everything is ready
 readiness = validate_publication_readiness(
-    project_dir=Path("projects/template_code_project/"),
+    project_dir=Path("projects/templates/template_code_project/"),
 )
 print(f"Ready: {readiness.is_ready}")
 for issue in readiness.issues:
@@ -515,7 +514,7 @@ checklist = create_submission_checklist(metadata)
 
 # Bundle everything for submission
 package = create_publication_package(
-    project_dir=Path("projects/template_code_project/"),
+    project_dir=Path("projects/templates/template_code_project/"),
     output_dir=Path("output/template_code_project/publication/"),
 )
 ```

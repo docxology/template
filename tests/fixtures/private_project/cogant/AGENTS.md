@@ -1,6 +1,6 @@
 # tests/fixtures/private_project/cogant/
 
-Fixture tree for COGANT `private_project` infra tests. Real staging at `projects_in_progress/cogant/` overrides these paths when its `tools/` directory exists.
+Fixture tree for COGANT `private_project` infra tests. Real staging at `projects/working/cogant/` (private-repo mirror) overrides these paths when its `tools/` directory exists.
 
 ## Layout
 

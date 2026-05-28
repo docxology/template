@@ -63,6 +63,8 @@ class TransmissionContext:
     title: str
     version: str | None
     doi: str | None
+    version_doi: str | None
+    version_record: str | None
     github_release_url: str | None
     github_repository: str | None
     pdf_sha256: str | None
@@ -182,6 +184,65 @@ def _format_prior_releases_table(
     return "\n".join(lines)
 
 
+def _publication_version_fields(raw_config: dict[str, Any]) -> tuple[str | None, str | None]:
+    publication = raw_config.get("publication") or {}
+    if not isinstance(publication, dict):
+        return None, None
+    version_doi = publication.get("version_doi")
+    version_record = publication.get("version_record")
+    v_doi = str(version_doi).strip() if version_doi else None
+    v_rec = str(version_record).strip() if version_record else None
+    return v_doi or None, v_rec or None
+
+
+def _hash_prefix(digest: str | None, length: int = 16) -> str:
+    if not digest:
+        return "pending"
+    if len(digest) <= length:
+        return digest
+    return f"{digest[:length]}…"
+
+
+def _format_metadata_table(context: TransmissionContext) -> str:
+    rows = [
+        ("Title", context.title),
+        ("Version", context.version or "—"),
+        ("Concept DOI", context.doi or "pending"),
+    ]
+    if context.version_doi:
+        rows.append(("Version DOI", context.version_doi))
+    rows.extend(
+        [
+            ("GitHub", context.github_release_url or context.github_repository or "pending"),
+            ("Zenodo", context.zenodo_record_url or "pending"),
+            ("SHA-256", _hash_prefix(context.pdf_sha256, 16)),
+            ("SHA-512", _hash_prefix(context.pdf_sha512, 16)),
+        ]
+    )
+    lines = [
+        "| Field | Value |",
+        "| --- | --- |",
+    ]
+    for label, value in rows:
+        if label.startswith("SHA") and value != "pending":
+            lines.append(f"| {label} | `{value}` |")
+        elif label in {"GitHub", "Zenodo"} and value.startswith("http"):
+            lines.append(f"| {label} | [{value}]({value}) |")
+        else:
+            lines.append(f"| {label} | {value} |")
+    return "\n".join(lines)
+
+
+def _verification_steps() -> str:
+    return "\n".join(
+        [
+            "- Scan **Integrity** QR and compare the embedded SHA-256 prefix to the table above.",
+            "- Scan **Zenodo** / **GitHub** QR codes and confirm they resolve to this release pairing.",
+            "- Full hashes and structured fields: `../data/transmission_manifest.json`.",
+        ]
+    )
+
+
 def _format_metadata_lines(context: TransmissionContext) -> list[str]:
     lines = [
         f"- **Title:** {context.title}",
@@ -260,6 +321,9 @@ def build_transmission_context(
 
     metadata = publication_metadata_from_config(config_path, allow_draft_abstract=True)
     resolved_repo = repo_root or project_root.parent.parent
+    version_doi, version_record = _publication_version_fields(raw_config)
+    if version_doi and not version_record:
+        version_record = zenodo_record_url_from_doi(version_doi)
     ledger = load_publication_ledger(project_root, repo_root=resolved_repo, project_name=project_name)
     latest = _latest_release(ledger)
 
@@ -324,6 +388,8 @@ def build_transmission_context(
         title=metadata.title,
         version=metadata.paper_version,
         doi=doi,
+        version_doi=version_doi,
+        version_record=version_record,
         github_release_url=github_release_url_value,
         github_repository=settings.github_repository,
         pdf_sha256=pdf_sha256,
@@ -352,6 +418,8 @@ def build_transmission_context(
         title=draft_context.title,
         version=draft_context.version,
         doi=draft_context.doi,
+        version_doi=draft_context.version_doi,
+        version_record=draft_context.version_record,
         github_release_url=draft_context.github_release_url,
         github_repository=draft_context.github_repository,
         pdf_sha256=draft_context.pdf_sha256,
@@ -400,24 +468,25 @@ def render_transmission_markdown(context: TransmissionContext, *, boundary: Lite
     ]
 
     if boundary == "begin":
-        body_parts.extend([f"**State:** {status}", ""])
         body_parts.extend(
             [
+                f"**State:** {status}",
+                "",
+                context.pairing_compact,
+                "",
                 "```{=latex}",
                 r"\subsubsection*{Release metadata}",
                 "```",
                 "",
-                *_format_metadata_lines(context),
-                "",
-                context.pairing_compact,
-                "",
-                context.integrity_strip_markdown,
+                _format_metadata_table(context),
                 "",
                 "```{=latex}",
-                r"\subsubsection*{Transmission manifest}",
+                r"\subsubsection*{How to verify}",
                 "```",
                 "",
-                context.manifest_snippet,
+                _verification_steps(),
+                "",
+                context.integrity_strip_markdown,
                 "",
                 f"Structured manifest: `{context.manifest_path}`",
                 "",

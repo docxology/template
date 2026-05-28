@@ -6,16 +6,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from infrastructure.core.runtime.setup_checks import validate_project_discovery
+from tests._support.projects import make_project
 
 
 def _scaffold_project(root: Path, name: str) -> Path:
-    project = root / "projects" / name
-    for sub in ("src", "tests", "scripts", "manuscript"):
-        (project / sub).mkdir(parents=True)
-    (project / "src" / "__init__.py").write_text("")
-    (project / "tests" / "__init__.py").write_text("")
-    (project / "manuscript" / "config.yaml").write_text("paper:\n  title: Demo\n")
-    return project
+    return make_project(root, name, with_manuscript=True, with_scripts=True)
 
 
 def test_validate_project_discovery_passes_for_scaffold(tmp_path: Path) -> None:

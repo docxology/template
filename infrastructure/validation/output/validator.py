@@ -75,9 +75,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
             logger.error(f"  Expected: output/{project_name}/{project_name}_combined.pdf")
             logger.error(f"  Or in: output/{project_name}/pdf/{project_name}_combined.pdf")
             logger.error(f"  Or in source: projects/{project_name}/output/pdf/{project_name}_combined.pdf")
-            logger.error(
-                f"  Or in WIP source: projects_in_progress/{project_name}/output/pdf/{project_name}_combined.pdf"
-            )
+            logger.error(f"  Or in WIP source: projects/working/{project_name}/output/pdf/{project_name}_combined.pdf")
         else:
             logger.error("  Expected: output/{project_name}_combined.pdf")
         logger.error("  → PDF rendering stage (Stage 5) may have failed")
@@ -369,12 +367,11 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
 
     # Check combined PDF using shared location logic
     path_parts = output_dir.parts
-    if output_dir.name == "output" and ("projects" in path_parts or "projects_in_progress" in path_parts):
-        # Handle source project directory, including nested layouts:
-        # projects/{name}/output, projects_in_progress/{name}/output, or
-        # projects/{program}/{name}/output.
-        marker = "projects" if "projects" in path_parts else "projects_in_progress"
-        projects_idx = len(path_parts) - 1 - path_parts[::-1].index(marker)
+    if output_dir.name == "output" and "projects" in path_parts:
+        # Handle source project directory, including typed-subfolder and nested
+        # layouts: projects/{name}/output, projects/{type}/{name}/output (e.g.
+        # projects/templates/{name}/output), or projects/{program}/{name}/output.
+        projects_idx = len(path_parts) - 1 - path_parts[::-1].index("projects")
         project_parts = path_parts[projects_idx + 1 : -1]
         project_name = "/".join(project_parts) if project_parts else output_dir.parent.name
     elif output_dir.parent.name == "output" and output_dir.name != "output":

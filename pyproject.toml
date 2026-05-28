@@ -148,8 +148,8 @@ exclude = [
 
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
-# projects/template_code_project/src is the canonical example project; add other project src/ paths here if needed
-pythonpath = [".", "infrastructure", "projects/template_code_project/src"]
+# projects/templates/template_code_project/src is the canonical example project; add other project src/ paths here if needed
+pythonpath = [".", "infrastructure", "projects/templates/template_code_project/src"]
 testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
@@ -187,7 +187,7 @@ filterwarnings = [
 #   - Infrastructure tests: --cov-datafile=.coverage.infra
 #   - Project tests: --cov-datafile=.coverage.project
 branch = true
-source = ["infrastructure", "projects/template_code_project/src"]
+source = ["infrastructure", "projects/templates/template_code_project/src"]
 omit = [
     "*/tests/*",
     "*/test_*",
@@ -195,13 +195,13 @@ omit = [
     "*/tmp/*",
     "*/temp/*",
     "*/site-packages/*",
-    "projects/template_code_project/src/analysis.py",
-    "projects/template_code_project/src/dashboard.py",
+    "projects/templates/template_code_project/src/analysis.py",
+    "projects/templates/template_code_project/src/dashboard.py",
     # figures.py is the figure-generator extraction split out of analysis.py;
     # the 6 generate_* functions are exercised only through
     # scripts/optimization_analysis.py (end-to-end pipeline run), not in the
     # gate-time unit test suite.
-    "projects/template_code_project/src/figures.py",
+    "projects/templates/template_code_project/src/figures.py",
     "/private/var/folders/*",
 ]
 
@@ -370,7 +370,7 @@ ignore_errors = true
 # Exclusions for paths (mirrors `exclude_dirs` in `bandit.yaml`). CI and
 # pre-commit use `-c bandit.yaml`; this block keeps ad-hoc `bandit -c pyproject.toml`
 # runs aligned.
-exclude_dirs = ["projects_archive", "projects_in_progress", ".venv", "site-packages"]
+exclude_dirs = ["projects/working", "projects/published", "projects/archive", "projects/other", ".venv", "site-packages"]
 # B101: assert_used — asserts are used as internal invariants in infrastructure code.
 # Suppressing B101 reduces noise without compromising security review of real issues.
 skips = ["B101"]

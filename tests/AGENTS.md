@@ -15,8 +15,25 @@ The `tests/` directory contains repository-wide tests for infrastructure, integr
 
 ## Current Subtrees
 
+- `tests/_support/` - shared test helpers (canonical ephemeral project scaffold factory)
 - `tests/infra_tests/` - infrastructure module coverage
 - `tests/integration/` - end-to-end and orchestration coverage
+- `tests/regression/` - pinned-value regression tier (real exemplar projects only)
+
+## Synthetic project scaffold factory
+
+Infrastructure and integration tests that need a minimum-valid project tree
+under ``tmp_path`` should use [`tests/_support/projects.py`](_support/projects.py):
+
+- ``make_project(root, name="template_test", ...)`` — one project under
+  ``projects/<name>/`` or ``projects/<program>/<name>/`` (pass ``program="templates"``
+  for qualified names like ``templates/template_test``).
+- ``make_repo(root, names=(...))`` — repository root with multiple synthetic projects.
+- ``repo_layout=False`` — standalone project at ``<root>/<name>/`` (integration fixtures).
+
+Default slug ``template_test`` is the canonical synthetic stand-in. Do **not**
+create a git-tracked ``template_test`` project under ``projects/`` — contract,
+public-scope, and regression tests continue to reference the five public exemplars.
 
 ## Coverage Expectations
 

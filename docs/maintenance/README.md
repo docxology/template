@@ -13,7 +13,7 @@
 | [`archival-targets.md`](archival-targets.md) | Insurance against Zenodo / arXiv / DOI vendor concentration via IPFS + Software Heritage parallel pins | 2026-05-20 |
 | [`ci-local.md`](ci-local.md) | Local reproduction of the GitHub Actions matrix via `act` — defense against CI free-tier compression | 2026-05-20 |
 | [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) | Design for a Stage 10 output (container + lockfile + agent-runnable manifest) alongside Stage 5 PDF — for the 2029+ executable-artifact world | 2026-05-20 |
-| [`private-projects-repo.md`](private-projects-repo.md) | Sibling private repo lifecycle (`active/`, `passive/`, `archive/`) and symlink-sync contract for confidential projects | 2026-05-21; expanded 2026-05-24 |
+| [`private-projects-repo.md`](private-projects-repo.md) | Sibling private repo lifecycle (`active/`, `working/`, `published/`, `archive/`, `other/`) and symlink-sync contract for confidential projects | 2026-05-21; expanded 2026-05-24 |
 
 ## The thesis these guides share
 
@@ -29,5 +29,5 @@ These guides exist to close that gap by giving every binding a documented swap p
 
 - [`MAINTAINERS.md`](../../MAINTAINERS.md) — who owns what
 - [`STATUS.md`](../../STATUS.md) — per-subsystem heartbeat
-- [`private-projects-repo.md`](private-projects-repo.md) — the implemented sibling private repo (active/passive/archive + lifecycle-link mechanism)
+- [`private-projects-repo.md`](private-projects-repo.md) — the implemented sibling private repo (active/working/published/archive/other + lifecycle-link mechanism)
 - [`AGENTS.md`](../../AGENTS.md) — full system manual

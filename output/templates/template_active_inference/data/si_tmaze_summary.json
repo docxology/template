@@ -1,0 +1,40 @@
+{
+  "steps": 2,
+  "policy_len": 2,
+  "num_policies": 4,
+  "mean_belief_entropy": 0.32508314364563223,
+  "actions": [
+    0,
+    1
+  ],
+  "observations": [
+    1,
+    1
+  ],
+  "mode": "state_inference",
+  "config_hash": "ea4b126a9c22f22f",
+  "goal_reached": true,
+  "action_diversity": 2,
+  "config": {
+    "horizon": 2,
+    "steps": 2,
+    "random_seed": 0,
+    "mode": "state_inference",
+    "policy_len": 2,
+    "tmaze": {
+      "num_states": 2,
+      "num_obs": 2,
+      "num_actions": 2,
+      "likelihood_diag": 0.9,
+      "preference_goal": 2.0
+    },
+    "agent": {
+      "inference_algo": "fpi",
+      "action_selection": "deterministic"
+    },
+    "logging": {
+      "enabled": true,
+      "path": "output/logs/pymdp_runs.jsonl"
+    }
+  }
+}

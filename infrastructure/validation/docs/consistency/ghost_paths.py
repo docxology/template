@@ -50,6 +50,13 @@ def is_placeholder_name(name: str) -> bool:
     return False
 
 
+#: Typed lifecycle subfolders that sit directly under ``projects/``. References
+#: like ``projects/<type>/`` are structural and always allowed; the project name
+#: to validate is the segment *after* the type prefix. Keep ``archive`` in sync
+#: with discovery.NON_RENDERED_SUBDIRS plus the rendered ``active``/``templates``.
+TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset({"active", "working", "published", "archive", "other", "templates"})
+
+
 def check_no_ghost_projects(
     repo_root: Path,
     canonical: tuple[str, ...] = (
@@ -59,15 +66,24 @@ def check_no_ghost_projects(
     ),
     extra_active: Iterable[str] | None = None,
 ) -> list[Inconsistency]:
-    """Flag unconditional ``projects/<name>/...`` references for non-active projects."""
+    """Flag unconditional ``projects/<name>/...`` references for non-active projects.
+
+    Recognizes the typed-subfolder layout: ``projects/<type>/<name>/`` references
+    are checked against ``<name>`` (the type prefix itself is structural). The
+    non-rendered typed subfolders (``working``/``published``/``archive``/
+    ``other``) hold rotating private work, so any name beneath them is allowed.
+    """
     active_names = {p.name for p in discover_projects(repo_root)}
     if extra_active:
         active_names.update(extra_active)
-    archive_root = repo_root / "projects_archive"
-    archived_names = {p.name for p in archive_root.iterdir() if p.is_dir()} if archive_root.is_dir() else set()
-    allow = active_names | set(canonical) | archived_names
+    allow = active_names | set(canonical)
 
-    pattern = re.compile(r"(?<![A-Za-z0-9_/])projects/(?P<name>\{[^}]+\}|<[^>]+>|[A-Za-z0-9_][A-Za-z0-9_.-]*)/")
+    # Optional typed-subfolder prefix, then the project-name segment.
+    pattern = re.compile(
+        r"(?<![A-Za-z0-9_/])projects/"
+        r"(?:(?P<type>active|working|published|archive|other|templates)/)?"
+        r"(?P<name>\{[^}]+\}|<[^>]+>|[A-Za-z0-9_][A-Za-z0-9_.-]*)/"
+    )
 
     issues: list[Inconsistency] = []
     for md in iter_long_lived_docs(repo_root):
@@ -78,10 +94,18 @@ def check_no_ghost_projects(
         for line_no, raw_line in enumerate(text.splitlines(), start=1):
             if line_is_conditional(raw_line) or line_has_noqa(raw_line):
                 continue
-            if "projects_archive/" in raw_line:
-                continue
             for match in pattern.finditer(raw_line):
+                prefix = match.group("type")
+                # Non-rendered typed subfolders hold rotating private work — any
+                # name beneath them is allowed (they are not ghost references).
+                if prefix in {"working", "published", "archive", "other"}:
+                    continue
                 name = match.group("name")
+                # A bare ``projects/<subfolder>/`` reference (no project name after
+                # the typed subfolder) is structural, not a project — the regex
+                # captures the subfolder itself as ``name`` when nothing follows.
+                if prefix is None and name in TYPED_PROJECT_SUBDIRS:
+                    continue
                 if name in allow:
                     continue
                 if name in {"AGENTS.md", "README.md"}:

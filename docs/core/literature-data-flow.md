@@ -52,7 +52,7 @@ A typical run lands the following artefacts:
 
 ```mermaid
 flowchart TB
-    PROJ[/projects_archive/template_search_project/<br/>local copy under projects/ only/]
+    PROJ[/projects/archive/template_search_project/<br/>local copy under projects/ only/]
     PROJ --> OUTPUT[/output/]
     PROJ --> MANUSCRIPT[/manuscript/]
 

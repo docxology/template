@@ -28,10 +28,11 @@ def _repo_visible_project_path(repo_root: Path | str, project_name: str) -> Path
     try:
         return project_root.relative_to(repo_root.resolve())
     except ValueError:
-        wip = repo_root / "projects_in_progress" / project_name
-        if wip.is_dir():
-            return Path("projects_in_progress") / project_name
-        return Path("projects") / project_name
+        for subdir in ("active", "working"):
+            candidate = repo_root / "projects" / subdir / project_name
+            if candidate.is_dir():
+                return Path("projects") / subdir / project_name
+        return Path("projects") / "active" / project_name
 
 
 def _project_output_dirs(repo_root: Path | str, project_name: str | None = None) -> list[str]:

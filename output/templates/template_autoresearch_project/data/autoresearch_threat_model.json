@@ -1,0 +1,206 @@
+{
+  "assets": [
+    {
+      "category": "input data",
+      "id": "asset-dataset",
+      "name": "Local MNIST fixture",
+      "path": "data/mnist_small.npz"
+    },
+    {
+      "category": "experiment config",
+      "id": "asset-task-config",
+      "name": "MNIST task configuration",
+      "path": "mnist_task.yaml"
+    },
+    {
+      "category": "implementation",
+      "id": "asset-source",
+      "name": "Project source code",
+      "path": "src/"
+    },
+    {
+      "category": "result evidence",
+      "id": "asset-generated",
+      "name": "Generated output artifacts",
+      "path": "output/"
+    },
+    {
+      "category": "publication",
+      "id": "asset-hydration",
+      "name": "Manuscript hydration",
+      "path": "output/data/manuscript_variables.json"
+    },
+    {
+      "category": "governance",
+      "id": "asset-review",
+      "name": "Review gates and packets",
+      "path": "output/data/review_decisions.json"
+    },
+    {
+      "category": "build context",
+      "id": "asset-ci",
+      "name": "CI and local build assumptions",
+      "path": "pipeline.yaml"
+    }
+  ],
+  "controls": [
+    {
+      "evidence_key": "network_policy",
+      "framework": "NIST_SP_800_207",
+      "id": "ctrl-offline",
+      "name": "Default offline execution",
+      "status": "implemented"
+    },
+    {
+      "evidence_key": "run_ledger",
+      "framework": "NIST_SP_800_218_SSDF",
+      "id": "ctrl-budget",
+      "name": "Zero LLM calls and zero cost budget",
+      "status": "implemented"
+    },
+    {
+      "evidence_key": "integrity_attestation",
+      "framework": "SLSA_SPEC",
+      "id": "ctrl-hashes",
+      "name": "SHA-256 artifact checksums",
+      "status": "implemented"
+    },
+    {
+      "evidence_key": "supply_chain_inventory",
+      "framework": "SLSA_SPEC",
+      "id": "ctrl-inventory",
+      "name": "SBOM-style local inventory",
+      "status": "implemented"
+    },
+    {
+      "evidence_key": "review_decisions",
+      "framework": "NIST_SP_800_218_SSDF",
+      "id": "ctrl-review",
+      "name": "Deferred human review gates",
+      "status": "implemented"
+    },
+    {
+      "evidence_key": "idea_ledger",
+      "framework": "MITRE_ATTACK_T1195",
+      "id": "ctrl-allowlist",
+      "name": "Edit allowlist for proposals",
+      "status": "implemented"
+    },
+    {
+      "evidence_key": "security_profile",
+      "framework": "NIST_SP_800_207",
+      "id": "ctrl-boundary",
+      "name": "Explicit non-claims in manuscript variables",
+      "status": "implemented"
+    }
+  ],
+  "frameworks": [
+    "STRIDE",
+    "MITRE_ATT&CK_T1195"
+  ],
+  "generated_at": "2026-05-27T23:33:29+00:00",
+  "not_external_signing": true,
+  "not_network_security_assessment": true,
+  "not_runtime_monitoring": true,
+  "not_slsa_certification": true,
+  "schema": "template-autoresearch-threat-model-v1",
+  "summary": {
+    "asset_count": 7,
+    "claim_boundary": "Threat model scopes local artifact integrity, not production deployment security.",
+    "control_count": 7,
+    "threat_count": 7
+  },
+  "threats": [
+    {
+      "asset_id": "asset-dataset",
+      "attack_technique": "T1195",
+      "controls": [
+        "sha256 fixture provenance",
+        "artifact inventory",
+        "default offline policy"
+      ],
+      "id": "threat-dataset-tamper",
+      "residual_risk": "Residual risk remains if a reviewer ignores checksum drift.",
+      "scenario": "A local fixture could be replaced or edited before analysis.",
+      "stride_category": "Tampering"
+    },
+    {
+      "asset_id": "asset-task-config",
+      "attack_technique": "T1195.001",
+      "controls": [
+        "git-reviewed config",
+        "required artifact manifest",
+        "candidate-selection audit"
+      ],
+      "id": "threat-config-drift",
+      "residual_risk": "Configuration review is still a human responsibility.",
+      "scenario": "Task settings could silently change candidate scope, budgets, or diagnostic policy.",
+      "stride_category": "Tampering"
+    },
+    {
+      "asset_id": "asset-source",
+      "attack_technique": "T1195.001",
+      "controls": [
+        "project tests",
+        "Ruff and mypy gates",
+        "thin-orchestrator validation"
+      ],
+      "id": "threat-source-edit",
+      "residual_risk": "The default run does not perform full static application security testing.",
+      "scenario": "Source changes could bypass the thin-script and no-generated-code boundary.",
+      "stride_category": "Elevation of privilege"
+    },
+    {
+      "asset_id": "asset-generated",
+      "attack_technique": "T1195.002",
+      "controls": [
+        "artifact manifest checksums",
+        "integrity attestation",
+        "variable provenance sidecar"
+      ],
+      "id": "threat-output-tamper",
+      "residual_risk": "Local checksum evidence is not externally signed.",
+      "scenario": "Generated reports or figures could be edited after analysis but before rendering.",
+      "stride_category": "Repudiation"
+    },
+    {
+      "asset_id": "asset-hydration",
+      "attack_technique": "T1195.002",
+      "controls": [
+        "strict manuscript source guard",
+        "variable provenance",
+        "figure registry"
+      ],
+      "id": "threat-manuscript-injection",
+      "residual_risk": "Stable scholarly prose and citekeys remain manually authored.",
+      "scenario": "Manual prose could hard-code run facts that bypass validated variables.",
+      "stride_category": "Information disclosure"
+    },
+    {
+      "asset_id": "asset-review",
+      "attack_technique": "T1195",
+      "controls": [
+        "deferred review decisions",
+        "publication_approved false",
+        "review-gate validation"
+      ],
+      "id": "threat-self-approval",
+      "residual_risk": "Publication remains outside the automated loop.",
+      "scenario": "Generated review packets could be mistaken for human publication approval.",
+      "stride_category": "Spoofing"
+    },
+    {
+      "asset_id": "asset-ci",
+      "attack_technique": "T1195.003",
+      "controls": [
+        "declared pipeline gates",
+        "required artifact checks",
+        "render validation"
+      ],
+      "id": "threat-build-assumption",
+      "residual_risk": "The exemplar does not sign build logs or isolate runners.",
+      "scenario": "A local or CI build context could omit checks or run stale generated artifacts.",
+      "stride_category": "Denial of service"
+    }
+  ]
+}

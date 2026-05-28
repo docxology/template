@@ -1,0 +1,18 @@
+{
+  "bundle_dir": "/Users/4d/Documents/GitHub/template/output/template_template/release_bundle",
+  "config_updated": true,
+  "deposit_filename": "Friedman_2026_Template_57199c03.pdf",
+  "doi": "10.5281/zenodo.20420387",
+  "dry_run": false,
+  "errors": [],
+  "github_release_url": "https://github.com/docxology/template_template/releases/tag/v1.0.6",
+  "github_repo": "docxology/template_template",
+  "pdf_path": "/Users/4d/Documents/GitHub/template/output/template_template/release_bundle/Friedman_2026_Template_57199c03.pdf",
+  "pdf_sha256": "57199c03ea10324015dde93cc9c54373faee19c3e07911b453655d3c2bf1490b",
+  "project": "template_template",
+  "render_exit_code": 0,
+  "sandbox": false,
+  "source_pdf_name": "template_template_combined.pdf",
+  "tag": "v1.0.6",
+  "timestamp": "2026-05-28T00:04:50.496506+00:00"
+}

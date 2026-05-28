@@ -27,8 +27,8 @@ class TestProjectOutputDirs:
 
     def test_contains_project_dirs(self):
         dirs = _project_output_dirs("myproj")
-        assert "projects/myproj/output" in dirs
-        assert "projects/myproj/output/figures" in dirs
+        assert "projects/active/myproj/output" in dirs
+        assert "projects/active/myproj/output/figures" in dirs
 
 
 class TestSetupDirectories:
@@ -38,7 +38,7 @@ class TestSetupDirectories:
         # Check some directories exist
         assert (tmp_path / "output" / "testproj").is_dir()
         assert (tmp_path / "output" / "testproj" / "pdf").is_dir()
-        assert (tmp_path / "projects" / "testproj" / "output").is_dir()
+        assert (tmp_path / "projects" / "active" / "testproj" / "output").is_dir()
 
     def test_creates_custom_directories(self, tmp_path):
         custom = ["custom/dir1", "custom/dir2"]
@@ -95,7 +95,8 @@ class TestVerifySourceStructure:
         (external / "src").mkdir(parents=True)
         (external / "tests").mkdir()
 
-        link = projects_dir / "linkedproj"
+        link = projects_dir / "active" / "linkedproj"
+        link.parent.mkdir(parents=True)
         link.symlink_to(external, target_is_directory=True)
 
         assert link.is_symlink()
@@ -103,15 +104,15 @@ class TestVerifySourceStructure:
 
     @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
     def test_wip_symlink_outside_repo(self, tmp_path):
-        """WIP trees under projects_in_progress/ pass source-structure checks."""
+        """WIP trees under projects/working/ pass source-structure checks."""
         repo_root = tmp_path / "repo"
         (repo_root / "infrastructure").mkdir(parents=True)
 
-        external = tmp_path / "private" / "passive" / "wipproj"
+        external = tmp_path / "private" / "working" / "wipproj"
         (external / "src").mkdir(parents=True)
         (external / "tests").mkdir()
 
-        wip_link = repo_root / "projects_in_progress" / "wipproj"
+        wip_link = repo_root / "projects" / "working" / "wipproj"
         wip_link.parent.mkdir(parents=True)
         wip_link.symlink_to(external, target_is_directory=True)
 

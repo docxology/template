@@ -1,0 +1,18 @@
+{
+  "bundle_dir": "/Users/4d/Documents/GitHub/template/output/template_code_project/release_bundle",
+  "config_updated": true,
+  "deposit_filename": "Friedman_2026_Convergence_d63f738b.pdf",
+  "doi": "10.5281/zenodo.20420368",
+  "dry_run": false,
+  "errors": [],
+  "github_release_url": "https://github.com/docxology/template_code_project/releases/tag/v2.5.0",
+  "github_repo": "docxology/template_code_project",
+  "pdf_path": "/Users/4d/Documents/GitHub/template/output/template_code_project/release_bundle/Friedman_2026_Convergence_d63f738b.pdf",
+  "pdf_sha256": "d63f738baf2787e9d9572b8d705cef1f7e56d8665979c95807627346c6ed70be",
+  "project": "template_code_project",
+  "render_exit_code": 0,
+  "sandbox": false,
+  "source_pdf_name": "template_code_project_combined.pdf",
+  "tag": "v2.5.0",
+  "timestamp": "2026-05-28T00:01:59.007802+00:00"
+}

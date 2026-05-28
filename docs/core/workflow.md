@@ -146,7 +146,7 @@ flowchart TD
 
 ```bash
 # Always start with tests
-uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=term-missing
 
 # Check coverage (≥90% gate; live percentage per exemplar → docs/_generated/canonical_facts.md)
 coverage report
@@ -163,11 +163,11 @@ coverage report
 uv run pytest
 
 # Generate figures and data
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 uv run python scripts/02_run_analysis.py --project template_code_project
 
 # Validate markdown integrity
-uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
 ```
 
 ### 3. Integration Phase
@@ -281,14 +281,14 @@ flowchart LR
 uv sync
 
 # Run tests with coverage
-uv run pytest projects/template_code_project/tests/ --cov=projects.template_code_project.src --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects.template_code_project.src --cov-report=term-missing
 
 # Generate figures
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 uv run python scripts/02_run_analysis.py --project template_code_project
 
 # Validate markdown
-uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
 
 # Build PDF pipeline
 uv run python scripts/execute_pipeline.py --project {name} --core-only
@@ -381,10 +381,10 @@ uv run pytest --cov=src --cov-report=term-missing
 
 ```bash
 # Check what's failing
-uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
 
 # Regenerate specific figures
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 # Check test coverage gaps
 coverage report -m

@@ -6,17 +6,17 @@ The names below are the public CI/documentation scope: tracked template projects
 
 Runtime discovery still uses `infrastructure.project.discovery.discover_projects()` and may include local-only private symlinked projects. Do not copy that local roster into public docs.
 
-Human-written documentation should **not** copy this list into RUN_GUIDE, PAI, or other guides; link here instead. For concrete paths, commands, and layout examples, default to the stable exemplar [`projects/template_code_project/`](../../projects/template_code_project/) unless a doc explicitly compares layouts.
+Human-written documentation should **not** copy this list into RUN_GUIDE, PAI, or other guides; link here instead. For concrete paths, commands, and layout examples, default to the stable exemplar [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/) unless a doc explicitly compares layouts.
 
-Generated at (UTC): `2026-05-27T21:48:13+00:00`
+Generated at (UTC): `2026-05-28T20:54:54+00:00`
 
 Current entries:
 
-- `template_active_inference`
-- `template_autoresearch_project`
-- `template_code_project`
-- `template_prose_project`
-- `template_template`
+- `templates/template_active_inference`
+- `templates/template_autoresearch_project`
+- `templates/template_code_project`
+- `templates/template_prose_project`
+- `templates/template_template`
 
 Regenerate after adding, removing, or renaming projects:
 

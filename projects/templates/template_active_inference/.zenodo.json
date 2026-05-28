@@ -1,0 +1,21 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for Active Inference Multi-Track Exemplar (2026).",
+  "keywords": [
+    "active inference",
+    "pymdp",
+    "sophisticated inference",
+    "lean",
+    "reproducible research"
+  ],
+  "license": "MIT",
+  "title": "Active Inference Multi-Track Exemplar",
+  "upload_type": "software",
+  "version": "0.3.0"
+}

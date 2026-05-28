@@ -25,13 +25,17 @@ logger = get_logger(__name__)
 STRIP_FILENAME = "transmission_integrity_strip.png"
 MANIFEST_FILENAME = "transmission_manifest.json"
 
-_LABEL_FONT_SIZE = 9
-_QR_SIZE = 64
-_LABEL_HEIGHT = 12
-_MARGIN = 6
-_SPACING = 8
-_CODE128_HEIGHT = 52
-_CODE128_WIDTH = 110
+_LABEL_FONT_SIZE = 11
+_QR_SIZE = 128
+_QR_BOX_SIZE = 8
+_QR_BORDER = 2
+_LABEL_HEIGHT = 14
+_MARGIN = 8
+_SPACING = 10
+_CODE128_HEIGHT = 104
+_CODE128_WIDTH = 250
+MIN_STRIP_WIDTH = 750
+MIN_STRIP_HEIGHT = 200
 
 
 def _author_names(authors: list[dict[str, Any]]) -> list[str]:
@@ -185,7 +189,7 @@ def _generate_code128_image(data: str, target_width: int, target_height: int) ->
     )
     buf.seek(0)
     image = Image.open(buf).convert("RGB")
-    return image.resize((target_width, target_height), Image.Resampling.NEAREST)
+    return image.resize((target_width, target_height), Image.Resampling.LANCZOS)
 
 
 def _paste_qr_row(
@@ -201,9 +205,10 @@ def _paste_qr_row(
 
     x_cursor = x_start
     for label, data in items:
-        qr_png = generate_qr_code(data, box_size=3, border=1)
+        qr_png = generate_qr_code(data, box_size=_QR_BOX_SIZE, border=_QR_BORDER)
         qr_image = Image.open(io.BytesIO(qr_png))
-        qr_image = qr_image.resize((_QR_SIZE, _QR_SIZE), Image.Resampling.NEAREST)
+        if qr_image.size != (_QR_SIZE, _QR_SIZE):
+            qr_image = qr_image.resize((_QR_SIZE, _QR_SIZE), Image.Resampling.LANCZOS)
         image.paste(qr_image, (x_cursor, y_offset))
         label_x = x_cursor + _QR_SIZE / 2
         draw.text((label_x, y_offset + _QR_SIZE + 1), label, fill=(60, 60, 60), font=font, anchor="mt")

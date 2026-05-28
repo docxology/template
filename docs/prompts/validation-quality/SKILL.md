@@ -27,7 +27,7 @@ Prefer **actual CLI entrypoints** in [`CLAUDE.md`](../../../CLAUDE.md) — not i
 
 ## Natural invoke
 
-- "Validate markdown under projects/template_prose_project/manuscript/"
+- "Validate markdown under projects/templates/template_prose_project/manuscript/"
 - "PDF has unresolved references — run validation"
 - "Strict prerender before render"
 

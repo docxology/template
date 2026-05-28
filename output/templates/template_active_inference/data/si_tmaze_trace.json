@@ -1,0 +1,22 @@
+{
+  "steps": [
+    {
+      "step": 0,
+      "obs": 1,
+      "action": 0,
+      "belief_entropy": 0.32508314364563223,
+      "qs_state1": 0.1000000774860336,
+      "mode": "state_inference",
+      "policy_method": "state_inference"
+    },
+    {
+      "step": 1,
+      "obs": 1,
+      "action": 1,
+      "belief_entropy": 0.32508314364563223,
+      "qs_state1": 0.8999999225139664,
+      "mode": "state_inference",
+      "policy_method": "state_inference"
+    }
+  ]
+}

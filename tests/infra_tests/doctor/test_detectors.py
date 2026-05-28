@@ -65,10 +65,10 @@ def test_pycache_skips_venv_anywhere(tmp_path: Path):
     assert findings[0].healthy is True
 
 
-def test_pycache_skips_archive_and_in_progress(tmp_path: Path):
+def test_pycache_skips_dormant_project_subdirs(tmp_path: Path):
     _make_min_repo(tmp_path)
-    (tmp_path / "projects_archive" / "old" / "__pycache__").mkdir(parents=True)
-    (tmp_path / "projects_in_progress" / "wip" / "__pycache__").mkdir(parents=True)
+    (tmp_path / "projects" / "archive" / "old" / "__pycache__").mkdir(parents=True)
+    (tmp_path / "projects" / "working" / "wip" / "__pycache__").mkdir(parents=True)
     findings = detect_pycache_clutter(tmp_path)
     assert findings[0].healthy is True
 

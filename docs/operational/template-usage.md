@@ -28,7 +28,7 @@ Commit the baseline, then customize `projects/` and manuscripts.
 
 ## Step 2: Add or Customize a Project
 
-Use the stable exemplar [`projects/template_code_project/`](../../projects/template_code_project/) as a structural reference: `src/` for logic, `tests/` with coverage targets per [`CLAUDE.md`](../../CLAUDE.md), `scripts/` as thin wrappers calling `src/`, and `manuscript/` for Markdown sources.
+Use the stable exemplar [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/) as a structural reference: `src/` for logic, `tests/` with coverage targets per [`CLAUDE.md`](../../CLAUDE.md), `scripts/` as thin wrappers calling `src/`, and `manuscript/` for Markdown sources.
 
 Authoritative discovered names (after you add folders) are listed in [`docs/_generated/active_projects.md`](../_generated/active_projects.md).
 

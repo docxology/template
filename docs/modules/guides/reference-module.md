@@ -38,7 +38,7 @@ from infrastructure.reference import (
 from pathlib import Path
 from infrastructure.reference import parse_bibfile, render_database
 
-db = parse_bibfile(Path("projects_archive/template_search_project/manuscript/references.bib"))
+db = parse_bibfile(Path("projects/archive/template_search_project/manuscript/references.bib"))
 print(render_database(db))
 ```
 

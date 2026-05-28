@@ -1,0 +1,11 @@
+{
+  "doi": "10.5281/zenodo.20417136",
+  "github_release_url": null,
+  "github_repository": "docxology/template_code_project",
+  "pdf_sha256": "5870d648def95d923ce5bc37a9061d56e2980c704fb6e3f5dfc46221a8bb6325",
+  "pdf_sha512": "97205f75992d100491631d9c5f16de22eaad6a98cf195276fa641ee7b2bae80ddd0d93b3590b6ab5ac6319f128961da5e317bb17b5d05af807115ae577862355",
+  "published": false,
+  "title": "Convergence Analysis of Gradient Descent Optimization",
+  "version": "2.3",
+  "zenodo_record_url": "https://zenodo.org/records/20417136"
+}

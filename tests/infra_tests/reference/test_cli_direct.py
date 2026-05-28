@@ -12,7 +12,7 @@ from infrastructure.reference.citation.cli import build_parser, main
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-EXEMPLAR = REPO_ROOT / "projects" / "template_code_project" / "manuscript" / "references.bib"
+EXEMPLAR = REPO_ROOT / "projects" / "templates" / "template_code_project" / "manuscript" / "references.bib"
 
 
 def test_validate_passes_on_exemplar(capsys):

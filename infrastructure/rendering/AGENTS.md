@@ -131,7 +131,7 @@ The PDFRenderer splits title page generation into two phases:
 
 2. **Body Phase** (`_generate_title_page_body()`):
    - Generates book cover (`titlepage`), publishing-information page, and table of contents
-   - When `publication.doi` is set in `config.yaml`, the DOI appears on both the cover and the publishing page, and in the suggested citation (repository URL and DOI URL when configured)
+   - When `publication.doi` is set in `config.yaml`, the **concept DOI** appears on the cover and publishing page, and in the suggested citation. `publication.version_doi` is not rendered on the cover (see [Zenodo DOI strategy](../../docs/guides/zenodo-doi-strategy.md))
    - Inserted AFTER `\begin{document}`
 
 **Example generated LaTeX**:

@@ -1,6 +1,6 @@
 # Manuscript Semantics & Syntax (Canonical)
 
-This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The public template exemplars — `projects/template_active_inference/`, `projects/template_autoresearch_project/`, `projects/template_code_project/`, and `projects/template_prose_project/` — plus the local-only `projects_archive/template_search_project/` add-on conform to the conventions below. New projects should copy whichever exemplar most closely matches their shape and follow these rules verbatim.
+This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The public template exemplars — `projects/templates/template_active_inference/`, `projects/templates/template_autoresearch_project/`, `projects/templates/template_code_project/`, `projects/templates/template_prose_project/`, and `projects/templates/template_template/` — plus the local-only `projects/archive/template_search_project/` add-on conform to the conventions below. New projects should copy whichever exemplar most closely matches their shape and follow these rules verbatim.
 
 The PDF rendering pipeline uses **two cooperating tools**:
 
@@ -104,7 +104,7 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 
 1. Use Markdown pipe-tables; the caption attaches via `: <caption text> {#tbl:label}` placed **directly below the table** (no blank line).
 2. Reference with `[@tbl:label]`, not `\ref{tab:label}` or `Table 1`.
-3. For dynamic table bodies, use a `{{TOKEN}}` placeholder (substituted at render time) inside the table — see [`template_code_project/manuscript/03_results.md`](../../projects/template_code_project/manuscript/03_results.md) `RESULT_TABLE_ROWS` for an example.
+3. For dynamic table bodies, use a `{{TOKEN}}` placeholder (substituted at render time) inside the table — see [`template_code_project/manuscript/03_results.md`](../../projects/templates/template_code_project/manuscript/03_results.md) `RESULT_TABLE_ROWS` for an example.
 
 ## 5. Sections
 
@@ -203,7 +203,7 @@ Before committing a manuscript change:
 
 ## See also
 
-- [`projects/template_code_project/manuscript/SYNTAX.md`](../../projects/template_code_project/manuscript/SYNTAX.md) — code-exemplar-specific token table and figure registry.
-- [`projects/template_prose_project/manuscript/SYNTAX.md`](../../projects/template_prose_project/manuscript/SYNTAX.md) — prose-exemplar-specific syntax notes.
-- [`projects_archive/template_search_project/manuscript/SYNTAX.md`](../../projects_archive/template_search_project/manuscript/SYNTAX.md) — search-exemplar-specific BibTeX-automation notes.
+- [`projects/templates/template_code_project/manuscript/SYNTAX.md`](../../projects/templates/template_code_project/manuscript/SYNTAX.md) — code-exemplar-specific token table and figure registry.
+- [`projects/templates/template_prose_project/manuscript/SYNTAX.md`](../../projects/templates/template_prose_project/manuscript/SYNTAX.md) — prose-exemplar-specific syntax notes.
+- [`projects/archive/template_search_project/manuscript/SYNTAX.md`](../../projects/archive/template_search_project/manuscript/SYNTAX.md) — search-exemplar-specific BibTeX-automation notes.
 - [`infrastructure/rendering/_pdf_combined_renderer.py`](../../infrastructure/rendering/_pdf_combined_renderer.py) — Pandoc invocation source.

@@ -6,7 +6,7 @@ This directory contains development standards, coding guidelines, and best pract
 
 > **Note**: Cursor reads the repository root **[`.cursorrules`](../../.cursorrules)** file for IDE/agent routing. Extended editorial standards live in **`docs/rules/`** (this directory).
 
-> **Project paths in examples**: default to [`projects/template_code_project/`](../../projects/template_code_project/). Authoritative active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md) (see [_generated/README.md](../_generated/README.md)).
+> **Project paths in examples**: default to [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/). Authoritative active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md) (see [_generated/README.md](../_generated/README.md)).
 
 ## Files
 
@@ -241,7 +241,7 @@ As shown in \eqref{eq:objective}, the objective function...
 **Related Documentation:**
 
 - [manuscript_style.md](manuscript_style.md) - manuscript formatting guide
-- [projects/template_code_project/manuscript/](../../projects/template_code_project/manuscript/) - Example manuscript (active project)
+- [projects/templates/template_code_project/manuscript/](../../projects/templates/template_code_project/manuscript/) - Example manuscript (active project)
 - [docs/usage/markdown-template-guide.md](../usage/markdown-template-guide.md) - Markdown guide
 
 ## Testing Standards
@@ -502,7 +502,7 @@ The `docs/rules/` standards align with and support the main documentation:
 | Documentation | [documentation_standards.md](documentation_standards.md) | [docs/core/workflow.md](../core/workflow.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/core/architecture.md](../core/architecture.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../../infrastructure/llm/AGENTS.md) |
-| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [projects/template_code_project/manuscript/](../../projects/template_code_project/manuscript/) |
+| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [projects/templates/template_code_project/manuscript/](../../projects/templates/template_code_project/manuscript/) |
 | Refactoring | [refactoring.md](refactoring.md) | [docs/best-practices/best-practices.md](../best-practices/best-practices.md) |
 
 ## Cross-Reference Guide
@@ -539,7 +539,7 @@ The `docs/rules/` standards align with and support the main documentation:
 | Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
 | Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |
 | Writing docs | [documentation_standards.md](documentation_standards.md) | Specific guide for your doc type |
-| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [projects/template_code_project/manuscript/](../../projects/template_code_project/manuscript/) for manuscript structure |
+| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [projects/templates/template_code_project/manuscript/](../../projects/templates/template_code_project/manuscript/) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
 | Generating reports | [reporting.md](reporting.md) | [docs/modules/modules-guide.md](../modules/modules-guide.md) for module details |

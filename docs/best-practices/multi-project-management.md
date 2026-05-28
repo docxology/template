@@ -16,36 +16,39 @@ When managing multiple research projects, you can leverage the template's struct
 - Manage dependencies across projects
 - Automate common workflows
 
-## 3-Directory Project Lifecycle
+## Typed-Subfolder Project Lifecycle
 
-The repository uses three sibling directories to manage projects at different stages:
+The repository uses typed subfolders under `projects/` to manage projects at different stages:
 
-| Directory | Purpose | Rendered by `./run.sh`? |
+| Subfolder | Purpose | Rendered by `./run.sh`? |
 |-----------|---------|------------------------|
-| `projects/` | **Active** – ready for the pipeline | ✅ Yes |
-| `projects_in_progress/` | **Work-in-progress** – not yet publication-ready | ❌ No |
-| `projects_archive/` | **Completed / paused** – kept for reference | ❌ No |
+| `projects/templates/` | **Public exemplars** – canonical reference projects | ✅ Yes |
+| `projects/active/` | **Hot-seat** – ready for the pipeline | ✅ Yes |
+| `projects/working/` | **Work-in-progress** – not yet publication-ready | ❌ No |
+| `projects/published/` | **Shipped** – published, kept for reference | ❌ No |
+| `projects/archive/` | **Completed / paused** – kept for reference | ❌ No |
+| `projects/other/` | **Miscellaneous** – uncategorized | ❌ No |
 
 **Rules:**
 
-- `./run.sh` only discovers projects under `projects/`. Archive and in-progress directories are ignored.
-- A project retains its full structure (src/, manuscript/, tests/, output/) in any directory, so it can be moved back to `projects/` at any time without modification.
-- Use `projects_in_progress/` while actively writing; move to `projects/` only when ready for a full pipeline render.
-- Use `projects_archive/` for completed or low-priority projects so they do not increase pipeline runtime.
+- `./run.sh` only discovers projects under the rendered subfolders `projects/templates/` and `projects/active/`. The non-rendered subfolders are ignored.
+- A project retains its full structure (src/, manuscript/, tests/, output/) in any subfolder, so it can be moved into `projects/active/` at any time without modification.
+- Use `projects/working/` while actively writing; move to `projects/active/` only when ready for a full pipeline render.
+- Use `projects/archive/` for completed or low-priority projects so they do not increase pipeline runtime.
 
-**Authoritative roster:** [`docs/_generated/active_projects.md`](../_generated/active_projects.md) from `discover_projects()`. Default path examples in docs use [`projects/template_code_project/`](../../projects/template_code_project/); an active project may maintain its own reference hub (for example [`projects/template_code_project/docs/`](../../projects/template_code_project/docs/)), and work-in-progress copies may live under `projects_in_progress/` until promoted.
+**Authoritative roster:** [`docs/_generated/active_projects.md`](../_generated/active_projects.md) from `discover_projects()`. Default path examples in docs use [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/); an active project may maintain its own reference hub (for example [`projects/templates/template_code_project/docs/`](../../projects/templates/template_code_project/docs/)), and work-in-progress copies may live under `projects/working/` until promoted.
 
 **Moving a project:**
 
 ```bash
 # Promote a WIP project to active
-mv projects_in_progress/my_paper projects/my_paper
+mv projects/working/my_paper projects/active/my_paper
 
 # Archive a completed project
-mv projects/finished_paper projects_archive/finished_paper
+mv projects/active/finished_paper projects/archive/finished_paper
 
 # Return an archived project for revisions
-mv projects_archive/old_paper projects_in_progress/old_paper
+mv projects/archive/old_paper projects/working/old_paper
 ```
 
 **Advanced: running the pipeline against a different directory:**
@@ -58,7 +61,7 @@ from pathlib import Path
 config = PipelineConfig(
     project_name="draft_paper",
     repo_root=Path("."),
-    projects_dir="projects_in_progress",   # override default "projects"
+    projects_dir="projects/working",   # override default "projects"
 )
 PipelineExecutor(config).execute_core_pipeline()
 ```

@@ -14,6 +14,13 @@ from infrastructure.project.validation import validate_project_structure
 
 logger = get_logger(__name__)
 
+#: Typed subfolders under ``projects/`` that hold non-rendered lifecycle mirrors.
+#: Their nested projects are deliberately excluded from discovery so they never
+#: enter the render set. Only ``templates/`` (public exemplars) and ``active/``
+#: (the hot seat) are discovered. Keep in sync with
+#: :data:`infrastructure.project.linking.LIFECYCLE_LINK_DIRS`.
+NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "published", "archive", "other"})
+
 
 def discover_projects(
     repo_root: Path | str,
@@ -26,7 +33,10 @@ def discover_projects(
     - Nested projects within program directories (subdirectories that contain projects)
 
     A program directory is a subdirectory that does not have src/ and tests/ itself,
-    but contains one or more valid project subdirectories.
+    but contains one or more valid project subdirectories. The public exemplars in
+    ``projects/templates/`` and the hot-seat ``projects/active/`` projects are
+    discovered as program directories (qualified ``templates/<name>`` and
+    ``active/<name>``).
 
     A valid project must have:
     - src/ directory with Python modules
@@ -39,28 +49,29 @@ def discover_projects(
     Args:
         repo_root: Repository root directory.
         projects_dir: Name of the active projects directory relative to repo_root.
-            Default ``'projects'``. The three standard directories are:
+            Default ``'projects'``. ``projects/`` holds typed lifecycle subfolders:
 
-            - ``projects/``            — active; discovered and rendered by run.sh
-            - ``projects_in_progress/`` — work-in-progress; NOT discovered automatically
-            - ``projects_archive/``     — completed/retired; NOT discovered automatically
-
-            Only pass a non-default value when you explicitly want to run a project
-            from a staging directory.
+            - ``projects/templates/`` — public canonical exemplars (rendered)
+            - ``projects/active/``     — hot-seat private projects (rendered)
+            - ``projects/working/``    — work-in-progress; NOT discovered
+            - ``projects/published/``  — published; NOT discovered
+            - ``projects/archive/``    — retired; NOT discovered
+            - ``projects/other/``      — miscellaneous; NOT discovered
 
     Returns:
         List of ProjectInfo objects for valid projects.
 
     Note:
-        ``projects_archive/`` and ``projects_in_progress/`` are deliberately excluded
-        from the default discovery path to prevent accidental execution.
+        The four lifecycle subfolders in :data:`NON_RENDERED_SUBDIRS`
+        (``working``/``published``/``archive``/``other``) are deliberately excluded
+        from discovery to prevent accidental execution/rendering.
 
     Examples:
         >>> projects = discover_projects(Path("/path/to/template"))
         >>> for project in projects:
         ...     print(f"{project.qualified_name}: {project.path}")
-        example_project: /path/to/template/projects/example_project
-        cognitive_integrity/cogsec_multiagent_1_theory: /path/to/template/projects/cognitive_integrity/cogsec_multiagent_1_theory
+        templates/template_code_project: /path/to/template/projects/templates/template_code_project
+        active/cogsec_multiagent: /path/to/template/projects/active/cogsec_multiagent
     """
     if isinstance(repo_root, str):
         repo_root = Path(repo_root)
@@ -77,6 +88,13 @@ def discover_projects(
             continue
 
         if child_dir.name.startswith("."):
+            continue
+
+        # Non-rendered lifecycle mirrors are never discovered — they hold
+        # backburner/published/retired/misc work that must stay out of the
+        # render set.
+        if child_dir.name in NON_RENDERED_SUBDIRS:
+            logger.debug(f"Skipping non-rendered lifecycle subfolder: {child_dir.name}")
             continue
 
         # First, check if this is a valid standalone project
@@ -102,16 +120,17 @@ def discover_projects(
 
 
 def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
-    """Return the directory for *project_name*, preferring real active projects over WIP trees.
+    """Return the directory for *project_name*, preferring the hot seat over WIP trees.
 
     Use this when a tool should find a work-in-progress tree (for example COGANT) that has not
-    been moved into ``projects/`` yet. If ``projects/<project_name>`` exists and looks like a
-    project source tree, that path wins; otherwise ``projects_in_progress/<project_name>`` is
-    used when present. A skeletal generated-output directory under ``projects/`` does not shadow
-    an actual WIP source tree.
+    been promoted to ``projects/active/`` yet. If ``projects/active/<project_name>`` exists and
+    looks like a project source tree, that path wins; otherwise
+    ``projects/working/<project_name>`` is used when present, then a flat
+    standalone ``projects/<project_name>`` tree. A skeletal generated-output
+    directory does not shadow an actual WIP source tree.
 
-    If neither directory exists, returns ``projects/<project_name>`` so callers get a stable
-    path for error messages.
+    If none of those exist, returns ``projects/active/<project_name>`` so callers get a
+    stable path for error messages.
 
     Args:
         repo_root: Repository root (directory containing ``infrastructure/``).
@@ -126,12 +145,25 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     def has_project_markers(path: Path) -> bool:
         return any((path / marker).exists() for marker in ("src", "tests", "scripts", "manuscript"))
 
-    primary = repo_root / "projects" / project_name
+    # A name that already carries a typed-subfolder prefix (e.g. ``active/demo``,
+    # ``working/draft``, ``templates/template_code_project``) is resolved directly
+    # under ``projects/`` without re-prepending the hot-seat prefix.
+    head = project_name.replace("\\", "/").split("/", 1)[0]
+    if head in (NON_RENDERED_SUBDIRS | {"active", "templates"}):
+        qualified = repo_root / "projects" / project_name
+        if qualified.is_dir():
+            return qualified.resolve()
+        return qualified
+
+    primary = repo_root / "projects" / "active" / project_name
     if primary.is_dir() and has_project_markers(primary):
         return primary.resolve()
-    wip = repo_root / "projects_in_progress" / project_name
+    wip = repo_root / "projects" / "working" / project_name
     if wip.is_dir():
         return wip.resolve()
+    flat = repo_root / "projects" / project_name
+    if flat.is_dir():
+        return flat.resolve()
     if primary.is_dir():
         return primary.resolve()
     return primary

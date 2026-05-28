@@ -56,7 +56,7 @@ Shared via [`scan_scope.py`](scan_scope.py) (`DEFAULT_EXCLUDE_PARTS`, `SKILL_EVA
 
 | Path component | Rationale |
 | --- | --- |
-| `output/`, `projects_archive/`, `projects_in_progress/` | Regenerated or non-executed trees |
+| `output/`, `projects/archive/`, `projects/working/` | Regenerated or non-executed trees |
 | `_generated/` | Machine-generated snippets |
 | `_skill-eval/` | Regenerated skill-eval harness fixtures under `docs/prompts/_skill-eval/` |
 
@@ -68,7 +68,7 @@ Cross-link lint also skips `**/_skill-eval/**` via `_DEFAULT_EXCLUDE_GLOBS`.
 
 - PIPELINE_MODE export claims tied to `run.sh` (bash-local only, not exported)
 - claims that `secure_run.sh` owns `--deterministic` parsing (Python `secure` subcommand owns the flag)
-- unconditional `projects/template_search_project/` without `projects_archive/` or local-only copy context
+- unconditional `projects/template_search_project/` without `projects/archive/` or local-only copy context
 
 ## See Also
 

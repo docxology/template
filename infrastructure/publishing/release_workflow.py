@@ -40,7 +40,6 @@ from infrastructure.publishing.zenodo.publish import (
     publish_new_version_to_zenodo,
     publish_to_zenodo,
 )
-from infrastructure.project.discovery import resolve_project_root
 
 logger = get_logger(__name__)
 
@@ -356,7 +355,7 @@ def _update_transmission_artifacts(
     if errors and not request.dry_run:
         return
 
-    project_root = resolve_project_root(request.repo_root, request.project_name)
+    project_root = request.repo_root / "projects" / request.project_name
     receipt_stub = {
         "project": request.project_name,
         "tag": request.tag,

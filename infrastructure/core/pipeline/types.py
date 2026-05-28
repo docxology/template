@@ -76,8 +76,9 @@ class PipelineConfig:
         project_name: Name of the project directory (e.g. 'template_code_project').
         repo_root: Absolute path to the repository root.
         projects_dir: Name of the active projects directory relative to repo_root.
-            Default 'projects'. Set to 'projects_in_progress' to run a project
-            that hasn't been promoted to the active pool yet.
+            Default 'projects'. Set to a typed subfolder such as
+            'projects/working' to run a project that hasn't been promoted to the
+            active pool yet.
         clean: Whether to clean outputs before running.
         skip_infra: Whether to skip infrastructure tests.
         skip_llm: Whether to skip LLM stages.
@@ -111,8 +112,8 @@ class PipelineConfig:
             → /repo/projects/myproj
 
             PipelineConfig(project_name='myproj', repo_root=Path('/repo'),
-                           projects_dir='projects_in_progress')
-            → /repo/projects_in_progress/myproj
+                           projects_dir='projects/working')
+            → /repo/projects/working/myproj
         """
         return self.repo_root / self.projects_dir / self.project_name
 

@@ -1,8 +1,8 @@
 # New Project Setup Checklist
 
-Complete checklist for creating a new project workspace in the Docxology Template. Lessons are framed around folder patterns and the stable exemplar [`projects/template_code_project/`](../../projects/template_code_project/).
+Complete checklist for creating a new project workspace in the Docxology Template. Lessons are framed around folder patterns and the stable exemplar [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/).
 
-For a copy-paste LLM scaffold anchored on that exemplar, see [new-project-one-shot-prompt.md](new-project-one-shot-prompt.md). Other active layouts under `projects/` are listed in [_generated/active_projects.md](../_generated/active_projects.md). For archived reference trees (not run by default), see `projects_archive/`.
+For a copy-paste LLM scaffold anchored on that exemplar, see [new-project-one-shot-prompt.md](new-project-one-shot-prompt.md). Other active layouts under `projects/` are listed in [_generated/active_projects.md](../_generated/active_projects.md). For archived reference trees (not run by default), see `projects/archive/`.
 
 > **Key Principle**: A project is auto-discovered when it is under
 > `projects/`, has `src/` with at least one Python file, and has `tests/`.
@@ -10,7 +10,7 @@ For a copy-paste LLM scaffold anchored on that exemplar, see [new-project-one-sh
 > the discovery predicate by itself. No infrastructure changes are needed for a
 > structurally valid project.
 >
-> **3-Directory Lifecycle**: Projects live in one of three directories: `projects/` (active, rendered by `./run.sh`), `projects_in_progress/` (WIP, not auto-discovered), or `projects_archive/` (completed/paused, not auto-discovered). Move projects freely between directories; only what is in `projects/` is rendered.
+> **3-Directory Lifecycle**: Projects live in one of three directories: `projects/` (active, rendered by `./run.sh`), `projects/working/` (WIP, not auto-discovered), or `projects/archive/` (completed/paused, not auto-discovered). Move projects freely between directories; only what is in `projects/` is rendered.
 
 ---
 

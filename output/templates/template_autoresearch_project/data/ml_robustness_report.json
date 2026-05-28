@@ -1,0 +1,142 @@
+{
+  "accepted_candidate_id": "exp-mlp-tanh-64",
+  "accepted_min_accuracy": 0.8,
+  "claim_boundary": "Deterministic no-retrain smoke test on the fixed local subset.",
+  "rows": [
+    {
+      "accuracy": 0.882,
+      "candidate_id": "exp-softmax-linear",
+      "model_type": "softmax_regression",
+      "sample_count": 500,
+      "transform": "identity",
+      "transform_type": "identity"
+    },
+    {
+      "accuracy": 0.814,
+      "candidate_id": "exp-softmax-linear",
+      "model_type": "softmax_regression",
+      "sample_count": 500,
+      "transform": "shift_right_1",
+      "transform_type": "shift"
+    },
+    {
+      "accuracy": 0.786,
+      "candidate_id": "exp-softmax-linear",
+      "model_type": "softmax_regression",
+      "sample_count": 500,
+      "transform": "shift_down_1",
+      "transform_type": "shift"
+    },
+    {
+      "accuracy": 0.88,
+      "candidate_id": "exp-softmax-linear",
+      "model_type": "softmax_regression",
+      "sample_count": 500,
+      "transform": "low_contrast_0_85",
+      "transform_type": "contrast"
+    },
+    {
+      "accuracy": 0.886,
+      "candidate_id": "exp-mlp-relu-32",
+      "model_type": "mlp",
+      "sample_count": 500,
+      "transform": "identity",
+      "transform_type": "identity"
+    },
+    {
+      "accuracy": 0.824,
+      "candidate_id": "exp-mlp-relu-32",
+      "model_type": "mlp",
+      "sample_count": 500,
+      "transform": "shift_right_1",
+      "transform_type": "shift"
+    },
+    {
+      "accuracy": 0.802,
+      "candidate_id": "exp-mlp-relu-32",
+      "model_type": "mlp",
+      "sample_count": 500,
+      "transform": "shift_down_1",
+      "transform_type": "shift"
+    },
+    {
+      "accuracy": 0.882,
+      "candidate_id": "exp-mlp-relu-32",
+      "model_type": "mlp",
+      "sample_count": 500,
+      "transform": "low_contrast_0_85",
+      "transform_type": "contrast"
+    },
+    {
+      "accuracy": 0.304,
+      "candidate_id": "exp-tiny-patch-attention",
+      "model_type": "tiny_patch_transformer",
+      "sample_count": 500,
+      "transform": "identity",
+      "transform_type": "identity"
+    },
+    {
+      "accuracy": 0.298,
+      "candidate_id": "exp-tiny-patch-attention",
+      "model_type": "tiny_patch_transformer",
+      "sample_count": 500,
+      "transform": "shift_right_1",
+      "transform_type": "shift"
+    },
+    {
+      "accuracy": 0.258,
+      "candidate_id": "exp-tiny-patch-attention",
+      "model_type": "tiny_patch_transformer",
+      "sample_count": 500,
+      "transform": "shift_down_1",
+      "transform_type": "shift"
+    },
+    {
+      "accuracy": 0.246,
+      "candidate_id": "exp-tiny-patch-attention",
+      "model_type": "tiny_patch_transformer",
+      "sample_count": 500,
+      "transform": "low_contrast_0_85",
+      "transform_type": "contrast"
+    },
+    {
+      "accuracy": 0.894,
+      "candidate_id": "exp-mlp-tanh-64",
+      "model_type": "mlp",
+      "sample_count": 500,
+      "transform": "identity",
+      "transform_type": "identity"
+    },
+    {
+      "accuracy": 0.832,
+      "candidate_id": "exp-mlp-tanh-64",
+      "model_type": "mlp",
+      "sample_count": 500,
+      "transform": "shift_right_1",
+      "transform_type": "shift"
+    },
+    {
+      "accuracy": 0.8,
+      "candidate_id": "exp-mlp-tanh-64",
+      "model_type": "mlp",
+      "sample_count": 500,
+      "transform": "shift_down_1",
+      "transform_type": "shift"
+    },
+    {
+      "accuracy": 0.898,
+      "candidate_id": "exp-mlp-tanh-64",
+      "model_type": "mlp",
+      "sample_count": 500,
+      "transform": "low_contrast_0_85",
+      "transform_type": "contrast"
+    }
+  ],
+  "schema": "template-autoresearch-robustness-report-v1",
+  "transforms": [
+    "identity",
+    "shift_right_1",
+    "shift_down_1",
+    "low_contrast_0_85"
+  ]
+}

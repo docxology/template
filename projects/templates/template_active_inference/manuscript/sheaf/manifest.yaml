@@ -1,0 +1,232 @@
+schema_version: 2
+
+defaults:
+  missing_track: skip
+
+sections:
+  - id: intro
+    order: 1
+    kind: group
+    imrad: introduction
+    depth: 0
+    compose: false
+    title: Introduction
+    short: intro
+    output_name: _group_intro.md
+    tracks: {}
+
+  - id: intro_motivation
+    order: 2
+    kind: section
+    imrad: introduction
+    depth: 1
+    title: Motivation and scope
+    short: motiv
+    output_name: 02_intro_motivation.md
+    tracks:
+      prose: manuscript/sections/imrad/intro_motivation/prose.md
+
+  - id: intro_contributions
+    order: 3
+    kind: section
+    imrad: introduction
+    depth: 1
+    title: Contributions
+    short: contrib
+    output_name: 03_intro_contributions.md
+    tracks:
+      prose: manuscript/sections/imrad/intro_contributions/prose.md
+      ontology: manuscript/sections/imrad/intro_contributions/ontology.yaml
+      visualization: manuscript/sections/imrad/intro_contributions/visualization.md
+
+  - id: methods
+    order: 4
+    kind: group
+    imrad: methods
+    depth: 0
+    compose: false
+    title: Methods
+    short: meth
+    output_name: _group_methods.md
+    tracks: {}
+
+  - id: methods_analytical
+    order: 5
+    kind: section
+    imrad: methods
+    depth: 1
+    title: Bernoulli–Ising analytical model
+    short: anal
+    output_name: 05_methods_analytical.md
+    tracks:
+      prose: manuscript/sections/imrad/methods_analytical/prose.md
+      formalism: manuscript/sections/imrad/methods_analytical/formalism.md
+      simulation: manuscript/sections/imrad/methods_analytical/simulation.md
+      visualization: manuscript/sections/imrad/methods_analytical/visualization.md
+      gnn: manuscript/sections/imrad/methods_analytical/gnn.md
+      ontology: manuscript/sections/imrad/methods_analytical/ontology.yaml
+
+  - id: methods_pymdp
+    order: 6
+    kind: section
+    imrad: methods
+    depth: 1
+    title: pymdp simulation harness
+    short: pymdp
+    output_name: 06_methods_pymdp.md
+    tracks:
+      prose: manuscript/sections/imrad/methods_pymdp/prose.md
+      formalism: manuscript/sections/imrad/methods_pymdp/formalism.md
+      pymdp: manuscript/sections/imrad/methods_pymdp/pymdp.md
+      gnn: manuscript/sections/imrad/methods_pymdp/gnn.md
+      ontology: manuscript/sections/imrad/methods_pymdp/ontology.yaml
+      visualization: manuscript/sections/imrad/methods_pymdp/visualization.md
+
+  - id: methods_lean
+    order: 7
+    kind: section
+    imrad: methods
+    depth: 1
+    title: Lean formalization boundary
+    short: lean
+    output_name: 07_methods_lean.md
+    tracks:
+      prose: manuscript/sections/imrad/methods_lean/prose.md
+      lean: manuscript/sections/imrad/methods_lean/lean.md
+      visualization: manuscript/sections/imrad/methods_lean/visualization.md
+
+  - id: methods_sheaf
+    order: 8
+    kind: section
+    imrad: methods
+    depth: 1
+    title: Sheaf composition
+    short: sheaf
+    output_name: 08_methods_sheaf.md
+    track_order:
+      - prose
+      - formalism
+      - visualization
+      - layers
+    tracks:
+      prose: manuscript/sections/imrad/methods_sheaf/prose.md
+      formalism: manuscript/sections/imrad/methods_sheaf/formalism.md
+      visualization: manuscript/sections/imrad/methods_sheaf/visualization.md
+      layers: manuscript/sections/imrad/methods_sheaf/layers.md
+
+  - id: results
+    order: 9
+    kind: group
+    imrad: results
+    depth: 0
+    compose: false
+    title: Results
+    short: res
+    output_name: _group_results.md
+    tracks: {}
+
+  - id: results_mi_sweep
+    order: 10
+    kind: section
+    imrad: results
+    depth: 1
+    title: Mutual-information parameter sweep
+    short: mi
+    output_name: 10_results_mi_sweep.md
+    tracks:
+      prose: manuscript/sections/imrad/results_mi_sweep/prose.md
+      formalism: manuscript/sections/imrad/results_mi_sweep/formalism.md
+      simulation: manuscript/sections/imrad/results_mi_sweep/simulation.md
+      visualization: manuscript/sections/imrad/results_mi_sweep/visualization.md
+
+  - id: results_free_energy
+    order: 11
+    kind: section
+    imrad: results
+    depth: 1
+    title: Free-energy decomposition
+    short: fe
+    output_name: 11_results_free_energy.md
+    tracks:
+      prose: manuscript/sections/imrad/results_free_energy/prose.md
+      visualization: manuscript/sections/imrad/results_free_energy/visualization.md
+
+  - id: results_si_tmaze
+    order: 12
+    kind: section
+    imrad: results
+    depth: 1
+    title: T-maze sophisticated inference
+    short: tmaze
+    output_name: 12_results_si_tmaze.md
+    tracks:
+      prose: manuscript/sections/imrad/results_si_tmaze/prose.md
+      pymdp: manuscript/sections/imrad/results_si_tmaze/pymdp.md
+      visualization: manuscript/sections/imrad/results_si_tmaze/visualization.md
+
+  - id: results_invariants
+    order: 13
+    kind: section
+    imrad: results
+    depth: 1
+    title: Validation invariants
+    short: inv
+    output_name: 13_results_invariants.md
+    tracks:
+      prose: manuscript/sections/imrad/results_invariants/prose.md
+      simulation: manuscript/sections/imrad/results_invariants/simulation.md
+      visualization: manuscript/sections/imrad/results_invariants/visualization.md
+
+  - id: discussion
+    order: 14
+    kind: group
+    imrad: discussion
+    depth: 0
+    compose: false
+    title: Discussion
+    short: disc
+    output_name: _group_discussion.md
+    tracks: {}
+
+  - id: discussion_outlook
+    order: 15
+    kind: section
+    imrad: discussion
+    depth: 1
+    title: Limitations and outlook
+    short: outlook
+    output_name: 15_discussion_outlook.md
+    tracks:
+      prose: manuscript/sections/imrad/discussion_outlook/prose.md
+      simulation: manuscript/sections/imrad/discussion_outlook/simulation.md
+      ontology: manuscript/sections/imrad/discussion_outlook/ontology.yaml
+
+  - id: appendix
+    order: 16
+    kind: group
+    imrad: appendix
+    depth: 0
+    compose: false
+    title: Appendix
+    short: appendix
+    output_name: _group_appendix.md
+    tracks: {}
+
+  - id: appendix_full_sheaf
+    order: 17
+    kind: section
+    imrad: appendix
+    depth: 1
+    title: "Appendix: full track coverage"
+    short: proof
+    output_name: 16_appendix_full_sheaf.md
+    tracks:
+      prose: manuscript/sections/imrad/appendix_full_sheaf/prose.md
+      formalism: manuscript/sections/imrad/appendix_full_sheaf/formalism.md
+      simulation: manuscript/sections/imrad/appendix_full_sheaf/simulation.md
+      pymdp: manuscript/sections/imrad/appendix_full_sheaf/pymdp.md
+      visualization: manuscript/sections/imrad/appendix_full_sheaf/visualization.md
+      lean: manuscript/sections/imrad/appendix_full_sheaf/lean.md
+      gnn: manuscript/sections/imrad/appendix_full_sheaf/gnn.md
+      ontology: manuscript/sections/imrad/appendix_full_sheaf/ontology.yaml
+      animation: manuscript/sections/imrad/appendix_full_sheaf/animation.md

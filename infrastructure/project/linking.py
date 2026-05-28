@@ -1,24 +1,32 @@
 """Symlink private lifecycle projects into the template checkout.
 
 The private companion repo (default: the sibling ``<repo_root.parent>/projects``,
-i.e. ``docxology/projects``) holds real work in three lifecycle folders:
+i.e. ``docxology/projects``) holds real work in five lifecycle folders, each
+mirrored into a same-named *typed subfolder* under ``<repo_root>/projects/``:
 
-- ``active/``  — symlinked into ``<repo_root>/projects/`` and rendered every run
-- ``passive/`` — symlinked into ``<repo_root>/projects_in_progress/``
-- ``archive/`` — symlinked into ``<repo_root>/projects_archive/``
+- ``active/``    — symlinked into ``projects/active/``   and rendered every run
+- ``working/``   — symlinked into ``projects/working/``   (not rendered)
+- ``published/`` — symlinked into ``projects/published/`` (not rendered)
+- ``archive/``   — symlinked into ``projects/archive/``   (not rendered)
+- ``other/``     — symlinked into ``projects/other/``     (not rendered)
 
-Because ``projects/`` is a namespace-package directory on the pythonpath, a
-symlink ``projects/<name>`` -> ``<private>/active/<name>`` resolves transparently
+The public canonical exemplars live in ``projects/templates/`` and are tracked
+natively in this repo — they are NOT part of the private companion repo and are
+never linked.
+
+Because ``projects/`` is on the pythonpath, a symlink
+``projects/active/<name>`` -> ``<private>/active/<name>`` resolves transparently
 for imports, discovery (:func:`infrastructure.project.discovery.discover_projects`),
-validation, and rendering — *as if* the project were a native child of
-``projects/``. A private lifecycle entry may itself be a symlink to a sibling
+validation, and rendering — *as if* the project were a native child of the typed
+subfolder. A private lifecycle entry may itself be a symlink to a sibling
 self-versioned repo; the resolved canonical repo remains the single source of
 truth. Execution stays inside the template checkout, so ``infrastructure/``
 resolves natively and no git submodule / vendored copy is needed.
 
-The passive/archive mirrors are intentionally placed outside the default
-``projects/`` discovery root. They make backburner and retired work visible to
-agents and humans without adding those projects to the normal render set.
+The ``working``/``published``/``archive``/``other`` mirrors are excluded from the
+default render set by :func:`discover_projects` (only ``templates`` and ``active``
+are rendered). They make backburner, published, retired, and miscellaneous work
+visible to agents and humans without adding those projects to the render set.
 
 Safety invariants (never violated):
 
@@ -43,19 +51,34 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 logger = get_logger(__name__)
 
-#: Real directories under ``projects/`` that must never be managed as symlinks.
-PROTECTED_NAMES: frozenset[str] = frozenset(PUBLIC_PROJECT_NAMES)
+#: Bare directory names of the public exemplars that must never be managed as
+#: symlinks. ``PUBLIC_PROJECT_NAMES`` are qualified (``templates/<name>``); the
+#: linker compares against bare child names, so strip the program prefix.
+PROTECTED_NAMES: frozenset[str] = frozenset(Path(name).name for name in PUBLIC_PROJECT_NAMES)
 #: Private root lifecycle subdirectories.
 ACTIVE_SUBDIR = "active"
-PASSIVE_SUBDIR = "passive"
+WORKING_SUBDIR = "working"
+PUBLISHED_SUBDIR = "published"
 ARCHIVE_SUBDIR = "archive"
+OTHER_SUBDIR = "other"
 #: The full lifecycle signature that identifies the private companion repo.
-LIFECYCLE_SUBDIRS = (ACTIVE_SUBDIR, PASSIVE_SUBDIR, ARCHIVE_SUBDIR)
+LIFECYCLE_SUBDIRS = (
+    ACTIVE_SUBDIR,
+    WORKING_SUBDIR,
+    PUBLISHED_SUBDIR,
+    ARCHIVE_SUBDIR,
+    OTHER_SUBDIR,
+)
 #: Mapping from private lifecycle subdirectory to local template mirror.
+#: Each lifecycle folder mirrors into a same-named typed subfolder under
+#: ``projects/``. The public ``projects/templates/`` exemplars are tracked
+#: natively and never linked.
 LIFECYCLE_LINK_DIRS: dict[str, str] = {
-    ACTIVE_SUBDIR: "projects",
-    PASSIVE_SUBDIR: "projects_in_progress",
-    ARCHIVE_SUBDIR: "projects_archive",
+    ACTIVE_SUBDIR: "projects/active",
+    WORKING_SUBDIR: "projects/working",
+    PUBLISHED_SUBDIR: "projects/published",
+    ARCHIVE_SUBDIR: "projects/archive",
+    OTHER_SUBDIR: "projects/other",
 }
 #: Optional one-line config file (gitignored) overriding the private root path.
 CONFIG_FILENAME = ".private_projects_root"
@@ -70,8 +93,8 @@ class LinkSyncResult:
     """Outcome of a link-sync call.
 
     Entries in ``created``, ``updated``, ``removed``, and ``skipped`` are
-    repo-relative paths such as ``projects/alpha`` or
-    ``projects_archive/old_project``.
+    repo-relative paths such as ``projects/active/alpha`` or
+    ``projects/archive/old_project``.
     """
 
     created: list[str] = field(default_factory=list)
@@ -107,10 +130,11 @@ def private_projects_root(repo_root: Path) -> Path | None:
 
     Explicit candidates (env, config) are accepted if they contain an
     ``active/`` subdirectory. The **implicit sibling fallback** is held to a
-    stricter bar — it must contain the full ``active/``+``passive/``+``archive/``
-    lifecycle signature — so a coincidental sibling ``projects/active/`` on
-    another developer's machine or a CI runner can never be mistaken for the
-    private companion repo and silently linked into the public tree.
+    stricter bar — it must contain the full
+    ``active/``+``working/``+``published/``+``archive/``+``other/`` lifecycle
+    signature — so a coincidental sibling ``projects/active/`` on another
+    developer's machine or a CI runner can never be mistaken for the private
+    companion repo and silently linked into the public tree.
 
     Args:
         repo_root: Template repository root (directory containing ``projects/``).
@@ -191,10 +215,17 @@ def _repo_relative(path: Path, repo_root: Path) -> str:
 
 
 def _lifecycle_for_link(path: Path) -> str | None:
-    """Infer the expected private lifecycle from a local mirror path."""
-    parent_name = path.parent.name
+    """Infer the expected private lifecycle from a local mirror path.
+
+    Mirror directories are nested (``projects/active``, ``projects/working``,
+    …), so a managed symlink sits at ``projects/<lifecycle>/<name>``. Match on
+    the trailing path segments of the symlink's parent against each mapped
+    mirror directory.
+    """
+    parent_parts = path.parent.parts
     for lifecycle, link_dir in LIFECYCLE_LINK_DIRS.items():
-        if parent_name == link_dir:
+        link_parts = Path(link_dir).parts
+        if parent_parts[-len(link_parts) :] == link_parts:
             return lifecycle
     return None
 
@@ -205,9 +236,11 @@ def is_managed_symlink(path: Path, private_root: Path) -> bool:
     A managed link points at the private lifecycle subtree expected for its
     local mirror directory:
 
-    - ``projects/*`` resolves into ``private/active/*``
-    - ``projects_in_progress/*`` resolves into ``private/passive/*``
-    - ``projects_archive/*`` resolves into ``private/archive/*``
+    - ``projects/active/*``    resolves into ``private/active/*``
+    - ``projects/working/*``   resolves into ``private/working/*``
+    - ``projects/published/*`` resolves into ``private/published/*``
+    - ``projects/archive/*``   resolves into ``private/archive/*``
+    - ``projects/other/*``     resolves into ``private/other/*``
 
     Real directories (``is_symlink`` False), foreign symlinks, and deliberate
     user links into a different lifecycle all return ``False``, so pruning and
@@ -316,9 +349,11 @@ def sync_private_project_links(
     For each directory under the private root's lifecycle folders, a matching
     symlink is created (or repointed) in the template checkout:
 
-    - ``active/<name>`` -> ``projects/<name>``
-    - ``passive/<name>`` -> ``projects_in_progress/<name>``
-    - ``archive/<name>`` -> ``projects_archive/<name>``
+    - ``active/<name>``    -> ``projects/active/<name>``
+    - ``working/<name>``   -> ``projects/working/<name>``
+    - ``published/<name>`` -> ``projects/published/<name>``
+    - ``archive/<name>``   -> ``projects/archive/<name>``
+    - ``other/<name>``     -> ``projects/other/<name>``
 
     When *prune* is true, managed symlinks whose source has left its lifecycle
     folder are removed from that lifecycle's local mirror.
@@ -369,8 +404,10 @@ def sync_active_links(
     """Compatibility wrapper for the lifecycle-aware linker.
 
     Historically this function synced only ``active/`` into ``projects/``. It
-    now delegates to :func:`sync_private_project_links`, which also mirrors
-    ``passive/`` and ``archive/`` into non-rendered local directories.
+    now delegates to :func:`sync_private_project_links`, which mirrors all five
+    lifecycle folders (``active``/``working``/``published``/``archive``/``other``)
+    into same-named typed subfolders under ``projects/`` — only ``active`` is
+    rendered.
     """
     return sync_private_project_links(repo_root, private_root, prune=prune, dry_run=dry_run)
 

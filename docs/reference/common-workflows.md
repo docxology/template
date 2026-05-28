@@ -33,7 +33,7 @@
 1. **Edit the abstract**
 
    ```bash
-   vim projects/template_code_project/manuscript/01_abstract.md
+   vim projects/templates/template_code_project/manuscript/01_abstract.md
    ```
 
 2. **Add your content**
@@ -79,7 +79,7 @@
 2. **Create the file**
 
    ```bash
-   vim projects/template_code_project/manuscript/07_limitations.md
+   vim projects/templates/template_code_project/manuscript/07_limitations.md
    ```
 
 3. **Add section header with label**
@@ -124,7 +124,7 @@
 1. **Create business logic in `projects/{name}/src/`**
 
    ```bash
-   vim projects/template_code_project/src/data_analysis.py
+   vim projects/templates/template_code_project/src/data_analysis.py
    ```
 
    ```python
@@ -140,7 +140,7 @@
 2. **Create tests (90% minimum coverage required)**
 
    ```bash
-   vim projects/template_code_project/tests/test_data_analysis.py
+   vim projects/templates/template_code_project/tests/test_data_analysis.py
    ```
 
    ```python
@@ -156,13 +156,13 @@
 3. **Run tests**
 
    ```bash
-   uv run pytest projects/template_code_project/tests/test_data_analysis.py --cov=projects/template_code_project/src/data_analysis
+   uv run pytest projects/templates/template_code_project/tests/test_data_analysis.py --cov=projects/templates/template_code_project/src/data_analysis
    ```
 
 4. **Create thin orchestrator script**
 
    ```bash
-   vim projects/template_code_project/scripts/my_analysis_figure.py
+   vim projects/templates/template_code_project/scripts/my_analysis_figure.py
    ```
 
    ```python
@@ -191,7 +191,7 @@
 5. **Run script**
 
    ```bash
-   uv run python projects/template_code_project/scripts/my_analysis_figure.py
+   uv run python projects/templates/template_code_project/scripts/my_analysis_figure.py
    ```
 
 6. **Add to manuscript**
@@ -318,7 +318,7 @@ Table \ref{tab:performance} summarizes...
 **Validation**:
 
 ```bash
-uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
 ```
 
 **See Also**: [Markdown Template Guide](../usage/markdown-template-guide.md)
@@ -336,7 +336,7 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 1. **Create module in `projects/{name}/src/`**
 
    ```bash
-   vim projects/template_code_project/src/statistics.py
+   vim projects/templates/template_code_project/src/statistics.py
    ```
 
    ```python
@@ -355,7 +355,7 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 2. **Create tests**
 
    ```bash
-   vim projects/template_code_project/tests/test_statistics.py
+   vim projects/templates/template_code_project/tests/test_statistics.py
    ```
 
    ```python
@@ -375,7 +375,7 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 3. **Ensure coverage**
 
    ```bash
-   uv run pytest projects/template_code_project/tests/test_statistics.py --cov=projects/template_code_project/src/statistics --cov-report=term-missing
+   uv run pytest projects/templates/template_code_project/tests/test_statistics.py --cov=projects/templates/template_code_project/src/statistics --cov-report=term-missing
    ```
 
 4. **Use in scripts (thin orchestrator)**
@@ -411,7 +411,7 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 1. **Create test file**
 
    ```bash
-   vim projects/template_code_project/tests/test_my_module.py
+   vim projects/templates/template_code_project/tests/test_my_module.py
    ```
 
 2. **Import module to test**
@@ -442,7 +442,7 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 4. **Run tests with coverage**
 
    ```bash
-   uv run pytest projects/template_code_project/tests/test_my_module.py --cov=projects/template_code_project/src/my_module --cov-report=term-missing
+   uv run pytest projects/templates/template_code_project/tests/test_my_module.py --cov=projects/templates/template_code_project/src/my_module --cov-report=term-missing
    ```
 
 5. **Check for missing lines**
@@ -478,13 +478,13 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 2. **Run specific test**
 
    ```bash
-   uv run pytest projects/template_code_project/tests/test_my_module.py::test_specific_function -v
+   uv run pytest projects/templates/template_code_project/tests/test_my_module.py::test_specific_function -v
    ```
 
 3. **Use debugger**
 
    ```bash
-   uv run pytest projects/template_code_project/tests/test_my_module.py --pdb
+   uv run pytest projects/templates/template_code_project/tests/test_my_module.py --pdb
    ```
 
 4. **Check detailed output**

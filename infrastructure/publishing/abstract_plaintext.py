@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.prose.markdown import normalise_for_deposit
 from infrastructure.publishing.zenodo_urls import zenodo_record_url_from_doi
-from infrastructure.rendering.manuscript_injection import substitute_manuscript_text
 
 logger = get_logger(__name__)
 
@@ -25,6 +25,8 @@ __all__ = [
 ]
 
 _ABSTRACT_FILENAME = "00_abstract.md"
+_UPPER_TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
+_SNAKE_TOKEN_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)(?::\.(\d+)f)?\}\}")
 
 
 @dataclass(frozen=True)
@@ -85,7 +87,59 @@ def load_manuscript_variables(variables_path: Path | None) -> dict[str, str]:
         return {}
     if not isinstance(payload, dict):
         return {}
-    return {str(key): str(value) for key, value in payload.items()}
+    variables = {str(key): str(value) for key, value in payload.items()}
+    for key, value in tuple(variables.items()):
+        variables.setdefault(key.upper(), value)
+    return variables
+
+
+def _substitute_snake_case_tokens(
+    text: str,
+    variables: dict[str, str],
+) -> tuple[str, list[str]]:
+    unresolved: list[str] = []
+
+    def _replace(match: re.Match[str]) -> str:
+        key = match.group(1)
+        precision = match.group(2)
+        if key not in variables:
+            unresolved.append(key)
+            return match.group(0)
+        value = variables[key]
+        if precision is not None:
+            try:
+                return f"{float(value):.{int(precision)}f}"
+            except ValueError:
+                return value
+        return value
+
+    return _SNAKE_TOKEN_RE.sub(_replace, text), unresolved
+
+
+def _substitute_uppercase_tokens(
+    text: str,
+    variables: dict[str, str],
+) -> tuple[str, list[str]]:
+    unresolved: list[str] = []
+
+    def _replace(match: re.Match[str]) -> str:
+        key = match.group(1)
+        if key in variables:
+            return variables[key]
+        unresolved.append(key)
+        return match.group(0)
+
+    return _UPPER_TOKEN_RE.sub(_replace, text), unresolved
+
+
+def substitute_abstract_tokens(
+    text: str,
+    variables: dict[str, str],
+) -> tuple[str, list[str]]:
+    """Hydrate both repository-wide uppercase and project snake_case tokens."""
+    text, upper_unresolved = _substitute_uppercase_tokens(text, variables)
+    text, snake_unresolved = _substitute_snake_case_tokens(text, variables)
+    return text, [*upper_unresolved, *snake_unresolved]
 
 
 def render_abstract_plaintext(
@@ -106,7 +160,7 @@ def render_abstract_plaintext(
             return ""
         variables = load_manuscript_variables(variables_path)
         if variables:
-            raw, unresolved = substitute_manuscript_text(raw, variables)
+            raw, unresolved = substitute_abstract_tokens(raw, variables)
             if unresolved:
                 logger.warning(
                     "Unresolved manuscript tokens in %s: %s",

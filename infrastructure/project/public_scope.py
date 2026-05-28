@@ -16,11 +16,11 @@ from infrastructure.project.discovery import discover_projects
 from infrastructure.project.project_info import ProjectInfo
 
 PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
-    "template_active_inference",
-    "template_autoresearch_project",
-    "template_code_project",
-    "template_prose_project",
-    "template_template",
+    "templates/template_active_inference",
+    "templates/template_autoresearch_project",
+    "templates/template_code_project",
+    "templates/template_prose_project",
+    "templates/template_template",
 )
 
 

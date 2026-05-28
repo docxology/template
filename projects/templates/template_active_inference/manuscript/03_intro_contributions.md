@@ -1,0 +1,29 @@
+# Contributions {#sec:intro_contributions}
+
+<!-- sheaf-track:prose -->
+
+## Scientific contributions
+
+1. **Analytical oracle** ([@sec:methods_analytical]): closed-form mutual information and free-energy decomposition on a symmetric Bernoulli–Ising toy with Monte Carlo cross-checks ([@sec:results_mi_sweep], [@sec:results_free_energy]).
+2. **Sophisticated-inference harness** ([@sec:methods_pymdp]): deterministic pymdp T-maze rollout with logged beliefs, actions, and merged invariant gates ([@sec:results_si_tmaze], [@sec:results_invariants]).
+3. **Sheaf-indexed composition** ([@sec:methods_sheaf]): {{sheaf_track_count}} optional fragment types bind to {{imrad_manifest_rows}} manifest rows under [@eq:coverage_cell], with a {{appendix_sheaf_track_count}}-track appendix composability proof ([@sec:appendix_full_sheaf]).
+
+[@fig:multi_track_architecture] maps the three scientific tracks to {{pipeline_track_count}} pipeline gates and {{sheaf_track_count}} composable fragment renderers. Measured invariant checks: {{invariants_passed}} / {{invariants_total}} passed.
+
+Ontology-facing symbols in the analytical track—`location`, `observation`, `policy`, and `expected_free_energy`—map to **HiddenState**, **ObservationLikelihood**, **PolicyPosterior**, and **ExpectedFreeEnergy** in the GNN concordance figure ([@fig:gnn_ontology_concordance], [@sec:methods_analytical]).
+
+<!-- sheaf-track:visualization -->
+
+![Process diagram linking three scientific tracks to {{pipeline_track_count}} pipeline gates and {{sheaf_track_count}} sheaf fragment types across {{imrad_manifest_rows}} manifest rows.](../output/figures/multi_track_architecture.png){#fig:multi_track_architecture width=95%}
+
+*Figure I1 (intro). Multi-track architecture: analytical, pymdp, and sheaf composition lanes mapped to {{pipeline_track_count}} pipeline gates and {{sheaf_track_count}} composable fragment types.*
+
+<!-- sheaf-track:ontology -->
+
+### Ontology bindings
+
+- `expected_free_energy` → **ExpectedFreeEnergy**
+- `location` → **HiddenState**
+- `observation` → **ObservationLikelihood**
+- `policy` → **PolicyPosterior**
+

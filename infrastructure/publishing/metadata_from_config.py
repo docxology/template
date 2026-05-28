@@ -8,7 +8,7 @@ from pathlib import Path
 from infrastructure.core.config.loader import load_config
 from infrastructure.core.exceptions import MetadataError
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.prose.markdown import normalise_for_deposit
+from infrastructure.publishing.abstract_plaintext import render_abstract_plaintext
 from infrastructure.publishing.deposit_filename import (
     DepositPublishContext,
     deposit_context_from_config,
@@ -16,6 +16,26 @@ from infrastructure.publishing.deposit_filename import (
 from infrastructure.publishing.models import AuthorRecord, PublicationMetadata
 
 logger = get_logger(__name__)
+
+#: Typed lifecycle subfolders that sit between ``projects/`` and a project dir.
+#: Keep in sync with discovery.NON_RENDERED_SUBDIRS plus the rendered
+#: ``active``/``templates`` pools.
+_TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset({"active", "working", "published", "archive", "other", "templates"})
+
+
+def _repo_root_and_qualified_name(project_root: Path) -> tuple[Path, str] | None:
+    """Return ``(repo_root, qualified_name)`` for a project source tree.
+
+    Handles both the flat ``projects/<name>`` layout and the typed-subfolder
+    layout ``projects/<type>/<name>`` (e.g. ``projects/templates/<name>``),
+    where the output tree lives at ``output/<qualified_name>``.
+    """
+    parent = project_root.parent
+    if parent.name == "projects":
+        return parent.parent, project_root.name
+    if parent.name in _TYPED_PROJECT_SUBDIRS and parent.parent.name == "projects":
+        return parent.parent.parent, f"{parent.name}/{project_root.name}"
+    return None
 
 
 @dataclass(frozen=True)
@@ -63,14 +83,40 @@ def _author_records_from_config(config: dict) -> tuple[list[str], list[AuthorRec
     return authors, records
 
 
-def _read_abstract_plaintext(abstract_path: Path) -> str:
+def _default_variables_path(config_path: Path) -> Path | None:
+    """Return generated manuscript variables next to or above a project config."""
+    project_root = config_path.parent.parent
+    candidates = [project_root / "output" / "data" / "manuscript_variables.json"]
+    if config_path.parent.name == "manuscript":
+        resolved = _repo_root_and_qualified_name(project_root)
+        if resolved is not None:
+            repo_root, qualified_name = resolved
+            candidates.append(repo_root / "output" / qualified_name / "data" / "manuscript_variables.json")
+    for path in candidates:
+        if path.is_file():
+            return path
+    return None
+
+
+def _default_abstract_path(config_path: Path) -> Path:
+    """Prefer hydrated output abstract when a config belongs to a project tree."""
+    project_root = config_path.parent.parent
+    candidates = [project_root / "output" / "manuscript" / "00_abstract.md"]
+    if config_path.parent.name == "manuscript":
+        resolved = _repo_root_and_qualified_name(project_root)
+        if resolved is not None:
+            repo_root, qualified_name = resolved
+            candidates.append(repo_root / "output" / qualified_name / "manuscript" / "00_abstract.md")
+    candidates.append(config_path.parent / "00_abstract.md")
+    for path in candidates:
+        if path.is_file():
+            return path
+    return candidates[-1]
+
+
+def _read_abstract_plaintext(abstract_path: Path, *, variables_path: Path | None = None) -> str:
     """Return a short plaintext abstract excerpt for citations and legacy fields."""
-    try:
-        text = abstract_path.read_text(encoding="utf-8")
-    except OSError as exc:
-        logger.warning("Could not read abstract from %s: %s", abstract_path, exc)
-        return ""
-    return normalise_for_deposit(text)
+    return render_abstract_plaintext(abstract_path, variables_path=variables_path)
 
 
 def _prior_doi_from_config(config: dict) -> str | None:
@@ -87,6 +133,7 @@ def publication_metadata_from_config_dict(
     config_path: Path,
     *,
     abstract_path: Path | None = None,
+    variables_path: Path | None = None,
     allow_draft_abstract: bool = False,
 ) -> PublicationMetadata:
     """Build ``PublicationMetadata`` from a parsed config mapping."""
@@ -105,8 +152,13 @@ def publication_metadata_from_config_dict(
 
     resolved_abstract_path = abstract_path
     if resolved_abstract_path is None:
-        resolved_abstract_path = config_path.parent / "00_abstract.md"
-    abstract = _read_abstract_plaintext(resolved_abstract_path) if resolved_abstract_path.exists() else ""
+        resolved_abstract_path = _default_abstract_path(config_path)
+    resolved_variables_path = variables_path if variables_path is not None else _default_variables_path(config_path)
+    abstract = (
+        _read_abstract_plaintext(resolved_abstract_path, variables_path=resolved_variables_path)
+        if resolved_abstract_path.exists()
+        else ""
+    )
     if not abstract and not allow_draft_abstract:
         override = publication.get("zenodo_description")
         if not (isinstance(override, str) and override.strip()):
@@ -148,6 +200,7 @@ def load_publication_release_context(
     config_path: Path,
     *,
     abstract_path: Path | None = None,
+    variables_path: Path | None = None,
     allow_draft_abstract: bool = False,
 ) -> PublicationReleaseContext:
     """Load publication metadata, deposit context, and prior DOI in one parse."""
@@ -159,6 +212,7 @@ def load_publication_release_context(
         config,
         config_path,
         abstract_path=abstract_path,
+        variables_path=variables_path,
         allow_draft_abstract=allow_draft_abstract,
     )
     return PublicationReleaseContext(
@@ -172,6 +226,7 @@ def publication_metadata_from_config(
     config_path: Path,
     *,
     abstract_path: Path | None = None,
+    variables_path: Path | None = None,
     allow_draft_abstract: bool = False,
 ) -> PublicationMetadata:
     """Load publication metadata from ``manuscript/config.yaml``.
@@ -179,6 +234,7 @@ def publication_metadata_from_config(
     Args:
         config_path: Path to ``config.yaml``.
         abstract_path: Optional abstract markdown file; defaults to sibling ``00_abstract.md``.
+        variables_path: Optional manuscript variables JSON used to hydrate abstract tokens.
         allow_draft_abstract: When False, raise if abstract text is empty after load.
 
     Returns:
@@ -187,5 +243,6 @@ def publication_metadata_from_config(
     return load_publication_release_context(
         config_path,
         abstract_path=abstract_path,
+        variables_path=variables_path,
         allow_draft_abstract=allow_draft_abstract,
     ).metadata

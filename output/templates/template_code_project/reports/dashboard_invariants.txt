@@ -1,0 +1,53 @@
+Invariants for Optimization Exemplar — Interactive Convergence Suite
+====================================================================
+generated:    2026-05-27T22:11:17Z
+project:      template_code_project
+git rev:      d15eef55
+git status:   dirty (uncommitted changes)
+
+summary:      22/22 passed, 0 failed
+
+  [PASS] gradient_finite_difference_agreement  equal                |3.33384e-11 - 0| = 3.334e-11 (tol=1.0e-05)
+         max |∇f_analytic − ∇f_finite_diff| < 1e-5 at a random test point (seed=20260506, eps=1e-06)
+  [PASS] reached_minimum_alpha=0.01            equal                |4.31712e-05 - 0| = 4.317e-05 (tol=1.0e-03)
+         ||x_final − x*|| ≤ 1.0e-03 with x* = A^{-1} b
+  [PASS] objective_at_minimum_alpha=0.01       equal                |9.31878e-10 - 0| = 9.319e-10 (tol=1.0e-03)
+         f(x_final) − f(x*) ≤ 1e-3 (f* = -0.5)
+  [PASS] objective_monotone_alpha=0.01         monotone_decreasing  worst out-of-order step = 0.000e+00 (tol=1.0e-09, sequence length 1001, expect a_i >= a_{i+1})
+         objective history is monotone non-increasing for stable α=0.01
+  [PASS] reached_minimum_alpha=0.1             equal                |9.82741e-09 - 0| = 9.827e-09 (tol=1.0e-03)
+         ||x_final − x*|| ≤ 1.0e-03 with x* = A^{-1} b
+  [PASS] objective_at_minimum_alpha=0.1        equal                |5.55112e-17 - 0| = 5.551e-17 (tol=1.0e-03)
+         f(x_final) − f(x*) ≤ 1e-3 (f* = -0.5)
+  [PASS] objective_monotone_alpha=0.1          monotone_decreasing  worst out-of-order step = 0.000e+00 (tol=1.0e-09, sequence length 176, expect a_i >= a_{i+1})
+         objective history is monotone non-increasing for stable α=0.1
+  [PASS] reached_minimum_alpha=0.5             equal                |7.45058e-09 - 0| = 7.451e-09 (tol=1.0e-03)
+         ||x_final − x*|| ≤ 1.0e-03 with x* = A^{-1} b
+  [PASS] objective_at_minimum_alpha=0.5        equal                |0 - 0| = 0.000e+00 (tol=1.0e-03)
+         f(x_final) − f(x*) ≤ 1e-3 (f* = -0.5)
+  [PASS] objective_monotone_alpha=0.5          monotone_decreasing  worst out-of-order step = 0.000e+00 (tol=1.0e-09, sequence length 28, expect a_i >= a_{i+1})
+         objective history is monotone non-increasing for stable α=0.5
+  [PASS] reached_minimum_alpha=1               equal                |0 - 0| = 0.000e+00 (tol=1.0e-03)
+         ||x_final − x*|| ≤ 1.0e-03 with x* = A^{-1} b
+  [PASS] objective_at_minimum_alpha=1          equal                |0 - 0| = 0.000e+00 (tol=1.0e-03)
+         f(x_final) − f(x*) ≤ 1e-3 (f* = -0.5)
+  [PASS] objective_monotone_alpha=1            monotone_decreasing  worst out-of-order step = 0.000e+00 (tol=1.0e-09, sequence length 2, expect a_i >= a_{i+1})
+         objective history is monotone non-increasing for stable α=1
+  [PASS] reached_minimum_alpha=1.5             equal                |7.45058e-09 - 0| = 7.451e-09 (tol=1.0e-03)
+         ||x_final − x*|| ≤ 1.0e-03 with x* = A^{-1} b
+  [PASS] objective_at_minimum_alpha=1.5        equal                |0 - 0| = 0.000e+00 (tol=1.0e-03)
+         f(x_final) − f(x*) ≤ 1e-3 (f* = -0.5)
+  [PASS] objective_monotone_alpha=1.5          monotone_decreasing  worst out-of-order step = 0.000e+00 (tol=1.0e-09, sequence length 28, expect a_i >= a_{i+1})
+         objective history is monotone non-increasing for stable α=1.5
+  [PASS] optimizer_finite_after_run_stable     finite               all finite (5 values)
+         every stable step size (α < 2/λ_max) yields a finite final objective (no NaN/Inf); divergent α intentionally not checked
+  [PASS] trajectory_monotone_alpha=0.01        monotone_decreasing  worst out-of-order step = 0.000e+00 (tol=1.0e-09, sequence length 101, expect a_i >= a_{i+1})
+         simulate_trajectory(α=0.01, max_iter=100) is monotone non-increasing
+  [PASS] trajectory_monotone_alpha=0.1         monotone_decreasing  worst out-of-order step = 0.000e+00 (tol=1.0e-09, sequence length 101, expect a_i >= a_{i+1})
+         simulate_trajectory(α=0.1, max_iter=100) is monotone non-increasing
+  [PASS] trajectory_monotone_alpha=0.5         monotone_decreasing  worst out-of-order step = 0.000e+00 (tol=1.0e-09, sequence length 28, expect a_i >= a_{i+1})
+         simulate_trajectory(α=0.5, max_iter=100) is monotone non-increasing
+  [PASS] trajectory_monotone_alpha=1           monotone_decreasing  worst out-of-order step = 0.000e+00 (tol=1.0e-09, sequence length 2, expect a_i >= a_{i+1})
+         simulate_trajectory(α=1, max_iter=100) is monotone non-increasing
+  [PASS] trajectory_monotone_alpha=1.5         monotone_decreasing  worst out-of-order step = 0.000e+00 (tol=1.0e-09, sequence length 28, expect a_i >= a_{i+1})
+         simulate_trajectory(α=1.5, max_iter=100) is monotone non-increasing

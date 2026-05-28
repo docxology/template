@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import json
 import re
 import tomllib
 from pathlib import Path
+
+import yaml
 
 from infrastructure.project.drift.models import Report
 from infrastructure.project.drift.orchestrator import (
@@ -343,6 +346,126 @@ def check_all_export_drift(project_root: Path, report: Report, project: str) -> 
             )
 
 
+_ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.\d+$")
+
+
+def _load_yaml_mapping(path: Path) -> dict:
+    if not path.is_file():
+        return {}
+    loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
+    return loaded if isinstance(loaded, dict) else {}
+
+
+def _normalize_doi(value: object) -> str:
+    if value is None:
+        return ""
+    text = str(value).strip()
+    if text.lower().startswith("https://doi.org/"):
+        return text[len("https://doi.org/") :]
+    return text
+
+
+def check_publication_metadata_consistency(project_root: Path, report: Report, project: str) -> None:
+    """Cross-check publication.doi, version_doi, CITATION.cff, and .zenodo.json."""
+    config_path = project_root / "manuscript" / "config.yaml"
+    if not config_path.is_file():
+        return
+
+    config = _load_yaml_mapping(config_path)
+    paper = config.get("paper", {}) if isinstance(config.get("paper"), dict) else {}
+    publication = config.get("publication", {}) if isinstance(config.get("publication"), dict) else {}
+    paper_version = str(paper.get("version", "")).strip()
+
+    concept_doi = _normalize_doi(publication.get("doi", ""))
+    version_doi = _normalize_doi(publication.get("version_doi", ""))
+    version_record = str(publication.get("version_record", "")).strip()
+
+    if concept_doi and not _ZENODO_DOI_RE.match(concept_doi):
+        report.add(
+            "WARNING",
+            project,
+            "publication_doi_format",
+            f"{_rel(config_path, project_root)} publication.doi is not a Zenodo DOI: {concept_doi!r}",
+        )
+
+    if version_doi:
+        if not _ZENODO_DOI_RE.match(version_doi):
+            report.add(
+                "WARNING",
+                project,
+                "publication_version_doi_format",
+                f"{_rel(config_path, project_root)} publication.version_doi is not a Zenodo DOI: {version_doi!r}",
+            )
+        if concept_doi and concept_doi == version_doi:
+            report.add(
+                "ERROR",
+                project,
+                "publication_split_doi_collision",
+                (
+                    f"{_rel(config_path, project_root)} publication.doi equals publication.version_doi "
+                    "— use concept DOI in doi and latest deposit in version_doi"
+                ),
+            )
+        if not version_record:
+            report.add(
+                "WARNING",
+                project,
+                "publication_version_record_missing",
+                f"{_rel(config_path, project_root)} has version_doi but no version_record URL",
+            )
+    elif concept_doi:
+        report.add(
+            "WARNING",
+            project,
+            "publication_split_doi_missing",
+            (
+                f"{_rel(config_path, project_root)} has publication.doi but no version_doi — "
+                "adopt split layout per docs/guides/zenodo-doi-strategy.md"
+            ),
+        )
+
+    cff_path = project_root / "CITATION.cff"
+    if cff_path.is_file():
+        cff = _load_yaml_mapping(cff_path)
+        cff_version = str(cff.get("version", "")).strip().strip("'\"")
+        cff_doi = _normalize_doi(cff.get("doi", ""))
+        if paper_version and cff_version and paper_version != cff_version:
+            report.add(
+                "ERROR",
+                project,
+                "publication_cff_version_drift",
+                (f"paper.version {paper_version!r} in config.yaml disagrees with CITATION.cff version {cff_version!r}"),
+            )
+        if concept_doi and cff_doi and concept_doi != cff_doi:
+            report.add(
+                "ERROR",
+                project,
+                "publication_cff_doi_drift",
+                f"CITATION.cff doi {cff_doi!r} must match publication.doi concept {concept_doi!r}",
+            )
+
+    zenodo_path = project_root / ".zenodo.json"
+    if zenodo_path.is_file() and paper_version:
+        try:
+            zenodo = json.loads(zenodo_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            report.add(
+                "ERROR",
+                project,
+                "publication_zenodo_json_invalid",
+                f"{_rel(zenodo_path, project_root)} is not valid JSON",
+            )
+            return
+        zenodo_version = str(zenodo.get("version", "")).strip()
+        if zenodo_version and zenodo_version != paper_version:
+            report.add(
+                "ERROR",
+                project,
+                "publication_zenodo_version_drift",
+                (f"paper.version {paper_version!r} disagrees with .zenodo.json version {zenodo_version!r}"),
+            )
+
+
 def check_required_files_exist(project_root: Path, report: Report, project: str) -> None:
     """Exemplar must ship the canonical layout.
 
@@ -438,6 +561,7 @@ def check_project(repo_root: Path, project: str, report: Report) -> None:
     check_no_oversize_src_files(project_root, report, project)
     check_no_blanket_except_in_src(project_root, report, project)
     check_mocks_absent_from_tests(project_root, report, project)
+    check_publication_metadata_consistency(project_root, report, project)
     check_project_scripts(project_root, repo_root, report, project)
 
 

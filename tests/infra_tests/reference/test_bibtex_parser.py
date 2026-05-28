@@ -18,7 +18,7 @@ from infrastructure.reference.citation.bibtex_parser import (
 from infrastructure.reference.citation.bibtex_writer import render_database
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-EXEMPLAR_BIB = REPO_ROOT / "projects" / "template_code_project" / "manuscript" / "references.bib"
+EXEMPLAR_BIB = REPO_ROOT / "projects" / "templates" / "template_code_project" / "manuscript" / "references.bib"
 
 
 class TestParseBasicEntry:

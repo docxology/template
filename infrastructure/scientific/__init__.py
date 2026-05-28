@@ -22,6 +22,9 @@ from infrastructure.scientific.benchmarking import (
     generate_performance_report,
 )
 
+# Import confirmation functions
+from infrastructure.scientific.confirmation import Confirmation, confirm_improvement
+
 # Import documentation functions
 from infrastructure.scientific.documentation import (
     generate_api_documentation,
@@ -50,8 +53,11 @@ __all__ = [
     # Data classes
     "StabilityTest",
     "BenchmarkResult",
+    "Confirmation",
     # Stability
     "check_numerical_stability",
+    # Confirmation
+    "confirm_improvement",
     # Benchmarking
     "benchmark_function",
     "format_benchmark_report",

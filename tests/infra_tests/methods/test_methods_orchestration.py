@@ -8,30 +8,31 @@ import sys
 from pathlib import Path
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from tests._support.projects import make_project, write_doc
 
 
 def test_build_plan_maps_pipeline_contracts_to_methods_surface(repo_root: Path) -> None:
     from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
 
-    plan = build_methods_orchestration_plan(repo_root, "template_code_project")
+    plan = build_methods_orchestration_plan(repo_root, "templates/template_code_project")
 
-    assert plan.project_name == "template_code_project"
+    assert plan.project_name == "templates/template_code_project"
     assert plan.pipeline_source.as_posix().endswith("infrastructure/core/pipeline/pipeline.yaml")
-    assert "projects/template_code_project/manuscript/02_methodology.md" in plan.method_sections
-    assert plan.artifact_manifest == Path("projects/template_code_project/output/reports/artifact_manifest.json")
-    assert plan.evidence_registry == Path("projects/template_code_project/output/reports/evidence_registry.json")
+    assert "projects/templates/template_code_project/manuscript/02_methodology.md" in plan.method_sections
+    assert plan.artifact_manifest == Path("projects/templates/template_code_project/output/reports/artifact_manifest.json")
+    assert plan.evidence_registry == Path("projects/templates/template_code_project/output/reports/evidence_registry.json")
 
     by_name = {stage.name: stage for stage in plan.stages}
     analysis = by_name["Project Analysis"]
     assert analysis.gate == "experiment_method_design"
-    assert "projects/template_code_project/src/" in analysis.input_artifacts
-    assert "projects/template_code_project/scripts/" in analysis.input_artifacts
+    assert "projects/templates/template_code_project/src/" in analysis.input_artifacts
+    assert "projects/templates/template_code_project/scripts/" in analysis.input_artifacts
     assert any("scripts/02_run_analysis.py" in command for command in analysis.verification_commands)
 
     render = by_name["PDF Rendering"]
     assert render.depends_on == ("Project Analysis",)
     assert any(
-        "execute_pipeline.py --project template_code_project --stage render_pdf" in command
+        "execute_pipeline.py --project templates/template_code_project --stage render_pdf" in command
         for command in render.verification_commands
     )
 
@@ -137,7 +138,8 @@ def test_methods_cli_outputs_json_and_markdown(repo_root: Path) -> None:
 def _write_minimal_repo(repo_root: Path) -> None:
     pipeline_dir = repo_root / "infrastructure" / "core" / "pipeline"
     pipeline_dir.mkdir(parents=True)
-    (pipeline_dir / "pipeline.yaml").write_text(
+    write_doc(
+        pipeline_dir / "pipeline.yaml",
         """
 stages:
   - name: Project Analysis
@@ -151,8 +153,6 @@ stages:
       retry_policy: 0
       gate: "experiment_method_design"
 """,
-        encoding="utf-8",
     )
-    project = repo_root / "projects" / "demo"
-    for path in ("src", "tests", "scripts", "manuscript", "output/reports"):
-        (project / path).mkdir(parents=True)
+    project = make_project(repo_root, "demo", with_manuscript=True, with_scripts=True)
+    (project / "output" / "reports").mkdir(parents=True, exist_ok=True)

@@ -11,7 +11,7 @@ flowchart LR
     LV2 --> LV3[Level 3<br/>search → enrich → BibTeX → LLM]
     LV1 -. CLI .-> CLI1[python -m infrastructure.search.literature.cli search]
     LV2 -. CLI .-> CLI2[python -m infrastructure.search.literature.cli to-bibtex]
-    LV3 -. project .-> PROJ[projects_archive/template_search_project/]
+    LV3 -. project .-> PROJ[projects/archive/template_search_project/]
 
     classDef level fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef tool fill:#0f766e,stroke:#0f172a,color:#fff
@@ -56,7 +56,7 @@ uv run python -m infrastructure.search.literature.cli to-bibtex \
 ```
 
 The emitted file is byte-compatible with the exemplar
-[`projects/template_code_project/manuscript/references.bib`](../../projects/template_code_project/manuscript/references.bib),
+[`projects/templates/template_code_project/manuscript/references.bib`](../../projects/templates/template_code_project/manuscript/references.bib),
 so Pandoc with `--natbib` picks it up unchanged.
 
 ## 3. Search → Enriched Corpus → LLM Synthesis
@@ -132,5 +132,5 @@ Three knobs make this workflow deterministic in CI:
 ## See Also
 
 * [`docs/modules/literature-search-and-references.md`](../modules/literature-search-and-references.md) — module reference.
-* [`projects_archive/template_search_project/`](../../projects_archive/template_search_project/) — fully wired exemplar project.
+* [`projects/archive/template_search_project/`](../../projects/archive/template_search_project/) — fully wired exemplar project.
 * [`docs/development/no-mocks-http-testing.md`](../development/no-mocks-http-testing.md) — testing conventions.

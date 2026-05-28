@@ -74,6 +74,25 @@ def test_build_project_registry_collects_variables_bibtex_figures_and_data(tmp_p
         '[{"claim_id": "c1", "value": 128}]',
         encoding="utf-8",
     )
+    (project / "figures.yaml").write_text(
+        """
+section_figures:
+  methods_sheaf:
+    - id: sheaf_layers_overview
+      number: 6
+""",
+        encoding="utf-8",
+    )
+    sheaf_config = project / "manuscript" / "sheaf"
+    sheaf_config.mkdir(parents=True)
+    (sheaf_config / "tracks.yaml").write_text(
+        """
+tracks:
+  simulation:
+    order: 30
+""",
+        encoding="utf-8",
+    )
     (project / "output" / "figures" / "plot.png").write_bytes(b"png")
 
     registry = build_project_evidence_registry(project)
@@ -86,8 +105,15 @@ def test_build_project_registry_collects_variables_bibtex_figures_and_data(tmp_p
     assert registry.has("figure", "fig:plot")
     assert registry.has("table", "tbl:values")
     assert registry.has("artifact", "output/figures/plot.png")
+    assert registry.has("number", "6")
+    assert registry.has("number", "30")
+    assert {fact.source_tier for fact in registry.lookup("number", "6")} == {"configuration"}
+    assert {fact.source_path for fact in registry.lookup("number", "30")} == {"manuscript/sheaf/tracks.yaml"}
 
-    report = validate_text_against_registry("The generated table reports 2,000 iterations.", registry)
+    report = validate_text_against_registry(
+        "The generated table reports 2,000 iterations. Figure 6 lists track order 30.",
+        registry,
+    )
     assert unsupported_number_tokens(report) == []
 
 

@@ -44,6 +44,29 @@ class TestNormaliseForDeposit:
         assert "**" not in out
         assert "[@smith2020]" not in out
 
+    def test_deposit_description_without_duplicate_hrules(self, tmp_path: Path) -> None:
+        abstract_path = tmp_path / "00_abstract.md"
+        abstract_path.write_text(
+            "Abstract body with `\\hyperref[sec:notation]{§S6}`{=latex}.\n\n---\n",
+            encoding="utf-8",
+        )
+        cross_links = DepositCrossLinks(
+            project="template_prose_project",
+            tag="v1.0.0",
+            github_repo="owner/repo",
+            pdf_sha256="sha256value",
+            doi="10.5281/zenodo.12345",
+        )
+        description = build_deposit_description(
+            abstract_source=abstract_path,
+            variables_path=None,
+            cross_links=cross_links,
+        )
+        assert "\\hyperref" not in description
+        assert "§S6" in description
+        assert "---\n---" not in description
+        assert description.count("---") == 1
+
     def test_links_to_label_paren_url_helper(self) -> None:
         text = "See [Pandoc](https://pandoc.org) for details."
         assert links_to_label_paren_url(text) == "See Pandoc (https://pandoc.org) for details."
@@ -64,6 +87,22 @@ class TestRenderAbstractPlaintext:
         out = render_abstract_plaintext(abstract_path, variables_path=variables_path)
         assert "3 files" in out
         assert "1200 words" in out
+        assert "{{" not in out
+
+    def test_injects_snake_case_variables_from_json(self, tmp_path: Path) -> None:
+        abstract_path = tmp_path / "00_abstract.md"
+        abstract_path.write_text(
+            "Binds {{track_count}} tracks with residual {{max_residual:.2f}}.\n",
+            encoding="utf-8",
+        )
+        variables_path = tmp_path / "manuscript_variables.json"
+        variables_path.write_text(
+            json.dumps({"track_count": 7, "max_residual": 0.004}),
+            encoding="utf-8",
+        )
+        out = render_abstract_plaintext(abstract_path, variables_path=variables_path)
+        assert "7 tracks" in out
+        assert "0.00" in out
         assert "{{" not in out
 
     def test_override_skips_markdown_source(self, tmp_path: Path) -> None:

@@ -264,9 +264,9 @@ class TestDiscoverMarkdownFilesFromDocsDiscovery:
         result = discover_markdown_files(tmp_path, scope="repo")
         assert len(result) == 0
 
-    def test_excludes_projects_archive(self, tmp_path):
-        (tmp_path / "projects_archive").mkdir()
-        (tmp_path / "projects_archive" / "old.md").write_text("# Old")
+    def test_excludes_projects_archive_subfolder(self, tmp_path):
+        (tmp_path / "projects" / "archive").mkdir(parents=True)
+        (tmp_path / "projects" / "archive" / "old.md").write_text("# Old")
         result = discover_markdown_files(tmp_path, scope="repo")
         assert len(result) == 0
 

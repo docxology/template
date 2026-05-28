@@ -73,7 +73,7 @@ For each quantitative claim in a manuscript:
 ```python
 """Regression test for Figure 3 panel (b) — convergence rate coefficient.
 
-Manuscript: projects/template_code_project/manuscript/03_results.md, Figure 3 panel (b).
+Manuscript: projects/templates/template_code_project/manuscript/03_results.md, Figure 3 panel (b).
 Claim: "the convergence rate constant k = 0.4271 ± 0.0003 (n=1000 trials, seed=42)"
 """
 

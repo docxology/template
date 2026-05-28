@@ -31,7 +31,7 @@ This document provides detailed performance analysis extracted from the build sy
 
 **Result:** ✅ **ALL SCRIPTS SUCCESSFUL**
 
-#### Script 1: `projects/template_code_project/scripts/optimization_analysis.py`
+#### Script 1: `projects/templates/template_code_project/scripts/optimization_analysis.py`
 
 - ✅ Demonstrates thin orchestrator pattern
 - ✅ Imports from `src/analysis.py`, `src/figures.py`, `src/optimizer.py`

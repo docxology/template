@@ -76,7 +76,7 @@ The template includes example scripts:
 
 ```bash
 # Run exemplar analysis script (figures + data under project output/)
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 # Or run all project scripts via the pipeline stage
 uv run python scripts/02_run_analysis.py --project template_code_project
@@ -108,9 +108,9 @@ def main():
     data = [1.2, 2.3, 1.8, 3.4, 2.1]
 
     # USE projects/{name}/src/ methods for computation - NEVER implement here
-    avg = calculate_average(data)  # From projects/template_code_project/src/example.py
-    max_val = find_maximum(data)   # From projects/template_code_project/src/example.py
-    min_val = find_minimum(data)   # From projects/template_code_project/src/example.py
+    avg = calculate_average(data)  # From projects/templates/template_code_project/src/example.py
+    max_val = find_maximum(data)   # From projects/templates/template_code_project/src/example.py
+    min_val = find_minimum(data)   # From projects/templates/template_code_project/src/example.py
 
     # Script ONLY handles visualization
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -124,7 +124,7 @@ def main():
     ax.set_ylabel('Value')
 
     # Save output
-    output_dir = 'projects/template_code_project/output/figures'
+    output_dir = 'projects/templates/template_code_project/output/figures'
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, 'my_analysis.png')
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
@@ -158,7 +158,7 @@ if __name__ == '__main__':
 If computation logic doesn't exist, add it to `projects/{name}/src/` first:
 
 ```python
-# projects/template_code_project/src/statistics.py
+# projects/templates/template_code_project/src/statistics.py
 def calculate_variance(values):
     """Calculate sample variance."""
     mean = sum(values) / len(values)
@@ -172,7 +172,7 @@ def calculate_std_dev(values):
 **Step 3: Create tests (coverage required)**
 
 ```python
-# projects/template_code_project/tests/test_statistics.py
+# projects/templates/template_code_project/tests/test_statistics.py
 from projects.template_code_project.src.statistics import calculate_variance, calculate_std_dev
 
 def test_calculate_variance():
@@ -189,13 +189,13 @@ def test_calculate_std_dev():
 **Step 4: Run tests**
 
 ```bash
-uv run pytest projects/template_code_project/tests/test_statistics.py --cov=projects.template_code_project.src.statistics --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/test_statistics.py --cov=projects.template_code_project.src.statistics --cov-report=term-missing
 ```
 
 **Step 5: Create thin orchestrator script**
 
 ```python
-# projects/template_code_project/scripts/statistics_figure.py
+# projects/templates/template_code_project/scripts/statistics_figure.py
 #!/usr/bin/env python3
 import os
 import matplotlib
@@ -222,7 +222,7 @@ def main():
     ax.set_title('Distribution with Standard Deviation')
 
     # Save
-    output_path = 'projects/template_code_project/output/figures/statistics_figure.png'
+    output_path = 'projects/templates/template_code_project/output/figures/statistics_figure.png'
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
@@ -237,7 +237,7 @@ if __name__ == '__main__':
 **Step 6: Run script**
 
 ```bash
-uv run python projects/template_code_project/scripts/statistics_figure.py
+uv run python projects/templates/template_code_project/scripts/statistics_figure.py
 ```
 
 **Step 7: Add to manuscript**
@@ -319,7 +319,7 @@ When adding new analysis capabilities:
 **Step 2: Write tests first**
 
 ```python
-# projects/template_code_project/tests/test_correlation.py
+# projects/templates/template_code_project/tests/test_correlation.py
 import pytest
 from projects.template_code_project.src.correlation import calculate_correlation, calculate_r_squared, linear_regression
 
@@ -356,7 +356,7 @@ def test_linear_regression():
 **Step 3: Implement in `projects/{name}/src/`**
 
 ```python
-# projects/template_code_project/src/correlation.py
+# projects/templates/template_code_project/src/correlation.py
 """Correlation and regression analysis functions."""
 
 def calculate_correlation(x: list[float], y: list[float]) -> float:
@@ -418,7 +418,7 @@ def linear_regression(x: list[float], y: list[float]) -> tuple[float, float]:
 **Step 4: Run tests**
 
 ```bash
-uv run pytest projects/template_code_project/tests/test_correlation.py --cov=projects.template_code_project.src.correlation --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/test_correlation.py --cov=projects.template_code_project.src.correlation --cov-report=term-missing
 ```
 
 Ensure coverage requirements are met before proceeding.
@@ -426,7 +426,7 @@ Ensure coverage requirements are met before proceeding.
 **Step 5: Use in scripts**
 
 ```python
-# projects/template_code_project/scripts/correlation_analysis.py
+# projects/templates/template_code_project/scripts/correlation_analysis.py
 #!/usr/bin/env python3
 import os
 import matplotlib
@@ -434,7 +434,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.template_code_project.src.correlation import calculate_correlation, linear_regression  # From projects/template_code_project/src/
+from projects.template_code_project.src.correlation import calculate_correlation, linear_regression  # From projects/templates/template_code_project/src/
 
 def main():
     # Generate sample data
@@ -457,7 +457,7 @@ def main():
     ax.grid(True, alpha=0.3)
 
     # Save
-    output_path = 'projects/template_code_project/output/figures/correlation_analysis.png'
+    output_path = 'projects/templates/template_code_project/output/figures/correlation_analysis.png'
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
@@ -478,18 +478,18 @@ import numpy as np
 import csv
 
 # Save as NPZ (NumPy compressed)
-np.savez('projects/template_code_project/output/data/analysis_data.npz',
+np.savez('projects/templates/template_code_project/output/data/analysis_data.npz',
          x=x, y=y, correlation=corr)
 
 # Save as CSV (portable)
-with open('projects/template_code_project/output/data/analysis_data.csv', 'w', newline='') as f:
+with open('projects/templates/template_code_project/output/data/analysis_data.csv', 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerow(['x', 'y'])
     writer.writerows(zip(x, y))
 
 # Print both paths
-print('projects/template_code_project/output/data/analysis_data.npz')
-print('projects/template_code_project/output/data/analysis_data.csv')
+print('projects/templates/template_code_project/output/data/analysis_data.npz')
+print('projects/templates/template_code_project/output/data/analysis_data.csv')
 ```
 
 ---
@@ -553,13 +553,13 @@ flowchart TB
 vim projects/{name}/src/my_module.py
 
 # 2. Write tests
-vim projects/template_code_project/tests/test_my_module.py
+vim projects/templates/template_code_project/tests/test_my_module.py
 
 # 3. Run tests
-uv run pytest projects/template_code_project/tests/test_my_module.py --cov=projects.template_code_project.src.my_module
+uv run pytest projects/templates/template_code_project/tests/test_my_module.py --cov=projects.template_code_project.src.my_module
 
 # 4. Create/update script
-vim projects/template_code_project/scripts/my_figure.py
+vim projects/templates/template_code_project/scripts/my_figure.py
 
 # 5. Run build
 uv run python scripts/execute_pipeline.py --project {name} --core-only
@@ -597,17 +597,17 @@ echo "Running custom build pipeline..."
 
 # 1. Run specific tests
 echo "Testing analysis module..."
-uv run pytest projects/template_code_project/tests/test_correlation.py --cov=projects.template_code_project.src.correlation
+uv run pytest projects/templates/template_code_project/tests/test_correlation.py --cov=projects.template_code_project.src.correlation
 
 # 2. Generate specific figures
 echo "Generating figures..."
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 # 3. Build specific sections
 # NOTE: paths below are illustrative — substitute your actual manuscript section.
 echo "Building results section..."
-pandoc projects/template_code_project/manuscript/04_experimental_results.md \
-    -o projects/template_code_project/output/pdf/04_experimental_results.pdf \
+pandoc projects/templates/template_code_project/manuscript/04_experimental_results.md \
+    -o projects/templates/template_code_project/output/pdf/04_experimental_results.pdf \
     --pdf-engine=xelatex  # example output path
 
 echo "Custom build!"
@@ -666,7 +666,7 @@ if __name__ == '__main__':
 **Solution**:
 ```python
 import os
-output_dir = 'projects/template_code_project/output/figures'
+output_dir = 'projects/templates/template_code_project/output/figures'
 os.makedirs(output_dir, exist_ok=True)  # Create if missing
 fig.savefig(os.path.join(output_dir, 'figure.png'), dpi=300)
 ```
@@ -679,7 +679,7 @@ fig.savefig(os.path.join(output_dir, 'figure.png'), dpi=300)
 
 **Solution**: Use `uv run` to ensure proper Python path:
 ```bash
-uv run python projects/template_code_project/scripts/my_figure.py
+uv run python projects/templates/template_code_project/scripts/my_figure.py
 ```
 
 ### Matplotlib Display Errors

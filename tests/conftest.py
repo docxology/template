@@ -49,7 +49,7 @@ if os.path.exists(SRC) and SRC not in sys.path:
 
 # Add projects/*/src/ to path for project modules (active projects only)
 # Note: Only active projects in projects/ directory are added here.
-# Archived projects in projects_archive/ are not included.
+# Non-rendered lifecycle subfolders (projects/working|published|archive|other/) are not rendered.
 # Projects are discovered dynamically from the projects/ directory.
 # Supports both top-level projects (projects/act_inf_metaanalysis/src/) and nested/program-grouped
 # projects (projects/cognitive_integrity/cogsec_multiagent_1_theory/src/).

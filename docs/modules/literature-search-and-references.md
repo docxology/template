@@ -4,7 +4,7 @@ End-to-end module guide for the **discovery → export → synthesis** workflow:
 [`infrastructure/search/`](../../infrastructure/search/) finds papers,
 [`infrastructure/reference/`](../../infrastructure/reference/) exports them
 to BibTeX (compatible with the
-[`projects/template_code_project/manuscript/references.bib`](../../projects/template_code_project/manuscript/references.bib)
+[`projects/templates/template_code_project/manuscript/references.bib`](../../projects/templates/template_code_project/manuscript/references.bib)
 syntax read by Pandoc with `--natbib`), and
 [`infrastructure/llm/`](../../infrastructure/llm/) synthesises content over
 the result.
@@ -115,7 +115,7 @@ The project's no-mocks policy is satisfied by:
 ## Format Compatibility
 
 The BibTeX writer is byte-compatible with
-[`projects/template_code_project/manuscript/references.bib`](../../projects/template_code_project/manuscript/references.bib):
+[`projects/templates/template_code_project/manuscript/references.bib`](../../projects/templates/template_code_project/manuscript/references.bib):
 
 * 2-space indent, trailing-comma-rule.
 * `pages={N--M}` (auto-normalised from `-` / `–` / `—`).
@@ -127,4 +127,4 @@ The BibTeX writer is byte-compatible with
 
 * Module skills: [`infrastructure/search/SKILL.md`](../../infrastructure/search/SKILL.md), [`infrastructure/reference/SKILL.md`](../../infrastructure/reference/SKILL.md).
 * Module agents: [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md), [`infrastructure/reference/AGENTS.md`](../../infrastructure/reference/AGENTS.md).
-* Exemplar project: [`projects_archive/template_search_project/`](../../projects_archive/template_search_project/).
+* Exemplar project: [`projects/archive/template_search_project/`](../../projects/archive/template_search_project/).

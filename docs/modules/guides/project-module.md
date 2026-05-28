@@ -41,7 +41,7 @@ for project in projects:
 from pathlib import Path
 from infrastructure.project import validate_project_structure
 
-is_valid, message = validate_project_structure(Path("projects/template_code_project"))
+is_valid, message = validate_project_structure(Path("projects/templates/template_code_project"))
 if is_valid:
     print("Project structure is valid")
 else:
@@ -54,7 +54,7 @@ else:
 from pathlib import Path
 from infrastructure.project import get_project_metadata
 
-metadata = get_project_metadata(Path("projects/template_code_project"))
+metadata = get_project_metadata(Path("projects/templates/template_code_project"))
 print(f"Title: {metadata.title}")
 print(f"Authors: {metadata.authors}")
 ```
@@ -84,7 +84,7 @@ A directory is a valid project if and only if:
 3. It contains `src/` with at least one Python file
 4. It contains `tests/`
 
-Projects in `projects_in_progress/` and `projects_archive/` are **not** discovered.
+Projects in `projects/working/` and `projects/archive/` are **not** discovered.
 `manuscript/config.yaml` is still required for rendering metadata and normal
 project workflows, but it is not the low-level discovery predicate.
 

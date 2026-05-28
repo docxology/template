@@ -97,72 +97,45 @@ Thumbs.db
 # projects/*/output stays ignored.
 !/output/
 /output/*
-!/output/template_code_project/
-!/output/template_code_project/**
-!/output/template_prose_project/
-!/output/template_prose_project/**
-!/output/template_active_inference/
-!/output/template_active_inference/**
-!/output/template_autoresearch_project/
-!/output/template_autoresearch_project/**
-!/output/template_template/
-!/output/template_template/**
-# Public-exemplar PROJECT-LOCAL rendered output (bare-render target) is
-# also tracked as render-proof. Scoped to the five public templates only;
-# every other projects/*/output stays ignored (confidentiality).
-!projects/template_active_inference/output/
-!projects/template_active_inference/output/**
-!projects/template_autoresearch_project/output/
-!projects/template_autoresearch_project/output/**
-!projects/template_code_project/output/
-!projects/template_code_project/output/**
-!projects/template_prose_project/output/
-!projects/template_prose_project/output/**
-!projects/template_template/output/
-!projects/template_template/output/**
+# Public exemplar rendered output lives under output/templates/<name>/ and is
+# tracked as living render-proof. Re-include the templates/ shell, then
+# re-ignore its contents so ONLY the five canonical exemplars are tracked —
+# any other rotating/confidential project's output under output/ stays ignored.
+!/output/templates/
+/output/templates/*
+!/output/templates/template_code_project/
+!/output/templates/template_code_project/**
+!/output/templates/template_prose_project/
+!/output/templates/template_prose_project/**
+!/output/templates/template_active_inference/
+!/output/templates/template_active_inference/**
+!/output/templates/template_autoresearch_project/
+!/output/templates/template_autoresearch_project/**
+!/output/templates/template_template/
+!/output/templates/template_template/**
 
-output/template_*/**/.checkpoints/
-output/template_*/**/.pipeline/
-projects/template_*/output/**/.checkpoints/
-projects/template_*/output/**/.pipeline/
+output/templates/template_*/**/.checkpoints/
+output/templates/template_*/**/.pipeline/
 # Re-exclude LaTeX build-intermediate files inside the tracked public-exemplar
 # output trees — keep deliverables (pdf/png/json/csv/html/md), drop churn.
-output/template_*/**/*.aux
-output/template_*/**/*.log
-output/template_*/**/*.out
-output/template_*/**/*.toc
-output/template_*/**/*.fls
-output/template_*/**/*.fdb_latexmk
-output/template_*/**/*.snm
-output/template_*/**/*.nav
-output/template_*/**/*.vrb
-output/template_*/**/*.bcf
-output/template_*/**/*.run.xml
-output/template_*/**/*.synctex.gz
-output/template_*/**/*.lof
-output/template_*/**/*.lot
-output/template_*/**/*.tex
-output/template_*/**/*.idx
-output/template_*/**/*.ilg
-output/template_*/**/*.ind
-projects/template_*/output/**/*.aux
-projects/template_*/output/**/*.log
-projects/template_*/output/**/*.out
-projects/template_*/output/**/*.toc
-projects/template_*/output/**/*.fls
-projects/template_*/output/**/*.fdb_latexmk
-projects/template_*/output/**/*.snm
-projects/template_*/output/**/*.nav
-projects/template_*/output/**/*.vrb
-projects/template_*/output/**/*.bcf
-projects/template_*/output/**/*.run.xml
-projects/template_*/output/**/*.synctex.gz
-projects/template_*/output/**/*.lof
-projects/template_*/output/**/*.lot
-projects/template_*/output/**/*.tex
-projects/template_*/output/**/*.idx
-projects/template_*/output/**/*.ilg
-projects/template_*/output/**/*.ind
+output/templates/template_*/**/*.aux
+output/templates/template_*/**/*.log
+output/templates/template_*/**/*.out
+output/templates/template_*/**/*.toc
+output/templates/template_*/**/*.fls
+output/templates/template_*/**/*.fdb_latexmk
+output/templates/template_*/**/*.snm
+output/templates/template_*/**/*.nav
+output/templates/template_*/**/*.vrb
+output/templates/template_*/**/*.bcf
+output/templates/template_*/**/*.run.xml
+output/templates/template_*/**/*.synctex.gz
+output/templates/template_*/**/*.lof
+output/templates/template_*/**/*.lot
+output/templates/template_*/**/*.tex
+output/templates/template_*/**/*.idx
+output/templates/template_*/**/*.ilg
+output/templates/template_*/**/*.ind
 **/.benchmarks/
 **/.pytest_cache/
 **/.venv/
@@ -178,37 +151,45 @@ projects/template_*/output/**/*.ind
 # Test artifacts
 invalid/
 
-# projects/: ignore all workspaces except the canonical template exemplars
-# (Tracked copies of other projects remain in the index until `git rm -r --cached projects/<name>`.)
-# template_code_project, template_prose_project, and
-# template_autoresearch_project are the permanent always-present exemplars.
-# template_search_project rotates between projects/ (active) and
-# projects_archive/.
+# projects/: typed lifecycle subfolders. Only the canonical public exemplars
+# under projects/templates/ are ever tracked; every other typed subfolder
+# (active/ working/ published/ archive/ other/) holds private symlinked
+# workspaces that must stay LOCAL-ONLY.
 projects/*
 # CONFIDENTIALITY INVARIANT: this is a PUBLIC repo into which confidential
-# projects are routinely rotated under projects/. Repo-level Markdown files in
-# projects/ are navigation docs; only the canonical template exemplar
-# directories may ever be tracked/pushed. Do NOT add a negation for any other
-# project directory (incl. template_search_project) — if a non-confidential
-# extra exemplar must be published, update this allowlist and the
-# check-tracked-projects guard together. The guard (pre-push + CI) fails the
-# build if anything else under projects/ is staged/tracked.
+# projects are routinely rotated under projects/'s typed subfolders. Repo-level
+# Markdown files in projects/ are navigation docs; only the five canonical
+# template exemplar directories under projects/templates/ may ever be
+# tracked/pushed. Do NOT add a negation for any other project directory — if a
+# non-confidential extra exemplar must be published, update this allowlist and
+# the check-tracked-projects guard together. The guard (pre-push + CI) fails
+# the build if anything else under projects/ is staged/tracked.
 !projects/*.md
-!projects/template_code_project/
-!projects/template_code_project/**
-!projects/template_prose_project/
-!projects/template_prose_project/**
-!projects/template_active_inference/
-!projects/template_active_inference/**
-!projects/template_autoresearch_project/
-!projects/template_autoresearch_project/**
-!projects/template_template/
-!projects/template_template/**
+# Re-include the public templates/ subfolder, then re-ignore everything inside
+# it so ONLY the five canonical exemplars below are ever tracked. Anything else
+# dropped into projects/templates/ stays ignored (fail-closed).
+!projects/templates/
+projects/templates/*
+!projects/templates/template_code_project/
+!projects/templates/template_code_project/**
+!projects/templates/template_prose_project/
+!projects/templates/template_prose_project/**
+!projects/templates/template_active_inference/
+!projects/templates/template_active_inference/**
+!projects/templates/template_autoresearch_project/
+!projects/templates/template_autoresearch_project/**
+!projects/templates/template_template/
+!projects/templates/template_template/**
 projects/*/.DS_Store
-projects/*/output/
-projects/*/output/**
+projects/templates/*/.DS_Store
+# Exemplar project-local output is a disposable working tree (tracked render-
+# proof lives at output/templates/<name>/, not here).
+projects/templates/*/output/
+projects/templates/*/output/**
 projects/*/*.egg-info/
 projects/*/src/*.egg-info/
+projects/templates/*/*.egg-info/
+projects/templates/*/src/*.egg-info/
 
 # Download/generated fixture payloads. Keep the fixture docs and committed
 # private_project stubs visible, but never surface cloned repos or benchmark
@@ -218,7 +199,15 @@ tests/fixtures/real_codebases/*
 !tests/fixtures/real_codebases/AGENTS.md
 tests/fixtures/timeseries/
 
-# Archived and in-progress projects (not executed by pipeline)
+# Private-projects root override (one-line absolute path; machine-local — must
+# never be committed to this public repo). Consumed by
+# infrastructure/project/linking.py to locate the sibling docxology/projects repo.
+.private_projects_root
+
+# RETIRED top-level mirror dirs (removed; replaced by typed subfolders under
+# projects/: active/ working/ published/ archive/ other/). Kept ignored
+# defensively so a stray recreation + `git add -A` can never stage private work
+# the projects/ guard does not scan.
 projects_archive/
 projects_in_progress/
 

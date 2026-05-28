@@ -2,7 +2,7 @@
 
 > **Documentation hub** for the Research Project Template
 
-**Forking the template?** Start here: the code and prose exemplars each ship a 5-minute walkthrough at [`projects/template_code_project/docs/forking_guide.md`](../projects/template_code_project/docs/forking_guide.md) (numerical research) and [`projects/template_prose_project/docs/forking_guide.md`](../projects/template_prose_project/docs/forking_guide.md) (editorial review). The Active Inference exemplar is documented at [`projects/template_active_inference/README.md`](../projects/template_active_inference/README.md). The AutoResearch exemplar is documented at [`projects/template_autoresearch_project/README.md`](../projects/template_autoresearch_project/README.md). The drift checker that gates your fork against the template's contract is [`scripts/check_template_drift.py`](../scripts/check_template_drift.py) (run `uv run python scripts/check_template_drift.py` from the repo root).
+**Forking the template?** Start here: the code and prose exemplars each ship a 5-minute walkthrough at [`projects/templates/template_code_project/docs/forking_guide.md`](../projects/templates/template_code_project/docs/forking_guide.md) (numerical research) and [`projects/templates/template_prose_project/docs/forking_guide.md`](../projects/templates/template_prose_project/docs/forking_guide.md) (editorial review). The Active Inference exemplar is documented at [`projects/templates/template_active_inference/README.md`](../projects/templates/template_active_inference/README.md). The AutoResearch exemplar is documented at [`projects/templates/template_autoresearch_project/README.md`](../projects/templates/template_autoresearch_project/README.md). The meta-template exemplar is documented at [`projects/templates/template_template/README.md`](../projects/templates/template_template/README.md). The drift checker that gates your fork against the template's contract is [`scripts/check_template_drift.py`](../scripts/check_template_drift.py) (run `uv run python scripts/check_template_drift.py` from the repo root).
 
 **Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md) | [GitHub / CI](../.github/README.md) | [Canonical Facts](_generated/canonical_facts.md)
 
@@ -10,7 +10,7 @@
 
 The `docs/` directory contains project documentation organized by purpose and audience. This is the central hub for all project documentation beyond code comments.
 
-**`projects/` is a rotating set:** directories are promoted, archived, or moved to `projects_in_progress/` over time. The only workspace **guaranteed** to stay in the tree as the **control-positive** layout for paths and commands is [`projects/template_code_project/`](../projects/template_code_project/). For the current discovered list, link [`_generated/active_projects.md`](_generated/active_projects.md)—do not treat any other sibling name as permanent.
+**`projects/` is a rotating set:** directories are promoted, archived, or moved to `projects/working/` over time. The only workspace **guaranteed** to stay in the tree as the **control-positive** layout for paths and commands is [`projects/templates/template_code_project/`](../projects/templates/template_code_project/). For the current discovered list, link [`_generated/active_projects.md`](_generated/active_projects.md)—do not treat any other sibling name as permanent.
 
 Machine-generated snippets (including that authoritative list) live under [`_generated/`](_generated/README.md). Human-written pages should link there instead of copying project rosters.
 
@@ -107,7 +107,7 @@ graph TD
 ### Creating a New Project
 
 1. [`guides/new-project-setup.md`](guides/new-project-setup.md) - **Complete setup checklist** with all pitfalls
-2. [`guides/manuscript-semantics.md`](guides/manuscript-semantics.md) - Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by all three template exemplars
+2. [`guides/manuscript-semantics.md`](guides/manuscript-semantics.md) - Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by all public template exemplars
 3. [`architecture/thin-orchestrator-summary.md`](architecture/thin-orchestrator-summary.md) - Script pattern
 
 ### Developers Start Here
@@ -157,4 +157,4 @@ graph TD
 - [`documentation-index.md`](documentation-index.md) - Full file index
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates
 - Agent skills manifest: `uv run python -m infrastructure.skills write` (writes `.cursor/skill_manifest.json` at repo root when run) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
-- Active projects under [`../projects/`](../projects/) may ship a local docs tree (e.g. [`../projects/template_code_project/docs/`](../projects/template_code_project/docs/)); work-in-progress trees under [`../projects_in_progress/`](../projects_in_progress/) are not discovered until promoted. Authoritative slugs: [`_generated/active_projects.md`](_generated/active_projects.md)
+- Active projects under [`../projects/`](../projects/) may ship a local docs tree (e.g. [`../projects/templates/template_code_project/docs/`](../projects/templates/template_code_project/docs/)); work-in-progress trees under [`../projects/working/`](../projects/working/) are not discovered until promoted. Authoritative slugs: [`_generated/active_projects.md`](_generated/active_projects.md)

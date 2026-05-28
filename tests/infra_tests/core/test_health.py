@@ -69,14 +69,14 @@ class TestPublicSurface:
 
     def test_build_gate_specs_uses_public_project_scope(self, tmp_path: Path) -> None:
         """Lint/type gates must not follow local rotating project symlinks."""
-        (tmp_path / "projects" / "template_code_project" / "src").mkdir(parents=True)
+        (tmp_path / "projects" / "templates" / "template_code_project" / "src").mkdir(parents=True)
         (tmp_path / "projects" / "private_research_project" / "src").mkdir(parents=True)
 
         specs = dict(build_gate_specs(tmp_path))
 
         for gate in ("mypy", "ruff", "ruff-format"):
             argv = specs[gate]
-            assert "projects/template_code_project/src" in argv
+            assert "projects/templates/template_code_project/src" in argv
             assert "projects/private_research_project/src" not in argv
 
 

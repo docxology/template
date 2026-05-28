@@ -211,7 +211,7 @@ Glossary generation is **not** a fixed numbered pipeline stage in the root `scri
 
 ```bash
 uv run python -m infrastructure.documentation.generate_glossary_cli \
-  projects/template_code_project/src/ projects/template_code_project/manuscript/98_symbols_glossary.md
+  projects/templates/template_code_project/src/ projects/templates/template_code_project/manuscript/98_symbols_glossary.md
 ```
 
 This:

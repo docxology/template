@@ -113,7 +113,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    SC[/projects/template_code_project/scripts//]
+    SC[/projects/templates/template_code_project/scripts//]
     SC --> PF[00_preflight.py<br/>chrome-headless-shell preflight]
     SC --> OA[optimization_analysis.py<br/>main analysis pipeline · thin wrapper around src/analysis/]
     SC --> BD[build_dashboard.py<br/>numerical-invariants HTML dashboard]
@@ -697,8 +697,8 @@ grep -r "import projects\." infrastructure/
 
 - [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - Infrastructure layer documentation
 - [infrastructure/README.md](../../infrastructure/README.md) - Infrastructure quick reference
-- [template_code_project/src/AGENTS.md](../../projects/template_code_project/src/AGENTS.md) - Project layer documentation
-- [template_code_project/src/README.md](../../projects/template_code_project/src/README.md) - Project quick reference
+- [template_code_project/src/AGENTS.md](../../projects/templates/template_code_project/src/AGENTS.md) - Project layer documentation
+- [template_code_project/src/README.md](../../projects/templates/template_code_project/src/README.md) - Project quick reference
 
 ### System Documentation
 

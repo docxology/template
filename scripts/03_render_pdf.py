@@ -42,7 +42,7 @@ def main() -> int:
     parser.add_argument(
         "--project",
         default="project",
-        help="Project directory name; resolves projects/<name> first, else projects_in_progress/<name>",
+        help="Project directory name; resolves projects/active/<name> first, else projects/working/<name>",
     )
     args = parser.parse_args()
 

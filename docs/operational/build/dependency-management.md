@@ -89,7 +89,7 @@ Run repository commands through `uv run` so they use the managed environment:
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
 # Run one public project test suite
-uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=html
 
 # Run type checking over the public source scope
 CI_SOURCE_PATHS="$(uv run python -m infrastructure.project.public_scope source-paths)"

@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/<project>/pdf/`. Logs in `output/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars: `template_active_inference`, `template_autoresearch_project`, `template_code_project`, `template_prose_project`. The search exemplar is an optional add-on under `projects_archive/template_search_project/`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars: `template_active_inference`, `template_autoresearch_project`, `template_code_project`, `template_prose_project`, `template_template`. The search exemplar is an optional add-on under `projects/archive/template_search_project/`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -115,14 +115,17 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 
 | Exemplar | Shape | Tests | Coverage |
 |---|---|---|---|
-| [`projects/template_active_inference/`](projects/template_active_inference/) | Active Inference multi-track (analytical + pymdp + sheaf manuscript + Lean/GNN/ontology) | see canonical facts | see canonical facts |
-| [`projects/template_autoresearch_project/`](projects/template_autoresearch_project/) | AutoResearch-centric (deterministic plan/evidence/claim/artifact/readiness loop) | see canonical facts | see canonical facts |
-| [`projects/template_code_project/`](projects/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
-| [`projects/template_prose_project/`](projects/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | see canonical facts | see canonical facts |
+| [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) | Active Inference multi-track (analytical + pymdp + sheaf manuscript + Lean/GNN/ontology) | see canonical facts | see canonical facts |
+| [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) | AutoResearch-centric (deterministic plan/evidence/claim/artifact/readiness loop) | see canonical facts | see canonical facts |
+| [`projects/templates/template_code_project/`](projects/templates/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
+| [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | see canonical facts | see canonical facts |
+| [`projects/templates/template_template/`](projects/templates/template_template/) | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
 
 *Test and coverage figures are representative; confirm against [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) after substantive changes.*
 
 The permanent exemplars share the same core layout and verification checklist. The code/prose exemplars also carry the 12-file project `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`). New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) for the full comparison.
+
+Publication metadata for every public exemplar is generated from project config and sidecars into [`docs/_generated/publication_records.md`](docs/_generated/publication_records.md), and the GitHub-facing table in [`.github/README.md`](.github/README.md#published-exemplars--pipeline-productivity-advanced-provenance-and-autopoiesis) is auto-injected from that same source.
 
 The canonical exemplars also ship project-local composability overlays:
 `domain_profile.yaml` declares review gates, source policy, artifact
@@ -133,38 +136,39 @@ for validation and benchmark tooling; they do not generate experiments or run
 autonomous agents.
 
 > **🔒 Confidentiality.** This is a **public** template repo. Only the
-> canonical exemplars above are git-tracked/pushed — `.gitignore` ignores
-> `projects/*` and negates only those public project directories. Any project you add under
-> `projects/` (research, client, confidential, or the optional local-only
-> `template_search_project` literature-search exemplar that rests in
-> [`projects_archive/`](projects_archive/template_search_project/)) stays
+> canonical exemplars above (under `projects/templates/`) are git-tracked/pushed
+> — `.gitignore` ignores `projects/*` and negates only `projects/templates/`. Any
+> project you add under `projects/` (research, client, confidential, or the
+> optional local-only `template_search_project` literature-search exemplar that
+> rests in [`projects/archive/`](projects/archive/template_search_project/)) stays
 > **local-only and is never committed**; `scripts/check_tracked_projects.py`
 > blocks any accidental commit in the pre-push hook and CI. Copy
-> `template_search_project` under `projects/` locally to exercise literature
+> `template_search_project` under `projects/active/` locally to exercise literature
 > discovery, then never commit it.
 
 **Private lifecycle projects.** In Daniel's working checkout, confidential
 projects live outside this public repo at `$TEMPLATE_PRIVATE_PROJECTS_ROOT`
-with the lifecycle folders `active/`, `passive/`, and `archive/`. `run.sh` and
-`python -m infrastructure.orchestration` auto-sync `active/*` into
-`template/projects/*` for listing, selecting, running, and rendering; `passive/*`
-into `template/projects_in_progress/*`; and `archive/*` into
-`template/projects_archive/*`. Active links behave like native `projects/`
-entries; passive/archive links are visible but not default-rendered.
+with the lifecycle folders `active/`, `working/`, `published/`, `archive/`, and
+`other/`. `run.sh` and `python -m infrastructure.orchestration` auto-sync each
+into the matching typed subfolder under `projects/`: `active/*` into
+`projects/active/*` for listing, selecting, running, and rendering; and
+`working/*`, `published/*`, `archive/*`, `other/*` into the matching
+`projects/<subfolder>/*`. `templates/` and `active/` links behave like native
+rendered entries; the other lifecycle links are visible but not default-rendered.
 Inspect without changing the tree:
 `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 Override the sibling path with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.
-The symlinked project keeps working outputs at `projects/<name>/output/` (the
-private target), while final deliverables still copy to `output/<name>/` in this
-template checkout.
+The symlinked project keeps working outputs at `projects/<subfolder>/<name>/output/`
+(the private target), while final deliverables still copy to
+`output/<subfolder>/<name>/` in this template checkout.
 
-Other entries in `projects/` rotate between `projects_in_progress/`,
-`projects/`, and `projects_archive/` as work progresses (Lean toolchain
+Other entries rotate between `projects/working/`, `projects/active/`, and
+`projects/archive/` as work progresses (Lean toolchain
 projects, domain catalogues, case studies). Never hard-code their paths in
 long-lived docs — consult
 [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)
-(authoritative, regenerated from `discover_projects()`) and
+(authoritative public scope, regenerated from `infrastructure.project.public_scope`) and
 [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md)
 instead.
 
@@ -178,9 +182,9 @@ instead.
 mkdir -p projects/my_research/{src,tests,manuscript,scripts}  # Scaffold new project
 ```
 
-**Lifecycle:** active = `projects/` (discovered, executed). To park a project:
-`mv projects/{name}/ projects_archive/{name}/`. To promote scaffolding:
-`mv projects_in_progress/{name}/ projects/{name}/`. See
+**Lifecycle:** rendered = `projects/templates/` + `projects/active/` (discovered,
+executed). To park a project: `mv projects/active/{name}/ projects/archive/{name}/`.
+To promote scaffolding: `mv projects/working/{name}/ projects/active/{name}/`. See
 [`projects/PROJECTS_PARADIGM.md`](projects/PROJECTS_PARADIGM.md) for the full
 lifecycle, slug rules, and discovery semantics.
 
@@ -354,7 +358,7 @@ Per-project manuscript files live in `projects/{name}/manuscript/`:
 `config.yaml`, `preamble.md`, zero-padded numbered chapter files
 (`00_abstract.md` onward), optional `S01_*.md` supplements, and
 `99_references.md`. Exact chapter slugs vary per project — the canonical
-exemplar is [`projects/template_code_project/manuscript/`](projects/template_code_project/manuscript/);
+exemplar is [`projects/templates/template_code_project/manuscript/`](projects/templates/template_code_project/manuscript/);
 the numbering system and slug rules are authoritative in
 [`docs/usage/manuscript-numbering-system.md`](docs/usage/manuscript-numbering-system.md).
 

@@ -1,0 +1,37 @@
+{
+  "artifact_manifest_hash": "f7480b873e195eb562a6e98077405b912df4bf8c90d655fe02241140248bb83e",
+  "artifacts": {
+    "output/checks.json": "29cd5a88bc388a693a22a8fa88f17a6cdf2e5046b19c7e418747fb1bd3194d83",
+    "output/data/manuscript_variables.json": "b467a916360ee43aa8ca89d192652d89fda474124626d95cf2714932619192dd",
+    "output/data/transmission_manifest.json": "c860de1634a32ae9441bf402668855022ebdd41fa803a199ee9532c089bc8bc3",
+    "output/figures/citation_density.png": "e7d580c0c481327e4c1ab927ad0e29049e8e64c184ffba4e708c97be386a738d",
+    "output/figures/readability_metrics.png": "5c016d096b2516b8fce0c6ff8b0da6e019e93b10458cb15a6889dd7807632ff2",
+    "output/figures/section_word_counts.png": "5015ff00900ebc1fd497e54f85e1d766fba1a2776b197e8a9ae1ab4f68cb2237",
+    "output/figures/transmission_pairing.png": "29b69369ce80168b59f4d9f69a036eed8e66a2035dbd63815fe8f34dad12e686",
+    "output/manuscript/00_abstract.md": "1adb91648c236afa7c40eca2d1b29f74a1cbf64963398abdff2200584ee95d48",
+    "output/manuscript/01_introduction.md": "c51a38a3f2323ee40f04101df67262d22ce3157b3872145e8b414f26649a2107",
+    "output/manuscript/02_methodology.md": "34d5f534cb3dd3981be0a3df2476ddb9c5b614e9ca7b0f375dc42386ce8ca55a",
+    "output/manuscript/03_results.md": "5070ee7f11b90d139f305b8d9992b7bc7f07b8fbe250ee3490cc54ab2d85ad76",
+    "output/manuscript/04_conclusion.md": "ad76319ddd600461811898c136be4c613f3bf5d4466bb09489a5e221a026cd8c",
+    "output/manuscript/05_pipeline_internals.md": "a8ec6387c97aa03c1b0d92d4f50b9073a5b6cb0184d741585a289d5f444695f3",
+    "output/manuscript/06_reproducibility.md": "d4556cdad3473ca55e3690f02a2829b41996abadf8cf5e431eaeb19725aa4d5d",
+    "output/manuscript/99_references.md": "d58607556acc1a61281aa5f8f6e636a8efda4f176f31de56b0fea783adb57f43",
+    "output/manuscript/config.yaml": "2c2d5f7d4433d19bd5b95fea6c63f7d8cc67a39ffcce38665eaff5ea1ce83d1a",
+    "output/manuscript/preamble.md": "d844eedeb42cde65f48273e17499e2a73be1d07f397e585f709f7a53487ee963",
+    "output/manuscript/references.bib": "b8a8f331dd83f0ea71e03833462310339c9a9eb7775ca8ebcf25e573520c4ebe",
+    "output/manuscript_report.json": "bf786765317584f58c6b78e858ceb13bd524cdaff8127f04f10c0531772b8458",
+    "output/reports/test_results.json": "169318caf64fe374184b17e809490bbb9fd097e59f8868468ad77ef151227273",
+    "output/reports/test_results.md": "4ec8e46fc85343aa12e1341af11bb02b4cfc160304c88035b9fe640448f169a0",
+    "output/review_report.md": "6ecb4faba358f79eff59660707c9c1759e4b167f7e8fa65ac0e9740cd6e8ba93",
+    "output/run_summary.json": "cc21b338bcf709b514a8f8cd19b3eb8d6e8a07ba13368aca2cf3956a65d586a9"
+  },
+  "evidence_fact_count": 0,
+  "path": "/Users/4d/Documents/GitHub/template/projects/template_prose_project/output/reports/snapshots/stage-04-project-analysis.json",
+  "stage_name": "Project Analysis",
+  "stage_num": 4,
+  "timestamp": "2026-05-27T22:12:31+00:00",
+  "validation_summary": {
+    "checks": {},
+    "summary": {}
+  }
+}

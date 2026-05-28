@@ -1,0 +1,110 @@
+{
+  "fig:free_energy_curve": {
+    "alt": "Line plot of free energy in nats versus coupling strength lambda for the entangled posterior relative to a mean-field prior. A single dark curve traces free energy across the sweep; the minimum is marked with a teal scatter point and labeled with the argmin lambda value.",
+    "caption": "Free energy of the entangled posterior relative to the mean-field prior across the hyperparameter sweep (grid points {{param_sweep_grid_points}}).",
+    "figure_id": "free_energy_curve",
+    "filename": "free_energy_curve.png",
+    "generated_by": "visualizations.figures::free_energy_curve",
+    "label": "fig:free_energy_curve",
+    "width": 0.9
+  },
+  "fig:gnn_ontology_concordance": {
+    "alt": "Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md ({{gnn_spec_version}}), and Active Inference Ontology terms.",
+    "caption": "GNN \u2194 ontology concordance for the Bernoulli\u2013Ising toy ({{gnn_spec_version}}).",
+    "figure_id": "gnn_ontology_concordance",
+    "filename": "gnn_ontology_concordance.png",
+    "generated_by": "visualizations.figures::gnn_ontology_concordance",
+    "label": "fig:gnn_ontology_concordance",
+    "width": 0.9
+  },
+  "fig:invariant_dashboard": {
+    "alt": "Horizontal bar checklist of analytical and simulation invariant names with pass or fail status. {{invariants_passed}} of {{invariants_total}} checks pass on the merged report.",
+    "caption": "Invariant dashboard: {{invariants_passed}} / {{invariants_total}} merged analytical and simulation checks from the validation registry.",
+    "figure_id": "invariant_dashboard",
+    "filename": "invariant_dashboard.png",
+    "generated_by": "visualizations.figures::invariant_dashboard",
+    "label": "fig:invariant_dashboard",
+    "width": 0.9
+  },
+  "fig:ising_mi_curve": {
+    "alt": "Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows closed-form curve (solid dark line) and Monte Carlo estimates (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows Monte Carlo minus closed-form residuals versus lambda with a zero reference line.",
+    "caption": "Closed-form and Monte Carlo mutual information I(\u03bb) for the symmetric Bernoulli-Ising toy across {{param_sweep_grid_points}} grid points up to \u03bb_max = {{lambda_max}}; grid maximum {{ising_mi_saturation}} nats on the measured sweep.",
+    "figure_id": "ising_mi_curve",
+    "filename": "ising_mi_curve.png",
+    "generated_by": "visualizations.figures::ising_mi_curve",
+    "label": "fig:ising_mi_curve",
+    "width": 0.9
+  },
+  "fig:lean_boundary_status": {
+    "alt": "Table figure listing Lean modules, declaration kinds, names, and proved versus sorry status under lean/TemplateActiveInference/.",
+    "caption": "Lean formalization boundary: module witnesses checked by lake build.",
+    "figure_id": "lean_boundary_status",
+    "filename": "lean_boundary_status.png",
+    "generated_by": "visualizations.figures::lean_boundary_status",
+    "label": "fig:lean_boundary_status",
+    "width": 0.9
+  },
+  "fig:multi_track_architecture": {
+    "alt": "Process diagram linking three scientific tracks to {{pipeline_track_count}} pipeline gates and {{sheaf_track_count}} sheaf fragment types across {{imrad_manifest_rows}} manifest rows.",
+    "caption": "Multi-track architecture: analytical, pymdp, and sheaf composition lanes mapped to {{pipeline_track_count}} pipeline gates and {{sheaf_track_count}} composable fragment types.",
+    "figure_id": "multi_track_architecture",
+    "filename": "multi_track_architecture.png",
+    "generated_by": "visualizations.figures::multi_track_architecture",
+    "label": "fig:multi_track_architecture",
+    "width": 0.95
+  },
+  "fig:sheaf_coverage_heatmap": {
+    "alt": "Heatmap matrix of IMRAD manuscript rows versus {{sheaf_track_count}} sheaf fragment track columns. Black cells mean the track is bound and the fragment file exists; white cells mean the track is not bound; gray cells mean bound but missing. Rows are grouped by IMRAD block with indented subsection labels; column headers list track ids.",
+    "caption": "Sheaf track coverage matrix: {{imrad_manifest_rows}} IMRAD rows \u00d7 {{sheaf_track_count}} fragment columns. Black = present (P), white = absent (\u2014), gray = missing (M). Counts: {{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing.",
+    "figure_id": "sheaf_coverage_heatmap",
+    "filename": "sheaf_coverage_heatmap.png",
+    "generated_by": "visualizations.figures::sheaf_coverage_heatmap",
+    "label": "fig:sheaf_coverage_heatmap",
+    "width": 0.95
+  },
+  "fig:sheaf_layers_overview": {
+    "alt": "Two-panel overview of sheaf fragment layers. Left panel shows {{sheaf_track_count}} composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across {{imrad_manifest_rows}} manifest rows and {{sheaf_track_count}} tracks.",
+    "caption": "Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for {{sheaf_track_count}} fragment types across {{imrad_manifest_rows}} manifest rows ({{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing).",
+    "figure_id": "sheaf_layers_overview",
+    "filename": "sheaf_layers_overview.png",
+    "generated_by": "visualizations.figures::sheaf_layers_overview",
+    "label": "fig:sheaf_layers_overview",
+    "width": 0.98
+  },
+  "fig:si_belief_entropy_curve": {
+    "alt": "Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from {{si_entropy_min}} to {{si_entropy_max}} nats across {{si_tmaze_steps}} steps in {{pymdp_mode}} mode.",
+    "caption": "Belief entropy over time for the T-maze rollout (mean {{si_tmaze_mean_belief_entropy_formatted}} nats).",
+    "figure_id": "si_belief_entropy_curve",
+    "filename": "si_belief_entropy_curve.png",
+    "generated_by": "visualizations.figures::si_belief_entropy_curve",
+    "label": "fig:si_belief_entropy_curve",
+    "width": 0.9
+  },
+  "fig:si_obs_action_trace": {
+    "alt": "Dual-panel plot of observation index and action index versus timestep for the pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel shows actions. Goal reached flag is {{si_goal_reached}}.",
+    "caption": "Observation and action traces for the T-maze rollout (action diversity {{si_action_diversity}}).",
+    "figure_id": "si_obs_action_trace",
+    "filename": "si_obs_action_trace.png",
+    "generated_by": "visualizations.figures::si_obs_action_trace",
+    "label": "fig:si_obs_action_trace",
+    "width": 0.9
+  },
+  "fig:si_tmaze_actions": {
+    "alt": "Step plot of discrete action index versus timestep for the pymdp sophisticated-inference T-maze rollout. Actions change at each timestep with light fill under the step trace; policy depth is {{si_tmaze_policy_len}} steps.",
+    "caption": "Discrete action index over time for the pymdp T-maze rollout (policy length {{si_tmaze_policy_len}}).",
+    "figure_id": "si_tmaze_actions",
+    "filename": "si_tmaze_actions.png",
+    "generated_by": "visualizations.figures::si_tmaze_actions",
+    "label": "fig:si_tmaze_actions",
+    "width": 0.9
+  },
+  "fig:tmaze_schematic": {
+    "alt": "Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and observations, and planning horizon policy_len = {{si_tmaze_policy_len}}.",
+    "caption": "T-maze generative model schematic ({{si_tmaze_policy_len}}-step policy horizon, {{pymdp_mode}} mode).",
+    "figure_id": "tmaze_schematic",
+    "filename": "tmaze_schematic.png",
+    "generated_by": "visualizations.figures::tmaze_schematic",
+    "label": "fig:tmaze_schematic",
+    "width": 0.85
+  }
+}

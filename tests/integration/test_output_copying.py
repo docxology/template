@@ -204,7 +204,7 @@ class TestCopyFinalDeliverables:
     def test_copy_wip_project_with_explicit_project_dir(self, tmp_path):
         """Copying a WIP project should not require a projects/<name> shadow."""
         repo_root = tmp_path / "repo"
-        project_dir = repo_root / "projects_in_progress" / "biology_textbook"
+        project_dir = repo_root / "projects" / "working" / "biology_textbook"
         pdf_dir = project_dir / "output" / "pdf"
         web_dir = project_dir / "output" / "web"
         pdf_dir.mkdir(parents=True)

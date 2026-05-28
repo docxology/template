@@ -68,8 +68,8 @@ def generate_pipeline_report(
         project_name: Name of the project (for log-file enrichment).
         project_dir: Absolute path to the project directory. When given,
             overrides ``repo_root / 'projects' / project_name`` for log-file
-            path resolution. Pass this when the project lives in a
-            non-default directory such as ``projects_in_progress/``.
+            path resolution. Pass this when the project lives in a typed
+            subfolder such as ``projects/working/``.
         Other keyword args pass through to PipelineReport fields.
     """
     stages = []

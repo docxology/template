@@ -86,7 +86,10 @@ def build_fix_clean_pycache(finding: Finding, state: DoctorState) -> list[FixPla
     # ``sample`` is only the first 10 — re-walk for a complete pass.
     seen: set[Path] = set()
     cache_names = ("__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache")
-    ignored_top = {".venv", ".doctor", "node_modules", "projects_archive", "projects_in_progress"}
+    ignored_top = {".venv", ".doctor", "node_modules"}
+    # Dormant private typed-subfolder trees; keep in sync with
+    # discovery.NON_RENDERED_SUBDIRS.
+    dormant_project_subdirs = {"archive", "other", "published", "working"}
     for sub in state.repo_root.rglob("*"):
         if not sub.is_dir() or sub.name not in cache_names:
             continue
@@ -95,6 +98,8 @@ def build_fix_clean_pycache(finding: Finding, state: DoctorState) -> list[FixPla
         except ValueError:
             continue
         if rel_parts and rel_parts[0] in ignored_top:
+            continue
+        if len(rel_parts) >= 2 and rel_parts[0] == "projects" and rel_parts[1] in dormant_project_subdirs:
             continue
         if any(part == ".venv" for part in rel_parts):
             continue

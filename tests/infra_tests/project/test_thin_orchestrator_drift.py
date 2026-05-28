@@ -112,11 +112,11 @@ def test_repo_vs_project_severity_policy(tmp_path: Path) -> None:
 
 
 def test_line_count_scan_project_scripts(tmp_path: Path) -> None:
-    scripts = tmp_path / "projects" / "template_code_project" / "scripts"
+    scripts = tmp_path / "projects" / "templates" / "template_code_project" / "scripts"
     scripts.mkdir(parents=True)
     (scripts / "big.py").write_text("\n".join(["# line"] * 260), encoding="utf-8")
     _warnings, failures = scan_project_scripts(tmp_path)
-    assert any("projects/template_code_project/scripts/big.py" in rel for rel, _ in failures)
+    assert any("projects/templates/template_code_project/scripts/big.py" in rel for rel, _ in failures)
 
 
 def test_line_count_scan_infrastructure(tmp_path: Path) -> None:

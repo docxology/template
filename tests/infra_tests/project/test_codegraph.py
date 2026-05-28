@@ -57,8 +57,8 @@ def test_unexpected_indexed_project_paths_flags_private_projects() -> None:
     indexed_paths = [
         "infrastructure/project/codegraph.py",
         "projects/README.md",
-        "projects/template_code_project/src/optimizer.py",
-        "projects/template_autoresearch_project/tests/test_loop.py",
+        "projects/templates/template_code_project/src/optimizer.py",
+        "projects/templates/template_autoresearch_project/tests/test_loop.py",
         "projects/encinitas/src/history.py",
         "projects/biology_textbook/manuscript/01_cells.md",
     ]

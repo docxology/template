@@ -150,6 +150,35 @@ class TestMetadataFromConfig:
         assert "Test abstract" in metadata.abstract
         assert "testing" in metadata.keywords
 
+    def test_loads_hydrated_abstract_from_config(self, tmp_path: Path) -> None:
+        config_path = _write_minimal_project(tmp_path)
+        abstract_path = config_path.parent / "00_abstract.md"
+        abstract_path.write_text(
+            "# Abstract\n\nThis release binds {{track_count}} tracks.\n",
+            encoding="utf-8",
+        )
+        variables_path = tmp_path / "projects" / "test_release" / "output" / "data" / "manuscript_variables.json"
+        variables_path.parent.mkdir(parents=True)
+        variables_path.write_text(json.dumps({"track_count": 7}), encoding="utf-8")
+
+        metadata = publication_metadata_from_config(config_path)
+
+        assert "7 tracks" in metadata.abstract
+        assert "{{" not in metadata.abstract
+
+    def test_prefers_output_abstract_from_config(self, tmp_path: Path) -> None:
+        config_path = _write_minimal_project(tmp_path)
+        source_abstract = config_path.parent / "00_abstract.md"
+        source_abstract.write_text("# Abstract\n\nSource {{track_count}} tracks.\n", encoding="utf-8")
+        output_abstract = tmp_path / "projects" / "test_release" / "output" / "manuscript" / "00_abstract.md"
+        output_abstract.parent.mkdir(parents=True)
+        output_abstract.write_text("# Abstract\n\nHydrated 7 tracks.\n", encoding="utf-8")
+
+        metadata = publication_metadata_from_config(config_path)
+
+        assert "Hydrated 7 tracks" in metadata.abstract
+        assert "{{" not in metadata.abstract
+
     def test_requires_abstract_by_default(self, tmp_path: Path) -> None:
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()

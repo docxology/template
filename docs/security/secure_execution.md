@@ -12,7 +12,7 @@ When the **pipeline phase** runs (`--steganography-only` not set), **`--project 
 
 For multi-project **pipeline + steganography**, run `./run.sh --all-projects --pipeline` (or per-project pipelines), then `./secure_run.sh --steganography-only` with no `--project` to harden all discovered PDFs.
 
-**Active `projects/` names:** [_generated/active_projects.md](../_generated/active_projects.md). Trees under `projects_archive/` or `projects_in_progress/` are not discovered until moved into `projects/`.
+**Active `projects/` names:** [_generated/active_projects.md](../_generated/active_projects.md). Trees under `projects/archive/` or `projects/working/` are not discovered until moved into `projects/`.
 
 Post-processing outputs:
 

@@ -18,14 +18,14 @@ def test_template_autoresearch_project_is_public_and_discoverable() -> None:
     repo_root = _repo_root()
     project_names = {project.qualified_name for project in discover_projects(repo_root)}
 
-    assert "template_autoresearch_project" in project_names
-    assert "template_autoresearch_project" in public_project_names(repo_root)
-    assert "projects/template_autoresearch_project/" in ALLOWED_PROJECT_DIRS
+    assert "templates/template_autoresearch_project" in project_names
+    assert "templates/template_autoresearch_project" in public_project_names(repo_root)
+    assert "projects/templates/template_autoresearch_project/" in ALLOWED_PROJECT_DIRS
 
 
 def test_template_autoresearch_project_declares_exact_stage_gates() -> None:
     repo_root = _repo_root()
-    plan = build_autoresearch_plan(repo_root, "template_autoresearch_project")
+    plan = build_autoresearch_plan(repo_root, "templates/template_autoresearch_project")
     stage_names = {stage.name for stage in plan.stages}
 
     assert plan.config.strict is True
@@ -83,7 +83,7 @@ def test_template_autoresearch_project_declares_exact_stage_gates() -> None:
 
 
 def test_template_autoresearch_project_has_project_docs_contract() -> None:
-    project_root = _repo_root() / "projects" / "template_autoresearch_project"
+    project_root = _repo_root() / "projects" / "templates" / "template_autoresearch_project"
     docs_dir = project_root / "docs"
     required_docs = {
         "README.md",
@@ -230,7 +230,7 @@ def test_template_autoresearch_project_has_project_docs_contract() -> None:
 
 
 def test_template_autoresearch_project_declares_program_and_seed_ideas() -> None:
-    project_root = _repo_root() / "projects" / "template_autoresearch_project"
+    project_root = _repo_root() / "projects" / "templates" / "template_autoresearch_project"
 
     program = project_root / "program.md"
     seed_ideas = project_root / "seed_ideas.yaml"

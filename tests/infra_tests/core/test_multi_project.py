@@ -15,6 +15,7 @@ from infrastructure.core.pipeline.multi_project import (
     MultiProjectResult,
 )
 from infrastructure.project.project_info import ProjectInfo
+from tests._support.projects import make_project
 
 
 def _create_test_repo_structure(tmp_dir: Path, make_project2_fail: bool = False) -> Path:
@@ -83,20 +84,13 @@ sys.exit(0)
 
 def _create_test_project(repo_root: Path, project_name: str) -> None:
     """Create a minimal test project structure."""
-    project_dir = repo_root / "projects" / project_name
-    project_dir.mkdir(parents=True)
-
-    # Create required directories
-    (project_dir / "src").mkdir()
-    (project_dir / "tests").mkdir()
-    (project_dir / "scripts").mkdir()
-    (project_dir / "manuscript").mkdir()
-    (project_dir / "output").mkdir()
-
-    # Create minimal files
-    (project_dir / "src" / "__init__.py").write_text("")
-    (project_dir / "tests" / "__init__.py").write_text("")
-    (project_dir / "scripts" / "__init__.py").write_text("")
+    project_dir = make_project(
+        repo_root,
+        project_name,
+        with_manuscript=True,
+        with_scripts=True,
+        with_output=True,
+    )
     (project_dir / "manuscript" / "config.yaml").write_text(
         """
 paper:
@@ -105,8 +99,6 @@ authors:
   - name: "Test Author"
 """
     )
-
-    # Create a minimal analysis script
     analysis_script = project_dir / "scripts" / "analysis_pipeline.py"
     analysis_script.write_text(
         """

@@ -6,7 +6,7 @@ metadata:
   purpose: "Default import boundaries for generic modules; pytest marker scoping; agent voice."
   stats_as_of: "2026-04-26"
   stats_notes:
-    files_analyzed: "Counted .py under infrastructure/, scripts/, tests/, projects/; excludes venv, projects_archive, __pycache__."
+    files_analyzed: "Counted .py under infrastructure/, scripts/, tests/, projects/; excludes venv, non-rendered typed subfolders (projects/working|published|archive|other), __pycache__."
     docstring_count: "AST: docstrings on module, class, and function (incl. async) nodes."
     rates_in_voice: "type_hint_rate, bare_except_rate, early_return_rate are prior samples; re-measure to refresh."
 

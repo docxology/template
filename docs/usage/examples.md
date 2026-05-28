@@ -237,7 +237,7 @@ graph LR
 
 ### Example: Adding ML Optimization Module
 
-1. **Create `projects/template_code_project/src/ml_optimizer.py`:**
+1. **Create `projects/templates/template_code_project/src/ml_optimizer.py`:**
 
 ```python
 """Machine learning optimization algorithms."""
@@ -253,7 +253,7 @@ def adam_optimizer(loss_fn, initial_params, learning_rate=0.001):
     pass
 ```
 
-1. **Create `projects/template_code_project/tests/test_ml_optimizer.py`:**
+1. **Create `projects/templates/template_code_project/tests/test_ml_optimizer.py`:**
 
 ```python
 """Tests for ML optimizer module."""
@@ -267,7 +267,7 @@ def test_adam_optimizer():
     pass
 ```
 
-1. **Create `projects/template_code_project/scripts/ml_training.py`:**
+1. **Create `projects/templates/template_code_project/scripts/ml_training.py`:**
 
 ```python
 #!/usr/bin/env python3

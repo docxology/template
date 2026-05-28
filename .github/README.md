@@ -71,7 +71,7 @@ Pick the entry that matches your goal — each link is stable for deep navigatio
 | Goal | Start here | Then |
 | --- | --- | --- |
 | **Clone and run** | [Quick Start](#quick-start) | [`docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md) · [`docs/guides/getting-started.md`](../docs/guides/getting-started.md) |
-| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | Start from the closest public exemplar: [`template_active_inference`](../projects/template_active_inference/), [`template_code_project`](../projects/template_code_project/), [`template_prose_project`](../projects/template_prose_project/), or [`template_autoresearch_project`](../projects/template_autoresearch_project/) |
+| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | Start from the closest public exemplar: [`template_active_inference`](../projects/template_active_inference/), [`template_autoresearch_project`](../projects/template_autoresearch_project/), [`template_code_project`](../projects/template_code_project/), [`template_prose_project`](../projects/template_prose_project/), or [`template_template`](../projects/template_template/) |
 | **Debug a failed pipeline stage** | [`docs/prompts/pipeline-debugging/SKILL.md`](../docs/prompts/pipeline-debugging/SKILL.md) | [`docs/operational/troubleshooting/`](../docs/operational/troubleshooting/) |
 | **Write or fix tests** | [`docs/rules/testing_standards.md`](../docs/rules/testing_standards.md) | [`docs/prompts/test-creation/SKILL.md`](../docs/prompts/test-creation/SKILL.md) |
 | **Manuscript / PDF / citations** | [`docs/guides/manuscript-semantics.md`](../docs/guides/manuscript-semantics.md) | [`docs/prompts/manuscript-cross-references/SKILL.md`](../docs/prompts/manuscript-cross-references/SKILL.md) |
@@ -210,7 +210,7 @@ graph TD
     end
 ```
 
-Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). Archived or local-only exemplars live under [`projects_archive/`](../projects_archive/) when present.
+Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). Archived or local-only exemplars live under [`projects/archive/`](../projects/archive/) when present.
 
 ### Directory Reference
 
@@ -218,8 +218,8 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 | --- | :---: | --- |
 | `infrastructure/` | Permanent | Top-level Python packages under `infrastructure/` (plus config/documentation-only directories); live count in [docs/_generated/canonical_facts.md](../docs/_generated/canonical_facts.md), documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md), and package details in [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
-| `projects_in_progress/` | Transient | Staging area: scaffold here before promoting to `projects/` |
-| `projects_archive/` | Permanent | Completed/retired work — preserved, not executed |
+| `projects/working/` | Transient | Staging area: scaffold here before promoting to `projects/` |
+| `projects/archive/` | Permanent | Completed/retired work — preserved, not executed |
 | `scripts/` | Permanent | 8 generic pipeline stage scripts (Stages 00–07) |
 | `output/` | Disposable | Final PDFs, dashboards, reports — cleaned on each run |
 | `docs/` | Permanent | Large documentation hub — inventory in [`docs/documentation-index.md`](../docs/documentation-index.md) (counts vary; do not rely on a single “N files” figure across READMEs) |
@@ -250,13 +250,22 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 The repository ships **five** public template projects. Each lives inside this public repo *and* is independently published as **its own GitHub repository + Zenodo deposit** (versioned, authored by Daniel Ari Friedman), demonstrating the pipeline end-to-end on real, citable artifacts.
 
-| Exemplar | Standalone repo | Zenodo (concept DOI) | Demonstrates |
-| --- | --- | --- | --- |
-| `template_code_project` | [docxology/template_code_project](https://github.com/docxology/template_code_project) | [10.5281/zenodo.20417136](https://doi.org/10.5281/zenodo.20417136) | code-centric pipeline (optimization study) |
-| `template_prose_project` | [docxology/template_prose_project](https://github.com/docxology/template_prose_project) | [10.5281/zenodo.20417104](https://doi.org/10.5281/zenodo.20417104) | prose-review gating pipeline |
-| `template_autoresearch_project` | [docxology/template_autoresearch_project](https://github.com/docxology/template_autoresearch_project) | [10.5281/zenodo.20417016](https://doi.org/10.5281/zenodo.20417016) | bounded ML AutoResearch loop |
-| `template_active_inference` | [docxology/template_active_inference](https://github.com/docxology/template_active_inference) | [10.5281/zenodo.20417021](https://doi.org/10.5281/zenodo.20417021) | multi-track manuscript (analytical/pymdp/sheaf) |
-| `template_template` | [docxology/template_template](https://github.com/docxology/template_template) | minted by the publishing pipeline | **autopoietic** meta-template (below) |
+The table below is auto-injected from public project config files plus optional GitHub/Zenodo API refreshes. Do not hand-edit it.
+
+<!-- BEGIN:PUBLICATION_RECORDS -->
+<!-- This block is generated by scripts/generate_publication_records_doc.py. Do not hand-edit. -->
+
+| Exemplar | Config version | GitHub | Latest release | Zenodo concept DOI | Latest version DOI |
+| --- | --- | --- | --- | --- | --- |
+| [`templates/template_active_inference`](../projects/templates/template_active_inference/) | 0.3.0 | [docxology/template_active_inference](https://github.com/docxology/template_active_inference) | not checked | [10.5281/zenodo.20417021](https://doi.org/10.5281/zenodo.20417021) | [10.5281/zenodo.20420352](https://doi.org/10.5281/zenodo.20420352) |
+| [`templates/template_autoresearch_project`](../projects/templates/template_autoresearch_project/) | 0.3.0 | [docxology/template_autoresearch_project](https://github.com/docxology/template_autoresearch_project) | not checked | [10.5281/zenodo.20417016](https://doi.org/10.5281/zenodo.20417016) | [10.5281/zenodo.20420357](https://doi.org/10.5281/zenodo.20420357) |
+| [`templates/template_code_project`](../projects/templates/template_code_project/) | 2.5.0 | [docxology/template_code_project](https://github.com/docxology/template_code_project) | not checked | [10.5281/zenodo.20417136](https://doi.org/10.5281/zenodo.20417136) | [10.5281/zenodo.20420368](https://doi.org/10.5281/zenodo.20420368) |
+| [`templates/template_prose_project`](../projects/templates/template_prose_project/) | 0.4.0 | [docxology/template_prose_project](https://github.com/docxology/template_prose_project) | not checked | [10.5281/zenodo.20417104](https://doi.org/10.5281/zenodo.20417104) | [10.5281/zenodo.20420342](https://doi.org/10.5281/zenodo.20420342) |
+| [`templates/template_template`](../projects/templates/template_template/) | 1.0.6 | [docxology/template_template](https://github.com/docxology/template_template) | not checked | [10.5281/zenodo.20419007](https://doi.org/10.5281/zenodo.20419007) | [10.5281/zenodo.20420387](https://doi.org/10.5281/zenodo.20420387) |
+
+Full generated matrix: [`docs/_generated/publication_records.md`](../docs/_generated/publication_records.md).
+
+<!-- END:PUBLICATION_RECORDS -->
 
 **Productive** — every exemplar above is the *output* of running this repo's own pipeline (`./run.sh --pipeline`): tested (≥90 % project coverage), rendered to a validated PDF, then released. The artifacts are not hand-authored — they are produced by the DAG they describe.
 
@@ -267,20 +276,20 @@ The repository ships **five** public template projects. Each lives inside this p
 ### Rotating projects
 
 Beyond the permanent public exemplars, other projects rotate between
-`projects_in_progress/`, `projects/`, and `projects_archive/` as work
+`projects/working/`, `projects/`, and `projects/archive/` as work
 progresses (meta-documentation, domain catalogues, Lean-toolchain projects,
 case studies). Their paths are deliberately **not** hard-coded here — per the
 repo-wide rule also stated in the root [`README.md`](../README.md) and
-[`AGENTS.md`](AGENTS.md), the single authoritative roster is
+[`../AGENTS.md`](../AGENTS.md), the single authoritative roster is
 [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)
-(regenerated from `discover_projects()`), with measured facts in
+(regenerated from `infrastructure.project.public_scope`), with measured facts in
 [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md).
 This keeps the docs-lint "zero ghost references" gate green without per-line
 `noqa` suppressions.
 
 ### Archived exemplars
 
-Retired or sample projects are kept under [`projects_archive/`](../projects_archive/) when present, but that roster is checkout-specific and not executed by `./run.sh` until moved back into `projects/`.
+Retired or sample projects are kept under [`projects/archive/`](../projects/archive/) when present, but that roster is checkout-specific and not executed by `./run.sh` until moved back into `projects/`.
 
 ### Project Directory Layout
 
@@ -371,9 +380,9 @@ stateDiagram-v2
     Active --> Archive: Complete / retire
     Archive --> Active: Reactivate
 
-    InProgress : projects_in_progress/ — not executed
+    InProgress : projects/working/ — not executed
     Active : projects/ — auto-discovered, pipeline-executed
-    Archive : projects_archive/ — preserved, not executed
+    Archive : projects/archive/ — preserved, not executed
 ```
 
 ---
@@ -790,7 +799,7 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 | [docs/maintenance/ci-local.md](../docs/maintenance/ci-local.md) | Reproduce GitHub Actions with `act` / [`scripts/ci_local.sh`](../scripts/ci_local.sh) |
 | [docs/maintenance/regression-testing.md](../docs/maintenance/regression-testing.md) | Pinned numerical outputs for claim binding |
 | [docs/maintenance/archival-targets.md](../docs/maintenance/archival-targets.md) | Stage 11 Zenodo / Software Heritage / IPFS |
-| [docs/maintenance/private-projects-repo.md](../docs/maintenance/private-projects-repo.md) | Private `active/` / `passive/` / `archive/` lifecycle |
+| [docs/maintenance/private-projects-repo.md](../docs/maintenance/private-projects-repo.md) | Private `active/` / `working/` / `published/` / `archive/` / `other/` lifecycle |
 | [docs/maintenance/stage-10-executable-bundle.md](../docs/maintenance/stage-10-executable-bundle.md) | Opt-in executable bundle stage |
 
 ### 📋 Repo meta (root)

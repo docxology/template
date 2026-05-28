@@ -10,8 +10,8 @@ They live in a separate **private** repo, `docxology/projects`, cloned as a
 
 ```
 ~/Documents/GitHub/
-├── template/      (public  — this repo: pipeline + 2 exemplars)
-└── projects/      (private — docxology/projects: active/ passive/ archive/)
+├── template/      (public  — this repo: pipeline + public exemplars)
+└── projects/      (private — docxology/projects: active/ working/ published/ archive/ other/)
 ```
 
 ## The mechanism (symlink-in-place)
@@ -21,17 +21,20 @@ symlinks private lifecycle folders into local template mirrors:
 
 | Private folder | Local mirror | Rendered by `run.sh`? |
 | --- | --- | --- |
-| `active/<name>` | `template/projects/<name>` | Yes |
-| `passive/<name>` | `template/projects_in_progress/<name>` | No |
-| `archive/<name>` | `template/projects_archive/<name>` | No |
+| `active/<name>` | `template/projects/active/<name>` | Yes |
+| `working/<name>` | `template/projects/working/<name>` | No |
+| `published/<name>` | `template/projects/published/<name>` | No |
+| `archive/<name>` | `template/projects/archive/<name>` | No |
+| `other/<name>` | `template/projects/other/<name>` | No |
 
 Because `projects/` is a Python **namespace
 package**, the symlink resolves transparently for `from projects.<name>.src…`
 imports, `discover_projects`, `validate_project_structure`, and rendering — the
 project behaves exactly like a native child of `projects/`. Execution stays in
 this checkout, so `infrastructure/` resolves natively (**no submodule needed**).
-The passive/archive mirrors are for inspection and explicit local work only;
-default discovery still scans `projects/`, not the dormant mirrors.
+The non-rendered mirrors (`working/`, `published/`, `archive/`, `other/`) are for
+inspection and explicit local work only; default discovery scans only the
+rendered subfolders `projects/templates/` and `projects/active/`.
 
 `sync_private_project_links()` runs automatically in
 `infrastructure/orchestration/cli.py` (`_maybe_sync_links`) on **every** `run.sh`
@@ -43,9 +46,11 @@ prints a warning, never crashes the CLI).
 
 | Folder | Local visibility | Rendered by `run.sh`? | Operation to change |
 |--------|------------------|----------------------|---------------------|
-| `active/` | `projects/<n>` | **Yes, every run** | `mv passive/<n> active/<n>` |
-| `passive/` | `projects_in_progress/<n>` | No (backburner) | `mv active/<n> passive/<n>` |
-| `archive/` | `projects_archive/<n>` | No (retired) | `mv …/<n> archive/<n>` |
+| `active/` | `projects/active/<n>` | **Yes, every run** | `mv working/<n> active/<n>` |
+| `working/` | `projects/working/<n>` | No (backburner) | `mv active/<n> working/<n>` |
+| `published/` | `projects/published/<n>` | No (shipped) | `mv active/<n> published/<n>` |
+| `archive/` | `projects/archive/<n>` | No (retired) | `mv …/<n> archive/<n>` |
+| `other/` | `projects/other/<n>` | No (misc) | `mv …/<n> other/<n>` |
 
 Explicit re-sync without a full run: `uv run python -m infrastructure.orchestration link-projects`
 (supports `--dry-run`, `--no-prune`).
@@ -54,8 +59,8 @@ Explicit re-sync without a full run: `uv run python -m infrastructure.orchestrat
 
 Resolution order: `$TEMPLATE_PRIVATE_PROJECTS_ROOT` → one-line
 `template/.private_projects_root` (gitignored) → sibling `../projects`. The bare
-sibling fallback requires the full `active/`+`passive/`+`archive/` signature so a
-coincidental sibling folder with only an `active/` child can't be mislinked.
+sibling fallback requires the full `active/`+`working/`+`published/`+`archive/`+`other/`
+signature so a coincidental sibling folder with only an `active/` child can't be mislinked.
 Disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.
 
 ## Confidentiality model (defense in depth)
@@ -84,10 +89,10 @@ directories.
 
 ## Known follow-ups
 
-- `check_tracked_projects.py` scans only `projects/`. The passive/archive mirrors
-  are gitignored and non-rendered, but a future public archive policy should
-  extend the guard before tracking anything under `projects_in_progress/` or
-  `projects_archive/`.
+- `check_tracked_projects.py` scans only `projects/`. The non-rendered subfolders
+  (`working/`, `published/`, `archive/`, `other/`) are gitignored and non-rendered,
+  but a future public archive policy should extend the guard before tracking
+  anything under those subfolders.
 - Public git **history** may contain intentionally-published dataset material
   (e.g. cogant Kaggle/HuggingFace prep). Audit history separately if any of it
   was sensitive — gitignore/guard only govern the current index.

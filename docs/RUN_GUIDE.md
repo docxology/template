@@ -123,8 +123,8 @@ The template now supports **multiple research projects** in a single repository.
 
 Projects are discovered dynamically from `projects/` (see `infrastructure.project.discovery.discover_projects()`). **Authoritative names:** [_generated/active_projects.md](_generated/active_projects.md) (see [_generated/README.md](_generated/README.md) for policy and regeneration). **Examples in this guide** use **`template_code_project`** as the stable control-positive layout under `projects/`.
 
-Archived and in-progress work lives under `projects_archive/` and
-`projects_in_progress/` and is not executed by `./run.sh` until moved into
+Archived and in-progress work lives under `projects/archive/` and
+`projects/working/` and is not executed by `./run.sh` until moved into
 `projects/`.
 
 Private active work normally lives in the sibling repo

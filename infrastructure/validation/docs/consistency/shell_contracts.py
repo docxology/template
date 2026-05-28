@@ -37,9 +37,9 @@ _DETERMINISTIC_SHELL_STRIP_ACTION_RE = re.compile(
     re.IGNORECASE,
 )
 _DETERMINISTIC_MENTION_RE = re.compile(r"--deterministic|\bdeterministic\b", re.IGNORECASE)
-_TEMPLATE_SEARCH_PATH_RE = re.compile(r"projects/template_search_project/")
+_TEMPLATE_SEARCH_PATH_RE = re.compile(r"(?<!/)projects/template_search_project/")
 _TEMPLATE_SEARCH_OK_PHRASES: tuple[str, ...] = (
-    "projects_archive/template_search_project",
+    "projects/archive/template_search_project",
     "local-only",
     "local only",
     "copy under projects",
@@ -48,13 +48,13 @@ _TEMPLATE_SEARCH_OK_PHRASES: tuple[str, ...] = (
     "not git-tracked",
     "archive",
     "archived",
-    "projects_archive/",
+    "projects/archive/",
 )
 
 
 def _line_ok_for_template_search(line: str) -> bool:
     low = line.lower()
-    if "projects_archive/template_search_project" in line:
+    if "projects/archive/template_search_project" in line:
         return True
     return any(phrase in low for phrase in _TEMPLATE_SEARCH_OK_PHRASES)
 
@@ -169,8 +169,8 @@ def check_stale_shell_contracts(repo_root: Path) -> list[Inconsistency]:
                         category="shell-contract",
                         detail=(
                             "hard-codes `projects/template_search_project/` without "
-                            "projects_archive/ or local-only copy context — canonical home is "
-                            "projects_archive/template_search_project/"
+                            "projects/archive/ or local-only copy context — canonical home is "
+                            "projects/archive/template_search_project/"
                         ),
                     )
                 )

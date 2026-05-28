@@ -30,7 +30,7 @@ def test_offending_tracked_projects_flags_non_exemplar(tmp_path: Path) -> None:
 def test_offending_tracked_projects_allows_exemplars(tmp_path: Path) -> None:
     _init_git_repo(tmp_path)
     for name in ("template_code_project", "template_prose_project", "template_autoresearch_project"):
-        src = tmp_path / "projects" / name / "src"
+        src = tmp_path / "projects" / "templates" / name / "src"
         src.mkdir(parents=True)
         (src / "x.py").write_text("pass\n")
     (tmp_path / "projects" / "README.md").write_text("# projects\n")

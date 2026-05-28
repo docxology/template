@@ -176,14 +176,14 @@ def risky_operation():
 
 ### Lean (public exemplar)
 
-The tracked [`projects/template_active_inference/`](../../../projects/template_active_inference/) project ships a minimal `lake build` tree under `lean/`. Optional math-inc Open Gauss CLI workflows use the same naming disambiguation as [`docs/reference/opengauss-naming.md`](../../reference/opengauss-naming.md).
+The tracked [`projects/templates/template_active_inference/`](../../../projects/templates/template_active_inference/) project ships a minimal `lake build` tree under `lean/`. Optional math-inc Open Gauss CLI workflows use the same naming disambiguation as [`docs/reference/opengauss-naming.md`](../../reference/opengauss-naming.md).
 
 | Variable | Default | Description |
 | -------- | ------- | ----------- |
 | `FEP_LEAN_GAUSS_WORKFLOWS` | (unset) | **Legacy alias** retained by `run.sh` / `secure_run.sh`; when truthy, enables Lean-heavy analysis paths. Prefer `./run.sh --no-lean-workflows` to disable. Not specific to any single project name. |
 | `GAUSS_HOME` | `~/.gauss` | Writable directory checked for math-inc tooling layout |
 
-Name disambiguation: [`docs/reference/opengauss-naming.md`](../../reference/opengauss-naming.md). Lean build: [`projects/template_active_inference/lean/`](../../../projects/template_active_inference/lean/).
+Name disambiguation: [`docs/reference/opengauss-naming.md`](../../reference/opengauss-naming.md). Lean build: [`projects/templates/template_active_inference/lean/`](../../../projects/templates/template_active_inference/lean/).
 
 ### Literature Search
 
@@ -307,7 +307,7 @@ The template validates configuration at startup:
 
 ```bash
 # Check configuration
-uv run python -c "from infrastructure.core.config.loader import load_config; print(load_config('projects/template_code_project/manuscript/config.yaml', strict=True))"
+uv run python -c "from infrastructure.core.config.loader import load_config; print(load_config('projects/templates/template_code_project/manuscript/config.yaml', strict=True))"
 ```
 
 Permissive loading remains the default so partial project configs can fall

@@ -36,7 +36,7 @@ uv sync
 # Recommended: match CI (see ../.github/README.md)
 uv sync
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-fail-under=90 -m "not requires_ollama"
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-fail-under=90 -m "not requires_ollama"
 ```
 
 Legacy one-liners (without `uv`; not recommended):

@@ -11,7 +11,7 @@
     "claim_text": "the convergence rate constant k = 0.4271 ± 0.0003 (n=1000 trials, seed=42)",
     "value": 0.4271,
     "abs_tolerance": 0.0003,
-    "verifier_function": "projects.template_code_project.src.analysis.compute_convergence_rate",
+    "verifier_function": "analysis.pipeline.run_analysis",
     "verifier_args": {"n_trials": 1000, "seed": 42},
     "pinned_on": "EXAMPLE",
     "pinned_by": "EXAMPLE",

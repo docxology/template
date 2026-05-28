@@ -105,7 +105,7 @@ The template provides pre-structured manuscript files in the `manuscript/` direc
 
 ```mermaid
 flowchart TB
-    M[/projects/template_code_project/manuscript//]
+    M[/projects/templates/template_code_project/manuscript//]
     M --> PRE[preamble.md<br/>LaTeX styling]
     M --> ABS[00_abstract.md<br/>Research overview]
     M --> INTRO[01_introduction.md]
@@ -128,7 +128,7 @@ flowchart TB
 1. **Open the abstract file**
 
    ```bash
-   vim projects/template_code_project/manuscript/00_abstract.md
+   vim projects/templates/template_code_project/manuscript/00_abstract.md
    # Or use your preferred text editor
    ```
 
@@ -157,7 +157,7 @@ flowchart TB
 1. **Open the introduction**
 
    ```bash
-   vim projects/template_code_project/manuscript/01_introduction.md
+   vim projects/templates/template_code_project/manuscript/01_introduction.md
    ```
 
 2. **Add your content**:
@@ -432,7 +432,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 1. **Open preamble**
 
    ```bash
-   vim projects/template_code_project/manuscript/preamble.md
+   vim projects/templates/template_code_project/manuscript/preamble.md
    ```
 
 2. **Find color definitions** (around line 97-103):
@@ -460,14 +460,14 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    }
    ```
 
-**See [template_code_project/manuscript/preamble.md](../../projects/template_code_project/manuscript/preamble.md) for the LaTeX preamble configuration.**
+**See [template_code_project/manuscript/preamble.md](../../projects/templates/template_code_project/manuscript/preamble.md) for the LaTeX preamble configuration.**
 
 ### Add Bibliography
 
 1. **Edit references.bib**
 
    ```bash
-   vim projects/template_code_project/manuscript/references.bib
+   vim projects/templates/template_code_project/manuscript/references.bib
    ```
 
 2. **Add entries**:
@@ -579,7 +579,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 **Solutions**:
 
 1. Ensure `manuscript/config.yaml` exists
-2. Check project is in `projects/` (not `projects_archive/`)
+2. Check project is in `projects/` (not `projects/archive/`)
 
 ### References Show ??
 

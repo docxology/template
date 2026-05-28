@@ -1,0 +1,32 @@
+# Active Inference exemplar configuration template
+# Copy to config.yaml and customize. See docs/guides/zenodo-doi-strategy.md for split DOI layout.
+
+paper:
+  title: "Your Active Inference Research Title"
+  subtitle: "Optional subtitle"
+  version: "0.1.0"
+  date: ""
+
+authors:
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"
+    email: "your.email@example.com"
+    affiliation: "Your Institution"
+    corresponding: true
+
+publication:
+  doi: ""  # Concept DOI — stable citation; PDF cover and CITATION.cff
+  version_doi: ""  # Latest Zenodo version DOI
+  version_record: ""  # https://zenodo.org/records/{id}
+  github_repository: ""  # e.g. docxology/template_active_inference
+  transmission_bookends:
+    enabled: false
+    max_prior_releases: 5
+    show_steganography: true
+
+keywords:
+  - "active inference"
+
+metadata:
+  license: "MIT"
+  language: "en"

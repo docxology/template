@@ -23,7 +23,7 @@ def test_discover_projects_finds_templates() -> None:
     # The permanent public exemplars must always be present under
     # ``projects/``. ``template_search_project`` is an optional add-on
     # exemplar that rotates between ``projects/`` and
-    # ``projects_archive/``; do not gate on it here.
+    # ``projects/archive/``; do not gate on it here.
     assert "template_autoresearch_project" in names
     assert "template_code_project" in names
     assert "template_prose_project" in names

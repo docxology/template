@@ -1,0 +1,171 @@
+{
+  "baseline": {
+    "id": "nearest_centroid_baseline",
+    "type": "nearest_centroid"
+  },
+  "candidate_configs": [
+    {
+      "activation": "relu",
+      "d_model": 32,
+      "hidden_sizes": [],
+      "identifier": "exp-softmax-linear",
+      "model_type": "softmax_regression",
+      "patch_size": 7,
+      "seed": 101,
+      "title": "Softmax regression",
+      "train_attention": false,
+      "training": {
+        "batch_size": 100,
+        "epochs": 20,
+        "gradient_clip_norm": 5.0,
+        "l2": 0.0001,
+        "learning_rate": 0.3,
+        "learning_rate_decay": 0.995
+      }
+    },
+    {
+      "activation": "relu",
+      "d_model": 32,
+      "hidden_sizes": [
+        32
+      ],
+      "identifier": "exp-mlp-relu-32",
+      "model_type": "mlp",
+      "patch_size": 7,
+      "seed": 102,
+      "title": "One-hidden-layer ReLU MLP",
+      "train_attention": false,
+      "training": {
+        "batch_size": 100,
+        "epochs": 24,
+        "gradient_clip_norm": 5.0,
+        "l2": 0.0001,
+        "learning_rate": 0.2,
+        "learning_rate_decay": 0.995
+      }
+    },
+    {
+      "activation": "relu",
+      "d_model": 32,
+      "hidden_sizes": [],
+      "identifier": "exp-tiny-patch-attention",
+      "model_type": "tiny_patch_transformer",
+      "patch_size": 7,
+      "seed": 103,
+      "title": "Tiny patch-attention classifier",
+      "train_attention": false,
+      "training": {
+        "batch_size": 100,
+        "epochs": 24,
+        "gradient_clip_norm": 5.0,
+        "l2": 0.0001,
+        "learning_rate": 0.24,
+        "learning_rate_decay": 0.995
+      }
+    },
+    {
+      "activation": "tanh",
+      "d_model": 32,
+      "hidden_sizes": [
+        64
+      ],
+      "identifier": "exp-mlp-tanh-64",
+      "model_type": "mlp",
+      "patch_size": 7,
+      "seed": 104,
+      "title": "One-hidden-layer tanh MLP",
+      "train_attention": false,
+      "training": {
+        "batch_size": 100,
+        "epochs": 22,
+        "gradient_clip_norm": 5.0,
+        "l2": 0.0001,
+        "learning_rate": 0.16,
+        "learning_rate_decay": 0.995
+      }
+    },
+    {
+      "activation": "relu",
+      "d_model": 32,
+      "hidden_sizes": [
+        64
+      ],
+      "identifier": "exp-mlp-relu-64-deferred",
+      "model_type": "mlp",
+      "patch_size": 7,
+      "seed": 105,
+      "title": "Deferred wider ReLU MLP",
+      "train_attention": false,
+      "training": {
+        "batch_size": 100,
+        "epochs": 22,
+        "gradient_clip_norm": 5.0,
+        "l2": 0.0001,
+        "learning_rate": 0.18,
+        "learning_rate_decay": 0.995
+      }
+    }
+  ],
+  "dataset_path": "data/mnist_small.npz",
+  "diagnostics": {
+    "bootstrap_resamples": 1000,
+    "bootstrap_seed_offset": 10003,
+    "calibration_bins": 10,
+    "coverage_thresholds": [
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "high_confidence_threshold": 0.8,
+    "low_margin_threshold": 0.15
+  },
+  "id": "mnist_small_neural_search",
+  "max_candidates": 4,
+  "metric_direction": "maximize",
+  "metric_name": "test_accuracy",
+  "name": "small MNIST neural-network classification",
+  "normalization": "zero_one",
+  "provenance_path": "data/mnist_small_provenance.json",
+  "robustness_transforms": [
+    {
+      "dx": 0,
+      "dy": 0,
+      "factor": 1.0,
+      "id": "identity",
+      "type": "identity"
+    },
+    {
+      "dx": 1,
+      "dy": 0,
+      "factor": 1.0,
+      "id": "shift_right_1",
+      "type": "shift"
+    },
+    {
+      "dx": 0,
+      "dy": 1,
+      "factor": 1.0,
+      "id": "shift_down_1",
+      "type": "shift"
+    },
+    {
+      "dx": 0,
+      "dy": 0,
+      "factor": 0.85,
+      "id": "low_contrast_0_85",
+      "type": "contrast"
+    }
+  ],
+  "seed": 20260525,
+  "source_path": "mnist_task.yaml",
+  "training_defaults": {
+    "batch_size": 100,
+    "epochs": 18,
+    "gradient_clip_norm": 5.0,
+    "l2": 0.0001,
+    "learning_rate": 0.22,
+    "learning_rate_decay": 0.995
+  }
+}

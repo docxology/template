@@ -3,7 +3,7 @@
 > **Deterministic readiness planning for research workflows.**
 
 **Location:** `infrastructure/autoresearch/`
-**Quick Reference:** [Modules Guide](../modules-guide.md) | [AutoResearch Exemplar](../../../projects/template_autoresearch_project/README.md) | [Code Review Checklist](../../development/code-review-checklist.md)
+**Quick Reference:** [Modules Guide](../modules-guide.md) | [AutoResearch Exemplar](../../../projects/templates/template_autoresearch_project/README.md) | [Code Review Checklist](../../development/code-review-checklist.md)
 
 ---
 

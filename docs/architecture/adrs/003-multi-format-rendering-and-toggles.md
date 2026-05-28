@@ -89,7 +89,7 @@ larger task.
   `_render_combined_docx` / `_render_combined_epub` for the new formats.
 - Schema diff: `infrastructure/core/config/schema.py` gained a `render`
   top-level key with a nested `formats` sub-schema.
-- Per-project validator: `projects/template_prose_project/src/config.py`
+- Per-project validator: `projects/templates/template_prose_project/src/config.py`
   has its own `_KNOWN_TOP_LEVEL_KEYS` whitelist that needed `"render"` added.
   Any future project with a similar whitelist must do the same.
 

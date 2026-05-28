@@ -32,7 +32,7 @@ class TestValidatePdfs:
 
     def test_valid_pdfs(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        pdf_dir = tmp_path / "projects" / "test" / "output" / "pdf"
+        pdf_dir = tmp_path / "projects" / "active" / "test" / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "section1.pdf").write_bytes(_minimal_structural_pdf())
         (pdf_dir / "section2.pdf").write_bytes(_minimal_structural_pdf())
@@ -41,7 +41,7 @@ class TestValidatePdfs:
 
     def test_valid_pdfs_resolves_wip_project(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        pdf_dir = tmp_path / "projects_in_progress" / "draft" / "output" / "pdf"
+        pdf_dir = tmp_path / "projects" / "working" / "draft" / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "draft_combined.pdf").write_bytes(_minimal_structural_pdf())
 
@@ -53,20 +53,20 @@ class TestValidatePdfs:
 
     def test_empty_pdf_directory(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        pdf_dir = tmp_path / "projects" / "test" / "output" / "pdf"
+        pdf_dir = tmp_path / "projects" / "active" / "test" / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
         assert mod.validate_pdfs("test") is False
 
     def test_empty_pdf_file(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        pdf_dir = tmp_path / "projects" / "test" / "output" / "pdf"
+        pdf_dir = tmp_path / "projects" / "active" / "test" / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "empty.pdf").write_bytes(b"")
         assert mod.validate_pdfs("test") is False
 
     def test_mixed_valid_and_empty(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        pdf_dir = tmp_path / "projects" / "test" / "output" / "pdf"
+        pdf_dir = tmp_path / "projects" / "active" / "test" / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "valid.pdf").write_bytes(_minimal_structural_pdf())
         (pdf_dir / "empty.pdf").write_bytes(b"")
@@ -85,22 +85,22 @@ class TestValidateMarkdown:
 
     def test_empty_manuscript_dir(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        ms_dir = tmp_path / "projects" / "test" / "manuscript"
+        ms_dir = tmp_path / "projects" / "active" / "test" / "manuscript"
         ms_dir.mkdir(parents=True)
         assert mod.validate_manuscript_output_markdown("test") is True
 
     def test_with_markdown_files(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        ms_dir = tmp_path / "projects" / "test" / "manuscript"
+        ms_dir = tmp_path / "projects" / "active" / "test" / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("# Introduction\n\nHello world.")
         (ms_dir / "02_methods.md").write_text("# Methods\n\nWe did things.")
-        (tmp_path / "projects" / "test" / "output").mkdir(parents=True)
+        (tmp_path / "projects" / "active" / "test" / "output").mkdir(parents=True)
         assert mod.validate_manuscript_output_markdown("test") is True
 
     def test_markdown_resolves_wip_project(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        project = tmp_path / "projects_in_progress" / "draft"
+        project = tmp_path / "projects" / "working" / "draft"
         ms_dir = project / "manuscript"
         ms_dir.mkdir(parents=True)
         (project / "output").mkdir(parents=True)
@@ -109,7 +109,7 @@ class TestValidateMarkdown:
 
     def test_clean_markdown_clears_stale_diagnostics(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        project = tmp_path / "projects" / "test"
+        project = tmp_path / "projects" / "active" / "test"
         ms_dir = project / "manuscript"
         report_dir = project / "output" / "reports"
         ms_dir.mkdir(parents=True)
@@ -138,7 +138,7 @@ class TestVerifyOutputsExist:
 
     def test_valid_structure(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        output_dir = tmp_path / "projects" / "test" / "output"
+        output_dir = tmp_path / "projects" / "active" / "test" / "output"
         (output_dir / "pdf").mkdir(parents=True)
         (output_dir / "pdf" / "paper.pdf").write_bytes(b"%PDF content")
 
@@ -148,14 +148,14 @@ class TestVerifyOutputsExist:
 
     def test_empty_output(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        output_dir = tmp_path / "projects" / "test" / "output"
+        output_dir = tmp_path / "projects" / "active" / "test" / "output"
         output_dir.mkdir(parents=True)
         structure_valid, details = mod.verify_outputs_exist("test")
         assert isinstance(structure_valid, bool)
 
     def test_verify_outputs_resolves_wip_project(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        output_dir = tmp_path / "projects_in_progress" / "draft" / "output"
+        output_dir = tmp_path / "projects" / "working" / "draft" / "output"
         pdf_dir = output_dir / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "draft_combined.pdf").write_bytes(_minimal_structural_pdf())
@@ -167,7 +167,7 @@ class TestVerifyOutputsExist:
 
 def test_validate_project_design_includes_autoresearch_when_configured(tmp_path, monkeypatch):
     monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-    project = tmp_path / "projects" / "demo"
+    project = tmp_path / "projects" / "active" / "demo"
     (project / "output" / "reports").mkdir(parents=True)
     (project / "autoresearch.yaml").write_text(
         "strict: true\nquality_checks: [unknown_check]\n",
@@ -227,7 +227,7 @@ class TestGenerateValidationReport:
 
     def test_all_passed(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        out_dir = tmp_path / "projects" / "test" / "output" / "reports"
+        out_dir = tmp_path / "projects" / "active" / "test" / "output" / "reports"
         out_dir.mkdir(parents=True)
         checks = [
             ("PDF validation", True),
@@ -242,7 +242,7 @@ class TestGenerateValidationReport:
 
     def test_pdf_failed(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        out_dir = tmp_path / "projects" / "test" / "output" / "reports"
+        out_dir = tmp_path / "projects" / "active" / "test" / "output" / "reports"
         out_dir.mkdir(parents=True)
         checks = [("PDF validation", False), ("Markdown validation", True)]
         result = generate_validation_report(checks, [], {}, project_name="test")
@@ -252,7 +252,7 @@ class TestGenerateValidationReport:
 
     def test_markdown_failed(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        out_dir = tmp_path / "projects" / "test" / "output" / "reports"
+        out_dir = tmp_path / "projects" / "active" / "test" / "output" / "reports"
         out_dir.mkdir(parents=True)
         result = generate_validation_report([("Markdown validation", False)], [], {}, project_name="test")
         recs = result["recommendations"]
@@ -260,7 +260,7 @@ class TestGenerateValidationReport:
 
     def test_output_structure_failed(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        out_dir = tmp_path / "projects" / "test" / "output" / "reports"
+        out_dir = tmp_path / "projects" / "active" / "test" / "output" / "reports"
         out_dir.mkdir(parents=True)
         result = generate_validation_report([("Output structure", False)], [], {}, project_name="test")
         recs = result["recommendations"]
@@ -268,7 +268,7 @@ class TestGenerateValidationReport:
 
     def test_figure_issues(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        out_dir = tmp_path / "projects" / "test" / "output" / "reports"
+        out_dir = tmp_path / "projects" / "active" / "test" / "output" / "reports"
         out_dir.mkdir(parents=True)
         figure_issues = ["Missing figure: fig1.png", "Unregistered: fig2.png"]
         result = generate_validation_report([("PDF validation", True)], figure_issues, {}, project_name="test")
@@ -278,7 +278,7 @@ class TestGenerateValidationReport:
 
     def test_with_output_statistics(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        out_dir = tmp_path / "projects" / "test" / "output" / "reports"
+        out_dir = tmp_path / "projects" / "active" / "test" / "output" / "reports"
         out_dir.mkdir(parents=True)
         stats = {"pdf": {"files": 3, "size_mb": 1.5}}
         result = generate_validation_report([("PDF validation", True)], [], stats, project_name="test")
@@ -305,7 +305,7 @@ class TestGenerateValidationReport:
 
     def test_fallback_json_save(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        out_dir = tmp_path / "projects" / "test" / "output" / "reports"
+        out_dir = tmp_path / "projects" / "active" / "test" / "output" / "reports"
         out_dir.mkdir(parents=True)
         result = generate_validation_report([("PDF validation", True)], [], {}, project_name="test")
         assert "timestamp" in result
@@ -318,14 +318,14 @@ class TestExecuteValidationPipeline:
 
     def test_no_pdfs_no_manuscript(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        project_dir = tmp_path / "projects" / "test"
+        project_dir = tmp_path / "projects" / "active" / "test"
         (project_dir / "output").mkdir(parents=True)
         result = mod.execute_validation_pipeline("test")
         assert isinstance(result, int)
 
     def test_with_valid_pdfs(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        project_dir = tmp_path / "projects" / "test"
+        project_dir = tmp_path / "projects" / "active" / "test"
         pdf_dir = project_dir / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "paper.pdf").write_bytes(b"%PDF-1.4 content")
@@ -336,7 +336,7 @@ class TestExecuteValidationPipeline:
 
     def test_with_figure_registry(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        project_dir = tmp_path / "projects" / "test"
+        project_dir = tmp_path / "projects" / "active" / "test"
         pdf_dir = project_dir / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "paper.pdf").write_bytes(b"%PDF content")
@@ -350,7 +350,7 @@ class TestExecuteValidationPipeline:
 
     def test_with_output_subdirs(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
-        project_dir = tmp_path / "projects" / "test"
+        project_dir = tmp_path / "projects" / "active" / "test"
         pdf_dir = project_dir / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "paper.pdf").write_bytes(b"%PDF content")
@@ -366,7 +366,7 @@ class TestExecuteValidationPipeline:
         assert isinstance(mod.execute_validation_pipeline("test"), int)
 
     def test_prefers_current_project_manifest_over_stale_stage_snapshots(self, tmp_path):
-        project_dir = tmp_path / "projects" / "test"
+        project_dir = tmp_path / "projects" / "active" / "test"
         artifact = project_dir / "output" / "data" / "result.json"
         artifact.parent.mkdir(parents=True)
         artifact.write_text('{"ok": true}\n')

@@ -11,7 +11,7 @@ references and an LLM-synthesised reading report" with no manual steps.
   enrichment.
 * `infrastructure/reference/citation/` — BibTeX read/write/convert
   byte-compatible with the Pandoc-consumed
-  `projects/template_code_project/manuscript/references.bib`.
+  `projects/templates/template_code_project/manuscript/references.bib`.
 * [`projects_archive/template_search_project/`](../../projects_archive/template_search_project/) — fully wired exemplar (copy locally under `projects/` to run; not git-tracked).
 
 ## Stream Map

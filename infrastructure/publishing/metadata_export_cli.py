@@ -34,7 +34,7 @@ def main(argv: list[str] | None = None) -> int:
     export_parser.add_argument(
         "--project",
         required=True,
-        help="Project name under projects/ or projects_in_progress/.",
+        help="Project name under projects/ (optionally typed-subfolder-qualified, e.g. working/<name>).",
     )
     export_parser.add_argument(
         "--out",

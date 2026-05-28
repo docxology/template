@@ -74,7 +74,7 @@ Description optimization trigger set: [`_skill-eval/trigger-eval-set.json`](_ski
 
 ## Conventions
 
-- Exemplar: [`projects/template_code_project/`](../../projects/template_code_project/); active names → [`../_generated/active_projects.md`](../_generated/active_projects.md).
+- Exemplar: [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/); active names → [`../_generated/active_projects.md`](../_generated/active_projects.md).
 - Manuscript: Pandoc-crossref vs registry tokens — skills state which applies.
 - Thin orchestrator + no mocks enforced in every workflow skill.
 

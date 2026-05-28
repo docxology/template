@@ -73,8 +73,8 @@ flowchart TB
     ROOT --> RUN[run.sh<br/>Thin shell dispatcher → infrastructure.orchestration]
     ROOT --> SCR[/scripts<br/>Entry-point orchestrators · thin wrappers/]
     ROOT --> PROJ[/projects<br/>Active research projects · Layer 2/]
-    ROOT --> ARCH[/projects_archive<br/>Archived · not executed/]
-    ROOT --> WIP[/projects_in_progress<br/>WIP · not discovered/]
+    ROOT --> ARCH[/projects/archive<br/>Archived · not executed/]
+    ROOT --> WIP[/projects/working<br/>WIP · not discovered/]
     ROOT --> T[/tests<br/>Infrastructure tests/]
     ROOT --> DOCS[docs/CLOUD_DEPLOY.md<br/>Headless cloud server guide]
     ROOT --> DOCKER[infrastructure/docker<br/>Dockerfile · docker-compose.yml]
@@ -83,7 +83,7 @@ flowchart TB
 
     SCR --> SCR_FILES[shell_bootstrap.sh · bash_utils.sh ops only ·<br/>00_setup_environment → 06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
 
-    PROJ --> PROJ_F["template_active_inference · template_autoresearch_project · template_code_project · template_prose_project<br/>local template_search_project add-on<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
+    PROJ --> PROJ_F["template_active_inference · template_autoresearch_project · template_code_project · template_prose_project · template_template<br/>local template_search_project add-on<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -129,7 +129,7 @@ uv run python scripts/execute_pipeline.py --project template_code_project --core
 uv run python scripts/01_run_tests.py --project template_code_project
 
 # Validate markdown (exemplar path)
-uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
 ```
 
 Active project slugs: see [_generated/active_projects.md](_generated/active_projects.md) — do not duplicate that roster here.

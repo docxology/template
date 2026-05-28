@@ -125,14 +125,15 @@ class TestFindCombinedPdfSourceLayout:
 
     def test_finds_pdf_in_wip_source_project_layout(self, tmp_path: Path) -> None:
         repo_root = tmp_path
-        source_output = repo_root / "projects_in_progress" / PROJECT_NAME / "output"
+        qualified_name = f"working/{PROJECT_NAME}"
+        source_output = repo_root / "projects" / "working" / PROJECT_NAME / "output"
         source_output.mkdir(parents=True)
         source_pdf = _make_pdf(source_output / "pdf" / f"{PROJECT_NAME}_combined.pdf")
 
-        copied_output = repo_root / "output" / PROJECT_NAME
+        copied_output = repo_root / "output" / "working" / PROJECT_NAME
         copied_output.mkdir(parents=True)
 
-        result = find_combined_pdf(copied_output, PROJECT_NAME)
+        result = find_combined_pdf(copied_output, qualified_name)
 
         assert result is not None
         found_path, _ = result

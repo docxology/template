@@ -112,7 +112,7 @@ class TestSetupDirectories:
         assert result is True
         assert (tmp_path / "output" / "test_project").is_dir()
         assert (tmp_path / "output" / "test_project" / "figures").is_dir()
-        assert (tmp_path / "projects" / "test_project" / "output").is_dir()
+        assert (tmp_path / "projects" / "active" / "test_project" / "output").is_dir()
 
     def test_setup_directories_idempotent(self, tmp_path):
         """Test that running setup twice does not fail."""

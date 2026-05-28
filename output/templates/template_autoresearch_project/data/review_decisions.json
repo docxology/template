@@ -1,0 +1,21 @@
+{
+  "decisions": [
+    {
+      "decision": "deferred",
+      "gate": "proposal_review",
+      "rationale": "Decision is read from human_review.yaml when present; generated readiness is not approval.",
+      "required": true
+    },
+    {
+      "decision": "deferred",
+      "gate": "evidence_review",
+      "rationale": "Decision is read from human_review.yaml when present; generated readiness is not approval.",
+      "required": true
+    }
+  ],
+  "generated_at": "2026-05-27T23:33:29+00:00",
+  "human_review_source": "human_review.yaml",
+  "human_review_source_exists": true,
+  "publication_approved": false,
+  "schema": "template-autoresearch-review-decisions-v1"
+}

@@ -12,8 +12,8 @@ from __future__ import annotations
 
 
 # TODO: replace with the actual import path of the function that produces this value
-# Example:
-#   from projects.template_code_project.src.analysis import compute_convergence_rate
+# Example (with ``projects/templates/template_code_project/src`` on PYTHONPATH):
+#   from analysis.pipeline import run_analysis
 
 
 PINNED_KEY = "figure_TEMPLATE"  # TODO: replace with the JSON key in pinned_values

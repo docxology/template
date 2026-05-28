@@ -71,6 +71,17 @@ class TestStripping:
         assert "Docs (https://example.com/doc)" in out
         assert links_to_label_paren_url("[A](https://a.test)") == "A (https://a.test)"
 
+    def test_strips_raw_latex_and_hyperref_visible_text(self) -> None:
+        text = (
+            "See notation glossary "
+            "(`\\hyperref[sec:notation]{§S6}`{=latex}) in the supplement.\n\n---\n"
+        )
+        out = normalise_for_deposit(text)
+        assert "{=latex}" not in out
+        assert "\\hyperref" not in out
+        assert "§S6" in out
+        assert out.endswith("in the supplement.")
+
 
 class TestReadManuscriptDir:
     def test_collects_md_files(self, tmp_path: Path):

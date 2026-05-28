@@ -39,7 +39,7 @@ The full authoritative export list is in `infrastructure/prose/__init__.py`.
 from pathlib import Path
 from infrastructure.prose import analyze_manuscript
 
-report = analyze_manuscript(Path("projects/template_prose_project/manuscript"))
+report = analyze_manuscript(Path("projects/templates/template_prose_project/manuscript"))
 print(report.summary())
 ```
 

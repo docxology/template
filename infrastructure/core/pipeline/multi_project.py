@@ -523,9 +523,9 @@ class MultiProjectOrchestrator:
             try:
                 with log_operation(f"Pipeline execution for {project_name}"):
                     # Preserve qualified names for nested projects.  The
-                    # projects_dir remains the top-level pool (projects or
-                    # projects_in_progress); project_name carries any program
-                    # subpath, e.g. cognitive_integrity/cogsec_multiagent_1_theory.
+                    # projects_dir remains the top-level pool (projects);
+                    # project_name carries any typed-subfolder/program subpath,
+                    # e.g. templates/template_code_project or active/cogsec.
                     pipeline_config = PipelineConfig(
                         project_name=project_name,
                         repo_root=self.config.repo_root,

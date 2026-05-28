@@ -49,7 +49,7 @@ uv sync
 uv run pytest tests/
 
 # Regenerate only figures
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 # Rebuild PDFs (run stage 3 only)
 uv run python scripts/03_render_pdf.py

@@ -15,6 +15,8 @@ from typing import Generator
 
 import pytest
 
+from tests._support.projects import make_project
+
 # Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
 
@@ -63,20 +65,13 @@ def temp_project_dir(tmp_path: Path) -> Generator[Path, None, None]:
     Yields:
         Path to the temporary project directory
     """
-    project_dir = tmp_path / "project"
-    project_dir.mkdir()
-
-    # Create standard subdirectories
-    (project_dir / "src").mkdir()
-    (project_dir / "src" / "__init__.py").write_text("")
-    (project_dir / "tests").mkdir()
-    (project_dir / "tests" / "__init__.py").write_text("")
-    (project_dir / "manuscript").mkdir()
-    (project_dir / "output").mkdir()
-
-    # Create output subdirectories
-    for subdir in ["pdf", "figures", "data", "web", "slides", "reports", "logs"]:
-        (project_dir / "output" / subdir).mkdir()
+    project_dir = make_project(
+        tmp_path,
+        "project",
+        repo_layout=False,
+        with_manuscript=True,
+        with_output=True,
+    )
 
     yield project_dir
 

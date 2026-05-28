@@ -67,17 +67,17 @@ offenders = verify_codegraph_scope_payload(codegraph_files_json)
 The index directory `.codegraph/` is generated local state and must remain
 untracked.
 
-## Active vs Archived Projects
+## Rendered vs Non-Rendered Subfolders
 
-- **Active:** `projects/` — Discovered and executed by infrastructure
-- **Archived:** `projects_archive/` — Preserved but not executed
+- **Rendered:** `projects/templates/` (public exemplars) and `projects/active/` (hot-seat) — Discovered and executed by infrastructure
+- **Non-rendered:** `projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/` — Preserved but not executed
 
 ```bash
 # Archive a project
-mv projects/{name}/ projects_archive/{name}/
+mv projects/active/{name}/ projects/archive/{name}/
 
 # Reactivate a project
-mv projects_archive/{name}/ projects/{name}/
+mv projects/archive/{name}/ projects/active/{name}/
 ```
 
 ## Multi-Project Pipeline Usage

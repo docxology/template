@@ -18,8 +18,8 @@ def test_shared_scope_skips_local_and_generated_trees(tmp_path: Path) -> None:
     excluded_paths = [
         tmp_path / ".claude" / "worktrees" / "scratch.md",
         tmp_path / ".codex" / "sessions" / "thread.md",
-        tmp_path / "projects_in_progress" / "draft" / "README.md",
-        tmp_path / "projects_archive" / "old" / "README.md",
+        tmp_path / "projects" / "working" / "draft" / "README.md",
+        tmp_path / "projects" / "archive" / "old" / "README.md",
         tmp_path / "projects" / "demo" / "output" / "report.md",
         tmp_path / ".venv" / "lib" / "site-packages" / "pkg" / "README.md",
     ]

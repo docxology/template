@@ -4,13 +4,15 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Active Projects
 
-Directories under `projects/` **change over time** (promotion, archiving, or moving to `projects_in_progress/`). The set guaranteed to remain as **permanent canonical exemplars** is:
+Paths under `projects/` are organized as **typed subfolders** (`templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) and **change over time** as projects rotate between lifecycle folders. The set guaranteed to remain as **permanent canonical exemplars** — git-tracked under `projects/templates/` — is:
 
-- [`template_code_project/`](template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
-- [`template_prose_project/`](template_prose_project/) — prose-centric exemplar (editorial review, BibTeX validation, readability metrics)
-- [`template_autoresearch_project/`](template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
+- [`templates/template_code_project/`](templates/template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
+- [`templates/template_prose_project/`](templates/template_prose_project/) — prose-centric exemplar (editorial review, BibTeX validation, readability metrics)
+- [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
+- [`templates/template_active_inference/`](templates/template_active_inference/) — Active Inference multi-track exemplar (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
+- [`templates/template_template/`](templates/template_template/) — meta-template (introspects `infrastructure/` and the public exemplar roster)
 
-They are **standalone** projects with the same core layout (`src/`, `tests/`, `scripts/`, `manuscript/`, `output/`) and the same verification commands. The optional `template_search_project` literature-search exemplar is **local-only** — it lives at [`projects_archive/template_search_project/`](../projects_archive/template_search_project/) and is **not git-tracked**. This is a public repo: only the public canonical exemplars listed above are tracked; copy `template_search_project` under `projects/` *locally* to exercise literature-search workflows, but never commit it (`scripts/check_tracked_projects.py` blocks any non-template project in pre-push + CI). Examples in this documentation default to `projects/template_code_project/` unless a doc explicitly compares projects.
+They are **standalone** projects with the same core layout (`src/`, `tests/`, `scripts/`, `manuscript/`, `output/`) and the same verification commands. The optional `template_search_project` literature-search exemplar is **local-only** — it lives at [`archive/template_search_project/`](archive/template_search_project/) and is **not git-tracked**. This is a public repo: only the public canonical exemplars under `templates/` are tracked; copy `template_search_project` under `projects/active/` *locally* to exercise literature-search workflows, but never commit it (`scripts/check_tracked_projects.py` blocks any non-template project in pre-push + CI). Examples in this documentation default to `projects/templates/template_code_project/` unless a doc explicitly compares projects.
 
 **Current** names from `discover_projects()` are listed in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerate after layout changes).
 
@@ -18,35 +20,38 @@ They are **standalone** projects with the same core layout (`src/`, `tests/`, `s
 
 | Exemplar | Purpose | Algorithm? | Mutates `references.bib`? | Embeds figures? | Tests | Coverage |
 |---|---|---|---|---|---|---|
-| [`template_code_project`](template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
-| [`template_prose_project`](template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
-| [`template_autoresearch_project`](template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
+| [`template_code_project`](templates/template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
+| [`template_prose_project`](templates/template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
+| [`template_autoresearch_project`](templates/template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
+| [`template_active_inference`](templates/template_active_inference/) | Active Inference multi-track research | yes (multiple tracks) | no (curated) | yes | see canonical facts | see canonical facts |
+| [`template_template`](templates/template_template/) | Meta-template (infrastructure introspection) | yes (`src/template_template/introspection.py`) | no (curated) | yes (architecture figures) | see canonical facts | see canonical facts |
 
 The measured test and coverage totals drift as the exemplars evolve; confirm
 current numbers in
 [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md).
-The permanent exemplars cover the computational, prose-review, and deterministic
-AutoResearch paths. Use the archived search exemplar when the project needs
+The permanent exemplars cover Active Inference, computational, prose-review,
+deterministic AutoResearch, and autopoietic meta-documentation paths. Use the
+archived search exemplar when the project needs
 literature discovery, auto-populated BibTeX, or optional LLM synthesis.
 **Important:** run each
 project's `tests/` in **its own** `pytest` invocation — pointing pytest at
 `projects/*/tests/` simultaneously triggers `ImportPathMismatchError` because
 every project ships a `tests/conftest.py`.
 
-Additional siblings under `projects/` today are real projects for this
-checkout, not permanent fixtures. They are usually symlinks from an external
-private lifecycle repo's `active/` tree; inspect planned syncs with
+Projects under `projects/active/` today are real projects for this checkout,
+not permanent fixtures. They are usually symlinks from an external private
+lifecycle repo's `active/` tree; inspect planned syncs with
 `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
-### In-progress projects (under `projects_in_progress/`)
+### In-progress projects (under `projects/working/`)
 
-These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready. The roster is deliberately not copied here; use `ls projects_in_progress/` for the current checkout and [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) for projects actually discovered by `./run.sh`.
+These are actively being developed under [`working/`](working/) but are not yet pipeline-ready. The roster is deliberately not copied here; use `ls projects/working/` for the current checkout and [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) for projects actually discovered by `./run.sh`.
 
-**Note:** Use `projects/template_code_project/` for concrete paths, commands, and layout examples unless a document explicitly compares project shapes. Promote projects from `projects_in_progress/` or `projects_archive/` to `projects/` when they are ready for pipeline execution.
+**Note:** Use `projects/templates/template_code_project/` for concrete paths, commands, and layout examples unless a document explicitly compares project shapes. Promote projects from `projects/working/` or `projects/archive/` to `projects/active/` when they are ready for pipeline execution.
 
-### Archived exemplars (not in `projects/`)
+### Archived exemplars (under `projects/archive/`)
 
-Preserved under [`projects_archive/`](../projects_archive/) until moved back; the pipeline does not discover them. The archive roster is checkout-specific, especially when lifecycle symlinks are synced from the private sidecar repo. Use `ls projects_archive/` for local inspection and [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) for the public policy — do not hard-code names here.
+Preserved under [`archive/`](archive/) until moved back; the pipeline does not discover them. The archive roster is checkout-specific, especially when lifecycle symlinks are synced from the private sidecar repo. Use `ls projects/archive/` for local inspection and [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) for the public policy — do not hard-code names here.
 
 ## Standalone Project Paradigm
 
@@ -73,25 +78,25 @@ Each project in `projects/` is **completely self-contained** with three critical
 - Rendered independently via infrastructure.rendering
 - Own publication metadata and cross-references
 
-## Active vs Archived Projects
+## Rendered vs Non-Rendered Projects
 
 ### 📁 **Project Organization**
 
-The template distinguishes between **active projects** and **archived projects**:
+The template organizes projects into **typed subfolders** under `projects/`. Two are rendered (`templates/`, `active/`); the rest are linked for inspection only.
 
-#### ✅ **Active Projects (`projects/`)**
+#### ✅ **Rendered Projects (`projects/templates/` + `projects/active/`)**
 
-Projects in the `projects/` directory are **actively discovered and executed** by infrastructure:
+Projects under `projects/templates/` (the tracked exemplars) and `projects/active/` (the hot-seat set) are **actively discovered and executed** by infrastructure:
 
-- **Discovered** by `infrastructure.project.discovery.discover_projects()`
+- **Discovered** by `infrastructure.project.discovery.discover_projects()` with qualified names `templates/<name>` and `active/<name>`
 - **Listed** in `run.sh` interactive menu for selection
 - **Executed** by all pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
 - **Rendered** independently with project-specific manuscripts
-- **Outputs** organized in `projects/{name}/output/` and `output/{name}/`
+- **Outputs** organized in `projects/<subfolder>/{name}/output/` and `output/<subfolder>/{name}/`
 
-#### 📦 **Archived Projects (`projects_archive/`)**
+#### 📦 **Non-Rendered Projects (`working/`, `published/`, `archive/`, `other/`)**
 
-Projects in the `projects_archive/` directory are **preserved but not executed**:
+Projects under `projects/working/`, `projects/published/`, `projects/archive/`, and `projects/other/` are **preserved but not executed**:
 
 - **NOT discovered** by infrastructure discovery functions
 - **NOT listed** in `run.sh` menu
@@ -100,27 +105,28 @@ Projects in the `projects_archive/` directory are **preserved but not executed**
 
 ```bash
 # Move project to archive
-mv projects/myproject projects_archive/myproject
+mv projects/active/myproject projects/archive/myproject
 
-# Move project back to active
-mv projects_archive/myproject projects/myproject
+# Move project back to the rendered hot-seat set
+mv projects/archive/myproject projects/active/myproject
 
 # Project will be automatically discovered on next run.sh execution
 ```
 
 For confidential work, prefer the configured external private lifecycle repo:
-`active/` is linked into this directory, `passive/` is linked into
-`../projects_in_progress/`, and `archive/` is linked into `../projects_archive/`.
-Only this directory is discovered/rendered by default; the passive/archive
+its `active/` is linked into `projects/active/`, and `working/`, `published/`,
+`archive/`, `other/` are linked into the matching `projects/<subfolder>/`.
+Only `templates/` and `active/` are discovered/rendered by default; the other
 mirrors are for inspection or explicit targeted work. Move private work between
 lifecycle folders instead of committing it here.
 
 | Directory            | Role                      | Tests | Coverage |
 |----------------------|---------------------------|-------|----------|
-| `template_active_inference/` | Active Inference multi-track exemplar (analytical + pymdp + sheaf manuscript) | see canonical facts | see canonical facts |
-| `template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
-| `template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | see canonical facts | see canonical facts |
-| `template_autoresearch_project/` | AutoResearch exemplar (deterministic readiness loop) | see canonical facts | see canonical facts |
+| `templates/template_active_inference/` | Active Inference multi-track exemplar (analytical + pymdp + sheaf manuscript) | see canonical facts | see canonical facts |
+| `templates/template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
+| `templates/template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | see canonical facts | see canonical facts |
+| `templates/template_autoresearch_project/` | AutoResearch exemplar (deterministic readiness loop) | see canonical facts | see canonical facts |
+| `templates/template_template/` | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
 
 The permanent exemplars share the same per-directory `AGENTS.md` + `README.md` convention and the same `src/`, `tests/`, `scripts/`, `manuscript/`, and `output/` boundaries.
 
@@ -128,9 +134,9 @@ The permanent exemplars share the same per-directory `AGENTS.md` + `README.md` c
 the corresponding local lifecycle mirrors automatically by `run.sh`/orchestration.
 Set `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root` to use another
 private repo; set `TEMPLATE_SKIP_LINK_SYNC=1` to skip one auto-sync.
-**In-progress projects** live in `projects_in_progress/` (including private
-`passive/` symlinks).
-**Archived projects** live in `projects_archive/` (including private `archive/`
+**In-progress projects** live in `projects/working/` (including private
+`working/` symlinks).
+**Archived projects** live in `projects/archive/` (including private `archive/`
 symlinks).
 
 ```mermaid
@@ -197,7 +203,7 @@ from infrastructure.project import discover_projects, validate_project_structure
 projects = discover_projects(Path("."))  # Finds template_code_project, etc.
 
 # Validates project structure
-is_valid, message = validate_project_structure(Path("projects/template_code_project"))
+is_valid, message = validate_project_structure(Path("projects/templates/template_code_project"))
 # Returns: (True, "Valid project structure")
 ```
 
@@ -348,7 +354,7 @@ flowchart TB
 
 ```bash
 # Copy an existing project as a starting point
-cp -r projects/template_code_project projects/myresearch
+cp -r projects/templates/template_code_project projects/active/myresearch
 
 # Customize pyproject.toml
 vim projects/myresearch/pyproject.toml
@@ -613,7 +619,7 @@ Available projects are automatically discovered - use `--project {name}` to spec
 
 ## Real Project Examples
 
-### **Stable Code Exemplar** (`projects/template_code_project/`)
+### **Stable Code Exemplar** (`projects/templates/template_code_project/`)
 
 The code-centric exemplar demonstrates numerical analysis, dashboard outputs,
 manuscript-variable hydration, and thin project scripts.
@@ -637,7 +643,7 @@ uv run python scripts/execute_pipeline.py --project template_code_project --core
 
 ```bash
 # Copy an existing project as template
-cp -r projects/template_code_project projects/my_research
+cp -r projects/templates/template_code_project projects/active/my_research
 cd projects/my_research
 
 # Update project metadata
@@ -700,14 +706,14 @@ for p in projects:
 ### "Project not found - is it archived?"
 
 ```bash
-# Check if project is in archive directory
-ls -la projects_archive/
+# Check if project is in the archive subfolder
+ls -la projects/archive/
 
 # If found in archive, reactivate it
-mv projects_archive/myproject projects/myproject
+mv projects/archive/myproject projects/active/myproject
 
 # Verify project structure is valid
-uv run python -c "from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/myproject')))"
+uv run python -c "from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/active/myproject')))"
 
 # Project should now be discoverable
 ./run.sh
@@ -717,12 +723,12 @@ uv run python -c "from infrastructure.project import validate_project_structure;
 
 - Project exists but not listed in `run.sh` menu
 - Infrastructure reports "project not found"
-- Project appears to be missing from `projects/` directory
+- Project appears to be missing from the rendered subfolders
 
 **Solution:**
 
-1. Check if project exists in `projects_archive/` directory
-2. If archived, move it back to `projects/` directory
+1. Check if project exists in `projects/archive/` (or `working/`, `other/`)
+2. If archived, move it back to `projects/active/`
 3. Validate project structure (must have `src/` and `tests/`)
 4. Project will be automatically discovered on next execution
 
@@ -864,12 +870,15 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 
 ### 🎯 **Permanent Exemplars**
 
+- **template_active_inference**: Active Inference multi-track exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
+- **template_autoresearch_project**: AutoResearch exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
 - **template_code_project**: Optimization research exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
 - **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
+- **template_template**: Meta-template exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
 
 Additional rotating projects are discovered from `docs/_generated/active_projects.md`.
 
-**Note:** In-progress projects are in `projects_in_progress/`; archived projects are preserved in `projects_archive/`.
+**Note:** In-progress projects are in `projects/working/`; archived projects are preserved in `projects/archive/`.
 
 ### 🚀 **Workflow**
 

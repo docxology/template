@@ -17,7 +17,7 @@ VALID_DIRECTORY_REFERENCES: set[str] = {
     "projects/",
     "tests/",
     "output/",
-    "projects_archive/",
+    "projects/archive/",
 }
 
 # Template patterns (placeholders that can't be resolved)

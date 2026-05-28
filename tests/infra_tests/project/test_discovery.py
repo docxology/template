@@ -737,8 +737,8 @@ class TestDiscoverProjects:
         assert project.has_manuscript is True
         assert project.is_valid is True
 
-    def test_discover_excludes_projects_archive(self, tmp_path: Path):
-        """Test discovery does not scan projects_archive directory."""
+    def test_discover_excludes_archive_subfolder(self, tmp_path: Path):
+        """Test discovery does not scan the projects/archive/ subfolder."""
         # Create projects directory with valid project
         projects_dir = tmp_path / "projects"
         projects_dir.mkdir()
@@ -748,8 +748,8 @@ class TestDiscoverProjects:
         (active / "src" / "__init__.py").write_text("")
         (active / "tests" / "__init__.py").write_text("")
 
-        # Create projects_archive directory with valid project (should be ignored)
-        archive_dir = tmp_path / "projects_archive"
+        # Create projects/archive/ subfolder with valid project (should be ignored)
+        archive_dir = projects_dir / "archive"
         archive_dir.mkdir()
         archived = archive_dir / "archived_project"
         (archived / "src").mkdir(parents=True)
@@ -1129,8 +1129,8 @@ authors:
         (second_project / "src" / "__init__.py").write_text("")
         (second_project / "tests" / "__init__.py").write_text("")
 
-        # Simulate projects_archive (should not be discovered)
-        archive = tmp_path / "projects_archive"
+        # Simulate projects/archive/ subfolder (should not be discovered)
+        archive = projects_dir / "archive"
         (archive / "old_project" / "src").mkdir(parents=True)
         (archive / "old_project" / "tests").mkdir()
         (archive / "old_project" / "src" / "__init__.py").write_text("")
@@ -1283,24 +1283,25 @@ authors:
         assert "Chen Wei" in metadata["authors"]
 
 
-def test_resolve_project_root_prefers_projects_over_wip(tmp_path: Path) -> None:
-    """Active ``projects/<name>`` wins when both exist."""
-    (tmp_path / "projects" / "demo" / "src").mkdir(parents=True)
-    (tmp_path / "projects" / "demo" / "tests").mkdir()
-    (tmp_path / "projects" / "demo" / "src" / "__init__.py").write_text("")
-    (tmp_path / "projects" / "demo" / "tests" / "__init__.py").write_text("")
-    wip_demo = tmp_path / "projects_in_progress" / "demo"
+def test_resolve_project_root_prefers_active_over_working(tmp_path: Path) -> None:
+    """Hot-seat ``projects/active/<name>`` wins when both it and a WIP tree exist."""
+    active_demo = tmp_path / "projects" / "active" / "demo"
+    (active_demo / "src").mkdir(parents=True)
+    (active_demo / "tests").mkdir()
+    (active_demo / "src" / "__init__.py").write_text("")
+    (active_demo / "tests" / "__init__.py").write_text("")
+    wip_demo = tmp_path / "projects" / "working" / "demo"
     wip_demo.mkdir(parents=True)
     (wip_demo / "marker.txt").write_text("wip")
 
     resolved = resolve_project_root(tmp_path, "demo")
-    assert resolved == (tmp_path / "projects" / "demo").resolve()
+    assert resolved == active_demo.resolve()
     assert not (resolved / "marker.txt").exists()
 
 
-def test_resolve_project_root_falls_back_to_projects_in_progress(tmp_path: Path) -> None:
-    """When not under ``projects/``, use ``projects_in_progress/<name>``."""
-    wip = tmp_path / "projects_in_progress" / "staged"
+def test_resolve_project_root_falls_back_to_working(tmp_path: Path) -> None:
+    """When not under ``projects/active/``, use ``projects/working/<name>``."""
+    wip = tmp_path / "projects" / "working" / "staged"
     (wip / "manuscript").mkdir(parents=True)
     (wip / "manuscript" / "config.yaml").write_text("paper:\n  title: T\n")
 
@@ -1309,9 +1310,9 @@ def test_resolve_project_root_falls_back_to_projects_in_progress(tmp_path: Path)
 
 
 def test_resolve_project_root_ignores_output_only_projects_shadow(tmp_path: Path) -> None:
-    """A generated output stub under projects/ must not hide a WIP source tree."""
-    (tmp_path / "projects" / "staged" / "output" / "reports").mkdir(parents=True)
-    wip = tmp_path / "projects_in_progress" / "staged"
+    """A generated output stub under projects/active/ must not hide a WIP source tree."""
+    (tmp_path / "projects" / "active" / "staged" / "output" / "reports").mkdir(parents=True)
+    wip = tmp_path / "projects" / "working" / "staged"
     (wip / "manuscript").mkdir(parents=True)
     (wip / "manuscript" / "config.yaml").write_text("paper:\n  title: T\n")
 

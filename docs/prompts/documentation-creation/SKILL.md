@@ -21,7 +21,7 @@ metadata:
 
 ## Natural invoke
 
-- "Write AGENTS.md for projects/template_code_project/scripts/"
+- "Write AGENTS.md for projects/templates/template_code_project/scripts/"
 - "README and AGENTS for new infrastructure package"
 - "Fix stale commands in docs/prompts AGENTS.md"
 

@@ -1,13 +1,12 @@
 # infrastructure/project/drift/
 
-Template drift detection for canonical exemplar projects (`template_code_project`,
-`template_prose_project`).
+Template drift detection for public canonical exemplar projects (`PUBLIC_PROJECT_NAMES`).
 
 ## Public API
 
 - `run_drift_checks(repo_root, projects)` — run all drift checks, return `Report`
 - `Finding`, `Report` — structured findings (`models.py`)
-- Individual `check_*` functions in `checks.py` (used by tests)
+- Individual `check_*` functions in `checks.py` (used by tests), including `check_publication_metadata_consistency` (concept vs version DOI, CITATION.cff, `.zenodo.json`)
 - `check_repo_thin_orchestrator_scripts` / `check_project_scripts` in `orchestrator.py` — AST + line-count thin-orchestrator enforcement for `scripts/` and `projects/*/scripts/`
 
 ## Thin orchestrator rules (`orchestrator.py`)

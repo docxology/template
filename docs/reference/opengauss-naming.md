@@ -7,8 +7,8 @@ In this repository, **Open Gauss** almost always means the **[math-inc OpenGauss
 ## Where to look
 
 - **This page** — hub-visible disambiguation; does not require any rotating project in the working tree.
-- **Public Lean exemplar** — [`projects/template_active_inference/lean/`](../../projects/template_active_inference/lean/) (`lake build`, minimal witnesses).
-- **Archived Lean-heavy projects** — under `projects_archive/` when present locally; not part of public CI scope.
+- **Public Lean exemplar** — [`projects/templates/template_active_inference/lean/`](../../projects/templates/template_active_inference/lean/) (`lake build`, minimal witnesses).
+- **Archived Lean-heavy projects** — under `projects/archive/` when present locally; not part of public CI scope.
 
 ## Related docs
 

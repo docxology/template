@@ -43,7 +43,7 @@ figures = manager.get_all()
 from infrastructure.documentation import build_api_index, generate_markdown_table
 
 # Scan source directory for public APIs
-entries = build_api_index("projects/template_code_project/src/")
+entries = build_api_index("projects/templates/template_code_project/src/")
 
 # Generate markdown table
 table = generate_markdown_table(entries)
@@ -54,8 +54,8 @@ print(f"Found {len(entries)} API entries")
 
 ```bash
 uv run python -m infrastructure.documentation.generate_glossary_cli \
-    projects/template_code_project/src/ \
-    projects/template_code_project/manuscript/98_symbols_glossary.md
+    projects/templates/template_code_project/src/ \
+    projects/templates/template_code_project/manuscript/98_symbols_glossary.md
 ```
 
 ### Image Integration

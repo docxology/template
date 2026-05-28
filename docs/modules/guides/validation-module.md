@@ -79,9 +79,9 @@ report = verify_output_integrity(output_dir)
 
 # Targeted checks
 verify_file_integrity(output_dir / "pdf" / "template_code_project_combined.pdf")
-verify_cross_references(Path("projects/template_code_project/manuscript"))
+verify_cross_references(Path("projects/templates/template_code_project/manuscript"))
 verify_data_consistency(output_dir / "data")
-verify_academic_standards(Path("projects/template_code_project/manuscript"))
+verify_academic_standards(Path("projects/templates/template_code_project/manuscript"))
 
 # Generate a structured integrity report
 integrity_report = generate_integrity_report(output_dir)
@@ -94,8 +94,8 @@ from pathlib import Path
 from infrastructure.validation import validate_figure_registry
 
 success, issues = validate_figure_registry(
-    Path("projects/template_code_project/output/figures/figure_registry.json"),
-    Path("projects/template_code_project/manuscript"),
+    Path("projects/templates/template_code_project/output/figures/figure_registry.json"),
+    Path("projects/templates/template_code_project/manuscript"),
 )
 ```
 
@@ -116,7 +116,7 @@ from infrastructure.validation import (
     filter_false_positives, prioritize_issues, generate_issue_summary,
 )
 
-project_path = Path("projects/template_code_project")
+project_path = Path("projects/templates/template_code_project")
 
 # Run all validation checks in a single pass
 audit_results = run_comprehensive_audit(project_path)
@@ -137,7 +137,7 @@ from infrastructure.validation import validate_output_structure, validate_copied
 
 validate_output_structure(Path("output/template_code_project"))
 validate_copied_outputs(
-    source_dir=Path("projects/template_code_project/output"),
+    source_dir=Path("projects/templates/template_code_project/output"),
     dest_dir=Path("output/template_code_project"),
 )
 ```

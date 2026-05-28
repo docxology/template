@@ -17,7 +17,12 @@ _LINK_AUDIT_EXCLUDE_PARTS: frozenset[str] = frozenset(
         "htmlcov",
         "node_modules",
         "output",
-        "projects_archive",
+        # Non-rendered typed project subfolders (private symlinked work). Keep in
+        # sync with discovery.NON_RENDERED_SUBDIRS.
+        "archive",
+        "other",
+        "published",
+        "working",
         "site-packages",
         ".venv",
         "venv",

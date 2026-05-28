@@ -323,8 +323,10 @@ def detect_pycache_clutter(repo_root: Path) -> list[Finding]:
     # Top-level directories where stray caches are not the doctor's concern:
     #   * .venv / node_modules — tool-managed environments
     #   * .doctor — our own state
-    #   * projects_archive / projects_in_progress — dormant trees, leave alone
-    ignored_top = {".venv", ".doctor", "node_modules", "projects_archive", "projects_in_progress"}
+    ignored_top = {".venv", ".doctor", "node_modules"}
+    # Non-rendered typed project subfolders are dormant private trees — leave
+    # alone. Keep in sync with discovery.NON_RENDERED_SUBDIRS.
+    dormant_project_subdirs = {"archive", "other", "published", "working"}
     for sub in repo_root.rglob("*"):
         if not sub.is_dir():
             continue
@@ -335,6 +337,8 @@ def detect_pycache_clutter(repo_root: Path) -> list[Finding]:
         except ValueError:
             continue
         if rel_parts and rel_parts[0] in ignored_top:
+            continue
+        if len(rel_parts) >= 2 and rel_parts[0] == "projects" and rel_parts[1] in dormant_project_subdirs:
             continue
         # Also skip caches embedded in any nested ``.venv`` further down.
         if any(part == ".venv" for part in rel_parts):
@@ -426,10 +430,11 @@ def detect_stale_coverage_files(repo_root: Path) -> list[Finding]:
 def detect_orphan_output_dirs(repo_root: Path) -> list[Finding]:
     """``output/<name>/`` whose ``<name>`` does not match any discovered project.
 
-    Project rotations between ``projects/``, ``projects_in_progress/``, and
-    ``projects_archive/`` leave behind output trees that nothing else
-    refreshes. Removing them is *radical* — the user may want the PDFs
-    — so we only suggest, never apply automatically.
+    Project rotations between the typed subfolders under ``projects/``
+    (``active/``, ``working/``, ``published/``, ``archive/``, ``other/``) leave
+    behind output trees that nothing else refreshes. Removing them is *radical*
+    — the user may want the PDFs — so we only suggest, never apply
+    automatically.
     """
     out_dir = repo_root / "output"
     if not out_dir.is_dir():

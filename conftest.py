@@ -23,12 +23,12 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-# Add projects/*/src for project-specific imports (active projects only)
-# Note: Only active projects in projects/ directory are added here.
-# Archived projects in projects_archive/ are not included.
+# Add projects/*/src for project-specific imports.
 # Discovery is dynamic - all directories in projects/ with a src/ subdirectory are included.
-# Supports both top-level projects (projects/template_code_project/src/) and nested/program-grouped
-# projects (projects/cognitive_integrity/cogsec_multiagent_1_theory/src/).
+# Supports both top-level projects (projects/<name>/src/) and one level of nesting,
+# which covers the typed subfolders (projects/templates/template_code_project/src/,
+# projects/active/<name>/src/) and program-grouped projects
+# (projects/cognitive_integrity/cogsec_multiagent_1_theory/src/).
 projects_dir = os.path.join(ROOT, "projects")
 if os.path.isdir(projects_dir):
     for project_name in os.listdir(projects_dir):

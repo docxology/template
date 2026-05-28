@@ -54,7 +54,7 @@ packages:
 
 ### v0.7.0 — Exemplar Hardening
 
-Make `projects/template_code_project/` fully compliant post-desloppify:
+Make `projects/templates/template_code_project/` fully compliant post-desloppify:
 zero ruff errors, no mock patterns, demonstrate all infrastructure tooling
 (`ProjectLogger`, `validate_interpreter()`, `ResolvedTestingConfig`,
 `load_config()`).

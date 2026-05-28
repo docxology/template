@@ -170,7 +170,7 @@ def test_canonical_template_projects_ship_valid_composability_overlays(
     expected_domain: str,
     expected_primary_metric: str,
 ) -> None:
-    project_root = REPO_ROOT / "projects" / project_name
+    project_root = REPO_ROOT / "projects" / "templates" / project_name
 
     profile = load_domain_profile(project_root)
     plan = load_experiment_plan(project_root)

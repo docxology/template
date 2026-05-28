@@ -13,7 +13,7 @@ Agent skill `template-manuscript-cross-references` — Registry/token cross-refs
 ## Verification
 
 ```bash
-uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
 ```
 
 ## See also

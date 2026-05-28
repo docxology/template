@@ -737,6 +737,7 @@ class TestConfigKeyValidation:
             "publication": {"doi": "10.1234/test"},
             "keywords": ["optimization"],
             "metadata": {"license": "MIT"},
+            "sheaf": {"manifest": "manuscript/sheaf/manifest.yaml"},
             "llm": {"reviews": {"enabled": True}},
             "testing": {"max_test_failures": 0},
             "render": {"formats": {"pdf": True, "html": True, "slides": False}},

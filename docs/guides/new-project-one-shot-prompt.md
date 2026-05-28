@@ -1,6 +1,6 @@
 # One-shot LLM prompt: new `projects/{name}/`
 
-Use this prompt when you want a model to scaffold a full project in one pass. Anchor layout and conventions on the control-positive exemplar [`projects/template_code_project/`](../../projects/template_code_project/).
+Use this prompt when you want a model to scaffold a full project in one pass. Anchor layout and conventions on the control-positive exemplar [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/).
 
 **Checklist and pitfalls:** [new-project-setup.md](new-project-setup.md)
 
@@ -10,12 +10,12 @@ Use this prompt when you want a model to scaffold a full project in one pass. An
 
 | Control | Path | Role |
 | -------- | ----- | ----- |
-| A | [projects/template_code_project](../../projects/template_code_project/) | Flat `src/` modules, `scripts/` orchestrators, standard manuscript sections, reproducible figures/data, `tests/` layout |
+| A | [projects/template_code_project](../../projects/templates/template_code_project/) | Flat `src/` modules, `scripts/` orchestrators, standard manuscript sections, reproducible figures/data, `tests/` layout |
 
 ## Prompt (copy from below into your assistant)
 
 ```text
-You are working inside the docxology/template monorepo. Create a new active project at projects/<PROJECT_SLUG>/ that matches the same shape and discipline as the control-positive exemplar projects/template_code_project/: flat src/ modules, analysis scripts as thin orchestrators, standard manuscript sectioning, reproducible figures/data, tests/ with conftest path and MPLBACKEND=Agg if using matplotlib, ≥90% coverage on projects/<PROJECT_SLUG>/src, no mocks.
+You are working inside the docxology/template monorepo. Create a new active project at projects/<PROJECT_SLUG>/ that matches the same shape and discipline as the control-positive exemplar projects/templates/template_code_project/: flat src/ modules, analysis scripts as thin orchestrators, standard manuscript sectioning, reproducible figures/data, tests/ with conftest path and MPLBACKEND=Agg if using matplotlib, ≥90% coverage on projects/<PROJECT_SLUG>/src, no mocks.
 
 Required layout (must exist):
 

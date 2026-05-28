@@ -340,10 +340,11 @@ jobs:
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 4b — fep_lean (real math-inc gauss + elan lake/lean; excluded from matrix above)
-# This job uses projects/fep_lean/ paths.  When fep_lean lives under
-# projects_in_progress/, the detect job emits fep_lean=false and this job is
-# skipped.  Promote to projects/ to activate CI:
-#   mv projects_in_progress/fep_lean projects/fep_lean
+# This job uses projects/fep_lean/ paths.  When fep_lean is not checked out
+# (it lives in the private repo's working/ pool), the detect job emits
+# fep_lean=false and this job is skipped.  Check it out flat under projects/ to
+# activate CI:
+#   cp -r <private-projects>/working/fep_lean projects/fep_lean
 # ─────────────────────────────────────────────────────────────────────────────
   fep-lean:
     name: fep_lean (gauss + lake)

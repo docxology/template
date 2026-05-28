@@ -15,17 +15,19 @@ def _repo_root() -> Path:
 
 def test_generated_artifact_path_matcher() -> None:
     """Matcher catches disposable paths without flagging source files."""
-    assert is_generated_artifact_path("projects/template_code_project/output/data/results.json")
-    assert is_generated_artifact_path("projects/template_code_project/.DS_Store")
+    assert is_generated_artifact_path("projects/templates/template_code_project/output/data/results.json")
+    assert is_generated_artifact_path("projects/templates/template_code_project/.DS_Store")
     assert is_generated_artifact_path("projects/demo/src/demo.egg-info/PKG-INFO")
     assert is_generated_artifact_path("coverage_project.json")
 
-    assert not is_generated_artifact_path("projects/template_code_project/src/optimizer.py")
+    assert not is_generated_artifact_path("projects/templates/template_code_project/src/optimizer.py")
     assert not is_generated_artifact_path("docs/_generated/canonical_facts.md")
 
-    # Scoped exception: the two exemplars' TOP-LEVEL output is tracked render-proof.
-    assert not is_generated_artifact_path("output/template_code_project/pdf/template_code_project_combined.pdf")
-    assert not is_generated_artifact_path("output/template_prose_project/figures/wordcount.png")
+    # Scoped exception: the exemplars' TOP-LEVEL output is tracked render-proof.
+    assert not is_generated_artifact_path(
+        "output/templates/template_code_project/pdf/template_code_project_combined.pdf"
+    )
+    assert not is_generated_artifact_path("output/templates/template_prose_project/figures/wordcount.png")
     # But a confidential/active project's top-level output stays guarded.
     assert is_generated_artifact_path("output/actinf_policy_entanglement_lean/pdf/x.pdf")
 

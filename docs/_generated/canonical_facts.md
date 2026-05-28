@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-27 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**457**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**178**), publishing suite collection/full run (**362**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-05-27 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**459**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**178**), publishing suite collection/full run (**364**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -12,10 +12,11 @@ This file aggregates verifiable facts from discovery scripts, CI configuration, 
 - `template_autoresearch_project`
 - `template_code_project`
 - `template_prose_project`
+- `template_template`
 
-Optional add-on: `projects_archive/template_search_project` can be restored under `projects/` for literature-search workflows.
+Optional add-on: `projects/archive/template_search_project` (mirrored read-only from the private repo's `archive/`) can be copied under `projects/active/` for literature-search workflows.
 
-Private lifecycle projects live outside this public repo in a separate external repository (location set via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`), organized into `active/`, `passive/`, and `archive/`. `run.sh`/`infrastructure.orchestration` symlinks `active/*` into `template/projects/*` before discovery/rendering, `passive/*` into `template/projects_in_progress/*`, and `archive/*` into `template/projects_archive/*` for non-rendered inspection. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
+Private lifecycle projects live outside this public repo in a separate external repository (location set via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`), organized into `active/`, `working/`, `published/`, `archive/`, and `other/`. `run.sh`/`infrastructure.orchestration` symlinks each private lifecycle folder into the same-named typed subfolder under `template/projects/` (`active/*` → `projects/active/*`, `working/*` → `projects/working/*`, …) before discovery/rendering; only `projects/templates/` and `projects/active/` are rendered, the rest are non-rendered mirrors for inspection. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
 **Public CI/documentation project scope** (`projects/`, filtered through `infrastructure.project.public_scope`; authoritative snapshot → [`active_projects.md`](active_projects.md)):
 
@@ -23,12 +24,13 @@ Private lifecycle projects live outside this public repo in a separate external 
 - `template_autoresearch_project`
 - `template_code_project`
 - `template_prose_project`
+- `template_template`
 
 `projects/_test_project/` is a stub layout used by validation tests only — omitted from `discover_projects()` (path may be absent in sparse checkouts; not a tracked exemplar tree).
 
-**In-progress projects** (`projects_in_progress/`, not discovered until moved under `projects/`): local-only roster omitted from public docs.
+**Work-in-progress projects** (`projects/working/`, not discovered/rendered): local-only symlinks to the private repo's `working/` projects — roster omitted from public docs; list with `ls projects/working/`.
 
-**Archived projects** (`projects_archive/`, preserved but not executed): local-only symlinks to the private repo's `archive/` projects (roster omitted from public docs) — list with `ls projects_archive/`.
+**Archived projects** (`projects/archive/`, preserved but not executed): local-only symlinks to the private repo's `archive/` projects (roster omitted from public docs) — list with `ls projects/archive/`. `projects/published/` and `projects/other/` are additional non-rendered lifecycle mirrors.
 
 Regenerate [`active_projects.md`](active_projects.md) with:
 
@@ -75,7 +77,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **457** on 2026-05-27 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **459** on 2026-05-28 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -92,7 +94,7 @@ uv run pytest tests/infra_tests/project/ --collect-only -q --no-cov
 uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 ```
 
-Result: **178** project-scope infrastructure tests collected and **362** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
+Result: **178** project-scope infrastructure tests collected and **364** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
 **Exemplar `pytest --collect-only` totals** (2026-05-27):
 
@@ -102,6 +104,7 @@ Result: **178** project-scope infrastructure tests collected and **362** publish
 | `template_autoresearch_project` | 217 | 91.56 % |
 | `template_code_project` | 209 | 98.25 % |
 | `template_prose_project` | 76 | 100.00 % |
+| `template_template` | 84 | 91.53 % |
 
 Collection was refreshed with per-project `uv run pytest tests/ --collect-only -q --no-cov` runs. Coverage values come from the latest project coverage gates; re-run the per-project coverage command after changing project `src/` or tests. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 

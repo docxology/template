@@ -162,6 +162,7 @@ class ManuscriptConfig(TypedDict, total=False):
     metadata: dict[str, str]
     project_config: dict[str, Any]  # passthrough for project-specific config sections
     experiment: dict[str, Any]  # passthrough for project experimental parameters
+    sheaf: dict[str, Any]  # manifest-indexed manuscript composition configuration
 
 
 def generate_manuscript_config_schema(
@@ -249,6 +250,7 @@ def generate_manuscript_config_schema(
         "metadata": {"type": "object", "additionalProperties": {"type": "string"}},
         "project_config": {"type": "object", "additionalProperties": True},
         "experiment": {"type": "object", "additionalProperties": True},
+        "sheaf": {"type": "object", "additionalProperties": True},
     }
     if include_registered_extensions:
         extensions = {}

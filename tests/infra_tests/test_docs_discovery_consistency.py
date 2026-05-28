@@ -31,6 +31,71 @@ def test_active_projects_doc_matches_discovery() -> None:
     )
 
 
+def test_publication_records_doc_matches_public_scope() -> None:
+    """docs/_generated/publication_records.md must cover every public exemplar."""
+    root = _repo_root()
+    doc_path = root / "docs" / "_generated" / "publication_records.md"
+    assert doc_path.is_file(), (
+        "Missing publication records doc; run "
+        "uv run python scripts/generate_publication_records_doc.py --refresh-external"
+    )
+
+    text = doc_path.read_text(encoding="utf-8")
+    discovered = set(public_project_names(root))
+    documented = set(re.findall(r"\| `([^`]+)` \|", text))
+
+    assert documented == discovered, (
+        "publication_records.md drifted from public project scope; "
+        "run uv run python scripts/generate_publication_records_doc.py --refresh-external\n"
+        f"missing={sorted(discovered - documented)} extra={sorted(documented - discovered)}"
+    )
+
+
+def test_github_readme_publication_block_matches_public_scope() -> None:
+    """The GitHub README publication table is generated from public scope."""
+    root = _repo_root()
+    text = (root / ".github" / "README.md").read_text(encoding="utf-8")
+    match = re.search(
+        r"<!-- BEGIN:PUBLICATION_RECORDS -->(?P<block>.*?)<!-- END:PUBLICATION_RECORDS -->",
+        text,
+        flags=re.DOTALL,
+    )
+    assert match, ".github/README.md must contain the generated publication records block"
+
+    discovered = set(public_project_names(root))
+    documented = set(re.findall(r"\.\./projects/([a-z0-9_]+/[a-z0-9_]+)/", match.group("block")))
+    assert documented == discovered, (
+        ".github/README.md publication table drifted from public project scope; "
+        "run uv run python scripts/generate_publication_records_doc.py --refresh-external\n"
+        f"missing={sorted(discovered - documented)} extra={sorted(documented - discovered)}"
+    )
+
+
+def test_top_level_docs_do_not_claim_four_public_exemplars() -> None:
+    """The public exemplar set currently has five entries, not four."""
+    root = _repo_root()
+    docs_to_check = [
+        root / "AGENTS.md",
+        root / "README.md",
+        root / "CLAUDE.md",
+        root / ".cursorrules",
+        root / ".github" / "README.md",
+        root / ".github" / "AGENTS.md",
+        root / "projects" / "AGENTS.md",
+        root / "projects" / "README.md",
+        root / "docs" / "guides" / "manuscript-semantics.md",
+    ]
+    forbidden = (
+        "four projects under `projects/` are permanent canonical exemplars",
+        "four public template exemplars",
+        "four permanent canonical exemplars",
+    )
+    for doc_path in docs_to_check:
+        text = doc_path.read_text(encoding="utf-8").lower()
+        for phrase in forbidden:
+            assert phrase not in text, doc_path
+
+
 def test_docs_markdown_no_broken_projects_paths() -> None:
     """Links under docs/ must not point at projects/NAME/ unless NAME exists."""
     root = _repo_root()

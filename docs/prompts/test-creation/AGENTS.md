@@ -14,7 +14,7 @@ Agent skill `template-test-creation` — Tests under the no-mocks policy.
 ## Verification
 
 ```bash
-uv run pytest projects/template_code_project/tests/ -q
+uv run pytest projects/templates/template_code_project/tests/ -q
 ```
 
 ## See also

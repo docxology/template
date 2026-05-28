@@ -300,13 +300,16 @@ def validate_project_design(project_root: Path) -> tuple[bool, list[str]]:
 
 
 def _project_name_from_root(project_root: Path) -> str:
-    """Return a project discovery name for active or WIP project roots."""
-    for parent in (_REPO_ROOT / "projects", _REPO_ROOT / "projects_in_progress"):
-        try:
-            return str(project_root.resolve().relative_to(parent.resolve()))
-        except ValueError:
-            continue
-    return project_root.name
+    """Return a project discovery name for active or WIP project roots.
+
+    The returned name is qualified relative to ``projects/`` and therefore
+    carries any typed-subfolder prefix (e.g. ``templates/template_code_project``
+    or ``working/<name>``).
+    """
+    try:
+        return str(project_root.resolve().relative_to((_REPO_ROOT / "projects").resolve()))
+    except ValueError:
+        return project_root.name
 
 
 def _read_artifact_manifest(path: Path) -> ArtifactManifest:

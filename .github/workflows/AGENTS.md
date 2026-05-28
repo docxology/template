@@ -114,7 +114,7 @@ flowchart TB
 
 #### 6. fep_lean — real Open Gauss + Lake (`fep-lean`)
 
-- **Conditional:** Job is **skipped** unless `projects/fep_lean/lean/lean-toolchain` exists and the `detect` job emits `fep_lean == 'true'`. When fep_lean lives under `projects_in_progress/`, `detect` reports `false` and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate.
+- **Conditional:** Job is **skipped** unless `projects/fep_lean/lean/lean-toolchain` exists and the `detect` job emits `fep_lean == 'true'`. When fep_lean lives under `projects/working/`, `detect` reports `false` and the job is skipped. Promote with `mv projects/working/fep_lean projects/fep_lean` to activate.
 - **Runner:** `ubuntu-latest` / Python 3.12 only; job `timeout-minutes: 60`
 - **Depends on:** `verify-no-mocks`
 - **Working directory (when present):** `projects/fep_lean` for pytest; `projects/fep_lean/lean` for Lake warm-up
@@ -151,7 +151,7 @@ flowchart TB
   3. **Consistency** — `N Python (sub)packages` claims must match the live count under `infrastructure/`; rotating project names (`fep_lean`, `cogant`, …) must be conditionally framed in long-lived docs.
   4. **Doc pairs** — permanent-template content folders must carry paired `AGENTS.md` and `README.md`; generated/local paths and rotating projects are excluded.
 - **Escape hatch:** append `<!-- noqa: docs-lint -->` to a Markdown line to suppress consistency or broken-link warnings on that line.
-- **Scope guarantees:** the linter skips generated/local paths such as `output/`, `.venv/`, `.claude/`, `projects_archive/`, `projects_in_progress/`, `htmlcov/`, and `node_modules/`.
+- **Scope guarantees:** the linter skips generated/local paths such as `output/`, `.venv/`, `.claude/`, `projects/archive/`, `projects/working/`, `htmlcov/`, and `node_modules/`.
 - **Module:** [`infrastructure/validation/docs/`](../../infrastructure/validation/docs/) — `mermaid_lint.py`, `cross_link_lint.py`, `consistency_lint.py`, `doc_pair_lint.py`.
 
 #### 10. Performance Check (`performance`)

@@ -235,7 +235,7 @@ def test_write_metadata_for_config_path_uses_load_config(tmp_path: Path) -> None
 def test_cli_main_writes_files_with_repo_override(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
     (repo_root / "infrastructure").mkdir(parents=True)
-    project_root = repo_root / "projects" / "demo"
+    project_root = repo_root / "projects" / "active" / "demo"
     manuscript_dir = project_root / "manuscript"
     manuscript_dir.mkdir(parents=True)
     config_path = manuscript_dir / "config.yaml"

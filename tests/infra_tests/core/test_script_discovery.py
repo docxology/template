@@ -115,9 +115,9 @@ class TestDiscoverAnalysisScripts:
         assert [script.name for script in scripts] == ["generate_figures.py", "biology_analysis.py"]
 
     def test_discover_analysis_scripts_resolves_wip_project(self, tmp_path):
-        """Stage 02 can run a project before promotion from projects_in_progress/."""
+        """Stage 02 can run a project before promotion from projects/working/."""
         repo_root = tmp_path / "repo"
-        scripts_dir = repo_root / "projects_in_progress" / "draft_project" / "scripts"
+        scripts_dir = repo_root / "projects" / "working" / "draft_project" / "scripts"
         scripts_dir.mkdir(parents=True)
         (scripts_dir / "analysis.py").write_text("# analysis")
 

@@ -28,7 +28,7 @@ def render_active_projects_doc(repo_root: Path, generated_at: datetime | None = 
         "Human-written documentation should **not** copy this list into RUN_GUIDE, "
         "PAI, or other guides; link here instead. For concrete paths, commands, and "
         "layout examples, default to the stable exemplar "
-        "[`projects/template_code_project/`](../../projects/template_code_project/) unless a doc "
+        "[`projects/templates/template_code_project/`](../../projects/templates/template_code_project/) unless a doc "
         "explicitly compares layouts.",
         "",
         f"Generated at (UTC): `{generated_at.isoformat(timespec='seconds')}`",

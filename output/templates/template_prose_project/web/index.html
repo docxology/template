@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>_combined_manuscript</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+
+<style>
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: #2c3e50;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#sec:abstract" id="toc-sec:abstract"><span
+class="toc-section-number">1</span> Abstract</a></li>
+<li><a href="#sec:introduction" id="toc-sec:introduction"><span
+class="toc-section-number">2</span> Introduction</a></li>
+<li><a href="#sec:methodology" id="toc-sec:methodology"><span
+class="toc-section-number">3</span> Methodology</a>
+<ul>
+<li><a href="#read" id="toc-read"><span
+class="toc-section-number">3.1</span> Read</a></li>
+<li><a href="#analyse" id="toc-analyse"><span
+class="toc-section-number">3.2</span> Analyse</a></li>
+<li><a href="#cross-check" id="toc-cross-check"><span
+class="toc-section-number">3.3</span> Cross-check</a></li>
+<li><a href="#evaluate" id="toc-evaluate"><span
+class="toc-section-number">3.4</span> Evaluate</a></li>
+<li><a href="#render" id="toc-render"><span
+class="toc-section-number">3.5</span> Render</a></li>
+</ul></li>
+<li><a href="#sec:results" id="toc-sec:results"><span
+class="toc-section-number">4</span> Results</a></li>
+<li><a href="#sec:conclusion" id="toc-sec:conclusion"><span
+class="toc-section-number">5</span> Conclusion</a></li>
+<li><a href="#sec:pipeline_internals"
+id="toc-sec:pipeline_internals"><span
+class="toc-section-number">6</span> Pipeline Internals</a>
+<ul>
+<li><a href="#data-structures" id="toc-data-structures"><span
+class="toc-section-number">6.1</span> Data structures</a></li>
+</ul></li>
+<li><a href="#sec:reproducibility" id="toc-sec:reproducibility"><span
+class="toc-section-number">7</span> Reproducibility</a>
+<ul>
+<li><a href="#verifying-reproducibility-locally"
+id="toc-verifying-reproducibility-locally"><span
+class="toc-section-number">7.1</span> Verifying reproducibility
+locally</a></li>
+<li><a href="#determinism-guarantees"
+id="toc-determinism-guarantees"><span
+class="toc-section-number">7.2</span> Determinism guarantees</a></li>
+</ul></li>
+<li><a href="#sec:references" id="toc-sec:references"><span
+class="toc-section-number">8</span> References</a></li>
+</ul>
+</nav>
+<p><strong>State:</strong> published</p>
+<ul>
+<li><strong>Title:</strong> Editorial Quality at Scale: A Reproducible
+Prose-Review Pipeline</li>
+<li><strong>Version:</strong> 0.4.0</li>
+<li><strong>DOI:</strong> 10.5281/zenodo.20417104</li>
+<li><strong>GitHub:</strong>
+https://github.com/docxology/template_prose_project/releases/tag/v0.4.0</li>
+<li><strong>Zenodo:</strong> https://zenodo.org/records/20417104</li>
+<li><strong>SHA-256:</strong>
+<code>cbe5adae0be78b58c77637042257e9faa61a21b6c5101da52600cf8e2e80c0e2</code></li>
+<li><strong>SHA-512:</strong>
+<code>45c0f0052a193397f8c877bf51b467040d731f23b6abf10500c2f91426c0ace3157dfd6ad5057b65c27a3987a4349a147f58db836ce4bfc1d9347a3ca9808b04</code></li>
+</ul>
+<p><strong>Pairing:</strong> complete (DOI, GitHub, SHA-256, Zenodo
+URL)</p>
+<figure>
+<img src="../figures/transmission_integrity_strip.png"
+style="width:98.0%" alt="Integrity QR strip" />
+<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+</figure>
+<pre><code>title=Editorial Quality at Scale: A Reproducible Prose
+version=0.4.0 doi=10.5281/zenodo.20417104
+sha256=cbe5adae0be78b58… manifest={&quot;t&quot;:&quot;Editorial Quality at Sca&quot;,&quot;v&quot;:&quot;0.4.0&quot;,&quot;d&quot;:&quot;10.5281/zenodo.20417104&quot;,&quot;s&quot;:&quot;cbe5adae0be78b58&quot;}</code></pre>
+<p>Structured manifest:
+<code>../data/transmission_manifest.json</code></p>
+<figure>
+<img src="../figures/transmission_pairing.png" style="width:35.0%"
+alt="Publication pairing flow" />
+<figcaption aria-hidden="true">Publication pairing flow</figcaption>
+</figure>
+<p><strong>Stego:</strong> off | overlays text | barcodes on | XMP on |
+manifest on → <code>./secure_run.sh</code></p>
+<!-- BEGINNING OF TRANSMISSION -->
+<hr />
+<h1 data-number="1" id="sec:abstract"><span
+class="header-section-number">1</span> Abstract</h1>
+<p>This paper documents <code>template_prose_project</code>, the
+prose-focused exemplar of the <a
+href="https://github.com/docxology/template">Research Project
+Template</a>. It pairs the template’s two-layer architecture with the <a
+href="https://github.com/docxology/template/tree/main/infrastructure/prose">prose
+analysis infrastructure</a> (readability metrics, structural outline,
+editorial quality flags) and the <a
+href="https://github.com/docxology/template/tree/main/infrastructure/reference">reference
+validation infrastructure</a> (BibTeX validation), demonstrating that
+<strong>rigorous editorial review can be expressed as a configurable,
+deterministic pipeline</strong> with no novel domain algorithm of its
+own.</p>
+<p>A single <code>manuscript/config.yaml</code> defines target
+grade-level bands, citation-density floors, structural rules (every
+section has an H1, no heading levels skipped), and
+bibliography-consistency policy. The pipeline reads the manuscript, runs
+the prose analysers, cross-checks every <code>[@key]</code> citation
+against <code>manuscript/references.bib</code>, evaluates the configured
+checks, and writes a deterministic markdown review report alongside
+three figures (per-file word counts, readability metrics, citation
+density) and a JSON <code>manuscript_report.json</code> suitable for CI
+artefacts.</p>
+<p><strong>Run snapshot.</strong> The current configuration analyses 8
+file(s) totalling 1676 words across 84 sentence(s) and 63 paragraph(s).
+Average Flesch-Kincaid grade level is 15.92; average Gunning Fog index
+is 16.69; the manuscript references 6 unique citation key(s); the
+longest section is 413 words and the shortest is 17. These numbers are
+auto-substituted by
+<code>scripts/z_generate_manuscript_variables.py</code> after every run,
+so the abstract tracks the JSON outputs in <code>output/</code>.</p>
+<p>The contribution is methodological and architectural: a <em>generic,
+reusable</em> prose-quality module (<code>infrastructure/prose/</code>)
+that any project in the template can opt into, plus a <em>minimal,
+configurable</em> exemplar
+(<code>projects/template_prose_project/</code>) that wires it to the
+bibliography and the manuscript pipeline.</p>
+<p><strong>Keywords:</strong> prose analysis, readability, editorial
+review, reproducible manuscript review, scientific infrastructure</p>
+<hr />
+<h1 data-number="2" id="sec:introduction"><span
+class="header-section-number">2</span> Introduction</h1>
+<p>Editorial review is one of the longest-lived bottlenecks in
+scientific writing — and an obvious target for the kind of
+<em>reproducible computational workflow</em> advocated by <span
+class="citation"
+data-cites="peng2011reproducible">[@peng2011reproducible]</span>. A
+working draft accumulates structural drift (skipped heading levels,
+sections that have grown to 2,000 words while their siblings sit at
+200), readability drift (a once-clean introduction now reads at the
+Gunning Fog level of a legal contract <span class="citation"
+data-cites="gunning1952technique">[@gunning1952technique]</span>), and
+citation drift (<code>[@key]</code> references that no longer exist in
+<code>references.bib</code>, or bibliography entries that nobody
+actually cites). The traditional remedy — a senior co-author re-reading
+the manuscript with <span class="citation"
+data-cites="strunk2000elements">[@strunk2000elements]</span> in hand —
+is slow, non-reproducible, and impossible to apply continuously.</p>
+<p><code>template_prose_project</code> exists to demonstrate that the
+editorial-review pass can be expressed as a <strong>deterministic,
+configurable, infrastructure-backed pipeline</strong>. This project
+carries no novel research contribution of its own; its purpose is to
+show how to compose existing template infrastructure into a complete,
+reproducible editorial workflow.</p>
+<p>The architecture is simple. <code>manuscript/config.yaml</code>
+defines policy: target grade-level band, citation-density floor,
+heading-structure rules, bibliography-consistency policy.
+<code>src/pipeline/__init__.py::run_prose_pipeline</code> reads the
+manuscript directory, calls <a
+href="../../../infrastructure/prose/SKILL.md"><code>infrastructure.prose.analyze_manuscript</code></a>
+to produce a <code>ManuscriptReport</code>, cross-checks the cited keys
+against <a
+href="../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
+for the <code>references.bib</code>, evaluates each configured check,
+and writes a markdown review report alongside JSON artefacts and three
+figures. None of this is project-specific: a different project can
+re-use the same infrastructure with a different <code>config.yaml</code>
+and a different manuscript directory.</p>
+<p>The remainder of this paper documents the methodology (sec. 3), the
+run-time results on the bundled manuscript (sec. 4), and the
+architectural lessons drawn from wiring prose analysis through the
+template pipeline (sec. 5).</p>
+<hr />
+<h1 data-number="3" id="sec:methodology"><span
+class="header-section-number">3</span> Methodology</h1>
+<p>The pipeline runs in five stages, each a pure function in the
+project’s <code>src/</code> modules; the orchestrator script in
+<code>scripts/</code> does only argument parsing and filesystem I/O.</p>
+<h2 data-number="3.1" id="read"><span
+class="header-section-number">3.1</span> Read</h2>
+<p><code>infrastructure.prose.read_manuscript_dir</code> walks the
+configured manuscript directory and returns a sorted
+<code>{filename: text}</code> mapping. Scaffolding files
+(<code>preamble.md</code>, <code>config.yaml.example</code>,
+<code>AGENTS.md</code>, <code>README.md</code>, <code>SYNTAX.md</code>)
+are excluded by default — they hold infrastructure documentation rather
+than manuscript prose.</p>
+<h2 data-number="3.2" id="analyse"><span
+class="header-section-number">3.2</span> Analyse</h2>
+<p>For each file, three analysers run in parallel:</p>
+<ul>
+<li><p><strong>Metrics</strong>
+(<code>infrastructure.prose.analysis.metrics</code>) — word, sentence,
+paragraph, syllable counts; average words per sentence; average
+syllables per word; complex-word fraction; Flesch Reading Ease <span
+class="citation" data-cites="flesch1948new">[@flesch1948new]</span>;
+Flesch-Kincaid Grade Level <span class="citation"
+data-cites="kincaid1975derivation">[@kincaid1975derivation]</span>;
+Gunning Fog Index <span class="citation"
+data-cites="gunning1952technique">[@gunning1952technique]</span>. The
+implementations are textbook formulae over a vowel-group syllable
+heuristic; they’re good enough for a writer-facing signal, not for
+linguistic research.</p></li>
+<li><p><strong>Structure</strong>
+(<code>infrastructure.prose.analysis.structure</code>) — heading
+outline, per-section word counts, max heading depth, presence of an H1,
+detection of skipped heading levels (e.g. an H1 followed directly by an
+H3).</p></li>
+<li><p><strong>Quality</strong>
+(<code>infrastructure.prose.analysis.quality</code>) — passive-voice
+candidates (heuristic: “be” form + past participle), hedge-word density,
+citation density (Pandoc-style <code>[@key]</code> extraction),
+long-sentence flagging.</p></li>
+</ul>
+<p>The results are aggregated into a <code>ManuscriptReport</code> whose
+JSON form is small, greppable, and diff-friendly.</p>
+<h2 data-number="3.3" id="cross-check"><span
+class="header-section-number">3.3</span> Cross-check</h2>
+<p>Every cited key is matched against the BibTeX file at
+<code>bibliography.references_path</code>. The check has four tunable
+behaviours via <code>config.yaml</code>:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fail_on_missing: true</code></td>
+<td>Any cited <code>[@key]</code> that does not exist in the bib fails
+the check.</td>
+</tr>
+<tr>
+<td><code>fail_on_missing: false</code></td>
+<td>Missing citations are warned but do not fail the run.</td>
+</tr>
+<tr>
+<td><code>fail_on_unused: true</code></td>
+<td>Bib entries that are never cited fail the check.</td>
+</tr>
+<tr>
+<td><code>fail_on_unused: false</code></td>
+<td>Unused entries are warned but do not fail.</td>
+</tr>
+</tbody>
+</table>
+<p>The check uses <a
+href="../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
+so it sees exactly the same view of the bibliography that the rendering
+pipeline uses.</p>
+<h2 data-number="3.4" id="evaluate"><span
+class="header-section-number">3.4</span> Evaluate</h2>
+<p>The report runs through a set of pure check functions:</p>
+<ul>
+<li><code>_check_grade_level</code> — the manuscript-wide weighted
+average FKGL falls within
+<code>[target_grade_level_min, target_grade_level_max]</code>.</li>
+<li><code>_check_citation_density</code> — citations per 1000 words ≥
+<code>citation_density_min_per_1000</code>.</li>
+<li><code>_check_no_skipped_levels</code> — no file uses a skipped
+heading level (when
+<code>prose.forbid_skipped_levels: true</code>).</li>
+<li><code>_check_h1_per_file</code> — every file has an H1 (when
+<code>prose.require_h1_per_section: true</code>).</li>
+<li><code>_check_bibliography</code> — citation/bib consistency per the
+<code>bibliography:</code> policy block.</li>
+</ul>
+<p>Each check produces a
+<code>CheckResult(passed, message, details)</code>; the run’s
+<code>all_passed</code> flag is the conjunction.</p>
+<h2 data-number="3.5" id="render"><span
+class="header-section-number">3.5</span> Render</h2>
+<p><code>src/report.py::write_review_report</code> writes a markdown
+file with:</p>
+<ul>
+<li>Top-line counts (files, words, sentences, paragraphs,
+averages).</li>
+<li>A pass/fail table for every check.</li>
+<li>Per-file metrics table (word count, sentence count, FRE, FKGL, Fog,
+citations, hedges, passives).</li>
+<li>Heading outline per file.</li>
+<li>Quality-flag callouts (long sentences, passive candidates, hedges)
+per file.</li>
+</ul>
+<p>Three orchestrators run in lexicographic order (so the figure and
+variable stages always see a fresh review):</p>
+<ul>
+<li><code>scripts/run_prose_pipeline.py</code> writes
+<code>output/manuscript_report.json</code> (the raw
+<code>ManuscriptReport</code>), <code>output/checks.json</code> (the
+list of check results), <code>output/review_report.md</code> (the
+human-readable review report), and <code>output/run_summary.json</code>
+(one-line metadata).</li>
+<li><code>scripts/y_generate_prose_figures.py</code> reads
+<code>manuscript_report.json</code> and writes
+<code>../figures/{section_word_counts,readability_metrics,citation_density}.png</code>.</li>
+<li><code>scripts/z_generate_manuscript_variables.py</code> reads
+<code>manuscript_report.json</code>
+<ul>
+<li><code>config.yaml</code> and writes
+<code>output/data/manuscript_variables.json</code> along with a resolved
+manuscript tree under <code>output/manuscript/</code>.</li>
+</ul></li>
+<li><code>manuscript/references.bib</code> is <strong>not</strong>
+modified by this pipeline — the prose project does not generate
+citations, only validates them.</li>
+</ul>
+<hr />
+<h1 data-number="4" id="sec:results"><span
+class="header-section-number">4</span> Results</h1>
+<p>After running <code>scripts/run_prose_pipeline.py</code> with the
+bundled <code>manuscript/config.yaml</code> and the manuscript described
+in this paper, the project produces the following on-disk artefacts:</p>
+<ul>
+<li><code>output/manuscript_report.json</code> — the raw
+<code>ManuscriptReport</code> JSON.</li>
+<li><code>output/checks.json</code> — one <code>CheckResult</code> per
+configured check.</li>
+<li><code>output/review_report.md</code> — the assembled markdown review
+report.</li>
+<li><code>../figures/section_word_counts.png</code> — per-file word
+counts.</li>
+<li><code>../figures/readability_metrics.png</code> — Flesch /
+Flesch-Kincaid / Gunning Fog per file.</li>
+<li><code>../figures/citation_density.png</code> — citations per 1000
+words per file.</li>
+<li><code>output/data/manuscript_variables.json</code> — substitution
+variables for the abstract.</li>
+</ul>
+<p>Because the pipeline does not consult any external service, every
+artefact is reproducible from the manuscript text +
+<code>config.yaml</code> alone. A second run on the same inputs produces
+byte-identical JSON (modulo timestamp metadata in any caches the project
+later adds).</p>
+<p>The pass/fail status of each configured check is recorded in
+<code>output/checks.json</code>. With the bundled configuration:</p>
+<ul>
+<li><strong><code>grade_level_in_band</code></strong> — the weighted
+average FKGL across this manuscript is reported in the
+<code>output/checks.json</code> <code>details.value</code> field. The
+default band <code>10.0–18.0</code> is intentionally generous; tighten
+it for editorial review of public-facing material.</li>
+<li><strong><code>citation_density_above_floor</code></strong> —
+citations per 1000 words must meet
+<code>prose.citation_density_min_per_1000</code>. The bundled config
+sets the floor to <code>0.0</code> (disabled) so the run is green out of
+the box; researchers should raise it to match the publication
+target.</li>
+<li><strong><code>no_skipped_heading_levels</code></strong> — every file
+in this manuscript uses contiguous heading levels.</li>
+<li><strong><code>every_file_has_h1</code></strong> — every prose file
+starts with an H1.</li>
+<li><strong><code>bibliography_consistency</code></strong> — every
+<code>[@key]</code> in the prose resolves against
+<code>manuscript/references.bib</code>.</li>
+</ul>
+<p>The figures in <code>../figures/</code> are colour-blind-safe (Wong
+2011 palette) <span class="citation"
+data-cites="wong2011points">[@wong2011points]</span>, 300 dpi, and
+PNG-only for archival stability. They are referenced in sec. 6 where we
+walk through the on-disk artefact set in full.</p>
+<p>The full pass/fail summary lands in
+<code>output/review_report.md</code>, which is itself a Markdown file
+rendered alongside the manuscript by Pandoc — i.e. the project reports
+on itself in the same compilation step that produces the manuscript
+PDF.</p>
+<hr />
+<h1 data-number="5" id="sec:conclusion"><span
+class="header-section-number">5</span> Conclusion</h1>
+<p><code>template_prose_project</code> packages a complete,
+configurable, reproducible editorial-review workflow into the Research
+Project Template’s two-layer architecture. By keeping prose analysis,
+structural validation, and bibliography cross-checking in two orthogonal
+infrastructure modules — <code>infrastructure/prose/</code> and
+<code>infrastructure/reference/</code> — the project demonstrates that
+<em>editorial discipline</em> is expressible as a configurable,
+deterministic pipeline.</p>
+<p>This exemplar follows a single house style:</p>
+<ul>
+<li><code>manuscript/config.yaml</code> is the only place run policy
+lives.</li>
+<li><code>src/pipeline/</code> is the only place the project touches
+<code>infrastructure/</code>.</li>
+<li>Scripts in <code>scripts/</code> do only filesystem I/O and CLI
+argument handling.</li>
+<li>Every artefact in <code>output/</code> is regeneratable;
+<code>manuscript/references.bib</code> is curated and validated
+read-only by this project.</li>
+</ul>
+<p>The contribution of this exemplar is architectural: a <em>generic,
+reusable</em> prose-quality module that any project in the template can
+opt into, and a <em>minimal, configurable</em> exemplar wiring it to the
+bibliography and the manuscript pipeline.</p>
+<p>Three concrete extensions follow naturally:</p>
+<ol type="1">
+<li><strong>Style-guide enforcement</strong> — extend
+<code>analyze_quality</code> with project-specific style rules
+(e.g. forbidden phrases, required terminology) read from
+<code>config.yaml</code>.</li>
+<li><strong>Diff-aware review</strong> — restrict the report to files
+modified since a given git ref so editorial review can run on every
+PR.</li>
+<li><strong>LLM-assisted rewriting</strong> — pipe long sentences and
+passive candidates into <code>infrastructure.llm</code> for suggested
+rewrites, using the same <code>seed=42, temperature=0.0</code>
+reproducibility contract as optional LLM stages in the template
+pipeline.</li>
+</ol>
+<hr />
+<h1 data-number="6" id="sec:pipeline_internals"><span
+class="header-section-number">6</span> Pipeline Internals</h1>
+<p>This section documents the artefacts produced by the prose-review
+run.</p>
+<pre class="mermaid"><code>flowchart TB
+    P[/projects/template_prose_project//]
+    P --&gt; M[/manuscript//]
+    P --&gt; OUT[/output/&lt;br/&gt;regenerable · gitignored/]
+
+    M --&gt; M_CFG[config.yaml&lt;br/&gt;single source of truth]
+    M --&gt; M_PRE[preamble.md&lt;br/&gt;LaTeX preamble]
+    M --&gt; M_SEC[00_abstract → 04_conclusion ·&lt;br/&gt;05_pipeline_internals · 06_reproducibility]
+    M --&gt; M_BIB[references.bib&lt;br/&gt;read-only · validated by pipeline]
+
+    OUT --&gt; O_REP[manuscript_report.json&lt;br/&gt;ManuscriptReport JSON]
+    OUT --&gt; O_CK[checks.json&lt;br/&gt;list of CheckResult]
+    OUT --&gt; O_RR[review_report.md&lt;br/&gt;final markdown report]
+    OUT --&gt; O_DATA[/data/manuscript_variables.json/]
+    OUT --&gt; O_FIG[/figures/&lt;br/&gt;section_word_counts.png ·&lt;br/&gt;readability_metrics.png ·&lt;br/&gt;citation_density.png/]
+    OUT --&gt; O_RS[run_summary.json]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef src fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef gen fill:#0f766e,stroke:#0f172a,color:#fff
+    class P,M,OUT d
+    class M_CFG,M_PRE,M_SEC,M_BIB src
+    class O_REP,O_CK,O_RR,O_DATA,O_FIG,O_RS gen</code></pre>
+<h2 data-number="6.1" id="data-structures"><span
+class="header-section-number">6.1</span> Data structures</h2>
+<pre class="mermaid"><code>classDiagram
+    class ManuscriptReport {
+        +list~FileReport~ files
+        +int total_words
+        +int total_sentences
+        +int total_paragraphs
+        +float avg_flesch_reading_ease
+        +float avg_flesch_kincaid_grade
+        +float avg_gunning_fog
+        +list~str~ citation_keys
+    }
+
+    class FileReport {
+        +str name
+        +ProseMetrics metrics
+        +StructureReport structure
+        +QualityReport quality
+    }
+
+    class ProseMetrics {
+        +int word_count
+        +int sentence_count
+        +int paragraph_count
+        +float flesch_reading_ease
+        +float flesch_kincaid_grade
+        +float gunning_fog
+    }
+
+    class StructureReport {
+        +list~Heading~ headings
+        +list~Section~ sections
+        +int max_depth
+        +bool has_h1
+        +bool has_skipped_level
+    }
+
+    class QualityReport {
+        +int passive_count
+        +int hedge_count
+        +int citation_count
+        +int long_sentence_count
+        +float citation_density_per_1000
+    }
+
+    class CheckResult {
+        +str name
+        +bool passed
+        +str message
+    }
+
+    class ProseRunArtifacts {
+        +ManuscriptReport manuscript_report
+        +list~CheckResult~ checks
+        +bool all_passed
+    }
+
+    ManuscriptReport --&gt; &quot;*&quot; FileReport
+    FileReport --&gt; ProseMetrics
+    FileReport --&gt; StructureReport
+    FileReport --&gt; QualityReport
+    ProseRunArtifacts --&gt; ManuscriptReport
+    ProseRunArtifacts --&gt; &quot;*&quot; CheckResult</code></pre>
+<hr />
+<h1 data-number="7" id="sec:reproducibility"><span
+class="header-section-number">7</span> Reproducibility</h1>
+<p>The bundled <code>manuscript/config.yaml</code> is configured for the
+<strong>strict reproducibility</strong> discipline advocated for
+computational science by <span class="citation"
+data-cites="peng2011reproducible">[@peng2011reproducible]</span>:</p>
+<ol type="1">
+<li><strong>No network calls.</strong> All analysis is local: prose
+metrics, structure, quality flags, and bibliography validation are
+computed from in-repo files only.</li>
+<li><strong>Deterministic outputs.</strong>
+<code>compute_metrics</code>, <code>analyze_structure</code>, and
+<code>analyze_quality</code> are pure functions over their input
+strings. The same manuscript text + the same <code>config.yaml</code>
+produces byte-identical JSON artefacts (modulo timestamp metadata in any
+caches the project later adds).</li>
+<li><strong>Threshold transparency.</strong> Every pass/fail decision is
+recorded in <code>output/checks.json</code> along with the numeric value
+that triggered it, so a reviewer can audit the gate without re-running
+the pipeline.</li>
+<li><strong>No hidden state.</strong> The pipeline does not mutate
+<code>manuscript/</code>; it reads and reports.
+<code>manuscript/references.bib</code> is read-only here (in contrast
+with the optional search add-on, where it is auto-populated).</li>
+<li><strong>Same code, different config.</strong> A reviewer who wants
+stricter standards edits <code>manuscript/config.yaml</code>
+(<code>prose.target_grade_level_max: 14.0</code>, say); no code changes
+are required.</li>
+</ol>
+<h2 data-number="7.1" id="verifying-reproducibility-locally"><span
+class="header-section-number">7.1</span> Verifying reproducibility
+locally</h2>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run twice; check there are no diffs in the JSON artefacts.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/template_prose_project/scripts/run_prose_pipeline.py</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> projects/template_prose_project/output projects/template_prose_project/output_first</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/template_prose_project/scripts/run_prose_pipeline.py</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> <span class="at">-ru</span> <span class="dt">\</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    projects/template_prose_project/output_first/manuscript_report.json <span class="dt">\</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    projects/template_prose_project/output/manuscript_report.json</span></code></pre></div>
+<p>The diff should be empty. If it is not, the pipeline has acquired
+non-determinism — file an issue.</p>
+<h2 data-number="7.2" id="determinism-guarantees"><span
+class="header-section-number">7.2</span> Determinism guarantees</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Deterministic?</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prose analysis</td>
+<td>yes</td>
+<td>pure functions over text</td>
+</tr>
+<tr>
+<td>Bibliography parse</td>
+<td>yes</td>
+<td>byte-stable round-trip in
+<code>infrastructure.reference.citation</code></td>
+</tr>
+<tr>
+<td>Check evaluation</td>
+<td>yes</td>
+<td>pure comparisons</td>
+</tr>
+<tr>
+<td>Markdown report assembly</td>
+<td>yes</td>
+<td>sorted file list, fixed output template</td>
+</tr>
+<tr>
+<td>Figure generation</td>
+<td>yes (within Matplotlib version)</td>
+<td>fixed palette, no random subsampling</td>
+</tr>
+<tr>
+<td>Manuscript variables</td>
+<td>yes</td>
+<td>derived from the deterministic JSON report</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 data-number="8" id="sec:references"><span
+class="header-section-number">8</span> References</h1>
+<p>Bibliography lives in <a
+href="references.bib"><code>manuscript/references.bib</code></a> and is
+read by Pandoc during PDF render. The build pipeline invokes Pandoc with
+<code>--natbib</code>, so every <code>[@key]</code> citation in the
+manuscript is rewritten to the appropriate
+<code>\cite{}</code>/<code>\citep{}</code>/<code>\citet{}</code> LaTeX
+command and resolved against the bib file.</p>
+<p>This project does not auto-generate the bibliography — it
+<strong>validates</strong> that every <code>[@key]</code> cited in the
+prose has a matching entry, via <a
+href="../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>.
+The check policy is configured under <code>bibliography:</code> in <a
+href="config.yaml"><code>config.yaml</code></a>.</p>
+<p>To validate that <code>references.bib</code> is syntactically
+clean:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    projects/template_prose_project/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+<hr />
+<p><strong>Release:</strong> v0.4.0 · DOI
+<code>10.5281/zenodo.20417104</code> · SHA-256
+<code>cbe5adae0be7…</code> · pairing complete</p>
+<figure>
+<img src="../figures/transmission_integrity_strip.png"
+style="width:88.0%" alt="Integrity QR strip" />
+<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+</figure>
+<p><strong>Prior:</strong> <em>No prior releases.</em></p>
+<!-- END OF TRANSMISSION -->
+</body>
+</html>

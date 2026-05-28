@@ -18,6 +18,9 @@ _PANDOC_ATTR_RE = re.compile(r"\s*\{#[^}]+\}")
 _PANDOC_CARET_ATTR_RE = re.compile(r"\s*\{\^[^}]+\}")
 _EMPHASIS_RE = re.compile(r"\*\*([^*]+)\*\*|\*([^*]+)\*|__([^_]+)__|_([^_]+)_")
 _CITATION_RE = re.compile(r"\[@([^\]]+)\]")
+_HRULE_RE = re.compile(r"^\s*---+\s*$", re.MULTILINE)
+_PANDOC_RAW_LATEX_ATTR_RE = re.compile(r"\{=latex\}")
+_HYPERREF_VISIBLE_RE = re.compile(r"\\hyperref\[[^\]]*\]\{([^}]*)\}")
 _WHITESPACE_RE = re.compile(r"[ \t]+\n")
 _MULTI_NEWLINE_RE = re.compile(r"\n{3,}")
 
@@ -101,6 +104,17 @@ def strip_citations(text: str) -> str:
     return _CITATION_RE.sub("", text)
 
 
+def strip_horizontal_rules(text: str) -> str:
+    """Remove markdown horizontal rules (``---``) that are not deposit prose."""
+    return _HRULE_RE.sub("", text)
+
+
+def strip_raw_latex_inline(text: str) -> str:
+    """Reduce Pandoc raw-LaTeX spans to their visible text for deposit metadata."""
+    text = _PANDOC_RAW_LATEX_ATTR_RE.sub("", text)
+    return _HYPERREF_VISIBLE_RE.sub(r"\1", text)
+
+
 def collapse_whitespace(text: str) -> str:
     """Normalise trailing spaces and excessive blank lines."""
     text = _WHITESPACE_RE.sub("\n", text)
@@ -114,9 +128,11 @@ def normalise_for_deposit(text: str) -> str:
     out = strip_markdown_headers(out)
     out = strip_pandoc_attributes(out)
     out = unwrap_inline_code(out)
+    out = strip_raw_latex_inline(out)
     out = links_to_label_paren_url(out)
     out = strip_emphasis_asterisk(out)
     out = strip_citations(out)
+    out = strip_horizontal_rules(out)
     return collapse_whitespace(out)
 
 

@@ -183,8 +183,8 @@ The standalone project paradigm requires alignment with the repository root **[`
 uv run python scripts/01_run_tests.py --project-only --all-projects
 
 # Manual coverage spot-check — replace NAME with an active project (never aggregate glob SRC paths):
-uv run pytest projects/template_code_project/tests/ \
-  --cov=projects/template_code_project/src \
+uv run pytest projects/templates/template_code_project/tests/ \
+  --cov=projects/templates/template_code_project/src \
   --cov-fail-under=90
 
 find projects/ -name "*.py" -exec grep -L '"""' {} \;  # Check for missing docstrings (representative)
@@ -537,9 +537,9 @@ Active projects are discovered and executed by infrastructure:
 - **Executed** by pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
 - **Outputs** generated in `projects/{name}/output/` and `output/{name}/`
 
-### Archived Projects (`projects_archive/`)
+### Non-Rendered Projects (`projects/working/`, `published/`, `archive/`, `other/`)
 
-Archived projects are preserved but not executed:
+Non-rendered projects are preserved but not executed:
 
 - **NOT discovered** by infrastructure discovery functions
 - **NOT listed** in `run.sh` menu
@@ -548,17 +548,17 @@ Archived projects are preserved but not executed:
 
 ### Archiving a Project
 
-To archive an active project:
+To archive a rendered project:
 
-1. Move project from `projects/{name}/` to `projects_archive/{name}/`
+1. Move project from `projects/active/{name}/` to `projects/archive/{name}/`
 2. Project will no longer appear in discovery or execution
-3. Can be reactivated by moving back to `projects/`
+3. Can be reactivated by moving back to `projects/active/`
 
 ### Reactivating an Archived Project
 
 To reactivate an archived project:
 
-1. Move project from `projects_archive/{name}/` to `projects/{name}/`
+1. Move project from `projects/archive/{name}/` to `projects/active/{name}/`
 2. Ensure project structure is valid (has `src/` and `tests/`)
 3. Project will be automatically discovered on next `run.sh` execution
 
@@ -567,18 +567,18 @@ To reactivate an archived project:
 ```mermaid
 graph TD
     subgraph "Project States"
-        ACTIVE[Active<br/>projects/{name}/]
-        ARCHIVED[Archived<br/>projects_archive/{name}/]
+        ACTIVE[Rendered<br/>projects/active/{name}/]
+        ARCHIVED[Non-rendered<br/>projects/archive/{name}/]
     end
 
     subgraph "Infrastructure Operations"
-        DISCOVER[discover_projects()<br/>Scans projects/ only]
+        DISCOVER[discover_projects()<br/>Scans templates/ + active/ only]
         EXECUTE[Pipeline Execution<br/>Tests, Analysis, Rendering]
         LIST[List in run.sh menu<br/>Interactive selection]
     end
 
     ACTIVE -->|Move to archive| ARCHIVED
-    ARCHIVED -->|Move to projects/| ACTIVE
+    ARCHIVED -->|Move to active/| ACTIVE
 
     ACTIVE -->|Discovered| DISCOVER
     DISCOVER -->|Listed| LIST

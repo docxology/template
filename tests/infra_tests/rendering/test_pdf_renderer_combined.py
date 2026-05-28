@@ -79,9 +79,13 @@ class TestTitlePageGeneration:
 
         preamble = generate_title_page_preamble(temp_manuscript_dir)
 
-        # Subtitle should be included with title
-        assert r"\title{Main Title" in preamble
-        assert "A Subtitle" in preamble
+        assert r"\title{Main Title}" in preamble
+        assert r"\\normalsize" not in preamble
+        assert "A Subtitle" not in preamble
+
+        body = generate_title_page_body(temp_manuscript_dir)
+        assert r"{\LARGE\bfseries Main Title" in body
+        assert r"{\large A Subtitle" in body
 
     def test_title_page_preamble_with_custom_date(self, temp_manuscript_dir):
         """Test preamble generation with custom date."""

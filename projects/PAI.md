@@ -14,12 +14,15 @@ Always-present permanent exemplars under `projects/`:
 
 | Project | Domain | Status |
 |---|---|---|
+| `template_active_inference` | Active Inference multi-track exemplar | ✅ Permanent exemplar |
+| `template_autoresearch_project` | AutoResearch exemplar | ✅ Permanent exemplar |
 | `template_code_project` | Optimization research exemplar | ✅ Permanent exemplar |
 | `template_prose_project` | Prose-review exemplar | ✅ Permanent exemplar |
+| `template_template` | Meta-template exemplar | ✅ Permanent exemplar |
 
-Rotating projects appear under `projects/` in some checkouts and under `projects_archive/` or `projects_in_progress/` in others; specific names rotate, so consult the generated roster rather than hard-coding them.
+Rotating projects appear under `projects/active/` in some checkouts and under `projects/archive/`, `projects/working/`, `projects/published/`, or `projects/other/` in others; specific names rotate, so consult the generated roster rather than hard-coding them.
 
-Authoritative active roster: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerated from `discover_projects()`).
+Authoritative public active roster: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerated from `infrastructure.project.public_scope`; runtime `discover_projects()` may include local private symlinks).
 
 ## 📂 Structure Per Project
 
@@ -34,13 +37,13 @@ Authoritative active roster: [`docs/_generated/active_projects.md`](../docs/_gen
 
 - **Isolation**: Projects should not import from each other.
 - **Infrastructure Usage**: Projects can and should import from `infrastructure/`.
-- **Creation**: To create a new project, copy an existing project under `projects/` as a template.
-- **In-Progress**: Projects in `projects_in_progress/` are not yet discovered by the pipeline until moved under `projects/`.
-- **Archived**: Projects in `projects_archive/` are preserved but not discovered.
+- **Creation**: To create a new project, copy an exemplar from `projects/templates/` into `projects/active/`.
+- **In-Progress**: Projects in `projects/working/` are not yet discovered by the pipeline until moved under `projects/active/`.
+- **Archived**: Projects in `projects/archive/` are preserved but not discovered.
 
 ## 🔗 Key References
 
 - [AGENTS.md](AGENTS.md) — Technical documentation for the projects directory
 - [README.md](README.md) — Quick reference and getting started
 - [PROJECTS_PARADIGM.md](PROJECTS_PARADIGM.md) — Standalone project paradigm philosophy
-- [template_code_project/AGENTS.md](template_code_project/AGENTS.md) — Canonical control-positive exemplar technical docs
+- [templates/template_code_project/AGENTS.md](templates/template_code_project/AGENTS.md) — Canonical control-positive exemplar technical docs

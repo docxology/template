@@ -13,7 +13,7 @@ This directory holds **generator output** (`active_projects.md`) plus **maintain
 | [`coverage_history.md`](coverage_history.md) | **Generated** — `uv run python scripts/generate_coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
 | [`canonical_facts.md`](canonical_facts.md) | **Maintained** — ground-truthed test counts, gates, and roster notes (refresh with measured `pytest` + `generate_active_projects_doc.py`; see [`README.md`](README.md)) |
 | [`hermes_knowledge_audit.json`](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; do not use for current counts |
-| [`publication_records.md`](publication_records.md) | **Maintained snapshot** — dated external DOI/GitHub verification evidence; re-check before citing status as current |
+| [`publication_records.md`](publication_records.md) | **Generated publication matrix** — public exemplar GitHub/Zenodo/config records; refresh with `uv run python scripts/generate_publication_records_doc.py --refresh-external` |
 | [`skills_index.md`](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |
 | [`last-run-summary.md`](last-run-summary.md) | **Generated** — written by `infrastructure.core.pipeline.multi_project.write_last_run_summary` from `scripts/execute_multi_project.py` end-of-run. Schema: [`../operational/logging/output-design.md`](../operational/logging/output-design.md) |
 | [`README.md`](README.md), `AGENTS.md` | **Maintainer** — policy and linking conventions |
@@ -21,7 +21,7 @@ This directory holds **generator output** (`active_projects.md`) plus **maintain
 ## Conventions
 
 - Link to [`active_projects.md`](active_projects.md) for the public CI/documentation project scope; avoid copying local `discover_projects()` rosters into other guides.
-- For concrete paths in examples, default to [`projects/template_code_project/`](../../projects/template_code_project/).
+- For concrete paths in examples, default to [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/).
 
 ## See Also
 

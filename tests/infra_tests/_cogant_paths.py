@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-_STAGING = _REPO_ROOT / "projects_in_progress/cogant"
+_STAGING = _REPO_ROOT / "projects/working/cogant"  # private-repo mirror (lifecycle: working/)
 _FIXTURE = _REPO_ROOT / "tests/fixtures/private_project/cogant"
 
 

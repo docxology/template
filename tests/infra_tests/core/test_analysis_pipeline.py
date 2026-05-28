@@ -53,7 +53,7 @@ def test_run_analysis_script_success(tmp_path: Path) -> None:
 
 
 def test_run_analysis_script_resolves_wip_project_env(tmp_path: Path) -> None:
-    project = tmp_path / "projects_in_progress" / "draft"
+    project = tmp_path / "projects" / "working" / "draft"
     (project / "src").mkdir(parents=True, exist_ok=True)
     (project / "scripts").mkdir(parents=True, exist_ok=True)
     marker = tmp_path / "project_dir.txt"

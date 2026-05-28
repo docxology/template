@@ -169,13 +169,23 @@ def load_config(
 def _infer_project_name_from_path(config_path: Path) -> str:
     """Infer a project name from a config path's layout.
 
-    Looks for a ``…/<projects_dir>/<project_name>/manuscript/config.yaml``
-    pattern. Returns an empty string when the layout doesn't match.
-    Recognized parent directory names: ``projects``, ``projects_in_progress``,
-    ``projects_archive``.
+    Looks for a ``…/<parent>/<project_name>/manuscript/config.yaml`` pattern.
+    Returns an empty string when the layout doesn't match. Recognized parents
+    are ``projects`` itself plus the typed lifecycle subfolders under it
+    (``active``, ``working``, ``published``, ``archive``, ``other``,
+    ``templates``) — e.g. ``projects/active/<name>/manuscript/config.yaml`` or
+    ``projects/templates/<name>/manuscript/config.yaml``.
     """
     parts = config_path.parts
-    candidates = {"projects", "projects_in_progress", "projects_archive"}
+    candidates = {
+        "projects",
+        "active",
+        "working",
+        "published",
+        "archive",
+        "other",
+        "templates",
+    }
     for idx, part in enumerate(parts):
         if part in candidates and idx + 2 < len(parts) and parts[idx + 2] == "manuscript":
             return parts[idx + 1]

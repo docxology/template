@@ -26,9 +26,9 @@ class TestPipelineConfig:
         config = PipelineConfig(
             project_name="myproj",
             repo_root=tmp_path,
-            projects_dir="projects_in_progress",
+            projects_dir="projects/working",
         )
-        assert config.project_dir == tmp_path / "projects_in_progress" / "myproj"
+        assert config.project_dir == tmp_path / "projects" / "working" / "myproj"
 
     def test_nested_project_name_resolves_under_projects_dir(self, tmp_path):
         """Qualified project names preserve program-directory layouts."""

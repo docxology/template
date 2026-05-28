@@ -15,7 +15,7 @@ During the post-processing phase of `./secure_run.sh`, the system calculates two
 
 A `.hashes.json` manifest is written to the output directory immediately adjacent to the finalized PDFs. This file tracks the timestamp, document ID, configured hashes, source filename, source size, and Git commit when Git metadata is available. If Git metadata is unavailable, the manifest records that fact instead of inventing a commit.
 
-If `projects/template_code_project/output/pdf/template_code_project_combined.pdf` was processed, the engine will drop `template_code_project_combined.hashes.json` right next to it.
+If `projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf` was processed, the engine will drop `template_code_project_combined.hashes.json` right next to it.
 
 ## Internal Binding
 

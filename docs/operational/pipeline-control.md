@@ -183,7 +183,7 @@ stage number, stage name, and timestamp. Compare snapshots or output
 directories with:
 
 ```bash
-uv run python -m infrastructure.core.pipeline.snapshot compare <left> <right> --output-dir projects/template_code_project/output
+uv run python -m infrastructure.core.pipeline.snapshot compare <left> <right> --output-dir projects/templates/template_code_project/output
 ```
 
 Comparison reports are written as `snapshot_compare.json` and
@@ -198,7 +198,7 @@ labels, data JSON values, claim ledgers, and generated artifact paths. The
 validation CLI can flag unsupported manuscript numbers and citations:
 
 ```bash
-uv run python -m infrastructure.validation.cli.main evidence projects/template_code_project --fail-on-issues
+uv run python -m infrastructure.validation.cli.main evidence projects/templates/template_code_project --fail-on-issues
 ```
 
 The output validation stage writes
@@ -230,12 +230,12 @@ profiles also cover code research, prose research, and literature review.
 Unknown keys fail fast.
 
 The public canonical exemplars ship explicit overlays:
-`projects/template_code_project/domain_profile.yaml`,
-`projects/template_code_project/experiment_plan.yaml`,
-`projects/template_prose_project/domain_profile.yaml`,
-`projects/template_prose_project/experiment_plan.yaml`,
-`projects/template_autoresearch_project/domain_profile.yaml`, and
-`projects/template_autoresearch_project/experiment_plan.yaml`. Treat them as
+`projects/templates/template_code_project/domain_profile.yaml`,
+`projects/templates/template_code_project/experiment_plan.yaml`,
+`projects/templates/template_prose_project/domain_profile.yaml`,
+`projects/templates/template_prose_project/experiment_plan.yaml`,
+`projects/templates/template_autoresearch_project/domain_profile.yaml`, and
+`projects/templates/template_autoresearch_project/experiment_plan.yaml`. Treat them as
 copy-and-edit starting points for new public projects.
 
 Projects may also add `experiment_plan.yaml` for design validation:
