@@ -105,6 +105,14 @@ jobs:
       - name: Confidentiality guard — only template projects tracked
         run: uv run python scripts/check_tracked_projects.py
 
+      # Enforce the module-size composability budget as a hard gate (fails at
+      # >=950 infra / >=250 project-script lines). It also runs inside the
+      # informational health job below, but that job is wrapped in ``|| true``
+      # and never blocks — so without this step an oversized module could land
+      # on main unnoticed. Advisory warnings (>=800) still only warn.
+      - name: Module line-count gate — composability budget
+        run: uv run python scripts/gates/module_line_count_check.py
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 1b — Unified health report (informational, no fail)
 #
