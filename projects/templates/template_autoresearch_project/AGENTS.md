@@ -7,31 +7,28 @@ This project is the public exemplar for deterministic AutoResearch loops in
 
 ## Architecture
 
-- Business logic: `src/`
-  - `loop.py` — thin orchestrator (`run_autoresearch_loop`)
-  - `ml_data.py` — MNIST task config, fixture loading, provenance summary, and array validation
-  - `ml_models.py` — baseline and candidate evaluation, robustness transforms, and model-result records
-  - `ml_training.py` — numpy-only softmax, MLP, patch-attention features, SGD schedules, clipping, and metric primitives
-  - `ml_selection.py` — bounded task orchestration, candidate ranking, tie-breaking, histories, and error examples
-  - `ml_task.py` — compatibility exports for the public ML API
-  - `diagnostics_records.py` — probability-aware prediction records and candidate row validators
-  - `diagnostics_metrics.py` — class metrics, calibration, robustness, probability quality, statistical summary, and training dynamics
-  - `diagnostics_intervals.py` — Wilson intervals, bootstrap intervals, rank stability, and paired-comparison statistics
-  - `diagnostics_reports.py` — diagnostic bundle assembly, selection audit, boundary report, and JSON writers
-  - `diagnostics.py` — compatibility exports by diagnostic surface
-  - `security.py` — local deterministic security profile, threat model, SBOM-style inventory, checksum attestation, and security review packet
-  - `models.py` — loop result dataclasses
-  - `config.py` — manuscript settings + plan merge (`build_loop_config`)
-  - `writers.py` — JSON/CSV/manifest I/O; delegates figure batching to `writers_figure_dispatch.py` and benchmark grading to `writers_benchmark.py`
-  - `reports.py` — markdown and review-packet renderers
-  - `figures_core.py` — shared chart primitives (bar panels, matrix annotations)
-  - `figures_ml.py` — compatibility barrel; implementations in `figures_ml_{candidates,calibration,matrices,mnist}.py`
-  - `figures_process.py` — stage matrix, candidate lifecycle, and closure-flow figures
-  - `figures_security.py` — security-control and integrity-chain figures
-  - `figures.py` — compatibility exports by figure family
-  - `manuscript_variables.py` — facade; token logic in `manuscript_tokens_{core,ml,figures,format}.py`
-  - `manuscript_tables.py` — facade; builders in `manuscript_tables_{builders,format}.py`
-  - `source_ledger.py`, `artifact_schemas.py`, `research_object.py` — offline source-ledger validation, schema manifest generation, and local research-object manifest packaging
+- Business logic: [`src/`](src/) — see [`src/AGENTS.md`](src/AGENTS.md) for package layout and conventions.
+
+Implementation lives in typed packages; root-level `src/*.py` stubs preserve legacy
+import paths (explicit re-exports, star-import stubs, or `sys.modules` aliases where
+tests monkeypatch private helpers).
+
+| Package | Role | Root stubs (if any) |
+| --- | --- | --- |
+| `ml/` | MNIST task config, models, training, selection | `ml_task.py`, `ml_data.py`, … |
+| `diagnostics/` | Records, metrics, intervals, reports | `diagnostics_*.py`, `diagnostics.py` |
+| `figures/` | Figure specs and ML/process/security charts | `figure_specs.py`, `figures_core.py`, … |
+| `manuscript/` | Token builders, tables, hydration facade | `manuscript_variables.py`, `manuscript_tables.py`, … |
+| `writers/` | JSON/CSV/manifest I/O, payloads, benchmark dispatch | `writers_benchmark.py`, `writers_figure_dispatch.py` |
+| `security/` | Local security profile, threat model, attestation | — |
+
+Top-level orchestration (not in packages above):
+
+- `loop.py`, `loop_phases.py` — AutoResearch loop orchestration
+- `models.py`, `config.py` — loop dataclasses and plan merge
+- `reports.py`, `phase_ledger.py`, `research_object.py` — markdown renderers and ledgers
+- `artifact_loader.py`, `artifact_schemas.py`, `artifact_content.py`, `json_coerce.py`, `source_ledger.py` — artifact gates and loaders
+
 - Thin scripts: `scripts/`
 - Project docs: `docs/`
 - Manuscript source: `manuscript/`
@@ -93,13 +90,12 @@ uv run python -m infrastructure.autoresearch.cli validate --project template_aut
 ## Editing Rules
 
 - Keep `scripts/` as orchestrators only.
-- Add orchestration in `src/loop.py`; add I/O in `src/writers.py` (or `writers_figure_dispatch.py` / `writers_benchmark.py` when the surface grows); add renderers in `src/reports.py`.
-- Keep ML task logic in `src/ml_data.py`, `src/ml_models.py`,
-  `src/ml_training.py`, and `src/ml_selection.py`; do not move model evaluation
-  into scripts.
+- Add orchestration in `src/loop.py`; add I/O under `src/writers/`; add renderers in `src/reports.py`.
+- Keep ML task logic in `src/ml/`; do not move model evaluation into scripts.
 - Keep true publication approval in the human-authored `human_review.yaml`.
   Generated readiness may never self-approve publication.
-- Add manuscript tokens in `src/manuscript_tokens_*.py` (re-export via `manuscript_variables.py`), tables in `manuscript_tables_builders.py`, figure blocks, and provenance — then extend tests.
+- Add manuscript tokens in `src/manuscript/manuscript_tokens_*.py`, tables in
+  `src/manuscript/manuscript_tables_builders.py`, figure blocks, and provenance — then extend tests.
 - Register every generated figure with source artifact, alt text, and claim
   boundary metadata before inserting it into numbered manuscript files.
 - Keep figure generation methods in `output/figures/figure_registry.json`; the

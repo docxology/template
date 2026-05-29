@@ -2,6 +2,12 @@
   "version": 1,
   "skills": [
     {
+      "name": "continual-learning",
+      "description": "Orchestrate continual learning by delegating transcript mining to agents-memory-updater and writing durable memory to local JSON (never root AGENTS.md Learned sections). USE WHEN continual learning, mine prior chats, maintain agent memory, or the stop hook triggers this skill.",
+      "path": ".cursor/skills/continual-learning/SKILL.md",
+      "cursor_at": ".cursor/skills/continual-learning/SKILL.md"
+    },
+    {
       "name": "gauss-open-gauss-cli",
       "description": "Open Gauss in this workspace is the math-inc/OpenGauss gauss CLI for Lean session tooling—not Huawei OpenGauss DBMS. See docs/reference/opengauss-naming.md; for the public Lean exemplar see projects/template_active_inference/lean/.",
       "path": ".cursor/skills/gauss/SKILL.md",

@@ -164,6 +164,32 @@ def test_root_agents_is_public_repo_contract_not_personal_memory() -> None:
         assert phrase not in text
 
 
+def test_continual_learning_local_state_gitignored() -> None:
+    """Continual-learning runtime files must stay out of version control."""
+    root = _repo_root()
+    gitignore = (root / ".gitignore").read_text(encoding="utf-8")
+    for pattern in (
+        ".cursor/hooks/state/continual-learning-memory.json",
+        ".cursor/hooks/state/continual-learning-index.json",
+    ):
+        assert pattern in gitignore, f".gitignore must ignore {pattern}"
+
+
+def test_continual_learning_index_not_tracked() -> None:
+    """Transcript index is machine-local and must not be git-tracked."""
+    import subprocess
+
+    root = _repo_root()
+    result = subprocess.run(
+        ["git", "ls-files", ".cursor/hooks/state/continual-learning-index.json"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert result.stdout.strip() == ""
+
+
 def test_publishing_cli_docs_do_not_advertise_apa_mla_formats() -> None:
     """The CLI supports BibTeX only; APA/MLA are programmatic helpers."""
     root = _repo_root()

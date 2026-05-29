@@ -54,6 +54,10 @@ Use this file together with **[README.md](README.md)** (onboarding),
   `infrastructure/core/pipeline/pipeline.yaml`.
 - Touch only files and behaviour the user requested; avoid drive-by refactors.
 
+## Agent memory (local only)
+
+- Continual-learning writes to `.cursor/hooks/state/continual-learning-memory.json` only; never add Learned sections to root `AGENTS.md` (public-repo contract).
+
 ## Security and secrets
 
 - Follow [docs/rules/security.md](docs/rules/security.md) and [bandit.yaml](bandit.yaml).

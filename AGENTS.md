@@ -46,6 +46,13 @@ and rejected by the generated-artifact guard if force-added. Use
 associated projects from their canonical private checkout, not through public
 `template/projects/<name>` symlinks.
 
+**Local agent memory (gitignored):** When present, read
+[`.cursor/hooks/state/continual-learning-memory.json`](.cursor/hooks/state/continual-learning-memory.json)
+for durable user preferences and workspace facts. Never commit this file or write
+Learned sections into root `AGENTS.md`. Schema:
+[`.cursor/hooks/state/continual-learning-memory.example.json`](.cursor/hooks/state/continual-learning-memory.example.json).
+Load/save helpers: `infrastructure.core.agent_memory`.
+
 ## Template authoring & operational notes
 
 Generic, Layer-1 facts for working in this repository.
