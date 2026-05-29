@@ -14,6 +14,19 @@ BERNOULLI_SYMBOL_MAP: dict[str, str] = {
 }
 
 
+# Canonical ontology terms for the Bernoulli-Ising toy variables. Pinned as a fixed
+# reference so a relabel of bernoulli_toy.gnn.md to a different-but-valid term is caught
+# by the production gate, not just by tests. (lambda->lam is omitted: it carries no
+# ontology annotation in the toy, so it stays a presence-only check.)
+BERNOULLI_EXPECTED_TERMS: dict[str, str] = {
+    "pi1": "Stream1PolicyVector",
+    "pi2": "Stream2PolicyVector",
+    "J": "CrossStreamCouplingPotential",
+    "gamma": "SophisticationWeight",
+    "q_joint": "EntangledJointPosterior",
+}
+
+
 def parity_gaps(
     model: GnnModel,
     symbol_map: dict[str, str] | None = None,

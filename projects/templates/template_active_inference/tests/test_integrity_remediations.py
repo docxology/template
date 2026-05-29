@@ -92,9 +92,24 @@ def test_binding_passes_merged_claim_with_simulation(tmp_path: Path) -> None:
     )
     (tmp_path / "output" / "reports").mkdir(parents=True, exist_ok=True)
     (tmp_path / "output" / "reports" / "invariants.json").write_text(
-        json.dumps({"invariants": {"a": True}, "simulation": {"s": True}}), encoding="utf-8"
+        json.dumps({"invariants": {"a": True}, "simulation": {"goal_reached": True}}), encoding="utf-8"
     )
     assert verify_claim_bindings(tmp_path) == []
+
+
+def test_binding_flags_merged_claim_with_relabeled_block(tmp_path: Path) -> None:
+    """Content membership: a non-SI block parked under 'simulation' is NOT 'merged'."""
+    (tmp_path / "manuscript").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "manuscript" / "13_results_invariants.md").write_text(
+        "Checks pass in the merged validation report.\n", encoding="utf-8"
+    )
+    (tmp_path / "output" / "reports").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "output" / "reports" / "invariants.json").write_text(
+        json.dumps({"invariants": {"a": True}, "simulation": {"analytical_only_fake": True}}),
+        encoding="utf-8",
+    )
+    violations = verify_claim_bindings(tmp_path)
+    assert any("merged" in v for v in violations), violations
 
 
 # ── H3: GNN concordance correctness (not just presence) ──────────────────────
@@ -124,6 +139,23 @@ def test_lean_axioms_clean_on_real_project() -> None:
 
 
 @pytest.mark.skipif(shutil.which("lake") is None, reason="lake toolchain not installed")
+@pytest.mark.skipif(shutil.which("lake") is None, reason="lake toolchain not installed")
+def test_lean_axioms_catches_native_decide(tmp_path: Path) -> None:
+    """native_decide injects Lean.ofReduceBool (not in the whitelist) -> must fail."""
+    assert lean_project_present(PROJECT_ROOT)
+    shutil.copytree(PROJECT_ROOT / "lean", tmp_path / "lean")
+    target = tmp_path / "lean" / "TemplateActiveInference" / "SophisticatedInference.lean"
+    target.write_text(
+        "namespace TemplateActiveInference\n"
+        "def defaultPolicyLen : Nat := 3\n"
+        "theorem sophisticated_requires_horizon : defaultPolicyLen > 1 := by native_decide\n"
+        "end TemplateActiveInference\n",
+        encoding="utf-8",
+    )
+    ok, out = lean_axioms_clean(tmp_path)
+    assert not ok, f"native_decide (Lean.ofReduceBool) must fail the axioms audit: {out}"
+
+
 def test_lean_axioms_catches_planted_sorry(tmp_path: Path) -> None:
     assert lean_project_present(PROJECT_ROOT)
     shutil.copytree(PROJECT_ROOT / "lean", tmp_path / "lean")

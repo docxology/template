@@ -6,7 +6,7 @@ from pathlib import Path
 
 import yaml
 
-from gnn.concordance import BERNOULLI_SYMBOL_MAP, parity_gaps
+from gnn.concordance import BERNOULLI_EXPECTED_TERMS, BERNOULLI_SYMBOL_MAP, parity_gaps
 from gnn.parser import parse_gnn_file
 
 SI_SYMBOL_MAP: dict[str, str] = {
@@ -35,5 +35,5 @@ def load_section_ontology(path: Path) -> dict[str, str]:
 
 def validate_gnn_ontology(gnn_path: Path, symbol_map: dict[str, str] | None = None) -> list[str]:
     model = parse_gnn_file(gnn_path)
-    gaps: list[str] = parity_gaps(model, symbol_map or BERNOULLI_SYMBOL_MAP)
+    gaps: list[str] = parity_gaps(model, symbol_map or BERNOULLI_SYMBOL_MAP, expected_terms=BERNOULLI_EXPECTED_TERMS)
     return gaps

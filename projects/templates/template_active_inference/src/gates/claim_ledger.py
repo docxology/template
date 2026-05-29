@@ -79,7 +79,9 @@ def verify_claim_bindings(project_root: Path) -> list[str]:
             cfg = {}
             violations.append(f"pymdp.yaml unreadable: {exc}")
         cfg_mode = cfg.get("mode")
-        if cfg_mode is not None and cfg_mode != summary_mode:
+        if cfg_mode is None:
+            violations.append("pymdp.yaml is missing the mandatory 'mode' key (mode-match bind disarmed)")
+        elif cfg_mode != summary_mode:
             violations.append(
                 f"pymdp mode mismatch: config mode={cfg_mode!r} but recorded rollout mode={summary_mode!r}"
             )
