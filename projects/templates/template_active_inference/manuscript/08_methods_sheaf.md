@@ -111,7 +111,7 @@ Section rows versus fragment track columns. **P** = present (bound and file exis
 | Results (group) | — | — | — | — | — | — | — | — | — | — |
 |   Mutual-information parameter sweep | P | P | P | — | — | P | — | — | — | — |
 |   Free-energy decomposition | P | — | — | — | — | P | — | — | — | — |
-|   T-maze sophisticated inference | P | — | — | — | P | P | — | — | — | — |
+|   T-maze active-inference rollout | P | — | — | — | P | P | — | — | — | — |
 |   Validation invariants | P | — | P | — | — | P | — | — | — | — |
 | Discussion (group) | — | — | — | — | — | — | — | — | — | — |
 |   Limitations and outlook | P | — | P | — | — | — | — | — | P | — |

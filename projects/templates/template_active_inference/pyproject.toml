@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_active_inference"
-version = "0.1.0"
-description = "Multi-track Active Inference exemplar: analytical + pymdp + sheaf manuscript + Lean/GNN/ontology (7 pipeline tracks, 10 sheaf fragment types)"
+version = "0.3.0"
+description = "Multi-track Active Inference exemplar: analytical + pymdp + sheaf manuscript + Lean/GNN/ontology. Track/fragment counts are registry-backed (manuscript/sheaf/tracks.yaml); not hard-coded here."
 authors = [{ name = "Daniel Ari Friedman", email = "daniel@activeinference.institute" }]
 requires-python = ">=3.10"
 dependencies = [

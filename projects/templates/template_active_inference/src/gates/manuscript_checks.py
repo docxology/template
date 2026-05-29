@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from gates.claim_ledger import validate_claim_ledger
+from gates.claim_ledger import validate_claim_ledger, verify_claim_bindings
 
 
 def validate_manuscript(project_root: Path) -> dict[str, bool]:
@@ -90,6 +90,7 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
         "full_sheaf_appendix_tracks": full_sheaf_appendix_tracks,
         "imrad_groups_present": imrad_groups_present,
         "claim_ledger_valid": validate_claim_ledger(root),
+        "claim_bindings_satisfied": not verify_claim_bindings(root),
         "labels_yaml": labels.exists(),
         "composed_sections": len(composed) >= composed_leaf_count,
         "sheaf_coverage_page": (root / "manuscript" / "00_00_sheaf_coverage.md").exists(),

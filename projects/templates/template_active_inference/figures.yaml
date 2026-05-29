@@ -49,7 +49,7 @@ figures:
     filename: si_tmaze_actions.png
     alt: >-
       Step plot of discrete action index versus timestep for the pymdp
-      sophisticated-inference T-maze rollout. Actions change at each timestep with
+      T-maze rollout in {{pymdp_mode}} mode. Actions change at each timestep with
       light fill under the step trace; policy depth is {{si_tmaze_policy_len}} steps.
     caption: >-
       Discrete action index over time for the pymdp T-maze rollout (policy length

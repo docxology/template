@@ -26,3 +26,23 @@ def load_invariant_counts(project_root: Path) -> tuple[int, int]:
             return sum(1 for value in combined.values() if value), len(combined)
     inv = run_invariants()
     return sum(1 for value in inv.values() if value), len(inv)
+
+
+def invariants_are_merged(project_root: Path) -> bool:
+    """True when the invariants report actually contains simulation invariants.
+
+    Binds the manuscript's "merged analytical and simulation" claim: returns False
+    in the silent-degrade case (analytical-only) so a gate can refuse to certify the
+    merged claim rather than print an analytical-only count under a "merged" caption.
+    """
+    root = project_root.resolve()
+    inv_path = root / "output" / "reports" / "invariants.json"
+    if inv_path.is_file():
+        data = json.loads(inv_path.read_text(encoding="utf-8"))
+        if data.get("simulation"):
+            return True
+    si_inv_path = root / "output" / "reports" / "si_invariants.json"
+    if si_inv_path.is_file():
+        si_data = json.loads(si_inv_path.read_text(encoding="utf-8"))
+        return bool(si_data.get("invariants"))
+    return False

@@ -156,7 +156,7 @@ sections:
     kind: section
     imrad: results
     depth: 1
-    title: T-maze sophisticated inference
+    title: T-maze active-inference rollout
     short: tmaze
     output_name: 12_results_si_tmaze.md
     tracks:

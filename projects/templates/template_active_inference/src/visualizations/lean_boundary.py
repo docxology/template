@@ -16,7 +16,11 @@ class LeanBoundaryRow:
 
 
 _DECL_START_RE = re.compile(r"^\s*(?:def|theorem)\s+(\w+)", re.MULTILINE)
-_SORRY_RE = re.compile(r"\bsorry\b")
+# A declaration is NOT cleanly proved if it leans on any of these: `sorry`/`admit`
+# (placeholders), `sorryAx` (the compiled-term form), or `native_decide` (trusts the
+# compiler via the `Lean.ofReduceBool` axiom). Plain `decide` is sound and stays
+# "proved". A bare `\bsorry\b` regex missed admit/native_decide/sorryAx entirely.
+_SORRY_RE = re.compile(r"\b(?:sorry|admit|sorryAx|native_decide)\b")
 
 
 def _module_name(path: Path, lean_root: Path) -> str:

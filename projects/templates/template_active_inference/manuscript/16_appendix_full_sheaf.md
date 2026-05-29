@@ -38,7 +38,7 @@ pymdp harness summary: `output/data/si_tmaze_summary.json` (mean belief entropy,
 
 *Figure A1 (appendix). Closed-form and Monte Carlo mutual information I(λ) for the symmetric Bernoulli-Ising toy across {{param_sweep_grid_points}} grid points up to λ_max = {{lambda_max}}; grid maximum {{ising_mi_saturation}} nats on the measured sweep.*
 
-![Step plot of discrete action index versus timestep for the pymdp sophisticated-inference T-maze rollout. Actions change at each timestep with light fill under the step trace; policy depth is {{si_tmaze_policy_len}} steps.](../output/figures/si_tmaze_actions.png){width=90%}
+![Step plot of discrete action index versus timestep for the pymdp T-maze rollout in {{pymdp_mode}} mode. Actions change at each timestep with light fill under the step trace; policy depth is {{si_tmaze_policy_len}} steps.](../output/figures/si_tmaze_actions.png){width=90%}
 
 *Figure A2 (appendix). Discrete action index over time for the pymdp T-maze rollout (policy length {{si_tmaze_policy_len}}).*
 

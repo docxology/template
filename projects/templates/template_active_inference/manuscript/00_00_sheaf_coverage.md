@@ -27,7 +27,7 @@ This page summarizes which **sheaf fragment tracks** are bound for each IMRAD ro
 - **Results** *(group)*
 -   **Mutual-information parameter sweep**
 -   **Free-energy decomposition**
--   **T-maze sophisticated inference**
+-   **T-maze active-inference rollout**
 -   **Validation invariants**
 ## Discussion
 

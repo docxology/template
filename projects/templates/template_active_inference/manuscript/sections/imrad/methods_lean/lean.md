@@ -1,3 +1,3 @@
-Lean module `TemplateActiveInference.SophisticatedInference` declares the planning horizon parameter and a witness that horizon $> 1$ distinguishes sophisticated from myopic inference.
+Lean module `TemplateActiveInference.SophisticatedInference` declares the planning-horizon parameter `defaultPolicyLen` and a placeholder arithmetic witness `sophisticated_requires_horizon : defaultPolicyLen > 1` (proved by `decide`). The witness pins the horizon invariant that sophisticated inference requires a policy length above one; it does *not* by itself formalize the inferential distinction between sophisticated and myopic agents — that distinction lives in the pymdp harness ([@sec:methods_pymdp]), not in the Lean term. Axioms are audited with `#print axioms` (the gate whitelists only `propext`, `Classical.choice`, `Quot.sound`); see the Lean track gate.
 
 Build via `lake build` under `lean/`.
