@@ -488,24 +488,38 @@ jobs:
       - name: Verify project imports
         env:
           PUBLIC_PROJECTS: ${{ steps.project-scope.outputs.names }}
+        # Public project names are now QUALIFIED (``templates/<name>``) and the
+        # projects/ tree is not a Python package chain (no projects/__init__.py),
+        # so a dotted ``projects.<name>.src`` import cannot resolve. Import each
+        # project's ``src`` package in an ISOLATED subprocess with the project's
+        # own sys.path (repo root for ``infrastructure``, project dir, and its
+        # ``src``) — the same way pytest's pythonpath is configured — which also
+        # avoids the top-level ``src`` name collision across projects.
         run: |
           uv run python -c "
-          import sys
-          import importlib
           import os
+          import subprocess
+          import sys
 
+          repo = os.getcwd()
           projects = os.environ['PUBLIC_PROJECTS'].split()
           if not projects:
               print('No projects found — skipping import check')
               sys.exit(0)
+          failed = False
           for project in projects:
-              module_name = f'projects.{project}.src'
-              try:
-                  importlib.import_module(module_name)
-                  print(f'  OK: {module_name}')
-              except Exception as e:
-                  print(f'  FAIL: {module_name}: {e}')
-                  sys.exit(1)
+              proj_dir = os.path.join(repo, 'projects', *project.split('/'))
+              env = dict(os.environ)
+              env['PYTHONPATH'] = os.pathsep.join([repo, proj_dir, os.path.join(proj_dir, 'src')])
+              result = subprocess.run([sys.executable, '-c', 'import src'], env=env, capture_output=True, text=True)
+              if result.returncode == 0:
+                  print(f'  OK: {project} (src)')
+              else:
+                  tail = (result.stderr.strip().splitlines() or [str(result.returncode)])[-1]
+                  print(f'  FAIL: {project}: {tail}')
+                  failed = True
+          if failed:
+              sys.exit(1)
           print(f'All {len(projects)} project(s) imported successfully')
           "
 

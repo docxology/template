@@ -200,6 +200,43 @@ def test_dead_link_skips_fenced_code(drift_module, tmp_path):
     assert rep.findings == []
 
 
+def test_dead_link_skips_output_targets(drift_module, tmp_path):
+    """Manuscript figure embeds into ``output/`` are disposable/regenerated.
+
+    Regression: on a fresh checkout (CI strict drift gate) the gitignored
+    project-local ``output/figures/*.png`` do not exist yet, so a real manuscript
+    embed like ``![cap](../output/figures/free_energy_curve.png)`` must NOT be
+    reported as a dead link — the docstring contract excludes ``output/`` and the
+    figures are validated at render time, not by this stale-link gate.
+    """
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript").mkdir(exist_ok=True)
+    (root / "manuscript" / "11_results.md").write_text(
+        "![A real generated figure.](../output/figures/free_energy_curve.png){#fig:fe}\n"
+        "Also a nested one: [data](../output/data/results.json).\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_referenced_files_exist(root, rep, "fake_project")
+    assert not any(f.rule == "dead_link" for f in rep.findings)
+
+
+def test_dead_link_still_catches_non_output_missing_target(drift_module, tmp_path):
+    """The output exclusion must not mask genuinely-dead non-output links."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript").mkdir(exist_ok=True)
+    (root / "manuscript" / "12_results.md").write_text(
+        "See [the appendix](./99_appendix_missing.md) and a figure "
+        "[chart](../assets/not_output.png).\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_referenced_files_exist(root, rep, "fake_project")
+    flagged = [f.message for f in rep.findings if f.rule == "dead_link"]
+    assert any("99_appendix_missing.md" in m for m in flagged)
+    assert any("not_output.png" in m for m in flagged)
+
+
 def test_dead_link_scans_beyond_docs_dir(drift_module, tmp_path):
     """Broadened scope: stale links in root ``AGENTS.md`` and ``manuscript/`` are
     caught, not only those under ``docs/``.
