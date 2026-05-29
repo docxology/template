@@ -16,6 +16,7 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `05_copy_outputs.py` - output copying orchestration
 - `06_llm_review.py` - LLM review and translation orchestration
 - `07_generate_executive_report.py` - multi-project executive reporting
+- `render_working_projects.py` - batch core pipeline for `projects/working/` WIP trees
 - `execute_pipeline.py` - single-project pipeline runner
 - `execute_multi_project.py` - multi-project pipeline runner (serial; `--parallel` for process-pool)
 
@@ -139,7 +140,8 @@ orchestrator:
 | `04_validate_output.py` | `infrastructure.validation.cli` | |
 | `05_copy_outputs.py` | `infrastructure.reporting.output_organizer` | |
 | `06_llm_review.py` | `infrastructure.llm.review` | Skipped when Ollama is absent. |
-| `07_generate_executive_report.py` | `infrastructure.reporting.executive_reporter` | |
+| `07_generate_executive_report.py` | `infrastructure.reporting.multi_project_reporter.generate_multi_project_report`, `infrastructure.reporting.output_organizer.OutputOrganizer.copy_combined_pdfs` | Multi-project only; skips when one project discovered. |
+| `render_working_projects.py` | `infrastructure.project.working_render` | Local WIP audit under `projects/working/`; not part of default pipeline. |
 | `lint_docs.py` | `infrastructure.validation.docs.lint_runner` | |
 | `execute_pipeline.py` (post-run) | `infrastructure.core.pipeline.post_run_reporting` | |
 | `00_setup_environment.py` | `infrastructure.core.runtime.environment`, `setup_checks`, `env_deps` | |

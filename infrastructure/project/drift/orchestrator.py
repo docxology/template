@@ -54,7 +54,25 @@ def _is_skipped_script(path: Path) -> bool:
     return False
 
 
-def _count_non_trivial_functions(source: str) -> int:
+def _function_body_line_count(node: ast.FunctionDef) -> int:
+    """Approximate physical lines spanned by a function definition."""
+    if not node.body:
+        return 0
+    end_lines = [
+        getattr(child, "end_lineno", getattr(child, "lineno", node.lineno))
+        for child in ast.walk(node)
+        if hasattr(child, "lineno")
+    ]
+    return max(end_lines) - node.lineno + 1
+
+
+def _function_complexity_score(node: ast.FunctionDef) -> tuple[int, int]:
+    """Return (ast_node_count, physical_line_span) for non-trivial heuristics."""
+    node_count = sum(1 for child in ast.walk(node) if hasattr(child, "lineno") and child.lineno >= node.lineno)
+    return node_count, _function_body_line_count(node)
+
+
+def _count_non_trivial_functions(source: str, *, script_line_count: int = 0) -> int:
     try:
         tree = ast.parse(source)
     except SyntaxError:
@@ -63,10 +81,16 @@ def _count_non_trivial_functions(source: str) -> int:
     for node in tree.body:
         if not isinstance(node, ast.FunctionDef):
             continue
-        if node.name in _TRIVIAL_FUNC_NAMES or node.name.startswith("_parse_"):
+        if node.name.startswith("_parse_"):
             continue
-        body_lines = sum(1 for child in ast.walk(node) if hasattr(child, "lineno") and child.lineno >= node.lineno)
-        if body_lines > 8 or len(node.body) > 3:
+        if node.name in _TRIVIAL_FUNC_NAMES:
+            if node.name == "main" and script_line_count >= 150:
+                _, physical_lines = _function_complexity_score(node)
+                if physical_lines >= 120:
+                    count += 1
+            continue
+        node_count, physical_lines = _function_complexity_score(node)
+        if node_count > 8 or len(node.body) > 3 or physical_lines > 12:
             count += 1
     return count
 
@@ -89,12 +113,12 @@ def _uses_compute_imports(source: str) -> bool:
     return False
 
 
-def _is_subprocess_scheduler(path: Path, source: str) -> bool:
+def _is_subprocess_scheduler(path: Path, source: str, *, line_count: int) -> bool:
     if path.name not in _SUBPROCESS_SCHEDULER_NAMES:
         return False
     if "subprocess" not in source:
         return False
-    return _count_non_trivial_functions(source) <= 1
+    return _count_non_trivial_functions(source, script_line_count=line_count) <= 1
 
 
 def _analyze_script(path: Path, repo_root: Path) -> tuple[str | None, str | None]:
@@ -103,7 +127,7 @@ def _analyze_script(path: Path, repo_root: Path) -> tuple[str | None, str | None
         return None, None
     source = path.read_text(encoding="utf-8")
     line_count = source.count("\n") + (1 if source and not source.endswith("\n") else 0)
-    if _is_subprocess_scheduler(path, source):
+    if _is_subprocess_scheduler(path, source, line_count=line_count):
         return None, None
 
     rel = _rel(path, repo_root)
@@ -111,7 +135,7 @@ def _analyze_script(path: Path, repo_root: Path) -> tuple[str | None, str | None
     is_project_script = normalized.startswith("projects/") and "/scripts/" in normalized
 
     if is_project_script and line_count >= _PROJECT_SCRIPT_WARN_LINES:
-        non_trivial = _count_non_trivial_functions(source)
+        non_trivial = _count_non_trivial_functions(source, script_line_count=line_count)
         if line_count >= _FAT_SCRIPT_FAIL_LINES and non_trivial >= _FAT_MIN_FUNCTIONS:
             return (
                 "ERROR",
@@ -124,7 +148,7 @@ def _analyze_script(path: Path, repo_root: Path) -> tuple[str | None, str | None
             )
 
     if not is_project_script and line_count >= _FAT_SCRIPT_FAIL_LINES:
-        non_trivial = _count_non_trivial_functions(source)
+        non_trivial = _count_non_trivial_functions(source, script_line_count=line_count)
         if non_trivial >= _FAT_MIN_FUNCTIONS or _uses_compute_imports(source):
             return (
                 "WARNING",
@@ -132,7 +156,7 @@ def _analyze_script(path: Path, repo_root: Path) -> tuple[str | None, str | None
             )
 
     if not is_project_script and line_count >= _ROOT_REUSABLE_HELPER_MIN_LINES:
-        non_trivial = _count_non_trivial_functions(source)
+        non_trivial = _count_non_trivial_functions(source, script_line_count=line_count)
         if non_trivial >= _ROOT_REUSABLE_HELPER_MIN_FUNCTIONS:
             return (
                 "WARNING",
@@ -140,7 +164,7 @@ def _analyze_script(path: Path, repo_root: Path) -> tuple[str | None, str | None
             )
 
     if _uses_compute_imports(source) and is_project_script:
-        non_trivial = _count_non_trivial_functions(source)
+        non_trivial = _count_non_trivial_functions(source, script_line_count=line_count)
         if non_trivial >= 2:
             return (
                 "ERROR",

@@ -410,7 +410,7 @@ def test_build_claims_only_supports_existing_files(project_root: Path, repo_root
 
 
 def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
-    repo_root = Path(__file__).resolve().parents[3]
+    repo_root = Path(__file__).resolve().parents[4]
     project = tmp_path / "template_autoresearch_project"
     source = Path(__file__).resolve().parents[1]
     shutil.copytree(

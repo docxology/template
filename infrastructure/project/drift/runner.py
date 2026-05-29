@@ -4,11 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from infrastructure.project.drift.checks import (
-    check_project,
-    check_repo_docs_hardcoded_counts,
-    check_repo_thin_orchestrator_scripts,
-)
+from infrastructure.project.drift.checks import check_project
+from infrastructure.project.drift.registry import run_repo_checks
 from infrastructure.project.drift.models import Report
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
@@ -27,8 +24,7 @@ def run_drift_checks(
     for project in names:
         check_project(repo_root, project, report)
     if include_repo_checks:
-        check_repo_docs_hardcoded_counts(repo_root, report)
-        check_repo_thin_orchestrator_scripts(repo_root, report)
+        run_repo_checks(repo_root, report)
     return report
 
 

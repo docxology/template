@@ -214,7 +214,7 @@ def load_loop_config(project_root: Path, plan: AutoResearchPlan | None = None) -
     if plan is None:
         from infrastructure.autoresearch import build_autoresearch_plan
 
-        repo_root = project_root.parents[1]
+        repo_root = project_root.parents[2]
         plan = build_autoresearch_plan(repo_root, project_root.name)
     return build_loop_config(plan, settings, human_review=load_human_review(project_root / "human_review.yaml"))
 

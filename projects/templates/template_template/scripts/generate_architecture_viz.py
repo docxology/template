@@ -12,26 +12,19 @@ import matplotlib
 matplotlib.use("Agg")
 
 
-def _locate_repo_root(project_dir: Path) -> Path:
-    resolved = project_dir.resolve()
-    for candidate in (resolved, *resolved.parents):
-        if (candidate / "infrastructure").is_dir() and (candidate / "pyproject.toml").is_file():
-            return candidate
-    sibling = resolved.parents[2] / "template"
-    if (sibling / "infrastructure").is_dir():
-        return sibling.resolve()
-    raise FileNotFoundError(f"Could not locate template repo root from {project_dir}")
-
-
 PROJECT_DIR = Path(os.environ.get("PROJECT_DIR", Path(__file__).resolve().parent.parent))
-REPO_ROOT = _locate_repo_root(PROJECT_DIR)
 SRC_DIR = PROJECT_DIR / "src"
-for path_str in (str(REPO_ROOT), str(SRC_DIR)):
-    if path_str not in sys.path:
-        sys.path.insert(0, path_str)
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
 
-from infrastructure.core.logging.utils import get_logger
-from template_template import generate_all_architecture_figures
+from template_template.paths import locate_repo_root  # noqa: E402
+
+REPO_ROOT = locate_repo_root(PROJECT_DIR)
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from infrastructure.core.logging.utils import get_logger  # noqa: E402
+from template_template import generate_all_architecture_figures  # noqa: E402
 
 logger = get_logger(__name__)
 

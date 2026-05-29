@@ -11,7 +11,6 @@ import yaml
 
 from infrastructure.project.drift.models import Report
 from infrastructure.project.drift.orchestrator import (
-    check_project_scripts,
     check_repo_scripts,
 )
 
@@ -554,21 +553,13 @@ def check_repo_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
 
 
 def check_project(repo_root: Path, project: str, report: Report) -> None:
+    from infrastructure.project.drift.registry import run_project_checks
+
     project_root = repo_root / "projects" / project
     if not project_root.is_dir():
         report.add("WARNING", project, "project_missing", f"{project_root} does not exist; skipping")
         return
-    check_required_files_exist(project_root, report, project)
-    check_function_name_drift(project_root, report, project)
-    check_test_class_drift(project_root, report, project)
-    check_all_export_drift(project_root, report, project)
-    check_coverage_floor_consistency(project_root, report, project)
-    check_referenced_files_exist(project_root, report, project)
-    check_no_oversize_src_files(project_root, report, project)
-    check_no_blanket_except_in_src(project_root, report, project)
-    check_mocks_absent_from_tests(project_root, report, project)
-    check_publication_metadata_consistency(project_root, report, project)
-    check_project_scripts(project_root, repo_root, report, project)
+    run_project_checks(project_root, repo_root, report, project)
 
 
 def check_repo_thin_orchestrator_scripts(repo_root: Path, report: Report) -> None:

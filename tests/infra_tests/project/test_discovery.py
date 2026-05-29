@@ -1318,3 +1318,35 @@ def test_resolve_project_root_ignores_output_only_projects_shadow(tmp_path: Path
 
     resolved = resolve_project_root(tmp_path, "staged")
     assert resolved == wip.resolve()
+
+
+def test_resolve_project_root_finds_templates_exemplar_by_bare_name(tmp_path: Path) -> None:
+    """A public exemplar under projects/templates/<name> resolves by bare name.
+
+    Regression: ``build_autoresearch_plan`` resolves the project by bare name.
+    Before the templates lookup was added, an output-only shadow under
+    ``projects/active/<name>`` won and the exemplar silently loaded default
+    config (security disabled, wrong accepted candidate, truncated stage matrix).
+    """
+    exemplar = tmp_path / "projects" / "templates" / "template_demo"
+    (exemplar / "src").mkdir(parents=True)
+    (exemplar / "tests").mkdir()
+    (exemplar / "manuscript").mkdir()
+    # An output-only shadow in the hot seat must NOT win over the real exemplar.
+    (tmp_path / "projects" / "active" / "template_demo" / "output").mkdir(parents=True)
+
+    resolved = resolve_project_root(tmp_path, "template_demo")
+    assert resolved == exemplar.resolve()
+
+
+def test_resolve_project_root_promoted_active_beats_templates(tmp_path: Path) -> None:
+    """A genuinely promoted hot-seat tree still wins over a templates exemplar."""
+    active = tmp_path / "projects" / "active" / "template_demo"
+    (active / "src").mkdir(parents=True)
+    (active / "tests").mkdir()
+    templated = tmp_path / "projects" / "templates" / "template_demo"
+    (templated / "src").mkdir(parents=True)
+    (templated / "manuscript").mkdir()
+
+    resolved = resolve_project_root(tmp_path, "template_demo")
+    assert resolved == active.resolve()

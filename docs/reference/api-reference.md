@@ -289,11 +289,7 @@ Return ``(overall, per_dimension)`` 0–100 scores.
 
 ### `DETECTORS`
 
-*constant — defined in `infrastructure.doctor.detectors`*
-
-```python
-DETECTORS: tuple[DetectorFn, ...] = (detect_doctor_state_writable, detect_uv_available, detect_python_version, de...
-```
+*symbol — defined in `infrastructure.doctor.detectors`*
 
 ### `DIMENSION_WEIGHTS`
 
@@ -489,13 +485,7 @@ One available therapy for a finding.
 
 ### `run_detectors`
 
-*function — defined in `infrastructure.doctor.detectors`*
-
-```python
-run_detectors(repo_root: Path, selected: tuple[DetectorFn, ...] | None=None) -> list[Finding]
-```
-
-Run every detector (or only ``selected``) and return findings.
+*symbol — defined in `infrastructure.doctor.detectors`*
 
 ### `Severity`
 
@@ -939,7 +929,7 @@ Information about a discovered project.
 resolve_project_root(repo_root: Path | str, project_name: str) -> Path
 ```
 
-Return the directory for *project_name*, preferring real active projects over WIP trees.
+Return the directory for *project_name*, preferring the hot seat over WIP trees.
 
 ### `run_project_setup_hook`
 
@@ -2109,6 +2099,26 @@ check_research_compliance(func: Callable[..., Any]) -> dict[str, Any]
 
 Check function compliance with research software standards.
 
+### `confirm_improvement`
+
+*function — defined in `infrastructure.scientific.confirmation`*
+
+```python
+confirm_improvement(evaluate: Callable[[tuple[float, ...], int], float], candidate: tuple[float, ...], baseline_metric: float, seeds: Sequence[int], noise_scale: float, sigma: float=2.0) -> Confirmation
+```
+
+Confirm a candidate beats ``baseline_metric`` beyond the noise band.
+
+### `Confirmation`
+
+*class — defined in `infrastructure.scientific.confirmation`*
+
+```python
+class Confirmation
+```
+
+Outcome of a multi-seed confirmation check.
+
 ### `create_scientific_module_template`
 
 *function — defined in `infrastructure.scientific.templates`*
@@ -2223,7 +2233,7 @@ Populate :attr:`Paper.abstract` for records that lack one.
 
 ### `ArxivBackend`
 
-*class — defined in `infrastructure.search.literature.backends`*
+*class — defined in `infrastructure.search.literature.arxiv_backend`*
 
 ```python
 class ArxivBackend(*, http_client: HttpClient | None=None, base_url: str | None=None, timeout: float=15.0)
@@ -2233,7 +2243,7 @@ arXiv export API. Returns Atom XML; we parse it locally.
 
 ### `BackendError`
 
-*class — defined in `infrastructure.search.literature.backends`*
+*class — defined in `infrastructure.search.literature.base`*
 
 ```python
 class BackendError(RuntimeError)
@@ -2243,7 +2253,7 @@ Raised by a backend when the request itself fails (network, parse).
 
 ### `CrossrefBackend`
 
-*class — defined in `infrastructure.search.literature.backends`*
+*class — defined in `infrastructure.search.literature.crossref_backend`*
 
 ```python
 class CrossrefBackend(*, http_client: HttpClient | None=None, base_url: str | None=None, mailto: str | None=None, timeout: float=15.0)
@@ -2293,7 +2303,7 @@ Run a :class:`SearchQuery` across multiple :class:`SearchBackend`s.
 
 ### `LocalBackend`
 
-*class — defined in `infrastructure.search.literature.backends`*
+*class — defined in `infrastructure.search.literature.local_backend`*
 
 ```python
 class LocalBackend(corpus_path: Path | str)
@@ -2323,7 +2333,7 @@ A normalised literature-search result.
 
 ### `PaperclipBackend`
 
-*class — defined in `infrastructure.search.literature.backends`*
+*class — defined in `infrastructure.search.literature.paperclip_backend`*
 
 ```python
 class PaperclipBackend(*, api_key: str, http_client: HttpClient | None=None, base_url: str | None=None, timeout: float=30.0)
@@ -2333,7 +2343,7 @@ Paperclip (paperclip.gxl.ai) HTTP backend.
 
 ### `SearchBackend`
 
-*class — defined in `infrastructure.search.literature.backends`*
+*class — defined in `infrastructure.search.literature.base`*
 
 ```python
 class SearchBackend(abc.ABC)

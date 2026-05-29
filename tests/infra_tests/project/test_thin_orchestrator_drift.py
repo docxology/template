@@ -59,6 +59,19 @@ def test_fat_script_raises_error(tmp_path: Path) -> None:
     assert any(f.rule == "thin_orchestrator" for f in report.errors())
 
 
+def test_fat_main_in_repo_script_counts_as_non_trivial(tmp_path: Path) -> None:
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    main_body = "\n".join(f"    step_{i}()" for i in range(125))
+    helpers = "".join(_fat_function(f"helper_{i}") for i in range(3))
+    source = helpers + f"def main():\n{main_body}\n\nif __name__ == '__main__':\n    main()\n"
+    source += "pass\n" * 50
+    (scripts / "fat_main.py").write_text(source, encoding="utf-8")
+    report = Report()
+    check_repo_scripts(tmp_path, report)
+    assert any("fat_main.py" in f.message for f in report.warnings())
+
+
 def test_repo_script_fat_warns_not_errors(tmp_path: Path) -> None:
     scripts = tmp_path / "scripts"
     scripts.mkdir()

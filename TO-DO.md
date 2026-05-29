@@ -29,7 +29,7 @@ run when this file was last edited.
 | Stage-table generator | **idempotent** (5/5 docs in sync) | `uv run python scripts/generate_stage_table_doc.py` |
 | API-reference generator | idempotent when the generated API doc matches package exports | `uv run python scripts/generate_api_reference_doc.py --check` |
 | Architecture overview | regenerable from live package/config/project discovery | `uv run python scripts/generate_architecture_overview.py` |
-| Unified `health` command | **10/10 gates PASS** | `uv run python -m infrastructure.core.health` |
+| Unified `health` command | **11/11 gates PASS** | `uv run python -m infrastructure.core.health` |
 | Pre-push hooks | `ruff-ci`, `mypy-ci`, `pre-push-quick`, `bandit-quick`, `skills-check`, `all-exports-check` | `.pre-commit-config.yaml` |
 | Bench harness | **7 benches green** (opt-in via `-m bench`) | `tests/infra_tests/bench/` |
 | Telemetry retention (`TELEMETRY_KEEP`, default 10) | wired into `TelemetryCollector._persist_report` | `infrastructure/core/telemetry/retention.py` |
@@ -41,6 +41,48 @@ run when this file was last edited.
 | `infrastructure/` Python packages | live list and count in [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) | `find infrastructure -mindepth 1 -maxdepth 1 -type d -name '[!.]*'` |
 | Docs subdirectories with both `AGENTS.md` + `README.md` | **26 / 26** | sweep |
 | Infrastructure packages with local docs/skills | verify with docs lint plus `uv run python -m infrastructure.skills check-all-exports` | docs/tooling sweep |
+
+---
+
+## Thermo-nuclear remediation (2026-05-29)
+
+Full report: [`docs/audit/archived/thermo-nuclear-code-quality-2026-05-29.md`](docs/audit/archived/thermo-nuclear-code-quality-2026-05-29.md).
+
+### Blockers (cleared)
+
+| ID | Item | Status |
+| --- | --- | --- |
+| TN-B1 | Root `AGENTS.md` personal-memory sections fail public-repo contract test | **Fixed** — sections removed |
+| TN-B2 | Stale `docs/reference/api-reference.md` fails health gate | **Fixed** — regenerated |
+| TN-B3 | `scripts/render_working_projects.py` thin-orchestrator drift (354 LOC) | **Fixed** — `infrastructure/project/working_render.py` + 113-line script |
+| TN-B4 | `architecture_viz.py` line-count WARN (822 LOC) | **Fixed** — semantic figure-module split |
+| TN-B5 | `canonical_facts.md` infrastructure `.py` count drift | **Fixed** — count **460** |
+
+### High (next waves)
+
+| ID | Item | Status |
+| --- | --- | --- |
+| TN-H1 | Unify pytest argv: `test_runner` → `build_project_pytest_command` with qualified `project_root` | **Fixed** — `build_union_pytest_command` + `load_project_pyproject` |
+| TN-H2 | Add `validation/content/prerender.py` leaf; stop rendering → full `markdown_validator` import | **Fixed** — `prerender.py` + `markdown_strip.py` |
+| TN-H3 | Execute P1 splits: `backends.py`, `detectors.py`, `_dashboard_charts.py` (one wave each) | **Fixed** — semantic package/module splits; line-count gate clean |
+| TN-H4 | Coverage gate single owner: remove `suite_runner` suppression + `enforce_project_suite_guards` compensation | **Fixed** — fail-loud; zero-collected guard only |
+
+### Medium
+
+| ID | Item | Status |
+| --- | --- | --- |
+| TN-M1 | `validation/content/markdown_strip.py` — dedupe strip helpers | **Fixed** |
+| TN-M2 | Shared cross-ref core (`symbols.py`) for markdown + integrity | **Fixed** |
+| TN-M3 | `_latex_log_parse.py` + config-driven suggested citation | **Fixed** (title-page full extraction deferred) |
+| TN-M4 | `load_project_pyproject()` — single tomllib read in pytest orchestration | **Fixed** |
+
+### Deferred (waived with reason)
+
+| ID | Item | Reason |
+| --- | --- | --- |
+| TN-D1 | `template_autoresearch` 500+ LOC domain modules | Under 600 watch threshold; split when a module crosses 600 |
+| TN-D2 | Gate `TEST_DISCOVERY_LOG` for collect-only preamble | Ops convenience; low CI impact |
+| TN-D3 | Lazy `__init__.py` barrels on wide hubs | P1 row; no import-time regression until split waves land |
 
 ---
 
@@ -153,7 +195,7 @@ states effort, why it matters, and the smallest next step.
 | ID | Topic | Effort (rough) | Why | In scope (this item) | Out of scope | Next step |
 | --- | --- | --- | --- | --- | --- | --- |
 | **ARCH-CONFTEST-1** | Cross-project `tests/conftest.py` | Medium (½–2 days if pursued) | Multiple `conftest.py` trees in one pytest proc collide on `tests.conftest`. | Doc-only first: state the **one subprocess per project** contract in [`tests/AGENTS.md`](tests/AGENTS.md) and one allowed pattern (uniquely named `pytest_plugins` / shared import, no duplicate `tests.conftest`). Code later: optional thin helper if it does not change CI’s per-project pytest shape. | Switching CI to a single global pytest over all `projects/*/tests/` without `run_per_project_pytest`; silent `tests.conftest` collisions. | Read [`tests/AGENTS.md`](tests/AGENTS.md); add a short “Shared fixtures” subsection that names the collision failure mode and the allowed extension. |
-| **DEP-DEFUSEDXML-1** | Replace `defusedxml` with hardened stdlib | Medium (1–3 days) | Drop third-party XML dep once stdlib usage is provably safe on supported Pythons. | Refactor [`infrastructure/reporting/coverage_history.py`](infrastructure/reporting/coverage_history.py), [`infrastructure/search/literature/fulltext.py`](infrastructure/search/literature/fulltext.py), [`infrastructure/search/literature/backends.py`](infrastructure/search/literature/backends.py); add regression tests on real sample XML. | Drive-by changes to unrelated parsers; blanket `# nosec B314`. | `rg defusedxml` for call sites; read CPython 3.10–3.12 notes on `xml.etree` (DTD/expansion/external entities) for the parse modes this repo uses. |
+| **DEP-DEFUSEDXML-1** | Replace `defusedxml` with hardened stdlib | Medium (1–3 days) | Drop third-party XML dep once stdlib usage is provably safe on supported Pythons. | Refactor [`infrastructure/reporting/coverage_history.py`](infrastructure/reporting/coverage_history.py), [`infrastructure/search/literature/fulltext.py`](infrastructure/search/literature/fulltext.py), [`infrastructure/search/literature/arxiv_backend.py`](infrastructure/search/literature/arxiv_backend.py); add regression tests on real sample XML. | Drive-by changes to unrelated parsers; blanket `# nosec B314`. | `rg defusedxml` for call sites; read CPython 3.10–3.12 notes on `xml.etree` (DTD/expansion/external entities) for the parse modes this repo uses. |
 | **WIN-SETUPHOOK-1** | `setup_hook` Windows path | Small (mostly docs) | POSIX `setup_hook.sh` does not run on Windows; Python entry is required there. | Onboarding and CI stay aligned: [`docs/guides/new-project-setup.md`](docs/guides/new-project-setup.md) states Windows uses `setup_hook.py`; [`.github/workflows/ci.yml`](.github/workflows/ci.yml) `setup-hook-windows-smoke` still runs only when a matching `projects/**/scripts/setup_hook.py` exists. | Porting the shell hook to PowerShell; guaranteeing every Windows environment. | `rg setup_hook` after template changes; confirm the workflow `paths` / `if:` gates still match the doc. |
 
 **Canonical test runner reminder (ARCH-CONFTEST-1):** one pytest subprocess

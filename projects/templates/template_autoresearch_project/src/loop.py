@@ -51,7 +51,7 @@ __all__ = [
 def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> AutoResearchLoopResult:
     """Run the full deterministic AutoResearch loop for this exemplar."""
     project_root = project_root.resolve()
-    repo_root = (repo_root or project_root.parents[1]).resolve()
+    repo_root = (repo_root or project_root.parents[2]).resolve()
     project_name = project_root.name
     plan = build_autoresearch_plan(repo_root, project_name)
     settings = load_manuscript_loop_settings(project_root)

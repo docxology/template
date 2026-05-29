@@ -97,10 +97,14 @@ Tracked after the P0 composability pass (stage registry, unified markdown discov
 | `search/literature/backends.py` | 748 | One module per backend (`arxiv_backend.py`, `crossref_backend.py`, …) |
 | `doctor/detectors.py` | 739 | Package `doctor/detectors/` with one file per detector + registry |
 | `reporting/_dashboard_charts.py` | 735 | Split by chart family (health / pipeline / outputs) |
-| `rendering/_pdf_latex_helpers.py` | 729 | Split preamble vs bibliography vs log parsing |
-| `validation/content/markdown_validator.py` | 713 | Extract image/ref/math validators (discovery already in `content/discovery.py`) |
+| `rendering/_pdf_latex_helpers.py` | 729 | Split preamble vs title-page vs log parsing (see thermo-nuclear audit 2026-05-29) |
+| `validation/content/markdown_validator.py` | 713 | Extract image/ref/math validators + `markdown_strip.py` + pitfalls/citations leaves (discovery in `content/discovery.py`) |
 | `core/pipeline/multi_project.py` | — | Move `format_multi_project_detailed_report()` to `reporting/` |
 | `validation` ↔ `rendering` | — | Shared pre-render leaf (`validation/content/prerender.py`) so rendering does not import the full markdown validator |
+| `validation/integrity/link_extract.py` | 655 | P2: move skip/policy frozensets into `link_policies.py` or data file |
+| `validation/integrity/checks.py` | 651 | P2: split manifest (`integrity/manifest.py`) vs completeness (`integrity/completeness.py`) |
+| `rendering/_pdf_latex_helpers.py` (refined) | 765 | Split **title-page/front-matter** → `_pdf_title_page.py`, **log parse** → `_latex_log_parse.py` (bibliography lives elsewhere) |
+| `rendering/pipeline.py` | 610 | P2: `rendering/_manuscript_source.py` + `rendering/_combined_exports.py` |
 | `rendering/render_all_cli.py` | — | Remove `sys.path.insert`; use `--project` / discovery like other CLIs |
 | Package barrels | — | Lazy `__getattr__` on wide `__init__.py` hubs (`validation`, `reporting`, `publishing`, `doctor`) |
 

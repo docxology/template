@@ -32,6 +32,8 @@ uv run pytest projects/template_autoresearch_project/tests/ -q
 - Do not add network, LLM, generated-code execution, or autonomous approval
   dependencies.
 - Prefer exercising real project files over mocked objects.
-- Use `tmp_path` scaffolds with `repo_root=Path(__file__).resolve().parents[3]`
+- Use `tmp_path` scaffolds with `repo_root=Path(__file__).resolve().parents[4]`
   when the test needs infrastructure `pipeline.yaml` without copying the full
-  repository.
+  repository. (`parents[4]` because this exemplar lives at
+  `projects/templates/<name>/tests/`; the `projects/templates/` lifecycle layout
+  adds one level over the legacy `projects/<name>/` path.)

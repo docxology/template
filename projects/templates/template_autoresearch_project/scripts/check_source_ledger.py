@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-REPO_ROOT = PROJECT_ROOT.parents[1]
+REPO_ROOT = PROJECT_ROOT.parents[2]
 for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
     path_text = str(path)
     if path_text not in sys.path:

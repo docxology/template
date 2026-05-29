@@ -147,6 +147,69 @@ class TestExtractPreamble:
         result = extract_preamble(preamble_file)
         assert result.strip() == "\\usepackage{geometry}"
 
+    def test_recovers_raw_unfenced_latex(self, tmp_path):
+        """Regression: raw LaTeX with no ```latex fence is recovered, not dropped.
+
+        Previously an unfenced preamble.md (e.g. declaring \\geometry{margin=...})
+        returned "" silently, so manuscript-declared margins/fonts never reached the
+        PDF. The whitelist fallback now recovers LaTeX-command lines.
+        """
+        preamble_file = tmp_path / "preamble.md"
+        preamble_file.write_text(
+            "\\usepackage{amsmath,amssymb}\n"
+            "\\geometry{margin=0.25in}\n"
+            "\\changefontsize{9pt}{11pt}\n"
+        )
+        result = extract_preamble(preamble_file)
+        assert "\\geometry{margin=0.25in}" in result
+        assert "\\changefontsize{9pt}{11pt}" in result
+
+    def test_raw_fallback_drops_non_command_prose(self, tmp_path):
+        """Negative control: prose lines are NOT injected into the preamble.
+
+        Only whitelisted LaTeX-command lines survive the raw fallback, so stray body
+        text in an unfenced preamble.md cannot leak into the LaTeX preamble.
+        """
+        preamble_file = tmp_path / "preamble.md"
+        preamble_file.write_text(
+            "Some prose introduction.\n"
+            "\\usepackage{xcolor}\n"
+            "more prose that must not reach the preamble\n"
+            "\\setlength{\\parindent}{0pt}\n"
+        )
+        result = extract_preamble(preamble_file)
+        assert "\\usepackage{xcolor}" in result
+        assert "\\setlength{\\parindent}{0pt}" in result
+        assert "prose" not in result
+
+    def test_raw_fallback_drops_multiline_command_not_truncated(self, tmp_path):
+        """Well-formedness control: a multi-line command is dropped, never truncated.
+
+        Recovering a multi-line construct line-by-line would emit an unbalanced
+        ``\\newcommand{\\foo}{%`` fragment — malformed LaTeX worse than dropping it.
+        Only the balanced single-line directive survives.
+        """
+        preamble_file = tmp_path / "preamble.md"
+        preamble_file.write_text(
+            "\\newcommand{\\foo}{%\n"
+            "  multi-line body\n"
+            "}\n"
+            "\\usepackage{xcolor}\n"
+        )
+        result = extract_preamble(preamble_file)
+        assert "\\newcommand" not in result, "unbalanced multi-line opener must be dropped"
+        assert "\\usepackage{xcolor}" in result
+        # The recovered preamble is brace-balanced (no truncated fragment leaked).
+        assert result.count("{") == result.count("}")
+
+    def test_raw_fallback_drops_input_scope_expansion(self, tmp_path):
+        r"""\input is NOT recovered — it would pull an arbitrary file into the preamble."""
+        preamble_file = tmp_path / "preamble.md"
+        preamble_file.write_text("\\input{../../elsewhere.tex}\n\\geometry{margin=0.5in}\n")
+        result = extract_preamble(preamble_file)
+        assert "input" not in result, "\\input must be dropped (scope expansion)"
+        assert "\\geometry{margin=0.5in}" in result
+
     def test_unicode_math_gets_setmathfont_injected(self, tmp_path):
         """When unicode-math is loaded without \\setmathfont, one is auto-injected."""
         preamble_file = tmp_path / "preamble.md"

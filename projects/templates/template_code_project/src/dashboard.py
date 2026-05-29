@@ -1,13 +1,17 @@
 """Interactive dashboard facade for template_code_project.
 
 Payload computation lives in ``dashboard_payload``; Plotly panels in ``dashboard_panels``.
-CLI entry point: ``scripts/build_dashboard.py``.
+CLI entry point: ``scripts/build_dashboard.py`` → ``cli_main()``.
 """
 
 from __future__ import annotations
 
+import argparse
+import sys
 from pathlib import Path
 from types import SimpleNamespace
+
+import numpy as np
 
 from .dashboard_panels import REPO_ROOT, build_dashboard, to_dashboard_invariant
 from .dashboard_payload import compute_payload, load_yaml_defaults, to_diagonal_A
@@ -59,6 +63,68 @@ def build_dashboard_html(project_root: Path | None = None) -> Path:
     return Path(result["html"])
 
 
+def parse_dashboard_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI arguments for the dashboard builder."""
+    cfg = load_yaml_defaults(CFG_DEFAULT)
+    a_diag = np.diag(cfg.A_array()).tolist()
+    parser = argparse.ArgumentParser(
+        description="Build the interactive optimization dashboard.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("--step-sizes", type=float, nargs="+", default=list(cfg.step_sizes))
+    parser.add_argument("--A", type=float, nargs="+", default=[float(v) for v in a_diag])
+    parser.add_argument("--b", type=float, nargs="+", default=list(cfg.quadratic_b))
+    parser.add_argument("--x0", type=float, nargs="+", default=[cfg.initial_point])
+    parser.add_argument("--tol", type=float, default=float(cfg.tolerance))
+    parser.add_argument("--max-iter", type=int, default=int(cfg.max_iterations))
+    parser.add_argument("--alpha-sweep-min", type=float, default=0.005)
+    parser.add_argument("--alpha-sweep-max", type=float, default=1.95)
+    parser.add_argument("--alpha-sweep-num", type=int, default=40)
+    parser.add_argument("--landscape-x-min", type=float, default=-3.0)
+    parser.add_argument("--landscape-x-max", type=float, default=5.0)
+    parser.add_argument("--landscape-num", type=int, default=200)
+    parser.add_argument("--html-out", type=Path, default=WEB_DIR / "dashboard.html")
+    parser.add_argument("--json-out", type=Path, default=DATA_DIR / "dashboard_payload.json")
+    parser.add_argument("--invariants-out", type=Path, default=REP_DIR / "dashboard_invariants.txt")
+    parser.add_argument("--summary-out", type=Path, default=REP_DIR / "dashboard_summary.txt")
+    args = parser.parse_args(argv)
+    if not args.step_sizes:
+        parser.error("--step-sizes must list at least one positive α")
+    if any(a <= 0 for a in args.step_sizes):
+        parser.error("every --step-sizes value must be > 0")
+    if len(args.A) != len(args.b):
+        parser.error(f"--A length ({len(args.A)}) must equal --b length ({len(args.b)})")
+    if len(args.x0) != len(args.b):
+        parser.error(f"--x0 length ({len(args.x0)}) must equal --b length ({len(args.b)})")
+    if args.alpha_sweep_max <= args.alpha_sweep_min:
+        parser.error("--alpha-sweep-max must be > --alpha-sweep-min")
+    if args.alpha_sweep_num < 2:
+        parser.error("--alpha-sweep-num must be ≥ 2")
+    return args
+
+
+def cli_main(argv: list[str] | None = None) -> None:
+    """Build dashboard artifacts from CLI arguments."""
+    args = parse_dashboard_args(argv)
+    payload = compute_payload(args)
+    dashboard = build_dashboard(args, payload)
+    outputs = dashboard.write(
+        html_path=args.html_out,
+        json_path=args.json_out,
+        invariants_path=args.invariants_out,
+        txt_path=args.summary_out,
+    )
+    for key in ("html", "json", "invariants", "summary"):
+        if key in outputs:
+            print(outputs[key])
+
+    failed = [item for item in dashboard.evaluate_invariants() if not item["passed"]]
+    if failed:
+        names = ", ".join(item["name"] for item in failed)
+        print(f"FAILED INVARIANTS: {names}", file=sys.stderr)
+        sys.exit(1)
+
+
 __all__ = [
     "CFG_DEFAULT",
     "DATA_DIR",
@@ -73,4 +139,6 @@ __all__ = [
     "_to_dashboard_invariant",
     "_to_diagonal_A",
     "build_dashboard_html",
+    "cli_main",
+    "parse_dashboard_args",
 ]

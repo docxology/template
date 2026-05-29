@@ -47,8 +47,21 @@ def project_root() -> Path:
 
 @pytest.fixture(scope="session")
 def repo_root(project_root: Path) -> Path:
-    """Return the template repository root."""
-    return project_root.parents[1]
+    """Return the template repository root.
+
+    Walk upward from the project directory until the directory containing
+    ``infrastructure/`` is found. Deriving the root by marker rather than a
+    fixed ``parents[N]`` index keeps the fixture correct across lifecycle moves
+    of the project under ``projects/`` (notably the ``projects/templates/<name>``
+    layout introduced by the 5-folder lifecycle refactor, which a hard-coded
+    ``parents[1]`` resolved to ``projects/`` instead of the repo root).
+    """
+    for candidate in (project_root, *project_root.parents):
+        if (candidate / "infrastructure").is_dir():
+            return candidate
+    raise RuntimeError(
+        f"Could not locate repo root: no infrastructure/ directory above {project_root}"
+    )
 
 
 @pytest.fixture(scope="session")

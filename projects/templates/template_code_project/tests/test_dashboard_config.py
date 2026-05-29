@@ -7,8 +7,13 @@ from pathlib import Path
 
 import pytest
 
-from scripts.build_dashboard import _parse_args, main as dashboard_main
-from src.dashboard import _compute_payload, _load_yaml_defaults, CFG_DEFAULT
+from src.dashboard import (
+    _compute_payload,
+    _load_yaml_defaults,
+    CFG_DEFAULT,
+    cli_main as dashboard_main,
+    parse_dashboard_args as _parse_args,
+)
 from src.experiment_config import ExperimentConfig, load_experiment_config
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -38,7 +43,7 @@ class TestDashboardParseArgs:
 
     def test_rejects_empty_default_step_sizes(self, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setattr(
-            "scripts.build_dashboard._load_yaml_defaults",
+            "src.dashboard.load_yaml_defaults",
             lambda _path: ExperimentConfig(step_sizes=()),
         )
         with pytest.raises(SystemExit):
@@ -156,7 +161,7 @@ class TestDashboardPayload:
             def evaluate_invariants(self) -> list[dict[str, object]]:
                 return [{"name": "bad_invariant", "passed": False}]
 
-        monkeypatch.setattr("scripts.build_dashboard._build_dashboard", lambda _args, _payload: _FailedDashboard())
+        monkeypatch.setattr("src.dashboard.build_dashboard", lambda _args, _payload: _FailedDashboard())
         html = tmp_path / "dash.html"
         js = tmp_path / "dash.json"
         with pytest.raises(SystemExit) as exc:

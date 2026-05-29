@@ -20,6 +20,12 @@ from infrastructure.validation.content.diagnostic_codes import (
     BibtexCode,
     MarkdownCode,
 )
+from infrastructure.validation.content.markdown_strip import (
+    strip_code_and_math,
+    strip_fences,
+    strip_markdown_code_regions,
+)
+from infrastructure.validation.content.symbols import collect_symbols
 
 logger = get_logger(__name__)
 
@@ -34,15 +40,8 @@ BARE_URL_PATTERN = re.compile(r"(?<!\]\()https?://\S+")
 
 
 def _text_without_fenced_code(text: str) -> str:
-    """Remove triple-backtick and tilde-fenced code blocks.
-
-    Used for reference and internal-link checks so LaTeX inside a fenced
-    ``latex`` block (e.g. ``p(#1)`` in ``\\newcommand``) is not misparsed
-    as Markdown ``(#...)`` internal links.
-    """
-    text = re.sub(r"```[\s\S]*?```", "", text)
-    text = re.sub(r"~~~[\s\S]*?~~~", "", text)
-    return text
+    """Remove triple-backtick and tilde-fenced code blocks."""
+    return strip_fences(text)
 
 
 # Pandoc converts bare ``|word|`` in prose contexts and escaped ``\|`` inside
@@ -64,38 +63,6 @@ BIBTEX_KEY_PATTERN = re.compile(r"^@\w+\{\s*([^,\s}]+)\s*[,}]", re.MULTILINE)
 # final PDF (project documentation / preamble metadata). Skipped by the
 # render-time pitfall and citation checks to avoid false positives.
 NON_RENDERED_MANUSCRIPT_FILES: frozenset[str] = frozenset({"AGENTS.md", "README.md", "preamble.md"})
-
-
-def collect_symbols(md_paths: list[str]) -> tuple[set[str], set[str]]:
-    """Collect all equation labels and section anchors from markdown files.
-
-    Args:
-        md_paths: List of markdown file paths to process
-
-    Returns:
-        Tuple of (equation_labels, section_anchors) as sets
-    """
-    labels: set[str] = set()
-    anchors: set[str] = set()
-    for path in md_paths:
-        with open(path, "r", encoding="utf-8") as fh:
-            text = fh.read()
-        labels.update(EQ_LABEL_PATTERN.findall(text))
-        anchors.update(ANCHOR_PATTERN.findall(text))
-        # Also accept GitHub/MkDocs-slugified plain headings as valid
-        # internal-link targets. A table-of-contents self-link such as
-        # ``[Level 8](#level-8-complex-mathematical-workflows)`` is correct in
-        # the rendered doc even without an explicit ``{#anchor}`` attribute;
-        # without this the validator emits false "missing anchor" findings for
-        # every guide's own TOC.
-        body = _text_without_fenced_code(text)
-        for raw_heading in re.findall(r"(?m)^#{1,6}[ \t]+(.+?)[ \t]*$", body):
-            heading = re.sub(r"\s*\{#[^}]+\}\s*$", "", raw_heading).strip()
-            slug = re.sub(r"[^\w\s-]", "", heading.lower())
-            slug = re.sub(r"\s+", "-", slug).strip("-")
-            if slug:
-                anchors.add(slug)
-    return labels, anchors
 
 
 def validate_images(
@@ -257,19 +224,6 @@ def validate_refs(
     return problems
 
 
-def _strip_markdown_code_regions(text: str) -> str:
-    """Remove Markdown code regions before style-scanning prose/math."""
-    text = re.sub(r"```[\s\S]*?```", "", text)
-    text = re.sub(r"~~~[\s\S]*?~~~", "", text)
-    text = re.sub(r"`[^`\n]+`", "", text)
-    text = re.sub(
-        r"(?:\A|\n)(?:[ ]{4,}|\t)[^\n]*(?:\n(?:[ ]{4,}|\t)[^\n]*)*",
-        "\n",
-        text,
-    )
-    return text
-
-
 def _has_invalid_dollar_display_math(text: str) -> bool:
     """Return true for inline, nested, or unbalanced ``$$`` delimiters.
 
@@ -279,7 +233,7 @@ def _has_invalid_dollar_display_math(text: str) -> bool:
     its own line(s), either as a same-line block
     ``$$x = y$$`` or as paired delimiter lines.
     """
-    text = _strip_markdown_code_regions(text)
+    text = strip_markdown_code_regions(text)
     open_block = False
     for line in text.splitlines():
         stripped = line.strip()
@@ -392,39 +346,6 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
     return problems
 
 
-def _strip_code_and_math(text: str) -> str:
-    """Remove fenced code, inline code, display math, and inline math regions.
-
-    Strips, in order:
-      1. Triple-backtick fenced blocks (```...```).
-      2. Tilde-fenced blocks (~~~...~~~).
-      3. Inline code (`...`).
-      4. Indented code blocks (4+ leading spaces, contiguous lines).
-      5. LaTeX environments commonly used for display math.
-      6. Display math \\[ \\] and \\( \\).
-      7. Inline ``$...$`` math.
-
-    Used by Pandoc-pitfall and citation checks so that patterns inside
-    code blocks or math contexts are not flagged.
-    """
-    text = re.sub(r"```[\s\S]*?```", "", text)
-    text = re.sub(r"~~~[\s\S]*?~~~", "", text)
-    text = re.sub(r"`[^`\n]+`", "", text)
-    # Indented code blocks: contiguous run of lines each starting with 4+ spaces
-    # or a tab, preceded by a blank line (or start of file). Markdown's loose
-    # rule is "indent of 4+ spaces or a tab"; we collapse such runs to nothing.
-    text = re.sub(
-        r"(?:\A|\n)(?:[ ]{4,}|\t)[^\n]*(?:\n(?:[ ]{4,}|\t)[^\n]*)*",
-        "\n",
-        text,
-    )
-    text = re.sub(r"\\begin\{(equation\*?|align\*?|gather\*?|multline\*?)\}[\s\S]*?\\end\{\1\}", "", text)
-    text = re.sub(r"\\\([\s\S]*?\\\)", "", text)
-    text = re.sub(r"\\\[[\s\S]*?\\\]", "", text)
-    text = re.sub(r"(?<!\$)\$(?!\$)([^$\n]+?)(?<!\$)\$(?!\$)", "", text)
-    return text
-
-
 def validate_pandoc_pitfalls(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]:
     """Flag markdown patterns Pandoc converts to LaTeX ``\\mid`` in text mode.
 
@@ -462,7 +383,7 @@ def validate_pandoc_pitfalls(md_paths: list[str], repo_root: str | Path) -> list
             rel = path_obj
         rel_str = str(rel)
 
-        prose = _strip_code_and_math(text)
+        prose = strip_code_and_math(text)
         for m in PANDOC_BARE_PIPE_PATTERN.finditer(prose):
             problems.append(
                 DiagnosticEvent(
@@ -583,7 +504,7 @@ def validate_citations(
             rel = path_obj
         rel_str = str(rel)
 
-        prose = _strip_code_and_math(text)
+        prose = strip_code_and_math(text)
         seen_in_file: set[str] = set()
         for m in CITE_KEY_PATTERN.finditer(prose):
             key = m.group(1)

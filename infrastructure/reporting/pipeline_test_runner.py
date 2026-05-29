@@ -20,6 +20,7 @@ from infrastructure.core.pytest_orchestration import (
     InfrastructureTestScope,
     TestSuiteResults,
     apply_coverage_datafile,
+    build_project_pytest_command,
     build_pythonpath,
     enforce_project_suite_guards,
     log_discovered_tests,
@@ -28,7 +29,6 @@ from infrastructure.core.pytest_orchestration import (
     project_declared_coverage_floor,
     resolve_project_cov_config,
     resolve_infrastructure_test_paths,
-    resolve_project_test_python,
 )
 from infrastructure.core.runtime.environment import resolve_test_python
 from infrastructure.project.discovery import resolve_project_root
@@ -173,13 +173,13 @@ def run_project_tests(
     logger.info("Test path: %s", project_root / "tests")
     logger.info("Coverage target: %s (%s%% minimum)", project_root / "src", project_threshold)
 
-    cmd = resolve_project_test_python(project_root, resolve_test_python(project_root / ".venv"))
-    cmd += [
-        "-m",
-        "pytest",
-        str(project_root / "tests"),
-        f"--cov={project_root / 'src'}",
-    ]
+    cmd = build_project_pytest_command(
+        project_root,
+        [
+            str(project_root / "tests"),
+            f"--cov={project_root / 'src'}",
+        ],
+    )
     project_cov_config = resolve_project_cov_config(project_root)
     if project_cov_config is not None:
         cmd.append(f"--cov-config={project_cov_config}")

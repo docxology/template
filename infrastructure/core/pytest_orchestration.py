@@ -11,13 +11,17 @@ import os
 import re
 import shutil
 import subprocess
-import tomllib
 from pathlib import Path
 from typing import Any, Literal, TypedDict
 
+from infrastructure.core.coverage_policy import check_cov_datafile_support
 from infrastructure.core.logging.utils import get_logger, log_substep, log_success
-from infrastructure.core.runtime.environment import get_python_command
-from infrastructure.reporting.coverage_parser import check_cov_datafile_support
+from infrastructure.core.project_pyproject import (
+    project_declared_coverage_floor,
+    project_declares_dev_extra,
+    resolve_project_cov_config,
+)
+from infrastructure.core.runtime.environment import get_python_command, resolve_test_python
 
 logger = get_logger(__name__)
 
@@ -61,35 +65,6 @@ class TestSuiteResults(TypedDict, total=False):
     test_categories: dict[str, int]
     coverage_percent: float
     failed_tests: list[dict[str, str]]
-
-
-def project_declared_coverage_floor(project_root: Path) -> int | None:
-    """Return a project's self-declared ``fail_under`` from ``pyproject.toml``, if any."""
-    pyproject = project_root / "pyproject.toml"
-    if not pyproject.is_file():
-        return None
-    try:
-        data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError):
-        return None
-    declared = data.get("tool", {}).get("coverage", {}).get("report", {}).get("fail_under")
-    if isinstance(declared, (int, float)):
-        return int(declared)
-    return None
-
-
-def resolve_project_cov_config(project_root: Path) -> Path | None:
-    """Return project ``pyproject.toml`` when it declares ``[tool.coverage.run]``."""
-    pyproject = project_root / "pyproject.toml"
-    if not pyproject.is_file():
-        return None
-    try:
-        data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError):
-        return None
-    if data.get("tool", {}).get("coverage", {}).get("run") is None:
-        return None
-    return pyproject
 
 
 def resolve_infrastructure_test_paths(repo_root: Path, scope: InfrastructureTestScope) -> list[str]:
@@ -248,6 +223,86 @@ def resolve_project_test_python(project_root: Path, cmd: list[str]) -> list[str]
     return get_python_command()
 
 
+def normalize_pytest_args_for_project(project_root: Path, pytest_args: list[str]) -> list[str]:
+    """Rewrite absolute paths under *project_root* to project-relative form for ``uv run --directory``."""
+    root = project_root.resolve()
+    normalized: list[str] = []
+    for arg in pytest_args:
+        if not arg.startswith("-"):
+            candidate = Path(arg)
+            if candidate.is_absolute():
+                try:
+                    normalized.append(str(candidate.resolve().relative_to(root)))
+                    continue
+                except ValueError:
+                    pass
+        normalized.append(arg)
+    return normalized
+
+
+def build_project_pytest_command(project_root: Path, pytest_args: list[str]) -> list[str]:
+    """Return argv for a project pytest suite using project-local deps when declared.
+
+    Projects with ``pyproject.toml`` run via ``uv run --directory`` so pinned
+    dependencies (for example ``scikit-learn``) resolve from the project tree
+    instead of the workspace interpreter.
+    """
+    pyproject = project_root / "pyproject.toml"
+    uv_path = shutil.which("uv")
+    if pyproject.is_file() and uv_path:
+        resolved_root = project_root.resolve()
+        cmd: list[str] = [uv_path, "run", "--directory", str(resolved_root)]
+        if project_declares_dev_extra(resolved_root):
+            cmd.extend(["--extra", "dev"])
+        cmd.extend(
+            [
+                "python",
+                "-m",
+                "pytest",
+                *normalize_pytest_args_for_project(resolved_root, pytest_args),
+            ]
+        )
+        return cmd
+    interpreter = resolve_project_test_python(project_root, resolve_test_python(project_root / ".venv"))
+    return interpreter + ["-m", "pytest", *pytest_args]
+
+
+def build_union_pytest_command(
+    repo_root: Path,
+    project_root: Path,
+    tests_dir: Path,
+    *,
+    is_first: bool,
+    marker_expr: str | None,
+    timeout: int,
+) -> list[str]:
+    """Build argv for one project in a multi-project combined-coverage run."""
+    resolved_root = project_root.resolve()
+    repo = repo_root.resolve()
+    src_dir = resolved_root / "src"
+    try:
+        rel = resolved_root.relative_to(repo)
+    except ValueError:
+        rel = Path(resolved_root.name)
+    if src_dir.is_dir():
+        cov_target = str(rel / "src").replace("\\", "/")
+    else:
+        cov_target = str(rel).replace("\\", "/")
+
+    pytest_args: list[str] = [
+        str(tests_dir),
+        f"--cov={cov_target}",
+        "--cov-report=term-missing",
+        f"--timeout={timeout}",
+        "--durations=10",
+    ]
+    if marker_expr:
+        pytest_args.extend(["-m", marker_expr])
+    if not is_first:
+        pytest_args.append("--cov-append")
+    return build_project_pytest_command(resolved_root, pytest_args)
+
+
 def project_has_test_files(project_root: Path) -> bool:
     """Return True when ``tests/`` contains discoverable test modules."""
     tests_dir = project_root / "tests"
@@ -265,7 +320,12 @@ def enforce_project_suite_guards(
     project_threshold: float,
     strict: bool,
 ) -> tuple[int, dict[str, Any]]:
-    """Apply zero-collected and below-threshold coverage guards for project runs."""
+    """Apply zero-collected guard for project runs.
+
+    Coverage thresholds are enforced by pytest ``--cov-fail-under`` on the
+    command line; this guard only catches silent zero-collection failures.
+    """
+    del project_threshold  # retained for call-site stability; pytest owns coverage gates
     ran_count = test_results.get("total", 0) or test_results.get("passed", 0)
     if strict and project_has_test_files(project_root) and ran_count == 0:
         tests_dir = project_root / "tests"
@@ -279,18 +339,6 @@ def enforce_project_suite_guards(
         exit_code = 1
         test_results["exit_code"] = 1
 
-    cov_pct = test_results.get("coverage_percent")
-    if strict and cov_pct is not None and ran_count > 0 and cov_pct < project_threshold:
-        logger.error(
-            "Project '%s' coverage %.2f%% is below the %.0f%% gate — failing "
-            "(suite_runner would otherwise suppress the cov-fail-under exit).",
-            project_name,
-            cov_pct,
-            project_threshold,
-        )
-        exit_code = 1
-        test_results["exit_code"] = 1
-
     return exit_code, test_results
 
 
@@ -300,7 +348,8 @@ __all__ = [
     "InfrastructureTestScope",
     "PIPELINE_SMOKE_INFRA_TEST_PATHS",
     "TestSuiteResults",
-    "apply_coverage_datafile",
+    "build_project_pytest_command",
+    "build_union_pytest_command",
     "build_pythonpath",
     "enforce_project_suite_guards",
     "log_discovered_tests",

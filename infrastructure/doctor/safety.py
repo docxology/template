@@ -37,7 +37,6 @@ import stat
 import subprocess  # noqa: S404 — only used to invoke uv with hardcoded argv
 from collections.abc import Callable, Iterable
 from pathlib import Path
-from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.doctor.models import FixPlan, MutateRecord
@@ -547,8 +546,3 @@ def _register_builtin_handlers() -> None:
 
 
 _register_builtin_handlers()
-
-
-# Loader API used by ``mutate()`` callers that don't know what they got.
-def _Any() -> Any:  # pragma: no cover — typing helper
-    return None

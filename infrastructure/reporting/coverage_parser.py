@@ -11,12 +11,10 @@ from __future__ import annotations
 import json
 import os
 import re
-import subprocess
 import time
 from pathlib import Path
 from typing import TypedDict
 
-from infrastructure.core.runtime.environment import get_python_command
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.config.queries import get_testing_config
 
@@ -42,16 +40,6 @@ logger = get_logger(__name__)
 
 # Minimum file size (bytes) for a valid coverage JSON file; an empty JSON is ~50 bytes
 MIN_VALID_COVERAGE_FILE_BYTES = 100
-
-
-def check_cov_datafile_support() -> bool:
-    """Return True if pytest-cov supports the --cov-datafile flag."""
-    try:
-        cmd = get_python_command() + ["-m", "pytest", "--help"]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
-        return "--cov-datafile" in result.stdout
-    except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
-        return False
 
 
 def _parse_failures_section(combined_output: str) -> list[FailedTestInfo]:
@@ -308,3 +296,12 @@ def extract_coverage_percentage(stdout_text: str, coverage_json_paths: list[Path
         return True, pct
 
     return False, None
+
+
+from infrastructure.core.coverage_policy import check_cov_datafile_support  # noqa: E402 — compat re-export
+
+__all__ = [
+    "FailedTestInfo",
+    "TimeoutErrorInfo",
+    "check_cov_datafile_support",
+]

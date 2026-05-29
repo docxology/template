@@ -16,7 +16,7 @@ from src.config import (
 
 
 def test_load_loop_config_reads_questions_and_artifacts(project_root: Path) -> None:
-    repo_root = project_root.parents[1]
+    repo_root = project_root.parents[2]
     plan = build_autoresearch_plan(repo_root, project_root.name)
     config = load_loop_config(project_root, plan)
 
@@ -34,7 +34,7 @@ def test_load_loop_config_reads_questions_and_artifacts(project_root: Path) -> N
 
 
 def test_build_loop_config_uses_plan_required_artifacts(project_root: Path) -> None:
-    repo_root = project_root.parents[1]
+    repo_root = project_root.parents[2]
     plan = build_autoresearch_plan(repo_root, project_root.name)
     settings = load_manuscript_loop_settings(project_root)
     config = build_loop_config(plan, settings)

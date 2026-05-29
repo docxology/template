@@ -8,23 +8,16 @@ import sys
 from pathlib import Path
 
 
-def _locate_repo_root(project_dir: Path) -> Path:
-    resolved = project_dir.resolve()
-    for candidate in (resolved, *resolved.parents):
-        if (candidate / "infrastructure").is_dir() and (candidate / "pyproject.toml").is_file():
-            return candidate
-    sibling = resolved.parents[2] / "template"
-    if (sibling / "infrastructure").is_dir():
-        return sibling.resolve()
-    raise FileNotFoundError(f"Could not locate template repo root from {project_dir}")
-
-
 PROJECT_DIR = Path(os.environ.get("PROJECT_DIR", Path(__file__).resolve().parent.parent))
-REPO_ROOT = _locate_repo_root(PROJECT_DIR)
 SRC_DIR = PROJECT_DIR / "src"
-for _p in (str(REPO_ROOT), str(SRC_DIR)):
-    if _p not in sys.path:
-        sys.path.insert(0, _p)
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+from template_template.paths import locate_repo_root  # noqa: E402
+
+REPO_ROOT = locate_repo_root(PROJECT_DIR)
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from template_template import (  # noqa: E402  (path setup must precede import)
     build_manuscript_metrics_dict,

@@ -49,8 +49,8 @@ def test_run_sh_missing_executable_bit(tmp_path: Path):
 
 def test_pycache_clutter_finds_dirs(tmp_path: Path):
     _make_min_repo(tmp_path)
-    (tmp_path / "src" / "__pycache__").mkdir(parents=True)
-    (tmp_path / "src" / "__pycache__" / "x.pyc").write_text("compiled")
+    (tmp_path / "infrastructure" / "core" / "__pycache__").mkdir(parents=True)
+    (tmp_path / "infrastructure" / "core" / "__pycache__" / "x.pyc").write_text("compiled")
     findings = detect_pycache_clutter(tmp_path)
     assert findings[0].healthy is False
     assert findings[0].evidence["count"] == 1
@@ -97,10 +97,11 @@ def test_doctor_state_not_writable_reports_warn(tmp_path: Path) -> None:
         doctor_dir.chmod(0o755)
 
 
-def test_doctor_state_writable_creates_directory(tmp_path: Path):
+def test_doctor_state_writable_does_not_create_directory(tmp_path: Path):
     findings = detect_doctor_state_writable(tmp_path)
     assert findings[0].healthy is True
-    assert (tmp_path / ".doctor").is_dir()
+    assert not (tmp_path / ".doctor").exists()
+    assert not (tmp_path / ".doctor" / ".write_probe").exists()
 
 
 # ---------------------------------------------------------------------------

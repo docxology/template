@@ -237,8 +237,8 @@ def supply_chain_inventory_payload(
 ) -> dict[str, object]:
     """Return an SBOM-style local inventory of inputs and generated artifacts."""
     input_paths = (
-        ("root_pyproject", project_root.parents[1] / "pyproject.toml", False),
-        ("root_uv_lock", project_root.parents[1] / "uv.lock", False),
+        ("root_pyproject", project_root.parents[2] / "pyproject.toml", False),
+        ("root_uv_lock", project_root.parents[2] / "uv.lock", False),
         ("project_pyproject", project_root / "pyproject.toml", False),
         ("project_uv_lock", project_root / "uv.lock", False),
         ("autoresearch_config", project_root / "autoresearch.yaml", True),

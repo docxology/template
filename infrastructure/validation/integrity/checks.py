@@ -76,72 +76,9 @@ def verify_file_integrity(file_paths: list[Path], expected_hashes: dict[str, str
 
 def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
     """Verify cross-reference integrity in markdown files."""
-    integrity: dict[str, bool] = {
-        "equations": True,
-        "figures": True,
-        "tables": True,
-        "sections": True,
-        "citations": True,
-        "scan_healthy": True,
-    }
+    from infrastructure.validation.content.symbols import resolve_cross_reference_integrity
 
-    # Collect all labels and references
-    labels = set()
-    references = set()
-    scan_error_count = 0
-
-    for md_file in markdown_files:
-        try:
-            with open(md_file, "r", encoding="utf-8") as f:
-                content = f.read()
-
-            # Find all labels (both LaTeX and markdown style)
-            latex_labels = re.findall(r"\\label\{([^}]+)\}", content)
-            markdown_labels = re.findall(r"\{#([^}]+)\}", content)
-            labels.update(latex_labels)
-            labels.update(markdown_labels)
-
-            # Find all references (both LaTeX and markdown style)
-            ref_matches = re.findall(r"\\ref\{([^}]+)\}", content)
-            eqref_matches = re.findall(r"\\eqref\{([^}]+)\}", content)
-            references.update(ref_matches)
-            references.update(eqref_matches)
-
-        except OSError as e:
-            logger.error(f"Error reading {md_file}: {e}")
-            scan_error_count += 1
-
-    if scan_error_count > 0:
-        integrity["scan_healthy"] = False
-
-    # Check if all references have corresponding labels, broken down by type prefix
-    missing_labels = references - labels
-
-    if missing_labels:
-        logger.warning(f"Missing labels for references: {missing_labels}")
-        _prefix_to_key = {
-            "eq:": "equations",
-            "fig:": "figures",
-            "tab:": "tables",
-            "sec:": "sections",
-            "cite:": "citations",
-            "ref:": "citations",
-        }
-        for ref in missing_labels:
-            matched = False
-            for prefix, key in _prefix_to_key.items():
-                if ref.startswith(prefix):
-                    integrity[key] = False
-                    matched = True
-                    break
-            if not matched:
-                # Unknown prefix — mark all reference types as potentially broken
-                for key in ("equations", "figures", "tables", "sections", "citations"):
-                    integrity[key] = False
-    else:
-        logger.debug(f"Found {len(labels)} labels and {len(references)} references")
-
-    return integrity
+    return resolve_cross_reference_integrity(markdown_files)
 
 
 def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:

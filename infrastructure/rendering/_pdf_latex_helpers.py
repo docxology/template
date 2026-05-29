@@ -177,55 +177,58 @@ def extract_preamble(preamble_file: Path) -> str:
         result = ensure_setmathfont(result)
         logger.debug(f"Extracted {len(matches)} LaTeX preamble block(s) ({len(result)} chars)")
         return result
-    else:
-        logger.debug(f"No LaTeX code blocks found in {preamble_file.name}")
-        return ""
+
+    # Fallback: a preamble.md authored as RAW LaTeX (no ```latex fence) used to be
+    # dropped silently here, so manuscript-declared margins/fonts never reached the
+    # PDF. Recover only SELF-CONTAINED, single-line, brace/bracket-balanced directives
+    # from a curated whitelist and emit a warning so the failure is observable.
+    # Deliberately conservative (a fence is the supported contract): prose, ``\input``
+    # (arbitrary-file scope expansion), and any multi-line construct are dropped rather
+    # than recovered — recovering a multi-line command line-by-line would truncate it
+    # into malformed LaTeX, which is worse than dropping it.
+    raw_latex_cmd_re = re.compile(
+        r"^\s*(?:%|\\(?:usepackage|RequirePackage|geometry|newcommand|renewcommand"
+        r"|providecommand|DeclareMathOperator|DeclareUnicodeCharacter|setlength"
+        r"|definecolor|changefontsize|hypersetup|PassOptionsToPackage"
+        r"|newenvironment|setmainfont|setmonofont|setsansfont|usetikzlibrary)\b)"
+    )
+
+    def _self_contained(line: str) -> bool:
+        """True if the line is safe to recover standalone.
+
+        A comment line is inert. A command line is recovered only when its braces and
+        brackets balance on the line itself, so a multi-line construct (whose body
+        lives on continuation lines this line-oriented filter would drop) is never
+        emitted as a truncated, unbalanced fragment.
+        """
+        if line.lstrip().startswith("%"):
+            return True
+        return line.count("{") == line.count("}") and line.count("[") == line.count("]")
+
+    raw_lines = [
+        ln.rstrip() for ln in content.splitlines() if raw_latex_cmd_re.match(ln) and _self_contained(ln.rstrip())
+    ]
+    if raw_lines:
+        result = ensure_setmathfont("\n".join(raw_lines))
+        logger.warning(
+            "%s contains raw LaTeX with no ```latex fence; recovered %d self-contained "
+            "preamble line(s) by whitelist (multi-line constructs and \\input are "
+            "dropped). Wrap the preamble in a ```latex ... ``` fence to silence this "
+            "warning and capture every directive.",
+            preamble_file.name,
+            len(raw_lines),
+        )
+        return result
+
+    logger.debug(f"No LaTeX code blocks found in {preamble_file.name}")
+    return ""
 
 
 def check_latex_log_for_graphics_errors(log_file: Path) -> dict[str, list[str]]:
-    """Parse LaTeX log file for graphics-related errors and warnings.
+    """Parse LaTeX log file for graphics-related errors and warnings."""
+    from infrastructure.rendering._latex_log_parse import check_latex_log_for_graphics_errors as _check
 
-    Args:
-        log_file: Path to LaTeX .log file
-
-    Returns:
-        Dictionary with graphics issues found
-    """
-    result: dict[str, list[str]] = {
-        "graphics_errors": [],
-        "graphics_warnings": [],
-        "missing_files": [],
-    }
-
-    if not log_file.exists():
-        return result
-
-    try:
-        log_content = log_file.read_text(errors="ignore")
-
-        # Look for common graphics-related error patterns
-
-        # Pattern for file not found errors
-        file_not_found = re.findall(r"File `([^`]+)` not found", log_content)
-        result["missing_files"].extend(file_not_found)
-
-        # Pattern for graphics package warnings
-        graphics_warnings = re.findall(
-            r"((?:Package graphics|Graphics Error).*?)(?=\n(?:!|\s*$))",
-            log_content,
-            re.IGNORECASE,
-        )
-        result["graphics_warnings"].extend(graphics_warnings)
-
-        # Check for undefined control sequences related to graphics
-        if r"\includegraphics" in log_content and "Undefined" in log_content:
-            result["graphics_errors"].append("includegraphics command undefined - graphicx package may not be loaded")
-
-        return result
-
-    except (OSError, UnicodeDecodeError) as e:
-        logger.warning(f"Error parsing LaTeX log: {e}")
-        return result
+    return _check(log_file)
 
 
 def _resolve_config_yaml(manuscript_dir: Path) -> Path | None:
@@ -370,6 +373,58 @@ def _metadata_from_config(config: dict[str, Any]) -> dict[str, Any]:
         "license": str(book.get("license", "")),
         "code_license": str(book.get("code_license", "")),
     }
+
+
+def _suggested_citation_line(
+    config: dict[str, Any],
+    *,
+    title: str,
+    subtitle: str,
+    edition: str,
+    year: str,
+    tail: str,
+) -> str:
+    """Build suggested-citation LaTeX from config or author metadata."""
+    publication = config.get("publication", {}) or {}
+    if isinstance(publication, dict):
+        override = str(publication.get("suggested_citation", "")).strip()
+        if override:
+            return r"\noindent Suggested citation: " + _latex_text(override) + tail
+
+    authors = config.get("authors", [])
+    author_names: list[str] = []
+    if isinstance(authors, list):
+        for author in authors:
+            if isinstance(author, dict) and author.get("name"):
+                author_names.append(str(author["name"]))
+    if not author_names:
+        author_names = ["Project Author"]
+    if len(author_names) == 1:
+        author_text = _latex_text(author_names[0])
+    elif len(author_names) == 2:
+        author_text = _latex_text(f"{author_names[0]} & {author_names[1]}")
+    else:
+        author_text = _latex_text(", ".join(author_names[:-1]) + f", & {author_names[-1]}")
+
+    publisher = "Active Inference Institute"
+    if isinstance(publication, dict) and publication.get("publisher"):
+        publisher = str(publication["publisher"])
+
+    return (
+        r"\noindent Suggested citation: "
+        + author_text
+        + r" ("
+        + (year or r"\the\year")
+        + r"). \textit{"
+        + title
+        + (": " + subtitle if subtitle else "")
+        + r"} (Edition "
+        + (edition or "1.0")
+        + r"). "
+        + _latex_text(publisher)
+        + "."
+        + tail
+    )
 
 
 def _author_blocks(config: dict[str, Any]) -> list[dict[str, str]]:
@@ -529,18 +584,13 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
     suggested_citation_tail = ""
     if suggested_citation_parts:
         suggested_citation_tail = " " + ". ".join(suggested_citation_parts) + "."
+    suggested_citation_line = _suggested_citation_line(
+        config, title=title, subtitle=subtitle, edition=edition, year=year, tail=suggested_citation_tail
+    )
     publishing_lines.extend(
         [
             r"\vspace{1.0em}",
-            r"\noindent Suggested citation: Friedman, D. A. ("
-            + (year or r"\the\year")
-            + r"). \textit{"
-            + title
-            + (": " + subtitle if subtitle else "")
-            + r"} (Edition "
-            + (edition or "1.0")
-            + r"). Active Inference Institute."
-            + suggested_citation_tail,
+            suggested_citation_line,
             "",
             r"\vspace{1.0em}",
             r"\noindent This open textbook is generated from version-controlled Markdown, tested Python modules, "
@@ -735,31 +785,7 @@ def generate_title_page_body(manuscript_dir: Path) -> str:
 
 
 def parse_missing_latex_package_from_log(log_file: Path) -> str | None:
-    """Parse LaTeX log for missing package errors.
+    """Parse LaTeX log for missing package errors."""
+    from infrastructure.rendering._latex_log_parse import parse_missing_latex_package_from_log as _parse
 
-    Args:
-        log_file: Path to LaTeX .log file.
-
-    Returns:
-        Missing package name, or None if not found.
-    """
-    if not log_file.exists():
-        return None
-
-    try:
-        log_content = log_file.read_text(encoding="utf-8", errors="ignore")
-
-        match = re.search(r"File `([^']+\.sty)' not found", log_content)
-        if match:
-            sty_file = match.group(1)
-            return sty_file.replace(".sty", "")
-
-        match = re.search(r"! LaTeX Error: File `?([^'`\s]+\.sty)'? not found", log_content)
-        if match:
-            sty_file = match.group(1)
-            return sty_file.replace(".sty", "")
-
-    except OSError as e:
-        logger.debug("Error parsing log file for package errors: %s", e)
-
-    return None
+    return _parse(log_file)

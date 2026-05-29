@@ -50,12 +50,13 @@ from infrastructure.core.logging.utils import (
     log_success,
 )
 from infrastructure.core.pytest_orchestration import (
+    build_union_pytest_command,
     make_coverage_subprocess_env,
     resolve_coverage_file,
 )
-from infrastructure.core.runtime._python_env import get_python_command
 from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
-from infrastructure.project.discovery import discover_projects
+from infrastructure.core.runtime._python_env import get_python_command
+from infrastructure.project.discovery import discover_projects, resolve_project_root
 from infrastructure.project.metadata import get_project_metadata
 
 logger = get_logger(__name__)
@@ -98,15 +99,15 @@ def _discover_project_test_dirs(
     repo_root: Path,
     projects: Sequence[str] | None,
     skip_projects: Sequence[str],
-) -> list[tuple[str, Path]]:
-    """Return ``(project_name, tests_dir)`` pairs for every runnable project.
+) -> list[tuple[str, Path, Path]]:
+    """Return ``(project_name, project_root, tests_dir)`` for every runnable project.
 
     When ``projects`` is ``None`` the list is built from
-    :func:`discover_projects`; otherwise the explicit list is used and any
-    name lacking a ``projects/<name>/tests/`` directory is silently dropped
-    after a warning is logged.
+    :func:`discover_projects`; otherwise the explicit list is resolved via
+    :func:`resolve_project_root` so qualified paths such as
+    ``templates/template_code_project`` work.
     """
-    pairs: list[tuple[str, Path]] = []
+    pairs: list[tuple[str, Path, Path]] = []
     skip_set = set(skip_projects)
 
     if projects is None:
@@ -117,10 +118,11 @@ def _discover_project_test_dirs(
             if info.name in skip_set:
                 logger.info("Skipping project '%s' (in skip_projects)", info.name)
                 continue
-            pairs.append((info.name, tests_dir))
+            pairs.append((info.name, info.path, tests_dir))
     else:
         for name in projects:
-            tests_dir = repo_root / "projects" / name / "tests"
+            project_root = resolve_project_root(repo_root, name)
+            tests_dir = project_root / "tests"
             if not tests_dir.is_dir():
                 logger.warning(
                     "Project '%s' has no tests directory at %s; skipping",
@@ -131,43 +133,9 @@ def _discover_project_test_dirs(
             if name in skip_set:
                 logger.info("Skipping project '%s' (in skip_projects)", name)
                 continue
-            pairs.append((name, tests_dir))
+            pairs.append((name, project_root, tests_dir))
 
     return pairs
-
-
-def _build_pytest_cmd(
-    project_name: str,
-    tests_dir: Path,
-    *,
-    repo_root: Path,
-    is_first: bool,
-    marker_expr: str | None,
-    timeout: int,
-) -> list[str]:
-    """Build the per-project ``pytest`` command line.
-
-    The first project in the loop runs without ``--cov-append`` so it can
-    initialize a fresh coverage data file; every subsequent project adds
-    ``--cov-append`` so traces accumulate.
-    """
-    src_dir = repo_root / "projects" / project_name / "src"
-    cov_target = f"projects/{project_name}/src" if src_dir.is_dir() else f"projects/{project_name}"
-
-    cmd = get_python_command() + [
-        "-m",
-        "pytest",
-        str(tests_dir),
-        f"--cov={cov_target}",
-        "--cov-report=term-missing",
-        f"--timeout={timeout}",
-        "--durations=10",
-    ]
-    if marker_expr:
-        cmd.extend(["-m", marker_expr])
-    if not is_first:
-        cmd.append("--cov-append")
-    return cmd
 
 
 def _run_pytest_for_project(
@@ -279,15 +247,15 @@ def run_per_project_pytest(
     env = make_coverage_subprocess_env(str(cf_path), repo_root)
 
     logger.info("Will run %d project(s):", len(pairs))
-    for name, tests_dir in pairs:
+    for name, project_root, tests_dir in pairs:
         logger.info("  - %s (%s)", name, tests_dir)
 
     overall_exit = 0
-    for index, (project_name, tests_dir) in enumerate(pairs):
-        cmd = _build_pytest_cmd(
-            project_name,
+    for index, (project_name, project_root, tests_dir) in enumerate(pairs):
+        cmd = build_union_pytest_command(
+            repo_root,
+            project_root,
             tests_dir,
-            repo_root=repo_root,
             is_first=(index == 0),
             marker_expr=resolved_markers,
             timeout=timeout,

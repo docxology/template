@@ -92,11 +92,8 @@ def validate_prerender_command(args: argparse.Namespace) -> None:
     Exits 0 when the manuscript is render-ready, 1 when any pitfall or
     undefined citation is found.
     """
-    # Import lazily so the CLI module doesn't drag the rendering package
-    # into every ``-m infrastructure.validation.cli`` invocation.
-    from infrastructure.rendering._pdf_combined_renderer import (
-        prevalidate_source_markdown,
-    )
+    # Import from validation leaf — not the rendering package.
+    from infrastructure.validation.content.prerender import prevalidate_source_markdown
 
     manuscript_dir = Path(args.manuscript_dir)
     if not manuscript_dir.exists():

@@ -22,6 +22,14 @@ The `infrastructure/project/` module provides project discovery, validation, and
 - `check_project_scripts` / `check_repo_scripts` (`orchestrator.py`) - AST thin-orchestrator enforcement
 - Line-count gate: `infrastructure.validation.line_count.scan_project_scripts` (via `scripts/gates/module_line_count_check.py`)
 
+### Working-project batch render (`working_render.py`)
+
+- `list_working_projects(repo)` — names under `projects/working/`
+- `run_project_pipeline(repo, name, *, skip_infra)` — core DAG via `PipelineExecutor`
+- `audit_project(repo, name, results, duration_sec)` — `ProjectAudit` record (structure, PDF paths, validation)
+- `classify_status(...)` / `write_audit_report(repo, audits)` — rubric status + JSON/Markdown under `output/`
+- Thin CLI: `scripts/render_working_projects.py` (not discovered by `./run.sh --all-projects`)
+
 ### Project Introspection (`info.py`)
 
 - `collect_project_info(project_name, repo_root)` - manuscript/source/output/tests counts

@@ -159,7 +159,7 @@ class TestBuildDashboardCLI:
         js = tmp_path / "dash.json"
         inv = tmp_path / "inv.txt"
         sm = tmp_path / "sum.txt"
-        from scripts.build_dashboard import main as dashboard_main
+        from src.dashboard import cli_main as dashboard_main
 
         dashboard_main(
             [
@@ -178,7 +178,7 @@ class TestBuildDashboardCLI:
         js = tmp_path / "dash.json"
         inv = tmp_path / "inv.txt"
         sm = tmp_path / "sum.txt"
-        from scripts.build_dashboard import main as dashboard_main
+        from src.dashboard import cli_main as dashboard_main
 
         dashboard_main(
             [

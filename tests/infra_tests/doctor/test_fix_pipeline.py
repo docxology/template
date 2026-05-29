@@ -57,7 +57,7 @@ def test_pycache_clean_then_undo(tmp_path: Path):
     state = DoctorState(tmp_path)
     state.ensure()
 
-    cache = tmp_path / "src" / "__pycache__"
+    cache = tmp_path / "scripts" / "__pycache__"
     cache.mkdir(parents=True)
     (cache / "x.pyc").write_text("compiled")
 

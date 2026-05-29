@@ -164,6 +164,16 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     flat = repo_root / "projects" / project_name
     if flat.is_dir():
         return flat.resolve()
+    # Public canonical exemplars live under ``projects/templates/<name>`` and
+    # must resolve by bare name as well. Without this, an output-only shadow
+    # under ``projects/active/<name>`` (or the stable error-path fallback below)
+    # shadows a real exemplar source tree, so consumers such as
+    # ``infrastructure.autoresearch.build_autoresearch_plan`` silently load
+    # default config instead of the exemplar's own. Checked after the
+    # hot-seat/WIP/flat trees so an actually-promoted project still wins.
+    templated = repo_root / "projects" / "templates" / project_name
+    if templated.is_dir() and has_project_markers(templated):
+        return templated.resolve()
     if primary.is_dir():
         return primary.resolve()
     return primary

@@ -1,183 +1,59 @@
 #!/usr/bin/env python3
-"""Executive report generation orchestrator script.
-
-This thin orchestrator coordinates the executive reporting stage:
-1. Discovers all projects in the repository
-2. Collects comprehensive metrics using infrastructure.reporting.executive_reporter
-3. Generates comparative analysis across projects
-4. Creates visual dashboards (PNG/PDF/HTML)
-5. Saves reports to output/executive_summary/
-
-Stage 07 of the pipeline orchestration (optional, multi-project only).
-
-Architecture:
-    This is a generic entry point orchestrator (Layer 1 - Infrastructure).
-    It coordinates executive reporting without implementing business logic.
-    Follows thin orchestrator pattern - all logic in infrastructure modules.
-
-Exit codes:
-    0: Executive report generated (or gracefully no-op'd in single-project mode)
-    1: Executive report generation failed
-"""
+"""Executive report generation orchestrator (Stage 07, multi-project only)."""
 
 from __future__ import annotations
 
 import sys
 from pathlib import Path
 
-# Add root to path for infrastructure imports
-# Bootstrap: add repo root so the centralized helper itself is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts import ensure_repo_root_on_path  # noqa: E402
 
 ensure_repo_root_on_path()
 
-from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_substep
+from infrastructure.core.logging.utils import get_logger, log_header, log_substep, log_success
 from infrastructure.project.discovery import discover_projects
 from infrastructure.reporting._executive_health import verify_project_completion
-from infrastructure.reporting.executive_reporter import (
-    generate_executive_summary,
-    save_executive_summary,
-)
-from infrastructure.reporting._dashboard_matplotlib import generate_all_dashboards
+from infrastructure.reporting.multi_project_reporter import generate_multi_project_report
 from infrastructure.reporting.output_organizer import OutputOrganizer
 
-# Set up logger for this module
 logger = get_logger(__name__)
 
 
 def main() -> int:
-    """Execute executive reporting orchestration.
-
-    Returns:
-        Exit code (0=success, 1=failure)
-    """
     import argparse
 
     parser = argparse.ArgumentParser(description="Generate executive report")
-    parser.add_argument("--project", help="Project name (ignored - this stage runs for all projects)")
+    parser.add_argument("--project", help="Ignored — executive reporting runs for all projects")
     parser.parse_args()
 
-    log_header("STAGE 10: Executive Reporting", logger)
-
-    # Log resource usage at start
-    from infrastructure.core.logging.utils import log_live_resource_usage
-
-    log_live_resource_usage("Executive reporting stage start", logger)
-
-    try:
-        repo_root = Path(__file__).parent.parent
-
-        # Discover all projects
-        log_substep("Discovering projects...", logger)
-        projects = discover_projects(repo_root)
-
-        if not projects:
-            logger.error("No projects found in repository")
-            return 1
-
-        if len(projects) == 1:
-            logger.info("Only one project found - skipping executive reporting")
-            logger.info("  Executive reporting is designed for multi-project comparisons")
-            return 0
-
-        logger.info(f"Found {len(projects)} projects:")
-        for project in projects:
-            logger.info(f"  • {project.qualified_name}")
-
-        # Verify each project has completed successfully
-        log_substep("Verifying project completion...", logger)
-        completed_projects = []
-        incomplete_projects = []
-
-        for project in projects:
-            # Use qualified_name for path construction (handles nested projects)
-            if verify_project_completion(repo_root, project.qualified_name):
-                completed_projects.append(project.qualified_name)
-                logger.info(f"  ✓ {project.qualified_name}")
-            else:
-                incomplete_projects.append(project.qualified_name)
-                logger.warning(f"  ✗ {project.qualified_name} (incomplete)")
-
-        if not completed_projects:
-            logger.error("No projects have completed the pipeline successfully")
-            logger.error("  Run pipeline for at least one project before generating executive report")
-            return 1
-
-        if incomplete_projects:
-            logger.warning(f"Skipping {len(incomplete_projects)} incomplete project(s)")
-            for project_name in incomplete_projects:
-                logger.warning(f"  - {project_name}")
-
-        # Generate executive summary
-        log_substep(f"Generating executive summary for {len(completed_projects)} project(s)...", logger)
-        summary = generate_executive_summary(repo_root, completed_projects)
-
-        # Save reports
-        output_dir = repo_root / "output" / "executive_summary"
-        log_substep("Saving reports...", logger)
-        saved_reports = save_executive_summary(summary, output_dir)
-
-        for format_name, file_path in saved_reports.items():
-            logger.info(f"  {format_name.upper()}: {file_path.name}")
-
-        # Generate dashboards
-        log_substep("Generating visual dashboards...", logger)
-        dashboard_files = generate_all_dashboards(summary, output_dir)
-
-        for format_name, file_path in dashboard_files.items():
-            logger.info(f"  {format_name.upper()}: {file_path.name}")
-
-        # Copy combined PDFs from all projects
-        log_substep("Copying combined PDFs from all projects...", logger)
-        organizer = OutputOrganizer()
-        copied_count = organizer.copy_combined_pdfs(repo_root, output_dir)
-        logger.info(f"  Copied {copied_count} combined PDF files")
-
-        # Log high-level summary
-        logger.info("\n" + "=" * 60)
-        logger.info("EXECUTIVE SUMMARY")
-        logger.info("=" * 60)
-        logger.info(f"\nTotal Projects: {summary.total_projects}")
-        logger.info(
-            f"Total Tests: {summary.aggregate_metrics['tests']['total_tests']} "
-            f"({summary.aggregate_metrics['tests']['total_passed']} passed)"
-        )
-        logger.info(f"Average Coverage: {summary.aggregate_metrics['tests']['average_coverage']:.1f}%")
-        logger.info(f"Total Pipeline Time: {summary.aggregate_metrics['pipeline']['total_duration']:.0f}s")
-        logger.info(
-            f"\nManuscript: {summary.aggregate_metrics['manuscript']['total_words']:,} words, "
-            f"{summary.aggregate_metrics['manuscript']['total_sections']} sections"
-        )
-        logger.info(
-            f"Outputs: {summary.aggregate_metrics['outputs']['total_pdfs']} PDFs, "
-            f"{summary.aggregate_metrics['outputs']['total_figures']} figures"
-        )
-
-        # Log recommendations
-        if summary.recommendations:
-            logger.info("\nRecommendations:")
-            for rec in summary.recommendations:
-                logger.info(f"  {rec}")
-
-        logger.info("")
-
-        # Log output location
-        log_success("\n✅ Executive reporting complete!", logger)
-        logger.info(f"Reports saved to: {output_dir}")
-        logger.info("  • Consolidated report: consolidated_report.{json,html,md}")
-        logger.info("  • Visual dashboard: dashboard.{png,pdf,html}")
-
-        # Log resource usage at end
-        log_live_resource_usage("Executive reporting stage end", logger)
-
+    log_header("STAGE 07: Executive Reporting", logger)
+    repo_root = Path(__file__).parent.parent
+    projects = discover_projects(repo_root)
+    if len(projects) <= 1:
+        logger.info("Single-project checkout — executive reporting skipped")
         return 0
 
-    except Exception as e:
-        logger.error(f"Executive reporting failed: {e}", exc_info=True)
-        log_live_resource_usage("Executive reporting stage end (error)", logger)
+    completed = [
+        project.qualified_name
+        for project in projects
+        if verify_project_completion(repo_root, project.qualified_name)
+    ]
+    if not completed:
+        logger.error("No projects completed the pipeline successfully")
         return 1
+
+    output_dir = repo_root / "output" / "executive_summary"
+    log_substep(f"Generating executive summary for {len(completed)} project(s)...", logger)
+    generate_multi_project_report(repo_root, completed, output_dir)
+
+    log_substep("Copying combined PDFs...", logger)
+    copied = OutputOrganizer().copy_combined_pdfs(repo_root, output_dir)
+    logger.info("Copied %d combined PDF file(s)", copied)
+
+    log_success("Executive reporting complete", logger)
+    return 0
 
 
 if __name__ == "__main__":
-    exit(main())
+    raise SystemExit(main())
