@@ -33,7 +33,7 @@ uv run pytest tests/ --cov=src --cov-fail-under=90
 | `test_scripts_smoke.py` | Auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`) |
 | `test_documentation.py` | `documentation.py` API reference helpers |
 
-Live test count and coverage: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
+Live test count and coverage: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
 
 ## Architecture
 

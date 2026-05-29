@@ -8,8 +8,8 @@ It demonstrates the complete research pipeline from algorithm implementation thr
 
 This project is explicitly designed to showcase the repository's three foundational pillars:
 
-1. **`infrastructure/` Layer**: The code delegates tracking, performance benchmarking, stability validation, and PDF rendering to the shared infrastructure packages at the repository root. Current package counts live in [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
-2. **`tests/` Integrity**: A zero-mock suite ([`projects/template_code_project/tests/`](../tests/)) with **≥90%** coverage on `projects/template_code_project/src/`. Live test count and measured coverage: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
+1. **`infrastructure/` Layer**: The code delegates tracking, performance benchmarking, stability validation, and PDF rendering to the shared infrastructure packages at the repository root. Current package counts live in [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
+2. **`tests/` Integrity**: A zero-mock suite ([`projects/template_code_project/tests/`](../tests/)) with **≥90%** coverage on `projects/template_code_project/src/`. Live test count and measured coverage: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
 3. **`docs/` Orchestration**: Project documentation under `projects/template_code_project/docs/` records the operational patterns and is checked by the repository documentation lint gates.
 
 ## Manuscript Structure
@@ -79,5 +79,5 @@ If you are an AI agent operating in this repository, you **MUST** read [`AGENTS.
 ## See also
 
 - [`SYNTAX.md`](SYNTAX.md) — Pandoc citation / cross-reference conventions for this manuscript.
-- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide manuscript semantics.
+- [`../../../docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — Repository-wide manuscript semantics.
 - [`../../../AGENTS.md`](../../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) — public exemplar roster.

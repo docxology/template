@@ -200,6 +200,25 @@ def test_dead_link_skips_fenced_code(drift_module, tmp_path):
     assert rep.findings == []
 
 
+def test_dead_link_scans_beyond_docs_dir(drift_module, tmp_path):
+    """Broadened scope: stale links in root ``AGENTS.md`` and ``manuscript/`` are
+    caught, not only those under ``docs/``.
+
+    Regression for the ``projects/templates/`` move that left 89 broken relative
+    links across AGENTS.md / manuscript / src which the docs-only scan missed.
+    """
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "AGENTS.md").write_text("See [guide](../../docs/guides/missing.md).", encoding="utf-8")
+    (root / "manuscript" / "01_intro.md").write_text(
+        "Ref [syntax](../../docs/missing_syntax.md).", encoding="utf-8"
+    )
+    rep = drift_module.Report()
+    drift_module.check_referenced_files_exist(root, rep, "fake_project")
+    flagged = [f.message for f in rep.findings if f.rule == "dead_link"]
+    assert any("AGENTS.md" in m for m in flagged), flagged
+    assert any("01_intro.md" in m for m in flagged), flagged
+
+
 def test_oversize_src_file_flags_large_python(drift_module, tmp_path):
     root = _scaffold_minimal_project(tmp_path)
     big = root / "src" / "huge.py"

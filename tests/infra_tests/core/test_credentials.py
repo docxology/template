@@ -320,34 +320,47 @@ class TestGitHubCredentials:
             if "GITHUB_REPO" in os.environ:
                 del os.environ["GITHUB_REPO"]
 
-    def test_get_github_credentials_missing(self):
-        """Test getting GitHub credentials when not available."""
-        manager = CredentialManager()
+    def test_get_github_credentials_missing(self, tmp_path, monkeypatch):
+        """Test getting GitHub credentials when not available.
+
+        Isolated from the repo's real ``.env``: an empty ``env_file`` makes
+        ``CredentialManager`` skip the default ``.env`` autoload, and
+        ``delenv`` clears any inherited token/repo (real isolation, no mocks).
+        """
+        monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+        monkeypatch.delenv("GITHUB_REPO", raising=False)
+        env_file = tmp_path / ".env"
+        env_file.write_text("")
+
+        manager = CredentialManager(env_file=env_file)
         creds = manager.get_github_credentials()
 
         assert creds["token"] is None
         assert creds["repository"] is None
 
-    def test_has_github_credentials(self):
-        """Test checking if GitHub credentials are available."""
-        manager = CredentialManager()
+    def test_has_github_credentials(self, tmp_path, monkeypatch):
+        """Test checking if GitHub credentials are available.
+
+        Isolated from the repo's real ``.env`` via an empty ``env_file`` plus
+        ``delenv``; partial/full states are driven with ``monkeypatch.setenv``
+        so they auto-revert (real isolation, no mocks).
+        """
+        monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+        monkeypatch.delenv("GITHUB_REPO", raising=False)
+        env_file = tmp_path / ".env"
+        env_file.write_text("")
+        manager = CredentialManager(env_file=env_file)
 
         # Without credentials
         assert manager.has_github_credentials() is False
 
         # With partial credentials (missing repo)
-        os.environ["GITHUB_TOKEN"] = "token"
-        try:
-            assert manager.has_github_credentials() is False
+        monkeypatch.setenv("GITHUB_TOKEN", "token")
+        assert manager.has_github_credentials() is False
 
-            # With both
-            os.environ["GITHUB_REPO"] = "user/repo"
-            assert manager.has_github_credentials() is True
-        finally:
-            if "GITHUB_TOKEN" in os.environ:
-                del os.environ["GITHUB_TOKEN"]
-            if "GITHUB_REPO" in os.environ:
-                del os.environ["GITHUB_REPO"]
+        # With both
+        monkeypatch.setenv("GITHUB_REPO", "user/repo")
+        assert manager.has_github_credentials() is True
 
 
 class TestArxivCredentials:

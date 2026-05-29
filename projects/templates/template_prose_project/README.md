@@ -153,8 +153,8 @@ of the orchestrator scripts.
 
 * [`AGENTS.md`](AGENTS.md) — agent-oriented walkthrough.
 * [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation / cross-reference conventions for this project.
-* [`../../docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics.
+* [`../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics.
 * [`docs/architecture.md`](docs/architecture.md) — architectural diagram.
 * [`docs/quickstart.md`](docs/quickstart.md) — getting started guide.
-* [`infrastructure/prose/SKILL.md`](../../infrastructure/prose/SKILL.md) —
+* [`infrastructure/prose/SKILL.md`](../../../infrastructure/prose/SKILL.md) —
   underlying prose-analysis API.

@@ -39,10 +39,10 @@ uv run python projects/my_review_project/scripts/run_prose_pipeline.py
 
 **⚠️ Confidentiality invariant.** The repo `.gitignore` is configured so
 that **only** the public canonical exemplars listed in
-[`../../../docs/_generated/active_projects.md`](../../../docs/_generated/active_projects.md)
+[`../../../docs/_generated/active_projects.md`](../../../../docs/_generated/active_projects.md)
 under `projects/` are ever git-tracked. Your fork (`projects/my_review_project/`)
 is local-only and won't be pushed to the public repo even if you `git
-add -f` it. Read [`../../../CLAUDE.md`](../../../CLAUDE.md)
+add -f` it. Read [`../../../CLAUDE.md`](../../../../CLAUDE.md)
 "CONFIDENTIALITY INVARIANT" for the full fence.
 
 ## What you're forking
@@ -117,7 +117,7 @@ The loader rejects unknown YAML keys and enforces invariants
 uv run python scripts/check_template_drift.py
 ```
 20 unit tests in
-[`tests/infra_tests/test_check_template_drift.py`](../../../tests/infra_tests/test_check_template_drift.py)
+[`tests/infra_tests/test_check_template_drift.py`](../../../../tests/infra_tests/test_check_template_drift.py)
 prove each detector catches the bug class it was built for.
 
 ## Common friction points (and fixes)
@@ -145,4 +145,4 @@ than editorial, fork that one instead.
 - [`testing_philosophy.md`](testing_philosophy.md) — zero-mock standard
 - [`rendering_pipeline.md`](rendering_pipeline.md) — 4-phase pipeline
 - [`faq.md`](faq.md) — recurring questions
-- [`../../../scripts/check_template_drift.py`](../../../scripts/check_template_drift.py) — the drift checker
+- [`../../../scripts/check_template_drift.py`](../../../../scripts/check_template_drift.py) — the drift checker

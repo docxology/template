@@ -29,7 +29,7 @@ Every cited key is matched against the BibTeX file at `bibliography.references_p
 | `fail_on_unused: true` | Bib entries that are never cited fail the check. |
 | `fail_on_unused: false` | Unused entries are warned but do not fail. |
 
-The check uses [`infrastructure.reference.citation.parse_bibfile`](../../../infrastructure/reference/citation/SKILL.md) so it sees exactly the same view of the bibliography that the rendering pipeline uses.
+The check uses [`infrastructure.reference.citation.parse_bibfile`](../../../../infrastructure/reference/citation/SKILL.md) so it sees exactly the same view of the bibliography that the rendering pipeline uses.
 
 ## Evaluate
 

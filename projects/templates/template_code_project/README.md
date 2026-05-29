@@ -41,7 +41,7 @@ Full end-to-end: `uv run python scripts/execute_pipeline.py --project template_c
 
 ## Dependencies
 
-Run `uv sync` at the **repository root**; that environment is what CI and `./run.sh` use. [`pyproject.toml`](pyproject.toml) in this directory configures pytest/coverage for `projects/template_code_project/tests/` and records the same scientific stack for isolated runs. Root [`pyproject.toml`](../../pyproject.toml) has `[tool.uv.workspace]` with `members = []`, so this folder is not installed as a separate workspace package.
+Run `uv sync` at the **repository root**; that environment is what CI and `./run.sh` use. [`pyproject.toml`](pyproject.toml) in this directory configures pytest/coverage for `projects/template_code_project/tests/` and records the same scientific stack for isolated runs. Root [`pyproject.toml`](../../../pyproject.toml) has `[tool.uv.workspace]` with `members = []`, so this folder is not installed as a separate workspace package.
 
 ## Agentic research overlays
 
@@ -147,7 +147,7 @@ graph TD
 
 ✅ **Fully compliant** with template development standards:
 
-- **Testing**: `src/` coverage is gated at 90%; live test count + achieved coverage tracked in [`../../docs/_generated/canonical_facts.md`](../../docs/_generated/canonical_facts.md)
+- **Testing**: `src/` coverage is gated at 90%; live test count + achieved coverage tracked in [`../../docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md)
 - **Documentation**: AGENTS.md + README.md in each directory
 - **Type Safety**: Full type hints on all public APIs
 - **Code Quality**: Ruff format/check (CI parity), descriptive naming, proper imports
@@ -159,7 +159,7 @@ graph TD
 When editing manuscript markdown:
 
 - [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — citation, equation, figure, table, and section conventions specific to this project (label registries for all 6 figures and 8 equations).
-- [`../../docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md) — repository-wide manuscript semantics.
+- [`../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — repository-wide manuscript semantics.
 - [`manuscript/AGENTS.md`](manuscript/AGENTS.md) — `{{TOKEN}}` substitution protocol and section-modification workflow.
 
 ## More Information

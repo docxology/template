@@ -1,7 +1,8 @@
 # Methods Orchestration
 
 `infrastructure.methods` builds a deterministic methods orchestration plan for a
-project. The plan connects the pipeline DAG, manuscript methods sections,
+project. The plan connects the pipeline DAG, manuscript method sections
+(discovered by filename token or by an in-body Methods/Methodology heading),
 artifact manifests, evidence registries, and validation commands without moving
 stage logic out of the existing pipeline.
 

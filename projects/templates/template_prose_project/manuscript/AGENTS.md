@@ -105,13 +105,13 @@ Current markers (defined in
 ## See also
 
 * [`SYNTAX.md`](SYNTAX.md) — Pandoc citation/cross-reference syntax for this manuscript.
-* [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics (citations, equations, figures, tables, sections, tokens, preamble).
+* [`../../../docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics (citations, equations, figures, tables, sections, tokens, preamble).
 * [`README.md`](README.md) — quick reference.
 * [`../docs/output_conventions.md`](../docs/output_conventions.md) —
   what lands in `output/`.
 * [`../docs/troubleshooting.md`](../docs/troubleshooting.md) — when a
   check fails.
-* [`../../../infrastructure/prose/SKILL.md`](../../../infrastructure/prose/SKILL.md) —
+* [`../../../infrastructure/prose/SKILL.md`](../../../../infrastructure/prose/SKILL.md) —
   underlying analysis API.
-* [`../../../infrastructure/reference/SKILL.md`](../../../infrastructure/reference/SKILL.md) —
+* [`../../../infrastructure/reference/SKILL.md`](../../../../infrastructure/reference/SKILL.md) —
   bibliography validation API.

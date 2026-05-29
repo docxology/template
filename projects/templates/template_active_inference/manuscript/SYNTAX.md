@@ -1,6 +1,6 @@
 # Manuscript Syntax Reference (template_active_inference)
 
-Project overlay on [`docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md). Composed sections come from `manuscript/sections/imrad/` via `scripts/compose_manuscript.py`; edit fragments and [`manuscript/sheaf/manifest.yaml`](sheaf/manifest.yaml), not numbered `02_*.md` … `16_*.md` outputs.
+Project overlay on [`docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md). Composed sections come from `manuscript/sections/imrad/` via `scripts/compose_manuscript.py`; edit fragments and [`manuscript/sheaf/manifest.yaml`](sheaf/manifest.yaml), not numbered `02_*.md` … `16_*.md` outputs.
 
 ## Equation labels
 

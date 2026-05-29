@@ -1,6 +1,6 @@
 # Manuscript Syntax Reference (template_code_project)
 
-Project-specific overlay on the canonical [`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — read that file first; this file documents the **template_code_project**-specific figure registry, equation labels, and `{{TOKEN}}` table.
+Project-specific overlay on the canonical [`docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — read that file first; this file documents the **template_code_project**-specific figure registry, equation labels, and `{{TOKEN}}` table.
 
 ## Citation Syntax (Pandoc)
 
@@ -171,7 +171,7 @@ Files are assembled in lexicographic order by `infrastructure/rendering/pdf_rend
 
 ## See Also
 
-- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical semantics
+- [`../../../docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical semantics
 - [`AGENTS.md`](AGENTS.md) — RASP protocol and AI agent constraints
 - [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — Full rendering flow
 - [`../docs/syntax_guide.md`](../docs/syntax_guide.md) — Complete `{{VARIABLE}}` token reference

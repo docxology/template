@@ -34,7 +34,7 @@ uv run python projects/my_project/scripts/optimization_analysis.py
 
 **⚠️ Confidentiality invariant.** The repo `.gitignore` is configured so
 that **only** the public canonical exemplars listed in
-[`../../../docs/_generated/active_projects.md`](../../../docs/_generated/active_projects.md)
+[`../../../docs/_generated/active_projects.md`](../../../../docs/_generated/active_projects.md)
 under `projects/` are ever git-tracked. Your fork (`projects/my_project/`)
 is local-only and won't be pushed to the public repo even if you `git
 add -f` it — `scripts/check_tracked_projects.py` blocks the push in
@@ -127,4 +127,4 @@ numerical, fork that one instead.
 - [`testing_philosophy.md`](testing_philosophy.md) — zero-mock standard
 - [`output_inventory.md`](output_inventory.md) — producer/consumer graph
 - [`troubleshooting.md`](troubleshooting.md) — symptom-driven fixes
-- [`../../../scripts/check_template_drift.py`](../../../scripts/check_template_drift.py) — the drift checker
+- [`../../../scripts/check_template_drift.py`](../../../../scripts/check_template_drift.py) — the drift checker

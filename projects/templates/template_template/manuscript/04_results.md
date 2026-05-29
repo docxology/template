@@ -89,7 +89,7 @@ Measurements single-thread Apple Silicon; dominated by watermark overlay compl
 
 ## Self-Referential Analysis
 
-Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `${module_count}`). Architecture figures stem from [`template.architecture_viz`](../../src/template/architecture_viz.py)—font sizes constrained by §QA.
+Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `${module_count}`). Architecture figures stem from [`template.architecture_viz`](../src/template_template/architecture_viz.py)—font sizes constrained by §QA.
 
 ![Two-Layer Architecture Overview](../figures/architecture_overview.png)
 **Figure 1.** Live Two-Layer graph with documentation badges `[ARSP]` and per-module file counts derived from introspection snapshots.

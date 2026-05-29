@@ -67,7 +67,7 @@ they are what the repo's gates enforce:
 |---|---|---|
 | Thin-orchestrator: only `src/pipeline/` touches `infrastructure/`; `scripts/` are CLI shims | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/` infra-import grep |
 | Zero mocks: real Markdown + real BibTeX in `tmp_path` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/verify_no_mocks.py` |
-| ≥90% project coverage on `src/` (live % → [`canonical_facts.md`](../../../docs/_generated/canonical_facts.md)) | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` (canonical command below) |
+| ≥90% project coverage on `src/` (live % → [`canonical_facts.md`](../../../../docs/_generated/canonical_facts.md)) | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` (canonical command below) |
 | `manuscript/config.yaml` is the single source of run policy | [`rendering_pipeline.md`](rendering_pipeline.md) | the prose pipeline |
 | `references.bib` hand-curated, read-only (validated, never written) | [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) | bibliography checks |
 
@@ -87,7 +87,7 @@ uv run python scripts/execute_pipeline.py --project $NEW --core-only
 
 Because the copied tree already has `src/` Python files and `tests/`, the
 project is then auto-discovered; the repo-level
-[`docs/guides/new-project-setup.md`](../../../docs/guides/new-project-setup.md)
+[`docs/guides/new-project-setup.md`](../../../../docs/guides/new-project-setup.md)
 covers the full workflow.
 
 **Prerequisites before referencing the render path:** this manuscript embeds
@@ -111,5 +111,5 @@ share the identical structural contract above.
 * Project [`README.md`](../README.md) — top-level project overview.
 * Project [`AGENTS.md`](../AGENTS.md) — agent walkthrough.
 * [`../manuscript/SYNTAX.md`](../manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax.
-* [`../../../infrastructure/prose/SKILL.md`](../../../infrastructure/prose/SKILL.md) — underlying analysis API.
-* [`../../../infrastructure/reference/SKILL.md`](../../../infrastructure/reference/SKILL.md) — bibliography validation API.
+* [`../../../infrastructure/prose/SKILL.md`](../../../../infrastructure/prose/SKILL.md) — underlying analysis API.
+* [`../../../infrastructure/reference/SKILL.md`](../../../../infrastructure/reference/SKILL.md) — bibliography validation API.

@@ -33,7 +33,7 @@ flowchart TB
   the project's own `output/` directory.
 * **Bundled manuscript is the integration fixture.** `test_pipeline_integration.py`
   copies `manuscript/` to a temp dir and runs the whole pipeline against it.
-* **Coverage gate: 90%.** Measured coverage → [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md); reductions should be justified in the PR.
+* **Coverage gate: 90%.** Measured coverage → [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md); reductions should be justified in the PR.
 
 ## Running
 

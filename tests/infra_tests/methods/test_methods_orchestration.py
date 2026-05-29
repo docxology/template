@@ -59,6 +59,45 @@ def test_public_template_projects_have_methods_orchestration_plans(repo_root: Pa
         assert any(stage.output_artifacts for stage in plan.stages), plan.project_name
 
 
+def test_discovers_method_section_by_heading(tmp_path: Path) -> None:
+    """A manuscript file whose *name* lacks a method token is still a method
+    section when it carries a Methods/Methodology heading.
+
+    Uses the canonical ``template_test`` synthetic fixture (real files on disk,
+    no mocks) and mirrors the live ``template_template`` exemplar, whose
+    ``# Methods`` content lives inside ``03a_architecture.md``.
+    """
+    from infrastructure.methods.orchestration import _discover_method_sections
+
+    project = make_project(tmp_path, "template_test", with_manuscript=True)
+    manuscript = project / "manuscript"
+    write_doc(manuscript / "03a_architecture.md", "# Architecture\n\n# Methods\n\nWe did X.\n")
+    write_doc(manuscript / "02_introduction.md", "# Introduction\n\nContext only.\n")
+    write_doc(manuscript / "05_discussion.md", "## Methodological caveats\n\nNotes.\n")
+
+    sections = _discover_method_sections(project, tmp_path)
+
+    # Heading-named section is discovered even though the filename has no token.
+    assert any(s.endswith("manuscript/03a_architecture.md") for s in sections), sections
+    # Negative control: heading-free, non-method section is not discovered.
+    assert not any(s.endswith("manuscript/02_introduction.md") for s in sections), sections
+    # Word-boundary control: "Methodological" must not be mistaken for "Methods".
+    assert not any(s.endswith("manuscript/05_discussion.md") for s in sections), sections
+
+
+def test_discovers_method_section_by_filename_token(tmp_path: Path) -> None:
+    """A manuscript file whose *name* carries a method token is discovered
+    without needing a heading (filename path, real ``template_test`` fixture)."""
+    from infrastructure.methods.orchestration import _discover_method_sections
+
+    project = make_project(tmp_path, "template_test", with_manuscript=True)
+    write_doc(project / "manuscript" / "02_methodology.md", "Body without a heading token.\n")
+
+    sections = _discover_method_sections(project, tmp_path)
+
+    assert any(s.endswith("manuscript/02_methodology.md") for s in sections), sections
+
+
 def test_render_markdown_includes_actions_and_validation(repo_root: Path) -> None:
     from infrastructure.methods import build_methods_orchestration_plan, render_methods_orchestration_markdown
 
@@ -78,7 +117,7 @@ def test_validation_reports_missing_method_section(tmp_path: Path) -> None:
 
     _write_minimal_repo(tmp_path)
 
-    plan = build_methods_orchestration_plan(tmp_path, "demo")
+    plan = build_methods_orchestration_plan(tmp_path, "template_test")
     issues = validate_methods_orchestration_plan(plan)
 
     assert any(issue.code == "METHODS.METHOD_SECTION_MISSING" for issue in issues)
@@ -154,5 +193,5 @@ stages:
       gate: "experiment_method_design"
 """,
     )
-    project = make_project(repo_root, "demo", with_manuscript=True, with_scripts=True)
+    project = make_project(repo_root, "template_test", with_manuscript=True, with_scripts=True)
     (project / "output" / "reports").mkdir(parents=True, exist_ok=True)

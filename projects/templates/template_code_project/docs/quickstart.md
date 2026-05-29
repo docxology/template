@@ -30,7 +30,7 @@ Validate the environment and check that the project test suite passes with the â
 uv run pytest projects/template_code_project/tests/ -v --tb=short
 ```
 
-Expected: passing tests and coverage above the 90% gate. Live collection counts are tracked in [`../../../docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
+Expected: passing tests and coverage above the 90% gate. Live collection counts are tracked in [`../../../docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
 
 ## Execute the Analysis Pipeline
 

@@ -135,7 +135,7 @@ Thin wrapper → [`src/dashboard.py`](../src/dashboard.py). See [`../src/AGENTS.
 
 ### 00_preflight.py
 
-Thin wrapper → [`infrastructure.rendering.preflight`](../../../infrastructure/rendering/preflight.py).
+Thin wrapper → [`infrastructure.rendering.preflight`](../../../../infrastructure/rendering/preflight.py).
 
 ### z_generate_manuscript_variables.py
 

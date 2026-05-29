@@ -246,21 +246,33 @@ class TestGitHubCredentials:
 
         assert manager.has_github_credentials() is True
 
-    def test_has_github_credentials_false_no_token(self, monkeypatch):
-        """Test has_github_credentials returns False when no token."""
-        os.environ.pop("GITHUB_TOKEN", None)
-        monkeypatch.setenv("GITHUB_REPO", "repo")
+    def test_has_github_credentials_false_no_token(self, tmp_path, monkeypatch):
+        """Test has_github_credentials returns False when no token.
 
-        manager = CredentialManager()
+        Empty ``env_file`` skips the repo ``.env`` autoload; ``delenv`` clears
+        any inherited token (real isolation, no mocks).
+        """
+        monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+        monkeypatch.setenv("GITHUB_REPO", "repo")
+        env_file = tmp_path / ".env"
+        env_file.write_text("")
+
+        manager = CredentialManager(env_file=env_file)
 
         assert manager.has_github_credentials() is False
 
-    def test_has_github_credentials_false_no_repo(self, monkeypatch):
-        """Test has_github_credentials returns False when no repo."""
-        monkeypatch.setenv("GITHUB_TOKEN", "token")
-        os.environ.pop("GITHUB_REPO", None)
+    def test_has_github_credentials_false_no_repo(self, tmp_path, monkeypatch):
+        """Test has_github_credentials returns False when no repo.
 
-        manager = CredentialManager()
+        Empty ``env_file`` skips the repo ``.env`` autoload; ``delenv`` clears
+        any inherited repo (real isolation, no mocks).
+        """
+        monkeypatch.setenv("GITHUB_TOKEN", "token")
+        monkeypatch.delenv("GITHUB_REPO", raising=False)
+        env_file = tmp_path / ".env"
+        env_file.write_text("")
+
+        manager = CredentialManager(env_file=env_file)
 
         assert manager.has_github_credentials() is False
 

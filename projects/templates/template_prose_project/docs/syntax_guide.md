@@ -5,7 +5,7 @@ content inside the `template_prose_project` exemplar. Sections 1–5 are
 mandatory constraints; sections 6–7 are reference material.
 
 The canonical, repository-wide manuscript-syntax reference is
-[`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md).
+[`docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md).
 Read that first; this document records prose-project-specific overlays.
 
 ---

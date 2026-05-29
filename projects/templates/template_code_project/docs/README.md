@@ -14,7 +14,7 @@ The `docs/` directory contains the behavioral and architectural rules that gover
 |---|---|---|
 | [`agent_instructions.md`](agent_instructions.md) | 7 hard rules for AI agents; verification checklist | AI agents, all developers |
 | [`architecture.md`](architecture.md) | Layer table, dependency direction, forbidden patterns, how-to-add-algorithm | Developers |
-| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock policy, test-file inventory, coverage mechanics, the gate-vs-exit-code rule (live counts → [`canonical_facts.md`](../../../docs/_generated/canonical_facts.md)) | Developers, testers |
+| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock policy, test-file inventory, coverage mechanics, the gate-vs-exit-code rule (live counts → [`canonical_facts.md`](../../../../docs/_generated/canonical_facts.md)) | Developers, testers |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Mermaid/chrome prerequisite; 4-phase manuscript→PDF pipeline; config.yaml controls | Content authors, developers |
 | [`style_guide.md`](style_guide.md) | 7 rules: Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages | Developers |
 | [`syntax_guide.md`](syntax_guide.md) | Markdown links, LaTeX refs, all `{{VARIABLE}}` tokens, figure label registry | Content authors |
@@ -76,7 +76,7 @@ uv run python scripts/execute_pipeline.py --project $NEW --core-only
 ```
 
 Then the project is discovered automatically (`discover_projects()`); the
-repo-level guide [`docs/guides/new-project-setup.md`](../../../docs/guides/new-project-setup.md)
+repo-level guide [`docs/guides/new-project-setup.md`](../../../../docs/guides/new-project-setup.md)
 covers the full workflow.
 
 **Prerequisites to know before referencing the render path:** combined-PDF
@@ -113,4 +113,4 @@ grep -r "from infrastructure\|import infrastructure" projects/template_code_proj
 - [../README.md](../README.md) — Project quick start
 - [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — Manuscript directory rules and `{{VARIABLE}}` protocol
 - [output_conventions.md](output_conventions.md) — Output directory structure and regeneration
-- [../../../docs/](../../../docs/) — Repository-level documentation hub (127 files, 14 subdirectories)
+- [../../../docs/](../../../../docs/) — Repository-level documentation hub (127 files, 14 subdirectories)

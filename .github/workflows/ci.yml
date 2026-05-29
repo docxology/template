@@ -618,6 +618,9 @@ jobs:
       - name: Run docs linters (mermaid + cross-links + consistency + doc pairs)
         run: uv run python scripts/lint_docs.py --quiet
 
+      - name: Check template exemplar drift (strict — dead links gate)
+        run: uv run python scripts/check_template_drift.py --strict
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 7 — Performance Check
 # ─────────────────────────────────────────────────────────────────────────────

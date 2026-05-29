@@ -6,7 +6,11 @@
 orchestration plan:
 
 - pipeline stages and `contract:` metadata from `pipeline.yaml`
-- manuscript methods/methodology section files
+- manuscript method sections — a file qualifies when its **name** carries a
+  method token (`method`/`methodology`/`experimental_setup`/`protocol`) **or**
+  its body contains a top-level Methods/Methodology/Protocol heading. The
+  heading fallback covers exemplars whose Methods content lives in a
+  differently-named section file (e.g. `template_template`'s `03a_architecture.md`).
 - `artifact_manifest.json`
 - `evidence_registry.json`
 - validation commands that prove the methods surface is current

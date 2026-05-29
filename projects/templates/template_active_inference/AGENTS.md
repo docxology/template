@@ -115,5 +115,5 @@ uv run python scripts/validate_outputs.py
 ## Parent docs
 
 - Root [`AGENTS.md`](../../AGENTS.md)
-- [Publishing guide](../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../docs/guides/zenodo-doi-strategy.md)
+- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md)
 - [`tracks.yaml`](tracks.yaml)

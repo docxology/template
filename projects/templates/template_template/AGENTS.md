@@ -26,7 +26,7 @@ template_template/
 
 ## Publishing
 
-- [Publishing guide](../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../docs/guides/zenodo-doi-strategy.md)
+- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md)
 - Concept DOI: `manuscript/config.yaml` → `publication.doi` (PDF cover); `version_doi` / `version_record` for latest Zenodo deposit
 - Standalone repo: [docxology/template_template](https://github.com/docxology/template_template)
 

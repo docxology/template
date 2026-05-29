@@ -137,15 +137,21 @@ def check_referenced_files_exist(project_root: Path, report: Report, project: st
 
     Catches the prior `output/AGENTS.md` drift (referenced in 3 docs; did not
     exist) and any future stale `[...](path.md)` links inside the project.
+    Scope: top-level `*.md` (AGENTS.md, README.md, ...) plus everything under
+    `docs/`, `manuscript/`, and `src/`. `output/` is excluded (disposable,
+    regenerated). Broadened after the projects/templates/ move regressed
+    relative links in AGENTS.md/manuscript/src that the docs-only scan missed.
     Skips: links inside fenced/inline code blocks, links containing `<...>`
     placeholders, and filenames starting with `new_`/`my_`/`your_`/`example_`
     (illustrative templates, not real references).
     """
-    docs_dir = project_root / "docs"
-    if not docs_dir.is_dir():
-        return
     pat = re.compile(r"\[(?P<text>[^\]]+)\]\((?P<target>[^)#\s]+(?:#[^)\s]*)?)\)")
-    for md in docs_dir.rglob("*.md"):
+    md_files = sorted(project_root.glob("*.md"))
+    for _sub in ("docs", "manuscript", "src"):
+        _sub_dir = project_root / _sub
+        if _sub_dir.is_dir():
+            md_files.extend(sorted(_sub_dir.rglob("*.md")))
+    for md in md_files:
         text = _strip_code_fences(_read(md))
         for m in pat.finditer(text):
             target = m.group("target").split("#", 1)[0]

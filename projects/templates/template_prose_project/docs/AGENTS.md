@@ -51,7 +51,7 @@ delegation table.
 `create_autospec` anywhere in `tests/`. Tests use real Markdown, real
 BibTeX, real `tmp_path` directories, and real subprocess invocation. Live
 test count and achieved coverage are tracked in
-[`canonical_facts.md`](../../../docs/_generated/canonical_facts.md); the
+[`canonical_facts.md`](../../../../docs/_generated/canonical_facts.md); the
 suite runs well above the 90% gate.
 
 **Show-not-tell.** Manuscript references must use explicit file paths and
@@ -156,6 +156,6 @@ AESTHETIC list as the audit surface that lives outside automated CI.
 * [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — substitution-marker registry.
 * [`../src/AGENTS.md`](../src/AGENTS.md) — domain-orchestration guide.
 * [`../tests/AGENTS.md`](../tests/AGENTS.md) — test-suite agent guide.
-* [`../../../docs/rules/folder_structure.md`](../../../docs/rules/folder_structure.md) — repository-wide tri-doc convention.
-* [`../../../infrastructure/prose/SKILL.md`](../../../infrastructure/prose/SKILL.md) — underlying analysis API.
-* [`../../../infrastructure/reference/SKILL.md`](../../../infrastructure/reference/SKILL.md) — bibliography validation API.
+* [`../../../docs/rules/folder_structure.md`](../../../../docs/rules/folder_structure.md) — repository-wide tri-doc convention.
+* [`../../../infrastructure/prose/SKILL.md`](../../../../infrastructure/prose/SKILL.md) — underlying analysis API.
+* [`../../../infrastructure/reference/SKILL.md`](../../../../infrastructure/reference/SKILL.md) — bibliography validation API.

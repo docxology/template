@@ -1,6 +1,6 @@
 # Manuscript Syntax Reference (prose_project)
 
-Project-specific overlay on the canonical [`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — read that file first; this file documents **prose_project**-specific conventions.
+Project-specific overlay on the canonical [`docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — read that file first; this file documents **prose_project**-specific conventions.
 
 The prose exemplar deliberately omits equations and figures-from-data; its job is to *evaluate* manuscripts, not produce numerical artefacts. The pipeline still emits three diagnostic figures (per-file word counts, readability metrics, citation density) into `output/figures/` for human inspection, but they are not embedded in the manuscript body — they are part of the review report.
 
@@ -71,8 +71,8 @@ Define new tokens in [`src/manuscript_variables.py`](../src/manuscript_variables
 
 ## See also
 
-- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical semantics
+- [`../../../docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical semantics
 - [`AGENTS.md`](AGENTS.md) — Substitution-marker registry and editing checklist
 - [`../docs/output_conventions.md`](../docs/output_conventions.md) — What lands in `output/`
-- [`../../../infrastructure/prose/SKILL.md`](../../../infrastructure/prose/SKILL.md) — Underlying analysis API
-- [`../../../infrastructure/reference/SKILL.md`](../../../infrastructure/reference/SKILL.md) — Bibliography validation API
+- [`../../../infrastructure/prose/SKILL.md`](../../../../infrastructure/prose/SKILL.md) — Underlying analysis API
+- [`../../../infrastructure/reference/SKILL.md`](../../../../infrastructure/reference/SKILL.md) — Bibliography validation API

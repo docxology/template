@@ -112,6 +112,6 @@ uv run python -m infrastructure.autoresearch.cli validate --project template_aut
 
 ## Publishing
 
-- [Publishing guide](../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../docs/guides/zenodo-doi-strategy.md)
+- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md)
 - `manuscript/config.yaml` uses split DOIs: `publication.doi` (concept), `version_doi`, `version_record`
-- Current release/DOI records are generated in [`docs/_generated/publication_records.md`](../../docs/_generated/publication_records.md); release with `uv run python scripts/publish_project_release.py --project template_autoresearch_project --tag <vX.Y.Z> --repo docxology/template_autoresearch_project` after choosing the intended tag from `paper.version`.
+- Current release/DOI records are generated in [`docs/_generated/publication_records.md`](../../../docs/_generated/publication_records.md); release with `uv run python scripts/publish_project_release.py --project template_autoresearch_project --tag <vX.Y.Z> --repo docxology/template_autoresearch_project` after choosing the intended tag from `paper.version`.

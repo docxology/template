@@ -1,6 +1,6 @@
 # Code Project - Optimization Research Exemplar
 
-**This is an active project** in the `projects/` directory, discovered and executed by infrastructure discovery functions. Public exemplar roster and comparison: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on). Publication DOI layout: [`docs/guides/zenodo-doi-strategy.md`](../../docs/guides/zenodo-doi-strategy.md). Manuscript semantics: [`docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md).
+**This is an active project** in the `projects/` directory, discovered and executed by infrastructure discovery functions. Public exemplar roster and comparison: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on). Publication DOI layout: [`docs/guides/zenodo-doi-strategy.md`](../../../docs/guides/zenodo-doi-strategy.md). Manuscript semantics: [`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md).
 
 ## Overview
 
@@ -17,7 +17,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **Test suite**: covers edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; `projects/template_code_project/src/` measures well above the 90% minimum gate enforced by both the project `pyproject.toml` and the root pipeline. Live test count + achieved coverage: [`docs/_generated/canonical_facts.md`](../../docs/_generated/canonical_facts.md).
+- **Test suite**: covers edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; `projects/template_code_project/src/` measures well above the 90% minimum gate enforced by both the project `pyproject.toml` and the root pipeline. Live test count + achieved coverage: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
 - **Deterministic algorithms**: Reproducible results; tests avoid nondeterministic RNG unless documented (see `docs/agent_instructions.md`)
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -33,9 +33,9 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 Double publish (Zenodo + GitHub) via `scripts/publish_project_release.py`. Manuscript config enables transmission bookends, steganography profile documentation, and metadata-driven deposit filenames (`Author_2026_Convergence_{hash8}.pdf` — local working PDF remains `template_code_project_combined.pdf`).
 
-Current release/DOI records are generated from `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, GitHub, and Zenodo into [`docs/_generated/publication_records.md`](../../docs/_generated/publication_records.md). Do not copy per-version DOI rows here.
+Current release/DOI records are generated from `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, GitHub, and Zenodo into [`docs/_generated/publication_records.md`](../../../docs/_generated/publication_records.md). Do not copy per-version DOI rows here.
 
-Workflow reference: [`docs/guides/publishing-guide.md`](../../docs/guides/publishing-guide.md) (transmission bookends + deposit filename sections). Render/stego path: [`docs/rendering_pipeline.md`](docs/rendering_pipeline.md).
+Workflow reference: [`docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md) (transmission bookends + deposit filename sections). Render/stego path: [`docs/rendering_pipeline.md`](docs/rendering_pipeline.md).
 
 ### Scientific Validation & Analysis
 
@@ -83,7 +83,7 @@ flowchart TB
 
 ## Installation/Setup
 
-Install dependencies from the **repository root** with `uv sync` (see root [`pyproject.toml`](../../pyproject.toml)). The root `[tool.uv.workspace]` has `members = []`, so this directory is not a separate uv workspace package; [`projects/template_code_project/pyproject.toml`](pyproject.toml) still pins **pytest/coverage** settings, documents the project name, and lists scientific dependencies used when running tools against this tree in isolation.
+Install dependencies from the **repository root** with `uv sync` (see root [`pyproject.toml`](../../../pyproject.toml)). The root `[tool.uv.workspace]` has `members = []`, so this directory is not a separate uv workspace package; [`projects/template_code_project/pyproject.toml`](pyproject.toml) still pins **pytest/coverage** settings, documents the project name, and lists scientific dependencies used when running tools against this tree in isolation.
 
 ## Usage Examples
 
@@ -313,13 +313,13 @@ These issues were discovered during development and are documented here for futu
 
 4. **`MPLBACKEND=Agg` in conftest**: Without this, matplotlib tests may try to open display windows and hang. Set `os.environ.setdefault("MPLBACKEND", "Agg")` at the top of `conftest.py`.
 
-> **See also**: [New Project Setup Guide](../../docs/guides/new-project-setup.md) for the full checklist.
+> **See also**: [New Project Setup Guide](../../../docs/guides/new-project-setup.md) for the full checklist.
 
-This project complies with the template development standards in **[`docs/rules/`](../../docs/rules/)** and the root **[`.cursorrules`](../../.cursorrules)** file.
+This project complies with the template development standards in **[`docs/rules/`](../../../docs/rules/)** and the root **[`.cursorrules`](../../../.cursorrules)** file.
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: live test count and achieved coverage tracked in [`canonical_facts.md`](../../docs/_generated/canonical_facts.md); the current suite runs well above the 90% gate
+- **90%+ coverage**: live test count and achieved coverage tracked in [`canonical_facts.md`](../../../docs/_generated/canonical_facts.md); the current suite runs well above the 90% gate
 - **Real data only**: All tests use computations, no mocks
 - **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Tests use fixed inputs; any use of random draws should be justified or seeded (see `docs/agent_instructions.md`)
@@ -492,8 +492,8 @@ Step sizes: 100%|██████████████████| 4/4 [00
 ## See Also
 
 - [Root AGENTS.md](../../AGENTS.md) - Template documentation
-- [Publishing guide](../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../docs/guides/zenodo-doi-strategy.md) — split `publication.doi` (concept) / `version_doi` layout
-- [infrastructure/scientific/](../../infrastructure/scientific/AGENTS.md) - Scientific utilities
+- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) — split `publication.doi` (concept) / `version_doi` layout
+- [infrastructure/scientific/](../../../infrastructure/scientific/AGENTS.md) - Scientific utilities
 - [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax for this project
-- [`../../docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md) — Repository-wide manuscript semantics
+- [`../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide manuscript semantics
 - [`../../AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) — public exemplar roster

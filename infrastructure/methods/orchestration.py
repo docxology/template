@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from infrastructure.core.pipeline.dag import PipelineDAG, StageDefinition
@@ -22,6 +23,15 @@ _STAGE_NAME_TO_KEY = {
 }
 
 _METHOD_SECTION_TOKENS = ("method", "methodology", "experimental_setup", "protocol")
+
+# A manuscript file is a method section if its *filename* carries a method token
+# (above) OR it contains a top-level Methods/Methodology/Protocol heading. The
+# heading fallback covers exemplars (e.g. template_template) whose Methods content
+# lives inside a differently-named section file such as `03a_architecture.md`.
+_METHOD_HEADING_RE = re.compile(
+    r"(?m)^#{1,3}[ \t]+(?:methods?|methodology|experimental[ _-]setup|protocol)\b",
+    re.IGNORECASE,
+)
 
 
 def build_methods_orchestration_plan(
@@ -228,6 +238,13 @@ def _discover_method_sections(project_root: Path, repo_root: Path) -> tuple[str,
     for path in sorted(manuscript_dir.glob("*.md")):
         normalized = path.stem.lower().replace("-", "_")
         if any(token in normalized for token in _METHOD_SECTION_TOKENS):
+            sections.append(_relative_to(path, repo_root).as_posix())
+            continue
+        try:
+            body = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        if _METHOD_HEADING_RE.search(body):
             sections.append(_relative_to(path, repo_root).as_posix())
     return tuple(sections)
 

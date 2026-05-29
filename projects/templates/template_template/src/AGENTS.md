@@ -27,7 +27,7 @@ Module documentation: [`template_template/AGENTS.md`](template_template/AGENTS.m
 
 ## Publishing
 
-Release workflow: [`../../../docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md) and [`../../../docs/guides/zenodo-doi-strategy.md`](../../../docs/guides/zenodo-doi-strategy.md). Concept DOI lives in `manuscript/config.yaml` → `publication.doi`.
+Release workflow: [`../../../docs/guides/publishing-guide.md`](../../../../docs/guides/publishing-guide.md) and [`../../../docs/guides/zenodo-doi-strategy.md`](../../../../docs/guides/zenodo-doi-strategy.md). Concept DOI lives in `manuscript/config.yaml` → `publication.doi`.
 
 ## See Also
 

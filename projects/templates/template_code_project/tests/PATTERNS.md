@@ -146,7 +146,7 @@ uv run pytest projects/template_code_project/tests/ \
     --cov-report=html
 ```
 
-The `pyproject.toml` enforces `fail_under = 90` as the CI gate. Live achieved coverage is tracked in [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md). Do not delete tests to make a coverage number work — fix the gap.
+The `pyproject.toml` enforces `fail_under = 90` as the CI gate. Live achieved coverage is tracked in [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md). Do not delete tests to make a coverage number work — fix the gap.
 
 ## Determinism
 
