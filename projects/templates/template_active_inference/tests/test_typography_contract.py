@@ -21,6 +21,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
+
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +33,29 @@ CONFIG = PROJECT_ROOT / "manuscript" / "config.yaml"
 def _fenced_latex(preamble_text: str) -> str:
     blocks = re.findall(r"```\s*latex\s*\n(.*?)\n\s*```", preamble_text, re.DOTALL)
     return "\n".join(blocks)
+
+
+_EMITTED_TEX = PROJECT_ROOT / "output" / "pdf" / "_combined_manuscript.tex"
+
+
+def test_declared_typography_reaches_emitted_tex() -> None:
+    """Consumed-inventory gate: every declared typography knob reaches the render.
+
+    Declaring a knob is not enough — it must be *consumed* into the emitted LaTeX
+    (a knob can be named yet overridden/dropped and change no pixel). Binds the
+    silent declared-vs-rendered gap: config geometry and the preamble font-scale must
+    both appear verbatim in the rendered .tex. Skipped only when no render exists yet.
+    """
+    if not _EMITTED_TEX.is_file():
+        pytest.skip("no rendered _combined_manuscript.tex yet — run scripts/03_render_pdf.py")
+    tex = _EMITTED_TEX.read_text(encoding="utf-8")
+    config = yaml.safe_load(CONFIG.read_text())
+    geometry = (config.get("metadata") or {}).get("geometry", "")
+    assert geometry and geometry in tex, f"declared geometry {geometry!r} did not reach the emitted tex"
+    latex = _fenced_latex(PREAMBLE.read_text())
+    fontsize_decl = re.search(r"\\changefontsize\[[^\]]+\]\{[^}]+\}", latex)
+    assert fontsize_decl, "no bracketed changefontsize in preamble"
+    assert fontsize_decl.group(0) in tex, "declared font scaling did not reach the emitted tex"
 
 
 def test_preamble_is_fenced() -> None:
