@@ -80,6 +80,32 @@ repos:
         always_run: true
         verbose: true
 
+      # Docs/signpost contracts at push time. The personal-memory leak class
+      # shipped to origin once (commit 5345b025) because these guards only ran
+      # in the test suite, not before push: (1) check_template_drift --strict
+      # fails on any dead exemplar link (same gate as CI docs-lint); (2) the
+      # public AGENTS.md must never carry "## Learned User Preferences" /
+      # "## Learned Workspace Facts" personal-memory blocks.
+      - id: docs-contract-guard
+        name: docs signpost + public-AGENTS contract (dead links + no personal memory)
+        entry: bash
+        args:
+          - -eo
+          - pipefail
+          - -c
+          - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
+            export PYTHONDONTWRITEBYTECODE=1 &&
+            uv run python scripts/check_template_drift.py --strict &&
+            uv run pytest
+            tests/infra_tests/test_docs_discovery_consistency.py::test_root_agents_is_public_repo_contract_not_personal_memory
+            -q --import-mode=importlib
+        language: system
+        pass_filenames: false
+        stages: [pre-push, manual]
+        always_run: true
+        verbose: true
+
       # Mirrors the CI `security` job's Bandit step
       # (.github/workflows/ci.yml — "Code security scan (Bandit MEDIUM+ severity)").
       # Same scope and severity gate (`-ll` = MEDIUM+); exclusions are configured
