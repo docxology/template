@@ -47,7 +47,7 @@ associated projects from their canonical private checkout, not through public
 `template/projects/<name>` symlinks.
 
 **Local agent memory (gitignored):** When present, read
-[`.cursor/hooks/state/continual-learning-memory.json`](.cursor/hooks/state/continual-learning-memory.json)
+`.cursor/hooks/state/continual-learning-memory.json`
 for durable user preferences and workspace facts. Never commit this file or write
 Learned sections into root `AGENTS.md`. Schema:
 [`.cursor/hooks/state/continual-learning-memory.example.json`](.cursor/hooks/state/continual-learning-memory.example.json).
