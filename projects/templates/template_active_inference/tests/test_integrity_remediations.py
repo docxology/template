@@ -133,6 +133,7 @@ def test_concordance_catches_ontology_relabel() -> None:
 # ── H1: Lean axioms audit ────────────────────────────────────────────────────
 
 
+@pytest.mark.skipif(shutil.which("lake") is None, reason="lake toolchain not installed")
 def test_lean_axioms_clean_on_real_project() -> None:
     ok, output = lean_axioms_clean(PROJECT_ROOT)
     assert ok, output
@@ -156,6 +157,7 @@ def test_lean_axioms_catches_native_decide(tmp_path: Path) -> None:
     assert not ok, f"native_decide (Lean.ofReduceBool) must fail the axioms audit: {out}"
 
 
+@pytest.mark.skipif(shutil.which("lake") is None, reason="lake toolchain not installed")
 def test_lean_axioms_catches_planted_sorry(tmp_path: Path) -> None:
     assert lean_project_present(PROJECT_ROOT)
     shutil.copytree(PROJECT_ROOT / "lean", tmp_path / "lean")
