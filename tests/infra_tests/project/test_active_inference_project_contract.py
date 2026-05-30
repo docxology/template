@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -133,8 +134,18 @@ def test_methods_sheaf_layers_in_composed_manuscript() -> None:
 
 
 def test_build_lean_when_present_must_succeed() -> None:
+    """Build the Lean package when lake is installed and the project ships one.
+
+    Skipped when the lake toolchain is absent (e.g. standard CI workers that
+    don't install elan/lake; only the fep-lean CI job carries the toolchain).
+    """
+    if shutil.which("lake") is None:
+        import pytest
+
+        pytest.skip("lake toolchain not installed — skipping Lean build contract")
     root = _project_root()
     assert (root / "lean" / "lakefile.lean").is_file()
+    sys.path.insert(0, str(root / "src"))
     from gates.validation import build_lean
 
     code, msg = build_lean(root)

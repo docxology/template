@@ -97,9 +97,23 @@ def test_top_level_docs_do_not_claim_four_public_exemplars() -> None:
 
 
 def test_docs_markdown_no_broken_projects_paths() -> None:
-    """Links under docs/ must not point at projects/NAME/ unless NAME exists."""
+    """Links under docs/ must not point at projects/NAME/ unless NAME exists.
+
+    ``valid`` is seeded with the declared lifecycle subfolder names so the
+    check is clone-stable. On a fresh CI checkout ``projects/`` only tracks
+    ``templates/`` and the root *.md files; ``working/``, ``archive/``,
+    ``published/``, ``other/``, and ``active/`` are local-only lifecycle
+    mirrors and must not be treated as broken links just because they aren't
+    tracked directories on the CI worker.
+    """
+    from infrastructure.project.discovery import NON_RENDERED_SUBDIRS
+
     root = _repo_root()
-    valid = {p.name for p in (root / "projects").iterdir() if p.is_dir() and not p.name.startswith(".")}
+    # Lifecycle dirs are valid project prefixes by declaration, not by presence.
+    lifecycle_dirs = NON_RENDERED_SUBDIRS | {"active", "templates"}
+    valid = lifecycle_dirs | {
+        p.name for p in (root / "projects").iterdir() if p.is_dir() and not p.name.startswith(".")
+    }
     link_target = re.compile(r"\]\(([^)]+)\)")
     projects_segment = re.compile(r"projects/([a-z0-9_]+)/")
     failures: list[str] = []
