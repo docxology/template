@@ -4,7 +4,10 @@ This module reads project metadata from pyproject.toml and
 manuscript/config.yaml files.
 """
 
-import tomllib
+try:
+    import tomllib
+except ImportError:  # Python <3.11 — use backport
+    import tomli as tomllib  # type: ignore[no-redef]
 from pathlib import Path
 from typing import Any
 

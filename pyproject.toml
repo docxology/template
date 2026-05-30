@@ -38,6 +38,8 @@ dependencies = [
   # benchmarking and figure generation — not optional for projects using this template
   "numpy>=1.22",
   "pyyaml>=6.0",
+  # tomllib was added to the stdlib in Python 3.11; backport for 3.10.
+  "tomli>=2.0; python_version < '3.11'",
   "pillow>=10.0",
   "matplotlib>=3.7",
   # scipy, scikit-learn, wordcloud, rdflib are in [scientific] optional group — install with:

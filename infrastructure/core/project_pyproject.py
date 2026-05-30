@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-import tomllib
+try:
+    import tomllib
+except ImportError:  # Python <3.11 — use backport
+    import tomli as tomllib  # type: ignore[no-redef]
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path

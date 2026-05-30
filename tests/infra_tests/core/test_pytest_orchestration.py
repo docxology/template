@@ -203,7 +203,9 @@ def test_build_union_pytest_command_uses_qualified_cov_path(tmp_path: Path) -> N
         timeout=30,
     )
     joined = " ".join(cmd)
-    assert "--cov=projects/templates/demo/src" in joined
+    # cov path is now ABSOLUTE so pytest resolves it correctly when
+    # ``uv run --directory`` sets the subprocess CWD to the project directory.
+    assert f"--cov={src.resolve()}" in joined
     assert "--cov-append" not in joined
 
     cmd_append = build_union_pytest_command(

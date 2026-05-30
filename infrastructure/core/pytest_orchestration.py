@@ -290,16 +290,16 @@ def build_union_pytest_command(
 ) -> list[str]:
     """Build argv for one project in a multi-project combined-coverage run."""
     resolved_root = project_root.resolve()
-    repo = repo_root.resolve()
     src_dir = resolved_root / "src"
-    try:
-        rel = resolved_root.relative_to(repo)
-    except ValueError:
-        rel = Path(resolved_root.name)
+    # Use the ABSOLUTE resolved path so that --cov resolves correctly even
+    # when pytest runs under ``uv run --directory <project>`` which sets the
+    # subprocess CWD to the project directory — making a repo-relative path
+    # (e.g. ``projects/templates/.../src``) resolve to the wrong location and
+    # collect 0% coverage.
     if src_dir.is_dir():
-        cov_target = str(rel / "src").replace("\\", "/")
+        cov_target = str(src_dir)
     else:
-        cov_target = str(rel).replace("\\", "/")
+        cov_target = str(resolved_root)
 
     pytest_args: list[str] = [
         str(tests_dir),
