@@ -737,8 +737,9 @@ class TestDiscoverProjects:
         assert project.has_manuscript is True
         assert project.is_valid is True
 
-    def test_discover_excludes_archive_subfolder(self, tmp_path: Path):
-        """Test discovery does not scan the projects/archive/ subfolder."""
+    @pytest.mark.parametrize("subdir", ["working", "published", "archive", "other"])
+    def test_discover_excludes_archive_subfolder(self, tmp_path: Path, subdir: str):
+        """Test discovery does not scan any NON_RENDERED_SUBDIRS subfolder."""
         # Create projects directory with valid project
         projects_dir = tmp_path / "projects"
         projects_dir.mkdir()
@@ -748,18 +749,18 @@ class TestDiscoverProjects:
         (active / "src" / "__init__.py").write_text("")
         (active / "tests" / "__init__.py").write_text("")
 
-        # Create projects/archive/ subfolder with valid project (should be ignored)
-        archive_dir = projects_dir / "archive"
-        archive_dir.mkdir()
-        archived = archive_dir / "archived_project"
-        (archived / "src").mkdir(parents=True)
-        (archived / "tests").mkdir()
-        (archived / "src" / "__init__.py").write_text("")
-        (archived / "tests" / "__init__.py").write_text("")
+        # Create projects/<subdir>/ subfolder with valid project (should be ignored)
+        non_rendered_dir = projects_dir / subdir
+        non_rendered_dir.mkdir()
+        nested = non_rendered_dir / "nested_project"
+        (nested / "src").mkdir(parents=True)
+        (nested / "tests").mkdir()
+        (nested / "src" / "__init__.py").write_text("")
+        (nested / "tests" / "__init__.py").write_text("")
 
         projects = discover_projects(tmp_path)
 
-        # Only active project should be discovered
+        # Only active project should be discovered; nested_project must not appear
         assert len(projects) == 1
         assert projects[0].name == "active_project"
 
@@ -1349,4 +1350,70 @@ def test_resolve_project_root_promoted_active_beats_templates(tmp_path: Path) ->
     (templated / "manuscript").mkdir()
 
     resolved = resolve_project_root(tmp_path, "template_demo")
+    assert resolved == active.resolve()
+
+
+def test_resolve_project_root_qualified_templates_prefix(tmp_path: Path) -> None:
+    """``templates/<name>`` qualified prefix takes the fast path directly under projects/."""
+    exemplar = tmp_path / "projects" / "templates" / "template_demo"
+    (exemplar / "src").mkdir(parents=True)
+    (exemplar / "src" / "__init__.py").write_text("")
+
+    resolved = resolve_project_root(tmp_path, "templates/template_demo")
+    assert resolved == exemplar.resolve()
+
+
+def test_resolve_project_root_templates_stub_without_markers_does_not_win(tmp_path: Path) -> None:
+    """An empty templates stub (no src/tests/scripts/manuscript) must not shadow an active tree."""
+    # Empty stub under templates/ — no project markers present
+    stub = tmp_path / "projects" / "templates" / "template_stub"
+    stub.mkdir(parents=True)
+
+    # Active shadow with output/ only — no source markers
+    active_shadow = tmp_path / "projects" / "active" / "template_stub" / "output"
+    active_shadow.mkdir(parents=True)
+
+    # WIP tree with a real marker
+    wip = tmp_path / "projects" / "working" / "template_stub"
+    (wip / "manuscript").mkdir(parents=True)
+    (wip / "manuscript" / "config.yaml").write_text("paper:\n  title: Stub WIP\n")
+
+    resolved = resolve_project_root(tmp_path, "template_stub")
+    # The empty templates stub must NOT win; the wip tree with a marker should be returned
+    assert resolved != stub.resolve()
+    assert resolved == wip.resolve()
+
+
+def test_resolve_project_root_qualified_templates_prefix(tmp_path: Path) -> None:
+    """A qualified 'templates/<name>' path resolves directly under projects/templates/.
+
+    Regression guard: ensure the qualified-prefix fast-path (lines 151-156 of
+    discovery.py) correctly bypasses the active/working/flat search.
+    """
+    exemplar = tmp_path / "projects" / "templates" / "template_demo"
+    (exemplar / "src").mkdir(parents=True)
+    (exemplar / "tests").mkdir()
+    (exemplar / "src" / "__init__.py").write_text("")
+
+    resolved = resolve_project_root(tmp_path, "templates/template_demo")
+    assert resolved == exemplar.resolve()
+
+
+def test_resolve_project_root_templates_stub_without_markers_falls_through(tmp_path: Path) -> None:
+    """A templates/ dir that exists but lacks project markers must NOT shadow active/.
+
+    The templates lookup uses has_project_markers() so a stub directory (e.g. an
+    output-only artifact under projects/templates/) does not incorrectly win over a
+    properly-structured projects/active/ tree.
+    """
+    # Templates stub: exists but no src/tests/scripts/manuscript
+    (tmp_path / "projects" / "templates" / "template_stub" / "output").mkdir(parents=True)
+    # Active: full project with markers
+    active = tmp_path / "projects" / "active" / "template_stub"
+    (active / "src").mkdir(parents=True)
+    (active / "tests").mkdir()
+    (active / "src" / "__init__.py").write_text("")
+
+    resolved = resolve_project_root(tmp_path, "template_stub")
+    # The active/ project wins; the marker-less templates/ stub must not shadow it.
     assert resolved == active.resolve()
