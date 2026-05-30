@@ -7,7 +7,12 @@ that constructs reports from stage results.
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, NotRequired, TypedDict
+from typing import Any, TypedDict
+
+try:
+    from typing import NotRequired
+except ImportError:  # Python <3.11
+    from typing_extensions import NotRequired  # type: ignore[assignment]
 
 from infrastructure.core.runtime.checkpoint import StageResult
 from infrastructure.core.logging.utils import get_logger

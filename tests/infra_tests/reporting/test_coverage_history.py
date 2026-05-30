@@ -9,7 +9,7 @@ from __future__ import annotations
 import shutil
 import subprocess
 import sys
-from datetime import UTC, date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -58,7 +58,7 @@ def _write_cobertura(
 
 
 def test_parse_coverage_xml_extracts_all_fields(tmp_path: Path) -> None:
-    when = datetime(2026, 5, 1, 12, 0, tzinfo=UTC)
+    when = datetime(2026, 5, 1, 12, 0, tzinfo=timezone.utc)
     xml_path = _write_cobertura(
         tmp_path / "coverage-infra.xml",
         line_rate=0.8333,
@@ -75,11 +75,11 @@ def test_parse_coverage_xml_extracts_all_fields(tmp_path: Path) -> None:
     assert pt.lines_total == 3000
     assert abs(pt.percentage - 83.33) < 0.01
     assert pt.date.tzinfo is not None
-    assert pt.date.astimezone(UTC).date() == date(2026, 5, 1)
+    assert pt.date.astimezone(timezone.utc).date() == date(2026, 5, 1)
 
 
 def test_parse_coverage_xml_infers_suite_from_filename(tmp_path: Path) -> None:
-    when = datetime(2026, 4, 28, tzinfo=UTC)
+    when = datetime(2026, 4, 28, tzinfo=timezone.utc)
     xml_path = _write_cobertura(
         tmp_path / "coverage-fep_lean.xml",
         line_rate=0.91,
@@ -109,7 +109,7 @@ def test_parse_coverage_xml_rejects_non_cobertura_root(tmp_path: Path) -> None:
 
 
 def _sample_points() -> list[CoveragePoint]:
-    base = datetime(2026, 5, 1, 12, 0, tzinfo=UTC)
+    base = datetime(2026, 5, 1, 12, 0, tzinfo=timezone.utc)
     return [
         CoveragePoint(date=base.replace(day=1), suite="infra", percentage=82.50, lines_covered=825, lines_total=1000),
         CoveragePoint(date=base.replace(day=1), suite="project", percentage=91.00, lines_covered=910, lines_total=1000),
@@ -138,9 +138,9 @@ def test_build_history_markdown_is_deterministic() -> None:
 
 
 def test_build_history_markdown_drops_points_outside_window() -> None:
-    base = datetime(2026, 5, 1, tzinfo=UTC)
+    base = datetime(2026, 5, 1, tzinfo=timezone.utc)
     far_past = CoveragePoint(
-        date=datetime(2025, 1, 1, tzinfo=UTC),
+        date=datetime(2025, 1, 1, tzinfo=timezone.utc),
         suite="infra",
         percentage=10.0,
         lines_covered=100,
@@ -161,7 +161,7 @@ def test_build_history_markdown_handles_empty_input() -> None:
 
 
 def test_build_history_markdown_canonical_column_order() -> None:
-    base = datetime(2026, 5, 1, tzinfo=UTC)
+    base = datetime(2026, 5, 1, tzinfo=timezone.utc)
     points = [
         CoveragePoint(date=base, suite="zeta", percentage=50.0, lines_covered=5, lines_total=10),
         CoveragePoint(date=base, suite="project", percentage=90.0, lines_covered=9, lines_total=10),
@@ -180,8 +180,8 @@ def test_build_history_markdown_canonical_column_order() -> None:
 
 
 def test_collect_history_from_dir_parses_all_files(tmp_path: Path) -> None:
-    when_a = datetime(2026, 5, 1, tzinfo=UTC)
-    when_b = datetime(2026, 5, 2, tzinfo=UTC)
+    when_a = datetime(2026, 5, 1, tzinfo=timezone.utc)
+    when_b = datetime(2026, 5, 2, tzinfo=timezone.utc)
     nested = tmp_path / "run-123"
     nested.mkdir()
     _write_cobertura(nested / "coverage-infra.xml", line_rate=0.80, lines_covered=80, lines_total=100, when=when_a)
@@ -208,7 +208,7 @@ def test_collect_history_from_dir_skips_malformed(tmp_path: Path) -> None:
         line_rate=0.5,
         lines_covered=50,
         lines_total=100,
-        when=datetime(2026, 5, 1, tzinfo=UTC),
+        when=datetime(2026, 5, 1, tzinfo=timezone.utc),
     )
     (tmp_path / "coverage-broken.xml").write_text("<not><valid xml", encoding="utf-8")
 
@@ -230,7 +230,7 @@ def test_driver_from_dir_writes_valid_markdown(tmp_path: Path) -> None:
     # point always falls inside the rolling --days window, regardless of
     # when the test runs. A fixed historical date drifts out of range as
     # wall-clock time advances.
-    when = datetime.now(UTC) - timedelta(days=2)
+    when = datetime.now(timezone.utc) - timedelta(days=2)
     _write_cobertura(artefacts / "coverage-infra.xml", line_rate=0.84, lines_covered=84, lines_total=100, when=when)
     _write_cobertura(artefacts / "coverage-project.xml", line_rate=0.93, lines_covered=93, lines_total=100, when=when)
 
@@ -260,7 +260,7 @@ def test_driver_from_dir_is_idempotent(tmp_path: Path) -> None:
     """Same input → byte-identical output across two driver invocations."""
     artefacts = tmp_path / "artefacts"
     artefacts.mkdir()
-    when = datetime(2026, 5, 3, tzinfo=UTC)
+    when = datetime(2026, 5, 3, tzinfo=timezone.utc)
     _write_cobertura(artefacts / "coverage-infra.xml", line_rate=0.7, lines_covered=70, lines_total=100, when=when)
 
     out_a = tmp_path / "a.md"
@@ -282,7 +282,7 @@ def test_driver_from_dir_is_idempotent(tmp_path: Path) -> None:
     assert out_a.read_bytes() == out_b.read_bytes()
     # Driver itself runs cleanly (we don't compare bytes here because the
     # driver uses datetime.now()'s date as anchor — nondeterministic across
-    # midnight UTC, which is the expected behavior).
+    # midnight timezone.utc, which is the expected behavior).
     completed = subprocess.run(
         base_cmd + [f"--output={tmp_path / 'driven.md'}"], capture_output=True, text=True, timeout=60, check=False
     )

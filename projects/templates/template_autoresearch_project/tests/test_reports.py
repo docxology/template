@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from infrastructure.autoresearch import BudgetPolicy
@@ -31,7 +31,7 @@ def test_render_loop_markdown_includes_declared_stage_status() -> None:
     )
     result = AutoResearchLoopResult(
         project_name="demo",
-        generated_at=datetime.now(UTC).isoformat(timespec="seconds"),
+        generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
         config=config,
         stage_results=(
             LoopStageResult(
@@ -62,7 +62,7 @@ def test_render_stage_matrix_csv_header() -> None:
     )
     result = AutoResearchLoopResult(
         project_name="demo",
-        generated_at=datetime.now(UTC).isoformat(timespec="seconds"),
+        generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
         config=config,
         stage_results=(
             LoopStageResult(
@@ -92,7 +92,7 @@ def test_review_packet_distinguishes_ready_from_publication_approval() -> None:
     )
     result = AutoResearchLoopResult(
         project_name="demo",
-        generated_at=datetime.now(UTC).isoformat(timespec="seconds"),
+        generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
         config=config,
         stage_results=(
             LoopStageResult(
@@ -138,7 +138,7 @@ def test_review_packet_copies_only_manual_publication_approval() -> None:
     )
     result = AutoResearchLoopResult(
         project_name="demo",
-        generated_at=datetime.now(UTC).isoformat(timespec="seconds"),
+        generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
         config=config,
         stage_results=(),
         claims=(),

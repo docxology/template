@@ -33,7 +33,7 @@ import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
-from datetime import UTC, date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Sequence
 
@@ -54,7 +54,7 @@ class CoveragePoint:
     """A single coverage measurement for one suite at a specific timestamp.
 
     Attributes:
-        date: Timestamp of the underlying CI run (UTC, tz-aware).
+        date: Timestamp of the underlying CI run (timezone.utc, tz-aware).
         suite: Logical suite name — ``"infra"``, ``"project"``, or any
             additional suite discovered from ``coverage-*.xml`` filenames.
         percentage: Coverage in ``[0.0, 100.0]`` (Cobertura ``line-rate`` × 100).
@@ -94,22 +94,22 @@ def _suite_from_filename(path: Path) -> str:
 def _parse_timestamp(raw: str | None) -> datetime:
     """Parse Cobertura's ``timestamp`` attribute (Unix epoch in milliseconds).
 
-    Falls back to ``datetime.now(UTC)`` if the attribute is missing or
+    Falls back to ``datetime.now(timezone.utc)`` if the attribute is missing or
     unparseable — we'd rather emit an approximate point than skip data.
     """
     if not raw:
-        return datetime.now(UTC)
+        return datetime.now(timezone.utc)
     try:
         # Cobertura ships milliseconds; ``coverage.py`` uses milliseconds too.
         epoch_ms = int(raw)
-        return datetime.fromtimestamp(epoch_ms / 1000.0, tz=UTC)
+        return datetime.fromtimestamp(epoch_ms / 1000.0, tz=timezone.utc)
     except (ValueError, TypeError, OSError):
         # Some toolchains write seconds instead of milliseconds; try that next.
         try:
-            return datetime.fromtimestamp(float(raw), tz=UTC)
+            return datetime.fromtimestamp(float(raw), tz=timezone.utc)
         except (ValueError, TypeError, OSError):
             logger.warning("Coverage XML at unparseable timestamp %r; using now()", raw)
-            return datetime.now(UTC)
+            return datetime.now(timezone.utc)
 
 
 def parse_coverage_xml(path: Path) -> "CoveragePoint":
@@ -186,11 +186,11 @@ def _format_pct(value: float | None) -> str:
 
 
 def _bucket_by_day(points: Sequence[CoveragePoint]) -> dict[date, dict[str, float]]:
-    """Group points by UTC date → suite → percentage (latest wins per day)."""
+    """Group points by timezone.utc date → suite → percentage (latest wins per day)."""
     by_day: dict[date, dict[str, float]] = {}
     # Sort so that "latest wins" is deterministic.
     for pt in sorted(points, key=lambda p: (p.date, p.suite)):
-        day = pt.date.astimezone(UTC).date()
+        day = pt.date.astimezone(timezone.utc).date()
         by_day.setdefault(day, {})[pt.suite] = pt.percentage
     return by_day
 
@@ -208,17 +208,17 @@ def build_history_markdown(
             anything outside the rolling window is dropped.
         days: Width of the rolling window in days (default 30).
         today: Override the "today" anchor — used by tests to pin output.
-            Defaults to the current UTC date.
+            Defaults to the current timezone.utc date.
 
     Returns:
         A Markdown document string. The function is pure and idempotent:
         calling it twice with identical inputs returns identical output.
     """
-    anchor = today if today is not None else datetime.now(UTC).date()
+    anchor = today if today is not None else datetime.now(timezone.utc).date()
     cutoff = anchor - timedelta(days=days - 1)
 
     # Filter to window + bucket per day.
-    in_window = [p for p in points if cutoff <= p.date.astimezone(UTC).date() <= anchor]
+    in_window = [p for p in points if cutoff <= p.date.astimezone(timezone.utc).date() <= anchor]
     by_day = _bucket_by_day(in_window)
 
     # Discover which suites appear, then stabilise their order:
@@ -352,7 +352,7 @@ def collect_history_via_gh(
         Coverage points sorted by ``(date, suite)``.
     """
     _require_gh_cli()
-    cutoff = datetime.now(UTC) - timedelta(days=days)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
     # Heuristic limit: assume ≤8 successful runs per day, capped at 250 (gh max).
     limit = min(250, max(20, days * 8))
 

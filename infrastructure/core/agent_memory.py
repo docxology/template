@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -87,7 +87,7 @@ def save_memory(repo_root: Path, payload: dict[str, Any]) -> Path:
     payload = dict(payload)
     payload["learned_user_preferences"] = normalize_bullets(payload["learned_user_preferences"])
     payload["learned_workspace_facts"] = normalize_bullets(payload["learned_workspace_facts"])
-    payload["updated_at"] = datetime.now(tz=UTC).isoformat()
+    payload["updated_at"] = datetime.now(tz=timezone.utc).isoformat()
     path = memory_path(repo_root)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

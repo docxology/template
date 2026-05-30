@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from infrastructure.autoresearch import (
@@ -59,7 +59,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
     config = build_loop_config(plan, settings, human_review=human_review)
     readiness_pre = validate_autoresearch_plan(plan, project_root, phase="intrinsic")
     stage_results = build_stage_results(config, plan_stage_count=len(plan.stages))
-    generated_at = datetime.now(UTC).isoformat(timespec="seconds")
+    generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
     output_paths: list[Path] = []
     output_paths.extend(

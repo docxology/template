@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 import shutil
 
@@ -44,7 +44,7 @@ def test_write_loop_payloads_writes_core_and_finalize_artifacts(tmp_path: Path) 
             suggested_action="review",
         ),
     )
-    generated_at = datetime.now(UTC).isoformat(timespec="seconds")
+    generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
     result = AutoResearchLoopResult(
         project_name="demo",
         generated_at=generated_at,

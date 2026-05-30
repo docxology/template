@@ -7,7 +7,7 @@ import re
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -289,7 +289,7 @@ def render_publication_records_doc(
 ) -> str:
     """Render ``docs/_generated/publication_records.md``."""
     repo_root = Path(repo_root).resolve()
-    generated_at = generated_at or datetime.now(UTC)
+    generated_at = generated_at or datetime.now(timezone.utc)
     generated_text = generated_at.isoformat(timespec="seconds")
     external_text = f"refreshed at `{generated_text}`" if refreshed_external else "not refreshed in this run"
 
