@@ -18,7 +18,6 @@ QR strips, and LaTeX post-processing; this renderer is the portable subset.
 
 from __future__ import annotations
 
-import re
 import shutil
 import subprocess
 import sys
@@ -31,20 +30,7 @@ SRC = PROJECT_ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-
-def _extract_preamble(preamble_md: Path) -> str:
-    """Return the LaTeX inside the ```latex fence of preamble.md (or "")."""
-    if not preamble_md.is_file():
-        return ""
-    blocks = re.findall(r"```\s*latex\s*\n(.*?)\n\s*```", preamble_md.read_text(encoding="utf-8"), re.DOTALL)
-    return "\n".join(b.strip() for b in blocks)
-
-
-def _geometry(config_yaml: Path) -> str:
-    if not config_yaml.is_file():
-        return "margin=0.5in"
-    data = yaml.safe_load(config_yaml.read_text(encoding="utf-8")) or {}
-    return str((data.get("metadata") or {}).get("geometry") or "margin=0.5in")
+from manuscript.render_helpers import extract_preamble, geometry_string  # noqa: E402
 
 
 def main() -> int:
@@ -75,7 +61,7 @@ def main() -> int:
 
     # 4. preamble (font) + geometry (margins), both from project-owned sources.
     header_tex = out_pdf_dir / "_standalone_preamble.tex"
-    header_tex.write_text(_extract_preamble(manuscript_dir / "preamble.md") + "\n", encoding="utf-8")
+    header_tex.write_text(extract_preamble(manuscript_dir / "preamble.md") + "\n", encoding="utf-8")
 
     config = yaml.safe_load((manuscript_dir / "config.yaml").read_text(encoding="utf-8")) or {}
     title = str((config.get("paper") or {}).get("title") or "Manuscript")
@@ -93,7 +79,7 @@ def main() -> int:
         "-H",
         str(header_tex),
         "-V",
-        f"geometry:{_geometry(manuscript_dir / 'config.yaml')}",
+        f"geometry:{geometry_string(manuscript_dir / 'config.yaml')}",
         # Red hyperlinks — self-contained, no LaTeX post-processing needed.
         "-V",
         "colorlinks=true",
