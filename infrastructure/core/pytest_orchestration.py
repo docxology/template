@@ -246,12 +246,24 @@ def build_project_pytest_command(project_root: Path, pytest_args: list[str]) -> 
     Projects with ``pyproject.toml`` run via ``uv run --directory`` so pinned
     dependencies (for example ``scikit-learn``) resolve from the project tree
     instead of the workspace interpreter.
+
+    Test-runner packages (``pytest``, ``pytest-cov``, ``pytest-timeout``) are
+    injected via ``--with`` so they are always available in the project's
+    ephemeral env even when the project's own ``pyproject.toml`` does not declare
+    them. Without this, projects that only declare scientific deps (numpy /
+    matplotlib) would fail with ``--timeout=120 unrecognized argument`` (exit=4)
+    because the project venv is created on-demand by ``uv run --directory`` and
+    contains only the project's own deps — not the workspace dev group.
     """
     pyproject = project_root / "pyproject.toml"
     uv_path = shutil.which("uv")
     if pyproject.is_file() and uv_path:
         resolved_root = project_root.resolve()
         cmd: list[str] = [uv_path, "run", "--directory", str(resolved_root)]
+        # Inject test-runner deps so they are always available regardless of
+        # what the project itself declares (thin projects declare only runtime
+        # deps; pytest/cov/timeout stay in the workspace dev group).
+        cmd.extend(["--with", "pytest", "--with", "pytest-cov", "--with", "pytest-timeout"])
         if project_declares_dev_extra(resolved_root):
             cmd.extend(["--extra", "dev"])
         cmd.extend(

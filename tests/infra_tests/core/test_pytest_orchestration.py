@@ -162,6 +162,28 @@ def test_build_project_pytest_command_uses_uv_for_pyproject_projects(tmp_path: P
     assert "-m" in cmd and "pytest" in cmd
 
 
+def test_build_project_pytest_command_injects_test_runner_deps(tmp_path: Path) -> None:
+    """Test-runner packages are injected via --with so projects without pytest in their
+    deps still work — specifically so --timeout=120 doesn't fail with exit=4 on CI where
+    ``uv run --directory`` creates a project venv from the project's own pyproject.toml
+    (which typically only declares scientific runtime deps, not test infrastructure).
+    """
+    project = tmp_path / "projects" / "thin"
+    project.mkdir(parents=True)
+    (project / "pyproject.toml").write_text(
+        "[project]\nname = \"thin\"\ndependencies = [\"numpy>=1.26\"]\n",
+        encoding="utf-8",
+    )
+
+    cmd = build_project_pytest_command(project, ["tests/", "--timeout=120"])
+    # All three test-runner packages must appear as --with arguments.
+    assert "--with" in cmd
+    with_values = [cmd[i + 1] for i, c in enumerate(cmd) if c == "--with"]
+    assert "pytest" in with_values
+    assert "pytest-cov" in with_values
+    assert "pytest-timeout" in with_values
+
+
 def test_build_union_pytest_command_uses_qualified_cov_path(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     project = repo / "projects" / "templates" / "demo"
