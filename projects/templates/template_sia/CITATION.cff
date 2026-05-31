@@ -1,0 +1,19 @@
+authors:
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
+cff-version: 1.2.0
+date-released: '2026-05-29'
+doi: 10.5281/zenodo.20453879
+keywords:
+- self-improvement agents
+- benchmark harness
+- reproducible research
+- agent evaluation
+license: MIT
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template
+title: Self-Improvement Agent Harness — A Deterministic SIA Exemplar
+type: software
+version: '0.1.0'

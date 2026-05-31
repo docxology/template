@@ -12,6 +12,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from manuscript.hydrate import write_resolved_manuscript
+from manuscript.sheaf import compose_all_sections
+from manuscript.sheaf.semantic import write_semantic_gluing_outputs
 from manuscript.variables import generate_variables
 
 
@@ -31,8 +33,21 @@ def main(argv: list[str] | None = None) -> int:
     out = PROJECT_ROOT / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(variables, indent=2), encoding="utf-8")
+    write_semantic_gluing_outputs(PROJECT_ROOT)
+
+    # Recompose after semantic outputs exist so generated layer tables reflect
+    # final artifact producers, claims, and restrictions rather than draft state.
+    compose_all_sections(PROJECT_ROOT)
+    variables = generate_variables(
+        PROJECT_ROOT,
+        require_analysis_outputs=not args.allow_draft,
+    )
+    out.write_text(json.dumps(variables, indent=2), encoding="utf-8")
+    semantic_paths = write_semantic_gluing_outputs(PROJECT_ROOT)
     resolved_dir = write_resolved_manuscript(PROJECT_ROOT, variables)
     print(out)
+    for path in semantic_paths.values():
+        print(path)
     print(resolved_dir)
     return 0
 

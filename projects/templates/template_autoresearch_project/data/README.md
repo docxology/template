@@ -14,7 +14,7 @@ subset seed, class counts, and the subset archive hash are recorded in
 Regeneration is an explicit manual maintenance action:
 
 ```bash
-uv run python projects/template_autoresearch_project/scripts/regenerate_mnist_fixture.py
+uv run python projects/templates/template_autoresearch_project/scripts/regenerate_mnist_fixture.py
 ```
 
 The script downloads upstream MNIST archives, verifies their fixed HTTPS source,

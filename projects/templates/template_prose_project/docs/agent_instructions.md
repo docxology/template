@@ -46,8 +46,8 @@ Before modifying any file in `src/`, count the existing tests for the function
 you are changing. After modifying, run:
 
 ```bash
-uv run pytest projects/template_prose_project/tests/ \
-    --cov=projects/template_prose_project/src \
+uv run pytest projects/templates/template_prose_project/tests/ \
+    --cov=projects/templates/template_prose_project/src \
     --cov-fail-under=90 \
     --cov-report=term-missing \
     -v
@@ -93,7 +93,7 @@ The pipeline analyses the manuscript using standard readability metrics.
 
 **GOOD** (concrete, linkable):
 ```markdown
-`projects/template_prose_project/src/pipeline/__init__.py::run_prose_pipeline` calls
+`projects/templates/template_prose_project/src/pipeline/__init__.py::run_prose_pipeline` calls
 `infrastructure.prose.analyze_manuscript` to compute Flesch-Kincaid Grade
 Level, Flesch Reading Ease, and Gunning Fog from the files under
 `manuscript/`, then validates citations against `manuscript/references.bib`
@@ -150,7 +150,7 @@ syntax rules to Python source.
 
 ## Rule 7: `output/` Is Disposable — Never Edit Generated Files
 
-The entire `projects/template_prose_project/output/` tree is written by the
+The entire `projects/templates/template_prose_project/output/` tree is written by the
 pipeline and overwritten on every run. Editing a file in `output/` has zero
 lasting effect and will confuse future agents.
 
@@ -177,20 +177,20 @@ Run all three commands before submitting any change to this project:
 
 ```bash
 # 1. Tests pass and coverage gate is met
-uv run pytest projects/template_prose_project/tests/ \
-    --cov=projects/template_prose_project/src \
+uv run pytest projects/templates/template_prose_project/tests/ \
+    --cov=projects/templates/template_prose_project/src \
     --cov-fail-under=90 -q
 
 # 2. No mocks exist anywhere in tests/
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
-    projects/template_prose_project/tests/ || echo "Clean — no mocks found"
+    projects/templates/template_prose_project/tests/ || echo "Clean — no mocks found"
 
 # 3. pipeline.py is the only module performing infrastructure operations
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
-    projects/template_prose_project/src/figures.py \
-    projects/template_prose_project/src/report.py \
-    projects/template_prose_project/src/manuscript_variables.py \
-    projects/template_prose_project/src/config.py \
+    projects/templates/template_prose_project/src/figures.py \
+    projects/templates/template_prose_project/src/report.py \
+    projects/templates/template_prose_project/src/manuscript_variables.py \
+    projects/templates/template_prose_project/src/config.py \
     || echo "Clean — only pipeline.py performs infrastructure operations"
 ```
 

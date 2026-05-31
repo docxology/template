@@ -1,0 +1,3 @@
+The `provenance` fragment makes artifact lineage a live validation-spine track. The configured producer `generate_validation_spine.py` writes `output/data/artifact_provenance.json`, which hashes {{validation_spine_artifact_count}} core artifacts and records their producer scripts plus config digests. Publication claims that depend on generated files must be traceable to this lineage table or to a narrower artifact-specific certificate.
+
+The first promoted provenance claim is intentionally limited: every listed core artifact exists, has a SHA-256 digest, and is produced by a configured analysis script. A changed file, missing producer, or stale saved digest is a validation failure, not a prose warning.

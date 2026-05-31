@@ -46,6 +46,8 @@ Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbo
 
 ### Ontology bindings
 
+- `E1` → **Stream1HabitPrior**
+- `E2` → **Stream2HabitPrior**
 - `J` → **CrossStreamCouplingPotential**
 - `gamma` → **SophisticationWeight**
 - `lam` → **EntanglementDeformationParameter**

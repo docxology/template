@@ -24,9 +24,9 @@ If you ever feel the urge to mock something in a test for `src/`, treat it as a 
 | `test_invariants_and_dashboard.py` | `scripts/build_dashboard.py` end-to-end |
 | `test_manuscript_variables.py` | `{{TOKEN}}` map + live manuscript cross-reference |
 
-Configuration: `projects/template_code_project/pyproject.toml` (`fail_under = 90`, matching the root pipeline gate)
+Configuration: `projects/templates/template_code_project/pyproject.toml` (`fail_under = 90`, matching the root pipeline gate)
 
-Conftest: `projects/template_code_project/tests/conftest.py` (sets `MPLBACKEND=Agg`, adds `src/` to `sys.path`)
+Conftest: `projects/templates/template_code_project/tests/conftest.py` (sets `MPLBACKEND=Agg`, adds `src/` to `sys.path`)
 
 Live test count and coverage percentage: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md) (or `uv run pytest tests/ --collect-only -q` from the project directory).
 
@@ -71,7 +71,7 @@ fail_under = 90
 Authoritative gate (measures all of `src/`, including orchestration modules):
 
 ```bash
-cd projects/template_code_project
+cd projects/templates/template_code_project
 uv run pytest tests/ --cov=src --cov-report=term-missing --cov-fail-under=90
 ```
 
@@ -109,7 +109,7 @@ Orchestration modules (`analysis/`, `dashboard.py`, `figures/`, `manuscript_vari
 A green exit code is **not** proof the suite ran. Confirm **N collected > 0 AND coverage ≥ 90%**.
 
 ```bash
-cd projects/template_code_project
+cd projects/templates/template_code_project
 uv run pytest tests/ --cov=src --cov-fail-under=90 -q
 ```
 

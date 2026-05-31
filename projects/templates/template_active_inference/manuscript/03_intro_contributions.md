@@ -10,7 +10,7 @@
 
 [@fig:multi_track_architecture] maps the three scientific tracks to {{pipeline_track_count}} pipeline gates and {{sheaf_track_count}} composable fragment renderers. Measured invariant checks: {{invariants_passed}} / {{invariants_total}} passed.
 
-Ontology-facing symbols in the analytical track—`location`, `observation`, `policy`, and `expected_free_energy`—map to **HiddenState**, **ObservationLikelihood**, **PolicyPosterior**, and **ExpectedFreeEnergy** in the GNN concordance figure ([@fig:gnn_ontology_concordance], [@sec:methods_analytical]).
+Ontology-facing symbols are checked per model: the Bernoulli toy binds `pi1`, `pi2`, `J`, `gamma`, and `q_joint`, while the SI T-maze binds `location`, `observation`, `policy`, and `belief_entropy` to **HiddenState**, **ObservationLikelihood**, **PolicyPosterior**, and **BeliefEntropy** ([@fig:gnn_ontology_concordance], [@sec:methods_pymdp]).
 
 <!-- sheaf-track:visualization -->
 

@@ -177,13 +177,14 @@
 <h1 id="sec:appendix_full_sheaf">Appendix: full track coverage</h1>
 <!-- sheaf-track:prose -->
 <p>This section is the <strong>composability proof</strong> for the
-manifest-indexed sheaf model: all 9 appendix-bound fragment tracks
+manifest-indexed sheaf model: all 12 appendix-bound fragment tracks
 render into one flat manuscript section without section-specific compose
-branches. The registry defines 10 composable types; optional
+branches. The registry defines 13 composable types; optional
 <code>layers</code> is methods-only and excluded from this row. The
 <code>animation</code> fragment is bound here as an optional registry
-type alongside prose, formalism, simulation, pymdp, visualization, lean,
-gnn, and ontology tracks.</p>
+type alongside prose, formalism, simulation, pymdp, provenance,
+reproducibility, counterexample, visualization, lean, gnn, and ontology
+tracks.</p>
 <p>The proof is a publication-systems check (<span class="citation"
 data-cites="eq:appendix_track_count">[@eq:appendix_track_count]</span>).
 It demonstrates that heterogeneous fragments share one registry,
@@ -200,13 +201,26 @@ renderers pass through the same <code>resolve_track_body()</code>
 dispatch, so the appendix exercises the common compose interface rather
 than a bespoke appendix path.</p>
 <p><span class="math display">\[
-|\mathcal{T}_{\mathrm{Full}}| = 9
+|\mathcal{T}_{\mathrm{Full}}| = 12
 \]</span> {#eq:appendix_track_count}</p>
-<p>The fragment registry defines 10 composable track types; optional
+<p>The fragment registry defines 13 composable track types; optional
 <code>layers</code> is bound on the methods sheaf section only. Optional
-<code>animation</code> is bound in this appendix proof; the opt-in GIF
-extension in <code>tracks.yaml</code> <code>extension_tracks</code> is
-separate from this fragment slot.</p>
+<code>animation</code> is bound in this appendix proof; the
+deterministic GIF artifact in <code>tracks.yaml</code>
+<code>extension_tracks</code> is produced by the core analysis DAG and
+remains separate from this fragment slot.</p>
+<p>Because this appendix binds every non-optional track plus both
+optional tracks, it is the maximal stalk of the coverage presheaf and
+exercises every renderer through the common
+<code>resolve_track_body()</code> dispatch. The same compose path is
+gated by the 6 sheaf laws verified in <span class="citation"
+data-cites="sec:methods_sheaf">[@sec:methods_sheaf]</span> (6/6
+satisfied): the appendix section glues to a unique output (separation),
+occupies the terminal position of the linear extension under its own
+<code>appendix</code> group row (poset and gluing), binds only
+well-typed fragments (typing), and owns every fragment path it
+references (compositionality). No count in this appendix is
+hand-written; all are injected from the registry-backed oracle.</p>
 <!-- sheaf-track:simulation -->
 <p>Analytical sweep artifacts feed <span class="citation"
 data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span> and
@@ -219,6 +233,21 @@ additional path listing is required beyond those Results sections.</p>
 <p>pymdp harness summary: <code>output/data/si_tmaze_summary.json</code>
 (mean belief entropy, action trace). Full log:
 <code>output/logs/pymdp_runs.jsonl</code>.</p>
+<!-- sheaf-track:provenance -->
+<p>The appendix provenance fragment points to
+<code>output/data/artifact_provenance.json</code>, the promoted
+validation-spine artifact that records core artifact hashes, producer
+scripts, and config digests.</p>
+<!-- sheaf-track:reproducibility -->
+<p>The appendix reproducibility fragment points to
+<code>output/reports/reproducibility_replay.json</code>, which replays
+deterministic toy producers in a temporary tree and compares regenerated
+artifacts to the saved outputs.</p>
+<!-- sheaf-track:counterexample -->
+<p>The appendix counterexample fragment points to
+<code>output/reports/counterexample_matrix.json</code>, the
+expected-failure matrix that keeps promoted validation gates
+falsifiable.</p>
 <!-- sheaf-track:visualization -->
 <figure>
 <img src="../figures/ising_mi_curve.png" style="width:90.0%"
@@ -237,9 +266,9 @@ points up to λ_max = 4; grid maximum 0.6031 nats on the measured
 sweep.</em></p>
 <figure>
 <img src="../figures/si_tmaze_actions.png" style="width:90.0%"
-alt="Step plot of discrete action index versus timestep for the pymdp sophisticated-inference T-maze rollout. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps." />
+alt="Step plot of discrete action index versus timestep for the pymdp T-maze rollout in state_inference mode. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps." />
 <figcaption aria-hidden="true">Step plot of discrete action index versus
-timestep for the pymdp sophisticated-inference T-maze rollout. Actions
+timestep for the pymdp T-maze rollout in state_inference mode. Actions
 change at each timestep with light fill under the step trace; policy
 depth is 2 steps.</figcaption>
 </figure>
@@ -248,17 +277,17 @@ pymdp T-maze rollout (policy length 2).</em></p>
 <figure>
 <img src="../figures/sheaf_coverage_heatmap.png"
 style="width:95.0%"
-alt="Heatmap matrix of IMRAD manuscript rows versus 10 sheaf fragment track columns. Black cells mean the track is bound and the fragment file exists; white cells mean the track is not bound; gray cells mean bound but missing. Rows are grouped by IMRAD block with indented subsection labels; column headers list track ids." />
+alt="Heatmap matrix of IMRAD manuscript rows versus 13 sheaf fragment track columns. Black cells mean the track is bound and the fragment file exists; white cells mean the track is not bound; gray cells mean bound but missing. Rows are grouped by IMRAD block with indented subsection labels; column headers list track ids." />
 <figcaption aria-hidden="true">Heatmap matrix of IMRAD manuscript rows
-versus 10 sheaf fragment track columns. Black cells mean the track is
+versus 13 sheaf fragment track columns. Black cells mean the track is
 bound and the fragment file exists; white cells mean the track is not
 bound; gray cells mean bound but missing. Rows are grouped by IMRAD
 block with indented subsection labels; column headers list track
 ids.</figcaption>
 </figure>
-<p><em>Figure 4. Sheaf track coverage matrix: 16 IMRAD rows × 10
+<p><em>Figure 4. Sheaf track coverage matrix: 17 IMRAD rows × 13
 fragment columns. Black = present (P), white = absent (—), gray =
-missing (M). Counts: 47 present / 47 bound / 0 missing.</em></p>
+missing (M). Counts: 53 present / 53 bound / 0 missing.</em></p>
 <!-- sheaf-track:lean -->
 <p>Lean modules under <code>lean/TemplateActiveInference/</code> declare
 horizon and coupling witnesses. Build with <code>lake build</code> in
@@ -288,13 +317,13 @@ data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span>.</p>
 <li><code>sheaf_track</code> → <strong>SheafFragment</strong></li>
 </ul>
 <!-- sheaf-track:animation -->
-<p>Animation is an <strong>extension</strong> sheaf track (optional GIF
-via <code>scripts/render_animation.py</code>). This appendix row
-documents the track binding only; default publication uses static SI
-figures (<span class="citation"
+<p>Animation is an <strong>extension</strong> sheaf track backed by a
+deterministic GIF from <code>scripts/render_animation.py</code>. This
+appendix row documents the track binding only; default publication still
+uses static SI figures (<span class="citation"
 data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>, <span
 class="citation"
-data-cites="fig:si_tmaze_actions">[@fig:si_tmaze_actions]</span>) rather
-than embedding motion assets unless explicitly promoted.</p>
+data-cites="fig:si_tmaze_actions">[@fig:si_tmaze_actions]</span>) while
+the GIF remains an auditable generated artifact.</p>
 </body>
 </html>

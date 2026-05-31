@@ -25,14 +25,14 @@ For contribution workflow, see [`CONTRIBUTING.md`](CONTRIBUTING.md). For per-sub
 | Template drift & exemplar contracts | `infrastructure/project/drift/`, `scripts/check_template_drift.py` | Daniel | `PUBLIC_PROJECT_NAMES` alignment |
 | Regression / claim-binding tests | `tests/regression/` | Daniel | Scaffold — see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md) |
 | Generated facts & doc index | `docs/_generated/`, `scripts/generate_active_projects_doc.py`, `scripts/lint_docs.py` | Daniel | Do not hand-edit scripted outputs except maintained snapshots noted in [`docs/_generated/README.md`](docs/_generated/README.md) |
-| Public exemplar projects | `projects/template_*` | Daniel | Five tracked exemplars — roster in [`projects/AGENTS.md`](projects/AGENTS.md) |
+| Public exemplar projects | `projects/templates/template_*` | Daniel | Six tracked exemplars — roster in [`projects/AGENTS.md`](projects/AGENTS.md) |
 
 ## Escalation
 
 1. **Freshness / health** — check [`STATUS.md`](STATUS.md) verification ledger before assuming a subsystem is production-ready.
 2. **Architecture & commands** — [`AGENTS.md`](AGENTS.md), [`CLAUDE.md`](CLAUDE.md), [`.github/AGENTS.md`](.github/AGENTS.md).
-3. **Private or rotating projects** — never commit under `projects/` except the five public exemplars; see confidentiality invariant in [`AGENTS.md`](AGENTS.md) and [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md).
+3. **Private or rotating projects** — never commit under `projects/` except the six public exemplars; see confidentiality invariant in [`AGENTS.md`](AGENTS.md) and [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md).
 
 ## Public vs private scope
 
-This repository is **public**. Only `projects/template_active_inference/`, `projects/template_autoresearch_project/`, `projects/template_code_project/`, `projects/template_prose_project/`, and `projects/template_template/` are git-tracked project trees. Confidential work lives in a separate private lifecycle repository (symlinked locally). Do not commit secrets, machine-local paths, or non-exemplar project content.
+This repository is **public**. Only `projects/templates/template_active_inference/`, `projects/templates/template_autoresearch_project/`, `projects/templates/template_code_project/`, `projects/templates/template_prose_project/`, and `projects/templates/template_template/` are git-tracked project trees. Confidential work lives in a separate private lifecycle repository (symlinked locally). Do not commit secrets, machine-local paths, or non-exemplar project content.

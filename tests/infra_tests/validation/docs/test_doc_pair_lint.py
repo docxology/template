@@ -34,7 +34,7 @@ def test_find_doc_pair_issues_flags_missing_pairs(tmp_path: Path) -> None:
 
     issues = find_doc_pair_issues(
         tmp_path,
-        roots=("docs", "tests", "projects/template_code_project"),
+        roots=("docs", "tests", "projects/templates/template_code_project"),
     )
 
     by_path = {issue.path: issue for issue in issues}

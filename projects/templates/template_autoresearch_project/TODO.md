@@ -58,7 +58,7 @@ and loop/statistics consolidation pass:
   - Files to inspect:
     - `docs/_generated/canonical_facts.md`
     - `infrastructure/autoresearch/`
-    - `projects/template_autoresearch_project/`
+    - `projects/templates/template_autoresearch_project/`
     - `tests/infra_tests/autoresearch/test_autoresearch.py`
     - `tests/infra_tests/project/test_autoresearch_project_contract.py`
   - Command:
@@ -74,14 +74,14 @@ and loop/statistics consolidation pass:
   - Command:
     ```bash
     uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only --quiet
-    uv run python -m infrastructure.validation.cli prerender projects/template_autoresearch_project/manuscript --repo-root .
-    uv run python projects/template_autoresearch_project/scripts/z_generate_manuscript_variables.py
+    uv run python -m infrastructure.validation.cli prerender projects/templates/template_autoresearch_project/manuscript --repo-root .
+    uv run python projects/templates/template_autoresearch_project/scripts/z_generate_manuscript_variables.py
     uv run python scripts/03_render_pdf.py --project template_autoresearch_project
     uv run python scripts/04_validate_output.py --project template_autoresearch_project
     uv run python scripts/lint_docs.py
     uv run python scripts/check_template_drift.py --strict
-    uv run bandit -c bandit.yaml -q -lll -r projects/template_autoresearch_project
-    uv run mypy infrastructure/autoresearch projects/template_autoresearch_project/src
+    uv run bandit -c bandit.yaml -q -lll -r projects/templates/template_autoresearch_project
+    uv run mypy infrastructure/autoresearch projects/templates/template_autoresearch_project/src
     ```
   - Expected: all commands pass; update
     `docs/_generated/canonical_facts.md` if the measured AutoResearch coverage
@@ -98,7 +98,7 @@ and loop/statistics consolidation pass:
 ## P1 - Make Manual Approval A First-Class Input
 
 - [x] Add a human-authored approval intake file that is never generated.
-  - Create: `projects/template_autoresearch_project/human_review.yaml`
+  - Create: `projects/templates/template_autoresearch_project/human_review.yaml`
   - Initial content:
     ```yaml
     schema: template-autoresearch-human-review-v1
@@ -113,29 +113,29 @@ and loop/statistics consolidation pass:
   - Rule: generated code may read this file, but must not write or mutate it.
 
 - [x] Add config loading for the manual approval file.
-  - Modify: `projects/template_autoresearch_project/src/config.py`
+  - Modify: `projects/templates/template_autoresearch_project/src/config.py`
   - Add a small loader such as `load_human_review(path: Path) -> dict[str, Any]`
     that validates:
     - `schema == "template-autoresearch-human-review-v1"`
     - `publication_approved` is a boolean
     - every decision is one of `approved`, `deferred`, `rejected`
     - `reviewed_at` is `null` unless `publication_approved: true`
-  - Test: `projects/template_autoresearch_project/tests/test_config.py`
+  - Test: `projects/templates/template_autoresearch_project/tests/test_config.py`
 
 - [x] Route the manual review state into generated review outputs without
   allowing self-approval.
   - Modify:
-    - `projects/template_autoresearch_project/src/loop.py`
-    - `projects/template_autoresearch_project/src/reports.py`
-    - `projects/template_autoresearch_project/src/writers.py`
+    - `projects/templates/template_autoresearch_project/src/loop.py`
+    - `projects/templates/template_autoresearch_project/src/reports.py`
+    - `projects/templates/template_autoresearch_project/src/writers.py`
   - Expected behavior:
     - Missing `human_review.yaml` defaults to unapproved/deferred.
     - `publication_approved: false` remains the default in generated JSON.
     - A true approval is possible only from the human-authored file.
   - Tests:
-    - `projects/template_autoresearch_project/tests/test_loop.py`
-    - `projects/template_autoresearch_project/tests/test_reports.py`
-    - `projects/template_autoresearch_project/tests/test_writers.py`
+    - `projects/templates/template_autoresearch_project/tests/test_loop.py`
+    - `projects/templates/template_autoresearch_project/tests/test_reports.py`
+    - `projects/templates/template_autoresearch_project/tests/test_writers.py`
 
 - [x] Add a validator check that fails on generated self-approval.
   - Modify:
@@ -148,8 +148,8 @@ and loop/statistics consolidation pass:
 
 - [x] Define the source-ledger schema next to the manuscript docs.
   - Modify:
-    - `projects/template_autoresearch_project/manuscript/README.md`
-    - `projects/template_autoresearch_project/docs/configuration.md`
+    - `projects/templates/template_autoresearch_project/manuscript/README.md`
+    - `projects/templates/template_autoresearch_project/docs/configuration.md`
   - Required fields:
     - `citekey`
     - `canonical_url`
@@ -159,35 +159,35 @@ and loop/statistics consolidation pass:
 
 - [x] Move ledger validation out of only manuscript-variable tests into a
   reusable project helper.
-  - Create: `projects/template_autoresearch_project/src/source_ledger.py`
+  - Create: `projects/templates/template_autoresearch_project/src/source_ledger.py`
   - Responsibilities:
     - parse `manuscript/source_ledger.yaml`
     - validate HTTPS canonical URLs
     - validate ISO dates that are not in the future
     - validate allowed source tiers
     - return a stable list of citekeys
-  - Test: `projects/template_autoresearch_project/tests/test_source_ledger.py`
+  - Test: `projects/templates/template_autoresearch_project/tests/test_source_ledger.py`
 
 - [x] Keep the manuscript regression as an integration check.
-  - Modify: `projects/template_autoresearch_project/tests/test_manuscript_variables.py`
+  - Modify: `projects/templates/template_autoresearch_project/tests/test_manuscript_variables.py`
   - Expected: this test should call the reusable helper, then verify each
     citekey is present in `references.bib` and numbered manuscript prose.
 
 - [x] Add an optional offline freshness report.
-  - Create: `projects/template_autoresearch_project/scripts/check_source_ledger.py`
+  - Create: `projects/templates/template_autoresearch_project/scripts/check_source_ledger.py`
   - Expected:
     - no network calls
     - exits nonzero if any `checked_as_of` date is future-dated
     - prints source-tier counts
   - Run:
     ```bash
-    uv run python projects/template_autoresearch_project/scripts/check_source_ledger.py
+    uv run python projects/templates/template_autoresearch_project/scripts/check_source_ledger.py
     ```
 
 ## P1 - Split Oversized Source Modules By Responsibility
 
 - [x] Split `src/ml_task.py` into stable units.
-  - Current file: `projects/template_autoresearch_project/src/ml_task.py`
+  - Current file: `projects/templates/template_autoresearch_project/src/ml_task.py`
   - Proposed files:
     - `src/ml_data.py`: fixture loading, provenance loading, array validation
     - `src/ml_models.py`: nearest-centroid, softmax, MLP, patch-attention
@@ -197,12 +197,12 @@ and loop/statistics consolidation pass:
     - `src/ml_task.py`: public orchestration API and dataclasses only
   - Tests to keep green:
     ```bash
-    uv run python -m pytest projects/template_autoresearch_project/tests/test_ml_task.py -q
+    uv run python -m pytest projects/templates/template_autoresearch_project/tests/test_ml_task.py -q
     uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only --quiet
     ```
 
 - [x] Split `src/figures.py` into figure families.
-  - Current file: `projects/template_autoresearch_project/src/figures.py`
+  - Current file: `projects/templates/template_autoresearch_project/src/figures.py`
   - Proposed files:
     - `src/figures_core.py`: shared Matplotlib helpers, path handling, metadata
     - `src/figures_ml.py`: ML diagnostic figures
@@ -211,12 +211,12 @@ and loop/statistics consolidation pass:
     - `src/figures.py`: compatibility exports
   - Tests:
     ```bash
-    uv run python -m pytest projects/template_autoresearch_project/tests/test_writers.py projects/template_autoresearch_project/tests/test_security.py -q
+    uv run python -m pytest projects/templates/template_autoresearch_project/tests/test_writers.py projects/templates/template_autoresearch_project/tests/test_security.py -q
     uv run python scripts/check_template_drift.py --strict
     ```
 
 - [x] Split `src/diagnostics.py` into diagnostics and statistics units.
-  - Current file: `projects/template_autoresearch_project/src/diagnostics.py`
+  - Current file: `projects/templates/template_autoresearch_project/src/diagnostics.py`
   - Proposed files:
     - `src/diagnostics_records.py`: prediction records and candidate rows
     - `src/diagnostics_metrics.py`: F1, kappa, NLL, Brier, top-k
@@ -225,8 +225,8 @@ and loop/statistics consolidation pass:
     - `src/diagnostics.py`: compatibility exports
   - Tests:
     ```bash
-    uv run python -m pytest projects/template_autoresearch_project/tests/test_ml_task.py -q
-    uv run mypy projects/template_autoresearch_project/src
+    uv run python -m pytest projects/templates/template_autoresearch_project/tests/test_ml_task.py -q
+    uv run mypy projects/templates/template_autoresearch_project/src
     ```
 
 - [x] Keep `src/manuscript_variables.py` below the drift threshold after each
@@ -253,25 +253,25 @@ and loop/statistics consolidation pass:
     - `output/data/autoresearch_supply_chain_inventory.json`
     - `output/data/autoresearch_integrity_attestation.json`
   - Modify:
-    - `projects/template_autoresearch_project/src/reports.py`
-    - `projects/template_autoresearch_project/src/writers.py`
-    - `projects/template_autoresearch_project/src/diagnostics.py`
-    - `projects/template_autoresearch_project/src/security.py`
+    - `projects/templates/template_autoresearch_project/src/reports.py`
+    - `projects/templates/template_autoresearch_project/src/writers.py`
+    - `projects/templates/template_autoresearch_project/src/diagnostics.py`
+    - `projects/templates/template_autoresearch_project/src/security.py`
 
 - [x] Add a schema manifest artifact.
   - Create generated artifact:
     - `output/data/autoresearch_schema_manifest.json`
   - Modify:
-    - `projects/template_autoresearch_project/src/writers.py`
-    - `projects/template_autoresearch_project/autoresearch.yaml`
-    - `projects/template_autoresearch_project/domain_profile.yaml`
-    - `projects/template_autoresearch_project/docs/outputs.md`
+    - `projects/templates/template_autoresearch_project/src/writers.py`
+    - `projects/templates/template_autoresearch_project/autoresearch.yaml`
+    - `projects/templates/template_autoresearch_project/domain_profile.yaml`
+    - `projects/templates/template_autoresearch_project/docs/outputs.md`
   - Test:
-    - `projects/template_autoresearch_project/tests/test_writers.py`
+    - `projects/templates/template_autoresearch_project/tests/test_writers.py`
     - `tests/infra_tests/project/test_autoresearch_project_contract.py`
 
 - [x] Add regression tests for required schema versions.
-  - Create: `projects/template_autoresearch_project/tests/test_artifact_schemas.py`
+  - Create: `projects/templates/template_autoresearch_project/tests/test_artifact_schemas.py`
   - Expected: every required generated JSON artifact has either an explicit
     schema field or a documented reason it is a generic data table.
 
@@ -293,8 +293,8 @@ and loop/statistics consolidation pass:
 
 - [x] Add manuscript text that names the manifest as packaging evidence.
   - Modify:
-    - `projects/template_autoresearch_project/manuscript/02_methodology.md`
-    - `projects/template_autoresearch_project/manuscript/03_results.md`
+    - `projects/templates/template_autoresearch_project/manuscript/02_methodology.md`
+    - `projects/templates/template_autoresearch_project/manuscript/03_results.md`
   - Expected: text remains tokenized where run-derived paths or counts appear.
 
 - [x] Add output validation for the manifest.
@@ -307,16 +307,16 @@ and loop/statistics consolidation pass:
 ## P2 - Improve Security Evidence Without Expanding Claims
 
 - [x] Add machine-readable non-claim fields to security outputs.
-  - Modify: `projects/template_autoresearch_project/src/security.py`
+  - Modify: `projects/templates/template_autoresearch_project/src/security.py`
   - Required fields:
     - `not_external_signing: true`
     - `not_slsa_certification: true`
     - `not_runtime_monitoring: true`
     - `not_network_security_assessment: true`
-  - Test: `projects/template_autoresearch_project/tests/test_security.py`
+  - Test: `projects/templates/template_autoresearch_project/tests/test_security.py`
 
 - [x] Add a static no-network import guard for the project runtime.
-  - Test: `projects/template_autoresearch_project/tests/test_security.py`
+  - Test: `projects/templates/template_autoresearch_project/tests/test_security.py`
   - Expected: default runtime files do not import `requests`, `httpx`,
     `urllib.request.urlopen`, `socket`, or browser automation modules.
   - Exception: `src/mnist_fixture.py` and
@@ -333,7 +333,7 @@ and loop/statistics consolidation pass:
 - [x] Measure which tests dominate the 4 minute project gate.
   - Command:
     ```bash
-    uv run python -m pytest projects/template_autoresearch_project/tests --durations=20 -q
+    uv run python -m pytest projects/templates/template_autoresearch_project/tests --durations=20 -q
     ```
   - Expected: identify whether ML training, render hydration, or loop tests are
     the slowest surfaces.
@@ -341,8 +341,8 @@ and loop/statistics consolidation pass:
 - [x] Add a fast deterministic fixture for tests that do not need full loop
   execution.
   - Candidate files:
-    - `projects/template_autoresearch_project/tests/conftest.py`
-    - `projects/template_autoresearch_project/tests/fixtures/`
+    - `projects/templates/template_autoresearch_project/tests/conftest.py`
+    - `projects/templates/template_autoresearch_project/tests/fixtures/`
   - Constraint: do not mock core behavior; use real small payloads and real
     serialization.
 
@@ -383,11 +383,11 @@ deterministic, offline, and scoped to the checked-in local MNIST fixture.
 - [x] Full gate remains green:
   ```bash
   uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only --quiet
-  uv run python -m infrastructure.validation.cli prerender projects/template_autoresearch_project/manuscript --repo-root .
-  uv run python projects/template_autoresearch_project/scripts/z_generate_manuscript_variables.py
+  uv run python -m infrastructure.validation.cli prerender projects/templates/template_autoresearch_project/manuscript --repo-root .
+  uv run python projects/templates/template_autoresearch_project/scripts/z_generate_manuscript_variables.py
   uv run python scripts/03_render_pdf.py --project template_autoresearch_project
   uv run python scripts/04_validate_output.py --project template_autoresearch_project
   uv run python scripts/lint_docs.py
   uv run python scripts/check_template_drift.py --strict
-  uv run bandit -c bandit.yaml -q -lll -r projects/template_autoresearch_project
+  uv run bandit -c bandit.yaml -q -lll -r projects/templates/template_autoresearch_project
   ```

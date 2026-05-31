@@ -17,7 +17,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **Test suite**: covers edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; `projects/template_code_project/src/` measures well above the 90% minimum gate enforced by both the project `pyproject.toml` and the root pipeline. Live test count + achieved coverage: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
+- **Test suite**: covers edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; `projects/templates/template_code_project/src/` measures well above the 90% minimum gate enforced by both the project `pyproject.toml` and the root pipeline. Live test count + achieved coverage: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
 - **Deterministic algorithms**: Reproducible results; tests avoid nondeterministic RNG unless documented (see `docs/agent_instructions.md`)
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -57,7 +57,7 @@ Workflow reference: [`docs/guides/publishing-guide.md`](../../../docs/guides/pub
 
 ```mermaid
 flowchart TB
-    P[/projects/template_code_project/]
+    P[/projects/templates/template_code_project/]
     P --> SRC[/src<br/>Core algorithms · pure logic · no infrastructure imports/]
     P --> SC[/scripts<br/>Thin orchestrators/]
     P --> T[/tests/]
@@ -83,7 +83,7 @@ flowchart TB
 
 ## Installation/Setup
 
-Install dependencies from the **repository root** with `uv sync` (see root [`pyproject.toml`](../../../pyproject.toml)). The root `[tool.uv.workspace]` has `members = []`, so this directory is not a separate uv workspace package; [`projects/template_code_project/pyproject.toml`](pyproject.toml) still pins **pytest/coverage** settings, documents the project name, and lists scientific dependencies used when running tools against this tree in isolation.
+Install dependencies from the **repository root** with `uv sync` (see root [`pyproject.toml`](../../../pyproject.toml)). The root `[tool.uv.workspace]` has `members = []`, so this directory is not a separate uv workspace package; [`projects/templates/template_code_project/pyproject.toml`](pyproject.toml) still pins **pytest/coverage** settings, documents the project name, and lists scientific dependencies used when running tools against this tree in isolation.
 
 ## Usage Examples
 
@@ -112,8 +112,8 @@ logger.info("Iterations: %s, Final objective: %s", result.iterations, result.obj
 
 ```bash
 # From repository root — execute the full analysis pipeline
-uv run python projects/template_code_project/scripts/optimization_analysis.py
-# Writes figures, data, reports, and dashboard under projects/template_code_project/output/
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
+# Writes figures, data, reports, and dashboard under projects/templates/template_code_project/output/
 ```
 
 ### Manuscript variable hydration (strict default)
@@ -121,9 +121,9 @@ uv run python projects/template_code_project/scripts/optimization_analysis.py
 `scripts/z_generate_manuscript_variables.py` calls `generate_variables(..., require_analysis_outputs=True)` by default and fails when `output/data/optimization_results.csv` is absent. Pass `--allow-draft` only for intentional early drafts that may use `"N/A"` fallbacks for result-derived tokens.
 
 ```bash
-uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
 # Draft-only (skip analysis CSV requirement):
-uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py --allow-draft
+uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py --allow-draft
 ```
 
 ### Scientific Analysis Features
@@ -158,18 +158,18 @@ overlays are validation inputs only; they do not execute autonomous agents.
 
 **Critical Directive**: Before modifying this project, AI agents *must* reference the specific behavioral rules laid out in the `docs/` folder:
 
-- Start with `projects/template_code_project/docs/agent_instructions.md` to understand operational constraints.
-- Consult `projects/template_code_project/docs/testing_philosophy.md` before writing or modifying any `pytest` files.
-- Consult `projects/template_code_project/docs/architecture.md` before altering `scripts/` or `src/` modular boundaries.
+- Start with `projects/templates/template_code_project/docs/agent_instructions.md` to understand operational constraints.
+- Consult `projects/templates/template_code_project/docs/testing_philosophy.md` before writing or modifying any `pytest` files.
+- Consult `projects/templates/template_code_project/docs/architecture.md` before altering `scripts/` or `src/` modular boundaries.
 
 ## Testing
 
 ```bash
 # Run project tests
-uv run pytest projects/template_code_project/tests/ -v
+uv run pytest projects/templates/template_code_project/tests/ -v
 
 # With coverage
-uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=html
 ```
 
 ## API Reference
@@ -360,7 +360,7 @@ This project complies with the template development standards in **[`docs/rules/
 
 ```bash
 # Test coverage verification
-uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-fail-under=90
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-fail-under=90
 
 # Type hint verification
 uv run python -c "import ast; import inspect; # Type checking logic here"

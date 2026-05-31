@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write stub artifact for the opt-in graph-world SI extension track."""
+"""Write deterministic graph-world SI extension artifacts."""
 
 from __future__ import annotations
 
@@ -11,10 +11,10 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 
 def main() -> int:
-    from simulation.graph_world import write_graph_world_stub
+    from simulation.graph_world import write_graph_world_artifacts
 
-    out = write_graph_world_stub(PROJECT_ROOT)
-    print(out)
+    for name, path in write_graph_world_artifacts(PROJECT_ROOT).items():
+        print(f"{name}: {path}")
     return 0
 
 

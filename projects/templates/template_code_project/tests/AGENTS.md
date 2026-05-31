@@ -67,12 +67,12 @@ uv run pytest tests/ -v
 uv run pytest tests/ --cov=../src --cov-report=html
 
 # Canonical enforced gate (from project directory — authoritative for full src/ coverage):
-cd projects/template_code_project
+cd projects/templates/template_code_project
 uv run pytest tests/ --cov=src --cov-fail-under=90
 
 # From repo root (CI parity; same modules, project-relative coverage config):
-uv run pytest projects/template_code_project/tests/ \
-  --cov=projects/template_code_project/src --cov-fail-under=90
+uv run pytest projects/templates/template_code_project/tests/ \
+  --cov=projects/templates/template_code_project/src --cov-fail-under=90
 ```
 
 ### Run Specific Test Classes

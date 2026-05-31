@@ -31,6 +31,7 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 | `guides/orchestration-module.md` | Pipeline CLI and menu delegation |
 | `guides/prose-module.md` | Prose-manuscript analysis module |
 | `guides/search-module.md` | Literature discovery module |
+| `guides/sia-module.md` | SIA self-improvement harness module |
 | `guides/reference-module.md` | Citation and reference management module |
 
 Package-level `infrastructure/*/AGENTS.md` files remain the in-tree API reference when a guide defers to hub docs.

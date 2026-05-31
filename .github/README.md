@@ -11,7 +11,7 @@ Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
 [![uv](https://img.shields.io/badge/package%20manager-uv-purple?logo=astral)](https://docs.astral.sh/uv/)
 [![Ruff](https://img.shields.io/badge/linter-ruff-orange?logo=ruff)](https://docs.astral.sh/ruff/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)](../LICENSE)
-[![Version](https://img.shields.io/badge/version-3.0.0-informational)](../pyproject.toml)
+[![Version](https://img.shields.io/badge/version-3.1.0-informational)](../pyproject.toml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
 > **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
@@ -71,7 +71,7 @@ Pick the entry that matches your goal — each link is stable for deep navigatio
 | Goal | Start here | Then |
 | --- | --- | --- |
 | **Clone and run** | [Quick Start](#quick-start) | [`docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md) · [`docs/guides/getting-started.md`](../docs/guides/getting-started.md) |
-| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | Start from the closest public exemplar: [`template_active_inference`](../projects/template_active_inference/), [`template_autoresearch_project`](../projects/template_autoresearch_project/), [`template_code_project`](../projects/template_code_project/), [`template_prose_project`](../projects/template_prose_project/), or [`template_template`](../projects/template_template/) |
+| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | Start from the closest public exemplar: [`template_active_inference`](../projects/templates/template_active_inference/), [`template_autoresearch_project`](../projects/templates/template_autoresearch_project/), [`template_code_project`](../projects/templates/template_code_project/), [`template_prose_project`](../projects/templates/template_prose_project/), [`template_sia`](../projects/templates/template_sia/), or [`template_template`](../projects/templates/template_template/) |
 | **Debug a failed pipeline stage** | [`docs/prompts/pipeline-debugging/SKILL.md`](../docs/prompts/pipeline-debugging/SKILL.md) | [`docs/operational/troubleshooting/`](../docs/operational/troubleshooting/) |
 | **Write or fix tests** | [`docs/rules/testing_standards.md`](../docs/rules/testing_standards.md) | [`docs/prompts/test-creation/SKILL.md`](../docs/prompts/test-creation/SKILL.md) |
 | **Manuscript / PDF / citations** | [`docs/guides/manuscript-semantics.md`](../docs/guides/manuscript-semantics.md) | [`docs/prompts/manuscript-cross-references/SKILL.md`](../docs/prompts/manuscript-cross-references/SKILL.md) |
@@ -132,7 +132,7 @@ uv sync                                                          # install deps
 ./run.sh --pipeline --project template_code_project --core-only  # 8-stage core DAG
 uv run python scripts/01_run_tests.py --project template_code_project
 uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
-uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
 uv run python -m infrastructure.skills check                     # manifest freshness
 pre-commit run --hook-stage pre-push --all-files                 # local CI subset
 ```
@@ -233,22 +233,22 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 ### `template_code_project` — Code Exemplar
 
-> **`projects/template_code_project/`** is the canonical example of a complete, working project. Use it as the reference when building your own.
+> **`projects/templates/template_code_project/`** is the canonical example of a complete, working project. Use it as the reference when building your own.
 
 | Feature | Implementation |
 | --- | --- |
-| Gradient descent optimization | `projects/template_code_project/src/optimizer.py` |
+| Gradient descent optimization | `projects/templates/template_code_project/src/optimizer.py` |
 | Scientific benchmarking | uses `infrastructure.scientific` |
 | Project test suite | `tests/` — real operations only, coverage gated at 90% |
 | 6 publication-quality figures | generated in `scripts/`, registered via `FigureManager` |
 | Full pipeline output | PDF rendered, validated, steganographically signed |
 | Complete documentation | `AGENTS.md` + `README.md` throughout |
 
-→ **Details**: [projects/template_code_project/AGENTS.md](../projects/template_code_project/AGENTS.md) · [projects/template_code_project/README.md](../projects/template_code_project/README.md)
+→ **Details**: [projects/templates/template_code_project/AGENTS.md](../projects/templates/template_code_project/AGENTS.md) · [projects/templates/template_code_project/README.md](../projects/templates/template_code_project/README.md)
 
 ### Published exemplars — pipeline productivity, advanced provenance, and autopoiesis
 
-The repository ships **five** public template projects. Each lives inside this public repo *and* is independently published as **its own GitHub repository + Zenodo deposit** (versioned, authored by Daniel Ari Friedman), demonstrating the pipeline end-to-end on real, citable artifacts.
+The repository ships **six** public template projects. Each lives inside this public repo *and* is independently published as **its own GitHub repository + Zenodo deposit** (versioned, authored by Daniel Ari Friedman), demonstrating the pipeline end-to-end on real, citable artifacts.
 
 The table below is auto-injected from public project config files plus optional GitHub/Zenodo API refreshes. Do not hand-edit it.
 
@@ -257,11 +257,12 @@ The table below is auto-injected from public project config files plus optional 
 
 | Exemplar | Config version | GitHub | Latest release | Zenodo concept DOI | Latest version DOI |
 | --- | --- | --- | --- | --- | --- |
-| [`templates/template_active_inference`](../projects/templates/template_active_inference/) | 0.3.0 | [docxology/template_active_inference](https://github.com/docxology/template_active_inference) | not checked | [10.5281/zenodo.20417021](https://doi.org/10.5281/zenodo.20417021) | [10.5281/zenodo.20420352](https://doi.org/10.5281/zenodo.20420352) |
-| [`templates/template_autoresearch_project`](../projects/templates/template_autoresearch_project/) | 0.3.0 | [docxology/template_autoresearch_project](https://github.com/docxology/template_autoresearch_project) | not checked | [10.5281/zenodo.20417016](https://doi.org/10.5281/zenodo.20417016) | [10.5281/zenodo.20420357](https://doi.org/10.5281/zenodo.20420357) |
-| [`templates/template_code_project`](../projects/templates/template_code_project/) | 2.5.0 | [docxology/template_code_project](https://github.com/docxology/template_code_project) | not checked | [10.5281/zenodo.20417136](https://doi.org/10.5281/zenodo.20417136) | [10.5281/zenodo.20420368](https://doi.org/10.5281/zenodo.20420368) |
-| [`templates/template_prose_project`](../projects/templates/template_prose_project/) | 0.4.0 | [docxology/template_prose_project](https://github.com/docxology/template_prose_project) | not checked | [10.5281/zenodo.20417104](https://doi.org/10.5281/zenodo.20417104) | [10.5281/zenodo.20420342](https://doi.org/10.5281/zenodo.20420342) |
-| [`templates/template_template`](../projects/templates/template_template/) | 1.0.6 | [docxology/template_template](https://github.com/docxology/template_template) | not checked | [10.5281/zenodo.20419007](https://doi.org/10.5281/zenodo.20419007) | [10.5281/zenodo.20420387](https://doi.org/10.5281/zenodo.20420387) |
+| [`templates/template_active_inference`](../projects/templates/template_active_inference/) | 0.3.0 | [docxology/template_active_inference](https://github.com/docxology/template_active_inference) | [v0.3.0](https://github.com/docxology/template_active_inference/releases/tag/v0.3.0) | [10.5281/zenodo.20417021](https://doi.org/10.5281/zenodo.20417021) | [10.5281/zenodo.20420352](https://doi.org/10.5281/zenodo.20420352) |
+| [`templates/template_autoresearch_project`](../projects/templates/template_autoresearch_project/) | 0.3.0 | [docxology/template_autoresearch_project](https://github.com/docxology/template_autoresearch_project) | [v0.3.0](https://github.com/docxology/template_autoresearch_project/releases/tag/v0.3.0) | [10.5281/zenodo.20417016](https://doi.org/10.5281/zenodo.20417016) | [10.5281/zenodo.20420357](https://doi.org/10.5281/zenodo.20420357) |
+| [`templates/template_code_project`](../projects/templates/template_code_project/) | 2.5.0 | [docxology/template_code_project](https://github.com/docxology/template_code_project) | [v2.5.0](https://github.com/docxology/template_code_project/releases/tag/v2.5.0) | [10.5281/zenodo.20417136](https://doi.org/10.5281/zenodo.20417136) | [10.5281/zenodo.20420368](https://doi.org/10.5281/zenodo.20420368) |
+| [`templates/template_prose_project`](../projects/templates/template_prose_project/) | 0.4.0 | [docxology/template_prose_project](https://github.com/docxology/template_prose_project) | [v0.4.0](https://github.com/docxology/template_prose_project/releases/tag/v0.4.0) | [10.5281/zenodo.20417104](https://doi.org/10.5281/zenodo.20417104) | [10.5281/zenodo.20420342](https://doi.org/10.5281/zenodo.20420342) |
+| [`templates/template_sia`](../projects/templates/template_sia/) | 0.1.0 | [docxology/template](https://github.com/docxology/template) | [v3.0.0](https://github.com/docxology/template/releases/tag/v3.0.0) | [10.5281/zenodo.20453879](https://doi.org/10.5281/zenodo.20453879) | [10.5281/zenodo.20453880](https://doi.org/10.5281/zenodo.20453880) |
+| [`templates/template_template`](../projects/templates/template_template/) | 1.0.6 | [docxology/template_template](https://github.com/docxology/template_template) | [v1.0.6](https://github.com/docxology/template_template/releases/tag/v1.0.6) | [10.5281/zenodo.20419007](https://doi.org/10.5281/zenodo.20419007) | [10.5281/zenodo.20420387](https://doi.org/10.5281/zenodo.20420387) |
 
 Full generated matrix: [`docs/_generated/publication_records.md`](../docs/_generated/publication_records.md).
 
@@ -271,7 +272,7 @@ Full generated matrix: [`docs/_generated/publication_records.md`](../docs/_gener
 
 **Advanced — double-referenced provenance.** Each release is cross-linked both ways: the GitHub release body cites the Zenodo DOI + PDF SHA-256, and the Zenodo record carries a `related_identifiers: isSupplementTo` back to the GitHub release. The DOI resolves to the archived PDF; the repo resolves to the source — neither is orphaned. Releases are versioned (concept DOI for "always-latest" + per-version DOIs).
 
-**Autopoietic — `template_template`.** The fifth exemplar is a *self-referential* meta-research project: its manuscript is generated by programmatically introspecting this repository's own `infrastructure/` (module inventory, pipeline DAG, public-exemplar roster) via [`src/template_template/introspection.py`](../projects/template_template/src/template_template/) and injecting the live metrics into its prose. The pipeline documents itself, renders that documentation, and publishes it — a system that produces a description of its own production. Its introspection is scoped to `PUBLIC_PROJECT_NAMES` only (a confidentiality invariant enforced by a negative-control test), so the published artifact never embeds private/rotating project data.
+**Autopoietic — `template_template`.** The meta-template exemplar is a *self-referential* research project: its manuscript is generated by programmatically introspecting this repository's own `infrastructure/` (module inventory, pipeline DAG, public-exemplar roster) via [`src/template_template/introspection.py`](../projects/templates/template_template/src/template_template/) and injecting the live metrics into its prose. The pipeline documents itself, renders that documentation, and publishes it — a system that produces a description of its own production. Its introspection is scoped to `PUBLIC_PROJECT_NAMES` only (a confidentiality invariant enforced by a negative-control test), so the published artifact never embeds private/rotating project data.
 
 ### Rotating projects
 
@@ -536,7 +537,7 @@ Full specification: [docs/security/steganography.md](../docs/security/steganogra
 ```bash
 # Mirror CI locally
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/template_code_project/tests/ --cov-fail-under=90 -m "not requires_ollama"
+uv run pytest projects/templates/template_code_project/tests/ --cov-fail-under=90 -m "not requires_ollama"
 python scripts/verify_no_mocks.py
 ```
 

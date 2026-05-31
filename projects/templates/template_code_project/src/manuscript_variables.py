@@ -162,7 +162,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
         csv_path = project_root / "output" / "data" / "optimization_results.csv"
         raise FileNotFoundError(
             f"Analysis outputs required but missing or empty: {csv_path}. "
-            "Run projects/template_code_project/scripts/optimization_analysis.py first."
+            "Run projects/templates/template_code_project/scripts/optimization_analysis.py first."
         )
     stability = _load_json_report(project_root, "stability_analysis.json")
     benchmark = _load_json_report(project_root, "performance_benchmark.json")

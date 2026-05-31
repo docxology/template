@@ -274,6 +274,19 @@ def test_oversize_src_file_silent_under_threshold(drift_module, tmp_path):
     assert rep.findings == []
 
 
+def test_oversize_src_file_catches_file_in_subdirectory(drift_module, tmp_path):
+    """Oversize check must descend into src/ subdirectories (rglob, not glob)."""
+    root = _scaffold_minimal_project(tmp_path)
+    subdir = root / "src" / "submodule"
+    subdir.mkdir()
+    (subdir / "large.py").write_text("# line\n" * 1600, encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_no_oversize_src_files(root, rep, "fake_project")
+    assert any(
+        f.rule == "oversize_src_file" and "large.py" in f.message for f in rep.findings
+    ), f"Expected oversize_src_file finding for src/submodule/large.py, got: {rep.findings}"
+
+
 def test_blanket_except_error_when_no_noqa(drift_module, tmp_path):
     root = _scaffold_minimal_project(tmp_path)
     (root / "src" / "bad.py").write_text(

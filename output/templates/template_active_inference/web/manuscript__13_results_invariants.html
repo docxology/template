@@ -193,6 +193,15 @@ data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>). <span
 class="citation"
 data-cites="fig:invariant_dashboard">[@fig:invariant_dashboard]</span>
 summarizes pass/fail status for both domains on the clean tree.</p>
+<!-- sheaf-track:reproducibility -->
+<p>The <code>reproducibility</code> fragment replays deterministic toy
+producers in a temporary project tree and compares regenerated outputs
+with the saved artifacts. The current replay report records 5 checks and
+an all-passed flag of 1.</p>
+<p>The replay scope is deliberately narrow: analytical parameter sweeps,
+graph-world summary/trace artifacts, and the policy-comparison table. It
+does not claim platform-independent bitwise equivalence for PDF
+rendering, PNG rasterization, or external empirical data.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:invariant_dashboard">
 <img src="../figures/invariant_dashboard.png" style="width:90.0%"

@@ -1,0 +1,586 @@
+{
+  "claim_count": 30,
+  "claims": [
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "tracks",
+        "predicate": "non_empty"
+      },
+      "id": "sheaf_registry",
+      "path": "manuscript/sheaf/tracks.yaml",
+      "producer": "manual",
+      "section": "methods_sheaf",
+      "statement": "Sheaf track registry is present and drives compose order.",
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "sections",
+        "predicate": "non_empty"
+      },
+      "id": "sheaf_manifest",
+      "path": "manuscript/sheaf/manifest.yaml",
+      "producer": "manual",
+      "section": "methods_sheaf",
+      "statement": "IMRAD section manifest binds track fragments for composition.",
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "heatmap",
+        "predicate": "non_empty"
+      },
+      "id": "sheaf_coverage_config",
+      "path": "manuscript/sheaf/coverage.yaml",
+      "producer": "manual",
+      "section": "sheaf_coverage",
+      "statement": "Coverage report and heatmap settings are configurable.",
+      "tracks": [
+        "manuscript",
+        "visualization"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "sections",
+        "predicate": "non_empty"
+      },
+      "id": "sheaf_coverage_matrix",
+      "path": "output/data/sheaf_coverage_matrix.json",
+      "producer": "generate_figures.py",
+      "section": "sheaf_coverage",
+      "statement": "Coverage matrix JSON reflects manifest track bindings with IMRAD metadata.",
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "ok"
+      },
+      "id": "sheaf_gluing_certificate",
+      "path": "output/data/sheaf_gluing_certificate.json",
+      "producer": "z_generate_manuscript_variables.py",
+      "section": "methods_sheaf",
+      "statement": "Semantic gluing certificate records cross-track symbols and typed claims.",
+      "tracks": [
+        "manuscript",
+        "gnn",
+        "ontology",
+        "pymdp",
+        "visualization"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "claim_count",
+        "min": 1
+      },
+      "id": "sheaf_evidence_crosswalk",
+      "path": "output/data/sheaf_evidence_crosswalk.json",
+      "producer": "z_generate_manuscript_variables.py",
+      "section": "methods_sheaf",
+      "statement": "Evidence crosswalk records claim-to-artifact producer and gate bindings.",
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "issues",
+        "len_equals": 0
+      },
+      "id": "validation_dependency_graph",
+      "path": "output/data/validation_dependency_graph.json",
+      "producer": "z_generate_manuscript_variables.py",
+      "section": "methods_sheaf",
+      "statement": "Validation dependency graph has no producer-configuration issues.",
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "predicate": "file_exists"
+      },
+      "id": "semantic_gluing_graph_figure",
+      "path": "output/figures/semantic_gluing_graph.png",
+      "producer": "generate_figures.py",
+      "section": "methods_sheaf",
+      "statement": "Semantic gluing graph figure is generated from dependency records.",
+      "tracks": [
+        "visualization",
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_hashed"
+      },
+      "id": "artifact_provenance_spine",
+      "path": "output/data/artifact_provenance.json",
+      "producer": "generate_validation_spine.py",
+      "section": "methods_sheaf",
+      "statement": "Artifact provenance spine records hashes and configured producers for core outputs.",
+      "tracks": [
+        "provenance",
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_passed"
+      },
+      "id": "reproducibility_replay_spine",
+      "path": "output/reports/reproducibility_replay.json",
+      "producer": "generate_validation_spine.py",
+      "section": "results_invariants",
+      "statement": "Reproducibility spine replays deterministic toy producers and matches saved artifacts.",
+      "tracks": [
+        "reproducibility",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_expected_failures_documented"
+      },
+      "id": "counterexample_matrix_spine",
+      "path": "output/reports/counterexample_matrix.json",
+      "producer": "generate_validation_spine.py",
+      "section": "methods_sheaf",
+      "statement": "Counterexample spine records expected-failure fixtures for promoted validation gates.",
+      "tracks": [
+        "counterexample",
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "predicate": "file_exists"
+      },
+      "id": "sheaf_coverage_heatmap",
+      "path": "output/figures/sheaf_coverage_heatmap.png",
+      "producer": "generate_figures.py",
+      "section": "sheaf_coverage",
+      "statement": "B/W/G coverage heatmap PNG is generated for the first manuscript page.",
+      "tracks": [
+        "visualization",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": 0,
+        "field": "restrictions.coverage_missing"
+      },
+      "id": "coverage_no_gray",
+      "path": "output/data/sheaf_gluing_certificate.json",
+      "producer": "z_generate_manuscript_variables.py",
+      "section": "methods_sheaf",
+      "statement": "Coverage matrix JSON has zero gray cells on a clean tree.",
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "predicate": "file_exists"
+      },
+      "id": "composed_intro_motivation",
+      "path": "manuscript/02_intro_motivation.md",
+      "producer": "manual",
+      "section": "intro_motivation",
+      "statement": "Composed IMRAD introduction subsection exists for PDF pipeline.",
+      "tracks": [
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "predicate": "file_exists"
+      },
+      "id": "composed_methods_analytical",
+      "path": "manuscript/05_methods_analytical.md",
+      "producer": "manual",
+      "section": "methods_analytical",
+      "statement": "Composed Methods analytical subsection exists for PDF pipeline.",
+      "tracks": [
+        "analytical",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "predicate": "file_exists"
+      },
+      "id": "composed_results_mi",
+      "path": "manuscript/10_results_mi_sweep.md",
+      "producer": "manual",
+      "section": "results_mi_sweep",
+      "statement": "Composed Results MI sweep subsection exists for PDF pipeline.",
+      "tracks": [
+        "analytical",
+        "simulation",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "appendix_sheaf_track_count",
+        "min": 9
+      },
+      "id": "composed_appendix_full_sheaf",
+      "path": "output/data/manuscript_variables.json",
+      "producer": "z_generate_manuscript_variables.py",
+      "section": "appendix_full_sheaf",
+      "statement": "Appendix binds and composes appendix_sheaf_track_count fragment track types from the live manifest.",
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "steps",
+        "min": 1
+      },
+      "id": "si_tmaze_summary",
+      "path": "output/data/si_tmaze_summary.json",
+      "producer": "simulate_si_tmaze.py",
+      "section": "results_si_tmaze",
+      "statement": "pymdp T-maze summary JSON records measured rollout statistics.",
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "steps",
+        "predicate": "non_empty"
+      },
+      "id": "si_tmaze_trace",
+      "path": "output/data/si_tmaze_trace.json",
+      "producer": "simulate_si_tmaze.py",
+      "section": "results_si_tmaze",
+      "statement": "pymdp T-maze trace JSON records per-step beliefs and actions.",
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "summary.run_count",
+        "min": 4
+      },
+      "id": "si_policy_comparison",
+      "path": "output/data/si_policy_comparison.json",
+      "producer": "simulate_si_tmaze.py",
+      "section": "results_si_tmaze",
+      "statement": "Policy comparison artifact records state and policy inference comparison rows.",
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "summary.modes",
+        "set_equals": [
+          "state_inference",
+          "policy_inference"
+        ]
+      },
+      "id": "si_policy_comparison_modes",
+      "path": "output/data/si_policy_comparison.json",
+      "producer": "simulate_si_tmaze.py",
+      "section": "results_si_tmaze",
+      "statement": "Policy comparison covers exactly state and policy inference modes.",
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": "ok",
+        "field": "status"
+      },
+      "id": "si_graph_world_summary",
+      "path": "output/data/si_graph_world_summary.json",
+      "producer": "simulate_si_graph_world.py",
+      "section": "results_si_tmaze",
+      "statement": "Graph-world extension summary is a real deterministic artifact.",
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "steps",
+        "predicate": "non_empty"
+      },
+      "id": "si_graph_world_trace",
+      "path": "output/data/si_graph_world_trace.json",
+      "producer": "simulate_si_graph_world.py",
+      "section": "results_si_tmaze",
+      "statement": "Graph-world extension trace records deterministic per-step states.",
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "restrictions.graph_world_steps_match"
+      },
+      "id": "si_graph_world_trace_consistency",
+      "path": "output/data/sheaf_gluing_certificate.json",
+      "producer": "z_generate_manuscript_variables.py",
+      "section": "results_si_tmaze",
+      "statement": "Graph-world summary step count agrees with trace length.",
+      "tracks": [
+        "pymdp",
+        "simulation",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "predicate": "file_exists"
+      },
+      "id": "si_belief_entropy_figure",
+      "path": "output/figures/si_belief_entropy_curve.png",
+      "producer": "manual",
+      "section": "results_si_tmaze",
+      "statement": "Belief entropy curve figure is generated from the SI trace.",
+      "tracks": [
+        "visualization",
+        "pymdp"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "predicate": "file_exists"
+      },
+      "id": "si_belief_trajectory_gif",
+      "path": "output/figures/si_belief_trajectory.gif",
+      "producer": "render_animation.py",
+      "section": "appendix_full_sheaf",
+      "statement": "Belief trajectory GIF is generated from multi-step trace artifacts.",
+      "tracks": [
+        "animation",
+        "visualization"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "predicate": "file_exists"
+      },
+      "id": "composed_discussion",
+      "path": "manuscript/15_discussion_outlook.md",
+      "producer": "manual",
+      "section": "discussion_outlook",
+      "statement": "Discussion outlook section binds simulation and ontology tracks.",
+      "tracks": [
+        "simulation",
+        "ontology",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "predicate": "file_exists"
+      },
+      "id": "sheaf_layers_overview",
+      "path": "output/figures/sheaf_layers_overview.png",
+      "producer": "generate_figures.py",
+      "section": "methods_sheaf",
+      "statement": "Main-body sheaf layers overview figure combines registry stack and binding heatmap.",
+      "tracks": [
+        "visualization",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "restrictions.lean_all_proved"
+      },
+      "id": "lean_graph_world_policy_boundary",
+      "path": "output/data/sheaf_gluing_certificate.json",
+      "producer": "z_generate_manuscript_variables.py",
+      "section": "methods_lean",
+      "statement": "Lean boundary includes finite graph-world reachability and policy-enumeration witnesses.",
+      "tracks": [
+        "lean",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "predicate": "file_exists"
+      },
+      "id": "composed_methods_sheaf",
+      "path": "manuscript/08_methods_sheaf.md",
+      "producer": "manual",
+      "section": "methods_sheaf",
+      "statement": "Methods sheaf section binds figure, generated layer tables, and semantic gluing signposts.",
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    }
+  ],
+  "schema": "template_active_inference.evidence_crosswalk.v1"
+}

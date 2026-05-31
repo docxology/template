@@ -98,7 +98,7 @@ not download MNIST. To intentionally rebuild that fixture, run the manual
 maintenance utility:
 
 ```bash
-uv run python projects/template_autoresearch_project/scripts/regenerate_mnist_fixture.py
+uv run python projects/templates/template_autoresearch_project/scripts/regenerate_mnist_fixture.py
 ```
 
 Do not wire this script into project tests, analysis, rendering, validation, or

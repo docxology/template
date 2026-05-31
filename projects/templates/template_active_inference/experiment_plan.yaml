@@ -8,6 +8,12 @@ conditions:
   - name: sheaf_manifest_composition
     role: variant
     description: Registry-driven manuscript composition with coverage matrix and generated layers report.
+  - name: semantic_sheaf_gluing
+    role: variant
+    description: Cross-track certificate tying symbols, claims, artifacts, and manuscript variables together.
+  - name: graph_world_extension
+    role: variant
+    description: Deterministic graph-world SI trace and summary for extension-track validation.
 metrics:
   primary:
     name: invariants_all_pass
@@ -24,7 +30,10 @@ expected_figures:
   - fig:si_obs_action_trace
   - fig:sheaf_layers_overview
   - fig:sheaf_coverage_heatmap
+  - fig:semantic_gluing_graph
+  - fig:si_belief_trajectory
 baselines:
   - analytical_closed_form
 ablations:
   - sheaf_manifest_composition
+  - semantic_sheaf_gluing

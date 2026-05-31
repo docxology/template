@@ -6,5 +6,5 @@ To validate that `references.bib` is syntactically clean and contains the requir
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/template_code_project/manuscript/references.bib --strict
+    projects/templates/template_code_project/manuscript/references.bib --strict
 ```

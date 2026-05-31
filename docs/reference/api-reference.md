@@ -2391,6 +2391,64 @@ write_corpus(papers: Iterable[Paper], path: Path | str) -> Path
 
 Persist a list of (possibly enriched) papers as a JSON corpus file.
 
+## Package: `infrastructure.sia`
+
+### `AgentExecutionLog`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `append_generation`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `EvaluationResult`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `GenerationArtifacts`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `GenerationState`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `init_context`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `load_agent_execution`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `read_results_json`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `run_evaluation`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `run_sia_loop`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `RunConfig`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `TaskLayout`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `validate_task_dir`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `write_results_json`
+
+*symbol — defined in `infrastructure.sia`*
+
 ## Package: `infrastructure.skills`
 
 ### `build_manifest_payload`

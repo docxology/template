@@ -30,8 +30,8 @@ The test suite spans `test_optimizer.py` (pure math), `test_analysis_integration
 Before modifying `src/optimizer.py`, count the existing tests for the function you are changing. After modifying, run:
 
 ```bash
-uv run pytest projects/template_code_project/tests/ \
-    --cov=projects/template_code_project/src \
+uv run pytest projects/templates/template_code_project/tests/ \
+    --cov=projects/templates/template_code_project/src \
     --cov-fail-under=90 \
     --cov-report=term-missing \
     -v
@@ -74,7 +74,7 @@ Our testing framework validates numerical accuracy using standard approaches.
 
 **GOOD** (concrete, linkable):
 ```markdown
-`projects/template_code_project/tests/test_optimizer.py::TestComputeGradient` validates gradient
+`projects/templates/template_code_project/tests/test_optimizer.py::TestComputeGradient` validates gradient
 accuracy against analytical solutions without mocks, using `numpy` arrays with known values.
 ```
 
@@ -86,7 +86,7 @@ The infrastructure renders the manuscript to PDF automatically.
 **GOOD** (concrete):
 ```markdown
 `infrastructure/rendering/pdf_renderer.py` orchestrates Pandoc → XeLaTeX to produce
-`output/template_code_project/pdf/template_code_project_combined.pdf` from substituted markdown in `projects/template_code_project/output/manuscript/`.
+`output/template_code_project/pdf/template_code_project_combined.pdf` from substituted markdown in `projects/templates/template_code_project/output/manuscript/`.
 ```
 
 ---
@@ -119,7 +119,7 @@ Do not apply code-style rules to manuscript prose, and do not apply manuscript s
 
 ## Rule 7: `output/` Is Disposable — Never Edit Generated Files
 
-The entire `projects/template_code_project/output/` tree is written by the pipeline and overwritten on every run. Editing a file in `output/` has zero lasting effect and will confuse future agents.
+The entire `projects/templates/template_code_project/output/` tree is written by the pipeline and overwritten on every run. Editing a file in `output/` has zero lasting effect and will confuse future agents.
 
 If you need to change what a generated file contains, change the **generator**:
 - To change `output/data/optimization_results.csv` → modify `src/analysis/` (re-run via `scripts/optimization_analysis.py`)
@@ -136,13 +136,13 @@ Run all three commands before submitting any change to this project:
 
 ```bash
 # 1. Tests pass and coverage gate is met
-uv run pytest projects/template_code_project/tests/ \
-    --cov=projects/template_code_project/src \
+uv run pytest projects/templates/template_code_project/tests/ \
+    --cov=projects/templates/template_code_project/src \
     --cov-fail-under=90 -q
 
 # 2. No mocks exist anywhere in tests/
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
-    projects/template_code_project/tests/ || echo "Clean — no mocks found"
+    projects/templates/template_code_project/tests/ || echo "Clean — no mocks found"
 
 # 3. The mathematical primitives (optimizer.py, invariants.py) have no infrastructure imports.
 #    These two files MUST remain infrastructure-free so they are copy-pasteable into any
@@ -151,8 +151,8 @@ grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
 #    `infrastructure.*` behind try/except fallbacks; that is intentional and documented in
 #    `src/AGENTS.md` and `architecture.md`.
 grep -nE "^(from|import) infrastructure" \
-    projects/template_code_project/src/optimizer.py \
-    projects/template_code_project/src/invariants.py \
+    projects/templates/template_code_project/src/optimizer.py \
+    projects/templates/template_code_project/src/invariants.py \
     && echo "VIOLATION — math primitive imports infrastructure" \
     || echo "Clean — math primitives are infrastructure-free"
 ```

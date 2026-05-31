@@ -100,13 +100,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--config",
         type=Path,
-        default=Path("projects/template_prose_project/manuscript/config.yaml"),
+        default=Path("projects/templates/template_prose_project/manuscript/config.yaml"),
         help="Path to project config YAML.",
     )
     parser.add_argument(
         "--project-root",
         type=Path,
-        default=Path("projects/template_prose_project"),
+        default=Path("projects/templates/template_prose_project"),
         help="Project root directory (for isolated runs in tests).",
     )
     parser.add_argument(

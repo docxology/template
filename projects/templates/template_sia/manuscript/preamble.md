@@ -1,0 +1,3 @@
+---
+title: "{{CONFIG_TITLE}}"
+---

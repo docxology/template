@@ -183,7 +183,7 @@ def check_referenced_files_exist(project_root: Path, report: Report, project: st
 
 
 def check_no_oversize_src_files(project_root: Path, report: Report, project: str) -> None:
-    """`src/*.py` files should not exceed 1500 lines (modularity smell).
+    """``src/**/*.py`` files should not exceed 1500 lines (modularity smell).
 
     Catches the analysis.py-was-1719-lines smell; the template should not
     ship single source files that exceed thinkable refactor budget.
@@ -191,7 +191,7 @@ def check_no_oversize_src_files(project_root: Path, report: Report, project: str
     src_dir = project_root / "src"
     if not src_dir.is_dir():
         return
-    for py in src_dir.glob("*.py"):
+    for py in src_dir.rglob("*.py"):
         line_count = sum(1 for _ in py.open("r", encoding="utf-8"))
         if line_count > 1500:
             report.add(
@@ -203,7 +203,7 @@ def check_no_oversize_src_files(project_root: Path, report: Report, project: str
 
 
 def check_no_blanket_except_in_src(project_root: Path, report: Report, project: str) -> None:
-    """`except Exception:` in `src/*.py` should be rare and explicitly justified.
+    """``except Exception:`` in ``src/**/*.py`` should be rare and explicitly justified.
 
     Catches the CLAUDE.md-forbidden pattern of swallowing errors.
     """
@@ -211,7 +211,7 @@ def check_no_blanket_except_in_src(project_root: Path, report: Report, project: 
     if not src_dir.is_dir():
         return
     pat = re.compile(r"except\s+Exception\b")
-    for py in src_dir.glob("*.py"):
+    for py in src_dir.rglob("*.py"):
         text = _read(py)
         for m in pat.finditer(text):
             # Allow if the next 200 chars contain a noqa comment OR an `(ImportError`/specific filter.

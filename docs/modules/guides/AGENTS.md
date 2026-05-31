@@ -13,6 +13,7 @@ Focused guides for specific infrastructure modules. These documents supplement:
 | --- | --- |
 | `README.md` | Index for per-module guides |
 | `autoresearch-module.md` | Deterministic readiness planning |
+| `sia-module.md` | SIA Meta → Target → Feedback harness |
 | `benchmark-module.md` | Public exemplar benchmark manifests |
 | `config-module.md` | Configuration schemas / templates |
 | `core-module.md` | Core utilities |

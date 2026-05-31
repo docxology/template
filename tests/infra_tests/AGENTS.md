@@ -36,6 +36,7 @@ module test on each project render.
 - `reporting/`
 - `scientific/`
 - `search/`
+- `sia/`
 - `skills/`
 - `steganography/`
 - `validation/`

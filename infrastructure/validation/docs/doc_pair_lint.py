@@ -57,6 +57,11 @@ def _is_generated_tests_fixture_payload(path: Path) -> bool:
     return False
 
 
+def _is_recorded_generation_fixture(path: Path) -> bool:
+    """Return True for SIA replay trees under ``fixtures/recorded_generations``."""
+    return "recorded_generations" in path.parts
+
+
 @dataclass(frozen=True)
 class DocPairIssue:
     """A content directory missing one or both folder-level docs."""
@@ -83,6 +88,8 @@ def is_doc_pair_excluded_path(
     """Return True when *path* is outside permanent-template doc-pair scope."""
     excluded = set(exclude_parts)
     if _is_generated_tests_fixture_payload(path):
+        return True
+    if _is_recorded_generation_fixture(path):
         return True
     return any(part in excluded or part.endswith(".egg-info") for part in path.parts)
 

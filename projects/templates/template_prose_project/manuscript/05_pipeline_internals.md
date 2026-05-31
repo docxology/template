@@ -4,7 +4,7 @@ This section documents the artefacts produced by the prose-review run.
 
 ```mermaid
 flowchart TB
-    P[/projects/template_prose_project//]
+    P[/projects/templates/template_prose_project//]
     P --> M[/manuscript//]
     P --> OUT[/output/<br/>regenerable · gitignored/]
 

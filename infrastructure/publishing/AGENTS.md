@@ -137,7 +137,7 @@ from pathlib import Path
 from infrastructure.publishing.transmission_bookends import write_transmission_bookends
 
 paths = write_transmission_bookends(
-    Path("projects/template_prose_project"),
+    Path("projects/templates/template_prose_project"),
     "template_prose_project",
     repo_root=Path("."),
 )
@@ -152,7 +152,7 @@ from pathlib import Path
 from infrastructure.publishing.transmission_page_check import check_transmission_bookend_pages
 
 result = check_transmission_bookend_pages(
-    Path("projects/template_code_project/output/pdf/template_code_project_combined.pdf")
+    Path("projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf")
 )
 assert result.valid, result.issues
 ```
@@ -167,7 +167,7 @@ Local renders keep `{project}_combined.pdf`. `prepare_release_bundle` copies the
 from infrastructure.publishing.deposit_filename import build_deposit_filename
 from infrastructure.publishing.metadata_from_config import publication_metadata_from_config
 
-metadata = publication_metadata_from_config(Path("projects/template_code_project/manuscript/config.yaml"))
+metadata = publication_metadata_from_config(Path("projects/templates/template_code_project/manuscript/config.yaml"))
 name = build_deposit_filename(
     metadata=metadata,
     pdf_sha256="b591a0ce…",
@@ -200,7 +200,7 @@ cross_links = DepositCrossLinks(
     doi="10.5281/zenodo.12345",
 )
 description = build_deposit_description(
-    abstract_source=Path("projects/template_prose_project/manuscript/00_abstract.md"),
+    abstract_source=Path("projects/templates/template_prose_project/manuscript/00_abstract.md"),
     variables_path=Path("output/template_prose_project/data/manuscript_variables.json"),
     cross_links=cross_links,
     override_text=None,  # or publication.zenodo_description from config

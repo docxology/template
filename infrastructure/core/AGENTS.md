@@ -93,7 +93,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - ``build_pytest_marker_expression(...)`` returns one ``pytest -m`` string for subprocess runners (`pipeline_test_runner`, ``run_per_project_pytest``) so benchmarks and slow/Ollama-gated tests stay opt-in outside defaults.
 
 **pytest_orchestration.py**
-- Canonical Stage-01 / union-gate pytest subprocess policy: discovery logging, coverage datafile pinning, declared project ``fail_under``, and project-suite guards. Consumed by ``infrastructure.reporting.pipeline_test_runner`` and ``infrastructure.core.test_runner``.
+- Canonical Stage-01 / union-gate pytest subprocess policy: discovery logging, coverage datafile pinning, declared project ``fail_under``, and project-suite guards. Project subprocesses inject pytest/pytest-cov/pytest-timeout and pin `coverage==<workspace coverage version>` so `--cov-append` writes a single readable SQLite trace across mixed project environments. Consumed by ``infrastructure.reporting.pipeline_test_runner`` and ``infrastructure.core.test_runner``.
 
 **cli.py**
 - Command-line interface utilities
@@ -3940,4 +3940,3 @@ Core module is imported by all other infrastructure modules for:
 - [README.md](README.md) - Quick reference guide
 - [`validation/`](../validation/) - Validation & quality assurance
 - [`../scripts/gates/AGENTS.md`](../../scripts/gates/AGENTS.md) - Opt-in gate scripts
-

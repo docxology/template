@@ -58,8 +58,8 @@ A comprehensive, multi-pass review of the entire `docs/` directory was conducted
 
 | File | Fix |
 |------|-----|
-| `docs/README.md` | `../projects/fep_lean/docs/` → `../projects/template_code_project/docs/` |
-| `docs/best-practices/multi-project-management.md` | `projects/fep_lean/docs/` → `projects/template_code_project/docs/` |
+| `docs/README.md` | `../projects/fep_lean/docs/` → `../projects/templates/template_code_project/docs/` |
+| `docs/best-practices/multi-project-management.md` | `projects/fep_lean/docs/` → `projects/templates/template_code_project/docs/` |
 | `docs/documentation-index.md` | Heading changed to `template_code_project / CI paths`; link updated |
 | `docs/rules/documentation_standards.md` | Fixed relative paths: `../infrastructure/AGENTS.md` → `../../infrastructure/AGENTS.md` (4 occurrences); `configuration.md` → `../operational/config/configuration.md`; also fixed code example `../../../` → `../../` |
 | `docs/operational/config/configuration.md` | `projects/fep_lean/` path → `projects_archive/fep_lean/` for functional link |
@@ -69,7 +69,7 @@ A comprehensive, multi-pass review of the entire `docs/` directory was conducted
 | File | Before | After |
 |------|--------|-------|
 | `reference/glossary.md` | Build Pipeline described as `Tests → Scripts → Validation → Glossary → Individual PDFs → Combined PDF` | Replaced with accurate DAG: Clean → Setup → Infra Tests → Project Tests → Analysis → PDF Render → Validate → Copy → LLM Review/Translations |
-| `reference/quick-start-cheatsheet.md` | Coverage command `--cov=projects.template_code_project.src` (invalid) | `--cov=projects/template_code_project/src` (filesystem path) |
+| `reference/quick-start-cheatsheet.md` | Coverage command `--cov=projects.template_code_project.src` (invalid) | `--cov=projects/templates/template_code_project/src` (filesystem path) |
 | `reference/quick-start-cheatsheet.md` | Import `from projects.template_code_project.src.example import calculate_average` (non-existent) | `from src.optimizer import gradient_descent` (real exemplar code) |
 
 ### 3. Outdated Project References

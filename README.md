@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/<project>/pdf/`. Logs in `output/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars: `template_active_inference`, `template_autoresearch_project`, `template_code_project`, `template_prose_project`, `template_template`. The search exemplar is an optional add-on under `projects/archive/template_search_project/`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars: `template_active_inference`, `template_autoresearch_project`, `template_code_project`, `template_prose_project`, `template_sia`, `template_template`. The search exemplar is an optional add-on under `projects/archive/template_search_project/`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -119,6 +119,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) | AutoResearch-centric (deterministic plan/evidence/claim/artifact/readiness loop) | see canonical facts | see canonical facts |
 | [`projects/templates/template_code_project/`](projects/templates/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
 | [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | see canonical facts | see canonical facts |
+| [`projects/templates/template_sia/`](projects/templates/template_sia/) | SIA harness (meta → target → feedback loop, fixture replay) | see canonical facts | see canonical facts |
 | [`projects/templates/template_template/`](projects/templates/template_template/) | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
 
 *Test and coverage figures are representative; confirm against [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) after substantive changes.*

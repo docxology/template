@@ -771,7 +771,7 @@ self-contained except for the Plotly CDN script tag.
   closed-form Ising mirror with 6 panels / 3 controls / 18 invariants — but
   those projects are local-only and not git-tracked, so they are not linked
   here; the canonical exemplar below is the reference implementation.)*
-- [`projects/template_code_project/scripts/build_dashboard.py`](../../projects/template_code_project/scripts/build_dashboard.py)
+- [`projects/templates/template_code_project/scripts/build_dashboard.py`](../../projects/templates/template_code_project/scripts/build_dashboard.py)
   — gradient-descent diagnostics with 5 panels, 2 live controls, 22 invariants;
   defaults read from `manuscript/config.yaml`.
 

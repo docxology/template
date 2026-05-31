@@ -327,7 +327,7 @@ def _render_combined_outputs(
         logger.debug("\n" + "=" * 60)
         logger.info("Generating combined HTML manuscript...")
         try:
-            manager.render_combined_web(md_files, manuscript_dir, project_name)
+            manager.render_combined_web(_html_combined_source_files(md_files), manuscript_dir, project_name)
         except RenderingError as re:
             logger.warning(f"⚠️  Rendering error generating combined HTML: {re.message}")
             reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
@@ -347,6 +347,15 @@ def _render_combined_outputs(
         _render_combined_epub(manager, manuscript_dir, project_name, reporter)
     else:
         logger.debug("[skip] EPUB rendering disabled in config (default; render.formats.epub=true to enable)")
+
+
+def _html_combined_source_files(md_files: list[Path]) -> list[Path]:
+    """Return combined-HTML inputs, ignoring missing generated transmission bookends."""
+    html_files: list[Path] = []
+    for path in md_files:
+        if path.exists() or not is_transmission_bookend(path):
+            html_files.append(path)
+    return html_files
 
 
 def _resolve_combined_markdown(manuscript_dir: Path) -> Path | None:

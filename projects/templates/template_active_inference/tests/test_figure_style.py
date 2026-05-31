@@ -1,5 +1,9 @@
 from pathlib import Path
 
+import matplotlib.pyplot as plt
+from PIL import Image
+
+from visualizations.figure_io import save_figure_png
 from visualizations.figure_registry import load_figure_registry, render_figure_markdown
 from visualizations.figure_style import apply_style, load_figure_style
 
@@ -20,6 +24,31 @@ def test_apply_style_restores_active() -> None:
     with apply_style(style):
         assert active_style() is style
     assert active_style() is before
+
+
+def test_save_figure_png_normalizes_rgb_atomically(tmp_path: Path) -> None:
+    fig, ax = plt.subplots()
+    ax.plot([0, 1], [0, 1])
+
+    out = tmp_path / "figures" / "line.png"
+    assert save_figure_png(fig, out, dpi=72) == out
+
+    with Image.open(out) as img:
+        assert img.mode == "RGB"
+        assert img.size[0] > 0
+        assert img.size[1] > 0
+    assert not list(out.parent.glob(".line.*.png"))
+
+
+def test_save_figure_png_can_skip_rgb_normalization(tmp_path: Path) -> None:
+    fig, ax = plt.subplots()
+    ax.scatter([0, 1], [1, 0])
+
+    out = tmp_path / "transparent.png"
+    assert save_figure_png(fig, out, dpi=72, transparent=True, normalize_rgb=False) == out
+
+    with Image.open(out) as img:
+        assert img.mode in {"RGBA", "LA", "P"}
 
 
 def test_figure_registry_and_markdown() -> None:

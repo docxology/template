@@ -2,48 +2,230 @@ claims:
   - id: sheaf_registry
     statement: Sheaf track registry is present and drives compose order.
     path: manuscript/sheaf/tracks.yaml
+    section: methods_sheaf
+    tracks: [manuscript, sheaf]
+    evidence:
+      field: tracks
+      predicate: non_empty
   - id: sheaf_manifest
     statement: IMRAD section manifest binds track fragments for composition.
     path: manuscript/sheaf/manifest.yaml
+    section: methods_sheaf
+    tracks: [manuscript, sheaf]
+    evidence:
+      field: sections
+      predicate: non_empty
   - id: sheaf_coverage_config
     statement: Coverage report and heatmap settings are configurable.
     path: manuscript/sheaf/coverage.yaml
+    section: sheaf_coverage
+    tracks: [manuscript, visualization]
+    evidence:
+      field: heatmap
+      predicate: non_empty
   - id: sheaf_coverage_matrix
     statement: Coverage matrix JSON reflects manifest track bindings with IMRAD metadata.
     path: output/data/sheaf_coverage_matrix.json
+    section: sheaf_coverage
+    tracks: [manuscript, sheaf]
+    evidence:
+      field: sections
+      predicate: non_empty
+  - id: sheaf_gluing_certificate
+    statement: Semantic gluing certificate records cross-track symbols and typed claims.
+    path: output/data/sheaf_gluing_certificate.json
+    section: methods_sheaf
+    tracks: [manuscript, gnn, ontology, pymdp, visualization]
+    evidence:
+      field: ok
+      equals: true
+  - id: sheaf_evidence_crosswalk
+    statement: Evidence crosswalk records claim-to-artifact producer and gate bindings.
+    path: output/data/sheaf_evidence_crosswalk.json
+    section: methods_sheaf
+    tracks: [manuscript, sheaf]
+    evidence:
+      field: claim_count
+      min: 1
+  - id: validation_dependency_graph
+    statement: Validation dependency graph has no producer-configuration issues.
+    path: output/data/validation_dependency_graph.json
+    section: methods_sheaf
+    tracks: [manuscript, sheaf]
+    evidence:
+      field: issues
+      len_equals: 0
+  - id: semantic_gluing_graph_figure
+    statement: Semantic gluing graph figure is generated from dependency records.
+    path: output/figures/semantic_gluing_graph.png
+    section: methods_sheaf
+    tracks: [visualization, manuscript, sheaf]
+    evidence:
+      predicate: file_exists
+  - id: artifact_provenance_spine
+    statement: Artifact provenance spine records hashes and configured producers for core outputs.
+    path: output/data/artifact_provenance.json
+    section: methods_sheaf
+    tracks: [provenance, manuscript, sheaf]
+    evidence:
+      field: all_hashed
+      equals: true
+  - id: reproducibility_replay_spine
+    statement: Reproducibility spine replays deterministic toy producers and matches saved artifacts.
+    path: output/reports/reproducibility_replay.json
+    section: results_invariants
+    tracks: [reproducibility, manuscript]
+    evidence:
+      field: all_passed
+      equals: true
+  - id: counterexample_matrix_spine
+    statement: Counterexample spine records expected-failure fixtures for promoted validation gates.
+    path: output/reports/counterexample_matrix.json
+    section: methods_sheaf
+    tracks: [counterexample, manuscript, sheaf]
+    evidence:
+      field: all_expected_failures_documented
+      equals: true
   - id: sheaf_coverage_heatmap
     statement: B/W/G coverage heatmap PNG is generated for the first manuscript page.
     path: output/figures/sheaf_coverage_heatmap.png
+    section: sheaf_coverage
+    tracks: [visualization, manuscript]
+    evidence:
+      predicate: file_exists
   - id: coverage_no_gray
     statement: Coverage matrix JSON has zero gray cells on a clean tree.
-    path: output/data/sheaf_coverage_matrix.json
+    path: output/data/sheaf_gluing_certificate.json
+    section: methods_sheaf
+    tracks: [manuscript, sheaf]
+    evidence:
+      field: restrictions.coverage_missing
+      equals: 0
   - id: composed_intro_motivation
     statement: Composed IMRAD introduction subsection exists for PDF pipeline.
     path: manuscript/02_intro_motivation.md
+    section: intro_motivation
+    tracks: [manuscript]
+    evidence:
+      predicate: file_exists
   - id: composed_methods_analytical
     statement: Composed Methods analytical subsection exists for PDF pipeline.
     path: manuscript/05_methods_analytical.md
+    section: methods_analytical
+    tracks: [analytical, manuscript]
+    evidence:
+      predicate: file_exists
   - id: composed_results_mi
     statement: Composed Results MI sweep subsection exists for PDF pipeline.
     path: manuscript/10_results_mi_sweep.md
+    section: results_mi_sweep
+    tracks: [analytical, simulation, manuscript]
+    evidence:
+      predicate: file_exists
   - id: composed_appendix_full_sheaf
     statement: Appendix binds and composes appendix_sheaf_track_count fragment track types from the live manifest.
-    path: manuscript/16_appendix_full_sheaf.md
+    path: output/data/manuscript_variables.json
+    section: appendix_full_sheaf
+    tracks: [manuscript, sheaf]
+    evidence:
+      field: appendix_sheaf_track_count
+      min: 9
   - id: si_tmaze_summary
     statement: pymdp T-maze summary JSON records measured rollout statistics.
     path: output/data/si_tmaze_summary.json
+    section: results_si_tmaze
+    tracks: [pymdp, simulation]
+    evidence:
+      field: steps
+      min: 1
   - id: si_tmaze_trace
     statement: pymdp T-maze trace JSON records per-step beliefs and actions.
     path: output/data/si_tmaze_trace.json
+    section: results_si_tmaze
+    tracks: [pymdp, simulation]
+    evidence:
+      field: steps
+      predicate: non_empty
+  - id: si_policy_comparison
+    statement: Policy comparison artifact records state and policy inference comparison rows.
+    path: output/data/si_policy_comparison.json
+    section: results_si_tmaze
+    tracks: [pymdp, simulation]
+    evidence:
+      field: summary.run_count
+      min: 4
+  - id: si_policy_comparison_modes
+    statement: Policy comparison covers exactly state and policy inference modes.
+    path: output/data/si_policy_comparison.json
+    section: results_si_tmaze
+    tracks: [pymdp, simulation]
+    evidence:
+      field: summary.modes
+      set_equals: [state_inference, policy_inference]
+  - id: si_graph_world_summary
+    statement: Graph-world extension summary is a real deterministic artifact.
+    path: output/data/si_graph_world_summary.json
+    section: results_si_tmaze
+    tracks: [pymdp, simulation]
+    evidence:
+      field: status
+      equals: ok
+  - id: si_graph_world_trace
+    statement: Graph-world extension trace records deterministic per-step states.
+    path: output/data/si_graph_world_trace.json
+    section: results_si_tmaze
+    tracks: [pymdp, simulation]
+    evidence:
+      field: steps
+      predicate: non_empty
+  - id: si_graph_world_trace_consistency
+    statement: Graph-world summary step count agrees with trace length.
+    path: output/data/sheaf_gluing_certificate.json
+    section: results_si_tmaze
+    tracks: [pymdp, simulation, manuscript]
+    evidence:
+      field: restrictions.graph_world_steps_match
+      equals: true
   - id: si_belief_entropy_figure
     statement: Belief entropy curve figure is generated from the SI trace.
     path: output/figures/si_belief_entropy_curve.png
+    section: results_si_tmaze
+    tracks: [visualization, pymdp]
+    evidence:
+      predicate: file_exists
+  - id: si_belief_trajectory_gif
+    statement: Belief trajectory GIF is generated from multi-step trace artifacts.
+    path: output/figures/si_belief_trajectory.gif
+    section: appendix_full_sheaf
+    tracks: [animation, visualization]
+    evidence:
+      predicate: file_exists
   - id: composed_discussion
     statement: Discussion outlook section binds simulation and ontology tracks.
     path: manuscript/15_discussion_outlook.md
+    section: discussion_outlook
+    tracks: [simulation, ontology, manuscript]
+    evidence:
+      predicate: file_exists
   - id: sheaf_layers_overview
     statement: Main-body sheaf layers overview figure combines registry stack and binding heatmap.
     path: output/figures/sheaf_layers_overview.png
+    section: methods_sheaf
+    tracks: [visualization, sheaf]
+    evidence:
+      predicate: file_exists
+  - id: lean_graph_world_policy_boundary
+    statement: Lean boundary includes finite graph-world reachability and policy-enumeration witnesses.
+    path: output/data/sheaf_gluing_certificate.json
+    section: methods_lean
+    tracks: [lean, manuscript]
+    evidence:
+      field: restrictions.lean_all_proved
+      equals: true
   - id: composed_methods_sheaf
-    statement: Methods sheaf section binds figure and generated layer tables in the main body.
+    statement: Methods sheaf section binds figure, generated layer tables, and semantic gluing signposts.
     path: manuscript/08_methods_sheaf.md
+    section: methods_sheaf
+    tracks: [manuscript, sheaf]
+    evidence:
+      predicate: file_exists

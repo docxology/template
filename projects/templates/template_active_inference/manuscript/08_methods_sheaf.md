@@ -25,6 +25,8 @@ Each run emits `output/data/sheaf_coverage_matrix.json` and regenerates coverage
 
 `--validate-only --strict` runs the structural gate before any fragment is glued. Beyond per-cell coverage, it invokes the sheaf-law oracle (`verify_sheaf_laws`, `src/manuscript/sheaf/laws.py`), which checks {{sheaf_law_count}} axioms — poset, presheaf functoriality, separation, gluing, typing, and compositionality — and reports {{sheaf_laws_verified}}/{{sheaf_law_count}} satisfied for the current manifest. A violation is raised as an error-level issue and aborts the build, so a malformed manifest (a section colliding on an output file, an off-chain block, a mistyped fragment, a fragment shared between sections) can never compose. The formal statements are in the formalism block below; the negative-control suite (`tests/test_sheaf_laws.py`) proves each check is falsifiable.
 
+The semantic layer is separate from those structural laws. `output/data/sheaf_gluing_certificate.json` records cross-track symbols, typed claim evidence, artifact sources, and manuscript-variable restrictions; validation fails when the analytical, pymdp, GNN, ontology, Lean, visualization, or manuscript tracks disagree about a shared symbol or measured claim.
+
 <!-- sheaf-track:formalism -->
 
 ### Base poset and presheaf
@@ -65,11 +67,29 @@ Each law is paired with a negative control in `tests/test_sheaf_laws.py` — a s
 
 These laws verify the sheaf *axioms* on a finite base poset. They do **not** compute sheaf *cohomology* ($H^0$/$H^1$, Čech complexes, derived functors); "sheaf" here names the verified separation-and-gluing structure of a multi-track coverage assignment, not a cohomological invariant. Formal track definitions and section×track bindings appear in the generated tables below.
 
+Semantic gluing then checks agreement of the glued content: coverage counts, manuscript variables, typed claim predicates, pymdp mode/hash, Bernoulli GNN ontology, and SI T-maze GNN ontology. This certificate is a content-level audit over the same base, not an additional topological law.
+
 <!-- sheaf-track:visualization -->
 
 ![Two-panel overview of sheaf fragment layers. Left panel shows {{sheaf_track_count}} composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across {{imrad_manifest_rows}} manifest rows and {{sheaf_track_count}} tracks.](../output/figures/sheaf_layers_overview.png){#fig:sheaf_layers_overview width=98%}
 
 *Figure 6 (methods). Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for {{sheaf_track_count}} fragment types across {{imrad_manifest_rows}} manifest rows ({{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing).*
+
+![Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate.](../output/figures/semantic_gluing_graph.png){#fig:semantic_gluing_graph width=95%}
+
+*Figure 6b (methods). Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate.*
+
+<!-- sheaf-track:provenance -->
+
+The `provenance` fragment makes artifact lineage a live validation-spine track. The configured producer `generate_validation_spine.py` writes `output/data/artifact_provenance.json`, which hashes {{validation_spine_artifact_count}} core artifacts and records their producer scripts plus config digests. Publication claims that depend on generated files must be traceable to this lineage table or to a narrower artifact-specific certificate.
+
+The first promoted provenance claim is intentionally limited: every listed core artifact exists, has a SHA-256 digest, and is produced by a configured analysis script. A changed file, missing producer, or stale saved digest is a validation failure, not a prose warning.
+
+<!-- sheaf-track:counterexample -->
+
+The `counterexample` fragment records expected-failure fixtures as first-class evidence. `output/reports/counterexample_matrix.json` lists {{counterexample_count}} negative controls that intentionally mutate ontology mappings, semantic certificates, graph-world trace agreement, typed claim evidence, and provenance hashes.
+
+The matrix is not an empirical result. It is a falsifiability ledger: each row names the gate that must fail and the test that proves the failure path remains live.
 
 <!-- sheaf-track:layers -->
 
@@ -85,6 +105,9 @@ Compose order and renderer bindings from `manuscript/sheaf/tracks.yaml`.
 | 30 | `simulation` | Analytical simulation notes | `markdown` | No |
 | 35 | `layers` | Sheaf layers tables | `layers_report` | Yes |
 | 40 | `pymdp` | pymdp harness artifacts | `markdown` | No |
+| 42 | `provenance` | Artifact provenance spine | `markdown` | No |
+| 44 | `reproducibility` | Deterministic replay spine | `markdown` | No |
+| 46 | `counterexample` | Expected-failure counterexamples | `markdown` | No |
 | 50 | `visualization` | Figure references | `section_figures` | No |
 | 60 | `lean` | Lean boundary fragment | `markdown` | No |
 | 70 | `gnn` | GNN notation fragment | `markdown` | No |
@@ -98,25 +121,25 @@ Compose order and renderer bindings from `manuscript/sheaf/tracks.yaml`.
 
 Section rows versus fragment track columns. **P** = present (bound and file exists); **—** = absent (not bound); **M** = missing (bound, file absent).
 
-| Section | prose | formalism | simulation | layers | pymdp | visualization | lean | gnn | ontology | animation |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Introduction (group) | — | — | — | — | — | — | — | — | — | — |
-|   Motivation and scope | P | — | — | — | — | — | — | — | — | — |
-|   Contributions | P | — | — | — | — | P | — | — | P | — |
-| Methods (group) | — | — | — | — | — | — | — | — | — | — |
-|   Bernoulli–Ising analytical model | P | P | P | — | — | P | — | P | P | — |
-|   pymdp simulation harness | P | P | — | — | P | P | — | P | P | — |
-|   Lean formalization boundary | P | — | — | — | — | P | P | — | — | — |
-|   Sheaf composition | P | P | — | P | — | P | — | — | — | — |
-| Results (group) | — | — | — | — | — | — | — | — | — | — |
-|   Mutual-information parameter sweep | P | P | P | — | — | P | — | — | — | — |
-|   Free-energy decomposition | P | — | — | — | — | P | — | — | — | — |
-|   T-maze active-inference rollout | P | — | — | — | P | P | — | — | — | — |
-|   Validation invariants | P | — | P | — | — | P | — | — | — | — |
-| Discussion (group) | — | — | — | — | — | — | — | — | — | — |
-|   Limitations and outlook | P | — | P | — | — | — | — | — | P | — |
-| Appendix (group) | — | — | — | — | — | — | — | — | — | — |
-|   Appendix: full track coverage | P | P | P | — | P | P | P | P | P | P |
+| Section | prose | formalism | simulation | layers | pymdp | provenance | reproducibility | counterexample | visualization | lean | gnn | ontology | animation |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Introduction (group) | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Motivation and scope | P | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Contributions | P | — | — | — | — | — | — | — | P | — | — | P | — |
+| Methods (group) | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Bernoulli–Ising analytical model | P | P | P | — | — | — | — | — | P | — | P | P | — |
+|   pymdp simulation harness | P | P | — | — | P | — | — | — | P | — | P | P | — |
+|   Lean formalization boundary | P | — | — | — | — | — | — | — | P | P | — | — | — |
+|   Sheaf composition | P | P | — | P | — | P | — | P | P | — | — | — | — |
+| Results (group) | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Mutual-information parameter sweep | P | P | P | — | — | — | — | — | P | — | — | — | — |
+|   Free-energy decomposition | P | — | — | — | — | — | — | — | P | — | — | — | — |
+|   T-maze active-inference rollout | P | — | — | — | P | — | — | — | P | — | — | — | — |
+|   Validation invariants | P | — | P | — | — | — | P | — | P | — | — | — | — |
+| Discussion (group) | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Limitations and outlook | P | — | P | — | — | — | — | — | — | — | — | P | — |
+| Appendix (group) | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Appendix: full track coverage | P | P | P | — | P | P | P | P | P | P | P | P | P |
 
 **Totals:** {{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing.
 
@@ -126,4 +149,60 @@ Section rows versus fragment track columns. **P** = present (bound and file exis
 | P | Black | Track **present** (bound and fragment exists) |
 | — | White | **Absent** (not bound for this section) |
 | M | Gray | **Missing** (bound but fragment file absent) |
+
+<!-- sheaf-layers:evidence-crosswalk -->
+## Evidence crosswalk
+
+| Claim | Artifact | Producer | Gates |
+| --- | --- | --- | --- |
+| `sheaf_registry` | `manuscript/sheaf/tracks.yaml` | `manual` | validate_outputs |
+| `sheaf_manifest` | `manuscript/sheaf/manifest.yaml` | `manual` | validate_outputs |
+| `sheaf_coverage_config` | `manuscript/sheaf/coverage.yaml` | `manual` | validate_outputs |
+| `sheaf_coverage_matrix` | `output/data/sheaf_coverage_matrix.json` | `generate_figures.py` | validate_outputs |
+| `sheaf_gluing_certificate` | `output/data/sheaf_gluing_certificate.json` | `z_generate_manuscript_variables.py` | validate_manuscript, validate_outputs |
+| `sheaf_evidence_crosswalk` | `output/data/sheaf_evidence_crosswalk.json` | `z_generate_manuscript_variables.py` | validate_manuscript, validate_outputs |
+| `validation_dependency_graph` | `output/data/validation_dependency_graph.json` | `z_generate_manuscript_variables.py` | validate_manuscript, validate_outputs |
+| `semantic_gluing_graph_figure` | `output/figures/semantic_gluing_graph.png` | `generate_figures.py` | validate_outputs, figure_registry |
+
+**Claim rows:** 30 typed evidence claims.
+
+<!-- sheaf-layers:artifact-producers -->
+## Artifact producer graph
+
+| Artifact | Producer | Configured | Consumers |
+| --- | --- | --- | --- |
+| `output/data/analysis_statistics.json` | `compute_statistics.py` | Yes | validate_outputs |
+| `output/data/artifact_provenance.json` | `generate_validation_spine.py` | Yes | methods_sheaf |
+| `output/data/manuscript_variables.json` | `z_generate_manuscript_variables.py` | Yes | validate_outputs |
+| `output/data/parameter_sweep.csv` | `run_analytical_sweep.py` | Yes | validate_outputs |
+| `output/data/sheaf_coverage_matrix.json` | `generate_figures.py` | Yes | validate_outputs |
+| `output/data/sheaf_evidence_crosswalk.json` | `z_generate_manuscript_variables.py` | Yes | methods_sheaf |
+| `output/data/sheaf_gluing_certificate.json` | `z_generate_manuscript_variables.py` | Yes | methods_sheaf, appendix_full_sheaf |
+| `output/data/si_graph_world_summary.json` | `simulate_si_graph_world.py` | Yes | methods_pymdp, results_si_tmaze |
+| `output/data/si_graph_world_trace.json` | `simulate_si_graph_world.py` | Yes | methods_pymdp, results_si_tmaze, appendix_full_sheaf |
+| `output/data/si_policy_comparison.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, results_si_tmaze |
+| `output/data/si_tmaze_summary.json` | `simulate_si_tmaze.py` | Yes | validate_outputs |
+| `output/data/si_tmaze_trace.json` | `simulate_si_tmaze.py` | Yes | validate_outputs |
+| `output/data/validation_dependency_graph.json` | `z_generate_manuscript_variables.py` | Yes | methods_sheaf |
+| `output/figures/si_belief_trajectory.gif` | `render_animation.py` | Yes | appendix_full_sheaf |
+| `output/reports/counterexample_matrix.json` | `generate_validation_spine.py` | Yes | methods_sheaf |
+| `output/reports/invariants.json` | `run_analytical_sweep.py` | Yes | validate_outputs |
+| `output/reports/reproducibility_replay.json` | `generate_validation_spine.py` | Yes | results_invariants |
+| `output/reports/si_invariants.json` | `simulate_si_tmaze.py` | Yes | validate_outputs |
+| `output/reports/si_tmaze_run_report.json` | `simulate_si_tmaze.py` | Yes | validate_outputs |
+
+**Producer issues:** 0.
+
+<!-- sheaf-layers:semantic-restrictions -->
+## Semantic gluing restrictions
+
+| Restriction | Value |
+| --- | --- |
+| Coverage missing | `0` |
+| Policy comparison rows | `4` |
+| Graph-world trace agrees | `True` |
+| Animation frames | `4` |
+| Lean all proved | `True` |
+| GNN ontology ok | `True` |
+| Configured producers ok | `True` |
 

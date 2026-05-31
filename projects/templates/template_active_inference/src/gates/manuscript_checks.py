@@ -18,10 +18,9 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
         validate_coverage_json_data,
         validate_manifest,
     )
-    from ontology.bindings import validate_gnn_ontology
+    from ontology.bindings import validate_all_gnn_ontology
 
-    gnn_path = root / "gnn" / "bernoulli_toy.gnn.md"
-    gnn_ok = not validate_gnn_ontology(gnn_path)
+    gnn_ok = not validate_all_gnn_ontology(root)
     ctx = load_sheaf_coverage_context(root)
     manifest = ctx.manifest
     registry = ctx.registry
@@ -60,6 +59,7 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
 
     from manuscript.hydrate import EXCLUDED_DOC_FILENAMES, collect_malformed_token_names, validate_manuscript_tokens
     from manuscript.variables import generate_variables
+    from manuscript.sheaf.semantic import validate_semantic_gluing
 
     manuscript_dir = root / "manuscript"
     variable_keys = set(generate_variables(root, require_analysis_outputs=False))
@@ -100,4 +100,5 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
         "manuscript_tokens_registered": manuscript_tokens_registered,
         "resolved_manuscript_hydrated": resolved_manuscript_hydrated,
         "gnn_concordance": gnn_ok,
+        "semantic_sheaf_gluing": not validate_semantic_gluing(root),
     }

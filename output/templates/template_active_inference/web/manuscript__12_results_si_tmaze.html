@@ -171,12 +171,20 @@
   </style>
 </head>
 <body>
-<h1 id="sec:results_si_tmaze">T-maze sophisticated inference</h1>
+<h1 id="sec:results_si_tmaze">T-maze active-inference rollout</h1>
 <!-- sheaf-track:prose -->
-<p>The pymdp harness rolls out a T-maze sophisticated-inference agent
-with planning horizon 2. Summary metrics land in
-<code>output/data/si_tmaze_summary.json</code>.</p>
+<p>The pymdp harness rolls out a T-maze active-inference agent in
+<code>state_inference</code> mode with planning horizon 2. The default
+<code>state_inference</code> mode is belief filtering with a
+goal-seeking action rule; sophisticated policy inference (an
+expected-free-energy policy posterior) is selectable via
+<code>mode: policy_inference</code> (<span class="citation"
+data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span>). Summary
+metrics land in <code>output/data/si_tmaze_summary.json</code>.</p>
 <p>Steps recorded: 2. Mean belief entropy: 0.3251.</p>
+<p>Policy-comparison rows: 4 across state-inference and policy-inference
+modes; goal-reaching rows: 3. Graph-world extension rows: 4 over 4
+nodes, with goal-reached flag 1.</p>
 <!-- sheaf-track:pymdp -->
 <p>Rollout trace: <code>output/data/si_tmaze_trace.json</code>. JSONL
 run log: <code>output/logs/pymdp_runs.jsonl</code>.</p>
@@ -203,9 +211,9 @@ reached flag is 1.</figcaption>
 rollout (action diversity 2).</em></p>
 <figure id="fig:si_tmaze_actions">
 <img src="../figures/si_tmaze_actions.png" style="width:90.0%"
-alt="Step plot of discrete action index versus timestep for the pymdp sophisticated-inference T-maze rollout. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps." />
+alt="Step plot of discrete action index versus timestep for the pymdp T-maze rollout in state_inference mode. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps." />
 <figcaption aria-hidden="true">Step plot of discrete action index versus
-timestep for the pymdp sophisticated-inference T-maze rollout. Actions
+timestep for the pymdp T-maze rollout in state_inference mode. Actions
 change at each timestep with light fill under the step trace; policy
 depth is 2 steps.</figcaption>
 </figure>

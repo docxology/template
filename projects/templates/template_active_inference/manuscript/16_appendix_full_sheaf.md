@@ -8,7 +8,7 @@
 
 <!-- sheaf-track:prose -->
 
-This section is the **composability proof** for the manifest-indexed sheaf model: all {{appendix_sheaf_track_count}} appendix-bound fragment tracks render into one flat manuscript section without section-specific compose branches. The registry defines {{sheaf_track_count}} composable types; optional `layers` is methods-only and excluded from this row. The `animation` fragment is bound here as an optional registry type alongside prose, formalism, simulation, pymdp, visualization, lean, gnn, and ontology tracks.
+This section is the **composability proof** for the manifest-indexed sheaf model: all {{appendix_sheaf_track_count}} appendix-bound fragment tracks render into one flat manuscript section without section-specific compose branches. The registry defines {{sheaf_track_count}} composable types; optional `layers` is methods-only and excluded from this row. The `animation` fragment is bound here as an optional registry type alongside prose, formalism, simulation, pymdp, provenance, reproducibility, counterexample, visualization, lean, gnn, and ontology tracks.
 
 The proof is a publication-systems check ([@eq:appendix_track_count]). It demonstrates that heterogeneous fragments share one registry, manifest, renderer dispatch path, coverage matrix, and hydration boundary; it does not assert that every track carries equal scientific weight.
 
@@ -20,7 +20,7 @@ $$
 |\mathcal{T}_{\mathrm{Full}}| = {{appendix_sheaf_track_count}}
 $$ {#eq:appendix_track_count}
 
-The fragment registry defines {{sheaf_track_count}} composable track types; optional `layers` is bound on the methods sheaf section only. Optional `animation` is bound in this appendix proof; the opt-in GIF extension in `tracks.yaml` `extension_tracks` is separate from this fragment slot.
+The fragment registry defines {{sheaf_track_count}} composable track types; optional `layers` is bound on the methods sheaf section only. Optional `animation` is bound in this appendix proof; the deterministic GIF artifact in `tracks.yaml` `extension_tracks` is produced by the core analysis DAG and remains separate from this fragment slot.
 
 Because this appendix binds every non-optional track plus both optional tracks, it is the maximal stalk of the coverage presheaf and exercises every renderer through the common `resolve_track_body()` dispatch. The same compose path is gated by the {{sheaf_law_count}} sheaf laws verified in [@sec:methods_sheaf] ({{sheaf_laws_verified}}/{{sheaf_law_count}} satisfied): the appendix section glues to a unique output (separation), occupies the terminal position of the linear extension under its own `appendix` group row (poset and gluing), binds only well-typed fragments (typing), and owns every fragment path it references (compositionality). No count in this appendix is hand-written; all are injected from the registry-backed oracle.
 
@@ -31,6 +31,18 @@ Analytical sweep artifacts feed [@sec:results_mi_sweep] and [@sec:results_invari
 <!-- sheaf-track:pymdp -->
 
 pymdp harness summary: `output/data/si_tmaze_summary.json` (mean belief entropy, action trace). Full log: `output/logs/pymdp_runs.jsonl`.
+
+<!-- sheaf-track:provenance -->
+
+The appendix provenance fragment points to `output/data/artifact_provenance.json`, the promoted validation-spine artifact that records core artifact hashes, producer scripts, and config digests.
+
+<!-- sheaf-track:reproducibility -->
+
+The appendix reproducibility fragment points to `output/reports/reproducibility_replay.json`, which replays deterministic toy producers in a temporary tree and compares regenerated artifacts to the saved outputs.
+
+<!-- sheaf-track:counterexample -->
+
+The appendix counterexample fragment points to `output/reports/counterexample_matrix.json`, the expected-failure matrix that keeps promoted validation gates falsifiable.
 
 <!-- sheaf-track:visualization -->
 
@@ -68,4 +80,4 @@ GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md`. [@fig:gn
 
 <!-- sheaf-track:animation -->
 
-Animation is an **extension** sheaf track (optional GIF via `scripts/render_animation.py`). This appendix row documents the track binding only; default publication uses static SI figures ([@sec:results_si_tmaze], [@fig:si_tmaze_actions]) rather than embedding motion assets unless explicitly promoted.
+Animation is an **extension** sheaf track backed by a deterministic GIF from `scripts/render_animation.py`. This appendix row documents the track binding only; default publication still uses static SI figures ([@sec:results_si_tmaze], [@fig:si_tmaze_actions]) while the GIF remains an auditable generated artifact.

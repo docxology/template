@@ -91,20 +91,20 @@ before submitting any change:
 
 ```bash
 # 1. Test suite passes + coverage ≥ 90%
-uv run pytest projects/template_prose_project/tests/ \
-    --cov=projects/template_prose_project/src \
+uv run pytest projects/templates/template_prose_project/tests/ \
+    --cov=projects/templates/template_prose_project/src \
     --cov-fail-under=90 -q
 
 # 2. No mocks in tests/
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
-    projects/template_prose_project/tests/ || echo "Clean"
+    projects/templates/template_prose_project/tests/ || echo "Clean"
 
 # 3. Only pipeline.py performs infrastructure operations
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
-    projects/template_prose_project/src/figures.py \
-    projects/template_prose_project/src/report.py \
-    projects/template_prose_project/src/manuscript_variables.py \
-    projects/template_prose_project/src/config.py \
+    projects/templates/template_prose_project/src/figures.py \
+    projects/templates/template_prose_project/src/report.py \
+    projects/templates/template_prose_project/src/manuscript_variables.py \
+    projects/templates/template_prose_project/src/config.py \
     || echo "Clean"
 ```
 

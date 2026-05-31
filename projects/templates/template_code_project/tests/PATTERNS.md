@@ -135,14 +135,14 @@ def test_dimension_mismatch_A(self):
 
 ```bash
 # Run with coverage (gate is 90% enforced by pyproject.toml)
-uv run pytest projects/template_code_project/tests/ \
-    --cov=projects/template_code_project/src \
+uv run pytest projects/templates/template_code_project/tests/ \
+    --cov=projects/templates/template_code_project/src \
     --cov-report=term-missing \
     --cov-fail-under=90
 
 # Generate HTML report
-uv run pytest projects/template_code_project/tests/ \
-    --cov=projects/template_code_project/src \
+uv run pytest projects/templates/template_code_project/tests/ \
+    --cov=projects/templates/template_code_project/src \
     --cov-report=html
 ```
 

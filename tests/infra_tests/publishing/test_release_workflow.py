@@ -205,6 +205,15 @@ class TestReleaseWorkflow:
         assert found is not None
         assert found.name == "test_release_combined.pdf"
 
+    def test_resolve_combined_pdf_supports_qualified_project_name(self, tmp_path: Path) -> None:
+        qualified = "templates/template_sia"
+        pdf_dir = tmp_path / "output" / qualified / "pdf"
+        pdf_dir.mkdir(parents=True)
+        pdf_path = pdf_dir / "template_sia_combined.pdf"
+        pdf_path.write_bytes(b"%PDF-1.4")
+        found = resolve_combined_pdf(tmp_path, qualified)
+        assert found == pdf_path
+
     def test_validate_release_tag_rejects_spaces(self) -> None:
         with pytest.raises(PublishingError):
             validate_release_tag("bad tag")

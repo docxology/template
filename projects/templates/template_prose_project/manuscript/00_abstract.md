@@ -6,6 +6,6 @@ A single `manuscript/config.yaml` defines target grade-level bands, citation-den
 
 **Run snapshot.** The current configuration analyses {{FILES_ANALYSED}} file(s) totalling {{TOTAL_WORDS}} words across {{TOTAL_SENTENCES}} sentence(s) and {{TOTAL_PARAGRAPHS}} paragraph(s). Average Flesch-Kincaid grade level is {{AVG_GRADE_LEVEL}}; average Gunning Fog index is {{AVG_GUNNING_FOG}}; the manuscript references {{CITATION_COUNT}} unique citation key(s); the longest section is {{LONGEST_SECTION_WORDS}} words and the shortest is {{SHORTEST_SECTION_WORDS}}. These numbers are auto-substituted by `scripts/z_generate_manuscript_variables.py` after every run, so the abstract tracks the JSON outputs in `output/`.
 
-The contribution is methodological and architectural: a *generic, reusable* prose-quality module (`infrastructure/prose/`) that any project in the template can opt into, plus a *minimal, configurable* exemplar (`projects/template_prose_project/`) that wires it to the bibliography and the manuscript pipeline.
+The contribution is methodological and architectural: a *generic, reusable* prose-quality module (`infrastructure/prose/`) that any project in the template can opt into, plus a *minimal, configurable* exemplar (`projects/templates/template_prose_project/`) that wires it to the bibliography and the manuscript pipeline.
 
 **Keywords:** prose analysis, readability, editorial review, reproducible manuscript review, scientific infrastructure

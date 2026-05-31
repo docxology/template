@@ -5,7 +5,7 @@ Tests for the deterministic bounded AutoResearch public exemplar.
 ## Quick Start
 
 ```bash
-uv run pytest projects/template_autoresearch_project/tests/ -q
+uv run pytest projects/templates/template_autoresearch_project/tests/ -q
 ```
 
 Pipeline parity:

@@ -1,0 +1,167 @@
+{
+  "all_hashed": true,
+  "all_producers_configured": true,
+  "artifact_count": 14,
+  "artifacts": {
+    "output/data/analysis_statistics.json": {
+      "exists": true,
+      "path": "output/data/analysis_statistics.json",
+      "producer": "compute_statistics.py",
+      "sha256": "21a700ce5fb6e46503f60f26e51c7a459976e9259cbdb27b1875a05a2a7aef4a",
+      "size_bytes": 437
+    },
+    "output/data/parameter_sweep.csv": {
+      "exists": true,
+      "path": "output/data/parameter_sweep.csv",
+      "producer": "run_analytical_sweep.py",
+      "sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
+      "size_bytes": 1037
+    },
+    "output/data/sheaf_coverage_matrix.json": {
+      "exists": true,
+      "path": "output/data/sheaf_coverage_matrix.json",
+      "producer": "generate_figures.py",
+      "sha256": "48abcb9f385e55f1ef34ffe1155d8c19e14c08345daebf94f0a17b4efaa0b19b",
+      "size_bytes": 41720
+    },
+    "output/data/si_graph_world_summary.json": {
+      "exists": true,
+      "path": "output/data/si_graph_world_summary.json",
+      "producer": "simulate_si_graph_world.py",
+      "sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080",
+      "size_bytes": 268
+    },
+    "output/data/si_graph_world_trace.json": {
+      "exists": true,
+      "path": "output/data/si_graph_world_trace.json",
+      "producer": "simulate_si_graph_world.py",
+      "sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549",
+      "size_bytes": 639
+    },
+    "output/data/si_policy_comparison.json": {
+      "exists": true,
+      "path": "output/data/si_policy_comparison.json",
+      "producer": "simulate_si_tmaze.py",
+      "sha256": "25b660727c82234331a2eee1887fffde642c486896a88f01a53657a7faceba40",
+      "size_bytes": 2051
+    },
+    "output/data/si_tmaze_summary.json": {
+      "exists": true,
+      "path": "output/data/si_tmaze_summary.json",
+      "producer": "simulate_si_tmaze.py",
+      "sha256": "e08a1101c1565c52487ebbf5e39bd40857806b8f8779962d590e877399e528b5",
+      "size_bytes": 749
+    },
+    "output/data/si_tmaze_trace.json": {
+      "exists": true,
+      "path": "output/data/si_tmaze_trace.json",
+      "producer": "simulate_si_tmaze.py",
+      "sha256": "16144516d0371330970087a64d9ebf5c7b40350f36756f1ae0e6669d94f9533e",
+      "size_bytes": 465
+    },
+    "output/figures/figure_registry.json": {
+      "exists": true,
+      "path": "output/figures/figure_registry.json",
+      "producer": "generate_figures.py",
+      "sha256": "e146296efe070e66be73a6b9a5c2eb23384a28616157bfb215a244b4e68e456d",
+      "size_bytes": 8530
+    },
+    "output/figures/semantic_gluing_graph.png": {
+      "exists": true,
+      "path": "output/figures/semantic_gluing_graph.png",
+      "producer": "generate_figures.py",
+      "sha256": "ded3bb8b9a9a7b65e0d40a61f3a49824faccefe85a0a553518ed404251cf3b0a",
+      "size_bytes": 138609
+    },
+    "output/figures/si_belief_trajectory.gif": {
+      "exists": true,
+      "path": "output/figures/si_belief_trajectory.gif",
+      "producer": "render_animation.py",
+      "sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "size_bytes": 7058
+    },
+    "output/reports/invariants.json": {
+      "exists": true,
+      "path": "output/reports/invariants.json",
+      "producer": "run_analytical_sweep.py",
+      "sha256": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975",
+      "size_bytes": 499
+    },
+    "output/reports/si_invariants.json": {
+      "exists": true,
+      "path": "output/reports/si_invariants.json",
+      "producer": "simulate_si_tmaze.py",
+      "sha256": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c",
+      "size_bytes": 271
+    },
+    "output/reports/si_tmaze_run_report.json": {
+      "exists": true,
+      "path": "output/reports/si_tmaze_run_report.json",
+      "producer": "simulate_si_tmaze.py",
+      "sha256": "d2cc9ed7ea9cf256c337f2b41ce8c7447b4d76fcd90ab3c6fed77a347fe91a56",
+      "size_bytes": 670
+    }
+  },
+  "config_inputs": {
+    "data/claim_ledger.yaml": {
+      "exists": true,
+      "path": "data/claim_ledger.yaml",
+      "sha256": "59cb39b020f7c98c38ea505c5473a5dd3873827520285c326140430c4092a060"
+    },
+    "figures.yaml": {
+      "exists": true,
+      "path": "figures.yaml",
+      "sha256": "4f726a6dfa120783abda288bcb18e147471937ededce698bc32de004dcd0d0fb"
+    },
+    "manuscript/config.yaml": {
+      "exists": true,
+      "path": "manuscript/config.yaml",
+      "sha256": "03bb36cbadf32a27c01f3711a7e33d714233c06914e3bebf9dd2f5cb311199b2"
+    },
+    "manuscript/sheaf/coverage.yaml": {
+      "exists": true,
+      "path": "manuscript/sheaf/coverage.yaml",
+      "sha256": "3c9391552887faafda0dc9bfb8707c95233377b40c16d04d019e23c9f43f6070"
+    },
+    "manuscript/sheaf/manifest.yaml": {
+      "exists": true,
+      "path": "manuscript/sheaf/manifest.yaml",
+      "sha256": "375ad01e0494fe935352720d19010f1ac2138bc45dc71accbda55285b3563c1d"
+    },
+    "manuscript/sheaf/tracks.yaml": {
+      "exists": true,
+      "path": "manuscript/sheaf/tracks.yaml",
+      "sha256": "aa633e5bd3a7764b7836567c80f562b32798c90588a978d029fd21ba26c6adf7"
+    },
+    "pymdp.yaml": {
+      "exists": true,
+      "path": "pymdp.yaml",
+      "sha256": "2f1884c53735e1b90022ffcfbec18ffcaca876493b86329fc5e6d0649a3b5429"
+    },
+    "tracks.yaml": {
+      "exists": true,
+      "path": "tracks.yaml",
+      "sha256": "413ab0ec7692c50670fdc70a2fd2f36afda8430666af7e25661e712ecd2af732"
+    }
+  },
+  "configured_analysis_scripts": [
+    "compose_manuscript.py",
+    "run_analytical_sweep.py",
+    "simulate_si_tmaze.py",
+    "simulate_si_graph_world.py",
+    "compute_statistics.py",
+    "generate_figures.py",
+    "render_animation.py",
+    "generate_validation_spine.py",
+    "z_generate_manuscript_variables.py"
+  ],
+  "producer_coverage": {
+    "compute_statistics.py": true,
+    "generate_figures.py": true,
+    "render_animation.py": true,
+    "run_analytical_sweep.py": true,
+    "simulate_si_graph_world.py": true,
+    "simulate_si_tmaze.py": true
+  },
+  "schema": "template_active_inference.artifact_provenance.v1"
+}

@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from manuscript import variables as manuscript_variables
 from manuscript.variables import generate_variables
 
 
@@ -12,8 +13,8 @@ def test_generate_variables_with_outputs() -> None:
     assert vars_["lambda_grid_points"] >= 2
     assert vars_["bernoulli_state_count"] == 2
     assert vars_["gnn_spec_version"] == "GNN v1.1"
-    assert vars_["pipeline_track_count"] == 7
-    assert vars_["sheaf_track_count"] == 10
+    assert vars_["pipeline_track_count"] == 10
+    assert vars_["sheaf_track_count"] == 13
 
 
 def test_invariant_counts_include_simulation_when_merged() -> None:
@@ -86,3 +87,25 @@ def test_ising_mi_saturation_from_sweep() -> None:
     expected = max(float(row["closed_form_mi"]) for row in rows)
     vars_ = generate_variables(root, require_analysis_outputs=False)
     assert abs(float(vars_["ising_mi_saturation"]) - expected) < 1e-12
+
+
+def test_variable_helpers_handle_missing_optional_inputs(tmp_path: Path) -> None:
+    assert manuscript_variables._ising_mi_saturation_from_sweep([]) == 0.0
+    assert manuscript_variables._load_json(tmp_path / "missing.json") == {}
+    assert manuscript_variables._pipeline_track_count(tmp_path) == 0
+    assert manuscript_variables._gnn_spec_version(tmp_path) == ""
+
+
+def test_gnn_spec_version_skips_blank_lines_after_header(tmp_path: Path) -> None:
+    gnn_dir = tmp_path / "gnn"
+    gnn_dir.mkdir()
+    (gnn_dir / "bernoulli_toy.gnn.md").write_text(
+        "# Model\n\n## GNNVersionAndFlags\n\nGNN v9.9\n",
+        encoding="utf-8",
+    )
+    assert manuscript_variables._gnn_spec_version(tmp_path) == "GNN v9.9"
+
+
+def test_generate_variables_requires_analysis_outputs(tmp_path: Path) -> None:
+    with pytest.raises(FileNotFoundError, match="missing analysis artifact"):
+        generate_variables(tmp_path, require_analysis_outputs=True)

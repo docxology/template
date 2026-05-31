@@ -1,0 +1,660 @@
+{
+  "analysis_scripts": [
+    "compose_manuscript.py",
+    "run_analytical_sweep.py",
+    "simulate_si_tmaze.py",
+    "simulate_si_graph_world.py",
+    "compute_statistics.py",
+    "generate_figures.py",
+    "render_animation.py",
+    "generate_validation_spine.py",
+    "z_generate_manuscript_variables.py"
+  ],
+  "artifacts": {
+    "output/data/analysis_statistics.json": {
+      "claim_ids": [],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "compute_statistics.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/data/artifact_provenance.json": {
+      "claim_ids": [
+        "artifact_provenance_spine"
+      ],
+      "consumers": [
+        "methods_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_validation_spine.py",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    "output/data/manuscript_variables.json": {
+      "claim_ids": [
+        "composed_appendix_full_sheaf"
+      ],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "z_generate_manuscript_variables.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/data/parameter_sweep.csv": {
+      "claim_ids": [],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "run_analytical_sweep.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/data/sheaf_coverage_matrix.json": {
+      "claim_ids": [
+        "sheaf_coverage_matrix"
+      ],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/data/sheaf_evidence_crosswalk.json": {
+      "claim_ids": [
+        "sheaf_evidence_crosswalk"
+      ],
+      "consumers": [
+        "methods_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "z_generate_manuscript_variables.py",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    "output/data/sheaf_gluing_certificate.json": {
+      "claim_ids": [
+        "coverage_no_gray",
+        "lean_graph_world_policy_boundary",
+        "sheaf_gluing_certificate",
+        "si_graph_world_trace_consistency"
+      ],
+      "consumers": [
+        "methods_sheaf",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "z_generate_manuscript_variables.py",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    "output/data/si_graph_world_summary.json": {
+      "claim_ids": [
+        "si_graph_world_summary"
+      ],
+      "consumers": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "simulate_si_graph_world.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/data/si_graph_world_trace.json": {
+      "claim_ids": [
+        "si_graph_world_trace"
+      ],
+      "consumers": [
+        "methods_pymdp",
+        "results_si_tmaze",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "simulate_si_graph_world.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/data/si_policy_comparison.json": {
+      "claim_ids": [
+        "si_policy_comparison",
+        "si_policy_comparison_modes"
+      ],
+      "consumers": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "simulate_si_tmaze.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/data/si_tmaze_summary.json": {
+      "claim_ids": [
+        "si_tmaze_summary"
+      ],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "simulate_si_tmaze.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/data/si_tmaze_trace.json": {
+      "claim_ids": [
+        "si_tmaze_trace"
+      ],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "simulate_si_tmaze.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/data/validation_dependency_graph.json": {
+      "claim_ids": [
+        "validation_dependency_graph"
+      ],
+      "consumers": [
+        "methods_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "z_generate_manuscript_variables.py",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    "output/figures/figure_registry.json": {
+      "claim_ids": [],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/figures/semantic_gluing_graph.png": {
+      "claim_ids": [
+        "semantic_gluing_graph_figure"
+      ],
+      "consumers": [
+        "methods_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
+    "output/figures/sheaf_coverage_heatmap.png": {
+      "claim_ids": [
+        "sheaf_coverage_heatmap"
+      ],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/figures/sheaf_layers_overview.png": {
+      "claim_ids": [
+        "sheaf_layers_overview"
+      ],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/figures/si_belief_trajectory.gif": {
+      "claim_ids": [
+        "si_belief_trajectory_gif"
+      ],
+      "consumers": [
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "render_animation.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/reports/counterexample_matrix.json": {
+      "claim_ids": [
+        "counterexample_matrix_spine"
+      ],
+      "consumers": [
+        "methods_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_validation_spine.py",
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    "output/reports/invariants.json": {
+      "claim_ids": [],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "run_analytical_sweep.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/reports/reproducibility_replay.json": {
+      "claim_ids": [
+        "reproducibility_replay_spine"
+      ],
+      "consumers": [
+        "results_invariants"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_validation_spine.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/reports/si_invariants.json": {
+      "claim_ids": [],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "simulate_si_tmaze.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    "output/reports/si_tmaze_run_report.json": {
+      "claim_ids": [],
+      "consumers": [],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "simulate_si_tmaze.py",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    }
+  },
+  "edges": [
+    {
+      "kind": "produces",
+      "source": "compute_statistics.py",
+      "target": "output/data/analysis_statistics.json"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/analysis_statistics.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_validation_spine.py",
+      "target": "output/data/artifact_provenance.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/artifact_provenance.json",
+      "target": "methods_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/artifact_provenance.json",
+      "target": "validate_manuscript"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/artifact_provenance.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "z_generate_manuscript_variables.py",
+      "target": "output/data/manuscript_variables.json"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/manuscript_variables.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "run_analytical_sweep.py",
+      "target": "output/data/parameter_sweep.csv"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/parameter_sweep.csv",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_figures.py",
+      "target": "output/data/sheaf_coverage_matrix.json"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/sheaf_coverage_matrix.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "z_generate_manuscript_variables.py",
+      "target": "output/data/sheaf_evidence_crosswalk.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/sheaf_evidence_crosswalk.json",
+      "target": "methods_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/sheaf_evidence_crosswalk.json",
+      "target": "validate_manuscript"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/sheaf_evidence_crosswalk.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "z_generate_manuscript_variables.py",
+      "target": "output/data/sheaf_gluing_certificate.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/sheaf_gluing_certificate.json",
+      "target": "methods_sheaf"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/sheaf_gluing_certificate.json",
+      "target": "appendix_full_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/sheaf_gluing_certificate.json",
+      "target": "validate_manuscript"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/sheaf_gluing_certificate.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "simulate_si_graph_world.py",
+      "target": "output/data/si_graph_world_summary.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/si_graph_world_summary.json",
+      "target": "methods_pymdp"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/si_graph_world_summary.json",
+      "target": "results_si_tmaze"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/si_graph_world_summary.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "simulate_si_graph_world.py",
+      "target": "output/data/si_graph_world_trace.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/si_graph_world_trace.json",
+      "target": "methods_pymdp"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/si_graph_world_trace.json",
+      "target": "results_si_tmaze"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/si_graph_world_trace.json",
+      "target": "appendix_full_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/si_graph_world_trace.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "simulate_si_tmaze.py",
+      "target": "output/data/si_policy_comparison.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/si_policy_comparison.json",
+      "target": "methods_pymdp"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/si_policy_comparison.json",
+      "target": "results_si_tmaze"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/si_policy_comparison.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "simulate_si_tmaze.py",
+      "target": "output/data/si_tmaze_summary.json"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/si_tmaze_summary.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "simulate_si_tmaze.py",
+      "target": "output/data/si_tmaze_trace.json"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/si_tmaze_trace.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "z_generate_manuscript_variables.py",
+      "target": "output/data/validation_dependency_graph.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/validation_dependency_graph.json",
+      "target": "methods_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/validation_dependency_graph.json",
+      "target": "validate_manuscript"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/validation_dependency_graph.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_figures.py",
+      "target": "output/figures/figure_registry.json"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/figure_registry.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_figures.py",
+      "target": "output/figures/semantic_gluing_graph.png"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/figures/semantic_gluing_graph.png",
+      "target": "methods_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/semantic_gluing_graph.png",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/semantic_gluing_graph.png",
+      "target": "figure_registry"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_figures.py",
+      "target": "output/figures/sheaf_coverage_heatmap.png"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/sheaf_coverage_heatmap.png",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_figures.py",
+      "target": "output/figures/sheaf_layers_overview.png"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/sheaf_layers_overview.png",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "render_animation.py",
+      "target": "output/figures/si_belief_trajectory.gif"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/figures/si_belief_trajectory.gif",
+      "target": "appendix_full_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/si_belief_trajectory.gif",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_validation_spine.py",
+      "target": "output/reports/counterexample_matrix.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/reports/counterexample_matrix.json",
+      "target": "methods_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/reports/counterexample_matrix.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/reports/counterexample_matrix.json",
+      "target": "validate_manuscript"
+    },
+    {
+      "kind": "produces",
+      "source": "run_analytical_sweep.py",
+      "target": "output/reports/invariants.json"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/reports/invariants.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_validation_spine.py",
+      "target": "output/reports/reproducibility_replay.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/reports/reproducibility_replay.json",
+      "target": "results_invariants"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/reports/reproducibility_replay.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "simulate_si_tmaze.py",
+      "target": "output/reports/si_invariants.json"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/reports/si_invariants.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "produces",
+      "source": "simulate_si_tmaze.py",
+      "target": "output/reports/si_tmaze_run_report.json"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/reports/si_tmaze_run_report.json",
+      "target": "validate_outputs"
+    }
+  ],
+  "issues": [],
+  "schema": "template_active_inference.validation_dependency_graph.v1"
+}

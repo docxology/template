@@ -9,67 +9,55 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
-### Changed
+- No unreleased changes yet.
 
-- **Entry-point docs** — Expanded [`.cursorrules`](.cursorrules) (now tracked),
-  [`README.md`](README.md), [`CLAUDE.md`](CLAUDE.md), and [`AGENTS.md`](AGENTS.md)
-  with clearer roles, pre-commit/CI commands, `_generated/` ground truth, and an
-  **For assistants** section in `AGENTS.md`. Removed `.cursorrules` from
-  [`.gitignore`](.gitignore).
-
-- **Bandit** — `bandit.yaml` now sets `exclude_dirs` for `projects_archive`,
-  `projects_in_progress`, `.venv`, and `site-packages` so pre-push/CICD scans
-  authored code only (local per-project virtualenvs no longer trigger
-  multi-minute runs). CI, pre-commit, and docs use the same config via `-c
-  bandit.yaml` without a separate `--exclude` CLI list.
+## [3.1.0] — 2026-05-30
 
 ### Added
 
-- **Interactive simulation dashboards** — new project-agnostic infrastructure
-  module ``infrastructure.reporting.interactive_dashboard`` (``InteractiveDashboard``,
-  ``Panel``, ``Control``, ``Invariant``) builds self-contained Plotly HTML
-  dashboards with multiple linked views, live controls, and plaintext-validatable
-  numerical invariants. Zero new Python dependencies (Plotly via CDN). Companion
-  ``invariants.txt`` + ``summary.txt`` + ``payload.json`` artefacts let CI / agents
-  validate without a browser. Eight invariant kinds: ``equal``, ``le``, ``ge``,
-  ``in_range``, ``monotone_increasing``, ``monotone_decreasing``, ``finite``,
-  ``nonneg``, ``array_close``.
-- **Per-project ``build_dashboard.py`` scripts** — every active exemplar under
-  ``projects/`` now ships a CLI-configurable interactive dashboard:
-  - ``actinf_policy_entanglement_lean`` — 6 panels, 3 live controls, 47
-    invariants (Ising MI, free energy, optimal λ, phase classifier, marginal
-    entropy, Theorem 4.1 decomposition witness, coupling-pays verdict,
-    Theorem 6.4 e-geodesic affine slope).
-  - ``template_code_project`` — 5 panels, 2 live controls, 22 invariants
-    (gradient finite-difference agreement, monotone descent for stable α,
-    closed-form-minimum agreement, trajectory monotonicity).
-  - ``what_is_cogsec`` — 5 panels, 2 live controls, 11 corpus invariants
-    (schema, uniqueness, year range, decade buckets, category coverage).
-  - ``template_search_project`` — 5 panels, 11 search-coverage invariants
-    (DOI/abstract/year coverage floors, keyword distribution, year plausibility).
-- **CLI override layer for ``simulate_pymdp.py``** — every ``simulation.hyperparameters``
-  knob (K, γ, coupling λ, sweep grid, rollout, observations, seed) is now a
-  CLI flag while preserving bit-exact backwards compatibility.
-- **CLI on ``parameter_sweep.py``** — λ grid, utilities, phase thresholds, and
-  Schmidt tolerance are now overridable.
-- **Numerical invariants modules** — ``src/lean/invariants.py``
-  (actinf), ``src/invariants.py`` (template_code),
-  ``src/analysis/corpus_invariants.py`` (what_is_cogsec),
-  ``src/search_invariants.py`` (template_search_project) provide pure-compute
-  invariant builders that drive both the dashboard and the test suite.
-- **Comprehensive infrastructure tests** — ``tests/infra_tests/reporting/``
-  ``test_interactive_dashboard.py`` adds 62 tests covering every Invariant
-  kind (pass + fail paths), every Control kind, JSON/numpy serialisation,
-  HTML+JSON round-trip, plaintext rendering, and JS syntax of every
-  ``Panel.update_fn`` (when ``node`` is available).
+- **SIA public exemplar** — Added `projects/templates/template_sia/` plus
+  `infrastructure.sia`, project contracts, tests, docs, generated module guide,
+  and CLI validation for the `mini_classify` task.
+- **Active Inference semantic sheaf hardening** — Added semantic gluing,
+  dependency-graph, evidence-crosswalk, policy-comparison, graph-world, and
+  animation coverage so the exemplar now carries machine-checkable manuscript
+  and output contracts beyond static prose.
+- **Folder-doc and stale-path guardrails** — Extended documentation consistency
+  checks so public exemplar docs, generated facts, and folder-level
+  `AGENTS.md`/`README.md` pairs are checked across all six public templates.
+- **Interactive simulation dashboard groundwork** — Kept the project-agnostic
+  dashboard and invariant infrastructure in the release train, including
+  plaintext-validatable dashboard artefacts and real-data tests.
+
+### Changed
+
+- **Public project signposting** — Migrated long-lived documentation,
+  generated indexes, workflow docs, archived audit notes, and skill-eval
+  fixtures from stale `projects/template_*` paths to canonical
+  `projects/templates/template_*` paths.
+- **Generated facts and skills** — Refreshed `docs/_generated/active_projects.md`,
+  `canonical_facts.md`, `publication_records.md`, the architecture overview,
+  API reference, skill manifest, and skill index from live repository state.
+- **Release metadata** — Bumped the repository package and citation metadata to
+  `3.1.0`.
+- **Entry-point docs** — Tightened `README.md`, `CLAUDE.md`, `AGENTS.md`,
+  `.github/README.md`, and workflow docs around public scope, pipeline stages,
+  coverage gates, release behavior, and private-project boundaries.
 
 ### Fixed
 
-- **Pytest orchestration:** ``pipeline_test_runner`` and
-  ``infrastructure.core.test_runner.run_per_project_pytest`` now emit one
-  combined ``-m`` expression (including ``not bench`` by default), aligned
-  with ``pyproject.toml`` addopts for subprocess invocations that would
-  otherwise collect benchmark tests under the global timeout.
+- **Multi-project coverage corruption** — Project pytest subprocesses now pin
+  `coverage` to the workspace version before appending into `.coverage.project`,
+  preventing mixed project virtualenvs from corrupting the shared SQLite trace.
+- **Documentation lint blind spots** — Unqualified public exemplar links are no
+  longer suppressed as intentionally local, and ghost-path checks now treat
+  `projects/template_*` as stale public paths.
+- **Public source gates** — Narrowed broad exception handling and fixed type
+  issues in the code and Active Inference exemplars so Ruff and mypy remain
+  clean across public source paths.
+- **Generated output stability** — Normalized PNG writes atomically and made
+  simulation logging recreate missing parent directories after fresh-output
+  cleanup.
 
 ## [0.7.2] — 2026-05-05
 

@@ -51,7 +51,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 Key discoveries from multi-project development are documented in:
 
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** — Comprehensive setup checklist with all pitfalls
-- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** — Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by all three template exemplars; project-specific overlays live in `projects/template_*/manuscript/SYNTAX.md`
+- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** — Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by all six public template exemplars; project-specific overlays live in `projects/templates/template_*/manuscript/SYNTAX.md`
 - **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md)** — Pipeline-specific error patterns
 
 ### ⚠️ Critical Rule: Root Venv Must Include All Project Dependencies

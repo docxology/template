@@ -63,8 +63,10 @@ def test_methods_sheaf_binds_layers_tracks() -> None:
     root = Path(__file__).resolve().parents[1]
     manifest = load_manifest(root / "manuscript" / "sheaf" / "manifest.yaml")
     section = next(s for s in manifest.sections if s.id == "methods_sheaf")
-    assert section.track_order == ("prose", "formalism", "visualization", "layers")
+    assert section.track_order == ("prose", "formalism", "visualization", "provenance", "counterexample", "layers")
     assert "visualization" in section.tracks
+    assert "provenance" in section.tracks
+    assert "counterexample" in section.tracks
     assert "layers" in section.tracks
     assert "formalism" in section.tracks
     registry = load_track_registry(root / manifest.registry_path)

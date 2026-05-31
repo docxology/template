@@ -69,8 +69,14 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
     sweep_rows = read_parameter_sweep(sweep_path)
     si_data = _load_json(si_summary)
     stats_data = _load_json(stats_path)
+    policy_data = _load_json(root / "output" / "data" / "si_policy_comparison.json")
+    graph_data = _load_json(root / "output" / "data" / "si_graph_world_summary.json")
+    provenance_data = _load_json(root / "output" / "data" / "artifact_provenance.json")
+    replay_data = _load_json(root / "output" / "reports" / "reproducibility_replay.json")
+    counterexample_data = _load_json(root / "output" / "reports" / "counterexample_matrix.json")
     si_stats = stats_data.get("si_tmaze") or {}
     sweep_stats = stats_data.get("sweep") or {}
+    policy_summary = policy_data.get("summary") or {}
 
     mean_entropy = float(si_data.get("mean_belief_entropy", si_stats.get("entropy_mean", 0.0)))
     from manuscript.sheaf.counts import structural_counts
@@ -100,6 +106,15 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "sweep_rmse_mi": sweep_stats.get("rmse_mi", 0.0),
         "pymdp_mode": stats_data.get("pymdp_mode", si_data.get("mode", pymdp_cfg.mode)),
         "pymdp_config_hash": stats_data.get("pymdp_config_hash", si_data.get("config_hash", "")),
+        "si_policy_comparison_run_count": policy_summary.get("run_count", 0),
+        "si_policy_comparison_goal_reached_count": policy_summary.get("goal_reached_count", 0),
+        "si_graph_world_steps": graph_data.get("steps", 0),
+        "si_graph_world_node_count": graph_data.get("node_count", 0),
+        "si_graph_world_goal_reached": int(bool(graph_data.get("goal_reached", False))),
+        "validation_spine_artifact_count": provenance_data.get("artifact_count", 0),
+        "reproducibility_check_count": replay_data.get("check_count", 0),
+        "reproducibility_all_passed": int(bool(replay_data.get("all_passed", False))),
+        "counterexample_count": counterexample_data.get("counterexample_count", 0),
         "pipeline_track_count": _pipeline_track_count(root),
         **counts,
     }

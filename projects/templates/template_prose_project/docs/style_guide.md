@@ -10,7 +10,7 @@ test correctness, reproducibility, or manuscript accuracy.
 
 The most critical style rule is the absolute prohibition of mocking. The
 following are **forbidden** anywhere inside
-`projects/template_prose_project/tests/`:
+`projects/templates/template_prose_project/tests/`:
 
 - `import unittest.mock`
 - `from unittest.mock import MagicMock, patch, create_autospec, Mock, AsyncMock`
@@ -48,7 +48,7 @@ assert isinstance(result, CheckResult)
 
 **Verify cleanliness**:
 ```bash
-grep -r "unittest.mock\|MagicMock\|@patch" projects/template_prose_project/tests/ \
+grep -r "unittest.mock\|MagicMock\|@patch" projects/templates/template_prose_project/tests/ \
     || echo "Clean"
 ```
 
@@ -82,9 +82,9 @@ types, pure helpers, and operations as needed; logic must stay in
 # Operations originate from src/pipeline/ and src/manuscript_variables.py only;
 # figures.py loads infrastructure types from JSON but does not call analyze_*/parse_*/write_*.
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
-    projects/template_prose_project/src/figures.py \
-    projects/template_prose_project/src/report.py \
-    projects/template_prose_project/src/config.py \
+    projects/templates/template_prose_project/src/figures.py \
+    projects/templates/template_prose_project/src/report.py \
+    projects/templates/template_prose_project/src/config.py \
     || echo "Clean — figures/report/config call no analysis operations"
 ```
 
@@ -114,8 +114,8 @@ from projects.template_prose_project.src.config import load_project_config
 from projects.template_prose_project.src.pipeline import run_prose_pipeline
 
 def main():
-    config = load_project_config(Path("projects/template_prose_project/manuscript/config.yaml"))
-    artifacts = run_prose_pipeline(config, project_root=Path("projects/template_prose_project"))
+    config = load_project_config(Path("projects/templates/template_prose_project/manuscript/config.yaml"))
+    artifacts = run_prose_pipeline(config, project_root=Path("projects/templates/template_prose_project"))
     if args.strict and any(not c.passed for c in artifacts.checks):
         sys.exit(1)
 ```
@@ -139,7 +139,7 @@ Our pipeline computes readability and validates citations automatically.
 
 **Correct (concrete, anchored to `src/pipeline/`)**:
 ```markdown
-`projects/template_prose_project/src/pipeline/__init__.py::run_prose_pipeline` computes
+`projects/templates/template_prose_project/src/pipeline/__init__.py::run_prose_pipeline` computes
 readability via `infrastructure.prose.analyze_manuscript` and validates
 citation keys against `manuscript/references.bib` parsed by
 `infrastructure.reference.citation.parse_bibfile`. The thresholds applied
@@ -168,22 +168,22 @@ multiple sibling exemplars.
 
 | Short Name | Absolute Path (from repo root) |
 |---|---|
-| pipeline orchestrator | `projects/template_prose_project/src/pipeline/` |
-| config loader | `projects/template_prose_project/src/config.py` |
-| figures module | `projects/template_prose_project/src/figures.py` |
-| variables module | `projects/template_prose_project/src/manuscript_variables.py` |
-| report module | `projects/template_prose_project/src/report.py` |
-| pipeline test | `projects/template_prose_project/tests/test_pipeline.py` |
-| integration test | `projects/template_prose_project/tests/test_pipeline_integration.py` |
-| script test | `projects/template_prose_project/tests/test_scripts.py` |
-| conftest | `projects/template_prose_project/tests/conftest.py` |
-| run-pipeline script | `projects/template_prose_project/scripts/run_prose_pipeline.py` |
-| figure script | `projects/template_prose_project/scripts/y_generate_prose_figures.py` |
-| variables script | `projects/template_prose_project/scripts/z_generate_manuscript_variables.py` |
-| config | `projects/template_prose_project/manuscript/config.yaml` |
-| references | `projects/template_prose_project/manuscript/references.bib` |
-| review report | `projects/template_prose_project/output/review_report.md` |
-| working PDF | `projects/template_prose_project/output/pdf/template_prose_project_combined.pdf` |
+| pipeline orchestrator | `projects/templates/template_prose_project/src/pipeline/` |
+| config loader | `projects/templates/template_prose_project/src/config.py` |
+| figures module | `projects/templates/template_prose_project/src/figures.py` |
+| variables module | `projects/templates/template_prose_project/src/manuscript_variables.py` |
+| report module | `projects/templates/template_prose_project/src/report.py` |
+| pipeline test | `projects/templates/template_prose_project/tests/test_pipeline.py` |
+| integration test | `projects/templates/template_prose_project/tests/test_pipeline_integration.py` |
+| script test | `projects/templates/template_prose_project/tests/test_scripts.py` |
+| conftest | `projects/templates/template_prose_project/tests/conftest.py` |
+| run-pipeline script | `projects/templates/template_prose_project/scripts/run_prose_pipeline.py` |
+| figure script | `projects/templates/template_prose_project/scripts/y_generate_prose_figures.py` |
+| variables script | `projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py` |
+| config | `projects/templates/template_prose_project/manuscript/config.yaml` |
+| references | `projects/templates/template_prose_project/manuscript/references.bib` |
+| review report | `projects/templates/template_prose_project/output/review_report.md` |
+| working PDF | `projects/templates/template_prose_project/output/pdf/template_prose_project_combined.pdf` |
 | promoted PDF | `output/template_prose_project/template_prose_project_combined.pdf` |
 
 **Forbidden (relative / ambiguous)**:
@@ -195,8 +195,8 @@ output/figures/    # Relative to what?
 
 **Correct (absolute from repo root)**:
 ```
-projects/template_prose_project/src/pipeline/
-projects/template_prose_project/output/figures/section_word_counts.png
+projects/templates/template_prose_project/src/pipeline/
+projects/templates/template_prose_project/output/figures/section_word_counts.png
 ```
 
 ---

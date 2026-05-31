@@ -14,6 +14,7 @@ Reference for Layer-1 infrastructure modules.
 |--------|---------|--------------|-------|
 | **Core** | Shared utilities | Logging, config, exceptions | [Details](guides/core-module.md) |
 | **AutoResearch** | Deterministic research loops | Plan/evidence/readiness reports, stage contracts | [`infrastructure/autoresearch/AGENTS.md`](../../infrastructure/autoresearch/AGENTS.md) |
+| **SIA** | Self-improvement harness | Task layout, fixture replay, evaluation runner | [Details](guides/sia-module.md) |
 | **Benchmark** | Benchmarking helpers | Timing, resource summaries, report payloads | [`infrastructure/benchmark/AGENTS.md`](../../infrastructure/benchmark/AGENTS.md) |
 | **Documentation** | Doc generation | Figure management, API glossary | [Details](guides/documentation-module.md) |
 | **Doctor** | Repository health diagnostics | Environment and repository checks | [Details](guides/doctor-module.md) |

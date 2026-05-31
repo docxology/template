@@ -23,7 +23,7 @@ configuration, loop, artifact, and script execution paths.
 
 ```bash
 uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only
-uv run pytest projects/template_autoresearch_project/tests/ -q
+uv run pytest projects/templates/template_autoresearch_project/tests/ -q
 ```
 
 ## Editing Rules

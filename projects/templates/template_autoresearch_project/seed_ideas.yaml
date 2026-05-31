@@ -17,8 +17,8 @@ ideas:
         metric_name: test_accuracy
         metric_direction: maximize
         touched_paths:
-          - projects/template_autoresearch_project/mnist_task.yaml
-          - projects/template_autoresearch_project/src/ml_task.py
+          - projects/templates/template_autoresearch_project/mnist_task.yaml
+          - projects/templates/template_autoresearch_project/src/ml_task.py
         expected_artifacts:
           - output/data/mnist_task_config.json
           - output/data/ml_task_results.json
@@ -29,8 +29,8 @@ ideas:
         metric_name: test_accuracy
         metric_direction: maximize
         touched_paths:
-          - projects/template_autoresearch_project/mnist_task.yaml
-          - projects/template_autoresearch_project/src/ml_task.py
+          - projects/templates/template_autoresearch_project/mnist_task.yaml
+          - projects/templates/template_autoresearch_project/src/ml_task.py
         expected_artifacts:
           - output/data/mnist_task_config.json
           - output/data/ml_task_results.json
@@ -41,8 +41,8 @@ ideas:
         metric_name: test_accuracy
         metric_direction: maximize
         touched_paths:
-          - projects/template_autoresearch_project/mnist_task.yaml
-          - projects/template_autoresearch_project/src/ml_task.py
+          - projects/templates/template_autoresearch_project/mnist_task.yaml
+          - projects/templates/template_autoresearch_project/src/ml_task.py
         expected_artifacts:
           - output/data/mnist_task_config.json
           - output/data/ml_task_results.json
@@ -55,8 +55,8 @@ ideas:
         metric_name: test_accuracy
         metric_direction: maximize
         touched_paths:
-          - projects/template_autoresearch_project/mnist_task.yaml
-          - projects/template_autoresearch_project/src/ml_task.py
+          - projects/templates/template_autoresearch_project/mnist_task.yaml
+          - projects/templates/template_autoresearch_project/src/ml_task.py
         expected_artifacts:
           - output/data/ml_task_results.json
           - output/data/ml_candidate_ledger.json
@@ -66,8 +66,8 @@ ideas:
         metric_name: test_accuracy
         metric_direction: maximize
         touched_paths:
-          - projects/template_autoresearch_project/mnist_task.yaml
-          - projects/template_autoresearch_project/src/ml_task.py
+          - projects/templates/template_autoresearch_project/mnist_task.yaml
+          - projects/templates/template_autoresearch_project/src/ml_task.py
         expected_artifacts:
           - output/data/ml_task_results.json
           - output/data/ml_candidate_ledger.json
@@ -85,7 +85,7 @@ ideas:
         metric_name: readiness_valid
         metric_direction: maximize
         touched_paths:
-          - projects/template_autoresearch_project/src/loop.py
+          - projects/templates/template_autoresearch_project/src/loop.py
         expected_artifacts:
           - output/data/idea_ledger.json
           - output/data/run_ledger.json
@@ -106,6 +106,6 @@ ideas:
         metric_name: benchmark_status
         metric_direction: maximize
         touched_paths:
-          - projects/template_autoresearch_project/src/reports.py
+          - projects/templates/template_autoresearch_project/src/reports.py
         expected_artifacts:
           - output/data/benchmark_scores.json

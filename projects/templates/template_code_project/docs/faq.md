@@ -87,7 +87,7 @@ See [`troubleshooting.md`](troubleshooting.md#literal-token_name-appears-in-the-
 
 Working copy:
 ```
-projects/template_code_project/output/pdf/template_code_project_combined.pdf
+projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf
 ```
 
 Promoted copy (used by CI for artifact upload):

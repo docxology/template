@@ -183,6 +183,70 @@ def figure_free_energy_curve(project_root: Path) -> Path:
     return out
 
 
+def figure_semantic_gluing_graph(project_root: Path) -> Path:
+    root = project_root.resolve()
+    style = load_figure_style(root)
+    from manuscript.sheaf.semantic import build_validation_dependency_graph
+
+    graph = build_validation_dependency_graph(root)
+    selected = [
+        "output/data/sheaf_gluing_certificate.json",
+        "output/data/sheaf_evidence_crosswalk.json",
+        "output/data/validation_dependency_graph.json",
+        "output/data/artifact_provenance.json",
+        "output/reports/reproducibility_replay.json",
+        "output/reports/counterexample_matrix.json",
+        "output/data/si_policy_comparison.json",
+        "output/data/si_graph_world_trace.json",
+        "output/figures/si_belief_trajectory.gif",
+    ]
+    artifacts = graph.get("artifacts") or {}
+    out = figure_output_path(root, "semantic_gluing_graph")
+    with apply_style(style):
+        fig, ax = plt.subplots(figsize=(9.2, 4.8))
+        ax.axis("off")
+        producer_x, artifact_x, consumer_x = 0.05, 0.42, 0.78
+        y_positions = np.linspace(0.86, 0.14, len(selected))
+        ax.text(producer_x, 0.96, "Producer script", weight="bold", color=style.color("primary"))
+        ax.text(artifact_x, 0.96, "Evidence artifact", weight="bold", color=style.color("primary"))
+        ax.text(consumer_x, 0.96, "Consumer / gate", weight="bold", color=style.color("primary"))
+        for y, rel in zip(y_positions, selected, strict=True):
+            record = artifacts.get(rel, {})
+            producer = str(record.get("producer", "?"))
+            consumers = ", ".join(record.get("consumers") or record.get("validation_gates") or ["validate_outputs"])
+            ok = bool(record.get("produced_by_configured_analysis"))
+            box_color = style.color("pass") if ok else style.color("fail")
+            ax.text(
+                producer_x,
+                y,
+                producer,
+                fontsize=8,
+                va="center",
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="#f8fafc", edgecolor=box_color),
+            )
+            ax.text(
+                artifact_x,
+                y,
+                rel.replace("output/", ""),
+                fontsize=8,
+                va="center",
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor=style.color("secondary")),
+            )
+            ax.text(
+                consumer_x,
+                y,
+                consumers,
+                fontsize=8,
+                va="center",
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="#f8fafc", edgecolor=style.color("accent")),
+            )
+            ax.annotate("", xy=(artifact_x - 0.02, y), xytext=(producer_x + 0.24, y), arrowprops={"arrowstyle": "->"})
+            ax.annotate("", xy=(consumer_x - 0.02, y), xytext=(artifact_x + 0.29, y), arrowprops={"arrowstyle": "->"})
+        ax.set_title("Semantic sheaf gluing dependency graph", loc="left", pad=16)
+        save_styled_figure(fig, out, style)
+    return out
+
+
 FIGURE_GENERATORS: dict[str, Callable[[Path], Path | None]] = {
     "ising_mi_curve": figure_ising_mi_curve,
     "free_energy_curve": figure_free_energy_curve,
@@ -196,6 +260,7 @@ FIGURE_GENERATORS: dict[str, Callable[[Path], Path | None]] = {
     "multi_track_architecture": figure_multi_track_architecture,
     "lean_boundary_status": figure_lean_boundary_status,
     "gnn_ontology_concordance": figure_gnn_ontology_concordance,
+    "semantic_gluing_graph": figure_semantic_gluing_graph,
 }
 
 

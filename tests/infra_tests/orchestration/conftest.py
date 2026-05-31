@@ -20,8 +20,8 @@ def fake_repo(tmp_path: Path) -> Path:
 
     Layout::
 
-        <tmp>/projects/template_code_project/
-        <tmp>/projects/template_prose_project/
+        <tmp>/projects/templates/template_code_project/
+        <tmp>/projects/templates/template_prose_project/
         <tmp>/projects/template_search_project/
         <tmp>/projects/some_rotating_project/
     """

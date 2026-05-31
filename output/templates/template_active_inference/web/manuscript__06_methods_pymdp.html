@@ -185,14 +185,32 @@ planning horizon <code>policy_len = 2</code>. Default mode is
 <code>simulate_si_tmaze.py</code>). The Agent constructs a multi-step
 policy set (<code>num_policies</code> logged in SI artifacts); per-step
 <strong>belief entropy</strong> is aggregated as
-<code>mean_belief_entropy</code>.</p>
-<p>Graph-world <code>infer_policies</code> is an opt-in extension stub —
-see <code>tracks.yaml</code> <code>extension_tracks.graph_world</code>.
-For the reference workflow, see <span class="citation"
+<code>mean_belief_entropy</code>. Selecting
+<code>mode: policy_inference</code> enables expected-free-energy policy
+selection; on the default minimal T-maze (2 states / 2 observations / 2
+actions, horizon 2) this yields a constant-action policy that does not
+reach the goal — the toy is deliberately too small to exercise
+sophisticated inference’s advantage, so richer state spaces and longer
+horizons are needed for it to differ from belief filtering.</p>
+<p>Graph-world artifacts are deterministic extension outputs declared in
+<code>tracks.yaml</code> <code>extension_tracks.graph_world</code>. For
+the reference workflow, see <span class="citation"
 data-cites="sec:intro_motivation">[@sec:intro_motivation]</span>;
 measured rollouts appear in <span class="citation"
 data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>.</p>
 <p>Mean belief entropy across steps: 0.3251.</p>
+<p>The comparison artifact
+<code>output/data/si_policy_comparison.json</code> runs both
+<code>state_inference</code> and <code>policy_inference</code> over the
+declared toy horizons and seeds without replacing the default rollout.
+It records 4 deterministic comparison rows, of which 3 reach the goal
+under the toy transition model.</p>
+<p>The graph-world extension is deterministic:
+<code>simulate_si_graph_world.py</code> writes
+<code>si_graph_world_summary.json</code> and
+<code>si_graph_world_trace.json</code> for a four-node graph-world path.
+The regenerated summary reports 4 nodes, 4 steps, and goal-reached flag
+1.</p>
 <!-- sheaf-track:formalism -->
 <p>Given generative matrices <span
 class="math inline">\(A,B,C,D\)</span>, pymdp computes state beliefs

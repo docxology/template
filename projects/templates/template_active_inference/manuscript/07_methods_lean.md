@@ -14,6 +14,6 @@ Horizon witnesses link back to the analytical toy ([@sec:methods_analytical]) an
 
 <!-- sheaf-track:lean -->
 
-Lean module `TemplateActiveInference.SophisticatedInference` declares the planning-horizon parameter `defaultPolicyLen` and a placeholder arithmetic witness `sophisticated_requires_horizon : defaultPolicyLen > 1` (proved by `decide`). The witness pins the horizon invariant that sophisticated inference requires a policy length above one; it does *not* by itself formalize the inferential distinction between sophisticated and myopic agents — that distinction lives in the pymdp harness ([@sec:methods_pymdp]), not in the Lean term. Axioms are audited with `#print axioms` (the gate whitelists only `propext`, `Classical.choice`, `Quot.sound`); see the Lean track gate.
+Lean module `TemplateActiveInference.SophisticatedInference` declares the planning-horizon parameter `defaultPolicyLen` and finite T-maze boundary witnesses: `sophisticated_requires_horizon : defaultPolicyLen > 1`, `tmaze_two_forward_steps_reach_goal`, and `tmaze_goal_absorbing`. These theorems formalize the small state-transition boundary shared with the Python harness; they do *not* prove that the toy policy posterior is a general model of sophisticated inference. Axioms are audited with `#print axioms` (the gate whitelists only `propext`, `Classical.choice`, `Quot.sound`); see the Lean track gate.
 
 Build via `lake build` under `lean/`.

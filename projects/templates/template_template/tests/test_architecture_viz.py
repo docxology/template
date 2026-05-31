@@ -47,7 +47,7 @@ def _sample_projects() -> list[ProjectAnalysis]:
     return [
         ProjectAnalysis(
             name="template_code_project",
-            path=REPO_ROOT / "projects/template_code_project",
+            path=REPO_ROOT / "projects/templates/template_code_project",
             has_manuscript=True,
             chapter_count=8,
             has_tests=True,

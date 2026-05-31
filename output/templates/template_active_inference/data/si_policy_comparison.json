@@ -1,0 +1,112 @@
+{
+  "schema": "template_active_inference.si_policy_comparison.v1",
+  "runs": [
+    {
+      "mode": "state_inference",
+      "horizon": 2,
+      "seed": 0,
+      "steps": 2,
+      "policy_len": 2,
+      "num_policies": 4,
+      "goal_reached": true,
+      "action_diversity": 2,
+      "mean_belief_entropy": 0.32508314364563223,
+      "actions": [
+        0,
+        1
+      ],
+      "observations": [
+        1,
+        1
+      ],
+      "policy_methods": {
+        "state_inference": 2
+      }
+    },
+    {
+      "mode": "policy_inference",
+      "horizon": 2,
+      "seed": 0,
+      "steps": 2,
+      "policy_len": 2,
+      "num_policies": 4,
+      "goal_reached": false,
+      "action_diversity": 1,
+      "mean_belief_entropy": 0.32508314364563223,
+      "actions": [
+        0,
+        0
+      ],
+      "observations": [
+        1,
+        0
+      ],
+      "policy_methods": {
+        "expected_utility_fallback": 2
+      }
+    },
+    {
+      "mode": "state_inference",
+      "horizon": 3,
+      "seed": 0,
+      "steps": 3,
+      "policy_len": 3,
+      "num_policies": 8,
+      "goal_reached": true,
+      "action_diversity": 2,
+      "mean_belief_entropy": 0.32508314364563223,
+      "actions": [
+        0,
+        1,
+        1
+      ],
+      "observations": [
+        1,
+        1,
+        1
+      ],
+      "policy_methods": {
+        "state_inference": 3
+      }
+    },
+    {
+      "mode": "policy_inference",
+      "horizon": 3,
+      "seed": 0,
+      "steps": 3,
+      "policy_len": 3,
+      "num_policies": 8,
+      "goal_reached": true,
+      "action_diversity": 1,
+      "mean_belief_entropy": 0.32508314364563223,
+      "actions": [
+        0,
+        0,
+        0
+      ],
+      "observations": [
+        1,
+        0,
+        1
+      ],
+      "policy_methods": {
+        "expected_utility_fallback": 3
+      }
+    }
+  ],
+  "summary": {
+    "run_count": 4,
+    "modes": [
+      "policy_inference",
+      "state_inference"
+    ],
+    "horizons": [
+      2,
+      3
+    ],
+    "seeds": [
+      0
+    ],
+    "goal_reached_count": 3
+  }
+}

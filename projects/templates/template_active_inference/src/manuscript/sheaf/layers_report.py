@@ -77,12 +77,82 @@ def render_coverage_legend() -> str:
     )
 
 
+def render_evidence_crosswalk_table(project_root: Path) -> str:
+    from manuscript.sheaf.semantic import build_evidence_crosswalk
+
+    crosswalk = build_evidence_crosswalk(project_root)
+    lines = [
+        "<!-- sheaf-layers:evidence-crosswalk -->",
+        "## Evidence crosswalk",
+        "",
+        "| Claim | Artifact | Producer | Gates |",
+        "| --- | --- | --- | --- |",
+    ]
+    for claim in (crosswalk.get("claims") or [])[:8]:
+        gates = ", ".join(claim.get("validation_gates") or [])
+        lines.append(f"| `{claim.get('id')}` | `{claim.get('path')}` | `{claim.get('producer')}` | {gates} |")
+    lines.extend(["", f"**Claim rows:** {crosswalk.get('claim_count', 0)} typed evidence claims.", ""])
+    return "\n".join(lines)
+
+
+def render_artifact_producer_table(project_root: Path) -> str:
+    from manuscript.sheaf.semantic import build_validation_dependency_graph
+
+    graph = build_validation_dependency_graph(project_root)
+    lines = [
+        "<!-- sheaf-layers:artifact-producers -->",
+        "## Artifact producer graph",
+        "",
+        "| Artifact | Producer | Configured | Consumers |",
+        "| --- | --- | --- | --- |",
+    ]
+    for rel, record in sorted((graph.get("artifacts") or {}).items()):
+        if (
+            rel.startswith("output/data/")
+            or rel.startswith("output/reports/")
+            or rel == "output/figures/si_belief_trajectory.gif"
+        ):
+            configured = "Yes" if record.get("produced_by_configured_analysis") else "No"
+            consumers = ", ".join(record.get("consumers") or record.get("validation_gates") or [])
+            lines.append(f"| `{rel}` | `{record.get('producer')}` | {configured} | {consumers} |")
+    lines.extend(["", f"**Producer issues:** {len(graph.get('issues') or [])}.", ""])
+    return "\n".join(lines)
+
+
+def render_semantic_restrictions_table(project_root: Path) -> str:
+    from manuscript.sheaf.semantic import build_semantic_gluing_certificate
+
+    restrictions = build_semantic_gluing_certificate(project_root).get("restrictions") or {}
+    rows = [
+        ("Coverage missing", restrictions.get("coverage_missing")),
+        ("Policy comparison rows", restrictions.get("policy_comparison_run_count")),
+        ("Graph-world trace agrees", restrictions.get("graph_world_steps_match")),
+        ("Animation frames", restrictions.get("animation_frame_count")),
+        ("Lean all proved", restrictions.get("lean_all_proved")),
+        ("GNN ontology ok", restrictions.get("gnn_ontology_ok")),
+        ("Configured producers ok", restrictions.get("configured_artifact_producers_ok")),
+    ]
+    lines = [
+        "<!-- sheaf-layers:semantic-restrictions -->",
+        "## Semantic gluing restrictions",
+        "",
+        "| Restriction | Value |",
+        "| --- | --- |",
+    ]
+    lines.extend(f"| {name} | `{value}` |" for name, value in rows)
+    lines.append("")
+    return "\n".join(lines)
+
+
 def render_sheaf_layers_markdown(project_root: Path) -> str:
     ctx = load_sheaf_coverage_context(project_root)
     parts = [
         render_track_registry_table(ctx.registry),
         render_binding_matrix_table(ctx.matrix, ctx.manifest, project_root=project_root),
         render_coverage_legend(),
+        render_evidence_crosswalk_table(project_root),
+        render_artifact_producer_table(project_root),
+        render_semantic_restrictions_table(project_root),
     ]
     return "\n".join(parts)
 

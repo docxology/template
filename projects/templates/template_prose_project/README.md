@@ -46,16 +46,16 @@ flowchart LR
 
 ```bash
 # Run the full prose review (offline, no Ollama)
-uv run python projects/template_prose_project/scripts/run_prose_pipeline.py
+uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
 
 # Strict mode: exit non-zero if any check fails
-uv run python projects/template_prose_project/scripts/run_prose_pipeline.py --strict
+uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py --strict
 
 # Generate figures (after a pipeline run)
-uv run python projects/template_prose_project/scripts/y_generate_prose_figures.py
+uv run python projects/templates/template_prose_project/scripts/y_generate_prose_figures.py
 
 # Hydrate manuscript variables for the abstract
-uv run python projects/template_prose_project/scripts/z_generate_manuscript_variables.py
+uv run python projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py
 ```
 
 After the run, look in `output/`:
@@ -85,8 +85,8 @@ render — see [`docs/troubleshooting.md`](docs/troubleshooting.md#pdf-rendering
 alone is not proof; confirm tests collected > 0 and coverage ≥ 90%:
 
 ```bash
-uv run pytest projects/template_prose_project/tests/ \
-  --cov=projects/template_prose_project/src --cov-fail-under=90
+uv run pytest projects/templates/template_prose_project/tests/ \
+  --cov=projects/templates/template_prose_project/src --cov-fail-under=90
 # exemplar baseline → docs/_generated/canonical_facts.md
 ```
 
@@ -142,7 +142,7 @@ experiments, mutate prompts, or run autonomous review agents.
 ## Testing
 
 ```bash
-uv run pytest projects/template_prose_project/tests/ -v
+uv run pytest projects/templates/template_prose_project/tests/ -v
 ```
 
 All tests are offline; no mocks. The test suite uses real prose, real

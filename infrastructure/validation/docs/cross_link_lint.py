@@ -29,6 +29,7 @@ logger = get_logger(__name__)
 # Docs may legitimately reference those as "optional / restore-when-needed", so a
 # link into one of those areas is "absent by design", NOT a broken link.
 _TRACKED_PROJECT_DIRS = frozenset(PUBLIC_PROJECT_NAMES)
+_TRACKED_PROJECT_LEAF_DIRS = frozenset(name.split("/")[-1] for name in PUBLIC_PROJECT_NAMES)
 
 #: Typed subfolders whose contents are deliberately absent from a clean checkout.
 _ABSENT_TYPED_SUBDIRS: frozenset[str] = frozenset({"working", "published", "archive", "other"})
@@ -69,6 +70,8 @@ def _is_intentionally_absent_project(md_file: Path, decoded: str) -> bool:
         qualified, _ = resolved
         leaf = qualified.split("/")[-1]
         if qualified not in _TRACKED_PROJECT_DIRS and not leaf.endswith(".md"):
+            if leaf in _TRACKED_PROJECT_LEAF_DIRS:
+                return False
             return True
     return False
 

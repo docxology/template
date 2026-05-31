@@ -1,0 +1,42 @@
+{
+  "all_expected_failures_documented": true,
+  "counterexample_count": 5,
+  "rows": [
+    {
+      "expected_failure": true,
+      "gate": "validate_manuscript.semantic_sheaf_gluing",
+      "id": "stale_semantic_certificate",
+      "mutation": "change a saved artifact producer in sheaf_gluing_certificate.json",
+      "test": "tests/test_semantic_sheaf.py::test_semantic_gluing_rejects_stale_saved_certificate"
+    },
+    {
+      "expected_failure": true,
+      "gate": "validate_manuscript.gnn_concordance",
+      "id": "wrong_si_ontology_term",
+      "mutation": "map pi to HiddenState instead of PolicyPosterior",
+      "test": "tests/test_semantic_sheaf.py::test_semantic_gluing_rejects_wrong_si_ontology"
+    },
+    {
+      "expected_failure": true,
+      "gate": "validate_outputs.si_graph_world_schema",
+      "id": "graph_world_summary_trace_mismatch",
+      "mutation": "change summary step count without changing trace rows",
+      "test": "tests/test_semantic_extensions.py::test_validate_outputs_rejects_graph_world_summary_trace_mismatch"
+    },
+    {
+      "expected_failure": true,
+      "gate": "validate_manuscript.claim_ledger_valid",
+      "id": "claim_expected_value_mismatch",
+      "mutation": "set typed claim expected value to an impossible number",
+      "test": "tests/test_semantic_sheaf.py::test_typed_claim_evidence_rejects_wrong_expected_value"
+    },
+    {
+      "expected_failure": true,
+      "gate": "validate_outputs.artifact_provenance_schema",
+      "id": "stale_provenance_hash",
+      "mutation": "replace a saved artifact sha256 with a fake digest",
+      "test": "tests/test_validation_spine.py::test_validation_spine_rejects_stale_provenance_hash"
+    }
+  ],
+  "schema": "template_active_inference.counterexample_matrix.v1"
+}

@@ -53,6 +53,15 @@
     "label": "fig:multi_track_architecture",
     "width": 0.95
   },
+  "fig:semantic_gluing_graph": {
+    "alt": "Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate.",
+    "caption": "Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate.",
+    "figure_id": "semantic_gluing_graph",
+    "filename": "semantic_gluing_graph.png",
+    "generated_by": "visualizations.figures::semantic_gluing_graph",
+    "label": "fig:semantic_gluing_graph",
+    "width": 0.95
+  },
   "fig:sheaf_coverage_heatmap": {
     "alt": "Heatmap matrix of IMRAD manuscript rows versus {{sheaf_track_count}} sheaf fragment track columns. Black cells mean the track is bound and the fragment file exists; white cells mean the track is not bound; gray cells mean bound but missing. Rows are grouped by IMRAD block with indented subsection labels; column headers list track ids.",
     "caption": "Sheaf track coverage matrix: {{imrad_manifest_rows}} IMRAD rows \u00d7 {{sheaf_track_count}} fragment columns. Black = present (P), white = absent (\u2014), gray = missing (M). Counts: {{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing.",
@@ -90,7 +99,7 @@
     "width": 0.9
   },
   "fig:si_tmaze_actions": {
-    "alt": "Step plot of discrete action index versus timestep for the pymdp sophisticated-inference T-maze rollout. Actions change at each timestep with light fill under the step trace; policy depth is {{si_tmaze_policy_len}} steps.",
+    "alt": "Step plot of discrete action index versus timestep for the pymdp T-maze rollout in {{pymdp_mode}} mode. Actions change at each timestep with light fill under the step trace; policy depth is {{si_tmaze_policy_len}} steps.",
     "caption": "Discrete action index over time for the pymdp T-maze rollout (policy length {{si_tmaze_policy_len}}).",
     "figure_id": "si_tmaze_actions",
     "filename": "si_tmaze_actions.png",

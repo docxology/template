@@ -99,7 +99,7 @@ Thumbs.db
 /output/*
 # Public exemplar rendered output lives under output/templates/<name>/ and is
 # tracked as living render-proof. Re-include the templates/ shell, then
-# re-ignore its contents so ONLY the five canonical exemplars are tracked —
+# re-ignore its contents so ONLY the six canonical exemplars are tracked —
 # any other rotating/confidential project's output under output/ stays ignored.
 !/output/templates/
 /output/templates/*
@@ -111,6 +111,8 @@ Thumbs.db
 !/output/templates/template_active_inference/**
 !/output/templates/template_autoresearch_project/
 !/output/templates/template_autoresearch_project/**
+!/output/templates/template_sia/
+!/output/templates/template_sia/**
 !/output/templates/template_template/
 !/output/templates/template_template/**
 
@@ -158,7 +160,7 @@ invalid/
 projects/*
 # CONFIDENTIALITY INVARIANT: this is a PUBLIC repo into which confidential
 # projects are routinely rotated under projects/'s typed subfolders. Repo-level
-# Markdown files in projects/ are navigation docs; only the five canonical
+# Markdown files in projects/ are navigation docs; only the six canonical
 # template exemplar directories under projects/templates/ may ever be
 # tracked/pushed. Do NOT add a negation for any other project directory — if a
 # non-confidential extra exemplar must be published, update this allowlist and
@@ -166,7 +168,7 @@ projects/*
 # the build if anything else under projects/ is staged/tracked.
 !projects/*.md
 # Re-include the public templates/ subfolder, then re-ignore everything inside
-# it so ONLY the five canonical exemplars below are ever tracked. Anything else
+# it so ONLY the six canonical exemplars below are ever tracked. Anything else
 # dropped into projects/templates/ stays ignored (fail-closed).
 !projects/templates/
 projects/templates/*
@@ -178,6 +180,8 @@ projects/templates/*
 !projects/templates/template_active_inference/**
 !projects/templates/template_autoresearch_project/
 !projects/templates/template_autoresearch_project/**
+!projects/templates/template_sia/
+!projects/templates/template_sia/**
 !projects/templates/template_template/
 !projects/templates/template_template/**
 projects/*/.DS_Store

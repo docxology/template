@@ -59,7 +59,7 @@ These tests are deliberately **not gated by the 90% coverage floor** — they ar
 
 ## Test file template
 
-See [`projects/template_code_project/figures/test_figure_TEMPLATE.py`](projects/template_code_project/figures/test_figure_TEMPLATE.py) for a worked example.
+See [`tests/regression/projects/template_code_project/figures/test_figure_TEMPLATE.py`](./projects/template_code_project/figures/test_figure_TEMPLATE.py) for a worked example.
 
 ## Pinned-values JSON schema
 

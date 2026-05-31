@@ -11,6 +11,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from simulation.pymdp_config import apply_pymdp_overrides, load_pymdp_config
+from simulation.si_artifacts import write_policy_comparison
 from simulation.si_runner import pymdp_available, run_and_persist
 
 
@@ -69,6 +70,7 @@ def main(argv: list[str] | None = None) -> int:
     result = run_and_persist(PROJECT_ROOT, config=config)
     for name, path in result["paths"].items():
         print(f"{name}: {path}")
+    print(f"policy_comparison: {write_policy_comparison(PROJECT_ROOT)}")
     log_path = PROJECT_ROOT / config.logging.path
     if config.logging.enabled:
         print(f"log: {log_path}")

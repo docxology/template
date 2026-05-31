@@ -66,11 +66,11 @@
 Following the comprehensive review, the following corrections were applied:
 
 ### Broken Links Fixed (7)
-1. `docs/README.md`: `../projects/fep_lean/docs/` → `../projects/template_code_project/docs/`
-2. `docs/best-practices/multi-project-management.md`: `projects/fep_lean/docs/` → `projects/template_code_project/docs/`
+1. `docs/README.md`: `../projects/fep_lean/docs/` → `../projects/templates/template_code_project/docs/`
+2. `docs/best-practices/multi-project-management.md`: `projects/fep_lean/docs/` → `projects/templates/template_code_project/docs/`
 3. `docs/documentation-index.md`:
    - Heading `fep_lean / CI paths` → `template_code_project / CI paths`
-   - Link `../projects/fep_lean/` → `../projects/template_code_project/`
+   - Link `../projects/fep_lean/` → `../projects/templates/template_code_project/`
 4. `docs/rules/documentation_standards.md`:
    - `../infrastructure/AGENTS.md` (4 occurrences) → `../../infrastructure/AGENTS.md`
    - `configuration.md` → `../operational/config/configuration.md`
@@ -79,7 +79,7 @@ Following the comprehensive review, the following corrections were applied:
 
 ### Inaccuracies Corrected
 - **Glossary Build Pipeline** (`reference/glossary.md`): Replaced incorrect stage sequence with accurate DAG description
-- **Coverage commands** (`reference/quick-start-cheatsheet.md`): `--cov=projects.template_code_project.src` → `--cov=projects/template_code_project/src` (3 occurrences)
+- **Coverage commands** (`reference/quick-start-cheatsheet.md`): `--cov=projects.template_code_project.src` → `--cov=projects/templates/template_code_project/src` (3 occurrences)
 - **Import example** (`reference/quick-start-cheatsheet.md`): Replaced non-existent `example` module with real `optimizer` import
 
 ### Discoverability

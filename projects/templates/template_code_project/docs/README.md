@@ -64,7 +64,7 @@ project, mirror these invariants — they are what the repo's gates enforce:
 
 ```bash
 NEW=my_project
-cp -r projects/template_code_project projects/$NEW
+cp -r projects/templates/template_code_project projects/$NEW
 cd projects/$NEW
 # 1. Rewrite src/ with your domain logic (keep the pure-function, infra-free shape)
 # 2. Replace tests/ — real-data tests, no mocks, drive src/ coverage ≥90%
@@ -97,14 +97,14 @@ differ only in what `src/` computes and what the pipeline checks.
 
 ```bash
 # Tests pass + coverage ≥90%
-uv run pytest projects/template_code_project/tests/ \
-    --cov=projects/template_code_project/src --cov-fail-under=90 -q
+uv run pytest projects/templates/template_code_project/tests/ \
+    --cov=projects/templates/template_code_project/src --cov-fail-under=90 -q
 
 # No mocks in tests/
-grep -r "unittest.mock\|MagicMock\|@patch" projects/template_code_project/tests/ || echo "Clean"
+grep -r "unittest.mock\|MagicMock\|@patch" projects/templates/template_code_project/tests/ || echo "Clean"
 
 # src/ has no infrastructure imports
-grep -r "from infrastructure\|import infrastructure" projects/template_code_project/src/ || echo "Clean"
+grep -r "from infrastructure\|import infrastructure" projects/templates/template_code_project/src/ || echo "Clean"
 ```
 
 ## See Also

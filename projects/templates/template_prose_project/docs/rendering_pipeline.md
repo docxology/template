@@ -41,11 +41,11 @@ begins.
 
 ### Phase 1 — Run the Prose Pipeline
 
-**Script**: `projects/template_prose_project/scripts/run_prose_pipeline.py`
+**Script**: `projects/templates/template_prose_project/scripts/run_prose_pipeline.py`
 
 **Command**:
 ```bash
-uv run python projects/template_prose_project/scripts/run_prose_pipeline.py
+uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
 ```
 
 **Inputs**: `manuscript/*.md`, `manuscript/references.bib`,
@@ -71,13 +71,13 @@ The `--strict` flag causes the script to exit non-zero if any check fails.
 ### Phase 2 — Generate Figures and Manuscript Variables
 
 **Scripts**:
-`projects/template_prose_project/scripts/y_generate_prose_figures.py` and
-`projects/template_prose_project/scripts/z_generate_manuscript_variables.py`
+`projects/templates/template_prose_project/scripts/y_generate_prose_figures.py` and
+`projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py`
 
 **Commands**:
 ```bash
-uv run python projects/template_prose_project/scripts/y_generate_prose_figures.py
-uv run python projects/template_prose_project/scripts/z_generate_manuscript_variables.py
+uv run python projects/templates/template_prose_project/scripts/y_generate_prose_figures.py
+uv run python projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py
 ```
 
 **Inputs**: `output/manuscript_report.json` (produced by Phase 1) +
@@ -130,13 +130,13 @@ uv run python scripts/03_render_pdf.py --project template_prose_project
 | `infrastructure/core/config/loader.py` | Reads `manuscript/config.yaml` for title, authors, metadata |
 
 **Outputs**:
-- `projects/template_prose_project/output/pdf/template_prose_project_combined.pdf`
+- `projects/templates/template_prose_project/output/pdf/template_prose_project_combined.pdf`
   — final publication PDF (working copy).
-- `projects/template_prose_project/output/pdf/_combined_manuscript.*` — LaTeX intermediates
+- `projects/templates/template_prose_project/output/pdf/_combined_manuscript.*` — LaTeX intermediates
   (`.tex`, `.aux`, `.log`).
-- `projects/template_prose_project/output/slides/` — per-section Beamer slide
+- `projects/templates/template_prose_project/output/slides/` — per-section Beamer slide
   PDFs.
-- `projects/template_prose_project/output/web/` — HTML versions of each section.
+- `projects/templates/template_prose_project/output/web/` — HTML versions of each section.
 
 ### Phase 4 — Copy Final Deliverables
 
@@ -153,7 +153,7 @@ upload and by the multi-project executive report).
 
 ## `config.yaml` Controls
 
-Every knob lives in `projects/template_prose_project/manuscript/config.yaml`:
+Every knob lives in `projects/templates/template_prose_project/manuscript/config.yaml`:
 
 | YAML Key | Controls | Consumed by |
 |---|---|---|
@@ -181,13 +181,13 @@ in `src/manuscript_variables.py::ManuscriptVariables`.
 **Fix**:
 ```bash
 # Confirm the JSON exists
-ls projects/template_prose_project/output/data/manuscript_variables.json
+ls projects/templates/template_prose_project/output/data/manuscript_variables.json
 
 # Re-run Phase 2
-uv run python projects/template_prose_project/scripts/z_generate_manuscript_variables.py
+uv run python projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py
 
 # Detect remaining unresolved tokens
-grep -r "{{" projects/template_prose_project/output/manuscript/ | grep -v ".json"
+grep -r "{{" projects/templates/template_prose_project/output/manuscript/ | grep -v ".json"
 ```
 
 ### BibTeX citation error / PDF fails to compile
@@ -201,7 +201,7 @@ reference in the prose with no matching entry.
 **Fix**: Run the bibliography validator first:
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/template_prose_project/manuscript/references.bib --strict
+    projects/templates/template_prose_project/manuscript/references.bib --strict
 ```
 
 If `bibliography_consistency` failed in Phase 1, `output/checks.json`
@@ -235,7 +235,7 @@ that `src/figures.py` sets at import time.
 **Fix**:
 ```bash
 unset MPLBACKEND
-uv run python projects/template_prose_project/scripts/y_generate_prose_figures.py
+uv run python projects/templates/template_prose_project/scripts/y_generate_prose_figures.py
 ```
 
 `tests/conftest.py` pins `MPLBACKEND=Agg` for the test suite; the figure

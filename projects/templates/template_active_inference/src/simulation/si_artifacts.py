@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from simulation.logging_utils import RunLogger
-from simulation.pymdp_config import PymdpConfig, config_snapshot, load_pymdp_config
+from simulation.pymdp_config import PymdpConfig, apply_pymdp_overrides, config_snapshot, load_pymdp_config
 from simulation.si_loop import SIRunResult, run_si_tmaze
 
 
@@ -91,3 +91,58 @@ def run_and_persist(
     result = run_si_tmaze(project_root, config=cfg, logger=logger)
     paths = write_si_artifacts(project_root, result, config=cfg, trace_steps=result.trace_steps)
     return {"result": result, "paths": paths, "log_records": len(logger.records())}
+
+
+def write_policy_comparison(
+    project_root: Path,
+    *,
+    horizons: tuple[int, ...] = (2, 3),
+    seeds: tuple[int, ...] = (0,),
+) -> Path:
+    """Write deterministic state-vs-policy comparison rows without changing main SI artifacts."""
+    root = project_root.resolve()
+    base = load_pymdp_config(root)
+    rows: list[dict[str, Any]] = []
+    for horizon in horizons:
+        for seed in seeds:
+            for mode in ("state_inference", "policy_inference"):
+                cfg = apply_pymdp_overrides(base, horizon=horizon, steps=horizon, seed=seed, mode=mode)
+                logger = RunLogger(
+                    root / "output" / "logs" / f"pymdp_compare_{mode}_{horizon}_{seed}.jsonl", enabled=False
+                )
+                result = run_si_tmaze(root, config=cfg, logger=logger)
+                methods: dict[str, int] = {}
+                for step in result.trace_steps:
+                    method = str(step.get("policy_method", mode))
+                    methods[method] = methods.get(method, 0) + 1
+                rows.append(
+                    {
+                        "mode": mode,
+                        "horizon": horizon,
+                        "seed": seed,
+                        "steps": result.steps,
+                        "policy_len": result.policy_len,
+                        "num_policies": result.num_policies,
+                        "goal_reached": result.goal_reached,
+                        "action_diversity": result.action_diversity,
+                        "mean_belief_entropy": result.mean_belief_entropy,
+                        "actions": result.actions,
+                        "observations": result.observations,
+                        "policy_methods": methods,
+                    }
+                )
+    payload = {
+        "schema": "template_active_inference.si_policy_comparison.v1",
+        "runs": rows,
+        "summary": {
+            "run_count": len(rows),
+            "modes": sorted({row["mode"] for row in rows}),
+            "horizons": sorted({row["horizon"] for row in rows}),
+            "seeds": sorted({row["seed"] for row in rows}),
+            "goal_reached_count": sum(1 for row in rows if row["goal_reached"]),
+        },
+    }
+    out = root / "output" / "data" / "si_policy_comparison.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return out

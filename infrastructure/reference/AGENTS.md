@@ -44,7 +44,7 @@ from infrastructure.reference.citation import (
 )
 
 # Round-trip the exemplar — output matches input format byte-for-byte.
-db = parse_bibfile("projects/template_code_project/manuscript/references.bib")
+db = parse_bibfile("projects/templates/template_code_project/manuscript/references.bib")
 text = render_database(db)
 # text contains: "@article{cauchy1847methode,\n  title={Méthode...},\n  ..."
 ```
@@ -91,7 +91,7 @@ uv run pytest tests/infra_tests/reference/ -v
 
 The test suite (105+ assertions) covers:
 
-* Real round-trip through `projects/template_code_project/manuscript/references.bib`.
+* Real round-trip through `projects/templates/template_code_project/manuscript/references.bib`.
 * Byte-exact format pinning so the writer cannot drift from the exemplar.
 * Citation-key generation on stop-words, unicode, missing authors.
 * CLI subcommands via real subprocess + direct `main()` calls.

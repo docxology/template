@@ -145,6 +145,16 @@ figures:
     caption: >-
       GNN ↔ ontology concordance for the Bernoulli–Ising toy ({{gnn_spec_version}}).
     width: 0.9
+  semantic_gluing_graph:
+    filename: semantic_gluing_graph.png
+    alt: >-
+      Dependency diagram linking configured analysis scripts to generated evidence
+      artifacts, manuscript consumers, and validation gates for the semantic sheaf
+      gluing certificate.
+    caption: >-
+      Semantic gluing graph: configured producers, generated evidence artifacts, and
+      validation consumers for the multi-track sheaf certificate.
+    width: 0.95
 
 section_figures:
   coverage_page:
@@ -189,6 +199,8 @@ section_figures:
     - id: sheaf_layers_overview
       number: 6
       caption_prefix: "Figure 6 (methods). "
+    - id: semantic_gluing_graph
+      caption_prefix: "Figure 6b (methods). "
   appendix_full_sheaf:
     - id: ising_mi_curve
       caption_prefix: "Figure A1 (appendix). "

@@ -1,19 +1,16 @@
 {
-  "timestamp": "2026-05-28T09:32:05.023913",
+  "timestamp": "2026-05-30T17:08:38.819152",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": false,
+    "Figure registry": true,
     "Evidence registry": true,
     "Project design overlays": true,
     "Artifact manifest": true
   },
-  "figure_issues": [
-    "Unregistered figure reference: fig:id",
-    "Unregistered figure reference: fig:label"
-  ],
+  "figure_issues": [],
   "output_statistics": {
     "detailed_validation": {
       "structure": {
@@ -27,20 +24,20 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 0.89,
+            "size_mb": 1.19,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.05,
+            "size_mb": 1.39,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 18,
-            "size_mb": 0.2,
+            "size_mb": 0.25,
             "readable": true,
             "optional": false
           },
@@ -53,22 +50,22 @@
           },
           "figures": {
             "exists": true,
-            "files": 16,
-            "size_mb": 0.81,
+            "files": 19,
+            "size_mb": 1.15,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 8,
-            "size_mb": 0.03,
+            "files": 14,
+            "size_mb": 0.14,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 11,
-            "size_mb": 0.06,
+            "files": 19,
+            "size_mb": 0.02,
             "readable": true,
             "optional": false
           },
@@ -99,13 +96,13 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.05",
+          "size_mb": "1.39",
           "largest_file": "template_active_inference_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 18,
-          "size_mb": "0.20",
+          "size_mb": "0.25",
           "largest_file": "index.html"
         },
         "slides": {
@@ -116,21 +113,21 @@
         },
         "figures": {
           "exists": true,
-          "file_count": 16,
-          "size_mb": "0.81",
+          "file_count": 19,
+          "size_mb": "1.15",
           "largest_file": "sheaf_layers_overview.png"
         },
         "data": {
           "exists": true,
-          "file_count": 8,
-          "size_mb": "0.03",
-          "largest_file": "sheaf_coverage_matrix.json"
+          "file_count": 14,
+          "size_mb": "0.14",
+          "largest_file": "sheaf_gluing_certificate.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 11,
-          "size_mb": "0.06",
-          "largest_file": "artifact_manifest.json"
+          "file_count": 19,
+          "size_mb": "0.02",
+          "largest_file": "output_statistics.json"
         },
         "simulations": {
           "exists": true,
@@ -155,14 +152,14 @@
         "pdf": 10,
         "web": 18,
         "slides": 0,
-        "figures": 16,
-        "data": 8,
-        "reports": 11,
+        "figures": 19,
+        "data": 14,
+        "reports": 19,
         "simulations": 0,
         "llm": 0,
         "logs": 2
       },
-      "total_size_mb": 2.143914222717285,
+      "total_size_mb": 2.9414405822753906,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -174,30 +171,23 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.0477828979492188
+      "size_mb": 1.3912734985351562
     },
     "figures": {
-      "files": 16,
-      "size_mb": 0.8062067031860352
+      "files": 20,
+      "size_mb": 1.1482372283935547
     },
     "data": {
-      "files": 8,
-      "size_mb": 0.03373241424560547
+      "files": 14,
+      "size_mb": 0.1351776123046875
     }
   },
   "summary": {
     "total_checks": 8,
-    "passed": 7,
-    "failed": 1,
-    "figure_issues_count": 2,
-    "all_passed": false
+    "passed": 8,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "2 figure reference issue(s)",
-      "action": "Register missing figures or remove unused references",
-      "file": "projects/template_active_inference/output/figures/figure_registry.json"
-    }
-  ]
+  "recommendations": []
 }

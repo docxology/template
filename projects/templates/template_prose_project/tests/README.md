@@ -6,11 +6,11 @@ Real-data test suite for the prose-review pipeline. **No mocks.**
 
 ```bash
 # Full suite; see docs/_generated/canonical_facts.md for the current count
-uv run pytest projects/template_prose_project/tests/ -v
+uv run pytest projects/templates/template_prose_project/tests/ -v
 
 # Coverage gate
-uv run pytest projects/template_prose_project/tests/ \
-    --cov=projects/template_prose_project/src \
+uv run pytest projects/templates/template_prose_project/tests/ \
+    --cov=projects/templates/template_prose_project/src \
     --cov-fail-under=90
 ```
 

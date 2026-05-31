@@ -20,8 +20,13 @@ PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
     "templates/template_autoresearch_project",
     "templates/template_code_project",
     "templates/template_prose_project",
+    "templates/template_sia",
     "templates/template_template",
 )
+
+LOCAL_ONLY_TEMPLATE_NAMES: tuple[str, ...] = ("templates/template_autoscientists",)
+
+# Local-only template exemplars: see docs/maintenance/local-only-template-exemplars.md
 
 
 def public_project_infos(repo_root: Path | str) -> list[ProjectInfo]:
@@ -84,6 +89,7 @@ if __name__ == "__main__":  # pragma: no cover - exercised via CLI tests
 
 
 __all__ = [
+    "LOCAL_ONLY_TEMPLATE_NAMES",
     "PUBLIC_PROJECT_NAMES",
     "main",
     "public_ci_source_paths",

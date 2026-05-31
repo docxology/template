@@ -27,7 +27,7 @@ uv run python --version
 Validate the environment and check that the project test suite passes with the ≥90% coverage gate:
 
 ```bash
-uv run pytest projects/template_code_project/tests/ -v --tb=short
+uv run pytest projects/templates/template_code_project/tests/ -v --tb=short
 ```
 
 Expected: passing tests and coverage above the 90% gate. Live collection counts are tracked in [`../../../docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
@@ -37,10 +37,10 @@ Expected: passing tests and coverage above the 90% gate. Live collection counts 
 Generate figures, data, reports, and the analysis dashboard:
 
 ```bash
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 ```
 
-**Outputs created under `projects/template_code_project/output/`:**
+**Outputs created under `projects/templates/template_code_project/output/`:**
 - `figures/` — 6 PNG plots (convergence, stability, benchmarks)
 - `data/` — CSV and JSON results
 - `reports/` — HTML dashboard and validation JSON
@@ -55,20 +55,20 @@ Convert the manuscript to a PDF with LaTeX:
 uv run python scripts/03_render_pdf.py --project template_code_project
 ```
 
-Final PDF: `projects/template_code_project/output/pdf/template_code_project_combined.pdf`
+Final PDF: `projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf`
 
 ## View Results
 
-- **PDF manuscript**: open `projects/template_code_project/output/pdf/template_code_project_combined.pdf`
-- **HTML dashboard**: open `projects/template_code_project/output/web/dashboard.html` (via `scripts/build_dashboard.py`)
-- **Figures**: browse `projects/template_code_project/output/figures/`
-- **Data**: `cat projects/template_code_project/output/data/optimization_results.csv`
+- **PDF manuscript**: open `projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf`
+- **HTML dashboard**: open `projects/templates/template_code_project/output/web/dashboard.html` (via `scripts/build_dashboard.py`)
+- **Figures**: browse `projects/templates/template_code_project/output/figures/`
+- **Data**: `cat projects/templates/template_code_project/output/data/optimization_results.csv`
 
 ## Common Next Steps
 
-- **Change step sizes**: edit `projects/template_code_project/manuscript/config.yaml` → `experiment.step_sizes`, then re-run steps 2–4.
+- **Change step sizes**: edit `projects/templates/template_code_project/manuscript/config.yaml` → `experiment.step_sizes`, then re-run steps 2–4.
 - **Add a new algorithm**: extend `src/optimizer.py`, add tests in `tests/test_optimizer.py`, and call it from the analysis script (see `docs/architecture.md`).
-- **Modify the manuscript**: edit markdown files under `projects/template_code_project/manuscript/`, then hydrate variables and re-render (steps 3–4).
+- **Modify the manuscript**: edit markdown files under `projects/templates/template_code_project/manuscript/`, then hydrate variables and re-render (steps 3–4).
 
 ## Getting Help
 
@@ -81,9 +81,9 @@ Final PDF: `projects/template_code_project/output/pdf/template_code_project_comb
 
 | Task | Command |
 |---|---|
-| Run tests | `uv run pytest projects/template_code_project/tests/ -v` |
-| Run analysis | `uv run python projects/template_code_project/scripts/optimization_analysis.py` |
-| Hydrate manuscript variables | `uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py` (strict; requires analysis CSV; add `--allow-draft` for early drafts) |
+| Run tests | `uv run pytest projects/templates/template_code_project/tests/ -v` |
+| Run analysis | `uv run python projects/templates/template_code_project/scripts/optimization_analysis.py` |
+| Hydrate manuscript variables | `uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py` (strict; requires analysis CSV; add `--allow-draft` for early drafts) |
 | Render PDF | `uv run python scripts/03_render_pdf.py --project template_code_project` |
 | Copy final deliverables | `uv run python scripts/05_copy_outputs.py --project template_code_project` |
-| Clean outputs | `rm -rf projects/template_code_project/output/` |
+| Clean outputs | `rm -rf projects/templates/template_code_project/output/` |

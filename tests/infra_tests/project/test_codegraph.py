@@ -74,7 +74,7 @@ def test_extract_paths_from_files_payload_accepts_common_json_shapes() -> None:
     {
       "files": [
         {"path": "infrastructure/project/codegraph.py"},
-        "projects/template_code_project/src/optimizer.py"
+        "projects/templates/template_code_project/src/optimizer.py"
       ],
       "nested": {"relativePath": "projects/encinitas/src/history.py"}
     }
@@ -83,5 +83,5 @@ def test_extract_paths_from_files_payload_accepts_common_json_shapes() -> None:
     assert extract_paths_from_files_payload(payload) == [
         "infrastructure/project/codegraph.py",
         "projects/encinitas/src/history.py",
-        "projects/template_code_project/src/optimizer.py",
+        "projects/templates/template_code_project/src/optimizer.py",
     ]

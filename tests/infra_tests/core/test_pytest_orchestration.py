@@ -5,6 +5,7 @@ Real subprocess and filesystem fixtures — no mocks.
 
 from __future__ import annotations
 
+from importlib.metadata import version
 from pathlib import Path
 from textwrap import dedent
 
@@ -176,12 +177,14 @@ def test_build_project_pytest_command_injects_test_runner_deps(tmp_path: Path) -
     )
 
     cmd = build_project_pytest_command(project, ["tests/", "--timeout=120"])
-    # All three test-runner packages must appear as --with arguments.
+    # The base test-runner packages plus the workspace-pinned coverage package
+    # must appear as --with arguments.
     assert "--with" in cmd
     with_values = [cmd[i + 1] for i, c in enumerate(cmd) if c == "--with"]
     assert "pytest" in with_values
     assert "pytest-cov" in with_values
     assert "pytest-timeout" in with_values
+    assert f"coverage=={version('coverage')}" in with_values
 
 
 def test_build_union_pytest_command_uses_qualified_cov_path(tmp_path: Path) -> None:

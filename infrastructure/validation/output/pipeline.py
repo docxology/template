@@ -70,7 +70,11 @@ def validate_transmission_bookends(project_name: str = "project") -> bool:
     if not transmission_bookends_enabled(config_path):
         return True
 
-    combined_pdf = project_root / "output" / "pdf" / f"{project_name}_combined.pdf"
+    combined_pdf = project_root / "output" / "pdf" / f"{project_root.name}_combined.pdf"
+    if not combined_pdf.is_file():
+        candidates = sorted((project_root / "output" / "pdf").glob("*_combined.pdf"))
+        if candidates:
+            combined_pdf = candidates[0]
     if not combined_pdf.is_file():
         logger.warning("Transmission bookends enabled but combined PDF missing: %s", combined_pdf)
         return False

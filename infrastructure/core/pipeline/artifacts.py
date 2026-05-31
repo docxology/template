@@ -191,11 +191,15 @@ def _previous_artifact_hashes(output_dir: Path) -> dict[str, str]:
 
 def _declared_output_paths(repo_root: Path, project_dir: Path, contract: StageContract) -> tuple[Path, ...]:
     paths: list[Path] = []
+    try:
+        project_key = project_dir.resolve().relative_to((repo_root / "projects").resolve()).as_posix()
+    except (OSError, ValueError):
+        project_key = project_dir.name
     for raw in contract.output_artifacts:
-        rendered = raw.replace("{project}", project_dir.name).rstrip("/")
+        rendered = raw.replace("{project}", project_key).rstrip("/")
         if rendered.startswith("projects/"):
             paths.append(repo_root / rendered)
-        elif rendered == f"output/{project_dir.name}" or rendered.startswith(f"output/{project_dir.name}/"):
+        elif rendered == f"output/{project_key}" or rendered.startswith(f"output/{project_key}/"):
             paths.append(repo_root / rendered)
         elif rendered.startswith("output/"):
             paths.append(project_dir / rendered)
@@ -215,6 +219,7 @@ def _is_ignored_output(path: Path, output_dir: Path) -> bool:
     rel_parts = path.relative_to(output_dir).parts
     return (
         any(part in _IGNORED_OUTPUT_PARTS for part in rel_parts)
+        or any(part.startswith(".") for part in rel_parts)
         or path.name in _IGNORED_OUTPUT_FILENAMES
         or path.suffix in _IGNORED_OUTPUT_SUFFIXES
     )

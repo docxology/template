@@ -98,11 +98,18 @@ class ReleaseResult:
 
 def resolve_combined_pdf(repo_root: Path, project_name: str) -> Path | None:
     """Locate the combined manuscript PDF for a project."""
+    short_name = project_name.split("/")[-1]
     candidates = [
+        repo_root / "output" / project_name / "pdf" / f"{short_name}_combined.pdf",
         repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf",
-        repo_root / "projects" / project_name / "output" / "pdf" / f"{project_name}_combined.pdf",
+        repo_root / "projects" / project_name / "output" / "pdf" / f"{short_name}_combined.pdf",
     ]
+    seen: set[Path] = set()
     for path in candidates:
+        resolved = path.resolve()
+        if resolved in seen:
+            continue
+        seen.add(resolved)
         if path.is_file():
             return path
     return None

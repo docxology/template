@@ -418,6 +418,16 @@ jobs:
           export PATH="$HOME/.local/bin:$PATH"
           git clone --depth 1 https://github.com/math-inc/OpenGauss.git "$RUNNER_TEMP/OpenGauss"
           cd "$RUNNER_TEMP/OpenGauss"
+          # Pin to the reviewed HEAD SHA; update this value intentionally when upgrading.
+          EXPECTED_SHA="f87633900ae185b8037bf451a914fe7eeae1eb08"
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          if [ "$ACTUAL_SHA" != "$EXPECTED_SHA" ]; then
+            echo "ERROR: OpenGauss HEAD SHA mismatch."
+            echo "  Expected: $EXPECTED_SHA"
+            echo "  Got:      $ACTUAL_SHA"
+            echo "Update EXPECTED_SHA in .github/workflows/ci.yml after reviewing the diff."
+            exit 1
+          fi
           ./scripts/install.sh --plain --noninteractive --skip-system-packages
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           command -v gauss
@@ -690,15 +700,27 @@ jobs:
               print(f'SKIP infrastructure.core: {e}')
 
           # Public project scope only; runtime discovery remains broader.
+          # project names contain '/' (e.g. 'templates/template_code_project'),
+          # which makes them invalid Python module identifiers. Use a subprocess
+          # with PYTHONPATH set to the project dir so 'import src' resolves
+          # correctly and wall-clock time is actually recorded.
+          import subprocess
+          import os
           projects = public_project_names(Path('.'))
           for project in projects:
-              module_name = f'projects.{project}.src'
+              project_dir = str(Path('.') / 'projects' / project)
+              label = f'projects/{project}/src'
+              env = {**os.environ, 'PYTHONPATH': project_dir}
               t0 = time.perf_counter()
-              try:
-                  importlib.import_module(module_name)
-                  results[module_name] = time.perf_counter() - t0
-              except ImportError as e:
-                  print(f'SKIP {module_name}: {e}')
+              proc = subprocess.run(
+                  [sys.executable, '-c', 'import src'],
+                  env=env, capture_output=True,
+              )
+              elapsed = time.perf_counter() - t0
+              if proc.returncode == 0:
+                  results[label] = elapsed
+              else:
+                  print(f'SKIP {label}: {proc.stderr.decode().strip()}')
 
           total = sum(results.values())
           print('Import timing:')

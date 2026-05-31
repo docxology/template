@@ -35,7 +35,7 @@ flowchart LR
 * **Static review** — read every `.py` file end-to-end against this
   checklist.
 * **Round-trip validation** — parse and re-render
-  `projects/template_code_project/manuscript/references.bib`; byte-diff at the
+  `projects/templates/template_code_project/manuscript/references.bib`; byte-diff at the
   entry level.
 * **Test execution** — full suite under `tests/infra_tests/{search,reference}/`
   with `--cov`.
@@ -68,7 +68,7 @@ Both clear the 60% infra floor with margin.
 
 ### ✅ Pass: Round-trip stability against exemplar
 
-`parse_bibfile("projects/template_code_project/manuscript/references.bib")` →
+`parse_bibfile("projects/templates/template_code_project/manuscript/references.bib")` →
 `render_database` → `parse_bibtex` recovers identical (entry_type,
 citation_key, ordered field map) for all 8 entries.
 

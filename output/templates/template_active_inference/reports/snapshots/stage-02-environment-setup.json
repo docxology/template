@@ -1,13 +1,11 @@
 {
-  "artifact_manifest_hash": "b19a933d5e8978056589329cfc0cc6349d0511e3464a3cb966732b1b3dee7545",
-  "artifacts": {
-    "output/data/sheaf_coverage_matrix.json": "b6e9f2ac511289ab39be0a71258822f6c00df867b707c51e6737e390ceeb7bcb"
-  },
+  "artifact_manifest_hash": "576914d6119825e6a55775a2f7fd215e90e4f7d27806eefc14fff2a95d794fa0",
+  "artifacts": {},
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/template_active_inference/output/reports/snapshots/stage-02-environment-setup.json",
+  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_active_inference/output/reports/snapshots/stage-02-environment-setup.json",
   "stage_name": "Environment Setup",
   "stage_num": 2,
-  "timestamp": "2026-05-28T16:31:00+00:00",
+  "timestamp": "2026-05-31T00:00:12+00:00",
   "validation_summary": {
     "checks": {},
     "summary": {}

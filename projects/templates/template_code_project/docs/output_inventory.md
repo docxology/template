@@ -8,7 +8,7 @@
 > documentation of the producer/consumer graph that future agents and
 > forkers need.
 
-Paths in the table are relative to `projects/template_code_project/`.
+Paths in the table are relative to `projects/templates/template_code_project/`.
 
 ## File Inventory
 
@@ -53,13 +53,13 @@ If any artifact is corrupted or stale:
 
 ```bash
 # 1. Clean (optional but recommended for full regenerations)
-rm -rf projects/template_code_project/output/
+rm -rf projects/templates/template_code_project/output/
 
 # 2. Run analysis (produces figures/, data/, reports/, citations/)
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 # 3. Hydrate manuscript variables (produces output/manuscript/ + output/data/manuscript_variables.json)
-uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
 
 # 4. Render PDF (produces pdf/, slides/, web/)
 uv run python scripts/03_render_pdf.py --project template_code_project

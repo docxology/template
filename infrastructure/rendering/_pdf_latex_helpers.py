@@ -668,7 +668,7 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
                 if "name" not in author:
                     continue
 
-                name = author["name"]
+                name = _latex_text(author["name"])
                 parts = [name]
 
                 # Add affiliation(s) if present — support both singular string and plural list
@@ -679,11 +679,11 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
                 elif "affiliation" in author:
                     affils = [author["affiliation"]]
                 for affil in affils:
-                    parts.append(f"\\\\\\footnotesize{{{affil}}}")
+                    parts.append(f"\\\\\\footnotesize{{{_latex_text(affil)}}}")
 
-                # Add email if present
+                # Add email if present (escape so underscores etc. don't trigger math mode)
                 if "email" in author:
-                    parts.append(f"\\\\\\footnotesize{{\\texttt{{{author['email']}}}}}")
+                    parts.append(f"\\\\\\footnotesize{{\\texttt{{{_latex_text(author['email'])}}}}}")
 
                 # Add ORCID if present (with hyperlink)
                 if "orcid" in author:

@@ -24,6 +24,7 @@ def _scaffold_exemplars(root: Path) -> None:
     _scaffold_project(root, "templates/template_autoresearch_project")
     _scaffold_project(root, "templates/template_code_project")
     _scaffold_project(root, "templates/template_prose_project")
+    _scaffold_project(root, "templates/template_sia")
     _scaffold_project(root, "templates/template_template")
 
 
@@ -40,6 +41,7 @@ def test_public_scope_filters_to_template_projects(tmp_path: Path) -> None:
         "templates/template_autoresearch_project",
         "templates/template_code_project",
         "templates/template_prose_project",
+        "templates/template_sia",
         "templates/template_template",
     }
     assert public_project_names(tmp_path) == [
@@ -47,6 +49,7 @@ def test_public_scope_filters_to_template_projects(tmp_path: Path) -> None:
         "templates/template_autoresearch_project",
         "templates/template_code_project",
         "templates/template_prose_project",
+        "templates/template_sia",
         "templates/template_template",
     ]
     assert public_ci_source_paths(tmp_path) == [
@@ -55,6 +58,7 @@ def test_public_scope_filters_to_template_projects(tmp_path: Path) -> None:
         Path("projects/templates/template_autoresearch_project/src"),
         Path("projects/templates/template_code_project/src"),
         Path("projects/templates/template_prose_project/src"),
+        Path("projects/templates/template_sia/src"),
         Path("projects/templates/template_template/src"),
     ]
 
@@ -81,5 +85,6 @@ def test_public_scope_excludes_local_private_symlink(tmp_path: Path) -> None:
         "templates/template_autoresearch_project",
         "templates/template_code_project",
         "templates/template_prose_project",
+        "templates/template_sia",
         "templates/template_template",
     ]

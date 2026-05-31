@@ -169,9 +169,6 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
-  type="text/javascript"></script>
 </head>
 <body>
 <h1 id="sec:methods_lean">Lean formalization boundary</h1>
@@ -201,9 +198,17 @@ witnesses checked by lake build.</em></p>
 <!-- sheaf-track:lean -->
 <p>Lean module
 <code>TemplateActiveInference.SophisticatedInference</code> declares the
-planning horizon parameter and a witness that horizon <span
-class="math inline">\(&gt; 1\)</span> distinguishes sophisticated from
-myopic inference.</p>
+planning-horizon parameter <code>defaultPolicyLen</code> and finite
+T-maze boundary witnesses:
+<code>sophisticated_requires_horizon : defaultPolicyLen &gt; 1</code>,
+<code>tmaze_two_forward_steps_reach_goal</code>, and
+<code>tmaze_goal_absorbing</code>. These theorems formalize the small
+state-transition boundary shared with the Python harness; they do
+<em>not</em> prove that the toy policy posterior is a general model of
+sophisticated inference. Axioms are audited with
+<code>#print axioms</code> (the gate whitelists only
+<code>propext</code>, <code>Classical.choice</code>,
+<code>Quot.sound</code>); see the Lean track gate.</p>
 <p>Build via <code>lake build</code> under <code>lean/</code>.</p>
 </body>
 </html>

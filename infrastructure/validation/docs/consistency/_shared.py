@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS
 
 logger = get_logger(__name__)
@@ -17,9 +18,7 @@ DEFAULT_LONG_LIVED_DOC_ROOTS: tuple[str, ...] = (
     "infrastructure",
     ".github",
     "tests",
-    "projects/template_autoresearch_project",
-    "projects/template_code_project",
-    "projects/template_prose_project",
+    *(f"projects/{name}" for name in PUBLIC_PROJECT_NAMES),
 )
 
 DEFAULT_GHOST_EXCLUDE_PARTS: frozenset[str] = DEFAULT_EXCLUDE_PARTS | frozenset({"_generated", "audit", "streams"})

@@ -1,7 +1,7 @@
 """Render :class:`BibEntry` / :class:`BibDatabase` records to BibTeX text.
 
 The output format reproduces, byte-for-byte, the conventions used in
-``projects/template_code_project/manuscript/references.bib``:
+``projects/templates/template_code_project/manuscript/references.bib``:
 
 * ``@type{citation_key,`` opens the entry on its own line.
 * Each field uses **two-space indentation**: ``  field={value},``.

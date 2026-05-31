@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 from infrastructure.validation.docs.consistency_lint import check_no_ghost_projects
@@ -34,9 +35,8 @@ def test_ghost_project_canonical_exemplars_are_allowed(tmp_path: Path) -> None:
     repo = scaffold_repo(tmp_path, n_packages=15)
     write_doc(
         repo / "docs" / "guide.md",
-        """See `projects/template_code_project/`.
-See `projects/template_prose_project/`.
-See `projects/template_search_project/`.
+        """See `projects/templates/template_code_project/`.
+See `projects/templates/template_prose_project/`.
 """,
     )
     assert check_no_ghost_projects(repo) == []
@@ -44,8 +44,19 @@ See `projects/template_search_project/`.
 
 def test_ghost_project_active_project_is_allowed(tmp_path: Path) -> None:
     repo = scaffold_repo(tmp_path, n_packages=15)
-    write_doc(repo / "docs" / "guide.md", "See `projects/template_code_project/AGENTS.md`.\n")
+    write_doc(repo / "docs" / "guide.md", "See `projects/templates/template_code_project/AGENTS.md`.\n")
     assert check_no_ghost_projects(repo) == []
+
+
+def test_ghost_project_unqualified_public_template_is_flagged(tmp_path: Path) -> None:
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    shutil.rmtree(repo / "projects" / "template_code_project")
+    write_doc(repo / "docs" / "guide.md", "See `projects/template_code_project/AGENTS.md`.\n")
+
+    issues = check_no_ghost_projects(repo)
+
+    assert len(issues) == 1
+    assert "projects/template_code_project/" in issues[0].detail
 
 
 def test_ghost_project_placeholders_are_skipped(tmp_path: Path) -> None:

@@ -21,7 +21,7 @@ test the boundary directly.
 
 ## The Validation Suite
 
-Files (`projects/template_prose_project/tests/`):
+Files (`projects/templates/template_prose_project/tests/`):
 
 - `test_config.py` — covers `src/config.py` typed YAML loader (approximately 5 tests).
 - `test_figures.py` — covers `src/figures.py` matplotlib renderers (approximately 6 tests).
@@ -43,22 +43,22 @@ Files (`projects/template_prose_project/tests/`):
 
 **Live test count + achieved coverage:** see
 [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md)
-(or run `uv run pytest projects/template_prose_project/tests/ --collect-only -q | tail -1`).
+(or run `uv run pytest projects/templates/template_prose_project/tests/ --collect-only -q | tail -1`).
 
-Conftest: `projects/template_prose_project/tests/conftest.py` (sets
+Conftest: `projects/templates/template_prose_project/tests/conftest.py` (sets
 `MPLBACKEND=Agg` at import time, adds `src/` to `sys.path`).
-Configuration: `projects/template_prose_project/pyproject.toml`
+Configuration: `projects/templates/template_prose_project/pyproject.toml`
 (`fail_under = 90`; the root pipeline gates at the same 90% number).
 
 ## Coverage
 
-Measured line and branch coverage for `projects/template_prose_project/src/` lives in
+Measured line and branch coverage for `projects/templates/template_prose_project/src/` lives in
 [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md)
 (exemplar table). Re-measure locally:
 
 ```bash
-uv run pytest projects/template_prose_project/tests/ \
-    --cov=projects/template_prose_project/src \
+uv run pytest projects/templates/template_prose_project/tests/ \
+    --cov=projects/templates/template_prose_project/src \
     --cov-report=term-missing \
     --cov-fail-under=90
 ```
@@ -143,8 +143,8 @@ bitten this stack; both are now guarded, but the rule stands:
    per-project quality gate and what CI enforces project-by-project:
 
    ```bash
-   uv run pytest projects/template_prose_project/tests/ \
-     --cov=projects/template_prose_project/src --cov-fail-under=90
+   uv run pytest projects/templates/template_prose_project/tests/ \
+     --cov=projects/templates/template_prose_project/src --cov-fail-under=90
    ```
 
 3. **Coverage resolves against the repo-root config.** The project's own

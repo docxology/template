@@ -135,7 +135,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 ### Skill-Level Guides
 
 - **[guides/getting-started.md](guides/getting-started.md)** - Levels 1-3 (Beginner)
-- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** - Canonical manuscript syntax (citations, cross-references, sections, tokens) shared by all three template exemplars
+- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** - Canonical manuscript syntax (citations, cross-references, sections, tokens) shared by all six public template exemplars
 - **[guides/methods-orchestration.md](guides/methods-orchestration.md)** - Connect methods prose, pipeline contracts, artifacts, and evidence registries
 - **[guides/codegraph-local.md](guides/codegraph-local.md)** - Optional local CodeGraph indexing for agent code navigation and impact checks
 - **[guides/figures-and-analysis.md](guides/figures-and-analysis.md)** - Levels 4-6 (Intermediate)

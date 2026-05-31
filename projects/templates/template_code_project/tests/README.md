@@ -5,7 +5,7 @@ An uncompromising validation layer for the mathematical algorithms and orchestra
 ## Quick Start
 
 ```bash
-cd projects/template_code_project
+cd projects/templates/template_code_project
 uv run pytest tests/ -v
 uv run pytest tests/ --cov=src --cov-fail-under=90
 ```

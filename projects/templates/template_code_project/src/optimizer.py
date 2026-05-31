@@ -2,7 +2,7 @@
 
 Implements gradient descent and helpers for the quadratic exemplar. This
 package does not import `infrastructure.*`; stability and benchmarking run in
-`projects/template_code_project/scripts/` and tests.
+`projects/templates/template_code_project/scripts/` and tests.
 """
 
 from __future__ import annotations

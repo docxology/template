@@ -1,0 +1,42 @@
+{
+  "all_passed": true,
+  "check_count": 5,
+  "checks": [
+    {
+      "artifact": "output/data/parameter_sweep.csv",
+      "id": "parameter_sweep_replay",
+      "passed": true,
+      "replay_sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
+      "saved_sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc"
+    },
+    {
+      "artifact": "output/data/si_graph_world_summary.json",
+      "id": "graph_world_summary_replay",
+      "passed": true,
+      "replay_sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080",
+      "saved_sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080"
+    },
+    {
+      "artifact": "output/data/si_graph_world_trace.json",
+      "id": "graph_world_trace_replay",
+      "passed": true,
+      "replay_sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549",
+      "saved_sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549"
+    },
+    {
+      "artifact": "output/data/si_graph_world_summary.json + output/data/si_graph_world_trace.json",
+      "id": "graph_world_replay",
+      "passed": true,
+      "replay_sha256": "",
+      "saved_sha256": ""
+    },
+    {
+      "artifact": "output/data/si_policy_comparison.json",
+      "id": "policy_comparison_replay",
+      "passed": true,
+      "replay_sha256": "25b660727c82234331a2eee1887fffde642c486896a88f01a53657a7faceba40",
+      "saved_sha256": "25b660727c82234331a2eee1887fffde642c486896a88f01a53657a7faceba40"
+    }
+  ],
+  "schema": "template_active_inference.reproducibility_replay.v1"
+}

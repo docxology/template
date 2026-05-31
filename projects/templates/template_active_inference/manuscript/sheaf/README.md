@@ -5,7 +5,7 @@ Fragment tracks and IMRAD section bindings live in this directory. The sheaf is 
 ## Commands
 
 ```bash
-cd projects/template_active_inference
+cd projects/templates/template_active_inference
 uv run python scripts/compose_manuscript.py
 uv run python scripts/compose_manuscript.py --validate-only --strict
 uv run python scripts/compose_manuscript.py --list-tracks

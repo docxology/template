@@ -2,7 +2,7 @@
 
 BibTeX read/write/convert that round-trips byte-stable through the same
 format as
-[`projects/template_code_project/manuscript/references.bib`](../../../projects/template_code_project/manuscript/references.bib).
+[`projects/templates/template_code_project/manuscript/references.bib`](../../../projects/templates/template_code_project/manuscript/references.bib).
 
 ```mermaid
 flowchart LR

@@ -37,6 +37,21 @@ tracks:
     paths: [src/visualizations]
     gate: validate_outputs
     required: true
+  - id: provenance
+    label: Artifact provenance validation spine
+    paths: [src/validation_spine, output/data/artifact_provenance.json]
+    gate: validate_outputs
+    required: true
+  - id: reproducibility
+    label: Deterministic replay validation spine
+    paths: [src/validation_spine, output/reports/reproducibility_replay.json]
+    gate: validate_outputs
+    required: true
+  - id: counterexample
+    label: Expected-failure counterexample matrix
+    paths: [src/validation_spine, output/reports/counterexample_matrix.json]
+    gate: validate_manuscript
+    required: true
   - id: visualization
     label: Sheaf fragment alias for figures
     sheaf_track: visualization
@@ -51,13 +66,13 @@ tracks:
 
 extension_tracks:
   - id: animation
-    label: Belief trajectory animation (opt-in)
+    label: Belief trajectory animation (deterministic default extension artifact)
     sheaf_track: animation
     artifact: output/figures/si_belief_trajectory.gif
     script: render_animation.py
-    required: false
+    required: true
   - id: graph_world
-    label: pymdp graph-world SI extension (opt-in)
+    label: pymdp graph-world SI extension (deterministic default extension artifact)
     artifact: output/data/si_graph_world_summary.json
     script: simulate_si_graph_world.py
-    required: false
+    required: true

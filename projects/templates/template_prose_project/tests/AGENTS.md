@@ -39,15 +39,15 @@ flowchart TB
 
 ```bash
 # Full suite
-uv run pytest projects/template_prose_project/tests/ -v
+uv run pytest projects/templates/template_prose_project/tests/ -v
 
 # With coverage gate
-uv run pytest projects/template_prose_project/tests/ \
-    --cov=projects/template_prose_project/src \
+uv run pytest projects/templates/template_prose_project/tests/ \
+    --cov=projects/templates/template_prose_project/src \
     --cov-fail-under=90
 
 # A single test
-uv run pytest projects/template_prose_project/tests/test_pipeline.py::TestRunProsePipeline::test_passing_run -v
+uv run pytest projects/templates/template_prose_project/tests/test_pipeline.py::TestRunProsePipeline::test_passing_run -v
 ```
 
 ## Editing rules

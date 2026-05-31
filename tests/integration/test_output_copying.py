@@ -50,7 +50,7 @@ def temp_project_structure(tmp_path):
     repo_root = tmp_path / "repo"
     repo_root.mkdir()
 
-    # Create projects/template_code_project/output structure (multi-project format)
+    # Create projects/templates/template_code_project/output structure (multi-project format)
     project_output = repo_root / "projects" / "template_code_project" / "output"
     pdf_dir = project_output / "pdf"
     slides_dir = project_output / "slides"

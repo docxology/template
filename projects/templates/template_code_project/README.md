@@ -6,10 +6,10 @@ Research project demonstrating optimization algorithms with automated figure gen
 
 ```bash
 # Run the analysis pipeline
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 # Run tests
-uv run pytest projects/template_code_project/tests/ -v
+uv run pytest projects/templates/template_code_project/tests/ -v
 
 # View final deliverables (after scripts/05_copy_outputs.py)
 ls -la output/template_code_project/
@@ -21,8 +21,8 @@ ls -la output/template_code_project/
 alone is not proof — confirm tests collected > 0 and coverage ≥ 90%:
 
 ```bash
-uv run pytest projects/template_code_project/tests/ \
-  --cov=projects/template_code_project/src --cov-fail-under=90
+uv run pytest projects/templates/template_code_project/tests/ \
+  --cov=projects/templates/template_code_project/src --cov-fail-under=90
 # live baseline: docs/_generated/canonical_facts.md
 ```
 
@@ -41,7 +41,7 @@ Full end-to-end: `uv run python scripts/execute_pipeline.py --project template_c
 
 ## Dependencies
 
-Run `uv sync` at the **repository root**; that environment is what CI and `./run.sh` use. [`pyproject.toml`](pyproject.toml) in this directory configures pytest/coverage for `projects/template_code_project/tests/` and records the same scientific stack for isolated runs. Root [`pyproject.toml`](../../../pyproject.toml) has `[tool.uv.workspace]` with `members = []`, so this folder is not installed as a separate workspace package.
+Run `uv sync` at the **repository root**; that environment is what CI and `./run.sh` use. [`pyproject.toml`](pyproject.toml) in this directory configures pytest/coverage for `projects/templates/template_code_project/tests/` and records the same scientific stack for isolated runs. Root [`pyproject.toml`](../../../pyproject.toml) has `[tool.uv.workspace]` with `members = []`, so this folder is not installed as a separate workspace package.
 
 ## Agentic research overlays
 
@@ -90,7 +90,7 @@ regardless of whether their domain is optimization.
 ### Run Analysis
 
 ```bash
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 ```
 
 Generates convergence plots, performs scientific validation, creates dashboard, and saves all results.
@@ -98,7 +98,7 @@ Generates convergence plots, performs scientific validation, creates dashboard, 
 ### Run Tests
 
 ```bash
-uv run pytest projects/template_code_project/tests/ -v
+uv run pytest projects/templates/template_code_project/tests/ -v
 ```
 
 Tests optimization algorithms and numerical accuracy.
@@ -106,8 +106,8 @@ Tests optimization algorithms and numerical accuracy.
 ### View Results
 
 ```bash
-open projects/template_code_project/output/figures/convergence_plot.png
-cat projects/template_code_project/output/data/optimization_results.csv
+open projects/templates/template_code_project/output/figures/convergence_plot.png
+cat projects/templates/template_code_project/output/data/optimization_results.csv
 ```
 
 ## Architecture

@@ -2,7 +2,7 @@
 
 Synthetic projects live under ``tmp_path`` only — never under the real
 ``projects/`` tree. Default slug ``template_test`` gives tests a stable,
-readable stand-in without coupling to the five public exemplars.
+readable stand-in without coupling to the six public exemplars.
 """
 
 from __future__ import annotations

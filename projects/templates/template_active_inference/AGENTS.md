@@ -1,6 +1,6 @@
 # AGENTS.md — template_active_inference
 
-Multi-track Active Inference public exemplar. Manuscript sections follow an **IMRAD outline** composed from sheaf fragment tracks (prose, formalism, simulation, pymdp, visualization, Lean, GNN, ontology, animation).
+Multi-track Active Inference public exemplar. Manuscript sections follow an **IMRAD outline** composed from sheaf fragment tracks (prose, formalism, simulation, pymdp, provenance, reproducibility, counterexample, visualization, Lean, GNN, ontology, animation).
 
 ## Sheaf composition (registry-driven)
 
@@ -43,8 +43,18 @@ Full compose calls `emit_coverage_artifacts()` → JSON only. `generate_figures.
 | `si_goal_reached`, `si_action_diversity`, `si_entropy_min/max` | `analysis_statistics.json` / SI summary |
 | `sweep_max_residual`, `sweep_rmse_mi` | analytical sweep statistics |
 | `pymdp_mode`, `pymdp_config_hash` | `pymdp.yaml` + SI summary |
+| `validation_spine_artifact_count`, `reproducibility_check_count`, `counterexample_count` | promoted validation-spine artifacts |
 
 `z_generate_manuscript_variables.py` writes `output/data/manuscript_variables.json` and resolves `output/manuscript/` for PDF rendering. Compose emits `{{token}}` placeholders; hydration is the single substitution boundary (fail-closed on unknown or single-brace `{token}` typos).
+
+**Semantic gluing certificate:** `scripts/z_generate_manuscript_variables.py` also writes
+`output/data/sheaf_gluing_certificate.json`,
+`output/data/sheaf_evidence_crosswalk.json`, and
+`output/data/validation_dependency_graph.json` via
+`src/manuscript/sheaf/semantic.py`. The certificate records section bindings,
+shared GNN/ontology symbols, typed claim evidence, artifact producers, artifact
+consumers, validation gates, and manuscript variables. `validate_manuscript`
+fails if the certificate is missing, stale, or records cross-track disagreement.
 
 ## pymdp configuration
 
@@ -68,7 +78,26 @@ JSONL logging: `output/logs/pymdp_runs.jsonl` (`si_tmaze_run_header` + `si_tmaze
 
 **Discussion sheaf tracks:** `discussion_outlook` binds `prose`, `simulation`, and `ontology` fragments with measured tokens.
 
-**Methods sheaf layers (main body):** `methods_sheaf` uses explicit `track_order: [prose, formalism, visualization, layers]`. Layers overview figure via `visualization` / `section_figures`; tables via optional `layers` track / `layers_report` renderer with HTML markers `sheaf-layers:*`. Front-matter audit page [`manuscript/00_00_sheaf_coverage.md`](manuscript/00_00_sheaf_coverage.md) uses `section_figures.coverage_page` (no duplicate figure number vs appendix coverage figure).
+**Extension artifacts:** `simulate_si_tmaze.py` writes
+`output/data/si_policy_comparison.json`; `simulate_si_graph_world.py` writes
+`output/data/si_graph_world_summary.json` and `output/data/si_graph_world_trace.json`;
+`render_animation.py` writes a trace-derived multi-frame
+`output/figures/si_belief_trajectory.gif`. These are deterministic public
+artifacts.
+
+**Validation-spine tracks:** `generate_validation_spine.py` writes
+`output/data/artifact_provenance.json`,
+`output/reports/reproducibility_replay.json`, and
+`output/reports/counterexample_matrix.json`. These promote the first TODO
+validation-spine slice into live sheaf fragments: provenance and counterexample
+under `methods_sheaf`, reproducibility under `results_invariants`, and all
+three under `appendix_full_sheaf`.
+
+Non-blocking follow-up scope is tracked in [`TODO.md`](TODO.md); keep current
+publication claims confined to deterministic toy artifacts unless new measured
+outputs are added and validated.
+
+**Methods sheaf layers (main body):** `methods_sheaf` uses explicit `track_order: [prose, formalism, visualization, provenance, counterexample, layers]`. Layers overview figure via `visualization` / `section_figures`; tables via optional `layers` track / `layers_report` renderer with HTML markers `sheaf-layers:*`. Front-matter audit page [`manuscript/00_00_sheaf_coverage.md`](manuscript/00_00_sheaf_coverage.md) uses `section_figures.coverage_page` (no duplicate figure number vs appendix coverage figure).
 
 **Package modules** (`src/manuscript/sheaf/`):
 
@@ -83,7 +112,7 @@ JSONL logging: `output/logs/pymdp_runs.jsonl` (`si_tmaze_run_header` + `si_tmaze
 | `counts.py` | `structural_counts()` for registry-backed manuscript tokens |
 | `renderers.py` | `RENDERERS`, `resolve_track_body`, generated renderer dispatch |
 
-**Visualizations** (`src/visualizations/`): `figure_registry.py` (YAML SSOT + `write_figure_registry_json`), `figure_helpers.py` (`styled_figure`), `figures_diagrams.py`, `lean_boundary.py`, `figures.py` (`FIGURE_GENERATORS`, 12 figures), `figures_sheaf_{payload,draw}.py`. `generate_all_figures()` emits `output/figures/figure_registry.json` for validation.
+**Visualizations** (`src/visualizations/`): `figure_registry.py` (YAML SSOT + `write_figure_registry_json`), `figure_helpers.py` (`styled_figure`), `figures_diagrams.py`, `lean_boundary.py`, `figures.py` (`FIGURE_GENERATORS`, 13 figures), `figures_sheaf_{payload,draw}.py`. `generate_all_figures()` emits `output/figures/figure_registry.json` for validation.
 
 **Appendix proof:** `appendix_full_sheaf` binds the registry tracks required for the full proof row (all except optional `layers`) → `16_appendix_full_sheaf.md`. Registry size is injected from live counts rather than hand-authored here.
 
@@ -100,6 +129,7 @@ Edit fragments only under [`manuscript/sections/imrad/`](manuscript/sections/imr
 | `src/gnn/` | GNN parser + ontology concordance |
 | `src/ontology/` | Section ontology YAML helpers (`load_section_ontology` flattens nested `terms:` blocks) |
 | `src/gates/` | `validation.py` facade; `output_checks`, `manuscript_checks`, `claim_ledger`, `lean` |
+| `src/validation_spine/` | Provenance hashes, deterministic replay, and counterexample matrix artifacts |
 | `gnn/*.gnn.md` | GNN source files |
 | `lean/TemplateActiveInference/` | Lean witnesses — `build_lean` gate runs `lake build` when `lean/lakefile.lean` exists; absent Lean tree skips cleanly |
 | `scripts/` | Thin orchestrators only (extension tracks delegate to `src/visualizations/animation.py`, `src/simulation/graph_world.py`) |

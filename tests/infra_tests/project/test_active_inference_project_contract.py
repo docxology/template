@@ -71,24 +71,38 @@ def test_full_sheaf_appendix_binds_registry_tracks() -> None:
             text=True,
         )
     text = path.read_text(encoding="utf-8")
-    expected = (
-        "prose",
-        "formalism",
-        "simulation",
-        "pymdp",
-        "visualization",
-        "lean",
-        "gnn",
-        "ontology",
-        "animation",
-    )
-    for track_id in expected:
+    import yaml
+
+    tracks_yaml = root / "manuscript" / "sheaf" / "tracks.yaml"
+    tracks_data = yaml.safe_load(tracks_yaml.read_text())["tracks"]
+    # Non-optional tracks must all appear in the appendix.
+    # Optional tracks that are designated methods-only (e.g. 'layers') are legitimately
+    # excluded from the appendix row per the manuscript prose, so we only require
+    # optional tracks that actually appear.
+    required = {k for k, v in tracks_data.items() if not v.get("optional", False)}
+    all_keys = set(tracks_data.keys())
+    for track_id in required:
         assert f"<!-- sheaf-track:{track_id} -->" in text, f"missing marker for {track_id}"
+    # Only count standalone marker lines (the whole line is just the HTML comment),
+    # not prose lines that happen to mention the marker syntax inline.
+    import re
+
+    found = {
+        m.group(1)
+        for line in text.splitlines()
+        if re.fullmatch(r"\s*<!-- sheaf-track:(\S+) -->", line)
+        for m in [re.fullmatch(r"\s*<!-- sheaf-track:(\S+) -->", line)]
+        if m
+    }
+    # All found markers must be valid track ids; required tracks must all be present.
+    assert found <= all_keys, f"unknown track markers in appendix: {found - all_keys!r}"
+    assert required <= found, f"missing required track markers in appendix: {required - found!r}"
 
 
 def test_coverage_json_schema_on_clean_tree() -> None:
     root = _project_root()
     json_path = root / "output" / "data" / "sheaf_coverage_matrix.json"
+    json_path.unlink(missing_ok=True)
     if not json_path.is_file():
         subprocess.run(
             [sys.executable, str(root / "scripts" / "compose_manuscript.py")],

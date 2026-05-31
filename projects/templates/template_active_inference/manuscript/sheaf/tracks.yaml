@@ -28,6 +28,18 @@ tracks:
     order: 40
     renderer: markdown
     label: pymdp harness artifacts
+  provenance:
+    order: 42
+    renderer: markdown
+    label: Artifact provenance spine
+  reproducibility:
+    order: 44
+    renderer: markdown
+    label: Deterministic replay spine
+  counterexample:
+    order: 46
+    renderer: markdown
+    label: Expected-failure counterexamples
   visualization:
     order: 50
     renderer: section_figures

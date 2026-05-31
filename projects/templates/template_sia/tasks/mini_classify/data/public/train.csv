@@ -1,0 +1,7 @@
+id,feature_0,label
+0,0.10,negative
+1,0.90,positive
+2,0.20,negative
+3,0.85,positive
+4,0.15,negative
+5,0.95,positive

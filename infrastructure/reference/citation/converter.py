@@ -4,7 +4,7 @@ This module is the bridge between :mod:`infrastructure.search.literature`
 (discovery) and :mod:`infrastructure.reference.citation` (export). It is
 deliberately one-way: literature search returns enough metadata to build a
 canonical BibTeX record, and we map it into the same field shape used by
-``projects/template_code_project/manuscript/references.bib``.
+``projects/templates/template_code_project/manuscript/references.bib``.
 
 Citation-key generation follows the convention observed in the exemplar:
 ``{first_author_lastname_lowercase}{year}{first_significant_title_word}``,

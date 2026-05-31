@@ -169,14 +169,14 @@ def test_invalid_grade_band(tmp_path: Path):
 
 ```bash
 # Run with coverage (gate is 90% enforced by pyproject.toml)
-uv run pytest projects/template_prose_project/tests/ \
-    --cov=projects/template_prose_project/src \
+uv run pytest projects/templates/template_prose_project/tests/ \
+    --cov=projects/templates/template_prose_project/src \
     --cov-report=term-missing \
     --cov-fail-under=90
 
 # HTML report
-uv run pytest projects/template_prose_project/tests/ \
-    --cov=projects/template_prose_project/src \
+uv run pytest projects/templates/template_prose_project/tests/ \
+    --cov=projects/templates/template_prose_project/src \
     --cov-report=html
 ```
 

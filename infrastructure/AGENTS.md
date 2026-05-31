@@ -30,6 +30,7 @@ flowchart TB
     INFRA --> REP[/reporting<br/>Pipeline reports · error aggregation/]
     INFRA --> STEG[/steganography<br/>Secure PDF post-processing/]
     INFRA --> SEARCH[/search<br/>Multi-source literature search/]
+    INFRA --> SIA[/sia<br/>Self-improvement harness<br/>fixture replay · evaluation/]
     INFRA --> REF[/reference<br/>BibTeX read · write · convert/]
     INFRA --> ORCH[/orchestration<br/>run.sh-equivalent CLI · menu · PipelineRunner<br/>stage logs · secure_run wrapper/]
     INFRA --> PRS[/prose<br/>Readability metrics · outline · editorial flags · CLI/]
@@ -46,6 +47,7 @@ flowchart TB
     REP --> REP_F[report_generator · error_aggregator · executive_reporter ·<br/>_dashboard_matplotlib · _dashboard_charts ·<br/>_dashboard_health · _dashboard_pipeline ·<br/>_dashboard_outputs · _dashboard_codebase · _dashboard_csv]
     STEG --> STEG_F[core · config · overlays · barcodes ·<br/>metadata · hashing · encryption]
     SEARCH --> SEARCH_F[literature/ · models · backends ·<br/>client · cache · fulltext · cli]
+    SIA --> SIA_F[task_layout · loop_runner · evaluation_runner ·<br/>context_ledger · execution_logs · live_llm · cli]
     REF --> REF_F[citation/ · models · escape ·<br/>bibtex_writer · bibtex_parser · converter · cli]
     ORCH --> ORCH_F[cli · discovery · menu · pipeline_runner<br/>stage_logger · secure_run]
     PRS --> PRS_F[analysis/metrics · structure · quality<br/>markdown · report · cli]
@@ -55,8 +57,8 @@ flowchart TB
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef files fill:#0f766e,stroke:#0f172a,color:#fff
     class INFRA hub
-    class AUTO,BENCH,CORE,CFG,DOCK,SK,VAL,DOC,PROJ,SCI,LLM,METH,REND,PUB,REP,STEG,SEARCH,REF,ORCH,PRS pkg
-    class AUTO_F,BENCH_F,CORE_F,VAL_F,DOC_F,SCI_F,LLM_F,METH_F,REND_F,PUB_F,REP_F,STEG_F,SEARCH_F,REF_F,ORCH_F,PRS_F files
+    class AUTO,BENCH,CORE,CFG,DOCK,SK,VAL,DOC,PROJ,SCI,LLM,METH,REND,PUB,REP,STEG,SEARCH,SIA,REF,ORCH,PRS pkg
+    class AUTO_F,BENCH_F,CORE_F,VAL_F,DOC_F,SCI_F,LLM_F,METH_F,REND_F,PUB_F,REP_F,STEG_F,SEARCH_F,SIA_F,REF_F,ORCH_F,PRS_F files
 ```
 
 > Each Layer-1 Python package ships `AGENTS.md`, `README.md`, and `SKILL.md` (YAML frontmatter for editors). Non-package configuration folders such as `logrotate.d/` carry local docs but are not skill-discovered. The manifest aggregator lives in [`infrastructure/skills/`](skills/).
@@ -68,6 +70,7 @@ Measured coverage and gate thresholds → [`docs/_generated/canonical_facts.md`]
 | Module | Role |
 | --- | --- |
 | `autoresearch/` | Opt-in deterministic readiness plans and reports over domain profiles, experiment plans, pipeline contracts, evidence, artifacts, and thin-orchestrator drift |
+| `sia/` | Self-Improvement Agent harness: task layout validation, fixture replay loop, evaluation runner, context ledger, CLI |
 | `benchmark/` | Deterministic benchmark manifests and scoring for public template exemplar outputs |
 | `methods/` | Read-only methods orchestration plans over pipeline contracts, manuscript methods prose, artifact manifests, evidence registries, and validation commands |
 | `core/pipeline/post_run_reporting.py` | Post-run summary + JSON report after pipeline stages |
@@ -302,6 +305,41 @@ Tracked after the P0 composability pass (stage registry, unified markdown discov
 - `def generate_citation_bibtex(metadata: PublicationMetadata) -> str:`
 - `def generate_citation_apa(metadata: PublicationMetadata) -> str:`
 - `def generate_citation_mla(metadata: PublicationMetadata) -> str:`
+
+### SIA Module (`sia/`)
+
+#### task_layout.py
+
+- `def validate_task_dir(path: Path | str) -> TaskLayout:`
+
+#### loop_runner.py
+
+- `def run_sia_loop(config: RunConfig) -> list[GenerationArtifacts]:`
+
+#### evaluation_runner.py
+
+- `def run_evaluation(script: Path, *, gen_dir: Path, task_dir: Path, timeout_sec: int = 60) -> EvaluationResult:`
+- `def read_results_json(path: Path) -> EvaluationResult:`
+- `def write_results_json(path: Path, result: EvaluationResult) -> None:`
+
+#### context_ledger.py
+
+- `def init_context(path: Path, *, task_name: str) -> Path:`
+- `def append_generation(path: Path, *, artifacts: GenerationArtifacts, improvement_excerpt: str = "") -> None:`
+
+#### execution_logs.py
+
+- `def load_agent_execution(path: Path) -> AgentExecutionLog:`
+
+#### models.py
+
+- `class RunConfig:` — `task_dir`, `output_dir`, `run_id`, `max_generations`, `live`, `fixtures_dir`, `target_timeout_sec`, `llm_model`
+- `class TaskLayout:` — validated public/private/reference paths
+- `class EvaluationResult:` — `metric_name`, `metric_value`, `n_samples`, `extra`
+
+#### live_llm.py
+
+- `def generate_improvement_markdown(*, generation: int, metric_name: str, metric_value: float, llm_model: str) -> str | None:`
 
 ### Scientific Module
 

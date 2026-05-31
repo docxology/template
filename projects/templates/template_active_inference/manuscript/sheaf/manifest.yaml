@@ -107,11 +107,15 @@ sections:
       - prose
       - formalism
       - visualization
+      - provenance
+      - counterexample
       - layers
     tracks:
       prose: manuscript/sections/imrad/methods_sheaf/prose.md
       formalism: manuscript/sections/imrad/methods_sheaf/formalism.md
       visualization: manuscript/sections/imrad/methods_sheaf/visualization.md
+      provenance: manuscript/sections/imrad/methods_sheaf/provenance.md
+      counterexample: manuscript/sections/imrad/methods_sheaf/counterexample.md
       layers: manuscript/sections/imrad/methods_sheaf/layers.md
 
   - id: results
@@ -175,6 +179,7 @@ sections:
     tracks:
       prose: manuscript/sections/imrad/results_invariants/prose.md
       simulation: manuscript/sections/imrad/results_invariants/simulation.md
+      reproducibility: manuscript/sections/imrad/results_invariants/reproducibility.md
       visualization: manuscript/sections/imrad/results_invariants/visualization.md
 
   - id: discussion
@@ -225,6 +230,9 @@ sections:
       formalism: manuscript/sections/imrad/appendix_full_sheaf/formalism.md
       simulation: manuscript/sections/imrad/appendix_full_sheaf/simulation.md
       pymdp: manuscript/sections/imrad/appendix_full_sheaf/pymdp.md
+      provenance: manuscript/sections/imrad/appendix_full_sheaf/provenance.md
+      reproducibility: manuscript/sections/imrad/appendix_full_sheaf/reproducibility.md
+      counterexample: manuscript/sections/imrad/appendix_full_sheaf/counterexample.md
       visualization: manuscript/sections/imrad/appendix_full_sheaf/visualization.md
       lean: manuscript/sections/imrad/appendix_full_sheaf/lean.md
       gnn: manuscript/sections/imrad/appendix_full_sheaf/gnn.md

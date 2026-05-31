@@ -58,6 +58,16 @@ from manuscript.sheaf.report import (
     render_report_markdown,
     write_coverage_page,
 )
+from manuscript.sheaf.semantic import (
+    build_evidence_crosswalk,
+    build_semantic_gluing_certificate,
+    build_validation_dependency_graph,
+    semantic_gluing_issues,
+    validate_semantic_gluing,
+    validate_configured_artifact_producers,
+    write_semantic_gluing_certificate,
+    write_semantic_gluing_outputs,
+)
 
 # Backward-compatible alias for tests importing private helper.
 _parse_missing = parse_missing
@@ -117,4 +127,12 @@ __all__ = [
     "validate_manifest",
     "write_coverage_json",
     "write_coverage_page",
+    "build_evidence_crosswalk",
+    "build_semantic_gluing_certificate",
+    "build_validation_dependency_graph",
+    "semantic_gluing_issues",
+    "validate_semantic_gluing",
+    "validate_configured_artifact_producers",
+    "write_semantic_gluing_certificate",
+    "write_semantic_gluing_outputs",
 ]

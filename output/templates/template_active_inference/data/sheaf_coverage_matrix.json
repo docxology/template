@@ -5,6 +5,9 @@
     "simulation",
     "layers",
     "pymdp",
+    "provenance",
+    "reproducibility",
+    "counterexample",
     "visualization",
     "lean",
     "gnn",
@@ -50,6 +53,27 @@
         },
         {
           "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -136,6 +160,27 @@
           "color": "white"
         },
         {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": false,
           "path": null,
@@ -210,6 +255,27 @@
         },
         {
           "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -296,6 +362,27 @@
           "color": "white"
         },
         {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": false,
           "path": null,
@@ -370,6 +457,27 @@
         },
         {
           "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -456,6 +564,27 @@
           "color": "black"
         },
         {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/methods_pymdp/visualization.md",
@@ -530,6 +659,27 @@
         },
         {
           "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -616,6 +766,27 @@
           "color": "white"
         },
         {
+          "track": "provenance",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/provenance.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/counterexample.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/methods_sheaf/visualization.md",
@@ -690,6 +861,27 @@
         },
         {
           "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -776,6 +968,27 @@
           "color": "white"
         },
         {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/results_mi_sweep/visualization.md",
@@ -856,6 +1069,27 @@
           "color": "white"
         },
         {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/results_free_energy/visualization.md",
@@ -894,7 +1128,7 @@
     },
     {
       "id": "results_si_tmaze",
-      "title": "T-maze sophisticated inference",
+      "title": "T-maze active-inference rollout",
       "kind": "section",
       "imrad": "results",
       "depth": 1,
@@ -934,6 +1168,27 @@
           "path": "manuscript/sections/imrad/results_si_tmaze/pymdp.md",
           "status": "present",
           "color": "black"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
         },
         {
           "track": "visualization",
@@ -1010,6 +1265,27 @@
         },
         {
           "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_invariants/reproducibility.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "counterexample",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -1096,6 +1372,27 @@
           "color": "white"
         },
         {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": false,
           "path": null,
@@ -1176,6 +1473,27 @@
           "color": "white"
         },
         {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": false,
           "path": null,
@@ -1202,6 +1520,107 @@
           "path": "manuscript/sections/imrad/discussion_outlook/ontology.yaml",
           "status": "present",
           "color": "black"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "id": "appendix",
+      "title": "Appendix",
+      "kind": "group",
+      "imrad": "appendix",
+      "depth": 0,
+      "compose": false,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "reproducibility",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
         },
         {
           "track": "animation",
@@ -1252,6 +1671,27 @@
           "track": "pymdp",
           "bound": true,
           "path": "manuscript/sections/imrad/appendix_full_sheaf/pymdp.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "provenance",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/provenance.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "reproducibility",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/reproducibility.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "counterexample",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/counterexample.md",
           "status": "present",
           "color": "black"
         },
