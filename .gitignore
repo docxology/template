@@ -180,6 +180,8 @@ projects/templates/*
 !projects/templates/template_autoresearch_project/**
 !projects/templates/template_template/
 !projects/templates/template_template/**
+!projects/templates/template_newspaper/
+!projects/templates/template_newspaper/**
 projects/*/.DS_Store
 projects/templates/*/.DS_Store
 # Exemplar project-local output is a disposable working tree (tracked render-

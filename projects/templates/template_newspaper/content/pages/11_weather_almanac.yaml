@@ -1,0 +1,99 @@
+number: 12
+section: "A"
+department: "Weather & Almanac"
+template: "feature"
+columns: 4
+
+lead:
+  kicker: "The Almanac"
+  headline: "A week of fog, then a holiday of sun"
+  deck: "The marine layer holds through midweek before a building ridge clears the coast for the long weekend."
+  byline: "By the Triplicate Weather Desk"
+  drop_cap: true
+  figure:
+    path: "output/figures/weather_7day.png"
+    caption: "Seven-day forecast highs and lows for Crescent City. Temperatures climb steadily into the holiday weekend as the marine layer retreats offshore."
+    credit: "Triplicate / National Weather Service data"
+    height: 150
+  body:
+    - "A stubborn marine layer will keep Crescent City gray through midweek, with morning drizzle giving way to high overcast and afternoon clearing near the Oregon line. West winds pick up each afternoon, 10 to 15 knots, easing after sunset."
+    - "By Friday a building ridge of high pressure nudges the fog offshore. Expect the clearest, warmest stretch since April through the holiday weekend, with inland Hiouchi and Gasquet running ten degrees warmer than the immediate coast."
+    - "Boaters should note a moderate northwest swell building Saturday — three to five feet at eight seconds — and a small-craft advisory possible outside the harbor by afternoon."
+
+main:
+  - box: tides
+    title: "Tides — Crescent City Harbor"
+    body:
+      - "Mixed semidiurnal. Heights above MLLW; the second low each day runs deepest."
+    rows:
+      - ["", "High", "Low"]
+      - ["Wed", "6.8 ft 3:42a", "-0.6 ft 10:51a"]
+      - ["Wed", "5.9 ft 5:10p", "1.1 ft 10:33p"]
+      - ["Thu", "6.6 ft 4:28a", "-0.4 ft 11:38a"]
+      - ["Thu", "5.7 ft 6:01p", "1.3 ft 11:19p"]
+    footnote: "Battery Point reachable on foot at lows below ~1.5 ft."
+  - figure:
+      path: "output/figures/tides.png"
+      caption: "A representative 24-hour tide curve for the harbor. The North Coast's mixed semidiurnal pattern brings two unequal highs and two unequal lows each day."
+      credit: "Triplicate / NOAA data"
+      height: 132
+  - box: almanac
+    title: "Sun & Moon"
+    columns: ["", "Rise", "Set"]
+    rows:
+      - ["Sun", "5:51a", "8:38p"]
+      - ["Moon", "1:12p", "1:40a"]
+    footnote: "Moon: waxing gibbous, 78% illuminated. Full moon May 31."
+  - box: table
+    title: "Regional Forecast"
+    columns: ["Town", "Hi / Lo", "Sky"]
+    rows:
+      - ["Crescent City", "59 / 48", "Fog a.m."]
+      - ["Smith River", "61 / 47", "Fog a.m."]
+      - ["Hiouchi", "70 / 46", "Sunny"]
+      - ["Gasquet", "72 / 45", "Sunny"]
+      - ["Klamath", "60 / 48", "Cloudy"]
+      - ["Brookings, OR", "60 / 49", "Fog a.m."]
+    footnote: "Inland valleys run 10–12° warmer than the coast."
+  - box: table
+    title: "Marine & Bar Forecast"
+    columns: ["", "Today", "Sat"]
+    rows:
+      - ["Wind", "NW 10–15", "NW 15–20"]
+      - ["Seas", "3–5 ft", "5–7 ft"]
+      - ["Swell", "NW 8 sec", "NW 9 sec"]
+      - ["Bar", "Moderate", "Rough p.m."]
+    footnote: "Small-craft advisory possible Sat. afternoon outside the harbor."
+  - box: table
+    title: "Rivers & Bars"
+    columns: ["River", "Level", "Temp"]
+    rows:
+      - ["Smith (Jed)", "4.1 ft", "54°"]
+      - ["Klamath (lower)", "6.8 ft", "58°"]
+      - ["Lake Earl", "—", "61°"]
+    footnote: "Gauge heights, 6 a.m. Source: USGS."
+  - box: generic
+    title: "By the Numbers"
+    body:
+      - "<b>Yesterday</b> — High 58°, Low 49°, at the airport."
+      - "<b>Record high</b> May 27 — 79° (1987)."
+      - "<b>Record low</b> May 27 — 38° (1955)."
+      - "<b>Rain to date</b> — 71.4 in (season); avg 64.2 in."
+      - "<b>Wettest town in California</b>, most years. We have made peace with it."
+  - headline: "Looking Back: The night the ocean came up Front Street"
+    level: secondary
+    kicker: "From the Archive · 1964"
+    drop_cap: true
+    body:
+      - "Sixty-two years ago this spring, the keeper's log at Battery Point recorded, in a steady hand that betrays only a little of the night's terror, the aftermath of the deadliest tsunami in the modern history of the West Coast. On Good Friday, March 27, 1964, at 5:36 in the afternoon Alaska time, the ground beneath Prince William Sound heaved in a magnitude-9.2 earthquake — the second-largest ever recorded — and shoved a train of waves south down the Pacific."
+      - "Most of the coast was spared the worst. San Francisco saw a harmless ripple. Crescent City did not."
+      - "The reason is written in the seafloor. The continental shelf off Del Norte County and the curve of the coastline conspire to gather tsunami energy and aim it, like a funnel, straight into the mouth of the harbor — then trap it there, where it sloshes and builds. The first wave arrived just before midnight and was modest. So was the second. Some residents who had evacuated came back downtown to check on their shops."
+      - "The fourth wave was not modest. It came over the breakwater near one in the morning, a wall of black water that drove inland for three blocks, floated cars into storefronts, ignited a bulk-fuel fire at the tank farm and erased the heart of the business district. When it withdrew it took eleven lives with it."
+      - subhead: "A town that rebuilt on the same ground"
+      - "In the gray morning the survivors counted the cost: twenty-nine blocks flattened, the fishing fleet scattered and splintered, the dead being recovered from the mud. There was talk, briefly, of moving the town to higher ground. It did not last. Crescent City rebuilt where it had always been — because it was home, because the harbor was the only reason for a town to exist on that stretch of fogbound coast at all, and because the boats had nowhere else to go."
+      - "The rebuild made Crescent City, against its will, the nation's foremost classroom in tsunami survival. The town wired the harbor with instruments. It drilled its schoolchildren until the evacuation routes were muscle memory. When a surge from the 2011 Tōhoku earthquake in Japan crossed the entire Pacific and again tore out the docks, no one in Crescent City died — because by then the town knew, better than anywhere in America, exactly what the ocean was capable of and exactly how many minutes it would grant."
+      - "The docks rising in the inner basin this week (see Page A1) are the latest chapter in that long, unfinished argument with the Pacific — the one argument this town has never once had the luxury of walking away from. The new floats are engineered to ride the next wave up their pilings and settle back down. The eleven names from 1964 are not engineered into anything yet. The letters on this page ask that they be carved into the new pier. The argument continues."
+  - box: generic
+    title: "Colophon"
+    body:
+      - "<b>The Triplicate</b> is set in Didot for display and Georgia for text, and is produced entirely from structured data by an open layout engine. Founded 1879; named for the three copies struck from its first press run. This is a template edition — names and events are illustrative."

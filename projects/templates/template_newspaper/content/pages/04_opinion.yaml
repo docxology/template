@@ -1,0 +1,75 @@
+number: 5
+section: "A"
+department: "Opinion"
+template: "opinion"
+columns: 4
+
+lead:
+  kicker: "Editorial"
+  headline: "Build the docks, and tell the whole story"
+  deck: "The harbor rebuild is an act of faith. So is teaching every visitor why it was needed."
+  drop_cap: true
+  body:
+    - "There is a temptation, whenever Crescent City rebuilds its waterfront, to rebuild quietly — to pour the concrete, cut the ribbon and let the tourists assume the calm water was always calm. We hope the harbor district resists it."
+    - "The $29 million dock project that began this week is the right kind of ambitious. It does not pretend the ocean can be kept out. It plans, instead, for the ocean to come in, and to leave the working fleet intact when it does. That is maturity cast in steel."
+    - "But the most important line item may be the cheapest: the interpretive panels on the new public pier. A town that has buried its dead from two tsunamis owes its visitors more than a crab roll and a postcard. It owes them the truth that the postcard sits in an inundation zone."
+    - "Tell the whole story. The docks will protect the boats. The story protects the people."
+  jump: "— The Triplicate Editorial Board"
+
+main:
+  - box: staff
+    title: "The Triplicate"
+    items:
+      - "<b>Founded 1879</b> — and named for the three copies of the first press run."
+      - " "
+      - "<b>Eleanor R. Maddox</b>, Publisher"
+      - "<b>Sam Okafor</b>, Executive Editor"
+      - "<b>Priya Venkatesh</b>, Managing Editor"
+      - "<b>Walt Hennessey</b>, Opinion Editor"
+      - "<b>Maren Holloway · Theo Brennan · Iris Lindqvist</b>, Staff Writers"
+      - " "
+      - "312 H Street, Crescent City, CA 95531"
+      - "Letters: letters@triplicate.example"
+    footnote: "Signed columns reflect the author. Editorials reflect the board."
+  - headline: "Letters to the Editor"
+    level: secondary
+    body:
+      - subhead: "Keep the library open later, not shorter"
+      - "I read that the council saved the library hours. Good. Now go further. The students who ride two buses from Smith River need the building open until eight, not closed at five. A library that closes when the work starts is a reading room, not a library."
+      - "<i>— Daniel Osei, Crescent City</i>"
+      - subhead: "Slow down on Howland Hill"
+      - "To the tourist who passed me on a blind curve under the big trees Saturday: the road is older than your hurry. So are the redwoods. Please drive like a guest."
+      - "<i>— Marjorie Pell, Hiouchi</i>"
+      - subhead: "Thank the lily growers"
+      - "Before you buy a grocery-store Easter lily next spring, know it likely grew ten miles up the coast in our fog. We export beauty. Let us be proud of it."
+      - "<i>— Ron Whitcombe, Smith River</i>"
+      - subhead: "The harbor money is well spent"
+      - "Some will grumble at $29 million for docks. I fished forty years off those floats and watched two of them get torn out by water. Build them right once. The grumbling will pass; the next wave will not negotiate."
+      - "<i>— Dom Pereira, Crescent City</i>"
+      - subhead: "Remember the eleven"
+      - "As we celebrate the new harbor, let us not forget the eleven neighbors who died in 1964. Put their names on the new pier, not just the engineering. A town remembers, or it learns nothing."
+      - "<i>— Sister Agnes Moloney, Crescent City</i>"
+      - subhead: "Slow the trucks downtown"
+      - "Log trucks still take H Street too fast for a street with a school crossing. One painted line is not a plan. Please, council, before someone is hurt."
+      - "<i>— Bonnie Achterberg, Crescent City</i>"
+  - headline: "A working coast keeps its receipts"
+    level: secondary
+    kicker: "Column · Walt Hennessey"
+    body:
+      - "My grandfather kept the Battery Point light for nineteen years and never once called the fog an inconvenience. The fog, he said, was the rent we pay for a coast worth living on."
+      - "I think about that every time someone proposes to make this town into something it is not — a resort, a bedroom community, a brand. We are a working coast. The boats leave before dawn and come back smelling of diesel and crab. The trees are a business and a cathedral at once."
+      - "The new docks are a receipt. They say: we intend to keep working here, and we have done the arithmetic on what that costs. I find that more romantic than any postcard."
+      - "There is a particular dignity in a town that does not pretend. We do not pretend the fog will lift for the tourists. We do not pretend the ocean is tame. We get up before it does, and we go to work, and we keep our receipts. The lighthouse my grandfather tended is automated now, but the principle has not changed: somebody has to keep the light, and somebody has to mind the water, and in this town that somebody is us."
+  - box: generic
+    title: "Sound Off — Question of the Week"
+    body:
+      - "<b>Should the new public pier carry the names of the 1964 victims?</b>"
+      - "Vote at triplicate.example/soundoff or drop a card at 312 H Street. Results and selected comments print next Wednesday."
+      - "<i>Last week:</i> 81% said the library hours were worth saving."
+  - box: generic
+    title: "Today in History"
+    body:
+      - "<b>1854</b> — The schooner <i>Pomona</i> lands the first sawmill machinery at Crescent City."
+      - "<b>1856</b> — Construction begins on the Battery Point Lighthouse."
+      - "<b>1964</b> — A tsunami from the Good Friday earthquake strikes the harbor."
+      - "<b>2011</b> — Surge from the Tōhoku earthquake again damages the docks."

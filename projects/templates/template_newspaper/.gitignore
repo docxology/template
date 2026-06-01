@@ -1,0 +1,14 @@
+output/
+.coverage
+.coverage.*
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+__pycache__/
+*.pyc
+.benchmarks/
+.venv/
+htmlcov/
+src/*.egg-info/
+*.egg-info/
+.DS_Store

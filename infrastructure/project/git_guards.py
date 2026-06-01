@@ -11,6 +11,7 @@ ALLOWED_PROJECT_DIRS: tuple[str, ...] = (
     "projects/templates/template_active_inference/",
     "projects/templates/template_autoresearch_project/",
     "projects/templates/template_code_project/",
+    "projects/templates/template_newspaper/",
     "projects/templates/template_prose_project/",
     "projects/templates/template_template/",
 )

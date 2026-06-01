@@ -19,6 +19,7 @@ PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
     "templates/template_active_inference",
     "templates/template_autoresearch_project",
     "templates/template_code_project",
+    "templates/template_newspaper",
     "templates/template_prose_project",
     "templates/template_template",
 )

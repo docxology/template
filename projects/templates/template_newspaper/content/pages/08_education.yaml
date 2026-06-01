@@ -1,0 +1,58 @@
+number: 9
+section: "A"
+department: "Education & Schools"
+template: "standard"
+columns: 4
+
+lead:
+  kicker: "Pelican Bay"
+  headline: "Behind the wall, a classroom rewrites the odds"
+  deck: "A College of the Redwoods degree program inside Pelican Bay State Prison graduates its largest cohort yet."
+  byline: "By Iris Lindqvist · Triplicate Staff Writer"
+  drop_cap: true
+  body:
+    - "On Friday, in a gymnasium ringed by razor wire, nineteen men in borrowed caps and gowns will accept associate degrees earned one careful semester at a time inside Pelican Bay State Prison — the largest cohort since College of the Redwoods brought accredited coursework behind the wall six years ago."
+    - "The program is small, oversubscribed and, by every measure the college tracks, working. Participants are dramatically less likely to return to custody after release. \"Education is the most reliable key we have ever handed anyone in here,\" said warden's liaison Captain Dolores Ruiz. \"It does not open the gate. It changes who walks through it.\""
+    - "Instructors describe the most motivated students of their careers. \"Nobody is here to pad a transcript,\" said English instructor Tom Achebe, who drives ninety minutes each way to teach composition. \"They have read the syllabus twice before I arrive.\""
+    - "The college hopes to add a transferable bachelor's pathway in partnership with a state university, pending funding. For now, nineteen families will watch a livestream on Friday and, for once, the news from Pelican Bay will be good."
+
+main:
+  - box: generic
+    title: "School Notes"
+    body:
+      - "<b>Last day</b> of classes is June 12; graduation June 13 at the fairgrounds."
+      - "<b>Summer meals</b> program runs at three sites; no enrollment required for children 18 and under."
+      - "<b>Kindergarten</b> registration open for fall at all elementary sites."
+      - "<b>Bus routes</b> for 2026–27 posted at the district office."
+  - headline: "College of the Redwoods expands marine-trades program"
+    level: secondary
+    kicker: "Workforce"
+    byline: "By Theo Brennan · Triplicate Staff Writer"
+    body:
+      - "Citing the harbor reconstruction and a graying fleet, College of the Redwoods will double its marine-trades certificate seats this fall, adding welding, marine diesel and small-vessel operations. The harbor district has pledged apprenticeship slots."
+      - "\"We are building docks and losing deckhands at the same time,\" said program lead Grace Mbeki. \"This is how you fix both.\""
+  - headline: "Smith River school garden feeds the cafeteria"
+    level: secondary
+    kicker: "Elementary"
+    byline: "By Maren Holloway · Triplicate Staff Writer"
+    body:
+      - "Students at Smith River Elementary harvested the first lettuce and snap peas from a new school garden this week, much of it bound for the cafeteria salad bar. The garden began as a fourth-grade math project on area and perimeter and grew, literally, from there."
+  - headline: "Scholarships honor late longtime teacher"
+    level: minor
+    kicker: "Community"
+    body:
+      - "A new scholarship fund in memory of teacher and coach Raymond Voss will award two $1,500 grants to graduating seniors pursuing trades or the sciences. Applications are open through the counseling office."
+  - headline: "Tolowa language enters the elementary classroom"
+    level: secondary
+    kicker: "Immersion"
+    byline: "By Iris Lindqvist · Triplicate Staff Writer"
+    body:
+      - "Beginning this fall, kindergartners at two Crescent City elementary schools will start each morning with twenty minutes of Tolowa Dee-ni' — counting, greetings, the names of local plants and animals — taught by apprentice speakers from the Nation's new language program."
+      - "The pilot, developed with the Tolowa Dee-ni' Nation, makes Del Norte one of a handful of California districts to bring a Native language into the regular elementary day rather than an after-school elective."
+      - "\"Children take a language home and teach it to their parents,\" said program coordinator Della Richmond. \"That is how a language comes back — through the youngest mouths in the house.\""
+      - "District officials say they will measure not test scores but attendance and belonging, where early immersion programs elsewhere have shown the clearest gains."
+  - headline: "Robotics team places third at regional meet"
+    level: minor
+    kicker: "STEM"
+    body:
+      - "The Del Norte High robotics team took third of twenty-six schools at the regional championship in Eureka, its best finish to date, and qualified for the state event. The team is fundraising for travel with a car wash Saturday at the harbor lot."

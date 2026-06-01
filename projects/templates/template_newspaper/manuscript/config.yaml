@@ -1,0 +1,32 @@
+# template_newspaper — manuscript configuration
+#
+# This manuscript is a short, descriptive paper ABOUT the layout engine. It
+# exists so the repository pipeline's Stage 03 (infrastructure manuscript
+# renderer) produces a standard PDF for this project, exactly like the sibling
+# templates. The *newspaper* PDF itself is produced separately by scripts/ in
+# Stage 02 (see ../README.md).
+
+paper:
+  title: "The Triplicate: A Data-Driven Large-Format Newspaper Layout Engine"
+  subtitle: "Designed multi-column page layout as a reproducible-research exemplar"
+  version: "1.0.0"
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+keywords:
+  - "newspaper layout"
+  - "typography"
+  - "reportlab"
+  - "reproducible publishing"
+  - "document engineering"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+manuscript_dir: "manuscript"

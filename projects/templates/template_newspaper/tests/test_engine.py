@@ -1,0 +1,123 @@
+"""Integration tests: render the real edition to a PDF and assert on it."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from newspaper.content import Block, Box, Edition, Figure, Page, Story
+from newspaper.config import NewspaperConfig
+from newspaper.engine import build_and_render, render_edition
+
+
+def _read_pdf_page_count(path: Path) -> int:
+    """Count pages by scanning for /Type /Page tokens (no external dep)."""
+    data = path.read_bytes()
+    assert data.startswith(b"%PDF-"), "not a PDF"
+    return data.count(b"/Type /Page") - data.count(b"/Type /Pages")
+
+
+def test_render_real_edition(project_root, tmp_path) -> None:
+    out = tmp_path / "triplicate.pdf"
+    from newspaper.content import load_edition
+    from newspaper.config import load_newspaper_config
+
+    edition = load_edition(project_root / "content")
+    config = load_newspaper_config(project_root / "content")
+    result = render_edition(edition, config, project_root=project_root, output_path=out)
+
+    assert out.exists()
+    assert result.page_count == 12
+    assert result.all_pages_fit, f"over-set pages: {result.oversets}"
+    assert _read_pdf_page_count(out) == 12
+    assert out.stat().st_size > 50_000  # a real 12-page paper is not trivially small
+
+
+def test_build_and_render_default_path(project_root, tmp_path) -> None:
+    out = tmp_path / "out.pdf"
+    result = build_and_render(project_root, output_path=out)
+    assert result.output_path == out
+    assert out.exists()
+    assert result.to_dict()["page_count"] == 12
+
+
+def test_synthetic_minimal_edition(tmp_path) -> None:
+    """A tiny hand-built edition exercises every template branch and renders."""
+    pages = [
+        Page(
+            number=1,
+            template="front",
+            columns=3,
+            rail=True,
+            lead=Story(
+                headline="Test lead",
+                level="lead",
+                kicker="Test",
+                deck="A deck.",
+                byline="By A. Tester",
+                drop_cap=True,
+                body=[Block("p", "First paragraph of the lead story flows here."),
+                      Block("subhead", "A subhead"),
+                      Block("pull", "A memorable pull quote.", "Someone"),
+                      Block("p", "Second paragraph continues the report.")],
+                figure=Figure(path="missing.png", caption="cap", credit="cr", height=120),
+            ),
+            rail_items=[Box(kind="index", title="Inside", items=["A · 2", "B · 3"]),
+                        Box(kind="weather", title="Weather", rows=[["", "Hi", "Lo"], ["Today", "60", "50"]])],
+            main_items=[Story(headline="Second", level="secondary",
+                              body=[Block("p", "Body text.")])],
+        ),
+        Page(
+            number=2,
+            template="classified",
+            columns=4,
+            main_items=[Box(kind="generic", title="For Sale", items=["Item one", "Item two"]),
+                        Box(kind="display", title="House Ad", body=[Block("p", "Subscribe today.")])],
+        ),
+    ]
+    edition = Edition(nameplate="Test Times", city="Nowhere", state="CA", date="Today", pages=pages)
+    out = tmp_path / "synthetic.pdf"
+    result = render_edition(edition, NewspaperConfig(), project_root=tmp_path, output_path=out)
+    assert result.page_count == 2
+    assert out.exists()
+
+
+def test_overset_is_detected_not_silent(tmp_path) -> None:
+    """An over-long story must be reported as over-set, not silently dropped.
+
+    This is the flip-test that gives ``all_pages_fit`` its meaning: ReportLab
+    frames discard flowables that do not fit, so the engine counts the remainder.
+    Without this, a green render could be hiding lost copy.
+    """
+    flood = [Block("p", "A long paragraph repeated to overflow the page. " * 40) for _ in range(60)]
+    page = Page(number=1, template="standard", columns=2, main_items=[Story(headline="Flood", body=flood)])
+    edition = Edition(nameplate="T", city="C", state="S", date="D", pages=[page])
+    out = tmp_path / "overset.pdf"
+    result = render_edition(edition, NewspaperConfig(), project_root=tmp_path, output_path=out)
+    assert not result.all_pages_fit
+    assert result.oversets.get(1, 0) > 0
+
+
+def test_render_is_deterministic(project_root, tmp_path) -> None:
+    """The same content renders to identical bytes (invariant mode)."""
+    import hashlib
+
+    from newspaper.config import load_newspaper_config
+    from newspaper.content import load_edition
+
+    edition = load_edition(project_root / "content")
+    config = load_newspaper_config(project_root / "content")
+    a = tmp_path / "a.pdf"
+    b = tmp_path / "b.pdf"
+    render_edition(edition, config, project_root=project_root, output_path=a)
+    render_edition(edition, config, project_root=project_root, output_path=b)
+    assert hashlib.sha256(a.read_bytes()).hexdigest() == hashlib.sha256(b.read_bytes()).hexdigest()
+
+
+def test_zero_page_edition_reports_zero(tmp_path) -> None:
+    # The manifest loader already rejects an empty page list; a directly
+    # constructed empty Edition renders to a zero-page result rather than raising.
+    edition = Edition(nameplate="Empty", city="X", state="Y", date="Z", pages=[])
+    out = tmp_path / "empty.pdf"
+    result = render_edition(edition, NewspaperConfig(), project_root=tmp_path, output_path=out)
+    assert result.page_count == 0
+    assert result.all_pages_fit

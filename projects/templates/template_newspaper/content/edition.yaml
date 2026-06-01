@@ -1,0 +1,50 @@
+# ============================================================================
+# THE TRIPLICATE — edition manifest
+# ----------------------------------------------------------------------------
+# This file is the single source of truth for one printed edition. The
+# `masthead` block drives the nameplate and folios; the `render` block carries
+# production settings (validated strictly by newspaper.config); and `pages`
+# lists, in print order, the page files under content/pages/.
+#
+# Swapping in a new edition is a pure data edit — no code changes.
+# ============================================================================
+
+masthead:
+  nameplate: "The Triplicate"
+  motto: "Serving California's North Coast and Del Norte County since 1879"
+  established: "1879"
+  city: "Crescent City"
+  state: "California"
+  date: "Wednesday, May 27, 2026"
+  volume: "147"
+  number: "21"
+  price: "$1.50"
+  edition_label: "North Coast Edition"
+  # The right-hand "ear" beside the nameplate. Newlines become line breaks.
+  weather_strip: |
+    TODAY: Morning fog, 59°
+    TONIGHT: Clearing, 48°
+    Full almanac — Page A12
+
+render:
+  output_basename: "the-triplicate"
+  page: "tabloid"          # 11in x 17in large format
+  columns_default: 4
+  gutter_inches: 0.16
+  figures_dir: "output/figures"
+  draft_grid: false
+  spot_color: false
+
+pages:
+  - 00_front_page.yaml
+  - 01_local_region.yaml
+  - 02_government.yaml
+  - 03_coast_environment.yaml
+  - 04_opinion.yaml
+  - 05_business_fishing.yaml
+  - 06_community_arts.yaml
+  - 07_sports.yaml
+  - 08_education.yaml
+  - 09_record_obituaries.yaml
+  - 10_classifieds.yaml
+  - 11_weather_almanac.yaml

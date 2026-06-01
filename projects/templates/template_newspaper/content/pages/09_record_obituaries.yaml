@@ -1,0 +1,89 @@
+number: 10
+section: "A"
+department: "Public Record & Obituaries"
+template: "standard"
+columns: 4
+
+main:
+  - headline: "Obituaries"
+    level: primary
+    body:
+      - subhead: "Harold \"Hal\" Petersen, 1939–2026"
+      - "Hal Petersen, who skippered the <i>Marie Elise</i> out of Crescent City Harbor for forty-one seasons and never once, he claimed, lost a crab pot he meant to keep, died Sunday at home surrounded by family. He was 86."
+      - "Born in Eureka and raised on the water, Hal bought his first boat at 23 and his last at 68. He served two terms on the harbor commission, taught a generation of deckhands to splice line, and could read weather off the western sky better than any instrument aboard. He is survived by his wife of 60 years, Marie; three children; and seven grandchildren who knew him as the man who smelled of diesel and peppermint."
+      - "A memorial will be held Saturday at the harbor. In lieu of flowers, the family asks donations to the fishermen's relief fund."
+      - subhead: "Gloria Whitefeather Sanchez, 1951–2026"
+      - "Gloria Whitefeather Sanchez, a Tolowa Dee-ni' elder, basket weaver and tireless advocate for the return of the Tolowa language, died peacefully Friday. She was 75."
+      - "Gloria learned to weave from her grandmother and spent her last decades teaching the craft — and the language woven into its names — to anyone who would sit still long enough to learn. \"She gave the words back,\" said tribal chair Della Richmond. Services are private; a community gathering will be announced."
+      - subhead: "Raymond Voss, 1958–2026"
+      - "Ray Voss taught science and coached track at Del Norte High for thirty-three years. He died Wednesday after a brief illness. Hundreds of his former students are expected at a celebration of life June 14 at the fairgrounds. A scholarship in his name has been established (see Page A9)."
+      - subhead: "Dorothy Ann Kessler, 1934–2026"
+      - "Dorothy Kessler, who ran the lunch counter at the old Front Street pharmacy for thirty years and never forgot a regular's order, died May 20 at age 91. She is survived by four children, eleven grandchildren and what her family estimates to be three generations of grateful patrons."
+      - subhead: "James \"Jim\" Oduya, 1947–2026"
+      - "Jim Oduya, a millwright at the Smith River plywood mill until its closure and later a beloved Little League umpire, died Thursday. He was 78. \"He called them straight and he called them kind,\" his daughter said. Services pending."
+      - subhead: "Eleanor \"Nell\" Brightwater, 1929–2026"
+      - "Nell Brightwater, who taught third grade at Bess Maxwell Elementary for thirty-six years and was, by the count of a 1998 newspaper profile, the first teacher of roughly a quarter of the town's adults, died peacefully Saturday at 96."
+      - "She kept a tide chart and a terrarium at the back of every classroom and believed, she once said, that \"a child who can read the tide can read anything.\" She is survived by two sons, a daughter, and several thousand former students. A celebration of her life will be held at the fairgrounds June 20; in lieu of flowers, the family asks donations to the library."
+      - subhead: "Robert A. Ferreira, 1944–2026"
+      - "Bob Ferreira, a Coast Guard veteran, longtime harbor electrician and fixture of the Saturday-morning coffee counter, died at home Friday surrounded by family. He was 81. Memorial arrangements are pending with the family."
+  - box: table
+    title: "Sheriff's Log"
+    columns: ["Time", "Call"]
+    rows:
+      - ["6:12a", "Elk on 101 near Wilson Creek"]
+      - ["9:40a", "Welfare check, Front St — OK"]
+      - ["1:05p", "Minor collision, M & 9th"]
+      - ["4:33p", "Lost hiker located, Stout Grove"]
+      - ["8:51p", "Noise complaint, harbor lot"]
+      - ["11:20p", "Alarm, downtown — false"]
+      - ["2:14a", "Suspicious vehicle, mill rd"]
+      - ["7:02a", "Tree down, Howland Hill"]
+    footnote: "Selected calls. A call is not an arrest."
+  - box: table
+    title: "Fire & Medical Calls"
+    columns: ["Type", "No."]
+    rows:
+      - ["Medical aid", "31"]
+      - ["Vehicle accident", "4"]
+      - ["Structure (minor)", "1"]
+      - ["Vegetation", "2"]
+      - ["Public assist", "9"]
+      - ["Mutual aid", "3"]
+    footnote: "Week ending May 23. Crescent Fire Protection Dist."
+  - box: generic
+    title: "Vital Records"
+    body:
+      - "<b>Births</b> — To Ana and Luis Moreno, a daughter; to Jess Park and Devon Hall, a son; to Mara and Tom Reilly, twin girls."
+      - "<b>Marriage licenses</b> — 4 issued this week at the county clerk."
+      - "<b>Court calendar</b> — Superior Court, Dept. 1, civil motions Thursday 9 a.m.; small claims Friday 1:30 p.m."
+  - box: table
+    title: "Property Transfers"
+    columns: ["Area", "Price"]
+    rows:
+      - ["Crescent City", "$385,000"]
+      - ["Smith River", "$298,500"]
+      - ["Hiouchi", "$210,000"]
+      - ["Fort Dick", "$455,000"]
+      - ["Gasquet", "$162,000"]
+    footnote: "Recorded deeds, week of May 18. County Recorder."
+  - headline: "Public Notices & Legal"
+    level: secondary
+    body:
+      - subhead: "Notice of Lien Sale"
+      - "Harbor Self-Storage will sell the contents of units 14, 22 and 31 to satisfy liens on June 18 at 10 a.m., 100 Starfish Way. Cash only. The facility reserves the right to refuse bids."
+      - subhead: "Fictitious Business Name"
+      - "The following person is doing business as <b>Foglight Bakery</b>, 210 Front St: B. Onganga. Filed with the county clerk May 19."
+      - subhead: "Notice of Public Hearing"
+      - "The Planning Commission will consider a coastal development permit for a harbor-side café on June 3 at 6 p.m., City Hall. Written comment accepted until noon that day."
+      - subhead: "Notice to Creditors"
+      - "Estate of M. Petrov, Case PR-26-041. Creditors must file claims with the court or the personal representative within the statutory period. Dated May 26."
+      - subhead: "Request for Bids"
+      - "Del Norte USD invites sealed bids for roof repair at two elementary sites. Mandatory walk-through June 4. Bids due June 18, 2 p.m., district office."
+  - box: generic
+    title: "Building Permits"
+    body:
+      - "<b>Re-roof</b>, 812 Cooper Ave — $14,200."
+      - "<b>Deck</b>, 45 Pebble Beach Dr — $9,800."
+      - "<b>New SFD</b>, Hiouchi — $312,000."
+      - "<b>Tenant improvement</b>, 210 Front St (bakery) — $48,000."
+      - "<b>Dock repair</b>, harbor inner basin — see district."

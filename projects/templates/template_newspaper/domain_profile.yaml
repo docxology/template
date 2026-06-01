@@ -1,0 +1,49 @@
+domain: newspaper_layout
+display_name: Large-Format Newspaper Exemplar
+required_packages:
+  - reportlab
+  - pillow
+  - matplotlib
+  - pyyaml
+  - pytest
+preferred_outputs:
+  - pdf
+figure_types:
+  - halftone_engraving
+  - weather_chart
+  - tide_curve
+  - landings_bar
+validation_gates:
+  - render_validation
+  - publication_readiness
+citation_policy: not_applicable
+source_policy: >-
+  Template edition: all stories, bylines, names and events in content/ are
+  illustrative and fictional. The masthead 'The Triplicate' is homage to the
+  real Crescent City, CA newspaper (founded 1879).
+review_gates:
+  - render_validation
+  - publication_readiness
+artifact_expectations:
+  - output/pdf/the-triplicate.pdf
+  - output/figures/harbor.png
+  - output/figures/weather_7day.png
+  - output/data/render_report.json
+  - output/reports/render_summary.txt
+benchmark_rubric:
+  name: newspaper-layout-readiness
+  dimensions:
+    - name: render_success
+      weight: 2.0
+    - name: page_count_correct
+      weight: 1.0
+    - name: no_overset_pages
+      weight: 1.0
+    - name: typographic_quality
+      weight: 1.0
+    - name: visual_completeness
+      weight: 1.0
+llm_prompt_guidance: >-
+  Treat content/ YAML as the single source of truth for the edition. Never
+  hard-code copy or font names in src/. Verify every layout change by rendering
+  and inspecting the rasterized pages.
