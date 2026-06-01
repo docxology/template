@@ -14,7 +14,6 @@
 | [faq.md](faq.md) | Common questions |
 | [agent_instructions.md](agent_instructions.md) | Rules for AI agents editing this project |
 
-See the project [README](../README.md) for the overview and the page roster, and
-[ISA.md](../ISA.md) for the system of record (criteria + verification).
+See the project [README](../README.md) for the overview and the page roster.
 
 ![front page](front-page.png)

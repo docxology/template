@@ -11,7 +11,7 @@ top-level [`AGENTS.md`](../AGENTS.md).)
    `python scripts/10_generate_figures.py && python scripts/20_render_newspaper.py`
    then `pdftoppm -png -r 100 output/pdf/the-triplicate.pdf /tmp/p` and inspect.
 3. **Keep the gates green.** `pytest`, `mypy src/newspaper`, `ruff check`.
-4. **Update `ISA.md`.** It is the system of record — add Decisions/Verification.
+4. **Update the docs** when behavior or the content schema changes.
 
 ## Never
 
@@ -33,4 +33,4 @@ top-level [`AGENTS.md`](../AGENTS.md).)
 ## Definition of done
 
 12-page PDF renders, `all_pages_fit == True`, pages visually read as a real
-newspaper, tests/mypy/ruff green, ISA updated.
+newspaper, tests/mypy/ruff green, docs updated.

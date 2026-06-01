@@ -27,7 +27,6 @@ bug in the abstraction — fix the engine to be driven by data instead.
 | `tests/` | pytest suite | always, alongside engine changes |
 | `output/` | generated artifacts (PDF, figures, reports) | never by hand |
 | `docs/` | human documentation | when behavior changes |
-| `ISA.md` | the project's system of record | every substantive change |
 
 ## Verification is non-negotiable
 

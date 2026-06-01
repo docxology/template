@@ -123,8 +123,8 @@ The image is fit to the width of the column it flows into. A missing `path`
 **file** degrades to a labelled gray placeholder — never an error — but an
 *omitted* `path` field or a non-positive `height` is a load-time `ValueError`.
 Figures may not appear in the `rail`. Multi-column spanning is not supported by
-the flow model (see the project ISA "Out of Scope"). Figure images may be
-**color** — any RGB PNG renders in full color.
+the flow model. Figure images may be **color** — any RGB PNG renders in full
+color.
 
 ### Ad (display advertisement)
 
