@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import subprocess
 from pathlib import Path
 
 from infrastructure.project.public_scope import public_project_names
@@ -145,9 +146,20 @@ def test_canonical_facts_infrastructure_python_count_matches_tree() -> None:
     assert count_match, "canonical_facts.md must include the refreshed infrastructure Python-file count"
 
     documented = int(count_match.group("count"))
-    actual = sum(1 for path in (root / "infrastructure").rglob("*.py") if path.is_file())
+    # Count git-tracked source files, not an on-disk rglob: build- or test-generated
+    # .py files under infrastructure/ (e.g. a version stub written during `uv sync`
+    # in CI) would otherwise inflate the count and flap this gate per-environment.
+    # The factsheet documents the tracked source surface, which is what drift means.
+    tracked = subprocess.run(
+        ["git", "ls-files", "infrastructure"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.splitlines()
+    actual = sum(1 for path in tracked if path.endswith(".py"))
     assert documented == actual, (
-        "canonical_facts.md drifted from the live infrastructure Python-file count; "
+        "canonical_facts.md drifted from the tracked infrastructure Python-file count; "
         f"documented={documented} actual={actual}"
     )
 
@@ -191,8 +203,6 @@ def test_continual_learning_local_state_gitignored() -> None:
 
 def test_continual_learning_index_not_tracked() -> None:
     """Transcript index is machine-local and must not be git-tracked."""
-    import subprocess
-
     root = _repo_root()
     result = subprocess.run(
         ["git", "ls-files", ".cursor/hooks/state/continual-learning-index.json"],
