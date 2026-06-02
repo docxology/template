@@ -13,6 +13,7 @@ from pathlib import Path
 
 from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
+from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.logging.utils import get_logger, log_header, log_substep, log_success
 from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.core.pytest_orchestration import (
@@ -158,8 +159,38 @@ def run_project_tests(
     include_slow: bool = False,
     include_bench: bool = False,
     strict: bool = True,
+    include_ollama_tests: bool = False,
 ) -> tuple[int, TestSuiteResults]:
-    """Execute project test suite with coverage."""
+    """Execute the project test suite under the per-project output lock.
+
+    The lock serializes this run against any concurrent pipeline/test run on the
+    same project so a Stage-1 Clean cannot delete ``output/`` while these gate
+    tests read it. It is cross-process re-entrant: when invoked as the pipeline's
+    test stage (a subprocess of a run that already holds the lock) the
+    acquisition is a no-op, so it never deadlocks against the parent pipeline.
+    """
+    with project_output_lock(resolve_project_root(repo_root, project_name)):
+        return _run_project_tests_impl(
+            repo_root,
+            project_name,
+            quiet=quiet,
+            include_slow=include_slow,
+            include_bench=include_bench,
+            strict=strict,
+            include_ollama_tests=include_ollama_tests,
+        )
+
+
+def _run_project_tests_impl(
+    repo_root: Path,
+    project_name: str = "project",
+    quiet: bool = True,
+    include_slow: bool = False,
+    include_bench: bool = False,
+    strict: bool = True,
+    include_ollama_tests: bool = False,
+) -> tuple[int, TestSuiteResults]:
+    """Execute project test suite with coverage (assumes the output lock is held)."""
     start_time = time.time()
     project_root = resolve_project_root(repo_root, project_name)
 
@@ -204,8 +235,13 @@ def run_project_tests(
             "--tb=short",
         ]
     )
+    # Opt-in live LLM tests (``@pytest.mark.requires_ollama``) are excluded from
+    # the default project gate, matching both the infrastructure runner and the
+    # multi-project CI path (``--all-projects --public-projects``). They require a
+    # live Ollama daemon plus the ``llm`` dependency group and are run separately
+    # with ``--include-ollama-tests`` / ``pytest -m requires_ollama``.
     project_marker = build_pytest_marker_expression(
-        skip_requires_ollama=False,
+        skip_requires_ollama=not include_ollama_tests,
         skip_slow=not include_slow,
         skip_bench=not include_bench,
     )
@@ -296,6 +332,7 @@ def execute_test_pipeline(
             quiet,
             include_slow,
             strict=strict,
+            include_ollama_tests=include_ollama_tests,
         )
 
     if run_project:
