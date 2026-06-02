@@ -499,6 +499,7 @@ def test_protected_names_are_public_exemplars(name: str) -> None:
         "template_prose_project",
         "template_autoresearch_project",
         "template_template",
+        "template_newspaper",
     }
 
 

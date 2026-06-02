@@ -72,7 +72,7 @@ def test_github_readme_publication_block_matches_public_scope() -> None:
 
 
 def test_top_level_docs_do_not_claim_four_public_exemplars() -> None:
-    """The public exemplar set currently has five entries, not four."""
+    """The public exemplar set currently has six entries, not four."""
     root = _repo_root()
     docs_to_check = [
         root / "AGENTS.md",
