@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 from textwrap import dedent
 
@@ -73,16 +72,28 @@ def repo_root(tmp_path: Path) -> Path:
     return tmp_path
 
 
-def _link_pipeline_smoke_paths(repo_root: Path) -> None:
-    """Symlink pipeline-smoke test paths from the workspace into a synthetic repo root."""
-    workspace = Path(__file__).resolve().parents[3]
+def _seed_pipeline_smoke_paths(repo_root: Path) -> None:
+    """Create trivial passing test files at each pipeline-smoke path.
+
+    This exercises the *runner orchestration* — smoke-path resolution
+    (``resolve_infrastructure_test_paths``), the real pytest subprocess, the
+    marker-filter expression and exit-code propagation — in a self-contained
+    synthetic repo. We deliberately do NOT symlink the real infra smoke tests:
+    they pull in ``import infrastructure.*`` plus a conftest/helper chain that a
+    synthetic repo cannot satisfy, which previously made the subprocess fail
+    collection (exit 2). That non-zero exit used to be silently green-washed to 0
+    by ``suite_runner``; with that masking removed, this test must drive the
+    runner against tests that genuinely collect and pass. The real smoke tests are
+    exercised for real by the full infrastructure suite — here we only assert the
+    runner returns success when its smoke subprocess passes.
+    """
+    body = "def test_smoke_ok() -> None:\n    assert True\n"
     for rel in PIPELINE_SMOKE_INFRA_TEST_PATHS:
-        src = workspace / rel
-        dst = repo_root / rel
-        if dst.exists() or dst.is_symlink():
-            continue
+        # File paths (``.../foo.py``) become that file; directory paths
+        # (e.g. ``git_hook_smoke``) get a single test module inside them.
+        dst = repo_root / rel if rel.suffix == ".py" else repo_root / rel / "test_smoke.py"
         dst.parent.mkdir(parents=True, exist_ok=True)
-        os.symlink(src, dst, target_is_directory=src.is_dir())
+        dst.write_text(body)
 
 
 @pytest.mark.timeout(180)
@@ -90,7 +101,7 @@ def test_run_infrastructure_tests_pipeline_smoke_real_subprocess(tmp_path: Path)
     """Pipeline-smoke scope runs real pytest subprocesses against smoke paths."""
     (tmp_path / "projects").mkdir()
     _write_minimal_project(tmp_path, "demo")
-    _link_pipeline_smoke_paths(tmp_path)
+    _seed_pipeline_smoke_paths(tmp_path)
     exit_code, results = run_infrastructure_tests(
         tmp_path,
         project_name="demo",
