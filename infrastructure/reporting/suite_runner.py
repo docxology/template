@@ -281,9 +281,20 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
     if exit_code != 0:
         if should_halt:
             logger.error(message)
-        else:
+        elif failed_count > 0:
+            # Tolerated test failures (failed_count within the configured max):
+            # suppress the non-zero exit so the pipeline may continue.
             logger.warning(message)
             exit_code = 0
+        else:
+            # Non-zero exit with zero test failures is NOT a tolerated test
+            # failure — it is a coverage-below-floor gate failure or an internal
+            # pytest error. Suppressing it here would green-wash a failed
+            # coverage gate (every test passing while coverage < threshold).
+            logger.error(
+                f"{config.label}: non-zero exit ({exit_code}) with no test "
+                "failures — coverage gate or pytest error; not suppressed"
+            )
 
     # Keep the results dict in sync with the (possibly suppressed) exit code
     test_results["exit_code"] = exit_code

@@ -266,3 +266,31 @@ class TestRunTestSuite:
         config = self._make_config(tmp_path, cmd=["echo", "All good"])
         exit_code, results = run_test_suite(config)
         assert isinstance(results, dict)
+
+    def test_coverage_floor_failure_is_not_green_washed(self, tmp_path):
+        """Regression: a non-zero exit with ZERO test failures (the signature of a
+        ``--cov-fail-under`` coverage-floor failure: every test passes, pytest still
+        exits 1) must NOT be suppressed to 0. Suppressing it green-washes a failed
+        coverage gate. Pins suite_runner.run_test_suite against that latent defect."""
+        config = self._make_config(
+            tmp_path,
+            # All tests pass (failed==0) but the process exits non-zero, exactly as
+            # pytest does when coverage is below --cov-fail-under.
+            cmd=["bash", "-c", "echo '10 passed in 1.0s'; exit 1"],
+        )
+        exit_code, results = run_test_suite(config)
+        assert results.get("failed", 0) == 0
+        assert exit_code == 1, "coverage-floor failure (exit 1, 0 failed) was green-washed to 0"
+
+    def test_tolerated_test_failures_are_still_suppressed(self, tmp_path, monkeypatch):
+        """Companion control: a non-zero exit WITH test failures that are within the
+        configured tolerance is still suppressed to 0 (the legitimate path the fix
+        must preserve). Uses a real env var, not a mock."""
+        monkeypatch.setenv("MAX_TEST_FAILURES", "5")
+        config = self._make_config(
+            tmp_path,
+            cmd=["bash", "-c", "echo '2 failed, 8 passed in 1.0s'; exit 1"],
+        )
+        exit_code, results = run_test_suite(config)
+        assert results.get("failed", 0) == 2
+        assert exit_code == 0, "tolerated test failures (2 <= max 5) should be suppressed"
