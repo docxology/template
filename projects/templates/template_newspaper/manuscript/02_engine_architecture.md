@@ -38,3 +38,23 @@ pure document-template approach cannot place a headline that spans several
 columns above body text that flows beneath it; drawing the furniture first, and
 beginning the column frames below it, makes spanning headlines, standing boxes
 and automatic text flow coexist on the same page.
+
+## Methods
+
+Producing an edition is a deterministic, four-step method, run by the pipeline
+and covered end-to-end by the test suite:
+
+1. **Load** — `content` parses `edition.yaml` and every `content/pages/*.yaml`
+   into the typed `Edition` graph, rejecting unknown page templates or box kinds
+   by naming the offending value and the allowed set.
+2. **Measure** — `geometry` derives the trim, margins and `ColumnGrid` for each
+   page from the strict `config`, independently of any rendering library.
+3. **Compose** — `components` and `furniture` build the flowed and drawn
+   elements; `layout` pours them into the column frames and reports any content
+   that does not fit as an over-set page rather than dropping it silently.
+4. **Emit** — `engine` registers fonts, renders each page to the canvas, and
+   writes the PDF alongside a machine-readable render report.
+
+Every step is pure-data-in, artifact-out and seeded deterministically, so the
+same edition manifest always yields a byte-identical paper — the reproducibility
+contract verified in `tests/` and described in `04_reproducibility.md`.
