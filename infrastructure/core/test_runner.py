@@ -56,7 +56,8 @@ from infrastructure.core.pytest_orchestration import (
 )
 from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.core.runtime._python_env import get_python_command
-from infrastructure.project.discovery import discover_projects, resolve_project_root
+from infrastructure.core.project_paths import resolve_project_root
+from infrastructure.project.discovery import discover_projects
 from infrastructure.project.metadata import get_project_metadata
 
 logger = get_logger(__name__)
