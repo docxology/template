@@ -43,6 +43,9 @@ EXIT_HEALTHY = 0
 EXIT_WARN = 1
 EXIT_ERROR = 2
 EXIT_CRITICAL = 3
+# Reserved for future regression detection in ``cmd_fix``; not yet emitted by
+# ``compute_exit_code``, so it is deliberately absent from the agent-facing
+# exit-code contract (cli.py capabilities / robot-docs) until wired.
 EXIT_REGRESSION = 4
 EXIT_USAGE = 64
 

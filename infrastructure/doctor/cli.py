@@ -315,7 +315,6 @@ def cmd_capabilities(args: argparse.Namespace) -> int:
             "warn": 1,
             "error": 2,
             "critical": 3,
-            "regression": 4,
             "usage": 64,
         },
     }
@@ -354,7 +353,6 @@ EXIT CODES
   1  warnings present
   2  one or more errors
   3  critical findings present
-  4  regression introduced by a fix (rare)
   64 usage error (BSD EX_USAGE)
 
 CONTRACT

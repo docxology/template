@@ -227,15 +227,21 @@ class TestCheckNumericalStability:
         assert result.stability_score < 1.0
 
     def test_custom_tolerance(self):
-        """Test with custom tolerance parameter."""
+        """tolerance is a live knob: flipping it changes the stability score.
 
-        def precise_function(x):
-            return x + 1e-15  # Very small perturbation
+        A finite, non-zero result of 1e-15 is "stable" under a loose tolerance
+        but "near-underflow" under a strict one — so the score must drop.
+        """
+
+        def underflow_function(x):
+            return 1e-15  # finite, non-zero, tiny magnitude
 
         test_inputs = [1.0, 2.0, 3.0]
-        result = check_numerical_stability(precise_function, test_inputs, tolerance=1e-20)
+        loose = check_numerical_stability(underflow_function, test_inputs, tolerance=1e-20)
+        strict = check_numerical_stability(underflow_function, test_inputs, tolerance=1e-12)
 
-        assert result.stability_score == 1.0
+        assert loose.stability_score == 1.0  # 1e-15 not below 1e-20 → stable
+        assert strict.stability_score < loose.stability_score  # 1e-15 < 1e-12 → flagged
 
     def test_input_range_calculation(self):
         """Test input range is correctly calculated."""

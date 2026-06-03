@@ -36,6 +36,15 @@ class HttpClient(Protocol):
         timeout: float = 10.0,
     ) -> HttpResponse: ...  # pragma: no cover
 
+    def get_bytes(
+        self,
+        url: str,
+        *,
+        params: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
+        timeout: float = 10.0,
+    ) -> bytes: ...  # pragma: no cover
+
     def post(
         self,
         url: str,
@@ -75,6 +84,33 @@ class UrllibHttpClient:
             except (OSError, AttributeError):  # pragma: no cover
                 pass
             return HttpResponse(status_code=exc.code, text=body, url=url)
+        except urllib.error.URLError as exc:
+            raise BackendError(f"HTTP error fetching {url}: {exc.reason}") from exc
+
+    def get_bytes(
+        self,
+        url: str,
+        *,
+        params: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
+        timeout: float = 10.0,
+    ) -> bytes:
+        """Fetch raw response bytes (for binary payloads like PDFs).
+
+        Unlike :meth:`get`, this does NOT decode the body as text — decoding a
+        PDF as text and re-encoding corrupts every non-ASCII byte. Raises
+        :class:`BackendError` on any non-2xx status or transport error.
+        """
+        if params:
+            qs = urllib.parse.urlencode(params, doseq=True)
+            sep = "&" if "?" in url else "?"
+            url = f"{url}{sep}{qs}"
+        req = urllib.request.Request(url, headers=dict(headers or {}))
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec B310
+                return resp.read()
+        except urllib.error.HTTPError as exc:
+            raise BackendError(f"HTTP {exc.code} fetching {url}") from exc
         except urllib.error.URLError as exc:
             raise BackendError(f"HTTP error fetching {url}: {exc.reason}") from exc
 
