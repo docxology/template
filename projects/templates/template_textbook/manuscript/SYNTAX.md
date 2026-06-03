@@ -9,7 +9,7 @@ filter. For the rules governing *where* these must appear, see [`AGENTS.md`](AGE
 Reference a generated PNG, give it a label, and add an alt-text comment:
 
 ```markdown
-![Caption describing the figure.](../figures/part_0_orientation.png){#fig:part_0_orientation width=90%}
+![Caption describing the figure.](../output/figures/part_0_orientation.png){#fig:part_0_orientation width=90%}
 
 <!-- alt: One-sentence description of the figure for accessibility. -->
 ```

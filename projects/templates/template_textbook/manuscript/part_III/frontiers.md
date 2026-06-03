@@ -1,6 +1,6 @@
 # Frontiers and Open Problems {#sec:part_III_frontiers}
 
-![Overview schematic for "Frontiers and Open Problems". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../figures/part_III_frontiers.png){#fig:part_III_frontiers width=90%}
+![Overview schematic for "Frontiers and Open Problems". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_III_frontiers.png){#fig:part_III_frontiers width=90%}
 
 <!-- alt: Placeholder overview schematic for the chapter "Frontiers and Open Problems". TODO: write descriptive alt text once the real figure exists. -->
 

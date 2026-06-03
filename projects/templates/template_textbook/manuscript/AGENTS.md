@@ -31,7 +31,7 @@ A chapter file (`part_<label>/<stem>.md`) MUST contain, in roughly this order:
 
 - **A labelled H1 heading:** `# Title {#sec:<part>_<stem>}`
 - **One figure** with descriptive caption and an `<!-- alt: ... -->` comment:
-  `![caption](../figures/<part>_<stem>.png){#fig:<part>_<stem> width=90%}`
+  `![caption](../output/figures/<part>_<stem>.png){#fig:<part>_<stem> width=90%}`
 - **A metadata badge:** the `<!-- chapter-metadata-badge -->` marker followed by a
   blockquote (level, read time, lecture time, prerequisites).
 - **A Study Blueprint** wrapped in

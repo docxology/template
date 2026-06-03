@@ -1,6 +1,6 @@
 # Systems Overview {#sec:part_II_systems_overview}
 
-![Overview schematic for "Systems Overview". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../figures/part_II_systems_overview.png){#fig:part_II_systems_overview width=90%}
+![Overview schematic for "Systems Overview". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_II_systems_overview.png){#fig:part_II_systems_overview width=90%}
 
 <!-- alt: Placeholder overview schematic for the chapter "Systems Overview". TODO: write descriptive alt text once the real figure exists. -->
 

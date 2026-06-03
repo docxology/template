@@ -41,7 +41,9 @@ authors:
     corresponding: true
 
 publication:
-  doi: "10.5281/zenodo.20533125"  # Optional: assign at publication time (e.g. a Zenodo DOI)
+  doi: "10.5281/zenodo.20533125"  # Concept DOI — stable citation
+  version_doi: "10.5281/zenodo.20533126"  # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20533126"
   repository_url: "https://github.com/docxology/template_textbook"
   repository_label: "Source repository"
   keywords:

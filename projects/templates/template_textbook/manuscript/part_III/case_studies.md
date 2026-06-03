@@ -2,7 +2,7 @@
 
 ![Group means with standard-error bars for a control and two treatment levels,
 drawn from `assets/data/sample_dataset.csv` by
-`visualization.gallery.errorbar_plot`.](../figures/gallery/gallery_errorbar.png){#fig:part_III_case_studies width=75%}
+`visualization.gallery.errorbar_plot`.](../../output/figures/gallery/gallery_errorbar.png){#fig:part_III_case_studies width=75%}
 
 <!-- alt: A plot of six conditions on the x-axis against a measured response on
 the y-axis, each point carrying a vertical standard-error bar; the response rises

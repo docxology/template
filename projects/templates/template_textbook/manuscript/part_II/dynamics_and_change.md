@@ -1,6 +1,6 @@
 # Dynamics and Change {#sec:part_II_dynamics_and_change}
 
-![Overview schematic for "Dynamics and Change". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../figures/part_II_dynamics_and_change.png){#fig:part_II_dynamics_and_change width=90%}
+![Overview schematic for "Dynamics and Change". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_II_dynamics_and_change.png){#fig:part_II_dynamics_and_change width=90%}
 
 <!-- alt: Placeholder overview schematic for the chapter "Dynamics and Change". TODO: write descriptive alt text once the real figure exists. -->
 

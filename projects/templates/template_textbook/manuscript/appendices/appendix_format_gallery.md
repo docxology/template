@@ -157,22 +157,22 @@ A single figure with caption, label, and alt text, cross-referenced as
 [@fig:gallery_line]:
 
 ![A multi-series line plot of three sine waves, produced by
-`visualization.gallery.line_plot`.](../figures/gallery/gallery_line.png){#fig:gallery_line width=80%}
+`visualization.gallery.line_plot`.](../../output/figures/gallery/gallery_line.png){#fig:gallery_line width=80%}
 
 <!-- alt: Line plot with three sinusoidal curves of increasing frequency. -->
 
 Two figures side by side (Pandoc fenced div; falls back to stacked):
 
 ::: {layout-ncol=2}
-![Bar chart.](../figures/gallery/gallery_bar.png){#fig:gallery_bar width=48%}
+![Bar chart.](../../output/figures/gallery/gallery_bar.png){#fig:gallery_bar width=48%}
 
-![Pie chart.](../figures/gallery/gallery_pie.png){#fig:gallery_pie width=48%}
+![Pie chart.](../../output/figures/gallery/gallery_pie.png){#fig:gallery_pie width=48%}
 :::
 
 A multi-panel composite ([@fig:gallery_multipanel]):
 
 ![A 2×2 composite: line, scatter, bar, and histogram
-panels.](../figures/gallery/gallery_multipanel.png){#fig:gallery_multipanel width=85%}
+panels.](../../output/figures/gallery/gallery_multipanel.png){#fig:gallery_multipanel width=85%}
 
 The full plot-type gallery lives in `output/figures/gallery/` and includes:
 line, scatter-with-fit, bar, grouped bar, horizontal bar, histogram, box,
@@ -284,7 +284,7 @@ multiple sources [@doe2019methods; @lee2021systems], and an in-text form —
 Embedded raster image (any PNG/JPG works the same way as a figure):
 
 ![A generated heatmap embedded as a raster
-image.](../figures/gallery/gallery_heatmap.png){#fig:gallery_media width=60%}
+image.](../../output/figures/gallery/gallery_heatmap.png){#fig:gallery_media width=60%}
 
 Audio and video embed in HTML targets (PDF shows the caption + link). Syntax:
 
@@ -308,7 +308,7 @@ contents as a table:
 
 The error-bar figure [@fig:gallery_errorbar] visualises this kind of data:
 
-![Means with standard-error bars.](../figures/gallery/gallery_errorbar.png){#fig:gallery_errorbar width=70%}
+![Means with standard-error bars.](../../output/figures/gallery/gallery_errorbar.png){#fig:gallery_errorbar width=70%}
 
 ---
 

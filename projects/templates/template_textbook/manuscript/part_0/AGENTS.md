@@ -73,5 +73,5 @@ generated filename's stem so the reference resolves.
   [`scripts/audit_textbook_quality.py`](../../scripts/audit_textbook_quality.py).
 
 See also: this part's [README](README.md), the repo-wide
-[Authoring Guide](../appendix_authoring_guide.md), and the
-[Notation appendix](../appendix_notation.md).
+[Authoring Guide](../appendices/appendix_authoring_guide.md), and the
+[Notation appendix](../appendices/appendix_notation.md).

@@ -1,6 +1,6 @@
 # Applied Models {#sec:part_III_applied_models}
 
-![Overview schematic for "Applied Models". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../figures/part_III_applied_models.png){#fig:part_III_applied_models width=90%}
+![Overview schematic for "Applied Models". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_III_applied_models.png){#fig:part_III_applied_models width=90%}
 
 <!-- alt: Placeholder overview schematic for the chapter "Applied Models". TODO: write descriptive alt text once the real figure exists. -->
 

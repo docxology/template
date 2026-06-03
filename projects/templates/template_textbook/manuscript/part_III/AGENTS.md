@@ -19,7 +19,7 @@ Each chapter must contain all of the following (the audit gate checks for them):
 1. **Labelled H1** — the chapter title plus its section anchor:
    `# <Title> {#sec:part_III_<stem>}`.
 2. **One figure** with a Pandoc-crossref label and alt text:
-   `![caption](../figures/part_III_<stem>.png){#fig:part_III_<stem> width=90%}`
+   `![caption](../../output/figures/part_III_<stem>.png){#fig:part_III_<stem> width=90%}`
    followed by an `<!-- alt: ... -->` comment.
 3. **Metadata badge** — the `<!-- chapter-metadata-badge -->` marker and its
    level / read-time / prerequisites line.
@@ -74,5 +74,5 @@ uv run python scripts/audit_textbook_quality.py    # structural gate
 uv run --extra dev python -m pytest                # full suite
 ```
 
-For the full how-to, see the [Authoring Guide](../appendix_authoring_guide.md)
+For the full how-to, see the [Authoring Guide](../appendices/appendix_authoring_guide.md)
 and the part overview in [`README.md`](README.md).

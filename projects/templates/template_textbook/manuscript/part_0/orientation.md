@@ -1,6 +1,6 @@
 # Orientation to the Field {#sec:part_0_orientation}
 
-![Overview schematic for "Orientation to the Field". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../figures/part_0_orientation.png){#fig:part_0_orientation width=90%}
+![Overview schematic for "Orientation to the Field". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_0_orientation.png){#fig:part_0_orientation width=90%}
 
 <!-- alt: Placeholder overview schematic for the chapter "Orientation to the Field". TODO: write descriptive alt text once the real figure exists. -->
 

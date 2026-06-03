@@ -16,7 +16,7 @@ chapter, its practice, and its assessment stay in sync.
 > [`../config.yaml`](../config.yaml). The prose, objectives, figures, and
 > citations are placeholders marked with `<!-- STUB -->`, `TODO:`, or `TKTK`.
 > Your job as author is to replace them. Start with the
-> [Authoring Guide](../appendix_authoring_guide.md), keep the per-chapter
+> [Authoring Guide](../appendices/appendix_authoring_guide.md), keep the per-chapter
 > contract in [`AGENTS.md`](AGENTS.md) open, and verify your work with
 > `scripts/audit_textbook_quality.py`.
 

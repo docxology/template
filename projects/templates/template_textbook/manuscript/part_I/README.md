@@ -26,7 +26,7 @@ an inline `mermaid` diagram, a figure, and the Summary / Key Terms / Further
 Reading / Practice sections). Stub markers (`<!-- STUB -->`, `TODO:`, `TKTK`)
 flag the prose a future author must replace. See
 [`AGENTS.md`](AGENTS.md) for the per-chapter contract and the
-[Authoring Guide appendix](../appendix_authoring_guide.md) for the fill workflow.
+[Authoring Guide appendix](../appendices/appendix_authoring_guide.md) for the fill workflow.
 
 | # | Chapter | Stub description | Chapter | Lab | Questions |
 |---|---------|------------------|---------|-----|-----------|

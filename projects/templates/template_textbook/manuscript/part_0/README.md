@@ -46,5 +46,5 @@ pandoc-crossref and the TOC engine do it.
    and `uv run --extra dev python -m pytest`.
 
 See the per-chapter contract in [`AGENTS.md`](AGENTS.md), the repo-wide
-[Authoring Guide](../appendix_authoring_guide.md), and the
+[Authoring Guide](../appendices/appendix_authoring_guide.md), and the
 [Master Glossary](../glossary.md).

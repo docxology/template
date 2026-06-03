@@ -5,7 +5,7 @@ Authoring contract for the three chapters in this directory:
 truth for the part and its chapter list is [`../config.yaml`](../config.yaml)
 (`parts:` → `part_I`); this file restates the per-chapter rules so an author or
 agent can fill a stub without leaving the directory. The repo-wide
-[Authoring Guide](../appendix_authoring_guide.md) is the long-form companion.
+[Authoring Guide](../appendices/appendix_authoring_guide.md) is the long-form companion.
 
 ## Identifier patterns for this part
 

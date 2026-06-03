@@ -1,6 +1,6 @@
 # Core Methods and Tools {#sec:part_0_core_methods}
 
-![Overview schematic for "Core Methods and Tools". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../figures/part_0_core_methods.png){#fig:part_0_core_methods width=90%}
+![Overview schematic for "Core Methods and Tools". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_0_core_methods.png){#fig:part_0_core_methods width=90%}
 
 <!-- alt: Placeholder overview schematic for the chapter "Core Methods and Tools". TODO: write descriptive alt text once the real figure exists. -->
 

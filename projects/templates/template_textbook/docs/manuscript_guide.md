@@ -112,6 +112,6 @@ Rendering is handled by the monorepo's generic `infrastructure/` rendering stage
 (pandoc + pandoc-crossref → PDF/HTML), driven by the same `config.yaml` for
 layout, typography, and front-matter ordering. Figures must already exist under
 `output/figures/` (run `generate_figures.py` first) so the chapters'
-`![...](../figures/<part_id>_<stem>.png)` paths resolve. The numbering settings
+`![...](../output/figures/<part_id>_<stem>.png)` paths resolve. The numbering settings
 live under `rendering:` in `config.yaml` (`number_chapters`, `number_figures`,
 `number_equations`, `number_tables`, `toc_depth`).

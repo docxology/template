@@ -19,7 +19,7 @@ Every chapter in this part MUST contain, in order:
 2. **Metadata badge** — the `<!-- chapter-metadata-badge -->` marker.
 3. **Study Blueprint** — opened by `<!-- curriculum-scaffold-start -->`.
 4. **Learning Objectives** — a short objective list for the chapter.
-5. **One figure** — a `![alt text](...){#fig:part_II_<stem>}` reference with real
+5. **One figure** — a `![alt text](../../output/figures/part_II_<stem>.png){#fig:part_II_<stem>}` reference with real
    alt text, pointing at the chapter's generated image (see filename convention).
 6. **A worked formalism** — a numbered equation `{#eq:...}` plus a parameter table
    `{#tbl:...}`. Reuse the tested formalisms in

@@ -1,6 +1,6 @@
 # Quantitative Foundations {#sec:part_0_quantitative_foundations}
 
-![Overview schematic for "Quantitative Foundations". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../figures/part_0_quantitative_foundations.png){#fig:part_0_quantitative_foundations width=90%}
+![Overview schematic for "Quantitative Foundations". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_0_quantitative_foundations.png){#fig:part_0_quantitative_foundations width=90%}
 
 <!-- alt: Placeholder overview schematic for the chapter "Quantitative Foundations". TODO: write descriptive alt text once the real figure exists. -->
 

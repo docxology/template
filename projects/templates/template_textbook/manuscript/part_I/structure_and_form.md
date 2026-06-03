@@ -1,6 +1,6 @@
 # Structure and Form {#sec:part_I_structure_and_form}
 
-![Overview schematic for "Structure and Form". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../figures/part_I_structure_and_form.png){#fig:part_I_structure_and_form width=90%}
+![Overview schematic for "Structure and Form". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_I_structure_and_form.png){#fig:part_I_structure_and_form width=90%}
 
 <!-- alt: Placeholder overview schematic for the chapter "Structure and Form". TODO: write descriptive alt text once the real figure exists. -->
 

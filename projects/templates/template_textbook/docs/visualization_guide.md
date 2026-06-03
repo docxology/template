@@ -30,7 +30,7 @@ Each chapter placeholder is named **`<part_id>_<stem>.png`** — for example
 image path the scaffolded chapter already references:
 
 ```markdown
-![Overview schematic …](../figures/part_0_orientation.png){#fig:part_0_orientation width=90%}
+![Overview schematic …](../output/figures/part_0_orientation.png){#fig:part_0_orientation width=90%}
 ```
 
 Because the filename is derived from the same `ChapterRef` the manuscript uses,

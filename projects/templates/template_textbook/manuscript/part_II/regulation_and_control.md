@@ -1,6 +1,6 @@
 # Regulation and Control {#sec:part_II_regulation_and_control}
 
-![Overview schematic for "Regulation and Control". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../figures/part_II_regulation_and_control.png){#fig:part_II_regulation_and_control width=90%}
+![Overview schematic for "Regulation and Control". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_II_regulation_and_control.png){#fig:part_II_regulation_and_control width=90%}
 
 <!-- alt: Placeholder overview schematic for the chapter "Regulation and Control". TODO: write descriptive alt text once the real figure exists. -->
 

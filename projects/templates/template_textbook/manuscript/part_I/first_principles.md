@@ -2,7 +2,7 @@
 
 ![A logistic growth curve for three growth rates, approaching the carrying
 capacity $K = 100$. Produced deterministically by
-`visualization.plots.plot_logistic_growth`.](../figures/logistic_growth.png){#fig:part_I_first_principles width=85%}
+`visualization.plots.plot_logistic_growth`.](../../output/figures/logistic_growth.png){#fig:part_I_first_principles width=85%}
 
 <!-- alt: Three S-shaped curves rising from a small initial value and levelling
 off at a horizontal asymptote labelled K = 100; steeper curves correspond to

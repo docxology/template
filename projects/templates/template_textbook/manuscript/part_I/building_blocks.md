@@ -1,6 +1,6 @@
 # Building Blocks {#sec:part_I_building_blocks}
 
-![Overview schematic for "Building Blocks". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../figures/part_I_building_blocks.png){#fig:part_I_building_blocks width=90%}
+![Overview schematic for "Building Blocks". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_I_building_blocks.png){#fig:part_I_building_blocks width=90%}
 
 <!-- alt: Placeholder overview schematic for the chapter "Building Blocks". TODO: write descriptive alt text once the real figure exists. -->
 
