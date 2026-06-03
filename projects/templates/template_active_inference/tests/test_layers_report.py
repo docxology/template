@@ -50,4 +50,7 @@ def test_render_sheaf_layers_markdown(project_root: Path) -> None:
     assert "Sheaf fragment track registry" in md
     assert "IMRAD binding matrix" in md
     assert "<!-- sheaf-layers:legend -->" in md
+    assert "<!-- sheaf-layers:section-status -->" in md
+    assert "<!-- sheaf-layers:track-status -->" in md
+    assert "<!-- sheaf-layers:render-log -->" in md
     assert "| Symbol | Coverage color | Meaning |" in md

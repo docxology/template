@@ -1,0 +1,104 @@
+{
+  "all_figures_mapped": true,
+  "figure_count": 13,
+  "rows": [
+    {
+      "figure_id": "free_energy_curve",
+      "mapped": true,
+      "sources": [
+        "src/analytical/decomposition.py"
+      ]
+    },
+    {
+      "figure_id": "gnn_ontology_concordance",
+      "mapped": true,
+      "sources": [
+        "gnn",
+        "manuscript/sections/imrad"
+      ]
+    },
+    {
+      "figure_id": "invariant_dashboard",
+      "mapped": true,
+      "sources": [
+        "output/reports/invariants.json"
+      ]
+    },
+    {
+      "figure_id": "ising_mi_curve",
+      "mapped": true,
+      "sources": [
+        "output/data/parameter_sweep.csv"
+      ]
+    },
+    {
+      "figure_id": "lean_boundary_status",
+      "mapped": true,
+      "sources": [
+        "lean/TemplateActiveInference"
+      ]
+    },
+    {
+      "figure_id": "multi_track_architecture",
+      "mapped": true,
+      "sources": [
+        "tracks.yaml",
+        "manuscript/sheaf/tracks.yaml"
+      ]
+    },
+    {
+      "figure_id": "semantic_gluing_graph",
+      "mapped": true,
+      "sources": [
+        "output/data/validation_dependency_graph.json",
+        "output/data/sheaf_gluing_certificate.json",
+        "output/data/evidence_field_index.json"
+      ]
+    },
+    {
+      "figure_id": "sheaf_coverage_heatmap",
+      "mapped": true,
+      "sources": [
+        "output/data/sheaf_coverage_matrix.json"
+      ]
+    },
+    {
+      "figure_id": "sheaf_layers_overview",
+      "mapped": true,
+      "sources": [
+        "output/data/sheaf_coverage_matrix.json"
+      ]
+    },
+    {
+      "figure_id": "si_belief_entropy_curve",
+      "mapped": true,
+      "sources": [
+        "output/data/si_tmaze_trace.json"
+      ]
+    },
+    {
+      "figure_id": "si_obs_action_trace",
+      "mapped": true,
+      "sources": [
+        "output/data/si_tmaze_summary.json"
+      ]
+    },
+    {
+      "figure_id": "si_tmaze_actions",
+      "mapped": true,
+      "sources": [
+        "output/data/si_tmaze_summary.json"
+      ]
+    },
+    {
+      "figure_id": "tmaze_schematic",
+      "mapped": true,
+      "sources": [
+        "pymdp.yaml",
+        "output/reports/pymdp_runtime_diagnostics.json",
+        "output/data/pymdp_policy_posterior_grid.json"
+      ]
+    }
+  ],
+  "schema": "template_active_inference.figure_source_map.v1"
+}

@@ -1,4 +1,4 @@
-"""Subprocess tests for opt-in extension track scripts."""
+"""Subprocess tests for deterministic extension track scripts."""
 
 from __future__ import annotations
 
@@ -20,31 +20,40 @@ def _run_script(project_root: Path, script: str, *args: str) -> subprocess.Compl
     )
 
 
-def test_write_belief_trajectory_gif_uses_entropy_png(tmp_path: Path) -> None:
-    from PIL import Image
-
+def test_write_belief_trajectory_gif_uses_trace_artifact(tmp_path: Path) -> None:
     from visualizations.animation import write_belief_trajectory_gif
 
-    figures = tmp_path / "output" / "figures"
-    figures.mkdir(parents=True)
-    source = figures / "si_belief_entropy_curve.png"
-    Image.new("RGB", (10, 10), color="red").save(source)
+    data = tmp_path / "output" / "data"
+    data.mkdir(parents=True)
+    (data / "si_graph_world_trace.json").write_text(
+        json.dumps(
+            {
+                "steps": [
+                    {"step": 0, "node": "start", "action": "observe", "belief_entropy": 1.0},
+                    {"step": 1, "node": "goal", "action": "commit", "belief_entropy": 0.0},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
     out = write_belief_trajectory_gif(tmp_path)
     assert out.is_file()
     assert out.suffix == ".gif"
 
 
-def test_simulate_si_graph_world_writes_not_implemented_stub(project_root: Path) -> None:
+def test_simulate_si_graph_world_writes_deterministic_artifacts(project_root: Path) -> None:
     from simulation.graph_world import write_graph_world_stub
 
     out = write_graph_world_stub(project_root)
     assert out.is_file()
     payload = json.loads(out.read_text(encoding="utf-8"))
-    assert payload.get("status") == "not_implemented"
+    assert payload.get("status") == "ok"
+    assert payload.get("goal_reached") is True
 
     result = _run_script(project_root, "simulate_si_graph_world.py")
     assert result.returncode == 0, result.stderr
     assert out.is_file()
+    assert (project_root / "output" / "data" / "si_graph_world_trace.json").is_file()
 
 
 def test_render_animation_skip_exits_clean(project_root: Path) -> None:

@@ -1,11 +1,11 @@
 {
-  "artifact_manifest_hash": "576914d6119825e6a55775a2f7fd215e90e4f7d27806eefc14fff2a95d794fa0",
+  "artifact_manifest_hash": "c9ca17da5d67459d24b815f0b2112a1aed0c782be9f1ea485d46d7e6ba651723",
   "artifacts": {},
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/template_active_inference/output/reports/snapshots/stage-01-clean-output-directories.json",
+  "path": "/Users/4d/Documents/GitHub/template-active-inference-clean-pr/projects/templates/template_active_inference/output/reports/snapshots/stage-01-clean-output-directories.json",
   "stage_name": "Clean Output Directories",
   "stage_num": 1,
-  "timestamp": "2026-05-28T16:30:57+00:00",
+  "timestamp": "2026-06-03T03:39:20+00:00",
   "validation_summary": {
     "checks": {},
     "summary": {}

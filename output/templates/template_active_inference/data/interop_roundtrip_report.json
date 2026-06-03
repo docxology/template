@@ -1,0 +1,59 @@
+{
+  "all_lossless": true,
+  "all_shape_diffs_empty": true,
+  "check_count": 5,
+  "rows": [
+    {
+      "dropped_variables": [],
+      "dtype_diff": [],
+      "id": "gnn_json_ontology",
+      "lossless": true,
+      "ontology_term_diff": [],
+      "record_count": 2,
+      "shape_diff": [],
+      "source": "gnn_json_ontology"
+    },
+    {
+      "dropped_variables": [],
+      "dtype_diff": [],
+      "id": "gnn_lint",
+      "lossless": true,
+      "ontology_term_diff": [],
+      "record_count": 12,
+      "shape_diff": [],
+      "source": "gnn_lint"
+    },
+    {
+      "dropped_variables": [],
+      "dtype_diff": [],
+      "id": "ontology_profile",
+      "lossless": true,
+      "ontology_term_diff": [],
+      "record_count": 12,
+      "shape_diff": [],
+      "source": "ontology_profile"
+    },
+    {
+      "dropped_variables": [],
+      "dtype_diff": [],
+      "id": "cross_track_symbols",
+      "lossless": true,
+      "ontology_term_diff": [],
+      "record_count": 12,
+      "shape_diff": [],
+      "source": "cross_track_symbols"
+    },
+    {
+      "dropped_variables": [],
+      "dtype_diff": [],
+      "id": "dependency",
+      "lossless": true,
+      "ontology_term_diff": [],
+      "record_count": 1439,
+      "shape_diff": [],
+      "source": "dependency"
+    }
+  ],
+  "schema": "template_active_inference.interop_roundtrip_report.v1",
+  "schema_version": "template_active_inference.canonical_sheaf_tracks.v1"
+}

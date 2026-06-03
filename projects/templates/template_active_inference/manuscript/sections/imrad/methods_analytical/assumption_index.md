@@ -1,0 +1,3 @@
+The `assumption_index` fragment makes the analytical equations inspectable as a generated artifact instead of relying on prose labels. `output/data/analytical_assumption_index.json` indexes {{analytical_equation_count}} finite-model equation identifiers and {{analytical_assumption_count}} rows; the hydrated pass flag is `{{analytical_assumptions_indexed}}`.
+
+The index is deliberately narrow. It covers the Bernoulli-Ising toy equations, their finite binary state assumptions, and the generated artifacts that test the same symbols. Any missing equation identifier or empty assumption list fails the toy-sweep validation gate.

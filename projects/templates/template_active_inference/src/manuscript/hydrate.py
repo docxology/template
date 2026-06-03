@@ -99,11 +99,11 @@ def write_resolved_manuscript(project_root: Path, variables: dict[str, Any]) -> 
     all_unresolved: list[str] = []
 
     for stale in list(out_dir.glob("*.md")) + list(out_dir.glob("*.bib")):
-        stale.unlink()
+        stale.unlink(missing_ok=True)
     for stale_name in ("config.yaml", "preamble.md"):
         stale = out_dir / stale_name
         if stale.exists():
-            stale.unlink()
+            stale.unlink(missing_ok=True)
 
     for md_file in sorted(manuscript_dir.glob("*.md")):
         if md_file.name in EXCLUDED_DOC_FILENAMES:

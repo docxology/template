@@ -11,8 +11,7 @@ from manuscript.sheaf import (
     validate_coverage_strict,
     validate_manifest,
 )
-from manuscript.hydrate import write_resolved_manuscript
-from manuscript.variables import generate_variables
+from gate_support import ensure_gate_artifacts
 
 
 def test_manifest_loads_imrad_sections() -> None:
@@ -22,7 +21,7 @@ def test_manifest_loads_imrad_sections() -> None:
     assert manifest.sections[0].id == "intro"
     assert manifest.sections[0].kind == "group"
     appendix = next(s for s in manifest.sections if s.id == "appendix_full_sheaf")
-    assert len(appendix.tracks) == 9
+    assert len(appendix.tracks) == 31
     assert sum(1 for s in manifest.sections if s.should_compose()) == 12
     # Every IMRAD block now carries a group row (uniform base poset).
     assert sum(1 for s in manifest.sections if s.kind == "group") == 5
@@ -153,8 +152,7 @@ def test_group_rows_skip_compose(tmp_path: Path) -> None:
 
 def test_validate_manuscript_strict_coverage() -> None:
     root = Path(__file__).resolve().parents[1]
-    compose_all_sections(root)
-    write_resolved_manuscript(root, generate_variables(root, require_analysis_outputs=False))
+    ensure_gate_artifacts(root)
     checks = validate_manuscript(root)
     assert checks["sheaf_valid"]
     assert checks["coverage_matrix_valid"]

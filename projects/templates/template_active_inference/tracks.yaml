@@ -37,6 +37,119 @@ tracks:
     paths: [src/visualizations]
     gate: validate_outputs
     required: true
+  - id: provenance
+    label: Artifact provenance and bundle-lineage spine
+    paths: [src/roadmap_tracks, output/data/artifact_provenance.json]
+    gate: validate_outputs
+    required: true
+  - id: replay_matrix
+    label: Deterministic replay matrix
+    paths: [src/roadmap_tracks, output/reports/replay_matrix.json]
+    gate: validate_outputs
+    required: true
+  - id: counterexample
+    label: Expected-failure counterexample matrix
+    paths: [src/roadmap_tracks, output/reports/counterexample_matrix.json]
+    gate: validate_manuscript
+    required: true
+  - id: sensitivity
+    label: Deterministic toy sensitivity sweep
+    paths: [src/roadmap_tracks, output/data/sensitivity_sweep.json]
+    gate: validate_outputs
+    required: true
+  - id: assumption_index
+    label: Analytical equation assumption index
+    sheaf_track: assumption_index
+    paths: [src/roadmap_tracks, output/data/analytical_assumption_index.json]
+    gate: validate_outputs
+    required: true
+  - id: uncertainty
+    label: Posterior and policy uncertainty summaries
+    paths: [src/roadmap_tracks, output/data/uncertainty_summary.json]
+    gate: validate_outputs
+    required: true
+  - id: benchmark
+    label: Compact deterministic toy benchmark matrix
+    paths: [src/roadmap_tracks, output/data/toy_benchmark_matrix.json]
+    gate: validate_outputs
+    required: true
+  - id: model_checking
+    label: Finite-state model-checking witnesses
+    paths: [src/roadmap_tracks, output/reports/model_checking_witnesses.json]
+    gate: validate_outputs
+    required: true
+  - id: interop
+    label: GNN/ontology/JSON round-trip checks
+    paths: [src/roadmap_tracks, output/data/interop_roundtrip_report.json]
+    gate: validate_outputs
+    required: true
+  - id: adversarial_audit
+    label: Expected-failure adversarial audit matrix
+    paths: [src/roadmap_tracks, output/reports/adversarial_audit.json]
+    gate: validate_manuscript
+    required: true
+  - id: evidence_fields
+    label: Artifact field to claim and token index
+    paths: [src/roadmap_tracks, output/data/evidence_field_index.json]
+    gate: validate_manuscript
+    required: true
+  - id: release_bundle
+    label: Release bundle parity manifest
+    paths: [src/roadmap_tracks, output/reports/release_bundle_manifest.json]
+    gate: validate_manuscript
+    required: true
+  - id: theorem_traceability
+    label: Lean theorem and model-checking traceability matrix
+    paths: [src/roadmap_tracks, output/data/theorem_traceability_matrix.json]
+    gate: validate_outputs
+    required: true
+  - id: gate_ergonomics
+    label: Validation gate command/input/negative-control index
+    paths: [src/roadmap_tracks, output/data/validation_gate_index.json]
+    gate: validate_outputs
+    required: true
+  - id: artifact_diffoscope
+    label: Artifact hash and JSONPath diffoscope
+    paths: [src/roadmap_tracks, output/reports/artifact_diffoscope.json]
+    gate: validate_outputs
+    required: true
+  - id: proof_extraction
+    label: Lean proof extraction evidence index
+    paths: [src/roadmap_tracks, output/data/proof_extraction_index.json]
+    gate: validate_outputs
+    required: true
+  - id: state_space_catalog
+    label: Finite toy state-space catalog
+    paths: [src/roadmap_tracks, output/data/state_space_catalog.json]
+    gate: validate_outputs
+    required: true
+  - id: causal_ablation
+    label: Deterministic toy causal ablation matrix
+    paths: [src/roadmap_tracks, output/data/causal_ablation_matrix.json]
+    gate: validate_outputs
+    required: true
+  - id: artifact_license
+    label: Generated artifact license audit
+    paths: [src/roadmap_tracks, output/reports/artifact_license_audit.json]
+    gate: validate_outputs
+    required: true
+  - id: release_notes
+    label: Source-backed release notes evidence
+    paths: [src/roadmap_tracks, output/reports/release_notes_evidence.json]
+    gate: validate_outputs
+    required: true
+  - id: animation_delta
+    label: Animation frame-delta manifest
+    sheaf_track: animation_delta
+    paths: [src/visualizations, output/data/animation_frame_deltas.json]
+    gate: validate_outputs
+    required: true
+  - id: manuscript_staleness
+    label: Hydrated manuscript staleness audit
+    sheaf_track: manuscript_staleness
+    paths: [src/roadmap_tracks, output/reports/manuscript_staleness_report.json]
+    gate: validate_manuscript
+    required: true
   - id: visualization
     label: Sheaf fragment alias for figures
     sheaf_track: visualization
@@ -51,13 +164,13 @@ tracks:
 
 extension_tracks:
   - id: animation
-    label: Belief trajectory animation (opt-in)
+    label: Belief trajectory animation (deterministic default extension artifact)
     sheaf_track: animation
     artifact: output/figures/si_belief_trajectory.gif
     script: render_animation.py
-    required: false
+    required: true
   - id: graph_world
-    label: pymdp graph-world SI extension (opt-in)
+    label: pymdp graph-world SI extension (deterministic default extension artifact)
     artifact: output/data/si_graph_world_summary.json
     script: simulate_si_graph_world.py
-    required: false
+    required: true

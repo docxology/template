@@ -15,6 +15,7 @@ from simulation.pymdp_config import (
     config_hash,
     load_pymdp_config,
 )
+from simulation.pymdp_runtime import construct_agent_with_diagnostics
 from simulation.si_belief import (
     belief_entropy,
     qs_marginal_state1,
@@ -47,6 +48,7 @@ class SIRunResult:
     goal_reached: bool
     action_diversity: int
     trace_steps: list[dict[str, Any]] = field(default_factory=list)
+    runtime_diagnostics: dict[str, Any] = field(default_factory=dict)
 
 
 def sample_next_state(rng: np.random.Generator, b: np.ndarray, state: int, action: int) -> int:
@@ -76,8 +78,6 @@ def run_si_tmaze(
     if not pymdp_available():  # pragma: no cover
         raise RuntimeError("inferactively-pymdp is not installed")
 
-    from pymdp.agent import Agent
-
     cfg = config or load_pymdp_config(project_root)
     if steps is not None:
         cfg = apply_pymdp_overrides(cfg, steps=steps)
@@ -85,17 +85,12 @@ def run_si_tmaze(
     model = build_tmaze_generative_model(cfg)
     spec = spec_from_config(cfg)
 
-    def _numpy_factors(factors: list) -> list[np.ndarray]:
-        return [np.asarray(factor, dtype=np.float64) for factor in factors]
-
-    agent = Agent(
-        A=_numpy_factors(model["A"]),
-        B=_numpy_factors(model["B"]),
-        C=_numpy_factors(model["C"]),
-        D=_numpy_factors(model["D"]),
+    agent, runtime_diagnostics = construct_agent_with_diagnostics(
+        project_root,
+        config=cfg,
+        model=model,
         policy_len=spec.policy_len,
-        inference_algo=cfg.agent.inference_algo,
-        action_selection=cfg.agent.action_selection,
+        context=f"si_tmaze:{cfg.mode}:h{cfg.horizon}:s{cfg.random_seed}",
     )
 
     log = logger or RunLogger.from_project_root(
@@ -130,9 +125,20 @@ def run_si_tmaze(
         selected_policy: int | None = None
         expected_free_energy: float | None = None
         policy_method = cfg.mode
+        policy_evidence: dict[str, Any] = {
+            "posterior_available": False,
+            "q_pi": [],
+            "q_pi_sum": None,
+            "q_pi_entropy": None,
+            "q_pi_normalized": False,
+            "expected_free_energy_available": False,
+            "expected_free_energy_values": [],
+            "selected_policy_expected_free_energy": None,
+            "fallback_reason": "state_inference mode does not call infer_policies",
+        }
 
         if cfg.mode == "policy_inference":
-            action, policy_method, expected_free_energy, selected_policy = select_policy_action(
+            action, policy_method, expected_free_energy, selected_policy, policy_evidence = select_policy_action(
                 agent,
                 qs,
                 b=b_matrix,
@@ -156,7 +162,18 @@ def run_si_tmaze(
             "qs_state1": qs_state1,
             "mode": cfg.mode,
             "policy_method": policy_method,
+            "policy_posterior_available": policy_evidence.get("posterior_available") is True,
+            "policy_posterior_source": policy_evidence.get("posterior_source", policy_method),
+            "q_pi": policy_evidence.get("q_pi", []),
+            "q_pi_sum": policy_evidence.get("q_pi_sum"),
+            "q_pi_entropy": policy_evidence.get("q_pi_entropy"),
+            "q_pi_normalized": policy_evidence.get("q_pi_normalized") is True,
+            "expected_free_energy_available": policy_evidence.get("expected_free_energy_available") is True,
+            "expected_free_energy_values": policy_evidence.get("expected_free_energy_values", []),
+            "selected_policy_expected_free_energy": policy_evidence.get("selected_policy_expected_free_energy"),
         }
+        if policy_evidence.get("fallback_reason"):
+            step_record["fallback_reason"] = policy_evidence["fallback_reason"]
         if selected_policy is not None:
             step_record["selected_policy"] = selected_policy
         if expected_free_energy is not None:
@@ -173,6 +190,7 @@ def run_si_tmaze(
                 ctx["selected_policy"] = selected_policy
             if expected_free_energy is not None:
                 ctx["expected_free_energy"] = expected_free_energy
+            ctx["policy_posterior_available"] = policy_evidence.get("posterior_available") is True
 
     goal_reached = bool(observations and observations[-1] == goal_obs)
     return SIRunResult(
@@ -187,4 +205,5 @@ def run_si_tmaze(
         goal_reached=goal_reached,
         action_diversity=len(set(actions)),
         trace_steps=trace_steps,
+        runtime_diagnostics=runtime_diagnostics,
     )

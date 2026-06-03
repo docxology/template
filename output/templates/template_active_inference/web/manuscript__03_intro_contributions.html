@@ -178,29 +178,31 @@
 <li><strong>Analytical oracle</strong> (<span class="citation"
 data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>):
 closed-form mutual information and free-energy decomposition on a
-symmetric Bernoulli–Ising toy with Monte Carlo cross-checks (<span
-class="citation"
+symmetric Bernoulli–Ising toy with an independent exact-recomputation
+cross-check (<span class="citation"
 data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>, <span
 class="citation"
 data-cites="sec:results_free_energy">[@sec:results_free_energy]</span>).</li>
-<li><strong>Sophisticated-inference harness</strong> (<span
-class="citation"
+<li><strong>Active-inference harness</strong> (<span class="citation"
 data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span>):
-deterministic pymdp T-maze rollout with logged beliefs, actions, and
+deterministic pymdp T-maze rollout — default
+<code>state_inference</code> belief filtering, with sophisticated
+expected-free-energy policy inference selectable via
+<code>mode: policy_inference</code> — with logged beliefs, actions, and
 merged invariant gates (<span class="citation"
 data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>, <span
 class="citation"
 data-cites="sec:results_invariants">[@sec:results_invariants]</span>).</li>
 <li><strong>Sheaf-indexed composition</strong> (<span class="citation"
-data-cites="sec:methods_sheaf">[@sec:methods_sheaf]</span>): 10 optional
-fragment types bind to 16 manifest rows under <span class="citation"
-data-cites="eq:coverage_cell">[@eq:coverage_cell]</span>, with a 9-track
-appendix composability proof (<span class="citation"
+data-cites="sec:methods_sheaf">[@sec:methods_sheaf]</span>): 32 optional
+fragment types bind to 17 manifest rows under <span class="citation"
+data-cites="eq:coverage_cell">[@eq:coverage_cell]</span>, with a
+31-track appendix composability proof (<span class="citation"
 data-cites="sec:appendix_full_sheaf">[@sec:appendix_full_sheaf]</span>).</li>
 </ol>
 <p><span class="citation"
 data-cites="fig:multi_track_architecture">[@fig:multi_track_architecture]</span>
-maps the three scientific tracks to 7 pipeline gates and 10 composable
+maps the three scientific tracks to 29 pipeline gates and 32 composable
 fragment renderers. Measured invariant checks: 12 / 12 passed.</p>
 <p>Ontology-facing symbols in the analytical
 track—<code>location</code>, <code>observation</code>,
@@ -216,14 +218,12 @@ data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>).</p>
 <figure id="fig:multi_track_architecture">
 <img src="../figures/multi_track_architecture.png"
 style="width:95.0%"
-alt="Process diagram linking three scientific tracks to 7 pipeline gates and 10 sheaf fragment types across 16 manifest rows." />
-<figcaption aria-hidden="true">Process diagram linking three scientific
-tracks to 7 pipeline gates and 10 sheaf fragment types across 16
-manifest rows.</figcaption>
+data-fig-alt="Process diagram linking three scientific tracks to 29 pipeline gates and 32 sheaf fragment types across 17 manifest rows."
+alt="Multi-track architecture: analytical, pymdp, and sheaf composition lanes mapped to 29 pipeline gates and 32 composable fragment types." />
+<figcaption aria-hidden="true">Multi-track architecture: analytical,
+pymdp, and sheaf composition lanes mapped to 29 pipeline gates and 32
+composable fragment types.</figcaption>
 </figure>
-<p><em>Figure I1 (intro). Multi-track architecture: analytical, pymdp,
-and sheaf composition lanes mapped to 7 pipeline gates and 10 composable
-fragment types.</em></p>
 <!-- sheaf-track:ontology -->
 <h3 id="ontology-bindings">Ontology bindings</h3>
 <ul>

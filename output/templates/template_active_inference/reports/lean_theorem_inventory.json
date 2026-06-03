@@ -1,0 +1,52 @@
+{
+  "all_proved": true,
+  "forbidden_tokens": [],
+  "rows": [
+    {
+      "name": "branch_graph_world_three_steps_reach_goal",
+      "status": "proved"
+    },
+    {
+      "name": "diamond_graph_world_four_steps_reach_goal",
+      "status": "proved"
+    },
+    {
+      "name": "graph_world_three_steps_reach_goal",
+      "status": "proved"
+    },
+    {
+      "name": "ising_coupling_sum_zero",
+      "status": "proved"
+    },
+    {
+      "name": "loop_graph_world_four_steps_reach_goal",
+      "status": "proved"
+    },
+    {
+      "name": "policy_enumeration_contains_forward",
+      "status": "proved"
+    },
+    {
+      "name": "sophisticated_requires_horizon",
+      "status": "proved"
+    },
+    {
+      "name": "tmaze_goal_absorbing",
+      "status": "proved"
+    },
+    {
+      "name": "tmaze_two_forward_steps_reach_goal",
+      "status": "proved"
+    },
+    {
+      "name": "two_policy_posterior_weights_sum_to_two",
+      "status": "proved"
+    },
+    {
+      "name": "two_state_belief_weights_sum_to_two",
+      "status": "proved"
+    }
+  ],
+  "schema": "template_active_inference.lean_theorem_inventory.v1",
+  "theorem_count": 11
+}

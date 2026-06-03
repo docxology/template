@@ -1,0 +1,3 @@
+The `adversarial_audit` fragment makes expected failures part of the sheaf rather than an informal test note. `output/reports/adversarial_audit.json` records {{adversarial_audit_count}} known-bad rows and {{adversarial_known_bad_passed}} known-bad rows passing; publication proceeds only when every row is documented as an expected failure and mapped to a gate.
+
+The audit rows target the same failure modes as the semantic certificate: incomplete sweep cells, unnormalized uncertainty rows, interop field loss, stale certificate state, and empirical-scope leakage. The scope boundary remains toy-only: `{{scope_boundary_status}}`.

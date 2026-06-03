@@ -180,10 +180,11 @@
 class="math inline">\(\lambda\)</span> on a grid of 21 points up to
 <span class="math inline">\(\lambda_{\max} = 4\)</span>. Closed-form
 mutual information from <span class="citation"
-data-cites="eq:entangled_joint">[@eq:entangled_joint]</span> is compared
-to Monte Carlo estimates from the analytical module (<span
-class="citation"
-data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>).</p>
+data-cites="eq:entangled_joint">[@eq:entangled_joint]</span> is
+cross-checked against an independent exact recomputation via total
+correlation from the analytical module (<span class="citation"
+data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>);
+both are deterministic (no sampling) and agree to 0 nats.</p>
 <p>Measured invariant checks: 12 / 12 passed on the clean tree.</p>
 <!-- sheaf-track:formalism -->
 <p>The sweep reuses the entangled joint defined in <span
@@ -194,29 +195,25 @@ data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>).
 Mutual information <span class="math inline">\(I(\lambda)=\log 2 -
 H_b(\sigma(\lambda))\)</span> is evaluated on the same <span
 class="math inline">\(\lambda\)</span> grid as the analytical oracle and
-Monte Carlo estimates.</p>
+its independent exact recomputation.</p>
 <!-- sheaf-track:simulation -->
-<p>Empirical MI estimates use fixed seed 0 and share the same <span
-class="math inline">\(\lambda\)</span> grid as the closed-form sweep
-(<span class="citation"
+<p>Both estimators are deterministic (no sampling, no RNG) and are
+evaluated on the same <span class="math inline">\(\lambda\)</span> grid
+as the closed-form sweep (<span class="citation"
 data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>,
 <span class="citation"
 data-cites="fig:ising_mi_curve">[@fig:ising_mi_curve]</span>).</p>
 <!-- sheaf-track:visualization -->
-<figure>
-<img src="../figures/ising_mi_curve.png" style="width:90.0%"
-alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows closed-form curve (solid dark line) and Monte Carlo estimates (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows Monte Carlo minus closed-form residuals versus lambda with a zero reference line." />
-<figcaption aria-hidden="true">Two-panel plot of mutual information
-versus coupling strength lambda for the symmetric Bernoulli-Ising toy.
-Left panel shows closed-form curve (solid dark line) and Monte Carlo
-estimates (dashed blue line) with lambda on the x-axis and mutual
-information in nats on the y-axis. Right panel shows Monte Carlo minus
-closed-form residuals versus lambda with a zero reference
-line.</figcaption>
-</figure>
-<p><em>Figure 2 (results). Closed-form and Monte Carlo mutual
-information I(λ) for the symmetric Bernoulli-Ising toy across 21 grid
-points up to λ_max = 4; grid maximum 0.6031 nats on the measured
-sweep.</em></p>
+<p><img src="../figures/ising_mi_curve.png"
+style="width:90.0%" /></p>
+<p><em>Reproduced from <span class="citation"
+data-cites="fig:ising_mi_curve">[@fig:ising_mi_curve]</span>.
+Closed-form <span class="math inline">\(I(\lambda)\)</span> and an
+independent exact recomputation via total correlation for the symmetric
+Bernoulli-Ising toy across 21 grid points up to <span
+class="math inline">\(\lambda_{\max}\)</span> = 4; grid maximum 0.6031
+nats. Both estimators are deterministic (no sampling), so the right
+panel is a cross-implementation agreement check (max residual 0 nats),
+not a sampling residual.</em></p>
 </body>
 </html>

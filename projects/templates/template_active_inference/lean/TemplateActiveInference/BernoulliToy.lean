@@ -1,8 +1,11 @@
 namespace TemplateActiveInference
 
-/-- Placeholder witness: Ising coupling entries sum to zero on the 2×2 grid. -/
-def isingCouplingSum : Int := 0
+/-- The centered 2x2 Ising coupling entries used by the analytical toy. -/
+def isingCouplingEntries : List Int := [1, -1, -1, 1]
 
-theorem ising_coupling_sum_zero : isingCouplingSum = 0 := rfl
+def isingCouplingSum : Int := isingCouplingEntries.foldl (· + ·) 0
+
+theorem ising_coupling_sum_zero : isingCouplingSum = 0 := by
+  decide
 
 end TemplateActiveInference

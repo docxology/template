@@ -37,10 +37,11 @@ def test_figure_registry_fail_closed_on_unknown_token(project_root: Path) -> Non
         render_figure_markdown(
             project_root,
             "sheaf_coverage_heatmap",
-            variables={"sheaf_track_count": "10"},
+            variables={"sheaf_track_count": "30"},
         )
 
 
+@pytest.mark.timeout(30)
 def test_all_generators_write_png(project_root: Path) -> None:
     from analysis import run_analysis
     from manuscript.sheaf.coverage import emit_coverage_artifacts
@@ -68,6 +69,7 @@ def test_free_energy_grid_matches_ssot(project_root: Path) -> None:
     assert len(rows) == len(grid)
 
 
+@pytest.mark.timeout(30)
 def test_generate_all_figures_complete(project_root: Path) -> None:
     from analysis import run_analysis
     from simulation.si_runner import pymdp_available, run_and_persist
@@ -138,7 +140,8 @@ def test_coverage_page_section_figures_registered(project_root: Path) -> None:
     refs = load_section_figures(project_root).get("coverage_page", ())
     assert refs and refs[0].figure_id == "sheaf_coverage_heatmap"
     assert refs[0].number is None
-    assert "Coverage overview" in refs[0].caption_prefix
+    # pandoc-crossref owns numbering: no hand-written caption prefix is emitted.
+    assert refs[0].caption_prefix == ""
 
 
 def test_figure_sheaf_coverage_heatmap_dimensions(project_root: Path) -> None:

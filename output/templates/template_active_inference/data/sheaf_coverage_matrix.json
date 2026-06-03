@@ -3,13 +3,35 @@
     "prose",
     "formalism",
     "simulation",
+    "assumption_index",
     "layers",
     "pymdp",
+    "interop",
+    "provenance",
+    "replay_matrix",
+    "counterexample",
+    "adversarial_audit",
+    "evidence_fields",
+    "release_bundle",
+    "gate_ergonomics",
+    "artifact_diffoscope",
+    "artifact_license",
+    "sensitivity",
+    "uncertainty",
+    "benchmark",
+    "manuscript_staleness",
     "visualization",
     "lean",
+    "model_checking",
+    "theorem_traceability",
+    "proof_extraction",
+    "state_space_catalog",
+    "causal_ablation",
     "gnn",
     "ontology",
-    "animation"
+    "animation",
+    "animation_delta",
+    "release_notes"
   ],
   "sections": [
     {
@@ -42,6 +64,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -56,6 +85,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": false,
           "path": null,
@@ -64,6 +191,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -85,6 +247,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -122,6 +298,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -136,6 +319,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": false,
           "path": null,
@@ -144,6 +425,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -165,6 +481,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -202,6 +532,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -216,6 +553,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/intro_contributions/visualization.md",
@@ -224,6 +659,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -245,6 +715,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -282,6 +766,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -296,6 +787,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": false,
           "path": null,
@@ -304,6 +893,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -325,6 +949,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -362,6 +1000,13 @@
           "color": "black"
         },
         {
+          "track": "assumption_index",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_analytical/assumption_index.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -376,6 +1021,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/methods_analytical/visualization.md",
@@ -384,6 +1127,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -405,6 +1183,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -442,6 +1234,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -456,6 +1255,104 @@
           "color": "black"
         },
         {
+          "track": "interop",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_pymdp/interop.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/methods_pymdp/visualization.md",
@@ -464,6 +1361,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -485,6 +1417,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -522,6 +1468,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -530,6 +1483,104 @@
         },
         {
           "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -550,6 +1601,41 @@
           "color": "black"
         },
         {
+          "track": "model_checking",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_lean/model_checking.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_lean/theorem_traceability.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_lean/proof_extraction.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "gnn",
           "bound": false,
           "path": null,
@@ -565,6 +1651,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -602,6 +1702,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": true,
           "path": "manuscript/sections/imrad/methods_sheaf/layers.md",
@@ -616,6 +1723,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/provenance.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/counterexample.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/adversarial_audit.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/evidence_fields.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "release_bundle",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/release_bundle.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/gate_ergonomics.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/artifact_diffoscope.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "artifact_license",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/artifact_license.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": true,
+          "path": "manuscript/sections/imrad/methods_sheaf/manuscript_staleness.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/methods_sheaf/visualization.md",
@@ -624,6 +1829,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -645,6 +1885,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -682,6 +1936,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -696,6 +1957,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": false,
           "path": null,
@@ -704,6 +2063,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -725,6 +2119,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -762,6 +2170,13 @@
           "color": "black"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -776,6 +2191,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/results_mi_sweep/visualization.md",
@@ -784,6 +2297,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -805,6 +2353,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -842,6 +2404,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -856,6 +2425,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/results_free_energy/visualization.md",
@@ -864,6 +2531,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -889,12 +2591,26 @@
           "path": null,
           "status": "absent",
           "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
         }
       ]
     },
     {
       "id": "results_si_tmaze",
-      "title": "T-maze sophisticated inference",
+      "title": "T-maze active-inference rollout",
       "kind": "section",
       "imrad": "results",
       "depth": 1,
@@ -922,6 +2638,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -936,6 +2659,104 @@
           "color": "black"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/results_si_tmaze/visualization.md",
@@ -944,6 +2765,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -965,6 +2821,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -1002,6 +2872,13 @@
           "color": "black"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -1010,6 +2887,104 @@
         },
         {
           "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_invariants/replay_matrix.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_invariants/sensitivity.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "uncertainty",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_invariants/uncertainty.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "benchmark",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_invariants/benchmark.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "manuscript_staleness",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -1030,6 +3005,41 @@
           "color": "white"
         },
         {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_invariants/state_space_catalog.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "causal_ablation",
+          "bound": true,
+          "path": "manuscript/sections/imrad/results_invariants/causal_ablation.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
           "track": "gnn",
           "bound": false,
           "path": null,
@@ -1045,6 +3055,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -1082,6 +3106,13 @@
           "color": "white"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -1096,6 +3127,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": false,
           "path": null,
@@ -1104,6 +3233,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -1125,6 +3289,20 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -1162,6 +3340,13 @@
           "color": "black"
         },
         {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -1176,6 +3361,104 @@
           "color": "white"
         },
         {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
           "track": "visualization",
           "bound": false,
           "path": null,
@@ -1184,6 +3467,41 @@
         },
         {
           "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -1205,6 +3523,254 @@
         },
         {
           "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
+          "bound": true,
+          "path": "manuscript/sections/imrad/discussion_outlook/release_notes.md",
+          "status": "present",
+          "color": "black"
+        }
+      ]
+    },
+    {
+      "id": "appendix",
+      "title": "Appendix",
+      "kind": "group",
+      "imrad": "appendix",
+      "depth": 0,
+      "compose": false,
+      "cells": [
+        {
+          "track": "prose",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "formalism",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "simulation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "assumption_index",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "layers",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "pymdp",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "interop",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "provenance",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "counterexample",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_bundle",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "artifact_license",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "sensitivity",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "uncertainty",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "benchmark",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "visualization",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "lean",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "model_checking",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "causal_ablation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "gnn",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "ontology",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "animation_delta",
+          "bound": false,
+          "path": null,
+          "status": "absent",
+          "color": "white"
+        },
+        {
+          "track": "release_notes",
           "bound": false,
           "path": null,
           "status": "absent",
@@ -1242,6 +3808,13 @@
           "color": "black"
         },
         {
+          "track": "assumption_index",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/assumption_index.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
           "track": "layers",
           "bound": false,
           "path": null,
@@ -1256,6 +3829,104 @@
           "color": "black"
         },
         {
+          "track": "interop",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/interop.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "provenance",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/provenance.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "replay_matrix",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/replay_matrix.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "counterexample",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/counterexample.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "adversarial_audit",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/adversarial_audit.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "evidence_fields",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/evidence_fields.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "release_bundle",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/release_bundle.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "gate_ergonomics",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/gate_ergonomics.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "artifact_diffoscope",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/artifact_diffoscope.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "artifact_license",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/artifact_license.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "sensitivity",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/sensitivity.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "uncertainty",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/uncertainty.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "benchmark",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/benchmark.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "manuscript_staleness",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/manuscript_staleness.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
           "track": "visualization",
           "bound": true,
           "path": "manuscript/sections/imrad/appendix_full_sheaf/visualization.md",
@@ -1266,6 +3937,41 @@
           "track": "lean",
           "bound": true,
           "path": "manuscript/sections/imrad/appendix_full_sheaf/lean.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "model_checking",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/model_checking.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "theorem_traceability",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/theorem_traceability.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "proof_extraction",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/proof_extraction.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "state_space_catalog",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/state_space_catalog.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "causal_ablation",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/causal_ablation.md",
           "status": "present",
           "color": "black"
         },
@@ -1287,6 +3993,20 @@
           "track": "animation",
           "bound": true,
           "path": "manuscript/sections/imrad/appendix_full_sheaf/animation.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "animation_delta",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/animation_delta.md",
+          "status": "present",
+          "color": "black"
+        },
+        {
+          "track": "release_notes",
+          "bound": true,
+          "path": "manuscript/sections/imrad/appendix_full_sheaf/release_notes.md",
           "status": "present",
           "color": "black"
         }

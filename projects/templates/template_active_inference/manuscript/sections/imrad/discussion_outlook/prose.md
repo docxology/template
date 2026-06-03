@@ -1,3 +1,7 @@
+## What this demonstrates
+
+The result of this manuscript is a *discipline*, not a domain claim: across three toy models every reported number is hydrated from a generated artifact, {{sheaf_law_count}} sheaf axioms are machine-checked before composition, and {{counterexample_count}} negative controls keep each failure path live. No statistic, figure, or cross-track claim here can drift from its artifact without failing a gate before the PDF is built.
+
 ## Limitations
 
 The Bernoulli–Ising toy, T-maze harness, and sheaf composition model are pedagogical. They validate analytical consistency, artifact wiring, renderer dispatch, and manuscript hydration—not empirical claims about biological agents. Default pymdp mode is `{{pymdp_mode}}` with planning horizon {{si_tmaze_policy_len}}; full policy inference remains an opt-in extension ([@sec:methods_pymdp]).

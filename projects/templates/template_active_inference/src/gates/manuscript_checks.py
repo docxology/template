@@ -2,9 +2,29 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from gates.claim_ledger import validate_claim_ledger, verify_claim_bindings
+
+_SHEAF_TRACK_MARKER_RE = re.compile(r"^<!--\s*sheaf-track:([a-z_]+)\s*-->\s*$", re.MULTILINE)
+
+
+def _duplicate_track_markers(manuscript_dir: Path) -> list[str]:
+    """Composed sections in which the same sheaf-track marker appears more than once.
+
+    The composer emits exactly one ``<!-- sheaf-track:X -->`` per (section, track) binding,
+    so a track id appearing twice in one composed flat file means a fragment self-emitted a
+    marker the composer also emits (a doubled stutter). Matches standalone marker lines only,
+    so an inline prose mention of the marker syntax is not counted.
+    """
+    duplicates: list[str] = []
+    for md_file in sorted(manuscript_dir.glob("[0-9][0-9]_*.md")):
+        counts: dict[str, int] = {}
+        for tid in _SHEAF_TRACK_MARKER_RE.findall(md_file.read_text(encoding="utf-8")):
+            counts[tid] = counts.get(tid, 0) + 1
+        duplicates.extend(f"{md_file.name}:{tid}={count}" for tid, count in sorted(counts.items()) if count > 1)
+    return duplicates
 
 
 def validate_manuscript(project_root: Path) -> dict[str, bool]:
@@ -18,13 +38,41 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
         validate_coverage_json_data,
         validate_manifest,
     )
-    from ontology.bindings import validate_gnn_ontology
+    from ontology.bindings import validate_all_gnn_ontology
 
-    gnn_path = root / "gnn" / "bernoulli_toy.gnn.md"
-    gnn_ok = not validate_gnn_ontology(gnn_path)
+    gnn_ok = not validate_all_gnn_ontology(root)
     ctx = load_sheaf_coverage_context(root)
     manifest = ctx.manifest
     registry = ctx.registry
+    promoted_tracks = {
+        "sensitivity",
+        "uncertainty",
+        "benchmark",
+        "model_checking",
+        "interop",
+        "adversarial_audit",
+        "assumption_index",
+        "animation_delta",
+        "manuscript_staleness",
+        "provenance",
+        "replay_matrix",
+        "counterexample",
+        "evidence_fields",
+        "release_bundle",
+        "theorem_traceability",
+        "gate_ergonomics",
+        "artifact_diffoscope",
+        "proof_extraction",
+        "state_space_catalog",
+        "causal_ablation",
+        "artifact_license",
+        "release_notes",
+    }
+    bound_tracks = {track_id for section in manifest.sections for track_id in section.tracks}
+    promoted_tracks_bound = promoted_tracks <= set(registry.tracks) and promoted_tracks <= bound_tracks
+    empirical_adapter_blocked = (
+        "empirical_adapter" not in set(registry.tracks) and "empirical_adapter" not in bound_tracks
+    )
     sheaf_issues = validate_manifest(manifest, root, registry=registry, strict_coverage=True)
     sheaf_ok = not any(i.level == "error" for i in sheaf_issues)
 
@@ -56,10 +104,21 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
             and "<!-- sheaf-layers:registry -->" in sheaf_text
             and "<!-- sheaf-layers:binding-matrix -->" in sheaf_text
             and "<!-- sheaf-layers:legend -->" in sheaf_text
+            and "<!-- sheaf-layers:section-status -->" in sheaf_text
+            and "<!-- sheaf-layers:track-status -->" in sheaf_text
+            and "<!-- sheaf-layers:render-log -->" in sheaf_text
         )
 
     from manuscript.hydrate import EXCLUDED_DOC_FILENAMES, collect_malformed_token_names, validate_manuscript_tokens
     from manuscript.variables import generate_variables
+    from manuscript.sheaf.semantic import validate_semantic_gluing
+    from roadmap_tracks import (
+        validate_integration_audit_artifacts,
+        validate_sheaf_track_artifacts,
+    )
+
+    integration_issues = validate_integration_audit_artifacts(root)
+    sheaf_track_issues = validate_sheaf_track_artifacts(root)
 
     manuscript_dir = root / "manuscript"
     variable_keys = set(generate_variables(root, require_analysis_outputs=False))
@@ -98,6 +157,12 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
         "sheaf_coverage_heatmap": heatmap_path.exists(),
         "methods_sheaf_layers": methods_sheaf_layers,
         "manuscript_tokens_registered": manuscript_tokens_registered,
+        "no_duplicate_sheaf_track_markers": not _duplicate_track_markers(root / "manuscript"),
         "resolved_manuscript_hydrated": resolved_manuscript_hydrated,
         "gnn_concordance": gnn_ok,
+        "semantic_sheaf_gluing": not validate_semantic_gluing(root),
+        "promoted_sheaf_tracks_bound": promoted_tracks_bound,
+        "integration_audit_artifacts": not integration_issues,
+        "canonical_sheaf_tracks": not sheaf_track_issues,
+        "blocked_empirical_adapter": empirical_adapter_blocked,
     }
