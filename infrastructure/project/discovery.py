@@ -14,7 +14,7 @@ from infrastructure.core.logging.utils import get_logger
 # (core.project_paths). Re-exported here so existing
 # ``from infrastructure.project.discovery import resolve_project_root`` callers
 # keep working, without the foundation having to import upward into project.
-from infrastructure.core.project_paths import (  # noqa: F401  (re-export)
+from infrastructure.core.project_paths import (
     NON_RENDERED_SUBDIRS,
     resolve_project_root,
 )
@@ -22,6 +22,16 @@ from infrastructure.project.project_info import ProjectInfo, build_project_info
 from infrastructure.project.validation import validate_project_structure
 
 logger = get_logger(__name__)
+
+#: Public API of this module. ``resolve_project_root`` and ``NON_RENDERED_SUBDIRS``
+#: are re-exported from :mod:`infrastructure.core.project_paths` (declared here so
+#: the re-export is explicit per docs/rules/api_design.md).
+__all__ = [
+    "NON_RENDERED_SUBDIRS",
+    "discover_projects",
+    "get_default_project",
+    "resolve_project_root",
+]
 
 
 def discover_projects(
