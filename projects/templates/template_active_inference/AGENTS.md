@@ -143,7 +143,7 @@ outputs are added and validated.
 | `counts.py` | `structural_counts()` for registry-backed manuscript tokens |
 | `renderers.py` | `RENDERERS`, `resolve_track_body`, generated renderer dispatch |
 
-**Visualizations** (`src/visualizations/`): `figure_registry.py` (YAML SSOT + `write_figure_registry_json`), `figure_helpers.py` (`styled_figure`), `figures_diagrams.py`, `lean_boundary.py`, `figures.py` (`FIGURE_GENERATORS`, 13 figures), `figures_sheaf_{payload,draw}.py`. `generate_all_figures()` emits `output/figures/figure_registry.json` for validation.
+**Visualizations** (`src/visualizations/`): `figure_registry.py` (YAML SSOT + `write_figure_registry_json`), `figure_helpers.py` (`styled_figure`), `figures_diagrams.py`, `lean_boundary.py`, `figures.py` (`FIGURE_GENERATORS`, 15 figures), `figures_sheaf_{payload,draw}.py`. `generate_all_figures()` emits `output/figures/figure_registry.json` for validation.
 
 **Appendix proof:** `appendix_full_sheaf` binds the registry tracks required for the full proof row (all except optional `layers`) → `16_appendix_full_sheaf.md`. Registry size is injected from live counts rather than hand-authored here.
 

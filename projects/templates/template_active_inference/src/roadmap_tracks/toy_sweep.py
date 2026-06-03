@@ -334,11 +334,11 @@ def build_efe_terms(project_root: Path) -> dict[str, Any]:
                 if row.get("expected_free_energy_values")
                 else {},
                 "fallback_reason": "; ".join(row.get("expected_free_energy_fallback_reasons") or [])
-                or "pymdp did not expose decomposed expected-free-energy terms",
+                or "pymdp did not expose expected-free-energy values for this run",
             }
         )
     return {
-        "schema": "template_active_inference.si_efe_terms.v1",
+        "schema": "template_active_inference.si_efe_values.v1",
         "rows": rows,
         "row_count": len(rows),
         # Non-vacuous: a row claiming terms_available must carry non-empty term VALUES, and a
@@ -611,6 +611,8 @@ def validate_toy_sweep_artifacts(project_root: Path) -> list[str]:
         or (not row.get("terms_available") and bool(row.get("fallback_reason")))
         for row in efe_rows
     )
+    if efe.get("schema") != "template_active_inference.si_efe_values.v1":
+        issues.append("si_efe_terms.json schema mismatch")
     if efe.get("all_rows_explained") is not True or efe.get("all_rows_explained") != efe_derived:
         # Re-derived from rows, so a row claiming terms with none — or a tampered summary —
         # is caught even when the stored boolean still reads true.

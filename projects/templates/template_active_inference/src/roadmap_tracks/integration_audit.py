@@ -342,6 +342,14 @@ def build_validation_gate_index(project_root: Path) -> dict[str, Any]:
         {"id": "causal_ablation_matrix", "inputs": ["output/data/causal_ablation_matrix.json"], "indexed": True},
         {"id": "artifact_license_audit", "inputs": ["output/reports/artifact_license_audit.json"], "indexed": True},
         {"id": "release_notes_evidence", "inputs": ["output/reports/release_notes_evidence.json"], "indexed": True},
+        {"id": "proof_dependency_graph", "inputs": ["output/data/proof_dependency_graph.json"], "indexed": True},
+        {"id": "state_transition_table", "inputs": ["output/data/state_transition_table.json"], "indexed": True},
+        {
+            "id": "ablation_sensitivity_report",
+            "inputs": ["output/reports/ablation_sensitivity_report.json"],
+            "indexed": True,
+        },
+        {"id": "release_attestation", "inputs": ["output/reports/release_attestation.json"], "indexed": True},
         {"id": "track_improvement_scope", "inputs": ["output/data/track_improvement_scope.json"], "indexed": True},
         {"id": "blocked_scope_manifest", "inputs": ["output/reports/blocked_scope_manifest.json"], "indexed": True},
         {"id": "lake_build", "inputs": ["lean/lakefile.lean"], "indexed": True},
@@ -474,6 +482,14 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
             "output/data/sheaf_gluing_certificate.json",
             "output/data/evidence_field_index.json",
         ],
+        "theorem_traceability_graph": [
+            "output/data/theorem_traceability_matrix.json",
+            "output/data/proof_dependency_graph.json",
+        ],
+        "causal_ablation_heatmap": [
+            "output/data/causal_ablation_matrix.json",
+            "output/reports/ablation_sensitivity_report.json",
+        ],
     }
     rows = []
     for figure_id in sorted(load_figure_registry(root)):
@@ -551,6 +567,10 @@ def build_manuscript_evidence_tables(project_root: Path) -> dict[str, Any]:
     ablation = _load_json(root / "output" / "data" / "causal_ablation_matrix.json")
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     release_notes = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
+    proof_dependency = _load_json(root / "output" / "data" / "proof_dependency_graph.json")
+    transition_table = _load_json(root / "output" / "data" / "state_transition_table.json")
+    ablation_sensitivity = _load_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
+    release_attestation = _load_json(root / "output" / "reports" / "release_attestation.json")
     tables = [
         {
             "id": "claim_evidence",
@@ -626,6 +646,26 @@ def build_manuscript_evidence_tables(project_root: Path) -> dict[str, Any]:
             "id": "release_notes",
             "row_count": int(release_notes.get("row_count", 0)),
             "source": "output/reports/release_notes_evidence.json",
+        },
+        {
+            "id": "proof_dependency_graph",
+            "row_count": int(proof_dependency.get("edge_count", 0)),
+            "source": "output/data/proof_dependency_graph.json",
+        },
+        {
+            "id": "state_transition_table",
+            "row_count": int(transition_table.get("row_count", 0)),
+            "source": "output/data/state_transition_table.json",
+        },
+        {
+            "id": "ablation_sensitivity",
+            "row_count": int(ablation_sensitivity.get("row_count", 0)),
+            "source": "output/reports/ablation_sensitivity_report.json",
+        },
+        {
+            "id": "release_attestation",
+            "row_count": int(release_attestation.get("row_count", 0)),
+            "source": "output/reports/release_attestation.json",
         },
     ]
     return {
@@ -808,13 +848,18 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
         if row.get("sha256") != _sha256(path):
             issues.append(f"stale_artifact_report.json hash mismatch for {row.get('artifact')}")
     tokens = _load_json(root / "output" / "data" / "manuscript_token_provenance.json")
-    if tokens.get("all_tokens_mapped") is not True:
+    tokens_derived = bool(tokens.get("tokens")) and all(row.get("mapped") for row in tokens.get("tokens") or [])
+    if tokens.get("all_tokens_mapped") is not True or tokens.get("all_tokens_mapped") != tokens_derived:
         issues.append("manuscript_token_provenance.json has unmapped tokens")
     figures = _load_json(root / "output" / "data" / "figure_source_map.json")
-    if figures.get("all_figures_mapped") is not True:
+    figures_derived = bool(figures.get("rows")) and all(row.get("mapped") for row in figures.get("rows") or [])
+    if figures.get("all_figures_mapped") is not True or figures.get("all_figures_mapped") != figures_derived:
         issues.append("figure_source_map.json has unmapped figures")
     claim_audit = _load_json(root / "output" / "reports" / "claim_evidence_audit.json")
-    if claim_audit.get("all_claims_typed") is not True:
+    claims_derived = bool(claim_audit.get("rows")) and all(
+        row.get("has_evidence") and row.get("has_tracks") for row in claim_audit.get("rows") or []
+    )
+    if claim_audit.get("all_claims_typed") is not True or claim_audit.get("all_claims_typed") != claims_derived:
         issues.append("claim_evidence_audit.json has untyped claims")
     scope = _load_json(root / "output" / "reports" / "scope_boundary_audit.json")
     if scope.get("all_current_claims_toy") is not True:
@@ -823,10 +868,19 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     if adversarial.get("all_expected_failures_documented") is not True:
         issues.append("adversarial_audit.json has undocumented expected failures")
     figure_hash = _load_json(root / "output" / "reports" / "figure_hash_manifest.json")
-    if figure_hash.get("all_hashes_present") is not True:
+    figure_hash_derived = bool(figure_hash.get("rows")) and all(
+        row.get("sha256") for row in figure_hash.get("rows") or []
+    )
+    if (
+        figure_hash.get("all_hashes_present") is not True
+        or figure_hash.get("all_hashes_present") != figure_hash_derived
+    ):
         issues.append("figure_hash_manifest.json lacks hashes")
     tables = _load_json(root / "output" / "data" / "manuscript_evidence_tables.json")
-    if tables.get("all_source_backed") is not True:
+    tables_derived = bool(tables.get("tables")) and all(
+        int(table.get("row_count", 0) or 0) > 0 and table.get("source") for table in tables.get("tables") or []
+    )
+    if tables.get("all_source_backed") is not True or tables.get("all_source_backed") != tables_derived:
         issues.append("manuscript_evidence_tables.json has unbacked tables")
     staleness = _load_json(root / "output" / "reports" / "manuscript_staleness_report.json")
     if staleness.get("schema") != "template_active_inference.manuscript_staleness_report.v1":
@@ -844,10 +898,12 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     if staleness and saved_rows != live_rows:
         issues.append("manuscript_staleness_report.json is stale relative to live manuscript tokens")
     symbols = _load_json(root / "output" / "data" / "cross_track_symbol_table.json")
-    if symbols.get("all_consistent") is not True:
+    symbols_derived = bool(symbols.get("rows")) and all(row.get("consistent") for row in symbols.get("rows") or [])
+    if symbols.get("all_consistent") is not True or symbols.get("all_consistent") != symbols_derived:
         issues.append("cross_track_symbol_table.json has inconsistent symbols")
     gate_index = _load_json(root / "output" / "data" / "validation_gate_index.json")
-    if gate_index.get("all_indexed") is not True:
+    gates_derived = bool(gate_index.get("rows")) and all(row.get("indexed") for row in gate_index.get("rows") or [])
+    if gate_index.get("all_indexed") is not True or gate_index.get("all_indexed") != gates_derived:
         issues.append("validation_gate_index.json has unindexed gates")
     diffoscope = _load_json(root / "output" / "reports" / "artifact_diffoscope.json")
     if diffoscope.get("schema") != "template_active_inference.artifact_diffoscope.v1":

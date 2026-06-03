@@ -1,6 +1,6 @@
 {
   "all_claims_typed": true,
-  "claim_count": 81,
+  "claim_count": 85,
   "rows": [
     {
       "has_evidence": true,
@@ -487,6 +487,30 @@
       "has_tracks": true,
       "id": "release_notes_source_backed",
       "path": "output/reports/release_notes_evidence.json"
+    },
+    {
+      "has_evidence": true,
+      "has_tracks": true,
+      "id": "proof_dependency_graph_resolved",
+      "path": "output/data/proof_dependency_graph.json"
+    },
+    {
+      "has_evidence": true,
+      "has_tracks": true,
+      "id": "state_transition_table_complete",
+      "path": "output/data/state_transition_table.json"
+    },
+    {
+      "has_evidence": true,
+      "has_tracks": true,
+      "id": "ablation_sensitivity_source_backed",
+      "path": "output/reports/ablation_sensitivity_report.json"
+    },
+    {
+      "has_evidence": true,
+      "has_tracks": true,
+      "id": "release_attestation_complete",
+      "path": "output/reports/release_attestation.json"
     }
   ],
   "schema": "template_active_inference.claim_evidence_audit.v1"

@@ -70,6 +70,10 @@ CANONICAL_ARTIFACTS: dict[str, str] = {
     "causal_ablation": "output/data/causal_ablation_matrix.json",
     "artifact_license": "output/reports/artifact_license_audit.json",
     "release_notes": "output/reports/release_notes_evidence.json",
+    "proof_dependency_graph": "output/data/proof_dependency_graph.json",
+    "state_transition_table": "output/data/state_transition_table.json",
+    "ablation_sensitivity_report": "output/reports/ablation_sensitivity_report.json",
+    "release_attestation": "output/reports/release_attestation.json",
 }
 
 LEGACY_ARTIFACTS: tuple[str, ...] = (
@@ -443,22 +447,29 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
             CANONICAL_ARTIFACTS["artifact_diffoscope"],
             CANONICAL_ARTIFACTS["artifact_license"],
             CANONICAL_ARTIFACTS["release_notes"],
+            CANONICAL_ARTIFACTS["proof_dependency_graph"],
+            CANONICAL_ARTIFACTS["release_attestation"],
         ),
         "formal_interop": (
             CANONICAL_ARTIFACTS["model_checking"],
             CANONICAL_ARTIFACTS["interop"],
             CANONICAL_ARTIFACTS["proof_extraction"],
+            CANONICAL_ARTIFACTS["proof_dependency_graph"],
             "output/reports/lean_theorem_inventory.json",
             "output/reports/gnn_lint_report.json",
         ),
         "finite_toy_scope": (
             CANONICAL_ARTIFACTS["state_space_catalog"],
             CANONICAL_ARTIFACTS["causal_ablation"],
+            CANONICAL_ARTIFACTS["state_transition_table"],
+            CANONICAL_ARTIFACTS["ablation_sensitivity_report"],
             CANONICAL_ARTIFACTS["sensitivity"],
             CANONICAL_ARTIFACTS["uncertainty"],
         ),
         "rendered_outputs": (
             "output/figures/semantic_gluing_graph.png",
+            "output/figures/theorem_traceability_graph.png",
+            "output/figures/causal_ablation_heatmap.png",
             "output/figures/si_belief_trajectory.gif",
             "output/data/animation_frame_deltas.json",
             "output/reports/figure_hash_manifest.json",
@@ -1018,6 +1029,8 @@ def build_release_bundle_manifest(project_root: Path) -> dict[str, Any]:
         CANONICAL_ARTIFACTS["gate_ergonomics"],
         "output/figures/si_belief_trajectory.gif",
         "output/figures/semantic_gluing_graph.png",
+        "output/figures/theorem_traceability_graph.png",
+        "output/figures/causal_ablation_heatmap.png",
         "output/pdf/template_active_inference_combined.pdf",
         "output/web/template_active_inference.html",
         CANONICAL_ARTIFACTS["artifact_diffoscope"],
@@ -1026,6 +1039,10 @@ def build_release_bundle_manifest(project_root: Path) -> dict[str, Any]:
         CANONICAL_ARTIFACTS["causal_ablation"],
         CANONICAL_ARTIFACTS["artifact_license"],
         CANONICAL_ARTIFACTS["release_notes"],
+        CANONICAL_ARTIFACTS["proof_dependency_graph"],
+        CANONICAL_ARTIFACTS["state_transition_table"],
+        CANONICAL_ARTIFACTS["ablation_sensitivity_report"],
+        CANONICAL_ARTIFACTS["release_attestation"],
     ]
     rows = []
     for rel in required:
@@ -1318,6 +1335,10 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
     ablation = _load_json(root / CANONICAL_ARTIFACTS["causal_ablation"])
     license_audit = _load_json(root / CANONICAL_ARTIFACTS["artifact_license"])
     release_notes = _load_json(root / CANONICAL_ARTIFACTS["release_notes"])
+    proof_dependency = _load_json(root / CANONICAL_ARTIFACTS["proof_dependency_graph"])
+    transition = _load_json(root / CANONICAL_ARTIFACTS["state_transition_table"])
+    ablation_sensitivity = _load_json(root / CANONICAL_ARTIFACTS["ablation_sensitivity_report"])
+    release_attestation = _load_json(root / CANONICAL_ARTIFACTS["release_attestation"])
     claims_by_path = _claim_ids_by_path(root)
     return {
         "no_versioned_live_tracks": not any(VERSIONED_TRACK_RE.search(track_id) for track_id in registry),
@@ -1355,12 +1376,20 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
         "causal_ablation_complete": ablation.get("complete_grid") is True and ablation.get("all_deterministic") is True,
         "artifact_license_safe": license_audit.get("all_license_safe") is True,
         "release_notes_source_backed": release_notes.get("all_notes_source_backed") is True,
+        "proof_dependency_graph_resolved": proof_dependency.get("all_theorems_have_dependencies") is True
+        and proof_dependency.get("all_edges_resolved") is True,
+        "state_transition_table_complete": transition.get("all_transitions_deterministic") is True
+        and transition.get("all_reachable_states_covered") is True,
+        "ablation_sensitivity_source_backed": ablation_sensitivity.get("all_effects_source_backed") is True,
+        "release_attestation_complete": release_attestation.get("all_attested") is True,
         "all_canonical_artifacts_have_claims": all(claims_by_path.get(rel) for rel in CANONICAL_ARTIFACTS.values()),
     }
 
 
 def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
     root = project_root.resolve()
+    from roadmap_tracks.supplemental import write_supplemental_artifacts
+
     try:
         from roadmap_tracks import (
             write_formal_interop_artifacts,
@@ -1408,6 +1437,7 @@ def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
         root / CANONICAL_ARTIFACTS["release_bundle"],
         build_release_bundle_manifest(root),
     )
+    paths.update(write_supplemental_artifacts(root))
     paths["artifact_diffoscope"] = root / CANONICAL_ARTIFACTS["artifact_diffoscope"]
     paths["artifact_license"] = root / CANONICAL_ARTIFACTS["artifact_license"]
     paths["release_notes"] = root / CANONICAL_ARTIFACTS["release_notes"]
@@ -1450,6 +1480,7 @@ def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
             root / CANONICAL_ARTIFACTS["release_bundle"],
             build_release_bundle_manifest(root),
         )
+        paths.update(write_supplemental_artifacts(root))
         paths["artifact_diffoscope"] = root / CANONICAL_ARTIFACTS["artifact_diffoscope"]
         paths["artifact_license"] = root / CANONICAL_ARTIFACTS["artifact_license"]
         paths["release_notes"] = root / CANONICAL_ARTIFACTS["release_notes"]
@@ -1479,6 +1510,20 @@ def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
         _refresh_hydrated_manuscript(root)
         status_paths = write_sheaf_status_outputs(root)
         paths.update(status_paths)
+        paths["semantic"] = _write_json(root / CANONICAL_ARTIFACTS["semantic"], build_semantic_gluing_certificate(root))
+        paths.update(write_supplemental_artifacts(root))
+        _refresh_hydrated_manuscript(root)
+        paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], build_artifact_provenance(root))
+        paths["dependency"] = _write_json(
+            root / CANONICAL_ARTIFACTS["dependency"], build_validation_dependency_graph(root)
+        )
+        paths["semantic"] = _write_json(root / CANONICAL_ARTIFACTS["semantic"], build_semantic_gluing_certificate(root))
+        paths.update(write_supplemental_artifacts(root))
+        _refresh_hydrated_manuscript(root)
+        paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], build_artifact_provenance(root))
+        paths["dependency"] = _write_json(
+            root / CANONICAL_ARTIFACTS["dependency"], build_validation_dependency_graph(root)
+        )
         paths["semantic"] = _write_json(root / CANONICAL_ARTIFACTS["semantic"], build_semantic_gluing_certificate(root))
     except (ImportError, OSError, ValueError, KeyError):
         pass

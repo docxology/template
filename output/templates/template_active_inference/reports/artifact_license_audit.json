@@ -1,6 +1,6 @@
 {
   "all_license_safe": true,
-  "row_count": 70,
+  "row_count": 76,
   "rows": [
     {
       "artifact": "output/data/analysis_statistics.json",
@@ -119,6 +119,13 @@
       "license": "MIT",
       "license_safe": true,
       "producer": "run_analytical_sweep.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/proof_dependency_graph.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
       "source_kind": "generated_local"
     },
     {
@@ -241,6 +248,13 @@
       "source_kind": "generated_local"
     },
     {
+      "artifact": "output/data/state_transition_table.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
       "artifact": "output/data/theorem_traceability_matrix.json",
       "license": "MIT",
       "license_safe": true,
@@ -283,6 +297,13 @@
       "source_kind": "generated_local"
     },
     {
+      "artifact": "output/figures/causal_ablation_heatmap.png",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_figures.py",
+      "source_kind": "generated_local"
+    },
+    {
       "artifact": "output/figures/figure_registry.json",
       "license": "MIT",
       "license_safe": true,
@@ -315,6 +336,20 @@
       "license": "MIT",
       "license_safe": true,
       "producer": "render_animation.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/figures/theorem_traceability_graph.png",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_figures.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/ablation_sensitivity_report.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
       "source_kind": "generated_local"
     },
     {
@@ -427,6 +462,13 @@
       "license": "MIT",
       "license_safe": true,
       "producer": "simulate_si_tmaze.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/release_attestation.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
       "source_kind": "generated_local"
     },
     {

@@ -75,9 +75,9 @@ These laws verify the sheaf *axioms* on a finite base poset. They do **not** com
 
 <!-- sheaf-track:provenance -->
 
-The `provenance` fragment makes artifact lineage a live canonical sheaf track. The configured producer `generate_sheaf_tracks.py` writes `output/data/artifact_provenance.json`, which hashes 70 required toy artifacts and records producer scripts, source commit, deterministic seed fields, config digests, and 5 artifact bundles. Publication claims that depend on generated files must be traceable to this lineage table or to a narrower artifact-specific certificate.
+The `provenance` fragment makes artifact lineage a live canonical sheaf track. The configured producer `generate_sheaf_tracks.py` writes `output/data/artifact_provenance.json`, which hashes 76 required toy artifacts and records producer scripts, source commit, deterministic seed fields, config digests, and 5 artifact bundles. Publication claims that depend on generated files must be traceable to this lineage table or to a narrower artifact-specific certificate.
 
-The provenance claim is intentionally limited: every listed artifact exists, has a SHA-256 digest or an explicit cycle exclusion, is produced by a configured analysis script, and carries seed/config provenance (`70` seeded rows; all seeded flag `true`; bundle-complete flag `true`). A changed file, missing producer, or stale saved digest is a validation failure, not a prose warning.
+The provenance claim is intentionally limited: every listed artifact exists, has a SHA-256 digest or an explicit cycle exclusion, is produced by a configured analysis script, and carries seed/config provenance (`76` seeded rows; all seeded flag `true`; bundle-complete flag `true`). A changed file, missing producer, or stale saved digest is a validation failure, not a prose warning.
 
 <!-- sheaf-track:counterexample -->
 
@@ -93,15 +93,15 @@ The audit rows target the same failure modes as the semantic certificate: incomp
 
 <!-- sheaf-track:evidence_fields -->
 
-The `evidence_fields` fragment indexes the exact artifact fields that support typed claims and hydrated manuscript tokens. `output/data/evidence_field_index.json` records 81 field rows, and the track passes only when every referenced JSONPath or dotted field is present (`true`).
+The `evidence_fields` fragment indexes the exact artifact fields that support typed claims and hydrated manuscript tokens. `output/data/evidence_field_index.json` records 85 field rows, and the track passes only when every referenced JSONPath or dotted field is present (`true`).
 
 <!-- sheaf-track:release_bundle -->
 
-The `release_bundle` fragment records whether the canonical deliverables exist before copying and whether copied root outputs match or are explicitly deferred until the copy stage. `output/reports/release_bundle_manifest.json` tracks 23 required deliverables with source-present flag `true`.
+The `release_bundle` fragment records whether the canonical deliverables exist before copying and whether copied root outputs match or are explicitly deferred until the copy stage. `output/reports/release_bundle_manifest.json` tracks 29 required deliverables with source-present flag `true`.
 
 <!-- sheaf-track:gate_ergonomics -->
 
-The `gate_ergonomics` fragment turns validation commands into evidence rows. `output/data/validation_gate_index.json` records 22 gate rows, each naming required inputs and the negative-control surface that should fail closed.
+The `gate_ergonomics` fragment turns validation commands into evidence rows. `output/data/validation_gate_index.json` records 26 gate rows, each naming required inputs and the negative-control surface that should fail closed.
 
 <!-- sheaf-track:artifact_diffoscope -->
 
@@ -110,7 +110,7 @@ The `gate_ergonomics` fragment turns validation commands into evidence rows. `ou
 The `artifact_diffoscope` track compares saved provenance hashes against live
 artifact hashes at the artifact root JSONPath. Its proof artifact is
 `output/reports/artifact_diffoscope.json`: it currently records
-37 comparison rows, with equality status
+39 comparison rows, with equality status
 `true`.
 
 <!-- sheaf-track:artifact_license -->
@@ -120,12 +120,12 @@ artifact hashes at the artifact root JSONPath. Its proof artifact is
 The `artifact_license` track classifies generated and project-source artifacts
 under the public project license boundary. Its audit artifact is
 `output/reports/artifact_license_audit.json`: it currently records
-70 rows, with license-safe status
+76 rows, with license-safe status
 `true`.
 
 <!-- sheaf-track:manuscript_staleness -->
 
-The `manuscript_staleness` fragment closes the hydration loop. `output/reports/manuscript_staleness_report.json` checks 212 manuscript token bindings against the current generated variables after resolved markdown is written; the pass flag is `true`.
+The `manuscript_staleness` fragment closes the hydration loop. `output/reports/manuscript_staleness_report.json` checks 227 manuscript token bindings against the current generated variables after resolved markdown is written; the pass flag is `true`.
 
 This is a publication-systems claim, not a domain result. A stale hydrated value, unresolved token, or missing resolved section becomes a validation failure before PDF or web outputs are accepted.
 
@@ -246,26 +246,26 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `counterexample` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
 | `adversarial_audit` | `markdown` | 2 | 2 | 0 | 9 | `complete` |
 | `evidence_fields` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `release_bundle` | `markdown` | 2 | 2 | 0 | 4 | `complete` |
-| `gate_ergonomics` | `markdown` | 2 | 2 | 0 | 4 | `complete` |
+| `release_bundle` | `markdown` | 2 | 2 | 0 | 5 | `complete` |
+| `gate_ergonomics` | `markdown` | 2 | 2 | 0 | 5 | `complete` |
 | `artifact_diffoscope` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
 | `artifact_license` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `sensitivity` | `markdown` | 2 | 2 | 0 | 7 | `complete` |
-| `uncertainty` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
+| `sensitivity` | `markdown` | 2 | 2 | 0 | 9 | `complete` |
+| `uncertainty` | `markdown` | 2 | 2 | 0 | 4 | `complete` |
 | `benchmark` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
 | `manuscript_staleness` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
 | `visualization` | `section_figures` | 10 | 10 | 0 | 10 | `complete` |
-| `lean` | `markdown` | 2 | 2 | 0 | 7 | `complete` |
-| `model_checking` | `markdown` | 2 | 2 | 0 | 6 | `complete` |
-| `theorem_traceability` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
-| `proof_extraction` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `state_space_catalog` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `causal_ablation` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
+| `lean` | `markdown` | 2 | 2 | 0 | 8 | `complete` |
+| `model_checking` | `markdown` | 2 | 2 | 0 | 7 | `complete` |
+| `theorem_traceability` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
+| `proof_extraction` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
+| `state_space_catalog` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
+| `causal_ablation` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
 | `gnn` | `markdown` | 3 | 3 | 0 | 4 | `complete` |
 | `ontology` | `ontology_yaml` | 5 | 5 | 0 | 5 | `complete` |
 | `animation` | `markdown` | 1 | 1 | 0 | 2 | `complete` |
 | `animation_delta` | `markdown` | 1 | 1 | 0 | 1 | `complete` |
-| `release_notes` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
+| `release_notes` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
 
 **Status cells:** 544 section-track cells.
 
@@ -279,7 +279,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `coverage_matrix_built` | `sheaf.coverage` | `output/data/sheaf_coverage_matrix.json` | `ok` | 90 present cells |
 | `section_status_matrix_built` | `sheaf.status` | `output/data/sheaf_section_status_matrix.json` | `ok` | 544 section-track cells |
 | `layers_renderer_bound` | `sheaf.layers_report` | `manuscript/08_methods_sheaf.md` | `ok` | methods sheaf layer tables |
-| `semantic_artifacts_indexed` | `sheaf.semantic` | `output/data/validation_dependency_graph.json` | `ok` | 70 artifact producer rows |
+| `semantic_artifacts_indexed` | `sheaf.semantic` | `output/data/validation_dependency_graph.json` | `ok` | 76 artifact producer rows |
 | `validation_gates_indexed` | `gates` | `output/data/validation_gate_index.json` | `ok` | 3 gate groups |
 | `manuscript_sections_composed` | `sheaf.compose` | `manuscript/*.md` | `ok` | 16 composed markdown files |
 
@@ -299,7 +299,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `evidence_fields_mapped` | `output/data/evidence_field_index.json` | `generate_sheaf_tracks.py` | validate_outputs, validate_manuscript |
 | `validation_dependency_graph` | `output/data/validation_dependency_graph.json` | `generate_sheaf_tracks.py` | validate_manuscript, validate_outputs |
 
-**Claim rows:** 81 typed evidence claims.
+**Claim rows:** 85 typed evidence claims.
 
 <!-- sheaf-layers:artifact-producers -->
 ## Artifact producer graph
@@ -323,6 +323,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/data/ontology_alias_index.json` | `generate_formal_interop_tracks.py` | Yes | methods_pymdp, appendix_full_sheaf |
 | `output/data/ontology_profile_matrix.json` | `generate_formal_interop_tracks.py` | Yes | methods_pymdp, appendix_full_sheaf |
 | `output/data/parameter_sweep.csv` | `run_analytical_sweep.py` | Yes | methods_analytical, results_mi_sweep |
+| `output/data/proof_dependency_graph.json` | `generate_sheaf_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/data/proof_extraction_index.json` | `generate_formal_interop_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/data/pymdp_policy_posterior_grid.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, appendix_full_sheaf |
 | `output/data/sensitivity_sweep.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
@@ -340,6 +341,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/data/si_tmaze_summary.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, results_si_tmaze |
 | `output/data/si_tmaze_trace.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, results_si_tmaze |
 | `output/data/state_space_catalog.json` | `generate_toy_sweep_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
+| `output/data/state_transition_table.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/data/theorem_traceability_matrix.json` | `generate_sheaf_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/data/toy_benchmark_matrix.json` | `generate_toy_sweep_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/data/track_improvement_scope.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
@@ -347,6 +349,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/data/validation_dependency_graph.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf |
 | `output/data/validation_gate_index.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/figures/si_belief_trajectory.gif` | `render_animation.py` | Yes | appendix_full_sheaf |
+| `output/reports/ablation_sensitivity_report.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/reports/adversarial_audit.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/reports/artifact_diffoscope.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/reports/artifact_license_audit.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
@@ -363,6 +366,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/reports/model_checking_witnesses.json` | `generate_sheaf_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/reports/producer_completeness.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/reports/pymdp_runtime_diagnostics.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, appendix_full_sheaf |
+| `output/reports/release_attestation.json` | `generate_sheaf_tracks.py` | Yes | discussion_outlook, appendix_full_sheaf |
 | `output/reports/release_bundle_manifest.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/reports/release_notes_evidence.json` | `generate_integration_audit.py` | Yes | discussion_outlook, appendix_full_sheaf |
 | `output/reports/replay_matrix.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |

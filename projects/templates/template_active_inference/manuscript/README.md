@@ -8,5 +8,6 @@ The sheaf-composed manuscript for the multi-track exemplar.
   simulation, visualization, pymdp, lean) that the sheaf composer glues together.
 - `sheaf/` — manifest-indexed sheaf registry, section bindings, and coverage config
   controlling composition.
-- `refs/` — reference label mappings. `references.bib` — bibliography.
+- `figures.yaml` and `output/figures/figure_registry.json` are the figure-label
+  contract. `references.bib` is the bibliography.
 - `config.yaml` — paper metadata, authors, render targets. `preamble.md` — LaTeX preamble.

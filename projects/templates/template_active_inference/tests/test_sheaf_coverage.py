@@ -116,3 +116,6 @@ def test_figure_registry_includes_si_and_layers_figures() -> None:
     assert any(ref.figure_id == "si_belief_entropy_curve" for ref in section_refs)
     sheaf_refs = load_section_figures(root)["methods_sheaf"]
     assert any(ref.figure_id == "sheaf_layers_overview" for ref in sheaf_refs)
+    appendix_refs = load_section_figures(root)["appendix_full_sheaf"]
+    assert any(ref.figure_id == "theorem_traceability_graph" for ref in appendix_refs)
+    assert any(ref.figure_id == "causal_ablation_heatmap" for ref in appendix_refs)

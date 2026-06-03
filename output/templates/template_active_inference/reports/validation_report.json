@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-02T21:00:10.334673",
+  "timestamp": "2026-06-03T00:19:55.078429",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -8,148 +8,10 @@
     "Figure registry": true,
     "Evidence registry": true,
     "Project design overlays": true,
-    "Artifact manifest": false
+    "Artifact manifest": true
   },
   "figure_issues": [],
   "output_statistics": {
-    "artifact_manifest_issues": [
-      "missing declared output: projects/template_active_inference/output",
-      "missing declared output: projects/template_active_inference/output",
-      "missing declared output: projects/template_active_inference/output",
-      "missing declared output: projects/template_active_inference/output",
-      "missing declared output: projects/template_active_inference/output",
-      "missing declared output: projects/template_active_inference/output",
-      "undeclared artifact: output/data/analysis_statistics.json",
-      "undeclared artifact: output/data/analytical_assumption_index.json",
-      "undeclared artifact: output/data/analytical_observable_sweep.json",
-      "undeclared artifact: output/data/animation_frame_deltas.json",
-      "undeclared artifact: output/data/artifact_provenance.json",
-      "undeclared artifact: output/data/causal_ablation_matrix.json",
-      "undeclared artifact: output/data/cross_track_symbol_table.json",
-      "undeclared artifact: output/data/evidence_field_index.json",
-      "undeclared artifact: output/data/figure_source_map.json",
-      "undeclared artifact: output/data/gnn_roundtrip_report.json",
-      "undeclared artifact: output/data/interop_roundtrip_report.json",
-      "undeclared artifact: output/data/manuscript_evidence_tables.json",
-      "undeclared artifact: output/data/manuscript_token_provenance.json",
-      "undeclared artifact: output/data/manuscript_variables.json",
-      "undeclared artifact: output/data/ontology_alias_index.json",
-      "undeclared artifact: output/data/ontology_profile_matrix.json",
-      "undeclared artifact: output/data/parameter_sweep.csv",
-      "undeclared artifact: output/data/proof_extraction_index.json",
-      "undeclared artifact: output/data/pymdp_policy_posterior_grid.json",
-      "undeclared artifact: output/data/sensitivity_sweep.json",
-      "undeclared artifact: output/data/sheaf_coverage_matrix.json",
-      "undeclared artifact: output/data/sheaf_evidence_crosswalk.json",
-      "undeclared artifact: output/data/sheaf_gluing_certificate.json",
-      "undeclared artifact: output/data/sheaf_section_status_matrix.json",
-      "undeclared artifact: output/data/si_efe_terms.json",
-      "undeclared artifact: output/data/si_graph_world_summary.json",
-      "undeclared artifact: output/data/si_graph_world_topology_sweep.json",
-      "undeclared artifact: output/data/si_graph_world_topology_traces.json",
-      "undeclared artifact: output/data/si_graph_world_trace.json",
-      "undeclared artifact: output/data/si_policy_comparison.json",
-      "undeclared artifact: output/data/si_policy_grid.json",
-      "undeclared artifact: output/data/si_tmaze_summary.json",
-      "undeclared artifact: output/data/si_tmaze_trace.json",
-      "undeclared artifact: output/data/state_space_catalog.json",
-      "undeclared artifact: output/data/theorem_traceability_matrix.json",
-      "undeclared artifact: output/data/toy_benchmark_matrix.json",
-      "undeclared artifact: output/data/track_improvement_scope.json",
-      "undeclared artifact: output/data/uncertainty_summary.json",
-      "undeclared artifact: output/data/validation_dependency_graph.json",
-      "undeclared artifact: output/data/validation_gate_index.json",
-      "undeclared artifact: output/figures/figure_registry.json",
-      "undeclared artifact: output/figures/free_energy_curve.png",
-      "undeclared artifact: output/figures/gnn_ontology_concordance.png",
-      "undeclared artifact: output/figures/invariant_dashboard.png",
-      "undeclared artifact: output/figures/ising_mi_curve.png",
-      "undeclared artifact: output/figures/lean_boundary_status.png",
-      "undeclared artifact: output/figures/multi_track_architecture.png",
-      "undeclared artifact: output/figures/semantic_gluing_graph.png",
-      "undeclared artifact: output/figures/sheaf_coverage_heatmap.png",
-      "undeclared artifact: output/figures/sheaf_layers_overview.png",
-      "undeclared artifact: output/figures/si_belief_entropy_curve.png",
-      "undeclared artifact: output/figures/si_belief_trajectory.gif",
-      "undeclared artifact: output/figures/si_obs_action_trace.png",
-      "undeclared artifact: output/figures/si_tmaze_actions.png",
-      "undeclared artifact: output/figures/tmaze_schematic.png",
-      "undeclared artifact: output/manuscript/00_00_sheaf_coverage.md",
-      "undeclared artifact: output/manuscript/00_abstract.md",
-      "undeclared artifact: output/manuscript/02_intro_motivation.md",
-      "undeclared artifact: output/manuscript/03_intro_contributions.md",
-      "undeclared artifact: output/manuscript/05_methods_analytical.md",
-      "undeclared artifact: output/manuscript/06_methods_pymdp.md",
-      "undeclared artifact: output/manuscript/07_methods_lean.md",
-      "undeclared artifact: output/manuscript/08_methods_sheaf.md",
-      "undeclared artifact: output/manuscript/10_results_mi_sweep.md",
-      "undeclared artifact: output/manuscript/11_results_free_energy.md",
-      "undeclared artifact: output/manuscript/12_results_si_tmaze.md",
-      "undeclared artifact: output/manuscript/13_results_invariants.md",
-      "undeclared artifact: output/manuscript/15_discussion_outlook.md",
-      "undeclared artifact: output/manuscript/16_appendix_full_sheaf.md",
-      "undeclared artifact: output/manuscript/17_conclusion.md",
-      "undeclared artifact: output/manuscript/99_references.md",
-      "undeclared artifact: output/manuscript/config.yaml",
-      "undeclared artifact: output/manuscript/preamble.md",
-      "undeclared artifact: output/manuscript/references.bib",
-      "undeclared artifact: output/reports/adversarial_audit.json",
-      "undeclared artifact: output/reports/artifact_diffoscope.json",
-      "undeclared artifact: output/reports/artifact_license_audit.json",
-      "undeclared artifact: output/reports/blocked_scope_manifest.json",
-      "undeclared artifact: output/reports/claim_evidence_audit.json",
-      "undeclared artifact: output/reports/counterexample_matrix.json",
-      "undeclared artifact: output/reports/figure_hash_manifest.json",
-      "undeclared artifact: output/reports/gnn_lint_report.json",
-      "undeclared artifact: output/reports/graph_world_invariants.json",
-      "undeclared artifact: output/reports/invariants.json",
-      "undeclared artifact: output/reports/lean_graph_world_inventory.json",
-      "undeclared artifact: output/reports/lean_theorem_inventory.json",
-      "undeclared artifact: output/reports/manuscript_staleness_report.json",
-      "undeclared artifact: output/reports/model_checking_witnesses.json",
-      "undeclared artifact: output/reports/producer_completeness.json",
-      "undeclared artifact: output/reports/pymdp_runtime_diagnostics.json",
-      "undeclared artifact: output/reports/release_bundle_manifest.json",
-      "undeclared artifact: output/reports/release_notes_evidence.json",
-      "undeclared artifact: output/reports/replay_matrix.json",
-      "undeclared artifact: output/reports/reproducibility_replay.json",
-      "undeclared artifact: output/reports/scope_boundary_audit.json",
-      "undeclared artifact: output/reports/sheaf_render_log.json",
-      "undeclared artifact: output/reports/si_invariants.json",
-      "undeclared artifact: output/reports/si_tmaze_run_report.json",
-      "undeclared artifact: output/reports/stale_artifact_report.json",
-      "undeclared artifact: output/reports/test_results.json",
-      "undeclared artifact: output/reports/test_results.md",
-      "undeclared artifact: output/data/transmission_manifest.json",
-      "undeclared artifact: output/figures/transmission_integrity_strip.png",
-      "undeclared artifact: output/figures/transmission_pairing.png",
-      "undeclared artifact: output/manuscript/00_00_transmission_begin.md",
-      "undeclared artifact: output/manuscript/99_zz_transmission_end.md",
-      "undeclared artifact: output/pdf/_combined_manuscript.bbl",
-      "undeclared artifact: output/pdf/_combined_manuscript.blg",
-      "undeclared artifact: output/pdf/_combined_manuscript.md",
-      "undeclared artifact: output/pdf/_combined_manuscript.tex",
-      "undeclared artifact: output/pdf/references.bib",
-      "undeclared artifact: output/pdf/template_active_inference_combined.pdf",
-      "undeclared artifact: output/web/_combined_manuscript.md",
-      "undeclared artifact: output/web/index.html",
-      "undeclared artifact: output/web/manuscript__00_00_sheaf_coverage.html",
-      "undeclared artifact: output/web/manuscript__00_abstract.html",
-      "undeclared artifact: output/web/manuscript__02_intro_motivation.html",
-      "undeclared artifact: output/web/manuscript__03_intro_contributions.html",
-      "undeclared artifact: output/web/manuscript__05_methods_analytical.html",
-      "undeclared artifact: output/web/manuscript__06_methods_pymdp.html",
-      "undeclared artifact: output/web/manuscript__07_methods_lean.html",
-      "undeclared artifact: output/web/manuscript__08_methods_sheaf.html",
-      "undeclared artifact: output/web/manuscript__10_results_mi_sweep.html",
-      "undeclared artifact: output/web/manuscript__11_results_free_energy.html",
-      "undeclared artifact: output/web/manuscript__12_results_si_tmaze.html",
-      "undeclared artifact: output/web/manuscript__13_results_invariants.html",
-      "undeclared artifact: output/web/manuscript__15_discussion_outlook.html",
-      "undeclared artifact: output/web/manuscript__16_appendix_full_sheaf.html",
-      "undeclared artifact: output/web/manuscript__17_conclusion.html",
-      "undeclared artifact: output/web/manuscript__99_references.html"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -162,20 +24,20 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 1.8,
+            "size_mb": 1.94,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 2.19,
+            "size_mb": 2.35,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 18,
-            "size_mb": 0.38,
+            "size_mb": 0.41,
             "readable": true,
             "optional": false
           },
@@ -188,22 +50,22 @@
           },
           "figures": {
             "exists": true,
-            "files": 17,
-            "size_mb": 1.68,
+            "files": 19,
+            "size_mb": 1.82,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 41,
-            "size_mb": 1.54,
+            "files": 43,
+            "size_mb": 1.65,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 34,
-            "size_mb": 0.27,
+            "files": 36,
+            "size_mb": 0.31,
             "readable": true,
             "optional": false
           },
@@ -234,13 +96,13 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "2.19",
+          "size_mb": "2.35",
           "largest_file": "template_active_inference_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 18,
-          "size_mb": "0.38",
+          "size_mb": "0.41",
           "largest_file": "index.html"
         },
         "slides": {
@@ -251,20 +113,20 @@
         },
         "figures": {
           "exists": true,
-          "file_count": 17,
-          "size_mb": "1.68",
+          "file_count": 19,
+          "size_mb": "1.82",
           "largest_file": "sheaf_layers_overview.png"
         },
         "data": {
           "exists": true,
-          "file_count": 41,
-          "size_mb": "1.54",
+          "file_count": 43,
+          "size_mb": "1.65",
           "largest_file": "sheaf_section_status_matrix.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 34,
-          "size_mb": "0.27",
+          "file_count": 36,
+          "size_mb": "0.31",
           "largest_file": "manuscript_staleness_report.json"
         },
         "simulations": {
@@ -290,14 +152,14 @@
         "pdf": 10,
         "web": 18,
         "slides": 0,
-        "figures": 17,
-        "data": 41,
-        "reports": 34,
+        "figures": 19,
+        "data": 43,
+        "reports": 36,
         "simulations": 0,
         "llm": 0,
         "logs": 2
       },
-      "total_size_mb": 6.065000534057617,
+      "total_size_mb": 6.5284423828125,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -309,30 +171,23 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 2.189316749572754
+      "size_mb": 2.3465747833251953
     },
     "figures": {
-      "files": 17,
-      "size_mb": 1.675771713256836
+      "files": 19,
+      "size_mb": 1.8188467025756836
     },
     "data": {
-      "files": 41,
-      "size_mb": 1.541172981262207
+      "files": 43,
+      "size_mb": 1.6480646133422852
     }
   },
   "summary": {
     "total_checks": 8,
-    "passed": 7,
-    "failed": 1,
+    "passed": 8,
+    "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": false
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Artifact manifest reported drift or missing declared outputs",
-      "action": "Regenerate declared outputs or update the stage contract",
-      "file": "projects/templates/template_active_inference/output/reports/artifact_manifest.json"
-    }
-  ]
+  "recommendations": []
 }

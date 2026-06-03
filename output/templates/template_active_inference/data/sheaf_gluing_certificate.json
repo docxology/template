@@ -252,6 +252,22 @@
         "validate_outputs"
       ]
     },
+    "output/data/proof_dependency_graph.json": {
+      "claim_ids": [
+        "proof_dependency_graph_resolved"
+      ],
+      "consumers": [
+        "methods_lean",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_sheaf_tracks.py",
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
     "output/data/proof_extraction_index.json": {
       "claim_ids": [
         "proof_extraction_constructive"
@@ -518,6 +534,22 @@
         "validate_manuscript"
       ]
     },
+    "output/data/state_transition_table.json": {
+      "claim_ids": [
+        "state_transition_table_complete"
+      ],
+      "consumers": [
+        "results_invariants",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_sheaf_tracks.py",
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
     "output/data/theorem_traceability_matrix.json": {
       "claim_ids": [
         "theorem_traceability_linked"
@@ -614,6 +646,19 @@
         "validate_manuscript"
       ]
     },
+    "output/figures/causal_ablation_heatmap.png": {
+      "claim_ids": [],
+      "consumers": [
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
     "output/figures/figure_registry.json": {
       "claim_ids": [],
       "consumers": [
@@ -684,6 +729,35 @@
       "producer": "render_animation.py",
       "validation_gates": [
         "validate_outputs"
+      ]
+    },
+    "output/figures/theorem_traceability_graph.png": {
+      "claim_ids": [],
+      "consumers": [
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
+    "output/reports/ablation_sensitivity_report.json": {
+      "claim_ids": [
+        "ablation_sensitivity_source_backed"
+      ],
+      "consumers": [
+        "results_invariants",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_sheaf_tracks.py",
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
       ]
     },
     "output/reports/adversarial_audit.json": {
@@ -934,6 +1008,22 @@
         "validate_manuscript"
       ]
     },
+    "output/reports/release_attestation.json": {
+      "claim_ids": [
+        "release_attestation_complete"
+      ],
+      "consumers": [
+        "discussion_outlook",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_sheaf_tracks.py",
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
     "output/reports/release_bundle_manifest.json": {
       "claim_ids": [
         "release_bundle_sources_present"
@@ -1070,6 +1160,10 @@
     }
   },
   "artifact_sources": {
+    "ablation_sensitivity_report": {
+      "exists": true,
+      "path": "output/reports/ablation_sensitivity_report.json"
+    },
     "analysis_statistics": {
       "exists": true,
       "path": "output/data/analysis_statistics.json"
@@ -1106,6 +1200,14 @@
       "exists": true,
       "path": "output/reports/manuscript_staleness_report.json"
     },
+    "proof_dependency_graph": {
+      "exists": true,
+      "path": "output/data/proof_dependency_graph.json"
+    },
+    "release_attestation": {
+      "exists": true,
+      "path": "output/reports/release_attestation.json"
+    },
     "release_bundle": {
       "exists": true,
       "path": "output/reports/release_bundle_manifest.json"
@@ -1121,6 +1223,10 @@
     "si_summary": {
       "exists": true,
       "path": "output/data/si_tmaze_summary.json"
+    },
+    "state_transition_table": {
+      "exists": true,
+      "path": "output/data/state_transition_table.json"
     },
     "theorem_traceability": {
       "exists": true,
@@ -1696,7 +1802,7 @@
       "id": "si_efe_rows_explained",
       "path": "output/data/si_efe_terms.json",
       "section": "results_invariants",
-      "statement": "EFE artifact explicitly records availability or fallback for every policy-comparison row.",
+      "statement": "EFE values artifact explicitly records value availability or measured fallback for every policy-comparison row.",
       "tracks": [
         "pymdp",
         "sensitivity"
@@ -2310,10 +2416,70 @@
         "release_bundle",
         "gate_ergonomics"
       ]
+    },
+    {
+      "evidence": {
+        "equals": true,
+        "field": "all_theorems_have_dependencies"
+      },
+      "id": "proof_dependency_graph_resolved",
+      "path": "output/data/proof_dependency_graph.json",
+      "section": "methods_lean",
+      "statement": "Proof dependency graph links every extracted theorem to source, tactic, definitions, and finite model witnesses.",
+      "tracks": [
+        "proof_extraction",
+        "theorem_traceability",
+        "lean"
+      ]
+    },
+    {
+      "evidence": {
+        "equals": true,
+        "field": "all_reachable_states_covered"
+      },
+      "id": "state_transition_table_complete",
+      "path": "output/data/state_transition_table.json",
+      "section": "results_invariants",
+      "statement": "State transition table covers every reachable finite graph-world and T-maze model row with deterministic transitions.",
+      "tracks": [
+        "state_space_catalog",
+        "model_checking",
+        "sensitivity"
+      ]
+    },
+    {
+      "evidence": {
+        "equals": true,
+        "field": "all_effects_source_backed"
+      },
+      "id": "ablation_sensitivity_source_backed",
+      "path": "output/reports/ablation_sensitivity_report.json",
+      "section": "results_invariants",
+      "statement": "Ablation sensitivity report joins every causal-ablation effect to sensitivity and uncertainty source artifacts.",
+      "tracks": [
+        "causal_ablation",
+        "sensitivity",
+        "uncertainty"
+      ]
+    },
+    {
+      "evidence": {
+        "equals": true,
+        "field": "all_attested"
+      },
+      "id": "release_attestation_complete",
+      "path": "output/reports/release_attestation.json",
+      "section": "discussion_outlook",
+      "statement": "Release attestation binds validation, bundle hash, license audit, semantic certificate, and blocked-scope status.",
+      "tracks": [
+        "release_bundle",
+        "release_notes",
+        "gate_ergonomics"
+      ]
     }
   ],
   "evidence_crosswalk": {
-    "claim_count": 81,
+    "claim_count": 85,
     "claims": [
       {
         "artifact_exists": true,
@@ -3093,7 +3259,7 @@
         "path": "output/data/si_efe_terms.json",
         "producer": "generate_toy_sweep_tracks.py",
         "section": "results_invariants",
-        "statement": "EFE artifact explicitly records availability or fallback for every policy-comparison row.",
+        "statement": "EFE values artifact explicitly records value availability or measured fallback for every policy-comparison row.",
         "tracks": [
           "pymdp",
           "sensitivity"
@@ -3946,12 +4112,98 @@
           "validate_outputs",
           "validate_manuscript"
         ]
+      },
+      {
+        "artifact_exists": true,
+        "evidence": {
+          "equals": true,
+          "field": "all_theorems_have_dependencies"
+        },
+        "id": "proof_dependency_graph_resolved",
+        "path": "output/data/proof_dependency_graph.json",
+        "producer": "generate_sheaf_tracks.py",
+        "section": "methods_lean",
+        "statement": "Proof dependency graph links every extracted theorem to source, tactic, definitions, and finite model witnesses.",
+        "tracks": [
+          "proof_extraction",
+          "theorem_traceability",
+          "lean"
+        ],
+        "validation_gates": [
+          "validate_outputs",
+          "validate_manuscript"
+        ]
+      },
+      {
+        "artifact_exists": true,
+        "evidence": {
+          "equals": true,
+          "field": "all_reachable_states_covered"
+        },
+        "id": "state_transition_table_complete",
+        "path": "output/data/state_transition_table.json",
+        "producer": "generate_sheaf_tracks.py",
+        "section": "results_invariants",
+        "statement": "State transition table covers every reachable finite graph-world and T-maze model row with deterministic transitions.",
+        "tracks": [
+          "state_space_catalog",
+          "model_checking",
+          "sensitivity"
+        ],
+        "validation_gates": [
+          "validate_outputs",
+          "validate_manuscript"
+        ]
+      },
+      {
+        "artifact_exists": true,
+        "evidence": {
+          "equals": true,
+          "field": "all_effects_source_backed"
+        },
+        "id": "ablation_sensitivity_source_backed",
+        "path": "output/reports/ablation_sensitivity_report.json",
+        "producer": "generate_sheaf_tracks.py",
+        "section": "results_invariants",
+        "statement": "Ablation sensitivity report joins every causal-ablation effect to sensitivity and uncertainty source artifacts.",
+        "tracks": [
+          "causal_ablation",
+          "sensitivity",
+          "uncertainty"
+        ],
+        "validation_gates": [
+          "validate_outputs",
+          "validate_manuscript"
+        ]
+      },
+      {
+        "artifact_exists": true,
+        "evidence": {
+          "equals": true,
+          "field": "all_attested"
+        },
+        "id": "release_attestation_complete",
+        "path": "output/reports/release_attestation.json",
+        "producer": "generate_sheaf_tracks.py",
+        "section": "discussion_outlook",
+        "statement": "Release attestation binds validation, bundle hash, license audit, semantic certificate, and blocked-scope status.",
+        "tracks": [
+          "release_bundle",
+          "release_notes",
+          "gate_ergonomics"
+        ],
+        "validation_gates": [
+          "validate_outputs",
+          "validate_manuscript"
+        ]
       }
     ],
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
   "issues": [],
   "manuscript_variables": {
+    "ablation_sensitivity_row_count": 36,
+    "ablation_sensitivity_source_backed": true,
     "adversarial_audit_all_documented": true,
     "adversarial_audit_count": 22,
     "adversarial_known_bad_passed": 0,
@@ -3962,9 +4214,9 @@
     "animation_deltas_all_nonzero": true,
     "appendix_sheaf_track_count": 31,
     "artifact_diffoscope_all_equal": true,
-    "artifact_diffoscope_row_count": 37,
+    "artifact_diffoscope_row_count": 39,
     "artifact_license_all_safe": true,
-    "artifact_license_row_count": 70,
+    "artifact_license_row_count": 76,
     "benchmark_all_models_complete": true,
     "benchmark_model_count": 3,
     "bernoulli_ontology_term_count": 8,
@@ -3972,7 +4224,7 @@
     "blocked_scope_status": "blocked",
     "causal_ablation_complete_grid": true,
     "causal_ablation_row_count": 36,
-    "claim_evidence_audit_count": 81,
+    "claim_evidence_audit_count": 85,
     "composed_section_count": 12,
     "counterexample_all_known_bad_fail": 1,
     "counterexample_count": 22,
@@ -3983,10 +4235,10 @@
     "cross_track_symbols_consistent": 1,
     "dependency_edge_type_count": 16,
     "dependency_edge_types_ok": true,
-    "evidence_field_count": 81,
+    "evidence_field_count": 85,
     "evidence_fields_mapped": true,
     "figure_source_all_mapped": true,
-    "figure_source_coverage_count": 13,
+    "figure_source_coverage_count": 15,
     "free_energy_argmin_lambda": 0.0,
     "gnn_spec_version": "GNN v1.1",
     "imrad_group_count": 5,
@@ -4001,12 +4253,14 @@
     "lean_graph_world_all_topologies_witnessed": true,
     "lean_graph_world_topology_witness_count": 4,
     "manuscript_staleness_all_fresh": true,
-    "manuscript_staleness_row_count": 212,
+    "manuscript_staleness_row_count": 227,
     "model_checking_all_passed": true,
     "model_checking_witness_count": 12,
     "param_sweep_grid_points": 21,
     "pipeline_track_count": 29,
     "project_name": "template_active_inference",
+    "proof_dependency_all_resolved": true,
+    "proof_dependency_edge_count": 169,
     "proof_extraction_all_constructive": true,
     "proof_extraction_theorem_count": 10,
     "provenance_all_config_digests": true,
@@ -4014,7 +4268,7 @@
     "provenance_all_source_commits": true,
     "provenance_bundle_complete": true,
     "provenance_bundle_count": 5,
-    "provenance_seeded_count": 70,
+    "provenance_seeded_count": 76,
     "pymdp_config_hash": "81eb061f43b7bfd7",
     "pymdp_horizon": 2,
     "pymdp_mode": "state_inference",
@@ -4025,7 +4279,9 @@
     "pymdp_runtime_known_warning_count": 4,
     "pymdp_runtime_unexpected_warning_count": 0,
     "random_seed": 0,
-    "release_bundle_artifact_count": 23,
+    "release_attestation_all_attested": true,
+    "release_attestation_row_count": 5,
+    "release_bundle_artifact_count": 29,
     "release_bundle_sources_present": true,
     "release_notes_row_count": 3,
     "release_notes_source_backed": true,
@@ -4037,7 +4293,7 @@
     "reproducibility_check_count": 5,
     "scope_boundary_status": "toy_only_pass",
     "semantic_ok": true,
-    "semantic_restriction_count": 95,
+    "semantic_restriction_count": 103,
     "sensitivity_cell_count": 96,
     "sensitivity_complete_grid": true,
     "sheaf_law_count": 6,
@@ -4072,24 +4328,28 @@
     "si_tmaze_policy_len": 2,
     "si_tmaze_steps": 2,
     "stale_artifact_all_fresh": true,
-    "stale_artifact_fresh_count": 37,
+    "stale_artifact_fresh_count": 39,
     "state_space_catalog_all_finite": true,
     "state_space_catalog_row_count": 6,
+    "state_transition_all_covered": true,
+    "state_transition_row_count": 24,
     "sweep_max_residual": 4.440892098500626e-16,
     "sweep_rmse_mi": 2.122461271936776e-16,
     "theorem_traceability_linked": true,
     "theorem_traceability_row_count": 11,
-    "token_provenance_count": 397,
+    "token_provenance_count": 427,
     "track_improvement_all_live_valid": true,
     "track_improvement_row_count": 37,
     "uncertainty_all_normalized": true,
     "uncertainty_bin_count": 3,
     "uncertainty_row_count": 12,
-    "validation_gate_index_count": 22,
-    "validation_spine_artifact_count": 70
+    "validation_gate_index_count": 26,
+    "validation_spine_artifact_count": 76
   },
   "ok": true,
   "restrictions": {
+    "ablation_sensitivity_row_count": 36,
+    "ablation_sensitivity_source_backed": true,
     "adversarial_expected_failures": true,
     "adversarial_expected_failures_documented": true,
     "adversarial_known_bad_passed": 0,
@@ -4110,14 +4370,14 @@
     "blocked_empirical_adapter": true,
     "blocked_empirical_scope": true,
     "causal_ablation_complete": true,
-    "claim_count": 81,
+    "claim_count": 85,
     "configured_artifact_producers_ok": true,
     "counterexamples_fail_as_expected": true,
     "coverage_missing": 0,
     "dependency_edge_type_count": 16,
     "dependency_edge_types_complete": true,
     "dependency_edge_types_ok": true,
-    "evidence_field_count": 81,
+    "evidence_field_count": 85,
     "evidence_fields_mapped": true,
     "figure_source_coverage": true,
     "gate_ergonomics_indexed": true,
@@ -4130,7 +4390,7 @@
     "lean_all_proved": true,
     "lean_proved_count": 22,
     "manuscript_staleness_all_fresh": true,
-    "manuscript_staleness_row_count": 212,
+    "manuscript_staleness_row_count": 227,
     "model_checking_all_passed": true,
     "model_checking_exhaustive": true,
     "model_checking_witness_count": 12,
@@ -4151,6 +4411,8 @@
     "policy_posterior_normalized": true,
     "policy_posterior_row_count": 10,
     "producer_coverage_complete": true,
+    "proof_dependency_edge_count": 169,
+    "proof_dependency_graph_resolved": true,
     "proof_extraction_constructive": true,
     "provenance_bundle_complete": true,
     "provenance_bundle_count": 5,
@@ -4159,7 +4421,9 @@
     "pymdp_runtime_known_warning_count": 4,
     "pymdp_runtime_ok": true,
     "pymdp_runtime_unexpected_warning_count": 0,
-    "release_bundle_artifact_count": 23,
+    "release_attestation_complete": true,
+    "release_attestation_row_count": 5,
+    "release_bundle_artifact_count": 29,
     "release_bundle_parity_ok": true,
     "release_bundle_sources_present": true,
     "release_notes_source_backed": true,
@@ -4179,6 +4443,8 @@
     "sheaf_render_log_event_count": 8,
     "stale_artifacts_all_fresh": true,
     "state_spaces_finite": true,
+    "state_transition_row_count": 24,
+    "state_transition_table_complete": true,
     "theorem_traceability_linked": true,
     "theorem_traceability_row_count": 11,
     "token_provenance_complete": true,
@@ -4189,7 +4455,7 @@
     "uncertainty_all_normalized": true,
     "uncertainty_normalized": true,
     "uncertainty_row_count": 12,
-    "validation_gate_index_count": 22,
+    "validation_gate_index_count": 26,
     "validation_spine_ok": true
   },
   "schema": "template_active_inference.semantic_gluing.v2",

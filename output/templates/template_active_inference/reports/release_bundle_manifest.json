@@ -1,8 +1,8 @@
 {
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
-  "artifact_count": 23,
-  "bundle_hash": "9eea7209b4e9b43d98ed1c7f789ad3ae3d47ed796e2d118dafdd3eee4018813e",
+  "artifact_count": 29,
+  "bundle_hash": "549ca7c323a178d59c05662ea936d33f0cfd0e1cf21e2e668b69183dc5d0ba59",
   "copied_output_parity": {
     "all_copied_outputs_match": true,
     "all_copied_outputs_match_or_deferred": true,
@@ -10,7 +10,7 @@
     "copied_root": "/Users/4d/Documents/GitHub/template-active-inference-clean-pr/output/templates/template_active_inference",
     "copied_root_exists": true,
     "pre_copy_stage": true,
-    "row_count": 23,
+    "row_count": 29,
     "rows": [
       {
         "artifact": "output/data/sheaf_gluing_certificate.json",
@@ -21,7 +21,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "9da3f0f50e02e29ac15dc63f64f6a81f3d2fca22c4b6955414b30692eb811472"
+        "source_sha256": "91ecb4c61ac73a798164e65bc0b1663a036f6849b0d80a647ed109eef9adc230"
       },
       {
         "artifact": "output/data/validation_dependency_graph.json",
@@ -32,7 +32,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "6be59f5e982b8de4d16681ddf246d50a41036647d69b864bc8377b7fdef25fe2"
+        "source_sha256": "da67f8a47260a67d97c3b5e553ae75e9797a123ea6e88312bf23305d5f8c7db1"
       },
       {
         "artifact": "output/data/artifact_provenance.json",
@@ -43,7 +43,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "7bad195c4ce577e0a5dd63ca000f9c66ab55cf017b6f614618f67d85075cffb7"
+        "source_sha256": "70eeae105cb8041949f23885fdcf0ed4a817a16773d0d50f5e8cab40dddc376f"
       },
       {
         "artifact": "output/reports/replay_matrix.json",
@@ -54,7 +54,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "107e760d293f140a851d61eb5eb9033e6ea2699531c97bbea4bacfb26064c698"
+        "source_sha256": "073e9b94304d15ba5f27922fb1592066c9df19fb71f48e0475152ec5ac1a8b85"
       },
       {
         "artifact": "output/data/sensitivity_sweep.json",
@@ -109,7 +109,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "56b5e053a4d2cf70d3d523fc8971c2192abd3500ca9362b7647cff3fc6a9190a"
+        "source_sha256": "c33a83df2fb286f873ecfaf270eb2efed1fd9907fbd5033a5460b2933fdf4c3f"
       },
       {
         "artifact": "output/reports/adversarial_audit.json",
@@ -131,7 +131,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "418bbe8860636703bdd192ca7b68fd9aa7edd2e068d061af1e3fe7c8b170da0b"
+        "source_sha256": "05d3a1121df02157f96cf531873265542b64f5489f34e77c35eb8be76dd55dff"
       },
       {
         "artifact": "output/data/theorem_traceability_matrix.json",
@@ -153,7 +153,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "0491ebdb6d0492a74e67c946e175658ecb99e4bcb7e7532fea6fd4bcc18f1128"
+        "source_sha256": "d1bbfc88a4d525acb31db727919fc90adb5729b87ce463881c906432f098bce6"
       },
       {
         "artifact": "output/figures/si_belief_trajectory.gif",
@@ -175,7 +175,29 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "c56feee6a234679f58321e18f1e0f52a7881760aa6b7eea480d5346138d04c53"
+        "source_sha256": "4a73c276c040b4e30251a0909016e205fc7e606482da2010292e8fafcf5509c3"
+      },
+      {
+        "artifact": "output/figures/theorem_traceability_graph.png",
+        "comparison_deferred_until_copy": true,
+        "copied_exists": false,
+        "copied_path": "figures/theorem_traceability_graph.png",
+        "copied_sha256": "",
+        "hash_matches": false,
+        "matches_when_copied": true,
+        "source_exists": true,
+        "source_sha256": "25bb56f96ac140949d62946b111b0abf8bfbecc51636ab3874152eaf3cdf5b0a"
+      },
+      {
+        "artifact": "output/figures/causal_ablation_heatmap.png",
+        "comparison_deferred_until_copy": true,
+        "copied_exists": false,
+        "copied_path": "figures/causal_ablation_heatmap.png",
+        "copied_sha256": "",
+        "hash_matches": false,
+        "matches_when_copied": true,
+        "source_exists": true,
+        "source_sha256": "62851e1ea16588fdf968c4afe896d473024554e5f78dac8a4029236eec731a55"
       },
       {
         "artifact": "output/pdf/template_active_inference_combined.pdf",
@@ -208,7 +230,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "690e8461f6d37732a01f7915bec0e95e1b4c8ecd86014c457e835f1624b84ddc"
+        "source_sha256": "e1093f6cf3762cac9fed47f1d5f205292a42bf6b3e69ebc6a3ab88ee6b4e4ea9"
       },
       {
         "artifact": "output/data/proof_extraction_index.json",
@@ -252,7 +274,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "d078c0af6743f91399c1fa379d4fb0403d69dd566d765e60f021af6e134e6e7f"
+        "source_sha256": "5cfdfa32d5a9145f37119104cef31b1965932fa9afbb42ba09e80a0427026f5b"
       },
       {
         "artifact": "output/reports/release_notes_evidence.json",
@@ -264,6 +286,50 @@
         "matches_when_copied": true,
         "source_exists": true,
         "source_sha256": "7295f187c00b6a01eaf26c4cb824e112fb9f9d46c551a68c95a76bab259845e3"
+      },
+      {
+        "artifact": "output/data/proof_dependency_graph.json",
+        "comparison_deferred_until_copy": true,
+        "copied_exists": false,
+        "copied_path": "data/proof_dependency_graph.json",
+        "copied_sha256": "",
+        "hash_matches": false,
+        "matches_when_copied": true,
+        "source_exists": true,
+        "source_sha256": "27bd570f9ab585dc8f92b56c4788a65c99d12eb77d8056c2043763fa93db57b2"
+      },
+      {
+        "artifact": "output/data/state_transition_table.json",
+        "comparison_deferred_until_copy": true,
+        "copied_exists": false,
+        "copied_path": "data/state_transition_table.json",
+        "copied_sha256": "",
+        "hash_matches": false,
+        "matches_when_copied": true,
+        "source_exists": true,
+        "source_sha256": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f"
+      },
+      {
+        "artifact": "output/reports/ablation_sensitivity_report.json",
+        "comparison_deferred_until_copy": true,
+        "copied_exists": false,
+        "copied_path": "reports/ablation_sensitivity_report.json",
+        "copied_sha256": "",
+        "hash_matches": false,
+        "matches_when_copied": true,
+        "source_exists": true,
+        "source_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357"
+      },
+      {
+        "artifact": "output/reports/release_attestation.json",
+        "comparison_deferred_until_copy": true,
+        "copied_exists": false,
+        "copied_path": "reports/release_attestation.json",
+        "copied_sha256": "",
+        "hash_matches": false,
+        "matches_when_copied": true,
+        "source_exists": true,
+        "source_sha256": "c3978d58d013f16ea12a8e455461539fd1bc8c224966bcb00e5dd64abb34aaab"
       }
     ]
   },
@@ -273,28 +339,28 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "9da3f0f50e02e29ac15dc63f64f6a81f3d2fca22c4b6955414b30692eb811472"
+      "source_sha256": "91ecb4c61ac73a798164e65bc0b1663a036f6849b0d80a647ed109eef9adc230"
     },
     {
       "artifact": "output/data/validation_dependency_graph.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "6be59f5e982b8de4d16681ddf246d50a41036647d69b864bc8377b7fdef25fe2"
+      "source_sha256": "da67f8a47260a67d97c3b5e553ae75e9797a123ea6e88312bf23305d5f8c7db1"
     },
     {
       "artifact": "output/data/artifact_provenance.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "7bad195c4ce577e0a5dd63ca000f9c66ab55cf017b6f614618f67d85075cffb7"
+      "source_sha256": "70eeae105cb8041949f23885fdcf0ed4a817a16773d0d50f5e8cab40dddc376f"
     },
     {
       "artifact": "output/reports/replay_matrix.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "107e760d293f140a851d61eb5eb9033e6ea2699531c97bbea4bacfb26064c698"
+      "source_sha256": "073e9b94304d15ba5f27922fb1592066c9df19fb71f48e0475152ec5ac1a8b85"
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
@@ -329,7 +395,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "56b5e053a4d2cf70d3d523fc8971c2192abd3500ca9362b7647cff3fc6a9190a"
+      "source_sha256": "c33a83df2fb286f873ecfaf270eb2efed1fd9907fbd5033a5460b2933fdf4c3f"
     },
     {
       "artifact": "output/reports/adversarial_audit.json",
@@ -343,7 +409,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "418bbe8860636703bdd192ca7b68fd9aa7edd2e068d061af1e3fe7c8b170da0b"
+      "source_sha256": "05d3a1121df02157f96cf531873265542b64f5489f34e77c35eb8be76dd55dff"
     },
     {
       "artifact": "output/data/theorem_traceability_matrix.json",
@@ -357,7 +423,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "0491ebdb6d0492a74e67c946e175658ecb99e4bcb7e7532fea6fd4bcc18f1128"
+      "source_sha256": "d1bbfc88a4d525acb31db727919fc90adb5729b87ce463881c906432f098bce6"
     },
     {
       "artifact": "output/figures/si_belief_trajectory.gif",
@@ -371,7 +437,21 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "c56feee6a234679f58321e18f1e0f52a7881760aa6b7eea480d5346138d04c53"
+      "source_sha256": "4a73c276c040b4e30251a0909016e205fc7e606482da2010292e8fafcf5509c3"
+    },
+    {
+      "artifact": "output/figures/theorem_traceability_graph.png",
+      "deferred_until_render": false,
+      "required_deliverable": true,
+      "source_exists": true,
+      "source_sha256": "25bb56f96ac140949d62946b111b0abf8bfbecc51636ab3874152eaf3cdf5b0a"
+    },
+    {
+      "artifact": "output/figures/causal_ablation_heatmap.png",
+      "deferred_until_render": false,
+      "required_deliverable": true,
+      "source_exists": true,
+      "source_sha256": "62851e1ea16588fdf968c4afe896d473024554e5f78dac8a4029236eec731a55"
     },
     {
       "artifact": "output/pdf/template_active_inference_combined.pdf",
@@ -392,7 +472,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "690e8461f6d37732a01f7915bec0e95e1b4c8ecd86014c457e835f1624b84ddc"
+      "source_sha256": "e1093f6cf3762cac9fed47f1d5f205292a42bf6b3e69ebc6a3ab88ee6b4e4ea9"
     },
     {
       "artifact": "output/data/proof_extraction_index.json",
@@ -420,7 +500,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "d078c0af6743f91399c1fa379d4fb0403d69dd566d765e60f021af6e134e6e7f"
+      "source_sha256": "5cfdfa32d5a9145f37119104cef31b1965932fa9afbb42ba09e80a0427026f5b"
     },
     {
       "artifact": "output/reports/release_notes_evidence.json",
@@ -428,6 +508,34 @@
       "required_deliverable": true,
       "source_exists": true,
       "source_sha256": "7295f187c00b6a01eaf26c4cb824e112fb9f9d46c551a68c95a76bab259845e3"
+    },
+    {
+      "artifact": "output/data/proof_dependency_graph.json",
+      "deferred_until_render": false,
+      "required_deliverable": true,
+      "source_exists": true,
+      "source_sha256": "27bd570f9ab585dc8f92b56c4788a65c99d12eb77d8056c2043763fa93db57b2"
+    },
+    {
+      "artifact": "output/data/state_transition_table.json",
+      "deferred_until_render": false,
+      "required_deliverable": true,
+      "source_exists": true,
+      "source_sha256": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f"
+    },
+    {
+      "artifact": "output/reports/ablation_sensitivity_report.json",
+      "deferred_until_render": false,
+      "required_deliverable": true,
+      "source_exists": true,
+      "source_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357"
+    },
+    {
+      "artifact": "output/reports/release_attestation.json",
+      "deferred_until_render": false,
+      "required_deliverable": true,
+      "source_exists": true,
+      "source_sha256": "c3978d58d013f16ea12a8e455461539fd1bc8c224966bcb00e5dd64abb34aaab"
     }
   ],
   "schema": "template_active_inference.release_bundle_manifest.v1",

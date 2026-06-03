@@ -1,6 +1,6 @@
 {
   "all_fresh": true,
-  "row_count": 212,
+  "row_count": 227,
   "rows": [
     {
       "expected": "90",
@@ -507,7 +507,7 @@
       "token": "composed_section_count"
     },
     {
-      "expected": "70",
+      "expected": "76",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -521,7 +521,7 @@
       "token": "provenance_bundle_count"
     },
     {
-      "expected": "70",
+      "expected": "76",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -570,7 +570,7 @@
       "token": "scope_boundary_status"
     },
     {
-      "expected": "81",
+      "expected": "85",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -584,7 +584,7 @@
       "token": "evidence_fields_mapped"
     },
     {
-      "expected": "23",
+      "expected": "29",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -598,14 +598,14 @@
       "token": "release_bundle_sources_present"
     },
     {
-      "expected": "22",
+      "expected": "26",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "validation_gate_index_count"
     },
     {
-      "expected": "37",
+      "expected": "39",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -619,7 +619,7 @@
       "token": "artifact_diffoscope_all_equal"
     },
     {
-      "expected": "70",
+      "expected": "76",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -633,7 +633,7 @@
       "token": "artifact_license_all_safe"
     },
     {
-      "expected": "212",
+      "expected": "227",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -1102,6 +1102,27 @@
       "token": "sheaf_laws_verified"
     },
     {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "analytical_assumption_count"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "analytical_equation_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "analytical_assumptions_indexed"
+    },
+    {
       "expected": "4",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
@@ -1162,6 +1183,20 @@
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "counterexample_count"
+    },
+    {
+      "expected": "1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "counterexample_all_known_bad_fail"
+    },
+    {
+      "expected": "22",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
       "token": "adversarial_audit_count"
     },
     {
@@ -1179,7 +1214,7 @@
       "token": "adversarial_known_bad_passed"
     },
     {
-      "expected": "81",
+      "expected": "85",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
@@ -1193,7 +1228,7 @@
       "token": "evidence_fields_mapped"
     },
     {
-      "expected": "23",
+      "expected": "29",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
@@ -1207,14 +1242,14 @@
       "token": "release_bundle_sources_present"
     },
     {
-      "expected": "22",
+      "expected": "26",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
       "token": "validation_gate_index_count"
     },
     {
-      "expected": "37",
+      "expected": "39",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
@@ -1228,7 +1263,7 @@
       "token": "artifact_diffoscope_all_equal"
     },
     {
-      "expected": "70",
+      "expected": "76",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
@@ -1284,6 +1319,20 @@
       "token": "benchmark_all_models_complete"
     },
     {
+      "expected": "227",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "manuscript_staleness_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "manuscript_staleness_all_fresh"
+    },
+    {
       "expected": "21",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
@@ -1317,6 +1366,41 @@
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
       "token": "si_tmaze_policy_len"
+    },
+    {
+      "expected": "11",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "theorem_traceability_row_count"
+    },
+    {
+      "expected": "169",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "proof_dependency_edge_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "proof_dependency_all_resolved"
+    },
+    {
+      "expected": "36",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "ablation_sensitivity_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "ablation_sensitivity_source_backed"
     },
     {
       "expected": "17",
@@ -1375,13 +1459,6 @@
       "token": "lean_graph_world_all_topologies_witnessed"
     },
     {
-      "expected": "11",
-      "fresh": true,
-      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
-      "section": "manuscript/16_appendix_full_sheaf.md",
-      "token": "theorem_traceability_row_count"
-    },
-    {
       "expected": "true",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
@@ -1415,6 +1492,20 @@
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
       "token": "state_space_catalog_all_finite"
+    },
+    {
+      "expected": "24",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "state_transition_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "state_transition_all_covered"
     },
     {
       "expected": "36",
@@ -1457,6 +1548,20 @@
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
       "token": "release_notes_source_backed"
+    },
+    {
+      "expected": "5",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "release_attestation_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "release_attestation_all_attested"
     },
     {
       "expected": "12",

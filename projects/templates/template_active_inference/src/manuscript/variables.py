@@ -155,6 +155,10 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
     causal_ablation_data = _load_json(root / "output" / "data" / "causal_ablation_matrix.json")
     artifact_license_data = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     release_notes_data = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
+    proof_dependency_data = _load_json(root / "output" / "data" / "proof_dependency_graph.json")
+    state_transition_data = _load_json(root / "output" / "data" / "state_transition_table.json")
+    ablation_sensitivity_data = _load_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
+    release_attestation_data = _load_json(root / "output" / "reports" / "release_attestation.json")
     si_stats = stats_data.get("si_tmaze") or {}
     sweep_stats = stats_data.get("sweep") or {}
     policy_summary = policy_data.get("summary") or {}
@@ -299,6 +303,14 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "artifact_license_all_safe": bool(artifact_license_data.get("all_license_safe", False)),
         "release_notes_row_count": release_notes_data.get("row_count", 0),
         "release_notes_source_backed": bool(release_notes_data.get("all_notes_source_backed", False)),
+        "proof_dependency_edge_count": proof_dependency_data.get("edge_count", 0),
+        "proof_dependency_all_resolved": bool(proof_dependency_data.get("all_edges_resolved", False)),
+        "state_transition_row_count": state_transition_data.get("row_count", 0),
+        "state_transition_all_covered": bool(state_transition_data.get("all_reachable_states_covered", False)),
+        "ablation_sensitivity_row_count": ablation_sensitivity_data.get("row_count", 0),
+        "ablation_sensitivity_source_backed": bool(ablation_sensitivity_data.get("all_effects_source_backed", False)),
+        "release_attestation_row_count": release_attestation_data.get("row_count", 0),
+        "release_attestation_all_attested": bool(release_attestation_data.get("all_attested", False)),
         "pipeline_track_count": _pipeline_track_count(root),
         **counts,
     }

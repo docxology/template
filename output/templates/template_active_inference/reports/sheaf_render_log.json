@@ -1,6 +1,6 @@
 {
   "all_events_ok": true,
-  "artifact_producer_count": 70,
+  "artifact_producer_count": 76,
   "event_count": 8,
   "events": [
     {
@@ -45,7 +45,7 @@
     },
     {
       "component": "sheaf.semantic",
-      "detail": "70 artifact producer rows",
+      "detail": "76 artifact producer rows",
       "event_id": "semantic_artifacts_indexed",
       "input": "artifact producers",
       "output": "output/data/validation_dependency_graph.json",

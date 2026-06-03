@@ -23,6 +23,10 @@ def _write(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def _relative_posix(path: Path, root: Path) -> str:
+    return path.relative_to(root).as_posix()
+
+
 def test_live_track_surface_uses_canonical_ids(project_root: Path) -> None:
     from gates.artifact_manifest import REQUIRED_OUTPUTS
     from roadmap_tracks.sheaf_tracks import CANONICAL_TRACKS, LEGACY_ARTIFACTS
@@ -38,9 +42,7 @@ def test_live_track_surface_uses_canonical_ids(project_root: Path) -> None:
     configured = yaml.safe_load((project_root / "manuscript" / "config.yaml").read_text())["analysis"]["scripts"]
 
     bound_tracks = {
-        str(track_id)
-        for section in manifest["sections"]
-        for track_id in ((section.get("tracks") or {}).keys())
+        str(track_id) for section in manifest["sections"] for track_id in ((section.get("tracks") or {}).keys())
     }
     claim_ids = {str(claim.get("id")) for claim in claims}
 
@@ -63,21 +65,27 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     ensure_gate_artifacts(project_root)
     paths = write_sheaf_track_artifacts(project_root)
 
-    assert paths["semantic"].relative_to(project_root).as_posix() == "output/data/sheaf_gluing_certificate.json"
-    assert paths["dependency"].relative_to(project_root).as_posix() == "output/data/validation_dependency_graph.json"
-    assert paths["evidence_fields"].relative_to(project_root).as_posix() == "output/data/evidence_field_index.json"
-    assert paths["release_bundle"].relative_to(project_root).as_posix() == "output/reports/release_bundle_manifest.json"
-    assert paths["theorem_traceability"].relative_to(project_root).as_posix() == (
+    assert _relative_posix(paths["semantic"], project_root) == "output/data/sheaf_gluing_certificate.json"
+    assert _relative_posix(paths["dependency"], project_root) == "output/data/validation_dependency_graph.json"
+    assert _relative_posix(paths["evidence_fields"], project_root) == "output/data/evidence_field_index.json"
+    assert _relative_posix(paths["release_bundle"], project_root) == "output/reports/release_bundle_manifest.json"
+    assert _relative_posix(paths["theorem_traceability"], project_root) == (
         "output/data/theorem_traceability_matrix.json"
     )
-    assert paths["artifact_diffoscope"].relative_to(project_root).as_posix() == "output/reports/artifact_diffoscope.json"
-    assert paths["proof_extraction"].relative_to(project_root).as_posix() == "output/data/proof_extraction_index.json"
-    assert paths["state_space_catalog"].relative_to(project_root).as_posix() == "output/data/state_space_catalog.json"
-    assert paths["causal_ablation"].relative_to(project_root).as_posix() == "output/data/causal_ablation_matrix.json"
-    assert paths["artifact_license"].relative_to(project_root).as_posix() == "output/reports/artifact_license_audit.json"
-    assert paths["release_notes"].relative_to(project_root).as_posix() == "output/reports/release_notes_evidence.json"
-    assert paths["section_status"].relative_to(project_root).as_posix() == "output/data/sheaf_section_status_matrix.json"
-    assert paths["render_log"].relative_to(project_root).as_posix() == "output/reports/sheaf_render_log.json"
+    assert _relative_posix(paths["artifact_diffoscope"], project_root) == ("output/reports/artifact_diffoscope.json")
+    assert _relative_posix(paths["proof_extraction"], project_root) == "output/data/proof_extraction_index.json"
+    assert _relative_posix(paths["state_space_catalog"], project_root) == "output/data/state_space_catalog.json"
+    assert _relative_posix(paths["causal_ablation"], project_root) == "output/data/causal_ablation_matrix.json"
+    assert _relative_posix(paths["artifact_license"], project_root) == "output/reports/artifact_license_audit.json"
+    assert _relative_posix(paths["release_notes"], project_root) == "output/reports/release_notes_evidence.json"
+    assert _relative_posix(paths["proof_dependency_graph"], project_root) == ("output/data/proof_dependency_graph.json")
+    assert _relative_posix(paths["state_transition_table"], project_root) == ("output/data/state_transition_table.json")
+    assert _relative_posix(paths["ablation_sensitivity_report"], project_root) == (
+        "output/reports/ablation_sensitivity_report.json"
+    )
+    assert _relative_posix(paths["release_attestation"], project_root) == "output/reports/release_attestation.json"
+    assert _relative_posix(paths["section_status"], project_root) == "output/data/sheaf_section_status_matrix.json"
+    assert _relative_posix(paths["render_log"], project_root) == "output/reports/sheaf_render_log.json"
     assert validate_sheaf_track_artifacts(project_root) == []
 
     semantic = _load(project_root / "output" / "data" / "sheaf_gluing_certificate.json")
@@ -91,6 +99,10 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     ablation = _load(project_root / "output" / "data" / "causal_ablation_matrix.json")
     license_audit = _load(project_root / "output" / "reports" / "artifact_license_audit.json")
     release_notes = _load(project_root / "output" / "reports" / "release_notes_evidence.json")
+    proof_dependency = _load(project_root / "output" / "data" / "proof_dependency_graph.json")
+    transition_table = _load(project_root / "output" / "data" / "state_transition_table.json")
+    ablation_sensitivity = _load(project_root / "output" / "reports" / "ablation_sensitivity_report.json")
+    release_attestation = _load(project_root / "output" / "reports" / "release_attestation.json")
     section_status = _load(project_root / "output" / "data" / "sheaf_section_status_matrix.json")
     render_log = _load(project_root / "output" / "reports" / "sheaf_render_log.json")
 
@@ -106,6 +118,10 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert ablation["complete_grid"] is True
     assert license_audit["all_license_safe"] is True
     assert release_notes["all_notes_source_backed"] is True
+    assert proof_dependency["all_theorems_have_dependencies"] is True
+    assert transition_table["all_reachable_states_covered"] is True
+    assert ablation_sensitivity["all_effects_source_backed"] is True
+    assert release_attestation["all_attested"] is True
     assert section_status["all_bound_fragments_present"] is True
     assert section_status["all_sections_have_status"] is True
     assert section_status["cell_count"] == section_status["section_count"] * section_status["track_count"]
@@ -139,6 +155,10 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         "ablation": project_root / "output" / "data" / "causal_ablation_matrix.json",
         "license": project_root / "output" / "reports" / "artifact_license_audit.json",
         "release_notes": project_root / "output" / "reports" / "release_notes_evidence.json",
+        "proof_dependency": project_root / "output" / "data" / "proof_dependency_graph.json",
+        "transition_table": project_root / "output" / "data" / "state_transition_table.json",
+        "ablation_sensitivity": project_root / "output" / "reports" / "ablation_sensitivity_report.json",
+        "release_attestation": project_root / "output" / "reports" / "release_attestation.json",
         "section_status": project_root / "output" / "data" / "sheaf_section_status_matrix.json",
         "render_log": project_root / "output" / "reports" / "sheaf_render_log.json",
         "semantic": project_root / "output" / "data" / "sheaf_gluing_certificate.json",
@@ -289,6 +309,34 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         assert any("unsupported notes" in issue for issue in validate_sheaf_track_artifacts(project_root))
         paths["release_notes"].write_text(originals[paths["release_notes"]], encoding="utf-8")
 
+        data = _load(paths["proof_dependency"])
+        data["rows"][0]["linked"] = False
+        data["all_theorems_have_dependencies"] = True
+        _write(paths["proof_dependency"], data)
+        assert any("unlinked theorem dependencies" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["proof_dependency"].write_text(originals[paths["proof_dependency"]], encoding="utf-8")
+
+        data = _load(paths["transition_table"])
+        data["covered_models"] = data["covered_models"][:-1]
+        data["all_reachable_states_covered"] = True
+        _write(paths["transition_table"], data)
+        assert any("omits a reachable finite model" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["transition_table"].write_text(originals[paths["transition_table"]], encoding="utf-8")
+
+        data = _load(paths["ablation_sensitivity"])
+        data["rows"][0]["source_backed"] = False
+        data["all_effects_source_backed"] = True
+        _write(paths["ablation_sensitivity"], data)
+        assert any("unsupported ablation effects" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["ablation_sensitivity"].write_text(originals[paths["ablation_sensitivity"]], encoding="utf-8")
+
+        data = _load(paths["release_attestation"])
+        data["rows"][1]["passed"] = False
+        data["all_attested"] = True
+        _write(paths["release_attestation"], data)
+        assert any("failed gate passed" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["release_attestation"].write_text(originals[paths["release_attestation"]], encoding="utf-8")
+
         data = _load(paths["section_status"])
         data["missing_required_count"] = 1
         data["all_bound_fragments_present"] = False
@@ -306,7 +354,10 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         data = _load(paths["semantic"])
         data["restrictions"]["replay_matrix_all_matched"] = False
         _write(paths["semantic"], data)
-        assert any("stale relative to canonical restrictions" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        assert any(
+            "stale relative to canonical restrictions" in issue
+            for issue in validate_sheaf_track_artifacts(project_root)
+        )
     finally:
         for path, text in originals.items():
             path.write_text(text, encoding="utf-8")
@@ -357,7 +408,9 @@ def test_canonical_track_contract_negative_controls(project_root: Path) -> None:
         ]
         ledger_path.write_text(yaml.safe_dump(ledger_payload, sort_keys=False), encoding="utf-8")
         write_sheaf_track_artifacts(project_root)
-        assert any("all_canonical_artifacts_have_claims" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        assert any(
+            "all_canonical_artifacts_have_claims" in issue for issue in validate_sheaf_track_artifacts(project_root)
+        )
     finally:
         for path, text in originals.items():
             path.write_text(text, encoding="utf-8")

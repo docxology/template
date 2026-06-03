@@ -40,6 +40,8 @@ ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/reports/sheaf_render_log.json": "generate_sheaf_tracks.py",
     "output/data/artifact_provenance.json": "generate_sheaf_tracks.py",
     "output/figures/semantic_gluing_graph.png": "generate_figures.py",
+    "output/figures/theorem_traceability_graph.png": "generate_figures.py",
+    "output/figures/causal_ablation_heatmap.png": "generate_figures.py",
     "output/figures/si_belief_trajectory.gif": "render_animation.py",
     "output/data/animation_frame_deltas.json": "render_animation.py",
     "output/figures/sheaf_layers_overview.png": "generate_figures.py",
@@ -92,6 +94,10 @@ ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/data/causal_ablation_matrix.json": "generate_toy_sweep_tracks.py",
     "output/reports/artifact_license_audit.json": "generate_integration_audit.py",
     "output/reports/release_notes_evidence.json": "generate_integration_audit.py",
+    "output/data/proof_dependency_graph.json": "generate_sheaf_tracks.py",
+    "output/data/state_transition_table.json": "generate_sheaf_tracks.py",
+    "output/reports/ablation_sensitivity_report.json": "generate_sheaf_tracks.py",
+    "output/reports/release_attestation.json": "generate_sheaf_tracks.py",
 }
 
 ARTIFACT_CONSUMERS: dict[str, tuple[str, ...]] = {
@@ -155,8 +161,14 @@ ARTIFACT_CONSUMERS: dict[str, tuple[str, ...]] = {
     "output/data/causal_ablation_matrix.json": ("results_invariants", "appendix_full_sheaf"),
     "output/reports/artifact_license_audit.json": ("methods_sheaf", "appendix_full_sheaf"),
     "output/reports/release_notes_evidence.json": ("discussion_outlook", "appendix_full_sheaf"),
+    "output/data/proof_dependency_graph.json": ("methods_lean", "appendix_full_sheaf"),
+    "output/data/state_transition_table.json": ("results_invariants", "appendix_full_sheaf"),
+    "output/reports/ablation_sensitivity_report.json": ("results_invariants", "appendix_full_sheaf"),
+    "output/reports/release_attestation.json": ("discussion_outlook", "appendix_full_sheaf"),
     "output/reports/reproducibility_replay.json": ("results_invariants",),
     "output/figures/semantic_gluing_graph.png": ("methods_sheaf",),
+    "output/figures/theorem_traceability_graph.png": ("appendix_full_sheaf",),
+    "output/figures/causal_ablation_heatmap.png": ("appendix_full_sheaf",),
     "output/figures/si_belief_trajectory.gif": ("appendix_full_sheaf",),
     "output/data/animation_frame_deltas.json": ("appendix_full_sheaf",),
     "output/figures/sheaf_layers_overview.png": ("methods_sheaf",),
@@ -188,6 +200,8 @@ ARTIFACT_GATES: dict[str, tuple[str, ...]] = {
     "output/data/si_graph_world_trace.json": ("validate_outputs",),
     "output/figures/si_belief_trajectory.gif": ("validate_outputs",),
     "output/figures/semantic_gluing_graph.png": ("validate_outputs", "figure_registry"),
+    "output/figures/theorem_traceability_graph.png": ("validate_outputs", "figure_registry"),
+    "output/figures/causal_ablation_heatmap.png": ("validate_outputs", "figure_registry"),
     "output/reports/reproducibility_replay.json": ("validate_outputs",),
     "output/reports/counterexample_matrix.json": ("validate_outputs", "validate_manuscript"),
     "output/data/analytical_assumption_index.json": ("validate_outputs", "validate_manuscript"),
@@ -238,6 +252,10 @@ ARTIFACT_GATES: dict[str, tuple[str, ...]] = {
     "output/data/causal_ablation_matrix.json": ("validate_outputs", "validate_manuscript"),
     "output/reports/artifact_license_audit.json": ("validate_outputs", "validate_manuscript"),
     "output/reports/release_notes_evidence.json": ("validate_outputs", "validate_manuscript"),
+    "output/data/proof_dependency_graph.json": ("validate_outputs", "validate_manuscript"),
+    "output/data/state_transition_table.json": ("validate_outputs", "validate_manuscript"),
+    "output/reports/ablation_sensitivity_report.json": ("validate_outputs", "validate_manuscript"),
+    "output/reports/release_attestation.json": ("validate_outputs", "validate_manuscript"),
 }
 
 
@@ -650,6 +668,10 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
     track_scope = _load_json(root / "output" / "data" / "track_improvement_scope.json")
     blocked_scope = _load_json(root / "output" / "reports" / "blocked_scope_manifest.json")
     replay_matrix = _load_json(root / "output" / "reports" / "replay_matrix.json")
+    proof_dependency = _load_json(root / "output" / "data" / "proof_dependency_graph.json")
+    transition_table = _load_json(root / "output" / "data" / "state_transition_table.json")
+    ablation_sensitivity = _load_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
+    release_attestation = _load_json(root / "output" / "reports" / "release_attestation.json")
     try:
         from roadmap_tracks.sheaf_tracks import _canonical_restrictions
 
@@ -737,6 +759,22 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
                 "path": "output/reports/sheaf_render_log.json",
                 "exists": (root / "output" / "reports" / "sheaf_render_log.json").exists(),
             },
+            "proof_dependency_graph": {
+                "path": "output/data/proof_dependency_graph.json",
+                "exists": (root / "output" / "data" / "proof_dependency_graph.json").exists(),
+            },
+            "state_transition_table": {
+                "path": "output/data/state_transition_table.json",
+                "exists": (root / "output" / "data" / "state_transition_table.json").exists(),
+            },
+            "ablation_sensitivity_report": {
+                "path": "output/reports/ablation_sensitivity_report.json",
+                "exists": (root / "output" / "reports" / "ablation_sensitivity_report.json").exists(),
+            },
+            "release_attestation": {
+                "path": "output/reports/release_attestation.json",
+                "exists": (root / "output" / "reports" / "release_attestation.json").exists(),
+            },
         },
         "restrictions": {
             "coverage_missing": gray_cell_count(ctx.matrix),
@@ -813,6 +851,16 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
             "section_status_fully_sheafed_count": int(section_status.get("fully_sheafed_section_count", 0) or 0),
             "sheaf_render_log_all_events_ok": render_log.get("all_events_ok") is True,
             "sheaf_render_log_event_count": int(render_log.get("event_count", 0) or 0),
+            "proof_dependency_graph_resolved": proof_dependency.get("all_theorems_have_dependencies") is True
+            and proof_dependency.get("all_edges_resolved") is True,
+            "proof_dependency_edge_count": int(proof_dependency.get("edge_count", 0) or 0),
+            "state_transition_table_complete": transition_table.get("all_transitions_deterministic") is True
+            and transition_table.get("all_reachable_states_covered") is True,
+            "state_transition_row_count": int(transition_table.get("row_count", 0) or 0),
+            "ablation_sensitivity_source_backed": ablation_sensitivity.get("all_effects_source_backed") is True,
+            "ablation_sensitivity_row_count": int(ablation_sensitivity.get("row_count", 0) or 0),
+            "release_attestation_complete": release_attestation.get("all_attested") is True,
+            "release_attestation_row_count": int(release_attestation.get("row_count", 0) or 0),
             "no_versioned_live_tracks": not any(
                 tid.endswith(("_v2", "_v3", "_v4", "_v5")) for tid in ctx.registry.tracks
             ),

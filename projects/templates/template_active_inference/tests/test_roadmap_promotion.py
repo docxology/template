@@ -18,6 +18,10 @@ def _write(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def _relative_posix(path: Path, root: Path) -> str:
+    return path.relative_to(root).as_posix()
+
+
 def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) -> None:
     from roadmap_tracks import (
         validate_formal_interop_artifacts,
@@ -36,25 +40,31 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
     audit = write_integration_audit_artifacts(project_root)
     sheaf = write_sheaf_track_artifacts(project_root)
 
-    assert toy["sensitivity"].relative_to(project_root).as_posix() == "output/data/sensitivity_sweep.json"
-    assert toy["analytical_assumptions"].relative_to(project_root).as_posix() == (
+    assert _relative_posix(toy["sensitivity"], project_root) == "output/data/sensitivity_sweep.json"
+    assert _relative_posix(toy["analytical_assumptions"], project_root) == (
         "output/data/analytical_assumption_index.json"
     )
-    assert toy["state_space_catalog"].relative_to(project_root).as_posix() == "output/data/state_space_catalog.json"
-    assert toy["causal_ablation"].relative_to(project_root).as_posix() == "output/data/causal_ablation_matrix.json"
-    assert formal["model_checking"].relative_to(project_root).as_posix() == "output/reports/model_checking_witnesses.json"
-    assert formal["proof_extraction"].relative_to(project_root).as_posix() == "output/data/proof_extraction_index.json"
-    assert audit["gate_index"].relative_to(project_root).as_posix() == "output/data/validation_gate_index.json"
-    assert audit["artifact_diffoscope"].relative_to(project_root).as_posix() == "output/reports/artifact_diffoscope.json"
-    assert audit["artifact_license"].relative_to(project_root).as_posix() == "output/reports/artifact_license_audit.json"
-    assert audit["release_notes"].relative_to(project_root).as_posix() == "output/reports/release_notes_evidence.json"
-    assert sheaf["semantic"].relative_to(project_root).as_posix() == "output/data/sheaf_gluing_certificate.json"
-    assert sheaf["dependency"].relative_to(project_root).as_posix() == "output/data/validation_dependency_graph.json"
-    assert sheaf["evidence_fields"].relative_to(project_root).as_posix() == "output/data/evidence_field_index.json"
-    assert sheaf["release_bundle"].relative_to(project_root).as_posix() == "output/reports/release_bundle_manifest.json"
-    assert sheaf["theorem_traceability"].relative_to(project_root).as_posix() == (
+    assert _relative_posix(toy["state_space_catalog"], project_root) == "output/data/state_space_catalog.json"
+    assert _relative_posix(toy["causal_ablation"], project_root) == "output/data/causal_ablation_matrix.json"
+    assert _relative_posix(formal["model_checking"], project_root) == ("output/reports/model_checking_witnesses.json")
+    assert _relative_posix(formal["proof_extraction"], project_root) == "output/data/proof_extraction_index.json"
+    assert _relative_posix(audit["gate_index"], project_root) == "output/data/validation_gate_index.json"
+    assert _relative_posix(audit["artifact_diffoscope"], project_root) == ("output/reports/artifact_diffoscope.json")
+    assert _relative_posix(audit["artifact_license"], project_root) == ("output/reports/artifact_license_audit.json")
+    assert _relative_posix(audit["release_notes"], project_root) == "output/reports/release_notes_evidence.json"
+    assert _relative_posix(sheaf["semantic"], project_root) == "output/data/sheaf_gluing_certificate.json"
+    assert _relative_posix(sheaf["dependency"], project_root) == "output/data/validation_dependency_graph.json"
+    assert _relative_posix(sheaf["evidence_fields"], project_root) == "output/data/evidence_field_index.json"
+    assert _relative_posix(sheaf["release_bundle"], project_root) == "output/reports/release_bundle_manifest.json"
+    assert _relative_posix(sheaf["theorem_traceability"], project_root) == (
         "output/data/theorem_traceability_matrix.json"
     )
+    assert _relative_posix(sheaf["proof_dependency_graph"], project_root) == ("output/data/proof_dependency_graph.json")
+    assert _relative_posix(sheaf["state_transition_table"], project_root) == ("output/data/state_transition_table.json")
+    assert _relative_posix(sheaf["ablation_sensitivity_report"], project_root) == (
+        "output/reports/ablation_sensitivity_report.json"
+    )
+    assert _relative_posix(sheaf["release_attestation"], project_root) == "output/reports/release_attestation.json"
     topology = _load(project_root / "output" / "data" / "si_graph_world_topology_sweep.json")
     lean_graph = _load(project_root / "output" / "reports" / "lean_graph_world_inventory.json")
     topology_ids = {row["topology"] for row in topology["rows"]}
@@ -139,7 +149,10 @@ def test_toy_sweep_negative_controls(project_root: Path) -> None:
         data["rows"][0]["trace_summary_agree"] = False
         data["all_trace_summary_agree"] = False
         _write(topology_traces, data)
-        assert any("topology_traces.json summary/trace mismatch" in issue for issue in validate_toy_sweep_artifacts(project_root))
+        assert any(
+            "topology_traces.json summary/trace mismatch" in issue
+            for issue in validate_toy_sweep_artifacts(project_root)
+        )
         topology_traces.write_text(originals[topology_traces], encoding="utf-8")
 
         data = _load(state_catalog)
@@ -186,6 +199,7 @@ def test_toy_sweep_uses_measured_policy_and_topology_trace_artifacts(project_roo
     assert topology["topology_count"] >= 3
     assert topology_traces["topology_count"] == topology["topology_count"]
     assert topology_traces["all_trace_summary_agree"] is True
+    assert efe_terms["schema"] == "template_active_inference.si_efe_values.v1"
 
 
 def test_formal_interop_negative_controls(project_root: Path) -> None:
@@ -329,7 +343,10 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         data = _load(staleness)
         data["rows"][0]["expected"] = "definitely stale"
         _write(staleness, data)
-        assert any("manuscript_staleness_report.json is stale" in issue for issue in validate_integration_audit_artifacts(project_root))
+        assert any(
+            "manuscript_staleness_report.json is stale" in issue
+            for issue in validate_integration_audit_artifacts(project_root)
+        )
         staleness.write_text(originals[staleness], encoding="utf-8")
 
         diffoscope = paths[6]
@@ -337,7 +354,10 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         data["rows"][0]["equal"] = False
         data["all_equal"] = False
         _write(diffoscope, data)
-        assert any("artifact_diffoscope.json records artifact drift" in issue for issue in validate_integration_audit_artifacts(project_root))
+        assert any(
+            "artifact_diffoscope.json records artifact drift" in issue
+            for issue in validate_integration_audit_artifacts(project_root)
+        )
         diffoscope.write_text(originals[diffoscope], encoding="utf-8")
 
         license_audit = paths[7]
@@ -345,7 +365,10 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         data["rows"][0]["license_safe"] = False
         data["all_license_safe"] = False
         _write(license_audit, data)
-        assert any("artifact_license_audit.json records unsafe artifacts" in issue for issue in validate_integration_audit_artifacts(project_root))
+        assert any(
+            "artifact_license_audit.json records unsafe artifacts" in issue
+            for issue in validate_integration_audit_artifacts(project_root)
+        )
         license_audit.write_text(originals[license_audit], encoding="utf-8")
 
         release_notes = paths[8]
@@ -353,7 +376,10 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         data["rows"][0]["passed"] = False
         data["all_notes_source_backed"] = False
         _write(release_notes, data)
-        assert any("release_notes_evidence.json has unsupported notes" in issue for issue in validate_integration_audit_artifacts(project_root))
+        assert any(
+            "release_notes_evidence.json has unsupported notes" in issue
+            for issue in validate_integration_audit_artifacts(project_root)
+        )
     finally:
         for path, text in originals.items():
             path.write_text(text, encoding="utf-8")
@@ -386,9 +412,9 @@ def test_cross_track_symbol_table_binds_type_shape_and_section_ontology(project_
 def test_promoted_scripts_are_configured_between_validation_spine_and_hydration(project_root: Path) -> None:
     from orchestration.pipeline_manifest import DEFAULT_ANALYSIS_SCRIPTS
 
-    configured = yaml.safe_load((project_root / "manuscript" / "config.yaml").read_text(encoding="utf-8"))[
-        "analysis"
-    ]["scripts"]
+    configured = yaml.safe_load((project_root / "manuscript" / "config.yaml").read_text(encoding="utf-8"))["analysis"][
+        "scripts"
+    ]
     promoted = [
         "generate_toy_sweep_tracks.py",
         "generate_formal_interop_tracks.py",

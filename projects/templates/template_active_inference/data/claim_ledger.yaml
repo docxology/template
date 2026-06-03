@@ -410,8 +410,8 @@ claims:
     field: complete_grid
     equals: true
 - id: si_efe_rows_explained
-  statement: EFE artifact explicitly records availability or fallback for every policy-comparison
-    row.
+  statement: EFE values artifact explicitly records value availability or measured fallback
+    for every policy-comparison row.
   path: output/data/si_efe_terms.json
   section: results_invariants
   tracks:
@@ -887,4 +887,52 @@ claims:
   - gate_ergonomics
   evidence:
     field: all_notes_source_backed
+    equals: true
+- id: proof_dependency_graph_resolved
+  statement: Proof dependency graph links every extracted theorem to source, tactic,
+    definitions, and finite model witnesses.
+  path: output/data/proof_dependency_graph.json
+  section: methods_lean
+  tracks:
+  - proof_extraction
+  - theorem_traceability
+  - lean
+  evidence:
+    field: all_theorems_have_dependencies
+    equals: true
+- id: state_transition_table_complete
+  statement: State transition table covers every reachable finite graph-world and
+    T-maze model row with deterministic transitions.
+  path: output/data/state_transition_table.json
+  section: results_invariants
+  tracks:
+  - state_space_catalog
+  - model_checking
+  - sensitivity
+  evidence:
+    field: all_reachable_states_covered
+    equals: true
+- id: ablation_sensitivity_source_backed
+  statement: Ablation sensitivity report joins every causal-ablation effect to
+    sensitivity and uncertainty source artifacts.
+  path: output/reports/ablation_sensitivity_report.json
+  section: results_invariants
+  tracks:
+  - causal_ablation
+  - sensitivity
+  - uncertainty
+  evidence:
+    field: all_effects_source_backed
+    equals: true
+- id: release_attestation_complete
+  statement: Release attestation binds validation, bundle hash, license audit,
+    semantic certificate, and blocked-scope status.
+  path: output/reports/release_attestation.json
+  section: discussion_outlook
+  tracks:
+  - release_bundle
+  - release_notes
+  - gate_ergonomics
+  evidence:
+    field: all_attested
     equals: true

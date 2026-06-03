@@ -576,7 +576,8 @@
       "artifact": "output/data/causal_ablation_matrix.json",
       "artifact_exists": true,
       "claim_ids": [
-        "causal_ablation_complete"
+        "causal_ablation_complete",
+        "ablation_sensitivity_source_backed"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
@@ -685,7 +686,8 @@
         "validation_gate_index_complete",
         "sheaf_render_log_events_ok",
         "gate_ergonomics_indexed",
-        "release_notes_source_backed"
+        "release_notes_source_backed",
+        "release_attestation_complete"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
@@ -800,7 +802,8 @@
         "lean_graph_world_topologies_witnessed",
         "model_checking_exhaustive",
         "theorem_traceability_linked",
-        "proof_extraction_constructive"
+        "proof_extraction_constructive",
+        "proof_dependency_graph_resolved"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
@@ -857,7 +860,8 @@
         "lean_graph_world_topologies_witnessed",
         "model_checking_exhaustive",
         "theorem_traceability_linked",
-        "state_space_catalog_finite"
+        "state_space_catalog_finite",
+        "state_transition_table_complete"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
@@ -916,7 +920,8 @@
       "artifact": "output/data/proof_extraction_index.json",
       "artifact_exists": true,
       "claim_ids": [
-        "proof_extraction_constructive"
+        "proof_extraction_constructive",
+        "proof_dependency_graph_resolved"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
@@ -1057,7 +1062,8 @@
         "release_bundle_sources_present",
         "artifact_diffoscope_equal",
         "artifact_license_safe",
-        "release_notes_source_backed"
+        "release_notes_source_backed",
+        "release_attestation_complete"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
@@ -1083,7 +1089,8 @@
       "artifact": "output/reports/release_notes_evidence.json",
       "artifact_exists": true,
       "claim_ids": [
-        "release_notes_source_backed"
+        "release_notes_source_backed",
+        "release_attestation_complete"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
@@ -1144,7 +1151,9 @@
         "graph_world_invariants_pass",
         "lean_graph_world_topologies_witnessed",
         "sensitivity_complete_grid",
-        "causal_ablation_complete"
+        "causal_ablation_complete",
+        "state_transition_table_complete",
+        "ablation_sensitivity_source_backed"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
@@ -1207,7 +1216,8 @@
       "artifact": "output/data/state_space_catalog.json",
       "artifact_exists": true,
       "claim_ids": [
-        "state_space_catalog_finite"
+        "state_space_catalog_finite",
+        "state_transition_table_complete"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
@@ -1234,7 +1244,8 @@
       "artifact_exists": true,
       "claim_ids": [
         "theorem_traceability_linked",
-        "proof_extraction_constructive"
+        "proof_extraction_constructive",
+        "proof_dependency_graph_resolved"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
@@ -1262,7 +1273,8 @@
       "claim_ids": [
         "pymdp_policy_posterior_grid_normalized",
         "uncertainty_rows_normalized",
-        "uncertainty_normalized"
+        "uncertainty_normalized",
+        "ablation_sensitivity_source_backed"
       ],
       "has_artifact": true,
       "has_manuscript_consumer": true,
