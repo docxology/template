@@ -24,8 +24,24 @@ for the upstream contract; this tree reimplements the harness only.
 | Command | Behaviour |
 | --- | --- |
 | `uv run python scripts/run_sia_loop.py` | Fixture replay (deterministic) |
-| `… --live-sia` | Bounded subprocess target + evaluation |
-| `… --live-sia --llm-model gemma3:4b` | Live mode with Ollama feedback when available |
+| `… --live-sia` | Bounded subprocess target + evaluation; target code unchanged each generation (deterministic stub, no code mutation, no sandbox) |
+| `… --live-sia --llm-model gemma3:4b` | Live mode with Ollama feedback note written but **not applied to code** |
+
+Live mode demonstrates the loop's execution/evaluation plumbing, not autonomous
+code modification. Cross-generation self-improvement is shown only via fixture
+replay. See [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md).
+
+## Validation profile
+
+The harness exposes two validation surfaces:
+
+1. **Layout gate** — `uv run python -m infrastructure.sia.cli validate <task_dir>`
+   (add `--json`) checks the required task directory structure and exits non-zero
+   with a message on an invalid or missing task.
+2. **Pipeline contract** — each task's `sia.yaml` declares `required_artifacts`
+   and `quality_checks`; the loop fails closed when a required artifact is
+   missing or a quality check is unmet. Use these keys to define a project's own
+   acceptance profile without touching Layer-1 code.
 
 ## Testing
 

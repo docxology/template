@@ -14,6 +14,14 @@ uv run python scripts/01_run_tests.py --project templates/template_sia --project
 Default runs replay fixtures under `src/fixtures/recorded_generations/`. Pass
 `--live-sia` for bounded subprocess execution.
 
+> **Live mode is a deterministic stub.** `--live-sia` runs the *reference* agent
+> as a bounded subprocess and records its evaluation, but it does **not** mutate
+> target code and uses **no sandbox**: the `improvement.md` feedback note is
+> illustrative and is never applied, so the target agent is identical across
+> generations. Self-improvement *across generations* is demonstrated only via
+> **fixture replay**. This exemplar shows the harness mechanics, not autonomous
+> live code modification.
+
 ## Documentation
 
 - [`AGENTS.md`](AGENTS.md) — module map and contracts

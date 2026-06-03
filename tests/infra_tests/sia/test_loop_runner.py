@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import shutil
 from pathlib import Path
 
 import pytest
@@ -11,7 +10,6 @@ import pytest
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.sia.loop_runner import run_sia_loop
 from infrastructure.sia.models import RunConfig
-from infrastructure.sia.task_layout import validate_task_dir
 
 
 def _write_task(task_dir: Path) -> None:
@@ -100,3 +98,51 @@ def test_run_sia_loop_missing_fixtures(tmp_path: Path) -> None:
     )
     with pytest.raises(ValidationError, match="Missing fixture"):
         run_sia_loop(config)
+
+
+def test_fixture_replay_needs_no_fixtures_dir_for_live(tmp_path: Path) -> None:
+    """Boundary: live mode (offline stub) runs without a fixtures dir."""
+    task_dir = tmp_path / "task"
+    _write_task(task_dir)
+    output = tmp_path / "output"
+    config = RunConfig(
+        task_dir=task_dir,
+        output_dir=output,
+        run_id=1,
+        max_generations=2,
+        live=True,
+        llm_model="",  # offline: no Ollama, deterministic stub feedback
+    )
+    artifacts = run_sia_loop(config)
+    assert len(artifacts) == 2
+    summary = json.loads((output / "runs" / "run_1" / "run_summary.json").read_text(encoding="utf-8"))
+    assert summary.get("live") is True
+
+
+def test_live_mode_does_not_mutate_target_code_across_generations(tmp_path: Path) -> None:
+    """Honest-stub invariant: live mode re-runs the SAME reference agent.
+
+    The feedback note may be written, but it is never applied — so every
+    generation's target_agent.py is byte-identical. This pins the documented
+    'no code mutation, no sandbox' behaviour as a tripwire.
+    """
+    task_dir = tmp_path / "task"
+    _write_task(task_dir)
+    output = tmp_path / "output"
+    config = RunConfig(
+        task_dir=task_dir,
+        output_dir=output,
+        run_id=1,
+        max_generations=2,
+        live=True,
+        llm_model="",
+    )
+    run_sia_loop(config)
+
+    targets = sorted(output.rglob("target_agent.py"))
+    assert len(targets) >= 2, f"expected a target per generation, found {targets}"
+    bodies = {p.read_text(encoding="utf-8") for p in targets}
+    assert len(bodies) == 1, "live mode must not mutate target code across generations"
+    # And it is the reference agent verbatim.
+    reference = (task_dir / "reference" / "reference_target_agent.py").read_text(encoding="utf-8")
+    assert bodies == {reference}

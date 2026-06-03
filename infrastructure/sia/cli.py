@@ -7,6 +7,7 @@ import json
 import sys
 from pathlib import Path
 
+from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging.utils import get_logger
 
 from .task_layout import validate_task_dir
@@ -81,7 +82,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "inspect-run":
             return _cmd_inspect_run(args.run_summary, as_json=args.json)
         return _cmd_validate(args.task_dir, as_json=args.json)
-    except (FileNotFoundError, OSError, ValueError) as exc:
+    except (FileNotFoundError, OSError, ValueError, ValidationError) as exc:
         if args.json:
             print(json.dumps({"error": str(exc)}))
         else:

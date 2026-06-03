@@ -42,4 +42,6 @@ Each task directory exposes:
 
 [`projects/templates/template_sia/`](../../projects/templates/template_sia/) runs
 fixture replay by default (`live=False`). Pass `--live-sia` on
-`scripts/run_sia_loop.py` for opt-in Ollama-backed feedback (not CI).
+`scripts/run_sia_loop.py` for opt-in Ollama-backed feedback (not CI) — the
+feedback note is illustrative, not applied; live mode performs no code mutation
+and uses no sandbox, so cross-generation improvement is shown only via fixtures.
