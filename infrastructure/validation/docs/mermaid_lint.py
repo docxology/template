@@ -44,6 +44,8 @@ _MERMAID_FENCE = re.compile(
 # Heuristic: first non-empty, non-comment line tells us the diagram kind.
 _KIND_RE = re.compile(r"^\s*(?P<kind>[A-Za-z][A-Za-z0-9_-]*)")
 _MMDC_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TIMEOUT", "30"))
+_MMDC_TOTAL_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT", "120"))
+_MMDC_BATCH_SIZE = max(1, int(os.environ.get("TEMPLATE_MERMAID_LINT_BATCH_SIZE", "20")))
 
 
 @dataclass(frozen=True)
@@ -254,11 +256,36 @@ def _run_mmdc(
     puppeteer_cfg_path: Path,
     workdir: Path,
     timeout_seconds: float,
+    timeout_description: str | None = None,
 ) -> tuple[int, str]:
     """Render a single block with `mmdc`. Return (returncode, stderr)."""
     src = workdir / f"block_{block.line}.mmd"
     out = workdir / f"block_{block.line}.svg"
     src.write_text(block.body, encoding="utf-8")
+    return _run_mmdc_file(
+        src,
+        out,
+        mmdc_bin=mmdc_bin,
+        puppeteer_cfg_path=puppeteer_cfg_path,
+        workdir=workdir,
+        timeout_seconds=timeout_seconds,
+        timeout_description=timeout_description,
+        block=block,
+    )
+
+
+def _run_mmdc_file(
+    src: Path,
+    out: Path,
+    *,
+    mmdc_bin: str,
+    puppeteer_cfg_path: Path,
+    workdir: Path,
+    timeout_seconds: float,
+    timeout_description: str | None,
+    block: MermaidBlock,
+) -> tuple[int, str]:
+    """Render a Mermaid source file with `mmdc`. Return (returncode, stderr)."""
     cmd = [
         mmdc_bin,
         "-i",
@@ -284,10 +311,64 @@ def _run_mmdc(
             proc.communicate(timeout=1)
         except subprocess.TimeoutExpired:
             _close_process_pipes(proc)
-        return 124, f"mmdc timed out after {timeout_seconds:g}s for {block.file}:{block.line}"
+        description = timeout_description or f"mmdc timed out after {timeout_seconds:g}s"
+        return (
+            124,
+            f"{description} for {block.file}:{block.line}; command: {' '.join(cmd)}",
+        )
     _kill_process_group(proc.pid)
     _kill_processes_matching([str(workdir)])
-    return int(proc.returncode), stderr or stdout or ""
+    rc = int(proc.returncode)
+    # Fail closed on a silent no-op: `mmdc` occasionally exits 0 without writing
+    # the requested output (e.g. a Chrome/puppeteer hiccup). Trusting the exit
+    # code alone would swallow that as a pass — for a single block and, worse,
+    # for a whole batch. Treat "exit 0 but no output file" as a failure so the
+    # caller surfaces it (and, for a batch, falls back to per-block diagnosis).
+    if rc == 0 and (not out.exists() or out.stat().st_size == 0):
+        return (
+            1,
+            f"mmdc exited 0 but produced no output at {out.name} for "
+            f"{block.file}:{block.line}; command: {' '.join(cmd)}",
+        )
+    return rc, stderr or stdout or ""
+
+
+def _run_mmdc_batch(
+    blocks: Sequence[MermaidBlock],
+    *,
+    mmdc_bin: str,
+    puppeteer_cfg_path: Path,
+    workdir: Path,
+    timeout_seconds: float,
+    timeout_description: str | None,
+) -> tuple[int, str]:
+    """Render every block in one Markdown input; callers fall back on failure."""
+    src = workdir / "batch.md"
+    out = workdir / "batch_out.md"
+    parts: list[str] = []
+    for index, block in enumerate(blocks, start=1):
+        parts.append(f"<!-- mermaid-lint block {index}: {block.file}:{block.line} -->")
+        parts.append("```mermaid")
+        parts.append(block.body)
+        parts.append("```")
+        parts.append("")
+    src.write_text("\n".join(parts), encoding="utf-8")
+    return _run_mmdc_file(
+        src,
+        out,
+        mmdc_bin=mmdc_bin,
+        puppeteer_cfg_path=puppeteer_cfg_path,
+        workdir=workdir,
+        timeout_seconds=timeout_seconds,
+        timeout_description=timeout_description,
+        block=blocks[0],
+    )
+
+
+def _chunks(blocks: Sequence[MermaidBlock], size: int) -> Iterable[Sequence[MermaidBlock]]:
+    """Yield non-empty chunks from *blocks*."""
+    for index in range(0, len(blocks), size):
+        yield blocks[index : index + size]
 
 
 def validate_blocks(
@@ -295,6 +376,7 @@ def validate_blocks(
     mmdc_path: str | None = None,
     chrome_path: str | None = None,
     timeout_seconds: float = _MMDC_TIMEOUT_SECONDS,
+    total_timeout_seconds: float = _MMDC_TOTAL_TIMEOUT_SECONDS,
 ) -> list[ValidationFailure]:
     """Render each block with `mmdc` and return failures.
 
@@ -314,6 +396,7 @@ def validate_blocks(
         )
     chrome_resolved = _resolve_chrome(chrome_path)
     failures: list[ValidationFailure] = []
+    started_at = time.monotonic()
     with tempfile.TemporaryDirectory(prefix="mermaid_lint_") as tmp:
         tmp_path = Path(tmp)
         cfg_path = tmp_path / "puppeteer-config.json"
@@ -323,18 +406,101 @@ def validate_blocks(
             encoding="utf-8",
         )
         try:
-            for block in blocks:
-                rc, stderr = _run_mmdc(
-                    block,
+            for batch in _chunks(blocks, _MMDC_BATCH_SIZE):
+                elapsed = time.monotonic() - started_at
+                remaining = total_timeout_seconds - elapsed
+                if remaining <= 0:
+                    failures.append(
+                        ValidationFailure(
+                            block=batch[0],
+                            stderr=(
+                                f"mermaid lint total timeout after {total_timeout_seconds:g}s "
+                                f"before rendering {batch[0].file}:{batch[0].line}; mmdc: {mmdc_bin}"
+                            ),
+                            returncode=124,
+                        )
+                    )
+                    return failures
+                batch_timeout = min(remaining, timeout_seconds * len(batch))
+                batch_timeout_description = (
+                    f"mermaid lint total timeout after {total_timeout_seconds:g}s"
+                    if remaining <= batch_timeout
+                    else f"mmdc batch timed out after {batch_timeout:g}s"
+                )
+                batch_rc, batch_stderr = _run_mmdc_batch(
+                    batch,
                     mmdc_bin=mmdc_bin,
                     puppeteer_cfg_path=cfg_path,
                     workdir=tmp_path,
-                    timeout_seconds=timeout_seconds,
+                    timeout_seconds=batch_timeout,
+                    timeout_description=batch_timeout_description,
                 )
-                if rc != 0:
-                    failures.append(ValidationFailure(block=block, stderr=stderr, returncode=rc))
+                if batch_rc == 0:
+                    continue
+                if batch_rc == 124:
+                    failures.append(ValidationFailure(block=batch[0], stderr=batch_stderr, returncode=batch_rc))
+                    return failures
+                failures.extend(
+                    _validate_blocks_individually(
+                        batch,
+                        mmdc_bin=mmdc_bin,
+                        puppeteer_cfg_path=cfg_path,
+                        workdir=tmp_path,
+                        timeout_seconds=timeout_seconds,
+                        total_timeout_seconds=total_timeout_seconds,
+                        started_at=started_at,
+                    )
+                )
+                if failures and failures[-1].returncode == 124:
+                    return failures
         finally:
             _kill_processes_matching([str(tmp_path)])
+    return failures
+
+
+def _validate_blocks_individually(
+    blocks: Sequence[MermaidBlock],
+    *,
+    mmdc_bin: str,
+    puppeteer_cfg_path: Path,
+    workdir: Path,
+    timeout_seconds: float,
+    total_timeout_seconds: float,
+    started_at: float,
+) -> list[ValidationFailure]:
+    """Validate blocks one at a time after a batch failure for precise errors."""
+    failures: list[ValidationFailure] = []
+    for block in blocks:
+        elapsed = time.monotonic() - started_at
+        remaining = total_timeout_seconds - elapsed
+        if remaining <= 0:
+            failures.append(
+                ValidationFailure(
+                    block=block,
+                    stderr=(
+                        f"mermaid lint total timeout after {total_timeout_seconds:g}s "
+                        f"before rendering {block.file}:{block.line}; mmdc: {mmdc_bin}"
+                    ),
+                    returncode=124,
+                )
+            )
+            break
+        render_timeout = min(timeout_seconds, remaining)
+        timeout_description = (
+            None if remaining >= timeout_seconds else f"mermaid lint total timeout after {total_timeout_seconds:g}s"
+        )
+        rc, stderr = _run_mmdc(
+            block,
+            mmdc_bin=mmdc_bin,
+            puppeteer_cfg_path=puppeteer_cfg_path,
+            workdir=workdir,
+            timeout_seconds=render_timeout,
+            timeout_description=timeout_description,
+        )
+        if rc != 0:
+            failures.append(ValidationFailure(block=block, stderr=stderr, returncode=rc))
+        if time.monotonic() - started_at >= total_timeout_seconds:
+            break
     return failures
 
 

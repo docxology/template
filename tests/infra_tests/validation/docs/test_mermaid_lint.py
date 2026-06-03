@@ -149,6 +149,51 @@ def test_validate_blocks_timeout_kills_mmdc_process_tree(tmp_path: Path) -> None
     assert "timed out" in failures[0].stderr
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX executable script semantics")
+def test_validate_blocks_total_timeout_reports_targeted_block(tmp_path: Path) -> None:
+    md = tmp_path / "p.md"
+    _write_md(md, "```mermaid\nflowchart TB\n  A-->B\n```\n")
+    fake_mmdc = tmp_path / "fake_mmdc"
+    fake_mmdc.write_text("#!/usr/bin/env python3\nprint('not reached')\n", encoding="utf-8")
+    fake_mmdc.chmod(0o755)
+
+    failures = validate_blocks(
+        find_mermaid_blocks([tmp_path]),
+        mmdc_path=str(fake_mmdc),
+        timeout_seconds=10,
+        total_timeout_seconds=0,
+    )
+
+    assert len(failures) == 1
+    assert failures[0].returncode == 124
+    assert "total timeout" in failures[0].stderr
+    assert str(md) in failures[0].stderr
+    assert str(fake_mmdc) in failures[0].stderr
+
+
+def test_validate_blocks_flags_exit_zero_with_no_output(tmp_path: Path) -> None:
+    """A fake mmdc that exits 0 without writing output must NOT pass silently.
+
+    Guards the batch/individual success path against a swallowed render failure
+    (mmdc occasionally exits 0 without producing the requested file).
+    """
+    md = tmp_path / "p.md"
+    _write_md(md, "```mermaid\nflowchart TB\n  A-->B\n```\n")
+    # Real executable, no mocks: exits 0 but never writes the -o output file.
+    fake_mmdc = tmp_path / "fake_mmdc"
+    fake_mmdc.write_text(
+        "#!/usr/bin/env python3\nimport sys\nsys.exit(0)\n", encoding="utf-8"
+    )
+    fake_mmdc.chmod(0o755)
+
+    failures = validate_blocks(find_mermaid_blocks([tmp_path]), mmdc_path=str(fake_mmdc))
+
+    assert len(failures) == 1
+    assert failures[0].returncode == 1
+    assert "produced no output" in failures[0].stderr
+    assert str(md) in failures[0].stderr
+
+
 def test_mermaid_block_dataclass_is_frozen() -> None:
     block = MermaidBlock(file=Path("/x.md"), line=1, kind="flowchart", body="A-->B")
     with pytest.raises(Exception):  # frozen dataclass
