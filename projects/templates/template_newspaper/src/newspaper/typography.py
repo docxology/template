@@ -77,7 +77,7 @@ def _try_register(candidates: list[tuple[str, str, int]]) -> str | None:
         try:
             pdfmetrics.registerFont(TTFont(name, path, subfontIndex=subfont))
             return name
-        except Exception:  # pragma: no cover - font file present but unparsable
+        except Exception:  # noqa: BLE001 - final handler: broad by design so any parse/IO/asset failure falls back gracefully; narrowing would create silent gaps
             continue
     return None
 
@@ -106,7 +106,7 @@ def register_fonts() -> Fonts:
                 italic=body_italic,
                 boldItalic=body_bolditalic,
             )
-        except Exception:  # pragma: no cover
+        except Exception:  # noqa: BLE001 - final handler: broad by design so any parse/IO/asset failure falls back gracefully; narrowing would create silent gaps
             pass
 
     sans = _try_register(_SANS_CANDIDATES) or "Helvetica"
