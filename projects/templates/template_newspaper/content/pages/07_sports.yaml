@@ -1,0 +1,72 @@
+number: 8
+section: "A"
+department: "Sports"
+template: "standard"
+columns: 4
+
+lead:
+  kicker: "Prep Baseball"
+  headline: "Warriors walk off in the ninth, reach league final"
+  deck: "A two-out single by Eli Carrera scores Tavita Faleolo and sends Del Norte to Saturday's championship."
+  byline: "By Theo Brennan · Triplicate Staff Writer"
+  drop_cap: true
+  figure:
+    path: "output/figures/baseball.png"
+    caption: "Del Norte players mob Eli Carrera at home plate after his walk-off single in the ninth inning Tuesday at Bob Maready Field sent the Warriors to Saturday's league championship game."
+    credit: "Triplicate / J. Okafor"
+    height: 158
+  body:
+    - "For eight innings Tuesday, the Del Norte Warriors and the visiting Eureka Loggers traded zeros and held their breath. In the ninth, the Warriors finally exhaled."
+    - "With two out and the winning run on second, junior Eli Carrera lined a 2–2 pitch into right field, scoring Tavita Faleolo from second base and sending the Warriors to their first league championship game in eleven years. The home crowd poured onto the field at Bob Maready Field before Faleolo had finished his slide."
+    - "\"I was just looking for something I could put in play,\" Carrera said, still grinning under a pile of teammates. \"I did not even see it land. I heard it.\""
+    - "Starter Mateo Reyes went seven strong innings, scattering five hits and stranding nine Loggers. Coach Dana Whitfield credited the bullpen and a defense that turned two double plays in the late innings. \"We have been close all year,\" Whitfield said. \"Tonight close turned into through.\""
+    - "The Warriors (18–6) host the league final Saturday at 1 p.m. A win would be the program's first title since 2015."
+
+main:
+  - box: table
+    title: "Prep Scoreboard"
+    columns: ["Sport", "Result"]
+    rows:
+      - ["Baseball", "Del Norte 3, Eureka 2 (9)"]
+      - ["Softball", "Del Norte 7, Fortuna 4"]
+      - ["Track", "DN sweeps coastal relays"]
+      - ["Boys golf", "Del Norte 2nd at sectionals"]
+      - ["Tennis", "Fortuna 5, Del Norte 2"]
+    footnote: "Report scores to sports@triplicate.example by 9 p.m."
+  - box: table
+    title: "League Standings — Baseball"
+    columns: ["Team", "W", "L"]
+    rows:
+      - ["Del Norte", "18", "6"]
+      - ["Fortuna", "16", "8"]
+      - ["Eureka", "15", "9"]
+      - ["Arcata", "11", "13"]
+      - ["McKinleyville", "7", "17"]
+  - headline: "Softball secures No. 2 seed for playoffs"
+    level: secondary
+    kicker: "Prep Softball"
+    byline: "By Iris Lindqvist · Triplicate Staff Writer"
+    body:
+      - "The Warriors' softball team locked up the second seed with a 7–4 win over Fortuna, behind a three-run double from senior Brooke Vandermeer and a complete game from pitcher Sage Lindqvist. Del Norte opens the postseason at home next week."
+  - headline: "Harbor rows: youth crew launches first season"
+    level: secondary
+    kicker: "On the Water"
+    byline: "By Maren Holloway · Triplicate Staff Writer"
+    body:
+      - "A new youth rowing club put four boats on the inner harbor this spring, sharing the protected water with the crab fleet's idle season. Organizers hope the rebuilt docks will include a dedicated small-craft float. \"Flat water and no current — it is a perfect place to learn,\" said coach Will Abernathy."
+  - headline: "Outdoors: spring Chinook open below the dams"
+    level: minor
+    kicker: "Fishing Report"
+    body:
+      - "The Klamath's spring Chinook fishery opens this weekend, the first since the dam removals. Guides report fish moving past Blue Creek. Check tribal and state regulations before launching."
+  - ad:
+      sponsor: "Go, Warriors!"
+      tagline: "Citizens Dock Market cheers the team on."
+      graphic: "output/figures/ad_grocery.png"
+      background: "#EDF5E6"
+      accent: "#3E6E34"
+      border: "box"
+      graphic_height: 64
+      body:
+        - "Championship-Saturday cookout supplies in stock."
+      contact: "88 Citizens Dock Road · 555-0166"

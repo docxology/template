@@ -1,0 +1,53 @@
+number: 4
+section: "A"
+department: "Coast & Environment"
+template: "feature"
+columns: 4
+
+lead:
+  kicker: "From Page A1 · The Harbor"
+  headline: "Engineering a harbor to survive the wave"
+  deck: "The science of riding out a tsunami, and why Crescent City is the place the country comes to learn it."
+  byline: "By Maren Holloway · Triplicate Staff Writer"
+  drop_cap: true
+  figure:
+    path: "output/figures/harbor.png"
+    caption: "The inner boat basin, where breakaway float sections are designed to fail in sequence and spare the commercial fleet."
+    credit: "Triplicate / J. Okafor"
+    height: 150
+  body:
+    - "Continued from Page A1. Crescent City sits at the receiving end of a quirk of bathymetry. The continental shelf and the curve of the coast funnel Pacific tsunami energy straight into the harbor mouth, then trap and amplify it. That is why a 1964 wave generated off Alaska — which spared most of the West Coast — killed eleven people here and erased the downtown."
+    - "It is also why the harbor has become an outdoor laboratory. Researchers from three universities maintain instruments on the breakwater, and the new dock design is being watched as a national test case for resilient marine infrastructure."
+    - subhead: "Move with the water"
+    - "The core idea is counterintuitive: do not fight the surge, float on it. The new floats ride collars up the steel pilings, rising with the water and settling back as it drains. Sacrificial links are tuned to part in a known order so a failure stays local."
+    - "\"Every harbor on this coast is going to need this eventually,\" said coastal engineer Priya Nandakumar, who consulted on the design. \"Crescent City just has the least patience for waiting, because it has the most experience with what waiting costs.\""
+    - "The interpretive panels planned for the rebuilt pier will, for the first time, put that history in front of the tourists who stop for crab rolls — a small civic insistence that the town's defining trauma also be its standing lesson."
+
+main:
+  - box: generic
+    title: "If a Tsunami Warning Sounds"
+    body:
+      - "<b>Know your zone.</b> If you are in the inundation zone (harbor district, lowlands south of Front Street), move to high ground immediately — do not wait for an official order."
+      - "<b>On foot is faster.</b> Roads jam. High ground is minutes away uphill."
+      - "<b>A strong quake IS the warning.</b> If you cannot stand, do not wait for sirens. Go."
+      - "<b>Stay up.</b> Waves arrive in a train for hours. The first is rarely the largest."
+    footnote: "Zone maps: Office of Emergency Services, and Page A12."
+  - headline: "Howland Hill grading reopens redwood byway"
+    level: secondary
+    kicker: "Jedediah Smith"
+    byline: "By Iris Lindqvist · Triplicate Staff Writer"
+    figure:
+      path: "output/figures/redwoods.png"
+      caption: "Old growth along Howland Hill Road."
+      credit: "Triplicate file"
+      height: 116
+    body:
+      - "State Parks crews finished grading the unpaved Howland Hill Road this week, reopening the narrow corridor through Jedediah Smith Redwoods State Park ahead of the holiday weekend. The road threads between trees older than the nation and is closed each winter to washouts."
+      - "Rangers remind drivers the route is one lane in places, with no cell service and a 15-mph reality regardless of the posted limit. \"It is not a shortcut,\" said ranger Eli Sato. \"It is the destination.\""
+  - headline: "Smith River runs clear as restoration takes hold"
+    level: secondary
+    kicker: "Watershed"
+    byline: "By Theo Brennan · Triplicate Staff Writer"
+    body:
+      - "Water-quality monitors on the Smith — the last major undammed river in California — report another year of exceptional clarity, a baseline that researchers increasingly use to measure what other recovering rivers might become."
+      - "Volunteers with the watershed council will host a citizen-science clarity day on the South Fork next month."

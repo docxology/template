@@ -14,7 +14,7 @@
   "sample_facts": [
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "figures.yaml:$.dpi",
       "source_field": "$.dpi",
@@ -26,7 +26,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/coverage.yaml:$.heatmap.dpi",
       "source_field": "$.heatmap.dpi",
@@ -38,7 +38,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "figures.yaml:$.dpi (numeric variant)",
       "source_field": "$.dpi",
@@ -50,7 +50,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/coverage.yaml:$.heatmap.dpi (numeric variant)",
       "source_field": "$.heatmap.dpi",
@@ -62,7 +62,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/analytical_observable_sweep.json:$.rows[32].lambda",
       "source_field": "$.rows[32].lambda",
@@ -74,7 +74,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/analytical_observable_sweep.json:$.rows[33].lambda",
       "source_field": "$.rows[33].lambda",
@@ -86,7 +86,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/analytical_observable_sweep.json:$.rows[34].lambda",
       "source_field": "$.rows[34].lambda",
@@ -98,7 +98,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/analytical_observable_sweep.json:$.rows[35].lambda",
       "source_field": "$.rows[35].lambda",
@@ -110,7 +110,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/parameter_sweep.csv:row_9.lambda",
       "source_field": "row_9.lambda",
@@ -122,7 +122,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "figures.yaml:$.font_scale",
       "source_field": "$.font_scale",
@@ -134,7 +134,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "figures.yaml:$.figures.sheaf_layers_overview.width (numeric variant)",
       "source_field": "$.figures.sheaf_layers_overview.width",
@@ -146,7 +146,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/tracks.yaml:$.schema_version",
       "source_field": "$.schema_version",
@@ -158,7 +158,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/tracks.yaml:$.tracks.animation.order (numeric variant)",
       "source_field": "$.tracks.animation.order",
@@ -170,7 +170,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[0].order",
       "source_field": "$.sections[0].order",
@@ -182,7 +182,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[1].depth",
       "source_field": "$.sections[1].depth",
@@ -194,7 +194,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[2].depth",
       "source_field": "$.sections[2].depth",
@@ -206,7 +206,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[4].depth",
       "source_field": "$.sections[4].depth",
@@ -218,7 +218,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[5].depth",
       "source_field": "$.sections[5].depth",
@@ -230,7 +230,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[6].depth",
       "source_field": "$.sections[6].depth",
@@ -242,7 +242,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[7].depth",
       "source_field": "$.sections[7].depth",
@@ -254,7 +254,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[9].depth",
       "source_field": "$.sections[9].depth",
@@ -266,7 +266,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[10].depth",
       "source_field": "$.sections[10].depth",
@@ -278,7 +278,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[11].depth",
       "source_field": "$.sections[11].depth",
@@ -290,7 +290,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[12].depth",
       "source_field": "$.sections[12].depth",
@@ -302,7 +302,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[14].depth",
       "source_field": "$.sections[14].depth",
@@ -314,7 +314,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "manuscript/sheaf/manifest.yaml:$.sections[16].depth",
       "source_field": "$.sections[16].depth",
@@ -326,7 +326,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[3].lambda",
       "source_field": "$.rows[3].lambda",
@@ -338,7 +338,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[4].lambda",
       "source_field": "$.rows[4].lambda",
@@ -350,7 +350,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[5].lambda",
       "source_field": "$.rows[5].lambda",
@@ -362,7 +362,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[12].lambda",
       "source_field": "$.rows[12].lambda",
@@ -374,7 +374,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[13].lambda",
       "source_field": "$.rows[13].lambda",
@@ -386,7 +386,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[14].lambda",
       "source_field": "$.rows[14].lambda",
@@ -398,7 +398,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[21].lambda",
       "source_field": "$.rows[21].lambda",
@@ -410,7 +410,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[22].lambda",
       "source_field": "$.rows[22].lambda",
@@ -422,7 +422,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[23].lambda",
       "source_field": "$.rows[23].lambda",
@@ -434,7 +434,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[30].lambda",
       "source_field": "$.rows[30].lambda",
@@ -446,7 +446,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[31].lambda",
       "source_field": "$.rows[31].lambda",
@@ -458,7 +458,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/causal_ablation_matrix.json:$.rows[32].lambda",
       "source_field": "$.rows[32].lambda",
@@ -470,7 +470,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[1].step",
       "source_field": "$.rows[1].step",
@@ -482,7 +482,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[2].q_pi_sum",
       "source_field": "$.rows[2].q_pi_sum",
@@ -494,7 +494,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[2].run_index",
       "source_field": "$.rows[2].run_index",
@@ -506,7 +506,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[3].q_pi_sum",
       "source_field": "$.rows[3].q_pi_sum",
@@ -518,7 +518,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[3].run_index",
       "source_field": "$.rows[3].run_index",
@@ -530,7 +530,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[3].step",
       "source_field": "$.rows[3].step",
@@ -542,7 +542,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[5].step",
       "source_field": "$.rows[5].step",
@@ -554,7 +554,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[7].q_pi_sum",
       "source_field": "$.rows[7].q_pi_sum",
@@ -566,7 +566,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[8].q_pi_sum",
       "source_field": "$.rows[8].q_pi_sum",
@@ -578,7 +578,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[8].step",
       "source_field": "$.rows[8].step",
@@ -590,7 +590,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/pymdp_policy_posterior_grid.json:$.rows[9].q_pi_sum",
       "source_field": "$.rows[9].q_pi_sum",
@@ -602,7 +602,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_tmaze_trace.json:$.steps[0].obs",
       "source_field": "$.steps[0].obs",
@@ -614,7 +614,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_tmaze_trace.json:$.steps[1].step",
       "source_field": "$.steps[1].step",
@@ -626,7 +626,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_tmaze_trace.json:$.steps[1].obs",
       "source_field": "$.steps[1].obs",
@@ -638,7 +638,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_tmaze_trace.json:$.steps[1].action",
       "source_field": "$.steps[1].action",
@@ -650,7 +650,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.grid.lambdas[1]",
       "source_field": "$.grid.lambdas[1]",
@@ -662,7 +662,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.grid.seeds[1]",
       "source_field": "$.grid.seeds[1]",
@@ -674,7 +674,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[8].seed",
       "source_field": "$.rows[8].seed",
@@ -686,7 +686,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[9].seed",
       "source_field": "$.rows[9].seed",
@@ -698,7 +698,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[10].seed",
       "source_field": "$.rows[10].seed",
@@ -710,7 +710,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[11].seed",
       "source_field": "$.rows[11].seed",
@@ -722,7 +722,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[12].seed",
       "source_field": "$.rows[12].seed",
@@ -734,7 +734,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[13].seed",
       "source_field": "$.rows[13].seed",
@@ -746,7 +746,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[14].seed",
       "source_field": "$.rows[14].seed",
@@ -758,7 +758,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[15].seed",
       "source_field": "$.rows[15].seed",
@@ -770,7 +770,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[24].seed",
       "source_field": "$.rows[24].seed",
@@ -782,7 +782,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[25].seed",
       "source_field": "$.rows[25].seed",
@@ -794,7 +794,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[26].seed",
       "source_field": "$.rows[26].seed",
@@ -806,7 +806,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[27].seed",
       "source_field": "$.rows[27].seed",
@@ -818,7 +818,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[28].seed",
       "source_field": "$.rows[28].seed",
@@ -830,7 +830,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[29].seed",
       "source_field": "$.rows[29].seed",
@@ -842,7 +842,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[30].seed",
       "source_field": "$.rows[30].seed",
@@ -854,7 +854,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[31].seed",
       "source_field": "$.rows[31].seed",
@@ -866,7 +866,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[32].lambda",
       "source_field": "$.rows[32].lambda",
@@ -878,7 +878,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[33].lambda",
       "source_field": "$.rows[33].lambda",
@@ -890,7 +890,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[34].lambda",
       "source_field": "$.rows[34].lambda",
@@ -902,7 +902,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[35].lambda",
       "source_field": "$.rows[35].lambda",
@@ -914,7 +914,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[36].lambda",
       "source_field": "$.rows[36].lambda",
@@ -926,7 +926,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[37].lambda",
       "source_field": "$.rows[37].lambda",
@@ -938,7 +938,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[38].lambda",
       "source_field": "$.rows[38].lambda",
@@ -950,7 +950,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[39].lambda",
       "source_field": "$.rows[39].lambda",
@@ -962,7 +962,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[40].lambda",
       "source_field": "$.rows[40].lambda",
@@ -974,7 +974,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[40].seed",
       "source_field": "$.rows[40].seed",
@@ -986,7 +986,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[41].lambda",
       "source_field": "$.rows[41].lambda",
@@ -998,7 +998,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[41].seed",
       "source_field": "$.rows[41].seed",
@@ -1010,7 +1010,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[42].lambda",
       "source_field": "$.rows[42].lambda",
@@ -1022,7 +1022,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[42].seed",
       "source_field": "$.rows[42].seed",
@@ -1034,7 +1034,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[43].lambda",
       "source_field": "$.rows[43].lambda",
@@ -1046,7 +1046,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[43].seed",
       "source_field": "$.rows[43].seed",
@@ -1058,7 +1058,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[44].lambda",
       "source_field": "$.rows[44].lambda",
@@ -1070,7 +1070,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[44].seed",
       "source_field": "$.rows[44].seed",
@@ -1082,7 +1082,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[45].lambda",
       "source_field": "$.rows[45].lambda",
@@ -1094,7 +1094,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[45].seed",
       "source_field": "$.rows[45].seed",
@@ -1106,7 +1106,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[46].lambda",
       "source_field": "$.rows[46].lambda",
@@ -1118,7 +1118,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[46].seed",
       "source_field": "$.rows[46].seed",
@@ -1130,7 +1130,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[47].lambda",
       "source_field": "$.rows[47].lambda",
@@ -1142,7 +1142,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[47].seed",
       "source_field": "$.rows[47].seed",
@@ -1154,7 +1154,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[48].lambda",
       "source_field": "$.rows[48].lambda",
@@ -1166,7 +1166,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[49].lambda",
       "source_field": "$.rows[49].lambda",
@@ -1178,7 +1178,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[50].lambda",
       "source_field": "$.rows[50].lambda",
@@ -1190,7 +1190,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[51].lambda",
       "source_field": "$.rows[51].lambda",
@@ -1202,7 +1202,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[52].lambda",
       "source_field": "$.rows[52].lambda",
@@ -1214,7 +1214,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[53].lambda",
       "source_field": "$.rows[53].lambda",
@@ -1226,7 +1226,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[54].lambda",
       "source_field": "$.rows[54].lambda",
@@ -1238,7 +1238,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[55].lambda",
       "source_field": "$.rows[55].lambda",
@@ -1250,7 +1250,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[56].lambda",
       "source_field": "$.rows[56].lambda",
@@ -1262,7 +1262,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[56].seed",
       "source_field": "$.rows[56].seed",
@@ -1274,7 +1274,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[57].lambda",
       "source_field": "$.rows[57].lambda",
@@ -1286,7 +1286,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[57].seed",
       "source_field": "$.rows[57].seed",
@@ -1298,7 +1298,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[58].lambda",
       "source_field": "$.rows[58].lambda",
@@ -1310,7 +1310,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[58].seed",
       "source_field": "$.rows[58].seed",
@@ -1322,7 +1322,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[59].lambda",
       "source_field": "$.rows[59].lambda",
@@ -1334,7 +1334,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[59].seed",
       "source_field": "$.rows[59].seed",
@@ -1346,7 +1346,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[60].lambda",
       "source_field": "$.rows[60].lambda",
@@ -1358,7 +1358,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[60].seed",
       "source_field": "$.rows[60].seed",
@@ -1370,7 +1370,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[61].lambda",
       "source_field": "$.rows[61].lambda",
@@ -1382,7 +1382,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[61].seed",
       "source_field": "$.rows[61].seed",
@@ -1394,7 +1394,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[62].lambda",
       "source_field": "$.rows[62].lambda",
@@ -1406,7 +1406,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[62].seed",
       "source_field": "$.rows[62].seed",
@@ -1418,7 +1418,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[63].lambda",
       "source_field": "$.rows[63].lambda",
@@ -1430,7 +1430,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[63].seed",
       "source_field": "$.rows[63].seed",
@@ -1442,7 +1442,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[72].seed",
       "source_field": "$.rows[72].seed",
@@ -1454,7 +1454,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[73].seed",
       "source_field": "$.rows[73].seed",
@@ -1466,7 +1466,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[74].seed",
       "source_field": "$.rows[74].seed",
@@ -1478,7 +1478,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[75].seed",
       "source_field": "$.rows[75].seed",
@@ -1490,7 +1490,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[76].seed",
       "source_field": "$.rows[76].seed",
@@ -1502,7 +1502,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[77].seed",
       "source_field": "$.rows[77].seed",
@@ -1514,7 +1514,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[78].seed",
       "source_field": "$.rows[78].seed",
@@ -1526,7 +1526,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[79].seed",
       "source_field": "$.rows[79].seed",
@@ -1538,7 +1538,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[88].seed",
       "source_field": "$.rows[88].seed",
@@ -1550,7 +1550,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[89].seed",
       "source_field": "$.rows[89].seed",
@@ -1562,7 +1562,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[90].seed",
       "source_field": "$.rows[90].seed",
@@ -1574,7 +1574,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[91].seed",
       "source_field": "$.rows[91].seed",
@@ -1586,7 +1586,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[92].seed",
       "source_field": "$.rows[92].seed",
@@ -1598,7 +1598,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[93].seed",
       "source_field": "$.rows[93].seed",
@@ -1610,7 +1610,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[94].seed",
       "source_field": "$.rows[94].seed",
@@ -1622,7 +1622,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sensitivity_sweep.json:$.rows[95].seed",
       "source_field": "$.rows[95].seed",
@@ -1634,7 +1634,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_graph_world_topology_traces.json:$.rows[0].trace[1].step",
       "source_field": "$.rows[0].trace[1].step",
@@ -1646,7 +1646,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_graph_world_topology_traces.json:$.rows[1].trace[1].step",
       "source_field": "$.rows[1].trace[1].step",
@@ -1658,7 +1658,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_graph_world_topology_traces.json:$.rows[2].trace[1].step",
       "source_field": "$.rows[2].trace[1].step",
@@ -1670,7 +1670,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_graph_world_topology_traces.json:$.rows[3].trace[1].step",
       "source_field": "$.rows[3].trace[1].step",
@@ -1682,7 +1682,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.claims[5].evidence.min",
       "source_field": "$.claims[5].evidence.min",
@@ -1694,7 +1694,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.claims[19].evidence.min",
       "source_field": "$.claims[19].evidence.min",
@@ -1706,7 +1706,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.evidence_crosswalk.claims[5].evidence.min",
       "source_field": "$.evidence_crosswalk.claims[5].evidence.min",
@@ -1718,7 +1718,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.evidence_crosswalk.claims[19].evidence.min",
       "source_field": "$.evidence_crosswalk.claims[19].evidence.min",
@@ -1730,7 +1730,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.manuscript_variables.counterexample_all_known_bad_fail",
       "source_field": "$.manuscript_variables.counterexample_all_known_bad_fail",
@@ -1742,7 +1742,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.manuscript_variables.cross_track_symbols_consistent",
       "source_field": "$.manuscript_variables.cross_track_symbols_consistent",
@@ -1754,7 +1754,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.manuscript_variables.pymdp_policy_posteriors_normalized",
       "source_field": "$.manuscript_variables.pymdp_policy_posteriors_normalized",
@@ -1766,7 +1766,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.manuscript_variables.reproducibility_all_passed",
       "source_field": "$.manuscript_variables.reproducibility_all_passed",
@@ -1778,7 +1778,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.manuscript_variables.si_goal_reached",
       "source_field": "$.manuscript_variables.si_goal_reached",
@@ -1790,7 +1790,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.manuscript_variables.si_graph_world_goal_reached",
       "source_field": "$.manuscript_variables.si_graph_world_goal_reached",
@@ -1802,7 +1802,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.manuscript_variables.si_graph_world_topology_traces_agree",
       "source_field": "$.manuscript_variables.si_graph_world_topology_traces_agree",
@@ -1814,7 +1814,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.manuscript_variables.si_policy_comparison_complete_grid",
       "source_field": "$.manuscript_variables.si_policy_comparison_complete_grid",
@@ -1826,7 +1826,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.manuscript_variables.si_policy_comparison_policy_goal_count",
       "source_field": "$.manuscript_variables.si_policy_comparison_policy_goal_count",
@@ -1838,7 +1838,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.manuscript_variables.si_policy_efe_rows_explained",
       "source_field": "$.manuscript_variables.si_policy_efe_rows_explained",
@@ -1850,7 +1850,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_gluing_certificate.json:$.tracks[29].order (numeric variant)",
       "source_field": "$.tracks[29].order",
@@ -1862,7 +1862,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[1].depth",
       "source_field": "$.sections[1].depth",
@@ -1874,7 +1874,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[2].depth",
       "source_field": "$.sections[2].depth",
@@ -1886,7 +1886,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[4].depth",
       "source_field": "$.sections[4].depth",
@@ -1898,7 +1898,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[5].depth",
       "source_field": "$.sections[5].depth",
@@ -1910,7 +1910,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[6].depth",
       "source_field": "$.sections[6].depth",
@@ -1922,7 +1922,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[7].depth",
       "source_field": "$.sections[7].depth",
@@ -1934,7 +1934,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[9].depth",
       "source_field": "$.sections[9].depth",
@@ -1946,7 +1946,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[10].depth",
       "source_field": "$.sections[10].depth",
@@ -1958,7 +1958,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[11].depth",
       "source_field": "$.sections[11].depth",
@@ -1970,7 +1970,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[12].depth",
       "source_field": "$.sections[12].depth",
@@ -1982,7 +1982,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[14].depth",
       "source_field": "$.sections[14].depth",
@@ -1994,7 +1994,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_coverage_matrix.json:$.sections[16].depth",
       "source_field": "$.sections[16].depth",
@@ -2006,7 +2006,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.counterexample_all_known_bad_fail",
       "source_field": "$.counterexample_all_known_bad_fail",
@@ -2018,7 +2018,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.cross_track_symbols_consistent",
       "source_field": "$.cross_track_symbols_consistent",
@@ -2030,7 +2030,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.pymdp_policy_posteriors_normalized",
       "source_field": "$.pymdp_policy_posteriors_normalized",
@@ -2042,7 +2042,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.reproducibility_all_passed",
       "source_field": "$.reproducibility_all_passed",
@@ -2054,7 +2054,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.si_goal_reached",
       "source_field": "$.si_goal_reached",
@@ -2066,7 +2066,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.si_graph_world_goal_reached",
       "source_field": "$.si_graph_world_goal_reached",
@@ -2078,7 +2078,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.si_graph_world_topology_traces_agree",
       "source_field": "$.si_graph_world_topology_traces_agree",
@@ -2090,7 +2090,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.si_policy_comparison_complete_grid",
       "source_field": "$.si_policy_comparison_complete_grid",
@@ -2102,7 +2102,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.si_policy_comparison_policy_goal_count",
       "source_field": "$.si_policy_comparison_policy_goal_count",
@@ -2114,7 +2114,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.si_policy_efe_rows_explained",
       "source_field": "$.si_policy_efe_rows_explained",
@@ -2126,7 +2126,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_evidence_crosswalk.json:$.claims[5].evidence.min",
       "source_field": "$.claims[5].evidence.min",
@@ -2138,7 +2138,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/sheaf_evidence_crosswalk.json:$.claims[19].evidence.min",
       "source_field": "$.claims[19].evidence.min",
@@ -2150,7 +2150,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[0].actions[1]",
       "source_field": "$.runs[0].actions[1]",
@@ -2162,7 +2162,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[0].observations[0]",
       "source_field": "$.runs[0].observations[0]",
@@ -2174,7 +2174,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[0].observations[1]",
       "source_field": "$.runs[0].observations[1]",
@@ -2186,7 +2186,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[0].policy_posterior_steps[1].step",
       "source_field": "$.runs[0].policy_posterior_steps[1].step",
@@ -2198,7 +2198,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[1].action_diversity",
       "source_field": "$.runs[1].action_diversity",
@@ -2210,7 +2210,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[1].observations[0]",
       "source_field": "$.runs[1].observations[0]",
@@ -2222,7 +2222,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[1].policy_posterior_steps[0].q_pi_sum",
       "source_field": "$.runs[1].policy_posterior_steps[0].q_pi_sum",
@@ -2234,7 +2234,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[1].policy_posterior_steps[1].step",
       "source_field": "$.runs[1].policy_posterior_steps[1].step",
@@ -2246,7 +2246,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[1].policy_posterior_steps[1].q_pi_sum",
       "source_field": "$.runs[1].policy_posterior_steps[1].q_pi_sum",
@@ -2258,7 +2258,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[2].actions[1]",
       "source_field": "$.runs[2].actions[1]",
@@ -2270,7 +2270,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[2].actions[2]",
       "source_field": "$.runs[2].actions[2]",
@@ -2282,7 +2282,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[2].observations[0]",
       "source_field": "$.runs[2].observations[0]",
@@ -2294,7 +2294,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[2].observations[1]",
       "source_field": "$.runs[2].observations[1]",
@@ -2306,7 +2306,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[2].observations[2]",
       "source_field": "$.runs[2].observations[2]",
@@ -2318,7 +2318,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[2].policy_posterior_steps[1].step",
       "source_field": "$.runs[2].policy_posterior_steps[1].step",
@@ -2330,7 +2330,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[3].action_diversity",
       "source_field": "$.runs[3].action_diversity",
@@ -2342,7 +2342,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[3].observations[0]",
       "source_field": "$.runs[3].observations[0]",
@@ -2354,7 +2354,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[3].observations[2]",
       "source_field": "$.runs[3].observations[2]",
@@ -2366,7 +2366,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[3].policy_posterior_steps[0].q_pi_sum",
       "source_field": "$.runs[3].policy_posterior_steps[0].q_pi_sum",
@@ -2378,7 +2378,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[3].policy_posterior_steps[1].step",
       "source_field": "$.runs[3].policy_posterior_steps[1].step",
@@ -2390,7 +2390,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[3].policy_posterior_steps[1].q_pi_sum",
       "source_field": "$.runs[3].policy_posterior_steps[1].q_pi_sum",
@@ -2402,7 +2402,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-02T21:43:39+00:00",
+      "checked_at": "2026-06-03T04:00:10+00:00",
       "kind": "number",
       "source": "output/data/si_policy_comparison.json:$.runs[3].policy_posterior_steps[2].q_pi_sum",
       "source_field": "$.runs[3].policy_posterior_steps[2].q_pi_sum",

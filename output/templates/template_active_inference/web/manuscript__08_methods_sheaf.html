@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>08_methods_sheaf.md.web</title>
+  <title>08_methods_sheaf</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -249,12 +249,16 @@ composer flattens the binding set into one Markdown section for PDF and
 web output.</p>
 <p>The operational claim is auditable binding: analytical, simulation,
 pymdp, visualization, Lean, GNN, ontology, and optional media fragments
-attach to each IMRAD row under [eq:coverage_cell] (<strong>P</strong>
-present, <strong>—</strong> unbound, <strong>M</strong> missing).</p>
+attach to each IMRAD row under <span class="citation"
+data-cites="eq:coverage_cell">[@eq:coverage_cell]</span>
+(<strong>P</strong> present, <strong>—</strong> unbound,
+<strong>M</strong> missing).</p>
 <h2 id="coverage-and-figures">Coverage and figures</h2>
-<p>[fig:sheaf_layers_overview] summarizes 32 fragment types and their
-IMRAD bindings. Generated tables below list every track definition and
-section×track binding at compose time.</p>
+<p><span class="citation"
+data-cites="fig:sheaf_layers_overview">[@fig:sheaf_layers_overview]</span>
+summarizes 32 fragment types and their IMRAD bindings. Generated tables
+below list every track definition and section×track binding at compose
+time.</p>
 <h2 id="compose-commands">Compose commands</h2>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/compose_manuscript.py</span>
@@ -262,8 +266,10 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <p>Each run emits <code>output/data/sheaf_coverage_matrix.json</code>
 and regenerates coverage artifacts. Partial compose
 (<code>--section</code>) is draft-only; the matrix always reflects the
-full manifest. Coverage totals appear on [sec:sheaf_coverage];
-discussion scope is in [sec:discussion_outlook].</p>
+full manifest. Coverage totals appear on <span class="citation"
+data-cites="sec:sheaf_coverage">[@sec:sheaf_coverage]</span>; discussion
+scope is in <span class="citation"
+data-cites="sec:discussion_outlook">[@sec:discussion_outlook]</span>.</p>
 <h2 id="law-verification">Law verification</h2>
 <p><code>--validate-only --strict</code> runs the structural gate before
 any fragment is glued. Beyond per-cell coverage, it invokes the
@@ -282,7 +288,8 @@ proves each check is falsifiable.</p>
 cross-track symbols, typed claim evidence, artifact sources, and
 manuscript-variable restrictions; validation fails when the analytical,
 pymdp, GNN, ontology, Lean, visualization, or manuscript tracks disagree
-about a shared symbol or measured claim. [fig:semantic_gluing_graph]
+about a shared symbol or measured claim. <span class="citation"
+data-cites="fig:semantic_gluing_graph">[@fig:semantic_gluing_graph]</span>
 renders this gluing graph: the configured producers, the generated
 evidence artifacts, and the validation consumers that read each shared
 symbol.</p>
@@ -339,9 +346,10 @@ machine-checked. The oracle <code>verify_sheaf_laws</code>
 (<code>src/manuscript/sheaf/laws.py</code>) verifies 6 laws, and the
 regenerated build reports 6/6 satisfied:</p>
 <ol type="1">
-<li><strong>Poset.</strong> The IMRAD blocks form the chain of
-[eq:imrad_chain]; compose order is monotone in block rank and every
-composing section’s block carries a group row.</li>
+<li><strong>Poset.</strong> The IMRAD blocks form the chain of <span
+class="citation" data-cites="eq:imrad_chain">[@eq:imrad_chain]</span>;
+compose order is monotone in block rank and every composing section’s
+block carries a group row.</li>
 <li><strong>Presheaf (functoriality).</strong> Every bound track lies in
 <span class="math inline">\(\mathcal{T}\)</span>; <span
 class="math inline">\(\pi\)</span> is a strict total order; and each
@@ -385,14 +393,10 @@ class="math inline">\(H^1\)</span>, Čech complexes, derived functors);
 multi-track coverage assignment, not a cohomological invariant. Formal
 track definitions and section×track bindings appear in the generated
 tables below.</p>
-<p>Semantic gluing then checks agreement of the glued content: coverage
-counts, manuscript variables, typed claim predicates, pymdp mode/hash,
-Bernoulli GNN ontology, and SI T-maze GNN ontology. This certificate is
-a content-level audit over the same base, not an additional topological
-law.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:sheaf_layers_overview">
-<img src="../figures/sheaf_layers_overview.png" style="width:98.0%"
+<img src="../figures/sheaf_layers_overview.png"
+style="width:98.0%"
 data-fig-alt="Two-panel overview of sheaf fragment layers. Left panel shows 32 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 17 manifest rows and 32 tracks."
 alt="Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for 32 fragment types across 17 manifest rows (90 present / 90 bound / 0 missing)." />
 <figcaption aria-hidden="true">Sheaf layers overview: registry stack
@@ -401,7 +405,8 @@ types across 17 manifest rows (90 present / 90 bound / 0
 missing).</figcaption>
 </figure>
 <figure id="fig:semantic_gluing_graph">
-<img src="../figures/semantic_gluing_graph.png" style="width:95.0%"
+<img src="../figures/semantic_gluing_graph.png"
+style="width:95.0%"
 data-fig-alt="Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate."
 alt="Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate." />
 <figcaption aria-hidden="true">Semantic gluing graph: configured

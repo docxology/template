@@ -1,0 +1,211 @@
+number: 11
+section: "A"
+department: "Classifieds & Marketplace"
+template: "classified"
+columns: 6
+
+main:
+  - box: generic
+    title: "To Place an Ad"
+    body:
+      - "Call (707) 555-0179 · 312 H Street · ads@triplicate.example. Line ads $9 / 20 words, 30¢ each add'l word. Deadline noon Monday for Wednesday. Box replies held 30 days."
+  - box: generic
+    title: "Help Wanted"
+    items:
+      - "<b>Deckhands</b> — crab/salmon vessel, season start. Exp. pref., will train. Citizens Dock ice house."
+      - "<b>Line cook</b>, Foglight Bakery, mornings. Apply 210 Front St."
+      - "<b>Marine welder</b> — harbor reconstruction. CR cert. or equiv. (707) 555-0144."
+      - "<b>Substitute teachers</b>, Del Norte USD. Sub permit req. District office."
+      - "<b>CNA / caregivers</b>, all shifts, Seaside Care. Sign-on bonus."
+      - "<b>Diesel mechanic</b>, fleet shop. Heavy equip. exp. Top pay DOE."
+      - "<b>Cashier</b>, harbor market, P/T weekends. 18+."
+      - "<b>Forest tech</b>, seasonal, Smith River NRA. USAJobs #NC-2026."
+      - "<b>Dispatcher</b>, county OES, swing shift. Apply by June 6."
+      - "<b>Hotel housekeeping</b>, summer season, will train. (707) 555-0231."
+  - box: generic
+    title: "Autos & Trucks"
+    items:
+      - "<b>'19 Tacoma</b> 4x4, 78k, canopy, tow pkg. $28,500. (707) 555-0117."
+      - "<b>'12 Subaru Outback</b>, 141k, new tires, runs great. $7,900."
+      - "<b>'08 F-250</b> diesel, flatbed, 210k, strong. $9,500 obo."
+      - "<b>Utility trailer</b>, 5x8, ramp gate, lights. $750."
+      - "<b>'21 Honda CR-V</b>, 34k, one owner, AWD. $26,200."
+      - "<b>Camper shell</b>, fits full-size, white. $300."
+  - box: generic
+    title: "For Sale"
+    items:
+      - "<b>Crab pots</b>, 30, good cond., $25 ea. or $600 all. (707) 555-0188."
+      - "<b>Firewood</b>, seasoned tanoak, $280/cord delivered in town."
+      - "<b>Kayak</b>, 12-ft sit-on-top, paddle incl., $300. Harbor area."
+      - "<b>Woodstove</b>, EPA-cert., $450 obo. You haul. Gasquet."
+      - "<b>Chest freezer</b>, 15 cu ft, works. $180."
+      - "<b>Generator</b>, 6500W, low hours. $520."
+      - "<b>Smoker</b>, vertical, propane, for fish. $120."
+      - "<b>Patio set</b>, teak, 6 chairs, weathered but solid. $200."
+  - box: generic
+    title: "Boats & Marine"
+    items:
+      - "<b>32-ft Roughwater</b>, diesel, rigged for crab. Survey avail. Serious only."
+      - "<b>Outboard</b>, 9.9 hp 4-stroke, low hours, $1,400."
+      - "<b>Slip sublease</b>, inner basin, through Oct. Harbor office approval req."
+      - "<b>Crab blocks & line</b>, leaded, 200 fathom. Make offer."
+      - "<b>Survival suits</b>, adult, USCG, 2 avail. $250 ea."
+      - "<b>14-ft aluminum</b> skiff w/ trailer, 15 hp. $1,950."
+  - box: generic
+    title: "Rentals"
+    items:
+      - "<b>2BR cottage</b>, walk to harbor, fenced yard. $1,650/mo + dep. No smoking."
+      - "<b>Studio</b>, downtown, utilities incl., $1,050/mo. Avail. June 15."
+      - "<b>3BR house</b>, Smith River, garage, pets ok. $2,100/mo."
+      - "<b>Room</b> for rent, quiet home, shared bath. $700, utils incl."
+      - "<b>RV space</b>, full hookups, monthly. Near beach. $600."
+      - "<b>Commercial</b>, Front St storefront, 900 sq ft. Tran Realty."
+  - box: generic
+    title: "Real Estate"
+    items:
+      - "<b>Land</b>, 5 acres Hiouchi, well + septic. $189,000."
+      - "<b>3BR/2BA</b>, ocean view, updated. $429,000. Tran Realty."
+      - "<b>Fixer</b>, 2BR near downtown, cash or rehab loan. $215,000."
+      - "<b>Timber parcel</b>, 40 ac., road access, off-grid. Inquire."
+  - box: generic
+    title: "Farm & Ranch"
+    items:
+      - "<b>Hay</b>, grass/orchard mix, no rain, $14/bale. Smith River."
+      - "<b>Laying hens</b>, year-old, productive. $12 ea."
+      - "<b>Goat</b>, Nigerian dwarf wether, friendly. $90."
+      - "<b>Manure</b>, aged, you load, free. Bring truck."
+  - box: generic
+    title: "Pets & Livestock"
+    items:
+      - "<b>Lab pups</b>, AKC, black, ready July 4. Dep. holds."
+      - "<b>Free</b> barn cats, fixed, great mousers. Fort Dick."
+      - "<b>Lost cat</b>, gray tabby, 'Smelt,' harbor area. Reward."
+  - box: generic
+    title: "Services"
+    items:
+      - "<b>Net mending</b> & gear repair, 40 yrs on the dock. Ask for Pete."
+      - "<b>Tree work</b>, licensed/insured. Storm cleanup, fog-belt specialists."
+      - "<b>Tax & bookkeeping</b> for small boats and shops. Year-round."
+      - "<b>House cleaning</b>, weekly/biweekly, references."
+      - "<b>Hauling</b> & dump runs, 1-ton, reasonable."
+      - "<b>Welding</b>, mobile, marine & ag. (707) 555-0144."
+      - "<b>Childcare</b>, licensed, openings fall. Meals incl."
+  - box: generic
+    title: "Garage & Estate Sales"
+    items:
+      - "<b>Sat 8–2</b>, 145 Cooper Ave — tools, marine gear, books."
+      - "<b>Multi-family</b>, Sun, Pebble Beach Dr. Kids' stuff, furniture."
+      - "<b>Estate</b>, Fri–Sat, antiques, lens glass, ship models."
+  - box: generic
+    title: "Free & Wanted"
+    items:
+      - "<b>Free</b> — piano, upright, plays. You move it. South Beach."
+      - "<b>Free</b> — moving boxes, clean, lots. Curbside H St."
+      - "<b>Wanted</b> — rowers for new youth crew. harbor.row@example."
+      - "<b>Wanted</b> — old crab-pot floats for art project. Will trade."
+      - "<b>Wanted</b> — used kiln, small, for school. Donations welcome."
+  - box: generic
+    title: "Lost & Found"
+    items:
+      - "<b>Found</b>: ship's bell, brass, Kellogg Beach. Describe to claim."
+      - "<b>Lost</b>: orange survival suit, 'REYES' on collar. Reward."
+      - "<b>Found</b>: keys w/ float, harbor lot. At Triplicate office."
+  - box: generic
+    title: "Notices & Personals"
+    items:
+      - "<b>Thank you</b> to the stranger who returned my dog at Battery Point. — A grateful keeper."
+      - "<b>Reunion</b>: Del Norte High class of '76, Aug. 8, fairgrounds. RSVP Linda."
+      - "<b>AA / Al-Anon</b> meets daily, harbor church basement, noon & 7 p.m."
+      - "<b>Free meals</b> for seniors, M–F, community center, 11:30 a.m."
+  - box: generic
+    title: "Service Directory"
+    items:
+      - "<b>Appliance Repair</b> — North Coast Appliance, (707) 555-0102."
+      - "<b>Auto Body</b> — Redwood Collision, free estimates, 555-0119."
+      - "<b>Carpet & Floors</b> — Coastal Flooring, 555-0140."
+      - "<b>Chimney Sweep</b> — Fog Belt Sweeps, insured, 555-0155."
+      - "<b>Concrete</b> — Lindahl & Sons, drives & foundations, 555-0161."
+      - "<b>Dentist</b> — Harbor Family Dental, new patients, 555-0173."
+      - "<b>Electrician</b> — Tidewater Electric, lic. #C10, 555-0184."
+      - "<b>Excavation</b> — Smith River Earthworks, septic, 555-0190."
+      - "<b>Fencing</b> — Redwood Fence Co., deer & ranch, 555-0205."
+      - "<b>Glass</b> — Crescent Glass, auto & marine, 555-0211."
+      - "<b>Heating</b> — North Coast HVAC, heat pumps, 555-0224."
+      - "<b>Insurance</b> — Del Norte Mutual, home & boat, 555-0237."
+      - "<b>Landscaping</b> — Fern Canyon Gardens, 555-0249."
+      - "<b>Locksmith</b> — Battery Point Lock, 24 hr, 555-0252."
+      - "<b>Painting</b> — Maritime Painters, int/ext, 555-0268."
+      - "<b>Plumbing</b> — Tidewater Plumbing, 24 hr, 555-0271."
+      - "<b>Propane</b> — Coast Propane, delivery, 555-0285."
+      - "<b>Roofing</b> — Rainshadow Roofing, metal, 555-0298."
+      - "<b>Septic Pumping</b> — Clear Creek Septic, 555-0301."
+      - "<b>Storage</b> — Harbor Self-Storage, 555-0314."
+      - "<b>Surveyor</b> — North Coast Land Surveys, 555-0327."
+      - "<b>Towing</b> — 101 Towing, 24 hr, 555-0330."
+      - "<b>Tree Service</b> — Old Growth Arbor, lic/ins, 555-0346."
+      - "<b>Veterinarian</b> — Redwood Animal Hospital, 555-0359."
+      - "<b>Well Drilling</b> — Smith River Well, 555-0362."
+      - "<b>Windows</b> — Coastal Window & Door, 555-0378."
+  - box: generic
+    title: "Worship Directory"
+    items:
+      - "<b>St. Joseph Catholic</b> — Mass Sun 8 &amp; 10:30 a.m."
+      - "<b>First Presbyterian</b> — Worship Sun 10 a.m."
+      - "<b>Harbor Community</b> — Sun 9 &amp; 11 a.m., nursery."
+      - "<b>Bethany Lutheran</b> — Sun 9:30 a.m."
+      - "<b>Crescent Bible</b> — Sun 10:45 a.m., Wed 7 p.m."
+      - "<b>United Methodist</b> — Sun 10 a.m., fellowship after."
+      - "<b>Seventh-day Adventist</b> — Sat 11 a.m."
+      - "<b>Tolowa Dee-ni' Gatherings</b> — call Howonquet center."
+      - "<b>Friends Meeting</b> — Sun 10 a.m., silent worship."
+      - "<b>Grace Fellowship</b> — Sun 9 &amp; 11 a.m."
+  - box: generic
+    title: "Public & Legal Notices"
+    body:
+      - "<b>NOTICE OF TRUSTEE'S SALE</b> — T.S. No. 26-0142. The property at 88 Pebble Beach Dr. will be sold at public auction June 24, 10 a.m., at the county courthouse steps, to the highest bidder for cash. Amount of unpaid balance and other charges as of first publication: $214,880.16."
+      - "<b>NOTICE INVITING BIDS</b> — Harbor District seeks sealed bids for dredging of the inner boat basin. Pre-bid conference June 9. Bids due June 23, 2 p.m. Plans at the district office, 101 Citizens Dock Rd."
+      - "<b>SUMMONS</b> — Case CV-26-0188. To the defendant: you have 30 days after service to file a response. Failure may result in default judgment. Clerk of the Superior Court, Del Norte County."
+      - "<b>ABANDONED VESSEL</b> — The 28-ft vessel 'Sea Mist,' hull #DN4471, will be deemed abandoned and disposed of after June 30 unless claimed. Harbormaster, (707) 555-0179."
+  - box: display
+    title: "Subscribe to The Triplicate"
+    body:
+      - "<b>The North Coast's paper since 1879.</b>"
+      - "Home delivery $52/year. Online $39/year. Snowbird and senior rates available."
+      - "Call (707) 555-0100 or stop by 312 H Street."
+  - box: display
+    title: "Place a Classified"
+    body:
+      - "Reach every mailbox in Del Norte County."
+      - "20 words for $9. Photos add $5. Bold and borders available."
+      - "ads@triplicate.example · noon Monday deadline."
+  - box: display
+    title: "In Memoriam & Obituaries"
+    body:
+      - "Honor a loved one in print. Standard obituaries are published as a community service; extended tributes and photographs are available at modest cost."
+      - "obits@triplicate.example · (707) 555-0166."
+  - box: display
+    title: "Card of Thanks"
+    body:
+      - "The family of Hal Petersen thanks the harbor community, the relief fund and the crew of the <i>Marie Elise</i> for their kindness in our loss. Fair winds, Captain."
+  - ad:
+      sponsor: "Foglight Bakery"
+      tagline: "Fresh from the fog."
+      graphic: "output/figures/ad_bakery.png"
+      background: "#F8EFD9"
+      accent: "#6E3C18"
+      border: "box"
+      graphic_height: 64
+      body:
+        - "Order your festival pastry trays now."
+      contact: "210 Front St · 555-0210"
+  - ad:
+      sponsor: "Harbor View Realty"
+      tagline: "Thinking of selling?"
+      graphic: "output/figures/ad_realty.png"
+      background: "#EAF1F5"
+      accent: "#1F3A5F"
+      border: "box"
+      graphic_height: 64
+      body:
+        - "Free market analysis for harbor-district homes."
+      contact: "555-0150"

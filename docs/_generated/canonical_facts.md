@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-06-02 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**516**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**211**), publishing suite collection/full run (**381**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-06-03 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**516**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**212**), publishing suite collection/full run (**381**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -11,6 +11,7 @@ This file aggregates verifiable facts from discovery scripts, CI configuration, 
 - `template_active_inference`
 - `template_autoresearch_project`
 - `template_code_project`
+- `template_newspaper`
 - `template_prose_project`
 - `template_sia`
 - `template_template`
@@ -24,6 +25,7 @@ Private lifecycle projects live outside this public repo in a separate external 
 - `template_active_inference`
 - `template_autoresearch_project`
 - `template_code_project`
+- `template_newspaper`
 - `template_prose_project`
 - `template_sia`
 - `template_template`
@@ -44,7 +46,7 @@ Default exemplar for paths: `projects/templates/template_code_project/`.
 
 ## Infrastructure Modules
 
-Current importable Python subpackages under `infrastructure/` (20):
+Current importable Python subpackages under `infrastructure/` (19):
 
 - autoresearch
 - benchmark
@@ -62,7 +64,6 @@ Current importable Python subpackages under `infrastructure/` (20):
 - reporting
 - scientific
 - search
-- sia
 - skills
 - steganography
 - validation
@@ -80,9 +81,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **516** on 2026-06-03 UTC — includes the `infrastructure/search/exa/` client package, `infrastructure/core/project_paths.py`, the `__main__.py` entrypoints, and the reserve-first Zenodo helper (`release_workflow_zenodo.py`), PDF title-page module (`_pdf_title_page.py`), output project lock (`core/files/project_lock.py`), and XML-parser policy guard (`validation/xml_parser_policy.py`); re-derive with the command above.)
-
-Notable infra module sizes (post 2026-06-02 Wave D): `_pdf_combined_renderer.py` **861** (WARN), `_pdf_title_page.py` **542**, `_pdf_latex_helpers.py` **236** (preamble/math only).
+(Last refreshed count: **516** on 2026-06-03 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -99,22 +98,23 @@ uv run pytest tests/infra_tests/project/ --collect-only -q --no-cov
 uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 ```
 
-Result: **211** project-scope infrastructure tests collected and **381** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
+Result: **212** project-scope infrastructure tests collected and **381** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (2026-05-30):
+**Exemplar `pytest --collect-only` totals** (2026-05-27):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_active_inference` | 225 | 91.14 % |
-| `template_autoresearch_project` | 220 | 91.56 % |
-| `template_code_project` | 196 | 98.25 % |
+| `template_active_inference` | 141 | 91.35 % |
+| `template_autoresearch_project` | 217 | 91.56 % |
+| `template_code_project` | 209 | 98.25 % |
+| `template_newspaper` | 48 | 94.46 % |
 | `template_prose_project` | 76 | 100.00 % |
 | `template_sia` | 32 | 96.69 % |
 | `template_template` | 84 | 91.53 % |
 
 Collection was refreshed with per-project `uv run pytest tests/ --collect-only -q --no-cov` runs. Coverage values come from the latest project coverage gates; re-run the per-project coverage command after changing project `src/` or tests. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
-Drift-checker coverage: `uv run python scripts/check_template_drift.py --strict` completed with no drift on 2026-05-30. Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** through the thin-orchestrator detectors. Per-exemplar detectors include function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead links, oversize `src/*.py`, blanket `except Exception`, mocks in tests, and canonical-file presence.
+Drift-checker coverage: `uv run python scripts/check_template_drift.py --strict` completed with no drift on 2026-05-27. Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** through the thin-orchestrator detectors. Per-exemplar detectors include function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead links, oversize `src/*.py`, blanket `except Exception`, mocks in tests, and canonical-file presence.
 
 **Thin-orchestrator gates** (measured 2026-05-27):
 
@@ -126,7 +126,7 @@ Drift-checker coverage: `uv run python scripts/check_template_drift.py --strict`
 | Tracked projects | `uv run python scripts/check_tracked_projects.py` | non-exemplar paths under `projects/` |
 | Generated artifacts | `uv run python scripts/check_tracked_generated_artifacts.py` | disposable `output/` trees |
 
-Current line-count result: no failing modules under `infrastructure/` + `scripts/`; `_pdf_combined_renderer.py` is a warning at 861 lines; `_pdf_title_page.py` at 542 lines after title-page split.
+Current line-count result: no failing modules; `infrastructure/rendering/_pdf_combined_renderer.py` is a warning at 861 lines.
 
 Coverage gates (enforced in CI):
 

@@ -73,6 +73,39 @@ class TestValidatePdfs:
         assert mod.validate_pdfs("test") is False
 
 
+class TestValidateTransmissionBookends:
+    """Test transmission bookend PDF lookup."""
+
+    def test_qualified_project_uses_basename_combined_pdf(self, tmp_path, monkeypatch) -> None:
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        project_dir = tmp_path / "projects" / "templates" / "demo"
+        config_path = project_dir / "manuscript" / "config.yaml"
+        config_path.parent.mkdir(parents=True)
+        config_path.write_text(
+            "publication:\n"
+            "  transmission_bookends:\n"
+            "    enabled: true\n",
+            encoding="utf-8",
+        )
+
+        pdf_path = project_dir / "output" / "pdf" / "demo_combined.pdf"
+        pdf_path.parent.mkdir(parents=True)
+        pdf_path.write_bytes(_minimal_structural_pdf())
+
+        from infrastructure.publishing import transmission_page_check
+
+        checked_paths = []
+
+        def fake_page_check(path):
+            checked_paths.append(path)
+            return True
+
+        monkeypatch.setattr(transmission_page_check, "validate_transmission_bookend_pages", fake_page_check)
+
+        assert mod.validate_transmission_bookends("templates/demo") is True
+        assert checked_paths == [pdf_path]
+
+
 class TestValidateMarkdown:
     """Test validate_manuscript_output_markdown()."""
 

@@ -1,0 +1,73 @@
+number: 2
+section: "A"
+department: "Local & Region"
+template: "standard"
+columns: 4
+
+lead:
+  kicker: "Smith River"
+  headline: "Easter lily growers bet the farm on a warming bloom"
+  deck: "Ninety percent of the nation's potted Easter lilies come from a ten-mile strip of coast. A shifting climate is rewriting the planting calendar."
+  byline: "By Theo Brennan · Triplicate Staff Writer"
+  drop_cap: true
+  figure:
+    path: "output/figures/lily_fields.png"
+    caption: "Furrowed bulb fields run toward the morning fog north of Smith River, where the maritime climate has supported Easter-lily culture since the 1940s."
+    credit: "Triplicate / J. Okafor"
+    height: 158
+  body:
+    - "SMITH RIVER — In the bulb fields that run from the Smith River bottoms to the Oregon line, a dozen families grow nearly every Easter lily sold in North America. It is a crop measured in years, not seasons: a marketable bulb takes three to four years of digging, sorting and replanting before it is forced into a single, perfectly timed bloom."
+    - "That timing is the whole business, and it is getting harder. Growers say warmer, drier springs are pulling the bloom forward, threatening the delicate choreography that has to land a flowering plant on a store shelf the week before Easter — a date that itself wanders across five weeks of the calendar."
+    - "\"We are farming a holiday,\" said grower Anna Sefton, whose family has worked the same ground since 1948. \"The lily does not care what the church calendar says. We have to make it care.\""
+    - "The cooperative that markets the bulbs has begun staggering plantings across more microclimates and investing in cold-storage that can hold bloom back by days. The adjustments are expensive for a crop with thin margins and a single, unforgiving sell-by date."
+    - "Still, the growers are not going anywhere. The same fog that frustrates the lighthouse keepers two ridges west is exactly what the lily wants — cool nights, gray mornings, and a soil that drains the North Coast rain."
+
+main:
+  - box: briefs
+    title: "Around Del Norte"
+    body:
+      - subhead: "Klamath"
+      - "The Yurok Tribe's salmon-counting weir went in below Blue Creek this week, the first full season since the Klamath dams came down. Biologists report early Chinook moving past the old reservoir reaches."
+      - subhead: "Gasquet"
+      - "The Middle Fork Ranger Station reopens for the summer Saturday. Wilderness permits for the Siskiyou high country are available at the counter."
+      - subhead: "Fort Dick"
+      - "A power pole struck by a log truck knocked out service to 600 customers Monday evening. Crews restored power before midnight."
+      - subhead: "Hiouchi"
+      - "The Smith River visitor center reopens daily for the season Friday, with a new exhibit on the 2024 dam removals downstream on the Klamath."
+      - subhead: "Crescent City"
+      - "A leaking fire hydrant on Cooper Avenue will be replaced Thursday; the 400 block loses water service from 9 a.m. to noon."
+  - headline: "Tolowa Dee-ni' Nation breaks ground on language center"
+    level: secondary
+    kicker: "Howonquet"
+    byline: "By Iris Lindqvist · Triplicate Staff Writer"
+    body:
+      - "The Tolowa Dee-ni' Nation broke ground Saturday on a $4.2 million language and culture center at Howonquet, the latest step in a decades-long effort to bring the Tolowa language back into daily use after it was nearly silenced by a century of boarding-school policy."
+      - "The center will house immersion classrooms, a recording studio for elder speakers and a workshop for canoe carving and basketry. \"A language lives in the mouths of children or it does not live,\" said tribal chairperson Della Richmond. \"This building is where it gets to live.\""
+      - "Construction is expected to finish by spring 2027. The Nation is recruiting apprentice speakers now."
+  - headline: "Crescent City revives summer farmers market"
+    level: secondary
+    kicker: "Downtown"
+    byline: "By Maren Holloway · Triplicate Staff Writer"
+    body:
+      - "After two fallow summers, the downtown farmers market returns to the harbor-side lot on Saturday mornings beginning in June, with a roster of growers, a fish-off-the-boat vendor and live music from the high-school jazz band."
+      - "Organizers credit a small business grant and a new volunteer board. \"People want a reason to be downtown on a Saturday,\" said coordinator Beth Onganga. \"Tomatoes are a pretty good reason.\""
+  - headline: "Volunteers clear winter's blowdown from Tolowa Dunes trails"
+    level: secondary
+    kicker: "Lake Earl"
+    byline: "By Maren Holloway · Triplicate Staff Writer"
+    body:
+      - "A weekend work party of two dozen volunteers cleared more than a mile of storm-fallen alder and spruce from the Tolowa Dunes and Lake Earl trails, reopening the loop to Kellogg Beach in time for the summer season."
+      - "State Parks supplied the saws; the Friends of Del Norte supplied the muscle and the lunch. \"Every winter the wind rearranges the place,\" said crew leader Will Abernathy. \"Every spring we put the trails back. It is a fair trade for living here.\""
+      - "The next work party, focused on dune-grass restoration, is set for the second Saturday in June."
+  - ad:
+      sponsor: "Foglight Bakery"
+      tagline: "Fresh from the fog since 2024"
+      graphic: "output/figures/ad_bakery.png"
+      background: "#F8EFD9"
+      accent: "#6E3C18"
+      border: "double"
+      graphic_height: 78
+      body:
+        - "Sourdough · morning pastries · wood-fired loaves"
+        - "Open 6 a.m.–2 p.m. · 210 Front Street"
+      contact: "(707) 555-0210"

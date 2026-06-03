@@ -1,0 +1,96 @@
+number: 1
+section: "A"
+department: "Front Page"
+template: "front"
+columns: 4          # main columns; the rail is an additional fixed-width column
+rail_enabled: true
+
+# ── Left rail: index, weather, refers ──────────────────────────────────────
+rail:
+  - box: index
+    title: "Inside Today"
+    items:
+      - "<b>Local &amp; Region</b> · · · · · · A2"
+      - "<b>City &amp; County</b> · · · · · · · A3"
+      - "<b>Coast &amp; Environment</b> · · A4"
+      - "<b>Opinion</b> · · · · · · · · · · · · A5"
+      - "<b>Business &amp; Fishing</b> · · · A6"
+      - "<b>Community &amp; Arts</b> · · · · A7"
+      - "<b>Sports</b> · · · · · · · · · · · · · A8"
+      - "<b>Schools</b> · · · · · · · · · · · · A9"
+      - "<b>Public Record</b> · · · · · · · A10"
+      - "<b>Classifieds</b> · · · · · · · · · A11"
+      - "<b>Weather &amp; Almanac</b> · · A12"
+  - box: weather
+    title: "On the Coast"
+    body:
+      - "Marine layer through midmorning, then high overcast. West wind 10–15 mph by afternoon."
+    rows:
+      - ["", "High", "Low"]
+      - ["Today", "59°", "48°"]
+      - ["Thu", "61°", "49°"]
+      - ["Fri", "60°", "47°"]
+      - ["Sat", "63°", "50°"]
+    footnote: "Tides and sun tables, A12."
+  - box: briefs
+    title: "Also Inside"
+    body:
+      - subhead: "Crab season tally"
+      - "Del Norte boats land their best Dungeness haul in four years. — A6"
+      - subhead: "Warriors advance"
+      - "Del Norte High baseball takes the league semifinal in extra innings. — A8"
+      - subhead: "Redwoods reopen"
+      - "Howland Hill Road grading wraps ahead of the holiday weekend. — A4"
+
+# ── Lead story (headline drawn as spanning furniture) ──────────────────────
+lead:
+  kicker: "Waterfront"
+  headline: "Harbor breaks ground on tsunami-resilient docks"
+  deck: "Forty years after the wave that defined the town, Crescent City begins a $—29 million rebuild engineered to ride out the next one."
+  byline: "By Maren Holloway · Triplicate Staff Writer"
+  dateline: "CRESCENT CITY"
+  drop_cap: true
+  figure:
+    path: "output/figures/harbor.png"
+    caption: "Pilings for the new inner-boat-basin float system are set near Citizens Dock on Tuesday morning, with the Battery Point light visible beyond the breakwater."
+    credit: "Triplicate / J. Okafor"
+    height: 168
+  body:
+    - "Under a sky that could not decide between fog and sun, a line of pile drivers went to work in the inner boat basin on Tuesday, driving the first of 214 steel-cased pilings for a harbor that has been knocked flat more times than any other on the West Coast."
+    - "The $29 million project — funded through a braid of federal hazard-mitigation grants, a state coastal-resilience bond and the harbor district's own reserves — will replace timber floats first laid down after the 1964 tsunami and patched again after the 2011 surge that arrived from Japan. This time, engineers say, the docks are built to move with the water rather than against it."
+    - subhead: "Designed to flex"
+    - "\"The old docks were rigid, and rigid things break,\" said Harbor District Director Lourdes Avila, standing where the gangway will land. \"These floats ride up the pilings on collars. A six-foot surge lifts them six feet and sets them back down. That is the whole idea.\""
+    - "The design borrows from harbors in Hilo and Kushiro that have absorbed repeated tsunamis. Sacrificial breakaway sections are meant to fail in a predictable order, sparing the main basin and the commercial fleet that is the economic spine of the county."
+    - pull:
+        quote: "The old docks were rigid, and rigid things break. These ride up the pilings and set back down."
+        by: "Lourdes Avila, Harbor District director"
+    - "For the crab and salmon fleet, the work cannot finish soon enough. Skippers have spent two decades tying up to floats that list and groan in a hard swell. \"You learn which cleats to trust,\" said Dom Pereira, who has fished out of Crescent City since 1991. \"After this, maybe I trust all of them.\""
+    - "Construction will proceed in three phases through the winter, with the commercial basin kept open throughout. The district expects the recreational floats and a rebuilt public pier — with interpretive panels on the town's tsunami history — to open by next Memorial Day."
+    - "Mayor Priya Sandoval, who watched the first piling go down, framed the morning in plain terms. \"We do not get to choose whether the ocean comes for this harbor again,\" she said. \"We only get to choose what it finds when it does.\""
+    - "Continued on Page A4, Column 1"
+
+# ── Secondary front-page stories ────────────────────────────────────────────
+main:
+  - headline: "Supervisors clear path for county-wide broadband"
+    level: primary
+    kicker: "County"
+    deck: "A 1,400-mile fiber plan would reach Klamath, Gasquet and Smith River by 2029."
+    byline: "By Theo Brennan · Triplicate Staff Writer"
+    body:
+      - "The Del Norte County Board of Supervisors voted 4–1 on Tuesday to accept a $61 million state middle-mile grant, committing the county to a fiber-optic backbone that planners say would finally close the broadband gap that has shadowed the North Coast for a generation."
+      - "The network would follow the Highway 101 and 199 corridors, with spurs to the Yurok and Tolowa Dee-ni' communities along the lower Klamath. Supervisor Gail Whitethorn, the lone dissenting vote, said she supported the goal but wanted firmer guarantees that rural addresses — not just town centers — would see service."
+      - "\"I have constituents in Gasquet who file their taxes from the library parking lot,\" Whitethorn said. \"I need to know the line actually turns up their road.\""
+      - "County Administrative Officer Renée Castellano said construction bids would go out this fall, with the first homes connected in late 2027 and full buildout targeted for 2029."
+  - headline: "Battery Point light marks 170 years on the rock"
+    level: secondary
+    kicker: "Heritage"
+    byline: "By Iris Lindqvist · Triplicate Staff Writer"
+    figure:
+      path: "output/figures/lighthouse.png"
+      caption: "The 1856 Battery Point Lighthouse, reachable on foot only at low tide."
+      credit: "Triplicate file"
+      height: 120
+    body:
+      - "When the lamp at Battery Point was first lit on the night of Dec. 10, 1856, Crescent City was a muddy supply landing for the Klamath gold camps. The light has outlasted the camps, two tsunamis and the lumber boom that built and then emptied the surrounding blocks."
+      - "The Del Norte County Historical Society will mark the anniversary Saturday with low-tide tours, a keeper's-log reading and chowder on the lawn. Volunteers note the island is cut off when the tide comes in — visitors who linger get a free, unscheduled overnight."
+      - "\"It is the most photographed thing in the county and the least convenient to reach,\" said society president Walt Hennessey. \"That is precisely why people love it.\""

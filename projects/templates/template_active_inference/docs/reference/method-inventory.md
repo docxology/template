@@ -134,12 +134,12 @@ Total documented definitions: 540
 | 61 | `function` | `_DefinitionVisitor.visit_FunctionDef` | inventory fallback | Inventory fallback for function `_DefinitionVisitor.visit_FunctionDef` defined at `src/gates/method_inventory.py:61`. |
 | 67 | `function` | `_DefinitionVisitor.visit_AsyncFunctionDef` | inventory fallback | Inventory fallback for function `_DefinitionVisitor.visit_AsyncFunctionDef` defined at `src/gates/method_inventory.py:67`. |
 | 73 | `function` | `_DefinitionVisitor._record` | inventory fallback | Inventory fallback for function `_DefinitionVisitor._record` defined at `src/gates/method_inventory.py:73`. |
-| 90 | `function` | `_source_files` | docstring | Return Python files in the documentation inventory scope. |
-| 103 | `function` | `_path_sort_key` | docstring | Sort inventory paths by declared source-root order, then by path. |
-| 113 | `function` | `collect_method_entries` | docstring | Collect every class/function definition under source modules and scripts. |
-| 126 | `function` | `_escape_cell` | docstring | Escape Markdown table cells without changing the underlying value. |
-| 131 | `function` | `render_method_inventory_markdown` | docstring | Render method inventory entries as a grouped Markdown reference. |
-| 175 | `function` | `write_method_inventory` | docstring | Write the method inventory Markdown report and return its path. |
+| 89 | `function` | `_source_files` | docstring | Return Python files in the documentation inventory scope. |
+| 100 | `function` | `_path_sort_key` | docstring | Sort inventory paths by declared source-root order, then by path. |
+| 110 | `function` | `collect_method_entries` | docstring | Collect every class/function definition under source modules and scripts. |
+| 123 | `function` | `_escape_cell` | docstring | Escape Markdown table cells without changing the underlying value. |
+| 128 | `function` | `render_method_inventory_markdown` | docstring | Render method inventory entries as a grouped Markdown reference. |
+| 172 | `function` | `write_method_inventory` | docstring | Write the method inventory Markdown report and return its path. |
 
 ## `src/gates/output_checks.py`
 
@@ -249,12 +249,12 @@ Total documented definitions: 540
 | 60 | `function` | `build_coverage_matrix` | inventory fallback | Inventory fallback for function `build_coverage_matrix` defined at `src/manuscript/sheaf/coverage.py:60`. |
 | 103 | `function` | `coverage_matrix_to_dict` | inventory fallback | Inventory fallback for function `coverage_matrix_to_dict` defined at `src/manuscript/sheaf/coverage.py:103`. |
 | 130 | `function` | `write_coverage_json` | inventory fallback | Inventory fallback for function `write_coverage_json` defined at `src/manuscript/sheaf/coverage.py:130`. |
-| 140 | `function` | `load_coverage_json` | inventory fallback | Inventory fallback for function `load_coverage_json` defined at `src/manuscript/sheaf/coverage.py:140`. |
-| 145 | `function` | `validate_coverage_strict` | inventory fallback | Inventory fallback for function `validate_coverage_strict` defined at `src/manuscript/sheaf/coverage.py:145`. |
-| 158 | `function` | `gray_cell_count` | inventory fallback | Inventory fallback for function `gray_cell_count` defined at `src/manuscript/sheaf/coverage.py:158`. |
-| 162 | `function` | `gray_cell_count_from_json` | inventory fallback | Inventory fallback for function `gray_cell_count_from_json` defined at `src/manuscript/sheaf/coverage.py:162`. |
-| 171 | `function` | `validate_coverage_json_data` | inventory fallback | Inventory fallback for function `validate_coverage_json_data` defined at `src/manuscript/sheaf/coverage.py:171`. |
-| 207 | `function` | `emit_coverage_artifacts` | docstring | Build matrix from live manifest/registry and write coverage JSON only. |
+| 137 | `function` | `load_coverage_json` | inventory fallback | Inventory fallback for function `load_coverage_json` defined at `src/manuscript/sheaf/coverage.py:137`. |
+| 142 | `function` | `validate_coverage_strict` | inventory fallback | Inventory fallback for function `validate_coverage_strict` defined at `src/manuscript/sheaf/coverage.py:142`. |
+| 155 | `function` | `gray_cell_count` | inventory fallback | Inventory fallback for function `gray_cell_count` defined at `src/manuscript/sheaf/coverage.py:155`. |
+| 159 | `function` | `gray_cell_count_from_json` | inventory fallback | Inventory fallback for function `gray_cell_count_from_json` defined at `src/manuscript/sheaf/coverage.py:159`. |
+| 168 | `function` | `validate_coverage_json_data` | inventory fallback | Inventory fallback for function `validate_coverage_json_data` defined at `src/manuscript/sheaf/coverage.py:168`. |
+| 204 | `function` | `emit_coverage_artifacts` | docstring | Build matrix from live manifest/registry and write coverage JSON only. |
 
 ## `src/manuscript/sheaf/laws.py`
 
@@ -623,10 +623,10 @@ Total documented definitions: 540
 | 55 | `function` | `RunLogger.from_project_root` | inventory fallback | Inventory fallback for function `RunLogger.from_project_root` defined at `src/simulation/logging_utils.py:55`. |
 | 66 | `function` | `RunLogger.fresh` | inventory fallback | Inventory fallback for function `RunLogger.fresh` defined at `src/simulation/logging_utils.py:66`. |
 | 71 | `function` | `RunLogger.emit` | inventory fallback | Inventory fallback for function `RunLogger.emit` defined at `src/simulation/logging_utils.py:71`. |
-| 80 | `function` | `RunLogger.emit_run_header` | inventory fallback | Inventory fallback for function `RunLogger.emit_run_header` defined at `src/simulation/logging_utils.py:80`. |
-| 99 | `function` | `RunLogger.timed` | inventory fallback | Inventory fallback for function `RunLogger.timed` defined at `src/simulation/logging_utils.py:99`. |
-| 108 | `function` | `RunLogger.records` | inventory fallback | Inventory fallback for function `RunLogger.records` defined at `src/simulation/logging_utils.py:108`. |
-| 117 | `function` | `RunLogger.step_records` | inventory fallback | Inventory fallback for function `RunLogger.step_records` defined at `src/simulation/logging_utils.py:117`. |
+| 79 | `function` | `RunLogger.emit_run_header` | inventory fallback | Inventory fallback for function `RunLogger.emit_run_header` defined at `src/simulation/logging_utils.py:79`. |
+| 98 | `function` | `RunLogger.timed` | inventory fallback | Inventory fallback for function `RunLogger.timed` defined at `src/simulation/logging_utils.py:98`. |
+| 107 | `function` | `RunLogger.records` | inventory fallback | Inventory fallback for function `RunLogger.records` defined at `src/simulation/logging_utils.py:107`. |
+| 116 | `function` | `RunLogger.step_records` | inventory fallback | Inventory fallback for function `RunLogger.step_records` defined at `src/simulation/logging_utils.py:116`. |
 
 ## `src/simulation/pymdp_config.py`
 
@@ -757,7 +757,7 @@ Total documented definitions: 540
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 12 | `function` | `save_figure_png` | docstring | Save a figure to PNG and optionally normalize to RGB for PDF pipelines. |
+| 11 | `function` | `save_figure_png` | docstring | Save a figure to PNG and optionally normalize to RGB for PDF pipelines. |
 
 ## `src/visualizations/figure_registry.py`
 

@@ -1,0 +1,72 @@
+number: 3
+section: "A"
+department: "City & County"
+template: "standard"
+columns: 4
+
+lead:
+  kicker: "City Council"
+  headline: "Council adopts budget that spares the library, trims overtime"
+  deck: "A $48.6 million spending plan closes a projected shortfall without layoffs, but leaves three police positions unfilled."
+  byline: "By Maren Holloway · Triplicate Staff Writer"
+  drop_cap: true
+  body:
+    - "The Crescent City Council adopted a $48.6 million budget for the coming fiscal year Monday night, closing a projected $1.9 million shortfall through a freeze on hiring, a reduction in overtime and a one-time draw on reserves — and, in the end, sparing the public library hours that had been on the chopping block since March."
+    - "The 4–1 vote came after three hours of public comment dominated by library supporters, who packed the chambers and the overflow lobby. \"You do not balance a budget on the backs of the kids who use the only quiet, free, warm room in town,\" said resident Carla Devereaux, drawing applause the mayor had to gavel down."
+    - "City Manager Frank Ostrowski said the freeze leaves three police positions and two public-works jobs unfilled, and warned that the reserve draw is not repeatable. \"This budget works once,\" he said. \"Next year we need either growth or cuts. There is no third door.\""
+    - "Councilmember Lena Marsh cast the lone no vote, arguing the city should have used the reserves to keep the police positions instead. \"Response times are the budget line residents actually feel,\" she said."
+    - "The budget takes effect July 1. A mid-year review is scheduled for January."
+
+main:
+  - box: generic
+    title: "Public Notices"
+    body:
+      - "<b>Planning Commission</b> — June 3, 6 p.m., City Hall. Use permit for a 14-unit infill project on H Street; coastal development permit for a harbor-side café."
+      - "<b>Harbor District</b> — June 5, 5 p.m. Dock reconstruction phase-one update; slip-fee schedule."
+      - "<b>School Board</b> — June 9, 6:30 p.m. 2026–27 calendar; bond oversight report."
+    footnote: "Full agendas at the City Clerk's office and online."
+  - headline: "Supervisors back broadband, defer cannabis rules"
+    level: primary
+    kicker: "County"
+    byline: "By Theo Brennan · Triplicate Staff Writer"
+    body:
+      - "The Board of Supervisors accepted the state's middle-mile broadband grant Tuesday (see Page A1) and, in a quieter vote, postponed a contested overhaul of the county's cannabis cultivation ordinance for the third time this year."
+      - "Supervisor Gail Whitethorn asked staff to return in August with a version that separates licensing for small legacy growers from rules aimed at larger operations. \"We keep trying to write one rule for two very different things,\" she said."
+      - "The deferral leaves the current moratorium on new permits in place through the summer."
+  - headline: "Sheriff seeks funds for second marine patrol boat"
+    level: secondary
+    kicker: "Public Safety"
+    byline: "By Theo Brennan · Triplicate Staff Writer"
+    body:
+      - "Sheriff Marcus Bell told supervisors his office needs a second patrol vessel to cover the harbor, the Klamath estuary and 37 miles of rugged coast with a single aging boat."
+      - "\"When that one boat is in for repair, we have no water coverage at all,\" Bell said. The board directed staff to look for grant matches before the fall budget cycle."
+  - headline: "Roadwork on U.S. 101 to bring summer delays"
+    level: minor
+    kicker: "Caltrans"
+    body:
+      - "Caltrans will repave a six-mile stretch of U.S. 101 south of town beginning in July, with one-way controlled traffic on weekdays. Crews will work nights through the harbor district to limit daytime backups, the agency said."
+  - headline: "Grand jury faults county on deferred jail maintenance"
+    level: secondary
+    kicker: "Civil Grand Jury"
+    byline: "By Theo Brennan · Triplicate Staff Writer"
+    body:
+      - "The Del Norte County civil grand jury, in its annual report released Monday, found that years of deferred maintenance at the county jail have left two housing units operating below capacity and recommended the board set aside dedicated repair funding in each year's budget."
+      - "The report praised the sheriff's medical staff but warned that the building's aging plumbing and a failing boiler pose a growing risk. \"Maintenance deferred is maintenance multiplied,\" the foreperson wrote."
+      - "By law the board and the sheriff must respond to each finding within 90 days. Sheriff Marcus Bell said he agreed with \"essentially all of it\" and had been making the same case at budget time for years."
+  - headline: "Harbor bond measure headed for November ballot"
+    level: secondary
+    kicker: "Elections"
+    byline: "By Maren Holloway · Triplicate Staff Writer"
+    body:
+      - "The Harbor District board voted Tuesday to place a $12 million general-obligation bond before voters in November, the local match that would unlock the remaining state and federal money for the dock reconstruction now under way."
+      - "If approved by the required two-thirds, the measure would add an estimated $19 a year per $100,000 of assessed value. Opponents have not yet organized; supporters say the alternative is a half-finished harbor."
+      - "The county elections office must receive final ballot language by August 8."
+  - box: briefs
+    title: "County Briefs"
+    body:
+      - subhead: "Assessor"
+      - "Property-tax statements mail next week; the assessor's office extends counter hours through June."
+      - subhead: "Public Works"
+      - "The Elk Valley culvert replacement closes one lane of Northcrest Drive weekdays through July."
+      - subhead: "Clerk-Recorder"
+      - "Passport appointments are again available Fridays; bring two forms of ID."

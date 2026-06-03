@@ -1,0 +1,81 @@
+number: 7
+section: "A"
+department: "Community & Arts"
+template: "standard"
+columns: 4
+
+lead:
+  kicker: "Heritage"
+  headline: "Battery Point light keeps its 170-year vigil"
+  deck: "Volunteers will mark the anniversary with low-tide tours, a keeper's-log reading and chowder on the lawn."
+  byline: "By Iris Lindqvist · Triplicate Staff Writer"
+  drop_cap: true
+  figure:
+    path: "output/figures/lighthouse.png"
+    caption: "The Battery Point Lighthouse, lit in 1856 and reachable on foot only at low tide, remains the most photographed landmark on the North Coast."
+    credit: "Triplicate / J. Okafor"
+    height: 188
+  body:
+    - "When the lamp at Battery Point was first lit on the night of Dec. 10, 1856, Crescent City was a muddy supply landing for the Klamath gold camps. The light has outlasted the camps, the lumber boom, two tsunamis and a dozen schemes to make the town into something other than itself."
+    - "On Saturday the Del Norte County Historical Society will mark 170 years of that vigil with tours timed to the tide, a public reading from the keepers' logs, and chowder served on the island lawn — weather, as ever, permitting."
+    - "\"It is the most photographed thing in the county and the least convenient to reach,\" said society president Walt Hennessey. \"The island cuts off when the tide comes in. Visitors who linger get a free, unscheduled overnight, same as the keepers did.\""
+    - "The logs themselves are the draw. Generations of keepers recorded shipwrecks, whale strandings, the night the 1964 wave came over the causeway, and an unbroken century of weather that reads, in aggregate, like the autobiography of the coast itself."
+
+main:
+  - box: calendar
+    title: "This Week"
+    columns: ["Day", "Event"]
+    rows:
+      - ["Wed", "Harbor jazz, 6 p.m., Bandon Pier"]
+      - ["Thu", "Library story hour, 10 a.m."]
+      - ["Fri", "First Friday art walk, downtown"]
+      - ["Sat", "Lighthouse 170th, low tide 9 a.m."]
+      - ["Sat", "Farmers market opens, 9 a.m."]
+      - ["Sun", "Tolowa canoe demonstration, 1 p.m."]
+    footnote: "Submit events to calendar@triplicate.example."
+  - headline: "County museum reopens marine gallery"
+    level: secondary
+    kicker: "Arts"
+    byline: "By Maren Holloway · Triplicate Staff Writer"
+    body:
+      - "The Del Norte County Historical Society reopens its restored marine gallery this weekend, anchored by the second-order Fresnel lens that served Battery Point until its automation in 1953."
+      - "The lens, a six-foot beehive of hand-ground glass, was conserved over two years by a volunteer crew. \"You can put your face an inch from glass that guided ships for a century,\" said curator Sefa Adjei."
+  - headline: "High-school jazz band earns state invitation"
+    level: secondary
+    kicker: "Schools"
+    byline: "By Theo Brennan · Triplicate Staff Writer"
+    body:
+      - "The Del Norte High jazz ensemble accepted an invitation to the state festival in Sacramento next month, the first such bid in the program's history. The band will busk at the new farmers market to raise travel funds."
+  - headline: "Theater company stages 'Our Town' on the lawn"
+    level: secondary
+    kicker: "Stage"
+    byline: "By Maren Holloway · Triplicate Staff Writer"
+    body:
+      - "The Lighthouse Repertory Company opens an outdoor production of Thornton Wilder's <i>Our Town</i> at the museum lawn next weekend, the troupe's first staging since the pandemic shuttered its small downtown house."
+      - "Director Sefa Adjei chose the play deliberately. \"It is about an ordinary town that does not know how extraordinary it is until it is gone,\" he said. \"We thought Crescent City could stand to hear that.\" Performances run Friday and Saturday at dusk; bring a low chair and a blanket against the fog."
+  - headline: "Library summer reading kicks off with a fish tale"
+    level: minor
+    kicker: "Library"
+    body:
+      - "The county library's summer reading program opens Saturday with a harbor-themed kickoff: a touch tank from the marine lab, a fish-print art station, and a story hour under a borrowed sail. Sign-ups run all June; prizes include a kayak lesson and a stack of donated paperbacks."
+  - box: generic
+    title: "Community Briefs"
+    body:
+      - "<b>Blood drive</b> Tuesday at the fairgrounds, 11 a.m.–4 p.m."
+      - "<b>Trail crew</b> volunteers sought for Tolowa Dunes; meet at Kellogg Beach Saturday."
+      - "<b>Senior center</b> resumes Friday fish fry June 6."
+      - "<b>Quilt guild</b> show and sale at the grange, June 7–8."
+      - "<b>Veterans</b> coffee, first Wednesday, American Legion hall."
+  - ad:
+      sponsor: "Sea & Redwoods Festival"
+      tagline: "Three days on the North Coast — June 27–29"
+      graphic: "output/figures/ad_festival.png"
+      background: "#EAF3F5"
+      accent: "#1F6F8B"
+      border: "thick"
+      graphic_height: 92
+      body:
+        - "Harbor concerts · seafood &amp; chowder · redwood hikes"
+        - "Tolowa canoe demonstrations · kids' tide-pool tours"
+        - "Presented by the Del Norte Chamber of Commerce"
+      contact: "Schedule &amp; tickets: searedwoods.example"

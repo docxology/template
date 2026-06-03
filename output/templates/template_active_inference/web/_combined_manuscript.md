@@ -115,9 +115,9 @@ Appendix row `16_appendix_full_sheaf.md` binds 31 fragment track types as a comp
 
 We study a minimal Active Inference stack on toy models: a Bernoulli–Ising analytical oracle, a pymdp T-maze rollout, and a sheaf-indexed compose contract that binds 32 fragment tracks into 12 flat IMRAD sections. The methodological contribution is a discipline rather than a domain finding: every reported number is hydrated from a generated artifact and every cross-track claim is machine-checked before rendering, so no figure or statistic can drift from the artifact that produced it — 6 sheaf axioms are verified before composition and 22 negative controls keep each failure path live. Claims are limited to those models and their generated artifacts.
 
-[sec:sheaf_coverage] reports a 17-row coverage matrix (5 IMRAD group headers) regenerated from the live manifest at compose time. [sec:methods_pymdp] documents the T-maze harness aligned with [pymdp sophisticated_inference examples](https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference).
+[@sec:sheaf_coverage] reports a 17-row coverage matrix (5 IMRAD group headers) regenerated from the live manifest at compose time. [@sec:methods_pymdp] documents the T-maze harness aligned with [pymdp sophisticated_inference examples](https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference).
 
-[sec:results_invariants] records 12 / 12 invariant checks passed. SI planning horizon: 2 steps. Sweep RMSE 0 nats bounds analytical–empirical agreement on the coupling grid.
+[@sec:results_invariants] records 12 / 12 invariant checks passed. SI planning horizon: 2 steps. Sweep RMSE 0 nats bounds analytical–empirical agreement on the coupling grid.
 
 
 
@@ -141,9 +141,9 @@ This manuscript couples three tracks on toy Active Inference models: a Bernoulli
 
 ## Manuscript structure
 
-Three **scientific tracks** (analytical, pymdp, sheaf composition) map onto 32 **composable fragment types** and 29 pipeline gates ([fig:multi_track_architecture]). [sec:sheaf_coverage] summarizes which fragment tracks bind to each manifest row. [sec:methods_sheaf] documents the compose pipeline, coverage semantics ([eq:coverage_cell]), and strict validation gates.
+Three **scientific tracks** (analytical, pymdp, sheaf composition) map onto 32 **composable fragment types** and 29 pipeline gates ([@fig:multi_track_architecture]). [@sec:sheaf_coverage] summarizes which fragment tracks bind to each manifest row. [@sec:methods_sheaf] documents the compose pipeline, coverage semantics ([@eq:coverage_cell]), and strict validation gates.
 
-The pymdp track follows the [pymdp sophisticated_inference examples](https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference) with a minimal T-maze and planning horizon `policy_len = 2`. Other sections cite [sec:methods_pymdp] instead of repeating that reference.
+The pymdp track follows the [pymdp sophisticated_inference examples](https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference) with a minimal T-maze and planning horizon `policy_len = 2`. Other sections cite [@sec:methods_pymdp] instead of repeating that reference.
 
 
 
@@ -157,13 +157,13 @@ The pymdp track follows the [pymdp sophisticated_inference examples](https://git
 
 ## Scientific contributions
 
-1. **Analytical oracle** ([sec:methods_analytical]): closed-form mutual information and free-energy decomposition on a symmetric Bernoulli–Ising toy with an independent exact-recomputation cross-check ([sec:results_mi_sweep], [sec:results_free_energy]).
-2. **Active-inference harness** ([sec:methods_pymdp]): deterministic pymdp T-maze rollout — default `state_inference` belief filtering, with sophisticated expected-free-energy policy inference selectable via `mode: policy_inference` — with logged beliefs, actions, and merged invariant gates ([sec:results_si_tmaze], [sec:results_invariants]).
-3. **Sheaf-indexed composition** ([sec:methods_sheaf]): 32 optional fragment types bind to 17 manifest rows under [eq:coverage_cell], with a 31-track appendix composability proof ([sec:appendix_full_sheaf]).
+1. **Analytical oracle** ([@sec:methods_analytical]): closed-form mutual information and free-energy decomposition on a symmetric Bernoulli–Ising toy with an independent exact-recomputation cross-check ([@sec:results_mi_sweep], [@sec:results_free_energy]).
+2. **Active-inference harness** ([@sec:methods_pymdp]): deterministic pymdp T-maze rollout — default `state_inference` belief filtering, with sophisticated expected-free-energy policy inference selectable via `mode: policy_inference` — with logged beliefs, actions, and merged invariant gates ([@sec:results_si_tmaze], [@sec:results_invariants]).
+3. **Sheaf-indexed composition** ([@sec:methods_sheaf]): 32 optional fragment types bind to 17 manifest rows under [@eq:coverage_cell], with a 31-track appendix composability proof ([@sec:appendix_full_sheaf]).
 
-[fig:multi_track_architecture] maps the three scientific tracks to 29 pipeline gates and 32 composable fragment renderers. Measured invariant checks: 12 / 12 passed.
+[@fig:multi_track_architecture] maps the three scientific tracks to 29 pipeline gates and 32 composable fragment renderers. Measured invariant checks: 12 / 12 passed.
 
-Ontology-facing symbols are checked per model: the Bernoulli toy binds `pi1`, `pi2`, `J`, `gamma`, and `q_joint`, while the SI T-maze binds `location`, `observation`, `policy`, and `belief_entropy` to **HiddenState**, **ObservationLikelihood**, **PolicyPosterior**, and **BeliefEntropy** ([fig:gnn_ontology_concordance], [sec:methods_pymdp]).
+Ontology-facing symbols in the analytical track—`location`, `observation`, `policy`, and `expected_free_energy`—map to **HiddenState**, **ObservationLikelihood**, **PolicyPosterior**, and **ExpectedFreeEnergy** in the GNN concordance figure ([@fig:gnn_ontology_concordance], [@sec:methods_analytical]).
 
 <!-- sheaf-track:visualization -->
 
@@ -194,7 +194,7 @@ Ontology-facing symbols are checked per model: the Bernoulli toy binds `pi1`, `p
 
 <!-- sheaf-track:prose -->
 
-We study a minimal **K=2 Bernoulli / Ising** coupling as the analytical companion to multi-track verification. The entangled joint [eq:entangled_joint] yields closed-form mutual information $I(\lambda)$, which serves as an oracle for an independent exact recomputation (via total correlation) and GNN round-trips in [sec:results_mi_sweep] ([fig:gnn_ontology_concordance]).
+We study a minimal **K=2 Bernoulli / Ising** coupling as the analytical companion to multi-track verification. The entangled joint [@eq:entangled_joint] yields closed-form mutual information $I(\lambda)$, which serves as an oracle for an independent exact recomputation (via total correlation) and GNN round-trips in [@sec:results_mi_sweep] ([@fig:gnn_ontology_concordance]).
 
 Measured sweep grid points: 21. Invariants passed: 12 / 12.
 
@@ -216,7 +216,7 @@ vanishing at $\lambda=0$ ($\sigma=\tfrac12$, independent streams) and saturating
 
 <!-- sheaf-track:simulation -->
 
-The analytical track writes a parameter sweep comparing closed-form mutual information with an independent exact recomputation of it (via total correlation) across $\lambda \in [0, 4]$ on 21 grid points ([sec:results_mi_sweep], [fig:ising_mi_curve]).
+The analytical track writes a parameter sweep comparing closed-form mutual information with an independent exact recomputation of it (via total correlation) across $\lambda \in [0, 4]$ on 21 grid points ([@sec:results_mi_sweep], [@fig:ising_mi_curve]).
 
 <!-- sheaf-track:assumption_index -->
 
@@ -232,9 +232,9 @@ The index is deliberately narrow. It covers the Bernoulli-Ising toy equations, t
 
 <!-- sheaf-track:gnn -->
 
-The Bernoulli toy is declared in `gnn/bernoulli_toy.gnn.md` (GNN v1.1). [fig:gnn_ontology_concordance] links GNN variables to Active Inference Ontology terms bound in the analytical ontology fragment; round-trip parity is checked before render.
+The Bernoulli toy is declared in `gnn/bernoulli_toy.gnn.md` (GNN v1.1). [@fig:gnn_ontology_concordance] links GNN variables to Active Inference Ontology terms bound in the analytical ontology fragment; round-trip parity is checked before render.
 
-Measured MI and sweep artifacts in [sec:results_mi_sweep] ground the same symbol map used in the concordance diagram.
+Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbol map used in the concordance diagram.
 
 <!-- sheaf-track:ontology -->
 
@@ -259,9 +259,9 @@ Measured MI and sweep artifacts in [sec:results_mi_sweep] ground the same symbol
 
 <!-- sheaf-track:prose -->
 
-**Sophisticated inference (planning horizon).** This section documents a **pymdp state-inference harness** on a minimal T-maze ([fig:tmaze_schematic]) with planning horizon `policy_len = 2`. Default mode is `state_inference` (T-maze rollout via `simulate_si_tmaze.py`). The Agent constructs a multi-step policy set (`num_policies` logged in SI artifacts); per-step **belief entropy** is aggregated as `mean_belief_entropy`. Selecting `mode: policy_inference` enables expected-free-energy policy selection; on the default minimal T-maze (2 states / 2 observations / 2 actions, horizon 2) this yields a constant-action policy that does not reach the goal — the toy is deliberately too small to exercise sophisticated inference's advantage, so richer state spaces and longer horizons are needed for it to differ from belief filtering.
+**Sophisticated inference (planning horizon).** This section documents a **pymdp state-inference harness** on a minimal T-maze ([@fig:tmaze_schematic]) with planning horizon `policy_len = 2`. Default mode is `state_inference` (T-maze rollout via `simulate_si_tmaze.py`). The Agent constructs a multi-step policy set (`num_policies` logged in SI artifacts); per-step **belief entropy** is aggregated as `mean_belief_entropy`. Selecting `mode: policy_inference` enables expected-free-energy policy selection; on the default minimal T-maze (2 states / 2 observations / 2 actions, horizon 2) this yields a constant-action policy that does not reach the goal — the toy is deliberately too small to exercise sophisticated inference's advantage, so richer state spaces and longer horizons are needed for it to differ from belief filtering.
 
-Graph-world artifacts are deterministic extension outputs declared in `tracks.yaml` `extension_tracks.graph_world`. For the reference workflow, see [sec:intro_motivation]; measured rollouts appear in [sec:results_si_tmaze].
+Graph-world artifacts are deterministic extension outputs declared in `tracks.yaml` `extension_tracks.graph_world`. For the reference workflow, see [@sec:intro_motivation]; measured rollouts appear in [@sec:results_si_tmaze].
 
 Mean belief entropy across steps: 0.3251.
 
@@ -273,13 +273,13 @@ The graph-world extension is deterministic: `simulate_si_graph_world.py` writes 
 
 <!-- sheaf-track:formalism -->
 
-Given generative matrices $A,B,C,D$, pymdp computes state beliefs $q(s)$ via variational inference (`infer_states`). The Agent is configured with planning horizon $H =$ 2, which defines the **policy depth** used when constructing candidate policies (logged as `num_policies` in the SI summary artifact; see [sec:results_si_tmaze]).
+Given generative matrices $A,B,C,D$, pymdp computes state beliefs $q(s)$ via variational inference (`infer_states`). The Agent is configured with planning horizon $H =$ 2, which defines the **policy depth** used when constructing candidate policies (logged as `num_policies` in the SI summary artifact; see [@sec:results_si_tmaze]).
 
-The default harness records belief entropy per step; extending to full expected-free-energy policy selection (`infer_policies`) is documented as a follow-on track in [sec:discussion_outlook].
+The default harness records belief entropy per step; extending to full expected-free-energy policy selection (`infer_policies`) is documented as a follow-on track in [@sec:discussion_outlook].
 
 <!-- sheaf-track:pymdp -->
 
-SI artifacts (summary, trace, optional JSONL log) record step count, actions, observations, and belief entropy for [sec:results_si_tmaze]. Steps recorded: 2.
+SI artifacts (summary, trace, optional JSONL log) record step count, actions, observations, and belief entropy for [@sec:results_si_tmaze]. Steps recorded: 2.
 
 <!-- sheaf-track:interop -->
 
@@ -314,9 +314,9 @@ See `gnn/si_tmaze.gnn.md` for a GNN view of the T-maze hidden state, observation
 
 <!-- sheaf-track:prose -->
 
-The Lean track provides minimal boundary witnesses checked by `lake build` under `lean/TemplateActiveInference/`. [fig:lean_boundary_status] summarizes proved versus deferred statements; fragments cite theorem names without duplicating proof scripts in prose.
+The Lean track provides minimal boundary witnesses checked by `lake build` under `lean/TemplateActiveInference/`. [@fig:lean_boundary_status] summarizes proved versus deferred statements; fragments cite theorem names without duplicating proof scripts in prose.
 
-Horizon witnesses link back to the analytical toy ([sec:methods_analytical]) and the pymdp planning depth ([sec:methods_pymdp]).
+Horizon witnesses link back to the analytical toy ([@sec:methods_analytical]) and the pymdp planning depth ([@sec:methods_pymdp]).
 
 <!-- sheaf-track:visualization -->
 
@@ -361,11 +361,11 @@ constructive-token status `true`.
 
 Each manifest row in `manuscript/sheaf/manifest.yaml` binds fragment tracks from `manuscript/sheaf/tracks.yaml`. A track supplies a renderer, compose order, label, and optional flag; the composer flattens the binding set into one Markdown section for PDF and web output.
 
-The operational claim is auditable binding: analytical, simulation, pymdp, visualization, Lean, GNN, ontology, and optional media fragments attach to each IMRAD row under [eq:coverage_cell] (**P** present, **—** unbound, **M** missing).
+The operational claim is auditable binding: analytical, simulation, pymdp, visualization, Lean, GNN, ontology, and optional media fragments attach to each IMRAD row under [@eq:coverage_cell] (**P** present, **—** unbound, **M** missing).
 
 ## Coverage and figures
 
-[fig:sheaf_layers_overview] summarizes 32 fragment types and their IMRAD bindings. Generated tables below list every track definition and section×track binding at compose time.
+[@fig:sheaf_layers_overview] summarizes 32 fragment types and their IMRAD bindings. Generated tables below list every track definition and section×track binding at compose time.
 
 ## Compose commands
 
@@ -374,13 +374,13 @@ uv run python scripts/compose_manuscript.py
 uv run python scripts/compose_manuscript.py --validate-only --strict
 ```
 
-Each run emits `output/data/sheaf_coverage_matrix.json` and regenerates coverage artifacts. Partial compose (`--section`) is draft-only; the matrix always reflects the full manifest. Coverage totals appear on [sec:sheaf_coverage]; discussion scope is in [sec:discussion_outlook].
+Each run emits `output/data/sheaf_coverage_matrix.json` and regenerates coverage artifacts. Partial compose (`--section`) is draft-only; the matrix always reflects the full manifest. Coverage totals appear on [@sec:sheaf_coverage]; discussion scope is in [@sec:discussion_outlook].
 
 ## Law verification
 
 `--validate-only --strict` runs the structural gate before any fragment is glued. Beyond per-cell coverage, it invokes the sheaf-law oracle (`verify_sheaf_laws`, `src/manuscript/sheaf/laws.py`), which checks 6 axioms — poset, presheaf functoriality, separation, gluing, typing, and compositionality — and reports 6/6 satisfied for the current manifest. A violation is raised as an error-level issue and aborts the build, so a malformed manifest (a section colliding on an output file, an off-chain block, a mistyped fragment, a fragment shared between sections) can never compose. The formal statements are in the formalism block below; the negative-control suite (`tests/test_sheaf_laws.py`) proves each check is falsifiable.
 
-The semantic layer is separate from those structural laws. `output/data/sheaf_gluing_certificate.json` records cross-track symbols, typed claim evidence, artifact sources, and manuscript-variable restrictions; validation fails when the analytical, pymdp, GNN, ontology, Lean, visualization, or manuscript tracks disagree about a shared symbol or measured claim. [fig:semantic_gluing_graph] renders this gluing graph: the configured producers, the generated evidence artifacts, and the validation consumers that read each shared symbol.
+The semantic layer is separate from those structural laws. `output/data/sheaf_gluing_certificate.json` records cross-track symbols, typed claim evidence, artifact sources, and manuscript-variable restrictions; validation fails when the analytical, pymdp, GNN, ontology, Lean, visualization, or manuscript tracks disagree about a shared symbol or measured claim. [@fig:semantic_gluing_graph] renders this gluing graph: the configured producers, the generated evidence artifacts, and the validation consumers that read each shared symbol.
 
 <!-- sheaf-track:formalism -->
 
@@ -409,7 +409,7 @@ derived from $F_s(t)$ and filesystem existence at compose time: **P** when a bou
 
 What makes this presheaf a *sheaf* — rather than a bare incidence table — is that the composer's structural axioms are machine-checked. The oracle `verify_sheaf_laws` (`src/manuscript/sheaf/laws.py`) verifies 6 laws, and the regenerated build reports 6/6 satisfied:
 
-1. **Poset.** The IMRAD blocks form the chain of [eq:imrad_chain]; compose order is monotone in block rank and every composing section's block carries a group row.
+1. **Poset.** The IMRAD blocks form the chain of [@eq:imrad_chain]; compose order is monotone in block rank and every composing section's block carries a group row.
 2. **Presheaf (functoriality).** Every bound track lies in $\mathcal{T}$; $\pi$ is a strict total order; and each section's resolved track order is the monotone restriction of $\pi$ (an explicit `track_order` override must be a permutation of the section's bound tracks).
 3. **Separation (locality).** The map $s \mapsto \mathrm{output\_name}(s)$ is injective over composing sections: distinct locals glue to distinct global positions, so the global section is unique.
 4. **Gluing.** Compose order is a linear extension of $P$ — each block's rows are contiguous and strictly increasing in order — so the local fragments glue to a unique global manuscript in which every composing section appears exactly once.
@@ -421,8 +421,6 @@ Each law is paired with a negative control in `tests/test_sheaf_laws.py` — a s
 ### Scope (what is and is not claimed)
 
 These laws verify the sheaf *axioms* on a finite base poset. They do **not** compute sheaf *cohomology* ($H^0$/$H^1$, Čech complexes, derived functors); "sheaf" here names the verified separation-and-gluing structure of a multi-track coverage assignment, not a cohomological invariant. Formal track definitions and section×track bindings appear in the generated tables below.
-
-Semantic gluing then checks agreement of the glued content: coverage counts, manuscript variables, typed claim predicates, pymdp mode/hash, Bernoulli GNN ontology, and SI T-maze GNN ontology. This certificate is a content-level audit over the same base, not an additional topological law.
 
 <!-- sheaf-track:visualization -->
 
@@ -799,23 +797,23 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 
 <!-- sheaf-track:prose -->
 
-We sweep coupling strength $\lambda$ on a grid of 21 points up to $\lambda_{\max} = 4$. Closed-form mutual information from [eq:entangled_joint] is cross-checked against an independent exact recomputation via total correlation from the analytical module ([sec:methods_analytical]); both are deterministic (no sampling) and agree to 0 nats.
+We sweep coupling strength $\lambda$ on a grid of 21 points up to $\lambda_{\max} = 4$. Closed-form mutual information from [@eq:entangled_joint] is cross-checked against an independent exact recomputation via total correlation from the analytical module ([@sec:methods_analytical]); both are deterministic (no sampling) and agree to 0 nats.
 
 Measured invariant checks: 12 / 12 passed on the clean tree.
 
 <!-- sheaf-track:formalism -->
 
-The sweep reuses the entangled joint defined in [eq:entangled_joint] ([sec:methods_analytical]). Mutual information $I(\lambda)=\log 2 - H_b(\sigma(\lambda))$ is evaluated on the same $\lambda$ grid as the analytical oracle and its independent exact recomputation.
+The sweep reuses the entangled joint defined in [@eq:entangled_joint] ([@sec:methods_analytical]). Mutual information $I(\lambda)=\log 2 - H_b(\sigma(\lambda))$ is evaluated on the same $\lambda$ grid as the analytical oracle and its independent exact recomputation.
 
 <!-- sheaf-track:simulation -->
 
-Both estimators are deterministic (no sampling, no RNG) and are evaluated on the same $\lambda$ grid as the closed-form sweep ([sec:methods_analytical], [fig:ising_mi_curve]).
+Both estimators are deterministic (no sampling, no RNG) and are evaluated on the same $\lambda$ grid as the closed-form sweep ([@sec:methods_analytical], [@fig:ising_mi_curve]).
 
 <!-- sheaf-track:visualization -->
 
 ![](../figures/ising_mi_curve.png){width=90%}
 
-*Reproduced from [fig:ising_mi_curve]. Closed-form $I(\lambda)$ and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to $\lambda_{\max}$ = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual.*
+*Reproduced from [@fig:ising_mi_curve]. Closed-form $I(\lambda)$ and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to $\lambda_{\max}$ = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual.*
 
 
 
@@ -827,7 +825,7 @@ Both estimators are deterministic (no sampling, no RNG) and are evaluated on the
 
 <!-- sheaf-track:prose -->
 
-Free energy against the entangled prior is evaluated along the same $\lambda$ grid used for the MI sweep ([fig:free_energy_curve]). Against the *entangled* prior the entangled posterior is the exact variational minimizer, so its free energy is identically zero; the Theorem-5.1 decomposition then splits that zero into per-stream marginal free energies, a coupling-cost term, a coupling-prior term, and a total-correlation gain. For the symmetric toy with uniform marginals the coupling-prior term equals $-I(\lambda)$ and exactly cancels the total-correlation gain $+I(\lambda)$ — an exact cancellation the merged invariant suite checks (12/12 pass). The curve in [fig:free_energy_curve] instead reports free energy against the *mean-field* prior: its minimum at $\lambda=0$ is where the entangled posterior coincides with the factorized mean-field product, and any $\lambda>0$ raises the free energy as coupling pulls the posterior away from that independent prior.
+Free energy against the entangled prior is evaluated along the same $\lambda$ grid used for the MI sweep ([@fig:free_energy_curve]). Against the *entangled* prior the entangled posterior is the exact variational minimizer, so its free energy is identically zero; the Theorem-5.1 decomposition then splits that zero into per-stream marginal free energies, a coupling-cost term, a coupling-prior term, and a total-correlation gain. For the symmetric toy with uniform marginals the coupling-prior term equals $-I(\lambda)$ and exactly cancels the total-correlation gain $+I(\lambda)$ — an exact cancellation the merged invariant suite checks (12/12 pass). The curve in [@fig:free_energy_curve] instead reports free energy against the *mean-field* prior: its minimum at $\lambda=0$ is where the entangled posterior coincides with the factorized mean-field product, and any $\lambda>0$ raises the free energy as coupling pulls the posterior away from that independent prior.
 
 Saturation MI (grid maximum on the measured $\lambda$ sweep): 0.6031 nats.
 
@@ -845,9 +843,9 @@ Saturation MI (grid maximum on the measured $\lambda$ sweep): 0.6031 nats.
 
 <!-- sheaf-track:prose -->
 
-The pymdp harness rolls out a T-maze active-inference agent in `state_inference` mode with planning horizon 2. The default `state_inference` mode is belief filtering with a goal-seeking action rule; sophisticated policy inference (an expected-free-energy policy posterior) is selectable via `mode: policy_inference` ([sec:methods_pymdp]). Summary metrics land in `output/data/si_tmaze_summary.json`.
+The pymdp harness rolls out a T-maze active-inference agent in `state_inference` mode with planning horizon 2. The default `state_inference` mode is belief filtering with a goal-seeking action rule; sophisticated policy inference (an expected-free-energy policy posterior) is selectable via `mode: policy_inference` ([@sec:methods_pymdp]). Summary metrics land in `output/data/si_tmaze_summary.json`.
 
-Steps recorded: 2. Mean belief entropy: 0.3251. Belief entropy over the rollout is traced in [fig:si_belief_entropy_curve]; the paired observation and action indices are in [fig:si_obs_action_trace]. The default `state_inference` mode runs pymdp `infer_states` and **reports** the resulting posterior (belief entropy and the state-1 marginal), but the action is chosen by an open-loop scripted rule on the observation index — not by the posterior — so the inferred belief here is observed, not acted on. Under the toy transition model, expected-free-energy policy inference reaches the goal in 1 of its rows versus 2 for the scripted state-inference rule: no behavioral advantage on this two-state, horizon-2 maze, which is the measured content of the deliberately-too-small claim.
+Steps recorded: 2. Mean belief entropy: 0.3251. Belief entropy over the rollout is traced in [@fig:si_belief_entropy_curve]; the paired observation and action indices are in [@fig:si_obs_action_trace]. The default `state_inference` mode runs pymdp `infer_states` and **reports** the resulting posterior (belief entropy and the state-1 marginal), but the action is chosen by an open-loop scripted rule on the observation index — not by the posterior — so the inferred belief here is observed, not acted on. Under the toy transition model, expected-free-energy policy inference reaches the goal in 1 of its rows versus 2 for the scripted state-inference rule: no behavioral advantage on this two-state, horizon-2 maze, which is the measured content of the deliberately-too-small claim.
 
 Policy-comparison rows: 4 across state-inference and policy-inference modes; goal-reaching rows: 3. Graph-world extension rows: 4 over 4 nodes, with goal-reached flag 1.
 
@@ -873,13 +871,13 @@ Rollout trace: `output/data/si_tmaze_trace.json`. JSONL run log: `output/logs/py
 
 <!-- sheaf-track:prose -->
 
-The analytical invariant registry runs before PDF rendering ([sec:methods_analytical]). On a clean checkout **12 / 12** checks pass in the merged validation report, which records simulation invariants when the pymdp harness ran ([sec:results_si_tmaze]).
+The analytical invariant registry runs before PDF rendering ([@sec:methods_analytical]). On a clean checkout **12 / 12** checks pass in the merged validation report, which records simulation invariants when the pymdp harness ran ([@sec:results_si_tmaze]).
 
-[fig:invariant_dashboard] lists each analytical and simulation gate; failures block publication artifacts. See [sec:methods_sheaf] for how invariant counts hydrate manuscript tokens.
+[@fig:invariant_dashboard] lists each analytical and simulation gate; failures block publication artifacts. See [@sec:methods_sheaf] for how invariant counts hydrate manuscript tokens.
 
 <!-- sheaf-track:simulation -->
 
-Simulation invariants merge into the analytical report after the pymdp harness runs ([sec:results_si_tmaze]). [fig:invariant_dashboard] summarizes pass/fail status for both domains on the clean tree.
+Simulation invariants merge into the analytical report after the pymdp harness runs ([@sec:results_si_tmaze]). [@fig:invariant_dashboard] summarizes pass/fail status for both domains on the clean tree.
 
 <!-- sheaf-track:replay_matrix -->
 
@@ -949,15 +947,15 @@ The result of this manuscript is a *discipline*, not a domain claim: across thre
 
 ## Limitations
 
-The Bernoulli–Ising toy, T-maze harness, and sheaf composition model are pedagogical. They validate analytical consistency, artifact wiring, renderer dispatch, and manuscript hydration—not empirical claims about biological agents. Default pymdp mode is `state_inference` with planning horizon 2; the policy-comparison artifact exposes policy-inference rows without changing the default rollout ([sec:methods_pymdp]).
+The Bernoulli–Ising toy, T-maze harness, and sheaf composition model are pedagogical. They validate analytical consistency, artifact wiring, renderer dispatch, and manuscript hydration—not empirical claims about biological agents. Default pymdp mode is `state_inference` with planning horizon 2; full policy inference remains an opt-in extension ([@sec:methods_pymdp]).
 
 ## Sheaf audit and outlook
 
-[sec:sheaf_coverage] and [sec:appendix_full_sheaf] make binding state auditable under strict compose validation ([sec:methods_sheaf]). Pipeline extensions in `tracks.yaml` `extension_tracks` now write deterministic artifacts: a belief GIF via `render_animation.py` and graph-world SI summary/trace via `simulate_si_graph_world.py`. The appendix row already binds an `animation` sheaf fragment without new manifest rows.
+[@sec:sheaf_coverage] and [@sec:appendix_full_sheaf] make binding state auditable under strict compose validation ([@sec:methods_sheaf]). Opt-in pipeline extensions in `tracks.yaml` `extension_tracks` (belief GIF via `render_animation.py`, graph-world SI stub) add artifacts outside the default analysis DAG; the appendix row already binds an `animation` sheaf fragment without new manifest rows.
 
-Sweep RMSE 0 nats and SI goal reached 1 summarize measured agreement on the declared grids and rollout. Future work includes full expected-free-energy policy selection, richer graph-world rollouts, and expanded Lean proofs beyond the boundary witnesses in [sec:methods_lean].
+Sweep RMSE 0 nats and SI goal reached 1 summarize measured agreement on the declared grids and rollout. Future work includes full expected-free-energy policy selection, richer graph-world rollouts, and expanded Lean proofs beyond the boundary witnesses in [@sec:methods_lean].
 
-The discussion ontology binds `coverage_semantics` to the audit matrix in [sec:sheaf_coverage], `pedagogical_scope` to the non-empirical scope of the toy models, and `state_inference_mode` to the pymdp harness contract in [sec:methods_pymdp].
+The discussion ontology binds `coverage_semantics` to the audit matrix in [@sec:sheaf_coverage], `pedagogical_scope` to the non-empirical scope of the toy models, and `state_inference_mode` to the pymdp harness contract in [@sec:methods_pymdp].
 
 <!-- sheaf-track:simulation -->
 
@@ -1002,7 +1000,7 @@ validation, semantic, and bundle artifacts. Its evidence artifact is
 
 This section is the **composability proof** for the manifest-indexed sheaf model: all 31 appendix-bound fragment tracks render into one flat manuscript section without section-specific compose branches. The registry defines 32 composable types; optional `layers` is methods-only and excluded from this row. The `animation` fragment is bound here as an optional registry type alongside the live proof, simulation, formal, notation, validation-spine, integration, audit, finite-catalog, ablation, license, release-evidence, assumption-index, delta, and staleness tracks.
 
-The proof is a publication-systems check ([eq:appendix_track_count]). It demonstrates that heterogeneous fragments share one registry, manifest, renderer dispatch path, coverage matrix, and hydration boundary; it does not assert that every track carries equal scientific weight.
+The proof is a publication-systems check ([@eq:appendix_track_count]). It demonstrates that heterogeneous fragments share one registry, manifest, renderer dispatch path, coverage matrix, and hydration boundary; it does not assert that every track carries equal scientific weight.
 
 <!-- sheaf-track:formalism -->
 
@@ -1012,13 +1010,13 @@ $$
 |\mathcal{T}_{\mathrm{Full}}| = 31
 $$ {#eq:appendix_track_count}
 
-The fragment registry defines 32 composable track types; optional `layers` is bound on the methods sheaf section only. Optional `animation` is bound in this appendix proof; the deterministic GIF artifact in `tracks.yaml` `extension_tracks` is produced by the core analysis DAG and remains separate from this fragment slot.
+The fragment registry defines 32 composable track types; optional `layers` is bound on the methods sheaf section only. Optional `animation` is bound in this appendix proof; the opt-in GIF extension in `tracks.yaml` `extension_tracks` is separate from this fragment slot.
 
-Because this appendix binds every non-optional appendix track plus optional `animation`, it is the maximal publication stalk of the coverage presheaf and exercises every publication renderer through the common `resolve_track_body()` dispatch. The same compose path is gated by the 6 sheaf laws verified in [sec:methods_sheaf] (6/6 satisfied): the appendix section glues to a unique output (separation), occupies the terminal position of the linear extension under its own `appendix` group row (poset and gluing), binds only well-typed fragments (typing), and owns every fragment path it references (compositionality). No count in this appendix is hand-written; all are injected from the registry-backed oracle.
+Because this appendix binds every non-optional appendix track plus optional `animation`, it is the maximal publication stalk of the coverage presheaf and exercises every publication renderer through the common `resolve_track_body()` dispatch. The same compose path is gated by the 6 sheaf laws verified in [@sec:methods_sheaf] (6/6 satisfied): the appendix section glues to a unique output (separation), occupies the terminal position of the linear extension under its own `appendix` group row (poset and gluing), binds only well-typed fragments (typing), and owns every fragment path it references (compositionality). No count in this appendix is hand-written; all are injected from the registry-backed oracle.
 
 <!-- sheaf-track:simulation -->
 
-Analytical sweep artifacts feed [sec:results_mi_sweep] and [sec:results_invariants]; simulation invariants merge after [sec:results_si_tmaze]. No additional path listing is required beyond those Results sections.
+Analytical sweep artifacts feed [@sec:results_mi_sweep] and [@sec:results_invariants]; simulation invariants merge after [@sec:results_si_tmaze]. No additional path listing is required beyond those Results sections.
 
 <!-- sheaf-track:assumption_index -->
 
@@ -1096,19 +1094,19 @@ The appendix `manuscript_staleness` row points to `output/reports/manuscript_sta
 
 ![](../figures/ising_mi_curve.png){width=90%}
 
-*Reproduced from [fig:ising_mi_curve]. Closed-form $I(\lambda)$ and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to $\lambda_{\max}$ = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual.*
+*Reproduced from [@fig:ising_mi_curve]. Closed-form $I(\lambda)$ and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to $\lambda_{\max}$ = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual.*
 
 ![](../figures/si_tmaze_actions.png){width=90%}
 
-*Reproduced from [fig:si_tmaze_actions]. Discrete action index over time for the pymdp T-maze rollout (policy length 2).*
+*Reproduced from [@fig:si_tmaze_actions]. Discrete action index over time for the pymdp T-maze rollout (policy length 2).*
 
 ![](../figures/sheaf_coverage_heatmap.png){width=95%}
 
-*Reproduced from [fig:sheaf_coverage_heatmap]. Sheaf track coverage matrix: 17 IMRAD rows × 32 fragment columns. Black = present (P), white = absent (—), gray = missing (M). Counts: 90 present / 90 bound / 0 missing.*
+*Reproduced from [@fig:sheaf_coverage_heatmap]. Sheaf track coverage matrix: 17 IMRAD rows × 32 fragment columns. Black = present (P), white = absent (—), gray = missing (M). Counts: 90 present / 90 bound / 0 missing.*
 
 <!-- sheaf-track:lean -->
 
-Lean modules under `lean/TemplateActiveInference/` declare horizon and coupling witnesses. Build with `lake build` in `lean/`; [fig:lean_boundary_status] summarizes proved versus deferred statements for this boundary fragment.
+Lean modules under `lean/TemplateActiveInference/` declare horizon and coupling witnesses. Build with `lake build` in `lean/`; [@fig:lean_boundary_status] summarizes proved versus deferred statements for this boundary fragment.
 
 <!-- sheaf-track:model_checking -->
 
@@ -1144,7 +1142,7 @@ sheaf appendix. Cells: 36. Complete grid:
 
 <!-- sheaf-track:gnn -->
 
-GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md`. [fig:gnn_ontology_concordance] and [sec:methods_analytical] document ontology concordance for the Bernoulli toy; SI notation extends the same pattern under [sec:methods_pymdp].
+GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md`. [@fig:gnn_ontology_concordance] and [@sec:methods_analytical] document ontology concordance for the Bernoulli toy; SI notation extends the same pattern under [@sec:methods_pymdp].
 
 <!-- sheaf-track:ontology -->
 
@@ -1160,7 +1158,7 @@ GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md`. [fig:gnn
 
 <!-- sheaf-track:animation -->
 
-Animation is an **extension** sheaf track backed by a deterministic GIF from `scripts/render_animation.py`. This appendix row documents the track binding only; default publication still uses static SI figures ([sec:results_si_tmaze], [fig:si_tmaze_actions]) while the GIF remains an auditable generated artifact.
+Animation is an **extension** sheaf track (optional GIF via `scripts/render_animation.py`). This appendix row documents the track binding only; default publication uses static SI figures ([@sec:results_si_tmaze], [@fig:si_tmaze_actions]) rather than embedding motion assets unless explicitly promoted.
 
 <!-- sheaf-track:animation_delta -->
 
@@ -1182,9 +1180,9 @@ sheaf appendix. Rows: 3. Source-backed:
 
 # Conclusion {#sec:conclusion}
 
-Analytical oracles ([sec:methods_analytical]), pymdp rollouts ([sec:results_si_tmaze]), and sheaf composition ([sec:methods_sheaf]) share one auditable manuscript contract: measured artifacts hydrate 12 composed sections, [sec:sheaf_coverage] reports binding state, and strict compose validation blocks gray matrix cells before PDF rendering.
+Analytical oracles ([@sec:methods_analytical]), pymdp rollouts ([@sec:results_si_tmaze]), and sheaf composition ([@sec:methods_sheaf]) share one auditable manuscript contract: measured artifacts hydrate 12 composed sections, [@sec:sheaf_coverage] reports binding state, and strict compose validation blocks gray matrix cells before PDF rendering.
 
-The T-maze harness runs in `state_inference` mode with config hash `81eb061f43b7bfd7`; sweep RMSE 0 nats summarizes analytical–empirical agreement on the toy coupling grid. [sec:results_invariants] merges analytical and simulation gates; [sec:discussion_outlook] states scope and extensions. Scientific claims remain confined to declared models—not empirical statements about biological agents.
+The T-maze harness runs in `state_inference` mode with config hash `81eb061f43b7bfd7`; sweep RMSE 0 nats summarizes analytical–empirical agreement on the toy coupling grid. [@sec:results_invariants] merges analytical and simulation gates; [@sec:discussion_outlook] states scope and extensions. Scientific claims remain confined to declared models—not empirical statements about biological agents.
 
 
 

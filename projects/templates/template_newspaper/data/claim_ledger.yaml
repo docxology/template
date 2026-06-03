@@ -1,0 +1,43 @@
+claims:
+  - claim_id: page-count
+    kind: number
+    value: 12
+    source: projects/templates/template_newspaper/content/edition.yaml pages list
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/data/render_report.json
+  - claim_id: page-trim-width-pt
+    kind: number
+    value: 792
+    source: projects/templates/template_newspaper/src/newspaper/geometry.py PageGeometry (11in)
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/pdf/the-triplicate.pdf
+  - claim_id: page-trim-height-pt
+    kind: number
+    value: 1224
+    source: projects/templates/template_newspaper/src/newspaper/geometry.py PageGeometry (17in)
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/pdf/the-triplicate.pdf
+  - claim_id: figure-count
+    kind: number
+    value: 6
+    source: projects/templates/template_newspaper/src/newspaper/figures.py generate_all
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/figures/
+  - claim_id: founding-year
+    kind: number
+    value: 1879
+    source: masthead homage to the real Crescent City Triplicate
+    source_tier: reference_claim
+    freshness: active
+    artifact_path: content/edition.yaml
+  - claim_id: test-coverage-percent
+    kind: number
+    value: 95
+    source: pytest --cov=newspaper run 2026-05-31
+    source_tier: project_source
+    freshness: active
+    artifact_path: tests/

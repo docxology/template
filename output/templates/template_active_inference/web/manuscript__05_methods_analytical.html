@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05_methods_analytical.md.web</title>
+  <title>05_methods_analytical</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -178,11 +178,15 @@
 <!-- sheaf-track:prose -->
 <p>We study a minimal <strong>K=2 Bernoulli / Ising</strong> coupling as
 the analytical companion to multi-track verification. The entangled
-joint [eq:entangled_joint] yields closed-form mutual information <span
+joint <span class="citation"
+data-cites="eq:entangled_joint">[@eq:entangled_joint]</span> yields
+closed-form mutual information <span
 class="math inline">\(I(\lambda)\)</span>, which serves as an oracle for
 an independent exact recomputation (via total correlation) and GNN
-round-trips in [sec:results_mi_sweep]
-([fig:gnn_ontology_concordance]).</p>
+round-trips in <span class="citation"
+data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span> (<span
+class="citation"
+data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>).</p>
 <p>Measured sweep grid points: 21. Invariants passed: 12 / 12.</p>
 <!-- sheaf-track:formalism -->
 <p>The entangled joint over binary policies satisfies</p>
@@ -214,8 +218,10 @@ so the derivation is auditable rather than asserted.</p>
 <p>The analytical track writes a parameter sweep comparing closed-form
 mutual information with an independent exact recomputation of it (via
 total correlation) across <span class="math inline">\(\lambda \in [0,
-4]\)</span> on 21 grid points ([sec:results_mi_sweep],
-[fig:ising_mi_curve]).</p>
+4]\)</span> on 21 grid points (<span class="citation"
+data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>, <span
+class="citation"
+data-cites="fig:ising_mi_curve">[@fig:ising_mi_curve]</span>).</p>
 <!-- sheaf-track:assumption_index -->
 <p>The <code>assumption_index</code> fragment makes the analytical
 equations inspectable as a generated artifact instead of relying on
@@ -241,7 +247,8 @@ panel is a cross-implementation agreement check (max residual 0 nats),
 not a sampling residual.</figcaption>
 </figure>
 <figure id="fig:gnn_ontology_concordance">
-<img src="../figures/gnn_ontology_concordance.png" style="width:90.0%"
+<img src="../figures/gnn_ontology_concordance.png"
+style="width:90.0%"
 data-fig-alt="Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms."
 alt="GNN \leftrightarrow ontology concordance for the Bernoulli–Ising toy (GNN v1.1)." />
 <figcaption aria-hidden="true">GNN <span
@@ -250,12 +257,14 @@ the Bernoulli–Ising toy (GNN v1.1).</figcaption>
 </figure>
 <!-- sheaf-track:gnn -->
 <p>The Bernoulli toy is declared in
-<code>gnn/bernoulli_toy.gnn.md</code> (GNN v1.1).
-[fig:gnn_ontology_concordance] links GNN variables to Active Inference
-Ontology terms bound in the analytical ontology fragment; round-trip
-parity is checked before render.</p>
-<p>Measured MI and sweep artifacts in [sec:results_mi_sweep] ground the
-same symbol map used in the concordance diagram.</p>
+<code>gnn/bernoulli_toy.gnn.md</code> (GNN v1.1). <span class="citation"
+data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>
+links GNN variables to Active Inference Ontology terms bound in the
+analytical ontology fragment; round-trip parity is checked before
+render.</p>
+<p>Measured MI and sweep artifacts in <span class="citation"
+data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span> ground
+the same symbol map used in the concordance diagram.</p>
 <!-- sheaf-track:ontology -->
 <h3 id="ontology-bindings">Ontology bindings</h3>
 <ul>

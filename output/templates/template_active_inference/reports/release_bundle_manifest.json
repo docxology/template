@@ -2,12 +2,12 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 23,
-  "bundle_hash": "2f8879f30ec93e9fc39a7cbcb7acfd509ce320fed1de7051db63d6816c080955",
+  "bundle_hash": "9eea7209b4e9b43d98ed1c7f789ad3ae3d47ed796e2d118dafdd3eee4018813e",
   "copied_output_parity": {
     "all_copied_outputs_match": true,
     "all_copied_outputs_match_or_deferred": true,
     "all_required_sources_present": false,
-    "copied_root": "/Users/4d/Documents/GitHub/template/output/templates/template_active_inference",
+    "copied_root": "/Users/4d/Documents/GitHub/template-active-inference-clean-pr/output/templates/template_active_inference",
     "copied_root_exists": true,
     "pre_copy_stage": true,
     "row_count": 23,
@@ -43,7 +43,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "4bdd96785900e80fcd1d6e45f59251a5d7c3689c4b35da806fdb427417bc88cf"
+        "source_sha256": "7bad195c4ce577e0a5dd63ca000f9c66ab55cf017b6f614618f67d85075cffb7"
       },
       {
         "artifact": "output/reports/replay_matrix.json",
@@ -54,7 +54,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "08c6474c11a4cc36e490f19dd73495bbed69758af6bfb5a0887f5587a11bbe91"
+        "source_sha256": "107e760d293f140a851d61eb5eb9033e6ea2699531c97bbea4bacfb26064c698"
       },
       {
         "artifact": "output/data/sensitivity_sweep.json",
@@ -287,14 +287,14 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "4bdd96785900e80fcd1d6e45f59251a5d7c3689c4b35da806fdb427417bc88cf"
+      "source_sha256": "7bad195c4ce577e0a5dd63ca000f9c66ab55cf017b6f614618f67d85075cffb7"
     },
     {
       "artifact": "output/reports/replay_matrix.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "08c6474c11a4cc36e490f19dd73495bbed69758af6bfb5a0887f5587a11bbe91"
+      "source_sha256": "107e760d293f140a851d61eb5eb9033e6ea2699531c97bbea4bacfb26064c698"
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",

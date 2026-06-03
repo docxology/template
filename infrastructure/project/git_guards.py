@@ -11,6 +11,7 @@ ALLOWED_PROJECT_DIRS: tuple[str, ...] = (
     "projects/templates/template_active_inference/",
     "projects/templates/template_autoresearch_project/",
     "projects/templates/template_code_project/",
+    "projects/templates/template_newspaper/",
     "projects/templates/template_prose_project/",
     "projects/templates/template_sia/",
     "projects/templates/template_template/",
@@ -38,13 +39,14 @@ GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
 
 ALLOWED_TRACKED_OUTPUT_PREFIXES: tuple[str, ...] = (
     # Public exemplar rendered output is tracked as living render-proof (the
-    # published papers). Scoped to the five PUBLIC_PROJECT_NAMES only — every
+    # published papers). Scoped to the six PUBLIC_PROJECT_NAMES only — every
     # other project's output (confidential/rotating) stays ignored and is NEVER
     # listed here. Only repo-level output/<name>/ is allowed; project-local
     # projects/<name>/output/ remains a disposable working tree.
     "output/templates/template_active_inference/",
     "output/templates/template_autoresearch_project/",
     "output/templates/template_code_project/",
+    "output/templates/template_newspaper/",
     "output/templates/template_prose_project/",
     "output/templates/template_sia/",
     "output/templates/template_template/",

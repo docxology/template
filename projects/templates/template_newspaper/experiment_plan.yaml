@@ -1,0 +1,28 @@
+conditions:
+  - name: tabloid_default
+    role: proposed
+    description: "The default 12-page Triplicate edition rendered at US Tabloid (11x17) trim."
+  - name: broadsheet_variant
+    role: variant
+    description: "The same content rendered at broadsheet trim to test geometry independence."
+  - name: missing_assets
+    role: ablation
+    description: "Render with figures absent to confirm graceful placeholder fallback."
+metrics:
+  primary:
+    name: overset_pages
+    direction: minimize
+protocol: "Load content/ and render the full edition for each trim condition; assert page count, page size, and that no page drops copy (all_pages_fit)."
+expected_figures:
+  - fig:harbor_halftone
+  - fig:weather_7day
+  - fig:tide_curve
+  - fig:crab_landings
+expected_tables:
+  - tbl:dock_prices
+  - tbl:prep_standings
+  - tbl:regional_forecast
+baselines:
+  - tabloid_default
+ablations:
+  - missing_assets

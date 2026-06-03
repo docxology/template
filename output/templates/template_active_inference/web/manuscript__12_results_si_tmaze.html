@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>12_results_si_tmaze.md.web</title>
+  <title>12_results_si_tmaze</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -178,12 +178,15 @@
 <code>state_inference</code> mode is belief filtering with a
 goal-seeking action rule; sophisticated policy inference (an
 expected-free-energy policy posterior) is selectable via
-<code>mode: policy_inference</code> ([sec:methods_pymdp]). Summary
+<code>mode: policy_inference</code> (<span class="citation"
+data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span>). Summary
 metrics land in <code>output/data/si_tmaze_summary.json</code>.</p>
 <p>Steps recorded: 2. Mean belief entropy: 0.3251. Belief entropy over
-the rollout is traced in [fig:si_belief_entropy_curve]; the paired
-observation and action indices are in [fig:si_obs_action_trace]. The
-default <code>state_inference</code> mode runs pymdp
+the rollout is traced in <span class="citation"
+data-cites="fig:si_belief_entropy_curve">[@fig:si_belief_entropy_curve]</span>;
+the paired observation and action indices are in <span class="citation"
+data-cites="fig:si_obs_action_trace">[@fig:si_obs_action_trace]</span>.
+The default <code>state_inference</code> mode runs pymdp
 <code>infer_states</code> and <strong>reports</strong> the resulting
 posterior (belief entropy and the state-1 marginal), but the action is
 chosen by an open-loop scripted rule on the observation index — not by
@@ -201,7 +204,8 @@ nodes, with goal-reached flag 1.</p>
 run log: <code>output/logs/pymdp_runs.jsonl</code>.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:si_belief_entropy_curve">
-<img src="../figures/si_belief_entropy_curve.png" style="width:90.0%"
+<img src="../figures/si_belief_entropy_curve.png"
+style="width:90.0%"
 data-fig-alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251 to 0.3251 nats across 2 steps in state_inference mode."
 alt="Belief entropy over time for the T-maze rollout (mean 0.3251 nats)." />
 <figcaption aria-hidden="true">Belief entropy over time for the T-maze

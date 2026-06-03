@@ -18,6 +18,7 @@ from infrastructure.core.pipeline.artifacts import (
     aggregate_artifact_manifests,
     validate_artifact_manifest,
 )
+from infrastructure.core.files import find_combined_pdf
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
@@ -70,16 +71,15 @@ def validate_transmission_bookends(project_name: str = "project") -> bool:
     if not transmission_bookends_enabled(config_path):
         return True
 
-    combined_pdf = project_root / "output" / "pdf" / f"{project_root.name}_combined.pdf"
-    if not combined_pdf.is_file():
-        candidates = sorted((project_root / "output" / "pdf").glob("*_combined.pdf"))
-        if candidates:
-            combined_pdf = candidates[0]
-    if not combined_pdf.is_file():
-        logger.warning("Transmission bookends enabled but combined PDF missing: %s", combined_pdf)
+    located_pdf = find_combined_pdf(project_root / "output", project_name)
+    if located_pdf is None:
+        project_basename = Path(project_name).name
+        expected_pdf = project_root / "output" / "pdf" / f"{project_basename}_combined.pdf"
+        logger.warning("Transmission bookends enabled but combined PDF missing: %s", expected_pdf)
         return False
 
     log_substep("Validating transmission bookend page span...", logger)
+    combined_pdf, _ = located_pdf
     return validate_transmission_bookend_pages(combined_pdf)
 
 

@@ -1,0 +1,84 @@
+number: 6
+section: "A"
+department: "Business & Fishing"
+template: "standard"
+columns: 4
+
+lead:
+  kicker: "Dungeness"
+  headline: "Crab fleet lands its best season in four years"
+  deck: "A late opening and strong prices put the Del Norte fleet back in the black after a string of lean winters."
+  byline: "By Theo Brennan · Triplicate Staff Writer"
+  drop_cap: true
+  figure:
+    path: "output/figures/crab_boat.png"
+    caption: "The F/V Marie Elise runs for the inner basin stacked with pots at the close of a Dungeness season that landed 4.2 million pounds across the Citizens Dock hoist."
+    credit: "Triplicate / J. Okafor"
+    height: 150
+  body:
+    - "The Dungeness crab season that closed this month was the most lucrative for the Crescent City fleet in four years, with landings up 38 percent over last winter and a dock price that held above six dollars a pound deep into spring."
+    - "The season opened late again — delayed into December by elevated domoic-acid readings and the annual standoff over price — but once the boats went out, the crab were there. \"Big, clean, and close in,\" said skipper Dom Pereira. \"We did not have to steam to Oregon to find them this year.\""
+    - "Harbor District figures show 4.2 million pounds crossed the Citizens Dock hoist, the bulk of it in a ferocious February. The catch supports not just the boats but the ice house, the processors and a seasonal payroll that ripples through every café on Front Street."
+    - "Scientists caution that warm-water years and shifting acid risk make the fishery less predictable than the good numbers suggest. \"One strong season is a paycheck, not a trend,\" said state fishery biologist Ana Ruiz."
+
+main:
+  - box: table
+    title: "Fish Market — Dock Prices"
+    columns: ["Species", "Per lb", "Trend"]
+    rows:
+      - ["Dungeness crab", "$6.25", "▲"]
+      - ["Chinook salmon", "$9.80", "▲"]
+      - ["Rockfish", "$3.40", "—"]
+      - ["Lingcod", "$4.10", "▼"]
+      - ["Pacific halibut", "$11.50", "▲"]
+      - ["Albacore (frozen)", "$3.95", "—"]
+    footnote: "Ex-vessel prices, week ending May 23. Source: Harbor District."
+  - figure:
+      path: "output/figures/crab_landings.png"
+      caption: "Monthly Dungeness landings at Crescent City Harbor, in thousands of pounds. February's peak was the strongest single month since 2022."
+      credit: "Triplicate / Harbor District data"
+      height: 150
+  - headline: "Front Street storefronts fill as season turns"
+    level: secondary
+    kicker: "Downtown"
+    byline: "By Maren Holloway · Triplicate Staff Writer"
+    body:
+      - "Three long-empty storefronts on Front Street have new tenants this spring: a bakery, an outdoor-gear consignment shop and a second location for the Klamath coffee roaster. Brokers credit cheaper rents and the harbor project's promise of summer foot traffic."
+      - "\"People follow construction cranes,\" said commercial agent Lou Tran. \"They signal somebody believes in the block.\""
+  - headline: "Tourism bureau pins summer on the redwoods, not the weather"
+    level: secondary
+    kicker: "Visitors"
+    byline: "By Iris Lindqvist · Triplicate Staff Writer"
+    body:
+      - "The county visitors bureau launched a summer campaign this week built around the redwood parks and the Smith River rather than the famously unreliable beach weather. \"We stopped apologizing for the fog,\" said director Hana Brooks. \"The fog is why the biggest trees on earth grow here. That is the pitch.\""
+      - "Lodging-tax receipts, a proxy for visitation, rose 6 percent over last year."
+  - box: generic
+    title: "Business Briefs"
+    body:
+      - "<b>Credit union</b> opens a Smith River branch June 16."
+      - "<b>Mill site</b> cleanup grant clears final state review."
+      - "<b>Airport</b> adds a third weekly flight to Oakland for summer."
+  - ad:
+      sponsor: "Harbor View Realty"
+      tagline: "Your North Coast, your home."
+      graphic: "output/figures/ad_realty.png"
+      background: "#EAF1F5"
+      accent: "#1F3A5F"
+      border: "box"
+      graphic_height: 76
+      body:
+        - "Homes · land · commercial · property management"
+        - "312 Front Street · Lic. #01998877"
+      contact: "(707) 555-0150 · harborviewrealty.example"
+  - ad:
+      sponsor: "Citizens Dock Market"
+      tagline: "Off the boat & out of the field."
+      graphic: "output/figures/ad_grocery.png"
+      background: "#EDF5E6"
+      accent: "#3E6E34"
+      border: "box"
+      graphic_height: 76
+      body:
+        - "Fresh local seafood · North Coast produce · deli"
+        - "Open daily 7–9 · 88 Citizens Dock Road"
+      contact: "(707) 555-0166"
