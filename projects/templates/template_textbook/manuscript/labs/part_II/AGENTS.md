@@ -1,0 +1,9 @@
+# `manuscript/labs/part_II/` — Agent Guide
+
+Hands-on lab scaffolds for Part II (Dynamics & Control).
+
+**Contents.** Per-chapter lab stubs to fill; empty until authored.
+
+**Contract.** One lab dir per part; fill stubs following `docs/authoring_guide.md`.
+
+See the project [`AGENTS.md`](../../../AGENTS.md) and [`docs/`](../../../docs/) for the full map.
