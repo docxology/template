@@ -77,7 +77,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **484** on 2026-06-02 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **504** on 2026-06-03 UTC — includes the `infrastructure/search/exa/` client package, `infrastructure/core/project_paths.py`, and the `__main__.py` entrypoints; point-in-time, re-derive with the command above.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 

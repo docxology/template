@@ -923,7 +923,7 @@ Information about a discovered project.
 
 ### `resolve_project_root`
 
-*function — defined in `infrastructure.project.discovery`*
+*function — defined in `infrastructure.core.project_paths`*
 
 ```python
 resolve_project_root(repo_root: Path | str, project_name: str) -> Path
