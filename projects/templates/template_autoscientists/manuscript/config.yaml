@@ -24,7 +24,9 @@ authors:
 
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
-  doi: "" # Concept DOI assigned at first Zenodo deposit
+  doi: "10.5281/zenodo.20533669"  # Concept DOI — stable citation
+  version_doi: "10.5281/zenodo.20533670"  # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20533670"
   github_repository: "docxology/template_autoscientists"
   year: "2026"
 
