@@ -21,11 +21,11 @@ from matplotlib import image as mpimg
 from infrastructure.autoresearch import BudgetPolicy
 
 from src.diagnostics import diagnostic_bundle
-from src.figure_quality import figure_quality_report_payload
-from src.figure_registry import figure_registry_payload
-from src.figure_registry_contract import figure_method
-from src.figure_specs import ALL_FIGURE_LABELS, FIGURE_DISPATCH, FIGURE_METHODS
-from src.figure_style import (
+from src.figures.figure_quality import figure_quality_report_payload
+from src.figures.figure_registry import figure_registry_payload
+from src.figures.figure_registry_contract import figure_method
+from src.figures.figure_specs import ALL_FIGURE_LABELS, FIGURE_DISPATCH, FIGURE_METHODS
+from src.figures.figure_style import (
     DEFAULT_FIGURE_STYLE,
     FigureStyleConfig,
     apply_style,
@@ -58,11 +58,11 @@ from src.figures import (
     write_ml_training_dynamics_figure,
     write_stage_matrix_figure,
 )
-from src.figures_security import (
+from src.figures.figures_security import (
     write_security_control_matrix_figure,
     write_security_integrity_chain_figure,
 )
-from src.ml_task import run_bounded_ml_task
+from src.ml.task import run_bounded_ml_task
 
 _THREAT_MODEL = {
     "controls": [
@@ -516,7 +516,7 @@ def test_isolated_equals_batch_no_order_leakage(
 
 
 def test_status_color_canonical_and_muted_fallback():
-    from src.figures_core import _status_color
+    from src.figures.figures_core import _status_color
 
     with apply_style(DEFAULT_FIGURE_STYLE):
         assert _status_color("accepted") == "#0072b2"
@@ -531,7 +531,7 @@ def test_status_color_canonical_and_muted_fallback():
 
 
 def test_first_label_index_raises_when_label_absent():
-    from src.figures_core import _first_label_index
+    from src.figures.figures_core import _first_label_index
 
     assert _first_label_index(np.array([0, 1, 2, 1]), 1) == 1
     with pytest.raises(ValueError):
@@ -539,7 +539,7 @@ def test_first_label_index_raises_when_label_absent():
 
 
 def test_class_balance_count_returns_zero_when_no_match():
-    from src.figures_core import _class_balance_count
+    from src.figures.figures_core import _class_balance_count
 
     rows = [{"split": "test", "class_label": 1, "count": 5}]
     assert _class_balance_count(rows, "test", 1) == 5
@@ -550,7 +550,7 @@ def test_class_balance_count_returns_zero_when_no_match():
 def test_styled_grid_skips_when_grid_disabled():
     from matplotlib import pyplot as plt
 
-    from src.figures_core import styled_grid
+    from src.figures.figures_core import styled_grid
 
     fig, ax = plt.subplots()
     with apply_style(FigureStyleConfig(grid=False)):

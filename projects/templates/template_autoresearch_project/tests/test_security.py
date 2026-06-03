@@ -142,7 +142,7 @@ def test_write_security_artifacts_generates_local_review_and_figures(
 
     from infrastructure.autoresearch import BudgetPolicy
 
-    from src.ml_task import run_bounded_ml_task
+    from src.ml.task import run_bounded_ml_task
 
     ml_result = run_bounded_ml_task(sandbox_project, BudgetPolicy(max_iterations=4))
     paths = write_security_artifacts(

@@ -70,7 +70,7 @@ def load_loop_artifacts(project_root: Path, *, require_valid: bool = False) -> L
         readiness = _load_json(output / "reports" / "autoresearch_readiness.json")
         if readiness.get("valid") is not True:
             raise ValueError("autoresearch_readiness.json is missing or not valid")
-        from .manuscript_tokens_core import _validate_required_artifacts
+        from .manuscript.manuscript_tokens_core import _validate_required_artifacts
 
         _validate_required_artifacts(project_root, loop_payload)
 

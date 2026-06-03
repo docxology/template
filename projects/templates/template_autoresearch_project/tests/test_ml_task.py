@@ -13,7 +13,8 @@ import numpy as np
 import pytest
 from infrastructure.autoresearch import BudgetPolicy
 
-from src import diagnostics as diagnostics_module, mnist_fixture
+from src import diagnostics as diagnostics_module
+from src.ml import mnist_fixture
 from src.diagnostics import (
     bootstrap_intervals,
     calibration_report,
@@ -32,7 +33,7 @@ from src.diagnostics import (
     statistical_summary,
     training_diagnostics,
 )
-from src.ml_task import (
+from src.ml.task import (
     CandidateResult,
     accepted_error_examples,
     flatten_images,
@@ -210,12 +211,12 @@ def test_mnist_fixture_regeneration_is_manual_maintenance_only(project_root: Pat
         project_root / "scripts" / "run_autoresearch_loop.py",
         project_root / "scripts" / "z_generate_manuscript_variables.py",
         project_root / "src" / "loop.py",
-        project_root / "src" / "ml_task.py",
+        project_root / "src" / "ml" / "task.py",
     )
     forbidden_snippets = (
         "regenerate_mnist_fixture(",
-        "from src.mnist_fixture",
-        "import src.mnist_fixture",
+        "from src.ml.mnist_fixture",
+        "import src.ml.mnist_fixture",
     )
     for path in default_execution_paths:
         source = path.read_text(encoding="utf-8")

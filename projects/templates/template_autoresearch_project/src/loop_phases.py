@@ -16,7 +16,7 @@ from infrastructure.validation.evidence_registry import (
 from .config import AutoResearchLoopConfig
 from .diagnostics import diagnostic_bundle
 from .manuscript_variables import write_manuscript_hydration_artifacts
-from .ml_task import MLTaskResult
+from .ml.task import MLTaskResult
 from .models import AutoResearchLoopResult
 from .writers import (
     refresh_loop_payloads,

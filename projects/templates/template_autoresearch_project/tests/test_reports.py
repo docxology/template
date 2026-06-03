@@ -8,7 +8,7 @@ from pathlib import Path
 from infrastructure.autoresearch import BudgetPolicy
 
 from src.config import AutoResearchLoopConfig, HumanReviewState
-from src.ml_task import run_bounded_ml_task
+from src.ml.task import run_bounded_ml_task
 from src.models import AutoResearchLoopResult, LoopStageResult
 from src.reports import (
     build_review_packet,
