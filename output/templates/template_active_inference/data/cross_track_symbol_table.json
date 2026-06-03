@@ -1,0 +1,236 @@
+{
+  "all_consistent": true,
+  "all_dtypes_declared": true,
+  "all_ontology_terms_declared": true,
+  "all_section_terms_declared": true,
+  "all_shapes_declared": true,
+  "rows": [
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "Stream1HabitPrior",
+      "json_field": "E1",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "bernoulli_toy",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "Stream1HabitPrior",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "symbol": "E1",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "Stream2HabitPrior",
+      "json_field": "E2",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "bernoulli_toy",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "Stream2HabitPrior",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "symbol": "E2",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "CrossStreamCouplingPotential",
+      "json_field": "J",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "bernoulli_toy",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "CrossStreamCouplingPotential",
+      "shape": [
+        2,
+        2
+      ],
+      "shape_declared": true,
+      "symbol": "J",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "SophisticationWeight",
+      "json_field": "gamma",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "bernoulli_toy",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "SophisticationWeight",
+      "shape": [
+        1
+      ],
+      "shape_declared": true,
+      "symbol": "gamma",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "EntanglementDeformationParameter",
+      "json_field": "lam",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "bernoulli_toy",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "EntanglementDeformationParameter",
+      "shape": [
+        1
+      ],
+      "shape_declared": true,
+      "symbol": "lam",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "Stream1PolicyVector",
+      "json_field": "pi1",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "bernoulli_toy",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "Stream1PolicyVector",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "symbol": "pi1",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "Stream2PolicyVector",
+      "json_field": "pi2",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "bernoulli_toy",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "Stream2PolicyVector",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "symbol": "pi2",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "EntangledJointPosterior",
+      "json_field": "q_joint",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "bernoulli_toy",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "EntangledJointPosterior",
+      "shape": [
+        2,
+        2
+      ],
+      "shape_declared": true,
+      "symbol": "q_joint",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "BeliefEntropy",
+      "json_field": "belief_entropy",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "si_tmaze",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "BeliefEntropy",
+      "shape": [
+        1
+      ],
+      "shape_declared": true,
+      "symbol": "belief_entropy",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "HiddenState",
+      "json_field": "loc",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "si_tmaze",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "HiddenState",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "symbol": "loc",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "ObservationLikelihood",
+      "json_field": "obs",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "si_tmaze",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "ObservationLikelihood",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "symbol": "obs",
+      "term_consistent": true
+    },
+    {
+      "consistent": true,
+      "dtype": "float",
+      "dtype_declared": true,
+      "gnn_term": "PolicyPosterior",
+      "json_field": "pi",
+      "lean_namespace": "TemplateActiveInference",
+      "model": "si_tmaze",
+      "ontology_declared": true,
+      "section_ontology_declared": true,
+      "section_ontology_term": "PolicyPosterior",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "symbol": "pi",
+      "term_consistent": true
+    }
+  ],
+  "schema": "template_active_inference.cross_track_symbol_table.v1",
+  "symbol_count": 12
+}

@@ -1,0 +1,70 @@
+{
+  "all_counts_positive": true,
+  "all_finite": true,
+  "model_ids": [
+    "bernoulli_ising",
+    "graph_world_branch4",
+    "graph_world_diamond5",
+    "graph_world_linear4",
+    "graph_world_loop5",
+    "si_tmaze"
+  ],
+  "row_count": 6,
+  "rows": [
+    {
+      "action_count": 0,
+      "finite": true,
+      "model": "bernoulli_ising",
+      "policy_count": 4,
+      "source": "output/data/parameter_sweep.csv",
+      "state_count": 4,
+      "state_space": "binary_policy_pair"
+    },
+    {
+      "action_count": 2,
+      "finite": true,
+      "model": "si_tmaze",
+      "policy_count": 4,
+      "source": "output/data/si_tmaze_summary.json",
+      "state_count": 3,
+      "state_space": "start_cue_goal"
+    },
+    {
+      "action_count": 2,
+      "finite": true,
+      "model": "graph_world_linear4",
+      "policy_count": 8,
+      "source": "output/data/si_graph_world_topology_traces.json",
+      "state_count": 4,
+      "state_space": "linear4"
+    },
+    {
+      "action_count": 2,
+      "finite": true,
+      "model": "graph_world_branch4",
+      "policy_count": 8,
+      "source": "output/data/si_graph_world_topology_traces.json",
+      "state_count": 4,
+      "state_space": "branch4"
+    },
+    {
+      "action_count": 2,
+      "finite": true,
+      "model": "graph_world_loop5",
+      "policy_count": 16,
+      "source": "output/data/si_graph_world_topology_traces.json",
+      "state_count": 5,
+      "state_space": "loop5"
+    },
+    {
+      "action_count": 2,
+      "finite": true,
+      "model": "graph_world_diamond5",
+      "policy_count": 16,
+      "source": "output/data/si_graph_world_topology_traces.json",
+      "state_count": 5,
+      "state_space": "diamond5"
+    }
+  ],
+  "schema": "template_active_inference.state_space_catalog.v1"
+}

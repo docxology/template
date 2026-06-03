@@ -35,6 +35,13 @@ class LoggingConfig:
 
 
 @dataclass(frozen=True)
+class ComparisonConfig:
+    horizons: tuple[int, ...] = (2, 3)
+    seeds: tuple[int, ...] = (0,)
+    modes: tuple[SimulationMode, ...] = ("state_inference", "policy_inference")
+
+
+@dataclass(frozen=True)
 class PymdpConfig:
     horizon: int = 2
     steps: int = 2
@@ -43,6 +50,7 @@ class PymdpConfig:
     tmaze: TMazeConfig = TMazeConfig()
     agent: AgentConfig = AgentConfig()
     logging: LoggingConfig = LoggingConfig()
+    comparison: ComparisonConfig = ComparisonConfig()
 
     @property
     def policy_len(self) -> int:
@@ -60,8 +68,15 @@ def _parse_raw(raw: dict[str, Any]) -> PymdpConfig:
     tmaze_raw = raw.get("tmaze") or {}
     agent_raw = raw.get("agent") or {}
     logging_raw = raw.get("logging") or {}
+    comparison_raw = raw.get("comparison") or {}
+    horizon = int(raw.get("horizon", 2))
+    comparison_horizons = tuple(int(value) for value in comparison_raw.get("horizons", (horizon, horizon + 1)))
+    comparison_seeds = tuple(int(value) for value in comparison_raw.get("seeds", (int(raw.get("random_seed", 0)),)))
+    comparison_modes = tuple(
+        _coerce_mode(value) for value in comparison_raw.get("modes", ("state_inference", "policy_inference"))
+    )
     return PymdpConfig(
-        horizon=int(raw.get("horizon", 2)),
+        horizon=horizon,
         steps=int(raw.get("steps", raw.get("horizon", 2))),
         random_seed=int(raw.get("random_seed", 0)),
         mode=_coerce_mode(raw.get("mode")),
@@ -79,6 +94,11 @@ def _parse_raw(raw: dict[str, Any]) -> PymdpConfig:
         logging=LoggingConfig(
             enabled=bool(logging_raw.get("enabled", True)),
             path=str(logging_raw.get("path", "output/logs/pymdp_runs.jsonl")),
+        ),
+        comparison=ComparisonConfig(
+            horizons=comparison_horizons,
+            seeds=comparison_seeds,
+            modes=comparison_modes,
         ),
     )
 
@@ -147,6 +167,11 @@ def config_snapshot(config: PymdpConfig) -> dict[str, Any]:
         "logging": {
             "enabled": config.logging.enabled,
             "path": config.logging.path,
+        },
+        "comparison": {
+            "horizons": list(config.comparison.horizons),
+            "seeds": list(config.comparison.seeds),
+            "modes": list(config.comparison.modes),
         },
     }
 

@@ -1,5 +1,7 @@
 pi1: Stream1PolicyVector
 pi2: Stream2PolicyVector
+E1: Stream1HabitPrior
+E2: Stream2HabitPrior
 J: CrossStreamCouplingPotential
 lam: EntanglementDeformationParameter
 gamma: SophisticationWeight

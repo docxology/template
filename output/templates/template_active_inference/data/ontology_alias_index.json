@@ -1,0 +1,133 @@
+{
+  "alias_count": 25,
+  "conflicts": [],
+  "no_conflicts": true,
+  "rows": [
+    {
+      "alias": "belief_entropy",
+      "section": "appendix_full_sheaf",
+      "term": "BeliefEntropy"
+    },
+    {
+      "alias": "expected_free_energy",
+      "section": "appendix_full_sheaf",
+      "term": "ExpectedFreeEnergy"
+    },
+    {
+      "alias": "location",
+      "section": "appendix_full_sheaf",
+      "term": "HiddenState"
+    },
+    {
+      "alias": "observation",
+      "section": "appendix_full_sheaf",
+      "term": "ObservationLikelihood"
+    },
+    {
+      "alias": "policy",
+      "section": "appendix_full_sheaf",
+      "term": "PolicyPosterior"
+    },
+    {
+      "alias": "sheaf_track",
+      "section": "appendix_full_sheaf",
+      "term": "SheafFragment"
+    },
+    {
+      "alias": "coverage_semantics",
+      "section": "discussion_outlook",
+      "term": "Coverage matrix semantics"
+    },
+    {
+      "alias": "pedagogical_scope",
+      "section": "discussion_outlook",
+      "term": "Pedagogical scope"
+    },
+    {
+      "alias": "state_inference_mode",
+      "section": "discussion_outlook",
+      "term": "State inference harness"
+    },
+    {
+      "alias": "expected_free_energy",
+      "section": "intro_contributions",
+      "term": "ExpectedFreeEnergy"
+    },
+    {
+      "alias": "location",
+      "section": "intro_contributions",
+      "term": "HiddenState"
+    },
+    {
+      "alias": "observation",
+      "section": "intro_contributions",
+      "term": "ObservationLikelihood"
+    },
+    {
+      "alias": "policy",
+      "section": "intro_contributions",
+      "term": "PolicyPosterior"
+    },
+    {
+      "alias": "E1",
+      "section": "methods_analytical",
+      "term": "Stream1HabitPrior"
+    },
+    {
+      "alias": "E2",
+      "section": "methods_analytical",
+      "term": "Stream2HabitPrior"
+    },
+    {
+      "alias": "J",
+      "section": "methods_analytical",
+      "term": "CrossStreamCouplingPotential"
+    },
+    {
+      "alias": "gamma",
+      "section": "methods_analytical",
+      "term": "SophisticationWeight"
+    },
+    {
+      "alias": "lam",
+      "section": "methods_analytical",
+      "term": "EntanglementDeformationParameter"
+    },
+    {
+      "alias": "pi1",
+      "section": "methods_analytical",
+      "term": "Stream1PolicyVector"
+    },
+    {
+      "alias": "pi2",
+      "section": "methods_analytical",
+      "term": "Stream2PolicyVector"
+    },
+    {
+      "alias": "q_joint",
+      "section": "methods_analytical",
+      "term": "EntangledJointPosterior"
+    },
+    {
+      "alias": "belief_entropy",
+      "section": "methods_pymdp",
+      "term": "BeliefEntropy"
+    },
+    {
+      "alias": "loc",
+      "section": "methods_pymdp",
+      "term": "HiddenState"
+    },
+    {
+      "alias": "obs",
+      "section": "methods_pymdp",
+      "term": "ObservationLikelihood"
+    },
+    {
+      "alias": "pi",
+      "section": "methods_pymdp",
+      "term": "PolicyPosterior"
+    }
+  ],
+  "schema": "template_active_inference.ontology_alias_index.v1"
+}

@@ -1,0 +1,32 @@
+{
+  "steps": [
+    {
+      "step": 0,
+      "node": "start",
+      "action": "observe_cue",
+      "belief_entropy": 1.3862943611198906,
+      "goal_probability": 0.0
+    },
+    {
+      "step": 1,
+      "node": "cue",
+      "action": "advance",
+      "belief_entropy": 1.0397207708399179,
+      "goal_probability": 0.333333
+    },
+    {
+      "step": 2,
+      "node": "choice",
+      "action": "commit_goal",
+      "belief_entropy": 0.5623351446188083,
+      "goal_probability": 0.666667
+    },
+    {
+      "step": 3,
+      "node": "goal",
+      "action": "stay_goal",
+      "belief_entropy": 0.0,
+      "goal_probability": 1.0
+    }
+  ]
+}

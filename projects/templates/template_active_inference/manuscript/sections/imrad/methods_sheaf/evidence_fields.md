@@ -1,0 +1,1 @@
+The `evidence_fields` fragment indexes the exact artifact fields that support typed claims and hydrated manuscript tokens. `output/data/evidence_field_index.json` records {{evidence_field_count}} field rows, and the track passes only when every referenced JSONPath or dotted field is present (`{{evidence_fields_mapped}}`).

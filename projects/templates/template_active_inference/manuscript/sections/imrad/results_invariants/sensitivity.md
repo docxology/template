@@ -1,0 +1,3 @@
+The `sensitivity` fragment binds the deterministic toy sweep to the canonical sheaf track. `output/data/sensitivity_sweep.json` contains {{sensitivity_cell_count}} cells across toy parameters, policy modes, seeds, horizons, and graph topologies; the hydrated flag `{{sensitivity_complete_grid}}` is the only manuscript claim about coverage.
+
+The companion `output/data/si_policy_grid.json` records measured policy-mode rows derived from `si_policy_comparison.json`, not a synthetic grid. Missing cells fail the artifact schema before they can become prose; the topology trace artifact contributes {{si_graph_world_topology_trace_count}} deterministic topology traces.

@@ -1,0 +1,13 @@
+{
+  "artifact_manifest_hash": "4e3ee6666728bda192f3dafb419231eafe43d30871e2f4fa5255535af904661b",
+  "artifacts": {},
+  "evidence_fact_count": 0,
+  "path": "/Users/4d/Documents/GitHub/template-active-inference-clean-pr/projects/templates/template_active_inference/output/reports/snapshots/stage-03-infrastructure-tests.json",
+  "stage_name": "Infrastructure Tests",
+  "stage_num": 3,
+  "timestamp": "2026-06-03T03:39:26+00:00",
+  "validation_summary": {
+    "checks": {},
+    "summary": {}
+  }
+}

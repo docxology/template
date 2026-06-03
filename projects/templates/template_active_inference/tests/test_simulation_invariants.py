@@ -40,19 +40,12 @@ def test_simulation_invariants_after_run(project_root: Path) -> None:
 
 @pytest.mark.requires_pymdp
 def test_validate_outputs_gate_checks(project_root: Path) -> None:
-    from analysis import write_analysis_statistics
     from gates.validation import validate_outputs
-    from simulation.si_runner import pymdp_available, run_and_persist
-    from visualizations.figures import generate_all_figures
+    from gate_support import _BOOTSTRAPPED_ROOTS, ensure_gate_artifacts
 
-    from analysis import run_analysis
-
-    run_analysis(project_root)
-    if pymdp_available():
-        run_and_persist(project_root)
-        write_analysis_statistics(project_root)
-        generate_all_figures(project_root)
-        checks = validate_outputs(project_root)
-        assert checks.get("si_trace_present")
-        assert checks.get("si_summary_schema")
-        assert checks.get("experiment_plan_metrics")
+    _BOOTSTRAPPED_ROOTS.discard(project_root.resolve())
+    ensure_gate_artifacts(project_root)
+    checks = validate_outputs(project_root)
+    assert checks.get("si_trace_present")
+    assert checks.get("si_summary_schema")
+    assert checks.get("experiment_plan_metrics")

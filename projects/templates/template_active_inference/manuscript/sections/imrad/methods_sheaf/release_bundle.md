@@ -1,0 +1,1 @@
+The `release_bundle` fragment records whether the canonical deliverables exist before copying and whether copied root outputs match or are explicitly deferred until the copy stage. `output/reports/release_bundle_manifest.json` tracks {{release_bundle_artifact_count}} required deliverables with source-present flag `{{release_bundle_sources_present}}`.

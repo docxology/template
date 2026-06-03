@@ -1,0 +1,1 @@
+The `theorem_traceability` fragment binds Lean theorem inventory rows to finite model-checking witnesses, manuscript claims, and evidence fields. `output/data/theorem_traceability_matrix.json` records {{theorem_traceability_row_count}} traceability rows and passes only when every theorem row is linked (`{{theorem_traceability_linked}}`).

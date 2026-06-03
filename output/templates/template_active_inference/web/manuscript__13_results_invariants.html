@@ -193,15 +193,65 @@ data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>). <span
 class="citation"
 data-cites="fig:invariant_dashboard">[@fig:invariant_dashboard]</span>
 summarizes pass/fail status for both domains on the clean tree.</p>
+<!-- sheaf-track:replay_matrix -->
+<p>The replay matrix exposes deterministic rerun comparison as table
+data rather than prose. It contains 13 producer rows, uses explicit
+replay-or-fingerprint methods, and every row must match its saved
+artifact hash (<code>true</code>).</p>
+<!-- sheaf-track:sensitivity -->
+<p>The <code>sensitivity</code> fragment binds the deterministic toy
+sweep to the canonical sheaf track.
+<code>output/data/sensitivity_sweep.json</code> contains 96 cells across
+toy parameters, policy modes, seeds, horizons, and graph topologies; the
+hydrated flag <code>true</code> is the only manuscript claim about
+coverage.</p>
+<p>The companion <code>output/data/si_policy_grid.json</code> records
+measured policy-mode rows derived from
+<code>si_policy_comparison.json</code>, not a synthetic grid. Missing
+cells fail the artifact schema before they can become prose; the
+topology trace artifact contributes 4 deterministic topology traces.</p>
+<!-- sheaf-track:uncertainty -->
+<p>The <code>uncertainty</code> fragment reports only normalized toy
+summaries. <code>output/data/uncertainty_summary.json</code> contains 12
+belief and policy-posterior rows plus 3 finite entropy bins, and
+<code>true</code> is false if any posterior row fails to sum to one
+within the deterministic tolerance.</p>
+<p>Policy uncertainty is recorded in generated policy artifacts rather
+than hand-entered into the manuscript. The posterior grid contributes 5
+available posterior rows; the EFE artifact reports
+availability-or-fallback flag 1. The fragment is therefore a validation
+surface, not an empirical uncertainty claim.</p>
+<!-- sheaf-track:benchmark -->
+<p>The <code>benchmark</code> fragment adds a compact toy matrix over
+the Bernoulli, T-maze, and graph-world artifacts.
+<code>output/data/toy_benchmark_matrix.json</code> reports 3 model rows
+and <code>true</code> only when each row names an artifact, metric, and
+passing gate.</p>
+<p>The matrix is scoped to deterministic exemplar models. It is useful
+as a cross-track smoke test, not as a performance benchmark for
+biological or deployed systems.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:invariant_dashboard">
 <img src="../figures/invariant_dashboard.png" style="width:90.0%"
-alt="Horizontal bar checklist of analytical and simulation invariant names with pass or fail status. 12 of 12 checks pass on the merged report." />
-<figcaption aria-hidden="true">Horizontal bar checklist of analytical
-and simulation invariant names with pass or fail status. 12 of 12 checks
-pass on the merged report.</figcaption>
+data-fig-alt="Horizontal bar checklist of analytical and simulation invariant names with pass or fail status. 12 of 12 checks pass on the merged report."
+alt="Invariant dashboard: 12 / 12 merged analytical and simulation checks from the validation registry." />
+<figcaption aria-hidden="true">Invariant dashboard: 12 / 12 merged
+analytical and simulation checks from the validation
+registry.</figcaption>
 </figure>
-<p><em>Figure 5 (results). Invariant dashboard: 12 / 12 merged
-analytical and simulation checks from the validation registry.</em></p>
+<!-- sheaf-track:state_space_catalog -->
+<h3 id="state-space-catalog-track">State-space catalog track</h3>
+<p>The <code>state_space_catalog</code> track enumerates finite state
+spaces, action spaces, and policy counts for the deterministic toy
+models. The catalog artifact is
+<code>output/data/state_space_catalog.json</code>: it currently records
+6 rows, with finite-space status <code>true</code>.</p>
+<!-- sheaf-track:causal_ablation -->
+<h3 id="causal-ablation-track">Causal ablation track</h3>
+<p>The <code>causal_ablation</code> track records deterministic toy
+ablations over finite preferences, likelihood-noise settings, and
+graph-topology perturbations. The matrix artifact is
+<code>output/data/causal_ablation_matrix.json</code>: it currently
+records 36 cells, with complete-grid status <code>true</code>.</p>
 </body>
 </html>

@@ -1,0 +1,79 @@
+{
+  "all_mapped_once": true,
+  "row_count": 12,
+  "rows": [
+    {
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "Stream1HabitPrior",
+      "variable": "E1"
+    },
+    {
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "Stream2HabitPrior",
+      "variable": "E2"
+    },
+    {
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "CrossStreamCouplingPotential",
+      "variable": "J"
+    },
+    {
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "SophisticationWeight",
+      "variable": "gamma"
+    },
+    {
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "EntanglementDeformationParameter",
+      "variable": "lam"
+    },
+    {
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "Stream1PolicyVector",
+      "variable": "pi1"
+    },
+    {
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "Stream2PolicyVector",
+      "variable": "pi2"
+    },
+    {
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "EntangledJointPosterior",
+      "variable": "q_joint"
+    },
+    {
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ontology": "BeliefEntropy",
+      "variable": "belief_entropy"
+    },
+    {
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ontology": "HiddenState",
+      "variable": "loc"
+    },
+    {
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ontology": "ObservationLikelihood",
+      "variable": "obs"
+    },
+    {
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ontology": "PolicyPosterior",
+      "variable": "pi"
+    }
+  ],
+  "schema": "template_active_inference.ontology_profile_matrix.v1"
+}

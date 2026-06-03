@@ -28,9 +28,12 @@ def test_figure_registry_and_markdown() -> None:
     assert "ising_mi_curve" in registry
     assert len(registry["ising_mi_curve"].alt) >= 80
     md = render_figure_markdown(root, "ising_mi_curve", figure_number=1)
-    assert "Figure 1." in md
+    # pandoc-crossref owns numbering: a single label, the caption in the alt slot, no hand number.
+    assert "Figure 1." not in md
+    assert "*Figure" not in md
     assert "../output/figures/ising_mi_curve.png" in md
-    assert "{#fig:ising_mi_curve" in md
+    assert md.count("{#fig:ising_mi_curve") == 1
+    assert "Closed-form" in md
 
 
 def test_render_section_figures_for_results_mi_sweep() -> None:
@@ -39,7 +42,9 @@ def test_render_section_figures_for_results_mi_sweep() -> None:
 
     md = render_section_figures(root, "results_mi_sweep")
     assert "ising_mi_curve.png" in md
-    assert "Figure 2 (results)." in md
+    # results reuses the methods figure: unnumbered, cited back to the canonical label.
+    assert "Figure 2 (results)." not in md
+    assert "Reproduced from [@fig:ising_mi_curve]" in md
     assert len(md.split("\n\n")) >= 2
 
 
@@ -50,7 +55,13 @@ def test_render_figure_markdown_unlabeled_repeat() -> None:
     assert "{width=" in md
 
 
-def test_render_figure_markdown_no_duplicate_number_with_prefix() -> None:
+def test_render_figure_markdown_pandoc_owns_numbering() -> None:
+    """A labeled figure emits exactly one pandoc-crossref label and NO hand-written number.
+
+    Regression guard for the triple-numbering defect: render_figure_markdown must not emit
+    any ``Figure N`` / ``*Figure ...*`` hand label even when a legacy caption_prefix/number
+    is passed; pandoc-crossref is the single source of figure numbers.
+    """
     root = Path(__file__).resolve().parents[1]
     md = render_figure_markdown(
         root,
@@ -58,5 +69,29 @@ def test_render_figure_markdown_no_duplicate_number_with_prefix() -> None:
         figure_number=6,
         caption_prefix="Figure 6 (methods). ",
     )
-    assert "Figure 6 (methods)." in md
-    assert "Figure 6. Figure 6" not in md
+    assert "{#fig:sheaf_layers_overview" in md
+    assert md.count("#fig:sheaf_layers_overview") == 1
+    assert "Figure 6" not in md
+    assert "*Figure" not in md
+    # The clean caption rides the image alt slot so pandoc numbers it once.
+    assert "Sheaf layers overview" in md
+
+
+def test_no_orphan_hand_figure_labels_in_composed_manuscript() -> None:
+    """No composed section may carry a hand-written ``*Figure N ...*`` caption line.
+
+    Render-aware guard (not source-blind): pandoc-crossref numbers figures, so a leftover
+    italic ``*Figure ...*`` line means a double-number regression slipped back in.
+    """
+    import re as _re
+
+    from manuscript.sheaf import compose_all_sections
+
+    root = Path(__file__).resolve().parents[1]
+    compose_all_sections(root)
+    offenders = []
+    for md in sorted((root / "manuscript").glob("[0-9][0-9]_*.md")):
+        for i, line in enumerate(md.read_text(encoding="utf-8").splitlines(), 1):
+            if _re.match(r"\*Figure\s+[0-9IMA]", line.strip()):
+                offenders.append(f"{md.name}:{i}:{line.strip()[:50]}")
+    assert not offenders, f"orphan hand Figure labels: {offenders}"

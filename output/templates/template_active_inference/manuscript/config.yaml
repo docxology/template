@@ -31,6 +31,10 @@ keywords:
 metadata:
   license: "MIT"
   language: "en"
+  # Dense, config-driven page margins (single source of truth — do not also set
+  # \geometry in preamble.md). Forwarded to pandoc as `-V geometry:` by
+  # infrastructure/rendering/_pdf_combined_pandoc.py::build_pandoc_tex_command.
+  geometry: "margin=0.5in"
 
 render:
   formats:
@@ -52,8 +56,15 @@ analysis:
     - compose_manuscript.py
     - run_analytical_sweep.py
     - simulate_si_tmaze.py
+    - simulate_si_graph_world.py
     - compute_statistics.py
     - generate_figures.py
+    - render_animation.py
+    - generate_validation_spine.py
+    - generate_toy_sweep_tracks.py
+    - generate_formal_interop_tracks.py
+    - generate_integration_audit.py
+    - generate_sheaf_tracks.py
     - z_generate_manuscript_variables.py
 
 sheaf:

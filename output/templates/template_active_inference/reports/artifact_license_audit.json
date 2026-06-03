@@ -1,0 +1,497 @@
+{
+  "all_license_safe": true,
+  "row_count": 70,
+  "rows": [
+    {
+      "artifact": "output/data/analysis_statistics.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "compute_statistics.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/analytical_assumption_index.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_toy_sweep_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/analytical_observable_sweep.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_toy_sweep_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/animation_frame_deltas.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "render_animation.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/artifact_provenance.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/causal_ablation_matrix.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_toy_sweep_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/cross_track_symbol_table.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/evidence_field_index.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/figure_source_map.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/gnn_roundtrip_report.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_formal_interop_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/interop_roundtrip_report.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/manuscript_evidence_tables.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/manuscript_token_provenance.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/manuscript_variables.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "z_generate_manuscript_variables.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/ontology_alias_index.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_formal_interop_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/ontology_profile_matrix.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_formal_interop_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/parameter_sweep.csv",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "run_analytical_sweep.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/proof_extraction_index.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_formal_interop_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/pymdp_policy_posterior_grid.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "simulate_si_tmaze.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/sensitivity_sweep.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/sheaf_coverage_matrix.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_figures.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/sheaf_evidence_crosswalk.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/sheaf_gluing_certificate.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/sheaf_section_status_matrix.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/si_efe_terms.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_toy_sweep_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/si_graph_world_summary.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "simulate_si_graph_world.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/si_graph_world_topology_sweep.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_toy_sweep_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/si_graph_world_topology_traces.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_toy_sweep_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/si_graph_world_trace.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "simulate_si_graph_world.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/si_policy_comparison.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "simulate_si_tmaze.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/si_policy_grid.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_toy_sweep_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/si_tmaze_summary.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "simulate_si_tmaze.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/si_tmaze_trace.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "simulate_si_tmaze.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/state_space_catalog.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_toy_sweep_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/theorem_traceability_matrix.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/toy_benchmark_matrix.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_toy_sweep_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/track_improvement_scope.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/uncertainty_summary.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/validation_dependency_graph.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/data/validation_gate_index.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/figures/figure_registry.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_figures.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/figures/semantic_gluing_graph.png",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_figures.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/figures/sheaf_coverage_heatmap.png",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_figures.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/figures/sheaf_layers_overview.png",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_figures.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/figures/si_belief_trajectory.gif",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "render_animation.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/adversarial_audit.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/artifact_diffoscope.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/artifact_license_audit.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/blocked_scope_manifest.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/claim_evidence_audit.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/counterexample_matrix.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/figure_hash_manifest.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/gnn_lint_report.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_formal_interop_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/graph_world_invariants.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_toy_sweep_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/invariants.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "run_analytical_sweep.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/lean_graph_world_inventory.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_formal_interop_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/lean_theorem_inventory.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_formal_interop_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/manuscript_staleness_report.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "z_generate_manuscript_variables.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/model_checking_witnesses.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/producer_completeness.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/pymdp_runtime_diagnostics.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "simulate_si_tmaze.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/release_bundle_manifest.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/release_notes_evidence.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/replay_matrix.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/reproducibility_replay.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_validation_spine.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/scope_boundary_audit.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/sheaf_render_log.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_sheaf_tracks.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/si_invariants.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "simulate_si_tmaze.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/si_tmaze_run_report.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "simulate_si_tmaze.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/reports/stale_artifact_report.json",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_integration_audit.py",
+      "source_kind": "generated_local"
+    }
+  ],
+  "schema": "template_active_inference.artifact_license_audit.v1"
+}

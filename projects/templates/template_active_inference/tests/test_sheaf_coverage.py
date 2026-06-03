@@ -94,7 +94,10 @@ def test_write_coverage_page() -> None:
     assert "Sheaf Track Coverage" in text
     assert "Introduction" in text
     assert "sheaf_coverage_heatmap.png" in text
-    assert "Coverage overview." in text
+    # pandoc-crossref owns numbering: one {#fig:} label with the caption text, no hand label.
+    assert "{#fig:sheaf_coverage_heatmap" in text
+    assert "Sheaf track coverage matrix:" in text
+    assert "Coverage overview." not in text
     assert "Figure 4." not in text
     assert "Heatmap matrix of IMRAD manuscript rows" in text
     assert "16_appendix_full_sheaf.md" in text

@@ -1,0 +1,303 @@
+{
+  "all_equal": true,
+  "row_count": 37,
+  "rows": [
+    {
+      "artifact": "output/data/analysis_statistics.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "dc857ddeb134ed756b20770f776a2d52c36e305ee15d24c03a9347a4d91803f8",
+      "saved_sha256": "dc857ddeb134ed756b20770f776a2d52c36e305ee15d24c03a9347a4d91803f8",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/analytical_assumption_index.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "6d331551773356ade7c027d38a959fa814a7593eeea2a3a5f37ed658d24d1257",
+      "saved_sha256": "6d331551773356ade7c027d38a959fa814a7593eeea2a3a5f37ed658d24d1257",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/analytical_observable_sweep.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "cd9c29464a5dbfdc7c333d734cfa94625c9a30d67842dda63115bea42bee0ac0",
+      "saved_sha256": "cd9c29464a5dbfdc7c333d734cfa94625c9a30d67842dda63115bea42bee0ac0",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/animation_frame_deltas.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "26f4bd9ca87834f85de4b69a6c33d7459b72e542be342efa43ab5f9b5f88d2f6",
+      "saved_sha256": "26f4bd9ca87834f85de4b69a6c33d7459b72e542be342efa43ab5f9b5f88d2f6",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/causal_ablation_matrix.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
+      "saved_sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/gnn_roundtrip_report.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "3b91cfa950d1dfc8442ea50510c895a1006770631235db92467c0fcd33cda209",
+      "saved_sha256": "3b91cfa950d1dfc8442ea50510c895a1006770631235db92467c0fcd33cda209",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/ontology_alias_index.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "8c01513c5afa5f22b31cdf1e0976b5626c3b2a12e4dd4aaaf3f8442bdd736311",
+      "saved_sha256": "8c01513c5afa5f22b31cdf1e0976b5626c3b2a12e4dd4aaaf3f8442bdd736311",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/ontology_profile_matrix.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "a7b70c7ca5cd50b8814d8b235e04a533e7cbb6743f3ad15c007122312d109167",
+      "saved_sha256": "a7b70c7ca5cd50b8814d8b235e04a533e7cbb6743f3ad15c007122312d109167",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/parameter_sweep.csv",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
+      "saved_sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/proof_extraction_index.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "3d02e2175b829a019af2f3e0c8a98677f20a93f9d6293cbda3869918dbb3d1bf",
+      "saved_sha256": "3d02e2175b829a019af2f3e0c8a98677f20a93f9d6293cbda3869918dbb3d1bf",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/pymdp_policy_posterior_grid.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "9513f33271013f594069aa97d5cfc7b4e6b6b37476a6a49f107aa12c82fcce61",
+      "saved_sha256": "9513f33271013f594069aa97d5cfc7b4e6b6b37476a6a49f107aa12c82fcce61",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/sheaf_coverage_matrix.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "cc5774179267bf70cd8e5fcd6d4287a2300e576c1f5f8bb7e63d61ce406095e5",
+      "saved_sha256": "cc5774179267bf70cd8e5fcd6d4287a2300e576c1f5f8bb7e63d61ce406095e5",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/si_efe_terms.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "c49703517c82179c4b5c29962a5be91612e88954c72311d388999c2a1c99d2f7",
+      "saved_sha256": "c49703517c82179c4b5c29962a5be91612e88954c72311d388999c2a1c99d2f7",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/si_graph_world_summary.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080",
+      "saved_sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/si_graph_world_topology_sweep.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "f9610cc62493a5f02a4eaa8842188366d1cc2e5ed67e9e23a42c0b7e30c631fe",
+      "saved_sha256": "f9610cc62493a5f02a4eaa8842188366d1cc2e5ed67e9e23a42c0b7e30c631fe",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/si_graph_world_topology_traces.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "00f086b46f8ddd55b5521978945e652d041f16c0bfd59331ced0b1caaa128bc5",
+      "saved_sha256": "00f086b46f8ddd55b5521978945e652d041f16c0bfd59331ced0b1caaa128bc5",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/si_graph_world_trace.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549",
+      "saved_sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/si_policy_comparison.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "2ff44eadc0db5f57abdc579b8a1d9f2e13f6e17370fe7d79d9be1c67c92783ed",
+      "saved_sha256": "2ff44eadc0db5f57abdc579b8a1d9f2e13f6e17370fe7d79d9be1c67c92783ed",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/si_policy_grid.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "f49abb96cc04bcfa207c30205a38bdd344147fe52dcab95f586313e2da286490",
+      "saved_sha256": "f49abb96cc04bcfa207c30205a38bdd344147fe52dcab95f586313e2da286490",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/si_tmaze_summary.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e",
+      "saved_sha256": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/si_tmaze_trace.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "962f2a01908e353298f20f714e87f71cb266bb3d9ac96fb6fdb0c8232648992e",
+      "saved_sha256": "962f2a01908e353298f20f714e87f71cb266bb3d9ac96fb6fdb0c8232648992e",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/state_space_catalog.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
+      "saved_sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/toy_benchmark_matrix.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f",
+      "saved_sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/figure_registry.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "6b0d765800995b10bdbd4f799116b201a48a7eca01957649982f8f9ef4ce8e9d",
+      "saved_sha256": "6b0d765800995b10bdbd4f799116b201a48a7eca01957649982f8f9ef4ce8e9d",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/semantic_gluing_graph.png",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "c56feee6a234679f58321e18f1e0f52a7881760aa6b7eea480d5346138d04c53",
+      "saved_sha256": "c56feee6a234679f58321e18f1e0f52a7881760aa6b7eea480d5346138d04c53",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/sheaf_coverage_heatmap.png",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "569b1522fa89d2fc2bf726efcf3740df1b16057dfa96c4c6bed41fa7bbc4b68a",
+      "saved_sha256": "569b1522fa89d2fc2bf726efcf3740df1b16057dfa96c4c6bed41fa7bbc4b68a",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/sheaf_layers_overview.png",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "9b7a1129450a8b84217a9b6445c1982d0f20378db7385b2d6b86b744fc8f6a1b",
+      "saved_sha256": "9b7a1129450a8b84217a9b6445c1982d0f20378db7385b2d6b86b744fc8f6a1b",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/si_belief_trajectory.gif",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "saved_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/reports/gnn_lint_report.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "bc3ab7c7a9f6e3c469a4e3b8188a9d8bd6aee2542464e16d0d78b210769398a9",
+      "saved_sha256": "bc3ab7c7a9f6e3c469a4e3b8188a9d8bd6aee2542464e16d0d78b210769398a9",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/reports/graph_world_invariants.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9",
+      "saved_sha256": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/reports/invariants.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975",
+      "saved_sha256": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/reports/lean_graph_world_inventory.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "13bf2cf6c614f60f8e3ca9dc354d95bee67ea3dc353560d6f7b60cf039e3f0cb",
+      "saved_sha256": "13bf2cf6c614f60f8e3ca9dc354d95bee67ea3dc353560d6f7b60cf039e3f0cb",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/reports/lean_theorem_inventory.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "340348a8a3ee3ebba93aea0f81ac1cadbc845f2c4719275eb4d0f11a161ed776",
+      "saved_sha256": "340348a8a3ee3ebba93aea0f81ac1cadbc845f2c4719275eb4d0f11a161ed776",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/reports/pymdp_runtime_diagnostics.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "73404eb76d23671ced80b6cc1114f7e605a92e888de06b726f241d3bc8f43b97",
+      "saved_sha256": "73404eb76d23671ced80b6cc1114f7e605a92e888de06b726f241d3bc8f43b97",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/reports/reproducibility_replay.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "c14c0419111bd07e66c8cb83bf98d87ee006fbb6f6d4ae6e810f3cad9f94bcc4",
+      "saved_sha256": "c14c0419111bd07e66c8cb83bf98d87ee006fbb6f6d4ae6e810f3cad9f94bcc4",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/reports/si_invariants.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c",
+      "saved_sha256": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/reports/si_tmaze_run_report.json",
+      "equal": true,
+      "jsonpath": "$",
+      "live_sha256": "fd834b08c1c0987ec5753ab96ec04fae817c44aeba7992888381ce654038f44f",
+      "saved_sha256": "fd834b08c1c0987ec5753ab96ec04fae817c44aeba7992888381ce654038f44f",
+      "source": "output/data/artifact_provenance.json"
+    }
+  ],
+  "schema": "template_active_inference.artifact_diffoscope.v1"
+}

@@ -1,0 +1,3 @@
+The `uncertainty` fragment reports only normalized toy summaries. `output/data/uncertainty_summary.json` contains {{uncertainty_row_count}} belief and policy-posterior rows plus {{uncertainty_bin_count}} finite entropy bins, and `{{uncertainty_all_normalized}}` is false if any posterior row fails to sum to one within the deterministic tolerance.
+
+Policy uncertainty is recorded in generated policy artifacts rather than hand-entered into the manuscript. The posterior grid contributes {{pymdp_policy_posterior_available_count}} available posterior rows; the EFE artifact reports availability-or-fallback flag {{si_policy_efe_rows_explained}}. The fragment is therefore a validation surface, not an empirical uncertainty claim.

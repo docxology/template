@@ -19,9 +19,22 @@
     "logging": {
       "enabled": true,
       "path": "output/logs/pymdp_runs.jsonl"
+    },
+    "comparison": {
+      "horizons": [
+        2,
+        3
+      ],
+      "seeds": [
+        0
+      ],
+      "modes": [
+        "state_inference",
+        "policy_inference"
+      ]
     }
   },
-  "config_hash": "ea4b126a9c22f22f",
+  "config_hash": "81eb061f43b7bfd7",
   "mode": "state_inference",
   "seed": 0,
   "policy_len": 2,

@@ -182,7 +182,8 @@ joint <span class="citation"
 data-cites="eq:entangled_joint">[@eq:entangled_joint]</span> yields
 closed-form mutual information <span
 class="math inline">\(I(\lambda)\)</span>, which serves as an oracle for
-Monte Carlo checks and GNN round-trips in <span class="citation"
+an independent exact recomputation (via total correlation) and GNN
+round-trips in <span class="citation"
 data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span> (<span
 class="citation"
 data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>).</p>
@@ -194,42 +195,66 @@ q_\lambda(\pi) \propto E(\pi)\,\exp(\lambda J(\pi)),
 \]</span> {#eq:entangled_joint}</p>
 <p>with symmetric Ising coupling <span class="math inline">\(J\)</span>
 and deformation parameter <span class="math inline">\(\lambda\)</span>.
-Mutual information is <span class="math inline">\(I(\lambda)=\log 2 -
-H_b(\sigma(\lambda))\)</span>.</p>
+Let <span
+class="math inline">\(\sigma(\lambda)=q_\lambda(\pi_1=\pi_2)\)</span> be
+the probability that the two streams agree (the diagonal mass of the
+<span class="math inline">\(2\times2\)</span> joint); by symmetry both
+marginals are uniform. With binary entropy <span
+class="math inline">\(H_b(p)=-p\log p-(1-p)\log(1-p)\)</span> in nats,
+the joint entropy is <span class="math inline">\(H(q_\lambda)=\log 2 +
+H_b(\sigma(\lambda))\)</span> while each marginal contributes <span
+class="math inline">\(\log 2\)</span>, so the mutual information is</p>
+<p><span class="math display">\[
+I(\lambda)=\sum_k H(q_k)-H(q_\lambda)=\log 2 - H_b(\sigma(\lambda)),
+\]</span></p>
+<p>vanishing at <span class="math inline">\(\lambda=0\)</span> (<span
+class="math inline">\(\sigma=\tfrac12\)</span>, independent streams) and
+saturating at <span class="math inline">\(\log 2\)</span> as <span
+class="math inline">\(\lambda\to\infty\)</span> (<span
+class="math inline">\(\sigma\to1\)</span>, perfectly entangled). These
+symbols are the rows of <code>analytical_assumption_index.json</code>,
+so the derivation is auditable rather than asserted.</p>
 <!-- sheaf-track:simulation -->
 <p>The analytical track writes a parameter sweep comparing closed-form
-and empirical mutual information across <span
-class="math inline">\(\lambda \in [0, 4]\)</span> on 21 grid points
-(<span class="citation"
+mutual information with an independent exact recomputation of it (via
+total correlation) across <span class="math inline">\(\lambda \in [0,
+4]\)</span> on 21 grid points (<span class="citation"
 data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>, <span
 class="citation"
 data-cites="fig:ising_mi_curve">[@fig:ising_mi_curve]</span>).</p>
+<!-- sheaf-track:assumption_index -->
+<p>The <code>assumption_index</code> fragment makes the analytical
+equations inspectable as a generated artifact instead of relying on
+prose labels. <code>output/data/analytical_assumption_index.json</code>
+indexes 6 finite-model equation identifiers and 6 rows; the hydrated
+pass flag is <code>true</code>.</p>
+<p>The index is deliberately narrow. It covers the Bernoulli-Ising toy
+equations, their finite binary state assumptions, and the generated
+artifacts that test the same symbols. Any missing equation identifier or
+empty assumption list fails the toy-sweep validation gate.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:ising_mi_curve">
 <img src="../figures/ising_mi_curve.png" style="width:90.0%"
-alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows closed-form curve (solid dark line) and Monte Carlo estimates (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows Monte Carlo minus closed-form residuals versus lambda with a zero reference line." />
-<figcaption aria-hidden="true">Two-panel plot of mutual information
-versus coupling strength lambda for the symmetric Bernoulli-Ising toy.
-Left panel shows closed-form curve (solid dark line) and Monte Carlo
-estimates (dashed blue line) with lambda on the x-axis and mutual
-information in nats on the y-axis. Right panel shows Monte Carlo minus
-closed-form residuals versus lambda with a zero reference
-line.</figcaption>
+data-fig-alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark line) and an independent exact recomputation via total correlation (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows the recompute-minus-closed-form residual versus lambda with a zero reference line; the two deterministic estimators agree to machine precision."
+alt="Closed-form I(\lambda) and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to \lambda_{\max} = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual." />
+<figcaption aria-hidden="true">Closed-form <span
+class="math inline">\(I(\lambda)\)</span> and an independent exact
+recomputation via total correlation for the symmetric Bernoulli-Ising
+toy across 21 grid points up to <span
+class="math inline">\(\lambda_{\max}\)</span> = 4; grid maximum 0.6031
+nats. Both estimators are deterministic (no sampling), so the right
+panel is a cross-implementation agreement check (max residual 0 nats),
+not a sampling residual.</figcaption>
 </figure>
-<p><em>Figure 1 (methods). Closed-form and Monte Carlo mutual
-information I(λ) for the symmetric Bernoulli-Ising toy across 21 grid
-points up to λ_max = 4; grid maximum 0.6031 nats on the measured
-sweep.</em></p>
 <figure id="fig:gnn_ontology_concordance">
 <img src="../figures/gnn_ontology_concordance.png"
 style="width:90.0%"
-alt="Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms." />
-<figcaption aria-hidden="true">Layered concordance diagram linking
-analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1),
-and Active Inference Ontology terms.</figcaption>
+data-fig-alt="Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms."
+alt="GNN \leftrightarrow ontology concordance for the Bernoulli–Ising toy (GNN v1.1)." />
+<figcaption aria-hidden="true">GNN <span
+class="math inline">\(\leftrightarrow\)</span> ontology concordance for
+the Bernoulli–Ising toy (GNN v1.1).</figcaption>
 </figure>
-<p><em>Figure 1b (methods). GNN ↔︎ ontology concordance for the
-Bernoulli–Ising toy (GNN v1.1).</em></p>
 <!-- sheaf-track:gnn -->
 <p>The Bernoulli toy is declared in
 <code>gnn/bernoulli_toy.gnn.md</code> (GNN v1.1). <span class="citation"
@@ -243,6 +268,8 @@ the same symbol map used in the concordance diagram.</p>
 <!-- sheaf-track:ontology -->
 <h3 id="ontology-bindings">Ontology bindings</h3>
 <ul>
+<li><code>E1</code> → <strong>Stream1HabitPrior</strong></li>
+<li><code>E2</code> → <strong>Stream2HabitPrior</strong></li>
 <li><code>J</code> → <strong>CrossStreamCouplingPotential</strong></li>
 <li><code>gamma</code> → <strong>SophisticationWeight</strong></li>
 <li><code>lam</code> →

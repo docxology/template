@@ -7,6 +7,8 @@ from gnn.model import GnnModel
 BERNOULLI_SYMBOL_MAP: dict[str, str] = {
     "pi^1": "pi1",
     "pi^2": "pi2",
+    "E1": "E1",
+    "E2": "E2",
     "J": "J",
     "lambda": "lam",
     "gamma": "gamma",
@@ -16,12 +18,14 @@ BERNOULLI_SYMBOL_MAP: dict[str, str] = {
 
 # Canonical ontology terms for the Bernoulli-Ising toy variables. Pinned as a fixed
 # reference so a relabel of bernoulli_toy.gnn.md to a different-but-valid term is caught
-# by the production gate, not just by tests. (lambda->lam is omitted: it carries no
-# ontology annotation in the toy, so it stays a presence-only check.)
+# by the production gate, not just by tests.
 BERNOULLI_EXPECTED_TERMS: dict[str, str] = {
     "pi1": "Stream1PolicyVector",
     "pi2": "Stream2PolicyVector",
+    "E1": "Stream1HabitPrior",
+    "E2": "Stream2HabitPrior",
     "J": "CrossStreamCouplingPotential",
+    "lam": "EntanglementDeformationParameter",
     "gamma": "SophisticationWeight",
     "q_joint": "EntangledJointPosterior",
 }

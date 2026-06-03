@@ -1,0 +1,121 @@
+{
+  "backend_flags": {
+    "jax_default_backend": "cpu",
+    "jax_enable_x64": false,
+    "jax_platforms": "cpu"
+  },
+  "config_hashes": [
+    "0b46afb976bc0639",
+    "4e8521408cb18644",
+    "6c0410672bf58ef6",
+    "81eb061f43b7bfd7"
+  ],
+  "construction_count": 4,
+  "known_warning_count": 4,
+  "ok": true,
+  "records": [
+    {
+      "backend_flags": {
+        "jax_default_backend": "cpu",
+        "jax_enable_x64": false,
+        "jax_platforms": "cpu"
+      },
+      "config_hash": "81eb061f43b7bfd7",
+      "context": "si_tmaze:state_inference:h2:s0",
+      "known_warning_count": 1,
+      "known_warnings": [
+        {
+          "category": "UserWarning",
+          "known": true,
+          "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
+        }
+      ],
+      "unexpected_warning_count": 0,
+      "unexpected_warnings": [],
+      "versions": {
+        "inferactively_pymdp": "1.0.1",
+        "jax": "0.9.2",
+        "jaxlib": "0.9.2"
+      }
+    },
+    {
+      "backend_flags": {
+        "jax_default_backend": "cpu",
+        "jax_enable_x64": false,
+        "jax_platforms": "cpu"
+      },
+      "config_hash": "4e8521408cb18644",
+      "context": "si_tmaze:policy_inference:h2:s0",
+      "known_warning_count": 1,
+      "known_warnings": [
+        {
+          "category": "UserWarning",
+          "known": true,
+          "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
+        }
+      ],
+      "unexpected_warning_count": 0,
+      "unexpected_warnings": [],
+      "versions": {
+        "inferactively_pymdp": "1.0.1",
+        "jax": "0.9.2",
+        "jaxlib": "0.9.2"
+      }
+    },
+    {
+      "backend_flags": {
+        "jax_default_backend": "cpu",
+        "jax_enable_x64": false,
+        "jax_platforms": "cpu"
+      },
+      "config_hash": "0b46afb976bc0639",
+      "context": "si_tmaze:state_inference:h3:s0",
+      "known_warning_count": 1,
+      "known_warnings": [
+        {
+          "category": "UserWarning",
+          "known": true,
+          "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
+        }
+      ],
+      "unexpected_warning_count": 0,
+      "unexpected_warnings": [],
+      "versions": {
+        "inferactively_pymdp": "1.0.1",
+        "jax": "0.9.2",
+        "jaxlib": "0.9.2"
+      }
+    },
+    {
+      "backend_flags": {
+        "jax_default_backend": "cpu",
+        "jax_enable_x64": false,
+        "jax_platforms": "cpu"
+      },
+      "config_hash": "6c0410672bf58ef6",
+      "context": "si_tmaze:policy_inference:h3:s0",
+      "known_warning_count": 1,
+      "known_warnings": [
+        {
+          "category": "UserWarning",
+          "known": true,
+          "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
+        }
+      ],
+      "unexpected_warning_count": 0,
+      "unexpected_warnings": [],
+      "versions": {
+        "inferactively_pymdp": "1.0.1",
+        "jax": "0.9.2",
+        "jaxlib": "0.9.2"
+      }
+    }
+  ],
+  "schema": "template_active_inference.pymdp_runtime_diagnostics.v1",
+  "unexpected_warning_count": 0,
+  "versions": {
+    "inferactively_pymdp": "1.0.1",
+    "jax": "0.9.2",
+    "jaxlib": "0.9.2"
+  }
+}

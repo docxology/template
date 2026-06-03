@@ -1,49 +1,890 @@
 claims:
-  - id: sheaf_registry
-    statement: Sheaf track registry is present and drives compose order.
-    path: manuscript/sheaf/tracks.yaml
-  - id: sheaf_manifest
-    statement: IMRAD section manifest binds track fragments for composition.
-    path: manuscript/sheaf/manifest.yaml
-  - id: sheaf_coverage_config
-    statement: Coverage report and heatmap settings are configurable.
-    path: manuscript/sheaf/coverage.yaml
-  - id: sheaf_coverage_matrix
-    statement: Coverage matrix JSON reflects manifest track bindings with IMRAD metadata.
-    path: output/data/sheaf_coverage_matrix.json
-  - id: sheaf_coverage_heatmap
-    statement: B/W/G coverage heatmap PNG is generated for the first manuscript page.
-    path: output/figures/sheaf_coverage_heatmap.png
-  - id: coverage_no_gray
-    statement: Coverage matrix JSON has zero gray cells on a clean tree.
-    path: output/data/sheaf_coverage_matrix.json
-  - id: composed_intro_motivation
-    statement: Composed IMRAD introduction subsection exists for PDF pipeline.
-    path: manuscript/02_intro_motivation.md
-  - id: composed_methods_analytical
-    statement: Composed Methods analytical subsection exists for PDF pipeline.
-    path: manuscript/05_methods_analytical.md
-  - id: composed_results_mi
-    statement: Composed Results MI sweep subsection exists for PDF pipeline.
-    path: manuscript/10_results_mi_sweep.md
-  - id: composed_appendix_full_sheaf
-    statement: Appendix binds and composes appendix_sheaf_track_count fragment track types from the live manifest.
-    path: manuscript/16_appendix_full_sheaf.md
-  - id: si_tmaze_summary
-    statement: pymdp T-maze summary JSON records measured rollout statistics.
-    path: output/data/si_tmaze_summary.json
-  - id: si_tmaze_trace
-    statement: pymdp T-maze trace JSON records per-step beliefs and actions.
-    path: output/data/si_tmaze_trace.json
-  - id: si_belief_entropy_figure
-    statement: Belief entropy curve figure is generated from the SI trace.
-    path: output/figures/si_belief_entropy_curve.png
-  - id: composed_discussion
-    statement: Discussion outlook section binds simulation and ontology tracks.
-    path: manuscript/15_discussion_outlook.md
-  - id: sheaf_layers_overview
-    statement: Main-body sheaf layers overview figure combines registry stack and binding heatmap.
-    path: output/figures/sheaf_layers_overview.png
-  - id: composed_methods_sheaf
-    statement: Methods sheaf section binds figure and generated layer tables in the main body.
-    path: manuscript/08_methods_sheaf.md
+- id: sheaf_registry
+  statement: Sheaf track registry is present and drives compose order.
+  path: manuscript/sheaf/tracks.yaml
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  evidence:
+    field: tracks
+    predicate: non_empty
+- id: sheaf_manifest
+  statement: IMRAD section manifest binds track fragments for composition.
+  path: manuscript/sheaf/manifest.yaml
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  evidence:
+    field: sections
+    predicate: non_empty
+- id: sheaf_coverage_config
+  statement: Coverage report and heatmap settings are configurable.
+  path: manuscript/sheaf/coverage.yaml
+  section: sheaf_coverage
+  tracks:
+  - manuscript
+  - visualization
+  evidence:
+    field: heatmap
+    predicate: non_empty
+- id: sheaf_coverage_matrix
+  statement: Coverage matrix JSON reflects manifest track bindings with IMRAD metadata.
+  path: output/data/sheaf_coverage_matrix.json
+  section: sheaf_coverage
+  tracks:
+  - manuscript
+  - sheaf
+  evidence:
+    field: sections
+    predicate: non_empty
+- id: sheaf_gluing_certificate
+  statement: Semantic gluing certificate records cross-track symbols and typed claims.
+  path: output/data/sheaf_gluing_certificate.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - gnn
+  - ontology
+  - pymdp
+  - visualization
+  evidence:
+    field: ok
+    equals: true
+- id: sheaf_evidence_crosswalk
+  statement: Evidence crosswalk records claim-to-artifact producer and gate bindings.
+  path: output/data/sheaf_evidence_crosswalk.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  evidence:
+    field: claim_count
+    min: 1
+- id: evidence_fields_mapped
+  statement: Evidence-field index maps claim evidence fields to generated artifacts
+    and validators.
+  path: output/data/evidence_field_index.json
+  section: methods_sheaf
+  tracks:
+  - evidence_fields
+  - manuscript
+  - sheaf
+  evidence:
+    field: all_fields_mapped
+    equals: true
+- id: validation_dependency_graph
+  statement: Validation dependency graph has no producer-configuration issues.
+  path: output/data/validation_dependency_graph.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  evidence:
+    field: issues
+    len_equals: 0
+- id: semantic_gluing_graph_figure
+  statement: Semantic gluing graph figure is generated from dependency records.
+  path: output/figures/semantic_gluing_graph.png
+  section: methods_sheaf
+  tracks:
+  - visualization
+  - manuscript
+  - sheaf
+  evidence:
+    predicate: file_exists
+- id: artifact_provenance_spine
+  statement: Artifact provenance spine records hashes and configured producers for
+    core outputs.
+  path: output/data/artifact_provenance.json
+  section: methods_sheaf
+  tracks:
+  - provenance
+  - manuscript
+  - sheaf
+  evidence:
+    field: all_hashed
+    equals: true
+- id: artifact_provenance_seed_config
+  statement: Artifact provenance spine records deterministic seed and config digest
+    fields for core outputs.
+  path: output/data/artifact_provenance.json
+  section: methods_sheaf
+  tracks:
+  - provenance
+  - manuscript
+  - sheaf
+  evidence:
+    field: all_seeded
+    equals: true
+- id: replay_matrix_spine
+  statement: Replay spine checks deterministic toy producers and matches saved artifacts.
+  path: output/reports/reproducibility_replay.json
+  section: results_invariants
+  tracks:
+  - replay_matrix
+  - manuscript
+  evidence:
+    field: all_passed
+    equals: true
+- id: counterexample_matrix_spine
+  statement: Counterexample spine records expected-failure fixtures for promoted validation
+    gates.
+  path: output/reports/counterexample_matrix.json
+  section: methods_sheaf
+  tracks:
+  - counterexample
+  - manuscript
+  - sheaf
+  evidence:
+    field: all_expected_failures_documented
+    equals: true
+- id: sheaf_coverage_heatmap
+  statement: B/W/G coverage heatmap PNG is generated for the first manuscript page.
+  path: output/figures/sheaf_coverage_heatmap.png
+  section: sheaf_coverage
+  tracks:
+  - visualization
+  - manuscript
+  evidence:
+    predicate: file_exists
+- id: coverage_no_gray
+  statement: Coverage matrix JSON has zero gray cells on a clean tree.
+  path: output/data/sheaf_gluing_certificate.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  evidence:
+    field: restrictions.coverage_missing
+    equals: 0
+- id: composed_intro_motivation
+  statement: Composed IMRAD introduction subsection exists for PDF pipeline.
+  path: manuscript/02_intro_motivation.md
+  section: intro_motivation
+  tracks:
+  - manuscript
+  evidence:
+    predicate: file_exists
+- id: composed_methods_analytical
+  statement: Composed Methods analytical subsection exists for PDF pipeline.
+  path: manuscript/05_methods_analytical.md
+  section: methods_analytical
+  tracks:
+  - analytical
+  - manuscript
+  evidence:
+    predicate: file_exists
+- id: composed_results_mi
+  statement: Composed Results MI sweep subsection exists for PDF pipeline.
+  path: manuscript/10_results_mi_sweep.md
+  section: results_mi_sweep
+  tracks:
+  - analytical
+  - simulation
+  - manuscript
+  evidence:
+    predicate: file_exists
+- id: composed_appendix_full_sheaf
+  statement: Appendix binds and composes appendix_sheaf_track_count fragment track
+    types from the live manifest.
+  path: output/data/manuscript_variables.json
+  section: appendix_full_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  evidence:
+    field: appendix_sheaf_track_count
+    min: 9
+- id: si_tmaze_summary
+  statement: pymdp T-maze summary JSON records measured rollout statistics.
+  path: output/data/si_tmaze_summary.json
+  section: results_si_tmaze
+  tracks:
+  - pymdp
+  - simulation
+  evidence:
+    field: steps
+    min: 1
+- id: si_tmaze_trace
+  statement: pymdp T-maze trace JSON records per-step beliefs and actions.
+  path: output/data/si_tmaze_trace.json
+  section: results_si_tmaze
+  tracks:
+  - pymdp
+  - simulation
+  evidence:
+    field: steps
+    predicate: non_empty
+- id: si_policy_comparison
+  statement: Policy comparison artifact records state and policy inference comparison
+    rows.
+  path: output/data/si_policy_comparison.json
+  section: results_si_tmaze
+  tracks:
+  - pymdp
+  - simulation
+  evidence:
+    field: summary.run_count
+    min: 4
+- id: si_policy_comparison_modes
+  statement: Policy comparison covers exactly state and policy inference modes.
+  path: output/data/si_policy_comparison.json
+  section: results_si_tmaze
+  tracks:
+  - pymdp
+  - simulation
+  evidence:
+    field: summary.modes
+    set_equals:
+    - state_inference
+    - policy_inference
+- id: pymdp_runtime_diagnostics_ok
+  statement: PyMDP runtime diagnostics capture known JAX warnings and no unexpected
+    construction warnings.
+  path: output/reports/pymdp_runtime_diagnostics.json
+  section: methods_pymdp
+  tracks:
+  - pymdp
+  - provenance
+  - adversarial_audit
+  evidence:
+    field: ok
+    equals: true
+- id: pymdp_policy_posterior_grid_normalized
+  statement: Measured PyMDP policy posterior rows are normalized or explicitly unavailable
+    with a fallback reason.
+  path: output/data/pymdp_policy_posterior_grid.json
+  section: methods_pymdp
+  tracks:
+  - pymdp
+  - uncertainty
+  - interop
+  evidence:
+    field: all_available_posteriors_normalized
+    equals: true
+- id: si_graph_world_summary
+  statement: Graph-world extension summary is a real deterministic artifact.
+  path: output/data/si_graph_world_summary.json
+  section: results_si_tmaze
+  tracks:
+  - pymdp
+  - simulation
+  evidence:
+    field: status
+    equals: ok
+- id: si_graph_world_trace
+  statement: Graph-world extension trace records deterministic per-step states.
+  path: output/data/si_graph_world_trace.json
+  section: results_si_tmaze
+  tracks:
+  - pymdp
+  - simulation
+  evidence:
+    field: steps
+    predicate: non_empty
+- id: si_graph_world_trace_consistency
+  statement: Graph-world summary step count agrees with trace length.
+  path: output/data/sheaf_gluing_certificate.json
+  section: results_si_tmaze
+  tracks:
+  - pymdp
+  - simulation
+  - manuscript
+  evidence:
+    field: restrictions.graph_world_steps_match
+    equals: true
+- id: si_belief_entropy_figure
+  statement: Belief entropy curve figure is generated from the SI trace.
+  path: output/figures/si_belief_entropy_curve.png
+  section: results_si_tmaze
+  tracks:
+  - visualization
+  - pymdp
+  evidence:
+    predicate: file_exists
+- id: si_belief_trajectory_gif
+  statement: Belief trajectory GIF is generated from multi-step trace artifacts.
+  path: output/figures/si_belief_trajectory.gif
+  section: appendix_full_sheaf
+  tracks:
+  - animation
+  - visualization
+  evidence:
+    predicate: file_exists
+- id: composed_discussion
+  statement: Discussion outlook section binds simulation and ontology tracks.
+  path: manuscript/15_discussion_outlook.md
+  section: discussion_outlook
+  tracks:
+  - simulation
+  - ontology
+  - manuscript
+  evidence:
+    predicate: file_exists
+- id: sheaf_layers_overview
+  statement: Main-body sheaf layers overview figure combines registry stack and binding
+    heatmap.
+  path: output/figures/sheaf_layers_overview.png
+  section: methods_sheaf
+  tracks:
+  - visualization
+  - sheaf
+  evidence:
+    predicate: file_exists
+- id: lean_graph_world_policy_boundary
+  statement: Lean boundary includes finite graph-world reachability and policy-enumeration
+    witnesses.
+  path: output/data/sheaf_gluing_certificate.json
+  section: methods_lean
+  tracks:
+  - lean
+  - manuscript
+  evidence:
+    field: restrictions.lean_all_proved
+    equals: true
+- id: composed_methods_sheaf
+  statement: Methods sheaf section binds figure, generated layer tables, and semantic
+    gluing signposts.
+  path: manuscript/08_methods_sheaf.md
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  evidence:
+    predicate: file_exists
+- id: sensitivity_complete_grid
+  statement: Sensitivity track records a complete deterministic toy grid.
+  path: output/data/sensitivity_sweep.json
+  section: results_invariants
+  tracks:
+  - sensitivity
+  - manuscript
+  evidence:
+    field: complete_grid
+    equals: true
+- id: analytical_assumption_index
+  statement: Analytical assumption index maps every declared finite toy equation to
+    assumptions and evidence artifacts.
+  path: output/data/analytical_assumption_index.json
+  section: methods_analytical
+  tracks:
+  - assumption_index
+  - analytical
+  - manuscript
+  evidence:
+    field: all_equations_indexed
+    equals: true
+- id: uncertainty_rows_normalized
+  statement: Uncertainty track rows are normalized deterministic posterior summaries.
+  path: output/data/uncertainty_summary.json
+  section: results_invariants
+  tracks:
+  - uncertainty
+  - manuscript
+  evidence:
+    field: all_normalized
+    equals: true
+- id: benchmark_rows_complete
+  statement: Benchmark track includes every declared toy model row.
+  path: output/data/toy_benchmark_matrix.json
+  section: results_invariants
+  tracks:
+  - benchmark
+  - manuscript
+  evidence:
+    field: models
+    set_equals:
+    - bernoulli_ising
+    - si_tmaze
+    - graph_world
+- id: si_policy_grid_complete
+  statement: Policy grid artifact covers the deterministic modes, horizons, and seeds.
+  path: output/data/si_policy_grid.json
+  section: results_invariants
+  tracks:
+  - pymdp
+  - sensitivity
+  evidence:
+    field: complete_grid
+    equals: true
+- id: si_efe_rows_explained
+  statement: EFE artifact explicitly records availability or fallback for every policy-comparison
+    row.
+  path: output/data/si_efe_terms.json
+  section: results_invariants
+  tracks:
+  - pymdp
+  - sensitivity
+  evidence:
+    field: all_rows_explained
+    equals: true
+- id: graph_world_topology_traces_consistent
+  statement: Graph-world topology trace artifact agrees with every topology summary
+    row.
+  path: output/data/si_graph_world_topology_traces.json
+  section: results_invariants
+  tracks:
+  - pymdp
+  - sensitivity
+  evidence:
+    field: all_trace_summary_agree
+    equals: true
+- id: graph_world_invariants_pass
+  statement: Graph-world invariant artifact records only passing finite toy invariants.
+  path: output/reports/graph_world_invariants.json
+  section: results_invariants
+  tracks:
+  - pymdp
+  - sensitivity
+  evidence:
+    field: all_passed
+    equals: true
+- id: model_checking_witnesses_pass
+  statement: Model-checking witness artifact finds no finite toy counterexample.
+  path: output/reports/model_checking_witnesses.json
+  section: methods_lean
+  tracks:
+  - model_checking
+  - lean
+  evidence:
+    field: all_passed
+    equals: true
+- id: interop_roundtrip_lossless
+  statement: Interop artifact reports lossless GNN/JSON/ontology round-trip checks.
+  path: output/data/interop_roundtrip_report.json
+  section: methods_pymdp
+  tracks:
+  - interop
+  - gnn
+  - ontology
+  evidence:
+    field: all_lossless
+    equals: true
+- id: lean_theorem_inventory_proved
+  statement: Lean theorem inventory contains no forbidden proof placeholders.
+  path: output/reports/lean_theorem_inventory.json
+  section: methods_lean
+  tracks:
+  - lean
+  - model_checking
+  evidence:
+    field: all_proved
+    equals: true
+- id: lean_graph_world_topologies_witnessed
+  statement: Lean graph-world inventory witnesses every generated toy topology.
+  path: output/reports/lean_graph_world_inventory.json
+  section: methods_lean
+  tracks:
+  - lean
+  - model_checking
+  - sensitivity
+  evidence:
+    field: all_topologies_witnessed
+    equals: true
+- id: semantic_gluing_ok
+  statement: Canonical semantic gluing certificate reports all restrictions passing.
+  path: output/data/sheaf_gluing_certificate.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  - adversarial_audit
+  evidence:
+    field: ok
+    equals: true
+- id: dependency_graph_edges
+  statement: Canonical dependency graph includes producer, track, bundle, token, claim,
+    validator, fixture, model, ontology, figure, and copied-output edges.
+  path: output/data/validation_dependency_graph.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  - provenance
+  evidence:
+    field: all_required_edge_types_present
+    equals: true
+- id: producer_completeness
+  statement: Producer completeness audit finds every required artifact producer configured.
+  path: output/reports/producer_completeness.json
+  section: methods_sheaf
+  tracks:
+  - provenance
+  - adversarial_audit
+  evidence:
+    field: all_complete
+    equals: true
+- id: stale_artifact_report_fresh
+  statement: Stale-artifact report records fresh hashes for replay-safe generated
+    artifacts.
+  path: output/reports/stale_artifact_report.json
+  section: methods_sheaf
+  tracks:
+  - provenance
+  - replay_matrix
+  evidence:
+    field: all_fresh
+    equals: true
+- id: cross_track_symbols_consistent
+  statement: Cross-track symbol table records no symbol-level conflicts.
+  path: output/data/cross_track_symbol_table.json
+  section: methods_sheaf
+  tracks:
+  - gnn
+  - ontology
+  - sheaf
+  evidence:
+    field: all_consistent
+    equals: true
+- id: manuscript_evidence_tables_source_backed
+  statement: Generated manuscript evidence tables are source-backed.
+  path: output/data/manuscript_evidence_tables.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  evidence:
+    field: all_source_backed
+    equals: true
+- id: manuscript_token_provenance_mapped
+  statement: Manuscript token provenance maps every hydrated variable token to generated
+    variables.
+  path: output/data/manuscript_token_provenance.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  evidence:
+    field: all_tokens_mapped
+    equals: true
+- id: claim_evidence_audit_typed
+  statement: Claim-evidence audit reports every ledger claim has typed evidence and
+    track coverage.
+  path: output/reports/claim_evidence_audit.json
+  section: methods_sheaf
+  tracks:
+  - adversarial_audit
+  - manuscript
+  evidence:
+    field: all_claims_typed
+    equals: true
+- id: validation_gate_index_complete
+  statement: Validation gate index records every promoted local gate used by the release.
+  path: output/data/validation_gate_index.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  - gate_ergonomics
+  evidence:
+    field: all_indexed
+    equals: true
+- id: sheaf_section_status_matrix_complete
+  statement: Section-track status matrix records every current manuscript section
+    and registered sheaf track cell.
+  path: output/data/sheaf_section_status_matrix.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  - layers
+  evidence:
+    field: all_bound_fragments_present
+    equals: true
+- id: sheaf_render_log_events_ok
+  statement: Deterministic sheaf render log records only passing render and logging
+    events.
+  path: output/reports/sheaf_render_log.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  - gate_ergonomics
+  evidence:
+    field: all_events_ok
+    equals: true
+- id: figure_source_map_complete
+  statement: Figure source map covers every generated figure registry entry.
+  path: output/data/figure_source_map.json
+  section: methods_sheaf
+  tracks:
+  - visualization
+  - provenance
+  evidence:
+    field: all_figures_mapped
+    equals: true
+- id: figure_hash_manifest_complete
+  statement: Figure hash manifest records hashes for generated visual artifacts.
+  path: output/reports/figure_hash_manifest.json
+  section: methods_sheaf
+  tracks:
+  - visualization
+  - provenance
+  evidence:
+    field: all_hashes_present
+    equals: true
+- id: scope_boundary_toy_only
+  statement: Scope boundary audit keeps current claims confined to deterministic toy
+    artifacts.
+  path: output/reports/scope_boundary_audit.json
+  section: discussion_outlook
+  tracks:
+  - adversarial_audit
+  - manuscript
+  evidence:
+    field: scope_boundary_status
+    equals: toy_only_pass
+- id: adversarial_audit_expected_failures
+  statement: Adversarial audit documents every known-bad row as an expected failure.
+  path: output/reports/adversarial_audit.json
+  section: methods_sheaf
+  tracks:
+  - adversarial_audit
+  - manuscript
+  evidence:
+    field: all_expected_failures_documented
+    equals: true
+- id: animation_frame_deltas_nonzero
+  statement: Animation delta manifest records nonzero adjacent-frame changes for the
+    generated GIF.
+  path: output/data/animation_frame_deltas.json
+  section: appendix_full_sheaf
+  tracks:
+  - animation_delta
+  - animation
+  - visualization
+  evidence:
+    field: all_nonzero
+    equals: true
+- id: manuscript_staleness_fresh
+  statement: Manuscript staleness report confirms resolved markdown matches current
+    hydrated variables.
+  path: output/reports/manuscript_staleness_report.json
+  section: methods_sheaf
+  tracks:
+  - manuscript_staleness
+  - manuscript
+  - sheaf
+  evidence:
+    field: all_fresh
+    equals: true
+- id: replay_matrix_all_replayed
+  statement: Canonical replay matrix represents every configured analysis producer
+    with matched replay or fingerprint rows.
+  path: output/reports/replay_matrix.json
+  section: results_invariants
+  tracks:
+  - replay_matrix
+  evidence:
+    field: all_replay_rows_matched
+    equals: true
+- id: sensitivity_complete_grid
+  statement: Canonical sensitivity sweep covers every configured finite mode, horizon,
+    seed, topology, and lambda cell.
+  path: output/data/sensitivity_sweep.json
+  section: results_invariants
+  tracks:
+  - sensitivity
+  evidence:
+    field: complete_grid
+    equals: true
+- id: uncertainty_normalized
+  statement: Canonical uncertainty summary records normalized belief and policy-posterior
+    distributions.
+  path: output/data/uncertainty_summary.json
+  section: results_invariants
+  tracks:
+  - uncertainty
+  evidence:
+    field: all_normalized
+    equals: true
+- id: counterexample_expected_failures
+  statement: Canonical counterexample matrix covers every canonical promoted track
+    with observed expected failures.
+  path: output/reports/counterexample_matrix.json
+  section: methods_sheaf
+  tracks:
+  - counterexample
+  - adversarial_audit
+  evidence:
+    field: covered_tracks
+    set_equals:
+    - provenance
+    - replay_matrix
+    - sensitivity
+    - uncertainty
+    - counterexample
+    - model_checking
+    - interop
+    - adversarial_audit
+    - evidence_fields
+    - release_bundle
+    - theorem_traceability
+    - gate_ergonomics
+    - artifact_diffoscope
+    - proof_extraction
+    - state_space_catalog
+    - causal_ablation
+    - artifact_license
+    - release_notes
+- id: model_checking_exhaustive
+  statement: Canonical model-checking witnesses record finite exhaustive checks without
+    counterexamples.
+  path: output/reports/model_checking_witnesses.json
+  section: methods_lean
+  tracks:
+  - model_checking
+  - lean
+  evidence:
+    field: all_exhaustive
+    equals: true
+- id: interop_lossless
+  statement: Canonical interop round-trip checks preserve GNN, ontology, dependency,
+    and track-scope records without shape loss.
+  path: output/data/interop_roundtrip_report.json
+  section: methods_pymdp
+  tracks:
+  - interop
+  - gnn
+  - ontology
+  evidence:
+    field: all_lossless
+    equals: true
+- id: adversarial_audit_known_bad_blocked
+  statement: Canonical adversarial audit documents known-bad rows and records zero
+    known-bad rows passing.
+  path: output/reports/adversarial_audit.json
+  section: methods_sheaf
+  tracks:
+  - adversarial_audit
+  evidence:
+    field: known_bad_rows_passed
+    equals: 0
+- id: track_improvement_scope_complete
+  statement: Track improvement scope records complete promotion proof rows and future
+    improvement rows for canonical tracks.
+  path: output/data/track_improvement_scope.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  - provenance
+  evidence:
+    field: all_live_tracks_valid
+    equals: true
+- id: empirical_adapter_blocked
+  statement: Empirical adapter remains blocked and absent from the live sheaf registry.
+  path: output/reports/blocked_scope_manifest.json
+  section: discussion_outlook
+  tracks:
+  - adversarial_audit
+  - manuscript
+  evidence:
+    field: all_blocked
+    equals: true
+- id: release_bundle_sources_present
+  statement: Release bundle manifest records every canonical deliverable source artifact
+    before copying.
+  path: output/reports/release_bundle_manifest.json
+  section: methods_sheaf
+  tracks:
+  - release_bundle
+  - provenance
+  evidence:
+    field: all_required_sources_present
+    equals: true
+- id: theorem_traceability_linked
+  statement: Theorem traceability matrix links Lean theorem inventory rows to finite
+    witnesses and evidence fields.
+  path: output/data/theorem_traceability_matrix.json
+  section: methods_lean
+  tracks:
+  - theorem_traceability
+  - model_checking
+  - lean
+  evidence:
+    field: all_theorems_linked
+    equals: true
+- id: gate_ergonomics_indexed
+  statement: Gate ergonomics index records every validation gate row used by the canonical
+    release.
+  path: output/data/validation_gate_index.json
+  section: methods_sheaf
+  tracks:
+  - gate_ergonomics
+  - manuscript
+  - sheaf
+  evidence:
+    field: all_indexed
+    equals: true
+- id: artifact_diffoscope_equal
+  statement: Artifact diffoscope rows match saved provenance hashes against live artifacts.
+  path: output/reports/artifact_diffoscope.json
+  section: methods_sheaf
+  tracks:
+  - artifact_diffoscope
+  - provenance
+  - release_bundle
+  evidence:
+    field: all_equal
+    equals: true
+- id: proof_extraction_constructive
+  statement: Proof extraction rows contain Lean theorem statements without forbidden
+    proof tokens.
+  path: output/data/proof_extraction_index.json
+  section: methods_lean
+  tracks:
+  - proof_extraction
+  - lean
+  - theorem_traceability
+  evidence:
+    field: all_constructive
+    equals: true
+- id: state_space_catalog_finite
+  statement: State-space catalog records finite toy state and policy spaces.
+  path: output/data/state_space_catalog.json
+  section: results_invariants
+  tracks:
+  - state_space_catalog
+  - model_checking
+  - benchmark
+  evidence:
+    field: all_finite
+    equals: true
+- id: causal_ablation_complete
+  statement: Causal ablation matrix covers the deterministic toy ablation grid.
+  path: output/data/causal_ablation_matrix.json
+  section: results_invariants
+  tracks:
+  - causal_ablation
+  - sensitivity
+  - benchmark
+  evidence:
+    field: complete_grid
+    equals: true
+- id: artifact_license_safe
+  statement: Artifact license audit classifies all generated and source artifacts
+    as license-safe for the public toy exemplar.
+  path: output/reports/artifact_license_audit.json
+  section: methods_sheaf
+  tracks:
+  - artifact_license
+  - provenance
+  - release_bundle
+  evidence:
+    field: all_license_safe
+    equals: true
+- id: release_notes_source_backed
+  statement: Release-notes evidence rows are backed by validation, semantic, or bundle
+    artifacts.
+  path: output/reports/release_notes_evidence.json
+  section: discussion_outlook
+  tracks:
+  - release_notes
+  - release_bundle
+  - gate_ergonomics
+  evidence:
+    field: all_notes_source_backed
+    equals: true
