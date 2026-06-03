@@ -1,0 +1,65 @@
+# AutoScientists Template Configuration
+# Inherits workspace settings from root pyproject.toml
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "template_autoscientists"
+version = "0.1.0"
+description = "Deterministic reference implementation of the AutoScientists self-organizing agent coordination model"
+authors = [
+    {name = "Research Template Author", email = "author@research-template.org"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24.0",
+    "matplotlib>=3.7.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+# `--strict-markers` prevents typos; the live-agent path is opt-in only.
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "requires_ollama: mark test as requiring a running Ollama server with the Hermes model pulled",
+]
+
+[tool.coverage.run]
+# Coverage is measured on src/ only; the deterministic core is the gated surface.
+source = ["src"]
+branch = true
+omit = [
+    "tests/*",
+    "*/__init__.py",
+    "*/test_*.py",
+]
+
+[tool.coverage.report]
+# ≥90% on src/ is the enforced gate. The live Hermes path (HermesProposer.propose
+# and its lazy client wiring) is exercised only under `requires_ollama` and is
+# excluded from the gate via `pragma: no cover` on the network boundary.
+fail_under = 90
+show_missing = true
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+    # Protocol method stubs are type-only and never executed.
+    "^\\s*\\.\\.\\.$",
+]
+
+[tool.uv]
+# Inherits workspace settings from root pyproject.toml
