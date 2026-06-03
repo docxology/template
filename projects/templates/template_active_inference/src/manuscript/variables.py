@@ -221,7 +221,9 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "reproducibility_check_count": replay_data.get("check_count", 0),
         "reproducibility_all_passed": int(bool(replay_data.get("all_passed", False))),
         "counterexample_count": counterexample_data.get("counterexample_count", 0),
-        "counterexample_all_known_bad_fail": int(bool(counterexample_data.get("all_expected_failures_observed", False))),
+        "counterexample_all_known_bad_fail": int(
+            bool(counterexample_data.get("all_expected_failures_observed", False))
+        ),
         "sensitivity_cell_count": sensitivity_data.get("row_count", 0),
         "sensitivity_complete_grid": bool(sensitivity_data.get("complete_grid", False)),
         "analytical_assumption_count": assumption_data.get("row_count", 0),

@@ -81,8 +81,7 @@ class _DefinitionVisitor(ast.NodeVisitor):
                 kind=kind,
                 qualname=qualname,
                 documentation_source="docstring" if docstring else "inventory fallback",
-                summary=docstring
-                or _fallback_summary(self._rel_path, node.lineno, kind, qualname),
+                summary=docstring or _fallback_summary(self._rel_path, node.lineno, kind, qualname),
             )
         )
 
@@ -93,9 +92,7 @@ def _source_files(project_root: Path) -> list[Path]:
     for root_name in SOURCE_ROOTS:
         root = project_root / root_name
         files.extend(
-            path
-            for path in root.rglob("*.py")
-            if "__pycache__" not in path.parts and path.name != "__init__.py"
+            path for path in root.rglob("*.py") if "__pycache__" not in path.parts and path.name != "__init__.py"
         )
     return sorted(files)
 

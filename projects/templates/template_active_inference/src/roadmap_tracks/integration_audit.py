@@ -792,9 +792,7 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     issues: list[str] = []
     producer = _load_json(root / "output" / "reports" / "producer_completeness.json")
     producer_rows = producer.get("rows") or []
-    producer_derived = bool(producer_rows) and all(
-        row.get("exists") and row.get("configured") for row in producer_rows
-    )
+    producer_derived = bool(producer_rows) and all(row.get("exists") and row.get("configured") for row in producer_rows)
     if producer.get("all_complete") is not True or producer.get("all_complete") != producer_derived:
         # Re-derived from rows: a row showing a missing/unconfigured producer fails closed even
         # if the stored all_complete bit was left true.
