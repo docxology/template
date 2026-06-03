@@ -196,6 +196,46 @@ class TestPipelineDAGSorting:
         sorted_ = dag.sorted_stages()
         assert len(sorted_) == 3
 
+    def test_dropped_dependency_edges_recorded(self):
+        """A dep on an absent stage is sorted around but recorded, not silent."""
+        dag = PipelineDAG(
+            [
+                StageDefinition(name="A"),
+                StageDefinition(name="B", depends_on=["A"]),
+                StageDefinition(name="C", depends_on=["X"]),  # X absent
+            ]
+        )
+        dag.sorted_stages()
+        assert dag.dropped_dependency_edges == [("C", "X")]
+
+    def test_no_dropped_edges_when_all_present(self):
+        """Negative control: a fully-resolved DAG records zero dropped edges."""
+        dag = PipelineDAG(
+            [
+                StageDefinition(name="A"),
+                StageDefinition(name="B", depends_on=["A"]),
+                StageDefinition(name="C", depends_on=["B"]),
+            ]
+        )
+        dag.sorted_stages()
+        assert dag.dropped_dependency_edges == []
+
+    def test_filtering_out_a_dependency_warns_and_records(self, caplog):
+        """Filtering out a stage another stage depends on is observable."""
+        import logging
+
+        dag = PipelineDAG(
+            [
+                StageDefinition(name="A", tags=["prep"]),
+                StageDefinition(name="B", depends_on=["A"], tags=["core"]),
+            ]
+        )
+        dag.filter_tags(exclude={"prep"})  # drops A; B still depends on it
+        with caplog.at_level(logging.WARNING, logger="infrastructure.core.pipeline.dag"):
+            dag.sorted_stages()
+        assert dag.dropped_dependency_edges == [("B", "A")]
+        assert any("dropped" in m and "B->A" in m for m in caplog.messages)
+
     def test_sort_preserves_original_order_for_independent_stages(self):
         """Independent stages should preserve their declaration order."""
         dag = PipelineDAG(

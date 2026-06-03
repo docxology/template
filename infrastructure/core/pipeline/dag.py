@@ -78,6 +78,9 @@ class PipelineDAG:
 
     def __init__(self, stages: list[StageDefinition]) -> None:
         self.stages = list(stages)
+        # ``(stage, missing_dep)`` edges dropped by the most recent
+        # ``sorted_stages()`` call — see the property of the same name.
+        self._dropped_dependency_edges: list[tuple[str, str]] = []
         self._validate()
 
     # ── Construction helpers ─────────────────────────────────────────────
@@ -174,12 +177,28 @@ class PipelineDAG:
         in_degree: dict[str, int] = {s.name: 0 for s in self.stages}
         dependents: dict[str, list[str]] = {s.name: [] for s in self.stages}
 
+        dropped_edges: list[tuple[str, str]] = []
         for stage in self.stages:
             for dep in stage.depends_on:
                 if dep in remaining_names:
                     in_degree[stage.name] += 1
                     dependents[dep].append(stage.name)
-                # deps outside the filtered set are ignored (already removed)
+                else:
+                    # A retained stage declares a dependency on a stage absent
+                    # from the current set (tag-filtered or removed). The
+                    # ordering constraint cannot be honored — record it so the
+                    # drop is observable instead of silently discarded.
+                    dropped_edges.append((stage.name, dep))
+
+        self._dropped_dependency_edges = dropped_edges
+        if dropped_edges:
+            logger.warning(
+                "Pipeline DAG: %d declared dependency edge(s) reference stages "
+                "absent from the current set and were dropped (ordering for the "
+                "dependent stage is no longer constrained): %s",
+                len(dropped_edges),
+                ", ".join(f"{stage}->{dep}" for stage, dep in dropped_edges),
+            )
 
         # Kahn's algorithm with stable ordering
         queue: list[str] = [n for n in [s.name for s in self.stages] if in_degree[n] == 0]
@@ -198,6 +217,18 @@ class PipelineDAG:
             raise ValueError(f"Cycle detected in pipeline DAG involving: {cycle_nodes}")
 
         return result
+
+    @property
+    def dropped_dependency_edges(self) -> list[tuple[str, str]]:
+        """``(stage, missing_dep)`` edges dropped by the most recent sort.
+
+        Populated by :meth:`sorted_stages`: each entry is a retained stage that
+        declares a ``depends_on`` target absent from the current (possibly
+        filtered) stage set. Empty when every declared dependency is present,
+        so callers can assert ``not dag.dropped_dependency_edges`` to detect
+        filtering that orphaned an ordering constraint.
+        """
+        return list(self._dropped_dependency_edges)
 
     # ── Conversion ───────────────────────────────────────────────────────
 
