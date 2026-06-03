@@ -27,8 +27,7 @@ def generate_improvement_markdown(
         "suggesting threshold tuning on feature_0."
     )
     config = OllamaClientConfig(auto_inject_system_prompt=False)
-    if llm_model:
-        config.default_model = llm_model
+    config.default_model = llm_model
     client = LLMClient(config)
     try:
         response = client.query(prompt)

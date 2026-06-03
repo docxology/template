@@ -32,7 +32,6 @@ from infrastructure.rendering._pipeline_summary import (  # noqa: F401
     generate_rendering_summary,
     log_rendering_summary,
     verify_pdf_outputs,
-    _check_citations_used,
 )
 
 logger = get_logger(__name__)

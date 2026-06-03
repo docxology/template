@@ -176,3 +176,25 @@ benchmark_rubric:
     assert manifest.rubric is not None
     assert manifest.rubric.name == "code-rubric"
     assert manifest.rubric.dimensions[0].weight == 3.0
+
+
+def test_checked_in_smoke_manifest_projects_resolve_on_disk() -> None:
+    """The committed smoke manifest's project names must resolve to real dirs.
+
+    Regression guard: the manifest previously held bare names
+    ("template_code_project") that resolved to projects/<name>, but the public
+    exemplars live under projects/templates/. Without binding the file to disk,
+    a project move silently makes every benchmark check score 0 / "missing"
+    while the unit tests (which construct their own manifests) stay green.
+    """
+    repo_root = Path(__file__).resolve().parents[3]
+    manifest_path = (
+        repo_root / "infrastructure" / "benchmark" / "template_smoke_manifest.json"
+    )
+    manifest = load_benchmark_manifest(manifest_path)
+    assert manifest.projects, "smoke manifest lists no projects"
+    for name in manifest.projects:
+        assert (repo_root / "projects" / name).is_dir(), (
+            f"manifest project {name!r} does not resolve to a directory under "
+            "projects/ — qualify it (e.g. templates/<name>) or update the move"
+        )

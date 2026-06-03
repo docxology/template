@@ -20,16 +20,15 @@ from collections import OrderedDict
 from pathlib import Path
 
 from infrastructure.reference.citation.escape import unescape_latex
-from infrastructure.reference.citation.models import BibDatabase, BibEntry
+from infrastructure.reference.citation.models import (
+    VERBATIM_FIELDS as _VERBATIM_FIELDS,
+    BibDatabase,
+    BibEntry,
+)
 
 
 class BibParseError(ValueError):
     """Raised when the parser encounters a malformed BibTeX construct."""
-
-
-_VERBATIM_FIELDS: frozenset[str] = frozenset(
-    {"year", "volume", "number", "month", "edition", "isbn", "issn", "doi", "url"}
-)
 
 
 class _Reader:
