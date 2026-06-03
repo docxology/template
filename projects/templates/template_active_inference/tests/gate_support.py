@@ -62,6 +62,10 @@ _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
     "output/data/causal_ablation_matrix.json",
     "output/reports/artifact_license_audit.json",
     "output/reports/release_notes_evidence.json",
+    "output/data/proof_dependency_graph.json",
+    "output/data/state_transition_table.json",
+    "output/reports/ablation_sensitivity_report.json",
+    "output/reports/release_attestation.json",
     "output/data/validation_gate_index.json",
     "output/data/validation_dependency_graph.json",
     "output/data/sheaf_section_status_matrix.json",
@@ -72,6 +76,8 @@ _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
     "output/reports/manuscript_staleness_report.json",
     "output/reports/reproducibility_replay.json",
     "output/reports/counterexample_matrix.json",
+    "output/figures/theorem_traceability_graph.png",
+    "output/figures/causal_ablation_heatmap.png",
 )
 
 

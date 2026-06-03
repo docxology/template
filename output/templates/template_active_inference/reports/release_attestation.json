@@ -1,0 +1,41 @@
+{
+  "all_attested": true,
+  "attestation_hash": "3be63a255020f58985d5d19d89e2a669ee5cd879033416753d2663ec46ed0e41",
+  "bundle_hash": "549ca7c323a178d59c05662ea936d33f0cfd0e1cf21e2e668b69183dc5d0ba59",
+  "row_count": 5,
+  "rows": [
+    {
+      "deferred_until_validation": true,
+      "id": "validation_report",
+      "passed": false,
+      "source": "output/reports/validation_report.json"
+    },
+    {
+      "bundle_hash": "549ca7c323a178d59c05662ea936d33f0cfd0e1cf21e2e668b69183dc5d0ba59",
+      "deferred_until_validation": false,
+      "id": "release_bundle",
+      "passed": true,
+      "source": "output/reports/release_bundle_manifest.json"
+    },
+    {
+      "deferred_until_validation": false,
+      "id": "artifact_license",
+      "passed": true,
+      "source": "output/reports/artifact_license_audit.json"
+    },
+    {
+      "deferred_until_validation": false,
+      "id": "blocked_scope",
+      "passed": true,
+      "source": "output/reports/blocked_scope_manifest.json"
+    },
+    {
+      "deferred_until_validation": false,
+      "id": "semantic_certificate",
+      "ignored_self_restrictions": [],
+      "passed": true,
+      "source": "output/data/sheaf_gluing_certificate.json"
+    }
+  ],
+  "schema": "template_active_inference.release_attestation.v1"
+}

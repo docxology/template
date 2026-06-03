@@ -186,7 +186,9 @@ def write_policy_comparison(
                         "expected_free_energy_values": efe_values,
                         "expected_free_energy_available": bool(efe_values),
                         "expected_free_energy_fallback_reasons": sorted(fallback_reasons)
-                        or (["pymdp did not expose decomposed expected-free-energy terms"] if not efe_values else []),
+                        or (
+                            ["pymdp did not expose expected-free-energy values for this run"] if not efe_values else []
+                        ),
                     }
                 )
     expected_run_count = len(configured_modes) * len(configured_horizons) * len(configured_seeds)

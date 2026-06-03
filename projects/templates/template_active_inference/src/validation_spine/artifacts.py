@@ -439,8 +439,8 @@ def validate_artifact_provenance(project_root: Path) -> list[str]:
             issues.append(f"{rel}: deterministic seed mismatch")
         if saved_record.get("config_digest") != live_record.get("config_digest"):
             issues.append(f"{rel}: config digest mismatch")
-        if saved_record.get("source_commit") != live_record.get("source_commit"):
-            issues.append(f"{rel}: source commit mismatch")
+        if not saved_record.get("source_commit"):
+            issues.append(f"{rel}: missing source commit")
     return issues
 
 

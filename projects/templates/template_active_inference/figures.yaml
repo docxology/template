@@ -158,6 +158,28 @@ figures:
       Semantic gluing graph: configured producers, generated evidence artifacts, and
       validation consumers for the multi-track sheaf certificate.
     width: 0.95
+  theorem_traceability_graph:
+    filename: theorem_traceability_graph.png
+    alt: >-
+      Three-column graph generated from theorem traceability and proof dependency JSON.
+      Each row links a Lean theorem to its proof-dependency edge count and finite
+      model witness count; all theorem rows have resolved dependency edges:
+      {{proof_dependency_all_resolved}}.
+    caption: >-
+      Theorem traceability graph generated from {{theorem_traceability_row_count}}
+      linked theorem rows and {{proof_dependency_edge_count}} proof-dependency edges.
+    width: 0.95
+  causal_ablation_heatmap:
+    filename: causal_ablation_heatmap.png
+    alt: >-
+      Heatmap generated from the causal ablation and sensitivity reports. Rows are
+      toy graph topologies, columns are perturbation types, and each cell shows the
+      maximum absolute deterministic effect sourced from generated JSON rows.
+    caption: >-
+      Causal-ablation heatmap: {{ablation_sensitivity_row_count}} source-backed rows
+      joined to sensitivity and uncertainty artifacts; all effects source-backed:
+      {{ablation_sensitivity_source_backed}}.
+    width: 0.92
 
 section_figures:
   coverage_page:
@@ -190,5 +212,7 @@ section_figures:
       labeled: false
     - id: si_tmaze_actions
       labeled: false
+    - id: theorem_traceability_graph
+    - id: causal_ablation_heatmap
     - id: sheaf_coverage_heatmap
       labeled: false

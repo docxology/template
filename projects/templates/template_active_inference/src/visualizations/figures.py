@@ -208,7 +208,7 @@ def figure_semantic_gluing_graph(project_root: Path) -> Path:
     artifacts = graph.get("artifacts") or {}
     out = figure_output_path(root, "semantic_gluing_graph")
     with apply_style(style):
-        fig, ax = plt.subplots(figsize=(9.2, 4.8))
+        fig, ax = plt.subplots(figsize=(9.6, 5.6))
         ax.axis("off")
         producer_x, artifact_x, consumer_x = 0.05, 0.42, 0.78
         y_positions = np.linspace(0.86, 0.14, len(selected))
@@ -252,6 +252,114 @@ def figure_semantic_gluing_graph(project_root: Path) -> Path:
     return out
 
 
+def figure_theorem_traceability_graph(project_root: Path) -> Path:
+    """Render theorem → proof dependency → witness links from generated JSON rows."""
+    root = project_root.resolve()
+    style = load_figure_style(root)
+    theorem_path = root / "output" / "data" / "theorem_traceability_matrix.json"
+    dependency_path = root / "output" / "data" / "proof_dependency_graph.json"
+    if not theorem_path.is_file() or not dependency_path.is_file():
+        from roadmap_tracks import write_sheaf_track_artifacts
+
+        write_sheaf_track_artifacts(root)
+    theorem = json.loads(theorem_path.read_text(encoding="utf-8"))
+    dependency = json.loads(dependency_path.read_text(encoding="utf-8"))
+    rows = (theorem.get("rows") or [])[:6]
+    edges = dependency.get("edges") or []
+    edge_count_by_theorem = {
+        row.get("theorem", ""): sum(1 for edge in edges if edge.get("source") == row.get("theorem")) for row in rows
+    }
+    out = figure_output_path(root, "theorem_traceability_graph")
+    with apply_style(style):
+        fig, ax = plt.subplots(figsize=(9.2, 4.8))
+        ax.axis("off")
+        columns = [0.05, 0.42, 0.78]
+        headers = ["Lean theorem", "Proof dependency rows", "Finite witnesses"]
+        for x, header in zip(columns, headers, strict=True):
+            ax.text(x, 0.94, header, weight="bold", color=style.color("primary"), fontsize=10)
+        y_positions = np.linspace(0.82, 0.14, max(1, len(rows)))
+        for y, row in zip(y_positions, rows, strict=False):
+            theorem_id = str(row.get("theorem", ""))
+            theorem_words = theorem_id.split("_")
+            theorem_label = "\n".join(
+                " ".join(theorem_words[index : index + 3]) for index in range(0, len(theorem_words), 3)
+            )
+            witness_count = len(row.get("model_witnesses") or [])
+            linked = row.get("linked") is True
+            edge_color = style.color("pass") if linked else style.color("fail")
+            proof_label = f"{edge_count_by_theorem.get(theorem_id, 0)} dependency edges"
+            witness_label = f"{witness_count} finite witnesses"
+            ax.text(
+                columns[0],
+                y,
+                theorem_label,
+                fontsize=7.5,
+                va="center",
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="#f8fafc", edgecolor=edge_color),
+            )
+            ax.text(
+                columns[1],
+                y,
+                proof_label,
+                fontsize=8,
+                va="center",
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor=style.color("secondary")),
+            )
+            ax.text(
+                columns[2],
+                y,
+                witness_label,
+                fontsize=8,
+                va="center",
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="#f8fafc", edgecolor=style.color("accent")),
+            )
+            ax.annotate("", xy=(columns[1] - 0.03, y), xytext=(columns[0] + 0.24, y), arrowprops={"arrowstyle": "->"})
+            ax.annotate("", xy=(columns[2] - 0.03, y), xytext=(columns[1] + 0.24, y), arrowprops={"arrowstyle": "->"})
+        ax.set_title("Theorem traceability graph", loc="left", pad=16)
+        save_styled_figure(fig, out, style)
+    return out
+
+
+def figure_causal_ablation_heatmap(project_root: Path) -> Path:
+    """Render source-backed causal-ablation effects as topology × perturbation heatmap."""
+    root = project_root.resolve()
+    style = load_figure_style(root)
+    report_path = root / "output" / "reports" / "ablation_sensitivity_report.json"
+    if not report_path.is_file():
+        from roadmap_tracks import write_sheaf_track_artifacts
+
+        write_sheaf_track_artifacts(root)
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    rows = report.get("rows") or []
+    topologies = sorted({str(row.get("topology")) for row in rows if row.get("topology")})
+    perturbations = sorted({str(row.get("perturbation")) for row in rows if row.get("perturbation")})
+    matrix = np.zeros((len(topologies), len(perturbations)))
+    for i, topology in enumerate(topologies):
+        for j, perturbation in enumerate(perturbations):
+            effects = [
+                abs(float(row.get("effect", 0.0) or 0.0))
+                for row in rows
+                if row.get("topology") == topology and row.get("perturbation") == perturbation
+            ]
+            matrix[i, j] = max(effects) if effects else 0.0
+    out = figure_output_path(root, "causal_ablation_heatmap")
+    with apply_style(style):
+        fig, ax = plt.subplots(figsize=(8.2, 4.8))
+        image = ax.imshow(matrix, cmap="viridis", aspect="auto")
+        ax.set_xticks(range(len(perturbations)), [label.replace("_", "\n") for label in perturbations], fontsize=8)
+        ax.set_yticks(range(len(topologies)), topologies, fontsize=9)
+        ax.set_xlabel("Perturbation")
+        ax.set_ylabel("Toy topology")
+        ax.set_title("Causal-ablation sensitivity")
+        for i in range(matrix.shape[0]):
+            for j in range(matrix.shape[1]):
+                ax.text(j, i, f"{matrix[i, j]:.2f}", ha="center", va="center", color="white", fontsize=8)
+        cbar = fig.colorbar(image, ax=ax, shrink=0.86)
+        cbar.set_label("|effect|")
+        save_styled_figure(fig, out, style)
+    return out
+
+
 FIGURE_GENERATORS: dict[str, Callable[[Path], Path | None]] = {
     "ising_mi_curve": figure_ising_mi_curve,
     "free_energy_curve": figure_free_energy_curve,
@@ -266,6 +374,8 @@ FIGURE_GENERATORS: dict[str, Callable[[Path], Path | None]] = {
     "lean_boundary_status": figure_lean_boundary_status,
     "gnn_ontology_concordance": figure_gnn_ontology_concordance,
     "semantic_gluing_graph": figure_semantic_gluing_graph,
+    "theorem_traceability_graph": figure_theorem_traceability_graph,
+    "causal_ablation_heatmap": figure_causal_ablation_heatmap,
 }
 
 

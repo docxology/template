@@ -13,6 +13,9 @@ claim pass; regenerate the producer that owns the artifact.
 - `tracks.yaml` declares pipeline tracks, gates, and extension artifacts.
 - `figures.yaml` is the source of truth for figure ids, captions, alt text,
   widths, and section bindings.
+- `manuscript/refs/labels.yaml` is intentionally absent; it was a stale second
+  figure registry. Figure labels are declared only by `figures.yaml` and
+  materialized in `output/figures/figure_registry.json`.
 - `pymdp.yaml`, `domain_profile.yaml`, and `data/claim_ledger.yaml` define
   deterministic runtime, domain, and claim-evidence contracts.
 
@@ -63,6 +66,7 @@ uv run python scripts/generate_method_inventory.py
 semantic certificate, dependency graph, provenance, replay, counterexample,
 evidence-field, release-bundle, theorem-traceability, gate-index, diffoscope,
 proof-extraction, state-space, causal-ablation, license, release-note,
+proof-dependency, transition-table, ablation-sensitivity, release-attestation,
 track-improvement, blocked-scope, section-status, and render-log artifacts.
 
 ## Figure rendering contract
@@ -72,6 +76,9 @@ Every figure id must exist in `figures.yaml`, have a generator in
 appear in `output/figures/figure_registry.json`. Figure captions and alt text may
 use hydration tokens, but figure numbering belongs to pandoc-crossref. Reused
 figures must use unlabeled references rather than duplicate labels.
+The appendix theorem-traceability graph and causal-ablation heatmap are generated
+from JSON rows and validated by the same figure registry contract as the main
+figures.
 
 ## Sheaf reproducibility
 

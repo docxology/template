@@ -1,26 +1,26 @@
 {
   "all_source_backed": true,
   "schema": "template_active_inference.manuscript_evidence_tables.v1",
-  "table_count": 15,
+  "table_count": 19,
   "tables": [
     {
       "id": "claim_evidence",
-      "row_count": 81,
+      "row_count": 85,
       "source": "output/reports/claim_evidence_audit.json"
     },
     {
       "id": "artifact_producers",
-      "row_count": 70,
+      "row_count": 76,
       "source": "output/data/validation_dependency_graph.json"
     },
     {
       "id": "artifact_provenance",
-      "row_count": 70,
+      "row_count": 76,
       "source": "output/data/artifact_provenance.json"
     },
     {
       "id": "manuscript_staleness",
-      "row_count": 212,
+      "row_count": 227,
       "source": "output/reports/manuscript_staleness_report.json"
     },
     {
@@ -35,7 +35,7 @@
     },
     {
       "id": "semantic_restrictions",
-      "row_count": 95,
+      "row_count": 103,
       "source": "output/data/sheaf_gluing_certificate.json"
     },
     {
@@ -50,7 +50,7 @@
     },
     {
       "id": "artifact_diffoscope",
-      "row_count": 37,
+      "row_count": 39,
       "source": "output/reports/artifact_diffoscope.json"
     },
     {
@@ -70,13 +70,33 @@
     },
     {
       "id": "artifact_license",
-      "row_count": 70,
+      "row_count": 76,
       "source": "output/reports/artifact_license_audit.json"
     },
     {
       "id": "release_notes",
       "row_count": 3,
       "source": "output/reports/release_notes_evidence.json"
+    },
+    {
+      "id": "proof_dependency_graph",
+      "row_count": 169,
+      "source": "output/data/proof_dependency_graph.json"
+    },
+    {
+      "id": "state_transition_table",
+      "row_count": 24,
+      "source": "output/data/state_transition_table.json"
+    },
+    {
+      "id": "ablation_sensitivity",
+      "row_count": 36,
+      "source": "output/reports/ablation_sensitivity_report.json"
+    },
+    {
+      "id": "release_attestation",
+      "row_count": 5,
+      "source": "output/reports/release_attestation.json"
     }
   ]
 }

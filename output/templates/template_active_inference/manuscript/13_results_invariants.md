@@ -24,7 +24,7 @@ The companion `output/data/si_policy_grid.json` records measured policy-mode row
 
 The `uncertainty` fragment reports only normalized toy summaries. `output/data/uncertainty_summary.json` contains 12 belief and policy-posterior rows plus 3 finite entropy bins, and `true` is false if any posterior row fails to sum to one within the deterministic tolerance.
 
-Policy uncertainty is recorded in generated policy artifacts rather than hand-entered into the manuscript. The posterior grid contributes 5 available posterior rows; the EFE artifact reports availability-or-fallback flag 1. The fragment is therefore a validation surface, not an empirical uncertainty claim.
+Policy uncertainty is recorded in generated policy artifacts rather than hand-entered into the manuscript. The posterior grid contributes 5 available posterior rows; the EFE values artifact reports availability-or-measured-fallback flag 1. The fragment is therefore a validation surface, not an empirical uncertainty claim.
 
 <!-- sheaf-track:benchmark -->
 

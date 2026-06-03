@@ -680,6 +680,34 @@ def test_stage_artifact_manifest_accepts_symlinked_private_project_contracts(tmp
     assert validation.issues == ()
 
 
+def test_stage_artifact_manifest_uses_qualified_template_project_slug(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    project_dir = repo_root / "projects" / "templates" / "template_active_inference"
+    project_output = project_dir / "output" / "data" / "result.json"
+    copied_output = repo_root / "output" / "templates" / "template_active_inference" / "data" / "result.json"
+    project_output.parent.mkdir(parents=True)
+    copied_output.parent.mkdir(parents=True)
+    project_output.write_text('{"ok": true}\n', encoding="utf-8")
+    copied_output.write_text('{"ok": true}\n', encoding="utf-8")
+
+    manifest = write_stage_artifact_manifest(
+        repo_root=repo_root,
+        project_dir=project_dir,
+        stage_num=8,
+        stage_name="Copy Outputs",
+        contract=StageContract(
+            output_artifacts=(
+                "projects/{project}/output/data/",
+                "output/{project}/data/",
+            )
+        ),
+    )
+    validation = validate_artifact_manifest(manifest, project_dir=project_dir)
+
+    assert [entry.contract_match for entry in manifest.entries] == [True]
+    assert validation.issues == ()
+
+
 def test_default_environment_setup_contract_allows_setup_hook_outputs() -> None:
     pipeline_path = Path(__file__).resolve().parents[3] / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
     dag = PipelineDAG.from_yaml(pipeline_path)

@@ -69,13 +69,13 @@
         "manuscript/05_methods_analytical.md": "7f730b8bda6f5b0ad9f8ce4e6b624c2b3afd8ca319c3a558c37e82c779b74eab",
         "manuscript/06_methods_pymdp.md": "e7e2f01ac84487a617aa473cec9d37c739e1b73b62d5df339fe76a2163b980d3",
         "manuscript/07_methods_lean.md": "f1f8ed85a4dffd0e3d0144d04d5116a045100d101ce707f706bd423ea651de1c",
-        "manuscript/08_methods_sheaf.md": "fc651abce916e4993dbbcded489ccc5192b5baf0ca2f9f9e2bcd7344fd311cd7",
+        "manuscript/08_methods_sheaf.md": "71bad5b6234bafe4d9c0a52c5ead8edcbd97c4059eb9949584508452dc06b130",
         "manuscript/10_results_mi_sweep.md": "9c2459d28630e506e58a6e7fa411ed0fd37de86b299a56108a4898486c58cbd9",
         "manuscript/11_results_free_energy.md": "e687ac75e82ff24ef973efbe3e51cf83e24bf6974864ab516897b6923bc93920",
         "manuscript/12_results_si_tmaze.md": "591e421a77c6653387724e906faf361b2c0250508d9f464fac8c79e6a4164de8",
-        "manuscript/13_results_invariants.md": "244a992bb29e7d2201f7ce365bbf193d81d7d29d84e8828f95e73d3e7aea7153",
+        "manuscript/13_results_invariants.md": "ba9ee0fe9757ded51d1091e47989520a34955a1e3146a72c71449682bc88e811",
         "manuscript/15_discussion_outlook.md": "0031cc1c95b86f0f1b27ba65750e8463fef78a5ffcb1f27ba2138583ac58334a",
-        "manuscript/16_appendix_full_sheaf.md": "a19c965c6eb5cd1b8fb7b6c8454ff3690a059ca3ec9de60d14fc9348966dd5c2",
+        "manuscript/16_appendix_full_sheaf.md": "0060ee09fb08df31cb23d40c455ee6dfd6d7d45ca31b99ea80e544ab83b40900",
         "manuscript/17_conclusion.md": "bd38c5a01072cdc521f378c3cf3a6f91d3af9bbeea282a4e693abf37bde2ab9d",
         "manuscript/99_references.md": "c346c9a1c6ca9f2e822c7a3663b4a9fd590d56c9f1bd32bf84176215b45c1661"
       },
@@ -175,30 +175,36 @@
       "replay_method": "artifact_fingerprint"
     },
     {
-      "artifact_count": 5,
+      "artifact_count": 7,
       "artifacts": [
         "output/data/sheaf_coverage_matrix.json",
+        "output/figures/causal_ablation_heatmap.png",
         "output/figures/figure_registry.json",
         "output/figures/semantic_gluing_graph.png",
         "output/figures/sheaf_coverage_heatmap.png",
-        "output/figures/sheaf_layers_overview.png"
+        "output/figures/sheaf_layers_overview.png",
+        "output/figures/theorem_traceability_graph.png"
       ],
       "cycle_excluded_artifacts": [],
       "hash_checked_artifacts": [
         "output/data/sheaf_coverage_matrix.json",
+        "output/figures/causal_ablation_heatmap.png",
         "output/figures/figure_registry.json",
         "output/figures/semantic_gluing_graph.png",
         "output/figures/sheaf_coverage_heatmap.png",
-        "output/figures/sheaf_layers_overview.png"
+        "output/figures/sheaf_layers_overview.png",
+        "output/figures/theorem_traceability_graph.png"
       ],
       "input_config_hash": "efd795fbed4ad072ba122443fb4f192884a00849df577cd22023e7f6a296e085",
       "matched": true,
       "output_hashes": {
         "output/data/sheaf_coverage_matrix.json": "cc5774179267bf70cd8e5fcd6d4287a2300e576c1f5f8bb7e63d61ce406095e5",
-        "output/figures/figure_registry.json": "6b0d765800995b10bdbd4f799116b201a48a7eca01957649982f8f9ef4ce8e9d",
-        "output/figures/semantic_gluing_graph.png": "c56feee6a234679f58321e18f1e0f52a7881760aa6b7eea480d5346138d04c53",
+        "output/figures/causal_ablation_heatmap.png": "62851e1ea16588fdf968c4afe896d473024554e5f78dac8a4029236eec731a55",
+        "output/figures/figure_registry.json": "2c247d0cfdd4a8fe84fa0a4fd0df8772e7bc8b74d3287fbee5f61746b0a44e9d",
+        "output/figures/semantic_gluing_graph.png": "4a73c276c040b4e30251a0909016e205fc7e606482da2010292e8fafcf5509c3",
         "output/figures/sheaf_coverage_heatmap.png": "569b1522fa89d2fc2bf726efcf3740df1b16057dfa96c4c6bed41fa7bbc4b68a",
-        "output/figures/sheaf_layers_overview.png": "9b7a1129450a8b84217a9b6445c1982d0f20378db7385b2d6b86b744fc8f6a1b"
+        "output/figures/sheaf_layers_overview.png": "9b7a1129450a8b84217a9b6445c1982d0f20378db7385b2d6b86b744fc8f6a1b",
+        "output/figures/theorem_traceability_graph.png": "25bb56f96ac140949d62946b111b0abf8bfbecc51636ab3874152eaf3cdf5b0a"
       },
       "producer_script": "generate_figures.py",
       "replay_method": "artifact_fingerprint"
@@ -273,7 +279,7 @@
         "output/data/analytical_assumption_index.json": "6d331551773356ade7c027d38a959fa814a7593eeea2a3a5f37ed658d24d1257",
         "output/data/analytical_observable_sweep.json": "cd9c29464a5dbfdc7c333d734cfa94625c9a30d67842dda63115bea42bee0ac0",
         "output/data/causal_ablation_matrix.json": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
-        "output/data/si_efe_terms.json": "c49703517c82179c4b5c29962a5be91612e88954c72311d388999c2a1c99d2f7",
+        "output/data/si_efe_terms.json": "2b389ab27228f2f44a43d56733941e43e47463c6e2ebb97715aef7dfc51af936",
         "output/data/si_graph_world_topology_sweep.json": "f9610cc62493a5f02a4eaa8842188366d1cc2e5ed67e9e23a42c0b7e30c631fe",
         "output/data/si_graph_world_topology_traces.json": "00f086b46f8ddd55b5521978945e652d041f16c0bfd59331ced0b1caaa128bc5",
         "output/data/si_policy_grid.json": "f49abb96cc04bcfa207c30205a38bdd344147fe52dcab95f586313e2da286490",
@@ -357,39 +363,43 @@
       "matched": true,
       "output_hashes": {
         "output/data/cross_track_symbol_table.json": "ae4be5ba2d0caa9264ea1f54d6370ffa9eb82d397b0ab1c91f04a5bac9d441e6",
-        "output/data/figure_source_map.json": "7206a790a39bdb41237020f37a40815589a447a4f6d828fb7b57080cfc970692",
-        "output/data/manuscript_evidence_tables.json": "ab966ec368ad92e174995c97056a91f8fb925e6116feeeb1f227a4315ddfe49d",
-        "output/data/manuscript_token_provenance.json": "a1b6f9846475a00031bbb6d1077aeae94dbba5b8bad1604b77e95c098123fe50",
-        "output/data/validation_gate_index.json": "0491ebdb6d0492a74e67c946e175658ecb99e4bcb7e7532fea6fd4bcc18f1128",
-        "output/reports/artifact_license_audit.json": "d078c0af6743f91399c1fa379d4fb0403d69dd566d765e60f021af6e134e6e7f",
-        "output/reports/claim_evidence_audit.json": "0d9e979452a8a97ecfae5d7572442d74dedfc319378fb8a0530c918307f3193d",
-        "output/reports/figure_hash_manifest.json": "a30e32fb7a02d52696a082c1f7aeb9ef20e6a0dedd086199cfd7b2b74be9e9dd",
-        "output/reports/producer_completeness.json": "49be2b82384229c4c327e12c009834f0e84f8f5c0c8f6a6660c9652d1d6904a4",
+        "output/data/figure_source_map.json": "a2ffb7164940e393617b9ddcdb937ebc29d3cc826a0e84dc694b7055f76899a5",
+        "output/data/manuscript_evidence_tables.json": "025ba9463a61e004c196c0ea0bd03e81cfe31460f97a18dfdf64c13225d1f9b3",
+        "output/data/manuscript_token_provenance.json": "3494c6d651d490726cad00976f6c5d9bde93589f2a07932bc3e5773d84dc1d86",
+        "output/data/validation_gate_index.json": "d1bbfc88a4d525acb31db727919fc90adb5729b87ce463881c906432f098bce6",
+        "output/reports/artifact_license_audit.json": "5cfdfa32d5a9145f37119104cef31b1965932fa9afbb42ba09e80a0427026f5b",
+        "output/reports/claim_evidence_audit.json": "22c831227bc9b779ef3412d4da5fdfb008a09d80dab3dd397778923586a06f27",
+        "output/reports/figure_hash_manifest.json": "f78003077d69aa49edb4eafb9d2e3f8c10b5b78d24917aa23ca5389c4de0217f",
+        "output/reports/producer_completeness.json": "ba167b89b219527a423b361072c396c59df780ef831ac089c6cd4a7c5d7659a9",
         "output/reports/release_notes_evidence.json": "7295f187c00b6a01eaf26c4cb824e112fb9f9d46c551a68c95a76bab259845e3",
         "output/reports/scope_boundary_audit.json": "13ca40f11e404ffdac957c8a05cfe939e14f3d3b3e81413fa38ef2bb7da2d543",
-        "output/reports/stale_artifact_report.json": "00eda664354fc4ea6cea834ab8eedb83ddee2238481ade43301b86b2517431ea"
+        "output/reports/stale_artifact_report.json": "4a9c84a6194055e605ff7f0132c8fba014a4f52a5619e163d815e708aa5d0100"
       },
       "producer_script": "generate_integration_audit.py",
       "replay_method": "artifact_fingerprint"
     },
     {
-      "artifact_count": 18,
+      "artifact_count": 22,
       "artifacts": [
         "output/data/artifact_provenance.json",
         "output/data/evidence_field_index.json",
         "output/data/interop_roundtrip_report.json",
+        "output/data/proof_dependency_graph.json",
         "output/data/sensitivity_sweep.json",
         "output/data/sheaf_evidence_crosswalk.json",
         "output/data/sheaf_gluing_certificate.json",
         "output/data/sheaf_section_status_matrix.json",
+        "output/data/state_transition_table.json",
         "output/data/theorem_traceability_matrix.json",
         "output/data/track_improvement_scope.json",
         "output/data/uncertainty_summary.json",
         "output/data/validation_dependency_graph.json",
+        "output/reports/ablation_sensitivity_report.json",
         "output/reports/adversarial_audit.json",
         "output/reports/blocked_scope_manifest.json",
         "output/reports/counterexample_matrix.json",
         "output/reports/model_checking_witnesses.json",
+        "output/reports/release_attestation.json",
         "output/reports/release_bundle_manifest.json",
         "output/reports/replay_matrix.json",
         "output/reports/sheaf_render_log.json"
@@ -404,34 +414,42 @@
       "hash_checked_artifacts": [
         "output/data/evidence_field_index.json",
         "output/data/interop_roundtrip_report.json",
+        "output/data/proof_dependency_graph.json",
         "output/data/sensitivity_sweep.json",
         "output/data/sheaf_evidence_crosswalk.json",
         "output/data/sheaf_section_status_matrix.json",
+        "output/data/state_transition_table.json",
         "output/data/theorem_traceability_matrix.json",
         "output/data/uncertainty_summary.json",
+        "output/reports/ablation_sensitivity_report.json",
         "output/reports/adversarial_audit.json",
         "output/reports/blocked_scope_manifest.json",
         "output/reports/counterexample_matrix.json",
         "output/reports/model_checking_witnesses.json",
+        "output/reports/release_attestation.json",
         "output/reports/release_bundle_manifest.json",
         "output/reports/sheaf_render_log.json"
       ],
       "input_config_hash": "efd795fbed4ad072ba122443fb4f192884a00849df577cd22023e7f6a296e085",
       "matched": true,
       "output_hashes": {
-        "output/data/evidence_field_index.json": "418bbe8860636703bdd192ca7b68fd9aa7edd2e068d061af1e3fe7c8b170da0b",
-        "output/data/interop_roundtrip_report.json": "56b5e053a4d2cf70d3d523fc8971c2192abd3500ca9362b7647cff3fc6a9190a",
+        "output/data/evidence_field_index.json": "05d3a1121df02157f96cf531873265542b64f5489f34e77c35eb8be76dd55dff",
+        "output/data/interop_roundtrip_report.json": "c33a83df2fb286f873ecfaf270eb2efed1fd9907fbd5033a5460b2933fdf4c3f",
+        "output/data/proof_dependency_graph.json": "27bd570f9ab585dc8f92b56c4788a65c99d12eb77d8056c2043763fa93db57b2",
         "output/data/sensitivity_sweep.json": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
-        "output/data/sheaf_evidence_crosswalk.json": "ee178de3b570d7250195a04962a6eb5315c68d7fa3614e56f84c1f4fbe561505",
-        "output/data/sheaf_section_status_matrix.json": "e2f2d1774def673b772cf7af4b6f9e27ed15a6f96c467172f247c9426b4daab3",
+        "output/data/sheaf_evidence_crosswalk.json": "13a4437e8701ff99cdc7f9f792899c756e86b0070b99a78a7173daacb49df0da",
+        "output/data/sheaf_section_status_matrix.json": "1332c873d2f5c22b7a39eb33d2a7093def758267ba5e8caf7184541d40fe00ff",
+        "output/data/state_transition_table.json": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f",
         "output/data/theorem_traceability_matrix.json": "3aad64661769a3b85f6fc878002c265e0b7063b91ef1d316118294c439b4c909",
         "output/data/uncertainty_summary.json": "adc47fd54967a3eee7cf595633ab1b20559f56177d290614c2115750ce4d9797",
+        "output/reports/ablation_sensitivity_report.json": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
         "output/reports/adversarial_audit.json": "1335ca7e658b2f3ec928bda615c333d0b237a6a305b834e4f3cca57760cfe64b",
         "output/reports/blocked_scope_manifest.json": "1b64b74e15525a4b6e6aa54db01defd7bf3186fecf2ff6a9c4d7a0319cf1ff1a",
         "output/reports/counterexample_matrix.json": "5824dd430560f62c54ac9e2f93eaca5051ba08a02e38197f7088532cad739112",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_bundle_manifest.json": "a143e0216ba0f20da52a726a68020dc192138ceeb901d7c6e10f84cf3565c22f",
-        "output/reports/sheaf_render_log.json": "5712d46ab186878865e3d064e69dc742727048be72c1883f822b121a5605a2c0"
+        "output/reports/release_attestation.json": "5933382cd8a8ed450f2030f15b8ec15627978ea98c5860b0940443ac0e51ae57",
+        "output/reports/release_bundle_manifest.json": "f5a582bcdd570d5cab8f9e273506cc40f4e1eb804ebb5487ebbded3bbd04e873",
+        "output/reports/sheaf_render_log.json": "a5a24c16a701aa9c0e824a36923195ceccc874ec4d55f9da1de98ea3c4219606"
       },
       "producer_script": "generate_sheaf_tracks.py",
       "replay_method": "artifact_fingerprint"
@@ -450,8 +468,8 @@
       "input_config_hash": "efd795fbed4ad072ba122443fb4f192884a00849df577cd22023e7f6a296e085",
       "matched": true,
       "output_hashes": {
-        "output/data/manuscript_variables.json": "a6b07a16a1fb551cfe4f4d77699321e72c01962565bbb7fb8be66c023343024a",
-        "output/reports/manuscript_staleness_report.json": "f70e8ece08880085f4e4758195f12cc9865c0e7a63f780b4f04a0e25c15fc8f2"
+        "output/data/manuscript_variables.json": "39958a72f1b5f95b12904be831e037971ad8c547e91eab3310d1fadd4e43922c",
+        "output/reports/manuscript_staleness_report.json": "3bd10f01826e5ac42fc7b9b52914ebd0d4c16f3b07c573191d362568f5a525c7"
       },
       "producer_script": "z_generate_manuscript_variables.py",
       "replay_method": "artifact_fingerprint"

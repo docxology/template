@@ -268,6 +268,22 @@
         "validate_outputs"
       ]
     },
+    "output/data/proof_dependency_graph.json": {
+      "claim_ids": [
+        "proof_dependency_graph_resolved"
+      ],
+      "consumers": [
+        "methods_lean",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_sheaf_tracks.py",
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
     "output/data/proof_extraction_index.json": {
       "claim_ids": [
         "proof_extraction_constructive"
@@ -534,6 +550,22 @@
         "validate_manuscript"
       ]
     },
+    "output/data/state_transition_table.json": {
+      "claim_ids": [
+        "state_transition_table_complete"
+      ],
+      "consumers": [
+        "results_invariants",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_sheaf_tracks.py",
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
     "output/data/theorem_traceability_matrix.json": {
       "claim_ids": [
         "theorem_traceability_linked"
@@ -630,6 +662,19 @@
         "validate_manuscript"
       ]
     },
+    "output/figures/causal_ablation_heatmap.png": {
+      "claim_ids": [],
+      "consumers": [
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
     "output/figures/figure_registry.json": {
       "claim_ids": [],
       "consumers": [
@@ -700,6 +745,35 @@
       "producer": "render_animation.py",
       "validation_gates": [
         "validate_outputs"
+      ]
+    },
+    "output/figures/theorem_traceability_graph.png": {
+      "claim_ids": [],
+      "consumers": [
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
+    "output/reports/ablation_sensitivity_report.json": {
+      "claim_ids": [
+        "ablation_sensitivity_source_backed"
+      ],
+      "consumers": [
+        "results_invariants",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_sheaf_tracks.py",
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
       ]
     },
     "output/reports/adversarial_audit.json": {
@@ -945,6 +1019,22 @@
       "exists": true,
       "produced_by_configured_analysis": true,
       "producer": "simulate_si_tmaze.py",
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    "output/reports/release_attestation.json": {
+      "claim_ids": [
+        "release_attestation_complete"
+      ],
+      "consumers": [
+        "discussion_outlook",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_sheaf_tracks.py",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -1586,6 +1676,46 @@
     },
     {
       "kind": "producer_to_track",
+      "source": "generate_sheaf_tracks.py",
+      "target": "proof_dependency_graph"
+    },
+    {
+      "kind": "track_to_artifact",
+      "source": "proof_dependency_graph",
+      "target": "output/data/proof_dependency_graph.json"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_sheaf_tracks.py",
+      "target": "output/data/proof_dependency_graph.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/proof_dependency_graph.json",
+      "target": "methods_lean"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/proof_dependency_graph.json",
+      "target": "appendix_full_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/proof_dependency_graph.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/proof_dependency_graph.json",
+      "target": "validate_manuscript"
+    },
+    {
+      "kind": "artifact_to_claim",
+      "source": "output/data/proof_dependency_graph.json",
+      "target": "proof_dependency_graph_resolved"
+    },
+    {
+      "kind": "producer_to_track",
       "source": "generate_formal_interop_tracks.py",
       "target": "proof_extraction"
     },
@@ -2122,6 +2252,46 @@
     {
       "kind": "producer_to_track",
       "source": "generate_sheaf_tracks.py",
+      "target": "state_transition_table"
+    },
+    {
+      "kind": "track_to_artifact",
+      "source": "state_transition_table",
+      "target": "output/data/state_transition_table.json"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_sheaf_tracks.py",
+      "target": "output/data/state_transition_table.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/state_transition_table.json",
+      "target": "results_invariants"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/data/state_transition_table.json",
+      "target": "appendix_full_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/state_transition_table.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/data/state_transition_table.json",
+      "target": "validate_manuscript"
+    },
+    {
+      "kind": "artifact_to_claim",
+      "source": "output/data/state_transition_table.json",
+      "target": "state_transition_table_complete"
+    },
+    {
+      "kind": "producer_to_track",
+      "source": "generate_sheaf_tracks.py",
       "target": "theorem_traceability"
     },
     {
@@ -2352,6 +2522,26 @@
     {
       "kind": "produces",
       "source": "generate_figures.py",
+      "target": "output/figures/causal_ablation_heatmap.png"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/figures/causal_ablation_heatmap.png",
+      "target": "appendix_full_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/causal_ablation_heatmap.png",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/causal_ablation_heatmap.png",
+      "target": "figure_registry"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_figures.py",
       "target": "output/figures/figure_registry.json"
     },
     {
@@ -2463,6 +2653,66 @@
       "kind": "artifact_to_claim",
       "source": "output/figures/si_belief_trajectory.gif",
       "target": "si_belief_trajectory_gif"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_figures.py",
+      "target": "output/figures/theorem_traceability_graph.png"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/figures/theorem_traceability_graph.png",
+      "target": "appendix_full_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/theorem_traceability_graph.png",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/theorem_traceability_graph.png",
+      "target": "figure_registry"
+    },
+    {
+      "kind": "producer_to_track",
+      "source": "generate_sheaf_tracks.py",
+      "target": "ablation_sensitivity_report"
+    },
+    {
+      "kind": "track_to_artifact",
+      "source": "ablation_sensitivity_report",
+      "target": "output/reports/ablation_sensitivity_report.json"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_sheaf_tracks.py",
+      "target": "output/reports/ablation_sensitivity_report.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/reports/ablation_sensitivity_report.json",
+      "target": "results_invariants"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/reports/ablation_sensitivity_report.json",
+      "target": "appendix_full_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/reports/ablation_sensitivity_report.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/reports/ablation_sensitivity_report.json",
+      "target": "validate_manuscript"
+    },
+    {
+      "kind": "artifact_to_claim",
+      "source": "output/reports/ablation_sensitivity_report.json",
+      "target": "ablation_sensitivity_source_backed"
     },
     {
       "kind": "producer_to_track",
@@ -2977,6 +3227,46 @@
     {
       "kind": "producer_to_track",
       "source": "generate_sheaf_tracks.py",
+      "target": "release_attestation"
+    },
+    {
+      "kind": "track_to_artifact",
+      "source": "release_attestation",
+      "target": "output/reports/release_attestation.json"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_sheaf_tracks.py",
+      "target": "output/reports/release_attestation.json"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/reports/release_attestation.json",
+      "target": "discussion_outlook"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/reports/release_attestation.json",
+      "target": "appendix_full_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/reports/release_attestation.json",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/reports/release_attestation.json",
+      "target": "validate_manuscript"
+    },
+    {
+      "kind": "artifact_to_claim",
+      "source": "output/reports/release_attestation.json",
+      "target": "release_attestation_complete"
+    },
+    {
+      "kind": "producer_to_track",
+      "source": "generate_sheaf_tracks.py",
       "target": "release_bundle"
     },
     {
@@ -3316,6 +3606,16 @@
     },
     {
       "kind": "artifact_to_bundle",
+      "source": "output/data/proof_dependency_graph.json",
+      "target": "semantic_audit"
+    },
+    {
+      "kind": "artifact_to_bundle",
+      "source": "output/reports/release_attestation.json",
+      "target": "semantic_audit"
+    },
+    {
+      "kind": "artifact_to_bundle",
       "source": "output/reports/model_checking_witnesses.json",
       "target": "formal_interop"
     },
@@ -3327,6 +3627,11 @@
     {
       "kind": "artifact_to_bundle",
       "source": "output/data/proof_extraction_index.json",
+      "target": "formal_interop"
+    },
+    {
+      "kind": "artifact_to_bundle",
+      "source": "output/data/proof_dependency_graph.json",
       "target": "formal_interop"
     },
     {
@@ -3351,6 +3656,16 @@
     },
     {
       "kind": "artifact_to_bundle",
+      "source": "output/data/state_transition_table.json",
+      "target": "finite_toy_scope"
+    },
+    {
+      "kind": "artifact_to_bundle",
+      "source": "output/reports/ablation_sensitivity_report.json",
+      "target": "finite_toy_scope"
+    },
+    {
+      "kind": "artifact_to_bundle",
       "source": "output/data/sensitivity_sweep.json",
       "target": "finite_toy_scope"
     },
@@ -3362,6 +3677,16 @@
     {
       "kind": "artifact_to_bundle",
       "source": "output/figures/semantic_gluing_graph.png",
+      "target": "rendered_outputs"
+    },
+    {
+      "kind": "artifact_to_bundle",
+      "source": "output/figures/theorem_traceability_graph.png",
+      "target": "rendered_outputs"
+    },
+    {
+      "kind": "artifact_to_bundle",
+      "source": "output/figures/causal_ablation_heatmap.png",
       "target": "rendered_outputs"
     },
     {
@@ -4912,6 +5237,26 @@
     {
       "kind": "artifact_to_token",
       "source": "output/data/manuscript_variables.json",
+      "target": "ablation_sensitivity_row_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "ablation_sensitivity_row_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "ablation_sensitivity_source_backed"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "ablation_sensitivity_source_backed",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
       "target": "adversarial_audit_all_documented"
     },
     {
@@ -4937,6 +5282,36 @@
     {
       "kind": "token_to_claim",
       "source": "adversarial_known_bad_passed",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "analytical_assumption_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "analytical_assumption_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "analytical_assumptions_indexed"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "analytical_assumptions_indexed",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "analytical_equation_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "analytical_equation_count",
       "target": "composed_appendix_full_sheaf"
     },
     {
@@ -5047,6 +5422,26 @@
     {
       "kind": "token_to_claim",
       "source": "causal_ablation_row_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "counterexample_all_known_bad_fail"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "counterexample_all_known_bad_fail",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "counterexample_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "counterexample_count",
       "target": "composed_appendix_full_sheaf"
     },
     {
@@ -5172,6 +5567,26 @@
     {
       "kind": "artifact_to_token",
       "source": "output/data/manuscript_variables.json",
+      "target": "manuscript_staleness_all_fresh"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "manuscript_staleness_all_fresh",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "manuscript_staleness_row_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "manuscript_staleness_row_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
       "target": "model_checking_all_passed"
     },
     {
@@ -5197,6 +5612,26 @@
     {
       "kind": "token_to_claim",
       "source": "param_sweep_grid_points",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "proof_dependency_all_resolved"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "proof_dependency_all_resolved",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "proof_dependency_edge_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "proof_dependency_edge_count",
       "target": "composed_appendix_full_sheaf"
     },
     {
@@ -5257,6 +5692,26 @@
     {
       "kind": "token_to_claim",
       "source": "pymdp_runtime_unexpected_warning_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "release_attestation_all_attested"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "release_attestation_all_attested",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "release_attestation_row_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "release_attestation_row_count",
       "target": "composed_appendix_full_sheaf"
     },
     {
@@ -5387,6 +5842,26 @@
     {
       "kind": "token_to_claim",
       "source": "state_space_catalog_row_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "state_transition_all_covered"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "state_transition_all_covered",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "state_transition_row_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "state_transition_row_count",
       "target": "composed_appendix_full_sheaf"
     },
     {
@@ -5592,6 +6067,36 @@
     {
       "kind": "artifact_to_token",
       "source": "output/data/manuscript_variables.json",
+      "target": "analytical_assumption_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "analytical_assumption_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "analytical_assumptions_indexed"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "analytical_assumptions_indexed",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "analytical_equation_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "analytical_equation_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
       "target": "benchmark_all_models_complete"
     },
     {
@@ -5612,6 +6117,26 @@
     {
       "kind": "artifact_to_token",
       "source": "output/data/manuscript_variables.json",
+      "target": "ablation_sensitivity_row_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "ablation_sensitivity_row_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "ablation_sensitivity_source_backed"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "ablation_sensitivity_source_backed",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
       "target": "causal_ablation_complete_grid"
     },
     {
@@ -5627,6 +6152,26 @@
     {
       "kind": "token_to_claim",
       "source": "causal_ablation_row_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "counterexample_all_known_bad_fail"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "counterexample_all_known_bad_fail",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "counterexample_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "counterexample_count",
       "target": "composed_appendix_full_sheaf"
     },
     {
@@ -5722,6 +6267,26 @@
     {
       "kind": "artifact_to_token",
       "source": "output/data/manuscript_variables.json",
+      "target": "manuscript_staleness_all_fresh"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "manuscript_staleness_all_fresh",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "manuscript_staleness_row_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "manuscript_staleness_row_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
       "target": "lean_graph_world_all_topologies_witnessed"
     },
     {
@@ -5757,6 +6322,26 @@
     {
       "kind": "token_to_claim",
       "source": "model_checking_witness_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "proof_dependency_all_resolved"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "proof_dependency_all_resolved",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "proof_dependency_edge_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "proof_dependency_edge_count",
       "target": "composed_appendix_full_sheaf"
     },
     {
@@ -5862,6 +6447,26 @@
     {
       "kind": "artifact_to_token",
       "source": "output/data/manuscript_variables.json",
+      "target": "release_attestation_all_attested"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "release_attestation_all_attested",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "release_attestation_row_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "release_attestation_row_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
       "target": "release_notes_row_count"
     },
     {
@@ -5927,6 +6532,26 @@
     {
       "kind": "token_to_claim",
       "source": "state_space_catalog_row_count",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "state_transition_all_covered"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "state_transition_all_covered",
+      "target": "composed_appendix_full_sheaf"
+    },
+    {
+      "kind": "artifact_to_token",
+      "source": "output/data/manuscript_variables.json",
+      "target": "state_transition_row_count"
+    },
+    {
+      "kind": "token_to_claim",
+      "source": "state_transition_row_count",
       "target": "composed_appendix_full_sheaf"
     },
     {
@@ -7755,6 +8380,26 @@
       "target": "discussion_outlook"
     },
     {
+      "kind": "claim_to_section",
+      "source": "proof_dependency_graph_resolved",
+      "target": "methods_lean"
+    },
+    {
+      "kind": "claim_to_section",
+      "source": "state_transition_table_complete",
+      "target": "results_invariants"
+    },
+    {
+      "kind": "claim_to_section",
+      "source": "ablation_sensitivity_source_backed",
+      "target": "results_invariants"
+    },
+    {
+      "kind": "claim_to_section",
+      "source": "release_attestation_complete",
+      "target": "discussion_outlook"
+    },
+    {
       "kind": "validator_to_negative_control",
       "source": "validate_manuscript.canonical_sheaf_tracks_bound",
       "target": "missing_sheaf_track_producer"
@@ -8086,6 +8731,16 @@
     },
     {
       "kind": "figure_to_source",
+      "source": "causal_ablation_heatmap",
+      "target": "output/data/causal_ablation_matrix.json"
+    },
+    {
+      "kind": "figure_to_source",
+      "source": "causal_ablation_heatmap",
+      "target": "output/reports/ablation_sensitivity_report.json"
+    },
+    {
+      "kind": "figure_to_source",
       "source": "free_energy_curve",
       "target": "src/analytical/decomposition.py"
     },
@@ -8163,6 +8818,16 @@
       "kind": "figure_to_source",
       "source": "si_tmaze_actions",
       "target": "output/data/si_tmaze_summary.json"
+    },
+    {
+      "kind": "figure_to_source",
+      "source": "theorem_traceability_graph",
+      "target": "output/data/theorem_traceability_matrix.json"
+    },
+    {
+      "kind": "figure_to_source",
+      "source": "theorem_traceability_graph",
+      "target": "output/data/proof_dependency_graph.json"
     },
     {
       "kind": "figure_to_source",
@@ -8298,6 +8963,26 @@
       "kind": "output_to_copied_output",
       "source": "output/reports/release_notes_evidence.json",
       "target": "reports/release_notes_evidence.json"
+    },
+    {
+      "kind": "output_to_copied_output",
+      "source": "output/data/proof_dependency_graph.json",
+      "target": "data/proof_dependency_graph.json"
+    },
+    {
+      "kind": "output_to_copied_output",
+      "source": "output/data/state_transition_table.json",
+      "target": "data/state_transition_table.json"
+    },
+    {
+      "kind": "output_to_copied_output",
+      "source": "output/reports/ablation_sensitivity_report.json",
+      "target": "reports/ablation_sensitivity_report.json"
+    },
+    {
+      "kind": "output_to_copied_output",
+      "source": "output/reports/release_attestation.json",
+      "target": "reports/release_attestation.json"
     }
   ],
   "issues": [],

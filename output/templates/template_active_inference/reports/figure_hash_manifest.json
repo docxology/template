@@ -1,7 +1,13 @@
 {
   "all_hashes_present": true,
-  "figure_count": 14,
+  "figure_count": 16,
   "rows": [
+    {
+      "fresh": true,
+      "path": "output/figures/causal_ablation_heatmap.png",
+      "sha256": "62851e1ea16588fdf968c4afe896d473024554e5f78dac8a4029236eec731a55",
+      "size_bytes": 46344
+    },
     {
       "fresh": true,
       "path": "output/figures/free_energy_curve.png",
@@ -41,8 +47,8 @@
     {
       "fresh": true,
       "path": "output/figures/semantic_gluing_graph.png",
-      "sha256": "c56feee6a234679f58321e18f1e0f52a7881760aa6b7eea480d5346138d04c53",
-      "size_bytes": 203592
+      "sha256": "4a73c276c040b4e30251a0909016e205fc7e606482da2010292e8fafcf5509c3",
+      "size_bytes": 206781
     },
     {
       "fresh": true,
@@ -79,6 +85,12 @@
       "path": "output/figures/si_tmaze_actions.png",
       "sha256": "c659fbe96f97b686b028297a237f8268edafdf32b9adaf0b9837e00dd780eab9",
       "size_bytes": 16946
+    },
+    {
+      "fresh": true,
+      "path": "output/figures/theorem_traceability_graph.png",
+      "sha256": "25bb56f96ac140949d62946b111b0abf8bfbecc51636ab3874152eaf3cdf5b0a",
+      "size_bytes": 99043
     },
     {
       "fresh": true,

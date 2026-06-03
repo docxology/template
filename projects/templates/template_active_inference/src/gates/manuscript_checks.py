@@ -30,7 +30,6 @@ def _duplicate_track_markers(manuscript_dir: Path) -> list[str]:
 def validate_manuscript(project_root: Path) -> dict[str, bool]:
     root = project_root.resolve()
     composed = list((root / "manuscript").glob("[0-9][0-9]_*.md"))
-    labels = root / "manuscript" / "refs" / "labels.yaml"
     manifest_path = root / "manuscript" / "sheaf" / "manifest.yaml"
     from manuscript.sheaf import (
         load_coverage_json,
@@ -79,6 +78,8 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
     coverage_matrix_valid = False
     json_path = root / "output" / "data" / "sheaf_coverage_matrix.json"
     heatmap_path = root / "output" / "figures" / "sheaf_coverage_heatmap.png"
+    figure_registry_yaml = root / "figures.yaml"
+    generated_figure_registry = root / "output" / "figures" / "figure_registry.json"
     if json_path.exists():
         data = load_coverage_json(json_path)
         json_issues = validate_coverage_json_data(data, manifest, registry)
@@ -150,7 +151,8 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
         "imrad_groups_present": imrad_groups_present,
         "claim_ledger_valid": validate_claim_ledger(root),
         "claim_bindings_satisfied": not verify_claim_bindings(root),
-        "labels_yaml": labels.exists(),
+        "figure_registry_yaml": figure_registry_yaml.exists(),
+        "generated_figure_registry": generated_figure_registry.exists(),
         "composed_sections": len(composed) >= composed_leaf_count,
         "sheaf_coverage_page": (root / "manuscript" / "00_00_sheaf_coverage.md").exists(),
         "sheaf_coverage_json": json_path.exists(),

@@ -417,7 +417,7 @@ the multi-track sheaf certificate.</figcaption>
 <p>The <code>provenance</code> fragment makes artifact lineage a live
 canonical sheaf track. The configured producer
 <code>generate_sheaf_tracks.py</code> writes
-<code>output/data/artifact_provenance.json</code>, which hashes 70
+<code>output/data/artifact_provenance.json</code>, which hashes 76
 required toy artifacts and records producer scripts, source commit,
 deterministic seed fields, config digests, and 5 artifact bundles.
 Publication claims that depend on generated files must be traceable to
@@ -425,7 +425,7 @@ this lineage table or to a narrower artifact-specific certificate.</p>
 <p>The provenance claim is intentionally limited: every listed artifact
 exists, has a SHA-256 digest or an explicit cycle exclusion, is produced
 by a configured analysis script, and carries seed/config provenance
-(<code>70</code> seeded rows; all seeded flag <code>true</code>;
+(<code>76</code> seeded rows; all seeded flag <code>true</code>;
 bundle-complete flag <code>true</code>). A changed file, missing
 producer, or stale saved digest is a validation failure, not a prose
 warning.</p>
@@ -453,26 +453,26 @@ leakage. The scope boundary remains toy-only:
 <!-- sheaf-track:evidence_fields -->
 <p>The <code>evidence_fields</code> fragment indexes the exact artifact
 fields that support typed claims and hydrated manuscript tokens.
-<code>output/data/evidence_field_index.json</code> records 81 field
+<code>output/data/evidence_field_index.json</code> records 85 field
 rows, and the track passes only when every referenced JSONPath or dotted
 field is present (<code>true</code>).</p>
 <!-- sheaf-track:release_bundle -->
 <p>The <code>release_bundle</code> fragment records whether the
 canonical deliverables exist before copying and whether copied root
 outputs match or are explicitly deferred until the copy stage.
-<code>output/reports/release_bundle_manifest.json</code> tracks 23
+<code>output/reports/release_bundle_manifest.json</code> tracks 29
 required deliverables with source-present flag <code>true</code>.</p>
 <!-- sheaf-track:gate_ergonomics -->
 <p>The <code>gate_ergonomics</code> fragment turns validation commands
 into evidence rows. <code>output/data/validation_gate_index.json</code>
-records 22 gate rows, each naming required inputs and the
+records 26 gate rows, each naming required inputs and the
 negative-control surface that should fail closed.</p>
 <!-- sheaf-track:artifact_diffoscope -->
 <h3 id="artifact-diffoscope-track">Artifact diffoscope track</h3>
 <p>The <code>artifact_diffoscope</code> track compares saved provenance
 hashes against live artifact hashes at the artifact root JSONPath. Its
 proof artifact is <code>output/reports/artifact_diffoscope.json</code>:
-it currently records 37 comparison rows, with equality status
+it currently records 39 comparison rows, with equality status
 <code>true</code>.</p>
 <!-- sheaf-track:artifact_license -->
 <h3 id="artifact-license-track">Artifact license track</h3>
@@ -480,11 +480,11 @@ it currently records 37 comparison rows, with equality status
 project-source artifacts under the public project license boundary. Its
 audit artifact is
 <code>output/reports/artifact_license_audit.json</code>: it currently
-records 70 rows, with license-safe status <code>true</code>.</p>
+records 76 rows, with license-safe status <code>true</code>.</p>
 <!-- sheaf-track:manuscript_staleness -->
 <p>The <code>manuscript_staleness</code> fragment closes the hydration
 loop. <code>output/reports/manuscript_staleness_report.json</code>
-checks 212 manuscript token bindings against the current generated
+checks 227 manuscript token bindings against the current generated
 variables after resolved markdown is written; the pass flag is
 <code>true</code>.</p>
 <p>This is a publication-systems claim, not a domain result. A stale
@@ -1707,7 +1707,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
 <td><code>complete</code></td>
 </tr>
 <tr>
@@ -1716,7 +1716,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
 <td><code>complete</code></td>
 </tr>
 <tr>
@@ -1743,7 +1743,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">9</td>
 <td><code>complete</code></td>
 </tr>
 <tr>
@@ -1752,7 +1752,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
 <td><code>complete</code></td>
 </tr>
 <tr>
@@ -1788,7 +1788,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">8</td>
 <td><code>complete</code></td>
 </tr>
 <tr>
@@ -1797,7 +1797,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: right;">7</td>
 <td><code>complete</code></td>
 </tr>
 <tr>
@@ -1806,7 +1806,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
 <td><code>complete</code></td>
 </tr>
 <tr>
@@ -1815,7 +1815,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
 <td><code>complete</code></td>
 </tr>
 <tr>
@@ -1824,7 +1824,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
 <td><code>complete</code></td>
 </tr>
 <tr>
@@ -1833,7 +1833,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
 <td><code>complete</code></td>
 </tr>
 <tr>
@@ -1878,7 +1878,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
 <td><code>complete</code></td>
 </tr>
 </tbody>
@@ -1944,7 +1944,7 @@ sheafed; 0 required bound fragments missing.</p>
 <td><code>sheaf.semantic</code></td>
 <td><code>output/data/validation_dependency_graph.json</code></td>
 <td><code>ok</code></td>
-<td>70 artifact producer rows</td>
+<td>76 artifact producer rows</td>
 </tr>
 <tr>
 <td><code>validation_gates_indexed</code></td>
@@ -2031,7 +2031,7 @@ sheafed; 0 required bound fragments missing.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Claim rows:</strong> 81 typed evidence claims.</p>
+<p><strong>Claim rows:</strong> 85 typed evidence claims.</p>
 <!-- sheaf-layers:artifact-producers -->
 <h2 id="artifact-producer-graph">Artifact producer graph</h2>
 <table>
@@ -2153,6 +2153,12 @@ sheafed; 0 required bound fragments missing.</p>
 <td>methods_analytical, results_mi_sweep</td>
 </tr>
 <tr>
+<td><code>output/data/proof_dependency_graph.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_lean, appendix_full_sheaf</td>
+</tr>
+<tr>
 <td><code>output/data/proof_extraction_index.json</code></td>
 <td><code>generate_formal_interop_tracks.py</code></td>
 <td>Yes</td>
@@ -2255,6 +2261,12 @@ sheafed; 0 required bound fragments missing.</p>
 <td>results_invariants, appendix_full_sheaf</td>
 </tr>
 <tr>
+<td><code>output/data/state_transition_table.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
+</tr>
+<tr>
 <td><code>output/data/theorem_traceability_matrix.json</code></td>
 <td><code>generate_sheaf_tracks.py</code></td>
 <td>Yes</td>
@@ -2295,6 +2307,12 @@ sheafed; 0 required bound fragments missing.</p>
 <td><code>render_animation.py</code></td>
 <td>Yes</td>
 <td>appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/ablation_sensitivity_report.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/reports/adversarial_audit.json</code></td>
@@ -2391,6 +2409,12 @@ sheafed; 0 required bound fragments missing.</p>
 <td><code>simulate_si_tmaze.py</code></td>
 <td>Yes</td>
 <td>methods_pymdp, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/release_attestation.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>discussion_outlook, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/reports/release_bundle_manifest.json</code></td>

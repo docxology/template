@@ -104,6 +104,12 @@
       "producer": "run_analytical_sweep.py"
     },
     {
+      "artifact": "output/data/proof_dependency_graph.json",
+      "configured": true,
+      "exists": true,
+      "producer": "generate_sheaf_tracks.py"
+    },
+    {
       "artifact": "output/data/proof_extraction_index.json",
       "configured": true,
       "exists": true,
@@ -206,6 +212,12 @@
       "producer": "generate_toy_sweep_tracks.py"
     },
     {
+      "artifact": "output/data/state_transition_table.json",
+      "configured": true,
+      "exists": true,
+      "producer": "generate_sheaf_tracks.py"
+    },
+    {
       "artifact": "output/data/theorem_traceability_matrix.json",
       "configured": true,
       "exists": true,
@@ -242,6 +254,12 @@
       "producer": "generate_integration_audit.py"
     },
     {
+      "artifact": "output/figures/causal_ablation_heatmap.png",
+      "configured": true,
+      "exists": true,
+      "producer": "generate_figures.py"
+    },
+    {
       "artifact": "output/figures/figure_registry.json",
       "configured": true,
       "exists": true,
@@ -270,6 +288,18 @@
       "configured": true,
       "exists": true,
       "producer": "render_animation.py"
+    },
+    {
+      "artifact": "output/figures/theorem_traceability_graph.png",
+      "configured": true,
+      "exists": true,
+      "producer": "generate_figures.py"
+    },
+    {
+      "artifact": "output/reports/ablation_sensitivity_report.json",
+      "configured": true,
+      "exists": true,
+      "producer": "generate_sheaf_tracks.py"
     },
     {
       "artifact": "output/reports/adversarial_audit.json",
@@ -366,6 +396,12 @@
       "configured": true,
       "exists": true,
       "producer": "simulate_si_tmaze.py"
+    },
+    {
+      "artifact": "output/reports/release_attestation.json",
+      "configured": true,
+      "exists": true,
+      "producer": "generate_sheaf_tracks.py"
     },
     {
       "artifact": "output/reports/release_bundle_manifest.json",
