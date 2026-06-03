@@ -50,6 +50,14 @@ CANONICAL_ENTRY_TYPES: frozenset[str] = frozenset(
     }
 )
 
+# Fields whose values are numeric / symbolic and must NOT be LaTeX-escaped on
+# write nor LaTeX-unescaped on read. This is round-trip-critical shared
+# vocabulary: the parser skips ``unescape_latex`` for these and the writer skips
+# ``escape_latex`` for them. Defined once here so the two cannot drift.
+VERBATIM_FIELDS: frozenset[str] = frozenset(
+    {"year", "volume", "number", "month", "edition", "isbn", "issn", "doi", "url"}
+)
+
 
 @dataclass
 class BibEntry:
