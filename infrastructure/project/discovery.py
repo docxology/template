@@ -9,17 +9,19 @@ sibling sub-modules (``metadata``, ``validation``, ``project_info``) or from the
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+
+# resolve_project_root and NON_RENDERED_SUBDIRS now live in the foundation layer
+# (core.project_paths). Re-exported here so existing
+# ``from infrastructure.project.discovery import resolve_project_root`` callers
+# keep working, without the foundation having to import upward into project.
+from infrastructure.core.project_paths import (  # noqa: F401  (re-export)
+    NON_RENDERED_SUBDIRS,
+    resolve_project_root,
+)
 from infrastructure.project.project_info import ProjectInfo, build_project_info
 from infrastructure.project.validation import validate_project_structure
 
 logger = get_logger(__name__)
-
-#: Typed subfolders under ``projects/`` that hold non-rendered lifecycle mirrors.
-#: Their nested projects are deliberately excluded from discovery so they never
-#: enter the render set. Only ``templates/`` (public exemplars) and ``active/``
-#: (the hot seat) are discovered. Keep in sync with
-#: :data:`infrastructure.project.linking.LIFECYCLE_LINK_DIRS`.
-NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "published", "archive", "other"})
 
 
 def discover_projects(
@@ -117,66 +119,6 @@ def discover_projects(
                 logger.debug(f"Skipping {child_dir.name}: {message}")
 
     return projects
-
-
-def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
-    """Return the directory for *project_name*, preferring the hot seat over WIP trees.
-
-    Use this when a tool should find a work-in-progress tree (for example COGANT) that has not
-    been promoted to ``projects/active/`` yet. If ``projects/active/<project_name>`` exists and
-    looks like a project source tree, that path wins; otherwise
-    ``projects/working/<project_name>`` is used when present, then a flat
-    standalone ``projects/<project_name>`` tree. A skeletal generated-output
-    directory does not shadow an actual WIP source tree.
-
-    If none of those exist, returns ``projects/active/<project_name>`` so callers get a
-    stable path for error messages.
-
-    Args:
-        repo_root: Repository root (directory containing ``infrastructure/``).
-        project_name: Final path segment (e.g. ``\"cogant\"``).
-
-    Returns:
-        Absolute resolved path to the project directory.
-    """
-    if isinstance(repo_root, str):
-        repo_root = Path(repo_root)
-
-    def has_project_markers(path: Path) -> bool:
-        return any((path / marker).exists() for marker in ("src", "tests", "scripts", "manuscript"))
-
-    # A name that already carries a typed-subfolder prefix (e.g. ``active/demo``,
-    # ``working/draft``, ``templates/template_code_project``) is resolved directly
-    # under ``projects/`` without re-prepending the hot-seat prefix.
-    head = project_name.replace("\\", "/").split("/", 1)[0]
-    if head in (NON_RENDERED_SUBDIRS | {"active", "templates"}):
-        qualified = repo_root / "projects" / project_name
-        if qualified.is_dir():
-            return qualified.resolve()
-        return qualified
-
-    primary = repo_root / "projects" / "active" / project_name
-    if primary.is_dir() and has_project_markers(primary):
-        return primary.resolve()
-    wip = repo_root / "projects" / "working" / project_name
-    if wip.is_dir():
-        return wip.resolve()
-    flat = repo_root / "projects" / project_name
-    if flat.is_dir():
-        return flat.resolve()
-    # Public canonical exemplars live under ``projects/templates/<name>`` and
-    # must resolve by bare name as well. Without this, an output-only shadow
-    # under ``projects/active/<name>`` (or the stable error-path fallback below)
-    # shadows a real exemplar source tree, so consumers such as
-    # ``infrastructure.autoresearch.build_autoresearch_plan`` silently load
-    # default config instead of the exemplar's own. Checked after the
-    # hot-seat/WIP/flat trees so an actually-promoted project still wins.
-    templated = repo_root / "projects" / "templates" / project_name
-    if templated.is_dir() and has_project_markers(templated):
-        return templated.resolve()
-    if primary.is_dir():
-        return primary.resolve()
-    return primary
 
 
 def _discover_nested_projects(program_dir: Path, program_name: str) -> list[ProjectInfo]:

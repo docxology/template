@@ -7,7 +7,7 @@ the source code directory structure.
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_success
-from infrastructure.project.discovery import resolve_project_root
+from infrastructure.core.project_paths import resolve_project_root
 
 logger = get_logger(__name__)
 

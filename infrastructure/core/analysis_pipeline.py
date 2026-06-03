@@ -28,7 +28,7 @@ from infrastructure.core.logging.utils import (
 )
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.runtime.environment import build_analysis_script_cmd_and_env
-from infrastructure.project.discovery import resolve_project_root
+from infrastructure.core.project_paths import resolve_project_root
 
 logger = get_logger(__name__)
 

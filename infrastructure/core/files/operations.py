@@ -161,7 +161,7 @@ def copy_final_deliverables(
     logger.info(f"Copying all outputs for project '{project_name}'...")
 
     if project_dir is None:
-        from infrastructure.project.discovery import resolve_project_root
+        from infrastructure.core.project_paths import resolve_project_root
 
         project_dir = resolve_project_root(project_root, project_name)
     project_output = project_dir / "output"
