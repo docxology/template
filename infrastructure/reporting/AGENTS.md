@@ -46,6 +46,11 @@ flowchart TB
 5. **Error Categorization**: Intelligent error grouping and prioritization
 6. **Unified Organization**: Consistent file organization across all reporting modules
 
+### Test suite runners
+
+- **`pipeline_test_runner.py`** — project test gate invoked from Stage 3; wraps execution in `project_output_lock()` so concurrent pipeline runs on the same project do not race on `output/` (subprocess test stages inherit an env marker for re-entrant lock release).
+- **`suite_runner.py`** — shared pytest orchestration helpers used by infra and project gates.
+
 ## Output Organization System
 
 ### Output Organizer (`output_organizer.py`)

@@ -141,6 +141,10 @@ The Core module provides fundamental foundation utilities used across the entire
 - File size calculation and formatting
 - Inventory reporting for pipeline summaries
 
+**files/project_lock.py**
+- Per-project POSIX advisory lock for pipeline and test runner
+- Env-marker re-entrancy for subprocess test stages
+
 **pipeline/executor.py**
 - PipelineExecutor class for single project execution
 - Pipeline configuration management
@@ -1442,6 +1446,18 @@ def format_file_size(size_bytes: int) -> str:
     Returns:
         Formatted size string (e.g., '1.5 MB')
     """
+```
+
+### files/project_lock.py
+
+#### project_output_lock (function)
+```python
+def project_output_lock(
+    project_root: Path,
+    *,
+    timeout: float | None = None,
+) -> Iterator[None]:
+    """Advisory lock serializing pipeline/test runs for one project output tree."""
 ```
 
 ### pipeline/executor.py

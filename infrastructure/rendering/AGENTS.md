@@ -498,6 +498,8 @@ class PosterRenderer:
 
 ### _pdf_latex_helpers.py
 
+Preamble extraction, Unicode math font injection, and log-parse delegates. Title-page generation lives in [`_pdf_title_page.py`](_pdf_title_page.py).
+
 #### extract_preamble (function)
 ```python
 def extract_preamble(preamble_file: Path) -> str:
@@ -530,7 +532,7 @@ def ensure_setmathfont(preamble: str, math_font: str = "latinmodern-math.otf") -
 | `_pdf_combined_markdown.py` | Mermaid, figure paths, dotted-key `manuscript_vars.yaml` substitution (`{{maturity.real}}`, etc.) — not UPPER_SNAKE project tokens (see `manuscript_injection.py`) |
 | `_pdf_combined_pandoc.py` | Pandoc CLI construction and subprocess execution |
 | `_pdf_combined_latex.py` | Starred-heading hyperref repair, post-Pandoc LaTeX normalisation |
-| `_pdf_combined_preamble.py` | `preamble.md` + title page injection |
+| `_pdf_combined_preamble.py` | `preamble.md` + title page injection (via `_pdf_title_page.py`) |
 | `_pdf_combined_bibliography.py` | Multi-`.bib` discovery and `\bibliography{}` placement |
 | `_pdf_combined_prevalidate.py` | Figure reference checks, markdown/citation hard gate |
 | `_pdf_combined_transmission.py` | Transmission bookend TOC relocation helpers |

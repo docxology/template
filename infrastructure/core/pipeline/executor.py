@@ -11,6 +11,7 @@ import time
 from pathlib import Path
 from typing import Callable
 
+from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.runtime.checkpoint import CheckpointManager
 from infrastructure.core.logging.utils import (
     get_logger,
@@ -214,11 +215,20 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         return self._run_pipeline(include_llm=False)
 
     def _run_pipeline(self, include_llm: bool) -> list[PipelineStageResult]:
-        """Shared implementation for execute_full_pipeline and execute_core_pipeline."""
-        if self.config.resume:
-            return self._resume_pipeline()
-        skip_clean = not self.config.clean
-        return self._execute_pipeline(self._build_stage_list(include_llm=include_llm, skip_clean=skip_clean))
+        """Shared implementation for execute_full_pipeline and execute_core_pipeline.
+
+        The whole run is held under a per-project output lock so a concurrent
+        pipeline/test run on the same project cannot clean or rewrite ``output/``
+        mid-flight (the cause of random-location "artifact missing" gate
+        failures). The lock is cross-process re-entrant: the test stage spawned
+        as a subprocess inherits the holder's environment marker and treats its
+        own acquisition as a no-op, so it never deadlocks against this run.
+        """
+        with project_output_lock(self.config.project_dir):
+            if self.config.resume:
+                return self._resume_pipeline()
+            skip_clean = not self.config.clean
+            return self._execute_pipeline(self._build_stage_list(include_llm=include_llm, skip_clean=skip_clean))
 
     def _run_stage_and_checkpoint(
         self,

@@ -6,7 +6,7 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 
 ## Files
 
-- `executor.py` - pipeline execution (thin `_execute_stage` delegates to `_stage_execution`)
+- `executor.py` - pipeline execution (thin `_execute_stage` delegates to `_stage_execution`); acquires `project_output_lock` for the resolved project directory for the full run
 - `_stage_execution.py` - stage orchestration: HITL pauses, pre/post hooks, retries, telemetry (`execute_stage`, `handle_post_stage_success`, `handle_stage_failure`, `handle_stage_exception`)
 - `dag.py` - stage dependency graph helpers
 - `multi_project.py` - multi-project orchestration (serial)

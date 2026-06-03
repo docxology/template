@@ -109,6 +109,7 @@ class TestTransmissionBookends:
         context = build_transmission_context(project_root, "demo", repo_root=tmp_path)
         assert context is not None
         assert context.published is True
+        assert context.pdf_sha256 == "a" * 64
         end_markdown = render_transmission_markdown(context, boundary="end")
         assert "END OF TRANSMISSION" in end_markdown
         assert "Prior:" in end_markdown
@@ -182,6 +183,25 @@ class TestTransmissionBookends:
         payload = json.loads(manifest_path.read_text(encoding="utf-8"))
         assert payload["title"] == "Transmission Demo"
         assert payload["published"] is False
+        assert payload["pdf_sha256"] is None
         begin_markdown = render_transmission_markdown(context, boundary="begin")
         assert "How to verify" in begin_markdown
         assert STRIP_FILENAME in begin_markdown
+
+    def test_draft_context_does_not_embed_existing_pdf_hash(self, tmp_path: Path) -> None:
+        project_root = tmp_path / "demo"
+        _write_project(project_root, enabled=True)
+        stale_pdf = project_root / "output" / "pdf" / "entofile_combined.pdf"
+        stale_pdf.parent.mkdir(parents=True)
+        stale_pdf.write_bytes(b"%PDF-1.7\nstale prior render\n%%EOF\n")
+
+        context = build_transmission_context(project_root, "demo", repo_root=tmp_path)
+
+        assert context is not None
+        assert context.published is False
+        assert context.pdf_sha256 is None
+        assert context.pdf_sha512 is None
+        manifest_path = project_root / "output" / "data" / "transmission_manifest.json"
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        assert payload["pdf_sha256"] is None
+        assert "SHA-256 | pending" in render_transmission_markdown(context, boundary="begin")

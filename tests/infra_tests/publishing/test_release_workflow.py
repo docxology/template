@@ -20,6 +20,7 @@ from infrastructure.publishing.metadata_from_config import (
     publication_metadata_from_config,
 )
 from infrastructure.publishing import release_workflow as release_workflow_module
+from infrastructure.publishing import release_workflow_zenodo as zenodo_phase_module
 from infrastructure.publishing.release_workflow import (
     ReleaseRequest,
     prepare_release_bundle,
@@ -27,6 +28,7 @@ from infrastructure.publishing.release_workflow import (
     run_release_workflow,
     validate_release_tag,
 )
+from infrastructure.publishing.zenodo.models import DepositionResult, PublishResult
 
 
 def _write_minimal_project(
@@ -88,10 +90,7 @@ class TestConfigDoi:
 
     def test_preserves_inline_comments_on_replace(self, tmp_path: Path) -> None:
         config_path = tmp_path / "config.yaml"
-        original = (
-            "publication:\n"
-            '  doi: "10.5281/zenodo.11111"  # checked by gates\n'
-        )
+        original = 'publication:\n  doi: "10.5281/zenodo.11111"  # checked by gates\n'
         config_path.write_text(original, encoding="utf-8")
         update_publication_doi(config_path, "10.5281/zenodo.22222")
         text = config_path.read_text(encoding="utf-8")
@@ -101,12 +100,7 @@ class TestConfigDoi:
 
     def test_preserves_header_comments(self, tmp_path: Path) -> None:
         config_path = tmp_path / "config.yaml"
-        original = (
-            "# header comment\n"
-            "paper:\n  title: T\n"
-            "publication:\n"
-            '  doi: "10.5281/zenodo.11111"  # existing\n'
-        )
+        original = '# header comment\npaper:\n  title: T\npublication:\n  doi: "10.5281/zenodo.11111"  # existing\n'
         config_path.write_text(original, encoding="utf-8")
         update_publication_doi(config_path, "10.5281/zenodo.22222")
         text = config_path.read_text(encoding="utf-8")
@@ -249,9 +243,7 @@ class TestReleaseWorkflow:
         assert bundle.pdf_sha256
         assert bundle.pdf_path.name != "test_release_combined.pdf"
         assert bundle.pdf_path.name.endswith(".pdf")
-        metadata_payload = json.loads(
-            (bundle.bundle_dir / "publication_metadata.json").read_text(encoding="utf-8")
-        )
+        metadata_payload = json.loads((bundle.bundle_dir / "publication_metadata.json").read_text(encoding="utf-8"))
         assert metadata_payload["pdf_sha256"] == bundle.pdf_sha256
         assert metadata_payload["deposit_description"]
         assert "PDF SHA-256:" in metadata_payload["deposit_description"]
@@ -275,7 +267,7 @@ class TestReleaseWorkflow:
             render_calls.append(project_name)
             return 0
 
-        original_zenodo = release_workflow_module.run_zenodo_publish
+        original_zenodo = release_workflow_module.publish_zenodo_for_release
         original_github = release_workflow_module.run_github_release
 
         def track_zenodo(*args, **kwargs):
@@ -286,7 +278,7 @@ class TestReleaseWorkflow:
             stage_order.append("github")
             return original_github(*args, **kwargs)
 
-        monkeypatch.setattr(release_workflow_module, "run_zenodo_publish", track_zenodo)
+        monkeypatch.setattr(release_workflow_module, "publish_zenodo_for_release", track_zenodo)
         monkeypatch.setattr(release_workflow_module, "run_github_release", track_github)
 
         request = ReleaseRequest(
@@ -306,22 +298,23 @@ class TestReleaseWorkflow:
         assert result.doi == "10.5281/zenodo.12345"
         assert result.config_updated is True
         assert result.pdf_sha256
-        assert read_publication_doi(
-            tmp_path / "projects" / "test_release" / "manuscript" / "config.yaml"
-        ) == "10.5281/zenodo.12345"
+        assert (
+            read_publication_doi(tmp_path / "projects" / "test_release" / "manuscript" / "config.yaml")
+            == "10.5281/zenodo.12345"
+        )
         assert render_calls == ["test_release"]
         assert (result.bundle_dir / "manifest.json").exists()
         receipt = json.loads(result.receipt_path.read_text(encoding="utf-8"))
         assert receipt["pdf_sha256"] == result.pdf_sha256
 
-        metadata_payload = json.loads(
-            (result.bundle_dir / "publication_metadata.json").read_text(encoding="utf-8")
-        )
+        metadata_payload = json.loads((result.bundle_dir / "publication_metadata.json").read_text(encoding="utf-8"))
         deposit_description = metadata_payload["deposit_description"]
         assert result.doi in deposit_description
         assert result.pdf_sha256 in deposit_description
 
-        from infrastructure.publishing.abstract_plaintext import build_github_release_body
+        from infrastructure.publishing.abstract_plaintext import (
+            build_github_release_body,
+        )
 
         expected_body = build_github_release_body(
             project_name=request.project_name,
@@ -378,6 +371,80 @@ class TestReleaseWorkflow:
         )
         result = run_release_workflow(request, render_fn=lambda _r, _p: 0)
         assert result.doi == "10.5281/zenodo.54321"
+
+    def test_reserve_doi_first_rerenders_before_upload(
+        self,
+        tmp_path: Path,
+        monkeypatch,
+    ) -> None:
+        config_path = _write_minimal_project(tmp_path)
+        render_calls: list[str] = []
+        upload_seen: list[bytes] = []
+
+        def fake_reserve(*_args, **_kwargs) -> DepositionResult:
+            return DepositionResult(
+                deposition_id="22222",
+                bucket_url="https://zenodo.test/files/bucket222",
+                reserved_doi="10.5281/zenodo.22222",
+                concept_doi="10.5281/zenodo.11111",
+                concept_record_id="11111",
+            )
+
+        def fake_render(repo_root: Path, project_name: str) -> int:
+            render_calls.append(project_name)
+            pdf_path = repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf"
+            pdf_path.write_bytes(b"%PDF DOI 10.5281/zenodo.22222")
+            return 0
+
+        def fake_publish_reserved(
+            _metadata,
+            file_paths,
+            *_args,
+            **_kwargs,
+        ) -> PublishResult:
+            payload = file_paths[0].read_bytes()
+            upload_seen.append(payload)
+            assert b"10.5281/zenodo.22222" in payload
+            return PublishResult(
+                doi="10.5281/zenodo.22222",
+                deposition_id="22222",
+                concept_doi="10.5281/zenodo.11111",
+            )
+
+        monkeypatch.setattr(
+            zenodo_phase_module,
+            "reserve_zenodo_deposition",
+            fake_reserve,
+        )
+        monkeypatch.setattr(
+            zenodo_phase_module,
+            "publish_reserved_deposition_to_zenodo",
+            fake_publish_reserved,
+        )
+        monkeypatch.setattr(
+            release_workflow_module,
+            "patch_deposition_description",
+            lambda *_args, **_kwargs: None,
+        )
+
+        request = ReleaseRequest(
+            repo_root=tmp_path,
+            project_name="test_release",
+            tag="v1.0.0",
+            github_repo="testuser/testrepo",
+            zenodo_token="zen-test",
+            skip_github=True,
+            reserve_doi_first=True,
+        )
+        result = run_release_workflow(request, render_fn=fake_render)
+
+        assert render_calls == ["test_release"]
+        assert upload_seen
+        assert result.doi == "10.5281/zenodo.22222"
+        assert result.concept_doi == "10.5281/zenodo.11111"
+        assert result.version_doi == "10.5281/zenodo.22222"
+        assert read_publication_doi(config_path) == "10.5281/zenodo.11111"
+        assert read_publication_version_doi(config_path) == ("10.5281/zenodo.22222")
 
     def test_prepare_release_bundle_missing_pdf(self, tmp_path: Path) -> None:
         request = ReleaseRequest(
