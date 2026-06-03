@@ -218,9 +218,23 @@ uv run python scripts/publish_project_release.py \
   --tag v2.0.1 \
   --repo owner/template \
   --new-version
+
+# Production first release with a DOI-bearing deposited PDF
+export ZENODO_PROD_TOKEN=...
+uv run python scripts/publish_project_release.py \
+  --project template_code_project \
+  --tag v2.0.0 \
+  --repo owner/template \
+  --production \
+  --reserve-doi-first
 ```
 
-**Single-pass Zenodo:** the deposited PDF is the render produced before DOI write-back. After Zenodo returns a DOI, the script updates `manuscript/config.yaml` and re-renders locally so the title page shows the DOI; it does not automatically upload a second Zenodo version.
+`--reserve-doi-first` creates the Zenodo draft first, asks Zenodo to reserve a
+version DOI, derives the concept DOI from the draft metadata, writes
+`publication.doi` and `publication.version_doi`, re-renders the PDF, then
+uploads that DOI-bearing PDF to the same draft before publishing. The older
+one-pass flow still exists for already-published `--new-version` releases and
+for cases where a pre-DOI deposited PDF is acceptable.
 
 **Outputs:** `output/{project}/release_bundle/` (`Author_Year_Topic_hash8.pdf` by default — see [Deposit upload filename](#deposit-upload-filename); legacy `{project}_combined.pdf` when disabled), `publication_metadata.json`, `manifest.json`, `RELEASE_RECEIPT.json`.
 

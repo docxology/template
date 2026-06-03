@@ -14,11 +14,12 @@
 | --- | --- |
 | `metadata.py`, `_metadata_*.py` | Metadata extraction and reporting |
 | `citations.py` | Citation helpers: BibTeX CLI target plus APA/MLA library helpers |
-| `zenodo/` | Zenodo Deposit API — `ZenodoClient`, `publish_to_zenodo`, `publish_new_version_to_zenodo` |
+| `zenodo/` | Zenodo Deposit API — `ZenodoClient`, `publish_to_zenodo`, `publish_new_version_to_zenodo`, `reserve_zenodo_deposition`, `publish_reserved_deposition_to_zenodo` |
 | `github/` | GitHub Releases — `create_github_release` |
 | `arxiv/` | arXiv tarball — `prepare_arxiv_submission` |
 | `metadata_from_config.py`, `config_doi.py` | Config-driven metadata and DOI write-back |
 | `release_workflow.py` | Unified GitHub + Zenodo + re-render orchestration |
+| `release_workflow_zenodo.py` | Reserve-first DOI phase and Zenodo publish paths |
 | `platforms.py`, `api.py` | Backwards-compatible re-exports |
 | `executable_bundle.py` | Stage 10 executable bundle (`bundle_project`) |
 | `archival.py` | Stage 11 multi-target archival — see [`archival/README.md`](../../../infrastructure/publishing/archival/README.md) |

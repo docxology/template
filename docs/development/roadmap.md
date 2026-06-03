@@ -5,9 +5,24 @@ infrastructure. Architecture details:
 [`architecture.md`](../core/architecture.md) and
 [`workflow.md`](../core/workflow.md).
 
-**Last verified:** 2026-05-05 (metrics defer to [`TO-DO.md`](../../TO-DO.md) live snapshot unless this file is re-measured)
+**Last verified:** 2026-05-31 (post-`v3.1.0` backlog refresh; measured
+metrics defer to [`TO-DO.md`](../../TO-DO.md) and
+[`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)
+unless this file is re-measured)
 
 ## Completed Releases
+
+### v3.1.0 — Public Exemplar / Validation-Spine Release (2026-05-30)
+
+- added the sixth public exemplar, `projects/templates/template_sia/`, plus the
+  reusable `infrastructure.sia` harness and validation docs
+- promoted the first Active Inference validation-spine tracks:
+  `provenance`, `reproducibility`, and `counterexample`
+- refreshed public project signposting to `projects/templates/...` and checked
+  folder-level `AGENTS.md` / `README.md` coverage across public exemplars
+- hardened public project coverage orchestration by pinning subprocess coverage
+  behavior across project virtual environments
+- shipped curated release notes and a `3.1.0` metadata bump
 
 ### v3.0.0 — Production / Stable (2026-02-22)
 
@@ -52,34 +67,56 @@ packages:
 
 ## Planned
 
-### v0.7.0 — Exemplar Hardening
+The active planning surface is [`TO-DO.md`](../../TO-DO.md). It is intentionally
+more specific than this roadmap and now groups work as **Minor**, **Medium**,
+and **Major**.
 
-Make `projects/templates/template_code_project/` fully compliant post-desloppify:
-zero ruff errors, no mock patterns, demonstrate all infrastructure tooling
-(`ProjectLogger`, `validate_interpreter()`, `ResolvedTestingConfig`,
-`load_config()`).
+### v3.1.x — Hygiene and Backlog Accuracy
 
-### v1.0.0 — Next Generation (vision)
+- keep `TO-DO.md`, generated facts, release metadata, and public-scope docs in
+  sync after each release
+- close GitHub hygiene items: SHA-pinned actions, `actionlint`, and safe
+  Dependabot automerge
+- land the Active Inference gate-cache follow-up without changing the immutable
+  `v3.1.0` tag
 
+### v3.2.0 — Format, Logging, and Exemplar Hardening
+
+- finish terminal logging cleanup and preserve verbose file logs
+- add optional DOCX/EPUB rendering with per-format toggles
+- extend the Active Inference validation spine with producer completeness,
+  stale-artifact checks, and dependency graph v2
+- harden the public SIA harness boundary and re-baseline coverage gaps
+
+### Next Generation (vision)
+
+- **Evidence graph**: unify pipeline DAG, artifact registry, claim ledger,
+  provenance, and manuscript tokens into one queryable release-readiness graph
 - **Incremental pipeline**: skip unchanged stages via content hashing
-- **Parallel project execution**: multi-process orchestration
-- **Plugin architecture**: user-defined pipeline stages
-- **Remote LLM providers**: OpenAI/Anthropic alongside local Ollama
-- **Web dashboard**: real-time pipeline monitoring and reporting
+- **Plugin architecture**: user-defined pipeline stages with schema validation
+- **Hermetic release bundles**: lockfile, artifact manifest, hashes, and
+  reproduction commands from a clean checkout
+- **Local dashboard**: static, no-network view of pipeline status, coverage
+  trends, evidence graph status, and release readiness
 
 ---
 
 ## Next Up
 
-The active backlog is [`TO-DO.md`](../../TO-DO.md). It is regenerated
-against a live audit; the roadmap intentionally does not duplicate the
-items there. The current top items (verify against `TO-DO.md` for the
-authoritative form):
+Use [`TO-DO.md`](../../TO-DO.md) as the authoritative backlog and live snapshot.
+The current top items are:
 
-- **`TO-DO.md`** — authoritative backlog and live audit snapshot (metrics and open items — verify there before copying numbers here).
-- **M7** — Roadmap hygiene: link to sources instead of duplicating drift-prone counts.
+- **Minor:** `GH-PIN-1`, `GH-ACTIONLINT-1`, `GH-AUTOMERGE-1`,
+  `AI-GATE-CACHE-1`
+- **Medium:** `LOG-CLEAN-1`, `FMT-BUNDLE-1`, `AI-SPINE-V2`,
+  `SIA-HARNESS-2`, `COVERAGE-REBASE-1`
+- **Major:** `EVIDENCE-GRAPH-1`, `INCREMENTAL-PIPELINE-1`,
+  `PLUGIN-STAGES-1`, `REPRO-BUNDLE-1`, `DASHBOARD-1`
 
-Shipped elsewhere (do not re-track here): **M2** pip-audit blocking CI (**v0.7.2**), **M4** Bandit LOW triage via `bandit.yaml`, **docs-lint** CI job (**MED4** in [`CHANGELOG.md`](../../CHANGELOG.md)), per-project test runner (**MED3** — `infrastructure.core.test_runner`). **DOC-MERMAID-1** in [`TO-DO.md`](../../TO-DO.md) is separate backlog for legacy Mermaid `noqa` cleanup — not the MED4 docs-lint ship label.
+Shipped elsewhere and not re-tracked here: pip-audit blocking CI, Bandit LOW
+triage, docs-lint CI, the per-project test runner, SIA public-exemplar
+promotion, and the first Active Inference validation-spine tracks. See
+[`CHANGELOG.md`](../../CHANGELOG.md) for the release history.
 
 ---
 

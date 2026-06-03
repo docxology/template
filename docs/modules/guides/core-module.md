@@ -12,7 +12,7 @@
 - **Logging**: Structured logging with `get_logger`, decorators (`log_operation`), stage reporting (`log_stage`), and duration formatting
 - **Exceptions**: Unified `TemplateError` hierarchy with context-preserving helpers (`raise_with_context`, `chain_exceptions`)
 - **Configuration**: YAML config loading (`load_config`) with auto-discovery (`find_config_file`)
-- **Pipeline**: DAG-based pipeline execution (`PipelineExecutor`, `PipelineConfig`) with multi-project orchestration
+- **Pipeline**: DAG-based pipeline execution (`PipelineExecutor`, `PipelineConfig`) with multi-project orchestration; per-project output serialization via `project_output_lock` in [`files/project_lock.py`](../../../infrastructure/core/files/project_lock.py)
 - **Checkpoint**: Resumable execution via `CheckpointManager` for long-running pipelines
 - **Health Checks**: Dependency and environment validation (`SystemHealthChecker`, `get_health_status`, `is_healthy`)
 - **Performance**: Function-level profiling (`monitor_performance`) and system resource monitoring

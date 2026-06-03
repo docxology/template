@@ -923,7 +923,7 @@ Information about a discovered project.
 
 ### `resolve_project_root`
 
-*function — defined in `infrastructure.project.discovery`*
+*function — defined in `infrastructure.core.project_paths`*
 
 ```python
 resolve_project_root(repo_root: Path | str, project_name: str) -> Path
@@ -2270,6 +2270,36 @@ enrich_papers(papers: Iterable[Paper], *, abstracts: AbstractFetcher | None=None
 ```
 
 Run the configured fetchers over *papers* in order (abstract first).
+
+### `ExaClient`
+
+*class — defined in `infrastructure.search.exa.client`*
+
+```python
+class ExaClient(config: ExaConfig, *, http_client: ExaHttpClient | None=None)
+```
+
+Thin, dependency-injected client for the Exa REST API.
+
+### `ExaConfig`
+
+*class — defined in `infrastructure.search.exa.config`*
+
+```python
+class ExaConfig
+```
+
+Immutable Exa client configuration.
+
+### `ExaError`
+
+*class — defined in `infrastructure.search.exa.errors`*
+
+```python
+class ExaError(message: str, *, status: int | None=None, body: str | None=None)
+```
+
+Raised when an Exa request fails (transport, non-2xx status, or parse).
 
 ### `FetchResult`
 

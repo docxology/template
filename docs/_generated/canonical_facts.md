@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-30 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**492**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**211**), publishing suite collection/full run (**368**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-06-02 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**516**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**211**), publishing suite collection/full run (**381**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -80,7 +80,9 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **492** on 2026-05-30 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **516** on 2026-06-03 UTC — includes the `infrastructure/search/exa/` client package, `infrastructure/core/project_paths.py`, the `__main__.py` entrypoints, and the reserve-first Zenodo helper (`release_workflow_zenodo.py`), PDF title-page module (`_pdf_title_page.py`), output project lock (`core/files/project_lock.py`), and XML-parser policy guard (`validation/xml_parser_policy.py`); re-derive with the command above.)
+
+Notable infra module sizes (post 2026-06-02 Wave D): `_pdf_combined_renderer.py` **861** (WARN), `_pdf_title_page.py` **542**, `_pdf_latex_helpers.py` **236** (preamble/math only).
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -97,7 +99,7 @@ uv run pytest tests/infra_tests/project/ --collect-only -q --no-cov
 uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 ```
 
-Result: **211** project-scope infrastructure tests collected and **368** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
+Result: **211** project-scope infrastructure tests collected and **381** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
 **Exemplar `pytest --collect-only` totals** (2026-05-30):
 
@@ -124,7 +126,7 @@ Drift-checker coverage: `uv run python scripts/check_template_drift.py --strict`
 | Tracked projects | `uv run python scripts/check_tracked_projects.py` | non-exemplar paths under `projects/` |
 | Generated artifacts | `uv run python scripts/check_tracked_generated_artifacts.py` | disposable `output/` trees |
 
-Current line-count result: no failing modules; `infrastructure/rendering/_pdf_combined_renderer.py` is a warning at 861 lines.
+Current line-count result: no failing modules under `infrastructure/` + `scripts/`; `_pdf_combined_renderer.py` is a warning at 861 lines; `_pdf_title_page.py` at 542 lines after title-page split.
 
 Coverage gates (enforced in CI):
 
