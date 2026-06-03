@@ -30,8 +30,13 @@ class StabilityTest:
     recommendations: list[str]
 
 
-def _score_result(result: Any) -> tuple[str, float]:
-    """Return (behavior_label, stability_score) for a numeric result."""
+def _score_result(result: Any, tolerance: float) -> tuple[str, float]:
+    """Return (behavior_label, stability_score) for a numeric result.
+
+    ``tolerance`` flags near-underflow instability: a finite, non-zero result
+    whose magnitude falls below ``tolerance`` (e.g. the residue of catastrophic
+    cancellation) is treated as numerically suspect rather than fully stable.
+    """
     has_nan = np.isnan(result).any() if hasattr(result, "any") else np.isnan(result)
     has_inf = np.isinf(result).any() if hasattr(result, "any") else np.isinf(result)
     if has_nan:
@@ -40,6 +45,10 @@ def _score_result(result: Any) -> tuple[str, float]:
         return "Infinite values detected", 0.0
     if np.abs(result) > 1e10:
         return "Extremely large values", 0.3
+    magnitude = np.abs(result)
+    underflow = (magnitude > 0) & (magnitude < tolerance)
+    if underflow.any() if hasattr(underflow, "any") else underflow:
+        return "Near-underflow values", 0.3
     return "Numerically stable", 1.0
 
 
@@ -61,7 +70,7 @@ def check_numerical_stability(
     for test_input in test_inputs:
         try:
             result = func(test_input)
-            behavior, score = _score_result(result)
+            behavior, score = _score_result(result, tolerance)
             results.append((test_input, result, behavior, score))
 
         except Exception as e:  # noqa: BLE001 — any function failure is a stability event

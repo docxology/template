@@ -17,6 +17,14 @@ class TestBarcodes:
         assert isinstance(png_bytes, bytes)
         assert len(png_bytes) > 100
 
+    def test_generate_code128(self):
+        from infrastructure.steganography.barcodes import generate_code128
+
+        svg_bytes = generate_code128("ID:test123|P:1")
+        assert isinstance(svg_bytes, bytes)
+        assert len(svg_bytes) > 100
+        assert b"<svg" in svg_bytes or b"<?xml" in svg_bytes
+
     def test_build_barcode_payload(self):
         from infrastructure.steganography.barcodes import build_barcode_payload
 

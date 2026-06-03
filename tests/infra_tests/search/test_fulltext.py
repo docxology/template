@@ -137,6 +137,19 @@ class TestFulltextFetcher:
         fetcher.fetch(p)
         assert (tmp_path / f"{_safe_id('x:1')}.pdf").exists()
 
+    def test_pdf_bytes_cached_without_corruption(self, httpserver: HTTPServer, tmp_path: Path):
+        # PDF payload with non-ASCII bytes (>0x7F). The previous text->latin-1
+        # round-trip replaced every non-decodable byte with U+FFFD, corrupting
+        # the cached PDF; get_bytes must persist the payload byte-for-byte.
+        payload = b"%PDF-1.4\n\xff\xfe\x80\x00binary\xc3\xa9\n%%EOF\n"
+        httpserver.expect_request("/raw.pdf").respond_with_data(payload, content_type="application/pdf")
+        fetcher = FulltextFetcher(cache_dir=tmp_path)
+        p = Paper(id="x:2", title="t", pdf_url=httpserver.url_for("/raw.pdf"))
+        fetcher.fetch(p)
+        cached = tmp_path / f"{_safe_id('x:2')}.pdf"
+        assert cached.exists()
+        assert cached.read_bytes() == payload  # byte-identical: no decode corruption
+
     def test_cached_text_short_circuits(self, tmp_path: Path):
         text_path = tmp_path / f"{_safe_id('arxiv:1')}.txt"
         text_path.write_text("cached body", encoding="utf-8")

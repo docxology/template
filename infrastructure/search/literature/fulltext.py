@@ -246,13 +246,9 @@ class FulltextFetcher:
             )
 
         try:
-            resp = self.http.get(url, timeout=self.timeout)
+            pdf_bytes = self.http.get_bytes(url, timeout=self.timeout)
         except BackendError as exc:
             return FetchResult(paper=paper, status="error", message=str(exc))
-        if resp.status_code != 200:
-            return FetchResult(paper=paper, status="error", message=f"HTTP {resp.status_code}")
-
-        pdf_bytes = resp.text.encode("latin-1", errors="ignore")
         # Write PDF to cache regardless of whether we can extract text.
         path: Path | None = None
         if cache is not None:
