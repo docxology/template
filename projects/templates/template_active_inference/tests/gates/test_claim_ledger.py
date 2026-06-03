@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from gates.validation import validate_manuscript
+from gate_support import refresh_generated_gate_artifacts
 
 
 def test_validate_manuscript_claim_ledger_missing_file_negative(project_root: Path, tmp_path: Path) -> None:
@@ -18,6 +19,7 @@ def test_validate_manuscript_claim_ledger_missing_file_negative(project_root: Pa
         assert checks["claim_ledger_valid"] is False
     finally:
         ledger.write_text(backup.read_text(encoding="utf-8"), encoding="utf-8")
+        refresh_generated_gate_artifacts(project_root)
 
 
 def test_validate_manuscript_claim_ledger_negative(project_root: Path) -> None:
@@ -32,6 +34,7 @@ def test_validate_manuscript_claim_ledger_negative(project_root: Path) -> None:
     finally:
         if backup_exists:
             target.write_bytes(backup_bytes)
+        refresh_generated_gate_artifacts(project_root)
 
 
 def test_typed_claim_evidence_exercises_success_predicates(tmp_path: Path) -> None:

@@ -68,6 +68,12 @@ from manuscript.sheaf.semantic import (
     write_semantic_gluing_certificate,
     write_semantic_gluing_outputs,
 )
+from manuscript.sheaf.status import (
+    build_sheaf_render_log,
+    build_sheaf_section_status_matrix,
+    validate_sheaf_status_outputs,
+    write_sheaf_status_outputs,
+)
 
 # Backward-compatible alias for tests importing private helper.
 _parse_missing = parse_missing
@@ -135,4 +141,8 @@ __all__ = [
     "validate_configured_artifact_producers",
     "write_semantic_gluing_certificate",
     "write_semantic_gluing_outputs",
+    "build_sheaf_render_log",
+    "build_sheaf_section_status_matrix",
+    "validate_sheaf_status_outputs",
+    "write_sheaf_status_outputs",
 ]

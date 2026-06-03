@@ -11,9 +11,9 @@ _TOKEN_RE = re.compile(r"\{\{[a-z][a-z0-9_]*(?::\.[0-9]+f)?\}\}")
 def test_generate_variables_includes_structural_counts() -> None:
     root = Path(__file__).resolve().parents[1]
     vars_ = generate_variables(root, require_analysis_outputs=False)
-    assert vars_["pipeline_track_count"] == 10
-    assert vars_["sheaf_track_count"] == 13
-    assert vars_["appendix_sheaf_track_count"] == 12
+    assert vars_["pipeline_track_count"] == 29
+    assert vars_["sheaf_track_count"] == 32
+    assert vars_["appendix_sheaf_track_count"] == 31
     assert vars_["imrad_manifest_rows"] == 17
     assert vars_["composed_section_count"] == 12
     assert vars_["imrad_group_count"] == 5
@@ -73,7 +73,7 @@ def test_write_resolved_manuscript_raises_on_single_brace_token(tmp_path: Path) 
     import pytest
 
     with pytest.raises(ValueError, match="malformed single-brace"):
-        write_resolved_manuscript(tmp_path, {"pipeline_track_count": 10})
+        write_resolved_manuscript(tmp_path, {"pipeline_track_count": 16})
 
 
 def test_write_resolved_manuscript_raises_on_unknown_token(tmp_path: Path) -> None:
@@ -83,7 +83,7 @@ def test_write_resolved_manuscript_raises_on_unknown_token(tmp_path: Path) -> No
     import pytest
 
     with pytest.raises(ValueError, match="not_a_real_token"):
-        write_resolved_manuscript(tmp_path, {"pipeline_track_count": 10})
+        write_resolved_manuscript(tmp_path, {"pipeline_track_count": 16})
 
 
 def test_write_resolved_manuscript_removes_tokens(tmp_path: Path) -> None:
@@ -98,4 +98,4 @@ def test_write_resolved_manuscript_removes_tokens(tmp_path: Path) -> None:
     out_dir = write_resolved_manuscript(tmp_path, variables)
     resolved = (out_dir / "00_abstract.md").read_text(encoding="utf-8")
     assert _TOKEN_RE.search(resolved) is None
-    assert "Tracks: 10" in resolved
+    assert "Tracks: 29" in resolved

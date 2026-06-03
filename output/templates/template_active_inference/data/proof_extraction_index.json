@@ -1,0 +1,88 @@
+{
+  "all_constructive": true,
+  "all_extracted": true,
+  "rows": [
+    {
+      "extracted": true,
+      "forbidden_tokens": [],
+      "leading_tactic": "decide",
+      "source": "lean/TemplateActiveInference/BernoulliToy.lean",
+      "statement": "isingCouplingSum = 0",
+      "theorem": "ising_coupling_sum_zero"
+    },
+    {
+      "extracted": true,
+      "forbidden_tokens": [],
+      "leading_tactic": "rfl",
+      "source": "lean/TemplateActiveInference/SophisticatedInference.lean",
+      "statement": "branchGraphWorldStep (branchGraphWorldStep (branchGraphWorldStep BranchGraphWorldState.start 0) 0) 0 = BranchGraphWorldState.goal",
+      "theorem": "branch_graph_world_three_steps_reach_goal"
+    },
+    {
+      "extracted": true,
+      "forbidden_tokens": [],
+      "leading_tactic": "rfl",
+      "source": "lean/TemplateActiveInference/SophisticatedInference.lean",
+      "statement": "diamondGraphWorldStep (diamondGraphWorldStep (diamondGraphWorldStep (diamondGraphWorldStep DiamondGraphWorldState.start 0) 0) 0) 0 = DiamondGraphWorldState.goal",
+      "theorem": "diamond_graph_world_four_steps_reach_goal"
+    },
+    {
+      "extracted": true,
+      "forbidden_tokens": [],
+      "leading_tactic": "rfl",
+      "source": "lean/TemplateActiveInference/SophisticatedInference.lean",
+      "statement": "graphWorldStep (graphWorldStep (graphWorldStep GraphWorldState.start 0) 0) 0 = GraphWorldState.goal",
+      "theorem": "graph_world_three_steps_reach_goal"
+    },
+    {
+      "extracted": true,
+      "forbidden_tokens": [],
+      "leading_tactic": "rfl",
+      "source": "lean/TemplateActiveInference/SophisticatedInference.lean",
+      "statement": "loopGraphWorldStep (loopGraphWorldStep (loopGraphWorldStep (loopGraphWorldStep LoopGraphWorldState.start 0) 0) 0) 0 = LoopGraphWorldState.goal",
+      "theorem": "loop_graph_world_four_steps_reach_goal"
+    },
+    {
+      "extracted": true,
+      "forbidden_tokens": [],
+      "leading_tactic": "simp",
+      "source": "lean/TemplateActiveInference/SophisticatedInference.lean",
+      "statement": "[0, 0, 0] \u2208 finitePolicies",
+      "theorem": "policy_enumeration_contains_forward"
+    },
+    {
+      "extracted": true,
+      "forbidden_tokens": [],
+      "leading_tactic": "decide",
+      "source": "lean/TemplateActiveInference/SophisticatedInference.lean",
+      "statement": "defaultPolicyLen > 1",
+      "theorem": "sophisticated_requires_horizon"
+    },
+    {
+      "extracted": true,
+      "forbidden_tokens": [],
+      "leading_tactic": "rfl",
+      "source": "lean/TemplateActiveInference/SophisticatedInference.lean",
+      "statement": "tmazeStep (tmazeStep TMazeState.start 0) 0 = TMazeState.goal",
+      "theorem": "tmaze_two_forward_steps_reach_goal"
+    },
+    {
+      "extracted": true,
+      "forbidden_tokens": [],
+      "leading_tactic": "rfl",
+      "source": "lean/TemplateActiveInference/SophisticatedInference.lean",
+      "statement": "twoPolicyPosteriorWeights.foldl Nat.add 0 = 2",
+      "theorem": "two_policy_posterior_weights_sum_to_two"
+    },
+    {
+      "extracted": true,
+      "forbidden_tokens": [],
+      "leading_tactic": "rfl",
+      "source": "lean/TemplateActiveInference/SophisticatedInference.lean",
+      "statement": "twoStateBeliefWeights.foldl Nat.add 0 = 2",
+      "theorem": "two_state_belief_weights_sum_to_two"
+    }
+  ],
+  "schema": "template_active_inference.proof_extraction_index.v1",
+  "theorem_count": 10
+}

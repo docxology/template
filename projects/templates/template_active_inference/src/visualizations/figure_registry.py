@@ -102,6 +102,11 @@ def render_figure_markdown(
     variables: dict[str, str] | None = None,
     labeled: bool = True,
 ) -> str:
+    # `figure_number` / `caption_prefix` are retained for signature back-compat but are
+    # intentionally unused: pandoc-crossref owns figure numbering (single source of truth).
+    # Hand-written "Figure N (section)." prefixes previously double-numbered every figure
+    # against pandoc's auto-caption — see manuscript/SYNTAX.md and src/visualizations/AGENTS.md.
+    del figure_number, caption_prefix
     spec = load_figure_registry(project_root)[figure_id]
     rel = f"../output/figures/{spec.filename}"
     alt = spec.alt
@@ -112,12 +117,16 @@ def render_figure_markdown(
         unresolved = sorted(set(unresolved_alt + unresolved_cap))
         if unresolved:
             raise ValueError(f"unresolved figure tokens for {figure_id}: {', '.join(unresolved)}")
-    number_prefix = ""
-    if figure_number is not None and not caption_prefix.strip():
-        number_prefix = f"Figure {figure_number}. "
     width_pct = int(round(spec.width * 100))
-    label_suffix = f"{{#fig:{figure_id} width={width_pct}%}}" if labeled else f"{{width={width_pct}%}}"
-    return f"![{alt}]({rel}){label_suffix}\n\n*{caption_prefix}{number_prefix}{caption}*"
+    if labeled:
+        # The caption is the image alt text, so pandoc-crossref emits exactly one
+        # numbered "Figure N: {caption}". The verbose description rides along as fig-alt
+        # for accessibility without producing a second caption.
+        fig_alt = alt.replace('"', "'")
+        return f'![{caption}]({rel}){{#fig:{figure_id} width={width_pct}% fig-alt="{fig_alt}"}}'
+    # Reused figure: empty alt → unnumbered graphic (no second "Figure N"); cite the
+    # canonical labeled occurrence so the reader is pointed at the authoritative number.
+    return f"![]({rel}){{width={width_pct}%}}\n\n*Reproduced from [@fig:{figure_id}]. {caption}*"
 
 
 def render_section_figures(

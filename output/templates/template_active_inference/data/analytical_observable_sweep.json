@@ -1,0 +1,595 @@
+{
+  "max_abs_residual": 0.0,
+  "row_count": 84,
+  "rows": [
+    {
+      "closed_form": 0.5,
+      "empirical": 0.5,
+      "lambda": 0.0,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.0,
+      "empirical": 0.0,
+      "lambda": 0.0,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.3862943611198906,
+      "empirical": 1.3862943611198906,
+      "lambda": 0.0,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 0.0,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.549833997312478,
+      "empirical": 0.549833997312478,
+      "lambda": 0.2,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.09966799462495587,
+      "empirical": 0.09966799462495587,
+      "lambda": 0.2,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.3813192504790415,
+      "empirical": 1.3813192504790415,
+      "lambda": 0.2,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 0.2,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.598687660112452,
+      "empirical": 0.598687660112452,
+      "lambda": 0.4,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.19737532022490403,
+      "empirical": 0.19737532022490403,
+      "lambda": 0.4,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.3666873689149173,
+      "empirical": 1.3666873689149173,
+      "lambda": 0.4,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 0.4,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6456563062257955,
+      "empirical": 0.6456563062257955,
+      "lambda": 0.6000000000000001,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.2913126124515909,
+      "empirical": 0.2913126124515909,
+      "lambda": 0.6000000000000001,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.3432413473103537,
+      "empirical": 1.3432413473103537,
+      "lambda": 0.6000000000000001,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 0.6000000000000001,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6899744811276124,
+      "empirical": 0.6899744811276124,
+      "lambda": 0.8,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.3799489622552249,
+      "empirical": 0.3799489622552249,
+      "lambda": 0.8,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.3122682616056331,
+      "empirical": 1.3122682616056331,
+      "lambda": 0.8,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 0.8,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.731058578630005,
+      "empirical": 0.731058578630005,
+      "lambda": 1.0,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.4621171572600098,
+      "empirical": 0.4621171572600098,
+      "lambda": 1.0,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.2753502894481632,
+      "empirical": 1.2753502894481632,
+      "lambda": 1.0,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599452,
+      "empirical": 0.6931471805599452,
+      "lambda": 1.0,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.7685247834990176,
+      "empirical": 0.7685247834990176,
+      "lambda": 1.2000000000000002,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.5370495669980353,
+      "empirical": 0.5370495669980353,
+      "lambda": 1.2000000000000002,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.2341999076991552,
+      "empirical": 1.2341999076991552,
+      "lambda": 1.2000000000000002,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 1.2000000000000002,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8021838885585818,
+      "empirical": 0.8021838885585818,
+      "lambda": 1.4000000000000001,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6043677771171635,
+      "empirical": 0.6043677771171635,
+      "lambda": 1.4000000000000001,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.190507146496382,
+      "empirical": 1.190507146496382,
+      "lambda": 1.4000000000000001,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 1.4000000000000001,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8320183851339245,
+      "empirical": 0.8320183851339245,
+      "lambda": 1.6,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6640367702678489,
+      "empirical": 0.6640367702678489,
+      "lambda": 1.6,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.1458185052340049,
+      "empirical": 1.1458185052340049,
+      "lambda": 1.6,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 1.6,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8581489350995122,
+      "empirical": 0.8581489350995122,
+      "lambda": 1.8,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.7162978701990244,
+      "empirical": 0.7162978701990244,
+      "lambda": 1.8,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.1014567079068973,
+      "empirical": 1.1014567079068973,
+      "lambda": 1.8,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 1.8,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8807970779778824,
+      "empirical": 0.8807970779778824,
+      "lambda": 2.0,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.7615941559557649,
+      "empirical": 0.7615941559557649,
+      "lambda": 2.0,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.0584810356471528,
+      "empirical": 1.0584810356471528,
+      "lambda": 2.0,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 2.0,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9002495108803149,
+      "empirical": 0.9002495108803149,
+      "lambda": 2.2,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8004990217606297,
+      "empirical": 0.8004990217606297,
+      "lambda": 2.2,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 1.0176815763919485,
+      "empirical": 1.0176815763919485,
+      "lambda": 2.2,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 2.2,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9168273035060777,
+      "empirical": 0.9168273035060777,
+      "lambda": 2.4000000000000004,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8336546070121553,
+      "empirical": 0.8336546070121553,
+      "lambda": 2.4000000000000004,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9795978042993085,
+      "empirical": 0.9795978042993085,
+      "lambda": 2.4000000000000004,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 2.4000000000000004,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9308615796566532,
+      "empirical": 0.9308615796566532,
+      "lambda": 2.6,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8617231593133065,
+      "empirical": 0.8617231593133065,
+      "lambda": 2.6,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9445517654203168,
+      "empirical": 0.9445517654203168,
+      "lambda": 2.6,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 2.6,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9426758241011312,
+      "empirical": 0.9426758241011312,
+      "lambda": 2.8000000000000003,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8853516482022624,
+      "empirical": 0.8853516482022624,
+      "lambda": 2.8000000000000003,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9126876993647491,
+      "empirical": 0.9126876993647491,
+      "lambda": 2.8000000000000003,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 2.8000000000000003,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9525741268224333,
+      "empirical": 0.9525741268224333,
+      "lambda": 3.0,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9051482536448665,
+      "empirical": 0.9051482536448665,
+      "lambda": 3.0,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8840121516663877,
+      "empirical": 0.8840121516663877,
+      "lambda": 3.0,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 3.0,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9608342772032356,
+      "empirical": 0.9608342772032356,
+      "lambda": 3.2,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9216685544064712,
+      "empirical": 0.9216685544064712,
+      "lambda": 3.2,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8584308266720215,
+      "empirical": 0.8584308266720215,
+      "lambda": 3.2,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 3.2,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9677045353015495,
+      "empirical": 0.9677045353015495,
+      "lambda": 3.4000000000000004,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.935409070603099,
+      "empirical": 0.935409070603099,
+      "lambda": 3.4000000000000004,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8357802309595423,
+      "empirical": 0.8357802309595423,
+      "lambda": 3.4000000000000004,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 3.4000000000000004,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.973403006423134,
+      "empirical": 0.973403006423134,
+      "lambda": 3.6,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9468060128462681,
+      "empirical": 0.9468060128462681,
+      "lambda": 3.6,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.8158534504448705,
+      "empirical": 0.8158534504448705,
+      "lambda": 3.6,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 3.6,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9781187290638695,
+      "empirical": 0.9781187290638695,
+      "lambda": 3.8000000000000003,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9562374581277391,
+      "empirical": 0.9562374581277391,
+      "lambda": 3.8000000000000003,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.7984202265721202,
+      "empirical": 0.7984202265721202,
+      "lambda": 3.8000000000000003,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 3.8000000000000003,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9820137900379085,
+      "empirical": 0.9820137900379085,
+      "lambda": 4.0,
+      "observable": "same_state_probability",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.9640275800758169,
+      "empirical": 0.9640275800758169,
+      "lambda": 4.0,
+      "observable": "posterior_correlation",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.7832419483261213,
+      "empirical": 0.7832419483261213,
+      "lambda": 4.0,
+      "observable": "joint_entropy",
+      "residual": 0.0
+    },
+    {
+      "closed_form": 0.6931471805599453,
+      "empirical": 0.6931471805599453,
+      "lambda": 4.0,
+      "observable": "marginal_entropy",
+      "residual": 0.0
+    }
+  ],
+  "schema": "template_active_inference.analytical_observable_sweep.v1"
+}

@@ -46,6 +46,15 @@ def ising_joint_posterior(lam: float) -> ArrayF:
 
 
 def empirical_mutual_information(lam: float) -> float:
+    """Mutual information recomputed independently from the joint via total correlation.
+
+    Despite the historical name, this is a *deterministic exact recomputation* — not a
+    Monte Carlo / sampled estimate. It evaluates total correlation on the exact entangled
+    joint, providing a second code path that must agree with the closed-form
+    ``ising_mutual_information`` to machine precision (see ``invariants.py`` and
+    ``test_bernoulli_toy``). It exists as a cross-implementation oracle, so manuscript
+    figures/prose describe it as an "exact recomputation", never as an empirical estimate.
+    """
     return float(total_correlation(ising_joint_posterior(lam)))
 
 

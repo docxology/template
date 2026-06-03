@@ -1,0 +1,1 @@
+The replay matrix exposes deterministic rerun comparison as table data rather than prose. It contains {{replay_matrix_row_count}} producer rows, uses explicit replay-or-fingerprint methods, and every row must match its saved artifact hash (`{{replay_matrix_all_matched}}`).

@@ -62,6 +62,7 @@ sections:
       prose: manuscript/sections/imrad/methods_analytical/prose.md
       formalism: manuscript/sections/imrad/methods_analytical/formalism.md
       simulation: manuscript/sections/imrad/methods_analytical/simulation.md
+      assumption_index: manuscript/sections/imrad/methods_analytical/assumption_index.md
       visualization: manuscript/sections/imrad/methods_analytical/visualization.md
       gnn: manuscript/sections/imrad/methods_analytical/gnn.md
       ontology: manuscript/sections/imrad/methods_analytical/ontology.yaml
@@ -78,6 +79,7 @@ sections:
       prose: manuscript/sections/imrad/methods_pymdp/prose.md
       formalism: manuscript/sections/imrad/methods_pymdp/formalism.md
       pymdp: manuscript/sections/imrad/methods_pymdp/pymdp.md
+      interop: manuscript/sections/imrad/methods_pymdp/interop.md
       gnn: manuscript/sections/imrad/methods_pymdp/gnn.md
       ontology: manuscript/sections/imrad/methods_pymdp/ontology.yaml
       visualization: manuscript/sections/imrad/methods_pymdp/visualization.md
@@ -93,6 +95,9 @@ sections:
     tracks:
       prose: manuscript/sections/imrad/methods_lean/prose.md
       lean: manuscript/sections/imrad/methods_lean/lean.md
+      model_checking: manuscript/sections/imrad/methods_lean/model_checking.md
+      theorem_traceability: manuscript/sections/imrad/methods_lean/theorem_traceability.md
+      proof_extraction: manuscript/sections/imrad/methods_lean/proof_extraction.md
       visualization: manuscript/sections/imrad/methods_lean/visualization.md
 
   - id: methods_sheaf
@@ -109,6 +114,13 @@ sections:
       - visualization
       - provenance
       - counterexample
+      - adversarial_audit
+      - evidence_fields
+      - release_bundle
+      - gate_ergonomics
+      - artifact_diffoscope
+      - artifact_license
+      - manuscript_staleness
       - layers
     tracks:
       prose: manuscript/sections/imrad/methods_sheaf/prose.md
@@ -116,6 +128,13 @@ sections:
       visualization: manuscript/sections/imrad/methods_sheaf/visualization.md
       provenance: manuscript/sections/imrad/methods_sheaf/provenance.md
       counterexample: manuscript/sections/imrad/methods_sheaf/counterexample.md
+      adversarial_audit: manuscript/sections/imrad/methods_sheaf/adversarial_audit.md
+      evidence_fields: manuscript/sections/imrad/methods_sheaf/evidence_fields.md
+      release_bundle: manuscript/sections/imrad/methods_sheaf/release_bundle.md
+      gate_ergonomics: manuscript/sections/imrad/methods_sheaf/gate_ergonomics.md
+      artifact_diffoscope: manuscript/sections/imrad/methods_sheaf/artifact_diffoscope.md
+      artifact_license: manuscript/sections/imrad/methods_sheaf/artifact_license.md
+      manuscript_staleness: manuscript/sections/imrad/methods_sheaf/manuscript_staleness.md
       layers: manuscript/sections/imrad/methods_sheaf/layers.md
 
   - id: results
@@ -179,7 +198,12 @@ sections:
     tracks:
       prose: manuscript/sections/imrad/results_invariants/prose.md
       simulation: manuscript/sections/imrad/results_invariants/simulation.md
-      reproducibility: manuscript/sections/imrad/results_invariants/reproducibility.md
+      replay_matrix: manuscript/sections/imrad/results_invariants/replay_matrix.md
+      sensitivity: manuscript/sections/imrad/results_invariants/sensitivity.md
+      uncertainty: manuscript/sections/imrad/results_invariants/uncertainty.md
+      benchmark: manuscript/sections/imrad/results_invariants/benchmark.md
+      state_space_catalog: manuscript/sections/imrad/results_invariants/state_space_catalog.md
+      causal_ablation: manuscript/sections/imrad/results_invariants/causal_ablation.md
       visualization: manuscript/sections/imrad/results_invariants/visualization.md
 
   - id: discussion
@@ -205,6 +229,7 @@ sections:
       prose: manuscript/sections/imrad/discussion_outlook/prose.md
       simulation: manuscript/sections/imrad/discussion_outlook/simulation.md
       ontology: manuscript/sections/imrad/discussion_outlook/ontology.yaml
+      release_notes: manuscript/sections/imrad/discussion_outlook/release_notes.md
 
   - id: appendix
     order: 16
@@ -230,11 +255,30 @@ sections:
       formalism: manuscript/sections/imrad/appendix_full_sheaf/formalism.md
       simulation: manuscript/sections/imrad/appendix_full_sheaf/simulation.md
       pymdp: manuscript/sections/imrad/appendix_full_sheaf/pymdp.md
+      interop: manuscript/sections/imrad/appendix_full_sheaf/interop.md
       provenance: manuscript/sections/imrad/appendix_full_sheaf/provenance.md
-      reproducibility: manuscript/sections/imrad/appendix_full_sheaf/reproducibility.md
+      replay_matrix: manuscript/sections/imrad/appendix_full_sheaf/replay_matrix.md
       counterexample: manuscript/sections/imrad/appendix_full_sheaf/counterexample.md
+      adversarial_audit: manuscript/sections/imrad/appendix_full_sheaf/adversarial_audit.md
+      evidence_fields: manuscript/sections/imrad/appendix_full_sheaf/evidence_fields.md
+      release_bundle: manuscript/sections/imrad/appendix_full_sheaf/release_bundle.md
+      gate_ergonomics: manuscript/sections/imrad/appendix_full_sheaf/gate_ergonomics.md
+      artifact_diffoscope: manuscript/sections/imrad/appendix_full_sheaf/artifact_diffoscope.md
+      artifact_license: manuscript/sections/imrad/appendix_full_sheaf/artifact_license.md
+      assumption_index: manuscript/sections/imrad/appendix_full_sheaf/assumption_index.md
+      sensitivity: manuscript/sections/imrad/appendix_full_sheaf/sensitivity.md
+      uncertainty: manuscript/sections/imrad/appendix_full_sheaf/uncertainty.md
+      benchmark: manuscript/sections/imrad/appendix_full_sheaf/benchmark.md
+      state_space_catalog: manuscript/sections/imrad/appendix_full_sheaf/state_space_catalog.md
+      causal_ablation: manuscript/sections/imrad/appendix_full_sheaf/causal_ablation.md
       visualization: manuscript/sections/imrad/appendix_full_sheaf/visualization.md
       lean: manuscript/sections/imrad/appendix_full_sheaf/lean.md
+      model_checking: manuscript/sections/imrad/appendix_full_sheaf/model_checking.md
+      theorem_traceability: manuscript/sections/imrad/appendix_full_sheaf/theorem_traceability.md
+      proof_extraction: manuscript/sections/imrad/appendix_full_sheaf/proof_extraction.md
       gnn: manuscript/sections/imrad/appendix_full_sheaf/gnn.md
       ontology: manuscript/sections/imrad/appendix_full_sheaf/ontology.yaml
       animation: manuscript/sections/imrad/appendix_full_sheaf/animation.md
+      animation_delta: manuscript/sections/imrad/appendix_full_sheaf/animation_delta.md
+      manuscript_staleness: manuscript/sections/imrad/appendix_full_sheaf/manuscript_staleness.md
+      release_notes: manuscript/sections/imrad/appendix_full_sheaf/release_notes.md

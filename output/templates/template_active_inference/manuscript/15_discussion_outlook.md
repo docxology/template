@@ -8,6 +8,10 @@
 
 <!-- sheaf-track:prose -->
 
+## What this demonstrates
+
+The result of this manuscript is a *discipline*, not a domain claim: across three toy models every reported number is hydrated from a generated artifact, 6 sheaf axioms are machine-checked before composition, and 22 negative controls keep each failure path live. No statistic, figure, or cross-track claim here can drift from its artifact without failing a gate before the PDF is built.
+
 ## Limitations
 
 The Bernoulli–Ising toy, T-maze harness, and sheaf composition model are pedagogical. They validate analytical consistency, artifact wiring, renderer dispatch, and manuscript hydration—not empirical claims about biological agents. Default pymdp mode is `state_inference` with planning horizon 2; the policy-comparison artifact exposes policy-inference rows without changing the default rollout ([@sec:methods_pymdp]).
@@ -22,9 +26,9 @@ The discussion ontology binds `coverage_semantics` to the audit matrix in [@sec:
 
 <!-- sheaf-track:simulation -->
 
-Measured pymdp rollout (`state_inference`, config hash `ea4b126a9c22f22f`): mean belief entropy 0.3251 nats over 2 steps; goal reached flag 1; action diversity 2.
+Measured pymdp rollout (`state_inference`, config hash `81eb061f43b7bfd7`): mean belief entropy 0.3251 nats over 2 steps; goal reached flag 1; action diversity 2.
 
-Analytical sweep residual RMSE 0 nats (max residual 0). Coverage audit: 53 present / 53 bound / 0 missing cells on the IMRAD matrix.
+Analytical sweep residual RMSE 0 nats (max residual 0). Coverage audit: 90 present / 90 bound / 0 missing cells on the IMRAD matrix.
 
 <!-- sheaf-track:ontology -->
 
@@ -34,3 +38,13 @@ Analytical sweep residual RMSE 0 nats (max residual 0). Coverage audit: 53 prese
 - `pedagogical_scope` → **Pedagogical scope**
 - `state_inference_mode` → **State inference harness**
 
+
+<!-- sheaf-track:release_notes -->
+
+### Release notes evidence track
+
+The `release_notes` track keeps release-language claims source-backed by
+validation, semantic, and bundle artifacts. Its evidence artifact is
+`output/reports/release_notes_evidence.json`: it currently records
+3 rows, with source-backed status
+`true`.

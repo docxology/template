@@ -25,14 +25,17 @@ figures:
     filename: ising_mi_curve.png
     alt: >-
       Two-panel plot of mutual information versus coupling strength lambda for the
-      symmetric Bernoulli-Ising toy. Left panel shows closed-form curve (solid dark
-      line) and Monte Carlo estimates (dashed blue line) with lambda on the x-axis
-      and mutual information in nats on the y-axis. Right panel shows Monte Carlo
-      minus closed-form residuals versus lambda with a zero reference line.
+      symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark
+      line) and an independent exact recomputation via total correlation (dashed blue
+      line) with lambda on the x-axis and mutual information in nats on the y-axis. Right
+      panel shows the recompute-minus-closed-form residual versus lambda with a zero
+      reference line; the two deterministic estimators agree to machine precision.
     caption: >-
-      Closed-form and Monte Carlo mutual information I(λ) for the symmetric Bernoulli-Ising
-      toy across {{param_sweep_grid_points}} grid points up to λ_max = {{lambda_max}}; grid
-      maximum {{ising_mi_saturation}} nats on the measured sweep.
+      Closed-form $I(\lambda)$ and an independent exact recomputation via total correlation for
+      the symmetric Bernoulli-Ising toy across {{param_sweep_grid_points}} grid points up
+      to $\lambda_{\max}$ = {{lambda_max}}; grid maximum {{ising_mi_saturation}} nats. Both estimators
+      are deterministic (no sampling), so the right panel is a cross-implementation
+      agreement check (max residual {{sweep_max_residual}} nats), not a sampling residual.
     width: 0.9
   free_energy_curve:
     filename: free_energy_curve.png
@@ -143,7 +146,7 @@ figures:
       Layered concordance diagram linking analytical symbols, GNN variables from
       bernoulli_toy.gnn.md ({{gnn_spec_version}}), and Active Inference Ontology terms.
     caption: >-
-      GNN ↔ ontology concordance for the Bernoulli–Ising toy ({{gnn_spec_version}}).
+      GNN $\leftrightarrow$ ontology concordance for the Bernoulli–Ising toy ({{gnn_spec_version}}).
     width: 0.9
   semantic_gluing_graph:
     filename: semantic_gluing_graph.png
@@ -159,55 +162,33 @@ figures:
 section_figures:
   coverage_page:
     - id: sheaf_coverage_heatmap
-      caption_prefix: "Coverage overview. "
   intro_contributions:
     - id: multi_track_architecture
-      caption_prefix: "Figure I1 (intro). "
   methods_analytical:
     - id: ising_mi_curve
-      number: 1
-      caption_prefix: "Figure 1 (methods). "
     - id: gnn_ontology_concordance
-      caption_prefix: "Figure 1b (methods). "
   methods_pymdp:
     - id: tmaze_schematic
-      caption_prefix: "Figure M1 (methods). "
   methods_lean:
     - id: lean_boundary_status
-      caption_prefix: "Figure M2 (methods). "
   results_mi_sweep:
     - id: ising_mi_curve
-      number: 2
-      caption_prefix: "Figure 2 (results). "
       labeled: false
   results_free_energy:
     - id: free_energy_curve
-      number: 3
-      caption_prefix: "Figure 3 (results). "
   results_invariants:
     - id: invariant_dashboard
-      number: 5
-      caption_prefix: "Figure 5 (results). "
   results_si_tmaze:
     - id: si_belief_entropy_curve
-      caption_prefix: "Figure 3a (results). "
     - id: si_obs_action_trace
-      caption_prefix: "Figure 3b (results). "
     - id: si_tmaze_actions
-      caption_prefix: "Figure 3c (results). "
   methods_sheaf:
     - id: sheaf_layers_overview
-      number: 6
-      caption_prefix: "Figure 6 (methods). "
     - id: semantic_gluing_graph
-      caption_prefix: "Figure 6b (methods). "
   appendix_full_sheaf:
     - id: ising_mi_curve
-      caption_prefix: "Figure A1 (appendix). "
       labeled: false
     - id: si_tmaze_actions
-      caption_prefix: "Figure A2 (appendix). "
       labeled: false
     - id: sheaf_coverage_heatmap
-      number: 4
       labeled: false

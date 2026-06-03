@@ -1,6 +1,6 @@
 # AGENTS.md — template_active_inference
 
-Multi-track Active Inference public exemplar. Manuscript sections follow an **IMRAD outline** composed from sheaf fragment tracks (prose, formalism, simulation, pymdp, provenance, reproducibility, counterexample, visualization, Lean, GNN, ontology, animation).
+Multi-track Active Inference public exemplar. Manuscript sections follow an **IMRAD outline** composed from stable canonical sheaf fragment tracks (prose, formalism, simulation, assumption index, pymdp, interop, provenance, replay matrix, counterexample, adversarial audit, evidence fields, release bundle, gate ergonomics, sensitivity, uncertainty, benchmark, manuscript staleness, visualization, Lean, model checking, theorem traceability, GNN, ontology, animation, animation delta).
 
 ## Sheaf composition (registry-driven)
 
@@ -43,11 +43,17 @@ Full compose calls `emit_coverage_artifacts()` → JSON only. `generate_figures.
 | `si_goal_reached`, `si_action_diversity`, `si_entropy_min/max` | `analysis_statistics.json` / SI summary |
 | `sweep_max_residual`, `sweep_rmse_mi` | analytical sweep statistics |
 | `pymdp_mode`, `pymdp_config_hash` | `pymdp.yaml` + SI summary |
-| `validation_spine_artifact_count`, `reproducibility_check_count`, `counterexample_count` | promoted validation-spine artifacts |
+| `validation_spine_artifact_count`, `replay_matrix_row_count`, `counterexample_count` | promoted validation-spine and canonical replay artifacts |
+| `pymdp_runtime_known_warning_count`, `pymdp_runtime_unexpected_warning_count`, `pymdp_policy_posterior_row_count` | scoped pymdp/JAX runtime diagnostics + posterior grid |
+| `sensitivity_cell_count`, `uncertainty_row_count`, `benchmark_model_count`, `analytical_assumption_count`, `si_graph_world_topology_trace_count` | promoted toy sweep artifacts |
+| `model_checking_witness_count`, `interop_check_count`, `adversarial_audit_count` | formal interop and audit artifacts |
+| `semantic_restriction_count`, `dependency_edge_type_count`, `stale_artifact_fresh_count`, `manuscript_staleness_row_count`, `figure_source_coverage_count`, `scope_boundary_status` | semantic and integration audit artifacts |
+| `provenance_bundle_count`, `evidence_field_count`, `release_bundle_artifact_count`, `theorem_traceability_row_count`, `validation_gate_index_count`, `track_improvement_row_count` | canonical sheaf-track artifacts |
+| `artifact_diffoscope_row_count`, `proof_extraction_theorem_count`, `state_space_catalog_row_count`, `causal_ablation_row_count`, `artifact_license_row_count`, `release_notes_row_count` | promoted canonical proof, finite-scope, license, and release-note artifacts |
 
 `z_generate_manuscript_variables.py` writes `output/data/manuscript_variables.json` and resolves `output/manuscript/` for PDF rendering. Compose emits `{{token}}` placeholders; hydration is the single substitution boundary (fail-closed on unknown or single-brace `{token}` typos).
 
-**Semantic gluing certificate:** `scripts/z_generate_manuscript_variables.py` also writes
+**Semantic gluing certificates:** `scripts/z_generate_manuscript_variables.py` writes
 `output/data/sheaf_gluing_certificate.json`,
 `output/data/sheaf_evidence_crosswalk.json`, and
 `output/data/validation_dependency_graph.json` via
@@ -55,6 +61,19 @@ Full compose calls `emit_coverage_artifacts()` → JSON only. `generate_figures.
 shared GNN/ontology symbols, typed claim evidence, artifact producers, artifact
 consumers, validation gates, and manuscript variables. `validate_manuscript`
 fails if the certificate is missing, stale, or records cross-track disagreement.
+`generate_integration_audit.py` writes producer, stale-artifact, token-provenance,
+figure-source, claim-audit, scope-boundary, manuscript-staleness, and adversarial
+audit reports. `generate_sheaf_tracks.py` is the canonical promotion producer: it
+writes `output/data/sheaf_gluing_certificate.json`,
+`output/data/validation_dependency_graph.json`,
+`output/data/evidence_field_index.json`,
+`output/reports/release_bundle_manifest.json`,
+`output/data/theorem_traceability_matrix.json`,
+`output/data/track_improvement_scope.json`, and the canonical replay, sensitivity,
+uncertainty, counterexample, model-checking, interop, adversarial, provenance, and
+blocked-scope artifacts. `validate_outputs` and `validate_manuscript` require the
+canonical saved artifacts after regeneration; versioned live track IDs and
+versioned public output paths are intentionally not part of the live contract.
 
 ## pymdp configuration
 
@@ -79,25 +98,37 @@ JSONL logging: `output/logs/pymdp_runs.jsonl` (`si_tmaze_run_header` + `si_tmaze
 **Discussion sheaf tracks:** `discussion_outlook` binds `prose`, `simulation`, and `ontology` fragments with measured tokens.
 
 **Extension artifacts:** `simulate_si_tmaze.py` writes
-`output/data/si_policy_comparison.json`; `simulate_si_graph_world.py` writes
+`output/data/si_policy_comparison.json`,
+`output/data/pymdp_policy_posterior_grid.json`, and
+`output/reports/pymdp_runtime_diagnostics.json`; `simulate_si_graph_world.py` writes
 `output/data/si_graph_world_summary.json` and `output/data/si_graph_world_trace.json`;
 `render_animation.py` writes a trace-derived multi-frame
-`output/figures/si_belief_trajectory.gif`. These are deterministic public
+`output/figures/si_belief_trajectory.gif` and
+`output/data/animation_frame_deltas.json`. These are deterministic public
 artifacts.
 
-**Validation-spine tracks:** `generate_validation_spine.py` writes
-`output/data/artifact_provenance.json`,
-`output/reports/reproducibility_replay.json`, and
-`output/reports/counterexample_matrix.json`. These promote the first TODO
-validation-spine slice into live sheaf fragments: provenance and counterexample
-under `methods_sheaf`, reproducibility under `results_invariants`, and all
-three under `appendix_full_sheaf`.
+**Validation-spine tracks:** `generate_validation_spine.py` writes initial
+provenance, replay, and counterexample support artifacts. `generate_sheaf_tracks.py`
+then folds the strongest deterministic evidence into the canonical `provenance`,
+`replay_matrix`, and `counterexample` sheaf tracks, plus the validation-spine
+tracks added for `evidence_fields`, `release_bundle`, `theorem_traceability`, and
+`gate_ergonomics`.
+
+**Promoted roadmap tracks:** `generate_toy_sweep_tracks.py` writes sensitivity,
+uncertainty, benchmark, measured policy-grid, EFE-availability, analytical-observable,
+analytical-assumption, graph-world topology trace, and graph-world invariant
+artifacts. `generate_formal_interop_tracks.py` writes finite model-checking, GNN
+round-trip/lint, ontology profile/alias, and Lean theorem inventory artifacts.
+`generate_integration_audit.py` writes manuscript-staleness and integration audit
+artifacts. `generate_sheaf_tracks.py` consolidates the live canonical track
+surface and removes legacy duplicate public artifacts. These tracks are live and
+toy-only; `empirical_adapter` remains blocked rather than live.
 
 Non-blocking follow-up scope is tracked in [`TODO.md`](TODO.md); keep current
 publication claims confined to deterministic toy artifacts unless new measured
 outputs are added and validated.
 
-**Methods sheaf layers (main body):** `methods_sheaf` uses explicit `track_order: [prose, formalism, visualization, provenance, counterexample, layers]`. Layers overview figure via `visualization` / `section_figures`; tables via optional `layers` track / `layers_report` renderer with HTML markers `sheaf-layers:*`. Front-matter audit page [`manuscript/00_00_sheaf_coverage.md`](manuscript/00_00_sheaf_coverage.md) uses `section_figures.coverage_page` (no duplicate figure number vs appendix coverage figure).
+**Methods sheaf layers (main body):** `methods_sheaf` uses explicit `track_order` to place prose/formalism/visualization, provenance, counterexample, adversarial audit, evidence fields, release bundle, gate ergonomics, manuscript staleness, and generated layer tables. Layers overview figure via `visualization` / `section_figures`; tables via optional `layers` track / `layers_report` renderer with HTML markers `sheaf-layers:*`, including the generated track-improvement scope. Front-matter audit page [`manuscript/00_00_sheaf_coverage.md`](manuscript/00_00_sheaf_coverage.md) uses `section_figures.coverage_page` (no duplicate figure number vs appendix coverage figure).
 
 **Package modules** (`src/manuscript/sheaf/`):
 
@@ -130,6 +161,7 @@ Edit fragments only under [`manuscript/sections/imrad/`](manuscript/sections/imr
 | `src/ontology/` | Section ontology YAML helpers (`load_section_ontology` flattens nested `terms:` blocks) |
 | `src/gates/` | `validation.py` facade; `output_checks`, `manuscript_checks`, `claim_ledger`, `lean` |
 | `src/validation_spine/` | Provenance hashes, deterministic replay, and counterexample matrix artifacts |
+| `src/roadmap_tracks/` | Promoted toy sweep, formal interop, integration-audit, and canonical sheaf-track artifacts |
 | `gnn/*.gnn.md` | GNN source files |
 | `lean/TemplateActiveInference/` | Lean witnesses — `build_lean` gate runs `lake build` when `lean/lakefile.lean` exists; absent Lean tree skips cleanly |
 | `scripts/` | Thin orchestrators only (extension tracks delegate to `src/visualizations/animation.py`, `src/simulation/graph_world.py`) |

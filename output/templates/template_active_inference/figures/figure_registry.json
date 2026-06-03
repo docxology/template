@@ -10,7 +10,7 @@
   },
   "fig:gnn_ontology_concordance": {
     "alt": "Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md ({{gnn_spec_version}}), and Active Inference Ontology terms.",
-    "caption": "GNN \u2194 ontology concordance for the Bernoulli\u2013Ising toy ({{gnn_spec_version}}).",
+    "caption": "GNN $\\leftrightarrow$ ontology concordance for the Bernoulli\u2013Ising toy ({{gnn_spec_version}}).",
     "figure_id": "gnn_ontology_concordance",
     "filename": "gnn_ontology_concordance.png",
     "generated_by": "visualizations.figures::gnn_ontology_concordance",
@@ -27,8 +27,8 @@
     "width": 0.9
   },
   "fig:ising_mi_curve": {
-    "alt": "Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows closed-form curve (solid dark line) and Monte Carlo estimates (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows Monte Carlo minus closed-form residuals versus lambda with a zero reference line.",
-    "caption": "Closed-form and Monte Carlo mutual information I(\u03bb) for the symmetric Bernoulli-Ising toy across {{param_sweep_grid_points}} grid points up to \u03bb_max = {{lambda_max}}; grid maximum {{ising_mi_saturation}} nats on the measured sweep.",
+    "alt": "Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark line) and an independent exact recomputation via total correlation (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows the recompute-minus-closed-form residual versus lambda with a zero reference line; the two deterministic estimators agree to machine precision.",
+    "caption": "Closed-form $I(\\lambda)$ and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across {{param_sweep_grid_points}} grid points up to $\\lambda_{\\max}$ = {{lambda_max}}; grid maximum {{ising_mi_saturation}} nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual {{sweep_max_residual}} nats), not a sampling residual.",
     "figure_id": "ising_mi_curve",
     "filename": "ising_mi_curve.png",
     "generated_by": "visualizations.figures::ising_mi_curve",

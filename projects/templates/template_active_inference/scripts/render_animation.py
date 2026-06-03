@@ -29,14 +29,16 @@ def main(argv: list[str] | None = None) -> int:
         print("render_animation.py: skipped (--skip)")
         return 0
 
-    from visualizations.animation import write_belief_trajectory_gif
+    from visualizations.animation import write_animation_frame_deltas, write_belief_trajectory_gif
 
     try:
         out = write_belief_trajectory_gif(PROJECT_ROOT)
+        deltas = write_animation_frame_deltas(PROJECT_ROOT)
     except FileNotFoundError as exc:
         print(str(exc), file=sys.stderr)
         return 1
     print(out)
+    print(deltas)
     return 0
 
 

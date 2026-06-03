@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>07_methods_lean</title>
+  <title>07_methods_lean.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -175,26 +175,20 @@
 <!-- sheaf-track:prose -->
 <p>The Lean track provides minimal boundary witnesses checked by
 <code>lake build</code> under
-<code>lean/TemplateActiveInference/</code>. <span class="citation"
-data-cites="fig:lean_boundary_status">[@fig:lean_boundary_status]</span>
+<code>lean/TemplateActiveInference/</code>. [fig:lean_boundary_status]
 summarizes proved versus deferred statements; fragments cite theorem
 names without duplicating proof scripts in prose.</p>
-<p>Horizon witnesses link back to the analytical toy (<span
-class="citation"
-data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>)
-and the pymdp planning depth (<span class="citation"
-data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span>).</p>
+<p>Horizon witnesses link back to the analytical toy
+([sec:methods_analytical]) and the pymdp planning depth
+([sec:methods_pymdp]).</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:lean_boundary_status">
-<img src="../figures/lean_boundary_status.png"
-style="width:90.0%"
-alt="Table figure listing Lean modules, declaration kinds, names, and proved versus sorry status under lean/TemplateActiveInference/." />
-<figcaption aria-hidden="true">Table figure listing Lean modules,
-declaration kinds, names, and proved versus sorry status under
-lean/TemplateActiveInference/.</figcaption>
+<img src="../figures/lean_boundary_status.png" style="width:90.0%"
+data-fig-alt="Table figure listing Lean modules, declaration kinds, names, and proved versus sorry status under lean/TemplateActiveInference/."
+alt="Lean formalization boundary: module witnesses checked by lake build." />
+<figcaption aria-hidden="true">Lean formalization boundary: module
+witnesses checked by lake build.</figcaption>
 </figure>
-<p><em>Figure M2 (methods). Lean formalization boundary: module
-witnesses checked by lake build.</em></p>
 <!-- sheaf-track:lean -->
 <p>Lean module
 <code>TemplateActiveInference.SophisticatedInference</code> declares the
@@ -202,13 +196,42 @@ planning-horizon parameter <code>defaultPolicyLen</code> and finite
 T-maze boundary witnesses:
 <code>sophisticated_requires_horizon : defaultPolicyLen &gt; 1</code>,
 <code>tmaze_two_forward_steps_reach_goal</code>, and
-<code>tmaze_goal_absorbing</code>. These theorems formalize the small
-state-transition boundary shared with the Python harness; they do
-<em>not</em> prove that the toy policy posterior is a general model of
-sophisticated inference. Axioms are audited with
+<code>tmaze_goal_absorbing</code>. It also contains constructive finite
+witnesses for graph-world reachability, finite policy enumeration,
+two-state belief weights, and two-policy posterior weights. These
+theorems formalize small finite boundaries shared with generated
+artifacts; they do <em>not</em> prove that the toy policy posterior is a
+general model of sophisticated inference. Axioms are audited with
 <code>#print axioms</code> (the gate whitelists only
 <code>propext</code>, <code>Classical.choice</code>,
 <code>Quot.sound</code>); see the Lean track gate.</p>
 <p>Build via <code>lake build</code> under <code>lean/</code>.</p>
+<!-- sheaf-track:model_checking -->
+<p>The <code>model_checking</code> fragment complements Lean with finite
+exhaustive witnesses.
+<code>output/reports/model_checking_witnesses.json</code> records 12
+toy-state witnesses and reports <code>true</code> only when no
+counterexample is found in the enumerated state/action space.</p>
+<p>This is deliberately narrower than a semantic proof of all Active
+Inference programs. It checks the finite T-maze and graph-world boundary
+objects used by this manuscript and exposes the witness inventory to the
+same artifact and claim gates as the Lean theorem inventory. The Lean
+graph-world inventory witnesses 4 generated toy topology ids, with
+all-topologies-witnessed flag <code>true</code>; theorem traceability
+contributes 11 linked rows.</p>
+<!-- sheaf-track:theorem_traceability -->
+<p>The <code>theorem_traceability</code> fragment binds Lean theorem
+inventory rows to finite model-checking witnesses, manuscript claims,
+and evidence fields.
+<code>output/data/theorem_traceability_matrix.json</code> records 11
+traceability rows and passes only when every theorem row is linked
+(<code>true</code>).</p>
+<!-- sheaf-track:proof_extraction -->
+<h3 id="proof-extraction-track">Proof extraction track</h3>
+<p>The <code>proof_extraction</code> track extracts Lean theorem
+statements and proof-source metadata into
+<code>output/data/proof_extraction_index.json</code>. The index
+currently contains 10 extracted theorem rows, with constructive-token
+status <code>true</code>.</p>
 </body>
 </html>

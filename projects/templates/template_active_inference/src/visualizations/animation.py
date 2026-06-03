@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
+
+ANIMATION_DELTAS_SCHEMA = "template_active_inference.animation_frame_deltas.v1"
 
 
 def _load_trace_steps(root: Path) -> list[dict]:
@@ -57,3 +60,83 @@ def write_belief_trajectory_gif(project_root: Path) -> Path:
         loop=0,
     )
     return out
+
+
+def build_animation_frame_deltas(project_root: Path) -> dict[str, Any]:
+    """Compute a deterministic manifest proving adjacent GIF frames change."""
+    from PIL import Image, ImageChops, ImageSequence
+
+    root = project_root.resolve()
+    gif_path = root / "output" / "figures" / "si_belief_trajectory.gif"
+    if not gif_path.is_file():
+        return {
+            "schema": ANIMATION_DELTAS_SCHEMA,
+            "artifact": "output/figures/si_belief_trajectory.gif",
+            "frame_count": 0,
+            "delta_count": 0,
+            "rows": [],
+            "all_nonzero": False,
+        }
+
+    with Image.open(gif_path) as image:
+        frames = [frame.convert("RGB") for frame in ImageSequence.Iterator(image)]
+    rows: list[dict[str, Any]] = []
+    for idx, (left, right) in enumerate(zip(frames, frames[1:], strict=False), start=1):
+        diff = ImageChops.difference(left, right)
+        bbox = diff.getbbox()
+        if bbox is None:
+            area = 0
+            bbox_values: list[int] = []
+        else:
+            x0, y0, x1, y1 = bbox
+            area = int((x1 - x0) * (y1 - y0))
+            bbox_values = [int(x0), int(y0), int(x1), int(y1)]
+        rows.append(
+            {
+                "from_frame": idx - 1,
+                "to_frame": idx,
+                "changed_bbox": bbox_values,
+                "delta_bbox_area": area,
+                "nonzero": bool(bbox is not None and area > 0),
+            }
+        )
+    return {
+        "schema": ANIMATION_DELTAS_SCHEMA,
+        "artifact": "output/figures/si_belief_trajectory.gif",
+        "frame_count": len(frames),
+        "delta_count": len(rows),
+        "rows": rows,
+        "all_nonzero": len(frames) >= 2 and bool(rows) and all(row["nonzero"] for row in rows),
+    }
+
+
+def write_animation_frame_deltas(project_root: Path) -> Path:
+    """Write the frame-delta manifest for the deterministic animation track."""
+    root = project_root.resolve()
+    path = root / "output" / "data" / "animation_frame_deltas.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(build_animation_frame_deltas(root), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
+def validate_animation_frame_deltas(project_root: Path) -> list[str]:
+    """Return frame-delta manifest issues."""
+    root = project_root.resolve()
+    path = root / "output" / "data" / "animation_frame_deltas.json"
+    if not path.is_file():
+        return ["missing output/data/animation_frame_deltas.json"]
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    issues: list[str] = []
+    if payload.get("schema") != ANIMATION_DELTAS_SCHEMA:
+        issues.append("animation_frame_deltas.json schema mismatch")
+    if int(payload.get("frame_count", 0) or 0) < 2:
+        issues.append("animation_frame_deltas.json frame count is too small")
+    if int(payload.get("delta_count", -1) or -1) != int(payload.get("frame_count", 0) or 0) - 1:
+        issues.append("animation_frame_deltas.json delta count does not match frame count")
+    if payload.get("all_nonzero") is not True:
+        issues.append("animation_frame_deltas.json contains static adjacent frames")
+    live = build_animation_frame_deltas(root)
+    stable_keys = ("frame_count", "delta_count", "rows", "all_nonzero")
+    if payload and {key: payload.get(key) for key in stable_keys} != {key: live.get(key) for key in stable_keys}:
+        issues.append("animation_frame_deltas.json is stale relative to GIF frames")
+    return issues

@@ -21,6 +21,6 @@ Use the headless Agg backend and pin `savefig` metadata so figures are byte-repr
 
 Alt strings in `figures.yaml` are full accessibility descriptions. Captions and alt text use `{{token}}` placeholders resolved at hydration (`z_generate_manuscript_variables.py`). Partial substitution via `variables=` is fail-closed. Unknown tokens fail hydration with `ValueError`. Single-brace `{token}` typos are rejected at hydration.
 
-**Caption rule:** when `caption_prefix` is set in `figures.yaml`, `render_figure_markdown` does not also emit a redundant `Figure {n}.` prefix.
+**Caption rule:** pandoc-crossref owns all figure numbering. `render_figure_markdown` emits one `{#fig:id}` label per labeled figure with the caption in the image alt slot (verbose description rides `fig-alt`) and **never** a hand-written `Figure N` / `*Figure ...*` line; reused figures use empty alt + a `Reproduced from [@fig:id]` cite (unnumbered). `caption_prefix`/`number` in `figures.yaml` are deprecated and ignored.
 
 **Heatmap:** `figures_sheaf_draw.draw_coverage_heatmap` draws IMRAD block labels on the left margin when `heatmap.group_separator` is enabled in `manuscript/sheaf/coverage.yaml`.

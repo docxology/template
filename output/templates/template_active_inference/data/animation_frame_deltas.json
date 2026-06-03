@@ -1,0 +1,45 @@
+{
+  "all_nonzero": true,
+  "artifact": "output/figures/si_belief_trajectory.gif",
+  "delta_count": 3,
+  "frame_count": 4,
+  "rows": [
+    {
+      "changed_bbox": [
+        24,
+        22,
+        202,
+        154
+      ],
+      "delta_bbox_area": 23496,
+      "from_frame": 0,
+      "nonzero": true,
+      "to_frame": 1
+    },
+    {
+      "changed_bbox": [
+        24,
+        22,
+        273,
+        154
+      ],
+      "delta_bbox_area": 32868,
+      "from_frame": 1,
+      "nonzero": true,
+      "to_frame": 2
+    },
+    {
+      "changed_bbox": [
+        23,
+        22,
+        397,
+        154
+      ],
+      "delta_bbox_area": 49368,
+      "from_frame": 2,
+      "nonzero": true,
+      "to_frame": 3
+    }
+  ],
+  "schema": "template_active_inference.animation_frame_deltas.v1"
+}

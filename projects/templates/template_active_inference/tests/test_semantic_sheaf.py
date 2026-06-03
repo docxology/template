@@ -16,18 +16,34 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
 
     assert cert["schema"] == "template_active_inference.semantic_gluing.v2"
     assert cert["ok"] is True
-    assert cert["manuscript_variables"]["sheaf_track_count"] == 13
+    assert cert["manuscript_variables"]["sheaf_track_count"] == 32
     assert cert["shared_symbols"]["bernoulli"]["J"] == "CrossStreamCouplingPotential"
     assert cert["shared_symbols"]["si_tmaze"]["pi"] == "PolicyPosterior"
     assert cert["artifact_sources"]["si_summary"]["path"] == "output/data/si_tmaze_summary.json"
     assert cert["artifact_graph"]["output/data/si_graph_world_trace.json"]["producer"] == "simulate_si_graph_world.py"
+    assert cert["artifact_graph"]["output/data/sheaf_section_status_matrix.json"]["producer"] == "generate_sheaf_tracks.py"
+    assert cert["artifact_graph"]["output/reports/sheaf_render_log.json"]["producer"] == "generate_sheaf_tracks.py"
     assert "results_si_tmaze" in cert["artifact_graph"]["output/data/si_policy_comparison.json"]["consumers"]
+    assert cert["artifact_graph"]["output/data/pymdp_policy_posterior_grid.json"]["producer"] == "simulate_si_tmaze.py"
     assert cert["restrictions"]["animation_frame_count"] >= 3
+    assert cert["restrictions"]["pymdp_runtime_unexpected_warning_count"] == 0
+    assert cert["restrictions"]["policy_posterior_normalized"] is True
+    assert cert["restrictions"]["policy_comparison_complete_grid"] is True
+    assert cert["restrictions"]["section_status_all_bound_present"] is True
+    assert cert["restrictions"]["section_status_all_sections_have_status"] is True
+    assert cert["restrictions"]["section_status_cell_count"] > 0
+    assert cert["restrictions"]["sheaf_render_log_all_events_ok"] is True
 
     methods_pymdp = next(section for section in cert["sections"] if section["id"] == "methods_pymdp")
-    assert {"prose", "formalism", "pymdp", "gnn", "ontology", "visualization"} <= set(
-        methods_pymdp["tracks"]
-    )
+    assert {
+        "prose",
+        "formalism",
+        "pymdp",
+        "interop",
+        "gnn",
+        "ontology",
+        "visualization",
+    } <= set(methods_pymdp["tracks"])
 
 
 def test_semantic_gluing_rejects_wrong_si_ontology(project_root: Path) -> None:
@@ -132,6 +148,40 @@ def test_dependency_graph_distinguishes_missing_from_unconfigured_existing(proje
         assert any("si_graph_world_summary.json lacks configured producer" in issue for issue in missing_issues)
     finally:
         graph_summary.write_text(original, encoding="utf-8")
+
+
+def test_semantic_gluing_rejects_mutated_policy_posterior(project_root: Path) -> None:
+    from manuscript.sheaf.semantic import validate_semantic_gluing, write_semantic_gluing_outputs
+    from simulation.si_artifacts import write_policy_comparison, write_policy_posterior_grid
+
+    ensure_gate_artifacts(project_root)
+    write_policy_comparison(project_root)
+    posterior_path = write_policy_posterior_grid(project_root)
+    write_semantic_gluing_outputs(project_root)
+    original = posterior_path.read_text(encoding="utf-8")
+    try:
+        payload = json.loads(original)
+        row = next(row for row in payload["rows"] if row["posterior_available"])
+        row["q_pi"] = [0.7, 0.7]
+        row["normalized"] = False
+        payload["all_available_posteriors_normalized"] = False
+        posterior_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        issues = validate_semantic_gluing(project_root)
+    finally:
+        posterior_path.write_text(original, encoding="utf-8")
+
+    assert any("stale relative to live semantic fields" in issue for issue in issues)
+
+
+def test_semantic_certificate_records_lean_graph_world_topology_witnesses(project_root: Path) -> None:
+    from manuscript.sheaf.semantic import build_semantic_gluing_certificate
+
+    ensure_gate_artifacts(project_root)
+    cert = build_semantic_gluing_certificate(project_root)
+
+    assert cert["ok"] is True
+    assert cert["restrictions"]["lean_all_proved"] is True
+    assert cert["restrictions"]["model_checking_all_passed"] is True
 
 
 def test_typed_claim_evidence_rejects_wrong_expected_value(project_root: Path, tmp_path: Path) -> None:

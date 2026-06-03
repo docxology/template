@@ -1,0 +1,305 @@
+{
+  "all_theorems_linked": true,
+  "row_count": 11,
+  "rows": [
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "branch_graph_world_three_steps_reach_goal"
+    },
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "diamond_graph_world_four_steps_reach_goal"
+    },
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "graph_world_three_steps_reach_goal"
+    },
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "ising_coupling_sum_zero"
+    },
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "loop_graph_world_four_steps_reach_goal"
+    },
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "policy_enumeration_contains_forward"
+    },
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "sophisticated_requires_horizon"
+    },
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "tmaze_goal_absorbing"
+    },
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "tmaze_two_forward_steps_reach_goal"
+    },
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "two_policy_posterior_weights_sum_to_two"
+    },
+    {
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "evidence_fields": [
+        "$.all_passed",
+        "$.all_exhaustive"
+      ],
+      "linked": true,
+      "model_witnesses": [
+        "base_0",
+        "base_1",
+        "base_2",
+        "base_3",
+        "base_4",
+        "base_5",
+        "base_6",
+        "topology_linear4",
+        "topology_branch4",
+        "topology_loop5",
+        "topology_diamond5",
+        "finite_policy_posterior_inventory"
+      ],
+      "status": "proved",
+      "theorem": "two_state_belief_weights_sum_to_two"
+    }
+  ],
+  "schema": "template_active_inference.theorem_traceability_matrix.v1",
+  "schema_version": "template_active_inference.canonical_sheaf_tracks.v1"
+}

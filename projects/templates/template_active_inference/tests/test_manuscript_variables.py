@@ -1,4 +1,6 @@
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
@@ -13,8 +15,10 @@ def test_generate_variables_with_outputs() -> None:
     assert vars_["lambda_grid_points"] >= 2
     assert vars_["bernoulli_state_count"] == 2
     assert vars_["gnn_spec_version"] == "GNN v1.1"
-    assert vars_["pipeline_track_count"] == 10
-    assert vars_["sheaf_track_count"] == 13
+    assert vars_["pipeline_track_count"] == 29
+    assert vars_["sheaf_track_count"] == 32
+    assert vars_["lean_graph_world_topology_witness_count"] >= 3
+    assert vars_["lean_graph_world_all_topologies_witnessed"] is True
 
 
 def test_invariant_counts_include_simulation_when_merged() -> None:
@@ -109,3 +113,21 @@ def test_gnn_spec_version_skips_blank_lines_after_header(tmp_path: Path) -> None
 def test_generate_variables_requires_analysis_outputs(tmp_path: Path) -> None:
     with pytest.raises(FileNotFoundError, match="missing analysis artifact"):
         generate_variables(tmp_path, require_analysis_outputs=True)
+
+
+def test_generate_manuscript_variables_reaches_semantic_fixed_point(project_root: Path) -> None:
+    """The hydration entry point must leave semantic/sheaf validators converged."""
+    from manuscript.sheaf.semantic import validate_semantic_gluing
+    from roadmap_tracks import validate_sheaf_track_artifacts
+
+    result = subprocess.run(
+        [sys.executable, "scripts/z_generate_manuscript_variables.py"],
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert validate_semantic_gluing(project_root) == []
+    assert validate_sheaf_track_artifacts(project_root) == []

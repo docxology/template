@@ -14,6 +14,7 @@ proven to reject bad input, not just accept good input.
 | [`manuscript_checks.py`](manuscript_checks.py) | Sheaf manifest, tokens, hydration, layers markers |
 | [`claim_ledger.py`](claim_ledger.py) | Claim ledger vs on-disk artifacts (`data/claim_ledger.yaml` required) |
 | [`lean.py`](lean.py) | Conditional `lake build` when `lean/lakefile.lean` exists |
+| [`method_inventory.py`](method_inventory.py) | AST-backed report for every `def` and `class` under `src/` and `scripts/` |
 
 ## Manuscript gates (`validate_manuscript`)
 
@@ -49,3 +50,12 @@ Negative controls: `test_validate_outputs_negative_missing_sweep`, `test_validat
 | `build_lean(root)` | Runs `lake build` when present (must exit 0); returns skip message when absent |
 
 Negative controls: `test_build_lean_when_present_must_succeed`, `test_build_lean_skips_without_lakefile`, `test_validate_manuscript_gnn_concordance_negative`, `test_validate_manuscript_claim_ledger_negative`, `test_validate_manuscript_claim_ledger_missing_file_negative`, `test_validate_manuscript_tokens_registered_negative`.
+
+## Method inventory (`generate_method_inventory.py`)
+
+[`method_inventory.py`](method_inventory.py) writes
+`docs/reference/method-inventory.md` from the live AST. The report documents
+every source/script `def` and `class`; entries without inline docstrings are
+marked `inventory fallback` so missing method-level docstrings stay visible.
+`tests/test_method_inventory.py` pins the generated inventory shape and docs
+signposts.

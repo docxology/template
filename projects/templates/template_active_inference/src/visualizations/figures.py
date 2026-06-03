@@ -55,7 +55,7 @@ def figure_ising_mi_curve(project_root: Path) -> Path:
             lambdas,
             empirical,
             "--",
-            label="empirical",
+            label="exact recompute",
             color=style.color("secondary"),
             linewidth=2,
         )
@@ -69,7 +69,7 @@ def figure_ising_mi_curve(project_root: Path) -> Path:
         ax_resid.plot(lambdas, residuals, color=style.color("accent"), linewidth=1.5)
         ax_resid.set_xlabel(r"$\lambda$")
         ax_resid.set_ylabel("residual")
-        ax_resid.set_title("MC − closed", fontsize=9)
+        ax_resid.set_title("recompute − closed", fontsize=9)
         style_grid(ax_resid, style)
         save_styled_figure(fig, out, style)
     return out
@@ -194,11 +194,16 @@ def figure_semantic_gluing_graph(project_root: Path) -> Path:
         "output/data/sheaf_evidence_crosswalk.json",
         "output/data/validation_dependency_graph.json",
         "output/data/artifact_provenance.json",
-        "output/reports/reproducibility_replay.json",
-        "output/reports/counterexample_matrix.json",
-        "output/data/si_policy_comparison.json",
-        "output/data/si_graph_world_trace.json",
-        "output/figures/si_belief_trajectory.gif",
+        "output/reports/replay_matrix.json",
+        "output/data/sensitivity_sweep.json",
+        "output/data/uncertainty_summary.json",
+        "output/data/toy_benchmark_matrix.json",
+        "output/data/interop_roundtrip_report.json",
+        "output/reports/model_checking_witnesses.json",
+        "output/reports/adversarial_audit.json",
+        "output/data/evidence_field_index.json",
+        "output/reports/release_bundle_manifest.json",
+        "output/data/theorem_traceability_matrix.json",
     ]
     artifacts = graph.get("artifacts") or {}
     out = figure_output_path(root, "semantic_gluing_graph")

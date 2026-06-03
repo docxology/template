@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>08_methods_sheaf</title>
+  <title>08_methods_sheaf.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -249,16 +249,12 @@ composer flattens the binding set into one Markdown section for PDF and
 web output.</p>
 <p>The operational claim is auditable binding: analytical, simulation,
 pymdp, visualization, Lean, GNN, ontology, and optional media fragments
-attach to each IMRAD row under <span class="citation"
-data-cites="eq:coverage_cell">[@eq:coverage_cell]</span>
-(<strong>P</strong> present, <strong>—</strong> unbound,
-<strong>M</strong> missing).</p>
+attach to each IMRAD row under [eq:coverage_cell] (<strong>P</strong>
+present, <strong>—</strong> unbound, <strong>M</strong> missing).</p>
 <h2 id="coverage-and-figures">Coverage and figures</h2>
-<p><span class="citation"
-data-cites="fig:sheaf_layers_overview">[@fig:sheaf_layers_overview]</span>
-summarizes 13 fragment types and their IMRAD bindings. Generated tables
-below list every track definition and section×track binding at compose
-time.</p>
+<p>[fig:sheaf_layers_overview] summarizes 32 fragment types and their
+IMRAD bindings. Generated tables below list every track definition and
+section×track binding at compose time.</p>
 <h2 id="compose-commands">Compose commands</h2>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/compose_manuscript.py</span>
@@ -266,10 +262,8 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <p>Each run emits <code>output/data/sheaf_coverage_matrix.json</code>
 and regenerates coverage artifacts. Partial compose
 (<code>--section</code>) is draft-only; the matrix always reflects the
-full manifest. Coverage totals appear on <span class="citation"
-data-cites="sec:sheaf_coverage">[@sec:sheaf_coverage]</span>; discussion
-scope is in <span class="citation"
-data-cites="sec:discussion_outlook">[@sec:discussion_outlook]</span>.</p>
+full manifest. Coverage totals appear on [sec:sheaf_coverage];
+discussion scope is in [sec:discussion_outlook].</p>
 <h2 id="law-verification">Law verification</h2>
 <p><code>--validate-only --strict</code> runs the structural gate before
 any fragment is glued. Beyond per-cell coverage, it invokes the
@@ -288,7 +282,10 @@ proves each check is falsifiable.</p>
 cross-track symbols, typed claim evidence, artifact sources, and
 manuscript-variable restrictions; validation fails when the analytical,
 pymdp, GNN, ontology, Lean, visualization, or manuscript tracks disagree
-about a shared symbol or measured claim.</p>
+about a shared symbol or measured claim. [fig:semantic_gluing_graph]
+renders this gluing graph: the configured producers, the generated
+evidence artifacts, and the validation consumers that read each shared
+symbol.</p>
 <!-- sheaf-track:formalism -->
 <h3 id="base-poset-and-presheaf">Base poset and presheaf</h3>
 <p>The manuscript is modelled as a coverage sheaf over a finite base
@@ -331,8 +328,8 @@ B(s,t) \in \{\mathrm{P}, \mathrm{—}, \mathrm{M}\}
 filesystem existence at compose time: <strong>P</strong> when a bound
 fragment exists, <strong>—</strong> when the track is unbound for that
 row, and <strong>M</strong> when a bound path is missing. The current
-regenerated matrix reports 53 present / 53 bound / 0 missing cells.
-Registry size: <span class="math inline">\(|\mathcal{T}| = 13\)</span>
+regenerated matrix reports 90 present / 90 bound / 0 missing cells.
+Registry size: <span class="math inline">\(|\mathcal{T}| = 32\)</span>
 types across 17 IMRAD manifest rows (5 group rows, 12 composing
 sections).</p>
 <h3 id="verified-sheaf-laws">Verified sheaf laws</h3>
@@ -342,10 +339,9 @@ machine-checked. The oracle <code>verify_sheaf_laws</code>
 (<code>src/manuscript/sheaf/laws.py</code>) verifies 6 laws, and the
 regenerated build reports 6/6 satisfied:</p>
 <ol type="1">
-<li><strong>Poset.</strong> The IMRAD blocks form the chain of <span
-class="citation" data-cites="eq:imrad_chain">[@eq:imrad_chain]</span>;
-compose order is monotone in block rank and every composing section’s
-block carries a group row.</li>
+<li><strong>Poset.</strong> The IMRAD blocks form the chain of
+[eq:imrad_chain]; compose order is monotone in block rank and every
+composing section’s block carries a group row.</li>
 <li><strong>Presheaf (functoriality).</strong> Every bound track lies in
 <span class="math inline">\(\mathcal{T}\)</span>; <span
 class="math inline">\(\pi\)</span> is a strict total order; and each
@@ -396,53 +392,99 @@ a content-level audit over the same base, not an additional topological
 law.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:sheaf_layers_overview">
-<img src="../figures/sheaf_layers_overview.png"
-style="width:98.0%"
-alt="Two-panel overview of sheaf fragment layers. Left panel shows 13 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 17 manifest rows and 13 tracks." />
-<figcaption aria-hidden="true">Two-panel overview of sheaf fragment
-layers. Left panel shows 13 composable track types in registry compose
-order with labels and renderer ids. Right panel shows the IMRAD section
-binding heatmap with black present, white absent, and gray missing cells
-across 17 manifest rows and 13 tracks.</figcaption>
+<img src="../figures/sheaf_layers_overview.png" style="width:98.0%"
+data-fig-alt="Two-panel overview of sheaf fragment layers. Left panel shows 32 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 17 manifest rows and 32 tracks."
+alt="Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for 32 fragment types across 17 manifest rows (90 present / 90 bound / 0 missing)." />
+<figcaption aria-hidden="true">Sheaf layers overview: registry stack
+(compose order, renderer ids) and IMRAD binding heatmap for 32 fragment
+types across 17 manifest rows (90 present / 90 bound / 0
+missing).</figcaption>
 </figure>
-<p><em>Figure 6 (methods). Sheaf layers overview: registry stack
-(compose order, renderer ids) and IMRAD binding heatmap for 13 fragment
-types across 17 manifest rows (53 present / 53 bound / 0
-missing).</em></p>
 <figure id="fig:semantic_gluing_graph">
-<img src="../figures/semantic_gluing_graph.png"
-style="width:95.0%"
-alt="Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate." />
-<figcaption aria-hidden="true">Dependency diagram linking configured
-analysis scripts to generated evidence artifacts, manuscript consumers,
-and validation gates for the semantic sheaf gluing
-certificate.</figcaption>
+<img src="../figures/semantic_gluing_graph.png" style="width:95.0%"
+data-fig-alt="Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate."
+alt="Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate." />
+<figcaption aria-hidden="true">Semantic gluing graph: configured
+producers, generated evidence artifacts, and validation consumers for
+the multi-track sheaf certificate.</figcaption>
 </figure>
-<p><em>Figure 6b (methods). Semantic gluing graph: configured producers,
-generated evidence artifacts, and validation consumers for the
-multi-track sheaf certificate.</em></p>
 <!-- sheaf-track:provenance -->
 <p>The <code>provenance</code> fragment makes artifact lineage a live
-validation-spine track. The configured producer
-<code>generate_validation_spine.py</code> writes
-<code>output/data/artifact_provenance.json</code>, which hashes 14 core
-artifacts and records their producer scripts plus config digests.
+canonical sheaf track. The configured producer
+<code>generate_sheaf_tracks.py</code> writes
+<code>output/data/artifact_provenance.json</code>, which hashes 70
+required toy artifacts and records producer scripts, source commit,
+deterministic seed fields, config digests, and 5 artifact bundles.
 Publication claims that depend on generated files must be traceable to
 this lineage table or to a narrower artifact-specific certificate.</p>
-<p>The first promoted provenance claim is intentionally limited: every
-listed core artifact exists, has a SHA-256 digest, and is produced by a
-configured analysis script. A changed file, missing producer, or stale
-saved digest is a validation failure, not a prose warning.</p>
+<p>The provenance claim is intentionally limited: every listed artifact
+exists, has a SHA-256 digest or an explicit cycle exclusion, is produced
+by a configured analysis script, and carries seed/config provenance
+(<code>70</code> seeded rows; all seeded flag <code>true</code>;
+bundle-complete flag <code>true</code>). A changed file, missing
+producer, or stale saved digest is a validation failure, not a prose
+warning.</p>
 <!-- sheaf-track:counterexample -->
 <p>The <code>counterexample</code> fragment records expected-failure
 fixtures as first-class evidence.
-<code>output/reports/counterexample_matrix.json</code> lists 5 negative
+<code>output/reports/counterexample_matrix.json</code> lists 22 negative
 controls that intentionally mutate ontology mappings, semantic
-certificates, graph-world trace agreement, typed claim evidence, and
-provenance hashes.</p>
+certificates, graph-world trace agreement, typed claim evidence, replay
+rows, release parity, and provenance hashes.</p>
 <p>The matrix is not an empirical result. It is a falsifiability ledger:
 each row names the gate that must fail and the test that proves the
 failure path remains live.</p>
+<!-- sheaf-track:adversarial_audit -->
+<p>The <code>adversarial_audit</code> fragment makes expected failures
+part of the sheaf rather than an informal test note.
+<code>output/reports/adversarial_audit.json</code> records 22 known-bad
+rows and 0 known-bad rows passing; publication proceeds only when every
+row is documented as an expected failure and mapped to a gate.</p>
+<p>The audit rows target the same failure modes as the semantic
+certificate: incomplete sweep cells, unnormalized uncertainty rows,
+interop field loss, stale certificate state, and empirical-scope
+leakage. The scope boundary remains toy-only:
+<code>toy_only_pass</code>.</p>
+<!-- sheaf-track:evidence_fields -->
+<p>The <code>evidence_fields</code> fragment indexes the exact artifact
+fields that support typed claims and hydrated manuscript tokens.
+<code>output/data/evidence_field_index.json</code> records 81 field
+rows, and the track passes only when every referenced JSONPath or dotted
+field is present (<code>true</code>).</p>
+<!-- sheaf-track:release_bundle -->
+<p>The <code>release_bundle</code> fragment records whether the
+canonical deliverables exist before copying and whether copied root
+outputs match or are explicitly deferred until the copy stage.
+<code>output/reports/release_bundle_manifest.json</code> tracks 23
+required deliverables with source-present flag <code>true</code>.</p>
+<!-- sheaf-track:gate_ergonomics -->
+<p>The <code>gate_ergonomics</code> fragment turns validation commands
+into evidence rows. <code>output/data/validation_gate_index.json</code>
+records 22 gate rows, each naming required inputs and the
+negative-control surface that should fail closed.</p>
+<!-- sheaf-track:artifact_diffoscope -->
+<h3 id="artifact-diffoscope-track">Artifact diffoscope track</h3>
+<p>The <code>artifact_diffoscope</code> track compares saved provenance
+hashes against live artifact hashes at the artifact root JSONPath. Its
+proof artifact is <code>output/reports/artifact_diffoscope.json</code>:
+it currently records 37 comparison rows, with equality status
+<code>true</code>.</p>
+<!-- sheaf-track:artifact_license -->
+<h3 id="artifact-license-track">Artifact license track</h3>
+<p>The <code>artifact_license</code> track classifies generated and
+project-source artifacts under the public project license boundary. Its
+audit artifact is
+<code>output/reports/artifact_license_audit.json</code>: it currently
+records 70 rows, with license-safe status <code>true</code>.</p>
+<!-- sheaf-track:manuscript_staleness -->
+<p>The <code>manuscript_staleness</code> fragment closes the hydration
+loop. <code>output/reports/manuscript_staleness_report.json</code>
+checks 212 manuscript token bindings against the current generated
+variables after resolved markdown is written; the pass flag is
+<code>true</code>.</p>
+<p>This is a publication-systems claim, not a domain result. A stale
+hydrated value, unresolved token, or missing resolved section becomes a
+validation failure before PDF or web outputs are accepted.</p>
 <!-- sheaf-track:layers -->
 <!-- sheaf-layers:registry -->
 <h2 id="sheaf-fragment-track-registry">Sheaf fragment track
@@ -489,6 +531,13 @@ registry</h2>
 <td>No</td>
 </tr>
 <tr>
+<td style="text-align: right;">32</td>
+<td><code>assumption_index</code></td>
+<td>Analytical assumption index</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
 <td style="text-align: right;">35</td>
 <td><code>layers</code></td>
 <td>Sheaf layers tables</td>
@@ -503,21 +552,28 @@ registry</h2>
 <td>No</td>
 </tr>
 <tr>
+<td style="text-align: right;">41</td>
+<td><code>interop</code></td>
+<td>GNN/ontology/JSON interop checks</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
 <td style="text-align: right;">42</td>
 <td><code>provenance</code></td>
-<td>Artifact provenance spine</td>
+<td>Artifact provenance and bundle lineage spine</td>
 <td><code>markdown</code></td>
 <td>No</td>
 </tr>
 <tr>
-<td style="text-align: right;">44</td>
-<td><code>reproducibility</code></td>
-<td>Deterministic replay spine</td>
+<td style="text-align: right;">45</td>
+<td><code>replay_matrix</code></td>
+<td>Deterministic replay matrix</td>
 <td><code>markdown</code></td>
 <td>No</td>
 </tr>
 <tr>
-<td style="text-align: right;">46</td>
+<td style="text-align: right;">48</td>
 <td><code>counterexample</code></td>
 <td>Expected-failure counterexamples</td>
 <td><code>markdown</code></td>
@@ -525,42 +581,161 @@ registry</h2>
 </tr>
 <tr>
 <td style="text-align: right;">50</td>
+<td><code>adversarial_audit</code></td>
+<td>Adversarial audit matrix</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">52</td>
+<td><code>evidence_fields</code></td>
+<td>Evidence field index</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">53</td>
+<td><code>release_bundle</code></td>
+<td>Release bundle parity manifest</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">54</td>
+<td><code>gate_ergonomics</code></td>
+<td>Validation gate ergonomics</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">55</td>
+<td><code>artifact_diffoscope</code></td>
+<td>Artifact diffoscope</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">56</td>
+<td><code>artifact_license</code></td>
+<td>Artifact license audit</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">60</td>
+<td><code>sensitivity</code></td>
+<td>Toy sensitivity sweep</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">62</td>
+<td><code>uncertainty</code></td>
+<td>Toy uncertainty summaries</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">65</td>
+<td><code>benchmark</code></td>
+<td>Compact toy benchmark matrix</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">66</td>
+<td><code>manuscript_staleness</code></td>
+<td>Hydrated manuscript staleness report</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">67</td>
 <td><code>visualization</code></td>
 <td>Figure references</td>
 <td><code>section_figures</code></td>
 <td>No</td>
 </tr>
 <tr>
-<td style="text-align: right;">60</td>
+<td style="text-align: right;">70</td>
 <td><code>lean</code></td>
 <td>Lean boundary fragment</td>
 <td><code>markdown</code></td>
 <td>No</td>
 </tr>
 <tr>
-<td style="text-align: right;">70</td>
+<td style="text-align: right;">75</td>
+<td><code>model_checking</code></td>
+<td>Finite-state model checking witnesses</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">76</td>
+<td><code>theorem_traceability</code></td>
+<td>Lean theorem traceability matrix</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">77</td>
+<td><code>proof_extraction</code></td>
+<td>Lean proof extraction index</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">78</td>
+<td><code>state_space_catalog</code></td>
+<td>Finite state-space catalog</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">79</td>
+<td><code>causal_ablation</code></td>
+<td>Deterministic causal ablation matrix</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
 <td><code>gnn</code></td>
 <td>GNN notation fragment</td>
 <td><code>markdown</code></td>
 <td>No</td>
 </tr>
 <tr>
-<td style="text-align: right;">80</td>
+<td style="text-align: right;">90</td>
 <td><code>ontology</code></td>
 <td>Active Inference Ontology bindings</td>
 <td><code>ontology_yaml</code></td>
 <td>No</td>
 </tr>
 <tr>
-<td style="text-align: right;">90</td>
+<td style="text-align: right;">100</td>
 <td><code>animation</code></td>
 <td>Animation fragment</td>
 <td><code>markdown</code></td>
 <td>Yes</td>
 </tr>
+<tr>
+<td style="text-align: right;">102</td>
+<td><code>animation_delta</code></td>
+<td>Animation frame-delta manifest</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td style="text-align: right;">110</td>
+<td><code>release_notes</code></td>
+<td>Release notes evidence</td>
+<td><code>markdown</code></td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
-<p><strong>Track count:</strong> 13 registered fragment types.</p>
+<p><strong>Track count:</strong> 32 registered fragment types.</p>
 <!-- sheaf-layers:binding-matrix -->
 <h2 id="imrad-binding-matrix">IMRAD binding matrix</h2>
 <p>Section rows versus fragment track columns. <strong>P</strong> =
@@ -568,20 +743,39 @@ present (bound and file exists); <strong>—</strong> = absent (not
 bound); <strong>M</strong> = missing (bound, file absent).</p>
 <table style="width:100%;">
 <colgroup>
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
 </colgroup>
 <thead>
 <tr>
@@ -589,21 +783,59 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <th>prose</th>
 <th>formalism</th>
 <th>simulation</th>
+<th>assumption_index</th>
 <th>layers</th>
 <th>pymdp</th>
+<th>interop</th>
 <th>provenance</th>
-<th>reproducibility</th>
+<th>replay_matrix</th>
 <th>counterexample</th>
+<th>adversarial_audit</th>
+<th>evidence_fields</th>
+<th>release_bundle</th>
+<th>gate_ergonomics</th>
+<th>artifact_diffoscope</th>
+<th>artifact_license</th>
+<th>sensitivity</th>
+<th>uncertainty</th>
+<th>benchmark</th>
+<th>manuscript_staleness</th>
 <th>visualization</th>
 <th>lean</th>
+<th>model_checking</th>
+<th>theorem_traceability</th>
+<th>proof_extraction</th>
+<th>state_space_catalog</th>
+<th>causal_ablation</th>
 <th>gnn</th>
 <th>ontology</th>
 <th>animation</th>
+<th>animation_delta</th>
+<th>release_notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Introduction (group)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -633,6 +865,25 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 </tr>
 <tr>
 <td>Contributions</td>
@@ -644,14 +895,52 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
-<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 </tr>
 <tr>
 <td>Methods (group)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -671,6 +960,18 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>P</td>
 <td>P</td>
 <td>P</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -678,8 +979,15 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>—</td>
 <td>P</td>
 <td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>P</td>
 <td>P</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 </tr>
 <tr>
@@ -688,14 +996,33 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>P</td>
 <td>—</td>
 <td>—</td>
+<td>—</td>
+<td>P</td>
 <td>P</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>P</td>
 <td>P</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 </tr>
 <tr>
@@ -708,8 +1035,27 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>P</td>
 <td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -719,12 +1065,31 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>P</td>
 <td>P</td>
 <td>—</td>
+<td>—</td>
 <td>P</td>
+<td>—</td>
 <td>—</td>
 <td>P</td>
 <td>—</td>
 <td>P</td>
 <td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -732,6 +1097,25 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 </tr>
 <tr>
 <td>Results (group)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -756,7 +1140,26 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -772,7 +1175,26 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -784,11 +1206,30 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>P</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
-<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -802,9 +1243,28 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>P</td>
 <td>P</td>
 <td>—</td>
 <td>P</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>P</td>
+<td>P</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -812,6 +1272,25 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 </tr>
 <tr>
 <td>Discussion (group)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -839,11 +1318,49 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>P</td>
 <td>—</td>
+<td>—</td>
+<td>P</td>
 </tr>
 <tr>
 <td>Appendix (group)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -863,7 +1380,26 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>P</td>
 <td>P</td>
 <td>P</td>
+<td>P</td>
 <td>—</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
+<td>P</td>
 <td>P</td>
 <td>P</td>
 <td>P</td>
@@ -876,7 +1412,7 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Totals:</strong> 53 present / 53 bound / 0 missing.</p>
+<p><strong>Totals:</strong> 90 present / 90 bound / 0 missing.</p>
 <!-- sheaf-layers:legend -->
 <table>
 <thead>
@@ -904,6 +1440,524 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 </tr>
 </tbody>
 </table>
+<!-- sheaf-layers:section-status -->
+<h2 id="section-track-status">Section-track status</h2>
+<p>Generated status for the current manuscript sheaf, summarized per
+composable section.</p>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>Section</th>
+<th>IMRAD</th>
+<th style="text-align: right;">Bound</th>
+<th style="text-align: right;">Present</th>
+<th style="text-align: right;">Missing</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Motivation and scope</td>
+<td>introduction</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>Contributions</td>
+<td>introduction</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>Bernoulli–Ising analytical model</td>
+<td>methods</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>pymdp simulation harness</td>
+<td>methods</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>Lean formalization boundary</td>
+<td>methods</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>Sheaf composition</td>
+<td>methods</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>Mutual-information parameter sweep</td>
+<td>results</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>Free-energy decomposition</td>
+<td>results</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>T-maze active-inference rollout</td>
+<td>results</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>Validation invariants</td>
+<td>results</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>Limitations and outlook</td>
+<td>discussion</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+<tr>
+<td>Appendix: full track coverage</td>
+<td>appendix</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0</td>
+<td><code>fully_sheafed</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Section status:</strong> 12 / 12 composable sections fully
+sheafed; 0 required bound fragments missing.</p>
+<!-- sheaf-layers:track-status -->
+<h2 id="track-status">Track status</h2>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr>
+<th>Track</th>
+<th>Renderer</th>
+<th style="text-align: right;">Bound sections</th>
+<th style="text-align: right;">Present</th>
+<th style="text-align: right;">Missing</th>
+<th style="text-align: right;">Claims</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prose</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>formalism</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>simulation</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">9</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>assumption_index</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>layers</code></td>
+<td><code>layers_report</code></td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>pymdp</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">15</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>interop</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>provenance</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">12</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>replay_matrix</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>counterexample</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>adversarial_audit</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">9</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>evidence_fields</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>release_bundle</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">4</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>gate_ergonomics</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">4</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>artifact_diffoscope</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>artifact_license</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>sensitivity</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>uncertainty</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>benchmark</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>manuscript_staleness</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>visualization</code></td>
+<td><code>section_figures</code></td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>lean</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>model_checking</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>theorem_traceability</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>proof_extraction</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>state_space_catalog</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>causal_ablation</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>gnn</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">4</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>ontology</code></td>
+<td><code>ontology_yaml</code></td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>animation</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>animation_delta</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+<tr>
+<td><code>release_notes</code></td>
+<td><code>markdown</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td><code>complete</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Status cells:</strong> 544 section-track cells.</p>
+<!-- sheaf-layers:render-log -->
+<h2 id="render-and-logging-summary">Render and logging summary</h2>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Event</th>
+<th>Component</th>
+<th>Output</th>
+<th>Status</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>registry_loaded</code></td>
+<td><code>sheaf.registry</code></td>
+<td><code>registered_tracks</code></td>
+<td><code>ok</code></td>
+<td>32 tracks</td>
+</tr>
+<tr>
+<td><code>manifest_loaded</code></td>
+<td><code>sheaf.manifest</code></td>
+<td><code>manifest_sections</code></td>
+<td><code>ok</code></td>
+<td>17 sections</td>
+</tr>
+<tr>
+<td><code>coverage_matrix_built</code></td>
+<td><code>sheaf.coverage</code></td>
+<td><code>output/data/sheaf_coverage_matrix.json</code></td>
+<td><code>ok</code></td>
+<td>90 present cells</td>
+</tr>
+<tr>
+<td><code>section_status_matrix_built</code></td>
+<td><code>sheaf.status</code></td>
+<td><code>output/data/sheaf_section_status_matrix.json</code></td>
+<td><code>ok</code></td>
+<td>544 section-track cells</td>
+</tr>
+<tr>
+<td><code>layers_renderer_bound</code></td>
+<td><code>sheaf.layers_report</code></td>
+<td><code>manuscript/08_methods_sheaf.md</code></td>
+<td><code>ok</code></td>
+<td>methods sheaf layer tables</td>
+</tr>
+<tr>
+<td><code>semantic_artifacts_indexed</code></td>
+<td><code>sheaf.semantic</code></td>
+<td><code>output/data/validation_dependency_graph.json</code></td>
+<td><code>ok</code></td>
+<td>70 artifact producer rows</td>
+</tr>
+<tr>
+<td><code>validation_gates_indexed</code></td>
+<td><code>gates</code></td>
+<td><code>output/data/validation_gate_index.json</code></td>
+<td><code>ok</code></td>
+<td>3 gate groups</td>
+</tr>
+<tr>
+<td><code>manuscript_sections_composed</code></td>
+<td><code>sheaf.compose</code></td>
+<td><code>manuscript/*.md</code></td>
+<td><code>ok</code></td>
+<td>16 composed markdown files</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Render events:</strong> 8.</p>
 <!-- sheaf-layers:evidence-crosswalk -->
 <h2 id="evidence-crosswalk">Evidence crosswalk</h2>
 <table>
@@ -944,35 +1998,35 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td><code>sheaf_coverage_matrix</code></td>
 <td><code>output/data/sheaf_coverage_matrix.json</code></td>
 <td><code>generate_figures.py</code></td>
-<td>validate_outputs</td>
+<td>validate_outputs, validate_manuscript</td>
 </tr>
 <tr>
 <td><code>sheaf_gluing_certificate</code></td>
 <td><code>output/data/sheaf_gluing_certificate.json</code></td>
-<td><code>z_generate_manuscript_variables.py</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
 <td>validate_manuscript, validate_outputs</td>
 </tr>
 <tr>
 <td><code>sheaf_evidence_crosswalk</code></td>
 <td><code>output/data/sheaf_evidence_crosswalk.json</code></td>
-<td><code>z_generate_manuscript_variables.py</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
 <td>validate_manuscript, validate_outputs</td>
+</tr>
+<tr>
+<td><code>evidence_fields_mapped</code></td>
+<td><code>output/data/evidence_field_index.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>validate_outputs, validate_manuscript</td>
 </tr>
 <tr>
 <td><code>validation_dependency_graph</code></td>
 <td><code>output/data/validation_dependency_graph.json</code></td>
-<td><code>z_generate_manuscript_variables.py</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
 <td>validate_manuscript, validate_outputs</td>
-</tr>
-<tr>
-<td><code>semantic_gluing_graph_figure</code></td>
-<td><code>../figures/semantic_gluing_graph.png</code></td>
-<td><code>generate_figures.py</code></td>
-<td>validate_outputs, figure_registry</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Claim rows:</strong> 30 typed evidence claims.</p>
+<p><strong>Claim rows:</strong> 81 typed evidence claims.</p>
 <!-- sheaf-layers:artifact-producers -->
 <h2 id="artifact-producer-graph">Artifact producer graph</h2>
 <table>
@@ -995,49 +2049,169 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td><code>output/data/analysis_statistics.json</code></td>
 <td><code>compute_statistics.py</code></td>
 <td>Yes</td>
-<td>validate_outputs</td>
+<td>results_si_tmaze, results_invariants</td>
+</tr>
+<tr>
+<td><code>output/data/analytical_assumption_index.json</code></td>
+<td><code>generate_toy_sweep_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_analytical, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/analytical_observable_sweep.json</code></td>
+<td><code>generate_toy_sweep_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/animation_frame_deltas.json</code></td>
+<td><code>render_animation.py</code></td>
+<td>Yes</td>
+<td>appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/data/artifact_provenance.json</code></td>
-<td><code>generate_validation_spine.py</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
 <td>Yes</td>
 <td>methods_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/causal_ablation_matrix.json</code></td>
+<td><code>generate_toy_sweep_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/cross_track_symbol_table.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/evidence_field_index.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/figure_source_map.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/gnn_roundtrip_report.json</code></td>
+<td><code>generate_formal_interop_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_pymdp, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/interop_roundtrip_report.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_pymdp, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/manuscript_evidence_tables.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/manuscript_token_provenance.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/data/manuscript_variables.json</code></td>
 <td><code>z_generate_manuscript_variables.py</code></td>
 <td>Yes</td>
-<td>validate_outputs</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/ontology_alias_index.json</code></td>
+<td><code>generate_formal_interop_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_pymdp, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/ontology_profile_matrix.json</code></td>
+<td><code>generate_formal_interop_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_pymdp, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/data/parameter_sweep.csv</code></td>
 <td><code>run_analytical_sweep.py</code></td>
 <td>Yes</td>
-<td>validate_outputs</td>
+<td>methods_analytical, results_mi_sweep</td>
+</tr>
+<tr>
+<td><code>output/data/proof_extraction_index.json</code></td>
+<td><code>generate_formal_interop_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_lean, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/pymdp_policy_posterior_grid.json</code></td>
+<td><code>simulate_si_tmaze.py</code></td>
+<td>Yes</td>
+<td>methods_pymdp, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/sensitivity_sweep.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/data/sheaf_coverage_matrix.json</code></td>
 <td><code>generate_figures.py</code></td>
 <td>Yes</td>
-<td>validate_outputs</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/data/sheaf_evidence_crosswalk.json</code></td>
-<td><code>z_generate_manuscript_variables.py</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
 <td>Yes</td>
 <td>methods_sheaf</td>
 </tr>
 <tr>
 <td><code>output/data/sheaf_gluing_certificate.json</code></td>
-<td><code>z_generate_manuscript_variables.py</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
 <td>Yes</td>
 <td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/sheaf_section_status_matrix.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/si_efe_terms.json</code></td>
+<td><code>generate_toy_sweep_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/data/si_graph_world_summary.json</code></td>
 <td><code>simulate_si_graph_world.py</code></td>
 <td>Yes</td>
 <td>methods_pymdp, results_si_tmaze</td>
+</tr>
+<tr>
+<td><code>output/data/si_graph_world_topology_sweep.json</code></td>
+<td><code>generate_toy_sweep_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/si_graph_world_topology_traces.json</code></td>
+<td><code>generate_toy_sweep_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/data/si_graph_world_trace.json</code></td>
@@ -1052,22 +2226,64 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>methods_pymdp, results_si_tmaze</td>
 </tr>
 <tr>
+<td><code>output/data/si_policy_grid.json</code></td>
+<td><code>generate_toy_sweep_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
+</tr>
+<tr>
 <td><code>output/data/si_tmaze_summary.json</code></td>
 <td><code>simulate_si_tmaze.py</code></td>
 <td>Yes</td>
-<td>validate_outputs</td>
+<td>methods_pymdp, results_si_tmaze</td>
 </tr>
 <tr>
 <td><code>output/data/si_tmaze_trace.json</code></td>
 <td><code>simulate_si_tmaze.py</code></td>
 <td>Yes</td>
-<td>validate_outputs</td>
+<td>methods_pymdp, results_si_tmaze</td>
+</tr>
+<tr>
+<td><code>output/data/state_space_catalog.json</code></td>
+<td><code>generate_toy_sweep_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/theorem_traceability_matrix.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_lean, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/toy_benchmark_matrix.json</code></td>
+<td><code>generate_toy_sweep_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/track_improvement_scope.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/uncertainty_summary.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/data/validation_dependency_graph.json</code></td>
-<td><code>z_generate_manuscript_variables.py</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
 <td>Yes</td>
 <td>methods_sheaf</td>
+</tr>
+<tr>
+<td><code>output/data/validation_gate_index.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>../figures/si_belief_trajectory.gif</code></td>
@@ -1076,16 +2292,118 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>appendix_full_sheaf</td>
 </tr>
 <tr>
+<td><code>output/reports/adversarial_audit.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/artifact_diffoscope.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/artifact_license_audit.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/blocked_scope_manifest.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, discussion_outlook, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/claim_evidence_audit.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
 <td><code>output/reports/counterexample_matrix.json</code></td>
-<td><code>generate_validation_spine.py</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
 <td>Yes</td>
 <td>methods_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/figure_hash_manifest.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/gnn_lint_report.json</code></td>
+<td><code>generate_formal_interop_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_pymdp, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/graph_world_invariants.json</code></td>
+<td><code>generate_toy_sweep_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/reports/invariants.json</code></td>
 <td><code>run_analytical_sweep.py</code></td>
 <td>Yes</td>
-<td>validate_outputs</td>
+<td>results_invariants</td>
+</tr>
+<tr>
+<td><code>output/reports/lean_graph_world_inventory.json</code></td>
+<td><code>generate_formal_interop_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_lean, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/lean_theorem_inventory.json</code></td>
+<td><code>generate_formal_interop_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_lean, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/manuscript_staleness_report.json</code></td>
+<td><code>z_generate_manuscript_variables.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/model_checking_witnesses.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_lean, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/producer_completeness.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/pymdp_runtime_diagnostics.json</code></td>
+<td><code>simulate_si_tmaze.py</code></td>
+<td>Yes</td>
+<td>methods_pymdp, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/release_bundle_manifest.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/release_notes_evidence.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>discussion_outlook, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/replay_matrix.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>results_invariants, appendix_full_sheaf</td>
 </tr>
 <tr>
 <td><code>output/reports/reproducibility_replay.json</code></td>
@@ -1094,16 +2412,34 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>results_invariants</td>
 </tr>
 <tr>
+<td><code>output/reports/scope_boundary_audit.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
+<td><code>output/reports/sheaf_render_log.json</code></td>
+<td><code>generate_sheaf_tracks.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
+</tr>
+<tr>
 <td><code>output/reports/si_invariants.json</code></td>
 <td><code>simulate_si_tmaze.py</code></td>
 <td>Yes</td>
-<td>validate_outputs</td>
+<td>results_si_tmaze</td>
 </tr>
 <tr>
 <td><code>output/reports/si_tmaze_run_report.json</code></td>
 <td><code>simulate_si_tmaze.py</code></td>
 <td>Yes</td>
-<td>validate_outputs</td>
+<td>results_si_tmaze</td>
+</tr>
+<tr>
+<td><code>output/reports/stale_artifact_report.json</code></td>
+<td><code>generate_integration_audit.py</code></td>
+<td>Yes</td>
+<td>methods_sheaf, appendix_full_sheaf</td>
 </tr>
 </tbody>
 </table>
@@ -1127,6 +2463,22 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td><code>4</code></td>
 </tr>
 <tr>
+<td>Policy grid complete</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Policy posterior rows</td>
+<td><code>10</code></td>
+</tr>
+<tr>
+<td>Policy posterior normalized</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Runtime unexpected warnings</td>
+<td><code>0</code></td>
+</tr>
+<tr>
 <td>Graph-world trace agrees</td>
 <td><code>True</code></td>
 </tr>
@@ -1146,7 +2498,184 @@ bound); <strong>M</strong> = missing (bound, file absent).</p>
 <td>Configured producers ok</td>
 <td><code>True</code></td>
 </tr>
+<tr>
+<td>Semantic certificate ok</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td>Dependency edges ok</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Track scope complete</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Empirical adapter blocked</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Provenance bundles complete</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Replay rows matched</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Sensitivity complete</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Uncertainty normalized</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Evidence fields mapped</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Release bundle sources present</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Theorem traceability linked</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Gate ergonomics indexed</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Interop lossless</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>Scope toy-only</td>
+<td><code>True</code></td>
+</tr>
 </tbody>
 </table>
+<!-- sheaf-layers:track-improvement-scope -->
+<h2 id="track-improvement-scope">Track improvement scope</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th>Track</th>
+<th>Status</th>
+<th>Current proof</th>
+<th>Next artifact</th>
+<th>Gate</th>
+<th>Negative control</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>adversarial_audit</code></td>
+<td>live</td>
+<td><code>output/reports/adversarial_audit.json</code></td>
+<td><code>output/reports/adversarial_audit.json</code></td>
+<td><code>validate_outputs, validate_manuscript</code></td>
+<td>adversarial_known_bad_passes</td>
+</tr>
+<tr>
+<td><code>animation</code></td>
+<td>optional</td>
+<td><code>../figures/si_belief_trajectory.gif</code></td>
+<td><code>../figures/si_belief_trajectory.gif</code></td>
+<td><code>validate_outputs</code></td>
+<td>missing_fragment_coverage</td>
+</tr>
+<tr>
+<td><code>animation_delta</code></td>
+<td>live</td>
+<td><code>output/data/animation_frame_deltas.json</code></td>
+<td><code>output/data/animation_frame_deltas.json</code></td>
+<td><code>validate_outputs, validate_manuscript</code></td>
+<td>missing_fragment_coverage</td>
+</tr>
+<tr>
+<td><code>artifact_diffoscope</code></td>
+<td>live</td>
+<td><code>output/reports/artifact_diffoscope.json</code></td>
+<td><code>output/reports/artifact_diffoscope.json</code></td>
+<td><code>validate_outputs, validate_manuscript</code></td>
+<td>artifact_diffoscope_missed_hash_drift</td>
+</tr>
+<tr>
+<td><code>artifact_license</code></td>
+<td>live</td>
+<td><code>output/reports/artifact_license_audit.json</code></td>
+<td><code>output/reports/artifact_license_audit.json</code></td>
+<td><code>validate_outputs, validate_manuscript</code></td>
+<td>artifact_license_unsafe_artifact</td>
+</tr>
+<tr>
+<td><code>assumption_index</code></td>
+<td>live</td>
+<td><code>output/data/analytical_assumption_index.json</code></td>
+<td><code>output/data/analytical_assumption_index.json</code></td>
+<td><code>validate_outputs, validate_manuscript</code></td>
+<td>missing_fragment_coverage</td>
+</tr>
+<tr>
+<td><code>benchmark</code></td>
+<td>live</td>
+<td><code>output/data/toy_benchmark_matrix.json</code></td>
+<td><code>output/data/toy_benchmark_matrix.json</code></td>
+<td><code>validate_outputs</code></td>
+<td>missing_fragment_coverage</td>
+</tr>
+<tr>
+<td><code>causal_ablation</code></td>
+<td>live</td>
+<td><code>output/data/causal_ablation_matrix.json</code></td>
+<td><code>output/data/causal_ablation_matrix.json</code></td>
+<td><code>validate_outputs, validate_manuscript</code></td>
+<td>causal_ablation_missing_cell</td>
+</tr>
+<tr>
+<td><code>counterexample</code></td>
+<td>live</td>
+<td><code>output/reports/counterexample_matrix.json</code></td>
+<td><code>output/reports/counterexample_matrix.json</code></td>
+<td><code>validate_outputs, validate_manuscript</code></td>
+<td>known_bad_counterexample_passed</td>
+</tr>
+<tr>
+<td><code>evidence_fields</code></td>
+<td>live</td>
+<td><code>output/data/evidence_field_index.json</code></td>
+<td><code>output/data/evidence_field_index.json</code></td>
+<td><code>validate_outputs, validate_manuscript</code></td>
+<td>missing_typed_claim</td>
+</tr>
+<tr>
+<td><code>formalism</code></td>
+<td>live</td>
+<td><code>manuscript/sheaf/manifest.yaml</code></td>
+<td><code>manuscript/sheaf/manifest.yaml</code></td>
+<td><code>validate_manuscript</code></td>
+<td>missing_fragment_coverage</td>
+</tr>
+<tr>
+<td><code>gate_ergonomics</code></td>
+<td>live</td>
+<td><code>output/data/validation_gate_index.json</code></td>
+<td><code>output/data/validation_gate_index.json</code></td>
+<td><code>validate_outputs, validate_manuscript</code></td>
+<td>gate_ergonomics_unindexed</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Improvement rows:</strong> 37.</p>
 </body>
 </html>

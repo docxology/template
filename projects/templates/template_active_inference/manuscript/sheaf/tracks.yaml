@@ -19,6 +19,10 @@ tracks:
     order: 30
     renderer: markdown
     label: Analytical simulation notes
+  assumption_index:
+    order: 32
+    renderer: markdown
+    label: Analytical assumption index
   layers:
     order: 35
     renderer: layers_report
@@ -28,39 +32,111 @@ tracks:
     order: 40
     renderer: markdown
     label: pymdp harness artifacts
+  interop:
+    order: 41
+    renderer: markdown
+    label: GNN/ontology/JSON interop checks
   provenance:
     order: 42
     renderer: markdown
-    label: Artifact provenance spine
-  reproducibility:
-    order: 44
+    label: Artifact provenance and bundle lineage spine
+  replay_matrix:
+    order: 45
     renderer: markdown
-    label: Deterministic replay spine
+    label: Deterministic replay matrix
   counterexample:
-    order: 46
+    order: 48
     renderer: markdown
     label: Expected-failure counterexamples
-  visualization:
+  adversarial_audit:
     order: 50
+    renderer: markdown
+    label: Adversarial audit matrix
+  evidence_fields:
+    order: 52
+    renderer: markdown
+    label: Evidence field index
+  release_bundle:
+    order: 53
+    renderer: markdown
+    label: Release bundle parity manifest
+  gate_ergonomics:
+    order: 54
+    renderer: markdown
+    label: Validation gate ergonomics
+  artifact_diffoscope:
+    order: 55
+    renderer: markdown
+    label: Artifact diffoscope
+  artifact_license:
+    order: 56
+    renderer: markdown
+    label: Artifact license audit
+  sensitivity:
+    order: 60
+    renderer: markdown
+    label: Toy sensitivity sweep
+  uncertainty:
+    order: 62
+    renderer: markdown
+    label: Toy uncertainty summaries
+  benchmark:
+    order: 65
+    renderer: markdown
+    label: Compact toy benchmark matrix
+  manuscript_staleness:
+    order: 66
+    renderer: markdown
+    label: Hydrated manuscript staleness report
+  visualization:
+    order: 67
     renderer: section_figures
     label: Figure references
   lean:
-    order: 60
+    order: 70
     renderer: markdown
     label: Lean boundary fragment
+  model_checking:
+    order: 75
+    renderer: markdown
+    label: Finite-state model checking witnesses
+  theorem_traceability:
+    order: 76
+    renderer: markdown
+    label: Lean theorem traceability matrix
+  proof_extraction:
+    order: 77
+    renderer: markdown
+    label: Lean proof extraction index
+  state_space_catalog:
+    order: 78
+    renderer: markdown
+    label: Finite state-space catalog
+  causal_ablation:
+    order: 79
+    renderer: markdown
+    label: Deterministic causal ablation matrix
   gnn:
-    order: 70
+    order: 80
     renderer: markdown
     label: GNN notation fragment
   ontology:
-    order: 80
+    order: 90
     renderer: ontology_yaml
     label: Active Inference Ontology bindings
   animation:
-    order: 90
+    order: 100
     renderer: markdown
     label: Animation fragment
     optional: true
+  animation_delta:
+    order: 102
+    renderer: markdown
+    label: Animation frame-delta manifest
+  release_notes:
+    order: 110
+    renderer: markdown
+    label: Release notes evidence
 
 renderers:
   markdown:

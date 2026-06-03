@@ -1,1 +1,0 @@
-The appendix reproducibility fragment points to `output/reports/reproducibility_replay.json`, which replays deterministic toy producers in a temporary tree and compares regenerated artifacts to the saved outputs.

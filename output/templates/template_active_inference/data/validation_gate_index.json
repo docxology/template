@@ -1,0 +1,164 @@
+{
+  "all_indexed": true,
+  "gate_count": 22,
+  "rows": [
+    {
+      "id": "validate_outputs",
+      "indexed": true,
+      "inputs": [
+        "output/data",
+        "output/reports"
+      ]
+    },
+    {
+      "id": "validate_manuscript",
+      "indexed": true,
+      "inputs": [
+        "manuscript/sheaf",
+        "output/manuscript"
+      ]
+    },
+    {
+      "id": "semantic_sheaf_gluing",
+      "indexed": true,
+      "inputs": [
+        "output/data/sheaf_gluing_certificate.json"
+      ]
+    },
+    {
+      "id": "typed_claim_evidence",
+      "indexed": true,
+      "inputs": [
+        "data/claim_ledger.yaml"
+      ]
+    },
+    {
+      "id": "manuscript_staleness_report",
+      "indexed": true,
+      "inputs": [
+        "output/manuscript",
+        "output/data/manuscript_variables.json"
+      ]
+    },
+    {
+      "id": "animation_frame_deltas",
+      "indexed": true,
+      "inputs": [
+        "output/figures/si_belief_trajectory.gif"
+      ]
+    },
+    {
+      "id": "pymdp_runtime_diagnostics",
+      "indexed": true,
+      "inputs": [
+        "output/reports/pymdp_runtime_diagnostics.json"
+      ]
+    },
+    {
+      "id": "pymdp_policy_posterior_grid",
+      "indexed": true,
+      "inputs": [
+        "output/data/pymdp_policy_posterior_grid.json"
+      ]
+    },
+    {
+      "id": "analytical_assumption_index",
+      "indexed": true,
+      "inputs": [
+        "output/data/analytical_assumption_index.json"
+      ]
+    },
+    {
+      "id": "canonical_sheaf_tracks",
+      "indexed": true,
+      "inputs": [
+        "output/data/track_improvement_scope.json"
+      ]
+    },
+    {
+      "id": "release_bundle_manifest",
+      "indexed": true,
+      "inputs": [
+        "output/reports/release_bundle_manifest.json"
+      ]
+    },
+    {
+      "id": "evidence_field_index",
+      "indexed": true,
+      "inputs": [
+        "output/data/evidence_field_index.json"
+      ]
+    },
+    {
+      "id": "theorem_traceability_matrix",
+      "indexed": true,
+      "inputs": [
+        "output/data/theorem_traceability_matrix.json"
+      ]
+    },
+    {
+      "id": "artifact_diffoscope",
+      "indexed": true,
+      "inputs": [
+        "output/reports/artifact_diffoscope.json"
+      ]
+    },
+    {
+      "id": "proof_extraction_index",
+      "indexed": true,
+      "inputs": [
+        "output/data/proof_extraction_index.json"
+      ]
+    },
+    {
+      "id": "state_space_catalog",
+      "indexed": true,
+      "inputs": [
+        "output/data/state_space_catalog.json"
+      ]
+    },
+    {
+      "id": "causal_ablation_matrix",
+      "indexed": true,
+      "inputs": [
+        "output/data/causal_ablation_matrix.json"
+      ]
+    },
+    {
+      "id": "artifact_license_audit",
+      "indexed": true,
+      "inputs": [
+        "output/reports/artifact_license_audit.json"
+      ]
+    },
+    {
+      "id": "release_notes_evidence",
+      "indexed": true,
+      "inputs": [
+        "output/reports/release_notes_evidence.json"
+      ]
+    },
+    {
+      "id": "track_improvement_scope",
+      "indexed": true,
+      "inputs": [
+        "output/data/track_improvement_scope.json"
+      ]
+    },
+    {
+      "id": "blocked_scope_manifest",
+      "indexed": true,
+      "inputs": [
+        "output/reports/blocked_scope_manifest.json"
+      ]
+    },
+    {
+      "id": "lake_build",
+      "indexed": true,
+      "inputs": [
+        "lean/lakefile.lean"
+      ]
+    }
+  ],
+  "schema": "template_active_inference.validation_gate_index.v1"
+}

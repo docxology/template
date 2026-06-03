@@ -22,7 +22,17 @@ def test_registry_defines_track_order() -> None:
 def test_list_registered_tracks() -> None:
     root = Path(__file__).resolve().parents[1]
     specs = list_registered_tracks(root)
-    assert {s.id for s in specs} >= {"prose", "lean", "ontology", "animation"}
+    assert {s.id for s in specs} >= {
+        "prose",
+        "lean",
+        "ontology",
+        "animation",
+        "evidence_fields",
+        "release_bundle",
+        "theorem_traceability",
+        "gate_ergonomics",
+    }
+    assert not any(s.id.endswith(("_v2", "_v3", "_v4", "_v5")) for s in specs)
 
 
 def test_track_order_respects_section_include_exclude() -> None:
@@ -63,10 +73,31 @@ def test_methods_sheaf_binds_layers_tracks() -> None:
     root = Path(__file__).resolve().parents[1]
     manifest = load_manifest(root / "manuscript" / "sheaf" / "manifest.yaml")
     section = next(s for s in manifest.sections if s.id == "methods_sheaf")
-    assert section.track_order == ("prose", "formalism", "visualization", "provenance", "counterexample", "layers")
+    assert section.track_order == (
+        "prose",
+        "formalism",
+        "visualization",
+        "provenance",
+        "counterexample",
+        "adversarial_audit",
+        "evidence_fields",
+        "release_bundle",
+        "gate_ergonomics",
+        "artifact_diffoscope",
+        "artifact_license",
+        "manuscript_staleness",
+        "layers",
+    )
     assert "visualization" in section.tracks
     assert "provenance" in section.tracks
     assert "counterexample" in section.tracks
+    assert "adversarial_audit" in section.tracks
+    assert "evidence_fields" in section.tracks
+    assert "release_bundle" in section.tracks
+    assert "gate_ergonomics" in section.tracks
+    assert "artifact_diffoscope" in section.tracks
+    assert "artifact_license" in section.tracks
+    assert "manuscript_staleness" in section.tracks
     assert "layers" in section.tracks
     assert "formalism" in section.tracks
     registry = load_track_registry(root / manifest.registry_path)

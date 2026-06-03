@@ -1,0 +1,1491 @@
+{
+  "all_fresh": true,
+  "row_count": 212,
+  "rows": [
+    {
+      "expected": "90",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_00_sheaf_coverage.md",
+      "section": "manuscript/00_00_sheaf_coverage.md",
+      "token": "coverage_present"
+    },
+    {
+      "expected": "90",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_00_sheaf_coverage.md",
+      "section": "manuscript/00_00_sheaf_coverage.md",
+      "token": "coverage_bound"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_00_sheaf_coverage.md",
+      "section": "manuscript/00_00_sheaf_coverage.md",
+      "token": "coverage_missing"
+    },
+    {
+      "expected": "17",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_00_sheaf_coverage.md",
+      "section": "manuscript/00_00_sheaf_coverage.md",
+      "token": "imrad_manifest_rows"
+    },
+    {
+      "expected": "32",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_00_sheaf_coverage.md",
+      "section": "manuscript/00_00_sheaf_coverage.md",
+      "token": "sheaf_track_count"
+    },
+    {
+      "expected": "31",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_00_sheaf_coverage.md",
+      "section": "manuscript/00_00_sheaf_coverage.md",
+      "token": "appendix_sheaf_track_count"
+    },
+    {
+      "expected": "32",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_abstract.md",
+      "section": "manuscript/00_abstract.md",
+      "token": "sheaf_track_count"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_abstract.md",
+      "section": "manuscript/00_abstract.md",
+      "token": "composed_section_count"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_abstract.md",
+      "section": "manuscript/00_abstract.md",
+      "token": "sheaf_law_count"
+    },
+    {
+      "expected": "22",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_abstract.md",
+      "section": "manuscript/00_abstract.md",
+      "token": "counterexample_count"
+    },
+    {
+      "expected": "17",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_abstract.md",
+      "section": "manuscript/00_abstract.md",
+      "token": "imrad_manifest_rows"
+    },
+    {
+      "expected": "5",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_abstract.md",
+      "section": "manuscript/00_abstract.md",
+      "token": "imrad_group_count"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_abstract.md",
+      "section": "manuscript/00_abstract.md",
+      "token": "invariants_passed"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_abstract.md",
+      "section": "manuscript/00_abstract.md",
+      "token": "invariants_total"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_abstract.md",
+      "section": "manuscript/00_abstract.md",
+      "token": "si_tmaze_policy_len"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/00_abstract.md",
+      "section": "manuscript/00_abstract.md",
+      "token": "sweep_rmse_mi"
+    },
+    {
+      "expected": "32",
+      "fresh": true,
+      "resolved_path": "output/manuscript/02_intro_motivation.md",
+      "section": "manuscript/02_intro_motivation.md",
+      "token": "sheaf_track_count"
+    },
+    {
+      "expected": "29",
+      "fresh": true,
+      "resolved_path": "output/manuscript/02_intro_motivation.md",
+      "section": "manuscript/02_intro_motivation.md",
+      "token": "pipeline_track_count"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/02_intro_motivation.md",
+      "section": "manuscript/02_intro_motivation.md",
+      "token": "si_tmaze_policy_len"
+    },
+    {
+      "expected": "32",
+      "fresh": true,
+      "resolved_path": "output/manuscript/03_intro_contributions.md",
+      "section": "manuscript/03_intro_contributions.md",
+      "token": "sheaf_track_count"
+    },
+    {
+      "expected": "17",
+      "fresh": true,
+      "resolved_path": "output/manuscript/03_intro_contributions.md",
+      "section": "manuscript/03_intro_contributions.md",
+      "token": "imrad_manifest_rows"
+    },
+    {
+      "expected": "31",
+      "fresh": true,
+      "resolved_path": "output/manuscript/03_intro_contributions.md",
+      "section": "manuscript/03_intro_contributions.md",
+      "token": "appendix_sheaf_track_count"
+    },
+    {
+      "expected": "29",
+      "fresh": true,
+      "resolved_path": "output/manuscript/03_intro_contributions.md",
+      "section": "manuscript/03_intro_contributions.md",
+      "token": "pipeline_track_count"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/03_intro_contributions.md",
+      "section": "manuscript/03_intro_contributions.md",
+      "token": "invariants_passed"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/03_intro_contributions.md",
+      "section": "manuscript/03_intro_contributions.md",
+      "token": "invariants_total"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "bernoulli_state_count"
+    },
+    {
+      "expected": "21",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "param_sweep_grid_points"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "invariants_passed"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "invariants_total"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "lambda_max"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "analytical_equation_count"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "analytical_assumption_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "analytical_assumptions_indexed"
+    },
+    {
+      "expected": "0.6031",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "ising_mi_saturation"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "sweep_max_residual"
+    },
+    {
+      "expected": "GNN v1.1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/05_methods_analytical.md",
+      "section": "manuscript/05_methods_analytical.md",
+      "token": "gnn_spec_version"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_tmaze_policy_len"
+    },
+    {
+      "expected": "state_inference",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "pymdp_mode"
+    },
+    {
+      "expected": "0.3251",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_tmaze_mean_belief_entropy_formatted"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_policy_comparison_run_count"
+    },
+    {
+      "expected": "1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_policy_comparison_complete_grid"
+    },
+    {
+      "expected": "3",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_policy_comparison_goal_reached_count"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "pymdp_runtime_construction_count"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "pymdp_runtime_known_warning_count"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "pymdp_runtime_unexpected_warning_count"
+    },
+    {
+      "expected": "10",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "pymdp_policy_posterior_row_count"
+    },
+    {
+      "expected": "1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "pymdp_policy_posteriors_normalized"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_graph_world_node_count"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_graph_world_steps"
+    },
+    {
+      "expected": "1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_graph_world_goal_reached"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_graph_world_topology_trace_count"
+    },
+    {
+      "expected": "1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_graph_world_topology_traces_agree"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "si_tmaze_steps"
+    },
+    {
+      "expected": "5",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "interop_check_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/06_methods_pymdp.md",
+      "section": "manuscript/06_methods_pymdp.md",
+      "token": "interop_all_lossless"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/07_methods_lean.md",
+      "section": "manuscript/07_methods_lean.md",
+      "token": "model_checking_witness_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/07_methods_lean.md",
+      "section": "manuscript/07_methods_lean.md",
+      "token": "model_checking_all_passed"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/07_methods_lean.md",
+      "section": "manuscript/07_methods_lean.md",
+      "token": "lean_graph_world_topology_witness_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/07_methods_lean.md",
+      "section": "manuscript/07_methods_lean.md",
+      "token": "lean_graph_world_all_topologies_witnessed"
+    },
+    {
+      "expected": "11",
+      "fresh": true,
+      "resolved_path": "output/manuscript/07_methods_lean.md",
+      "section": "manuscript/07_methods_lean.md",
+      "token": "theorem_traceability_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/07_methods_lean.md",
+      "section": "manuscript/07_methods_lean.md",
+      "token": "theorem_traceability_linked"
+    },
+    {
+      "expected": "10",
+      "fresh": true,
+      "resolved_path": "output/manuscript/07_methods_lean.md",
+      "section": "manuscript/07_methods_lean.md",
+      "token": "proof_extraction_theorem_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/07_methods_lean.md",
+      "section": "manuscript/07_methods_lean.md",
+      "token": "proof_extraction_all_constructive"
+    },
+    {
+      "expected": "32",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "sheaf_track_count"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "sheaf_law_count"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "sheaf_laws_verified"
+    },
+    {
+      "expected": "90",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "coverage_present"
+    },
+    {
+      "expected": "90",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "coverage_bound"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "coverage_missing"
+    },
+    {
+      "expected": "17",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "imrad_manifest_rows"
+    },
+    {
+      "expected": "5",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "imrad_group_count"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "composed_section_count"
+    },
+    {
+      "expected": "70",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "validation_spine_artifact_count"
+    },
+    {
+      "expected": "5",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "provenance_bundle_count"
+    },
+    {
+      "expected": "70",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "provenance_seeded_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "provenance_all_seeded"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "provenance_bundle_complete"
+    },
+    {
+      "expected": "22",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "counterexample_count"
+    },
+    {
+      "expected": "22",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "adversarial_audit_count"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "adversarial_known_bad_passed"
+    },
+    {
+      "expected": "toy_only_pass",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "scope_boundary_status"
+    },
+    {
+      "expected": "81",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "evidence_field_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "evidence_fields_mapped"
+    },
+    {
+      "expected": "23",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "release_bundle_artifact_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "release_bundle_sources_present"
+    },
+    {
+      "expected": "22",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "validation_gate_index_count"
+    },
+    {
+      "expected": "37",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "artifact_diffoscope_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "artifact_diffoscope_all_equal"
+    },
+    {
+      "expected": "70",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "artifact_license_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "artifact_license_all_safe"
+    },
+    {
+      "expected": "212",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "manuscript_staleness_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/08_methods_sheaf.md",
+      "section": "manuscript/08_methods_sheaf.md",
+      "token": "manuscript_staleness_all_fresh"
+    },
+    {
+      "expected": "21",
+      "fresh": true,
+      "resolved_path": "output/manuscript/10_results_mi_sweep.md",
+      "section": "manuscript/10_results_mi_sweep.md",
+      "token": "param_sweep_grid_points"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/10_results_mi_sweep.md",
+      "section": "manuscript/10_results_mi_sweep.md",
+      "token": "lambda_max"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/10_results_mi_sweep.md",
+      "section": "manuscript/10_results_mi_sweep.md",
+      "token": "sweep_max_residual"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/10_results_mi_sweep.md",
+      "section": "manuscript/10_results_mi_sweep.md",
+      "token": "invariants_passed"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/10_results_mi_sweep.md",
+      "section": "manuscript/10_results_mi_sweep.md",
+      "token": "invariants_total"
+    },
+    {
+      "expected": "0.6031",
+      "fresh": true,
+      "resolved_path": "output/manuscript/10_results_mi_sweep.md",
+      "section": "manuscript/10_results_mi_sweep.md",
+      "token": "ising_mi_saturation"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/11_results_free_energy.md",
+      "section": "manuscript/11_results_free_energy.md",
+      "token": "invariants_passed"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/11_results_free_energy.md",
+      "section": "manuscript/11_results_free_energy.md",
+      "token": "invariants_total"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/11_results_free_energy.md",
+      "section": "manuscript/11_results_free_energy.md",
+      "token": "free_energy_argmin_lambda"
+    },
+    {
+      "expected": "0.6031",
+      "fresh": true,
+      "resolved_path": "output/manuscript/11_results_free_energy.md",
+      "section": "manuscript/11_results_free_energy.md",
+      "token": "ising_mi_saturation"
+    },
+    {
+      "expected": "21",
+      "fresh": true,
+      "resolved_path": "output/manuscript/11_results_free_energy.md",
+      "section": "manuscript/11_results_free_energy.md",
+      "token": "param_sweep_grid_points"
+    },
+    {
+      "expected": "state_inference",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "pymdp_mode"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_tmaze_policy_len"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_tmaze_steps"
+    },
+    {
+      "expected": "0.3251",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_tmaze_mean_belief_entropy"
+    },
+    {
+      "expected": "1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_policy_comparison_policy_goal_count"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_policy_comparison_state_goal_count"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_policy_comparison_run_count"
+    },
+    {
+      "expected": "3",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_policy_comparison_goal_reached_count"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_graph_world_steps"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_graph_world_node_count"
+    },
+    {
+      "expected": "1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_graph_world_goal_reached"
+    },
+    {
+      "expected": "0.3251",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_tmaze_mean_belief_entropy_formatted"
+    },
+    {
+      "expected": "0.3251",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_entropy_min"
+    },
+    {
+      "expected": "0.3251",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_entropy_max"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_action_diversity"
+    },
+    {
+      "expected": "1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/12_results_si_tmaze.md",
+      "section": "manuscript/12_results_si_tmaze.md",
+      "token": "si_goal_reached"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "invariants_passed"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "invariants_total"
+    },
+    {
+      "expected": "13",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "replay_matrix_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "replay_matrix_all_matched"
+    },
+    {
+      "expected": "96",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "sensitivity_cell_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "sensitivity_complete_grid"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "si_graph_world_topology_trace_count"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "uncertainty_row_count"
+    },
+    {
+      "expected": "3",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "uncertainty_bin_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "uncertainty_all_normalized"
+    },
+    {
+      "expected": "5",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "pymdp_policy_posterior_available_count"
+    },
+    {
+      "expected": "1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "si_policy_efe_rows_explained"
+    },
+    {
+      "expected": "3",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "benchmark_model_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "benchmark_all_models_complete"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "state_space_catalog_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "state_space_catalog_all_finite"
+    },
+    {
+      "expected": "36",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "causal_ablation_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/13_results_invariants.md",
+      "section": "manuscript/13_results_invariants.md",
+      "token": "causal_ablation_complete_grid"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "sheaf_law_count"
+    },
+    {
+      "expected": "22",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "counterexample_count"
+    },
+    {
+      "expected": "state_inference",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "pymdp_mode"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "si_tmaze_policy_len"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "sweep_rmse_mi"
+    },
+    {
+      "expected": "1",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "si_goal_reached"
+    },
+    {
+      "expected": "81eb061f43b7bfd7",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "pymdp_config_hash"
+    },
+    {
+      "expected": "0.3251",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "si_tmaze_mean_belief_entropy_formatted"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "si_tmaze_steps"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "si_action_diversity"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "sweep_max_residual"
+    },
+    {
+      "expected": "90",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "coverage_present"
+    },
+    {
+      "expected": "90",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "coverage_bound"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "coverage_missing"
+    },
+    {
+      "expected": "3",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "release_notes_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/15_discussion_outlook.md",
+      "section": "manuscript/15_discussion_outlook.md",
+      "token": "release_notes_source_backed"
+    },
+    {
+      "expected": "31",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "appendix_sheaf_track_count"
+    },
+    {
+      "expected": "32",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "sheaf_track_count"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "sheaf_law_count"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "sheaf_laws_verified"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "pymdp_runtime_known_warning_count"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "pymdp_runtime_unexpected_warning_count"
+    },
+    {
+      "expected": "10",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "pymdp_policy_posterior_row_count"
+    },
+    {
+      "expected": "5",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "interop_check_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "interop_all_lossless"
+    },
+    {
+      "expected": "5",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "provenance_bundle_count"
+    },
+    {
+      "expected": "13",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "replay_matrix_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "replay_matrix_all_matched"
+    },
+    {
+      "expected": "22",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "adversarial_audit_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "adversarial_audit_all_documented"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "adversarial_known_bad_passed"
+    },
+    {
+      "expected": "81",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "evidence_field_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "evidence_fields_mapped"
+    },
+    {
+      "expected": "23",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "release_bundle_artifact_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "release_bundle_sources_present"
+    },
+    {
+      "expected": "22",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "validation_gate_index_count"
+    },
+    {
+      "expected": "37",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "artifact_diffoscope_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "artifact_diffoscope_all_equal"
+    },
+    {
+      "expected": "70",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "artifact_license_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "artifact_license_all_safe"
+    },
+    {
+      "expected": "96",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "sensitivity_cell_count"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "uncertainty_row_count"
+    },
+    {
+      "expected": "3",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "uncertainty_bin_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "uncertainty_all_normalized"
+    },
+    {
+      "expected": "3",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "benchmark_model_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "benchmark_all_models_complete"
+    },
+    {
+      "expected": "21",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "param_sweep_grid_points"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "lambda_max"
+    },
+    {
+      "expected": "0.6031",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "ising_mi_saturation"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "sweep_max_residual"
+    },
+    {
+      "expected": "2",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "si_tmaze_policy_len"
+    },
+    {
+      "expected": "17",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "imrad_manifest_rows"
+    },
+    {
+      "expected": "90",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "coverage_present"
+    },
+    {
+      "expected": "90",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "coverage_bound"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "coverage_missing"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "model_checking_witness_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "model_checking_all_passed"
+    },
+    {
+      "expected": "4",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "lean_graph_world_topology_witness_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "lean_graph_world_all_topologies_witnessed"
+    },
+    {
+      "expected": "11",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "theorem_traceability_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "theorem_traceability_linked"
+    },
+    {
+      "expected": "10",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "proof_extraction_theorem_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "proof_extraction_all_constructive"
+    },
+    {
+      "expected": "6",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "state_space_catalog_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "state_space_catalog_all_finite"
+    },
+    {
+      "expected": "36",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "causal_ablation_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "causal_ablation_complete_grid"
+    },
+    {
+      "expected": "3",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "animation_delta_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "animation_deltas_all_nonzero"
+    },
+    {
+      "expected": "3",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "release_notes_row_count"
+    },
+    {
+      "expected": "true",
+      "fresh": true,
+      "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
+      "section": "manuscript/16_appendix_full_sheaf.md",
+      "token": "release_notes_source_backed"
+    },
+    {
+      "expected": "12",
+      "fresh": true,
+      "resolved_path": "output/manuscript/17_conclusion.md",
+      "section": "manuscript/17_conclusion.md",
+      "token": "composed_section_count"
+    },
+    {
+      "expected": "state_inference",
+      "fresh": true,
+      "resolved_path": "output/manuscript/17_conclusion.md",
+      "section": "manuscript/17_conclusion.md",
+      "token": "pymdp_mode"
+    },
+    {
+      "expected": "81eb061f43b7bfd7",
+      "fresh": true,
+      "resolved_path": "output/manuscript/17_conclusion.md",
+      "section": "manuscript/17_conclusion.md",
+      "token": "pymdp_config_hash"
+    },
+    {
+      "expected": "0",
+      "fresh": true,
+      "resolved_path": "output/manuscript/17_conclusion.md",
+      "section": "manuscript/17_conclusion.md",
+      "token": "sweep_rmse_mi"
+    }
+  ],
+  "schema": "template_active_inference.manuscript_staleness_report.v1"
+}

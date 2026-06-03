@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-30T17:08:38.819152",
+  "timestamp": "2026-06-02T14:43:39.765125",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -24,20 +24,20 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 1.19,
+            "size_mb": 1.8,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.39,
+            "size_mb": 2.19,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 18,
-            "size_mb": 0.25,
+            "size_mb": 0.38,
             "readable": true,
             "optional": false
           },
@@ -50,22 +50,22 @@
           },
           "figures": {
             "exists": true,
-            "files": 19,
-            "size_mb": 1.15,
+            "files": 17,
+            "size_mb": 1.68,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 14,
-            "size_mb": 0.14,
+            "files": 41,
+            "size_mb": 1.54,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 19,
-            "size_mb": 0.02,
+            "files": 34,
+            "size_mb": 0.27,
             "readable": true,
             "optional": false
           },
@@ -96,13 +96,13 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.39",
+          "size_mb": "2.19",
           "largest_file": "template_active_inference_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 18,
-          "size_mb": "0.25",
+          "size_mb": "0.38",
           "largest_file": "index.html"
         },
         "slides": {
@@ -113,21 +113,21 @@
         },
         "figures": {
           "exists": true,
-          "file_count": 19,
-          "size_mb": "1.15",
+          "file_count": 17,
+          "size_mb": "1.68",
           "largest_file": "sheaf_layers_overview.png"
         },
         "data": {
           "exists": true,
-          "file_count": 14,
-          "size_mb": "0.14",
-          "largest_file": "sheaf_gluing_certificate.json"
+          "file_count": 41,
+          "size_mb": "1.54",
+          "largest_file": "sheaf_section_status_matrix.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 19,
-          "size_mb": "0.02",
-          "largest_file": "output_statistics.json"
+          "file_count": 34,
+          "size_mb": "0.27",
+          "largest_file": "manuscript_staleness_report.json"
         },
         "simulations": {
           "exists": true,
@@ -152,14 +152,14 @@
         "pdf": 10,
         "web": 18,
         "slides": 0,
-        "figures": 19,
-        "data": 14,
-        "reports": 19,
+        "figures": 17,
+        "data": 41,
+        "reports": 34,
         "simulations": 0,
         "llm": 0,
         "logs": 2
       },
-      "total_size_mb": 2.9414405822753906,
+      "total_size_mb": 6.062553405761719,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -171,15 +171,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.3912734985351562
+      "size_mb": 2.1902666091918945
     },
     "figures": {
-      "files": 20,
-      "size_mb": 1.1482372283935547
+      "files": 17,
+      "size_mb": 1.675771713256836
     },
     "data": {
-      "files": 14,
-      "size_mb": 0.1351776123046875
+      "files": 41,
+      "size_mb": 1.541172981262207
     }
   },
   "summary": {

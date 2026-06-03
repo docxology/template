@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write provenance, reproducibility, and counterexample validation artifacts."""
+"""Write provenance, replay, and counterexample validation artifacts."""
 
 from __future__ import annotations
 

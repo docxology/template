@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>06_methods_pymdp</title>
+  <title>06_methods_pymdp.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -178,9 +178,8 @@
 <!-- sheaf-track:prose -->
 <p><strong>Sophisticated inference (planning horizon).</strong> This
 section documents a <strong>pymdp state-inference harness</strong> on a
-minimal T-maze (<span class="citation"
-data-cites="fig:tmaze_schematic">[@fig:tmaze_schematic]</span>) with
-planning horizon <code>policy_len = 2</code>. Default mode is
+minimal T-maze ([fig:tmaze_schematic]) with planning horizon
+<code>policy_len = 2</code>. Default mode is
 <code>state_inference</code> (T-maze rollout via
 <code>simulate_si_tmaze.py</code>). The Agent constructs a multi-step
 policy set (<code>num_policies</code> logged in SI artifacts); per-step
@@ -194,23 +193,28 @@ sophisticated inference’s advantage, so richer state spaces and longer
 horizons are needed for it to differ from belief filtering.</p>
 <p>Graph-world artifacts are deterministic extension outputs declared in
 <code>tracks.yaml</code> <code>extension_tracks.graph_world</code>. For
-the reference workflow, see <span class="citation"
-data-cites="sec:intro_motivation">[@sec:intro_motivation]</span>;
-measured rollouts appear in <span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>.</p>
+the reference workflow, see [sec:intro_motivation]; measured rollouts
+appear in [sec:results_si_tmaze].</p>
 <p>Mean belief entropy across steps: 0.3251.</p>
 <p>The comparison artifact
 <code>output/data/si_policy_comparison.json</code> runs both
 <code>state_inference</code> and <code>policy_inference</code> over the
 declared toy horizons and seeds without replacing the default rollout.
-It records 4 deterministic comparison rows, of which 3 reach the goal
-under the toy transition model.</p>
+It records 4 deterministic comparison rows, complete-grid flag 1, and 3
+goal-reaching rows under the toy transition model.</p>
+<p>Agent construction is audited in
+<code>output/reports/pymdp_runtime_diagnostics.json</code>: 4
+constructions, 4 known third-party JAX static-array warnings, and 0
+unexpected warnings. Policy posterior evidence is written separately to
+<code>output/data/pymdp_policy_posterior_grid.json</code> with 10 rows
+and normalized-posterior flag 1.</p>
 <p>The graph-world extension is deterministic:
 <code>simulate_si_graph_world.py</code> writes
 <code>si_graph_world_summary.json</code> and
 <code>si_graph_world_trace.json</code> for a four-node graph-world path.
 The regenerated summary reports 4 nodes, 4 steps, and goal-reached flag
-1.</p>
+1. The topology-trace extension records 4 topology traces with agreement
+flag 1.</p>
 <!-- sheaf-track:formalism -->
 <p>Given generative matrices <span
 class="math inline">\(A,B,C,D\)</span>, pymdp computes state beliefs
@@ -219,27 +223,36 @@ class="math inline">\(A,B,C,D\)</span>, pymdp computes state beliefs
 horizon <span class="math inline">\(H =\)</span> 2, which defines the
 <strong>policy depth</strong> used when constructing candidate policies
 (logged as <code>num_policies</code> in the SI summary artifact; see
-<span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>).</p>
+[sec:results_si_tmaze]).</p>
 <p>The default harness records belief entropy per step; extending to
 full expected-free-energy policy selection (<code>infer_policies</code>)
-is documented as a follow-on track in <span class="citation"
-data-cites="sec:discussion_outlook">[@sec:discussion_outlook]</span>.</p>
+is documented as a follow-on track in [sec:discussion_outlook].</p>
 <!-- sheaf-track:pymdp -->
 <p>SI artifacts (summary, trace, optional JSONL log) record step count,
-actions, observations, and belief entropy for <span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>. Steps
-recorded: 2.</p>
+actions, observations, and belief entropy for [sec:results_si_tmaze].
+Steps recorded: 2.</p>
+<!-- sheaf-track:interop -->
+<p>The <code>interop</code> fragment treats the GNN files, JSON views,
+and ontology bindings as a round-trip contract rather than parallel
+documentation. <code>output/data/interop_roundtrip_report.json</code>
+records 5 deterministic checks; the manuscript only claims losslessness
+when <code>true</code> is true.</p>
+<p>The stricter lint artifacts are adjacent evidence, not new model
+claims: <code>output/data/gnn_roundtrip_report.json</code>,
+<code>output/reports/gnn_lint_report.json</code>,
+<code>output/data/ontology_alias_index.json</code>, and
+<code>output/data/ontology_profile_matrix.json</code> must agree before
+the interop row passes. A missing GNN variable, duplicate ontology
+alias, dropped JSON field, shape diff, or dtype diff is therefore a
+validation failure before rendering.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:tmaze_schematic">
 <img src="../figures/tmaze_schematic.png" style="width:85.0%"
-alt="Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and observations, and planning horizon policy_len = 2." />
-<figcaption aria-hidden="true">Schematic of the minimal T-maze POMDP
-with start and goal states, discrete actions and observations, and
-planning horizon policy_len = 2.</figcaption>
+data-fig-alt="Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and observations, and planning horizon policy_len = 2."
+alt="T-maze generative model schematic (2-step policy horizon, state_inference mode)." />
+<figcaption aria-hidden="true">T-maze generative model schematic (2-step
+policy horizon, state_inference mode).</figcaption>
 </figure>
-<p><em>Figure M1 (methods). T-maze generative model schematic (2-step
-policy horizon, state_inference mode).</em></p>
 <!-- sheaf-track:gnn -->
 <p>See <code>gnn/si_tmaze.gnn.md</code> for a GNN view of the T-maze
 hidden state, observation, and policy variables with ontology

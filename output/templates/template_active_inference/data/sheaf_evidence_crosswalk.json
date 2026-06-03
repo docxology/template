@@ -1,5 +1,5 @@
 {
-  "claim_count": 30,
+  "claim_count": 81,
   "claims": [
     {
       "artifact_exists": true,
@@ -74,7 +74,8 @@
         "sheaf"
       ],
       "validation_gates": [
-        "validate_outputs"
+        "validate_outputs",
+        "validate_manuscript"
       ]
     },
     {
@@ -85,7 +86,7 @@
       },
       "id": "sheaf_gluing_certificate",
       "path": "output/data/sheaf_gluing_certificate.json",
-      "producer": "z_generate_manuscript_variables.py",
+      "producer": "generate_sheaf_tracks.py",
       "section": "methods_sheaf",
       "statement": "Semantic gluing certificate records cross-track symbols and typed claims.",
       "tracks": [
@@ -108,7 +109,7 @@
       },
       "id": "sheaf_evidence_crosswalk",
       "path": "output/data/sheaf_evidence_crosswalk.json",
-      "producer": "z_generate_manuscript_variables.py",
+      "producer": "generate_sheaf_tracks.py",
       "section": "methods_sheaf",
       "statement": "Evidence crosswalk records claim-to-artifact producer and gate bindings.",
       "tracks": [
@@ -123,12 +124,33 @@
     {
       "artifact_exists": true,
       "evidence": {
+        "equals": true,
+        "field": "all_fields_mapped"
+      },
+      "id": "evidence_fields_mapped",
+      "path": "output/data/evidence_field_index.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Evidence-field index maps claim evidence fields to generated artifacts and validators.",
+      "tracks": [
+        "evidence_fields",
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
         "field": "issues",
         "len_equals": 0
       },
       "id": "validation_dependency_graph",
       "path": "output/data/validation_dependency_graph.json",
-      "producer": "z_generate_manuscript_variables.py",
+      "producer": "generate_sheaf_tracks.py",
       "section": "methods_sheaf",
       "statement": "Validation dependency graph has no producer-configuration issues.",
       "tracks": [
@@ -168,7 +190,7 @@
       },
       "id": "artifact_provenance_spine",
       "path": "output/data/artifact_provenance.json",
-      "producer": "generate_validation_spine.py",
+      "producer": "generate_sheaf_tracks.py",
       "section": "methods_sheaf",
       "statement": "Artifact provenance spine records hashes and configured producers for core outputs.",
       "tracks": [
@@ -185,15 +207,36 @@
       "artifact_exists": true,
       "evidence": {
         "equals": true,
+        "field": "all_seeded"
+      },
+      "id": "artifact_provenance_seed_config",
+      "path": "output/data/artifact_provenance.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Artifact provenance spine records deterministic seed and config digest fields for core outputs.",
+      "tracks": [
+        "provenance",
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
         "field": "all_passed"
       },
-      "id": "reproducibility_replay_spine",
+      "id": "replay_matrix_spine",
       "path": "output/reports/reproducibility_replay.json",
       "producer": "generate_validation_spine.py",
       "section": "results_invariants",
-      "statement": "Reproducibility spine replays deterministic toy producers and matches saved artifacts.",
+      "statement": "Replay spine checks deterministic toy producers and matches saved artifacts.",
       "tracks": [
-        "reproducibility",
+        "replay_matrix",
         "manuscript"
       ],
       "validation_gates": [
@@ -208,7 +251,7 @@
       },
       "id": "counterexample_matrix_spine",
       "path": "output/reports/counterexample_matrix.json",
-      "producer": "generate_validation_spine.py",
+      "producer": "generate_sheaf_tracks.py",
       "section": "methods_sheaf",
       "statement": "Counterexample spine records expected-failure fixtures for promoted validation gates.",
       "tracks": [
@@ -236,7 +279,8 @@
         "manuscript"
       ],
       "validation_gates": [
-        "validate_outputs"
+        "validate_outputs",
+        "figure_registry"
       ]
     },
     {
@@ -247,7 +291,7 @@
       },
       "id": "coverage_no_gray",
       "path": "output/data/sheaf_gluing_certificate.json",
-      "producer": "z_generate_manuscript_variables.py",
+      "producer": "generate_sheaf_tracks.py",
       "section": "methods_sheaf",
       "statement": "Coverage matrix JSON has zero gray cells on a clean tree.",
       "tracks": [
@@ -329,7 +373,7 @@
         "sheaf"
       ],
       "validation_gates": [
-        "validate_outputs"
+        "validate_manuscript"
       ]
     },
     {
@@ -414,6 +458,48 @@
     {
       "artifact_exists": true,
       "evidence": {
+        "equals": true,
+        "field": "ok"
+      },
+      "id": "pymdp_runtime_diagnostics_ok",
+      "path": "output/reports/pymdp_runtime_diagnostics.json",
+      "producer": "simulate_si_tmaze.py",
+      "section": "methods_pymdp",
+      "statement": "PyMDP runtime diagnostics capture known JAX warnings and no unexpected construction warnings.",
+      "tracks": [
+        "pymdp",
+        "provenance",
+        "adversarial_audit"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_available_posteriors_normalized"
+      },
+      "id": "pymdp_policy_posterior_grid_normalized",
+      "path": "output/data/pymdp_policy_posterior_grid.json",
+      "producer": "simulate_si_tmaze.py",
+      "section": "methods_pymdp",
+      "statement": "Measured PyMDP policy posterior rows are normalized or explicitly unavailable with a fallback reason.",
+      "tracks": [
+        "pymdp",
+        "uncertainty",
+        "interop"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
         "equals": "ok",
         "field": "status"
       },
@@ -457,7 +543,7 @@
       },
       "id": "si_graph_world_trace_consistency",
       "path": "output/data/sheaf_gluing_certificate.json",
-      "producer": "z_generate_manuscript_variables.py",
+      "producer": "generate_sheaf_tracks.py",
       "section": "results_si_tmaze",
       "statement": "Graph-world summary step count agrees with trace length.",
       "tracks": [
@@ -540,7 +626,8 @@
         "sheaf"
       ],
       "validation_gates": [
-        "validate_outputs"
+        "validate_outputs",
+        "figure_registry"
       ]
     },
     {
@@ -551,7 +638,7 @@
       },
       "id": "lean_graph_world_policy_boundary",
       "path": "output/data/sheaf_gluing_certificate.json",
-      "producer": "z_generate_manuscript_variables.py",
+      "producer": "generate_sheaf_tracks.py",
       "section": "methods_lean",
       "statement": "Lean boundary includes finite graph-world reachability and policy-enumeration witnesses.",
       "tracks": [
@@ -579,6 +666,971 @@
       ],
       "validation_gates": [
         "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "complete_grid"
+      },
+      "id": "sensitivity_complete_grid",
+      "path": "output/data/sensitivity_sweep.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "results_invariants",
+      "statement": "Sensitivity track records a complete deterministic toy grid.",
+      "tracks": [
+        "sensitivity",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_equations_indexed"
+      },
+      "id": "analytical_assumption_index",
+      "path": "output/data/analytical_assumption_index.json",
+      "producer": "generate_toy_sweep_tracks.py",
+      "section": "methods_analytical",
+      "statement": "Analytical assumption index maps every declared finite toy equation to assumptions and evidence artifacts.",
+      "tracks": [
+        "assumption_index",
+        "analytical",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_normalized"
+      },
+      "id": "uncertainty_rows_normalized",
+      "path": "output/data/uncertainty_summary.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "results_invariants",
+      "statement": "Uncertainty track rows are normalized deterministic posterior summaries.",
+      "tracks": [
+        "uncertainty",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "models",
+        "set_equals": [
+          "bernoulli_ising",
+          "si_tmaze",
+          "graph_world"
+        ]
+      },
+      "id": "benchmark_rows_complete",
+      "path": "output/data/toy_benchmark_matrix.json",
+      "producer": "generate_toy_sweep_tracks.py",
+      "section": "results_invariants",
+      "statement": "Benchmark track includes every declared toy model row.",
+      "tracks": [
+        "benchmark",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "complete_grid"
+      },
+      "id": "si_policy_grid_complete",
+      "path": "output/data/si_policy_grid.json",
+      "producer": "generate_toy_sweep_tracks.py",
+      "section": "results_invariants",
+      "statement": "Policy grid artifact covers the deterministic modes, horizons, and seeds.",
+      "tracks": [
+        "pymdp",
+        "sensitivity"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_rows_explained"
+      },
+      "id": "si_efe_rows_explained",
+      "path": "output/data/si_efe_terms.json",
+      "producer": "generate_toy_sweep_tracks.py",
+      "section": "results_invariants",
+      "statement": "EFE artifact explicitly records availability or fallback for every policy-comparison row.",
+      "tracks": [
+        "pymdp",
+        "sensitivity"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_trace_summary_agree"
+      },
+      "id": "graph_world_topology_traces_consistent",
+      "path": "output/data/si_graph_world_topology_traces.json",
+      "producer": "generate_toy_sweep_tracks.py",
+      "section": "results_invariants",
+      "statement": "Graph-world topology trace artifact agrees with every topology summary row.",
+      "tracks": [
+        "pymdp",
+        "sensitivity"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_passed"
+      },
+      "id": "graph_world_invariants_pass",
+      "path": "output/reports/graph_world_invariants.json",
+      "producer": "generate_toy_sweep_tracks.py",
+      "section": "results_invariants",
+      "statement": "Graph-world invariant artifact records only passing finite toy invariants.",
+      "tracks": [
+        "pymdp",
+        "sensitivity"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_passed"
+      },
+      "id": "model_checking_witnesses_pass",
+      "path": "output/reports/model_checking_witnesses.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_lean",
+      "statement": "Model-checking witness artifact finds no finite toy counterexample.",
+      "tracks": [
+        "model_checking",
+        "lean"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_lossless"
+      },
+      "id": "interop_roundtrip_lossless",
+      "path": "output/data/interop_roundtrip_report.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_pymdp",
+      "statement": "Interop artifact reports lossless GNN/JSON/ontology round-trip checks.",
+      "tracks": [
+        "interop",
+        "gnn",
+        "ontology"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_proved"
+      },
+      "id": "lean_theorem_inventory_proved",
+      "path": "output/reports/lean_theorem_inventory.json",
+      "producer": "generate_formal_interop_tracks.py",
+      "section": "methods_lean",
+      "statement": "Lean theorem inventory contains no forbidden proof placeholders.",
+      "tracks": [
+        "lean",
+        "model_checking"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_topologies_witnessed"
+      },
+      "id": "lean_graph_world_topologies_witnessed",
+      "path": "output/reports/lean_graph_world_inventory.json",
+      "producer": "generate_formal_interop_tracks.py",
+      "section": "methods_lean",
+      "statement": "Lean graph-world inventory witnesses every generated toy topology.",
+      "tracks": [
+        "lean",
+        "model_checking",
+        "sensitivity"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "ok"
+      },
+      "id": "semantic_gluing_ok",
+      "path": "output/data/sheaf_gluing_certificate.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Canonical semantic gluing certificate reports all restrictions passing.",
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "adversarial_audit"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_required_edge_types_present"
+      },
+      "id": "dependency_graph_edges",
+      "path": "output/data/validation_dependency_graph.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Canonical dependency graph includes producer, track, bundle, token, claim, validator, fixture, model, ontology, figure, and copied-output edges.",
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "provenance"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_complete"
+      },
+      "id": "producer_completeness",
+      "path": "output/reports/producer_completeness.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Producer completeness audit finds every required artifact producer configured.",
+      "tracks": [
+        "provenance",
+        "adversarial_audit"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_fresh"
+      },
+      "id": "stale_artifact_report_fresh",
+      "path": "output/reports/stale_artifact_report.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Stale-artifact report records fresh hashes for replay-safe generated artifacts.",
+      "tracks": [
+        "provenance",
+        "replay_matrix"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_consistent"
+      },
+      "id": "cross_track_symbols_consistent",
+      "path": "output/data/cross_track_symbol_table.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Cross-track symbol table records no symbol-level conflicts.",
+      "tracks": [
+        "gnn",
+        "ontology",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_source_backed"
+      },
+      "id": "manuscript_evidence_tables_source_backed",
+      "path": "output/data/manuscript_evidence_tables.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Generated manuscript evidence tables are source-backed.",
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_tokens_mapped"
+      },
+      "id": "manuscript_token_provenance_mapped",
+      "path": "output/data/manuscript_token_provenance.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Manuscript token provenance maps every hydrated variable token to generated variables.",
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_claims_typed"
+      },
+      "id": "claim_evidence_audit_typed",
+      "path": "output/reports/claim_evidence_audit.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Claim-evidence audit reports every ledger claim has typed evidence and track coverage.",
+      "tracks": [
+        "adversarial_audit",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_indexed"
+      },
+      "id": "validation_gate_index_complete",
+      "path": "output/data/validation_gate_index.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Validation gate index records every promoted local gate used by the release.",
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "gate_ergonomics"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_bound_fragments_present"
+      },
+      "id": "sheaf_section_status_matrix_complete",
+      "path": "output/data/sheaf_section_status_matrix.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Section-track status matrix records every current manuscript section and registered sheaf track cell.",
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "layers"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_events_ok"
+      },
+      "id": "sheaf_render_log_events_ok",
+      "path": "output/reports/sheaf_render_log.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Deterministic sheaf render log records only passing render and logging events.",
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "gate_ergonomics"
+      ],
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_figures_mapped"
+      },
+      "id": "figure_source_map_complete",
+      "path": "output/data/figure_source_map.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Figure source map covers every generated figure registry entry.",
+      "tracks": [
+        "visualization",
+        "provenance"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_hashes_present"
+      },
+      "id": "figure_hash_manifest_complete",
+      "path": "output/reports/figure_hash_manifest.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Figure hash manifest records hashes for generated visual artifacts.",
+      "tracks": [
+        "visualization",
+        "provenance"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": "toy_only_pass",
+        "field": "scope_boundary_status"
+      },
+      "id": "scope_boundary_toy_only",
+      "path": "output/reports/scope_boundary_audit.json",
+      "producer": "generate_integration_audit.py",
+      "section": "discussion_outlook",
+      "statement": "Scope boundary audit keeps current claims confined to deterministic toy artifacts.",
+      "tracks": [
+        "adversarial_audit",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_expected_failures_documented"
+      },
+      "id": "adversarial_audit_expected_failures",
+      "path": "output/reports/adversarial_audit.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Adversarial audit documents every known-bad row as an expected failure.",
+      "tracks": [
+        "adversarial_audit",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_nonzero"
+      },
+      "id": "animation_frame_deltas_nonzero",
+      "path": "output/data/animation_frame_deltas.json",
+      "producer": "render_animation.py",
+      "section": "appendix_full_sheaf",
+      "statement": "Animation delta manifest records nonzero adjacent-frame changes for the generated GIF.",
+      "tracks": [
+        "animation_delta",
+        "animation",
+        "visualization"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_fresh"
+      },
+      "id": "manuscript_staleness_fresh",
+      "path": "output/reports/manuscript_staleness_report.json",
+      "producer": "z_generate_manuscript_variables.py",
+      "section": "methods_sheaf",
+      "statement": "Manuscript staleness report confirms resolved markdown matches current hydrated variables.",
+      "tracks": [
+        "manuscript_staleness",
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_replay_rows_matched"
+      },
+      "id": "replay_matrix_all_replayed",
+      "path": "output/reports/replay_matrix.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "results_invariants",
+      "statement": "Canonical replay matrix represents every configured analysis producer with matched replay or fingerprint rows.",
+      "tracks": [
+        "replay_matrix"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "complete_grid"
+      },
+      "id": "sensitivity_complete_grid",
+      "path": "output/data/sensitivity_sweep.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "results_invariants",
+      "statement": "Canonical sensitivity sweep covers every configured finite mode, horizon, seed, topology, and lambda cell.",
+      "tracks": [
+        "sensitivity"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_normalized"
+      },
+      "id": "uncertainty_normalized",
+      "path": "output/data/uncertainty_summary.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "results_invariants",
+      "statement": "Canonical uncertainty summary records normalized belief and policy-posterior distributions.",
+      "tracks": [
+        "uncertainty"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "field": "covered_tracks",
+        "set_equals": [
+          "provenance",
+          "replay_matrix",
+          "sensitivity",
+          "uncertainty",
+          "counterexample",
+          "model_checking",
+          "interop",
+          "adversarial_audit",
+          "evidence_fields",
+          "release_bundle",
+          "theorem_traceability",
+          "gate_ergonomics",
+          "artifact_diffoscope",
+          "proof_extraction",
+          "state_space_catalog",
+          "causal_ablation",
+          "artifact_license",
+          "release_notes"
+        ]
+      },
+      "id": "counterexample_expected_failures",
+      "path": "output/reports/counterexample_matrix.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Canonical counterexample matrix covers every canonical promoted track with observed expected failures.",
+      "tracks": [
+        "counterexample",
+        "adversarial_audit"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_exhaustive"
+      },
+      "id": "model_checking_exhaustive",
+      "path": "output/reports/model_checking_witnesses.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_lean",
+      "statement": "Canonical model-checking witnesses record finite exhaustive checks without counterexamples.",
+      "tracks": [
+        "model_checking",
+        "lean"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_lossless"
+      },
+      "id": "interop_lossless",
+      "path": "output/data/interop_roundtrip_report.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_pymdp",
+      "statement": "Canonical interop round-trip checks preserve GNN, ontology, dependency, and track-scope records without shape loss.",
+      "tracks": [
+        "interop",
+        "gnn",
+        "ontology"
+      ],
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": 0,
+        "field": "known_bad_rows_passed"
+      },
+      "id": "adversarial_audit_known_bad_blocked",
+      "path": "output/reports/adversarial_audit.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Canonical adversarial audit documents known-bad rows and records zero known-bad rows passing.",
+      "tracks": [
+        "adversarial_audit"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_live_tracks_valid"
+      },
+      "id": "track_improvement_scope_complete",
+      "path": "output/data/track_improvement_scope.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Track improvement scope records complete promotion proof rows and future improvement rows for canonical tracks.",
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "provenance"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_blocked"
+      },
+      "id": "empirical_adapter_blocked",
+      "path": "output/reports/blocked_scope_manifest.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "discussion_outlook",
+      "statement": "Empirical adapter remains blocked and absent from the live sheaf registry.",
+      "tracks": [
+        "adversarial_audit",
+        "manuscript"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_required_sources_present"
+      },
+      "id": "release_bundle_sources_present",
+      "path": "output/reports/release_bundle_manifest.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_sheaf",
+      "statement": "Release bundle manifest records every canonical deliverable source artifact before copying.",
+      "tracks": [
+        "release_bundle",
+        "provenance"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_theorems_linked"
+      },
+      "id": "theorem_traceability_linked",
+      "path": "output/data/theorem_traceability_matrix.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_lean",
+      "statement": "Theorem traceability matrix links Lean theorem inventory rows to finite witnesses and evidence fields.",
+      "tracks": [
+        "theorem_traceability",
+        "model_checking",
+        "lean"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_indexed"
+      },
+      "id": "gate_ergonomics_indexed",
+      "path": "output/data/validation_gate_index.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Gate ergonomics index records every validation gate row used by the canonical release.",
+      "tracks": [
+        "gate_ergonomics",
+        "manuscript",
+        "sheaf"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_equal"
+      },
+      "id": "artifact_diffoscope_equal",
+      "path": "output/reports/artifact_diffoscope.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Artifact diffoscope rows match saved provenance hashes against live artifacts.",
+      "tracks": [
+        "artifact_diffoscope",
+        "provenance",
+        "release_bundle"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_constructive"
+      },
+      "id": "proof_extraction_constructive",
+      "path": "output/data/proof_extraction_index.json",
+      "producer": "generate_formal_interop_tracks.py",
+      "section": "methods_lean",
+      "statement": "Proof extraction rows contain Lean theorem statements without forbidden proof tokens.",
+      "tracks": [
+        "proof_extraction",
+        "lean",
+        "theorem_traceability"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_finite"
+      },
+      "id": "state_space_catalog_finite",
+      "path": "output/data/state_space_catalog.json",
+      "producer": "generate_toy_sweep_tracks.py",
+      "section": "results_invariants",
+      "statement": "State-space catalog records finite toy state and policy spaces.",
+      "tracks": [
+        "state_space_catalog",
+        "model_checking",
+        "benchmark"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "complete_grid"
+      },
+      "id": "causal_ablation_complete",
+      "path": "output/data/causal_ablation_matrix.json",
+      "producer": "generate_toy_sweep_tracks.py",
+      "section": "results_invariants",
+      "statement": "Causal ablation matrix covers the deterministic toy ablation grid.",
+      "tracks": [
+        "causal_ablation",
+        "sensitivity",
+        "benchmark"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_license_safe"
+      },
+      "id": "artifact_license_safe",
+      "path": "output/reports/artifact_license_audit.json",
+      "producer": "generate_integration_audit.py",
+      "section": "methods_sheaf",
+      "statement": "Artifact license audit classifies all generated and source artifacts as license-safe for the public toy exemplar.",
+      "tracks": [
+        "artifact_license",
+        "provenance",
+        "release_bundle"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_notes_source_backed"
+      },
+      "id": "release_notes_source_backed",
+      "path": "output/reports/release_notes_evidence.json",
+      "producer": "generate_integration_audit.py",
+      "section": "discussion_outlook",
+      "statement": "Release-notes evidence rows are backed by validation, semantic, or bundle artifacts.",
+      "tracks": [
+        "release_notes",
+        "release_bundle",
+        "gate_ergonomics"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
       ]
     }
   ],
