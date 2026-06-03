@@ -21,14 +21,17 @@ PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
     "templates/template_code_project",
     "templates/template_newspaper",
     "templates/template_prose_project",
+    "templates/template_autoscientists",
     "templates/template_sia",
     "templates/template_template",
     "templates/template_textbook",
 )
 
-# template_autoscientists is tracked in-repo but local-only (no Zenodo DOI yet),
-# so it is excluded from the public CI/publication scope pending its first deposit.
-LOCAL_ONLY_TEMPLATE_NAMES: tuple[str, ...] = ("templates/template_autoscientists",)
+# Template exemplars that exist on disk under projects/templates/ but are NOT
+# part of the public CI/publication scope. Empty: all on-disk exemplars are now
+# fully public (tracked, CI-gated, double-published). Re-populate only if a new
+# exemplar is staged locally before it is promoted to PUBLIC_PROJECT_NAMES.
+LOCAL_ONLY_TEMPLATE_NAMES: tuple[str, ...] = ()
 
 # Local-only template exemplars: see docs/maintenance/local-only-template-exemplars.md
 

@@ -23,11 +23,6 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
     if text not in sys.path:
         sys.path.insert(0, text)
 
-import matplotlib  # noqa: E402
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-
 from src import (  # noqa: E402
     DeterministicProposer,
     SearchConfig,
@@ -35,6 +30,7 @@ from src import (  # noqa: E402
     SyntheticObjective,
     run_search,
 )
+from src.figures import write_comparison_figure  # noqa: E402
 
 BUDGET = 60
 
@@ -48,28 +44,6 @@ def _run_pair(objective: SyntheticObjective) -> tuple[SearchResult, SearchResult
     coordinated = run_search(objective, proposer, SearchConfig(budget=BUDGET))
     baseline = run_search(objective, proposer, SearchConfig.single_thread_baseline(budget=BUDGET))
     return coordinated, baseline
-
-
-def _write_figure(coordinated: SearchResult, baseline: SearchResult, path: Path) -> None:
-    fig, ax = plt.subplots(figsize=(7.0, 4.5))
-    ax.plot(range(1, len(coordinated.trajectory) + 1), coordinated.trajectory, label="Coordinated teams", linewidth=2.0)
-    ax.plot(
-        range(1, len(baseline.trajectory) + 1),
-        baseline.trajectory,
-        label="Single-thread baseline",
-        linewidth=2.0,
-        linestyle="--",
-    )
-    ax.set_xlabel("Experiment")
-    ax.set_ylabel("Champion metric (higher is better)")
-    ax.set_title(
-        "Champion trajectory under matched experiment budget\n(coordinated teams partition the same budget as the baseline)"
-    )
-    ax.legend(loc="lower right")
-    ax.grid(True, alpha=0.3)
-    fig.tight_layout()
-    fig.savefig(path, dpi=150)
-    plt.close(fig)
 
 
 def _summary(objective: SyntheticObjective, coordinated: SearchResult, baseline: SearchResult) -> dict[str, object]:
@@ -111,7 +85,7 @@ def main() -> int:
 
     figure_path = figures_dir / "search_comparison.png"
     data_path = data_dir / "search_comparison.json"
-    _write_figure(coordinated, baseline, figure_path)
+    write_comparison_figure(coordinated, baseline, figure_path)
     data_path.write_text(json.dumps(_summary(objective, coordinated, baseline), indent=2, sort_keys=True) + "\n")
 
     print(figure_path)

@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-06-03 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**516**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**213**), publishing suite collection/full run (**381**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-06-03 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**516**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**214**), publishing suite collection/full run (**381**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -10,6 +10,7 @@ This file aggregates verifiable facts from discovery scripts, CI configuration, 
 
 - `template_active_inference`
 - `template_autoresearch_project`
+- `template_autoscientists`
 - `template_code_project`
 - `template_newspaper`
 - `template_prose_project`
@@ -25,6 +26,7 @@ Private lifecycle projects live outside this public repo in a separate external 
 
 - `template_active_inference`
 - `template_autoresearch_project`
+- `template_autoscientists`
 - `template_code_project`
 - `template_newspaper`
 - `template_prose_project`
@@ -100,7 +102,7 @@ uv run pytest tests/infra_tests/project/ --collect-only -q --no-cov
 uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 ```
 
-Result: **213** project-scope infrastructure tests collected and **381** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
+Result: **214** project-scope infrastructure tests collected and **381** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
 **Exemplar `pytest --collect-only` totals** (2026-05-27):
 
@@ -108,6 +110,7 @@ Result: **213** project-scope infrastructure tests collected and **381** publish
 |---------|-----------------|----------------------------|
 | `template_active_inference` | 141 | 91.35 % |
 | `template_autoresearch_project` | 220 | 92.81 % |
+| `template_autoscientists` | 79 | 99.59 % |
 | `template_code_project` | 209 | 98.25 % |
 | `template_newspaper` | 48 | 94.46 % |
 | `template_prose_project` | 76 | 100.00 % |

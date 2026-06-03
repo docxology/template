@@ -6,9 +6,11 @@ part of `PUBLIC_PROJECT_NAMES`, CI, or git tracking. They are listed in
 
 ## Current entries
 
-| Qualified name | Why local-only |
-| --- | --- |
-| `templates/template_autoscientists` | AutoScientists (arXiv:2605.28655) coordination exemplar with a live Hermes plug-in that depends on local model weights. Exercised locally; not part of public CI. |
+_None._ All on-disk exemplars under `projects/templates/` are now fully public:
+tracked, CI-gated, and double-published (GitHub + Zenodo). `template_autoscientists`
+was the last local-only exemplar and was promoted to the public set on 2026-06-03
+(its deterministic coordination core is public-CI-safe; the optional live Hermes
+plug-in remains skipped without local model weights).
 
 ## Promoting an exemplar to the public set
 
