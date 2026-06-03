@@ -22,6 +22,7 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.project.discovery import discover_projects
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.project.linking import (
     ACTIVE_SUBDIR,
