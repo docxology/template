@@ -266,6 +266,61 @@ def safe_run_command(command: List[str], timeout: int = 30) -> str:
         raise SecurityError(f"Command execution failed: {e}")
 ```
 
+### Safe XML Parsing (DEP-DEFUSEDXML-1)
+
+**Policy: all XML parsing of external or untrusted input MUST use
+[`defusedxml`](https://pypi.org/project/defusedxml/).** The standard-library
+`xml.*` parsers and `lxml` are vulnerable to entity-expansion ("billion laughs")
+and external-entity (XXE) attacks, so `defusedxml` is the single sanctioned
+parser for this repository — keep it as a declared dependency, do not replace it
+with bare stdlib parsing.
+
+```python
+# ✅ GOOD: hardened parser for any input
+import defusedxml.ElementTree as ET
+
+root = ET.fromstring(untrusted_xml_bytes)
+
+# ✅ ALLOWED: type-only / construction-only import (never parses input)
+from xml.etree.ElementTree import Element
+
+# ❌ BAD: stdlib parsers — vulnerable to XXE / entity expansion
+import xml.etree.ElementTree as ET          # exposes ET.parse / ET.fromstring
+from xml.etree.ElementTree import fromstring
+from xml.dom.minidom import parseString
+import lxml.etree                            # unsafe by default
+```
+
+Current sanctioned call sites (all use `defusedxml.ElementTree`):
+`infrastructure/reporting/coverage_history.py`,
+`infrastructure/search/literature/fulltext.py`,
+`infrastructure/search/literature/arxiv_backend.py`. The lone stdlib reference,
+`from xml.etree.ElementTree import Element` in `arxiv_backend.py`, is a
+type-hint target only and is explicitly allowed (and `# nosec`-annotated for
+Bandit `B405`).
+
+This policy is enforced two ways, so a regression fails CI rather than relying
+on review:
+
+1. **Bandit** (`B313`–`B320`, `B405`–`B410`) runs as a blocking CI gate
+   (`.github/workflows/ci.yml` → `security`) and flags unsafe XML parse calls
+   and imports.
+2. **An import-level guard**,
+   `infrastructure/validation/xml_parser_policy.validate_xml_parser_policy`,
+   AST-scans `infrastructure/` for forbidden stdlib/`lxml` parser imports while
+   allowing type-only `Element`-style imports. It is exercised by
+   `tests/infra_tests/validation/test_xml_parser_policy.py`, whose live-tree
+   test asserts the shipped `infrastructure/` tree stays policy-clean.
+
+Verify the policy locally:
+
+```bash
+# Sanctioned parser is present and used; no bare stdlib XML parsing slipped in
+rg -n 'defusedxml' infrastructure/
+uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
+uv run pytest tests/infra_tests/validation/test_xml_parser_policy.py -q
+```
+
 ## Security Testing Patterns
 
 ### Test Input Validation
