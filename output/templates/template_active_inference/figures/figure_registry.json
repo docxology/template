@@ -1,4 +1,13 @@
 {
+  "fig:causal_ablation_heatmap": {
+    "alt": "Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows.",
+    "caption": "Causal-ablation heatmap: {{ablation_sensitivity_row_count}} source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: {{ablation_sensitivity_source_backed}}.",
+    "figure_id": "causal_ablation_heatmap",
+    "filename": "causal_ablation_heatmap.png",
+    "generated_by": "visualizations.figures::causal_ablation_heatmap",
+    "label": "fig:causal_ablation_heatmap",
+    "width": 0.92
+  },
   "fig:free_energy_curve": {
     "alt": "Line plot of free energy in nats versus coupling strength lambda for the entangled posterior relative to a mean-field prior. A single dark curve traces free energy across the sweep; the minimum is marked with a teal scatter point and labeled with the argmin lambda value.",
     "caption": "Free energy of the entangled posterior relative to the mean-field prior across the hyperparameter sweep (grid points {{param_sweep_grid_points}}).",
@@ -106,6 +115,15 @@
     "generated_by": "visualizations.figures::si_tmaze_actions",
     "label": "fig:si_tmaze_actions",
     "width": 0.9
+  },
+  "fig:theorem_traceability_graph": {
+    "alt": "Three-column graph generated from theorem traceability and proof dependency JSON. Each row links a Lean theorem to its proof-dependency edge count and finite model witness count; all theorem rows have resolved dependency edges: {{proof_dependency_all_resolved}}.",
+    "caption": "Theorem traceability graph generated from {{theorem_traceability_row_count}} linked theorem rows and {{proof_dependency_edge_count}} proof-dependency edges.",
+    "figure_id": "theorem_traceability_graph",
+    "filename": "theorem_traceability_graph.png",
+    "generated_by": "visualizations.figures::theorem_traceability_graph",
+    "label": "fig:theorem_traceability_graph",
+    "width": 0.95
   },
   "fig:tmaze_schematic": {
     "alt": "Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and observations, and planning horizon policy_len = {{si_tmaze_policy_len}}.",

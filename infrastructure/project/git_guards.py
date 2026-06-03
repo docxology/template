@@ -15,6 +15,7 @@ ALLOWED_PROJECT_DIRS: tuple[str, ...] = (
     "projects/templates/template_prose_project/",
     "projects/templates/template_sia/",
     "projects/templates/template_template/",
+    "projects/templates/template_textbook/",
 )
 # Repo-level navigation docs may live directly under projects/ (projects/*.md).
 ALLOWED_PROJECTS_TOPLEVEL = re.compile(r"^projects/[^/]+\.md$")

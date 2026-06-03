@@ -39,9 +39,7 @@ def test_validation_spine_artifacts_are_written(project_root: Path) -> None:
     assert "output/data/pymdp_policy_posterior_grid.json" in provenance["artifacts"]
     assert "output/data/si_graph_world_topology_traces.json" in provenance["artifacts"]
     semantic_artifacts = [
-        rel
-        for rel in provenance["artifacts"]
-        if rel.startswith("output/data/") or rel.startswith("output/reports/")
+        rel for rel in provenance["artifacts"] if rel.startswith("output/data/") or rel.startswith("output/reports/")
     ]
     assert all(provenance["artifacts"][rel]["deterministic_seed"] == 0 for rel in semantic_artifacts)
     assert all(provenance["artifacts"][rel]["config_digest"] for rel in semantic_artifacts)
@@ -94,6 +92,26 @@ def test_validation_spine_rejects_stale_seed_config_provenance(project_root: Pat
 
     assert any("deterministic seed mismatch" in issue for issue in issues)
     assert any("config digest mismatch" in issue for issue in issues)
+
+
+@pytest.mark.timeout(30)
+def test_validation_spine_allows_nonempty_source_commit_drift(project_root: Path) -> None:
+    from validation_spine.artifacts import validate_artifact_provenance, write_validation_spine_artifacts
+
+    _ensure_validation_spine_inputs(project_root)
+    paths = write_validation_spine_artifacts(project_root)
+    original = paths["provenance"].read_text(encoding="utf-8")
+    payload = json.loads(original)
+    try:
+        record = payload["artifacts"]["output/data/si_graph_world_trace.json"]
+        record["source_commit"] = "0" * 40
+        paths["provenance"].write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+        issues = validate_artifact_provenance(project_root)
+    finally:
+        paths["provenance"].write_text(original, encoding="utf-8")
+
+    assert not any("source commit mismatch" in issue for issue in issues)
+    assert not any("si_graph_world_trace.json" in issue and "missing source commit" in issue for issue in issues)
 
 
 @pytest.mark.timeout(30)

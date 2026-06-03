@@ -82,7 +82,7 @@
       "artifact": "output/data/si_efe_terms.json",
       "exists": true,
       "fresh": true,
-      "sha256": "c49703517c82179c4b5c29962a5be91612e88954c72311d388999c2a1c99d2f7"
+      "sha256": "2b389ab27228f2f44a43d56733941e43e47463c6e2ebb97715aef7dfc51af936"
     },
     {
       "artifact": "output/data/si_graph_world_summary.json",
@@ -145,16 +145,22 @@
       "sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f"
     },
     {
+      "artifact": "output/figures/causal_ablation_heatmap.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "62851e1ea16588fdf968c4afe896d473024554e5f78dac8a4029236eec731a55"
+    },
+    {
       "artifact": "output/figures/figure_registry.json",
       "exists": true,
       "fresh": true,
-      "sha256": "6b0d765800995b10bdbd4f799116b201a48a7eca01957649982f8f9ef4ce8e9d"
+      "sha256": "2c247d0cfdd4a8fe84fa0a4fd0df8772e7bc8b74d3287fbee5f61746b0a44e9d"
     },
     {
       "artifact": "output/figures/semantic_gluing_graph.png",
       "exists": true,
       "fresh": true,
-      "sha256": "c56feee6a234679f58321e18f1e0f52a7881760aa6b7eea480d5346138d04c53"
+      "sha256": "4a73c276c040b4e30251a0909016e205fc7e606482da2010292e8fafcf5509c3"
     },
     {
       "artifact": "output/figures/sheaf_coverage_heatmap.png",
@@ -173,6 +179,12 @@
       "exists": true,
       "fresh": true,
       "sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9"
+    },
+    {
+      "artifact": "output/figures/theorem_traceability_graph.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "25bb56f96ac140949d62946b111b0abf8bfbecc51636ab3874152eaf3cdf5b0a"
     },
     {
       "artifact": "output/reports/gnn_lint_report.json",

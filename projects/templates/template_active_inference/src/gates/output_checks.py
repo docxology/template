@@ -28,6 +28,15 @@ def _pymdp_logging_expected(root: Path) -> bool:
     return bool(cfg.logging.enabled)
 
 
+def _efe_values_explained(payload: dict) -> bool:
+    rows = payload.get("rows") or []
+    return bool(rows) and all(
+        (row.get("terms_available") and bool((row.get("terms") or {}).get("values")))
+        or (not row.get("terms_available") and bool(row.get("fallback_reason")))
+        for row in rows
+    )
+
+
 def validate_outputs(project_root: Path) -> dict[str, bool]:
     root = project_root.resolve()
     required = [root / rel for rel in REQUIRED_OUTPUTS]
@@ -219,6 +228,10 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
     causal_ablation = _read_json(root / "output" / "data" / "causal_ablation_matrix.json")
     artifact_license = _read_json(root / "output" / "reports" / "artifact_license_audit.json")
     release_notes = _read_json(root / "output" / "reports" / "release_notes_evidence.json")
+    proof_dependency = _read_json(root / "output" / "data" / "proof_dependency_graph.json")
+    transition_table = _read_json(root / "output" / "data" / "state_transition_table.json")
+    ablation_sensitivity = _read_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
+    release_attestation = _read_json(root / "output" / "reports" / "release_attestation.json")
 
     checks["analytical_observable_sweep_schema"] = (
         observable.get("schema") == "template_active_inference.analytical_observable_sweep.v1"
@@ -241,7 +254,11 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
         and benchmark.get("all_models_complete") is True
     )
     checks["si_policy_grid_schema"] = policy_grid.get("complete_grid") is True
-    checks["si_efe_terms_schema"] = efe_terms.get("all_rows_explained") is True
+    checks["si_efe_terms_schema"] = (
+        efe_terms.get("schema") == "template_active_inference.si_efe_values.v1"
+        and efe_terms.get("all_rows_explained") is True
+        and efe_terms.get("all_rows_explained") == _efe_values_explained(efe_terms)
+    )
     checks["si_graph_world_topology_sweep_schema"] = topology.get("all_summary_trace_agree") is True
     checks["si_graph_world_topology_traces_schema"] = (
         topology_traces.get("schema") == "template_active_inference.si_graph_world_topology_traces.v1"
@@ -358,6 +375,24 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
         release_notes.get("schema") == "template_active_inference.release_notes_evidence.v1"
         and release_notes.get("all_notes_source_backed") is True
     )
+    checks["proof_dependency_graph_schema"] = (
+        proof_dependency.get("schema") == "template_active_inference.proof_dependency_graph.v1"
+        and proof_dependency.get("all_theorems_have_dependencies") is True
+        and proof_dependency.get("all_edges_resolved") is True
+    )
+    checks["state_transition_table_schema"] = (
+        transition_table.get("schema") == "template_active_inference.state_transition_table.v1"
+        and transition_table.get("all_transitions_deterministic") is True
+        and transition_table.get("all_reachable_states_covered") is True
+    )
+    checks["ablation_sensitivity_report_schema"] = (
+        ablation_sensitivity.get("schema") == "template_active_inference.ablation_sensitivity_report.v1"
+        and ablation_sensitivity.get("all_effects_source_backed") is True
+    )
+    checks["release_attestation_schema"] = (
+        release_attestation.get("schema") == "template_active_inference.release_attestation.v1"
+        and release_attestation.get("all_attested") is True
+    )
     from visualizations.animation import validate_animation_frame_deltas
 
     checks["animation_frame_deltas_schema"] = (
@@ -439,6 +474,10 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
             "causal_ablation_matrix_schema",
             "artifact_license_audit_schema",
             "release_notes_evidence_schema",
+            "proof_dependency_graph_schema",
+            "state_transition_table_schema",
+            "ablation_sensitivity_report_schema",
+            "release_attestation_schema",
         )
     )
 

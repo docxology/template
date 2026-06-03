@@ -1,0 +1,266 @@
+# template_textbook Manuscript Configuration
+# =============================================================================
+# Single source of truth for the book's structure. Everything downstream — the
+# table of contents, chapter auto-numbering, figure generation, lab/question
+# wiring, and manuscript-integrity tests — reads THIS file. To grow the book,
+# add parts and chapters here, then run `scripts/scaffold_chapter.py` to
+# materialise any missing stub files in the correct shape.
+#
+# SECTIONS:
+#   book:         Bibliographic metadata (title, author, edition, license)
+#   authors:      Full author list with affiliations
+#   publication:  DOI, repository, keywords
+#   analysis:     Build-producing scripts run by pipeline Stage 02 (in order)
+#   layout:       Page geometry
+#   typography:   Fonts, link colour, sizes
+#   front_matter: Front-matter files and ordering
+#   rendering:    Chapter/figure/equation auto-numbering
+#   parts:        Part order and the chapters inside each part (THE STRUCTURE)
+#   appendices:   Labs, question banks, and reference appendices
+# =============================================================================
+
+book:
+  title: "The Template Textbook"
+  subtitle: "A Modular, Fillable Scaffold for Book-Length Technical Works"
+  author: "Daniel Ari Friedman"
+  orcid: "0000-0001-6232-9096"
+  edition: "0.1"
+  year: 2026
+  language: "en"
+  license: "CC BY 4.0"
+  code_license: "Apache-2.0"
+  cover:
+    image: "assets/cover/template_textbook_cover.png"
+    alt: "Abstract montage of nested modular structures: parts containing chapters containing sections, figures, equations, and diagrams."
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.20533125"  # Optional: assign at publication time (e.g. a Zenodo DOI)
+  repository_url: "https://github.com/docxology/template_textbook"
+  repository_label: "Source repository"
+  keywords:
+    - "open textbook"
+    - "modular manuscript"
+    - "reproducible publishing"
+    - "computational backbone"
+    - "Python"
+
+# ---------------------------------------------------------------------------
+# ANALYSIS ORCHESTRATION
+# Stage 02 runs only these build-producing scripts, in this order. Maintenance
+# scripts (audit_*, scaffold_chapter) stay callable by hand but are excluded so
+# rendering is reproducible and non-mutating.
+# ---------------------------------------------------------------------------
+analysis:
+  scripts:
+    - generate_figures.py
+    - generate_diagrams.py
+    - analysis.py
+
+# ---------------------------------------------------------------------------
+# PAGE LAYOUT  (mm unless noted; adjust here only)
+# ---------------------------------------------------------------------------
+layout:
+  page_size: "letter"      # letter | a4 | a5
+  margin_top_mm: 18
+  margin_bottom_mm: 18
+  margin_left_mm: 18
+  margin_right_mm: 18
+  margin_inner_extra_mm: 0 # set 6-10 for printed binding
+  line_height: 1.3
+  text_width_fraction: 0.92
+
+# ---------------------------------------------------------------------------
+# TYPOGRAPHY
+# ---------------------------------------------------------------------------
+typography:
+  body_font: "Linux Libertine O"
+  heading_font: "Linux Biolinum O"
+  mono_font: "DejaVu Sans Mono"
+  base_font_size_pt: 10
+  link_color: "#1A5276"
+  link_color_internal: "#1A5276"
+  link_color_external: "#1A5276"
+  link_underline: true
+
+# ---------------------------------------------------------------------------
+# FRONT MATTER
+# ---------------------------------------------------------------------------
+front_matter:
+  files:
+    - file: front_matter.md
+      title: "Front Matter"
+    - file: preface.md
+      title: "Preface"
+  page_two_quote:
+    text: "“Form follows function—that has been misunderstood. Form and function should be one, joined in a spiritual union.”"
+    attribution: "Frank Lloyd Wright"
+  page_two_acknowledgements:
+    title: "Acknowledgements"
+    text: "This template textbook is a structural scaffold. Replace this acknowledgement with your own once the chapters are filled."
+  include_front_matter: true
+  include_preface: true
+
+# ---------------------------------------------------------------------------
+# RENDERING / NUMBERING
+# ---------------------------------------------------------------------------
+rendering:
+  number_chapters: true
+  number_figures: true
+  number_equations: true
+  number_tables: true
+  toc_depth: 2
+
+# Output formats (infrastructure/rendering reads render.formats). The book
+# renders to PDF (via XeLaTeX + the preamble), plus HTML, EPUB, and DOCX, which
+# are LaTeX-free and portable. Per-file Beamer slide decks are OFF by default:
+# slide templates do not load the book preamble (siunitx/amsthm/cleveref) and
+# long-form chapters are not slide content. Flip `slides: true` if you maintain
+# separate slide-friendly source.
+render:
+  formats:
+    pdf: true
+    html: true
+    epub: true
+    docx: true
+    slides: false
+
+# ---------------------------------------------------------------------------
+# PARTS — the structure. Chapters number sequentially across the whole book.
+# Add a part: append a block here + a directory under manuscript/.
+# Skip a chapter without deleting it: add `enabled: false` to its entry.
+# ---------------------------------------------------------------------------
+units:
+  - id: part_0
+    title: "Orientation and Methods"
+    label: "0"
+    directory: part_0
+    chapters:
+      - file: orientation.md
+        title: "Orientation to the Field"
+      - file: core_methods.md
+        title: "Core Methods and Tools"
+      - file: quantitative_foundations.md
+        title: "Quantitative Foundations"
+
+  - id: part_I
+    title: "Fundamentals"
+    label: "I"
+    directory: part_I
+    chapters:
+      - file: first_principles.md
+        title: "First Principles"
+      - file: building_blocks.md
+        title: "Building Blocks"
+      - file: structure_and_form.md
+        title: "Structure and Form"
+
+  - id: part_II
+    title: "Core Systems"
+    label: "II"
+    directory: part_II
+    chapters:
+      - file: systems_overview.md
+        title: "Systems Overview"
+      - file: dynamics_and_change.md
+        title: "Dynamics and Change"
+      - file: regulation_and_control.md
+        title: "Regulation and Control"
+
+  - id: part_III
+    title: "Applications and Synthesis"
+    label: "III"
+    directory: part_III
+    chapters:
+      - file: applied_models.md
+        title: "Applied Models"
+      - file: case_studies.md
+        title: "Case Studies"
+      - file: frontiers.md
+        title: "Frontiers and Open Problems"
+
+# ---------------------------------------------------------------------------
+# APPENDICES — labs, question banks, and reference appendices.
+# Lab/question display titles are derived from the parent chapter title by
+# src/textbook/toc.py; list only file names here.
+# ---------------------------------------------------------------------------
+appendices:
+  include_labs: true
+  include_questions: true
+  include_reference: true
+
+  reference:
+    - file: appendix_authoring_guide.md
+      title: "Appendix A — Authoring Guide: Filling the Stubs"
+    - file: appendix_notation.md
+      title: "Appendix B — Notation and Symbols"
+    - file: appendix_math_review.md
+      title: "Appendix C — Mathematical Review"
+    - file: appendix_formalisms.md
+      title: "Appendix D — Formalisms: Definitions, Theorems, Algorithms"
+    - file: appendix_format_gallery.md
+      title: "Appendix E — Format Gallery: Every Content Primitive"
+    - file: glossary.md
+      title: "Appendix F — Master Glossary"
+    - file: appendix_index.md
+      title: "Appendix G — Index of Key Terms"
+
+  labs:
+    - unit: part_0
+      files:
+        - file: lab_orientation.md
+        - file: lab_core_methods.md
+        - file: lab_quantitative_foundations.md
+    - unit: part_I
+      files:
+        - file: lab_first_principles.md
+        - file: lab_building_blocks.md
+        - file: lab_structure_and_form.md
+    - unit: part_II
+      files:
+        - file: lab_systems_overview.md
+        - file: lab_dynamics_and_change.md
+        - file: lab_regulation_and_control.md
+    - unit: part_III
+      files:
+        - file: lab_applied_models.md
+        - file: lab_case_studies.md
+        - file: lab_frontiers.md
+
+  questions:
+    - unit: part_0
+      files:
+        - file: q_orientation.md
+        - file: q_core_methods.md
+        - file: q_quantitative_foundations.md
+    - unit: part_I
+      files:
+        - file: q_first_principles.md
+        - file: q_building_blocks.md
+        - file: q_structure_and_form.md
+    - unit: part_II
+      files:
+        - file: q_systems_overview.md
+        - file: q_dynamics_and_change.md
+        - file: q_regulation_and_control.md
+    - unit: part_III
+      files:
+        - file: q_applied_models.md
+        - file: q_case_studies.md
+        - file: q_frontiers.md
+
+# ---------------------------------------------------------------------------
+# OPTIONAL LLM STAGES (pipeline stages 07-08). Off by default for the template.
+# ---------------------------------------------------------------------------
+llm:
+  review:
+    enabled: false
+  translations:
+    enabled: false
+    languages: []

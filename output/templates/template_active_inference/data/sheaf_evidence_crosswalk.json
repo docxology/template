@@ -1,5 +1,5 @@
 {
-  "claim_count": 81,
+  "claim_count": 85,
   "claims": [
     {
       "artifact_exists": true,
@@ -779,7 +779,7 @@
       "path": "output/data/si_efe_terms.json",
       "producer": "generate_toy_sweep_tracks.py",
       "section": "results_invariants",
-      "statement": "EFE artifact explicitly records availability or fallback for every policy-comparison row.",
+      "statement": "EFE values artifact explicitly records value availability or measured fallback for every policy-comparison row.",
       "tracks": [
         "pymdp",
         "sensitivity"
@@ -1626,6 +1626,90 @@
       "tracks": [
         "release_notes",
         "release_bundle",
+        "gate_ergonomics"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_theorems_have_dependencies"
+      },
+      "id": "proof_dependency_graph_resolved",
+      "path": "output/data/proof_dependency_graph.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "methods_lean",
+      "statement": "Proof dependency graph links every extracted theorem to source, tactic, definitions, and finite model witnesses.",
+      "tracks": [
+        "proof_extraction",
+        "theorem_traceability",
+        "lean"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_reachable_states_covered"
+      },
+      "id": "state_transition_table_complete",
+      "path": "output/data/state_transition_table.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "results_invariants",
+      "statement": "State transition table covers every reachable finite graph-world and T-maze model row with deterministic transitions.",
+      "tracks": [
+        "state_space_catalog",
+        "model_checking",
+        "sensitivity"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_effects_source_backed"
+      },
+      "id": "ablation_sensitivity_source_backed",
+      "path": "output/reports/ablation_sensitivity_report.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "results_invariants",
+      "statement": "Ablation sensitivity report joins every causal-ablation effect to sensitivity and uncertainty source artifacts.",
+      "tracks": [
+        "causal_ablation",
+        "sensitivity",
+        "uncertainty"
+      ],
+      "validation_gates": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact_exists": true,
+      "evidence": {
+        "equals": true,
+        "field": "all_attested"
+      },
+      "id": "release_attestation_complete",
+      "path": "output/reports/release_attestation.json",
+      "producer": "generate_sheaf_tracks.py",
+      "section": "discussion_outlook",
+      "statement": "Release attestation binds validation, bundle hash, license audit, semantic certificate, and blocked-scope status.",
+      "tracks": [
+        "release_bundle",
+        "release_notes",
         "gate_ergonomics"
       ],
       "validation_gates": [

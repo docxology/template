@@ -1,6 +1,6 @@
 {
   "all_indexed": true,
-  "gate_count": 22,
+  "gate_count": 26,
   "rows": [
     {
       "id": "validate_outputs",
@@ -136,6 +136,34 @@
       "indexed": true,
       "inputs": [
         "output/reports/release_notes_evidence.json"
+      ]
+    },
+    {
+      "id": "proof_dependency_graph",
+      "indexed": true,
+      "inputs": [
+        "output/data/proof_dependency_graph.json"
+      ]
+    },
+    {
+      "id": "state_transition_table",
+      "indexed": true,
+      "inputs": [
+        "output/data/state_transition_table.json"
+      ]
+    },
+    {
+      "id": "ablation_sensitivity_report",
+      "indexed": true,
+      "inputs": [
+        "output/reports/ablation_sensitivity_report.json"
+      ]
+    },
+    {
+      "id": "release_attestation",
+      "indexed": true,
+      "inputs": [
+        "output/reports/release_attestation.json"
       ]
     },
     {

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>13_results_invariants.md.web</title>
+  <title>13_results_invariants</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -173,16 +173,25 @@
 <body>
 <h1 id="sec:results_invariants">Validation invariants</h1>
 <!-- sheaf-track:prose -->
-<p>The analytical invariant registry runs before PDF rendering
-([sec:methods_analytical]). On a clean checkout <strong>12 / 12</strong>
-checks pass in the merged validation report, which records simulation
-invariants when the pymdp harness ran ([sec:results_si_tmaze]).</p>
-<p>[fig:invariant_dashboard] lists each analytical and simulation gate;
-failures block publication artifacts. See [sec:methods_sheaf] for how
+<p>The analytical invariant registry runs before PDF rendering (<span
+class="citation"
+data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>).
+On a clean checkout <strong>12 / 12</strong> checks pass in the merged
+validation report, which records simulation invariants when the pymdp
+harness ran (<span class="citation"
+data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>).</p>
+<p><span class="citation"
+data-cites="fig:invariant_dashboard">[@fig:invariant_dashboard]</span>
+lists each analytical and simulation gate; failures block publication
+artifacts. See <span class="citation"
+data-cites="sec:methods_sheaf">[@sec:methods_sheaf]</span> for how
 invariant counts hydrate manuscript tokens.</p>
 <!-- sheaf-track:simulation -->
 <p>Simulation invariants merge into the analytical report after the
-pymdp harness runs ([sec:results_si_tmaze]). [fig:invariant_dashboard]
+pymdp harness runs (<span class="citation"
+data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>). <span
+class="citation"
+data-cites="fig:invariant_dashboard">[@fig:invariant_dashboard]</span>
 summarizes pass/fail status for both domains on the clean tree.</p>
 <!-- sheaf-track:replay_matrix -->
 <p>The replay matrix exposes deterministic rerun comparison as table
@@ -209,9 +218,9 @@ belief and policy-posterior rows plus 3 finite entropy bins, and
 within the deterministic tolerance.</p>
 <p>Policy uncertainty is recorded in generated policy artifacts rather
 than hand-entered into the manuscript. The posterior grid contributes 5
-available posterior rows; the EFE artifact reports
-availability-or-fallback flag 1. The fragment is therefore a validation
-surface, not an empirical uncertainty claim.</p>
+available posterior rows; the EFE values artifact reports
+availability-or-measured-fallback flag 1. The fragment is therefore a
+validation surface, not an empirical uncertainty claim.</p>
 <!-- sheaf-track:benchmark -->
 <p>The <code>benchmark</code> fragment adds a compact toy matrix over
 the Bernoulli, T-maze, and graph-world artifacts.

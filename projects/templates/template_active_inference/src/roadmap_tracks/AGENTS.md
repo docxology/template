@@ -37,6 +37,8 @@ private data, or nondeterministic research behavior.
   diffoscope, proof-extraction, state-space, causal-ablation, artifact-license,
   release-note, semantic, dependency, track-improvement, and blocked-scope
   artifacts.
+- `supplemental.py` - promoted supplemental proof-dependency, state-transition,
+  ablation-sensitivity, and release-attestation artifacts plus their validators.
 
 ## Verification
 

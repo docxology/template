@@ -1,0 +1,30 @@
+# Disposable outputs (regeneratable from scripts + config)
+output/
+
+# Python virtual environment
+.venv/
+
+# Byte-compiled / caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Coverage artifacts
+.coverage
+.coverage.*
+htmlcov/
+
+# Packaging
+*.egg-info/
+
+# OS cruft
+.DS_Store
+
+# Coverage JSON (per-suite)
+coverage*.json
+coverage_project.json
+
+# Local Mermaid render config (machine-specific Chrome path)
+.puppeteer.json

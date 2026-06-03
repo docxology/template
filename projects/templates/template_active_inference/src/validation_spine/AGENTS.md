@@ -1,17 +1,28 @@
-# Validation spine package (`src/validation_spine/`)
+# validation_spine/ - Artifact Provenance Spine
 
-This package owns the falsifiable validation-spine artifacts for the Active Inference exemplar.
+## Purpose
 
-## Contracts
+This package validates the generated artifact spine for the Active Inference
+exemplar: required artifact presence, deterministic fingerprints, producer
+metadata, replay provenance, and release-facing provenance drift checks.
 
-- Keep provenance records deterministic: every declared artifact must include existence, size, producer, and SHA-256 state.
-- Keep replay checks local and offline. Replays should rebuild small deterministic artifacts in a temporary directory and compare hashes or parsed JSON payloads.
-- Keep counterexamples explicit: each row needs a gate, mutation, expected failure flag, and test reference.
-- Do not add manuscript rendering or figure-generation logic here. This package reports validation evidence; orchestration remains in `scripts/generate_validation_spine.py`.
+## Local Rules
+
+- Keep validators deterministic and filesystem-local; the public exemplar must
+  not rely on network calls, private data, or LLM calls.
+- Preserve race-safe file provenance through `_file_fingerprint` in
+  [`artifacts.py`](artifacts.py). Do not replace it with ad hoc path or mtime
+  checks.
+- A new required artifact needs a producer, a fingerprinted provenance row, a
+  validation rule, and a negative-control test before manuscript prose may rely
+  on it.
+- Project-local `output/` is scratch. Copied public deliverables live under
+  [`../../../../../output/templates/template_active_inference/`](../../../../../output/templates/template_active_inference/)
+  after the root pipeline copy stage.
 
 ## Verification
 
 ```bash
-uv run pytest tests/test_validation_spine.py -q
-uv run python scripts/generate_validation_spine.py
+uv run --directory projects/templates/template_active_inference \
+  pytest tests/test_validation_spine.py tests/test_track_consolidation.py -q --tb=short
 ```

@@ -230,9 +230,14 @@ data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>. No
 additional path listing is required beyond those Results sections.</p>
 <!-- sheaf-track:assumption_index -->
 <p>The appendix <code>assumption_index</code> row points to
-<code>output/data/analytical_assumption_index.json</code>. It binds the
-finite Bernoulli-Ising assumptions to equation identifiers and generated
-artifacts so analytical signposting can be checked mechanically.</p>
+<code>output/data/analytical_assumption_index.json</code>. It binds 6
+finite Bernoulli-Ising assumption rows to 6 equation identifiers and
+generated artifacts, with indexed status <code>true</code>.</p>
+<p>The point is to make analytical signposting mechanical. If an
+equation is added without an assumption row, or if a row loses its
+evidence artifact, the index gate fails and the manuscript cannot
+present the equation as part of the validated finite toy proof
+surface.</p>
 <!-- sheaf-track:pymdp -->
 <p>pymdp harness summary: <code>output/data/si_tmaze_summary.json</code>
 (mean belief entropy, action trace). Runtime diagnostics:
@@ -261,7 +266,14 @@ status <code>true</code>.</p>
 <p>The appendix counterexample fragment points to
 <code>output/reports/counterexample_matrix.json</code>, the
 expected-failure matrix that keeps promoted validation gates
-falsifiable.</p>
+falsifiable. It currently records 22 known-bad fixtures, and the
+hydrated pass flag is <code>1</code>, meaning those fixtures are
+expected to fail rather than sneak through a positive-control gate.</p>
+<p>This row is the negative-control ledger for the sheaf. Each
+counterexample names a promoted track, target validation gate, mutation,
+and observed expected-failure status. A new live track without a
+counterexample row is therefore visibly incomplete in the
+track-improvement scope.</p>
 <!-- sheaf-track:adversarial_audit -->
 <p><code>sheaf-track:adversarial_audit</code> binds
 <code>output/reports/adversarial_audit.json</code>,
@@ -270,32 +282,54 @@ outputs. The appendix claim is exactly 22 expected-failure rows with
 documented status <code>true</code> and known-bad-passing count 0.</p>
 <!-- sheaf-track:evidence_fields -->
 <p><code>evidence_field_index.json</code> provides the appendix proof
-for field-level claim evidence: 81 mapped fields with status
+for field-level claim evidence: 85 mapped fields with status
 <code>true</code>.</p>
 <!-- sheaf-track:release_bundle -->
 <p><code>release_bundle_manifest.json</code> provides the appendix proof
-for required deliverables: 23 artifacts with source-present status
+for required deliverables: 29 artifacts with source-present status
 <code>true</code>.</p>
 <!-- sheaf-track:gate_ergonomics -->
 <p><code>validation_gate_index.json</code> provides the appendix proof
-for gate ergonomics: 22 indexed gates.</p>
+for gate ergonomics: 26 indexed gates.</p>
 <!-- sheaf-track:artifact_diffoscope -->
 <h3 id="appendix-track-artifact-diffoscope">Appendix track: artifact
 diffoscope</h3>
 <p><code>artifact_diffoscope</code> binds
 <code>output/reports/artifact_diffoscope.json</code> into the full sheaf
-appendix. Rows: 37. All equal: <code>true</code>.</p>
+appendix. Rows: 39. All equal: <code>true</code>.</p>
+<p>This diffoscope is deliberately narrow and reproducibility-facing.
+For each non-cyclic generated artifact, it compares the saved provenance
+digest to the live file digest at validation time. The validator
+re-derives equality from the rows, so a stale
+<code>all_equal: true</code> summary cannot hide one changed
+artifact.</p>
+<p>The row count is not a decoration; it is the number of artifact
+fingerprints that survived cycle exclusion and therefore can be compared
+directly. This keeps the release bundle honest about mutable files while
+avoiding self-referential hashes for artifacts that necessarily include
+their own provenance.</p>
 <!-- sheaf-track:artifact_license -->
 <h3 id="appendix-track-artifact-license">Appendix track: artifact
 license</h3>
 <p><code>artifact_license</code> binds
 <code>output/reports/artifact_license_audit.json</code> into the full
-sheaf appendix. Rows: 70. All safe: <code>true</code>.</p>
+sheaf appendix. Rows: 76. All safe: <code>true</code>.</p>
+<p>The license audit classifies each generated or source-backed artifact
+under the public exemplar’s configured license boundary. It is
+intentionally conservative: generated local outputs and project-owned
+source files pass, while an artifact outside those public source kinds
+would need an explicit provenance and license row before it could
+support a manuscript claim.</p>
+<p>This is also where the blocked empirical-adapter boundary matters.
+Private, restricted, or network-derived data are not smuggled in as
+evidence; they remain blocked until privacy, licensing, typed-claim,
+semantic, and negative-control gates are implemented in the same
+artifact path.</p>
 <!-- sheaf-track:sensitivity -->
 <p><code>sheaf-track:sensitivity</code> binds
 <code>output/data/sensitivity_sweep.json</code>, measured
-<code>output/data/si_policy_grid.json</code>,
-<code>output/data/si_efe_terms.json</code>,
+<code>output/data/si_policy_grid.json</code>, compatibility-named EFE
+values artifact <code>output/data/si_efe_terms.json</code>,
 <code>output/data/analytical_observable_sweep.json</code>, and
 graph-world topology artifacts including
 <code>output/data/si_graph_world_topology_traces.json</code>. The
@@ -312,8 +346,13 @@ is exactly 3 complete toy-model rows with status <code>true</code>.</p>
 <!-- sheaf-track:manuscript_staleness -->
 <p>The appendix <code>manuscript_staleness</code> row points to
 <code>output/reports/manuscript_staleness_report.json</code>. It checks
-that generated variables and resolved manuscript markdown agree after
-hydration, including late audit variables.</p>
+227 token bindings after hydration, including late audit variables, and
+the pass flag is <code>true</code>.</p>
+<p>This is the rendered-output side of the sheaf contract. Source
+fragments may contain hydration placeholders, but the public manuscript
+must not; the staleness report compares each token’s generated value
+against the resolved markdown so stale counts are caught after
+composition, not only during source-file linting.</p>
 <!-- sheaf-track:visualization -->
 <p><img src="../figures/ising_mi_curve.png"
 style="width:90.0%" /></p>
@@ -332,6 +371,23 @@ style="width:90.0%" /></p>
 data-cites="fig:si_tmaze_actions">[@fig:si_tmaze_actions]</span>.
 Discrete action index over time for the pymdp T-maze rollout (policy
 length 2).</em></p>
+<figure id="fig:theorem_traceability_graph">
+<img src="../figures/theorem_traceability_graph.png"
+style="width:95.0%"
+data-fig-alt="Three-column graph generated from theorem traceability and proof dependency JSON. Each row links a Lean theorem to its proof-dependency edge count and finite model witness count; all theorem rows have resolved dependency edges: true."
+alt="Theorem traceability graph generated from 11 linked theorem rows and 169 proof-dependency edges." />
+<figcaption aria-hidden="true">Theorem traceability graph generated from
+11 linked theorem rows and 169 proof-dependency edges.</figcaption>
+</figure>
+<figure id="fig:causal_ablation_heatmap">
+<img src="../figures/causal_ablation_heatmap.png"
+style="width:92.0%"
+data-fig-alt="Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows."
+alt="Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: true." />
+<figcaption aria-hidden="true">Causal-ablation heatmap: 36 source-backed
+rows joined to sensitivity and uncertainty artifacts; all effects
+source-backed: true.</figcaption>
+</figure>
 <p><img src="../figures/sheaf_coverage_heatmap.png"
 style="width:95.0%" /></p>
 <p><em>Reproduced from <span class="citation"
@@ -364,18 +420,55 @@ extraction</h3>
 <code>output/data/proof_extraction_index.json</code> into the full sheaf
 appendix. Extracted theorems: 10. Constructive status:
 <code>true</code>.</p>
+<p>The extraction index is intentionally modest: it records theorem
+names, statements, source files, leading tactics, and forbidden
+proof-token checks. That makes the Lean boundary inspectable without
+pretending that every proof term has been translated into a proof
+object. A row with a missing statement or forbidden token fails the
+formal interop gate and the canonical sheaf gate.</p>
+<p><code>output/data/proof_dependency_graph.json</code> adds the
+dependency view used by the appendix figure. It contributes 169
+theorem-source, theorem-tactic, theorem-definition, and theorem-witness
+edges, with resolved edge status <code>true</code>; this is the artifact
+that keeps the theorem-traceability graph tied to generated Lean and
+model-checking rows.</p>
 <!-- sheaf-track:state_space_catalog -->
 <h3 id="appendix-track-state-space-catalog">Appendix track: state-space
 catalog</h3>
 <p><code>state_space_catalog</code> binds
 <code>output/data/state_space_catalog.json</code> into the full sheaf
 appendix. Rows: 6. All finite: <code>true</code>.</p>
+<p>The catalog is the finite-scope boundary for every toy claim in the
+exemplar. Each row records a model id, state count, action count, policy
+count, source artifact, and finite flag; the validator recomputes that
+counts are positive and that every row remains finite. This prevents a
+manuscript sentence about exhaustive checking from silently drifting
+into an unbounded or empirical setting.</p>
+<p><code>output/data/state_transition_table.json</code> makes the
+boundary operational. It contains 24 deterministic transition rows and
+covers all reachable finite models with status <code>true</code>.
+Readers can therefore audit not just the number of states, but the
+actual state/action/next-state relation used by the model-checking
+witnesses.</p>
 <!-- sheaf-track:causal_ablation -->
 <h3 id="appendix-track-causal-ablation">Appendix track: causal
 ablation</h3>
 <p><code>causal_ablation</code> binds
 <code>output/data/causal_ablation_matrix.json</code> into the full sheaf
 appendix. Cells: 36. Complete grid: <code>true</code>.</p>
+<p>The matrix is a finite teaching device: every row names a topology, a
+coupling value, a perturbation, a scalar effect, and the generated
+source row that made the effect admissible. It is not a claim about
+empirical interventions. It shows how an intervention-shaped table can
+be made falsifiable inside the sheaf: delete one perturbation cell or
+clear one deterministic flag and the grid gate fails before the
+manuscript can reuse the result.</p>
+<p><code>output/reports/ablation_sensitivity_report.json</code> then
+joins those ablation effects to the sensitivity and uncertainty
+artifacts. The report contributes 36 source-backed rows, with
+source-backed status <code>true</code>, so the appendix heatmap is a
+rendered view of validated JSON rather than a decorative
+restatement.</p>
 <!-- sheaf-track:gnn -->
 <p>GNN declarations: <code>gnn/bernoulli_toy.gnn.md</code> and
 <code>gnn/si_tmaze.gnn.md</code>. <span class="citation"
@@ -418,5 +511,14 @@ notes evidence</h3>
 <p><code>release_notes</code> binds
 <code>output/reports/release_notes_evidence.json</code> into the full
 sheaf appendix. Rows: 3. Source-backed: <code>true</code>.</p>
+<p>Release notes are treated as claims, not as informal changelog prose.
+Each row names a source artifact and a pass/deferred status, so the
+release note can say only what validation, bundle, or semantic artifacts
+support. The validator re-derives support from rows; flipping the
+summary bit without fixing a failed row still fails.</p>
+<p><code>output/reports/release_attestation.json</code> is the compact
+final view over the same boundary. It records 5 attestation rows for
+validation, release bundle hash, license audit, semantic certificate,
+and blocked-scope status, with all-attested flag <code>true</code>.</p>
 </body>
 </html>

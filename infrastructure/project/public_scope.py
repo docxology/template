@@ -25,7 +25,14 @@ PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
     "templates/template_template",
 )
 
-LOCAL_ONLY_TEMPLATE_NAMES: tuple[str, ...] = ("templates/template_autoscientists",)
+# template_textbook is published standalone (Zenodo 10.5281/zenodo.20533125) but
+# is not yet a complete in-repo exemplar (missing docs/AGENTS.md + manuscript
+# figure/appendix artifacts), so it stays local-only until its drift contract is
+# finished. template_autoscientists is likewise local-only pending promotion.
+LOCAL_ONLY_TEMPLATE_NAMES: tuple[str, ...] = (
+    "templates/template_autoscientists",
+    "templates/template_textbook",
+)
 
 # Local-only template exemplars: see docs/maintenance/local-only-template-exemplars.md
 

@@ -1,0 +1,7 @@
+condition,replicate,measurement,standard_error
+control,1,2.10,0.20
+control,2,2.30,0.18
+treatment_low,1,3.60,0.25
+treatment_low,2,3.40,0.22
+treatment_high,1,4.80,0.35
+treatment_high,2,5.10,0.30

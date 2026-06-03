@@ -1,0 +1,116 @@
+"""Tests for config loading + validation against the real manuscript config."""
+
+from __future__ import annotations
+
+
+import pytest
+
+from textbook.config import (
+    DEFAULT_MANUSCRIPT,
+    ChapterRef,
+    iter_chapters,
+    load_config,
+    validate_config,
+)
+
+
+def test_load_default_config_has_units():
+    config = load_config()
+    assert config["book"]["title"]
+    assert isinstance(config["units"], list) and config["units"]
+
+
+def test_load_config_from_directory(tmp_path):
+    (tmp_path / "config.yaml").write_text("book:\n  title: T\nparts: []\n", encoding="utf-8")
+    config = load_config(tmp_path)
+    assert config["book"]["title"] == "T"
+
+
+def test_load_config_missing(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        load_config(tmp_path / "nope.yaml")
+
+
+def test_load_config_non_mapping(tmp_path):
+    path = tmp_path / "config.yaml"
+    path.write_text("- a\n- b\n", encoding="utf-8")
+    with pytest.raises(ValueError):
+        load_config(path)
+
+
+def test_iter_chapters_default_and_disabled():
+    config = load_config()
+    chapters = iter_chapters(config)
+    assert len(chapters) == 12
+    first = chapters[0]
+    assert isinstance(first, ChapterRef)
+    assert first.stem == first.file[:-3]
+    assert first.path(DEFAULT_MANUSCRIPT).name == first.file
+
+
+def test_iter_chapters_respects_enabled_flag():
+    config = {
+        "parts": [
+            {
+                "id": "p",
+                "label": "1",
+                "title": "P",
+                "directory": "p",
+                "chapters": [
+                    {"file": "a.md", "title": "A"},
+                    {"file": "b.md", "title": "B", "enabled": False},
+                ],
+            }
+        ]
+    }
+    assert len(iter_chapters(config)) == 1
+    assert len(iter_chapters(config, include_disabled=True)) == 2
+
+
+def test_validate_real_config_is_clean():
+    assert validate_config(load_config()) == []
+
+
+def test_validate_config_detects_problems():
+    bad = {
+        "book": {},
+        "parts": [
+            {"id": "x", "title": "", "chapters": [{"file": "a.md", "title": ""}]},
+            {"id": "x", "title": "Dup", "chapters": [{"file": "a.md", "title": "A"}]},
+            {"title": "noid", "chapters": []},
+        ],
+    }
+    issues = validate_config(bad)
+    joined = " ".join(issues)
+    assert "book.title is required" in joined
+    assert "duplicate part id: x" in joined
+    assert "missing id" in joined
+    assert "missing title" in joined
+
+
+def test_validate_config_requires_nonempty_units():
+    assert "units must be a non-empty list" in validate_config({"book": {"title": "t"}})
+
+
+def test_iter_chapters_accepts_units_key():
+    config = {
+        "units": [
+            {
+                "id": "u",
+                "label": "1",
+                "title": "U",
+                "directory": "u",
+                "chapters": [{"file": "a.md", "title": "A"}],
+            }
+        ]
+    }
+    chapters = iter_chapters(config)
+    assert len(chapters) == 1 and chapters[0].part_id == "u"
+
+
+def test_validate_config_chapter_without_file():
+    cfg = {
+        "book": {"title": "t"},
+        "parts": [{"id": "p", "title": "P", "chapters": [{"title": "no file"}]}],
+    }
+    assert any("chapter with no file" in i for i in validate_config(cfg))

@@ -1,13 +1,23 @@
-# Reference
+# Reference Contracts
 
-Reference material for the Active Inference exemplar — stable lookups that
-support the manuscript and the track pipeline.
+This directory holds the public reference contracts for the Active Inference
+exemplar.
 
-- [method-inventory.md](method-inventory.md) — catalogue of the analytical /
-  pymdp / Lean / GNN / ontology methods exercised by the tracks, and where each
-  is defined in `../../src/`.
-- [rendering-reproducibility.md](rendering-reproducibility.md) — how the
-  manuscript and figures are rendered deterministically (seeds, pinned inputs,
-  regenerate-from-clean steps).
+| File | Role |
+| --- | --- |
+| [`method-inventory.md`](method-inventory.md) | Generated inventory for every Python `class` and `def` in the project, including scripts and internal helpers. |
+| [`rendering-reproducibility.md`](rendering-reproducibility.md) | Contract for sheaf rendering, replay, provenance, figure metadata, PDF/web parity, and copied-output reproducibility. |
 
-See the parent [docs/README.md](../README.md) for the full documentation map.
+Regenerate the method inventory with:
+
+```bash
+uv run --directory projects/templates/template_active_inference \
+  python scripts/generate_method_inventory.py
+```
+
+Validate generated outputs with:
+
+```bash
+uv run --directory projects/templates/template_active_inference \
+  python scripts/validate_outputs.py
+```

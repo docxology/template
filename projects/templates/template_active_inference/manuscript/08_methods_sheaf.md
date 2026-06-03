@@ -67,8 +67,6 @@ Each law is paired with a negative control in `tests/test_sheaf_laws.py` — a s
 
 These laws verify the sheaf *axioms* on a finite base poset. They do **not** compute sheaf *cohomology* ($H^0$/$H^1$, Čech complexes, derived functors); "sheaf" here names the verified separation-and-gluing structure of a multi-track coverage assignment, not a cohomological invariant. Formal track definitions and section×track bindings appear in the generated tables below.
 
-Semantic gluing then checks agreement of the glued content: coverage counts, manuscript variables, typed claim predicates, pymdp mode/hash, Bernoulli GNN ontology, and SI T-maze GNN ontology. This certificate is a content-level audit over the same base, not an additional topological law.
-
 <!-- sheaf-track:visualization -->
 
 ![Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for {{sheaf_track_count}} fragment types across {{imrad_manifest_rows}} manifest rows ({{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing).](../output/figures/sheaf_layers_overview.png){#fig:sheaf_layers_overview width=98% fig-alt="Two-panel overview of sheaf fragment layers. Left panel shows {{sheaf_track_count}} composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across {{imrad_manifest_rows}} manifest rows and {{sheaf_track_count}} tracks."}
@@ -248,26 +246,26 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `counterexample` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
 | `adversarial_audit` | `markdown` | 2 | 2 | 0 | 9 | `complete` |
 | `evidence_fields` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `release_bundle` | `markdown` | 2 | 2 | 0 | 4 | `complete` |
-| `gate_ergonomics` | `markdown` | 2 | 2 | 0 | 4 | `complete` |
+| `release_bundle` | `markdown` | 2 | 2 | 0 | 5 | `complete` |
+| `gate_ergonomics` | `markdown` | 2 | 2 | 0 | 5 | `complete` |
 | `artifact_diffoscope` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
 | `artifact_license` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `sensitivity` | `markdown` | 2 | 2 | 0 | 7 | `complete` |
-| `uncertainty` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
+| `sensitivity` | `markdown` | 2 | 2 | 0 | 9 | `complete` |
+| `uncertainty` | `markdown` | 2 | 2 | 0 | 4 | `complete` |
 | `benchmark` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
 | `manuscript_staleness` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
 | `visualization` | `section_figures` | 10 | 10 | 0 | 10 | `complete` |
-| `lean` | `markdown` | 2 | 2 | 0 | 7 | `complete` |
-| `model_checking` | `markdown` | 2 | 2 | 0 | 6 | `complete` |
-| `theorem_traceability` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
-| `proof_extraction` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `state_space_catalog` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `causal_ablation` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
+| `lean` | `markdown` | 2 | 2 | 0 | 8 | `complete` |
+| `model_checking` | `markdown` | 2 | 2 | 0 | 7 | `complete` |
+| `theorem_traceability` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
+| `proof_extraction` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
+| `state_space_catalog` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
+| `causal_ablation` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
 | `gnn` | `markdown` | 3 | 3 | 0 | 4 | `complete` |
 | `ontology` | `ontology_yaml` | 5 | 5 | 0 | 5 | `complete` |
 | `animation` | `markdown` | 1 | 1 | 0 | 2 | `complete` |
 | `animation_delta` | `markdown` | 1 | 1 | 0 | 1 | `complete` |
-| `release_notes` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
+| `release_notes` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
 
 **Status cells:** 544 section-track cells.
 
@@ -281,7 +279,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `coverage_matrix_built` | `sheaf.coverage` | `output/data/sheaf_coverage_matrix.json` | `ok` | 90 present cells |
 | `section_status_matrix_built` | `sheaf.status` | `output/data/sheaf_section_status_matrix.json` | `ok` | 544 section-track cells |
 | `layers_renderer_bound` | `sheaf.layers_report` | `manuscript/08_methods_sheaf.md` | `ok` | methods sheaf layer tables |
-| `semantic_artifacts_indexed` | `sheaf.semantic` | `output/data/validation_dependency_graph.json` | `ok` | 70 artifact producer rows |
+| `semantic_artifacts_indexed` | `sheaf.semantic` | `output/data/validation_dependency_graph.json` | `ok` | 76 artifact producer rows |
 | `validation_gates_indexed` | `gates` | `output/data/validation_gate_index.json` | `ok` | 3 gate groups |
 | `manuscript_sections_composed` | `sheaf.compose` | `manuscript/*.md` | `ok` | 16 composed markdown files |
 
@@ -301,7 +299,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `evidence_fields_mapped` | `output/data/evidence_field_index.json` | `generate_sheaf_tracks.py` | validate_outputs, validate_manuscript |
 | `validation_dependency_graph` | `output/data/validation_dependency_graph.json` | `generate_sheaf_tracks.py` | validate_manuscript, validate_outputs |
 
-**Claim rows:** 81 typed evidence claims.
+**Claim rows:** 85 typed evidence claims.
 
 <!-- sheaf-layers:artifact-producers -->
 ## Artifact producer graph
@@ -325,6 +323,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/data/ontology_alias_index.json` | `generate_formal_interop_tracks.py` | Yes | methods_pymdp, appendix_full_sheaf |
 | `output/data/ontology_profile_matrix.json` | `generate_formal_interop_tracks.py` | Yes | methods_pymdp, appendix_full_sheaf |
 | `output/data/parameter_sweep.csv` | `run_analytical_sweep.py` | Yes | methods_analytical, results_mi_sweep |
+| `output/data/proof_dependency_graph.json` | `generate_sheaf_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/data/proof_extraction_index.json` | `generate_formal_interop_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/data/pymdp_policy_posterior_grid.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, appendix_full_sheaf |
 | `output/data/sensitivity_sweep.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
@@ -342,6 +341,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/data/si_tmaze_summary.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, results_si_tmaze |
 | `output/data/si_tmaze_trace.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, results_si_tmaze |
 | `output/data/state_space_catalog.json` | `generate_toy_sweep_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
+| `output/data/state_transition_table.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/data/theorem_traceability_matrix.json` | `generate_sheaf_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/data/toy_benchmark_matrix.json` | `generate_toy_sweep_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/data/track_improvement_scope.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
@@ -349,6 +349,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/data/validation_dependency_graph.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf |
 | `output/data/validation_gate_index.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/figures/si_belief_trajectory.gif` | `render_animation.py` | Yes | appendix_full_sheaf |
+| `output/reports/ablation_sensitivity_report.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/reports/adversarial_audit.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/reports/artifact_diffoscope.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/reports/artifact_license_audit.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
@@ -365,6 +366,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/reports/model_checking_witnesses.json` | `generate_sheaf_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/reports/producer_completeness.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/reports/pymdp_runtime_diagnostics.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, appendix_full_sheaf |
+| `output/reports/release_attestation.json` | `generate_sheaf_tracks.py` | Yes | discussion_outlook, appendix_full_sheaf |
 | `output/reports/release_bundle_manifest.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/reports/release_notes_evidence.json` | `generate_integration_audit.py` | Yes | discussion_outlook, appendix_full_sheaf |
 | `output/reports/replay_matrix.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |

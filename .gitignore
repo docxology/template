@@ -168,7 +168,7 @@ projects/*
 # the build if anything else under projects/ is staged/tracked.
 !projects/*.md
 # Re-include the public templates/ subfolder, then re-ignore everything inside
-# it so ONLY the six canonical exemplars below are ever tracked. Anything else
+# it so ONLY the canonical exemplars below are ever tracked. Anything else
 # dropped into projects/templates/ stays ignored (fail-closed).
 !projects/templates/
 projects/templates/*
@@ -186,6 +186,8 @@ projects/templates/*
 !projects/templates/template_template/**
 !projects/templates/template_newspaper/
 !projects/templates/template_newspaper/**
+!projects/templates/template_textbook/
+!projects/templates/template_textbook/**
 projects/*/.DS_Store
 projects/templates/*/.DS_Store
 # Exemplar project-local output is a disposable working tree (tracked render-

@@ -105,7 +105,7 @@ Result: **212** project-scope infrastructure tests collected and **381** publish
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
 | `template_active_inference` | 141 | 91.35 % |
-| `template_autoresearch_project` | 217 | 91.56 % |
+| `template_autoresearch_project` | 220 | 92.81 % |
 | `template_code_project` | 209 | 98.25 % |
 | `template_newspaper` | 48 | 94.46 % |
 | `template_prose_project` | 76 | 100.00 % |

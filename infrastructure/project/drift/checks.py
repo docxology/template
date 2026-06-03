@@ -182,16 +182,32 @@ def check_referenced_files_exist(project_root: Path, report: Report, project: st
                 )
 
 
+# Dense active-inference sheaf-domain modules carry a documented split-TODO and
+# are exempt from the oversize warning, mirroring ``LINE_COUNT_ALLOWLIST`` in
+# ``scripts/gates/module_line_count_check.py``. Keep the two allowlists in sync;
+# remove an entry once the sheaf builders are extracted into sibling modules.
+_OVERSIZE_SRC_ALLOWLIST: frozenset[str] = frozenset(
+    {
+        "src/roadmap_tracks/sheaf_tracks.py",
+        "src/manuscript/sheaf/semantic.py",
+    }
+)
+
+
 def check_no_oversize_src_files(project_root: Path, report: Report, project: str) -> None:
     """``src/**/*.py`` files should not exceed 1500 lines (modularity smell).
 
     Catches the analysis.py-was-1719-lines smell; the template should not
-    ship single source files that exceed thinkable refactor budget.
+    ship single source files that exceed thinkable refactor budget. Dense
+    sheaf-domain modules in ``_OVERSIZE_SRC_ALLOWLIST`` are exempt (documented
+    split-TODO; kept in sync with the module-line-count gate's allowlist).
     """
     src_dir = project_root / "src"
     if not src_dir.is_dir():
         return
     for py in src_dir.rglob("*.py"):
+        if _rel(py, project_root) in _OVERSIZE_SRC_ALLOWLIST:
+            continue
         line_count = sum(1 for _ in py.open("r", encoding="utf-8"))
         if line_count > 1500:
             report.add(

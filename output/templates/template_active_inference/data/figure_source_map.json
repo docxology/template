@@ -1,7 +1,15 @@
 {
   "all_figures_mapped": true,
-  "figure_count": 13,
+  "figure_count": 15,
   "rows": [
+    {
+      "figure_id": "causal_ablation_heatmap",
+      "mapped": true,
+      "sources": [
+        "output/data/causal_ablation_matrix.json",
+        "output/reports/ablation_sensitivity_report.json"
+      ]
+    },
     {
       "figure_id": "free_energy_curve",
       "mapped": true,
@@ -88,6 +96,14 @@
       "mapped": true,
       "sources": [
         "output/data/si_tmaze_summary.json"
+      ]
+    },
+    {
+      "figure_id": "theorem_traceability_graph",
+      "mapped": true,
+      "sources": [
+        "output/data/theorem_traceability_matrix.json",
+        "output/data/proof_dependency_graph.json"
       ]
     },
     {

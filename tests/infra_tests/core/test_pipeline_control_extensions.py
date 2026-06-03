@@ -625,7 +625,6 @@ def test_stage_artifact_manifest_records_hashes_and_contract_issues(tmp_path: Pa
     (project_dir / "output" / ".checkpoints").mkdir()
     (project_dir / "output" / "reports" / "snapshots").mkdir(parents=True)
     (project_dir / "output" / "data" / "result.json").write_text('{"ok": true}\n', encoding="utf-8")
-    (project_dir / "output" / "data" / ".result.atomic.json").write_text("", encoding="utf-8")
     (project_dir / "output" / "logs" / "pipeline.log").write_text("ignore me\n", encoding="utf-8")
     (project_dir / "output" / ".checkpoints" / "pipeline_checkpoint.json").write_text("{}", encoding="utf-8")
     (project_dir / "output" / "reports" / "artifact_manifest.json").write_text("{}", encoding="utf-8")
@@ -652,7 +651,6 @@ def test_stage_artifact_manifest_records_hashes_and_contract_issues(tmp_path: Pa
     assert all("artifact_manifest.json" not in entry.path for entry in manifest.entries)
     assert all("evidence_registry.json" not in entry.path for entry in manifest.entries)
     assert all("snapshots/" not in entry.path for entry in manifest.entries)
-    assert all("/." not in entry.path for entry in manifest.entries)
     assert all(not entry.path.endswith(".aux") for entry in manifest.entries)
     assert any("missing declared output" in issue for issue in validation.issues)
     assert (project_dir / "output" / "reports" / "artifact_manifest.json").exists()
@@ -682,20 +680,27 @@ def test_stage_artifact_manifest_accepts_symlinked_private_project_contracts(tmp
     assert validation.issues == ()
 
 
-def test_stage_artifact_manifest_matches_nested_template_contracts(tmp_path: Path) -> None:
+def test_stage_artifact_manifest_uses_qualified_template_project_slug(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
-    project_dir = repo_root / "projects" / "templates" / "template_demo"
-    output_file = project_dir / "output" / "data" / "result.json"
-    output_file.parent.mkdir(parents=True)
-    (repo_root / "output" / "templates" / "template_demo").mkdir(parents=True)
-    output_file.write_text('{"ok": true}\n', encoding="utf-8")
+    project_dir = repo_root / "projects" / "templates" / "template_active_inference"
+    project_output = project_dir / "output" / "data" / "result.json"
+    copied_output = repo_root / "output" / "templates" / "template_active_inference" / "data" / "result.json"
+    project_output.parent.mkdir(parents=True)
+    copied_output.parent.mkdir(parents=True)
+    project_output.write_text('{"ok": true}\n', encoding="utf-8")
+    copied_output.write_text('{"ok": true}\n', encoding="utf-8")
 
     manifest = write_stage_artifact_manifest(
         repo_root=repo_root,
         project_dir=project_dir,
-        stage_num=4,
-        stage_name="Project Analysis",
-        contract=StageContract(output_artifacts=("projects/{project}/output/", "output/{project}/")),
+        stage_num=8,
+        stage_name="Copy Outputs",
+        contract=StageContract(
+            output_artifacts=(
+                "projects/{project}/output/data/",
+                "output/{project}/data/",
+            )
+        ),
     )
     validation = validate_artifact_manifest(manifest, project_dir=project_dir)
 

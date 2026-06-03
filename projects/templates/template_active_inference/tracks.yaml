@@ -158,7 +158,7 @@ tracks:
     required: false
   - id: manuscript
     label: Sheaf composer and registry
-    paths: [src/manuscript, manuscript/refs, manuscript/sheaf]
+    paths: [src/manuscript, manuscript/sheaf, figures.yaml]
     gate: validate_manuscript
     required: true
 

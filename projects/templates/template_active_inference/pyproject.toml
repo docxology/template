@@ -20,6 +20,7 @@ dependencies = [
 dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
+    "pytest-timeout>=2.4.0",
 ]
 
 [tool.pytest.ini_options]
@@ -29,6 +30,7 @@ python_files = ["test_*.py"]
 addopts = "-v --tb=short --strict-markers"
 markers = [
     "requires_pymdp: tests that import inferactively-pymdp",
+    "timeout(seconds): per-test timeout for artifact write/validate isolation checks",
 ]
 
 [tool.coverage.run]
