@@ -223,7 +223,6 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[modules/guides/search-module.md](modules/guides/search-module.md)**
 - **[modules/guides/reference-module.md](modules/guides/reference-module.md)**
 - **[modules/guides/methods-module.md](modules/guides/methods-module.md)**
-- **[modules/guides/sia-module.md](modules/guides/sia-module.md)**
 
 ---
 
