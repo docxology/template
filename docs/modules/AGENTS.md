@@ -12,6 +12,8 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 | `scientific-simulation-guide.md` | Scientific simulation and analysis system |
 | `pdf-validation.md` | PDF validation system documentation |
 | `literature-search-and-references.md` | Literature search and reference management module |
+| `guides/autoresearch-module.md` | Deterministic readiness planning module |
+| `guides/benchmark-module.md` | Public exemplar benchmark manifests module |
 | `guides/config-module.md` | Config schemas / templates module |
 | `guides/core-module.md` | Core utilities module |
 | `guides/docker-module.md` | Docker / compose module |

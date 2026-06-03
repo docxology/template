@@ -49,7 +49,7 @@ from pathlib import Path
 
 # All techniques enabled with defaults
 embed_steganography(Path("output/template_code_project/pdf/template_code_project_combined.pdf"))
-# Creates: code_project_combined_steganography.pdf + .hashes.json
+# Creates: template_code_project_combined_steganography.pdf + .hashes.json
 ```
 
 ### Configurable Processing

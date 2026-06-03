@@ -21,6 +21,7 @@ Focused guides for specific infrastructure modules. These documents supplement:
 | `documentation-module.md` | Documentation, figures, glossary |
 | `integrity-module.md` | Integrity checks |
 | `llm-module.md` | LLM integration |
+| `methods-module.md` | Methods orchestration plans |
 | `project-module.md` | Project discovery |
 | `publishing-module.md` | Publishing |
 | `rendering-module.md` | Rendering |

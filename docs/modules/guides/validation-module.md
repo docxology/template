@@ -48,7 +48,7 @@ from infrastructure.validation import discover_markdown_files, validate_markdown
 from infrastructure.validation.content.markdown_validator import collect_symbols
 
 repo_root = Path(".")
-manuscript_dir = repo_root / "projects" / "template_code_project" / "manuscript"
+manuscript_dir = repo_root / "projects" / "templates" / "template_code_project" / "manuscript"
 
 # Validate all markdown files in a manuscript directory
 problems, exit_code = validate_markdown(manuscript_dir, repo_root)

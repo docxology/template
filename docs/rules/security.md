@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide covers **development security standards** for the Research Project Template. These are the security practices developers must follow when writing code, in contrast to the security policy documented in `docs/security.md`.
+This guide covers **development security standards** for the Research Project Template. These are the security practices developers must follow when writing code, in contrast to the security policy documented in `docs/development/security.md`.
 
 ## Input Validation Patterns
 

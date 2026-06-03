@@ -24,6 +24,16 @@ unless this file is re-measured)
   behavior across project virtual environments
 - shipped curated release notes and a `3.1.0` metadata bump
 
+> **Roster note (post-`v3.1.0`):** the git-tracked public exemplar set under
+> `projects/templates/` has since grown beyond the six referenced above —
+> `template_autoscientists`, `template_newspaper`, and `template_textbook`
+> were added (each double-published as a standalone GitHub repo + Zenodo DOI),
+> bringing the current public exemplar roster to **nine**. The authoritative,
+> always-current count and names live in
+> [`docs/_generated/active_projects.md`](../_generated/active_projects.md) and
+> [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md) —
+> consult those rather than this historical release log.
+
 ### v3.0.0 — Production / Stable (2026-02-22)
 
 - mypy strict adopted as the baseline gate for `infrastructure/` (live

@@ -699,6 +699,7 @@ uv run pytest --cov=projects.template_code_project.src --cov-report=term-missing
 → Read **[Pipeline Orchestration](../RUN_GUIDE.md)**
 
 **Review testing standards**
+→ Read **[Testing Standards](../rules/testing_standards.md)**
 
 ### Related Documentation
 

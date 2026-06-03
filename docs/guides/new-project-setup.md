@@ -4,13 +4,13 @@ Complete checklist for creating a new project workspace in the Docxology Templat
 
 For a copy-paste LLM scaffold anchored on that exemplar, see [new-project-one-shot-prompt.md](new-project-one-shot-prompt.md). Other active layouts under `projects/` are listed in [_generated/active_projects.md](../_generated/active_projects.md). For archived reference trees (not run by default), see `projects/archive/`.
 
-> **Key Principle**: A project is auto-discovered when it is under
-> `projects/`, has `src/` with at least one Python file, and has `tests/`.
+> **Key Principle**: A project is auto-discovered and rendered when it is under
+> `projects/templates/` or `projects/active/`, has `src/` with at least one Python file, and has `tests/`.
 > `manuscript/config.yaml` supplies metadata and render settings; it is not
 > the discovery predicate by itself. No infrastructure changes are needed for a
 > structurally valid project.
 >
-> **3-Directory Lifecycle**: Projects live in one of three directories: `projects/` (active, rendered by `./run.sh`), `projects/working/` (WIP, not auto-discovered), or `projects/archive/` (completed/paused, not auto-discovered). Move projects freely between directories; only what is in `projects/` is rendered.
+> **Typed-subfolder Lifecycle**: Projects live in typed subfolders under `projects/`: `projects/templates/` (the nine git-tracked public exemplars, rendered), `projects/active/` (hot-seat render set, symlinked from the private repo, rendered), and the non-rendered mirrors `projects/working/`, `projects/published/`, `projects/archive/`, and `projects/other/`. Only `projects/templates/*` and `projects/active/*` are discovered and rendered. See [_generated/canonical_facts.md](../_generated/canonical_facts.md).
 
 ---
 
@@ -149,7 +149,7 @@ name = "<project-name>"
 version = "1.0.0"
 description = "Short description"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
     "matplotlib>=3.10.0",
     # Add your project-specific deps here
