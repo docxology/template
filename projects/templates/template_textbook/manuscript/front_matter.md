@@ -76,7 +76,7 @@ time they appear.
 
 ---
 
-## How This Book Is Generated
+## Methodology: How This Book Is Generated
 
 This manuscript is rendered, not typeset by hand. The pipeline reads
 [`config.yaml`](config.yaml), runs the analysis scripts that produce figures and
