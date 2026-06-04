@@ -26,8 +26,8 @@ flowchart TB
     LINT --> SEC[security<br/>pip-audit + bandit -c bandit.yaml]
     LINT --> DL[docs-lint<br/>mermaid + links + consistency]
     VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
-    VNM --> TI[test-infra<br/>ubuntu+macos × py310–312<br/>≥ 60% coverage]
-    VNM --> TP[test-project<br/>01_run_tests.py public projects<br/>≥ 75% union coverage]
+    VNM --> TI[test-infra<br/>ubuntu × py310–312 + macOS × py312<br/>≥ 60% coverage]
+    VNM --> TP[test-project<br/>9 exemplars × py310/py312 = 18 ubuntu jobs<br/>each ≥ 90% own src/]
     VNM --> FL[fep-lean optional<br/>gauss + lake · timeout 60m]
     TI --> PERF[performance<br/>import time ≤ 5 s]
     TP --> PERF

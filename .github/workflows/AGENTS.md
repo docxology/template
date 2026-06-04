@@ -50,8 +50,8 @@ flowchart TB
     LINT --> SEC[security]
     LINT --> DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
-    VNM --> TI[test-infra<br/>matrix: ubuntu+macos × 3.10/3.11/3.12<br/>codecov on 3.12/ubuntu only]
-    VNM --> TP[test-project<br/>01_run_tests.py per-project pytest]
+    VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12 + macOS × 3.12<br/>codecov on 3.12/ubuntu only]
+    VNM --> TP[test-project<br/>per-project: 9 exemplars × py3.10/py3.12 = 18 ubuntu jobs<br/>01_run_tests.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
     DET --> SHW
     DET --> FL
@@ -97,7 +97,7 @@ flowchart TB
 
 #### 4. Infrastructure Tests (`test-infra`)
 
-- **Matrix:** `ubuntu-latest`, `macos-latest` × `3.10`, `3.11`, `3.12` (6 combinations)
+- **Matrix:** `ubuntu-latest` × `3.10`, `3.11`, `3.12`, plus an `include:` of `macos-latest` × `3.12` (4 cells). macOS legs are ~10x cost and rarely surface OS-specific breakage beyond the 3.12 cell, so only the 3.12 smoke runs there.
 - **Coverage threshold:** 60% (`--cov-fail-under=60`)
 - **Coverage file:** `.coverage.infra` (isolated from project coverage)
 - **Exclusions:** Tests marked `requires_ollama` are skipped (`-m "not requires_ollama"`)
@@ -106,11 +106,11 @@ flowchart TB
 #### 5. Project Tests (`test-project`)
 
 - **Sync:** `uv sync --group rendering --group monitoring --group discopy` — same packages as a fresh local `uv sync` at the repo root for DisCoPy string-diagram tests: root **`default-groups`** are `dev`, `rendering`, and **`discopy`**, so `uv sync` already installs **DisCoPy**; this job adds **monitoring** (not in `default-groups`). **Hypothesis** comes from the **dev** group (parametric tests), not from `discopy` (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
-- **Matrix:** Same as `test-infra` (6 combinations)
-- **Coverage threshold:** **75% combined union** (`DEFAULT_FAIL_UNDER` in [`infrastructure/core/test_runner.py`](../../infrastructure/core/test_runner.py)) — enforced via `coverage report` after all projects append into one trace. **Per-project standalone** runs still target **≥ 90%** on each project's own `src/`.
-- **Coverage file:** `.coverage.project` (isolated)
-- **Scope:** [`scripts/01_run_tests.py`](../../scripts/01_run_tests.py) `--project-only --all-projects --public-projects --non-strict --include-slow`, which delegates to [`infrastructure.core.test_runner.run_per_project_pytest`](../../infrastructure/core/test_runner.py) (one pytest process per public project from `infrastructure.project.public_scope`, project subprocesses pin `coverage` to the workspace version before `--cov-append`, then `coverage xml`). Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains. <!-- noqa: docs-lint -->
-- **Codecov upload:** On Python 3.12 / ubuntu-latest only
+- **Matrix:** **Per-project split** — `runs-on: ubuntu-latest` (no macOS) × `python-version: [3.10, 3.12]` × the **9** public exemplars (`templates/template_*`) = **18 parallel jobs**. Each exemplar runs in its own job, so wall-clock is the slowest single project rather than the sequential sum. py3.10 (floor) + py3.12 (ceiling) give cross-version coverage; macOS breadth is handled by `test-infra`. Job `timeout-minutes: 45`.
+- **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
+- **Coverage file:** `.coverage.project` (isolated; removed at the start of each job before the run)
+- **Scope:** [`scripts/01_run_tests.py`](../../scripts/01_run_tests.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell), then `coverage xml -o coverage-project.xml`. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
+- **Codecov upload:** On Python 3.12 only
 
 #### 6. fep_lean — real Open Gauss + Lake (`fep-lean`)
 
