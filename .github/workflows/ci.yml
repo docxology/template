@@ -322,7 +322,12 @@ jobs:
   test-project:
     name: "Project Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    # Sequential per-project pytest across all nine public exemplars with
+    # --include-slow (active_inference Lean + textbook rendering are heavy):
+    # ~29 min locally, more on slower CI runners. 30 min was being exceeded and
+    # GitHub marked the timed-out jobs "cancelled" once textbook (#8) and
+    # autoscientists (#9) joined the roster. 50 gives headroom for nine exemplars.
+    timeout-minutes: 50
     needs: [verify-no-mocks]
     permissions:
       contents: read
