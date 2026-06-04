@@ -369,22 +369,23 @@ jobs:
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group rendering --group monitoring --group discopy
 
+      # 01_run_tests.py --project runs pytest with cwd=<project> and enforces that
+      # project's own --cov-fail-under=90 internally, writing coverage into the
+      # project dir (projects/<name>/.coverage.project + coverage_project.json).
+      # The gate is therefore authoritative here; no repo-root coverage step.
       - name: Run project tests
         env:
-          COVERAGE_FILE: .coverage.project
           PYTHONPATH: .
         run: |
           set -euo pipefail
-          rm -f .coverage.project coverage-project.xml
           uv run python scripts/01_run_tests.py \
             --project "${{ matrix.project }}" --project-only --include-slow
-          uv run coverage xml -o coverage-project.xml
 
       - name: Upload project coverage to Codecov
         if: matrix.python-version == '3.12'
         uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
-          files: coverage-project.xml
+          files: projects/${{ matrix.project }}/coverage_project.json
           flags: projects
           name: project-coverage
           fail_ci_if_error: false
