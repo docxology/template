@@ -27,6 +27,15 @@ symlinks private lifecycle folders into local template mirrors:
 | `archive/<name>` | `template/projects/archive/<name>` | No |
 | `other/<name>` | `template/projects/other/<name>` | No |
 
+> **Operator playbook (private side).** This page is the engine-side record of the
+> *mechanism*. Operators who have the private sibling checked out keep their own
+> operational playbook in that repo's `docs/` tree — a modular hub
+> (`docs/lifecycle/`, `docs/publishing/`, `docs/rendering/`, each with
+> `README.md` + `AGENTS.md`) covering lifecycle moves, the GitHub + Zenodo + DOI
+> release/verification flow, and rendering. It signposts back into this `docs/`
+> tree as canonical. It is intentionally **not linked here** (the private repo is
+> absent from public clones).
+
 Because `projects/` is a Python **namespace
 package**, the symlink resolves transparently for `from projects.<name>.src…`
 imports, `discover_projects`, `validate_project_structure`, and rendering — the
