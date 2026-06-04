@@ -73,16 +73,7 @@ context: |
   
   - **Numerical Stability**: Algorithm stability testing
   - **Performance Benchmarking**: Execution time and memory analysis
-  - **Scientific Documentation**: API documentat
-  CRITICAL: Issues",
-  CRITICAL: issues (F grades)
-  DANGER: ous patterns to block — class-level constant, built once at class definition.
-  WARNING: detection
-  WARNING: s
-  WARNING: s only
-  WARNING: s
-  CRITICAL: issues
-  WARNING: issues
+  - **Scientific Documentation**: API documentation generation
   This module is used by: projects, scripts, tests
   Changes here may affect downstream consumers.
   ## Recent Changes

@@ -19,7 +19,7 @@ These are gates, not suggestions — see the docs above for the rationale:
 - **Coverage.** Infrastructure ≥ 60%, per-project ≥ 90%, combined-union all-projects ≥ 75%.
 - **Type hints + `__all__`** on public infrastructure APIs (`mypy`, `check-all-exports`).
 - **Conventional commits**; run `pre-commit` locally (`ruff`, `mypy`, `bandit`, the pre-push gates).
-- **Confidentiality.** This is a public repo: only `projects/templates/template_active_inference`, `projects/templates/template_autoresearch_project`, `projects/templates/template_code_project`, `projects/templates/template_prose_project`, and `projects/templates/template_template` are tracked. Never commit any other project under `projects/` — `scripts/check_tracked_projects.py` blocks it in the pre-push hook and CI.
+- **Confidentiality.** This is a public repo: only `projects/templates/template_active_inference`, `projects/templates/template_autoresearch_project`, `projects/templates/template_autoscientists`, `projects/templates/template_code_project`, `projects/templates/template_newspaper`, `projects/templates/template_prose_project`, `projects/templates/template_sia`, `projects/templates/template_template`, and `projects/templates/template_textbook` are tracked. Never commit any other project under `projects/` — `scripts/check_tracked_projects.py` blocks it in the pre-push hook and CI.
 
 ## Citation
 

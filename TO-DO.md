@@ -22,9 +22,9 @@ number into prose.
 | --- | --- | --- |
 | Package version | `3.1.0` | `pyproject.toml#[project].version` |
 | Latest template release | `v3.1.0` (published 2026-05-30) | [`CHANGELOG.md`](CHANGELOG.md), GitHub release tag |
-| Public source scope | `infrastructure` plus six public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
-| Public exemplars | `template_active_inference`, `template_autoresearch_project`, `template_code_project`, `template_prose_project`, `template_sia`, `template_template` | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
-| Canonical generated facts | 20 importable infrastructure packages; 492 infrastructure Python modules; six exemplar coverage gates at or above 90 % | [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) |
+| Public source scope | `infrastructure` plus nine public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
+| Public exemplars | `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook` | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
+| Canonical generated facts | 20 importable infrastructure packages; 492 infrastructure Python modules; nine exemplar coverage gates at or above 90 % | [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) |
 | Open GitHub PRs | 3 Dependabot PRs: Codecov action, `actions/stale`, `astral-sh/setup-uv` | `/opt/homebrew/bin/gh-axi pr list` |
 | Docs lint status | links-only, consistency-only, and doc-pairs checks were clean in the `v3.1.0` release verification | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
 | Mermaid lint status | clean with chunked batch rendering under the default total budget | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
@@ -82,7 +82,7 @@ Keep this section short. Details live in release notes or archived audits.
 - **Acceptance:** `rg -n '3\.1\.0|v3\.1\.0' TO-DO.md CHANGELOG.md pyproject.toml`
   finds the current release, and
   `uv run python -m infrastructure.project.public_scope source-paths` prints
-  `infrastructure` plus the six public exemplar source paths.
+  `infrastructure` plus the nine public exemplar source paths.
 - **Out of scope:** re-running generated docs unless generated facts changed.
 
 ### GH-PIN-1 - SHA-pin GitHub Actions

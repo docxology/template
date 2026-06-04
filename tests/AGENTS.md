@@ -33,7 +33,7 @@ under ``tmp_path`` should use [`tests/_support/projects.py`](_support/projects.p
 
 Default slug ``template_test`` is the canonical synthetic stand-in. Do **not**
 create a git-tracked ``template_test`` project under ``projects/`` — contract,
-public-scope, and regression tests continue to reference the six public exemplars.
+public-scope, and regression tests continue to reference the nine public exemplars.
 
 ## Coverage Expectations
 

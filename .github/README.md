@@ -248,7 +248,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 ### Published exemplars — pipeline productivity, advanced provenance, and autopoiesis
 
-The repository ships **seven** public template projects. Six are independently published as **their own GitHub repository + Zenodo deposit** (versioned, authored by Daniel Ari Friedman); `template_newspaper` ships in-repo as a layout/typography exemplar. Each demonstrates the pipeline end-to-end on real, citable artifacts.
+The repository ships **nine** public template projects. Seven are independently published as **their own GitHub repository + Zenodo deposit** (versioned, authored by Daniel Ari Friedman); `template_sia` is deposited from the shared `docxology/template` repository, and `template_textbook` is published to Zenodo. Each demonstrates the pipeline end-to-end on real, citable artifacts.
 
 The table below is auto-injected from public project config files plus optional GitHub/Zenodo API refreshes. Do not hand-edit it.
 

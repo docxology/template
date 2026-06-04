@@ -112,7 +112,7 @@ Result: **214** project-scope infrastructure tests collected and **381** publish
 | `template_active_inference` | 269 | 91.35 % |
 | `template_autoresearch_project` | 220 | 92.81 % |
 | `template_autoscientists` | 79 | 99.59 % |
-| `template_code_project` | 209 | 98.25 % |
+| `template_code_project` | 196 | 98.25 % |
 | `template_newspaper` | 48 | 94.46 % |
 | `template_prose_project` | 76 | 100.00 % |
 | `template_sia` | 32 | 96.69 % |

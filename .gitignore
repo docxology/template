@@ -99,7 +99,7 @@ Thumbs.db
 /output/*
 # Public exemplar rendered output lives under output/templates/<name>/ and is
 # tracked as living render-proof. Re-include the templates/ shell, then
-# re-ignore its contents so ONLY the six canonical exemplars are tracked —
+# re-ignore its contents so ONLY the nine canonical exemplars are tracked —
 # any other rotating/confidential project's output under output/ stays ignored.
 !/output/templates/
 /output/templates/*
@@ -160,7 +160,7 @@ invalid/
 projects/*
 # CONFIDENTIALITY INVARIANT: this is a PUBLIC repo into which confidential
 # projects are routinely rotated under projects/'s typed subfolders. Repo-level
-# Markdown files in projects/ are navigation docs; only the six canonical
+# Markdown files in projects/ are navigation docs; only the nine canonical
 # template exemplar directories under projects/templates/ may ever be
 # tracked/pushed. Do NOT add a negation for any other project directory — if a
 # non-confidential extra exemplar must be published, update this allowlist and

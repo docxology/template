@@ -341,7 +341,7 @@ try:
     # Verify the output
     if pdf_path.exists():
         size_mb = pdf_path.stat().st_size / (1024 * 1024)
-        print(".2f")
+        print(f"PDF size: {size_mb:.2f} MB")
 except Exception as e:
     print(f"Rendering failed: {e}")
     # Check logs for detailed error information
