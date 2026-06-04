@@ -12,12 +12,12 @@ The bundled `manuscript/config.yaml` is configured for the **strict reproducibil
 
 ```bash
 # Run twice; check there are no diffs in the JSON artefacts.
-uv run python projects/template_prose_project/scripts/run_prose_pipeline.py
-mv projects/template_prose_project/output projects/template_prose_project/output_first
-uv run python projects/template_prose_project/scripts/run_prose_pipeline.py
+uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
+mv projects/templates/template_prose_project/output projects/templates/template_prose_project/output_first
+uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
 diff -ru \
-    projects/template_prose_project/output_first/manuscript_report.json \
-    projects/template_prose_project/output/manuscript_report.json
+    projects/templates/template_prose_project/output_first/manuscript_report.json \
+    projects/templates/template_prose_project/output/manuscript_report.json
 ```
 
 The diff should be empty. If it is not, the pipeline has acquired non-determinism — file an issue.

@@ -35,7 +35,7 @@ print(report.citation_keys)
 
 ```bash
 uv run python -m infrastructure.prose.cli report \
-    projects/template_prose_project/manuscript \
+    projects/templates/template_prose_project/manuscript \
     --output output/prose_report.json
 ```
 

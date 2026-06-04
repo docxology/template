@@ -4,7 +4,7 @@ type: "manuscript_guide"
 version: "2.5.0"
 ---
 
-# Manuscript (`projects/template_code_project/manuscript/`)
+# Manuscript (`projects/templates/template_code_project/manuscript/`)
 
 Repository-wide agent rules for this exemplar live in [`../docs/agent_instructions.md`](../docs/agent_instructions.md). This file covers **manuscript-specific** editing: file roles, `{{VARIABLE}}` token protocol, figure protocol, and the section modification workflow.
 
@@ -42,12 +42,12 @@ Numeric values that come from analysis outputs **must** use `{{VARIABLE_NAME}}` 
 **Adding a new token**:
 1. Add a key/value pair to the `variables` dict in `src/manuscript_variables.py::generate_variables()`
 2. Add a corresponding assertion in `tests/test_manuscript_variables.py` (the live cross-reference test `test_all_manuscript_tokens_are_generated` will fail automatically if a manuscript token is missing)
-3. Verify: `python -c "import json; d=json.load(open('projects/template_code_project/output/data/manuscript_variables.json')); print(d['MY_TOKEN'])"`
+3. Verify: `python -c "import json; d=json.load(open('projects/templates/template_code_project/output/data/manuscript_variables.json')); print(d['MY_TOKEN'])"`
 4. Reference in a manuscript file as `{{MY_TOKEN}}`
 
 **Detecting unresolved tokens** (run before rendering):
 ```bash
-grep -r "{{" projects/template_code_project/output/manuscript/ 2>/dev/null \
+grep -r "{{" projects/templates/template_code_project/output/manuscript/ 2>/dev/null \
   && echo "UNRESOLVED TOKENS — re-run z_generate_manuscript_variables.py" \
   || echo "All tokens resolved"
 ```
@@ -75,7 +75,7 @@ All six figures must be referenced via Pandoc-crossref `[@fig:label]`, never wit
 
 ## Infrastructure Coupling (`scripts/`, not `src/`)
 
-Orchestrators under `projects/template_code_project/scripts/` should use `infrastructure.core.logging.utils.get_logger(__name__)` (same pattern as `optimization_analysis.py`). Scientific checks should go through `infrastructure.scientific` helpers where applicable. `src/optimizer.py` must remain infrastructure-free.
+Orchestrators under `projects/templates/template_code_project/scripts/` should use `infrastructure.core.logging.utils.get_logger(__name__)` (same pattern as `optimization_analysis.py`). Scientific checks should go through `infrastructure.scientific` helpers where applicable. `src/optimizer.py` must remain infrastructure-free.
 
 ## Section Modification Protocol
 
@@ -85,15 +85,15 @@ Follow these steps in order whenever you change behavior and need to update the 
 2. **Add or extend tests** — pure math in `tests/test_optimizer.py`; orchestration and error paths in `tests/test_analysis_integration.py` and `tests/test_analysis_coverage.py`.
 3. **Regenerate analysis outputs**:
    ```bash
-   uv run python projects/template_code_project/scripts/optimization_analysis.py
+   uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
    ```
 4. **Hydrate manuscript variables** (substitute `{{VARIABLE}}` tokens):
    ```bash
-   uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+   uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
    ```
 5. **Verify all tokens resolved**:
    ```bash
-   grep -r "{{" projects/template_code_project/output/manuscript/ || echo "All resolved"
+   grep -r "{{" projects/templates/template_code_project/output/manuscript/ || echo "All resolved"
    ```
 6. **Render PDF** from the repository root:
    ```bash
@@ -109,12 +109,12 @@ Follow these steps in order whenever you change behavior and need to update the 
 > **PDF Rendering** stage fails while per-section slides still render. Full
 > detail: [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md#prerequisite-mermaid-diagrams-need-chrome-headless-shell).
 
-Final deliverables appear under `output/template_code_project/` after `scripts/05_copy_outputs.py` runs (working files remain under `projects/template_code_project/output/` during the run).
+Final deliverables appear under `output/template_code_project/` after `scripts/05_copy_outputs.py` runs (working files remain under `projects/templates/template_code_project/output/` during the run).
 
 ## RASP Conventions
 
 1. Avoid boilerplate closers such as "In summary" / "In conclusion" at the end of sections unless the section genuinely needs them.
-2. Figures and numbers in `03_results.md` must match what `scripts/optimization_analysis.py` writes (paths under `projects/template_code_project/output/figures/` and related CSV/JSON).
+2. Figures and numbers in `03_results.md` must match what `scripts/optimization_analysis.py` writes (paths under `projects/templates/template_code_project/output/figures/` and related CSV/JSON).
 3. When referencing template code, prefer concrete paths or URLs (e.g. [core utilities in the template repository](https://github.com/docxology/template/tree/main/infrastructure/core)) over vague module dotted paths alone.
 
 ## See also

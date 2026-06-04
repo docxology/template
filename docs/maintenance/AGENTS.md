@@ -21,6 +21,8 @@ LaTeX). These docs are decade-scale planning, not day-of operations.
 | [`archival-targets.md`](archival-targets.md) | IPFS + Software Heritage parallel pins for DOI/Zenodo independence |
 | [`ci-local.md`](ci-local.md) | Local reproduction of GH Actions via `act` |
 | [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) | Container + lockfile + agent-runnable manifest design |
+| [`private-projects-repo.md`](private-projects-repo.md) | Sibling private repo lifecycle + symlink-sync contract |
+| [`local-only-template-exemplars.md`](local-only-template-exemplars.md) | LOCAL_ONLY_TEMPLATE_NAMES and promoting an exemplar to the public set |
 
 ## When to edit
 

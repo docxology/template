@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-27 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**459**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**178**), publishing suite collection/full run (**364**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-06-03 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**516**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**214**), publishing suite collection/full run (**381**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -10,9 +10,13 @@ This file aggregates verifiable facts from discovery scripts, CI configuration, 
 
 - `template_active_inference`
 - `template_autoresearch_project`
+- `template_autoscientists`
 - `template_code_project`
+- `template_newspaper`
 - `template_prose_project`
+- `template_sia`
 - `template_template`
+- `template_textbook`
 
 Optional add-on: `projects/archive/template_search_project` (mirrored read-only from the private repo's `archive/`) can be copied under `projects/active/` for literature-search workflows.
 
@@ -22,9 +26,13 @@ Private lifecycle projects live outside this public repo in a separate external 
 
 - `template_active_inference`
 - `template_autoresearch_project`
+- `template_autoscientists`
 - `template_code_project`
+- `template_newspaper`
 - `template_prose_project`
+- `template_sia`
 - `template_template`
+- `template_textbook`
 
 `projects/_test_project/` is a stub layout used by validation tests only — omitted from `discover_projects()` (path may be absent in sparse checkouts; not a tracked exemplar tree).
 
@@ -38,11 +46,11 @@ Regenerate [`active_projects.md`](active_projects.md) with:
 uv run python scripts/generate_active_projects_doc.py
 ```
 
-Default exemplar for paths: `projects/template_code_project/`.
+Default exemplar for paths: `projects/templates/template_code_project/`.
 
 ## Infrastructure Modules
 
-Current importable Python subpackages under `infrastructure/` (19):
+Current importable Python subpackages under `infrastructure/` (20):
 
 - autoresearch
 - benchmark
@@ -60,6 +68,7 @@ Current importable Python subpackages under `infrastructure/` (19):
 - reporting
 - scientific
 - search
+- sia
 - skills
 - steganography
 - validation
@@ -77,7 +86,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **484** on 2026-06-02 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **516** on 2026-06-03 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -94,17 +103,21 @@ uv run pytest tests/infra_tests/project/ --collect-only -q --no-cov
 uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 ```
 
-Result: **178** project-scope infrastructure tests collected and **364** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
+Result: **214** project-scope infrastructure tests collected and **381** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
 **Exemplar `pytest --collect-only` totals** (2026-05-27):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_active_inference` | 141 | 91.35 % |
-| `template_autoresearch_project` | 217 | 91.56 % |
+| `template_active_inference` | 269 | 91.35 % |
+| `template_autoresearch_project` | 220 | 92.81 % |
+| `template_autoscientists` | 79 | 99.59 % |
 | `template_code_project` | 209 | 98.25 % |
+| `template_newspaper` | 48 | 94.46 % |
 | `template_prose_project` | 76 | 100.00 % |
+| `template_sia` | 32 | 96.69 % |
 | `template_template` | 84 | 91.53 % |
+| `template_textbook` | 111 | 97.01 % |
 
 Collection was refreshed with per-project `uv run pytest tests/ --collect-only -q --no-cov` runs. Coverage values come from the latest project coverage gates; re-run the per-project coverage command after changing project `src/` or tests. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
@@ -188,7 +201,7 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ```mermaid
 flowchart TD
-    Root[Root] --> Infra[infrastructure/ <br/>19 importable packages]
+    Root[Root] --> Infra[infrastructure/ <br/>20 importable packages]
     Root --> Projects[projects/ <br/>see active_projects.md]
     Root --> Tests[tests/infra_tests/]
     Infra --> Core[core/ <br/>pipeline, logging, files, config]

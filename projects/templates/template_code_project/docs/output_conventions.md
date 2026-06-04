@@ -1,6 +1,6 @@
 # Output Directory Conventions
 
-The project-relative `output/` directory (`projects/template_code_project/output/`) holds all generated artifacts from the analysis pipeline. This document describes its structure, regeneration process, and version-control policy.
+The project-relative `output/` directory (`projects/templates/template_code_project/output/`) holds all generated artifacts from the analysis pipeline. This document describes its structure, regeneration process, and version-control policy.
 
 ## Directory Purpose
 
@@ -47,18 +47,18 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 
 1. **Clean (optional)**: Delete the entire `output/` directory to start fresh.
    ```bash
-   rm -rf projects/template_code_project/output/
+   rm -rf projects/templates/template_code_project/output/
    ```
 
 2. **Run analysis pipeline** — generates figures, data, reports, dashboard, and registers figures.
    ```bash
-   uv run python projects/template_code_project/scripts/optimization_analysis.py
+   uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
    ```
    **Outputs**: `figures/`, `data/`, `reports/`, `citations/`, `manuscript/`
 
 3. **Hydrate manuscript variables** — substitutes `{{VARIABLE}}` tokens in all manuscript templates (strict: requires analysis CSV unless `--allow-draft`).
    ```bash
-   uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+   uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
    ```
    **Outputs**: updates `output/manuscript/*.md` (resolved copies) and writes `output/data/manuscript_variables.json`
 
@@ -76,7 +76,7 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 
 ## Version-Control Policy
 
-- **Project `output/` is gitignored** (`**/projects/*/output/` in `.gitignore`). Curated public deliverables are copied to the repo-level `output/template_code_project/` tree by `scripts/05_copy_outputs.py`; do not commit files from `projects/template_code_project/output/`.
+- **Project `output/` is gitignored** (`**/projects/*/output/` in `.gitignore`). Curated public deliverables are copied to the repo-level `output/template_code_project/` tree by `scripts/05_copy_outputs.py`; do not commit files from `projects/templates/template_code_project/output/`.
 
 - **Do not edit files in `output/` manually** — changes will be overwritten on the next pipeline run.
 

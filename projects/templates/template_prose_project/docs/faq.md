@@ -86,7 +86,7 @@ test `tests/test_pipeline_integration.py` additionally drives
 ### How do I run a single test?
 
 ```bash
-uv run pytest projects/template_prose_project/tests/test_pipeline.py::TestRunProsePipeline -v
+uv run pytest projects/templates/template_prose_project/tests/test_pipeline.py::TestRunProsePipeline -v
 ```
 
 Use the standard pytest selector syntax (`module::Class::method`).
@@ -108,7 +108,7 @@ See [`syntax_guide.md`](syntax_guide.md) Section 2.
 ### What `{{TOKEN}}`s are available?
 
 Eleven tokens are defined in
-`projects/template_prose_project/src/manuscript_variables.py::ManuscriptVariables`.
+`projects/templates/template_prose_project/src/manuscript_variables.py::ManuscriptVariables`.
 The full list with sources is documented in [`syntax_guide.md`](syntax_guide.md)
 Section 3.
 
@@ -141,7 +141,7 @@ appears in PDF" for the full diagnostic procedure.
 Working copy:
 
 ```
-projects/template_prose_project/output/pdf/template_prose_project_combined.pdf
+projects/templates/template_prose_project/output/pdf/template_prose_project_combined.pdf
 ```
 
 Promoted copy (used by CI for artifact upload):
@@ -175,7 +175,7 @@ passes a real Markdown string (or `tmp_path`-based `.md` file) through
 ```
 _pytest.pathlib.ImportPathMismatchError: ('tests.conftest', ...)
 ```
-when running `uv run pytest tests/ projects/template_prose_project/tests/` together.
+when running `uv run pytest tests/ projects/templates/template_prose_project/tests/` together.
 
 **Cause**: Both directories are named `tests/` and pytest's import-path
 discovery confuses them.
@@ -212,7 +212,7 @@ To add a new knob:
 ### I added a check and `output/checks.json` does not contain it
 
 Adding a check is a four-step process documented in
-`projects/template_prose_project/AGENTS.md` ("Extending"):
+`projects/templates/template_prose_project/AGENTS.md` ("Extending"):
 
 1. Add the field to `src/config.py::ProseAnalysisConfig`.
 2. Add a `_check_<name>` function in `src/pipeline/checks.py`.

@@ -7,9 +7,9 @@ Zenodo [REST Deposit API](https://developers.zenodo.org/) client and publish wor
 | File | Role |
 | --- | --- |
 | `config.py` | `ZenodoConfig` — sandbox/production/base_url |
-| `models.py` | `DepositionResult` — deposition id + bucket URL; `PublishResult` — DOI + deposition id |
+| `models.py` | `DepositionResult` — deposition id + bucket URL + reserved/concept DOI fields; `PublishResult` — DOI + deposition id |
 | `client.py` | `ZenodoClient` — create, upload, publish, resolve DOI, new version |
-| `publish.py` | `publish_to_zenodo()`, `publish_new_version_to_zenodo()` |
+| `publish.py` | `publish_to_zenodo()`, `publish_new_version_to_zenodo()`, `reserve_zenodo_deposition()`, `publish_reserved_deposition_to_zenodo()`, `patch_deposition_description()` |
 
 ## Public API
 
@@ -21,8 +21,23 @@ from infrastructure.publishing.zenodo import (
     PublishResult,
     publish_to_zenodo,
     publish_new_version_to_zenodo,
+    reserve_zenodo_deposition,
+    publish_reserved_deposition_to_zenodo,
+    patch_deposition_description,
 )
 ```
+
+Reserve-first orchestration (write concept/version DOI to config, re-render, upload) lives in
+[`release_workflow_zenodo.py`](../release_workflow_zenodo.py); see
+[`docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md).
+
+### `DepositionResult.from_zenodo_body`
+
+```python
+DepositionResult.from_zenodo_body(body: dict[str, Any]) -> DepositionResult
+```
+
+Parses Zenodo deposition JSON (`metadata.prereserve_doi`, `conceptrecid`, `conceptdoi`) into a typed result. Used by `ZenodoClient.create_deposition` and `create_new_version`.
 
 ### `ZenodoClient`
 
@@ -66,6 +81,36 @@ publish_new_version_to_zenodo(
 ```
 
 Clears inherited files on the new-version draft before upload so published records do not retain superseded PDF names.
+
+### `reserve_zenodo_deposition`
+
+```python
+reserve_zenodo_deposition(
+    metadata: PublicationMetadata,
+    access_token: str,
+    sandbox: bool = True,
+    *,
+    base_url: str | None = None,
+) -> DepositionResult
+```
+
+Creates a draft with `prereserve_doi=True` and returns reserved version/concept DOI fields.
+
+### `publish_reserved_deposition_to_zenodo`
+
+```python
+publish_reserved_deposition_to_zenodo(
+    metadata: PublicationMetadata,
+    file_paths: list[Path],
+    access_token: str,
+    deposition: DepositionResult,
+    sandbox: bool = True,
+    *,
+    base_url: str | None = None,
+) -> PublishResult
+```
+
+Uploads to an existing reserved draft and publishes. Used by [`release_workflow_zenodo.py`](../release_workflow_zenodo.py) after config write-back and re-render.
 
 ## Environment variables
 

@@ -2,7 +2,7 @@
 
 ```mermaid
 flowchart TB
-    S1[Step 1<br/>uv run pytest projects/template_prose_project/tests/]
+    S1[Step 1<br/>uv run pytest projects/templates/template_prose_project/tests/]
     S2[Step 2<br/>scripts/run_prose_pipeline.py]
     S3[Step 3<br/>scripts/y_generate_prose_figures.py<br/>scripts/z_generate_manuscript_variables.py]
     S4[Step 4<br/>./run.sh --project template_prose_project --pipeline]
@@ -17,7 +17,7 @@ flowchart TB
 ## 1. Smoke-test in 5 seconds
 
 ```bash
-uv run pytest projects/template_prose_project/tests/ -q
+uv run pytest projects/templates/template_prose_project/tests/ -q
 ```
 
 All tests should pass without an internet connection.
@@ -25,7 +25,7 @@ All tests should pass without an internet connection.
 ## 2. Run the orchestrator
 
 ```bash
-uv run python projects/template_prose_project/scripts/run_prose_pipeline.py
+uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
 ```
 
 Reads `manuscript/config.yaml`, runs prose analysis on
@@ -39,8 +39,8 @@ Reads `manuscript/config.yaml`, runs prose analysis on
 ## 3. Generate figures + variables
 
 ```bash
-uv run python projects/template_prose_project/scripts/y_generate_prose_figures.py
-uv run python projects/template_prose_project/scripts/z_generate_manuscript_variables.py
+uv run python projects/templates/template_prose_project/scripts/y_generate_prose_figures.py
+uv run python projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py
 ```
 
 Outputs:
@@ -75,7 +75,7 @@ prose:
 Then run with `--strict`:
 
 ```bash
-uv run python projects/template_prose_project/scripts/run_prose_pipeline.py --strict
+uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py --strict
 ```
 
 The script exits non-zero if any check fails — perfect for CI.

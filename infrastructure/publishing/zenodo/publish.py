@@ -12,7 +12,7 @@ from infrastructure.publishing.models import AuthorRecord, PublicationMetadata
 
 from .client import ZenodoClient
 from .config import ZenodoConfig
-from .models import PublishResult
+from .models import DepositionResult, PublishResult
 
 logger = get_logger(__name__)
 
@@ -32,7 +32,13 @@ def _related_identifiers(metadata: PublicationMetadata) -> list[dict[str, str]]:
     related: list[dict[str, str]] = []
     gh_url = metadata.github_release_url
     if gh_url:
-        related.append({"identifier": gh_url, "relation": "isSupplementTo", "resource_type": "software"})
+        related.append(
+            {
+                "identifier": gh_url,
+                "relation": "isSupplementTo",
+                "resource_type": "software",
+            }
+        )
     if metadata.repository_url and metadata.repository_url != gh_url:
         related.append(
             {
@@ -44,7 +50,11 @@ def _related_identifiers(metadata: PublicationMetadata) -> list[dict[str, str]]:
     return related
 
 
-def deposition_metadata_dict(metadata: PublicationMetadata) -> dict[str, Any]:
+def deposition_metadata_dict(
+    metadata: PublicationMetadata,
+    *,
+    prereserve_doi: bool = False,
+) -> dict[str, Any]:
     """Map ``PublicationMetadata`` to Zenodo deposit API metadata fields."""
     creators_source = metadata.author_records or [AuthorRecord(name=name) for name in metadata.authors]
     creators = [_creator_dict(author) for author in creators_source]
@@ -69,6 +79,8 @@ def deposition_metadata_dict(metadata: PublicationMetadata) -> dict[str, Any]:
     related = _related_identifiers(metadata)
     if related:
         payload["related_identifiers"] = related
+    if prereserve_doi:
+        payload["prereserve_doi"] = True
 
     return payload
 
@@ -120,7 +132,55 @@ def publish_to_zenodo(
             logger.warning(f"Skipping non-existent file for Zenodo upload: {path}")
 
     doi = client.publish(deposition.deposition_id)
-    return PublishResult(doi=doi, deposition_id=deposition.deposition_id)
+    return PublishResult(
+        doi=doi,
+        deposition_id=deposition.deposition_id,
+        concept_doi=deposition.concept_doi,
+    )
+
+
+def reserve_zenodo_deposition(
+    metadata: PublicationMetadata,
+    access_token: str,
+    sandbox: bool = True,
+    *,
+    base_url: str | None = None,
+) -> DepositionResult:
+    """Create a Zenodo draft and reserve its version DOI before upload."""
+    config = ZenodoConfig(access_token=access_token, sandbox=sandbox, base_url=base_url)
+    client = ZenodoClient(config)
+    return client.create_deposition(deposition_metadata_dict(metadata, prereserve_doi=True))
+
+
+def publish_reserved_deposition_to_zenodo(
+    metadata: PublicationMetadata,
+    file_paths: list[Path],
+    access_token: str,
+    deposition: DepositionResult,
+    sandbox: bool = True,
+    *,
+    base_url: str | None = None,
+) -> PublishResult:
+    """Upload files to a pre-reserved Zenodo draft and publish it."""
+    config = ZenodoConfig(access_token=access_token, sandbox=sandbox, base_url=base_url)
+    client = ZenodoClient(config)
+    client.update_deposition_metadata(
+        deposition.deposition_id,
+        deposition_metadata_dict(metadata),
+    )
+
+    for path in file_paths:
+        if path.exists():
+            client.upload_file(deposition.bucket_url, path)
+        else:
+            logger.warning(f"Skipping non-existent file for Zenodo upload: {path}")
+
+    doi = client.publish(deposition.deposition_id)
+    return PublishResult(
+        doi=doi,
+        deposition_id=deposition.deposition_id,
+        concept_doi=deposition.concept_doi,
+    )
 
 
 def publish_new_version_to_zenodo(
@@ -155,4 +215,8 @@ def publish_new_version_to_zenodo(
             logger.warning(f"Skipping non-existent file for Zenodo upload: {path}")
 
     doi = client.publish(deposition.deposition_id)
-    return PublishResult(doi=doi, deposition_id=deposition.deposition_id)
+    return PublishResult(
+        doi=doi,
+        deposition_id=deposition.deposition_id,
+        concept_doi=deposition.concept_doi,
+    )

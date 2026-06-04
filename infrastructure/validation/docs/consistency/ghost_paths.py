@@ -7,6 +7,7 @@ from collections.abc import Iterable
 from pathlib import Path
 
 from infrastructure.project.discovery import discover_projects
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs.consistency._shared import (
     Inconsistency,
     blank_fences,
@@ -59,11 +60,7 @@ TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset({"active", "working", "publish
 
 def check_no_ghost_projects(
     repo_root: Path,
-    canonical: tuple[str, ...] = (
-        "template_code_project",
-        "template_prose_project",
-        "template_search_project",
-    ),
+    canonical: tuple[str, ...] = PUBLIC_PROJECT_NAMES,
     extra_active: Iterable[str] | None = None,
 ) -> list[Inconsistency]:
     """Flag unconditional ``projects/<name>/...`` references for non-active projects.
@@ -73,10 +70,10 @@ def check_no_ghost_projects(
     non-rendered typed subfolders (``working``/``published``/``archive``/
     ``other``) hold rotating private work, so any name beneath them is allowed.
     """
-    active_names = {p.name for p in discover_projects(repo_root)}
+    active_qualified_names = {p.qualified_name for p in discover_projects(repo_root)}
     if extra_active:
-        active_names.update(extra_active)
-    allow = active_names | set(canonical)
+        active_qualified_names.update(extra_active)
+    allow = active_qualified_names | set(canonical)
 
     # Optional typed-subfolder prefix, then the project-name segment.
     pattern = re.compile(
@@ -112,13 +109,21 @@ def check_no_ghost_projects(
                     continue
                 if is_placeholder_name(name):
                     continue
+                if prefix is None:
+                    project_ref = name
+                    displayed = f"projects/{name}/"
+                else:
+                    project_ref = f"{prefix}/{name}"
+                    displayed = f"projects/{project_ref}/"
+                if project_ref in allow:
+                    continue
                 issues.append(
                     Inconsistency(
                         file=md,
                         line=line_no,
                         category="ghost-project",
                         detail=(
-                            f"hard-codes 'projects/{name}/' but '{name}' is not in "
+                            f"hard-codes '{displayed}' but '{project_ref}' is not in "
                             "docs/_generated/active_projects.md and is not a "
                             "canonical exemplar"
                         ),

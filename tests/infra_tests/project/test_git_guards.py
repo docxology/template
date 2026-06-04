@@ -42,14 +42,14 @@ def test_offending_tracked_projects_allows_exemplars(tmp_path: Path) -> None:
 
 def test_tracked_generated_artifacts_detects_output_tree(tmp_path: Path) -> None:
     _init_git_repo(tmp_path)
-    artifact = tmp_path / "projects" / "template_code_project" / "output" / "data" / "x.csv"
+    artifact = tmp_path / "projects" / "templates" / "template_code_project" / "output" / "data" / "x.csv"
     artifact.parent.mkdir(parents=True)
     artifact.write_text("a,b\n")
     subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
     subprocess.run(["git", "commit", "-m", "artifact"], cwd=tmp_path, check=True)
 
     tracked = tracked_generated_artifacts(tmp_path)
-    assert "projects/template_code_project/output/data/x.csv" in tracked
+    assert "projects/templates/template_code_project/output/data/x.csv" in tracked
 
 
 def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> None:
@@ -57,7 +57,7 @@ def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> 
     artifact = tmp_path / ".codegraph" / "codegraph.db"
     artifact.parent.mkdir(parents=True)
     artifact.write_text("local index\n")
-    project_artifact = tmp_path / "projects" / "template_code_project" / ".codegraph" / "codegraph.db"
+    project_artifact = tmp_path / "projects" / "templates" / "template_code_project" / ".codegraph" / "codegraph.db"
     project_artifact.parent.mkdir(parents=True)
     project_artifact.write_text("project index\n")
     subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
@@ -65,4 +65,4 @@ def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> 
 
     tracked = tracked_generated_artifacts(tmp_path)
     assert ".codegraph/codegraph.db" in tracked
-    assert "projects/template_code_project/.codegraph/codegraph.db" in tracked
+    assert "projects/templates/template_code_project/.codegraph/codegraph.db" in tracked

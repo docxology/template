@@ -168,6 +168,7 @@ ever git-tracked/pushed:
 - [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) — deterministic AutoResearch template
 - [`projects/templates/template_code_project/`](projects/templates/template_code_project/) — code-centric template
 - [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
+- [`projects/templates/template_sia/`](projects/templates/template_sia/) — SIA self-improvement harness template (fixture replay by default)
 - [`projects/templates/template_template/`](projects/templates/template_template/) — autopoietic meta-template (introspects infrastructure and public exemplar roster)
 
 `.gitignore` ignores `projects/*` and negates **only** `projects/templates/`
@@ -270,7 +271,7 @@ avg = calculate_average(data)  # Use tested method
 
 All project lifecycle state is expressed as typed subfolders under `projects/`:
 
-- **`projects/templates/`** — the five public exemplars, git-tracked in this repo (discovered + rendered).
+- **`projects/templates/`** — the six public exemplars, git-tracked in this repo (discovered + rendered).
 - **`projects/active/`** — the hot-seat render set: symlinks to the private repo's `active/` projects (discovered + rendered alongside the exemplars).
 - **`projects/working/`** — non-rendered symlinks to the private repo's `working/` projects (backburner / in-progress).
 - **`projects/published/`** — non-rendered symlinks to the private repo's `published/` projects.
@@ -427,7 +428,7 @@ llm:
 
 ```bash
 # Set Python path for IDE/editor integration
-export PYTHONPATH=".:infrastructure:projects/template_code_project/src"
+export PYTHONPATH=".:infrastructure:projects/templates/template_code_project/src"
 ```
 
 ## Development Workflow
@@ -449,7 +450,7 @@ touch projects/my_project/src/__init__.py
 touch projects/my_project/tests/__init__.py
 
 # Copy config template
-cp projects/template_code_project/manuscript/config.yaml projects/my_project/manuscript/
+cp projects/templates/template_code_project/manuscript/config.yaml projects/my_project/manuscript/
 
 # Create pyproject.toml (see existing projects for template)
 
@@ -625,3 +626,23 @@ uv run python scripts/03_render_pdf.py --project {name}
 - Use `uv` for dependency management (recommended)
 - Pipeline can be resumed from checkpoints with `--resume`
 - Tests timeout after 10 seconds by default (configurable in pyproject.toml)
+
+
+<!-- BEGIN:STAGE_TABLE -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+
+| Stage | Script | Tags | Failure mode |
+| ----- | ------ | ---- | ------------ |
+| **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
+| **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
+| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
+| **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
+| **6** Output Validation | `04_validate_output.py` | `core` | warning + report |
+| **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+| **10** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **11** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+<!-- END:STAGE_TABLE -->

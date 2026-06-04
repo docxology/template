@@ -20,8 +20,8 @@ Hyperlinks must be informative. Never use placeholder text.
 For internal cross-references, prefer relative paths to files inside the
 repository:
 
-- **BAD**: See `https://github.com/docxology/template/blob/main/projects/template_prose_project/src/pipeline/`
-- **GOOD**: See [`projects/template_prose_project/src/pipeline/`](../src/pipeline/).
+- **BAD**: See `https://github.com/docxology/template/blob/main/projects/templates/template_prose_project/src/pipeline/`
+- **GOOD**: See [`projects/templates/template_prose_project/src/pipeline/`](../src/pipeline/).
 
 ---
 
@@ -101,10 +101,10 @@ All tokens defined in `src/manuscript_variables.py::ManuscriptVariables`:
 ### Adding a New Token
 
 1. Add a field to the `ManuscriptVariables` dataclass in
-   `projects/template_prose_project/src/manuscript_variables.py`.
+   `projects/templates/template_prose_project/src/manuscript_variables.py`.
 2. Populate the new field inside `compute_variables(report)` from the
    `ManuscriptReport` it receives.
-3. Add a test in `projects/template_prose_project/tests/test_manuscript_variables.py`
+3. Add a test in `projects/templates/template_prose_project/tests/test_manuscript_variables.py`
    asserting the new field's value on a known fixture.
 4. Reference the token in the appropriate `manuscript/*.md` file as
    `{{NEW_TOKEN}}`.
@@ -118,7 +118,7 @@ If a token remains unresolved, the literal `{{TOKEN_NAME}}` will appear in
 the rendered PDF. Detect before rendering:
 
 ```bash
-grep -r "{{" projects/template_prose_project/output/manuscript/ 2>/dev/null \
+grep -r "{{" projects/templates/template_prose_project/output/manuscript/ 2>/dev/null \
   | grep -v ".json" \
   && echo "UNRESOLVED TOKENS FOUND" || echo "All tokens resolved"
 ```
@@ -141,12 +141,12 @@ For shell commands:
 
 ````markdown
 ```bash
-uv run pytest projects/template_prose_project/tests/ -v
+uv run pytest projects/templates/template_prose_project/tests/ -v
 ```
 ````
 
 For inline code referencing file paths, use single backticks:
-`projects/template_prose_project/src/pipeline/`.
+`projects/templates/template_prose_project/src/pipeline/`.
 
 ---
 

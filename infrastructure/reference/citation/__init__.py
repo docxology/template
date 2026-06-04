@@ -6,7 +6,7 @@ Public API:
   field order for byte-stable round trips.
 * :func:`render_entry`, :func:`render_database`, :func:`write_bibfile` —
   serialise to the same format as
-  ``projects/template_code_project/manuscript/references.bib``.
+  ``projects/templates/template_code_project/manuscript/references.bib``.
 * :func:`parse_bibtex`, :func:`parse_bibfile`, :class:`BibParseError` —
   forgiving parser sufficient for round-tripping our own output and the
   exemplar file.

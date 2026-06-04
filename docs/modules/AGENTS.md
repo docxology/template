@@ -12,6 +12,8 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 | `scientific-simulation-guide.md` | Scientific simulation and analysis system |
 | `pdf-validation.md` | PDF validation system documentation |
 | `literature-search-and-references.md` | Literature search and reference management module |
+| `guides/autoresearch-module.md` | Deterministic readiness planning module |
+| `guides/benchmark-module.md` | Public exemplar benchmark manifests module |
 | `guides/config-module.md` | Config schemas / templates module |
 | `guides/core-module.md` | Core utilities module |
 | `guides/docker-module.md` | Docker / compose module |
@@ -31,6 +33,7 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 | `guides/orchestration-module.md` | Pipeline CLI and menu delegation |
 | `guides/prose-module.md` | Prose-manuscript analysis module |
 | `guides/search-module.md` | Literature discovery module |
+| `guides/sia-module.md` | SIA self-improvement harness module |
 | `guides/reference-module.md` | Citation and reference management module |
 
 Package-level `infrastructure/*/AGENTS.md` files remain the in-tree API reference when a guide defers to hub docs.

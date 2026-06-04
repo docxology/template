@@ -20,8 +20,12 @@
 
 # Canonical template exemplars (the only published projects) and the
 # top-level instruction-hierarchy docs.
-/projects/template_code_project/  @docxology
-/projects/template_prose_project/ @docxology
+/projects/templates/template_active_inference/  @docxology
+/projects/templates/template_autoresearch_project/ @docxology
+/projects/templates/template_code_project/  @docxology
+/projects/templates/template_prose_project/ @docxology
+/projects/templates/template_sia/ @docxology
+/projects/templates/template_template/ @docxology
 /CLAUDE.md              @docxology
 /AGENTS.md              @docxology
 /README.md              @docxology

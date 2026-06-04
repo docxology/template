@@ -13,7 +13,7 @@
 uv sync
 
 # 1. Copy the exemplar to your new project name
-cp -r projects/template_prose_project projects/my_review_project
+cp -r projects/templates/template_prose_project projects/my_review_project
 rm -rf projects/my_review_project/src/*.egg-info
 rm -rf projects/my_review_project/output
 

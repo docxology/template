@@ -1,0 +1,53 @@
+# Dependabot Automerge (GH-AUTOMERGE-1)
+#
+# Enables GitHub native auto-merge for LOW-RISK Dependabot bumps so dependency
+# toil does not distract from template work, while preserving every safety gate:
+#
+#   * The job only runs for the Dependabot actor (`github.actor` guard).
+#   * Only `semver-minor` and `semver-patch` updates auto-merge. Major bumps are
+#     left for a human (they can carry breaking changes).
+#   * `gh pr merge --auto` enables GitHub's native auto-merge, which merges ONLY
+#     after every required status check passes. This is gated by branch
+#     protection on `main` — if required checks are not configured, GitHub will
+#     not merge on red. Auto-merge must also be enabled in repo settings
+#     (Settings → General → "Allow auto-merge").
+#
+# `pull_request_target` is required so the workflow has a writable token on
+# Dependabot PRs (the `pull_request` event gives Dependabot a read-only token
+# with no secrets). This workflow never checks out or executes PR HEAD code — it
+# only reads update metadata and calls the GitHub API — so the elevated trigger
+# does not expose secrets to untrusted code.
+name: Dependabot Automerge
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: dependabot-automerge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  automerge:
+    name: Auto-merge safe Dependabot bumps
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Only ever act on Dependabot's own PRs.
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Fetch Dependabot update metadata
+        id: meta
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+
+      - name: Enable auto-merge for minor and patch updates
+        if: >-
+          steps.meta.outputs.update-type == 'version-update:semver-minor' ||
+          steps.meta.outputs.update-type == 'version-update:semver-patch'
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr merge --auto --squash "$PR_URL"

@@ -7,7 +7,9 @@ from .publish import (
     deposition_metadata_dict,
     patch_deposition_description,
     publish_new_version_to_zenodo,
+    publish_reserved_deposition_to_zenodo,
     publish_to_zenodo,
+    reserve_zenodo_deposition,
 )
 
 __all__ = [
@@ -19,5 +21,7 @@ __all__ = [
     "deposition_metadata_dict",
     "patch_deposition_description",
     "publish_new_version_to_zenodo",
+    "publish_reserved_deposition_to_zenodo",
     "publish_to_zenodo",
+    "reserve_zenodo_deposition",
 ]

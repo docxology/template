@@ -110,7 +110,7 @@ class NewspaperConfig:
         try:
             color: object = HexColor(self.spot_hex)
             return color
-        except Exception:
+        except Exception:  # noqa: BLE001 - final handler: broad by design so any parse/IO/asset failure falls back gracefully; narrowing would create silent gaps
             return None
 
 

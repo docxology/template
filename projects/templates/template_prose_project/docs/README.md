@@ -75,7 +75,7 @@ they are what the repo's gates enforce:
 
 ```bash
 NEW=my_review_project
-cp -r projects/template_prose_project projects/$NEW
+cp -r projects/templates/template_prose_project projects/$NEW
 cd projects/$NEW
 # 1. Edit manuscript/config.yaml (title, thresholds, bibliography policy) — the only knob
 # 2. Replace manuscript/*.md with your prose; keep H1-per-section + {{TOKEN}} conventions

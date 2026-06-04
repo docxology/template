@@ -10,7 +10,7 @@ import shutil
 from infrastructure.autoresearch import BudgetPolicy, ReviewGate
 
 from src.config import AutoResearchLoopConfig, HumanReviewState
-from src.ml_task import run_bounded_ml_task
+from src.ml.task import run_bounded_ml_task
 from src.models import AutoResearchLoopResult, LoopStageResult
 from src.writers import (
     write_loop_payloads,
@@ -141,7 +141,7 @@ def test_refresh_loop_payloads_matches_legacy_aliases(tmp_path: Path) -> None:
 
 def test_build_figure_render_context_reuses_diagnostics(project_root: Path) -> None:
     from src.diagnostics import diagnostic_bundle
-    from src.ml_task import run_bounded_ml_task
+    from src.ml.task import run_bounded_ml_task
     from src.writers import build_figure_render_context
 
     ml_result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=4))

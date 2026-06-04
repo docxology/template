@@ -140,21 +140,18 @@ def run_analysis_pipeline() -> None:
         logger.error("File not found: %s", e, exc_info=True)
         raise
 
-    except Exception as e:  # noqa: BLE001
-        if INFRASTRUCTURE_AVAILABLE:
-            if isinstance(e, ScriptExecutionError):
-                logger.error("Script execution failed: %s", e, exc_info=True)
-                if hasattr(e, "recovery_commands") and e.recovery_commands:
-                    for cmd in e.recovery_commands:
-                        logger.error("  %s", cmd)
-                raise
-            if isinstance(e, TemplateError):
-                logger.error("Infrastructure error: %s", e, exc_info=True)
-                if hasattr(e, "suggestions") and e.suggestions:
-                    for suggestion in e.suggestions:
-                        logger.error("  • %s", suggestion)
-                raise
-        logger.error("Unexpected error during optimization analysis: %s", e, exc_info=True)
+    except ScriptExecutionError as e:
+        logger.error("Script execution failed: %s", e, exc_info=True)
+        if hasattr(e, "recovery_commands") and e.recovery_commands:
+            for cmd in e.recovery_commands:
+                logger.error("  %s", cmd)
+        raise
+
+    except TemplateError as e:
+        logger.error("Infrastructure error: %s", e, exc_info=True)
+        if hasattr(e, "suggestions") and e.suggestions:
+            for suggestion in e.suggestions:
+                logger.error("  • %s", suggestion)
         raise
 
 

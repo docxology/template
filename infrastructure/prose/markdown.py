@@ -16,7 +16,6 @@ _IMAGE_RE = re.compile(r"!\[([^\]]*)\]\([^\)]+\)")
 _MARKDOWN_HEADER_RE = re.compile(r"^#+\s*", re.MULTILINE)
 _PANDOC_ATTR_RE = re.compile(r"\s*\{#[^}]+\}")
 _PANDOC_CARET_ATTR_RE = re.compile(r"\s*\{\^[^}]+\}")
-_EMPHASIS_RE = re.compile(r"\*\*([^*]+)\*\*|\*([^*]+)\*|__([^_]+)__|_([^_]+)_")
 _CITATION_RE = re.compile(r"\[@([^\]]+)\]")
 _HRULE_RE = re.compile(r"^\s*---+\s*$", re.MULTILINE)
 _PANDOC_RAW_LATEX_ATTR_RE = re.compile(r"\{=latex\}")
@@ -85,18 +84,6 @@ def strip_emphasis_asterisk(text: str) -> str:
         return match.group(0)
 
     return re.sub(r"\*\*([^*]+)\*\*|\*([^*]+)\*", _replace, text)
-
-
-def strip_emphasis(text: str) -> str:
-    """Remove bold/italic markers, keeping inner text."""
-
-    def _replace(match: re.Match[str]) -> str:
-        for group in match.groups():
-            if group is not None:
-                return group
-        return match.group(0)
-
-    return _EMPHASIS_RE.sub(_replace, text)
 
 
 def strip_citations(text: str) -> str:

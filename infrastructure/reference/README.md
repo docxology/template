@@ -2,7 +2,7 @@
 
 Bibliographic-reference workflows: read, write, and convert BibTeX records
 that match the syntax of
-[`projects/template_code_project/manuscript/references.bib`](../../projects/template_code_project/manuscript/references.bib)
+[`projects/templates/template_code_project/manuscript/references.bib`](../../projects/templates/template_code_project/manuscript/references.bib)
 (consumed by Pandoc with `--natbib` during PDF render — see
 [`infrastructure/rendering/_pdf_combined_renderer.py`](../rendering/_pdf_combined_renderer.py)
 line 225).
@@ -23,7 +23,7 @@ from infrastructure.reference.citation import (
 from infrastructure.search.literature import LiteratureClient, SearchQuery, ArxivBackend
 
 # Read an existing bibliography.
-db = parse_bibfile("projects/template_code_project/manuscript/references.bib")
+db = parse_bibfile("projects/templates/template_code_project/manuscript/references.bib")
 print(f"{len(db)} entries; first key = {db.keys()[0]}")
 
 # Search for new references and append them.
@@ -75,7 +75,7 @@ uv run pytest tests/infra_tests/reference/ -v
 ```
 
 Tests follow the project's no-mocks policy: real `.bib` round-trips against
-the actual `projects/template_code_project/manuscript/references.bib`, real
+the actual `projects/templates/template_code_project/manuscript/references.bib`, real
 subprocess invocations of the CLI, real temp-file I/O.
 
 See [SKILL.md](SKILL.md) for the full agent-oriented API reference and

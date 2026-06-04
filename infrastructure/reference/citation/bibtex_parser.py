@@ -2,7 +2,7 @@
 
 We deliberately avoid the heavyweight ``bibtexparser`` dependency: the only
 dialects we need to read are (a) what our own writer emits and (b) the
-exemplar ``projects/template_code_project/manuscript/references.bib`` style. Both are
+exemplar ``projects/templates/template_code_project/manuscript/references.bib`` style. Both are
 covered by a simple state machine that:
 
 * Skips ``@comment{...}`` blocks (collected as the database preamble).
@@ -20,16 +20,15 @@ from collections import OrderedDict
 from pathlib import Path
 
 from infrastructure.reference.citation.escape import unescape_latex
-from infrastructure.reference.citation.models import BibDatabase, BibEntry
+from infrastructure.reference.citation.models import (
+    VERBATIM_FIELDS as _VERBATIM_FIELDS,
+    BibDatabase,
+    BibEntry,
+)
 
 
 class BibParseError(ValueError):
     """Raised when the parser encounters a malformed BibTeX construct."""
-
-
-_VERBATIM_FIELDS: frozenset[str] = frozenset(
-    {"year", "volume", "number", "month", "edition", "isbn", "issn", "doi", "url"}
-)
 
 
 class _Reader:
@@ -227,7 +226,7 @@ def parse_bibtex(text: str) -> BibDatabase:
 
     Comment blocks are concatenated into the database's preamble (joined with
     blank lines) so that round-tripping preserves provenance notes such as
-    the one at the top of ``projects/template_code_project/manuscript/references.bib``.
+    the one at the top of ``projects/templates/template_code_project/manuscript/references.bib``.
     """
     reader = _Reader(text)
     db = BibDatabase()

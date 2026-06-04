@@ -40,10 +40,10 @@ These links point to files that do not exist in the current repository tree and 
 
 | # | File | Line | Broken Link | Correct Target / Recommendation |
 |---|------|------|-------------|--------------------------------|
-| 1 | `docs/README.md` | ~137 | `../projects/fep_lean/docs/` | Change to `../projects/template_code_project/docs/` (fep_lean archived, template_code_project is active exemplar) |
-| 2 | `docs/best-practices/multi-project-management.md` | 36 | `../../projects/fep_lean/docs/` | Change to `../../projects/template_code_project/docs/` |
+| 1 | `docs/README.md` | ~137 | `../projects/fep_lean/docs/` | Change to `../projects/templates/template_code_project/docs/` (fep_lean archived, template_code_project is active exemplar) |
+| 2 | `docs/best-practices/multi-project-management.md` | 36 | `../../projects/fep_lean/docs/` | Change to `../../projects/templates/template_code_project/docs/` |
 | 3 | `docs/documentation-index.md` | 192 | `../projects/fep_lean/` | Rephrase: refer to active projects via `_generated/active_projects.md` or use `template_code_project` |
-| 4 | `docs/documentation-index.md` | 239 | `../projects/fep_lean/docs/` | Change to `../projects/template_code_project/docs/` |
+| 4 | `docs/documentation-index.md` | 239 | `../projects/fep_lean/docs/` | Change to `../projects/templates/template_code_project/docs/` |
 | 5 | `docs/operational/config/configuration.md` | 143 | `../../../projects/fep_lean/src/gauss/cli.py` | Update to archived path `../../../projects_archive/fep_lean/src/gauss/cli.py` OR drop hyperlink while preserving conditional info |
 | 6 | `docs/rules/documentation_standards.md` | 142 | `../infrastructure/AGENTS.md` | Should be `../../infrastructure/AGENTS.md` (from `docs/rules/` to `infrastructure/`) |
 | 7 | `docs/rules/documentation_standards.md` | 410 | `configuration.md` | File does not exist; should be `../operational/config/configuration.md` |
@@ -66,7 +66,7 @@ These links point to files that do not exist in the current repository tree and 
 - **File:** `docs/reference/quick-start-cheatsheet.md`
 - **Lines:** 24, 104, 113
 - **Issue:** Uses `--cov=projects.template_code_project.src` (dot notation)
-- **Correct:** `--cov=projects/template_code_project/src` (filesystem path)
+- **Correct:** `--cov=projects/templates/template_code_project/src` (filesystem path)
 - **Fix:** Replace all three occurrences with path-based coverage argument.
 
 ### 2.3 Invalid Import Example in Cheatsheet
@@ -83,10 +83,10 @@ The `fep_lean` project is archived under `projects_archive/` and is no longer an
 
 | File | Line(s) | Current Text | Recommended Change |
 |------|---------|--------------|--------------------|
-| `docs/README.md` | 137 | Example project with local docs: `../projects/fep_lean/docs/` | Change to `../projects/template_code_project/docs/` |
-| `docs/best-practices/multi-project-management.md` | 36 | Example per-project docs hub: `projects/fep_lean/docs/` | Change to `projects/template_code_project/docs/` |
+| `docs/README.md` | 137 | Example project with local docs: `../projects/fep_lean/docs/` | Change to `../projects/templates/template_code_project/docs/` |
+| `docs/best-practices/multi-project-management.md` | 36 | Example per-project docs hub: `projects/fep_lean/docs/` | Change to `projects/templates/template_code_project/docs/` |
 | `docs/documentation-index.md` | 192 (heading) | "fep_lean / CI paths" section | Rephrase to refer to generic active projects or `template_code_project` |
-| `docs/documentation-index.md` | 239 | Example: `projects/fep_lean/docs/` | Change to `projects/template_code_project/docs/` |
+| `docs/documentation-index.md` | 239 | Example: `projects/fep_lean/docs/` | Change to `projects/templates/template_code_project/docs/` |
 | `docs/operational/config/configuration.md` | 143 | Link to `projects/fep_lean/src/gauss/cli.py` | Update to archived path `../../../projects_archive/fep_lean/src/gauss/cli.py` OR remove hyperlink (keep conditional text) |
 
 **Note:** `docs/_generated/canonical_facts.md` contains historical fep_lean measurements — acceptable as archival snapshot; should not be hand-edited.

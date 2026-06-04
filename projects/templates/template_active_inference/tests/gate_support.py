@@ -92,8 +92,18 @@ def _hydrate_fixed_point(project_root: Path, out: Path) -> None:
 
 
 def refresh_generated_gate_artifacts(project_root: Path) -> None:
-    """Refresh generated manuscript/semantic artifacts after mutation tests."""
+    """Refresh generated manuscript/semantic artifacts after mutation tests.
+
+    Negative-control tests restore the single file they mutated byte-for-byte in
+    their own ``finally`` *before* calling this. When that restore already leaves
+    the gate artifacts valid (the common case), skip the expensive regeneration and
+    keep the session bootstrap cache warm so the next test reuses it instead of
+    triggering a full ~80s rebuild. Only regenerate when the artifacts are actually
+    stale (e.g. a test that mutated a generated ``output/`` artifact in place).
+    """
     root = project_root.resolve()
+    if root in _BOOTSTRAPPED_ROOTS and _gate_artifacts_present(root):
+        return
     out = root / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     write_sheaf_track_artifacts(root)

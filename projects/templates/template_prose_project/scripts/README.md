@@ -6,19 +6,19 @@ Three thin orchestrators plus optional preflight (alphabetical execution order u
 
 ```bash
 # Optional manuscript preflight (AESTHETIC — not pipeline-required)
-uv run python projects/template_prose_project/scripts/00_preflight.py
+uv run python projects/templates/template_prose_project/scripts/00_preflight.py
 
 # Full review
-uv run python projects/template_prose_project/scripts/run_prose_pipeline.py
+uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
 
 # Strict mode (exit non-zero on check failure)
-uv run python projects/template_prose_project/scripts/run_prose_pipeline.py --strict
+uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py --strict
 
 # Generate figures (requires manuscript_report.json from previous step)
-uv run python projects/template_prose_project/scripts/y_generate_prose_figures.py
+uv run python projects/templates/template_prose_project/scripts/y_generate_prose_figures.py
 
 # Hydrate manuscript variables (requires manuscript_report.json)
-uv run python projects/template_prose_project/scripts/z_generate_manuscript_variables.py
+uv run python projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py
 ```
 
 ## Execution order

@@ -10,7 +10,7 @@ from .config import (
 )
 from .loop import run_autoresearch_loop
 from .manuscript_variables import compute_variables, save_variables
-from .ml_task import MLTaskResult, load_mnist_task_config, run_bounded_ml_task
+from .ml.task import MLTaskResult, load_mnist_task_config, run_bounded_ml_task
 from .models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
 
 __all__ = [

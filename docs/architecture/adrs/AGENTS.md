@@ -11,6 +11,7 @@ Technical guide for `docs/architecture/adrs/` — lightweight, numbered decision
 | `000-two-layer-architecture.md` | Two-layer architecture (Infrastructure vs Project) |
 | `001-thin-orchestrator-pattern.md` | Thin orchestrator pattern for pipeline scripts |
 | `002-declarative-dag-pipeline.md` | Declarative DAG-based pipeline execution |
+| `003-multi-format-rendering-and-toggles.md` | Multi-format rendering and per-format toggles |
 | `004-zero-mock-testing-policy.md` | Zero-mock testing policy |
 
 ## Key Conventions

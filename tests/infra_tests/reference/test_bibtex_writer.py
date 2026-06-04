@@ -1,7 +1,7 @@
 """Tests for infrastructure.reference.citation.bibtex_writer.
 
 These tests pin the output format down to the byte level so that the writer
-remains compatible with ``projects/template_code_project/manuscript/references.bib``.
+remains compatible with ``projects/templates/template_code_project/manuscript/references.bib``.
 """
 
 from __future__ import annotations

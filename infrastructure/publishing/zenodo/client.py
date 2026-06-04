@@ -51,9 +51,7 @@ class ZenodoClient:
             )
             response.raise_for_status()
             body = response.json()
-            deposition_id = str(body["id"])
-            bucket_url = str(body["links"]["bucket"]).rstrip("/")
-            return DepositionResult(deposition_id=deposition_id, bucket_url=bucket_url)
+            return DepositionResult.from_zenodo_body(body)
         except requests.exceptions.RequestException as exc:
             raise PublishingError(f"Failed to create deposition: {exc}") from exc
 
@@ -186,9 +184,7 @@ class ZenodoClient:
             response = requests.post(url, headers=self.headers, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
             body = response.json()
-            new_id = str(body["id"])
-            bucket_url = str(body["links"]["bucket"]).rstrip("/")
-            return DepositionResult(deposition_id=new_id, bucket_url=bucket_url)
+            return DepositionResult.from_zenodo_body(body)
         except requests.exceptions.RequestException as exc:
             raise PublishingError(f"Failed to create new version: {exc}") from exc
 

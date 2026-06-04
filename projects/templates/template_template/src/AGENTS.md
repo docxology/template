@@ -1,4 +1,4 @@
-# projects/template_template/src/ — Template Source Wrapper
+# projects/templates/template_template/src/ — Template Source Wrapper
 
 ## Purpose
 

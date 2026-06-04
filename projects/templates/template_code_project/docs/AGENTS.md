@@ -2,7 +2,7 @@
 
 ## Overview
 
-Technical guide for `projects/template_code_project/docs/` — the operational rulebook for AI agents and developers working inside the `template_code_project` exemplar. Every document in this directory is a hard constraint, not a suggestion.
+Technical guide for `projects/templates/template_code_project/docs/` — the operational rulebook for AI agents and developers working inside the `template_code_project` exemplar. Every document in this directory is a hard constraint, not a suggestion.
 
 ## File Inventory
 
@@ -50,20 +50,20 @@ These three commands verify the most critical constraints. Run all three before 
 
 ```bash
 # Test suite passes + coverage ≥90%
-uv run pytest projects/template_code_project/tests/ \
-    --cov=projects/template_code_project/src \
+uv run pytest projects/templates/template_code_project/tests/ \
+    --cov=projects/templates/template_code_project/src \
     --cov-fail-under=90 -q
 
 # No mocks in tests/
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
-    projects/template_code_project/tests/ || echo "Clean"
+    projects/templates/template_code_project/tests/ || echo "Clean"
 
 # Mathematical primitives (optimizer.py, invariants.py) have no infrastructure imports
 # (orchestration modules analysis/ / dashboard.py / manuscript_variables.py are allowed
 # to import infrastructure behind try/except fallbacks — see src/AGENTS.md).
 grep -nE "^(from|import) infrastructure" \
-    projects/template_code_project/src/optimizer.py \
-    projects/template_code_project/src/invariants.py \
+    projects/templates/template_code_project/src/optimizer.py \
+    projects/templates/template_code_project/src/invariants.py \
     || echo "Clean — math primitives are infrastructure-free"
 ```
 

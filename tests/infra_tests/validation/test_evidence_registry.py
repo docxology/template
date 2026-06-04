@@ -339,3 +339,48 @@ def test_trusted_number_tiers_accepts_external_source() -> None:
     text = "## Results\n\nThe held-out accuracy was 0.873 on the test set.\n"
     report = validate_text_against_registry(text, registry, trusted_number_tiers=frozenset({"data_source"}))
     assert not any(issue.value == "0.873" for issue in report.errors)
+
+
+def test_lookup_fresh_only_filters_stale_facts() -> None:
+    """fresh_only drops stale/inactive facts (AI-SPINE-V2 fail-closed primitive)."""
+    registry = VerifiedEvidenceRegistry()
+    registry.add(
+        EvidenceFact(kind="number", value="0.5", source="ledger", source_tier="claim_ledger", stale=True)
+    )
+    # Default: the stale fact is still returned (report builder relies on this).
+    assert registry.lookup("number", "0.5")
+    assert registry.has("number", "0.5")
+    # fresh_only: the stale fact no longer counts as support.
+    assert registry.lookup("number", "0.5", fresh_only=True) == ()
+    assert not registry.has("number", "0.5", fresh_only=True)
+
+
+def test_stale_fact_fails_closed_in_strict_zone() -> None:
+    """Negative control: a strict-zone number backed only by a stale fact errors."""
+    registry = VerifiedEvidenceRegistry()
+    registry.add(
+        EvidenceFact(kind="number", value="0.873", source="ledger", source_tier="claim_ledger", stale=True)
+    )
+    text = "## Results\n\nThe held-out accuracy was 0.873 on the test set.\n"
+    report = validate_text_against_registry(text, registry)
+    assert any(issue.kind == "number" and issue.value == "0.873" for issue in report.errors)
+
+
+def test_fresh_fact_supports_number_in_strict_zone() -> None:
+    """Positive control: an active, non-stale fact still validates the number."""
+    registry = VerifiedEvidenceRegistry()
+    registry.add(EvidenceFact(kind="number", value="0.873", source="ledger", source_tier="claim_ledger"))
+    text = "## Results\n\nThe held-out accuracy was 0.873 on the test set.\n"
+    report = validate_text_against_registry(text, registry)
+    assert not any(issue.value == "0.873" for issue in report.errors)
+
+
+def test_stale_fact_tolerated_in_lenient_zone() -> None:
+    """Lenient zones stay tolerant of stale facts (no new error)."""
+    registry = VerifiedEvidenceRegistry()
+    registry.add(
+        EvidenceFact(kind="number", value="0.873", source="ledger", source_tier="claim_ledger", stale=True)
+    )
+    text = "Some background prose mentioning 0.873 in passing.\n"
+    report = validate_text_against_registry(text, registry)
+    assert not any(issue.severity == "error" and issue.value == "0.873" for issue in report.errors)

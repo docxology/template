@@ -22,6 +22,9 @@ def test_validate_outputs_after_analysis() -> None:
     assert checks.get("output/data/parameter_sweep.csv")
 
 
+# Regenerates heavy sheaf/roadmap gate artifacts; ~57-59s locally and can exceed the
+# CI-wide --timeout=120 on slower runners. The per-test marker overrides the CLI value.
+@pytest.mark.timeout(300)
 def test_validate_outputs_required_artifacts(project_root: Path) -> None:
     ensure_gate_artifacts(project_root)
     checks = validate_outputs(project_root)

@@ -26,7 +26,7 @@ from .loop_phases import (
     run_provisional_payload_phase,
     run_settlement_manifest_phase,
 )
-from .ml_task import MLTaskResult, run_bounded_ml_task
+from .ml.task import MLTaskResult, run_bounded_ml_task
 from .models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
 from .writers import (
     relative_path,

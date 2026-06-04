@@ -18,6 +18,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `abstract_plaintext.py` | Plaintext abstract + cross-link footer for Zenodo/GitHub (`build_deposit_description`, `build_github_release_body`) |
 | `config_doi.py` | `update_publication_doi`, `read_publication_doi`, `update_publication_after_zenodo_deposit` — comment-preserving DOI write-back (concept DOI preserved when `version_doi` is declared) |
 | `release_workflow.py` | Unified GitHub + Zenodo + DOI + re-render orchestration |
+| `release_workflow_zenodo.py` | Reserve-first DOI phase + `publish_zenodo_for_release` (leaf of release workflow) |
 | `deposit_filename.py` | `build_deposit_filename`, `DepositPublishContext`, `deposit_context_from_config` — metadata-driven Zenodo/GitHub upload basename |
 | `publication_ledger.py` | Append-only release ledger for transmission bookends |
 | `release_pairing.py` | Structural GitHub ↔ Zenodo pairing validation |
@@ -137,7 +138,7 @@ from pathlib import Path
 from infrastructure.publishing.transmission_bookends import write_transmission_bookends
 
 paths = write_transmission_bookends(
-    Path("projects/template_prose_project"),
+    Path("projects/templates/template_prose_project"),
     "template_prose_project",
     repo_root=Path("."),
 )
@@ -152,7 +153,7 @@ from pathlib import Path
 from infrastructure.publishing.transmission_page_check import check_transmission_bookend_pages
 
 result = check_transmission_bookend_pages(
-    Path("projects/template_code_project/output/pdf/template_code_project_combined.pdf")
+    Path("projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf")
 )
 assert result.valid, result.issues
 ```
@@ -167,7 +168,7 @@ Local renders keep `{project}_combined.pdf`. `prepare_release_bundle` copies the
 from infrastructure.publishing.deposit_filename import build_deposit_filename
 from infrastructure.publishing.metadata_from_config import publication_metadata_from_config
 
-metadata = publication_metadata_from_config(Path("projects/template_code_project/manuscript/config.yaml"))
+metadata = publication_metadata_from_config(Path("projects/templates/template_code_project/manuscript/config.yaml"))
 name = build_deposit_filename(
     metadata=metadata,
     pdf_sha256="b591a0ce…",
@@ -200,7 +201,7 @@ cross_links = DepositCrossLinks(
     doi="10.5281/zenodo.12345",
 )
 description = build_deposit_description(
-    abstract_source=Path("projects/template_prose_project/manuscript/00_abstract.md"),
+    abstract_source=Path("projects/templates/template_prose_project/manuscript/00_abstract.md"),
     variables_path=Path("output/template_prose_project/data/manuscript_variables.json"),
     cross_links=cross_links,
     override_text=None,  # or publication.zenodo_description from config
@@ -231,7 +232,7 @@ uv run python scripts/publish_project_release.py \
   --production
 ```
 
-Environment: `GITHUB_TOKEN`, `GITHUB_REPO`, `ZENODO_SANDBOX_TOKEN` (sandbox) or `ZENODO_PROD_TOKEN` / `ZENODO_TOKEN` (production). Metadata is read from `projects/{name}/manuscript/config.yaml` and `00_abstract.md`. The workflow publishes to **Zenodo first**, patches the live deposition description with the minted DOI (best-effort via `patch_deposition_description`), then creates the GitHub release (body includes DOI, Zenodo URL, GitHub URL, version, and PDF hash), writes `publication.doi`, and re-renders locally. Deposit descriptions use plaintext normalization (`abstract_plaintext.py`); see [`docs/guides/publishing-guide.md`](../../docs/guides/publishing-guide.md). After Zenodo mints a DOI, `publication.doi` is updated and `scripts/03_render_pdf.py` re-renders locally (single-pass: the Zenodo deposit uses the pre-DOI PDF).
+Environment: `GITHUB_TOKEN`, `GITHUB_REPO`, `ZENODO_SANDBOX_TOKEN` (sandbox) or `ZENODO_PROD_TOKEN` / `ZENODO_TOKEN` (production). Metadata is read from `projects/{name}/manuscript/config.yaml` and `00_abstract.md`. The default workflow publishes to **Zenodo first**, patches the live deposition description with the minted DOI (best-effort via `patch_deposition_description`), then creates the GitHub release (body includes DOI, Zenodo URL, GitHub URL, version, and PDF hash), writes `publication.doi`, and re-renders locally. With `--reserve-doi-first`, the workflow creates a Zenodo draft, reserves the version DOI, writes the concept DOI to `publication.doi` and the version DOI to `publication.version_doi`, re-renders first, uploads the DOI-bearing PDF to that draft, publishes, and only then creates the GitHub release. Deposit descriptions use plaintext normalization (`abstract_plaintext.py`); see [`docs/guides/publishing-guide.md`](../../docs/guides/publishing-guide.md).
 
 `publish_to_zenodo` and `publish_new_version_to_zenodo` return `PublishResult(doi, deposition_id)` from `infrastructure.publishing.zenodo.models`.
 

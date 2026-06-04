@@ -23,6 +23,7 @@ from pathlib import Path
 import pytest
 
 from infrastructure.project.discovery import discover_projects
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.project.linking import (
     ACTIVE_SUBDIR,
     ARCHIVE_SUBDIR,
@@ -493,14 +494,8 @@ def test_import_resolves_through_symlink(tmp_path: Path) -> None:
 
 @pytest.mark.parametrize("name", sorted(PROTECTED_NAMES))
 def test_protected_names_are_public_exemplars(name: str) -> None:
-    assert name in {
-        "template_active_inference",
-        "template_code_project",
-        "template_prose_project",
-        "template_autoresearch_project",
-        "template_template",
-        "template_newspaper",
-    }
+    public_short_names = {Path(qualified).name for qualified in PUBLIC_PROJECT_NAMES}
+    assert name in public_short_names
 
 
 def test_legacy_sync_active_links_wrapper_syncs_all_lifecycles(tmp_path: Path) -> None:

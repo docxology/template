@@ -1,8 +1,8 @@
 {
   "name": "template-smoke",
   "projects": [
-    "template_code_project",
-    "template_prose_project"
+    "templates/template_code_project",
+    "templates/template_prose_project"
   ],
   "required_outputs": [
     "output/pdf",

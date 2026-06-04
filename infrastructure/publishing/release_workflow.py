@@ -34,12 +34,12 @@ from infrastructure.publishing.metadata_from_config import (
 )
 from infrastructure.publishing.models import PublicationMetadata
 from infrastructure.publishing.package import create_publication_package
-from infrastructure.publishing.zenodo.models import PublishResult
-from infrastructure.publishing.zenodo.publish import (
-    patch_deposition_description,
-    publish_new_version_to_zenodo,
-    publish_to_zenodo,
+from infrastructure.publishing.release_workflow_zenodo import (
+    publish_zenodo_for_release,
+    run_reserve_doi_first_phase,
 )
+from infrastructure.publishing.zenodo.models import DepositionResult
+from infrastructure.publishing.zenodo.publish import patch_deposition_description
 
 logger = get_logger(__name__)
 
@@ -61,6 +61,7 @@ class ReleaseRequest:
     skip_github: bool = False
     skip_zenodo: bool = False
     skip_rerender: bool = False
+    reserve_doi_first: bool = False
     dry_run: bool = False
     allow_draft_abstract: bool = False
     release_name: str | None = None
@@ -91,6 +92,8 @@ class ReleaseResult:
     config_updated: bool
     render_exit_code: int | None
     receipt_path: Path
+    concept_doi: str | None = None
+    version_doi: str | None = None
     dry_run: bool = False
     errors: list[str] = field(default_factory=list)
     pdf_sha256: str | None = None
@@ -98,11 +101,18 @@ class ReleaseResult:
 
 def resolve_combined_pdf(repo_root: Path, project_name: str) -> Path | None:
     """Locate the combined manuscript PDF for a project."""
+    short_name = project_name.split("/")[-1]
     candidates = [
+        repo_root / "output" / project_name / "pdf" / f"{short_name}_combined.pdf",
         repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf",
-        repo_root / "projects" / project_name / "output" / "pdf" / f"{project_name}_combined.pdf",
+        repo_root / "projects" / project_name / "output" / "pdf" / f"{short_name}_combined.pdf",
     ]
+    seen: set[Path] = set()
     for path in candidates:
+        resolved = path.resolve()
+        if resolved in seen:
+            continue
+        seen.add(resolved)
         if path.is_file():
             return path
     return None
@@ -245,7 +255,11 @@ def run_github_release(
 ) -> str:
     """Create a GitHub release and attach the bundle PDF."""
     if request.dry_run:
-        logger.info("Dry run: would create GitHub release %s on %s", request.tag, request.github_repo)
+        logger.info(
+            "Dry run: would create GitHub release %s on %s",
+            request.tag,
+            request.github_repo,
+        )
         return github_release_url(request.github_repo, request.tag)
 
     if not request.github_token:
@@ -283,44 +297,6 @@ def run_github_release(
         request.github_token,
         request.github_repo,
         base_url=request.github_api_base_url,
-    )
-
-
-def run_zenodo_publish(
-    request: ReleaseRequest,
-    metadata: PublicationMetadata,
-    file_paths: list[Path],
-    *,
-    existing_doi: str | None = None,
-) -> PublishResult:
-    """Publish to Zenodo (new deposition or new version)."""
-    if request.dry_run:
-        logger.info("Dry run: would publish to Zenodo (sandbox=%s)", request.sandbox)
-        return PublishResult(
-            doi=existing_doi or "10.5281/zenodo.dryrun",
-            deposition_id="dryrun",
-        )
-
-    if not request.zenodo_token:
-        raise PublishingError("Zenodo token is required (--zenodo-token, ZENODO_SANDBOX_TOKEN, or ZENODO_PROD_TOKEN)")
-
-    use_new_version = request.new_version or bool(existing_doi)
-    if use_new_version and existing_doi:
-        return publish_new_version_to_zenodo(
-            metadata,
-            file_paths,
-            request.zenodo_token,
-            existing_doi,
-            sandbox=request.sandbox,
-            base_url=request.zenodo_base_url,
-        )
-
-    return publish_to_zenodo(
-        metadata,
-        file_paths,
-        request.zenodo_token,
-        sandbox=request.sandbox,
-        base_url=request.zenodo_base_url,
     )
 
 
@@ -368,8 +344,13 @@ def _update_transmission_artifacts(
         "dry_run": request.dry_run,
     }
     try:
-        from infrastructure.publishing.publication_ledger import append_release_entry, ledger_path_for_project
-        from infrastructure.publishing.transmission_bookends import write_transmission_bookends
+        from infrastructure.publishing.publication_ledger import (
+            append_release_entry,
+            ledger_path_for_project,
+        )
+        from infrastructure.publishing.transmission_bookends import (
+            write_transmission_bookends,
+        )
 
         append_release_entry(ledger_path_for_project(project_root), receipt_stub)
         write_transmission_bookends(project_root, request.project_name, repo_root=request.repo_root)
@@ -400,24 +381,68 @@ def run_release_workflow(
         config_path,
         allow_draft_abstract=request.allow_draft_abstract,
     )
-    bundle = prepare_release_bundle(request, release_context=release_context)
     existing_doi = release_context.prior_doi
 
     github_url: str | None = None
     doi: str | None = existing_doi
+    concept_doi: str | None = existing_doi
+    version_doi: str | None = None
     config_updated = False
     render_exit_code: int | None = None
     errors: list[str] = []
+    reserved_deposition: DepositionResult | None = None
+
+    if request.reserve_doi_first and not request.skip_zenodo:
+        try:
+            reserve_phase = run_reserve_doi_first_phase(
+                config_path=config_path,
+                release_context=release_context,
+                dry_run=request.dry_run,
+                zenodo_token=request.zenodo_token,
+                sandbox=request.sandbox,
+                zenodo_base_url=request.zenodo_base_url,
+                new_version=request.new_version,
+                skip_rerender=request.skip_rerender,
+                allow_draft_abstract=request.allow_draft_abstract,
+                repo_root=request.repo_root,
+                project_name=request.project_name,
+                renderer=renderer,
+            )
+            concept_doi = reserve_phase.concept_doi
+            version_doi = reserve_phase.version_doi
+            doi = reserve_phase.doi
+            config_updated = reserve_phase.config_updated
+            render_exit_code = reserve_phase.render_exit_code
+            reserved_deposition = reserve_phase.reserved_deposition
+            release_context = reserve_phase.release_context
+            existing_doi = reserve_phase.existing_doi
+        except (PublishingError, MetadataError) as exc:
+            errors.append(f"reserve_doi: {exc}")
+            if not request.dry_run:
+                raise
+
+    bundle = prepare_release_bundle(request, release_context=release_context)
 
     if not request.skip_zenodo:
         try:
-            publish_result = run_zenodo_publish(
-                request,
-                bundle.metadata,
-                [bundle.pdf_path],
-                existing_doi=existing_doi if (request.new_version or existing_doi) else None,
+            publish_result = publish_zenodo_for_release(
+                reserve_doi_first=request.reserve_doi_first,
+                dry_run=request.dry_run,
+                zenodo_token=request.zenodo_token,
+                sandbox=request.sandbox,
+                zenodo_base_url=request.zenodo_base_url,
+                new_version=request.new_version,
+                metadata=bundle.metadata,
+                file_paths=[bundle.pdf_path],
+                existing_doi=(existing_doi if (request.new_version or existing_doi) else None),
+                concept_doi=concept_doi,
+                version_doi=version_doi,
+                reserved_deposition=reserved_deposition,
+                doi=doi,
             )
             doi = publish_result.doi
+            version_doi = version_doi or doi
+            concept_doi = publish_result.concept_doi or concept_doi
             if doi and not request.dry_run:
                 bundle.metadata = _enrich_metadata_for_release(
                     bundle.metadata,
@@ -446,7 +471,7 @@ def run_release_workflow(
             if not request.dry_run:
                 raise
 
-    if doi and doi != existing_doi:
+    if doi and doi != existing_doi and not request.reserve_doi_first:
         try:
             config_updated = update_publication_after_zenodo_deposit(
                 config_path,
@@ -466,7 +491,7 @@ def run_release_workflow(
         errors=errors,
     )
 
-    if config_updated and not request.skip_rerender and not request.dry_run:
+    if config_updated and not request.reserve_doi_first and not request.skip_rerender and not request.dry_run:
         render_exit_code = renderer(request.repo_root, request.project_name)
         if render_exit_code != 0:
             errors.append(f"render: exit code {render_exit_code}")
@@ -478,6 +503,8 @@ def run_release_workflow(
         "github_repo": request.github_repo,
         "github_release_url": github_url,
         "doi": doi,
+        "concept_doi": concept_doi,
+        "version_doi": version_doi,
         "config_updated": config_updated,
         "render_exit_code": render_exit_code,
         "dry_run": request.dry_run,
@@ -499,6 +526,8 @@ def run_release_workflow(
         config_updated=config_updated,
         render_exit_code=render_exit_code,
         receipt_path=receipt_path,
+        concept_doi=concept_doi,
+        version_doi=version_doi,
         dry_run=request.dry_run,
         errors=errors,
         pdf_sha256=bundle.pdf_sha256,

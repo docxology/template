@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 from ontology.bindings import load_section_ontology, validate_gnn_ontology
@@ -15,6 +16,16 @@ def test_run_logger_emit_and_records(tmp_path: Path) -> None:
     records = log.records()
     assert len(records) == 1
     assert records[0]["event"] == "test"
+
+
+def test_run_logger_emit_recreates_missing_parent_after_fresh(tmp_path: Path) -> None:
+    log = RunLogger(tmp_path / "logs" / "runs.jsonl")
+    log.fresh()
+    shutil.rmtree(log.path.parent)
+
+    log.emit({"event": "test", "value": 2})
+
+    assert log.records()[0]["value"] == 2
 
 
 def test_sheaf_package_exports_public_symbols() -> None:

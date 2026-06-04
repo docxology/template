@@ -51,7 +51,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 Key discoveries from multi-project development are documented in:
 
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** — Comprehensive setup checklist with all pitfalls
-- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** — Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by all three template exemplars; project-specific overlays live in `projects/template_*/manuscript/SYNTAX.md`
+- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** — Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by all nine public template exemplars; project-specific overlays live in `projects/templates/template_*/manuscript/SYNTAX.md`
 - **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md)** — Pipeline-specific error patterns
 
 ### ⚠️ Critical Rule: Root Venv Must Include All Project Dependencies
@@ -94,22 +94,24 @@ This ensures the pipeline remains reproducible and does not make expensive netwo
 - [documentation-index.md](documentation-index.md) — Comprehensive file index
 - [Root AGENTS.md](../AGENTS.md) — System-level documentation
 
-## 3-Directory Project Lifecycle
+## Typed-Subfolder Project Lifecycle
 
-Projects are tracked across three sibling directories:
+Project lifecycle state is expressed as **typed subfolders under `projects/`**. Two are discovered and rendered; the rest are non-rendered mirrors of the private projects repo. Authoritative, always-current roster: [`docs/_generated/active_projects.md`](_generated/active_projects.md).
 
-| Directory | Purpose | Discovered by `./run.sh`? |
+| Subfolder | Purpose | Discovered + rendered? |
 | ---------- | ------- | ------------------------ |
-| `projects/` | **Active** projects for the current pipeline run | ✅ Yes |
-| `projects/working/` | Work-in-progress projects not yet ready for rendering | ❌ No |
-| `projects/archive/` | Completed or paused projects kept for reference | ❌ No |
+| `projects/templates/` | The nine git-tracked public exemplars (this repo) | ✅ Yes |
+| `projects/active/` | Hot-seat render set — symlinks to the private repo's `active/` | ✅ Yes |
+| `projects/working/` | Backburner / in-progress — symlinks, non-rendered | ❌ No |
+| `projects/published/` | Shipped — symlinks, non-rendered | ❌ No |
+| `projects/archive/` | Retired — symlinks, non-rendered | ❌ No |
+| `projects/other/` | Misc — symlinks, non-rendered | ❌ No |
 
 **Movement rules:**
 
-- Only projects under `projects/` are discovered and rendered by `./run.sh`.
-- Move a project **into** `projects/` when it is ready for a full pipeline run.
-- Move a project **out** to `projects/working/` or `projects/archive/` when it is not the current focus, to keep pipeline output clean and fast.
-- Projects in archive/in-progress directories retain their structure so they can be moved back at any time without modification.
+- Only `projects/templates/*` and `projects/active/*` are discovered and rendered (qualified names `templates/<name>` and `active/<name>`).
+- Private lifecycle projects live in the sibling `docxology/projects` repo and are symlinked into the matching typed subfolder on every `./run.sh` (or `uv run python -m infrastructure.orchestration link-projects`). To render a private project, move it into that repo's `active/`; to retire it, move it to `archive/`.
+- The git-tracked public exemplars under `projects/templates/` never move — they are owned by this repo. Every other path under `projects/` is local-only and never committed (enforced by `scripts/check_tracked_projects.py`).
 
 **Configuring the active directory (advanced):**
 

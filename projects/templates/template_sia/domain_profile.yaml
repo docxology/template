@@ -1,0 +1,17 @@
+domain: sia
+display_name: SIA self-improvement harness
+required_packages:
+  - pytest
+  - pyyaml
+preferred_outputs:
+  - pdf
+  - html
+  - reports
+validation_gates:
+  - Project Tests
+  - Project Analysis
+source_policy: local_artifacts_only
+artifact_expectations:
+  - output/runs/run_1/run_summary.json
+  - output/reports/sia_loop_report.md
+  - output/data/manuscript_variables.json

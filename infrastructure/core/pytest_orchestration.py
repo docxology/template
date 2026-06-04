@@ -11,6 +11,7 @@ import os
 import re
 import shutil
 import subprocess
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any, Literal, TypedDict
 
@@ -28,6 +29,8 @@ logger = get_logger(__name__)
 InfrastructureTestScope = Literal["full", "pipeline-smoke"]
 
 INFRASTRUCTURE_TEST_SCOPES: tuple[InfrastructureTestScope, ...] = ("full", "pipeline-smoke")
+
+TEST_RUNNER_BASE_DEPS: tuple[str, ...] = ("pytest", "pytest-cov", "pytest-timeout")
 
 PIPELINE_SMOKE_INFRA_TEST_PATHS = (
     Path("tests/infra_tests/git_hook_smoke"),
@@ -48,6 +51,22 @@ DISCOVERY_PATTERNS: tuple[str, ...] = (
     r"(\d+)\s+tests?\s+found",
     r"=+\s+(\d+)\s+tests?\s+collected",
 )
+
+
+def test_runner_dependency_specs() -> tuple[str, ...]:
+    """Return ``uv --with`` specs for project-level pytest subprocesses.
+
+    The multi-project runner appends every project's traces into one coverage
+    SQLite database. Mixing project environments with different ``coverage``
+    versions can leave that shared file unreadable by later subprocesses, so
+    pin ``coverage`` to the workspace version that launched the orchestrator.
+    """
+    deps = list(TEST_RUNNER_BASE_DEPS)
+    try:
+        deps.append(f"coverage=={version('coverage')}")
+    except PackageNotFoundError:
+        logger.warning("coverage package not found; project test subprocesses will not pin coverage")
+    return tuple(deps)
 
 
 class TestSuiteResults(TypedDict, total=False):
@@ -263,7 +282,8 @@ def build_project_pytest_command(project_root: Path, pytest_args: list[str]) -> 
         # Inject test-runner deps so they are always available regardless of
         # what the project itself declares (thin projects declare only runtime
         # deps; pytest/cov/timeout stay in the workspace dev group).
-        cmd.extend(["--with", "pytest", "--with", "pytest-cov", "--with", "pytest-timeout"])
+        for dependency_spec in test_runner_dependency_specs():
+            cmd.extend(["--with", dependency_spec])
         if project_declares_dev_extra(resolved_root):
             cmd.extend(["--extra", "dev"])
         cmd.extend(
@@ -375,4 +395,5 @@ __all__ = [
     "resolve_project_cov_config",
     "resolve_infrastructure_test_paths",
     "resolve_project_test_python",
+    "test_runner_dependency_specs",
 ]

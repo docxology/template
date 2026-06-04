@@ -9,7 +9,7 @@
     },
     {
       "name": "gauss-open-gauss-cli",
-      "description": "Open Gauss in this workspace is the math-inc/OpenGauss gauss CLI for Lean session tooling—not Huawei OpenGauss DBMS. See docs/reference/opengauss-naming.md; for the public Lean exemplar see projects/template_active_inference/lean/.",
+      "description": "Open Gauss in this workspace is the math-inc/OpenGauss gauss CLI for Lean session tooling—not Huawei OpenGauss DBMS. See docs/reference/opengauss-naming.md; for the public Lean exemplar see projects/templates/template_active_inference/lean/.",
       "path": ".cursor/skills/gauss/SKILL.md",
       "cursor_at": ".cursor/skills/gauss/SKILL.md"
     },
@@ -548,13 +548,13 @@
     },
     {
       "name": "infrastructure-reference",
-      "description": "Bibliographic-reference utilities for research projects. Read, write, and convert BibTeX entries that match the syntax/semantics of projects/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib during PDF render -- see infrastructure/rendering/_pdf_combined_renderer.py). Currently exposes the `citation` submodule (BibTeX I/O + Paper→BibEntry conversion); designed to host additional reference workflows (e.g. CSL-JSON export, ORCID lookups) without breaking the public API.",
+      "description": "Bibliographic-reference utilities for research projects. Read, write, and convert BibTeX entries that match the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib during PDF render -- see infrastructure/rendering/_pdf_combined_renderer.py). Currently exposes the `citation` submodule (BibTeX I/O + Paper→BibEntry conversion); designed to host additional reference workflows (e.g. CSL-JSON export, ORCID lookups) without breaking the public API.",
       "path": "infrastructure/reference/SKILL.md",
       "cursor_at": "infrastructure/reference/SKILL.md"
     },
     {
       "name": "infrastructure-reference-citation",
-      "description": "BibTeX read/write/convert that matches the syntax/semantics of projects/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_renderer.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.",
+      "description": "BibTeX read/write/convert that matches the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_renderer.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.",
       "path": "infrastructure/reference/citation/SKILL.md",
       "cursor_at": "infrastructure/reference/citation/SKILL.md"
     },
@@ -587,6 +587,12 @@
       "description": "Paperclip-style multi-source literature search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API. Provides Paper/SearchQuery/SearchResult data models, a LiteratureClient aggregator with per-backend failure isolation, DOI/arXiv-aware deduplication via merge_papers, deterministic JSON caching via SearchCache, an HttpClient protocol for test injection, and a CLI (search/to-bibtex). Use when finding papers by topic, building reading lists, populating references.bib from a query, or replaying a prior search reproducibly.",
       "path": "infrastructure/search/literature/SKILL.md",
       "cursor_at": "infrastructure/search/literature/SKILL.md"
+    },
+    {
+      "name": "infrastructure-sia",
+      "description": "Skill for the Self-Improvement Agent (SIA) harness contract. Use when validating task public/private layouts, generation artifact trees, evaluation runners, fixture replay loops, or opt-in live Meta→Target→Feedback cycles in template projects.",
+      "path": "infrastructure/sia/SKILL.md",
+      "cursor_at": "infrastructure/sia/SKILL.md"
     },
     {
       "name": "infrastructure-skills",

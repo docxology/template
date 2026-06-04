@@ -2,7 +2,7 @@
 
 ## Exception Hierarchy
 
-All custom exceptions inherit from `TemplateError` in `infrastructure/core/runtime/exceptions.py`.
+All custom exceptions inherit from `TemplateError` in `infrastructure/core/exceptions.py`.
 
 ### Import Pattern
 

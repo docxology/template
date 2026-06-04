@@ -12,7 +12,7 @@ Public API:
   project. Used standalone via ``--steganography-only``.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -36,7 +36,6 @@ class SecureRunOptions:
     skip_infra: bool = False
     core_only: bool = False
     resume: bool = False
-    extra_args: list[str] = field(default_factory=list)
 
 
 def _load_steganography():  # pragma: no cover - import indirection

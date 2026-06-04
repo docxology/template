@@ -5,7 +5,7 @@ from __future__ import annotations
 import csv
 import io
 
-from .ml_task import MLTaskResult
+from .ml.task import MLTaskResult
 from .models import AutoResearchLoopResult
 
 

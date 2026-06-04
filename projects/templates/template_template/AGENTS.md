@@ -2,7 +2,7 @@
 
 Technical specification for the self-referential documentation project that analyzes and documents the Docxology Template repository.
 
-**Location:** [`projects/template_template/`](.) — public canonical exemplar (`infrastructure.project.public_scope`).
+**Location:** [`projects/templates/template_template/`](.) — public canonical exemplar (`infrastructure.project.public_scope`).
 
 ## Purpose
 
@@ -63,10 +63,10 @@ Generates architecture overview, pipeline stages, module inventory, and comparat
 From the template repo root:
 
 ```bash
-uv run pytest projects/template_template/tests/ \
-  --cov=projects/template_template/src --cov-fail-under=90 -v
-uv run python projects/template_template/scripts/generate_manuscript_metrics.py
-uv run python projects/template_template/scripts/generate_architecture_viz.py
+uv run pytest projects/templates/template_template/tests/ \
+  --cov=projects/templates/template_template/src --cov-fail-under=90 -v
+uv run python projects/templates/template_template/scripts/generate_manuscript_metrics.py
+uv run python projects/templates/template_template/scripts/generate_architecture_viz.py
 ```
 
 ## Patterns

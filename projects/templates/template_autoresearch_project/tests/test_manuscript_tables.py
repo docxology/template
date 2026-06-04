@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from src.artifact_loader import LoopArtifacts
-from src.manuscript_tables import build_table_specs, variable_provenance_table
+from src.manuscript.manuscript_tables import build_table_specs, variable_provenance_table
 
 
 def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() -> None:

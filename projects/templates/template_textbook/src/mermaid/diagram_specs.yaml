@@ -1,0 +1,149 @@
+# Data-driven Mermaid diagram specifications.
+# Each entry becomes one diagram via textbook `mermaid.diagrams`. Add diagrams
+# here rather than hard-coding sources, so the catalogue is inspectable and
+# testable. `kind` selects the builder; `nodes`/`edges` parameterise it.
+
+diagrams:
+  - name: concept_map
+    kind: flowchart
+    title: "Generic concept map"
+    direction: TD
+    nodes:
+      - {id: A, label: "Inputs / assumptions"}
+      - {id: B, label: "Model"}
+      - {id: C, label: "Predictions"}
+      - {id: D, label: "Comparison with data"}
+    edges:
+      - {from: A, to: B}
+      - {from: B, to: C}
+      - {from: C, to: D}
+      - {from: D, to: A, label: "revise"}
+
+  - name: process_flow
+    kind: flowchart
+    title: "Generic process flow"
+    direction: LR
+    nodes:
+      - {id: S, label: "Start"}
+      - {id: P, label: "Process"}
+      - {id: E, label: "End"}
+    edges:
+      - {from: S, to: P}
+      - {from: P, to: E}
+
+  - name: part_hierarchy
+    kind: flowchart
+    title: "Book structure hierarchy"
+    direction: TD
+    nodes:
+      - {id: Book, label: "Book"}
+      - {id: Part, label: "Part"}
+      - {id: Chap, label: "Chapter"}
+      - {id: Sec, label: "Section"}
+    edges:
+      - {from: Book, to: Part}
+      - {from: Part, to: Chap}
+      - {from: Chap, to: Sec}
+
+  - name: sequence_demo
+    kind: sequence
+    title: "Generic interaction"
+    participants: [Author, Engine, Renderer]
+    messages:
+      - {from: Author, to: Engine, text: "edit config.yaml"}
+      - {from: Engine, to: Renderer, text: "emit manuscript"}
+      - {from: Renderer, to: Author, text: "PDF", dashed: true}
+
+  - name: state_demo
+    kind: state
+    title: "Stub lifecycle"
+    transitions:
+      - {from: "[*]", to: Stub}
+      - {from: Stub, to: Drafted, label: "fill"}
+      - {from: Drafted, to: Reviewed, label: "review"}
+      - {from: Reviewed, to: "[*]", label: "publish"}
+
+  - name: class_demo
+    kind: class
+    title: "Engine types"
+    classes:
+      - name: ChapterRef
+        members: ["+str part_id", "+str file", "+stem() str"]
+      - name: TocEntry
+        members: ["+int number", "+str title"]
+    relations:
+      - {from: ChapterRef, to: TocEntry, arrow: "-->", label: "numbered as"}
+
+  - name: er_demo
+    kind: er
+    title: "Book schema"
+    relations:
+      - {from: PART, to: CHAPTER, cardinality: "||--o{", label: "contains"}
+      - {from: CHAPTER, to: LAB, cardinality: "||--||", label: "has"}
+    entities:
+      - name: PART
+        attributes:
+          - {type: string, name: id}
+          - {type: string, name: title}
+      - name: CHAPTER
+        attributes:
+          - {type: string, name: file}
+          - {type: string, name: title}
+
+  - name: gantt_demo
+    kind: gantt
+    title: "Authoring schedule"
+    sections:
+      - name: Draft
+        tasks:
+          - {name: "Outline", id: t1, start: "2026-01-01", duration: "5d"}
+          - {name: "First pass", id: t2, start: "2026-01-06", duration: "10d"}
+      - name: Review
+        tasks:
+          - {name: "Edit", id: t3, start: "2026-01-16", duration: "7d"}
+
+  - name: pie_demo
+    kind: pie
+    title: "Effort by section"
+    slices:
+      - {label: "Prose", value: 50}
+      - {label: "Figures", value: 25}
+      - {label: "Tests", value: 25}
+
+  - name: mindmap_demo
+    kind: mindmap
+    root: "Textbook"
+    branches:
+      - label: "Manuscript"
+        children: ["Chapters", "Labs", "Questions"]
+      - label: "Engine"
+        children: ["models", "content", "visualization"]
+
+  - name: timeline_demo
+    kind: timeline
+    title: "Edition history"
+    events:
+      - {period: "0.1", items: ["Scaffold", "Stubs"]}
+      - {period: "1.0", items: ["Filled", "Published"]}
+
+  - name: quadrant_demo
+    kind: quadrant
+    title: "Prioritising chapters"
+    x_axis: "Low effort --> High effort"
+    y_axis: "Low value --> High value"
+    quadrants: ["Do now", "Plan", "Quick wins", "Defer"]
+    points:
+      - {label: "Core methods", x: 0.3, y: 0.8}
+      - {label: "Frontiers", x: 0.7, y: 0.6}
+
+  - name: journey_demo
+    kind: journey
+    title: "Reader journey"
+    sections:
+      - name: "Onboarding"
+        steps:
+          - {task: "Open book", score: 5, actors: [Reader]}
+          - {task: "Read preface", score: 4, actors: [Reader]}
+      - name: "Study"
+        steps:
+          - {task: "Do lab", score: 3, actors: [Reader, Instructor]}

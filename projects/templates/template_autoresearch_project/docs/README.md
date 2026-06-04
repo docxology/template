@@ -22,7 +22,7 @@ Useful direct checks:
 ```bash
 uv run python scripts/02_run_analysis.py --project template_autoresearch_project
 uv run python -m infrastructure.autoresearch.cli validate --project template_autoresearch_project --fail-on-issues
-uv run python -m pytest projects/template_autoresearch_project/tests -q
+uv run python -m pytest projects/templates/template_autoresearch_project/tests -q
 ```
 
 Documentation map:

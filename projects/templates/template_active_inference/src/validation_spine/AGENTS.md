@@ -23,6 +23,5 @@ metadata, replay provenance, and release-facing provenance drift checks.
 ## Verification
 
 ```bash
-uv run --directory projects/templates/template_active_inference \
-  pytest tests/test_validation_spine.py tests/test_track_consolidation.py -q --tb=short
+uv run --directory projects/templates/template_active_inference pytest tests/test_validation_spine.py tests/test_track_consolidation.py -q --tb=short
 ```

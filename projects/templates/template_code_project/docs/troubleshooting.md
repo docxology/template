@@ -12,11 +12,11 @@ analysis stage, or the token is not defined in `src/manuscript_variables.py::gen
 
 1. Run the variable-hydration stage:
    ```bash
-   uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+   uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
    ```
 2. Inspect the resolved values:
    ```bash
-   cat projects/template_code_project/output/data/manuscript_variables.json | jq .
+   cat projects/templates/template_code_project/output/data/manuscript_variables.json | jq .
    ```
 3. Re-render:
    ```bash
@@ -33,15 +33,15 @@ analysis stage, or the token is not defined in `src/manuscript_variables.py::gen
 
 1. Run analysis first:
    ```bash
-   uv run python projects/template_code_project/scripts/optimization_analysis.py
+   uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
    ```
 2. Re-run variable hydration:
    ```bash
-   uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+   uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
    ```
 3. For intentional early drafts only (tokens may fall back to `"N/A"`):
    ```bash
-   uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py --allow-draft
+   uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py --allow-draft
    ```
 
 ## Edited `manuscript/config.yaml` but the figures or PDF didn't change
@@ -52,8 +52,8 @@ stage ran (it does not re-execute `optimization_analysis.py`).
 **Fix.** Run the analysis stage first, then variables, then render:
 
 ```bash
-uv run python projects/template_code_project/scripts/optimization_analysis.py
-uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
 uv run python scripts/03_render_pdf.py --project template_code_project
 ```
 
@@ -92,7 +92,7 @@ before compilation.
 1. Look at the LaTeX log for the exact line:
    ```bash
    grep -nE "Citation|undefined|Error" \
-     projects/template_code_project/output/pdf/_combined_manuscript.log
+     projects/templates/template_code_project/output/pdf/_combined_manuscript.log
    ```
 2. Check the entry exists in `manuscript/references.bib` and is well-formed.
 3. Ensure all required BibTeX fields are present (`author`, `title`,
@@ -104,12 +104,12 @@ before compilation.
 
 1. Re-run with the full traceback visible:
    ```bash
-   uv run python projects/template_code_project/scripts/optimization_analysis.py 2>&1 | tee /tmp/analysis.log
+   uv run python projects/templates/template_code_project/scripts/optimization_analysis.py 2>&1 | tee /tmp/analysis.log
    ```
 2. Check the output directory exists and is writable.
 3. Validate `manuscript/config.yaml`:
    ```bash
-   uv run python -c "import yaml; yaml.safe_load(open('projects/template_code_project/manuscript/config.yaml'))"
+   uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_code_project/manuscript/config.yaml'))"
    ```
 
 ## `uv` command not found
@@ -132,8 +132,8 @@ Make sure `~/.local/bin` (or the install location) is on your `PATH`.
 
 1. Find which lines are uncovered:
    ```bash
-   uv run pytest projects/template_code_project/tests/ \
-       --cov=projects/template_code_project/src \
+   uv run pytest projects/templates/template_code_project/tests/ \
+       --cov=projects/templates/template_code_project/src \
        --cov-report=term-missing -v
    ```
 2. Add tests covering the missing branches.
@@ -146,7 +146,7 @@ Make sure `~/.local/bin` (or the install location) is on your `PATH`.
 **Fix.** Run from the repository root and let the workspace handle paths:
 
 ```bash
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 ```
 
 ## Sluggish test execution
@@ -157,13 +157,13 @@ repetitions; on a slow machine they can dominate the suite.
 **Fix.** Skip them for fast iteration:
 
 ```bash
-uv run pytest projects/template_code_project/tests/ -k "not Performance"
+uv run pytest projects/templates/template_code_project/tests/ -k "not Performance"
 ```
 
 Or run the suite in parallel:
 
 ```bash
-uv run pytest projects/template_code_project/tests/ -n auto
+uv run pytest projects/templates/template_code_project/tests/ -n auto
 ```
 
 ## YAML parse error in `manuscript/config.yaml`
@@ -177,7 +177,7 @@ uv run pytest projects/template_code_project/tests/ -n auto
 **Fix.** Validate the file before running:
 
 ```bash
-uv run python -c "import yaml; yaml.safe_load(open('projects/template_code_project/manuscript/config.yaml'))"
+uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_code_project/manuscript/config.yaml'))"
 ```
 
 ## PDF Rendering fails: `mmdc` could not find Chrome
@@ -220,7 +220,7 @@ documented direct command runs the current project suite with the measured
 coverage shown in the repo canonical facts.
 
 **Cause:** the aggregate runner resolves the interpreter from
-`projects/template_code_project/.venv`. A `.venv` made by `uv venv` without
+`projects/templates/template_code_project/.venv`. A `.venv` made by `uv venv` without
 `uv sync` lacks `pytest`, so pytest collects nothing. **A green exit with
 zero collected tests is not a pass.**
 
@@ -229,8 +229,8 @@ zero collected tests is not a pass.**
 1. Run the **canonical per-project gate** directly (authoritative; what CI
    enforces project-by-project):
    ```bash
-   uv run pytest projects/template_code_project/tests/ \
-     --cov=projects/template_code_project/src --cov-fail-under=90
+   uv run pytest projects/templates/template_code_project/tests/ \
+     --cov=projects/templates/template_code_project/src --cov-fail-under=90
    ```
 2. Or `uv sync` so the per-project `.venv` has the test deps.
 3. Always confirm **collected > 0 AND coverage ≥ 90%** — never exit code

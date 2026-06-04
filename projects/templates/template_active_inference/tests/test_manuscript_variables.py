@@ -7,6 +7,11 @@ import pytest
 from manuscript import variables as manuscript_variables
 from manuscript.variables import generate_variables
 
+# test_generate_manuscript_variables_reaches_semantic_fixed_point iterates the full
+# variable/semantic fixed point (~42s locally); widen the per-test ceiling so slower CI
+# runners don't trip the CI-wide --timeout=120.
+pytestmark = pytest.mark.timeout(300)
+
 
 def test_generate_variables_with_outputs() -> None:
     root = Path(__file__).resolve().parents[1]

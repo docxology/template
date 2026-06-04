@@ -14,7 +14,7 @@ from src.models import AutoResearchLoopResult
 
 _FIGURE_RENDER_HOOKS = (
     ("src.writers", "render_figure_batch"),
-    ("src.figures_process", "write_stage_matrix_figure"),
+    ("src.figures.figures_process", "write_stage_matrix_figure"),
 )
 
 

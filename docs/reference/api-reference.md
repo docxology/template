@@ -923,7 +923,7 @@ Information about a discovered project.
 
 ### `resolve_project_root`
 
-*function — defined in `infrastructure.project.discovery`*
+*function — defined in `infrastructure.core.project_paths`*
 
 ```python
 resolve_project_root(repo_root: Path | str, project_name: str) -> Path
@@ -2271,6 +2271,36 @@ enrich_papers(papers: Iterable[Paper], *, abstracts: AbstractFetcher | None=None
 
 Run the configured fetchers over *papers* in order (abstract first).
 
+### `ExaClient`
+
+*class — defined in `infrastructure.search.exa.client`*
+
+```python
+class ExaClient(config: ExaConfig, *, http_client: ExaHttpClient | None=None)
+```
+
+Thin, dependency-injected client for the Exa REST API.
+
+### `ExaConfig`
+
+*class — defined in `infrastructure.search.exa.config`*
+
+```python
+class ExaConfig
+```
+
+Immutable Exa client configuration.
+
+### `ExaError`
+
+*class — defined in `infrastructure.search.exa.errors`*
+
+```python
+class ExaError(message: str, *, status: int | None=None, body: str | None=None)
+```
+
+Raised when an Exa request fails (transport, non-2xx status, or parse).
+
 ### `FetchResult`
 
 *class — defined in `infrastructure.search.literature.fulltext`*
@@ -2390,6 +2420,64 @@ write_corpus(papers: Iterable[Paper], path: Path | str) -> Path
 ```
 
 Persist a list of (possibly enriched) papers as a JSON corpus file.
+
+## Package: `infrastructure.sia`
+
+### `AgentExecutionLog`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `append_generation`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `EvaluationResult`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `GenerationArtifacts`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `GenerationState`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `init_context`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `load_agent_execution`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `read_results_json`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `run_evaluation`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `run_sia_loop`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `RunConfig`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `TaskLayout`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `validate_task_dir`
+
+*symbol — defined in `infrastructure.sia`*
+
+### `write_results_json`
+
+*symbol — defined in `infrastructure.sia`*
 
 ## Package: `infrastructure.skills`
 

@@ -63,7 +63,7 @@ Generic, Layer-1 facts for working in this repository.
 
 ## Confidentiality invariant (this is a PUBLIC repo)
 
-`.gitignore` ignores `projects/*` and negates **only** the `projects/templates/` exemplar trees — `projects/templates/template_active_inference/`, `projects/templates/template_autoresearch_project/`, `projects/templates/template_code_project/`, `projects/templates/template_prose_project/`, and `projects/templates/template_template/` (plus the repo-level `projects/*.md` docs). Those public canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in a **separate, external private repository** whose location is configured with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; `run.sh`/`infrastructure.orchestration` sync that repo's lifecycle folders into matching typed subfolders under `projects/`: `active/*` → `projects/active/*` (rendered), and `working/*`, `published/*`, `archive/*`, `other/*` → `projects/{working,published,archive,other}/*` (linked, not rendered). Only `projects/templates/*` and `projects/active/*` are discovered/rendered by default.
+`.gitignore` ignores `projects/*` and negates **only** the `projects/templates/` exemplar trees — `projects/templates/template_active_inference/`, `projects/templates/template_autoresearch_project/`, `projects/templates/template_code_project/`, `projects/templates/template_prose_project/`, `projects/templates/template_sia/`, and `projects/templates/template_template/` (plus the repo-level `projects/*.md` docs). Those public canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in a **separate, external private repository** whose location is configured with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; `run.sh`/`infrastructure.orchestration` sync that repo's lifecycle folders into matching typed subfolders under `projects/`: `active/*` → `projects/active/*` (rendered), and `working/*`, `published/*`, `archive/*`, `other/*` → `projects/{working,published,archive,other}/*` (linked, not rendered). Only `projects/templates/*` and `projects/active/*` are discovered/rendered by default.
 
 Every path under `projects/` other than `templates/` — the `active/` hot-seat set, the `working/`/`published/`/`archive/`/`other/` lifecycle folders, and the optional `template_search_project` literature-search exemplar — is **local-only and must never be committed**. This is enforced, not conventional: `scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any project path in docs.
 
@@ -261,6 +261,7 @@ Each directory contains documentation for easy navigation:
 | [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) | [AGENTS.md](projects/templates/template_prose_project/AGENTS.md) | [README.md](projects/templates/template_prose_project/README.md) | Prose-centric exemplar (canonical, always present) |
 | [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) | [AGENTS.md](projects/templates/template_active_inference/AGENTS.md) | [README.md](projects/templates/template_active_inference/README.md) | Active Inference multi-track exemplar (canonical, always present) |
 | [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) | [AGENTS.md](projects/templates/template_autoresearch_project/AGENTS.md) | [README.md](projects/templates/template_autoresearch_project/README.md) | AutoResearch exemplar (canonical, always present) |
+| [`projects/templates/template_sia/`](projects/templates/template_sia/) | [AGENTS.md](projects/templates/template_sia/AGENTS.md) | [README.md](projects/templates/template_sia/README.md) | SIA harness exemplar (canonical, always present) |
 | [`projects/templates/template_template/`](projects/templates/template_template/) | [AGENTS.md](projects/templates/template_template/AGENTS.md) | [README.md](projects/templates/template_template/README.md) | Meta-template exemplar (canonical, always present) |
 | [`projects/archive/template_search_project/`](projects/archive/template_search_project/) | [AGENTS.md](projects/archive/template_search_project/AGENTS.md) | [README.md](projects/archive/template_search_project/README.md) | Literature-search exemplar — **local-only, NOT git-tracked**; copy under `projects/active/` locally to run, never commit |
 | Rotating projects (e.g. `actinf_policy_entanglement_lean`, private symlinked workspaces) | see project tree when checked out under `projects/active/` | see project tree when checked out under `projects/active/` | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current roster; rotates between `projects/working/` and `projects/archive/` |
@@ -1452,3 +1453,23 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 - ✅ Multi-project support (projects/{name}/ structure)
 - ✅ manuscript reference validation (all citations, figures, equations, sections resolved)
 - ✅ HTTP testing with pytest-httpserver (no mocks for API calls)
+
+
+<!-- BEGIN:STAGE_TABLE -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+
+| Stage | Script | Tags | Failure mode |
+| ----- | ------ | ---- | ------------ |
+| **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
+| **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
+| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
+| **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
+| **6** Output Validation | `04_validate_output.py` | `core` | warning + report |
+| **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+| **10** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **11** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+<!-- END:STAGE_TABLE -->

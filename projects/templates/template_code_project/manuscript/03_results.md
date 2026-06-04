@@ -1,6 +1,6 @@
 # Results {#sec:results}
 
-This section presents the experimental results from the gradient descent optimization study, including convergence analysis and performance comparisons. Every table, figure, and quantitative assertion in this section was compiled autonomously by the template's `infrastructure.reporting` subsystem executing the [optimization analysis script](https://github.com/docxology/template/blob/main/projects/template_code_project/scripts/optimization_analysis.py). No manual transcription was permitted.
+This section presents the experimental results from the gradient descent optimization study, including convergence analysis and performance comparisons. Every table, figure, and quantitative assertion in this section was compiled autonomously by the template's `infrastructure.reporting` subsystem executing the [optimization analysis script](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/scripts/optimization_analysis.py). No manual transcription was permitted.
 
 ## Convergence Analysis
 
@@ -24,7 +24,7 @@ This section presents the experimental results from the gradient descent optimiz
 
 ## Quantitative Results
 
-The optimization results for different step sizes are synthesized computationally by orchestrating [`infrastructure.reporting.executive_reporter`](https://github.com/docxology/template/blob/main/infrastructure/reporting/executive_reporter.py), feeding directly into the [optimization results data](https://github.com/docxology/template/blob/main/projects/template_code_project/output/data/optimization_results.csv) that acts as the source of truth for [@tbl:opt_results]. Rows follow `experiment.step_sizes` in `config.yaml`; the body rows below are injected at render time from that CSV (`RESULT_TABLE_ROWS` in `scripts/z_generate_manuscript_variables.py`).
+The optimization results for different step sizes are synthesized computationally by orchestrating [`infrastructure.reporting.executive_reporter`](https://github.com/docxology/template/blob/main/infrastructure/reporting/executive_reporter.py), feeding directly into the [optimization results data](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/data/optimization_results.csv) that acts as the source of truth for [@tbl:opt_results]. Rows follow `experiment.step_sizes` in `config.yaml`; the body rows below are injected at render time from that CSV (`RESULT_TABLE_ROWS` in `scripts/z_generate_manuscript_variables.py`).
 
 | Step Size (α) | Final Solution | Objective Value | Iterations | Converged |
 |---------------|----------------|-----------------|------------|-----------|

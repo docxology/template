@@ -11,6 +11,10 @@ from simulation.invariants import run_simulation_invariants, write_simulation_in
 from simulation.logging_utils import RunLogger, validate_record
 from simulation.si_runner import pymdp_available, run_and_persist
 
+# test_validate_outputs_gate_checks rebuilds the full gate-artifact bundle (~56s locally);
+# give this module a wider per-test ceiling so slower CI runners don't trip --timeout=120.
+pytestmark = pytest.mark.timeout(300)
+
 
 def test_validate_record_requires_step_keys() -> None:
     with pytest.raises(ValueError, match="missing keys"):

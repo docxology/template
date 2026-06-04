@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>15_discussion_outlook</title>
+  <title>15_discussion_outlook.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -185,35 +185,28 @@ without failing a gate before the PDF is built.</p>
 are pedagogical. They validate analytical consistency, artifact wiring,
 renderer dispatch, and manuscript hydration—not empirical claims about
 biological agents. Default pymdp mode is <code>state_inference</code>
-with planning horizon 2; full policy inference remains an opt-in
-extension (<span class="citation"
-data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span>).</p>
+with planning horizon 2; the policy-comparison artifact exposes
+policy-inference rows without changing the default rollout
+([sec:methods_pymdp]).</p>
 <h2 id="sheaf-audit-and-outlook">Sheaf audit and outlook</h2>
-<p><span class="citation"
-data-cites="sec:sheaf_coverage">[@sec:sheaf_coverage]</span> and <span
-class="citation"
-data-cites="sec:appendix_full_sheaf">[@sec:appendix_full_sheaf]</span>
-make binding state auditable under strict compose validation (<span
-class="citation"
-data-cites="sec:methods_sheaf">[@sec:methods_sheaf]</span>). Opt-in
-pipeline extensions in <code>tracks.yaml</code>
-<code>extension_tracks</code> (belief GIF via
-<code>render_animation.py</code>, graph-world SI stub) add artifacts
-outside the default analysis DAG; the appendix row already binds an
-<code>animation</code> sheaf fragment without new manifest rows.</p>
+<p>[sec:sheaf_coverage] and [sec:appendix_full_sheaf] make binding state
+auditable under strict compose validation ([sec:methods_sheaf]).
+Pipeline extensions in <code>tracks.yaml</code>
+<code>extension_tracks</code> now write deterministic artifacts: a
+belief GIF via <code>render_animation.py</code> and graph-world SI
+summary/trace via <code>simulate_si_graph_world.py</code>. The appendix
+row already binds an <code>animation</code> sheaf fragment without new
+manifest rows.</p>
 <p>Sweep RMSE 0 nats and SI goal reached 1 summarize measured agreement
 on the declared grids and rollout. Future work includes full
 expected-free-energy policy selection, richer graph-world rollouts, and
-expanded Lean proofs beyond the boundary witnesses in <span
-class="citation"
-data-cites="sec:methods_lean">[@sec:methods_lean]</span>.</p>
+expanded Lean proofs beyond the boundary witnesses in
+[sec:methods_lean].</p>
 <p>The discussion ontology binds <code>coverage_semantics</code> to the
-audit matrix in <span class="citation"
-data-cites="sec:sheaf_coverage">[@sec:sheaf_coverage]</span>,
-<code>pedagogical_scope</code> to the non-empirical scope of the toy
-models, and <code>state_inference_mode</code> to the pymdp harness
-contract in <span class="citation"
-data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span>.</p>
+audit matrix in [sec:sheaf_coverage], <code>pedagogical_scope</code> to
+the non-empirical scope of the toy models, and
+<code>state_inference_mode</code> to the pymdp harness contract in
+[sec:methods_pymdp].</p>
 <!-- sheaf-track:simulation -->
 <p>Measured pymdp rollout (<code>state_inference</code>, config hash
 <code>81eb061f43b7bfd7</code>): mean belief entropy 0.3251 nats over 2

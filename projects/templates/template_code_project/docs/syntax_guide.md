@@ -12,8 +12,8 @@ Hyperlinks must be informative. Never use placeholder text.
 - **GOOD**: See the [Research Project Template](https://github.com/docxology/template).
 
 For internal cross-references inside `manuscript/`, prefer relative paths:
-- **BAD**: See `https://github.com/docxology/template/blob/main/projects/template_code_project/src/optimizer.py`
-- **GOOD**: See [`projects/template_code_project/src/optimizer.py`](https://github.com/docxology/template/blob/main/projects/template_code_project/src/optimizer.py)
+- **BAD**: See `https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py`
+- **GOOD**: See [`projects/templates/template_code_project/src/optimizer.py`](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py)
 
 ---
 
@@ -128,7 +128,7 @@ Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_
 
 1. Add a key/value pair to `generate_variables()` in `src/manuscript_variables.py`.
 2. Add a corresponding test assertion in `tests/test_manuscript_variables.py` (the live cross-reference test `test_all_manuscript_tokens_are_generated` will catch any gap automatically).
-3. Verify it produces a non-empty string: `python projects/template_code_project/scripts/z_generate_manuscript_variables.py && python -c "import json; d=json.load(open('projects/template_code_project/output/data/manuscript_variables.json')); print(d['MY_TOKEN'])"`.
+3. Verify it produces a non-empty string: `python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py && python -c "import json; d=json.load(open('projects/templates/template_code_project/output/data/manuscript_variables.json')); print(d['MY_TOKEN'])"`.
 4. Reference it in a manuscript `.md` file as `{{MY_TOKEN}}`.
 
 ### Detecting Unresolved Tokens
@@ -136,7 +136,7 @@ Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_
 If a token remains unresolved, the literal `{{TOKEN_NAME}}` will appear in the rendered PDF. Detect before rendering:
 
 ```bash
-grep -r "{{" projects/template_code_project/output/manuscript/ 2>/dev/null \
+grep -r "{{" projects/templates/template_code_project/output/manuscript/ 2>/dev/null \
   && echo "UNRESOLVED TOKENS FOUND" || echo "All tokens resolved"
 ```
 
@@ -153,10 +153,10 @@ def example() -> bool:
 
 For shell commands:
 ```bash
-uv run pytest projects/template_code_project/tests/ -v
+uv run pytest projects/templates/template_code_project/tests/ -v
 ```
 
-For inline code referencing file paths, use single backticks: `projects/template_code_project/src/optimizer.py`
+For inline code referencing file paths, use single backticks: `projects/templates/template_code_project/src/optimizer.py`
 
 ---
 

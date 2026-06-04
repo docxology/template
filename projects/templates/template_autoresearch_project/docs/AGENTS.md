@@ -1,6 +1,6 @@
 # Agent Notes
 
-`projects/template_autoresearch_project/docs/` is documentation only. Keep
+`projects/templates/template_autoresearch_project/docs/` is documentation only. Keep
 business logic in `../src/`, orchestration in `../scripts/`, and generated
 artifacts under `../output/`.
 

@@ -100,14 +100,31 @@ class VerifiedEvidenceRegistry:
         normalized = _normalize_number_value(fact.value) if fact.kind == "number" else _normalize_value(fact.value)
         self._facts.setdefault(fact.kind, {}).setdefault(normalized, []).append(fact)
 
-    def has(self, kind: str, value: str) -> bool:
-        """Return true when ``kind`` contains ``value``."""
-        return bool(self.lookup(kind, value))
+    def has(self, kind: str, value: str, *, fresh_only: bool = False) -> bool:
+        """Return true when ``kind`` contains ``value``.
 
-    def lookup(self, kind: str, value: str) -> tuple[EvidenceFact, ...]:
-        """Return matching facts for a kind/value pair."""
+        With ``fresh_only`` set, stale or inactive facts (per the claim ledger)
+        do not count as support — used to fail closed in strict zones.
+        """
+        return bool(self.lookup(kind, value, fresh_only=fresh_only))
+
+    def lookup(self, kind: str, value: str, *, fresh_only: bool = False) -> tuple[EvidenceFact, ...]:
+        """Return matching facts for a kind/value pair.
+
+        When ``fresh_only`` is true only ``active`` and non-``stale`` facts are
+        returned, so a stale claim-ledger fact stops validating downstream
+        numbers/citations (AI-SPINE-V2 stale-fails-closed). The default
+        (``False``) preserves the historical accept-any behaviour for callers
+        such as the freshness report builder.
+        """
+
+        def _fresh(fact: EvidenceFact) -> bool:
+            return fact.active and not fact.stale
+
         normalized = _normalize_number_value(value) if kind == "number" else _normalize_value(value)
         direct = tuple(self._facts.get(kind, {}).get(normalized, ()))
+        if fresh_only:
+            direct = tuple(f for f in direct if _fresh(f))
         if direct or kind != "number":
             return direct
         try:
@@ -117,6 +134,8 @@ class VerifiedEvidenceRegistry:
         matches: list[EvidenceFact] = []
         for facts in self._facts.get(kind, {}).values():
             for fact in facts:
+                if fresh_only and not _fresh(fact):
+                    continue
                 try:
                     candidate = float(fact.value.rstrip("%"))
                 except ValueError:
@@ -220,10 +239,14 @@ def validate_text_against_registry(
             if number in seen_numbers or _is_always_allowed_number(number):
                 continue
             seen_numbers.add(number)
-            if not registry.has("number", number):
+            # In strict zones (and strict mode) a stale/inactive fact no longer
+            # counts as support: a number backed only by a stale claim-ledger
+            # entry fails closed (AI-SPINE-V2). Lenient zones stay tolerant.
+            require_fresh = strict or line_zone == "strict"
+            if not registry.has("number", number, fresh_only=require_fresh):
                 bucket.append(EvidenceIssue(kind="number", value=number, severity=severity, zone=line_zone))
             elif trusted_number_tiers is not None and line_zone == "strict":
-                facts = registry.lookup("number", number)
+                facts = registry.lookup("number", number, fresh_only=True)
                 if facts and not any(fact.source_tier in trusted_number_tiers for fact in facts):
                     bucket.append(EvidenceIssue(kind="number", value=number, severity=severity, zone=line_zone))
         for citation in _CITATION_RE.findall(claim_line):

@@ -24,6 +24,13 @@ class WebRenderer:
     _HREF_RE = re.compile(r"\\href\{[^{}]+\}\{([^{}]+)\}")
     _LABEL_RE = re.compile(r"\\(?:phantomsection\s*)?\\?label\{[^{}]+\}")
     _REF_RE = re.compile(r"\\(?:eqref|ref|autoref)\{([^{}]+)\}")
+    # Pandoc-style citations ``[@key]`` / ``[@key1; @key2]`` / ``[-@key]``.
+    # The PDF path resolves these via ``--citeproc``; the HTML writer leaves them
+    # raw, so this web-only pass renders them as readable ``[key1; key2]`` text
+    # (mirroring the ``\citep{...}`` handling) instead of emitting literal
+    # ``[@key]`` markdown into the rendered page.
+    _PANDOC_CITATION_RE = re.compile(r"\[(?P<body>[^\]]*?@[A-Za-z0-9_][^\]]*?)\]")
+    _PANDOC_CITEKEY_RE = re.compile(r"-?@([A-Za-z0-9_][A-Za-z0-9_:.#$%&+?<>~/-]*)")
 
     def __init__(self, config: RenderingConfig):
         """Initialize the web renderer with configuration."""
@@ -36,9 +43,22 @@ class WebRenderer:
 
         output_file = self._output_file_for_source(source_file)
 
+        # Apply the same web-only markdown pass used for the combined build so
+        # per-section HTML resolves Pandoc ``[@key]`` citations and raw-LaTeX
+        # spans instead of emitting them literally (the HTML writer, unlike the
+        # citeproc PDF path, leaves them untouched).
+        safe_source = source_file.with_suffix(source_file.suffix + ".web.tmp")
+        try:
+            safe_source.write_text(
+                self._html_safe_markdown(source_file.read_text(encoding="utf-8")),
+                encoding="utf-8",
+            )
+        except OSError:
+            safe_source = source_file
+
         cmd = [
             self.config.pandoc_path,
-            str(source_file),
+            str(safe_source),
             "-t",
             "html5",
             "-o",
@@ -60,6 +80,9 @@ class WebRenderer:
                 f"Failed to render HTML: {e.stderr}",
                 context={"source": str(source_file)},
             ) from e
+        finally:
+            if safe_source != source_file:
+                safe_source.unlink(missing_ok=True)
 
     def _output_file_for_source(self, source_file: Path) -> Path:
         """Return a collision-resistant HTML path for an individual section."""
@@ -342,7 +365,28 @@ class WebRenderer:
             latex = cls._REF_RE.sub(lambda m: _visible_ref(m.group(1)), latex)
             return _clean_latex_text(latex)
 
+        content = cls._render_pandoc_citations(content)
         return cls._normalize_figure_paths(cls._RAW_LATEX_INLINE_RE.sub(_replace_raw_span, content))
+
+    @classmethod
+    def _render_pandoc_citations(cls, content: str) -> str:
+        """Render Pandoc ``[@key]`` citation groups as readable ``[key]`` text.
+
+        The HTML writer (unlike the citeproc-driven PDF path) leaves Pandoc
+        citation syntax untouched, which would surface literal ``[@key]`` markup
+        on the page and trip publication validators. Bracket groups that contain
+        at least one ``@citekey`` are rewritten to ``[key1; key2]``; groups
+        without a citekey (ordinary bracketed prose, Markdown links) are left
+        unchanged.
+        """
+
+        def _replace(match: re.Match[str]) -> str:
+            keys = cls._PANDOC_CITEKEY_RE.findall(match.group("body"))
+            if not keys:
+                return match.group(0)
+            return "[" + "; ".join(keys) + "]"
+
+        return cls._PANDOC_CITATION_RE.sub(_replace, content)
 
     @staticmethod
     def _normalize_figure_paths(content: str) -> str:

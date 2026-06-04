@@ -18,7 +18,7 @@ Technical documentation for the `template` meta-project — the self-referential
 ## Project Structure
 
 ```text
-projects/template_template/
+projects/templates/template_template/
 ├── src/template_template/         # Domain logic (Layer 2)
 │   ├── __init__.py                # Public API (generate_all_architecture_figures)
 │   ├── introspection.py           # Repository analysis engine

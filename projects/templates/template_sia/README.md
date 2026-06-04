@@ -1,0 +1,29 @@
+# template_sia
+
+Public exemplar for the SIA (Self-Improvement Agent) harness: Meta → Target → Feedback
+loops with public/private task splits and canonical generation artifacts.
+
+## Quick start
+
+```bash
+uv run python projects/templates/template_sia/scripts/run_sia_loop.py
+uv run python projects/templates/template_sia/scripts/z_generate_manuscript_variables.py
+uv run python scripts/01_run_tests.py --project templates/template_sia --project-only
+```
+
+Default runs replay fixtures under `src/fixtures/recorded_generations/`. Pass
+`--live-sia` for bounded subprocess execution.
+
+> **Live mode is a deterministic stub.** `--live-sia` runs the *reference* agent
+> as a bounded subprocess and records its evaluation, but it does **not** mutate
+> target code and uses **no sandbox**: the `improvement.md` feedback note is
+> illustrative and is never applied, so the target agent is identical across
+> generations. Self-improvement *across generations* is demonstrated only via
+> **fixture replay**. This exemplar shows the harness mechanics, not autonomous
+> live code modification.
+
+## Documentation
+
+- [`AGENTS.md`](AGENTS.md) — module map and contracts
+- [`docs/quickstart.md`](docs/quickstart.md) — fork and extend
+- [`../../../infrastructure/sia/README.md`](../../../infrastructure/sia/README.md) — Layer 1 API

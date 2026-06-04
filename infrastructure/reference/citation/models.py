@@ -1,7 +1,7 @@
 """Data models for BibTeX-compatible citation entries.
 
 These models mirror the syntax and semantics of the exemplar
-``projects/template_code_project/manuscript/references.bib`` file consumed by
+``projects/templates/template_code_project/manuscript/references.bib`` file consumed by
 ``infrastructure/rendering/_pdf_combined_renderer.py`` via Pandoc's ``--natbib``
 flag (with the ``pandoc-crossref`` filter handling ``[@fig:..]``/``[@tbl:..]``/
 ``[@eq:..]``/``[@sec:..]`` cross-references).
@@ -48,6 +48,14 @@ CANONICAL_ENTRY_TYPES: frozenset[str] = frozenset(
         "dataset",
         "preprint",
     }
+)
+
+# Fields whose values are numeric / symbolic and must NOT be LaTeX-escaped on
+# write nor LaTeX-unescaped on read. This is round-trip-critical shared
+# vocabulary: the parser skips ``unescape_latex`` for these and the writer skips
+# ``escape_latex`` for them. Defined once here so the two cannot drift.
+VERBATIM_FIELDS: frozenset[str] = frozenset(
+    {"year", "volume", "number", "month", "edition", "isbn", "issn", "doi", "url"}
 )
 
 

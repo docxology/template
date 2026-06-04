@@ -46,6 +46,11 @@ flowchart TB
 5. **Error Categorization**: Intelligent error grouping and prioritization
 6. **Unified Organization**: Consistent file organization across all reporting modules
 
+### Test suite runners
+
+- **`pipeline_test_runner.py`** — project test gate invoked from Stage 3; wraps execution in `project_output_lock()` so concurrent pipeline runs on the same project do not race on `output/` (subprocess test stages inherit an env marker for re-entrant lock release).
+- **`suite_runner.py`** — shared pytest orchestration helpers used by infra and project gates.
+
 ## Output Organization System
 
 ### Output Organizer (`output_organizer.py`)
@@ -771,7 +776,7 @@ self-contained except for the Plotly CDN script tag.
   closed-form Ising mirror with 6 panels / 3 controls / 18 invariants — but
   those projects are local-only and not git-tracked, so they are not linked
   here; the canonical exemplar below is the reference implementation.)*
-- [`projects/template_code_project/scripts/build_dashboard.py`](../../projects/template_code_project/scripts/build_dashboard.py)
+- [`projects/templates/template_code_project/scripts/build_dashboard.py`](../../projects/templates/template_code_project/scripts/build_dashboard.py)
   — gradient-descent diagnostics with 5 panels, 2 live controls, 22 invariants;
   defaults read from `manuscript/config.yaml`.
 

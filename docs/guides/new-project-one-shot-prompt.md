@@ -10,7 +10,7 @@ Use this prompt when you want a model to scaffold a full project in one pass. An
 
 | Control | Path | Role |
 | -------- | ----- | ----- |
-| A | [projects/template_code_project](../../projects/templates/template_code_project/) | Flat `src/` modules, `scripts/` orchestrators, standard manuscript sections, reproducible figures/data, `tests/` layout |
+| A | [projects/templates/template_code_project](../../projects/templates/template_code_project/) | Flat `src/` modules, `scripts/` orchestrators, standard manuscript sections, reproducible figures/data, `tests/` layout |
 
 ## Prompt (copy from below into your assistant)
 

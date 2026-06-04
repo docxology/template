@@ -1,18 +1,18 @@
 ---
 name: infrastructure-reference-citation
-description: BibTeX read/write/convert that matches the syntax/semantics of projects/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_renderer.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.
+description: BibTeX read/write/convert that matches the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_renderer.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.
 ---
 
 # Citation Submodule
 
-BibTeX I/O matching `projects/template_code_project/manuscript/references.bib`.
+BibTeX I/O matching `projects/templates/template_code_project/manuscript/references.bib`.
 
 ## Reading
 
 ```python
 from infrastructure.reference.citation import parse_bibfile, parse_bibtex
 
-db = parse_bibfile("projects/template_code_project/manuscript/references.bib")
+db = parse_bibfile("projects/templates/template_code_project/manuscript/references.bib")
 print(len(db))                      # 8
 print(db.keys())                    # ['nocedal2006numerical', ...]
 entry = db.find("boyd2004convex")

@@ -8,8 +8,8 @@ from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_combined_transmission import _inject_toc_after_begin_transmission
-from infrastructure.rendering._pdf_latex_helpers import (
-    extract_preamble,
+from infrastructure.rendering._pdf_latex_helpers import extract_preamble
+from infrastructure.rendering._pdf_title_page import (
     generate_title_page_body,
     generate_title_page_preamble,
 )

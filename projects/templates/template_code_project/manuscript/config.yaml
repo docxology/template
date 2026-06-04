@@ -2,7 +2,7 @@
 # Comprehensive research project demonstrating advanced optimization algorithms
 # This file serves as a meta-artifact linking the prose of the manuscript to the execution
 # layer. It is loaded by `yaml.safe_load` inside `infrastructure/rendering/_pdf_combined_renderer.py`
-# (manuscript metadata) and `projects/template_code_project/scripts/z_generate_manuscript_variables.py`
+# (manuscript metadata) and `projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py`
 # (experiment parameters).
 
 # Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_report_model.py`
@@ -78,7 +78,7 @@ render:
     epub: true
 
 # Consumed by: `infrastructure.llm.LLMClient` (in `infrastructure/llm/core/client.py`)
-# See projects/template_code_project/docs/ for details
+# See projects/templates/template_code_project/docs/ for details
 llm:
   reviews:
     # Explicitly enabled for this exemplar to demonstrate AI-aided analysis

@@ -7,7 +7,7 @@ consumer. This file is the single source of truth for that mapping.
 
 ```mermaid
 flowchart TB
-    P[/projects/template_prose_project//]
+    P[/projects/templates/template_prose_project//]
     P --> M[/manuscript/<br/>committed source/]
     P --> OUT[/output/<br/>regeneratable · gitignored/]
 

@@ -21,8 +21,19 @@ PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
     "templates/template_code_project",
     "templates/template_newspaper",
     "templates/template_prose_project",
+    "templates/template_autoscientists",
+    "templates/template_sia",
     "templates/template_template",
+    "templates/template_textbook",
 )
+
+# Template exemplars that exist on disk under projects/templates/ but are NOT
+# part of the public CI/publication scope. Empty: all on-disk exemplars are now
+# fully public (tracked, CI-gated, double-published). Re-populate only if a new
+# exemplar is staged locally before it is promoted to PUBLIC_PROJECT_NAMES.
+LOCAL_ONLY_TEMPLATE_NAMES: tuple[str, ...] = ()
+
+# Local-only template exemplars: see docs/maintenance/local-only-template-exemplars.md
 
 
 def public_project_infos(repo_root: Path | str) -> list[ProjectInfo]:
@@ -85,6 +96,7 @@ if __name__ == "__main__":  # pragma: no cover - exercised via CLI tests
 
 
 __all__ = [
+    "LOCAL_ONLY_TEMPLATE_NAMES",
     "PUBLIC_PROJECT_NAMES",
     "main",
     "public_ci_source_paths",

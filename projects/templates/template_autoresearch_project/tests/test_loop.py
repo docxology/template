@@ -155,7 +155,7 @@ def test_run_autoresearch_loop_writes_bounded_method_ledgers(
     assert research_program["path"] == "program.md"
     assert research_program["autonomy_level"] == "proposal_only"
     assert research_program["budget_policy"]["max_iterations"] == 4
-    assert "projects/template_autoresearch_project/src/" in research_program["edit_allowlist"]
+    assert "projects/templates/template_autoresearch_project/src/" in research_program["edit_allowlist"]
     assert {idea["status"] for idea in idea_ledger["ideas"]} >= {"accepted", "rejected", "deferred"}
     accepted = [idea for idea in idea_ledger["ideas"] if idea["status"] == "accepted"]
     assert accepted and all(idea["evidence_links"] for idea in accepted)

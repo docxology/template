@@ -22,9 +22,9 @@ from src.config import (
     build_loop_config,
     load_manuscript_loop_settings,
 )
-from src.figure_quality import figure_quality_report_payload
+from src.figures.figure_quality import figure_quality_report_payload
 from src.loop import _final_output_path_payload, build_claims
-from src.ml_selection import run_bounded_ml_task
+from src.ml.selection import run_bounded_ml_task
 from src.models import AutoResearchLoopResult
 from src.writers import _BENCHMARK_CORE_ARTIFACTS, _grade_absent_benchmark
 from infrastructure.autoresearch import BenchmarkTask, build_autoresearch_plan

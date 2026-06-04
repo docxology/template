@@ -17,7 +17,7 @@ from infrastructure.autoresearch import BenchmarkTask
 from infrastructure.core.pipeline.artifacts import compute_sha256
 from src.artifact_schemas import _check_conformance, schema_manifest_payload
 from src.models import AutoResearchLoopResult
-from src.figures_core import save_figure
+from src.figures.figures_core import save_figure
 from src.security import _provenance_integrity_check, integrity_attestation_payload
 from src.writers import (
     _BENCHMARK_CORE_ARTIFACTS,

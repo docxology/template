@@ -4,13 +4,14 @@ This document tracks infrastructure test coverage gaps. Numbers are
 re-baselined from the live `pytest --cov` run; see "How this file is
 generated" below.
 
-**Last verified:** 2026-05-24 (infra test consolidation wave 3)
+**Last verified:** 2026-06-03 (backlog rebase: dag/registry/SIA hardening + the
+sheaf-branch infrastructure wave)
 
 ## Current Coverage Status
 
-**Overall infrastructure coverage: 76.61 %** (gate: ≥ 60 %)
-**Tests:** 5467 passing (non-LLM suite; LLM suite exercised separately)
-**Total statements measured:** 31 390
+**Overall infrastructure coverage: 77.23 %** (gate: ≥ 60 %)
+**Tests:** 5969 passing (non-LLM suite; LLM suite exercised separately)
+**Total statements measured:** 37 296
 
 The numbers below come from:
 
@@ -34,42 +35,45 @@ priority list below.
 
 | Module | Coverage | Statements | Notes |
 | ------ | -------- | ---------- | ----- |
-| `steganography/barcodes.py` | 11.39 % | 73 | Optional barcode rendering; gated on `pyzbar`/`pillow` |
-| `steganography/barcode_generators.py` | 20.00 % | 45 | Optional, same dependency gate |
-| `rendering/pipeline.py` | 32.40 % → improved | 331 | Orchestration spine — `_render_individual_files` error path in `test_pipeline.py`; full render LaTeX-gated |
-| `core/cli_handlers.py` | 38.07 % | 128 | Top-level CLI dispatch; subprocess-tested |
-| `core/install_commands.py` | 40.54 % | 23 | Optional-dep install hints; tiny module |
-| `publishing/publish_cli.py` | 41.18 % | 17 | CLI entry; subprocess-tested |
+| `project/drift/runner.py` | 18.64 % | 39 | Drift-check CLI runner; exercised via `check_template_drift` subprocess |
+| `validation/security_gate.py` | 22.02 % | 148 | Opt-in security scan (not in default pipeline/CI); external-tool gated |
+| `validation/plugin_export.py` | 27.12 % | 90 | Plugin-stage export surface; partial in-process coverage |
+| `core/cli_handlers.py` | 33.50 % | 145 | Top-level CLI dispatch; subprocess-tested |
+| `doctor/detectors/layout.py` | 34.85 % | 48 | Repo-layout detector; integration-tested |
+| `sia/live_llm.py` | 35.48 % | 25 | Optional Ollama feedback; gated, offline-stubbed |
+| `autoresearch/reports.py` | 36.67 % | 74 | Multi-project report builder; integration path |
+| `project/workspace.py` | 38.89 % | 72 | Workspace management CLI; subprocess-tested |
+| `rendering/_pdf_section_titles.py` | 38.89 % | 28 | LaTeX section-title helper; real-LaTeX gated |
+| `project/working_render.py` | 42.07 % | 191 | Working-project render (non-default lifecycle path) |
 | `core/runtime/env_deps.py` | 46.22 % | 89 | Environment-dep checks; mostly platform branches |
-| `reporting/pipeline_test_runner.py` | ~60 % | 137 | Stage-01 runner facade; reporting in `pipeline_test_reporting.py` (~89 %) |
-| `core/pytest_orchestration.py` | ~80 % | 141 | Shared pytest subprocess policy |
-| `core/config/cli.py` | 53.12 % | 26 | CLI entry; subprocess-tested |
-| `validation/cli/main.py` | 58.83 % | 147 | CLI entry; partial subprocess coverage |
-| `rendering/_pdf_latex_pipeline.py` | 60.65 % | 109 | Real-LaTeX gated paths skip when xelatex absent |
-| `reporting/_dashboard_matplotlib.py` | 60.67 % | 81 | Optional matplotlib backend code |
-| `rendering/core.py` | 65.22 % | 108 | Render tree builder — format-disable branches covered in `test_core.py` |
-| `rendering/cli.py` | 61.73 % | 69 | CLI entry; subprocess-tested |
+| `core/runtime/setup_checks.py` | 46.67 % | 79 | Setup checks; platform branches |
+| `rendering/pipeline.py` | 47.48 % | 351 | Orchestration spine (↑ from 32.40 %); full render LaTeX-gated |
+| `project/info.py` | 47.92 % | 64 | Project metadata resolution; branch-heavy |
+| `benchmark/template_harness.py` | 51.88 % | 236 | Benchmark harness; partial integration coverage |
+| `validation/docs/lint_runner.py` | 56.72 % | 139 | Docs-lint orchestration; subprocess/mmdc gated |
+| `validation/output/pipeline.py` | 68.81 % | 397 | Output-validation spine; strict-zone + report paths partly gated |
+| `validation/docs/mermaid_lint.py` | 71.92 % | 237 | Real-`mmdc`/chrome gated render paths |
 
 ### Real Improvement Targets
 
-After excluding CLI subprocess shims and optional-dep gated modules, the
-genuine gaps are:
+After excluding CLI subprocess shims (`*/cli.py`, `*/__main__.py`, the 0 %
+`*_cli.py` entrypoints), optional-dep/tool-gated modules, and LLM-suite modules
+(measured separately), the genuine gaps are:
 
-1. **`infrastructure/rendering/pipeline.py` (32.40 %, 331 stmts)** — the PDF
-   orchestration entry point. Pure-logic helpers and the missing-project fast
-   path are covered in `tests/infra_tests/rendering/test_pipeline.py`; full
-   render paths remain LaTeX-gated.
+1. **`infrastructure/rendering/pipeline.py` (47.48 %, 351 stmts)** — the PDF
+   orchestration entry point, up from 32.40 % at the last baseline. Pure-logic
+   helpers and the missing-project fast path are covered in
+   `tests/infra_tests/rendering/test_pipeline.py`; full render paths remain
+   LaTeX-gated.
 
-2. **`infrastructure/reporting/pipeline_test_runner.py` + `pipeline_test_reporting.py`
-   + `infrastructure/core/pytest_orchestration.py`** — Stage-01 orchestration
-   split across three modules; subprocess integration tests in
-   `test_pipeline_test_runner.py`; subprocess integration in
-   `test_pipeline_test_runner_integration.py`.
+2. **`infrastructure/validation/output/pipeline.py` (68.81 %, 397 stmts)** — the
+   output-validation spine. The strict-zone fail-closed paths (incl. the new
+   stale-fact handling) and the report-assembly branches are partially covered;
+   full-render integration paths are LaTeX/pandoc gated.
 
-3. **`infrastructure/rendering/core.py` (65.22 %, 108 stmts)** — the render
-   tree builder. Format-disable and missing-source branches are covered in
-   `tests/infra_tests/rendering/test_core.py`; Beamer/HTML success paths remain
-   pandoc/LaTeX gated.
+3. **`infrastructure/project/working_render.py` (42.07 %, 191 stmts)** — the
+   non-default working-project render path; lower priority as it is not on the
+   shipped pipeline, but it is genuine first-party logic rather than a shim.
 
 ## Modules Previously Listed (Now Resolved)
 
@@ -81,10 +85,12 @@ three are now well above the gate. Listed for historical context:
 | `core/runtime/retry.py` | 22.22 % | 97.56 % | +75 pp |
 | `core/runtime/checkpoint.py` | 39.24 % | 83.59 % | +44 pp |
 | `core/progress.py` | 18.09 % | 93.37 % | +75 pp |
+| `steganography/barcodes.py` | 11.39 % | 92.31 % | +81 pp |
+| `steganography/barcode_generators.py` | 20.00 % | 86.36 % | +66 pp |
 
 ## Coverage Gates
 
-- **Infrastructure**: ≥ 60 % (current **76.61 %**)
+- **Infrastructure**: ≥ 60 % (current **77.23 %**)
 - **Projects**: ≥ 90 % per project (rotating-project exception possible per
   the `.github/workflows/ci.yml` matrix; see CLAUDE.md)
 - **Per-project gates** are enforced separately in CI; they do not aggregate
@@ -105,6 +111,19 @@ uv run pytest tests/infra_tests/ \
 Then sort the per-module rows by coverage percentage and update the
 "Lowest-Coverage Modules" table above. Do not copy historical numbers
 forward — re-measure each time.
+
+## Recently added module tests (2026-06-03)
+
+| Module | Test file |
+| --- | --- |
+| `validation/xml_parser_policy.py` | `tests/infra_tests/validation/test_xml_parser_policy.py` |
+| `publishing/release_workflow_zenodo.py` | `tests/infra_tests/publishing/test_release_workflow_zenodo.py` |
+| `rendering/_pdf_title_page.py` | `tests/infra_tests/rendering/test_pdf_title_page.py` |
+| `core/files/project_lock.py` | `tests/infra_tests/core/test_project_lock.py` |
+| `core/pipeline/dag.py` (dropped-edge diagnostics) | `tests/infra_tests/core/test_dag.py` |
+| `validation/evidence_registry.py` (stale-fail-closed) | `tests/infra_tests/validation/test_evidence_registry.py` |
+| `validation/docs/mermaid_lint.py` (no-output fail-closed) | `tests/infra_tests/validation/docs/test_mermaid_lint.py` |
+| `sia/cli.py` + loop fixture/live separation | `tests/infra_tests/sia/test_cli.py`, `test_loop_runner.py` |
 
 ## Recently added module tests (2026-05-24)
 

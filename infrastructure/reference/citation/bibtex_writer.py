@@ -1,7 +1,7 @@
 """Render :class:`BibEntry` / :class:`BibDatabase` records to BibTeX text.
 
 The output format reproduces, byte-for-byte, the conventions used in
-``projects/template_code_project/manuscript/references.bib``:
+``projects/templates/template_code_project/manuscript/references.bib``:
 
 * ``@type{citation_key,`` opens the entry on its own line.
 * Each field uses **two-space indentation**: ``  field={value},``.
@@ -22,15 +22,13 @@ from pathlib import Path
 from typing import Iterable
 
 from infrastructure.reference.citation.escape import escape_latex
-from infrastructure.reference.citation.models import BibDatabase, BibEntry
+from infrastructure.reference.citation.models import (
+    VERBATIM_FIELDS as _VERBATIM_FIELDS,
+    BibDatabase,
+    BibEntry,
+)
 
 _INDENT = "  "
-
-# Fields whose values are numeric / symbolic and should *not* be LaTeX-escaped.
-# (Matches the convention in the exemplar references.bib.)
-_VERBATIM_FIELDS: frozenset[str] = frozenset(
-    {"year", "volume", "number", "month", "edition", "isbn", "issn", "doi", "url"}
-)
 
 # Author-like fields are split on " and " for normalisation but otherwise
 # escaped like normal text.

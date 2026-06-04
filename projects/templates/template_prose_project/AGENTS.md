@@ -11,7 +11,7 @@ workflow — fast and offline by default. Exemplar roster:
 
 ```mermaid
 flowchart TB
-    P[/projects/template_prose_project/]
+    P[/projects/templates/template_prose_project/]
     P --> SRC[/src<br/>domain orchestration/]
     P --> T[/tests<br/>real-data tests · no mocks/]
     P --> SC[/scripts<br/>thin orchestrators/]
@@ -70,7 +70,7 @@ These files are validation inputs only and do not run autonomous review agents.
 ## Testing
 
 ```bash
-uv run pytest projects/template_prose_project/tests/ -v
+uv run pytest projects/templates/template_prose_project/tests/ -v
 ```
 
 All tests run offline. Real prose inputs, real BibTeX files, real

@@ -79,10 +79,10 @@ Follow these five steps in order:
 
 1. **Add the function to `src/optimizer.py`** — Pure math only; no I/O; add type hints and a Google-style docstring; export from `__init__.py`.
 
-2. **Write a test class in `tests/test_optimizer.py`** — Follow the zero-mock pattern; use fixed numpy arrays; assert mathematical properties; run `uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-fail-under=90`.
+2. **Write a test class in `tests/test_optimizer.py`** — Follow the zero-mock pattern; use fixed numpy arrays; assert mathematical properties; run `uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-fail-under=90`.
 
-3. **Add the analysis call in `src/analysis/`** — Import the new function from `src/optimizer.py`; run it inside the existing experiment loop or add a new loop; write results to `projects/template_code_project/output/data/` or `output/figures/`.
+3. **Add the analysis call in `src/analysis/`** — Import the new function from `src/optimizer.py`; run it inside the existing experiment loop or add a new loop; write results to `projects/templates/template_code_project/output/data/` or `output/figures/`.
 
 4. **Update output conventions** — Document the new output file in `docs/output_conventions.md`; generated `output/` files stay untracked.
 
-5. **Update manuscript section** — Edit `manuscript/02_methodology.md` with the algorithm description using concrete file paths (e.g., `projects/template_code_project/src/optimizer.py::new_function()`); add any result variables to `src/manuscript_variables.py::generate_variables()`; reference figures with `\ref{fig:label}`.
+5. **Update manuscript section** — Edit `manuscript/02_methodology.md` with the algorithm description using concrete file paths (e.g., `projects/templates/template_code_project/src/optimizer.py::new_function()`); add any result variables to `src/manuscript_variables.py::generate_variables()`; reference figures with `\ref{fig:label}`.

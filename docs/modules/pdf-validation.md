@@ -77,7 +77,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 `04_validate_output.py` alone does **not** clean or re-render; it checks existing artifacts under `projects/{name}/output/` (and related paths) for the given `--project`.
 
-**Note**: For a full pipeline run, use `--skip-validation` only when iterating quickly; run validation before release builds.
+**Note**: Run validation before release builds. To iterate quickly you can run individual stages (e.g. `scripts/03_render_pdf.py`) directly without the full pipeline.
 
 ### Sample Output
 

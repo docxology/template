@@ -93,7 +93,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - ``build_pytest_marker_expression(...)`` returns one ``pytest -m`` string for subprocess runners (`pipeline_test_runner`, ``run_per_project_pytest``) so benchmarks and slow/Ollama-gated tests stay opt-in outside defaults.
 
 **pytest_orchestration.py**
-- Canonical Stage-01 / union-gate pytest subprocess policy: discovery logging, coverage datafile pinning, declared project ``fail_under``, and project-suite guards. Consumed by ``infrastructure.reporting.pipeline_test_runner`` and ``infrastructure.core.test_runner``.
+- Canonical Stage-01 / union-gate pytest subprocess policy: discovery logging, coverage datafile pinning, declared project ``fail_under``, and project-suite guards. Project subprocesses inject pytest/pytest-cov/pytest-timeout and pin `coverage==<workspace coverage version>` so `--cov-append` writes a single readable SQLite trace across mixed project environments. Consumed by ``infrastructure.reporting.pipeline_test_runner`` and ``infrastructure.core.test_runner``.
 
 **cli.py**
 - Command-line interface utilities
@@ -140,6 +140,10 @@ The Core module provides fundamental foundation utilities used across the entire
 - Directory scanning and categorization
 - File size calculation and formatting
 - Inventory reporting for pipeline summaries
+
+**files/project_lock.py**
+- Per-project POSIX advisory lock for pipeline and test runner
+- Env-marker re-entrancy for subprocess test stages
 
 **pipeline/executor.py**
 - PipelineExecutor class for single project execution
@@ -1442,6 +1446,18 @@ def format_file_size(size_bytes: int) -> str:
     Returns:
         Formatted size string (e.g., '1.5 MB')
     """
+```
+
+### files/project_lock.py
+
+#### project_output_lock (function)
+```python
+def project_output_lock(
+    project_root: Path,
+    *,
+    timeout: float | None = None,
+) -> Iterator[None]:
+    """Advisory lock serializing pipeline/test runs for one project output tree."""
 ```
 
 ### pipeline/executor.py
@@ -3940,4 +3956,3 @@ Core module is imported by all other infrastructure modules for:
 - [README.md](README.md) - Quick reference guide
 - [`validation/`](../validation/) - Validation & quality assurance
 - [`../scripts/gates/AGENTS.md`](../../scripts/gates/AGENTS.md) - Opt-in gate scripts
-

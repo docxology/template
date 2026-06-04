@@ -65,18 +65,54 @@ class TestDepositionMetadataDict:
             abstract="Abstract.",
             keywords=["test"],
             author_records=[
-                AuthorRecord(name="Author", orcid="0000-0000-0000-1234", affiliation="Institute"),
+                AuthorRecord(
+                    name="Author", orcid="0000-0000-0000-1234", affiliation="Institute"
+                ),
             ],
         )
         payload = deposition_metadata_dict(metadata)
         assert payload["creators"] == [{"name": "Author", "affiliation": "Institute"}]
 
+    def test_prereserve_doi_flag_is_explicit_opt_in(self) -> None:
+        metadata = PublicationMetadata(
+            title="Reserve DOI",
+            authors=["Author"],
+            abstract="Abstract.",
+            keywords=["test"],
+        )
+        payload = deposition_metadata_dict(metadata, prereserve_doi=True)
+        assert payload["prereserve_doi"] is True
+        assert "prereserve_doi" not in deposition_metadata_dict(metadata)
+
 
 class TestDepositionResult:
     def test_frozen_dataclass(self) -> None:
-        result = DepositionResult(deposition_id="1", bucket_url="http://example/bucket")
+        result = DepositionResult(
+            deposition_id="1",
+            bucket_url="http://example/bucket",
+            reserved_doi="10.5281/zenodo.22222",
+            concept_doi="10.5281/zenodo.11111",
+        )
         assert result.deposition_id == "1"
         assert result.bucket_url == "http://example/bucket"
+        assert result.reserved_doi == "10.5281/zenodo.22222"
+        assert result.concept_doi == "10.5281/zenodo.11111"
+
+    def test_from_zenodo_body_parses_prereserve_and_conceptrecid(self) -> None:
+        body = {
+            "id": 22222,
+            "links": {"bucket": "https://zenodo.test/api/files/bucket222/"},
+            "metadata": {
+                "prereserve_doi": {"doi": "10.5281/zenodo.22222", "value": "10.5281/zenodo.22222"},
+            },
+            "conceptrecid": "11111",
+        }
+        result = DepositionResult.from_zenodo_body(body)
+        assert result.deposition_id == "22222"
+        assert result.bucket_url == "https://zenodo.test/api/files/bucket222"
+        assert result.reserved_doi == "10.5281/zenodo.22222"
+        assert result.concept_record_id == "11111"
+        assert result.concept_doi == "10.5281/zenodo.11111"
 
 
 class TestZenodoClientImportGuard:
@@ -111,6 +147,37 @@ class TestZenodoClientDepositFlow:
         client.upload_file(deposition.bucket_url, pdf)
         doi = client.publish(deposition.deposition_id)
         assert doi == "10.5281/zenodo.12345"
+
+    def test_create_deposition_parses_reserved_and_concept_doi(self) -> None:
+        from pytest_httpserver import HTTPServer
+
+        server = HTTPServer()
+        server.start()
+        try:
+            server.expect_request(
+                "/deposit/depositions",
+                method="POST",
+            ).respond_with_json(
+                {
+                    "id": 22222,
+                    "conceptrecid": "11111",
+                    "links": {"bucket": f"{server.url_for('')}/files/bucket222"},
+                    "metadata": {"prereserve_doi": {"doi": "10.5281/zenodo.22222"}},
+                }
+            )
+            client = ZenodoClient(
+                ZenodoConfig(access_token="test", base_url=server.url_for(""))
+            )
+            deposition = client.create_deposition(
+                {"title": "Reserved", "prereserve_doi": True}
+            )
+        finally:
+            server.stop()
+
+        assert deposition.deposition_id == "22222"
+        assert deposition.reserved_doi == "10.5281/zenodo.22222"
+        assert deposition.concept_record_id == "11111"
+        assert deposition.concept_doi == "10.5281/zenodo.11111"
 
     def test_upload_uses_bucket_url_not_deposition_id(
         self, tmp_path: Path, zenodo_test_server
@@ -206,15 +273,17 @@ class TestZenodoClientDepositFlow:
         server = HTTPServer()
         server.start()
         try:
-            server.expect_request("/deposit/depositions", method="POST").respond_with_json(
+            server.expect_request(
+                "/deposit/depositions", method="POST"
+            ).respond_with_json(
                 {
                     "id": 999,
                     "links": {"bucket": f"{server.url_for('')}/files/bucket999"},
                 }
             )
-            server.expect_request("/files/bucket999/paper.pdf", method="PUT").respond_with_json(
-                {"key": "paper.pdf"}
-            )
+            server.expect_request(
+                "/files/bucket999/paper.pdf", method="PUT"
+            ).respond_with_json({"key": "paper.pdf"})
             server.expect_request(
                 "/deposit/depositions/999/actions/publish",
                 method="POST",
@@ -254,7 +323,13 @@ class TestZenodoVersioning:
         server = HTTPServer()
         server.start()
         server.expect_request("/deposit/depositions", method="GET").respond_with_json(
-            [{"id": 888, "doi": "10.5281/zenodo.list", "metadata": {"doi": "10.5281/zenodo.list"}}]
+            [
+                {
+                    "id": 888,
+                    "doi": "10.5281/zenodo.list",
+                    "metadata": {"doi": "10.5281/zenodo.list"},
+                }
+            ]
         )
         try:
             config = ZenodoConfig(access_token="test", base_url=server.url_for(""))
@@ -282,9 +357,9 @@ class TestZenodoVersioning:
                 payload = []
             return Response(json.dumps(payload), mimetype="application/json")
 
-        server.expect_request("/deposit/depositions", method="GET").respond_with_handler(
-            deposition_handler
-        )
+        server.expect_request(
+            "/deposit/depositions", method="GET"
+        ).respond_with_handler(deposition_handler)
         server.expect_request("/records", method="GET").respond_with_json(
             {
                 "hits": {
@@ -301,7 +376,9 @@ class TestZenodoVersioning:
         try:
             config = ZenodoConfig(access_token="test", base_url=server.url_for(""))
             client = ZenodoClient(config)
-            deposition_id = client.resolve_deposition_id_from_doi("10.5281/zenodo.20415768")
+            deposition_id = client.resolve_deposition_id_from_doi(
+                "10.5281/zenodo.20415768"
+            )
             assert deposition_id == "20415779"
         finally:
             server.stop()
@@ -319,7 +396,9 @@ class TestZenodoVersioning:
         assert result.deposition_id == "54321"
         removed = client.clear_deposition_files(result.deposition_id)
         assert removed == ["test_release_combined.pdf"]
-        client.update_deposition_metadata(result.deposition_id, {"title": "Updated title"})
+        client.update_deposition_metadata(
+            result.deposition_id, {"title": "Updated title"}
+        )
 
     def test_clear_deposition_files_empty_draft(self) -> None:
         from pytest_httpserver import HTTPServer
@@ -327,9 +406,9 @@ class TestZenodoVersioning:
         server = HTTPServer()
         server.start()
         try:
-            server.expect_request("/deposit/depositions/777", method="GET").respond_with_json(
-                {"id": 777, "files": []}
-            )
+            server.expect_request(
+                "/deposit/depositions/777", method="GET"
+            ).respond_with_json({"id": 777, "files": []})
             config = ZenodoConfig(access_token="test", base_url=server.url_for(""))
             client = ZenodoClient(config)
             assert client.clear_deposition_files("777") == []

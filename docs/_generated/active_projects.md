@@ -8,16 +8,19 @@ Runtime discovery still uses `infrastructure.project.discovery.discover_projects
 
 Human-written documentation should **not** copy this list into RUN_GUIDE, PAI, or other guides; link here instead. For concrete paths, commands, and layout examples, default to the stable exemplar [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/) unless a doc explicitly compares layouts.
 
-Generated at (timezone.utc): `2026-06-02T12:03:22+00:00`
+Generated at (timezone.utc): `2026-06-03T22:11:25+00:00`
 
 Current entries:
 
 - `templates/template_active_inference`
 - `templates/template_autoresearch_project`
+- `templates/template_autoscientists`
 - `templates/template_code_project`
 - `templates/template_newspaper`
 - `templates/template_prose_project`
+- `templates/template_sia`
 - `templates/template_template`
+- `templates/template_textbook`
 
 Regenerate after adding, removing, or renaming projects:
 

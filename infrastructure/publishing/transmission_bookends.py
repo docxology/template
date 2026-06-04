@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any, Literal
 
 from infrastructure.core.config.loader import load_config
-from infrastructure.core.files.operations import calculate_file_hash
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing.zenodo_urls import zenodo_record_url_from_doi
 from infrastructure.publishing.metadata_from_config import publication_metadata_from_config
@@ -331,24 +330,12 @@ def build_transmission_context(
     github_release_url_value = (
         str(latest.get("github_release_url")) if latest and latest.get("github_release_url") else None
     )
-    pdf_sha256 = None
-    pdf_sha512 = None
-    pdf_path = None
-    if latest and latest.get("pdf_sha256"):
-        pdf_sha256 = str(latest.get("pdf_sha256"))
-    else:
-        from infrastructure.publishing.release_workflow import resolve_combined_pdf
-
-        pdf_path = resolve_combined_pdf(resolved_repo, project_name)
-        if pdf_path and pdf_path.is_file():
-            pdf_sha256 = calculate_file_hash(pdf_path)
-
-    if pdf_path is None:
-        from infrastructure.publishing.release_workflow import resolve_combined_pdf
-
-        pdf_path = resolve_combined_pdf(resolved_repo, project_name)
-    if pdf_path and pdf_path.is_file():
-        pdf_sha512 = calculate_file_hash(pdf_path, algorithm="sha512")
+    # Do not hash the current combined PDF here. During render, that file is
+    # either absent or from a previous run, so embedding its digest in draft
+    # bookends creates stale release metadata by construction. Published hashes
+    # must come from the explicit publication ledger.
+    pdf_sha256 = str(latest.get("pdf_sha256")) if latest and latest.get("pdf_sha256") else None
+    pdf_sha512 = str(latest.get("pdf_sha512")) if latest and latest.get("pdf_sha512") else None
 
     zenodo_record_url = zenodo_record_url_from_doi(doi) if doi else None
     pairing = validate_release_pairing(
@@ -406,7 +393,7 @@ def build_transmission_context(
         manifest_path=f"../data/{MANIFEST_FILENAME}",
         prior_releases_table=prior_table,
         prior_compact=prior_compact,
-        published=bool(doi and github_release_url_value and pdf_sha256),
+        published=bool(latest and doi and github_release_url_value and pdf_sha256 and pairing.valid),
     )
 
     manifest_path = project_root / "output" / "data" / MANIFEST_FILENAME

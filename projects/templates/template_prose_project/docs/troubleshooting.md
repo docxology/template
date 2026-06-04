@@ -86,7 +86,7 @@ a list of files that do not start with `#`.
 
 ### "Coverage below 90%"
 
-**Symptom:** `uv run pytest projects/template_prose_project/tests/` exits with
+**Symptom:** `uv run pytest projects/templates/template_prose_project/tests/` exits with
 "coverage below 90".
 
 **Fixes:**
@@ -101,7 +101,7 @@ a list of files that do not start with `#`.
 ```
 _pytest.pathlib.ImportPathMismatchError: ('tests.conftest', ...)
 ```
-when running `uv run pytest tests/ projects/template_prose_project/tests/` together.
+when running `uv run pytest tests/ projects/templates/template_prose_project/tests/` together.
 
 **Cause:** Both directories are named `tests/` and pytest's import path
 discovery confuses them.
@@ -157,7 +157,7 @@ prints `Project: ✓ PASSED (0/0 tests, 0.0% coverage)` and exits 0, while the
 documented direct command runs all tests at full coverage.
 
 **Cause:** the aggregate runner resolves the project interpreter from
-`projects/template_prose_project/.venv`. If that venv exists but lacks
+`projects/templates/template_prose_project/.venv`. If that venv exists but lacks
 `pytest`/`pytest-cov` (created by `uv venv` without `uv sync`), pytest
 collects nothing. A green exit with **zero collected tests is not a pass.**
 
@@ -167,8 +167,8 @@ collects nothing. A green exit with **zero collected tests is not a pass.**
    quality gate (it always uses the workspace interpreter and the repo-root
    coverage config):
    ```bash
-   uv run pytest projects/template_prose_project/tests/ \
-     --cov=projects/template_prose_project/src --cov-fail-under=90
+   uv run pytest projects/templates/template_prose_project/tests/ \
+     --cov=projects/templates/template_prose_project/src --cov-fail-under=90
    ```
 2. Or `uv sync` so the per-project `.venv` has the test deps.
 3. Always verify the run **collected > 0 tests AND coverage ≥ 90%** — exit

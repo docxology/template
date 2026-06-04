@@ -53,6 +53,7 @@ This index lists documentation files in the Research Project Template by categor
 | Logging | [operational/logging/output-design.md](operational/logging/output-design.md) | [operational/logging/python-logging.md](operational/logging/python-logging.md), [operational/logging/bash-logging.md](operational/logging/bash-logging.md) |
 | Secure / steganography | [guides/secure-research-guide.md](guides/secure-research-guide.md) | [security/README.md](security/README.md), [security/secure_execution.md](security/secure_execution.md) |
 | Literature search | [guides/literature-workflow-guide.md](guides/literature-workflow-guide.md) | [core/literature-data-flow.md](core/literature-data-flow.md), [modules/literature-search-and-references.md](modules/literature-search-and-references.md) |
+| Web search (Exa) | [modules/guides/search-module.md](modules/guides/search-module.md#exa-web-search-exa) | [../infrastructure/search/exa/CAPABILITIES.md](../infrastructure/search/exa/CAPABILITIES.md) |
 
 **Module package counts:** link [modules/modules-guide.md](modules/modules-guide.md) or regenerate from `infrastructure/` discovery — do not hand-edit competing literals across hub pages.
 
@@ -135,7 +136,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 ### Skill-Level Guides
 
 - **[guides/getting-started.md](guides/getting-started.md)** - Levels 1-3 (Beginner)
-- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** - Canonical manuscript syntax (citations, cross-references, sections, tokens) shared by all three template exemplars
+- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** - Canonical manuscript syntax (citations, cross-references, sections, tokens) shared by all nine public template exemplars
 - **[guides/methods-orchestration.md](guides/methods-orchestration.md)** - Connect methods prose, pipeline contracts, artifacts, and evidence registries
 - **[guides/codegraph-local.md](guides/codegraph-local.md)** - Optional local CodeGraph indexing for agent code navigation and impact checks
 - **[guides/figures-and-analysis.md](guides/figures-and-analysis.md)** - Levels 4-6 (Intermediate)
@@ -221,6 +222,8 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[modules/guides/prose-module.md](modules/guides/prose-module.md)**
 - **[modules/guides/search-module.md](modules/guides/search-module.md)**
 - **[modules/guides/reference-module.md](modules/guides/reference-module.md)**
+- **[modules/guides/methods-module.md](modules/guides/methods-module.md)**
+- **[modules/guides/sia-module.md](modules/guides/sia-module.md)**
 
 ---
 

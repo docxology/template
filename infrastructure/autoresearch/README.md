@@ -59,7 +59,7 @@ budget:
   max_llm_calls: 0
   max_cost_usd: 0.0
 edit_allowlist:
-  - projects/template_autoresearch_project/src/
+  - projects/templates/template_autoresearch_project/src/
 metric_direction: maximize
 acceptance_policy: "Accepted ideas require evidence links and human review."
 quality_checks:

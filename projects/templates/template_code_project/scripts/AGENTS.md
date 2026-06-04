@@ -48,7 +48,7 @@ Scripts require the project dependencies:
 ### Running the Analysis
 
 ```bash
-# From projects/template_code_project/
+# From projects/templates/template_code_project/
 uv run python scripts/optimization_analysis.py
 ```
 

@@ -12,7 +12,7 @@ uv run python scripts/01_run_tests.py --infra-only --infra-scope pipeline-smoke
 uv run python scripts/01_run_tests.py --infra-only --infra-scope full
 
 # Project tests — control positive exemplar (≥90% coverage floor)
-uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-fail-under=90
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-fail-under=90
 
 # Integration tests
 uv run pytest tests/integration/ -v

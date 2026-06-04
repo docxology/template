@@ -36,6 +36,7 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 | `prose/` | Prose analysis (readability, structure, editorial quality, manuscript reports) | `analyze_manuscript`, `compute_metrics`, `analyze_structure`, `analyze_quality` |
 | `reporting/` | Pipeline reports, error aggregation, dashboards | `generate_pipeline_report`, `get_error_aggregator` |
 | `scientific/` | Benchmarking, numerical stability, scientific templates | `benchmark_function`, `check_numerical_stability` |
+| `sia/` | SIA harness: task layout, fixture replay loop, evaluation runner | `validate_task_dir`, `run_sia_loop`, `run_evaluation` |
 | `project/` | Multi-project discovery and validation | `discover_projects`, `validate_project_structure` |
 | `skills/` | Enumerate and parse `SKILL.md`; maintain Cursor manifest | `discover_skills`, `write_skill_manifest` |
 | `steganography/` | Cryptographic PDF watermarking and verification | `SteganographyProcessor`, `SteganographyConfig`, `embed_steganography` |
@@ -86,7 +87,7 @@ uv run python scripts/execute_pipeline.py --project template_code_project --core
 ### Validating Outputs
 
 ```bash
-uv run python -m infrastructure.validation.cli.main markdown projects/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli.main markdown projects/templates/template_code_project/manuscript/
 uv run python -m infrastructure.validation.cli.main pdf output/template_code_project/pdf/
 ```
 

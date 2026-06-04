@@ -13,7 +13,10 @@ ALLOWED_PROJECT_DIRS: tuple[str, ...] = (
     "projects/templates/template_code_project/",
     "projects/templates/template_newspaper/",
     "projects/templates/template_prose_project/",
+    "projects/templates/template_sia/",
     "projects/templates/template_template/",
+    "projects/templates/template_textbook/",
+    "projects/templates/template_autoscientists/",
 )
 # Repo-level navigation docs may live directly under projects/ (projects/*.md).
 ALLOWED_PROJECTS_TOPLEVEL = re.compile(r"^projects/[^/]+\.md$")
@@ -47,6 +50,7 @@ ALLOWED_TRACKED_OUTPUT_PREFIXES: tuple[str, ...] = (
     "output/templates/template_code_project/",
     "output/templates/template_newspaper/",
     "output/templates/template_prose_project/",
+    "output/templates/template_sia/",
     "output/templates/template_template/",
 )
 

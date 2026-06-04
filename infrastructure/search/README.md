@@ -1,6 +1,7 @@
 # Search Module
 
-Discovery utilities for academic literature, modelled after
+Discovery utilities for literature and the web. Each **search interface** is an
+independent subpackage; the literature side is modelled after
 [Paperclip](https://paperclip.gxl.ai)'s agent-native abstractions.
 
 ## Submodules
@@ -8,6 +9,21 @@ Discovery utilities for academic literature, modelled after
 | Submodule | Purpose |
 |---|---|
 | [`literature`](literature/) | Multi-source paper search across arXiv, Crossref, local JSON corpora, and Paperclip; deterministic caching; aggregator client; CLI. |
+| [`exa`](exa/) | General web search, content extraction, and grounded answers via the [Exa API](https://exa.ai). One subpackage per endpoint: [`search`](exa/search/), [`contents`](exa/contents/), [`answer`](exa/answer/), [`find_similar`](exa/find_similar/). Pure-stdlib transport, no SDK, no import-time network. |
+
+## Exa quick start
+
+```python
+from infrastructure.search.exa import ExaClient  # needs EXA_API_KEY
+
+client = ExaClient.from_env()
+for r in client.search("Next.js route handler auth example", num_results=10).results:
+    print(r.title, r.url)
+```
+
+See [`exa/README.md`](exa/README.md) for the full interface, structured-output,
+and CLI reference. Canonical API docs:
+<https://docs.exa.ai/reference/search-api-guide-for-coding-agents>.
 
 ## Quick Start
 

@@ -1,7 +1,7 @@
 # Results Invariants
 
 IMRaD **Results** section of the Active Inference multi-track manuscript
-(`projects/template_active_inference`). This directory holds the Markdown
+(`projects/templates/template_active_inference`). This directory holds the Markdown
 fragment(s) for the `results_invariants` section, which the renderer assembles into the
 combined manuscript across the analytical, pymdp, and sheaf tracks.
 

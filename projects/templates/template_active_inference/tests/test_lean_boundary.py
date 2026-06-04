@@ -9,6 +9,8 @@ def test_load_lean_boundary_rows(project_root: Path) -> None:
     names = {row.name for row in rows}
     assert "sophisticated_requires_horizon" in names
     assert "ising_coupling_sum_zero" in names
+    assert "graph_world_three_steps_reach_goal" in names
+    assert "policy_enumeration_contains_forward" in names
     assert all(row.status == "proved" for row in rows)
 
 

@@ -1,13 +1,13 @@
 ---
 name: infrastructure-reference
-description: Bibliographic-reference utilities for research projects. Read, write, and convert BibTeX entries that match the syntax/semantics of projects/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib during PDF render -- see infrastructure/rendering/_pdf_combined_renderer.py). Currently exposes the `citation` submodule (BibTeX I/O + Paper→BibEntry conversion); designed to host additional reference workflows (e.g. CSL-JSON export, ORCID lookups) without breaking the public API.
+description: Bibliographic-reference utilities for research projects. Read, write, and convert BibTeX entries that match the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib during PDF render -- see infrastructure/rendering/_pdf_combined_renderer.py). Currently exposes the `citation` submodule (BibTeX I/O + Paper→BibEntry conversion); designed to host additional reference workflows (e.g. CSL-JSON export, ORCID lookups) without breaking the public API.
 ---
 
 # Reference Module
 
 Bibliographic-reference workflows for the template's two-layer architecture.
 Output is byte-compatible with the existing
-``projects/template_code_project/manuscript/references.bib`` format and round-trips
+``projects/templates/template_code_project/manuscript/references.bib`` format and round-trips
 through the parser without semantic loss.
 
 ## `citation` — BibTeX read/write/convert
@@ -25,7 +25,7 @@ from infrastructure.reference.citation import (
 ### Read & validate an existing `.bib`
 
 ```python
-db = parse_bibfile("projects/template_code_project/manuscript/references.bib")
+db = parse_bibfile("projects/templates/template_code_project/manuscript/references.bib")
 print(len(db), "entries")
 boyd = db.find("boyd2004convex")
 assert boyd.entry_type == "article"
@@ -83,7 +83,7 @@ write_bibfile("output/references.bib", db)
 ```bash
 # Round-trip-parse a .bib file.
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/template_code_project/manuscript/references.bib
+    projects/templates/template_code_project/manuscript/references.bib
 
 # Re-emit a .bib in canonical format (overwrites in place).
 uv run python -m infrastructure.reference.citation.cli format path/to/refs.bib

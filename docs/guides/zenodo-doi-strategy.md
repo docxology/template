@@ -28,7 +28,7 @@ Sidecars must agree on **version string** and **concept DOI**:
 - `version` in `CITATION.cff` and `.zenodo.json`
 - `doi` in `CITATION.cff` = concept DOI only
 
-Rendering reads **`publication.doi` only** for the PDF title page and suggested citation block ([`_pdf_latex_helpers.py`](../../infrastructure/rendering/_pdf_latex_helpers.py)). It does not display `version_doi` on the cover.
+Rendering reads **`publication.doi` only** for the PDF title page and suggested citation block ([`_pdf_title_page.py`](../../infrastructure/rendering/_pdf_title_page.py)). It does not display `version_doi` on the cover.
 
 ## Public exemplar matrix
 
@@ -60,6 +60,28 @@ flowchart TD
 3. Run `uv run python scripts/publish_project_release.py --project {name} --tag vX.Y.Z --repo docxology/{name}`.
 4. After deposit, verify `version_doi` / `version_record` updated and `doi` unchanged.
 5. Sync `CITATION.cff`, `.zenodo.json`, and GitHub release notes (concept + version DOI + PDF SHA-256).
+
+## Reserve-first release (`--reserve-doi-first`)
+
+When the combined PDF must show the minted DOI on the cover **before** the first public deposit, use the reserve-first path documented in [`publishing-guide.md`](publishing-guide.md):
+
+```bash
+uv run python scripts/publish_project_release.py \
+  --project templates/template_code_project \
+  --tag v1.0.0 \
+  --repo docxology/template_code_project \
+  --reserve-doi-first
+```
+
+Flow (via [`release_workflow_zenodo.py`](../../infrastructure/publishing/release_workflow_zenodo.py)):
+
+1. Create a Zenodo draft with `prereserve_doi=True`.
+2. Write **concept DOI** to `publication.doi` and **version DOI** to `publication.version_doi`.
+3. Re-render the combined PDF so the cover reads the concept DOI.
+4. Upload the DOI-bearing PDF to the reserved draft and publish.
+5. Create the GitHub release (optional when `--skip-github`).
+
+Reserve-first is for **first releases** only unless `--new-version` is explicitly supported by the workflow; already-published concept DOIs should use the standard `--new-version` path instead.
 
 ## Checklist before tagging a release
 

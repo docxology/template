@@ -97,9 +97,9 @@ No environment variables. Pure-Python, stdlib-only.
 
 The Prose module is consumed by:
 
-* `projects/template_prose_project/` — full exemplar pipeline using
+* `projects/templates/template_prose_project/` — full exemplar pipeline using
   prose + reference modules.
-* `projects/template_code_project/` and other projects — invoke the CLI
+* `projects/templates/template_code_project/` and other projects — invoke the CLI
   in their analysis stage to attach a `prose_report.json` artefact.
 * Manuscript review workflows — the `ManuscriptReport` JSON is small,
   greppable, diff-friendly.
@@ -137,5 +137,5 @@ uv run python -m infrastructure.prose.cli quality \
 - [`SKILL.md`](SKILL.md) — agent-oriented API.
 - [`infrastructure/reference/`](../reference/) — citation export sister
   module.
-- [`projects/template_prose_project/`](../../projects/template_prose_project/)
+- [`projects/templates/template_prose_project/`](../../projects/templates/template_prose_project/)
   — exemplar project.

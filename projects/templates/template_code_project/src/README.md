@@ -57,7 +57,7 @@ x_star, f_star = quadratic_optimum(cfg.A_array(), cfg.b_array())
 ### Run Tests
 
 ```bash
-cd projects/template_code_project
+cd projects/templates/template_code_project
 uv run pytest tests/ --cov=src --cov-fail-under=90
 ```
 

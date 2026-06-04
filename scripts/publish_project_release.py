@@ -23,7 +23,11 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 ensure_repo_root_on_path()
 
 from infrastructure.core.exceptions import MetadataError, PublishingError  # noqa: E402
-from infrastructure.core.logging.utils import get_logger, log_header, log_success  # noqa: E402
+from infrastructure.core.logging.utils import (
+    get_logger,
+    log_header,
+    log_success,
+)  # noqa: E402
 from infrastructure.publishing.release_workflow import (  # noqa: E402
     ReleaseRequest,
     resolve_combined_pdf,
@@ -55,7 +59,9 @@ def _build_parser() -> argparse.ArgumentParser:
         "--repo",
         help="GitHub repository owner/name (default: GITHUB_REPO env)",
     )
-    parser.add_argument("--release-name", help="GitHub release title (default: paper title + tag)")
+    parser.add_argument(
+        "--release-name", help="GitHub release title (default: paper title + tag)"
+    )
     parser.add_argument(
         "--production",
         action="store_true",
@@ -66,15 +72,36 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Force a new Zenodo version when publication.doi is already set",
     )
-    parser.add_argument("--skip-github", action="store_true", help="Skip GitHub release")
-    parser.add_argument("--skip-zenodo", action="store_true", help="Skip Zenodo deposit")
-    parser.add_argument("--skip-rerender", action="store_true", help="Skip PDF re-render after DOI update")
+    parser.add_argument(
+        "--skip-github", action="store_true", help="Skip GitHub release"
+    )
+    parser.add_argument(
+        "--skip-zenodo", action="store_true", help="Skip Zenodo deposit"
+    )
+    parser.add_argument(
+        "--skip-rerender",
+        action="store_true",
+        help="Skip PDF re-render after DOI update",
+    )
+    parser.add_argument(
+        "--reserve-doi-first",
+        action="store_true",
+        help=(
+            "Reserve a Zenodo DOI before building the final bundle, write "
+            "concept/version DOI fields, re-render, then upload the "
+            "DOI-bearing PDF to the same draft"
+        ),
+    )
     parser.add_argument(
         "--allow-draft-abstract",
         action="store_true",
         help="Allow empty abstract (Zenodo may reject in production)",
     )
-    parser.add_argument("--dry-run", action="store_true", help="Prepare bundle and receipt without API calls")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Prepare bundle and receipt without API calls",
+    )
     parser.add_argument("--github-token", help="GitHub token (default: GITHUB_TOKEN)")
     parser.add_argument("--zenodo-token", help="Zenodo token (default: env-based)")
     return parser
@@ -106,7 +133,9 @@ def main(argv: list[str] | None = None) -> int:
         logger.error("Set --github-token or GITHUB_TOKEN for GitHub release")
         return 2
     if not args.skip_zenodo and not args.dry_run and not zenodo_token:
-        logger.error("Set --zenodo-token or ZENODO_SANDBOX_TOKEN / ZENODO_PROD_TOKEN / ZENODO_TOKEN")
+        logger.error(
+            "Set --zenodo-token or ZENODO_SANDBOX_TOKEN / ZENODO_PROD_TOKEN / ZENODO_TOKEN"
+        )
         return 2
 
     log_header(f"Project release: {args.project} ({args.tag})")
@@ -121,6 +150,7 @@ def main(argv: list[str] | None = None) -> int:
         skip_github=args.skip_github,
         skip_zenodo=args.skip_zenodo,
         skip_rerender=args.skip_rerender,
+        reserve_doi_first=args.reserve_doi_first,
         dry_run=args.dry_run,
         allow_draft_abstract=args.allow_draft_abstract,
         release_name=args.release_name,

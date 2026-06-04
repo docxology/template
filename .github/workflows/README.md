@@ -120,7 +120,7 @@ gh run rerun <run-id> --failed
 uv run pytest tests/infra_tests/test_foo.py::TestClass::test_method -s --pdb
 
 # Coverage HTML report
-uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=html
 open htmlcov/index.html
 ```
 

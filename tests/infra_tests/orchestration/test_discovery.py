@@ -33,6 +33,16 @@ def test_validate_project_slug_accepts_rotating_project(fake_repo: Path) -> None
     assert validate_project_slug("some_rotating_project", fake_repo) == "some_rotating_project"
 
 
+def test_validate_project_slug_accepts_unique_bare_nested_template(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "templates" / "template_demo"
+    (project / "src").mkdir(parents=True)
+    (project / "tests").mkdir()
+    (project / "src" / "__init__.py").write_text("", encoding="utf-8")
+
+    assert validate_project_slug("template_demo", tmp_path) == "templates/template_demo"
+    assert validate_project_slug("templates/template_demo", tmp_path) == "templates/template_demo"
+
+
 def test_validate_project_slug_rejects_empty(fake_repo: Path) -> None:
     with pytest.raises(ValueError, match="non-empty"):
         validate_project_slug("", fake_repo)

@@ -70,6 +70,17 @@ Cross-link lint also skips `**/_skill-eval/**` via `_DEFAULT_EXCLUDE_GLOBS`.
 - claims that `secure_run.sh` owns `--deterministic` parsing (Python `secure` subcommand owns the flag)
 - unconditional `projects/template_search_project/` without `projects/archive/` or local-only copy context
 
+## Mermaid lint (`mermaid_lint.py`)
+
+Fenced Mermaid blocks are validated by invoking `mmdc` (Mermaid CLI). Batch rendering
+reduces subprocess churn; a repo-wide total timeout caps wall time on large doc trees.
+
+| Environment variable | Default | Purpose |
+| --- | --- | --- |
+| `TEMPLATE_MERMAID_LINT_TIMEOUT` | `30` | Per-file `mmdc` timeout (seconds) |
+| `TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT` | `120` | Total budget across all files in one lint run |
+| `TEMPLATE_MERMAID_LINT_BATCH_SIZE` | `20` | Max diagrams per batch `mmdc` invocation |
+
 ## See Also
 
 - [`README.md`](README.md)

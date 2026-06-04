@@ -101,3 +101,25 @@ def test_pipeline_skip_branches_present() -> None:
     assert "[skip] HTML rendering disabled" in source
     assert "_render_combined_docx" in source
     assert "_render_combined_epub" in source
+
+
+def test_combined_html_skips_missing_transmission_bookends(tmp_path) -> None:
+    """Combined HTML should survive PDF-side cleanup of generated bookends."""
+    from infrastructure.publishing.transmission_bookends import BEGIN_FILENAME, END_FILENAME
+    from infrastructure.rendering.pipeline import _html_combined_source_files
+
+    body = tmp_path / "01_body.md"
+    body.write_text("# Body\n", encoding="utf-8")
+    missing_regular = tmp_path / "02_missing.md"
+
+    filtered = _html_combined_source_files(
+        [
+            tmp_path / BEGIN_FILENAME,
+            body,
+            tmp_path / END_FILENAME,
+        ]
+    )
+    with_regular_missing = _html_combined_source_files([body, missing_regular])
+
+    assert filtered == [body]
+    assert with_regular_missing == [body, missing_regular]

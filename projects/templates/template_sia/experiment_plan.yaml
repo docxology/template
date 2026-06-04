@@ -1,0 +1,6 @@
+experiment:
+  name: mini_classify_fixture_replay
+  primary_metric: accuracy
+  baseline: 0.5
+  max_generations: 3
+  live_default: false

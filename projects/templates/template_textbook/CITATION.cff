@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this template or its content, please cite it using the metadata from this file."
+title: "The Template Textbook"
+abstract: "A modular, fillable scaffold for book-length technical works: a data-driven manuscript (parts/chapters/labs/questions), a tested computational backbone, deterministic figures and Mermaid diagrams, and a content scaffold/validation engine."
+type: software
+authors:
+  - given-names: "Daniel Ari"
+    family-names: "Friedman"
+    orcid: "https://orcid.org/0000-0001-6232-9096"
+    affiliation: "Active Inference Institute"
+    email: "daniel@activeinference.institute"
+version: "0.1.0"
+date-released: "2026-06-03"
+license: "Apache-2.0"
+doi: "10.5281/zenodo.20533125"
+repository-code: "https://github.com/docxology/template_textbook"
+url: "https://github.com/docxology/template_textbook"
+keywords:
+  - "open textbook"
+  - "modular manuscript"
+  - "reproducible publishing"
+  - "computational backbone"
+  - "Python"

@@ -9,8 +9,8 @@ It demonstrates the complete research pipeline from algorithm implementation thr
 This project is explicitly designed to showcase the repository's three foundational pillars:
 
 1. **`infrastructure/` Layer**: The code delegates tracking, performance benchmarking, stability validation, and PDF rendering to the shared infrastructure packages at the repository root. Current package counts live in [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
-2. **`tests/` Integrity**: A zero-mock suite ([`projects/template_code_project/tests/`](../tests/)) with **≥90%** coverage on `projects/template_code_project/src/`. Live test count and measured coverage: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
-3. **`docs/` Orchestration**: Project documentation under `projects/template_code_project/docs/` records the operational patterns and is checked by the repository documentation lint gates.
+2. **`tests/` Integrity**: A zero-mock suite ([`projects/templates/template_code_project/tests/`](../tests/)) with **≥90%** coverage on `projects/templates/template_code_project/src/`. Live test count and measured coverage: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
+3. **`docs/` Orchestration**: Project documentation under `projects/templates/template_code_project/docs/` records the operational patterns and is checked by the repository documentation lint gates.
 
 ## Manuscript Structure
 
@@ -32,7 +32,7 @@ graph TD
     classDef project fill:#e1f5fe,stroke:#0277bd,stroke-width:2px;
     classDef docs fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
 
-    subgraph "Project Space (`projects/template_code_project/`)"
+    subgraph "Project Space (`projects/templates/template_code_project/`)"
         Script["scripts/optimization_analysis.py"]:::project
         Manuscript["manuscript/*.md"]:::project
     end
@@ -65,7 +65,7 @@ Experience the automated pipeline directly:
 
 ```bash
 # From repository root
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 uv run python scripts/03_render_pdf.py --project template_code_project
 

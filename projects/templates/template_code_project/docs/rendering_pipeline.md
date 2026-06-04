@@ -38,7 +38,7 @@ The pipeline has four steps. Each step must complete before the next begins.
 
 **Command**:
 ```bash
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 ```
 
 **Inputs**: `src/optimizer.py` functions + `manuscript/config.yaml` experiment parameters
@@ -65,7 +65,7 @@ uv run python projects/template_code_project/scripts/optimization_analysis.py
 
 **Command**:
 ```bash
-uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
 ```
 
 **Inputs**: `manuscript/config.yaml` + `output/data/optimization_results.csv` + `output/reports/*.json`
@@ -91,7 +91,7 @@ uv run python scripts/03_render_pdf.py --project template_code_project
 
 **Inputs**: `output/manuscript/*.md` (substituted) + `manuscript/config.yaml` + `manuscript/preamble.md` + `manuscript/references.bib`
 
-When `publication.transmission_bookends.enabled: true`, the combined PDF also includes generated `00_00_transmission_begin.md` and `99_zz_transmission_end.md` (compact metadata, dual-row integrity strip, `transmission_manifest.json`, prior releases capped at three rows on the end page). Verify single-page fit: `uv run python -m infrastructure.publishing.transmission_page_check projects/template_code_project/output/pdf/template_code_project_combined.pdf`. After render, run `uv run python -m infrastructure.orchestration secure --steganography-only --project template_code_project --deterministic` for the hardened `*_steganography.pdf` and `.hashes.json` manifest; the Python `secure` subcommand owns `--deterministic`. See [`docs/guides/publishing-guide.md`](../../../../docs/guides/publishing-guide.md#transmission-bookends-optional).
+When `publication.transmission_bookends.enabled: true`, the combined PDF also includes generated `00_00_transmission_begin.md` and `99_zz_transmission_end.md` (compact metadata, dual-row integrity strip, `transmission_manifest.json`, prior releases capped at three rows on the end page). Verify single-page fit: `uv run python -m infrastructure.publishing.transmission_page_check projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf`. After render, run `uv run python -m infrastructure.orchestration secure --steganography-only --project template_code_project --deterministic` for the hardened `*_steganography.pdf` and `.hashes.json` manifest; the Python `secure` subcommand owns `--deterministic`. See [`docs/guides/publishing-guide.md`](../../../../docs/guides/publishing-guide.md#transmission-bookends-optional).
 
 Zenodo and GitHub uploads use a metadata-driven basename from `publication.deposit_filename` (e.g. `Author_2026_Convergence_b591a0ce.pdf`); the local working file remains `template_code_project_combined.pdf`. See [Deposit upload filename](../../../../docs/guides/publishing-guide.md#deposit-upload-filename).
 
@@ -105,11 +105,11 @@ Zenodo and GitHub uploads use a metadata-driven basename from `publication.depos
 | `infrastructure/core/config/loader.py` | Reads `manuscript/config.yaml` for title, authors, metadata |
 
 **Outputs**:
-- `projects/template_code_project/output/pdf/template_code_project_combined.pdf` — working publication PDF
+- `projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf` — working publication PDF
 - `output/template_code_project/pdf/template_code_project_combined.pdf` — copied final publication PDF after Stage 07
-- `projects/template_code_project/output/pdf/_combined_manuscript.*` — LaTeX intermediates (`.tex`, `.aux`, `.log`)
-- `projects/template_code_project/output/slides/` — per-section Beamer slide PDFs (one per manuscript section)
-- `projects/template_code_project/output/web/` — HTML versions of each section
+- `projects/templates/template_code_project/output/pdf/_combined_manuscript.*` — LaTeX intermediates (`.tex`, `.aux`, `.log`)
+- `projects/templates/template_code_project/output/slides/` — per-section Beamer slide PDFs (one per manuscript section)
+- `projects/templates/template_code_project/output/web/` — HTML versions of each section
 
 ### Copy deliverables
 
@@ -145,13 +145,13 @@ uv run python scripts/05_copy_outputs.py --project template_code_project
 **Fix**:
 ```bash
 # Check whether output/data/manuscript_variables.json exists
-ls projects/template_code_project/output/data/manuscript_variables.json
+ls projects/templates/template_code_project/output/data/manuscript_variables.json
 
 # Re-run manuscript variables
-uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
 
 # Detect remaining unresolved tokens
-grep -r "{{" projects/template_code_project/output/manuscript/ | grep -v ".json"
+grep -r "{{" projects/templates/template_code_project/output/manuscript/ | grep -v ".json"
 ```
 
 ### Missing figure in PDF
@@ -162,8 +162,8 @@ grep -r "{{" projects/template_code_project/output/manuscript/ | grep -v ".json"
 
 **Fix**:
 ```bash
-ls projects/template_code_project/output/figures/*.png
-uv run python projects/template_code_project/scripts/optimization_analysis.py
+ls projects/templates/template_code_project/output/figures/*.png
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 ```
 
 ### BibTeX citation error / PDF fails to compile
@@ -172,7 +172,7 @@ uv run python projects/template_code_project/scripts/optimization_analysis.py
 
 **Cause**: Malformed entry in `manuscript/references.bib` (unclosed braces, duplicate keys, missing required fields).
 
-**Fix**: Validate `manuscript/references.bib` with a BibTeX linter or check `projects/template_code_project/output/pdf/_combined_manuscript.log` for the specific error message.
+**Fix**: Validate `manuscript/references.bib` with a BibTeX linter or check `projects/templates/template_code_project/output/pdf/_combined_manuscript.log` for the specific error message.
 
 ### Slides not generated
 

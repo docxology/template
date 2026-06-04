@@ -11,4 +11,4 @@ Sheaf tests are split by concern: `test_sheaf_manifest.py`, `test_sheaf_registry
 `test_sheaf_compose.py`, `test_sheaf_coverage.py`, `test_sheaf_cli.py`,
 `test_coverage_pipeline.py`, `test_sweep_io.py` (no monolithic `test_sheaf.py`).
 
-Run: `uv run pytest projects/template_active_inference/tests -q`.
+Run: `uv run pytest projects/templates/template_active_inference/tests -q`.

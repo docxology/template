@@ -174,6 +174,28 @@ def test_find_broken_links_reports_missing_public_project_source_link(tmp_path: 
     assert broken[0].target == "../src/missing.py"
 
 
+def test_find_broken_links_reports_unqualified_public_template_links(tmp_path: Path) -> None:
+    """Old ``projects/template_*`` links are stale public-exemplar paths."""
+    md = tmp_path / ".github" / "README.md"
+    _write(
+        md,
+        "[stale public exemplar](../projects/template_code_project/README.md)\n",
+    )
+
+    broken = find_broken_links([tmp_path])
+
+    assert len(broken) == 1
+    assert broken[0].target == "../projects/template_code_project/README.md"
+
+
+def test_find_broken_links_skips_missing_nonpublic_project_links(tmp_path: Path) -> None:
+    """Rotating local-only project references remain absent by design."""
+    md = tmp_path / "docs" / "local.md"
+    _write(md, "[local only](../projects/private_rotation/README.md)\n")
+
+    assert find_broken_links([tmp_path]) == []
+
+
 def test_find_broken_links_format_returns_string() -> None:
     bl = BrokenLink(
         file=Path("/x/y.md"),

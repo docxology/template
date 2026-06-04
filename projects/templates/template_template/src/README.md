@@ -1,4 +1,4 @@
-# projects/template_template/src/
+# projects/templates/template_template/src/
 
 Source wrapper for the meta-template project. Contains the `template_template/` subpackage (introspection, metrics, injection, visualization).
 

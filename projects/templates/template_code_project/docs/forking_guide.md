@@ -13,7 +13,7 @@
 uv sync
 
 # 1. Copy the exemplar to your new project name
-cp -r projects/template_code_project projects/my_project
+cp -r projects/templates/template_code_project projects/my_project
 rm -rf projects/my_project/src/*.egg-info     # stale package metadata
 rm -rf projects/my_project/output              # disposable
 

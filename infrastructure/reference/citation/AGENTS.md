@@ -57,7 +57,7 @@ uv run pytest tests/infra_tests/reference/ -v
 ```
 
 105+ tests, no mocks. Real round-trip against the exemplar
-`projects/template_code_project/manuscript/references.bib`.
+`projects/templates/template_code_project/manuscript/references.bib`.
 
 ## See also
 

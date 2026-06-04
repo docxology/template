@@ -4,7 +4,7 @@ terms:
     description: Analytical and pymdp artifacts validate pipeline wiring, not biological claims.
   state_inference_mode:
     label: State inference harness
-    description: Default T-maze mode runs infer_states with declared policy_len; full infer_policies is opt-in.
+    description: Default T-maze mode runs infer_states with declared policy_len; policy-comparison rows cover infer_policies separately.
   coverage_semantics:
     label: Coverage matrix semantics
     description: Black cells are bound and present; white unbound; gray bound but missing.

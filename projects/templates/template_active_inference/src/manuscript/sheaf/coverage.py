@@ -130,7 +130,10 @@ def coverage_matrix_to_dict(matrix: CoverageMatrix) -> dict[str, Any]:
 def write_coverage_json(matrix: CoverageMatrix, path: Path) -> Path:
     path = path.resolve()
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(coverage_matrix_to_dict(matrix), indent=2) + "\n", encoding="utf-8")
+    content = json.dumps(coverage_matrix_to_dict(matrix), indent=2) + "\n"
+    if path.is_file() and path.read_text(encoding="utf-8") == content:
+        return path
+    path.write_text(content, encoding="utf-8")
     return path
 
 

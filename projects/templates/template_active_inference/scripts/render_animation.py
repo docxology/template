@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Opt-in belief-trajectory GIF extension (placeholder frames from SI figure)."""
+"""Render belief-trajectory GIF extension from trace artifacts."""
 
 from __future__ import annotations
 
@@ -13,12 +13,12 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Write a deterministic placeholder GIF for the animation extension track.",
+        description="Write a deterministic trace-derived GIF for the animation extension track.",
     )
     parser.add_argument(
         "--skip",
         action="store_true",
-        help="Exit 0 without writing output (default pipeline path)",
+        help="Exit 0 without writing output (manual dry-run path)",
     )
     return parser
 

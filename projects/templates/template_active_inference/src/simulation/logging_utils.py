@@ -73,6 +73,7 @@ class RunLogger:
             return
         full = {"timestamp": _now_iso(), **dict(record)}
         validate_record(full)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.path.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(full, separators=(",", ":"), default=_json_default) + "\n")
 

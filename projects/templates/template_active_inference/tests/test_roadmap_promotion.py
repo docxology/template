@@ -5,9 +5,17 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from gate_support import ensure_gate_artifacts
+
+# These tests regenerate heavy sheaf gluing + roadmap-promotion artifacts (the negative
+# controls mutate generated output/ artifacts, defeating the bootstrap cache). They run
+# ~33-75s locally but ubuntu CI runners have been observed ~3.5x slower, so give the whole
+# module a wide per-test ceiling (a marker overrides the CLI --timeout value). 600s covers
+# the heaviest negative control on the slowest leg without masking a real hang.
+pytestmark = pytest.mark.timeout(600)
 
 
 def _load(path: Path) -> dict:

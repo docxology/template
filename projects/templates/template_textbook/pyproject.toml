@@ -1,0 +1,55 @@
+# template_textbook — exemplar book-length manuscript scaffold
+# Inherits workspace settings from the root pyproject.toml.
+#
+# This template demonstrates the *modular textbook* shape: a data-driven
+# manuscript (parts -> chapters -> sections), a tested computational backbone
+# under src/, deterministic figure + diagram generators, and a content
+# scaffolding/validation engine that lets authors fill marked stubs out to
+# hundreds or thousands of pages without drifting from the structural contract.
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "template_textbook"
+version = "0.1.0"
+description = "Modular, fillable textbook scaffold: data-driven manuscript (parts/chapters/labs/questions), tested computational backbone, deterministic figures + Mermaid diagrams, and a content scaffold/validation engine."
+authors = [{name = "Research Template Author", email = "author@research-template.org"}]
+requires-python = ">=3.10"
+dependencies = [
+    "pyyaml>=6.0",
+    "matplotlib>=3.7",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+
+[tool.uv]
+# Inherits workspace settings from root pyproject.toml

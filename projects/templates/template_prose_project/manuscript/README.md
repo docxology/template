@@ -22,7 +22,7 @@ Hand-curated manuscript and run policy for the prose-review exemplar.
 
 ```bash
 # After editing manuscript files, re-run the review:
-uv run python projects/template_prose_project/scripts/run_prose_pipeline.py
+uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
 ```
 
 The pipeline:

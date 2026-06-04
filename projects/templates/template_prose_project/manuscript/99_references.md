@@ -8,5 +8,5 @@ To validate that `references.bib` is syntactically clean:
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/template_prose_project/manuscript/references.bib --strict
+    projects/templates/template_prose_project/manuscript/references.bib --strict
 ```

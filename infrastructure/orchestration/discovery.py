@@ -31,6 +31,26 @@ def discover_qualified_names(repo_root: Path) -> list[str]:
     return sorted(p.qualified_name for p in projects)
 
 
+def _canonical_project_slug(slug: str, projects: Sequence[ProjectInfo]) -> str | None:
+    """Return the discovered qualified slug for an exact or unique bare-name match."""
+    exact = {project.qualified_name: project.qualified_name for project in projects}
+    if slug in exact:
+        return exact[slug]
+
+    matches = [project.qualified_name for project in projects if project.name == slug]
+    if not matches:
+        return None
+    priority = (
+        f"active/{slug}",
+        slug,
+        f"templates/{slug}",
+    )
+    for candidate in priority:
+        if candidate in matches:
+            return candidate
+    return sorted(matches)[0]
+
+
 def validate_project_slug(slug: str, repo_root: Path) -> str:
     """Validate a user-supplied project slug against discovered projects.
 
@@ -58,10 +78,12 @@ def validate_project_slug(slug: str, repo_root: Path) -> str:
     if slug.startswith("-"):
         raise ValueError(f"project slug must not start with '-': {slug!r}")
 
-    available = discover_qualified_names(repo_root)
-    if slug not in available:
+    projects = discover_projects(repo_root)
+    resolved = _canonical_project_slug(slug, projects)
+    if resolved is None:
+        available = sorted(p.qualified_name for p in projects)
         raise ValueError(f"project {slug!r} not found. Available: {', '.join(available) or '(none)'}")
-    return slug
+    return resolved
 
 
 def select_project_interactive(

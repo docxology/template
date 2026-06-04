@@ -22,12 +22,19 @@ figure_types:
   - multi_track_architecture
   - lean_boundary_status
   - gnn_ontology_concordance
+  - semantic_gluing_graph
 artifact_expectations:
   - output/data/parameter_sweep.csv
   - output/data/si_tmaze_summary.json
   - output/data/si_tmaze_trace.json
   - output/data/analysis_statistics.json
   - output/data/manuscript_variables.json
+  - output/data/sheaf_gluing_certificate.json
+  - output/data/sheaf_evidence_crosswalk.json
+  - output/data/validation_dependency_graph.json
+  - output/data/si_policy_comparison.json
+  - output/data/si_graph_world_summary.json
+  - output/data/si_graph_world_trace.json
   - output/figures/ising_mi_curve.png
   - output/figures/free_energy_curve.png
   - output/figures/si_tmaze_actions.png
@@ -40,6 +47,8 @@ artifact_expectations:
   - output/figures/multi_track_architecture.png
   - output/figures/lean_boundary_status.png
   - output/figures/gnn_ontology_concordance.png
+  - output/figures/semantic_gluing_graph.png
+  - output/figures/si_belief_trajectory.gif
   - output/figures/figure_registry.json
   - output/data/sheaf_coverage_matrix.json
   - output/reports/invariants.json

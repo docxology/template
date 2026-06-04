@@ -5,7 +5,7 @@ Subcommands:
 * ``validate`` — round-trip-parse a ``.bib`` file; exits non-zero on syntax
   errors and reports the entry count + missing required fields per type.
 * ``format`` — re-emit a ``.bib`` file using our canonical formatter so its
-  layout matches ``projects/template_code_project/manuscript/references.bib``.
+  layout matches ``projects/templates/template_code_project/manuscript/references.bib``.
 * ``convert`` — read a JSON file of literature-search :class:`Paper`-shaped
   records and emit a BibTeX file with auto-generated citation keys.
 """

@@ -50,7 +50,7 @@ def escape_latex(text: str) -> str:
     subsequent pass.
 
     Unicode is left untouched — Pandoc / XeLaTeX handle it natively, matching
-    the convention of ``projects/template_code_project/manuscript/references.bib``.
+    the convention of ``projects/templates/template_code_project/manuscript/references.bib``.
     """
     if not text:
         return ""

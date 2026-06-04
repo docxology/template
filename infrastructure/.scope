@@ -5,26 +5,26 @@ includes:
   - AGENTS.md
   - README.md
   - coverage_project.json
-  - projects/template_code_project/output/.checkpoints/pipeline_checkpoint.json
-  - projects/template_code_project/output/figures/performance_benchmark.png
-  - projects/template_code_project/output/logs/pipeline.log
-  - projects/template_code_project/output/pdf/_combined_manuscript.log
-  - projects/template_code_project/output/pdf/template_code_project_combined.pdf
-  - projects/template_code_project/output/reports/output_statistics.json
-  - projects/template_code_project/output/reports/output_statistics.txt
-  - projects/template_code_project/output/reports/performance_benchmark.json
-  - projects/template_code_project/output/reports/test_results.json
-  - projects/template_code_project/output/reports/test_results.md
-  - projects/template_code_project/output/reports/validation_report.json
-  - projects/template_code_project/output/reports/validation_report.md
-  - projects/template_code_project/output/slides/00_abstract_slides.log
-  - projects/template_code_project/output/slides/00_abstract_slides.pdf
-  - projects/template_code_project/output/slides/01_introduction_slides.log
-  - projects/template_code_project/output/slides/01_introduction_slides.pdf
-  - projects/template_code_project/output/slides/02_methodology_slides.log
-  - projects/template_code_project/output/slides/02_methodology_slides.pdf
-  - projects/template_code_project/output/slides/03_results_slides.log
-  - projects/template_code_project/output/slides/04_conclusion_slides.log
+  - projects/templates/template_code_project/output/.checkpoints/pipeline_checkpoint.json
+  - projects/templates/template_code_project/output/figures/performance_benchmark.png
+  - projects/templates/template_code_project/output/logs/pipeline.log
+  - projects/templates/template_code_project/output/pdf/_combined_manuscript.log
+  - projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf
+  - projects/templates/template_code_project/output/reports/output_statistics.json
+  - projects/templates/template_code_project/output/reports/output_statistics.txt
+  - projects/templates/template_code_project/output/reports/performance_benchmark.json
+  - projects/templates/template_code_project/output/reports/test_results.json
+  - projects/templates/template_code_project/output/reports/test_results.md
+  - projects/templates/template_code_project/output/reports/validation_report.json
+  - projects/templates/template_code_project/output/reports/validation_report.md
+  - projects/templates/template_code_project/output/slides/00_abstract_slides.log
+  - projects/templates/template_code_project/output/slides/00_abstract_slides.pdf
+  - projects/templates/template_code_project/output/slides/01_introduction_slides.log
+  - projects/templates/template_code_project/output/slides/01_introduction_slides.pdf
+  - projects/templates/template_code_project/output/slides/02_methodology_slides.log
+  - projects/templates/template_code_project/output/slides/02_methodology_slides.pdf
+  - projects/templates/template_code_project/output/slides/03_results_slides.log
+  - projects/templates/template_code_project/output/slides/04_conclusion_slides.log
 excludes:
   - infrastructure/__pycache__/
   - "*.pyc"
