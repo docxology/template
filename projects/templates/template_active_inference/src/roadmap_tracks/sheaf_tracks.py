@@ -8,10 +8,12 @@ output paths stay canonical so the manuscript cannot accumulate parallel
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import re
 import subprocess
+from functools import lru_cache
 from itertools import product
 from pathlib import Path
 from typing import Any
@@ -139,11 +141,26 @@ def _load_json(path: Path) -> dict[str, Any]:
     return data
 
 
+@lru_cache(maxsize=256)
+def _parse_yaml_cached(path_str: str, _mtime_ns: int, _size: int) -> dict[str, Any]:
+    """Parse a YAML file, memoized on (path, mtime, size).
+
+    The artifact builders read the same manifest/registry/config/ledger YAML files
+    dozens of times per ``write_sheaf_track_artifacts`` call; parsing dominates
+    (~579 parses / ~7.5s in a single call). The cache key includes mtime_ns AND size
+    so any rewrite (e.g. negative-control tests mutating then restoring these files)
+    invalidates the entry. Callers receive a deepcopy via ``_load_yaml`` so mutation
+    of the returned dict can never corrupt the cached object.
+    """
+    data = yaml.safe_load(Path(path_str).read_text(encoding="utf-8")) or {}
+    return data if isinstance(data, dict) else {}
+
+
 def _load_yaml(path: Path) -> dict[str, Any]:
     if not path.is_file():
         return {}
-    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    return data if isinstance(data, dict) else {}
+    stat = path.stat()
+    return copy.deepcopy(_parse_yaml_cached(str(path), stat.st_mtime_ns, stat.st_size))
 
 
 def _load_structured(path: Path) -> dict[str, Any]:

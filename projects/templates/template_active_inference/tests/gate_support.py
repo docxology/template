@@ -156,9 +156,8 @@ def ensure_gate_artifacts(project_root: Path) -> None:
     compose_all_sections(project_root)
     _hydrate_fixed_point(project_root, out)
     write_semantic_gluing_outputs(project_root)
-    write_integration_audit_artifacts(project_root)
-    write_sheaf_track_artifacts(project_root)
-    compose_all_sections(project_root)
-    _hydrate_fixed_point(project_root, out)
-    write_semantic_gluing_outputs(project_root)
+    # NOTE: a second convergence pass here was verified to produce a byte-identical
+    # digest (pass 1 already reaches semantic_issues=0), so it was pure ~22s waste and
+    # has been removed. If the convergence ever stops settling in one pass, restore a
+    # bounded fixpoint loop rather than an unconditional second pass.
     _BOOTSTRAPPED_ROOTS.add(root)

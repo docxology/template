@@ -166,10 +166,13 @@ exemplars — all under the git-tracked `projects/templates/` typed subfolder �
 ever git-tracked/pushed:
 - [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) — Active Inference multi-track template (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
 - [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) — deterministic AutoResearch template
+- [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) — deterministic coordination-mechanism testbed exemplar (arXiv:2605.28655 primitives)
 - [`projects/templates/template_code_project/`](projects/templates/template_code_project/) — code-centric template
+- [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) — data-driven large-format newspaper layout engine (ReportLab broadsheet)
 - [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
 - [`projects/templates/template_sia/`](projects/templates/template_sia/) — SIA self-improvement harness template (fixture replay by default)
 - [`projects/templates/template_template/`](projects/templates/template_template/) — autopoietic meta-template (introspects infrastructure and public exemplar roster)
+- [`projects/templates/template_textbook/`](projects/templates/template_textbook/) — modular, fillable book-length manuscript scaffold (config-driven parts/chapters/labs)
 
 `.gitignore` ignores `projects/*` and negates **only** `projects/templates/`
 (the public exemplars) plus the repo-level `projects/*.md` docs. **Every other
@@ -271,7 +274,7 @@ avg = calculate_average(data)  # Use tested method
 
 All project lifecycle state is expressed as typed subfolders under `projects/`:
 
-- **`projects/templates/`** — the six public exemplars, git-tracked in this repo (discovered + rendered).
+- **`projects/templates/`** — the nine public exemplars, git-tracked in this repo (discovered + rendered).
 - **`projects/active/`** — the hot-seat render set: symlinks to the private repo's `active/` projects (discovered + rendered alongside the exemplars).
 - **`projects/working/`** — non-rendered symlinks to the private repo's `working/` projects (backburner / in-progress).
 - **`projects/published/`** — non-rendered symlinks to the private repo's `published/` projects.

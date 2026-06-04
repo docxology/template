@@ -181,8 +181,8 @@ flowchart TD
 |--------|---------|----------------------|
 | **exceptions.py** | Exception hierarchy with context preservation | `TemplateError`, `ValidationError`, `BuildError`, `raise_with_context()`, `chain_exceptions()` |
 | **logging/utils.py** | Unified logging system with environment config | `get_logger()`, `setup_logger()`, `log_operation()`, `log_timing()`, `log_function_call()` |
-| **config/loader.py** | YAML config loading with environment overrides | `load_config()`, `get_config_as_dict()`, `get_config_as_env_vars()`, `find_config_file()` |
-| **runtime/health_check.py** | System health monitoring and component status | `SystemHealthChecker`, `get_health_api()`, `quick_health_check()`, `get_health_status()` |
+| **config/loader.py** | YAML config loading with environment overrides | `load_config()`, `get_config_as_dict()`, `find_config_file()`, `validate_config_keys()` |
+| **runtime/health_check.py** | System health monitoring and component status | `SystemHealthChecker` (with `.get_health_status()` method), `CheckResult`, `HealthStatus` |
 | **security.py** | Input validation and security monitoring | `SecurityValidator`, `get_security_headers()`, `get_cors_headers()`, `RateLimiter`, `SecurityMonitor` |
 | **progress.py** | Progress tracking with visual indicators | `ProgressBar`, `LLMProgressTracker`, `SubStageProgress` |
 | **runtime/checkpoint.py** | Pipeline state management for resume capability | `CheckpointManager`, `PipelineCheckpoint`, `StageResult` |
@@ -190,7 +190,8 @@ flowchart TD
 | **pipeline/stage_monitor.py** | Resource monitoring and performance metrics | `PerformanceMonitor`, `ResourceUsage`, `StagePerformanceTracker` |
 | **runtime/environment.py** | System validation and dependency checking | `check_python_version()`, `check_dependencies()`, `setup_directories()` |
 | **script_discovery.py** | Dynamic script finding and execution coordination | `discover_analysis_scripts()`, `discover_orchestrators()` |
-| **files/operations.py** | File management and output handling | `clean_output_directory()`, `copy_final_deliverables()` |
+| **files/operations.py** | File management and output handling | `copy_final_deliverables()`, `calculate_file_hash()` |
+| **files/cleanup.py** | Output directory cleanup | `clean_output_directory()`, `clean_output_directories()` |
 | **credentials.py** | Credential management from multiple sources | `CredentialManager` |
 | **logging/progress.py** | Advanced progress logging utilities | `calculate_eta()`, `log_with_spinner()`, `StreamingProgress` |
 | **logging/formatters.py** | Specialized logging formatters | `JSONFormatter`, `TemplateFormatter` |
