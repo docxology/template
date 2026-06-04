@@ -260,54 +260,69 @@ class TestAnalyzeCoverageConfig:
 # build_infrastructure_report
 # ---------------------------------------------------------------------------
 
+_INFRA_REPORT_CACHE: dict[str, object] = {}
+
+
+def _cached_infrastructure_report():
+    """Build the infrastructure report once and reuse it across read-only assertions.
+
+    ``build_infrastructure_report(REPO_ROOT)`` walks ~3000+ Python files (~0.84s) and
+    was previously called 10x identically in TestBuildInfrastructureReport. The report
+    is immutable for these assertions, so memoizing it saves ~7.5s per run (x6 CI cells).
+    """
+    if "report" not in _INFRA_REPORT_CACHE:
+        _INFRA_REPORT_CACHE["report"] = build_infrastructure_report(REPO_ROOT)
+    return _INFRA_REPORT_CACHE["report"]
+
+
 class TestBuildInfrastructureReport:
     """Tests for ``build_infrastructure_report``."""
 
     def test_returns_infrastructure_report(self):
-        report = build_infrastructure_report(REPO_ROOT)
+        report = _cached_infrastructure_report()
         assert isinstance(report, InfrastructureReport)
 
     def test_report_has_modules(self):
-        report = build_infrastructure_report(REPO_ROOT)
+        report = _cached_infrastructure_report()
         assert len(report.modules) >= 8
 
     def test_report_has_projects(self):
-        report = build_infrastructure_report(REPO_ROOT)
+        report = _cached_infrastructure_report()
         assert len(report.projects) >= 2
 
     def test_report_has_stages(self):
-        report = build_infrastructure_report(REPO_ROOT)
+        report = _cached_infrastructure_report()
         assert len(report.pipeline_stages) >= 12
         assert len(report.numbered_scripts) >= 8
 
     def test_pipeline_stage_counts(self):
-        report = build_infrastructure_report(REPO_ROOT)
+        report = _cached_infrastructure_report()
         assert report.pipeline_stages_declared == len(report.pipeline_stages)
         assert report.pipeline_stages_default_full == 10
         assert report.pipeline_stages_core_only == 8
 
     def test_report_has_python_files(self):
-        report = build_infrastructure_report(REPO_ROOT)
+        report = _cached_infrastructure_report()
         assert report.total_python_files > 50, (
             f"Expected >50 Python files, got {report.total_python_files}"
         )
 
     def test_report_has_test_files(self):
-        report = build_infrastructure_report(REPO_ROOT)
+        report = _cached_infrastructure_report()
         assert report.total_test_files > 5, (
             f"Expected >5 test files, got {report.total_test_files}"
         )
 
     def test_infrastructure_version_populated(self):
-        report = build_infrastructure_report(REPO_ROOT)
+        report = _cached_infrastructure_report()
         assert report.infrastructure_version != "unknown"
 
     def test_repo_root_matches(self):
-        report = build_infrastructure_report(REPO_ROOT)
+        report = _cached_infrastructure_report()
         assert report.repo_root == REPO_ROOT
 
     def test_computed_properties_match_lists(self):
-        report = build_infrastructure_report(REPO_ROOT)
+        report = _cached_infrastructure_report()
         assert len(report.modules) == len(report.modules)
         assert len(report.projects) == len(report.projects)
         assert len(report.pipeline_stages) == len(report.pipeline_stages)
