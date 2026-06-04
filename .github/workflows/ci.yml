@@ -323,11 +323,12 @@ jobs:
     name: "Project Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
     runs-on: ${{ matrix.os }}
     # Sequential per-project pytest across all nine public exemplars with
-    # --include-slow (active_inference Lean + textbook rendering are heavy):
-    # ~29 min locally, more on slower CI runners. 30 min was being exceeded and
-    # GitHub marked the timed-out jobs "cancelled" once textbook (#8) and
-    # autoscientists (#9) joined the roster. 50 gives headroom for nine exemplars.
-    timeout-minutes: 50
+    # --include-slow (active_inference Lean + textbook rendering are heavy).
+    # After the gate-artifact caching fix the suite runs ~36-38 min on macOS but
+    # ~45 min on the slower ubuntu runners; at timeout-minutes: 50 the ubuntu legs
+    # had only ~5 min of headroom and ubuntu-3.10 was cancelled right at the 50 min
+    # cap. 70 absorbs ubuntu runner variance for the nine-exemplar matrix.
+    timeout-minutes: 70
     needs: [verify-no-mocks]
     permissions:
       contents: read
