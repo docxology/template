@@ -12,7 +12,11 @@ import yaml
 from gate_support import ensure_gate_artifacts
 
 VERSIONED_TRACK_RE = re.compile(r"(?:^|_)v[2-9]$")
-pytestmark = pytest.mark.timeout(300)
+# test_canonical_track_contract_negative_controls regenerates the full sheaf-track
+# artifact set 5x (4 negative controls + restore); ~85s locally but ubuntu CI runners
+# have been observed ~3.5x slower, breaching a 300s ceiling. 600s gives margin for the
+# slowest leg without masking a real hang (the test is correct, just heavy).
+pytestmark = pytest.mark.timeout(600)
 
 
 def _load(path: Path) -> dict:
