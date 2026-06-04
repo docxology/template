@@ -30,11 +30,11 @@ This guide describes the accessibility features of the template/ documentation s
 ## Testing Accessibility
 
 ```bash
-# Verify all figures have Alt text in source markdown
-uv run python scripts/validate_alt_text.py
+# Validate manuscript markdown (alt-text, figure captions, links, structure)
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # Check PDF structure with pdftotext + grep for heading levels
-pdftotext output/combined.pdf - | grep '^Chapter\|^Section'
+pdftotext output/{name}/pdf/combined.pdf - | grep '^Chapter\|^Section'
 ```
 
 ## Further Reading

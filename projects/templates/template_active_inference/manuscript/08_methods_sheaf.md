@@ -401,12 +401,12 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | Dependency edges ok | `True` |
 | Track scope complete | `True` |
 | Empirical adapter blocked | `True` |
-| Provenance bundles complete | `False` |
-| Replay rows matched | `False` |
+| Provenance bundles complete | `True` |
+| Replay rows matched | `True` |
 | Sensitivity complete | `True` |
 | Uncertainty normalized | `True` |
 | Evidence fields mapped | `True` |
-| Release bundle sources present | `False` |
+| Release bundle sources present | `True` |
 | Theorem traceability linked | `True` |
 | Gate ergonomics indexed | `True` |
 | Interop lossless | `True` |

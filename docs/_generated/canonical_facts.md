@@ -50,7 +50,7 @@ Default exemplar for paths: `projects/templates/template_code_project/`.
 
 ## Infrastructure Modules
 
-Current importable Python subpackages under `infrastructure/` (19):
+Current importable Python subpackages under `infrastructure/` (20):
 
 - autoresearch
 - benchmark
@@ -68,6 +68,7 @@ Current importable Python subpackages under `infrastructure/` (19):
 - reporting
 - scientific
 - search
+- sia
 - skills
 - steganography
 - validation
@@ -108,7 +109,7 @@ Result: **214** project-scope infrastructure tests collected and **381** publish
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_active_inference` | 141 | 91.35 % |
+| `template_active_inference` | 269 | 91.35 % |
 | `template_autoresearch_project` | 220 | 92.81 % |
 | `template_autoscientists` | 79 | 99.59 % |
 | `template_code_project` | 209 | 98.25 % |
@@ -200,7 +201,7 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ```mermaid
 flowchart TD
-    Root[Root] --> Infra[infrastructure/ <br/>19 importable packages]
+    Root[Root] --> Infra[infrastructure/ <br/>20 importable packages]
     Root --> Projects[projects/ <br/>see active_projects.md]
     Root --> Tests[tests/infra_tests/]
     Infra --> Core[core/ <br/>pipeline, logging, files, config]
