@@ -323,32 +323,37 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Job 4 — Project Tests (matrix: ubuntu + macos × Python 3.10–3.12)
+# Job 4 — Project Tests (one parallel job per public exemplar)
 # ─────────────────────────────────────────────────────────────────────────────
   test-project:
-    name: "Project Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
-    runs-on: ${{ matrix.os }}
-    # Sequential per-project pytest across all nine public exemplars with
-    # --include-slow (active_inference Lean + textbook rendering are heavy).
-    # After the gate-artifact caching fix the suite runs ~36-38 min on macOS but
-    # ~45 min on the slower ubuntu runners; at timeout-minutes: 50 the ubuntu legs
-    # had only ~5 min of headroom and ubuntu-3.10 was cancelled right at the 50 min
-    # cap. 70 absorbs ubuntu runner variance for the nine-exemplar matrix.
-    timeout-minutes: 70
+    name: "Project Tests (${{ matrix.project }}, py${{ matrix.python-version }})"
+    runs-on: ubuntu-latest
+    # Each public exemplar runs in its OWN parallel job, so wall-clock is the
+    # slowest single project (~active_inference) instead of the ~45 min sequential
+    # sum of all nine. Each job enforces that project's own 90% floor via
+    # ``scripts/01_run_tests.py --project`` (authoritative per CLAUDE.md), which
+    # also removes the old code_project/fep_lean conftest plugin-name collision
+    # (every project is already isolated in its own job). py3.10 (floor) + py3.12
+    # (ceiling) give cross-version coverage; macOS breadth is handled by test-infra.
+    # 45 min is a generous backstop — only active_inference approaches it.
+    timeout-minutes: 45
     needs: [verify-no-mocks]
     permissions:
       contents: read
     strategy:
       fail-fast: false
       matrix:
-        # ubuntu covers all three Python versions; macOS runs only the 3.12
-        # smoke (macOS legs are ~10x cost and rarely surface OS-specific project
-        # breakage beyond what the 3.12 cell catches).
-        os: [ubuntu-latest]
-        python-version: ["3.10", "3.11", "3.12"]
-        include:
-          - os: macos-latest
-            python-version: "3.12"
+        python-version: ["3.10", "3.12"]
+        project:
+          - templates/template_active_inference
+          - templates/template_autoresearch_project
+          - templates/template_autoscientists
+          - templates/template_code_project
+          - templates/template_newspaper
+          - templates/template_prose_project
+          - templates/template_sia
+          - templates/template_template
+          - templates/template_textbook
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -364,16 +369,6 @@ jobs:
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group rendering --group monitoring --group discopy
 
-      - name: Fix macOS socket.getfqdn timeout
-        if: runner.os == 'macOS'
-        run: sudo scutil --set HostName "$(hostname)"
-
-      # One pytest process per project: template_code_project and fep_lean both use
-      # ``tests/conftest.py``, which registers as the same plugin name if collected
-      # in a single invocation. fep_lean runs in job ``fep-lean`` (real gauss/lake).
-      # The per-project loop, --cov-append accumulation, and combined coverage gate
-      # live in infrastructure.core.test_runner.run_per_project_pytest so CI and
-      # local runs share one implementation.
       - name: Run project tests
         env:
           COVERAGE_FILE: .coverage.project
@@ -382,11 +377,11 @@ jobs:
           set -euo pipefail
           rm -f .coverage.project coverage-project.xml
           uv run python scripts/01_run_tests.py \
-            --project-only --all-projects --public-projects --non-strict --include-slow
+            --project "${{ matrix.project }}" --project-only --include-slow
           uv run coverage xml -o coverage-project.xml
 
       - name: Upload project coverage to Codecov
-        if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
+        if: matrix.python-version == '3.12'
         uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           files: coverage-project.xml

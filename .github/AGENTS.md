@@ -66,8 +66,8 @@ in a job `if:` and rejects the whole workflow at parse).**
 | 3 | `health` | Unified Health Report (informational) | lint | 3.12 | ubuntu |
 | 4 | `verify-no-mocks` | Verify No Mocks Policy | lint | 3.12 | ubuntu |
 | 5 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
-| 6 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
-| 7 | `test-project` | Project Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
+| 6 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu (×3.10/3.11/3.12) + macOS (3.12 only) — 4 cells |
+| 7 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks | 3.10 + 3.12 | ubuntu only — 9 exemplars × 2 Python = 18 cells |
 | 8 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
 | 9 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
 | 10 | `security` | Security Scan | lint | 3.12 | ubuntu |
@@ -142,7 +142,12 @@ severity as the CI `security` job, so contributors hear it before CI does.
 
 ## Branch Protection (Recommended)
 
-Required checks must match the **`name:`** field of each job in [`workflows/ci.yml`](workflows/ci.yml). Matrix jobs expand to **Infra Tests (`<os>`, Python `<ver>`)** and **Project Tests (`<os>`, Python `<ver>`)** — require the combinations you care about (e.g. ubuntu-latest × 3.10/3.11/3.12), or use GitHub rulesets that treat required checks flexibly.
+Required checks must match the **`name:`** field of each job in [`workflows/ci.yml`](workflows/ci.yml). `main` is currently unprotected, so the contexts below are **illustrative**. Matrix jobs expand to one check per cell:
+
+- **`test-infra`** → **Infra Tests (`<os>`, Python `<ver>`)** — 4 cells: `ubuntu-latest × 3.10/3.11/3.12` plus `macos-latest × 3.12`.
+- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — 18 cells: each of the 9 public exemplars (`templates/template_*`) on `py3.10` and `py3.12`, ubuntu-latest only.
+
+Require the combinations you care about, or use GitHub rulesets that treat required checks flexibly.
 
 ```yaml
 required_status_checks:
@@ -152,9 +157,12 @@ required_status_checks:
     - "Infra Tests (ubuntu-latest, Python 3.10)"
     - "Infra Tests (ubuntu-latest, Python 3.11)"
     - "Infra Tests (ubuntu-latest, Python 3.12)"
-    - "Project Tests (ubuntu-latest, Python 3.10)"
-    - "Project Tests (ubuntu-latest, Python 3.11)"
-    - "Project Tests (ubuntu-latest, Python 3.12)"
+    - "Infra Tests (macos-latest, Python 3.12)"
+    # test-project expands to 18 checks: "Project Tests (<project>, py<ver>)"
+    # for each templates/template_* exemplar on py3.10 and py3.12. Examples:
+    - "Project Tests (templates/template_active_inference, py3.12)"
+    - "Project Tests (templates/template_code_project, py3.10)"
+    # ... (one check per exemplar × {py3.10, py3.12})
     # Optional: only when fep_lean job runs (skipped if no lean-toolchain file)
     # - "fep_lean (gauss + lake)"
     # Optional (informational artefact only): "Unified Health Report (informational)"
