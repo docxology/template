@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from gate_support import ensure_gate_artifacts
@@ -22,6 +23,10 @@ def _relative_posix(path: Path, root: Path) -> str:
     return path.relative_to(root).as_posix()
 
 
+# Regenerates heavy sheaf gluing + roadmap-promotion artifacts; ~57-59s locally and
+# can exceed the CI-wide --timeout=120 on slower runners. A per-test marker overrides
+# the CLI value (see pyproject.toml "timeout(seconds)" marker registration).
+@pytest.mark.timeout(300)
 def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) -> None:
     from roadmap_tracks import (
         validate_formal_interop_artifacts,
@@ -80,6 +85,7 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
     assert validate_sheaf_track_artifacts(project_root) == []
 
 
+@pytest.mark.timeout(300)
 def test_toy_sweep_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import validate_toy_sweep_artifacts, write_toy_sweep_artifacts
 
@@ -202,6 +208,7 @@ def test_toy_sweep_uses_measured_policy_and_topology_trace_artifacts(project_roo
     assert efe_terms["schema"] == "template_active_inference.si_efe_values.v1"
 
 
+@pytest.mark.timeout(300)
 def test_formal_interop_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import validate_formal_interop_artifacts, write_formal_interop_artifacts
 
