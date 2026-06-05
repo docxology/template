@@ -7,6 +7,7 @@ REQUIRED_OUTPUTS: tuple[str, ...] = (
     "output/data/si_tmaze_summary.json",
     "output/data/si_tmaze_trace.json",
     "output/data/analysis_statistics.json",
+    "output/figures/efe_decomposition.png",
     "output/figures/ising_mi_curve.png",
     "output/figures/free_energy_curve.png",
     "output/figures/si_tmaze_actions.png",
