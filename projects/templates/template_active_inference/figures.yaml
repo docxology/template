@@ -233,6 +233,7 @@ section_figures:
   results_invariants:
     - id: invariant_dashboard
   results_si_tmaze:
+    - id: efe_decomposition
     - id: si_belief_entropy_curve
     - id: si_obs_action_trace
     - id: si_tmaze_actions

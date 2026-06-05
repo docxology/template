@@ -99,6 +99,30 @@ def _gnn_spec_version(project_root: Path) -> str:
     return ""
 
 
+def _efe_token_values() -> dict[str, Any]:
+    """Manuscript tokens for the closed-form Expected Free Energy decomposition.
+
+    Computed directly from the finite T-maze generative model (deterministic, no
+    sampling), so the hydrated numbers are reproducible and back the Results prose.
+    """
+    from simulation.efe_decomposition import decompose_all_policies
+    from simulation.tmaze_model import build_tmaze_generative_model
+
+    result = decompose_all_policies(build_tmaze_generative_model())
+    best_policy = result["efe_minimizing_policy"]
+    best_row = next(row for row in result["rows"] if row["policy"] == best_policy)
+    return {
+        "efe_policy_count": int(result["policy_count"]),
+        "efe_minimizing_policy": "".join(str(a) for a in best_policy),
+        "efe_minimizing_total_formatted": f"{result['efe_minimizing_total']:.4f}",
+        "efe_risk_at_min_formatted": f"{best_row['risk']:.4f}",
+        "efe_ambiguity_at_min_formatted": f"{best_row['ambiguity']:.4f}",
+        "efe_pragmatic_at_min_formatted": f"{best_row['pragmatic_value']:.4f}",
+        "efe_epistemic_at_min_formatted": f"{best_row['epistemic_value']:.4f}",
+        "efe_max_identity_residual_formatted": f"{result['max_identity_residual']:.1e}",
+    }
+
+
 def generate_variables(project_root: Path, *, require_analysis_outputs: bool = True) -> dict[str, Any]:
     root = project_root.resolve()
     hp = load_hyperparameters()
@@ -201,6 +225,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "si_policy_comparison_policy_goal_count": policy_goal_by_mode["policy_inference"],
         "si_policy_comparison_complete_grid": int(bool(policy_summary.get("complete_grid", False))),
         "si_policy_efe_rows_explained": int(bool(policy_summary.get("all_efe_rows_explained", False))),
+        **_efe_token_values(),
         "pymdp_policy_posterior_row_count": posterior_data.get("row_count", 0),
         "pymdp_policy_posterior_available_count": posterior_data.get("available_row_count", 0),
         "pymdp_policy_posteriors_normalized": int(
