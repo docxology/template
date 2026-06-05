@@ -415,7 +415,70 @@ def figure_scholarship_source_map(project_root: Path) -> Path:
     return out
 
 
+def figure_efe_decomposition(project_root: Path) -> Path:
+    """Expected Free Energy term decomposition across T-maze policies.
+
+    Left panel: ``G(pi) = risk + ambiguity`` as a stacked bar per policy, with the
+    EFE-minimising policy marked. Right panel: the equal-and-opposite
+    ``G(pi) = -(pragmatic_value + epistemic_value)`` decomposition. Computed in
+    closed form (no sampling) so the figure is byte-deterministic.
+    """
+    from simulation.efe_decomposition import decompose_all_policies
+    from simulation.tmaze_model import build_tmaze_generative_model
+
+    root = project_root.resolve()
+    style = load_figure_style(root)
+    result = decompose_all_policies(build_tmaze_generative_model())
+    rows = result["rows"]
+    labels = ["".join(str(a) for a in row["policy"]) for row in rows]
+    risk = [float(row["risk"]) for row in rows]
+    ambiguity = [float(row["ambiguity"]) for row in rows]
+    pragmatic = [float(row["pragmatic_value"]) for row in rows]
+    epistemic = [float(row["epistemic_value"]) for row in rows]
+    totals = [r + a for r, a in zip(risk, ambiguity)]
+    best_label = "".join(str(a) for a in result["efe_minimizing_policy"])
+    best_idx = labels.index(best_label)
+    x = np.arange(len(labels))
+
+    out = figure_output_path(root, "efe_decomposition")
+    with apply_style(style):
+        fig, (ax_g, ax_pe) = plt.subplots(1, 2, figsize=(9.5, 4))
+        ax_g.bar(x, risk, color=style.color("secondary"), label="risk (pragmatic deviation)")
+        ax_g.bar(x, ambiguity, bottom=risk, color=style.color("accent"), label="ambiguity (epistemic)")
+        ax_g.scatter(
+            [x[best_idx]],
+            [totals[best_idx]],
+            color=style.color("fail"),
+            zorder=3,
+            s=45,
+            label=f"min G at policy {best_label}",
+        )
+        ax_g.set_xticks(x)
+        ax_g.set_xticklabels(labels)
+        ax_g.set_xlabel("Policy (action sequence)")
+        ax_g.set_ylabel("Expected free energy (nats)")
+        ax_g.set_title(r"$G(\pi)$ = risk + ambiguity")
+        style_grid(ax_g, style)
+        ax_g.legend(frameon=False, fontsize=7)
+
+        width = 0.4
+        ax_pe.bar(x - width / 2, pragmatic, width, color=style.color("primary"), label="pragmatic value")
+        ax_pe.bar(x + width / 2, epistemic, width, color=style.color("muted"), label="epistemic value")
+        ax_pe.axhline(0.0, color=style.color("reference"), linewidth=0.8)
+        ax_pe.set_xticks(x)
+        ax_pe.set_xticklabels(labels)
+        ax_pe.set_xlabel("Policy (action sequence)")
+        ax_pe.set_ylabel("Value (nats)")
+        ax_pe.set_title(r"$G(\pi)$ = -(pragmatic + epistemic)")
+        style_grid(ax_pe, style)
+        ax_pe.legend(frameon=False, fontsize=7)
+
+        save_styled_figure(fig, out, style)
+    return out
+
+
 FIGURE_GENERATORS: dict[str, Callable[[Path], Path | None]] = {
+    "efe_decomposition": figure_efe_decomposition,
     "ising_mi_curve": figure_ising_mi_curve,
     "free_energy_curve": figure_free_energy_curve,
     "si_belief_entropy_curve": figure_si_belief_entropy_curve,

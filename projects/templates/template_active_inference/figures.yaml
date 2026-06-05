@@ -21,6 +21,25 @@ palette:
   header_bg: "#e2e8f0"
 
 figures:
+  efe_decomposition:
+    filename: efe_decomposition.png
+    alt: >-
+      Two-panel bar chart of the Expected Free Energy term decomposition across the
+      four length-two T-maze policies (action sequences 00, 01, 10, 11). The left
+      panel stacks risk (pragmatic deviation, the KL of policy-predicted outcomes
+      from preferences) below ambiguity (epistemic, the expected likelihood entropy)
+      so each bar's height is the Expected Free Energy G(pi); the goal-seeking policy
+      with minimum G is marked. The right panel shows the equal-and-opposite
+      pragmatic value (expected log-preference) and epistemic value (state-outcome
+      mutual information) per policy, with a zero reference line, illustrating the
+      exact identity G(pi) = -(pragmatic + epistemic).
+    caption: >-
+      Closed-form Expected Free Energy decomposition over the finite T-maze policies.
+      Left: $G(\pi)$ = risk + ambiguity (stacked), with the goal-seeking minimiser
+      marked. Right: the pragmatic and epistemic values, which sum to $-G(\pi)$.
+      Both forms are computed in closed form (no sampling) and satisfy
+      risk + ambiguity + pragmatic + epistemic = 0 to machine precision.
+    width: 0.95
   ising_mi_curve:
     filename: ising_mi_curve.png
     alt: >-

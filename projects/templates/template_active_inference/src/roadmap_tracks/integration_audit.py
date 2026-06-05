@@ -473,6 +473,7 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
     from visualizations.figure_registry import load_figure_registry
 
     sources = {
+        "efe_decomposition": ["src/simulation/efe_decomposition.py", "src/simulation/tmaze_model.py"],
         "ising_mi_curve": ["output/data/parameter_sweep.csv"],
         "free_energy_curve": ["src/analytical/decomposition.py"],
         "si_belief_entropy_curve": ["output/data/si_tmaze_trace.json"],
