@@ -10,6 +10,11 @@ permissions:
   issues: write
   pull-requests: write
 
+# Only one stale sweep at a time; a superseded sweep is safe to cancel.
+concurrency:
+  group: stale
+  cancel-in-progress: true
+
 jobs:
   stale:
     name: Mark and Close Stale Items

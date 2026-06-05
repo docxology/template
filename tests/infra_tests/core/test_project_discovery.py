@@ -8,10 +8,27 @@ Follows No Mocks Policy - all tests use real data and real execution.
 from pathlib import Path
 
 
+from infrastructure.core.project_paths import find_repo_root
 from infrastructure.project.project_info import ProjectInfo
 from infrastructure.project.metadata import get_project_metadata
 from infrastructure.project.validation import validate_project_structure
 from infrastructure.project.discovery import discover_projects
+
+
+def test_find_repo_root_points_at_repository_root() -> None:
+    """find_repo_root() resolves to the directory containing infrastructure/ and projects/.
+
+    Several CLIs route their repo-root fallback through this helper instead of
+    hard-coding Path(__file__).resolve().parents[N]; this pins the contract.
+    """
+    root = find_repo_root()
+    assert (root / "infrastructure").is_dir()
+    assert (root / "projects").is_dir()
+    assert (root / "pyproject.toml").is_file()
+    # Equivalent to the historic computation from this module's location.
+    from infrastructure.core import project_paths
+
+    assert root == Path(project_paths.__file__).resolve().parents[2]
 
 
 class TestValidateProjectStructure:

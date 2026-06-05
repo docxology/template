@@ -23,7 +23,11 @@ from infrastructure.validation.docs.consistency.memory_decision import check_mem
 from infrastructure.validation.docs.lint_runner import doc_roots
 from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, iter_markdown_files, should_exclude_path
 
+# Bare exemplar slugs like ``template_active_inference`` (used to spot hard-coded
+# project names that should be sourced from the generated roster instead).
 _TEMPLATE_SLUG_RE = re.compile(r"\btemplate_[A-Za-z0-9_]+\b")
+# Prose count claims about the exemplar roster, in either order ("nine public
+# exemplars" / "exemplars ... 9"); flags literals that drift from canonical_facts.
 _PROJECT_COUNT_RE = re.compile(
     r"\b(?:\d+|nine|ten)\s+"
     r"(?:current|active|rendered|public|permanent|canonical|template)\s+"
@@ -33,18 +37,24 @@ _PROJECT_COUNT_RE = re.compile(
     r"(?:projects|exemplars|templates)\b.{0,80}\b(?:\d+|nine|ten)\b",
     re.IGNORECASE,
 )
+# A reference to a generated-facts source (a count claim near one of these is
+# considered sourced, not a hard-coded literal).
 _GENERATED_FACT_LINK_RE = re.compile(
     r"docs/_generated/(?:active_projects|canonical_facts|publication_records)\.md|"
     r"_generated/|PUBLIC_PROJECT_NAMES|generate_publication_records_doc\.py|"
     r"\$\{public_exemplar_list\}|\$\{project_count\}",
     re.I,
 )
+# Roster-context phrasing ("current/active/public set", "under projects/templates/")
+# used to disambiguate count claims that are genuinely about the exemplar roster.
 _ROSTER_CONTEXT_RE = re.compile(
     r"\b(?:current|active|rendered|public|permanent|always-present|roster|set|all)\b|"
     r"under\s+`?projects/templates/?`?",
     re.IGNORECASE,
 )
 
+# Gate/validator enforcement claims ("the schema must validate ..."), in either
+# noun→verb or verb→noun order; surfaces strong guarantees that need evidence.
 _GATE_CLAIM_RE = re.compile(
     r"\b(?:validator|verifier|schema|quality gate|gate|checker|linter|lint|rule)\b"
     r".{0,100}\b(?:must|requires?|enforces?|validates?|certifies?|proves?|guarantees?|blocks?|fails?)\b"
@@ -53,6 +63,8 @@ _GATE_CLAIM_RE = re.compile(
     r".{0,100}\b(?:validator|verifier|schema|quality gate|gate|checker|linter|lint|rule)\b",
     re.IGNORECASE,
 )
+# Negative-control / known-wrong terminology — evidence that a gate claim is
+# backed by an adversarial test rather than asserted.
 _NEGATIVE_CONTROL_RE = re.compile(
     r"negative[- ]control|known[- ]wrong|counterexample|fault[- ]inject|expected[- ]fail|bad fixture",
     re.IGNORECASE,

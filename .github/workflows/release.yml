@@ -13,6 +13,12 @@ on:
 permissions:
   contents: write  # Required to create the GitHub Release
 
+# Serialize releases per ref; never cancel an in-flight release (a half-cancelled
+# release is worse than a queued one).
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   release:
     name: Create GitHub Release

@@ -21,6 +21,17 @@ from pathlib import Path
 NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "published", "archive", "other"})
 
 
+def find_repo_root() -> Path:
+    """Return the repository root (the directory containing ``infrastructure/``).
+
+    This module lives at ``infrastructure/core/project_paths.py``, so the repo
+    root is two parents up from this file. Centralising the computation here lets
+    callers stop hard-coding their own ``Path(__file__).resolve().parents[N]``
+    depth, which is fragile under file moves and easy to get off by one.
+    """
+    return Path(__file__).resolve().parents[2]
+
+
 def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     """Return the directory for *project_name*, preferring the hot seat over WIP trees.
 
@@ -81,4 +92,4 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     return primary
 
 
-__all__ = ["NON_RENDERED_SUBDIRS", "resolve_project_root"]
+__all__ = ["NON_RENDERED_SUBDIRS", "find_repo_root", "resolve_project_root"]

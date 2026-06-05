@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import find_repo_root
 from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.accuracy import extract_headings
 from infrastructure.validation.integrity.link_extract import (
@@ -62,7 +63,7 @@ def run_link_audit(repo_root: Path) -> int:
 
 def main() -> int:
     """Check all documentation links and references comprehensively."""
-    repo_root = Path(__file__).resolve().parents[3]
+    repo_root = find_repo_root()
     return run_link_audit(repo_root)
 
 

@@ -13,7 +13,6 @@ import shutil
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -78,17 +77,6 @@ GATES = (
 )
 
 
-def _load_plugin_manifest(hermes_home: Path) -> dict[str, Any] | None:
-    manifest_path = hermes_home / "plugins" / "manifest.json"
-    if not manifest_path.exists():
-        return None
-    try:
-        return json.loads(manifest_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        print(f"ERROR: Invalid plugin manifest JSON: {exc}")
-        return None
-
-
 def _is_cache_fresh(cache_marker: Path, ttl_seconds: int) -> bool:
     if not cache_marker.exists():
         return False
@@ -133,7 +121,10 @@ def _populate_cache(hermes_home: Path, cache_path: Path, cache_marker: Path) -> 
 
 def run_cache_gate() -> int:
     hermes_home_env = os.getenv("HERMES_HOME")
-    cache_path = Path(os.getenv("HERMES_CACHE_PATH", "/var/cache/template"))
+    # Default under the user cache dir (XDG_CACHE_HOME or ~/.cache) for portability;
+    # /var/cache requires root and is not writable on most dev/CI machines.
+    default_cache = Path(os.getenv("XDG_CACHE_HOME") or (Path.home() / ".cache")) / "template"
+    cache_path = Path(os.getenv("HERMES_CACHE_PATH") or default_cache)
     cache_ttl = int(os.getenv("CACHE_TTL_SECONDS", "3600"))
     cache_marker = cache_path / ".cache_valid"
 

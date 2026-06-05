@@ -47,6 +47,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import find_repo_root
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 logger = get_logger(__name__)
@@ -437,7 +438,7 @@ def _build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     """CLI entry point. Returns process exit code (0 on success)."""
     ns = _build_parser().parse_args(argv)
-    repo_root = ns.repo_root or Path(__file__).resolve().parents[2]
+    repo_root = ns.repo_root or find_repo_root()
     result = sync_private_project_links(
         repo_root,
         ns.private_root,

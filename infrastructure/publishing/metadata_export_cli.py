@@ -8,6 +8,7 @@ from datetime import date
 from pathlib import Path
 
 from infrastructure.core.config.loader import load_config
+from infrastructure.core.project_paths import find_repo_root
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.publishing.metadata_export import write_metadata_files
 
@@ -76,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
 def _resolve_repo_root(repo_root: Path | None) -> Path:
     if repo_root is not None:
         return repo_root.resolve()
-    derived = Path(__file__).resolve().parents[2]
+    derived = find_repo_root()
     if not (derived / "projects").is_dir():
         raise ValueError(f"Could not determine repo root from {__file__}")
     return derived

@@ -21,6 +21,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from infrastructure.core.project_paths import find_repo_root
 from infrastructure.orchestration.discovery import (
     discover_qualified_names,
     select_project_interactive,
@@ -49,10 +50,10 @@ def _default_repo_root() -> Path:
     """Locate the repository root.
 
     The orchestration package lives at
-    ``<repo_root>/infrastructure/orchestration/``, so the repo root is two
-    parents up from this file.
+    ``<repo_root>/infrastructure/orchestration/``; delegate to the shared
+    ``find_repo_root`` helper rather than hard-coding the parent depth here.
     """
-    return Path(__file__).resolve().parents[2]
+    return find_repo_root()
 
 
 def build_parser() -> argparse.ArgumentParser:
