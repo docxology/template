@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
+from infrastructure.core.project_paths import find_repo_root
 from infrastructure.core.pipeline.multi_project import (
     MultiProjectConfig,
     MultiProjectOrchestrator,
@@ -244,7 +245,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None, *, repo_root: Path | None = None) -> int:
     """CLI entry point."""
     args = build_arg_parser().parse_args(argv)
-    root = repo_root or Path(__file__).resolve().parents[4]
+    root = repo_root or find_repo_root()
 
     if args.parallel:
         return execute_multi_project_parallel(
