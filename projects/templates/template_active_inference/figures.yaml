@@ -40,6 +40,66 @@ figures:
       Both forms are computed in closed form (no sampling) and satisfy
       risk + ambiguity + pragmatic + epistemic = 0 to machine precision.
     width: 0.95
+  precision_sweep:
+    filename: precision_sweep.png
+    alt: >-
+      Dual-axis line plot of how the T-maze policy posterior q(pi) = softmax(-gamma G)
+      sharpens as the precision gamma increases from 0 to 16. The left axis plots the
+      Shannon entropy of the posterior in nats, decreasing from ln 4 at gamma=0 and
+      saturating at the ln(|optimal set|) floor (a dashed reference line) because two
+      policies tie at the expected-free-energy minimum. The right axis plots the
+      probability mass placed on the expected-free-energy optimal policy set, rising
+      from 0.5 toward 1 and crossing the selection threshold; the precision at which it
+      crosses is marked.
+    caption: >-
+      Precision sweep over the closed-form T-maze policy posterior
+      $q(\pi)\propto\exp(-\gamma G)$ across {{precision_gamma_grid_points}} grid
+      points up to $\gamma$={{precision_gamma_max}}. Entropy falls from $\ln 4$ to the
+      $\ln|\Pi^\star|$ floor ({{precision_optimal_set_size}} tied optima, second action
+      irrelevant under the absorbing goal); the optimal-set mass crosses
+      {{precision_selection_threshold}} at $\gamma$={{precision_gamma_deterministic}}.
+      Entropy at $\gamma$=1 is {{precision_entropy_at_gamma_one_formatted}} nats.
+      Computed in closed form (no sampling).
+    width: 0.9
+  cue_tmaze_advantage:
+    filename: cue_tmaze_advantage.png
+    alt: >-
+      Two-panel bar chart for the cue-then-reward T-maze. The left panel shows the
+      cue information gain I(context; observation) in nats and the expected reward
+      log-preference for an epistemic agent that samples the cue versus a greedy
+      agent that commits to an arm, demonstrating a positive behavioural advantage
+      for cue-sampling. The right panel shows the flat Expected Free Energy of the
+      cue-first and greedy policies, which are identical, illustrating that flat EFE
+      propagation cannot reward cue-sampling and the sophisticated observation-
+      conditioned evaluator is required.
+    caption: >-
+      Cue-then-reward T-maze where epistemic value is strictly necessary. Left: the
+      cue carries {{cue_information_gain_formatted}} nats of information and the
+      cue-sampling agent reaches reward with a measured advantage of
+      {{cue_behavioral_advantage_formatted}} nats over a greedy agent. Right: flat
+      Expected Free Energy scores the cue-first and greedy policies identically
+      ({{cue_flat_efe_indistinguishable}}), so the sophisticated observation-
+      conditioned evaluator is what makes information-seeking required. Closed form
+      (no sampling).
+    width: 0.95
+  dirichlet_convergence:
+    filename: dirichlet_convergence.png
+    alt: >-
+      Single-panel semilog line chart of the Kullback-Leibler divergence from the
+      true T-maze likelihood matrix A to the Dirichlet-learned expected likelihood,
+      plotted against the update step. The divergence starts large at the uniform
+      prior and falls monotonically toward zero as deterministic observation-state
+      counts accumulate, crossing a dashed convergence-tolerance reference line; the
+      first step below tolerance is marked. The curve is computed in closed form
+      from a fixed expected-count stream (no sampling).
+    caption: >-
+      Dirichlet model learning: KL$(A_{\text{true}} \,\|\, A_{\text{learned}})$ versus
+      concentration-update step. The expected likelihood $E[A] = pA / \sum_o pA$
+      converges monotonically to the true generative likelihood; the run reaches the
+      convergence tolerance at step {{dirichlet_steps_to_converge}} with final KL
+      {{dirichlet_final_kl_formatted}} nats. Deterministic (no sampling), so the
+      curve is byte-reproducible.
+    width: 0.85
   ising_mi_curve:
     filename: ising_mi_curve.png
     alt: >-
@@ -233,7 +293,10 @@ section_figures:
   results_invariants:
     - id: invariant_dashboard
   results_si_tmaze:
+    - id: cue_tmaze_advantage
     - id: efe_decomposition
+    - id: precision_sweep
+    - id: dirichlet_convergence
     - id: si_belief_entropy_curve
     - id: si_obs_action_trace
     - id: si_tmaze_actions

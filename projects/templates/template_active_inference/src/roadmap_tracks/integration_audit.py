@@ -474,6 +474,9 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
 
     sources = {
         "efe_decomposition": ["src/simulation/efe_decomposition.py", "src/simulation/tmaze_model.py"],
+        "precision_sweep": ["src/simulation/precision_sweep.py", "src/simulation/efe_decomposition.py"],
+        "cue_tmaze_advantage": ["src/simulation/cue_tmaze_model.py", "src/simulation/efe_decomposition.py"],
+        "dirichlet_convergence": ["src/simulation/dirichlet_learning.py", "src/simulation/tmaze_model.py"],
         "ising_mi_curve": ["output/data/parameter_sweep.csv"],
         "free_energy_curve": ["src/analytical/decomposition.py"],
         "si_belief_entropy_curve": ["output/data/si_tmaze_trace.json"],

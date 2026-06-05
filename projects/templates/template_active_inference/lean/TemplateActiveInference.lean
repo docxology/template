@@ -1,2 +1,3 @@
 import TemplateActiveInference.BernoulliToy
 import TemplateActiveInference.SophisticatedInference
+import TemplateActiveInference.EFEDecomposition

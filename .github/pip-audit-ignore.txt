@@ -19,3 +19,11 @@
 #
 # Whenever you add an entry, also add it to the M2 acceptance log in TO-DO.md
 # so future maintainers can re-evaluate.
+#
+# PYSEC-2026-196 affects pip 26.1.1 (the CI runner's bundled installer, fixed in
+# 26.1.2). pip is the environment's installer, not a runtime/shipped dependency of
+# this template, so the advisory is not an exploitable vector in this codebase
+# (criterion 3); the project cannot pin the runner's pip (uv manages the env), so it
+# also cannot be upgraded here (criterion 1). Re-evaluate / remove once the runner
+# image ships pip >= 26.1.2.
+PYSEC-2026-196

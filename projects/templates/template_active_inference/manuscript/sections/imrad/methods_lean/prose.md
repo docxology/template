@@ -1,3 +1,5 @@
 The Lean track provides minimal boundary witnesses checked by `lake build` under `lean/TemplateActiveInference/`. [@fig:lean_boundary_status] summarizes proved versus deferred statements; fragments cite theorem names without duplicating proof scripts in prose.
 
 Horizon witnesses link back to the analytical toy ([@sec:methods_analytical]) and the pymdp planning depth ([@sec:methods_pymdp]).
+
+Beyond the floating-point check, the expected-free-energy additive identity is proved in the kernel-checked Lean track: `efe_additive_identity_from_relations` derives `(risk + ambiguity) + (pragmatic + epistemic) = 0` from the definitional relations `risk = -entropy - pragmatic` and `epistemic = entropy - ambiguity` using only core integer arithmetic (`omega`), with the equivalent `risk + ambiguity = -(pragmatic + epistemic)` and a concrete finite witness. These join the {{theorem_traceability_row_count}} linked theorem rows (all-linked flag `{{theorem_traceability_linked}}`) and depend only on whitelisted Lean axioms.

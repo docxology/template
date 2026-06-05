@@ -123,6 +123,64 @@ def _efe_token_values() -> dict[str, Any]:
     }
 
 
+def _precision_token_values() -> dict[str, Any]:
+    """Manuscript tokens for the closed-form precision (gamma) sweep.
+
+    Computed directly from the finite T-maze policy posterior (deterministic, no
+    sampling), so the hydrated numbers are reproducible and back the Results prose.
+    """
+    from simulation.precision_sweep import sweep_precision
+    from simulation.tmaze_model import build_tmaze_generative_model
+
+    result = sweep_precision(build_tmaze_generative_model())
+    gamma_det = result["gamma_deterministic_selection"]
+    return {
+        "precision_gamma_grid_points": int(result["gamma_grid_points"]),
+        "precision_gamma_max": f"{result['gamma_max']:g}",
+        "precision_optimal_set_size": int(result["optimal_set_size"]),
+        "precision_entropy_at_gamma_one_formatted": f"{result['entropy_at_gamma_one']:.4f}",
+        "precision_entropy_floor_formatted": f"{result['entropy_floor']:.4f}",
+        "precision_selection_threshold": f"{result['selection_mass_threshold']:g}",
+        "precision_gamma_deterministic": ("never" if gamma_det is None else f"{gamma_det:g}"),
+    }
+
+
+def _cue_tmaze_token_values() -> dict[str, Any]:
+    """Manuscript tokens for the cue-then-reward T-maze epistemic-necessity result.
+
+    Computed in closed form from the finite cue generative model (deterministic, no
+    sampling), so the hydrated numbers reproduce and back the Results prose.
+    """
+    from simulation.cue_tmaze_model import cue_advantage_summary
+
+    summary = cue_advantage_summary()
+    return {
+        "cue_information_gain_formatted": f"{summary['cue_information_gain']:.4f}",
+        "cue_behavioral_advantage_formatted": f"{summary['behavioral_advantage']:.4f}",
+        "cue_epistemic_reward_formatted": f"{summary['epistemic_reward_log_pref']:.4f}",
+        "cue_greedy_reward_formatted": f"{summary['greedy_reward_log_pref']:.4f}",
+        "cue_flat_efe_indistinguishable": "identical" if summary["flat_efe_indistinguishable"] else "distinct",
+        "cue_num_states": int(summary["num_states"]),
+    }
+
+
+def _dirichlet_token_values() -> dict[str, Any]:
+    """Manuscript tokens for the deterministic Dirichlet likelihood-learning run.
+
+    Computed in closed form from the finite T-maze model (no sampling), so the
+    hydrated numbers are reproducible and back the Results prose.
+    """
+    from simulation.dirichlet_learning import summarize_learning
+    from simulation.tmaze_model import build_tmaze_generative_model
+
+    summary = summarize_learning(build_tmaze_generative_model())
+    return {
+        "dirichlet_steps_to_converge": int(summary["steps_to_converge"]),
+        "dirichlet_final_kl_formatted": f"{summary['final_kl']:.2e}",
+        "dirichlet_initial_kl_formatted": f"{summary['initial_kl']:.4f}",
+    }
+
+
 def generate_variables(project_root: Path, *, require_analysis_outputs: bool = True) -> dict[str, Any]:
     root = project_root.resolve()
     hp = load_hyperparameters()
@@ -226,6 +284,9 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "si_policy_comparison_complete_grid": int(bool(policy_summary.get("complete_grid", False))),
         "si_policy_efe_rows_explained": int(bool(policy_summary.get("all_efe_rows_explained", False))),
         **_efe_token_values(),
+        **_precision_token_values(),
+        **_cue_tmaze_token_values(),
+        **_dirichlet_token_values(),
         "pymdp_policy_posterior_row_count": posterior_data.get("row_count", 0),
         "pymdp_policy_posterior_available_count": posterior_data.get("available_row_count", 0),
         "pymdp_policy_posteriors_normalized": int(

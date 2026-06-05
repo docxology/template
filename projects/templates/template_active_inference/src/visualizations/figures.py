@@ -477,8 +477,174 @@ def figure_efe_decomposition(project_root: Path) -> Path:
     return out
 
 
+def figure_precision_sweep(project_root: Path) -> Path:
+    """Policy-posterior sharpening as precision (gamma) increases.
+
+    Left axis: Shannon entropy ``H[q]`` of ``q(pi) = softmax(-gamma G)`` vs gamma,
+    with the ``ln(|optimal set|)`` saturation floor marked. Right axis: the EFE
+    optimal-set mass vs gamma, with the precision at which it crosses the
+    selection threshold marked. Computed in closed form (no sampling), so the
+    figure is byte-deterministic.
+    """
+    from simulation.precision_sweep import sweep_precision
+    from simulation.tmaze_model import build_tmaze_generative_model
+
+    root = project_root.resolve()
+    style = load_figure_style(root)
+    result = sweep_precision(build_tmaze_generative_model())
+    rows = result["rows"]
+    gammas = [float(r["gamma"]) for r in rows]
+    entropy = [float(r["entropy"]) for r in rows]
+    opt_mass = [float(r["optimal_set_mass"]) for r in rows]
+    floor = float(result["entropy_floor"])
+    threshold = float(result["selection_mass_threshold"])
+    gamma_det = result["gamma_deterministic_selection"]
+
+    out = figure_output_path(root, "precision_sweep")
+    with apply_style(style):
+        fig, ax_h = plt.subplots(figsize=(7.5, 4))
+        ax_h.plot(gammas, entropy, color=style.color("secondary"), marker="o", markersize=3, label="entropy H[q]")
+        ax_h.axhline(
+            floor,
+            color=style.color("reference"),
+            linewidth=0.9,
+            linestyle="--",
+            label=r"floor $\ln|\Pi^\star|$",
+        )
+        ax_h.set_xlabel(r"Precision $\gamma$ (inverse temperature)")
+        ax_h.set_ylabel("Posterior entropy (nats)")
+        ax_h.set_title(r"Precision sharpens the policy posterior $q(\pi)=\mathrm{softmax}(-\gamma G)$")
+        style_grid(ax_h, style)
+
+        ax_m = ax_h.twinx()
+        ax_m.plot(gammas, opt_mass, color=style.color("accent"), marker="s", markersize=3, label="optimal-set mass")
+        ax_m.axhline(threshold, color=style.color("muted"), linewidth=0.8, linestyle=":")
+        ax_m.set_ylabel("EFE optimal-set mass")
+        ax_m.set_ylim(0.0, 1.02)
+        if gamma_det is not None:
+            ax_m.scatter(
+                [float(gamma_det)],
+                [threshold],
+                color=style.color("fail"),
+                zorder=3,
+                s=45,
+                label=rf"mass $\geq$ {threshold:g} at $\gamma$={float(gamma_det):g}",
+            )
+
+        lines_h, labels_h = ax_h.get_legend_handles_labels()
+        lines_m, labels_m = ax_m.get_legend_handles_labels()
+        ax_h.legend(lines_h + lines_m, labels_h + labels_m, frameon=False, fontsize=7, loc="center right")
+
+        save_styled_figure(fig, out, style)
+    return out
+
+
+def figure_cue_tmaze_advantage(project_root: Path) -> Path:
+    """Epistemic necessity in the cue-then-reward T-maze.
+
+    Left panel: cue information gain I(context; o_cue) > 0 and the measured
+    behavioural advantage (epistemic vs greedy expected reward log-preference).
+    Right panel: the documented flat-EFE blind spot -- decompose_policy_efe scores
+    the cue-first and greedy policies identically, so the sophisticated evaluator
+    is what makes epistemic value strictly necessary. Closed form (no sampling),
+    byte-deterministic.
+    """
+    from simulation.cue_tmaze_model import compare_cue_vs_greedy
+
+    root = project_root.resolve()
+    style = load_figure_style(root)
+    adv = compare_cue_vs_greedy()
+
+    out = figure_output_path(root, "cue_tmaze_advantage")
+    with apply_style(style):
+        fig, (ax_adv, ax_flat) = plt.subplots(1, 2, figsize=(9.5, 4))
+
+        adv_labels = ["cue info gain\nI(ctx;o)", "epistemic\nreward", "greedy\nreward"]
+        adv_values = [
+            adv.cue_information_gain,
+            adv.epistemic_reward_log_pref,
+            adv.greedy_reward_log_pref,
+        ]
+        adv_colors = [style.color("accent"), style.color("pass"), style.color("fail")]
+        ax_adv.bar(np.arange(3), adv_values, color=adv_colors)
+        ax_adv.axhline(0.0, color=style.color("reference"), linewidth=0.8)
+        ax_adv.set_xticks(np.arange(3))
+        ax_adv.set_xticklabels(adv_labels, fontsize=8)
+        ax_adv.set_ylabel("Value (nats)")
+        ax_adv.set_title(f"Cue is required: +{adv.behavioral_advantage:.2f} nat advantage", loc="left", fontsize=9)
+        style_grid(ax_adv, style)
+
+        flat_values = [adv.flat_efe_cue, adv.flat_efe_greedy]
+        ax_flat.bar(
+            ["cue-first\npolicy", "greedy\npolicy"],
+            flat_values,
+            color=[style.color("secondary"), style.color("muted")],
+        )
+        ax_flat.set_ylabel("Flat EFE $G(\\pi)$ (nats)")
+        ax_flat.set_title(
+            f"Flat EFE blind spot: {'identical' if adv.flat_efe_indistinguishable else 'differs'}",
+            loc="left",
+            fontsize=9,
+        )
+        style_grid(ax_flat, style)
+
+        save_styled_figure(fig, out, style)
+    return out
+
+
+def figure_dirichlet_convergence(project_root: Path) -> Path:
+    """KL(true A || learned A) versus Dirichlet update step (log-y).
+
+    The deterministic Dirichlet likelihood-learning run drives the expected
+    likelihood toward the true T-maze ``A``; the per-step KL falls monotonically
+    toward zero. Computed in closed form (fixed expected-count stream, no
+    sampling) so the figure is byte-deterministic.
+    """
+    from simulation.dirichlet_learning import CONVERGENCE_KL_ATOL, summarize_learning
+    from simulation.tmaze_model import build_tmaze_generative_model
+
+    root = project_root.resolve()
+    style = load_figure_style(root)
+    summary = summarize_learning(build_tmaze_generative_model())
+    kls = [float(v) for v in summary["kl_trajectory"]]
+    steps = np.arange(len(kls))
+    converge_step = int(summary["steps_to_converge"])
+
+    out = figure_output_path(root, "dirichlet_convergence")
+    with apply_style(style):
+        fig, ax = plt.subplots(figsize=(7, 3.6))
+        ax.semilogy(steps, kls, marker="o", color=style.color("primary"), linewidth=2, label="KL(true || learned)")
+        ax.axhline(
+            CONVERGENCE_KL_ATOL,
+            color=style.color("reference"),
+            linewidth=1,
+            linestyle="--",
+            label=f"convergence tol {CONVERGENCE_KL_ATOL:g}",
+        )
+        if converge_step < len(kls):
+            ax.scatter(
+                [steps[converge_step]],
+                [kls[converge_step]],
+                color=style.color("pass"),
+                zorder=3,
+                s=45,
+                label=f"converged at step {converge_step}",
+            )
+        ax.set_xlabel("Dirichlet update step")
+        ax.set_ylabel("KL to true likelihood (nats)")
+        ax.set_title("Dirichlet likelihood learning converges to true A")
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        style_grid(ax, style)
+        ax.legend(frameon=False, fontsize=8)
+        save_styled_figure(fig, out, style)
+    return out
+
+
 FIGURE_GENERATORS: dict[str, Callable[[Path], Path | None]] = {
     "efe_decomposition": figure_efe_decomposition,
+    "precision_sweep": figure_precision_sweep,
+    "cue_tmaze_advantage": figure_cue_tmaze_advantage,
+    "dirichlet_convergence": figure_dirichlet_convergence,
     "ising_mi_curve": figure_ising_mi_curve,
     "free_energy_curve": figure_free_energy_curve,
     "si_belief_entropy_curve": figure_si_belief_entropy_curve,
