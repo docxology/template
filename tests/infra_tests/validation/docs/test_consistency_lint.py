@@ -12,5 +12,7 @@ def test_consistency_lint_facade_exports_check_functions() -> None:
         "check_readme_files_list",
         "check_canonical_count_singularity",
         "check_stale_shell_contracts",
+        "check_memory_decision_rule_links",
+        "check_project_discovery_claims",
     ):
         assert hasattr(consistency_lint, name)

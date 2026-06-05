@@ -196,8 +196,9 @@ def _validate_paths(paths: Iterable[Path], state: DoctorState) -> list[Path]:
     doctor_root = state.root.resolve()
     for raw in paths:
         # Resolve symlinks and ``..`` segments but tolerate non-existent
-        # leaves (resolve(strict=False) still normalises).
-        resolved = Path(os.path.normpath(str((repo / raw).resolve()))) if not raw.is_absolute() else raw.resolve()
+        # leaves (resolve(strict=False) still normalises — the extra
+        # os.path.normpath wrapper was redundant).
+        resolved = (repo / raw).resolve() if not raw.is_absolute() else raw.resolve()
         try:
             resolved.relative_to(repo)
         except ValueError as exc:
