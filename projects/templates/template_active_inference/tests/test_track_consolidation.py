@@ -380,6 +380,111 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         write_sheaf_track_artifacts(project_root)
 
 
+def test_canonical_sheaf_row_only_forgeries_are_caught(project_root: Path) -> None:
+    """Row-only forgeries (rows contradict a True stored aggregate) must be caught.
+
+    Each mutation here corrupts ONLY a row (or an edge / edge-type list) and leaves the
+    stored aggregate boolean True. A trust-the-flag check (read the flag, never recompute
+    from the rows) passes every one of these; the hardened checks recompute the aggregate
+    from its rows exactly as the generator derives it and require stored == recomputed.
+    """
+    from roadmap_tracks import validate_sheaf_track_artifacts, write_sheaf_track_artifacts
+
+    ensure_gate_artifacts(project_root)
+    write_sheaf_track_artifacts(project_root)
+    paths = {
+        "provenance": project_root / "output" / "data" / "artifact_provenance.json",
+        "dependency": project_root / "output" / "data" / "validation_dependency_graph.json",
+        "section_status": project_root / "output" / "data" / "sheaf_section_status_matrix.json",
+        "render_log": project_root / "output" / "reports" / "sheaf_render_log.json",
+        "scope": project_root / "output" / "data" / "track_improvement_scope.json",
+        "release": project_root / "output" / "reports" / "release_bundle_manifest.json",
+    }
+    originals = {path: path.read_text(encoding="utf-8") for path in paths.values()}
+    try:
+        # provenance: a row contradicts the True all_records_complete aggregate.
+        data = _load(paths["provenance"])
+        data["rows"][0]["complete"] = False
+        data["rows"][0]["cycle_excluded"] = False
+        assert data["all_records_complete"] is True
+        _write(paths["provenance"], data)
+        assert any(
+            "incomplete provenance rows or bundles" in issue for issue in validate_sheaf_track_artifacts(project_root)
+        )
+        paths["provenance"].write_text(originals[paths["provenance"]], encoding="utf-8")
+
+        # provenance: a bundle contradicts the True all_bundles_complete aggregate.
+        data = _load(paths["provenance"])
+        data["bundles"][0]["complete"] = False
+        assert data["all_bundles_complete"] is True
+        _write(paths["provenance"], data)
+        assert any(
+            "incomplete provenance rows or bundles" in issue for issue in validate_sheaf_track_artifacts(project_root)
+        )
+        paths["provenance"].write_text(originals[paths["provenance"]], encoding="utf-8")
+
+        # dependency: drop a required edge type while leaving the flag True.
+        data = _load(paths["dependency"])
+        data["edge_types"] = [kind for kind in data["edge_types"] if kind != "producer_to_track"]
+        assert data["all_required_edge_types_present"] is True
+        _write(paths["dependency"], data)
+        assert any("lacks required edge types" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["dependency"].write_text(originals[paths["dependency"]], encoding="utf-8")
+
+        # section_status: stale missing_required_count vs True all_bound_fragments_present.
+        data = _load(paths["section_status"])
+        data["missing_required_count"] = 1
+        assert data["all_bound_fragments_present"] is True
+        _write(paths["section_status"], data)
+        assert any("missing bound fragments" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["section_status"].write_text(originals[paths["section_status"]], encoding="utf-8")
+
+        # section_status: a section row with a blank status vs True all_sections_have_status.
+        data = _load(paths["section_status"])
+        data["sections"][0]["status"] = ""
+        assert data["all_sections_have_status"] is True
+        _write(paths["section_status"], data)
+        assert any("incomplete status rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["section_status"].write_text(originals[paths["section_status"]], encoding="utf-8")
+
+        # section_status: a track row with a blank status vs True all_tracks_have_status.
+        data = _load(paths["section_status"])
+        data["tracks"][0]["status"] = ""
+        assert data["all_tracks_have_status"] is True
+        _write(paths["section_status"], data)
+        assert any("incomplete status rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["section_status"].write_text(originals[paths["section_status"]], encoding="utf-8")
+
+        # render_log: a failed event row vs True all_events_ok.
+        data = _load(paths["render_log"])
+        data["events"][0]["status"] = "failed"
+        assert data["all_events_ok"] is True
+        _write(paths["render_log"], data)
+        assert any("failed render events" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["render_log"].write_text(originals[paths["render_log"]], encoding="utf-8")
+
+        # scope: an incomplete promotion row vs True all_live_tracks_valid.
+        data = _load(paths["scope"])
+        data["promotion_matrix"][0]["promotion_complete"] = False
+        assert data["all_live_tracks_valid"] is True
+        _write(paths["scope"], data)
+        assert any("live-track promotion rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["scope"].write_text(originals[paths["scope"]], encoding="utf-8")
+
+        # release_bundle: a missing source row vs True all_required_sources_present.
+        data = _load(paths["release"])
+        data["rows"][0]["source_exists"] = False
+        data["rows"][0]["deferred_until_render"] = False
+        assert data["all_required_sources_present"] is True
+        _write(paths["release"], data)
+        assert any("missing required deliverables" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["release"].write_text(originals[paths["release"]], encoding="utf-8")
+    finally:
+        for path, text in originals.items():
+            path.write_text(text, encoding="utf-8")
+        write_sheaf_track_artifacts(project_root)
+
+
 def test_canonical_track_contract_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import validate_sheaf_track_artifacts, write_sheaf_track_artifacts
 

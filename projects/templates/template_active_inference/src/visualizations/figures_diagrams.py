@@ -137,16 +137,32 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
     counts = structural_counts(root)
     pipeline_labels = _load_pipeline_track_labels(root)
     sheaf_labels = _load_sheaf_track_labels(root)
+    scientific = [
+        "Analytical oracle (Bernoulli–Ising)",
+        "pymdp T-maze harness",
+        "Sheaf composition contract",
+    ]
+    # Scale the canvas to the tallest column so no row runs off the axes or
+    # collides with the footer, no matter how many gates/fragments exist.
+    row_height = 0.42
+    max_rows = max(len(scientific), len(pipeline_labels), len(sheaf_labels))
+    top_y = 0.6  # space reserved above for column titles
+    footer_y = 0.45  # space reserved below for the summary footer
+    body_height = max_rows * row_height
+    ymax = top_y + body_height + footer_y
+    fig_h = max(5.5, ymax * 0.9)
     with styled_figure(root, "multi_track_architecture") as (style, out):
-        fig, ax = plt.subplots(figsize=(10, 5.5))
+        fig, ax = plt.subplots(figsize=(10, fig_h))
         ax.set_xlim(0, 10)
-        ax.set_ylim(0, 6)
+        ax.set_ylim(0, ymax)
         ax.axis("off")
+        title_y = ymax - top_y / 2
+        first_row_y = ymax - top_y
 
         def draw_column(x: float, title: str, items: list[str], width: float = 2.2) -> None:
-            ax.text(x + width / 2, 5.5, title, ha="center", va="bottom", fontsize=10, fontweight="bold")
+            ax.text(x + width / 2, title_y, title, ha="center", va="bottom", fontsize=10, fontweight="bold")
             for idx, label in enumerate(items):
-                y = 4.8 - idx * 0.42
+                y = first_row_y - idx * row_height
                 patch = FancyBboxPatch(
                     (x, y - 0.16),
                     width,
@@ -159,11 +175,6 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
                 ax.add_patch(patch)
                 ax.text(x + 0.08, y, label, va="center", fontsize=7)
 
-        scientific = [
-            "Analytical oracle (Bernoulli–Ising)",
-            "pymdp T-maze harness",
-            "Sheaf composition contract",
-        ]
         draw_column(0.4, "Scientific tracks (3)", scientific, width=2.6)
         draw_column(3.5, f"Pipeline gates ({len(pipeline_labels)})", pipeline_labels, width=2.5)
         draw_column(
@@ -172,7 +183,10 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
             sheaf_labels,
             width=2.8,
         )
-        for y in (2.5, 3.0, 3.5):
+        # Inter-column flow arrows centred in the body band.
+        band_center = first_row_y - body_height / 2
+        for offset in (-row_height, 0.0, row_height):
+            y = band_center + offset
             ax.annotate(
                 "",
                 xy=(3.4, y),
@@ -187,7 +201,7 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
             )
         ax.text(
             5.0,
-            0.35,
+            footer_y / 2,
             (
                 f"{counts['imrad_manifest_rows']} manifest rows · "
                 f"{counts['coverage_present']} present / {counts['coverage_bound']} bound"

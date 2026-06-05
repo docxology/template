@@ -496,6 +496,20 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
         data["rows"][0]["passed"] = False  # a real invariant violation
         data["all_passed"] = True
 
+    def break_diffoscope(data: dict) -> None:
+        # A row reports the live artifact differs from its provenance hash, yet the
+        # summary bit is left true. The validator must re-derive all_equal from rows.
+        data["rows"][0]["equal"] = False
+        data["all_equal"] = True
+
+    def break_figure_source_map(data: dict) -> None:
+        # Inject a fabricated, non-existent SOURCE-CODE path (src/**, not output/**)
+        # while claiming the row is mapped. The validator must re-check the path on
+        # the filesystem rather than trust the stored mapped/all_figures_mapped bits.
+        data["rows"][0]["sources"] = ["src/__fabricated_does_not_exist__.py"]
+        data["rows"][0]["mapped"] = True
+        data["all_figures_mapped"] = True
+
     cases = [
         (
             project_root / "output" / "reports" / "producer_completeness.json",
@@ -514,6 +528,18 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
             break_invariant,
             validate_toy_sweep_artifacts,
             "graph_world_invariants.json records a failing invariant",
+        ),
+        (
+            project_root / "output" / "reports" / "artifact_diffoscope.json",
+            break_diffoscope,
+            validate_integration_audit_artifacts,
+            "artifact_diffoscope.json records artifact drift",
+        ),
+        (
+            project_root / "output" / "data" / "figure_source_map.json",
+            break_figure_source_map,
+            validate_integration_audit_artifacts,
+            "figure_source_map.json has unmapped figures",
         ),
     ]
     for path, mutate, validator, expected_issue in cases:

@@ -38,6 +38,39 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _is_deferred_source(rel: str) -> bool:
+    """Pipeline-produced artifacts that do not exist at map-build time.
+
+    output/** paths (data, reports, figures) are generated later in the pipeline, so
+    requiring them on a clean tree would falsely report unmapped figures. They are
+    deferred — their existence is verified by the freshness/stale-artifact validators.
+    """
+    normalized = rel.replace("\\", "/").lstrip("./")
+    return normalized.startswith("output/")
+
+
+def _source_path_exists(root: Path, rel: str) -> bool:
+    """A listed source-code path must resolve to a real file or directory on disk."""
+    return (root / rel).exists()
+
+
+def _figure_sources_mapped(root: Path, figure_sources: list[str]) -> bool:
+    """Re-derive `mapped` from the filesystem rather than trusting the hardcoded dict.
+
+    A figure is mapped only when it has at least one source AND every listed
+    source-code path (src/**, *.yaml, *.bib, lean/**, gnn/**, manuscript/**, etc.)
+    exists. output/** artifact paths are deferred (produced later in the pipeline).
+    """
+    if not figure_sources:
+        return False
+    for rel in figure_sources:
+        if _is_deferred_source(rel):
+            continue
+        if not _source_path_exists(root, rel):
+            return False
+    return True
+
+
 def _analysis_scripts(root: Path) -> list[str]:
     data = yaml.safe_load((root / "manuscript" / "config.yaml").read_text(encoding="utf-8")) or {}
     return [str(script) for script in ((data.get("analysis") or {}).get("scripts") or [])]
@@ -510,14 +543,19 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
     }
     rows = []
     for figure_id in sorted(load_figure_registry(root)):
+        figure_sources = sources.get(figure_id, [])
         rows.append(
-            {"figure_id": figure_id, "sources": sources.get(figure_id, []), "mapped": bool(sources.get(figure_id))}
+            {
+                "figure_id": figure_id,
+                "sources": figure_sources,
+                "mapped": _figure_sources_mapped(root, figure_sources),
+            }
         )
     return {
         "schema": "template_active_inference.figure_source_map.v1",
         "rows": rows,
         "figure_count": len(rows),
-        "all_figures_mapped": all(row["mapped"] for row in rows),
+        "all_figures_mapped": bool(rows) and all(row["mapped"] for row in rows),
     }
 
 
@@ -877,7 +915,12 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     if tokens.get("all_tokens_mapped") is not True or tokens.get("all_tokens_mapped") != tokens_derived:
         issues.append("manuscript_token_provenance.json has unmapped tokens")
     figures = _load_json(root / "output" / "data" / "figure_source_map.json")
-    figures_derived = bool(figures.get("rows")) and all(row.get("mapped") for row in figures.get("rows") or [])
+    # Re-derive from the filesystem: recompute mapped per row from the listed source
+    # paths (source-code paths must exist; output/** is deferred). A stored mapped:true
+    # for a row whose source-code path is missing fails closed here.
+    figures_derived = bool(figures.get("rows")) and all(
+        _figure_sources_mapped(root, list(row.get("sources") or [])) for row in figures.get("rows") or []
+    )
     if figures.get("all_figures_mapped") is not True or figures.get("all_figures_mapped") != figures_derived:
         issues.append("figure_source_map.json has unmapped figures")
     claim_audit = _load_json(root / "output" / "reports" / "claim_evidence_audit.json")
@@ -887,7 +930,11 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     if claim_audit.get("all_claims_typed") is not True or claim_audit.get("all_claims_typed") != claims_derived:
         issues.append("claim_evidence_audit.json has untyped claims")
     scope = _load_json(root / "output" / "reports" / "scope_boundary_audit.json")
-    if scope.get("all_current_claims_toy") is not True:
+    scope_rows = scope.get("rows") or []
+    scope_derived = all(row.get("ok") for row in scope_rows)
+    if scope.get("all_current_claims_toy") is not True or scope.get("all_current_claims_toy") != scope_derived:
+        # Re-derived from rows: a row with ok:False fails closed even if the stored
+        # all_current_claims_toy bit was left true.
         issues.append("scope_boundary_audit.json records empirical scope leakage")
     adversarial = _load_json(root / "output" / "reports" / "adversarial_audit.json")
     if adversarial.get("all_expected_failures_documented") is not True:
@@ -933,7 +980,11 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     diffoscope = _load_json(root / "output" / "reports" / "artifact_diffoscope.json")
     if diffoscope.get("schema") != "template_active_inference.artifact_diffoscope.v1":
         issues.append("artifact_diffoscope.json schema mismatch")
-    if diffoscope.get("all_equal") is not True:
+    diffoscope_rows = diffoscope.get("rows") or []
+    diffoscope_derived = bool(diffoscope_rows) and all(row.get("equal") for row in diffoscope_rows)
+    if diffoscope.get("all_equal") is not True or diffoscope.get("all_equal") != diffoscope_derived:
+        # Re-derived from rows: a row with equal:False fails closed even if the stored
+        # all_equal bit was left true.
         issues.append("artifact_diffoscope.json records artifact drift")
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     if license_audit.get("schema") != "template_active_inference.artifact_license_audit.v1":
@@ -943,6 +994,15 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     release_notes = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
     if release_notes.get("schema") != "template_active_inference.release_notes_evidence.v1":
         issues.append("release_notes_evidence.json schema mismatch")
-    if release_notes.get("all_notes_source_backed") is not True:
+    release_notes_rows = release_notes.get("rows") or []
+    release_notes_derived = bool(release_notes_rows) and all(
+        row.get("source") and row.get("passed") for row in release_notes_rows
+    )
+    if (
+        release_notes.get("all_notes_source_backed") is not True
+        or release_notes.get("all_notes_source_backed") != release_notes_derived
+    ):
+        # Re-derived from rows: a note missing its source or failing its check fails
+        # closed even if the stored all_notes_source_backed bit was left true.
         issues.append("release_notes_evidence.json has unsupported notes")
     return issues

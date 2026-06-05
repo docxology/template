@@ -183,71 +183,104 @@ def figure_free_energy_curve(project_root: Path) -> Path:
     return out
 
 
+def _gluing_rows_from_edges(graph: dict, *, top_n: int = 14) -> list[dict]:
+    """Derive the highest-fan-out artifact rows from the real dependency edges.
+
+    Reads ``graph["edges"]`` (not a hardcoded artifact list): the producer comes
+    from the ``produces`` edge, consumers from ``consumed_by`` edges, and gates
+    from ``validated_by`` edges. Artifacts are ranked by real fan-out degree
+    (consumers + gates) so the figure reflects — and changes with — the actual
+    topology. Ordering is fully deterministic: degree desc, then path asc.
+    """
+    edges = graph.get("edges") or []
+    producer_of: dict[str, str] = {}
+    consumers_of: dict[str, list[str]] = {}
+    gates_of: dict[str, list[str]] = {}
+    for edge in edges:
+        kind = edge.get("kind")
+        source = str(edge.get("source", ""))
+        target = str(edge.get("target", ""))
+        if kind == "produces":
+            producer_of[target] = source
+        elif kind == "consumed_by":
+            consumers_of.setdefault(source, []).append(target)
+        elif kind == "validated_by":
+            gates_of.setdefault(source, []).append(target)
+    artifacts = sorted(set(producer_of) | set(consumers_of) | set(gates_of))
+    rows: list[dict] = []
+    for rel in artifacts:
+        consumers = sorted(set(consumers_of.get(rel, [])))
+        gates = sorted(set(gates_of.get(rel, [])))
+        rows.append(
+            {
+                "artifact": rel,
+                "producer": producer_of.get(rel, "?"),
+                "consumers": consumers,
+                "gates": gates,
+                "fan_out": len(consumers) + len(gates),
+            }
+        )
+    rows.sort(key=lambda row: (-row["fan_out"], row["artifact"]))
+    return rows[:top_n]
+
+
 def figure_semantic_gluing_graph(project_root: Path) -> Path:
     root = project_root.resolve()
     style = load_figure_style(root)
     from manuscript.sheaf.semantic import build_validation_dependency_graph
 
     graph = build_validation_dependency_graph(root)
-    selected = [
-        "output/data/sheaf_gluing_certificate.json",
-        "output/data/sheaf_evidence_crosswalk.json",
-        "output/data/validation_dependency_graph.json",
-        "output/data/artifact_provenance.json",
-        "output/reports/replay_matrix.json",
-        "output/data/sensitivity_sweep.json",
-        "output/data/uncertainty_summary.json",
-        "output/data/toy_benchmark_matrix.json",
-        "output/data/interop_roundtrip_report.json",
-        "output/reports/model_checking_witnesses.json",
-        "output/reports/adversarial_audit.json",
-        "output/data/evidence_field_index.json",
-        "output/reports/release_bundle_manifest.json",
-        "output/data/theorem_traceability_matrix.json",
-    ]
     artifacts = graph.get("artifacts") or {}
+    rows = _gluing_rows_from_edges(graph)
     out = figure_output_path(root, "semantic_gluing_graph")
     with apply_style(style):
-        fig, ax = plt.subplots(figsize=(9.6, 5.6))
+        fig, ax = plt.subplots(figsize=(10.4, 6.0))
         ax.axis("off")
-        producer_x, artifact_x, consumer_x = 0.05, 0.42, 0.78
-        y_positions = np.linspace(0.86, 0.14, len(selected))
+        producer_x, artifact_x, consumer_x = 0.04, 0.40, 0.74
+        y_positions = np.linspace(0.86, 0.10, max(1, len(rows)))
         ax.text(producer_x, 0.96, "Producer script", weight="bold", color=style.color("primary"))
         ax.text(artifact_x, 0.96, "Evidence artifact", weight="bold", color=style.color("primary"))
-        ax.text(consumer_x, 0.96, "Consumer / gate", weight="bold", color=style.color("primary"))
-        for y, rel in zip(y_positions, selected, strict=True):
-            record = artifacts.get(rel, {})
-            producer = str(record.get("producer", "?"))
-            consumers = ", ".join(record.get("consumers") or record.get("validation_gates") or ["validate_outputs"])
-            ok = bool(record.get("produced_by_configured_analysis"))
+        ax.text(consumer_x, 0.96, "Consumers / gates (fan-out)", weight="bold", color=style.color("primary"))
+        for y, row in zip(y_positions, rows, strict=False):
+            rel = str(row["artifact"])
+            producer = str(row["producer"])
+            targets = list(row["consumers"]) + [f"[{gate}]" for gate in row["gates"]]
+            consumer_label = ", ".join(targets) if targets else "—"
+            if len(consumer_label) > 46:
+                consumer_label = consumer_label[:43] + "…"
+            ok = bool(artifacts.get(rel, {}).get("produced_by_configured_analysis"))
             box_color = style.color("pass") if ok else style.color("fail")
             ax.text(
                 producer_x,
                 y,
                 producer,
-                fontsize=8,
+                fontsize=7.5,
                 va="center",
-                bbox=dict(boxstyle="round,pad=0.25", facecolor="#f8fafc", edgecolor=box_color),
+                bbox=dict(boxstyle="round,pad=0.22", facecolor="#f8fafc", edgecolor=box_color),
             )
             ax.text(
                 artifact_x,
                 y,
                 rel.replace("output/", ""),
-                fontsize=8,
+                fontsize=7.5,
                 va="center",
-                bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor=style.color("secondary")),
+                bbox=dict(boxstyle="round,pad=0.22", facecolor="#ffffff", edgecolor=style.color("secondary")),
             )
             ax.text(
                 consumer_x,
                 y,
-                consumers,
-                fontsize=8,
+                f"{consumer_label}  (×{row['fan_out']})",
+                fontsize=7.5,
                 va="center",
-                bbox=dict(boxstyle="round,pad=0.25", facecolor="#f8fafc", edgecolor=style.color("accent")),
+                bbox=dict(boxstyle="round,pad=0.22", facecolor="#f8fafc", edgecolor=style.color("accent")),
             )
-            ax.annotate("", xy=(artifact_x - 0.02, y), xytext=(producer_x + 0.24, y), arrowprops={"arrowstyle": "->"})
-            ax.annotate("", xy=(consumer_x - 0.02, y), xytext=(artifact_x + 0.29, y), arrowprops={"arrowstyle": "->"})
-        ax.set_title("Semantic sheaf gluing dependency graph", loc="left", pad=16)
+            ax.annotate("", xy=(artifact_x - 0.02, y), xytext=(producer_x + 0.23, y), arrowprops={"arrowstyle": "->"})
+            ax.annotate("", xy=(consumer_x - 0.02, y), xytext=(artifact_x + 0.27, y), arrowprops={"arrowstyle": "->"})
+        ax.set_title(
+            f"Semantic sheaf gluing dependency graph (top {len(rows)} by fan-out of {len(artifacts)} artifacts)",
+            loc="left",
+            pad=16,
+        )
         save_styled_figure(fig, out, style)
     return out
 

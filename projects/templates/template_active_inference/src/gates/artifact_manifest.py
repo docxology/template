@@ -152,4 +152,5 @@ REQUIRED_OUTPUT_CHECK_KEYS: tuple[str, ...] = (
     "output/reports/scope_boundary_audit.json",
     "output/data/animation_frame_deltas.json",
     "output/reports/manuscript_staleness_report.json",
+    "figures_nonblank",
 )

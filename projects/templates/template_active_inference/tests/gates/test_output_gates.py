@@ -139,3 +139,83 @@ def test_validate_outputs_negative_missing_sweep(project_root: Path, tmp_path: P
     finally:
         if backup.is_file():
             sweep.write_bytes(backup.read_bytes())
+
+
+@pytest.mark.timeout(300)
+def test_figures_nonblank_passes_on_real_tree(project_root: Path) -> None:
+    """Positive control: bootstrapped figures satisfy the integrity gate."""
+    ensure_gate_artifacts(project_root)
+    checks = validate_outputs(project_root)
+    assert checks.get("figures_nonblank") is True
+
+
+@pytest.mark.timeout(300)
+def test_figures_nonblank_negative_blank_png(project_root: Path, tmp_path: Path) -> None:
+    """A 0-byte PNG (empty-file sha is truthy under exists()) must fail the gate."""
+    ensure_gate_artifacts(project_root)
+    target = project_root / "output" / "figures" / "ising_mi_curve.png"
+    assert target.is_file(), "expected bootstrapped figure to exist"
+    backup = tmp_path / "ising_mi_curve.png.bak"
+    backup.write_bytes(target.read_bytes())
+    try:
+        target.write_bytes(b"")  # 0-byte blank figure
+        checks = validate_outputs(project_root)
+        assert checks.get("figures_nonblank") is False
+        assert checks.get("experiment_plan_metrics") is False
+        # The mere-existence check still passes, proving the new check is what catches it.
+        assert checks.get("output/figures/ising_mi_curve.png") is True
+    finally:
+        target.write_bytes(backup.read_bytes())
+
+
+@pytest.mark.timeout(300)
+def test_reproducibility_replay_rebuild_passes_on_real_tree(project_root: Path) -> None:
+    """Positive control: the real rebuild=True replay reproduces every producer."""
+    from validation_spine import validate_reproducibility_replay
+
+    ensure_gate_artifacts(project_root)
+    assert validate_reproducibility_replay(project_root, rebuild=True) == []
+
+
+@pytest.mark.timeout(300)
+def test_reproducibility_replay_rebuild_catches_forged_sweep(project_root: Path, tmp_path: Path) -> None:
+    """A forged parameter_sweep.csv must make rebuild=True replay report a mismatch."""
+    from validation_spine import validate_reproducibility_replay
+
+    ensure_gate_artifacts(project_root)
+    sweep = project_root / "output" / "data" / "parameter_sweep.csv"
+    assert sweep.is_file(), "expected bootstrapped parameter sweep"
+    backup = tmp_path / "parameter_sweep.csv.bak"
+    backup.write_bytes(sweep.read_bytes())
+    try:
+        sweep.write_text(sweep.read_text(encoding="utf-8") + "forged,row,values\n", encoding="utf-8")
+        issues = validate_reproducibility_replay(project_root, rebuild=True)
+        assert any("parameter_sweep_replay" in issue for issue in issues), issues
+    finally:
+        sweep.write_bytes(backup.read_bytes())
+
+
+def test_reproducibility_replay_recompute_catches_rows_vs_aggregate_forgery(
+    project_root: Path, tmp_path: Path
+) -> None:
+    """Flipping a row to passed=false while leaving all_passed=true must be caught (cheap path)."""
+    from validation_spine import validate_reproducibility_replay
+
+    path = project_root / "output" / "reports" / "reproducibility_replay.json"
+    if not path.is_file():
+        ensure_gate_artifacts(project_root)
+    assert path.is_file()
+    backup = tmp_path / "reproducibility_replay.json.bak"
+    backup.write_bytes(path.read_bytes())
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        rows = payload.get("checks") or []
+        assert rows, "expected replay checks to forge"
+        rows[0]["passed"] = False  # forge a failing row, keep aggregate all_passed=true
+        payload["checks"] = rows
+        payload["all_passed"] = True
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        issues = validate_reproducibility_replay(project_root, rebuild=False)
+        assert any("all_passed disagrees with per-row results" in issue for issue in issues), issues
+    finally:
+        path.write_bytes(backup.read_bytes())

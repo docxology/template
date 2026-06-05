@@ -7,6 +7,34 @@ from pathlib import Path
 
 from gates.artifact_manifest import REQUIRED_OUTPUTS
 
+# Matches the tests/test_figures.py::_assert_png lower bound. A 0-byte or blank
+# PNG has the empty-file sha (e3b0c4...) yet still satisfies Path.exists(); a
+# size floor plus a PIL decode of width/height closes that fail-open hole.
+_MIN_FIGURE_BYTES = 5_000
+
+
+def _figures_nonblank(root: Path) -> bool:
+    """Return True only if every required figure PNG is non-trivially sized and decodable."""
+    from PIL import Image
+
+    png_rels = [rel for rel in REQUIRED_OUTPUTS if rel.startswith("output/figures/") and rel.endswith(".png")]
+    if not png_rels:
+        return False
+    for rel in png_rels:
+        path = root / rel
+        if not path.is_file():
+            return False
+        if path.stat().st_size < _MIN_FIGURE_BYTES:
+            return False
+        try:
+            with Image.open(path) as img:
+                width, height = img.size
+        except (OSError, ValueError):
+            return False
+        if width <= 0 or height <= 0:
+            return False
+    return True
+
 
 def _read_json(path: Path) -> dict:
     if not path.exists():
@@ -41,6 +69,8 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
     root = project_root.resolve()
     required = [root / rel for rel in REQUIRED_OUTPUTS]
     checks = {str(p.relative_to(root)): p.exists() for p in required}
+
+    checks["figures_nonblank"] = _figures_nonblank(root)
 
     summary_path = root / "output" / "data" / "si_tmaze_summary.json"
     trace_path = root / "output" / "data" / "si_tmaze_trace.json"
@@ -464,6 +494,7 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
     checks["experiment_plan_metrics"] = checks["experiment_plan_metrics"] and all(
         checks.get(key, False)
         for key in (
+            "figures_nonblank",
             "toy_sweep_track_schemas",
             "formal_interop_track_schemas",
             "integration_audit_track_schemas",
