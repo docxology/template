@@ -15,6 +15,7 @@ The `core/` directory contains the essential documentation that all users should
 | [`how-to-use.md`](how-to-use.md) | usage guide from basic to advanced (all 12 levels) | New users, developers |
 | [`architecture.md`](architecture.md) | System design and structure overview | Developers, architects |
 | [`workflow.md`](workflow.md) | Development workflow and best practices | Developers |
+| [`literature-data-flow.md`](literature-data-flow.md) | Literature-search data pipeline and reference flow | Developers, researchers |
 
 ## Quick Navigation
 
