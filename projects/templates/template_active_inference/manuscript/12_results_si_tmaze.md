@@ -8,11 +8,15 @@ Steps recorded: {{si_tmaze_steps}}. Mean belief entropy: {{si_tmaze_mean_belief_
 
 Policy-comparison rows: {{si_policy_comparison_run_count}} across state-inference and policy-inference modes; goal-reaching rows: {{si_policy_comparison_goal_reached_count}}. Graph-world extension rows: {{si_graph_world_steps}} over {{si_graph_world_node_count}} nodes, with goal-reached flag {{si_graph_world_goal_reached}}.
 
+The expected free energy that scores those policies decomposes in closed form ([@fig:efe_decomposition]). Across the {{efe_policy_count}} length-{{si_tmaze_policy_len}} policies on the T-maze generative model, the expected-free-energy-minimising policy is `{{efe_minimizing_policy}}` with $G$ = {{efe_minimizing_total_formatted}} nats, splitting into risk {{efe_risk_at_min_formatted}} (the pragmatic deviation of predicted outcomes from preferences) and ambiguity {{efe_ambiguity_at_min_formatted}} (the expected likelihood entropy) nats. The same $G$ splits equivalently into pragmatic value {{efe_pragmatic_at_min_formatted}} (expected log-preference) and epistemic value {{efe_epistemic_at_min_formatted}} (state-outcome mutual information) nats — the term that drives information-seeking. The two forms are exactly equal: risk + ambiguity + pragmatic + epistemic vanishes to within {{efe_max_identity_residual_formatted}} across every policy, the action-selection twin of the analytical free-energy decomposition identity ([@sec:results_free_energy]).
+
 <!-- sheaf-track:pymdp -->
 
 Rollout trace: `output/data/si_tmaze_trace.json`. JSONL run log: `output/logs/pymdp_runs.jsonl`.
 
 <!-- sheaf-track:visualization -->
+
+![Closed-form Expected Free Energy decomposition over the finite T-maze policies. Left: $G(\pi)$ = risk + ambiguity (stacked), with the goal-seeking minimiser marked. Right: the pragmatic and epistemic values, which sum to $-G(\pi)$. Both forms are computed in closed form (no sampling) and satisfy risk + ambiguity + pragmatic + epistemic = 0 to machine precision.](../output/figures/efe_decomposition.png){#fig:efe_decomposition width=95% fig-alt="Two-panel bar chart of the Expected Free Energy term decomposition across the four length-two T-maze policies (action sequences 00, 01, 10, 11). The left panel stacks risk (pragmatic deviation, the KL of policy-predicted outcomes from preferences) below ambiguity (epistemic, the expected likelihood entropy) so each bar's height is the Expected Free Energy G(pi); the goal-seeking policy with minimum G is marked. The right panel shows the equal-and-opposite pragmatic value (expected log-preference) and epistemic value (state-outcome mutual information) per policy, with a zero reference line, illustrating the exact identity G(pi) = -(pragmatic + epistemic)."}
 
 ![Belief entropy over time for the T-maze rollout (mean {{si_tmaze_mean_belief_entropy_formatted}} nats).](../output/figures/si_belief_entropy_curve.png){#fig:si_belief_entropy_curve width=90% fig-alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from {{si_entropy_min}} to {{si_entropy_max}} nats across {{si_tmaze_steps}} steps in {{pymdp_mode}} mode."}
 
