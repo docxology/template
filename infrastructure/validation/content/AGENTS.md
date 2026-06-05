@@ -65,7 +65,7 @@ rg 'MARKDOWN\.PANDOC_BARE_PIPE' projects/*/output/reports/
 
 # Just the unresolved citations, JSON-flavoured
 jq '.events[] | select(.code=="BIBTEX.UNDEFINED_KEY")' \
-    projects/fep_lean/output/reports/diagnostics.json
+    projects/*/output/reports/diagnostics.json
 ```
 
 Adding a new code is non-breaking; **changing** an existing code is a

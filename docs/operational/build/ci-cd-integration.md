@@ -22,14 +22,14 @@ Upstream CI is **`name: CI`** in [`.github/workflows/ci.yml`](../../../.github/w
 
 | Doc | Contents |
 | --- | --- |
-| [`.github/AGENTS.md`](../../../.github/AGENTS.md) | Triggers, concurrency, dependency groups (`test-infra` vs `test-project`), combined project coverage semantics, macOS infra `continue-on-error`, stale / Dependabot / release summaries |
+| [`.github/AGENTS.md`](../../../.github/AGENTS.md) | Triggers, concurrency, dependency groups (`test-infra` vs `test-project`), per-project coverage semantics, macOS infra `continue-on-error`, stale / Dependabot / release summaries |
 | [`.github/workflows/AGENTS.md`](../../../.github/workflows/AGENTS.md) | Per-job steps: `lint`, `verify-no-mocks`, matrices, conditional `fep-lean`, `validate`, `security`, `performance` |
 | [`.github/workflows/README.md`](../../../.github/workflows/README.md) | Job graph synopsis and reproduce-CI shell snippets |
 
 High-signal behavioral anchors:
 
 1. **`test-infra`** — `uv sync --group rendering --group monitoring`; Ubuntu + macOS × Python 3.10–3.12; **≥ 60 %** on `infrastructure/`. pytest uses **`continue-on-error: true` on macOS**; treat **Ubuntu matrix legs as the authoritative merge gate**.
-2. **`test-project`** — Adds `--group discopy`. Runs **one `pytest` invocation per `projects/*/tests/`** with **`--cov=projects/<name>/src`** and **`--cov-append`**, skipping `projects/fep_lean/tests/`, then **`coverage report --fail-under=75`** on the **combined union** across measured project packages (`DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Each project still enforces **≥ 90%** on its own `src/` when pytest runs from that project directory.
+2. **`test-project`** — Adds `--group discopy`. Runs one matrix job per public exemplar from [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml), across Python 3.10 and 3.12, and invokes `scripts/01_run_tests.py --project <name> --project-only --include-slow`. Each job enforces that exemplar's own **≥ 90%** `src/` coverage floor; there is no combined-union project coverage run or `--cov-append` in current CI.
 3. **`fep-lean`** — Runs **only when** the `detect` job reports `needs.detect.outputs.fep_lean == 'true'`. The workflow deliberately avoids job-level `hashFiles()` because that context is invalid in a job `if:`.
 4. **Manual CI runs** — `workflow_dispatch` on **CI has no workflow inputs**. (The **`release`** workflow differs: **`workflow_dispatch`** expects a **`tag`** input.)
 
@@ -73,7 +73,7 @@ jobs:
 
 ## Automated Testing
 
-This template separates **Layer 1** (`tests/infra_tests/` → `--cov=infrastructure`) from **Layer 2** (**per-project `projects/<name>/tests/`** merged with **`--cov-append`**). Patterns below are generic; parity with Actions is [.github/workflows/README.md](../../../.github/workflows/README.md) “Reproduce CI locally”.
+This template separates **Layer 1** (`tests/infra_tests/` → `--cov=infrastructure`) from **Layer 2** (per-project `projects/<name>/tests/`). CI runs each public exemplar in its own matrix job; the local `scripts/01_run_tests.py --project-only --all-projects` path is the one that merges project coverage with `--cov-append`. Patterns below are generic; parity with Actions is [.github/workflows/README.md](../../../.github/workflows/README.md) “Reproduce CI locally”.
 
 ### Test Execution
 
@@ -112,7 +112,7 @@ For a single-package layout, **`pytest-cov`** can enforce gates directly:
     --cov-fail-under=90
 ```
 
-**This repo** aggregates multiple `projects/<name>/src` trees (`--cov-append` + combined union `coverage report --fail-under=75`). Per-project standalone gates remain **90%**. See [.github/workflows/AGENTS.md](../../../.github/workflows/AGENTS.md).
+**This repo** uses isolated per-project CI jobs for public exemplars. The local all-project orchestrator aggregates multiple `projects/<name>/src` trees (`--cov-append` + combined union `coverage report --fail-under=75`) for release-style sweeps. Per-project standalone gates remain **90%**. See [.github/workflows/AGENTS.md](../../../.github/workflows/AGENTS.md).
 
 ### Test Matrix
 

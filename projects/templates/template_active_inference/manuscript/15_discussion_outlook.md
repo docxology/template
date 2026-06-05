@@ -30,6 +30,14 @@ Measured pymdp rollout (`{{pymdp_mode}}`, config hash `{{pymdp_config_hash}}`): 
 
 Analytical sweep residual RMSE {{sweep_rmse_mi}} nats (max residual {{sweep_max_residual}}). Coverage audit: {{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing cells on the IMRAD matrix.
 
+<!-- sheaf-track:scholarship -->
+
+The scholarship matrix is also a scope-control device. It separates conceptual
+lineage from measured evidence: cited sources explain why the toy models are
+relevant, while generated artifacts decide every numerical, figure, and gate
+claim. That split keeps the paper from converting background authority into an
+unsupported empirical result.
+
 <!-- sheaf-track:ontology -->
 
 ### Ontology bindings

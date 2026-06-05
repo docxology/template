@@ -26,6 +26,7 @@ Development standards and coding guidelines for the Research Project Template.
 - **manuscript_style.md** - Manuscript formatting and style standards
 - **reporting.md** - Reporting module standards and outputs
 - **refactoring.md** - Refactoring and modularization standards (clean break approach)
+- **memory_and_decision_records.md** - Decision memory, ADRs, local agent memory, and RedTeam negative controls
 
 ## Key Principles
 
@@ -53,6 +54,7 @@ Development standards and coding guidelines for the Research Project Template.
 - **Tests**: 60% infrastructure minimum, 90% project minimum (current % — see [coverage-gaps.md](../development/coverage-gaps.md)) with data (no mocks)
 - **Types**: Type hints on all public APIs and functions
 - **Docs**: AGENTS.md + README.md for every directory
+- **Decision memory**: use [memory_and_decision_records.md](memory_and_decision_records.md) to choose between `WHY:` comments, ADRs, project plans, failure autopsies, local memory, and selective ignorance
 - **Errors**: Use custom exception hierarchy from `infrastructure.core.exceptions`
 - **Logging**: Unified logging via `infrastructure.core.logging.utils`
 

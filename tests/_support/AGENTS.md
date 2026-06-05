@@ -5,7 +5,7 @@
 Technical guide for `tests/_support/` — shared scaffold factories consumed by the
 infrastructure test suites. These helpers build minimum-valid synthetic project
 trees so tests exercise discovery, rendering, and orchestration without coupling
-to the nine public exemplars.
+to the public exemplars listed in [`docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md).
 
 ## Directory Structure
 

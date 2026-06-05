@@ -145,7 +145,7 @@ severity as the CI `security` job, so contributors hear it before CI does.
 Required checks must match the **`name:`** field of each job in [`workflows/ci.yml`](workflows/ci.yml). `main` is currently unprotected, so the contexts below are **illustrative**. Matrix jobs expand to one check per cell:
 
 - **`test-infra`** → **Infra Tests (`<os>`, Python `<ver>`)** — 4 cells: `ubuntu-latest × 3.10/3.11/3.12` plus `macos-latest × 3.12`.
-- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — 18 cells: each of the 9 public exemplars (`templates/template_*`) on `py3.10` and `py3.12`, ubuntu-latest only.
+- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — 18 cells: each public exemplar from [`../docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (`templates/template_*`) on `py3.10` and `py3.12`, ubuntu-latest only.
 
 Require the combinations you care about, or use GitHub rulesets that treat required checks flexibly.
 

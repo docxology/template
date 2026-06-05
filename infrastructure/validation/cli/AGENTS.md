@@ -32,18 +32,18 @@ Useful as a fast pre-commit / interactive check that fires in milliseconds and
 fails the same way the renderer would, on the same source files.
 
 ```bash
-# When fep_lean is checked out locally under projects/:
+# Canonical public exemplar:
 # Default discovery: union of manuscript/*.bib next to the markdown (omit --bib)
-uv run python -m infrastructure.validation.cli prerender projects/fep_lean/manuscript
+uv run python -m infrastructure.validation.cli prerender projects/templates/template_code_project/manuscript
 
 # Explicit bibliography path
 uv run python -m infrastructure.validation.cli prerender \
-  projects/fep_lean/manuscript \
-  --bib projects/fep_lean/manuscript/references.bib
+  projects/templates/template_code_project/manuscript \
+  --bib projects/templates/template_code_project/manuscript/references.bib
 
 # Repo-relative paths in the error output
 uv run python -m infrastructure.validation.cli prerender \
-  projects/fep_lean/manuscript \
+  projects/templates/template_code_project/manuscript \
   --repo-root .
 ```
 

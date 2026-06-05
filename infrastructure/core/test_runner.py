@@ -38,7 +38,6 @@ skip list, marker expression) is configurable, and all subprocess work
 happens via real ``subprocess.run`` calls — no mocking.
 """
 
-import shutil
 import subprocess  # nosec B404
 from pathlib import Path
 from typing import Sequence
@@ -168,11 +167,7 @@ def _run_combined_coverage_gate(
 ) -> int:
     """Run ``coverage report --fail-under=<N>`` and return its exit code."""
     log_substep(f"Running combined coverage gate (--fail-under={fail_under})", logger)
-    coverage_exe = shutil.which("coverage")
-    if coverage_exe:
-        cmd = [coverage_exe, "report", f"--fail-under={fail_under}"]
-    else:
-        cmd = get_python_command() + ["-m", "coverage", "report", f"--fail-under={fail_under}"]
+    cmd = get_python_command() + ["-m", "coverage", "report", f"--fail-under={fail_under}"]
     try:
         completed = subprocess.run(  # nosec B603
             cmd,

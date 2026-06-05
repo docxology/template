@@ -39,6 +39,7 @@ CANONICAL_TRACKS: tuple[str, ...] = (
     "release_bundle",
     "theorem_traceability",
     "gate_ergonomics",
+    "scholarship",
     "artifact_diffoscope",
     "proof_extraction",
     "state_space_catalog",
@@ -66,6 +67,7 @@ CANONICAL_ARTIFACTS: dict[str, str] = {
     "release_bundle": "output/reports/release_bundle_manifest.json",
     "theorem_traceability": "output/data/theorem_traceability_matrix.json",
     "gate_ergonomics": "output/data/validation_gate_index.json",
+    "scholarship": "output/data/scholarship_source_matrix.json",
     "artifact_diffoscope": "output/reports/artifact_diffoscope.json",
     "proof_extraction": "output/data/proof_extraction_index.json",
     "state_space_catalog": "output/data/state_space_catalog.json",
@@ -116,6 +118,8 @@ REQUIRED_EDGE_TYPES: tuple[str, ...] = (
     "model_to_witness",
     "ontology_to_roundtrip",
     "figure_to_source",
+    "scholarship_to_method",
+    "scholarship_to_artifact",
     "output_to_copied_output",
 )
 
@@ -464,6 +468,7 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
             CANONICAL_ARTIFACTS["artifact_diffoscope"],
             CANONICAL_ARTIFACTS["artifact_license"],
             CANONICAL_ARTIFACTS["release_notes"],
+            CANONICAL_ARTIFACTS["scholarship"],
             CANONICAL_ARTIFACTS["proof_dependency_graph"],
             CANONICAL_ARTIFACTS["release_attestation"],
         ),
@@ -487,6 +492,7 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
             "output/figures/semantic_gluing_graph.png",
             "output/figures/theorem_traceability_graph.png",
             "output/figures/causal_ablation_heatmap.png",
+            "output/figures/scholarship_source_map.png",
             "output/figures/si_belief_trajectory.gif",
             "output/data/animation_frame_deltas.json",
             "output/reports/figure_hash_manifest.json",
@@ -740,6 +746,7 @@ def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
         ),
         ("gate_ergonomics_unindexed", "gate_ergonomics", "validate_outputs.validation_gate_index_schema"),
         ("artifact_diffoscope_missed_hash_drift", "artifact_diffoscope", "validate_outputs.artifact_diffoscope_schema"),
+        ("missing_scholarship_source_binding", "scholarship", "validate_outputs.scholarship_source_matrix_schema"),
         ("proof_extraction_missing_statement", "proof_extraction", "validate_outputs.proof_extraction_index_schema"),
         (
             "state_space_catalog_missing_finite_space",
@@ -1044,10 +1051,12 @@ def build_release_bundle_manifest(project_root: Path) -> dict[str, Any]:
         CANONICAL_ARTIFACTS["evidence_fields"],
         CANONICAL_ARTIFACTS["theorem_traceability"],
         CANONICAL_ARTIFACTS["gate_ergonomics"],
+        CANONICAL_ARTIFACTS["scholarship"],
         "output/figures/si_belief_trajectory.gif",
         "output/figures/semantic_gluing_graph.png",
         "output/figures/theorem_traceability_graph.png",
         "output/figures/causal_ablation_heatmap.png",
+        "output/figures/scholarship_source_map.png",
         "output/pdf/template_active_inference_combined.pdf",
         "output/web/template_active_inference.html",
         CANONICAL_ARTIFACTS["artifact_diffoscope"],
@@ -1155,6 +1164,7 @@ def _track_artifact(track_id: str) -> str:
         "causal_ablation": CANONICAL_ARTIFACTS["causal_ablation"],
         "artifact_license": CANONICAL_ARTIFACTS["artifact_license"],
         "release_notes": CANONICAL_ARTIFACTS["release_notes"],
+        "scholarship": CANONICAL_ARTIFACTS["scholarship"],
         "prose": "manuscript/sheaf/manifest.yaml",
         "formalism": "manuscript/sheaf/manifest.yaml",
         "layers": "output/data/sheaf_coverage_matrix.json",
@@ -1304,6 +1314,13 @@ def build_validation_dependency_graph(project_root: Path) -> dict[str, Any]:
     for row in figure_source.get("rows") or []:
         for source in row.get("sources") or []:
             edges.append({"source": str(row.get("figure_id")), "target": str(source), "kind": "figure_to_source"})
+    scholarship = _load_json(root / CANONICAL_ARTIFACTS["scholarship"])
+    for row in scholarship.get("rows") or []:
+        citation = str(row.get("citation_key") or "")
+        method_role = str(row.get("method_role") or "")
+        artifact = str(row.get("artifact") or "")
+        edges.append({"source": citation, "target": method_role, "kind": "scholarship_to_method"})
+        edges.append({"source": citation, "target": artifact, "kind": "scholarship_to_artifact"})
     copied = _copied_parity(root, list(CANONICAL_ARTIFACTS.values()))
     for row in copied["rows"]:
         edges.append({"source": row["artifact"], "target": row["copied_path"], "kind": "output_to_copied_output"})
@@ -1352,6 +1369,7 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
     ablation = _load_json(root / CANONICAL_ARTIFACTS["causal_ablation"])
     license_audit = _load_json(root / CANONICAL_ARTIFACTS["artifact_license"])
     release_notes = _load_json(root / CANONICAL_ARTIFACTS["release_notes"])
+    scholarship = _load_json(root / CANONICAL_ARTIFACTS["scholarship"])
     proof_dependency = _load_json(root / CANONICAL_ARTIFACTS["proof_dependency_graph"])
     transition = _load_json(root / CANONICAL_ARTIFACTS["state_transition_table"])
     ablation_sensitivity = _load_json(root / CANONICAL_ARTIFACTS["ablation_sensitivity_report"])
@@ -1393,6 +1411,8 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
         "causal_ablation_complete": ablation.get("complete_grid") is True and ablation.get("all_deterministic") is True,
         "artifact_license_safe": license_audit.get("all_license_safe") is True,
         "release_notes_source_backed": release_notes.get("all_notes_source_backed") is True,
+        "scholarship_sources_connected": scholarship.get("all_sources_connected") is True
+        and scholarship.get("all_expected_sources_present") is True,
         "proof_dependency_graph_resolved": proof_dependency.get("all_theorems_have_dependencies") is True
         and proof_dependency.get("all_edges_resolved") is True,
         "state_transition_table_complete": transition.get("all_transitions_deterministic") is True
@@ -1405,6 +1425,7 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
 
 def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
     root = project_root.resolve()
+    from roadmap_tracks.scholarship import write_scholarship_source_matrix
     from roadmap_tracks.supplemental import write_supplemental_artifacts
 
     try:
@@ -1431,6 +1452,7 @@ def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
         root / CANONICAL_ARTIFACTS["model_checking"],
         build_model_checking_witnesses(root),
     )
+    paths["scholarship"] = write_scholarship_source_matrix(root)
     paths["dependency"] = _write_json(root / CANONICAL_ARTIFACTS["dependency"], build_validation_dependency_graph(root))
     from manuscript.sheaf.status import write_sheaf_status_outputs
 
@@ -1458,6 +1480,7 @@ def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
     paths["artifact_diffoscope"] = root / CANONICAL_ARTIFACTS["artifact_diffoscope"]
     paths["artifact_license"] = root / CANONICAL_ARTIFACTS["artifact_license"]
     paths["release_notes"] = root / CANONICAL_ARTIFACTS["release_notes"]
+    paths["scholarship"] = write_scholarship_source_matrix(root)
     paths["proof_extraction"] = root / CANONICAL_ARTIFACTS["proof_extraction"]
     paths["state_space_catalog"] = root / CANONICAL_ARTIFACTS["state_space_catalog"]
     paths["causal_ablation"] = root / CANONICAL_ARTIFACTS["causal_ablation"]
@@ -1501,6 +1524,7 @@ def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
         paths["artifact_diffoscope"] = root / CANONICAL_ARTIFACTS["artifact_diffoscope"]
         paths["artifact_license"] = root / CANONICAL_ARTIFACTS["artifact_license"]
         paths["release_notes"] = root / CANONICAL_ARTIFACTS["release_notes"]
+        paths["scholarship"] = write_scholarship_source_matrix(root)
         paths["proof_extraction"] = root / CANONICAL_ARTIFACTS["proof_extraction"]
         paths["state_space_catalog"] = root / CANONICAL_ARTIFACTS["state_space_catalog"]
         paths["causal_ablation"] = root / CANONICAL_ARTIFACTS["causal_ablation"]

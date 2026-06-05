@@ -16,12 +16,15 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
 
     assert cert["schema"] == "template_active_inference.semantic_gluing.v2"
     assert cert["ok"] is True
-    assert cert["manuscript_variables"]["sheaf_track_count"] == 32
+    assert cert["manuscript_variables"]["sheaf_track_count"] == 33
     assert cert["shared_symbols"]["bernoulli"]["J"] == "CrossStreamCouplingPotential"
     assert cert["shared_symbols"]["si_tmaze"]["pi"] == "PolicyPosterior"
     assert cert["artifact_sources"]["si_summary"]["path"] == "output/data/si_tmaze_summary.json"
     assert cert["artifact_graph"]["output/data/si_graph_world_trace.json"]["producer"] == "simulate_si_graph_world.py"
-    assert cert["artifact_graph"]["output/data/sheaf_section_status_matrix.json"]["producer"] == "generate_sheaf_tracks.py"
+    assert (
+        cert["artifact_graph"]["output/data/sheaf_section_status_matrix.json"]["producer"]
+        == "generate_sheaf_tracks.py"
+    )
     assert cert["artifact_graph"]["output/reports/sheaf_render_log.json"]["producer"] == "generate_sheaf_tracks.py"
     assert "results_si_tmaze" in cert["artifact_graph"]["output/data/si_policy_comparison.json"]["consumers"]
     assert cert["artifact_graph"]["output/data/pymdp_policy_posterior_grid.json"]["producer"] == "simulate_si_tmaze.py"
@@ -70,7 +73,10 @@ def test_semantic_certificate_is_written_as_generated_artifact(project_root: Pat
 
     assert path.relative_to(project_root).as_posix() == "output/data/sheaf_gluing_certificate.json"
     assert paths["crosswalk"].relative_to(project_root).as_posix() == "output/data/sheaf_evidence_crosswalk.json"
-    assert paths["dependency_graph"].relative_to(project_root).as_posix() == "output/data/validation_dependency_graph.json"
+    assert (
+        paths["dependency_graph"].relative_to(project_root).as_posix()
+        == "output/data/validation_dependency_graph.json"
+    )
     assert payload["ok"] is True
     assert payload["restrictions"]["coverage_missing"] == 0
     assert "si_graph_world_trace" in json.dumps(paths["crosswalk"].read_text(encoding="utf-8"))

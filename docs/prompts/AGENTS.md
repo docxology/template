@@ -22,6 +22,7 @@ Discovered by `infrastructure.skills` via root `docs/prompts` in `DEFAULT_SKILL_
 | [`refactoring/`](refactoring/SKILL.md) | `template-refactoring` | Refactors with migration |
 | [`infrastructure-module/`](infrastructure-module/SKILL.md) | `template-infrastructure-module` | New `infrastructure/*` packages |
 | [`documentation-creation/`](documentation-creation/SKILL.md) | `template-documentation-creation` | AGENTS.md / README.md |
+| [`agentic-use/`](agentic-use/SKILL.md) | `template-agentic-use` | Skill inventory, routing, external companion review |
 | [`validation-quality/`](validation-quality/SKILL.md) | `template-validation-quality` | Validation CLI / gates |
 | [`comprehensive-assessment/`](comprehensive-assessment/SKILL.md) | `template-comprehensive-assessment` | Full checkout audit |
 | [`reproducibility-audit/`](reproducibility-audit/SKILL.md) | `template-reproducibility-audit` | Determinism before release |

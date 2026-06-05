@@ -38,6 +38,20 @@ def main(argv: list[str] | None = None) -> int:
         require_analysis_outputs=not args.allow_draft,
     )
     out.write_text(json.dumps(variables, indent=2), encoding="utf-8")
+    if args.allow_draft:
+        # Draft hydration should stay below the repo's per-test timeout and
+        # tolerate missing analysis artifacts. The strict pipeline path below
+        # still refreshes the full sheaf-track and semantic artifact surface.
+        compose_all_sections(PROJECT_ROOT)
+        variables = generate_variables(PROJECT_ROOT, require_analysis_outputs=False)
+        out.write_text(json.dumps(variables, indent=2), encoding="utf-8")
+        resolved_dir = write_resolved_manuscript(PROJECT_ROOT, variables)
+        staleness_path = write_manuscript_staleness_report(PROJECT_ROOT)
+        print(out)
+        print(resolved_dir)
+        print(staleness_path)
+        return 0
+
     write_integration_audit_artifacts(PROJECT_ROOT)
     write_sheaf_track_artifacts(PROJECT_ROOT)
     semantic_paths = write_semantic_gluing_outputs(PROJECT_ROOT)

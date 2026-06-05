@@ -33,3 +33,14 @@ def test_academic_workflow_eval_cases_are_mapped_to_new_skills() -> None:
     for eval_id, rel_path in expected.items():
         assert EVAL_SKILL_MAP[eval_id] == rel_path
         assert (REPO / rel_path).is_file()
+
+
+def test_agentic_use_eval_cases_are_mapped_to_agentic_skill() -> None:
+    expected = {
+        28: "docs/prompts/agentic-use/SKILL.md",
+        29: "docs/prompts/agentic-use/SKILL.md",
+    }
+
+    for eval_id, rel_path in expected.items():
+        assert EVAL_SKILL_MAP[eval_id] == rel_path
+        assert (REPO / rel_path).is_file()

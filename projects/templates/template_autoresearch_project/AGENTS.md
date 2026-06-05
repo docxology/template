@@ -5,6 +5,8 @@
 This project is the public exemplar for deterministic AutoResearch loops in
 `template/`. It should remain small, auditable, and runnable through `run.sh`.
 
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+
 ## Architecture
 
 - Business logic: [`src/`](src/) — see [`src/AGENTS.md`](src/AGENTS.md) for package layout and conventions.

@@ -360,6 +360,61 @@ def figure_causal_ablation_heatmap(project_root: Path) -> Path:
     return out
 
 
+def figure_scholarship_source_map(project_root: Path) -> Path:
+    """Render bibliography-to-method-source bindings from the scholarship matrix."""
+    root = project_root.resolve()
+    style = load_figure_style(root)
+    matrix_path = root / "output" / "data" / "scholarship_source_matrix.json"
+    if not matrix_path.is_file():
+        from roadmap_tracks import write_sheaf_track_artifacts
+
+        write_sheaf_track_artifacts(root)
+    matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+    rows = matrix.get("rows") or []
+    out = figure_output_path(root, "scholarship_source_map")
+    with apply_style(style):
+        fig, ax = plt.subplots(figsize=(10.4, 5.8))
+        ax.axis("off")
+        columns = [0.03, 0.28, 0.55, 0.82]
+        headers = ["Citation", "Source family", "Method role", "Evidence artifact"]
+        for x, header in zip(columns, headers, strict=True):
+            ax.text(x, 0.95, header, weight="bold", color=style.color("primary"), fontsize=9)
+        y_positions = np.linspace(0.86, 0.12, max(1, len(rows)))
+        for y, row in zip(y_positions, rows, strict=False):
+            connected = row.get("connected") is True
+            edge_color = style.color("pass") if connected else style.color("fail")
+            artifact = str(row.get("artifact", "")).replace("output/", "")
+            if len(artifact) > 32:
+                artifact = artifact[:29] + "..."
+            labels = [
+                f"@{row.get('citation_key', '')}",
+                str(row.get("source_family", "")).replace("_", "\n"),
+                str(row.get("method_role", "")).replace("_", "\n"),
+                artifact,
+            ]
+            for x, label in zip(columns, labels, strict=True):
+                ax.text(
+                    x,
+                    y,
+                    label,
+                    fontsize=7.4,
+                    va="center",
+                    bbox=dict(boxstyle="round,pad=0.2", facecolor="#ffffff", edgecolor=edge_color),
+                )
+            ax.annotate("", xy=(columns[1] - 0.025, y), xytext=(columns[0] + 0.13, y), arrowprops={"arrowstyle": "->"})
+            ax.annotate("", xy=(columns[2] - 0.025, y), xytext=(columns[1] + 0.17, y), arrowprops={"arrowstyle": "->"})
+            ax.annotate("", xy=(columns[3] - 0.025, y), xytext=(columns[2] + 0.17, y), arrowprops={"arrowstyle": "->"})
+        summary = (
+            f"{matrix.get('source_count', 0)} sources, "
+            f"{matrix.get('method_role_count', 0)} method roles, "
+            f"connected={matrix.get('all_sources_connected')}"
+        )
+        ax.text(0.03, 0.04, summary, fontsize=8.5, color=style.color("muted"))
+        ax.set_title("Scholarship source map", loc="left", pad=16)
+        save_styled_figure(fig, out, style)
+    return out
+
+
 FIGURE_GENERATORS: dict[str, Callable[[Path], Path | None]] = {
     "ising_mi_curve": figure_ising_mi_curve,
     "free_energy_curve": figure_free_energy_curve,
@@ -376,6 +431,7 @@ FIGURE_GENERATORS: dict[str, Callable[[Path], Path | None]] = {
     "semantic_gluing_graph": figure_semantic_gluing_graph,
     "theorem_traceability_graph": figure_theorem_traceability_graph,
     "causal_ablation_heatmap": figure_causal_ablation_heatmap,
+    "scholarship_source_map": figure_scholarship_source_map,
 }
 
 

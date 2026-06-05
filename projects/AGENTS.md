@@ -57,6 +57,7 @@ The permanent exemplars, and the optional search add-on when restored, share the
 - Per-directory `AGENTS.md` + `README.md` (and, for `tests/`, a `PATTERNS.md`).
 - Manuscript files `00_abstract.md` … `99_references.md` plus `config.yaml`, `preamble.md`, `references.bib`, `SYNTAX.md`, and a manuscript-level `AGENTS.md`/`README.md`.
 - The same verification checklist: `pytest --cov`, no-mocks grep, layer-purity grep.
+- The same decision-memory contract: [`docs/rules/memory_and_decision_records.md`](../docs/rules/memory_and_decision_records.md) governs `WHY:` comments, ADR escalation, project TODO/ISA notes, local memory, failure autopsies, selective ignorance, and RedTeam-style negative controls.
 
 When a new project is bootstrapped, copy whichever exemplar is closest in shape and adjust from there. Examples in repo-wide docs default to `projects/templates/template_code_project/` unless the doc explicitly compares project shapes.
 

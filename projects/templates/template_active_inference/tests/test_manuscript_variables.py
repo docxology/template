@@ -20,10 +20,12 @@ def test_generate_variables_with_outputs() -> None:
     assert vars_["lambda_grid_points"] >= 2
     assert vars_["bernoulli_state_count"] == 2
     assert vars_["gnn_spec_version"] == "GNN v1.1"
-    assert vars_["pipeline_track_count"] == 29
-    assert vars_["sheaf_track_count"] == 32
+    assert vars_["pipeline_track_count"] == 30
+    assert vars_["sheaf_track_count"] == 33
     assert vars_["lean_graph_world_topology_witness_count"] >= 3
     assert vars_["lean_graph_world_all_topologies_witnessed"] is True
+    assert vars_["scholarship_source_count"] >= 8
+    assert vars_["scholarship_sources_connected"] is True
 
 
 def test_invariant_counts_include_simulation_when_merged() -> None:

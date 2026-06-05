@@ -453,6 +453,25 @@ def test_proof_extraction_source_is_per_file(project_root: Path) -> None:
     assert by_name["ising_coupling_sum_zero"]["leading_tactic"] == "decide"
 
 
+def test_scholarship_matrix_has_row_level_negative_control(project_root: Path) -> None:
+    from roadmap_tracks import validate_scholarship_source_matrix, write_sheaf_track_artifacts
+
+    ensure_gate_artifacts(project_root)
+    write_sheaf_track_artifacts(project_root)
+    path = project_root / "output" / "data" / "scholarship_source_matrix.json"
+    original = path.read_text(encoding="utf-8")
+    try:
+        data = json.loads(original)
+        assert validate_scholarship_source_matrix(project_root) == []
+        data["rows"][0]["cited_in_manuscript"] = False
+        data["rows"][0]["connected"] = True
+        data["all_sources_connected"] = True
+        path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        assert any("disconnected source rows" in issue for issue in validate_scholarship_source_matrix(project_root))
+    finally:
+        path.write_text(original, encoding="utf-8")
+
+
 def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) -> None:
     """Mutate a ROW (leaving the summary boolean true) and assert the gate still fails.
 

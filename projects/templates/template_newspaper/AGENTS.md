@@ -10,6 +10,8 @@ PDF (*The Triplicate*) from structured YAML. It is a canonical monorepo exemplar
 alongside `template_code_project` and `template_prose_project`, and obeys the
 same project contract.
 
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+
 ## The one rule that matters
 
 **Content is data; the engine is the press.** Editions live in `content/`. If a

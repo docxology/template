@@ -52,7 +52,7 @@ uv run pytest tests/integration/ --cov=projects/{name}/src --cov=infrastructure
 ## Full Test Suite
 
 ```bash
-# All tests with coverage (75% is the combined-union gate; per-suite gates are 60% infra / 90% project)
+# Local all-project union gate (75%); CI project jobs enforce each exemplar's own 90% floor
 uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=75
 
 # Generate HTML coverage report

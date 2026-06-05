@@ -26,7 +26,7 @@ uv run python scripts/07_generate_executive_report.py
 | Stage | Script | Responsibility |
 | --- | --- | --- |
 | 00 | `00_setup_environment.py` | Validate Python, dependencies, build tools, and directories |
-| 01 | `01_run_tests.py` | Run infrastructure and project tests. Project pipelines use `--infra-scope pipeline-smoke` for a focused real infrastructure contract; explicit repo verification uses `--infra-scope full` for the coverage-bearing infrastructure suite. With `--project-only --all-projects`, delegates to `infrastructure.core.test_runner.run_per_project_pytest` (one pytest process per project, `--cov-append`, combined coverage gate — used by CI). |
+| 01 | `01_run_tests.py` | Run infrastructure and project tests. Project pipelines use `--infra-scope pipeline-smoke` for a focused real infrastructure contract; explicit repo verification uses `--infra-scope full` for the coverage-bearing infrastructure suite. With `--project-only --all-projects`, delegates to `infrastructure.core.test_runner.run_per_project_pytest` (one pytest process per project, `--cov-append`, combined coverage gate for local all-project/release sweeps). |
 | 02 | `02_run_analysis.py` | Discover and run `projects/{name}/scripts/` |
 | 03 | `03_render_pdf.py` | Render manuscripts to PDF |
 | 04 | `04_validate_output.py` | Validate PDFs, markdown, and integrity reports |
@@ -45,6 +45,7 @@ uv run python scripts/07_generate_executive_report.py
 - `generate_coverage_history.py` - regenerates the coverage-history page from CI artefacts
 - `generate_stage_table_doc.py` - regenerates the canonical stage-table marker block
 - `lint_docs.py` - runs Mermaid, link, consistency, and doc-pair documentation checks
+- `audit_documentation.py` - emits the advisory public documentation RedTeam audit
 - `verify_no_mocks.py` - checks tests for mock usage
 - `audit_filepaths.py` - repository filepath and reference audit
 - `check_tracked_generated_artifacts.py` - rejects tracked generated outputs and package metadata
@@ -65,6 +66,7 @@ uv run python scripts/07_generate_executive_report.py
 | Gate | Command |
 | --- | --- |
 | Exemplar drift | `uv run python scripts/check_template_drift.py --strict` |
+| Documentation RedTeam audit | `uv run python scripts/audit_documentation.py --format markdown` |
 | Module line count | `uv run python scripts/gates/module_line_count_check.py` |
 | Tracked projects guard | `uv run python scripts/check_tracked_projects.py` |
 | Tracked generated artifacts | `uv run python scripts/check_tracked_generated_artifacts.py` |

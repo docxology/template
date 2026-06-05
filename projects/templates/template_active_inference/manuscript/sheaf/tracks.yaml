@@ -72,6 +72,10 @@ tracks:
     order: 56
     renderer: markdown
     label: Artifact license audit
+  scholarship:
+    order: 57
+    renderer: markdown
+    label: Source-backed scholarship matrix
   sensitivity:
     order: 60
     renderer: markdown

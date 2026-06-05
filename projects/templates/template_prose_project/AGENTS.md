@@ -7,6 +7,8 @@ Prose-focused exemplar demonstrating end-to-end use of
 workflow — fast and offline by default. Exemplar roster:
 [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
 
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+
 ## Layout
 
 ```mermaid

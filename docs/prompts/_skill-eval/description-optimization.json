@@ -1,14 +1,15 @@
 {
   "description_optimization": {
     "method": "manual_pushy_descriptions",
-    "note": "Automated run_loop requires skill-creator run from skill directory with claude -p; applied manual description pass to hub + pipeline-debugging, manuscript-claim-verification, comprehensive-assessment, code-development.",
+    "note": "Automated run_loop requires skill-creator run from skill directory with claude -p; applied manual description pass to hub + pipeline-debugging, manuscript-claim-verification, comprehensive-assessment, code-development, agentic-use.",
     "trigger_eval_set": "trigger-eval-set.json",
     "skills_updated": [
       "template-workflows",
       "template-pipeline-debugging",
       "template-manuscript-claim-verification",
       "template-comprehensive-assessment",
-      "template-code-development"
+      "template-code-development",
+      "template-agentic-use"
     ]
   },
   "iteration_2_benchmark": {

@@ -8,7 +8,7 @@
 
 <!-- sheaf-track:prose -->
 
-We study a minimal **K={{bernoulli_state_count}} Bernoulli / Ising** coupling as the analytical companion to multi-track verification. The entangled joint [@eq:entangled_joint] yields closed-form mutual information $I(\lambda)$, which serves as an oracle for an independent exact recomputation (via total correlation) and GNN round-trips in [@sec:results_mi_sweep] ([@fig:gnn_ontology_concordance]).
+We study a minimal **K={{bernoulli_state_count}} Bernoulli / Ising** coupling as the analytical companion to multi-track verification. The entangled joint [@eq:entangled_joint] yields closed-form mutual information $I(\lambda)$, which serves as an oracle for an independent exact recomputation (via total correlation) and GNN round-trips in [@sec:results_mi_sweep] ([@fig:gnn_ontology_concordance]). The free-energy terminology is scoped to finite variational calculations in the sense of mathematical reviews of the free-energy principle [@buckley2017mathreview].
 
 Measured sweep grid points: {{param_sweep_grid_points}}. Invariants passed: {{invariants_passed}} / {{invariants_total}}.
 
@@ -46,7 +46,7 @@ The index is deliberately narrow. It covers the Bernoulli-Ising toy equations, t
 
 <!-- sheaf-track:gnn -->
 
-The Bernoulli toy is declared in `gnn/bernoulli_toy.gnn.md` ({{gnn_spec_version}}). [@fig:gnn_ontology_concordance] links GNN variables to Active Inference Ontology terms bound in the analytical ontology fragment; round-trip parity is checked before render.
+The Bernoulli toy is declared in `gnn/bernoulli_toy.gnn.md` ({{gnn_spec_version}}), following the GNN notation role described by Smekal and Friedman [@gnn2023]. [@fig:gnn_ontology_concordance] links GNN variables to Active Inference Ontology terms bound in the analytical ontology fragment; round-trip parity is checked before render.
 
 Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbol map used in the concordance diagram.
 

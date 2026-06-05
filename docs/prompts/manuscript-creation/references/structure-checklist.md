@@ -1,6 +1,6 @@
 # Manuscript structure checklist
 
-Copy the closest exemplar under `projects/templates/template_active_inference/`, `projects/templates/template_autoresearch_project/`, `projects/templates/template_code_project/`, `projects/templates/template_prose_project/`, or local `projects/archive/template_search_project/`.
+Copy the closest exemplar listed in [`docs/_generated/active_projects.md`](../../../_generated/active_projects.md), commonly `projects/templates/template_active_inference/`, `projects/templates/template_autoresearch_project/`, `projects/templates/template_code_project/`, or `projects/templates/template_prose_project/`; local `projects/archive/template_search_project/` remains an optional add-on.
 
 ## Typical files
 

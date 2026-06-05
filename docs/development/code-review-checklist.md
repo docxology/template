@@ -27,6 +27,12 @@ accepted.
 If a change cannot meet a criterion, raise an ADR explaining the deviation — do
 not silently merge.
 
+Decision rationale follows the repository memory contract in
+[`docs/rules/memory_and_decision_records.md`](../rules/memory_and_decision_records.md):
+use `WHY:` comments for counterintuitive local choices, ADRs for structural
+rules, generated docs for volatile facts, and negative controls for verifier
+claims.
+
 ---
 
 ## Mapping to the Reviewed Trees
@@ -85,6 +91,7 @@ documented but not enforced — open an issue tagged `criteria-drift`.
 * [`docs/architecture/adrs/`](../architecture/adrs/) — constitutional rules
 * [`docs/development/validation_gates.md`](validation_gates.md) — gate details
 * [`docs/development/testing/testing-guide.md`](testing/testing-guide.md) — test patterns
+* [`docs/rules/memory_and_decision_records.md`](../rules/memory_and_decision_records.md) — rationale, ADR, local-memory, and negative-control policy
 * [`docs/best-practices/best-practices.md`](../best-practices/best-practices.md) — style and structure
 * [`docs/modules/guides/`](../modules/guides/) — per-module specifics
 * [`.github/AGENTS.md`](../../.github/AGENTS.md) — CI job names + coverage floors

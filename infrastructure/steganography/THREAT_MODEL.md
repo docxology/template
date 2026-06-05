@@ -6,7 +6,7 @@
 
 ## TL;DR
 
-- **Off by default for the public canonical exemplars.** No steganographic watermarking in `template_active_inference`, `template_autoresearch_project`, `template_code_project`, or `template_prose_project` unless explicitly enabled per-project.
+- **Off by default for the public canonical exemplars.** No steganographic watermarking in the public exemplars listed in [`docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md) unless explicitly enabled per-project.
 - **On by default only when an operator opts in** for a specific project (e.g., pre-publication leak attribution of a confidential client deliverable).
 - **The threat model below is the only thing this feature does.** Anything else (DRM, reader tracking, surveillance) is **explicitly out of scope** and not supported.
 

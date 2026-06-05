@@ -231,8 +231,20 @@ def build_manuscript_staleness_report(project_root: Path) -> dict[str, Any]:
     for path in sorted((root / "manuscript").glob("*.md")):
         if path.name in EXCLUDED_DOC_FILENAMES:
             continue
-        source_text = path.read_text(encoding="utf-8")
         resolved_path = output_dir / path.name
+        try:
+            source_text = path.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            rows.append(
+                {
+                    "section": path.relative_to(root).as_posix(),
+                    "token": "<missing_source>",
+                    "expected": "source file exists",
+                    "resolved_path": resolved_path.relative_to(root).as_posix(),
+                    "fresh": False,
+                }
+            )
+            continue
         resolved_text = resolved_path.read_text(encoding="utf-8") if resolved_path.is_file() else ""
         seen: set[tuple[str, str | None]] = set()
         for match in TOKEN_MATCH_RE.finditer(source_text):
@@ -490,6 +502,7 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
             "output/data/causal_ablation_matrix.json",
             "output/reports/ablation_sensitivity_report.json",
         ],
+        "scholarship_source_map": ["output/data/scholarship_source_matrix.json", "manuscript/references.bib"],
     }
     rows = []
     for figure_id in sorted(load_figure_registry(root)):
@@ -567,6 +580,7 @@ def build_manuscript_evidence_tables(project_root: Path) -> dict[str, Any]:
     ablation = _load_json(root / "output" / "data" / "causal_ablation_matrix.json")
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     release_notes = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
+    scholarship = _load_json(root / "output" / "data" / "scholarship_source_matrix.json")
     proof_dependency = _load_json(root / "output" / "data" / "proof_dependency_graph.json")
     transition_table = _load_json(root / "output" / "data" / "state_transition_table.json")
     ablation_sensitivity = _load_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
@@ -648,6 +662,11 @@ def build_manuscript_evidence_tables(project_root: Path) -> dict[str, Any]:
             "source": "output/reports/release_notes_evidence.json",
         },
         {
+            "id": "scholarship_sources",
+            "row_count": int(scholarship.get("source_count", 0)),
+            "source": "output/data/scholarship_source_matrix.json",
+        },
+        {
             "id": "proof_dependency_graph",
             "row_count": int(proof_dependency.get("edge_count", 0)),
             "source": "output/data/proof_dependency_graph.json",
@@ -711,6 +730,7 @@ def build_integration_semantic_snapshot(project_root: Path) -> dict[str, Any]:
     ablation = _load_json(root / "output" / "data" / "causal_ablation_matrix.json")
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     release_notes = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
+    scholarship = _load_json(root / "output" / "data" / "scholarship_source_matrix.json")
     restrictions = {
         "analytical_assumptions_indexed": assumptions.get("all_equations_indexed") is True,
         "pymdp_runtime_diagnostics_ok": runtime.get("ok") is True
@@ -744,6 +764,7 @@ def build_integration_semantic_snapshot(project_root: Path) -> dict[str, Any]:
         "causal_ablation_complete": ablation.get("complete_grid") is True and ablation.get("all_deterministic") is True,
         "artifact_license_safe": license_audit.get("all_license_safe") is True,
         "release_notes_source_backed": release_notes.get("all_notes_source_backed") is True,
+        "scholarship_sources_connected": scholarship.get("all_sources_connected") is True,
     }
     return {
         "schema": "template_active_inference.integration_semantic_snapshot.v1",

@@ -59,7 +59,7 @@ A maintainer in 2030 should be able to read this guide and know: "ruff is the im
 | | |
 | --- | --- |
 | **Contract** | Discover tests under `tests/` and `projects/*/tests/`; coverage measurement; fixtures; parametrized tests; no-mocks policy (real I/O, real HTTP via `pytest-httpserver`). |
-| **Current implementation** | `pytest` + `pytest-cov` + `pytest-httpserver`. Coverage floors: 60% infra, 90% per-project, 75% combined union. |
+| **Current implementation** | `pytest` + `pytest-cov` + `pytest-httpserver`. Coverage floors: 60% infra, 90% per-project, plus a 75% combined union in the local all-project orchestrator. |
 | **Migration path** | `pytest` is unusually durable (active since 2003). If succeeded, the most likely successor is a property-based/agentic test runner; the **no-mocks contract** is the harder thing to preserve — see `docs/maintenance/regression-testing.md` for the long-term direction (regression-pinned numerical outputs as the actual quality binding). |
 
 ## CI

@@ -4,6 +4,8 @@ Agent-facing reference for working inside the **template_textbook** exemplar: a
 modular, fillable book scaffold. Read this before editing anything. For the
 human-facing overview and quick-start commands, see [`README.md`](README.md).
 
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+
 ## Invariants (do not violate)
 
 1. **`manuscript/config.yaml` is the single source of truth.** Book structure —

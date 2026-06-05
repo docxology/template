@@ -21,7 +21,7 @@ def test_manifest_loads_imrad_sections() -> None:
     assert manifest.sections[0].id == "intro"
     assert manifest.sections[0].kind == "group"
     appendix = next(s for s in manifest.sections if s.id == "appendix_full_sheaf")
-    assert len(appendix.tracks) == 31
+    assert len(appendix.tracks) == 32
     assert sum(1 for s in manifest.sections if s.should_compose()) == 12
     # Every IMRAD block now carries a group row (uniform base poset).
     assert sum(1 for s in manifest.sections if s.kind == "group") == 5

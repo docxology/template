@@ -16,10 +16,10 @@ These are gates, not suggestions — see the docs above for the rationale:
 
 - **No mocks.** Tests use real data and computation (`scripts/verify_no_mocks.py`).
 - **Thin-orchestrator pattern.** Business logic lives in `infrastructure/` or `projects/<name>/src/`; `scripts/` only orchestrate.
-- **Coverage.** Infrastructure ≥ 60%, per-project ≥ 90%, combined-union all-projects ≥ 75%.
+- **Coverage.** Infrastructure ≥ 60%; each public exemplar project job ≥ 90% on its own `src/`. The local all-project orchestrator (`scripts/01_run_tests.py --project-only --all-projects --public-projects`) also enforces a 75% combined-union floor for release-style sweeps.
 - **Type hints + `__all__`** on public infrastructure APIs (`mypy`, `check-all-exports`).
 - **Conventional commits**; run `pre-commit` locally (`ruff`, `mypy`, `bandit`, the pre-push gates).
-- **Confidentiality.** This is a public repo: only `projects/templates/template_active_inference`, `projects/templates/template_autoresearch_project`, `projects/templates/template_autoscientists`, `projects/templates/template_code_project`, `projects/templates/template_newspaper`, `projects/templates/template_prose_project`, `projects/templates/template_sia`, `projects/templates/template_template`, and `projects/templates/template_textbook` are tracked. Never commit any other project under `projects/` — `scripts/check_tracked_projects.py` blocks it in the pre-push hook and CI.
+- **Confidentiality.** This is a public repo: only the public exemplars listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) are tracked (`projects/templates/template_active_inference`, `projects/templates/template_autoresearch_project`, `projects/templates/template_autoscientists`, `projects/templates/template_code_project`, `projects/templates/template_newspaper`, `projects/templates/template_prose_project`, `projects/templates/template_sia`, `projects/templates/template_template`, and `projects/templates/template_textbook`). Never commit any other project under `projects/` — `scripts/check_tracked_projects.py` blocks it in the pre-push hook and CI.
 
 ## Citation
 

@@ -272,6 +272,10 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     ):
         issues.append("release_notes_evidence.json has unsupported notes")
 
+    from .scholarship import validate_scholarship_source_matrix
+
+    issues.extend(validate_scholarship_source_matrix(root))
+
     issues.extend(validate_supplemental_artifacts(root))
 
     restrictions = _tracks._canonical_restrictions(root)

@@ -6,7 +6,7 @@
 
 Each manifest row in `manuscript/sheaf/manifest.yaml` binds fragment tracks from `manuscript/sheaf/tracks.yaml`. A track supplies a renderer, compose order, label, and optional flag; the composer flattens the binding set into one Markdown section for PDF and web output.
 
-The operational claim is auditable binding: analytical, simulation, pymdp, visualization, Lean, GNN, ontology, and optional media fragments attach to each IMRAD row under [@eq:coverage_cell] (**P** present, **—** unbound, **M** missing).
+The operational claim is auditable binding: analytical, simulation, pymdp, visualization, Lean, GNN, ontology, scholarship, and optional media fragments attach to each IMRAD row under [@eq:coverage_cell] (**P** present, **—** unbound, **M** missing). This is an applied local-to-global consistency contract in the spirit of cellular sheaf and sheaf-signal-processing work [@curry2014sheaves; @robinson2014topological], but instantiated here as a finite manuscript artifact gate.
 
 ## Coverage and figures
 
@@ -75,6 +75,8 @@ Semantic gluing then checks agreement of the glued content: coverage counts, man
 
 ![Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate.](../output/figures/semantic_gluing_graph.png){#fig:semantic_gluing_graph width=95% fig-alt="Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate."}
 
+![Scholarship source map: {{scholarship_source_count}} source rows across {{scholarship_method_role_count}} method roles and {{scholarship_source_family_count}} source families. Connected status: {{scholarship_sources_connected}}.](../output/figures/scholarship_source_map.png){#fig:scholarship_source_map width=95% fig-alt="Four-column source map generated from the scholarship source matrix. Each row links a bibliography key to a source family, method role, and generated evidence artifact; green borders mark rows with bibliography entries, manuscript citations, registered tracks, bound manuscript sections, and existing artifacts."}
+
 <!-- sheaf-track:provenance -->
 
 The `provenance` fragment makes artifact lineage a live canonical sheaf track. The configured producer `generate_sheaf_tracks.py` writes `output/data/artifact_provenance.json`, which hashes {{validation_spine_artifact_count}} required toy artifacts and records producer scripts, source commit, deterministic seed fields, config digests, and {{provenance_bundle_count}} artifact bundles. Publication claims that depend on generated files must be traceable to this lineage table or to a narrower artifact-specific certificate.
@@ -125,6 +127,27 @@ under the public project license boundary. Its audit artifact is
 {{artifact_license_row_count}} rows, with license-safe status
 `{{artifact_license_all_safe}}`.
 
+<!-- sheaf-track:scholarship -->
+
+The `scholarship` fragment turns citations into an audited method surface rather
+than decorative bibliography. `output/data/scholarship_source_matrix.json`
+records {{scholarship_source_count}} source rows across
+{{scholarship_method_role_count}} method roles and
+{{scholarship_source_family_count}} source families; [@fig:scholarship_source_map]
+renders the resulting source-to-artifact map. The row set connects foundational
+free-energy and active-inference references [@friston2010fep; @buckley2017mathreview;
+@dacosta2020discrete; @parr2022active; @smith2022tutorial], implementation and
+notation anchors [@pymdp2024; @gnn2023], and applied sheaf sources
+[@curry2014sheaves; @robinson2014topological] to the exact artifact or method
+role they support.
+
+The validation claim is deliberately narrow: every row must have a bibliography
+entry with a DOI or URL, a manuscript citation, a registered sheaf track, a bound
+manifest section, an existing evidence artifact, and a claim-boundary statement.
+The hydrated flag `{{scholarship_sources_connected}}` is therefore a
+source-traceability claim, not a claim that the toy results inherit empirical
+support from the cited literature.
+
 <!-- sheaf-track:manuscript_staleness -->
 
 The `manuscript_staleness` fragment closes the hydration loop. `output/reports/manuscript_staleness_report.json` checks {{manuscript_staleness_row_count}} manuscript token bindings against the current generated variables after resolved markdown is written; the pass flag is `{{manuscript_staleness_all_fresh}}`.
@@ -156,6 +179,7 @@ Compose order and renderer bindings from `manuscript/sheaf/tracks.yaml`.
 | 54 | `gate_ergonomics` | Validation gate ergonomics | `markdown` | No |
 | 55 | `artifact_diffoscope` | Artifact diffoscope | `markdown` | No |
 | 56 | `artifact_license` | Artifact license audit | `markdown` | No |
+| 57 | `scholarship` | Source-backed scholarship matrix | `markdown` | No |
 | 60 | `sensitivity` | Toy sensitivity sweep | `markdown` | No |
 | 62 | `uncertainty` | Toy uncertainty summaries | `markdown` | No |
 | 65 | `benchmark` | Compact toy benchmark matrix | `markdown` | No |
@@ -180,25 +204,25 @@ Compose order and renderer bindings from `manuscript/sheaf/tracks.yaml`.
 
 Section rows versus fragment track columns. **P** = present (bound and file exists); **—** = absent (not bound); **M** = missing (bound, file absent).
 
-| Section | prose | formalism | simulation | assumption_index | layers | pymdp | interop | provenance | replay_matrix | counterexample | adversarial_audit | evidence_fields | release_bundle | gate_ergonomics | artifact_diffoscope | artifact_license | sensitivity | uncertainty | benchmark | manuscript_staleness | visualization | lean | model_checking | theorem_traceability | proof_extraction | state_space_catalog | causal_ablation | gnn | ontology | animation | animation_delta | release_notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Introduction (group) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
-|   Motivation and scope | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
-|   Contributions | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | — | P | — | — | — |
-| Methods (group) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
-|   Bernoulli–Ising analytical model | P | P | P | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | P | P | — | — | — |
-|   pymdp simulation harness | P | P | — | — | — | P | P | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | P | P | — | — | — |
-|   Lean formalization boundary | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | P | P | P | P | — | — | — | — | — | — | — |
-|   Sheaf composition | P | P | — | — | P | — | — | P | — | P | P | P | P | P | P | P | — | — | — | P | P | — | — | — | — | — | — | — | — | — | — | — |
-| Results (group) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
-|   Mutual-information parameter sweep | P | P | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | — | — | — | — | — |
-|   Free-energy decomposition | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | — | — | — | — | — |
-|   T-maze active-inference rollout | P | — | — | — | — | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | — | — | — | — | — |
-|   Validation invariants | P | — | P | — | — | — | — | — | P | — | — | — | — | — | — | — | P | P | P | — | P | — | — | — | — | P | P | — | — | — | — | — |
-| Discussion (group) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
-|   Limitations and outlook | P | — | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | P |
-| Appendix (group) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
-|   Appendix: full track coverage | P | P | P | P | — | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P |
+| Section | prose | formalism | simulation | assumption_index | layers | pymdp | interop | provenance | replay_matrix | counterexample | adversarial_audit | evidence_fields | release_bundle | gate_ergonomics | artifact_diffoscope | artifact_license | scholarship | sensitivity | uncertainty | benchmark | manuscript_staleness | visualization | lean | model_checking | theorem_traceability | proof_extraction | state_space_catalog | causal_ablation | gnn | ontology | animation | animation_delta | release_notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Introduction (group) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Motivation and scope | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Contributions | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | — | P | — | — | — |
+| Methods (group) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Bernoulli–Ising analytical model | P | P | P | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | P | P | — | — | — |
+|   pymdp simulation harness | P | P | — | — | — | P | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | P | P | — | — | — |
+|   Lean formalization boundary | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | P | P | P | P | — | — | — | — | — | — | — |
+|   Sheaf composition | P | P | — | — | P | — | — | P | — | P | P | P | P | P | P | P | P | — | — | — | P | P | — | — | — | — | — | — | — | — | — | — | — |
+| Results (group) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Mutual-information parameter sweep | P | P | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | — | — | — | — | — |
+|   Free-energy decomposition | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | — | — | — | — | — |
+|   T-maze active-inference rollout | P | — | — | — | — | P | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | — | — | — | — | — |
+|   Validation invariants | P | — | P | — | — | — | — | — | P | — | — | — | — | — | — | — | — | P | P | P | — | P | — | — | — | — | P | P | — | — | — | — | — |
+| Discussion (group) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Limitations and outlook | P | — | P | — | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | — | — | — | — | — | — | — | — | — | — | P | — | — | P |
+| Appendix (group) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+|   Appendix: full track coverage | P | P | P | P | — | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P | P |
 
 **Totals:** {{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing.
 
@@ -221,13 +245,13 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | Bernoulli–Ising analytical model | methods | 7 | 7 | 0 | `fully_sheafed` |
 | pymdp simulation harness | methods | 7 | 7 | 0 | `fully_sheafed` |
 | Lean formalization boundary | methods | 6 | 6 | 0 | `fully_sheafed` |
-| Sheaf composition | methods | 13 | 13 | 0 | `fully_sheafed` |
+| Sheaf composition | methods | 14 | 14 | 0 | `fully_sheafed` |
 | Mutual-information parameter sweep | results | 4 | 4 | 0 | `fully_sheafed` |
 | Free-energy decomposition | results | 2 | 2 | 0 | `fully_sheafed` |
 | T-maze active-inference rollout | results | 3 | 3 | 0 | `fully_sheafed` |
 | Validation invariants | results | 9 | 9 | 0 | `fully_sheafed` |
-| Limitations and outlook | discussion | 4 | 4 | 0 | `fully_sheafed` |
-| Appendix: full track coverage | appendix | 31 | 31 | 0 | `fully_sheafed` |
+| Limitations and outlook | discussion | 5 | 5 | 0 | `fully_sheafed` |
+| Appendix: full track coverage | appendix | 32 | 32 | 0 | `fully_sheafed` |
 
 **Section status:** 12 / 12 composable sections fully sheafed; 0 required bound fragments missing.
 
@@ -252,11 +276,12 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `gate_ergonomics` | `markdown` | 2 | 2 | 0 | 5 | `complete` |
 | `artifact_diffoscope` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
 | `artifact_license` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
+| `scholarship` | `markdown` | 3 | 3 | 0 | 2 | `complete` |
 | `sensitivity` | `markdown` | 2 | 2 | 0 | 9 | `complete` |
 | `uncertainty` | `markdown` | 2 | 2 | 0 | 4 | `complete` |
 | `benchmark` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
 | `manuscript_staleness` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `visualization` | `section_figures` | 10 | 10 | 0 | 10 | `complete` |
+| `visualization` | `section_figures` | 10 | 10 | 0 | 11 | `complete` |
 | `lean` | `markdown` | 2 | 2 | 0 | 8 | `complete` |
 | `model_checking` | `markdown` | 2 | 2 | 0 | 7 | `complete` |
 | `theorem_traceability` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
@@ -269,19 +294,19 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `animation_delta` | `markdown` | 1 | 1 | 0 | 1 | `complete` |
 | `release_notes` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
 
-**Status cells:** 544 section-track cells.
+**Status cells:** 561 section-track cells.
 
 <!-- sheaf-layers:render-log -->
 ## Render and logging summary
 
 | Event | Component | Output | Status | Detail |
 | --- | --- | --- | --- | --- |
-| `registry_loaded` | `sheaf.registry` | `registered_tracks` | `ok` | 32 tracks |
+| `registry_loaded` | `sheaf.registry` | `registered_tracks` | `ok` | 33 tracks |
 | `manifest_loaded` | `sheaf.manifest` | `manifest_sections` | `ok` | 17 sections |
-| `coverage_matrix_built` | `sheaf.coverage` | `output/data/sheaf_coverage_matrix.json` | `ok` | 90 present cells |
-| `section_status_matrix_built` | `sheaf.status` | `output/data/sheaf_section_status_matrix.json` | `ok` | 544 section-track cells |
+| `coverage_matrix_built` | `sheaf.coverage` | `output/data/sheaf_coverage_matrix.json` | `ok` | 93 present cells |
+| `section_status_matrix_built` | `sheaf.status` | `output/data/sheaf_section_status_matrix.json` | `ok` | 561 section-track cells |
 | `layers_renderer_bound` | `sheaf.layers_report` | `manuscript/08_methods_sheaf.md` | `ok` | methods sheaf layer tables |
-| `semantic_artifacts_indexed` | `sheaf.semantic` | `output/data/validation_dependency_graph.json` | `ok` | 76 artifact producer rows |
+| `semantic_artifacts_indexed` | `sheaf.semantic` | `output/data/validation_dependency_graph.json` | `ok` | 78 artifact producer rows |
 | `validation_gates_indexed` | `gates` | `output/data/validation_gate_index.json` | `ok` | 3 gate groups |
 | `manuscript_sections_composed` | `sheaf.compose` | `manuscript/*.md` | `ok` | 16 composed markdown files |
 
@@ -298,10 +323,10 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `sheaf_coverage_matrix` | `output/data/sheaf_coverage_matrix.json` | `generate_figures.py` | validate_outputs, validate_manuscript |
 | `sheaf_gluing_certificate` | `output/data/sheaf_gluing_certificate.json` | `generate_sheaf_tracks.py` | validate_manuscript, validate_outputs |
 | `sheaf_evidence_crosswalk` | `output/data/sheaf_evidence_crosswalk.json` | `generate_sheaf_tracks.py` | validate_manuscript, validate_outputs |
-| `evidence_fields_mapped` | `output/data/evidence_field_index.json` | `generate_sheaf_tracks.py` | validate_outputs, validate_manuscript |
 | `validation_dependency_graph` | `output/data/validation_dependency_graph.json` | `generate_sheaf_tracks.py` | validate_manuscript, validate_outputs |
+| `semantic_gluing_graph_figure` | `output/figures/semantic_gluing_graph.png` | `generate_figures.py` | validate_outputs, figure_registry |
 
-**Claim rows:** 85 typed evidence claims.
+**Claim rows:** 87 typed evidence claims.
 
 <!-- sheaf-layers:artifact-producers -->
 ## Artifact producer graph
@@ -328,6 +353,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/data/proof_dependency_graph.json` | `generate_sheaf_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/data/proof_extraction_index.json` | `generate_formal_interop_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/data/pymdp_policy_posterior_grid.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, appendix_full_sheaf |
+| `output/data/scholarship_source_matrix.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/data/sensitivity_sweep.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/data/sheaf_coverage_matrix.json` | `generate_figures.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/data/sheaf_evidence_crosswalk.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf |
@@ -430,5 +456,5 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `formalism` | live | `manuscript/sheaf/manifest.yaml` | `manuscript/sheaf/manifest.yaml` | `validate_manuscript` | missing_fragment_coverage |
 | `gate_ergonomics` | live | `output/data/validation_gate_index.json` | `output/data/validation_gate_index.json` | `validate_outputs, validate_manuscript` | gate_ergonomics_unindexed |
 
-**Improvement rows:** 37.
+**Improvement rows:** 38.
 

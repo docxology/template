@@ -274,7 +274,7 @@ avg = calculate_average(data)  # Use tested method
 
 All project lifecycle state is expressed as typed subfolders under `projects/`:
 
-- **`projects/templates/`** — the nine public exemplars, git-tracked in this repo (discovered + rendered).
+- **`projects/templates/`** — public exemplars from [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md), git-tracked in this repo (discovered + rendered).
 - **`projects/active/`** — the hot-seat render set: symlinks to the private repo's `active/` projects (discovered + rendered alongside the exemplars).
 - **`projects/working/`** — non-rendered symlinks to the private repo's `working/` projects (backburner / in-progress).
 - **`projects/published/`** — non-rendered symlinks to the private repo's `published/` projects.

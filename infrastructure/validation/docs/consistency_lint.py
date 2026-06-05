@@ -2,7 +2,8 @@
 
 Checks include module-count claims, ghost-project paths, command conventions,
 doc import resolution, README file lists, project-discovery claims, canonical
-count singularity, and stale shell-bootstrap contract drift
+count singularity, memory-decision rule propagation, and stale shell-bootstrap
+contract drift
 (:func:`check_stale_shell_contracts`).
 
 All check functions return :class:`Inconsistency` records and never mutate state.
@@ -13,6 +14,7 @@ from infrastructure.validation.docs.consistency import (
     check_canonical_count_singularity,
     check_command_conventions,
     check_doc_imports_resolve,
+    check_memory_decision_rule_links,
     check_module_count_claims,
     check_no_ghost_projects,
     check_project_discovery_claims,
@@ -26,6 +28,7 @@ __all__ = [
     "check_canonical_count_singularity",
     "check_command_conventions",
     "check_doc_imports_resolve",
+    "check_memory_decision_rule_links",
     "check_module_count_claims",
     "check_no_ghost_projects",
     "check_project_discovery_claims",

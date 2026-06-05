@@ -155,6 +155,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
     causal_ablation_data = _load_json(root / "output" / "data" / "causal_ablation_matrix.json")
     artifact_license_data = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     release_notes_data = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
+    scholarship_data = _load_json(root / "output" / "data" / "scholarship_source_matrix.json")
     proof_dependency_data = _load_json(root / "output" / "data" / "proof_dependency_graph.json")
     state_transition_data = _load_json(root / "output" / "data" / "state_transition_table.json")
     ablation_sensitivity_data = _load_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
@@ -303,6 +304,11 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "artifact_license_all_safe": bool(artifact_license_data.get("all_license_safe", False)),
         "release_notes_row_count": release_notes_data.get("row_count", 0),
         "release_notes_source_backed": bool(release_notes_data.get("all_notes_source_backed", False)),
+        "scholarship_source_count": scholarship_data.get("source_count", 0),
+        "scholarship_method_role_count": scholarship_data.get("method_role_count", 0),
+        "scholarship_source_family_count": scholarship_data.get("source_family_count", 0),
+        "scholarship_primary_source_count": scholarship_data.get("primary_source_count", 0),
+        "scholarship_sources_connected": bool(scholarship_data.get("all_sources_connected", False)),
         "proof_dependency_edge_count": proof_dependency_data.get("edge_count", 0),
         "proof_dependency_all_resolved": bool(proof_dependency_data.get("all_edges_resolved", False)),
         "state_transition_row_count": state_transition_data.get("row_count", 0),

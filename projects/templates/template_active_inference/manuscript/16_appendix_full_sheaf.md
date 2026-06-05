@@ -8,7 +8,7 @@
 
 <!-- sheaf-track:prose -->
 
-This section is the **composability proof** for the manifest-indexed sheaf model: all {{appendix_sheaf_track_count}} appendix-bound fragment tracks render into one flat manuscript section without section-specific compose branches. The registry defines {{sheaf_track_count}} composable types; optional `layers` is methods-only and excluded from this row. The `animation` fragment is bound here as an optional registry type alongside the live proof, simulation, formal, notation, validation-spine, integration, audit, finite-catalog, ablation, license, release-evidence, assumption-index, delta, and staleness tracks.
+This section is the **composability proof** for the manifest-indexed sheaf model: all {{appendix_sheaf_track_count}} appendix-bound fragment tracks render into one flat manuscript section without section-specific compose branches. The registry defines {{sheaf_track_count}} composable types; optional `layers` is methods-only and excluded from this row. The `animation` fragment is bound here as an optional registry type alongside the live proof, simulation, formal, notation, validation-spine, integration, audit, finite-catalog, ablation, license, release-evidence, scholarship, assumption-index, delta, and staleness tracks.
 
 The proof is a publication-systems check ([@eq:appendix_track_count]). It demonstrates that heterogeneous fragments share one registry, manifest, renderer dispatch path, coverage matrix, and hydration boundary; it does not assert that every track carries equal scientific weight.
 
@@ -125,6 +125,15 @@ restricted, or network-derived data are not smuggled in as evidence; they remain
 blocked until privacy, licensing, typed-claim, semantic, and negative-control
 gates are implemented in the same artifact path.
 
+<!-- sheaf-track:scholarship -->
+
+`sheaf-track:scholarship` binds `output/data/scholarship_source_matrix.json` into
+the appendix proof row. The appendix claim is exactly
+{{scholarship_source_count}} connected source rows with connected status
+`{{scholarship_sources_connected}}`; each row names a bibliography key, method
+role, manuscript section, registered track set, evidence artifact, and
+claim-boundary statement.
+
 <!-- sheaf-track:sensitivity -->
 
 `sheaf-track:sensitivity` binds `output/data/sensitivity_sweep.json`, measured `output/data/si_policy_grid.json`, compatibility-named EFE values artifact `output/data/si_efe_terms.json`, `output/data/analytical_observable_sweep.json`, and graph-world topology artifacts including `output/data/si_graph_world_topology_traces.json`. The appendix claim is exactly {{sensitivity_cell_count}} complete canonical grid cells.
@@ -162,6 +171,10 @@ counts are caught after composition, not only during source-file linting.
 ![Theorem traceability graph generated from {{theorem_traceability_row_count}} linked theorem rows and {{proof_dependency_edge_count}} proof-dependency edges.](../output/figures/theorem_traceability_graph.png){#fig:theorem_traceability_graph width=95% fig-alt="Three-column graph generated from theorem traceability and proof dependency JSON. Each row links a Lean theorem to its proof-dependency edge count and finite model witness count; all theorem rows have resolved dependency edges: {{proof_dependency_all_resolved}}."}
 
 ![Causal-ablation heatmap: {{ablation_sensitivity_row_count}} source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: {{ablation_sensitivity_source_backed}}.](../output/figures/causal_ablation_heatmap.png){#fig:causal_ablation_heatmap width=92% fig-alt="Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows."}
+
+![](../output/figures/scholarship_source_map.png){width=95%}
+
+*Reproduced from [@fig:scholarship_source_map]. Scholarship source map: {{scholarship_source_count}} source rows across {{scholarship_method_role_count}} method roles and {{scholarship_source_family_count}} source families. Connected status: {{scholarship_sources_connected}}.*
 
 ![](../output/figures/sheaf_coverage_heatmap.png){width=95%}
 
@@ -243,7 +256,7 @@ view of validated JSON rather than a decorative restatement.
 
 <!-- sheaf-track:gnn -->
 
-GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md`. [@fig:gnn_ontology_concordance] and [@sec:methods_analytical] document ontology concordance for the Bernoulli toy; SI notation extends the same pattern under [@sec:methods_pymdp].
+GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md` [@gnn2023]. [@fig:gnn_ontology_concordance] and [@sec:methods_analytical] document ontology concordance for the Bernoulli toy; SI notation extends the same pattern under [@sec:methods_pymdp].
 
 <!-- sheaf-track:ontology -->
 

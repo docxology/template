@@ -296,7 +296,7 @@ def _render_combined_outputs(
         logger.debug("\n" + "=" * 60)
         logger.info("Generating combined PDF manuscript...")
         try:
-            combined_pdf = manager.render_combined_pdf(md_files, manuscript_dir, project_name)
+            combined_pdf = manager.render_combined_pdf(_combined_source_files(md_files), manuscript_dir, project_name)
             logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
         except RenderingError as re:
             logger.error(f"❌ Rendering error generating combined PDF: {re.message}")
@@ -326,7 +326,7 @@ def _render_combined_outputs(
         logger.debug("\n" + "=" * 60)
         logger.info("Generating combined HTML manuscript...")
         try:
-            manager.render_combined_web(_html_combined_source_files(md_files), manuscript_dir, project_name)
+            manager.render_combined_web(_combined_source_files(md_files), manuscript_dir, project_name)
         except RenderingError as re:
             logger.warning(f"⚠️  Rendering error generating combined HTML: {re.message}")
             reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
@@ -348,13 +348,16 @@ def _render_combined_outputs(
         logger.debug("[skip] EPUB rendering disabled in config (default; render.formats.epub=true to enable)")
 
 
-def _html_combined_source_files(md_files: list[Path]) -> list[Path]:
-    """Return combined-HTML inputs, ignoring missing generated transmission bookends."""
-    html_files: list[Path] = []
+def _combined_source_files(md_files: list[Path]) -> list[Path]:
+    """Return combined-render inputs, ignoring missing generated transmission bookends."""
+    combined_files: list[Path] = []
     for path in md_files:
         if path.exists() or not is_transmission_bookend(path):
-            html_files.append(path)
-    return html_files
+            combined_files.append(path)
+    return combined_files
+
+
+_html_combined_source_files = _combined_source_files
 
 
 def _resolve_combined_markdown(manuscript_dir: Path) -> Path | None:

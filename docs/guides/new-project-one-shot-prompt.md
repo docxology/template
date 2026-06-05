@@ -48,6 +48,7 @@ Rules:
 3. Imports: use from src... in scripts/tests as in template_code_project; infrastructure imports allowed; never import another projects/* package.
 4. Determinism: fixed RNG seeds for anything stochastic; headless plotting (MPLBACKEND=Agg) where relevant.
 5. Naming: <PROJECT_SLUG> is lowercase snake_case; package name in pyproject.toml aligns with repo conventions.
+6. Decision memory: follow docs/rules/memory_and_decision_records.md. Use `WHY:` comments only for counterintuitive local choices, project TODO/ISA notes for active plans, generated docs for volatile counts/rosters, and negative-control tests for verifier-like gates.
 
 One-shot deliverables (do all in one pass):
 

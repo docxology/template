@@ -1,6 +1,8 @@
 # AGENTS.md — template_active_inference
 
-Multi-track Active Inference public exemplar. Manuscript sections follow an **IMRAD outline** composed from stable canonical sheaf fragment tracks (prose, formalism, simulation, assumption index, pymdp, interop, provenance, replay matrix, counterexample, adversarial audit, evidence fields, release bundle, gate ergonomics, sensitivity, uncertainty, benchmark, manuscript staleness, visualization, Lean, model checking, theorem traceability, GNN, ontology, animation, animation delta).
+Multi-track Active Inference public exemplar. Manuscript sections follow an **IMRAD outline** composed from stable canonical sheaf fragment tracks (prose, formalism, simulation, assumption index, pymdp, interop, provenance, replay matrix, counterexample, adversarial audit, evidence fields, scholarship, release bundle, gate ergonomics, sensitivity, uncertainty, benchmark, manuscript staleness, visualization, Lean, model checking, theorem traceability, GNN, ontology, animation, animation delta).
+
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
 ## Sheaf composition (registry-driven)
 
@@ -50,6 +52,7 @@ Full compose calls `emit_coverage_artifacts()` → JSON only. `generate_figures.
 | `semantic_restriction_count`, `dependency_edge_type_count`, `stale_artifact_fresh_count`, `manuscript_staleness_row_count`, `figure_source_coverage_count`, `scope_boundary_status` | semantic and integration audit artifacts |
 | `provenance_bundle_count`, `evidence_field_count`, `release_bundle_artifact_count`, `theorem_traceability_row_count`, `validation_gate_index_count`, `track_improvement_row_count` | canonical sheaf-track artifacts |
 | `artifact_diffoscope_row_count`, `proof_extraction_theorem_count`, `state_space_catalog_row_count`, `causal_ablation_row_count`, `artifact_license_row_count`, `release_notes_row_count` | promoted canonical proof, finite-scope, license, and release-note artifacts |
+| `scholarship_source_count`, `scholarship_method_role_count`, `scholarship_sources_connected` | source-backed scholarship matrix |
 
 `z_generate_manuscript_variables.py` writes `output/data/manuscript_variables.json` and resolves `output/manuscript/` for PDF rendering. Compose emits `{{token}}` placeholders; hydration is the single substitution boundary (fail-closed on unknown or single-brace `{token}` typos).
 

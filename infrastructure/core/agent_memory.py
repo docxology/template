@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import re
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -12,6 +14,30 @@ EXAMPLE_REL_PATH = Path(".cursor/hooks/state/continual-learning-memory.example.j
 MAX_BULLETS = 12
 
 _REQUIRED_KEYS = ("version", "updated_at", "learned_user_preferences", "learned_workspace_facts")
+_PROJECT_TOKEN_RE = re.compile(r"\btemplate_[a-z0-9_]+\b")
+_MEASURED_COUNT_RE = re.compile(
+    r"(\b\d+\s+(?:passed|tests?|collected|Python files|Python modules|\.py files)\b|\b\d+(?:\.\d+)?\s*%)",
+    re.IGNORECASE,
+)
+_ROSTER_HINT_RE = re.compile(
+    r"\b(public|git-tracked|exemplars?|template projects?|project roster|PUBLIC_PROJECT_NAMES)\b",
+    re.IGNORECASE,
+)
+_GENERATED_POINTER_RE = re.compile(
+    r"docs/_generated/(?:active_projects|canonical_facts)\.md|active_projects\.md|canonical_facts\.md"
+)
+
+
+@dataclass(frozen=True)
+class MemoryAdvisory:
+    """Advisory warning for drift-prone local memory bullets."""
+
+    field: str
+    index: int
+    category: str
+    item: str
+    detail: str
+    source: str
 
 
 def memory_path(repo_root: Path) -> Path:
@@ -40,6 +66,54 @@ def normalize_bullets(items: list[str], *, max_items: int = MAX_BULLETS) -> list
         if len(normalized) >= max_items:
             break
     return normalized
+
+
+def audit_memory_payload(payload: dict[str, Any]) -> list[MemoryAdvisory]:
+    """Return advisory warnings for local memory bullets likely to drift.
+
+    The live memory file is gitignored and useful for low-friction context, but
+    it must not become another source of truth for public rosters or measured
+    counts. This helper does not fail or mutate the payload; callers can surface
+    the advisories and redirect agents to generated documentation.
+    """
+    _validate_payload(payload)
+    advisories: list[MemoryAdvisory] = []
+    for field in ("learned_user_preferences", "learned_workspace_facts"):
+        for index, raw in enumerate(payload[field]):
+            item = raw.strip()
+            if not item or _GENERATED_POINTER_RE.search(item):
+                continue
+            project_tokens = set(_PROJECT_TOKEN_RE.findall(item))
+            if len(project_tokens) >= 2 and _ROSTER_HINT_RE.search(item):
+                advisories.append(
+                    MemoryAdvisory(
+                        field=field,
+                        index=index,
+                        category="public-project-roster",
+                        item=item,
+                        detail=(
+                            "Local memory hard-codes a public template project roster; "
+                            "use docs/_generated/active_projects.md instead."
+                        ),
+                        source="docs/_generated/active_projects.md",
+                    )
+                )
+                continue
+            if _MEASURED_COUNT_RE.search(item):
+                advisories.append(
+                    MemoryAdvisory(
+                        field=field,
+                        index=index,
+                        category="measured-count",
+                        item=item,
+                        detail=(
+                            "Local memory hard-codes measured counts or percentages; "
+                            "re-derive or link docs/_generated/canonical_facts.md instead."
+                        ),
+                        source="docs/_generated/canonical_facts.md",
+                    )
+                )
+    return advisories
 
 
 def _validate_payload(payload: dict[str, Any]) -> None:

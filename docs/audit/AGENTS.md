@@ -32,6 +32,7 @@ Archive directly under `archived/` — do not leave undated copies at the top le
 | Linter | Command |
 |--------|---------|
 | Repo-wide doc linter | `uv run python scripts/lint_docs.py` |
+| Documentation RedTeam audit | `uv run python scripts/audit_documentation.py --format markdown` |
 | Template drift checker | `uv run python scripts/check_template_drift.py` |
 | Consistency-only pass | `uv run python scripts/lint_docs.py --consistency-only` |
 

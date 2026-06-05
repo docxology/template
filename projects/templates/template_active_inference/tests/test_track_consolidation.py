@@ -77,6 +77,7 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
         "output/data/theorem_traceability_matrix.json"
     )
     assert _relative_posix(paths["artifact_diffoscope"], project_root) == ("output/reports/artifact_diffoscope.json")
+    assert _relative_posix(paths["scholarship"], project_root) == "output/data/scholarship_source_matrix.json"
     assert _relative_posix(paths["proof_extraction"], project_root) == "output/data/proof_extraction_index.json"
     assert _relative_posix(paths["state_space_catalog"], project_root) == "output/data/state_space_catalog.json"
     assert _relative_posix(paths["causal_ablation"], project_root) == "output/data/causal_ablation_matrix.json"
@@ -103,6 +104,7 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     ablation = _load(project_root / "output" / "data" / "causal_ablation_matrix.json")
     license_audit = _load(project_root / "output" / "reports" / "artifact_license_audit.json")
     release_notes = _load(project_root / "output" / "reports" / "release_notes_evidence.json")
+    scholarship = _load(project_root / "output" / "data" / "scholarship_source_matrix.json")
     proof_dependency = _load(project_root / "output" / "data" / "proof_dependency_graph.json")
     transition_table = _load(project_root / "output" / "data" / "state_transition_table.json")
     ablation_sensitivity = _load(project_root / "output" / "reports" / "ablation_sensitivity_report.json")
@@ -122,6 +124,7 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert ablation["complete_grid"] is True
     assert license_audit["all_license_safe"] is True
     assert release_notes["all_notes_source_backed"] is True
+    assert scholarship["all_sources_connected"] is True
     assert proof_dependency["all_theorems_have_dependencies"] is True
     assert transition_table["all_reachable_states_covered"] is True
     assert ablation_sensitivity["all_effects_source_backed"] is True
@@ -154,6 +157,7 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         "theorem": project_root / "output" / "data" / "theorem_traceability_matrix.json",
         "gate": project_root / "output" / "data" / "validation_gate_index.json",
         "diffoscope": project_root / "output" / "reports" / "artifact_diffoscope.json",
+        "scholarship": project_root / "output" / "data" / "scholarship_source_matrix.json",
         "proof": project_root / "output" / "data" / "proof_extraction_index.json",
         "catalog": project_root / "output" / "data" / "state_space_catalog.json",
         "ablation": project_root / "output" / "data" / "causal_ablation_matrix.json",
@@ -276,6 +280,14 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         _write(paths["diffoscope"], data)
         assert any("artifact drift" in issue for issue in validate_sheaf_track_artifacts(project_root))
         paths["diffoscope"].write_text(originals[paths["diffoscope"]], encoding="utf-8")
+
+        data = _load(paths["scholarship"])
+        data["rows"][0]["bib_has_locator"] = False
+        data["rows"][0]["connected"] = True
+        data["all_sources_connected"] = True
+        _write(paths["scholarship"], data)
+        assert any("disconnected source rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["scholarship"].write_text(originals[paths["scholarship"]], encoding="utf-8")
 
         data = _load(paths["proof"])
         data["rows"][0]["extracted"] = False

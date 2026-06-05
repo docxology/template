@@ -7,6 +7,8 @@ Deterministic Self-Improvement Agent (SIA) harness exemplar. Layer 1 lives in
 and manuscript tokens. See [arXiv:2605.27276](https://arxiv.org/abs/2605.27276)
 for the upstream contract; this tree reimplements the harness only.
 
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+
 ## Layout
 
 | Path | Role |

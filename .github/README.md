@@ -16,7 +16,7 @@ Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
 
 > **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
 
-[**🧭 Choose path**](#choose-your-path) · [**🤖 Agents**](#agent--automation-entry-point) · [**⚡ Quick Start**](#quick-start) · [**📐 Architecture**](#architecture) · [**🔄 Pipeline**](#pipeline) · [**🔒 Provenance**](#security--provenance) · [**📚 Docs**](#documentation-hub) · [**🔧 CI/CD**](#cicd)
+[**🧭 Choose path**](#choose-your-path) · [**🤖 Agents**](#agent-automation-entry-point) · [**⚡ Quick Start**](#quick-start) · [**📐 Architecture**](#architecture) · [**🔄 Pipeline**](#pipeline) · [**🔒 Provenance**](#security-provenance) · [**📚 Docs**](#documentation-hub) · [**🔧 CI/CD**](#cicd)
 
 </div>
 
@@ -28,13 +28,13 @@ Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
 | --- | --- |
 | [About this document](#about-this-document) | Everyone — scope of this README vs root [`README.md`](../README.md) |
 | [Choose your path](#choose-your-path) | Humans — goal-based deep links |
-| [Agent & automation entry point](#agent--automation-entry-point) | Cursor, Claude Code, Codex, CI bots — read order, skills, commands |
+| [Agent & automation entry point](#agent-automation-entry-point) | Cursor, Claude Code, Codex, CI bots — read order, skills, commands |
 | [Quick Start](#quick-start) | First clone → first pipeline run |
 | [Architecture](#architecture) | Two-layer layout, directories, lifecycle |
 | [Active projects](#active-projects) | Exemplars and rotating roster |
 | [Pipeline](#pipeline) | Stage DAG, scripts, flags |
 | [AI collaboration](#ai-collaboration) | `AGENTS.md` / `SKILL.md` conventions |
-| [Security & provenance](#security--provenance) | Steganography, hashing, `secure_run.sh` |
+| [Security & provenance](#security-provenance) | Steganography, hashing, `secure_run.sh` |
 | [Testing standards](#testing-standards) | No-mocks policy, coverage floors |
 | [Documentation hub](#documentation-hub) | Full `docs/` map with deep links |
 | [CI/CD](#cicd) | Workflows, jobs, local parity, branch protection |
@@ -71,7 +71,7 @@ Pick the entry that matches your goal — each link is stable for deep navigatio
 | Goal | Start here | Then |
 | --- | --- | --- |
 | **Clone and run** | [Quick Start](#quick-start) | [`docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md) · [`docs/guides/getting-started.md`](../docs/guides/getting-started.md) |
-| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | Start from the closest public exemplar: [`template_active_inference`](../projects/templates/template_active_inference/), [`template_autoresearch_project`](../projects/templates/template_autoresearch_project/), [`template_code_project`](../projects/templates/template_code_project/), [`template_prose_project`](../projects/templates/template_prose_project/), [`template_sia`](../projects/templates/template_sia/), or [`template_template`](../projects/templates/template_template/) |
+| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | Start from the closest public exemplar; authoritative roster: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). Common starting points: [`template_active_inference`](../projects/templates/template_active_inference/), [`template_autoresearch_project`](../projects/templates/template_autoresearch_project/), [`template_code_project`](../projects/templates/template_code_project/), [`template_prose_project`](../projects/templates/template_prose_project/), [`template_sia`](../projects/templates/template_sia/), or [`template_template`](../projects/templates/template_template/) |
 | **Debug a failed pipeline stage** | [`docs/prompts/pipeline-debugging/SKILL.md`](../docs/prompts/pipeline-debugging/SKILL.md) | [`docs/operational/troubleshooting/`](../docs/operational/troubleshooting/) |
 | **Write or fix tests** | [`docs/rules/testing_standards.md`](../docs/rules/testing_standards.md) | [`docs/prompts/test-creation/SKILL.md`](../docs/prompts/test-creation/SKILL.md) |
 | **Manuscript / PDF / citations** | [`docs/guides/manuscript-semantics.md`](../docs/guides/manuscript-semantics.md) | [`docs/prompts/manuscript-cross-references/SKILL.md`](../docs/prompts/manuscript-cross-references/SKILL.md) |
@@ -503,7 +503,7 @@ flowchart TB
 
 | Layer | Entry |
 | --- | --- |
-| Workflow skills (14 tasks) | [`docs/prompts/SKILL.md`](../docs/prompts/SKILL.md) · [Agent router](#agent--automation-entry-point) |
+| Workflow skills (14 tasks) | [`docs/prompts/SKILL.md`](../docs/prompts/SKILL.md) · [Agent router](#agent-automation-entry-point) |
 | Infrastructure skills | [`infrastructure/SKILL.md`](../infrastructure/SKILL.md) · [`docs/_generated/skills_index.md`](../docs/_generated/skills_index.md) |
 | Editor manifest | [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — `uv run python -m infrastructure.skills write` |
 | Contributor norms | [`docs/rules/`](../docs/rules/) · [`.cursorrules`](../.cursorrules) |
@@ -726,7 +726,7 @@ Contributing, testing internals, roadmap.
 
 ### Prompts / workflow skills (`docs/prompts/`)
 
-Discoverable agent skills — **hub + 14 workflow directories** — for template-compliant tasks. Invoke in natural language; indexed in [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json). **Agent router:** [Agent & automation entry point](#agent--automation-entry-point).
+Discoverable agent skills — **hub + 14 workflow directories** — for template-compliant tasks. Invoke in natural language; indexed in [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json). **Agent router:** [Agent & automation entry point](#agent-automation-entry-point).
 
 Hub and index: [`docs/prompts/SKILL.md`](../docs/prompts/SKILL.md), [`docs/prompts/README.md`](../docs/prompts/README.md), [`docs/prompts/AGENTS.md`](../docs/prompts/AGENTS.md).
 
@@ -1005,7 +1005,7 @@ Common issues: [docs/operational/troubleshooting/](../docs/operational/troublesh
 
 <div align="center">
 
-**[🤖 Agent entry](#agent--automation-entry-point)** · **[📖 AGENTS.md](../AGENTS.md)** · **[⌨️ CLAUDE.md](../CLAUDE.md)** · **[🚀 Run Guide](../docs/RUN_GUIDE.md)** · **[📐 Architecture](../docs/architecture/two-layer-architecture.md)** · **[📋 Rules](../docs/rules/)** · **[🔧 CI AGENTS.md](AGENTS.md)** · **[📊 STATUS](../STATUS.md)** · **[🐛 Issues](https://github.com/docxology/template/issues)** · **[💬 Discussions](https://github.com/docxology/template/discussions)**
+**[🤖 Agent entry](#agent-automation-entry-point)** · **[📖 AGENTS.md](../AGENTS.md)** · **[⌨️ CLAUDE.md](../CLAUDE.md)** · **[🚀 Run Guide](../docs/RUN_GUIDE.md)** · **[📐 Architecture](../docs/architecture/two-layer-architecture.md)** · **[📋 Rules](../docs/rules/)** · **[🔧 CI AGENTS.md](AGENTS.md)** · **[📊 STATUS](../STATUS.md)** · **[🐛 Issues](https://github.com/docxology/template/issues)** · **[💬 Discussions](https://github.com/docxology/template/discussions)**
 
 *Reproducibility as architecture, not afterthought.*
 

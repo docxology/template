@@ -45,10 +45,10 @@ The repository uses typed subfolders under `projects/` to manage projects at dif
 mv projects/working/my_paper projects/active/my_paper
 
 # Archive a completed project
-mv projects/active/finished_paper projects/archive/finished_paper
+mv projects/active/{name} projects/archive/{name}
 
 # Return an archived project for revisions
-mv projects/archive/old_paper projects/working/old_paper
+mv projects/archive/{name} projects/working/{name}
 ```
 
 **Advanced: running the pipeline against a different directory:**

@@ -4,6 +4,8 @@ Technical specification for the self-referential documentation project that anal
 
 **Location:** [`projects/templates/template_template/`](.) — public canonical exemplar (`infrastructure.project.public_scope`).
 
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+
 ## Purpose
 
 Programmatic introspection and documentation of the template repository's own architecture, serving as both a live demonstration of pipeline capabilities and a comprehensive technical reference.

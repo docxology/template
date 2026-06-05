@@ -125,6 +125,13 @@ class TestCheckLinks:
         assert len(issues) == 1
         assert issues[0].issue_type == "broken_anchor"
 
+    def test_glossary_anchor_links_are_project_namespace(self, tmp_path):
+        md = tmp_path / "doc.md"
+        md.write_text("[term](#gl:model)")
+        headings = {str(md.relative_to(tmp_path)): set()}
+        issues = check_links([md], tmp_path, headings)
+        assert issues == []
+
     def test_http_links_ignored(self, tmp_path):
         md = tmp_path / "doc.md"
         md.write_text("[link](https://example.com)")

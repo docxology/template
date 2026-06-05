@@ -2,6 +2,8 @@
 
 **This is an active project** in the `projects/` directory, discovered and executed by infrastructure discovery functions. Public exemplar roster and comparison: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on). Publication DOI layout: [`docs/guides/zenodo-doi-strategy.md`](../../../docs/guides/zenodo-doi-strategy.md). Manuscript semantics: [`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md).
 
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+
 ## Overview
 
 A research project exemplifying mathematical optimization algorithms with rigorous implementation, extensive testing, and publication-quality analysis. This project demonstrates the template's full capabilities for computational research, including automated figure generation, reproducible results, and professional manuscript production.

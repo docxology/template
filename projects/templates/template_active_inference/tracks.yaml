@@ -133,6 +133,11 @@ tracks:
     paths: [src/roadmap_tracks, output/reports/artifact_license_audit.json]
     gate: validate_outputs
     required: true
+  - id: scholarship
+    label: Source-backed scholarship matrix
+    paths: [src/roadmap_tracks, output/data/scholarship_source_matrix.json]
+    gate: validate_outputs
+    required: true
   - id: release_notes
     label: Source-backed release notes evidence
     paths: [src/roadmap_tracks, output/reports/release_notes_evidence.json]

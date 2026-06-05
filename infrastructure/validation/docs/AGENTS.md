@@ -14,6 +14,7 @@ The `infrastructure/validation/docs/` package contains repository documentation 
 - `mermaid_lint.py` - fenced Mermaid validation through `mmdc`
 - `cross_link_lint.py` - relative Markdown link validation and link-cycle detection
 - `lint_runner.py` - CI docs lint orchestration (used by verification checks and `scripts/lint_docs.py`)
+- `public_audit.py` - advisory public documentation RedTeam audit; inventories docs, generated-fact grounding, verifier negative-control claims, and `def`/`class` documentation coverage
 - `consistency_lint.py` - facade re-exporting consistency checks (module counts, ghost projects, command conventions, doc imports, stale shell-bootstrap contracts)
 - `consistency/` - implementation package for consistency linters
 - `doc_pair_lint.py` - permanent-template `AGENTS.md` / `README.md` coverage (skips generated fixture payloads under `tests/fixtures/`)
@@ -35,6 +36,15 @@ The `infrastructure/validation/docs/` package contains repository documentation 
 | `link_checker` | `run_link_audit()` | `success` + `exit_code` |
 
 Stub statuses such as `basic_validation_passed` and `manual_testing_required` are removed.
+
+## Advisory RedTeam audit
+
+`scripts/audit_documentation.py` emits `public_audit.py` reports in Markdown or
+JSON. The audit reuses `doc_roots()` and shared scan exclusions, then adds
+advisory findings for stale project roster/count prose, verifier claims without
+nearby negative controls, missing decision-memory rule links, and public
+`def`/`class` documentation gaps. It is source-backed but not a replacement for
+the blocking `lint_docs.py` gate.
 
 ## Scanner API (evergreen step names)
 

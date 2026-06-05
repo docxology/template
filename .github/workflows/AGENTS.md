@@ -106,7 +106,7 @@ flowchart TB
 #### 5. Project Tests (`test-project`)
 
 - **Sync:** `uv sync --group rendering --group monitoring --group discopy` — same packages as a fresh local `uv sync` at the repo root for DisCoPy string-diagram tests: root **`default-groups`** are `dev`, `rendering`, and **`discopy`**, so `uv sync` already installs **DisCoPy**; this job adds **monitoring** (not in `default-groups`). **Hypothesis** comes from the **dev** group (parametric tests), not from `discopy` (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
-- **Matrix:** **Per-project split** — `runs-on: ubuntu-latest` (no macOS) × `python-version: [3.10, 3.12]` × the **9** public exemplars (`templates/template_*`) = **18 parallel jobs**. Each exemplar runs in its own job, so wall-clock is the slowest single project rather than the sequential sum. py3.10 (floor) + py3.12 (ceiling) give cross-version coverage; macOS breadth is handled by `test-infra`. Job `timeout-minutes: 45`.
+- **Matrix:** **Per-project split** — `runs-on: ubuntu-latest` (no macOS) × `python-version: [3.10, 3.12]` × each public exemplar in [`../../docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md) (`templates/template_*`) = **18 parallel jobs**. Each exemplar runs in its own job, so wall-clock is the slowest single project rather than the sequential sum. py3.10 (floor) + py3.12 (ceiling) give cross-version coverage; macOS breadth is handled by `test-infra`. Job `timeout-minutes: 45`.
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
 - **Coverage file:** `.coverage.project` (isolated; removed at the start of each job before the run)
 - **Scope:** [`scripts/01_run_tests.py`](../../scripts/01_run_tests.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell), then `coverage xml -o coverage-project.xml`. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
@@ -228,7 +228,7 @@ uv sync --group rendering --group monitoring --group discopy
 COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 
-# fep_lean only — requires gauss, lake, lean on PATH (see projects/fep_lean/tests/AGENTS.md when present)
+# fep_lean only — requires gauss, lake, lean on PATH (see that project's tests/AGENTS.md when present)
 (cd projects/fep_lean && COVERAGE_FILE=../../.coverage.fep_lean uv run pytest tests/ \
   --timeout=900 \
   --cov=src \

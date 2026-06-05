@@ -51,8 +51,7 @@ For Pandoc-crossref `@fig:` / `[@key]` exemplars, see [`docs/guides/manuscript-s
 
 ```bash
 uv run python -m infrastructure.validation.cli markdown projects/<name>/manuscript/
-# Project-local validator when present:
-uv run python scripts/validate_manuscript.py
+uv run python -m infrastructure.validation.cli prerender projects/<name>/manuscript --repo-root .
 ```
 
 ## When NOT to use

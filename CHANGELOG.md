@@ -11,6 +11,57 @@ not to the contents of any specific workspace.
 
 - No unreleased changes yet.
 
+## [3.2.0] — 2026-06-04
+
+### Added
+
+- 🧭 **Agentic-use workflow routing** — Added `template-agentic-use` as a
+  first-party workflow for skill discovery, local routing, agent onboarding,
+  contract/eval checks, and external-skill review without vendoring companion
+  skills into the public repository.
+- 🧪 **Skill eval coverage** — Extended the trigger eval set, eval harness
+  configuration, mode registry, generated skill index, and editor skill
+  manifest so requests such as "make template more agentic", "find relevant
+  skills", and "improve agent routing" route through the new workflow.
+- 🔍 **Public documentation audit** — Added advisory RedTeam-style helpers and
+  a CLI for inventorying public Markdown, volatile project roster/count claims,
+  verifier claims without nearby negative controls, and Python symbol
+  docstring coverage across public CI source paths.
+- 🧠 **Decision-memory contract** — Added a repository rule for WHY comments,
+  ADRs, local agent memory, failure autopsies, selective ignorance, and negative
+  controls, plus consistency checks that require key workflow docs and public
+  exemplar AGENTS files to link back to that contract.
+- 📚 **Active Inference scholarship traceability** — Added a source-backed
+  scholarship matrix builder, scholarship track registration, manuscript
+  scholarship sections, figure wiring, references, and tests for the
+  `template_active_inference` exemplar.
+
+### Changed
+
+- 🧱 **Agent-facing docs** — Refreshed AGENTS/README guidance across root,
+  docs, scripts, tests, infrastructure validation, public exemplars, and
+  prompt workflows so agents can locate rules, public-scope boundaries, and
+  decision-memory expectations without relying on stale path lore.
+- 🚀 **Rendering and validation plumbing** — Tightened rendering pipeline
+  behavior, documentation lint integration, accuracy checks, link extraction,
+  and Active Inference output-check/gate surfaces to keep generated claims
+  connected to source contracts.
+- 🧾 **Release metadata** — Bumped the repository package and citation metadata
+  to `3.2.0`.
+
+### Fixed
+
+- 🔐 **Public-scope drift risk** — Added explicit audit paths for hard-coded
+  public exemplar rosters/counts and for verifier prose that claims enforcement
+  without naming a known-wrong fixture or negative-control path.
+- 🧰 **Agent memory ergonomics** — Expanded core agent-memory tests and docs so
+  local-only memory remains useful for agents while staying out of committed
+  public repository state.
+- ✅ **Scholarship/manuscript consistency** — Connected Active Inference
+  scholarship references, manuscript sections, sheaf track metadata, claim
+  ledger entries, visualizations, and tests so literature anchors are checked
+  as part of the exemplar's public source surface.
+
 ## [3.1.0] — 2026-05-30
 
 ### Added

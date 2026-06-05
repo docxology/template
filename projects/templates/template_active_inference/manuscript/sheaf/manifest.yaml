@@ -120,6 +120,7 @@ sections:
       - gate_ergonomics
       - artifact_diffoscope
       - artifact_license
+      - scholarship
       - manuscript_staleness
       - layers
     tracks:
@@ -134,6 +135,7 @@ sections:
       gate_ergonomics: manuscript/sections/imrad/methods_sheaf/gate_ergonomics.md
       artifact_diffoscope: manuscript/sections/imrad/methods_sheaf/artifact_diffoscope.md
       artifact_license: manuscript/sections/imrad/methods_sheaf/artifact_license.md
+      scholarship: manuscript/sections/imrad/methods_sheaf/scholarship.md
       manuscript_staleness: manuscript/sections/imrad/methods_sheaf/manuscript_staleness.md
       layers: manuscript/sections/imrad/methods_sheaf/layers.md
 
@@ -229,6 +231,7 @@ sections:
       prose: manuscript/sections/imrad/discussion_outlook/prose.md
       simulation: manuscript/sections/imrad/discussion_outlook/simulation.md
       ontology: manuscript/sections/imrad/discussion_outlook/ontology.yaml
+      scholarship: manuscript/sections/imrad/discussion_outlook/scholarship.md
       release_notes: manuscript/sections/imrad/discussion_outlook/release_notes.md
 
   - id: appendix
@@ -265,6 +268,7 @@ sections:
       gate_ergonomics: manuscript/sections/imrad/appendix_full_sheaf/gate_ergonomics.md
       artifact_diffoscope: manuscript/sections/imrad/appendix_full_sheaf/artifact_diffoscope.md
       artifact_license: manuscript/sections/imrad/appendix_full_sheaf/artifact_license.md
+      scholarship: manuscript/sections/imrad/appendix_full_sheaf/scholarship.md
       assumption_index: manuscript/sections/imrad/appendix_full_sheaf/assumption_index.md
       sensitivity: manuscript/sections/imrad/appendix_full_sheaf/sensitivity.md
       uncertainty: manuscript/sections/imrad/appendix_full_sheaf/uncertainty.md

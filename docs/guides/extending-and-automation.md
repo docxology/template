@@ -15,6 +15,7 @@ By the end of this guide, you'll be able to:
 - ✅ Integrate external tools and systems
 - ✅ Implement continuous integration
 - ✅ Build automated documentation systems
+- ✅ Maintain agent skill routing and manifests
 - ✅ Create research workflow integrations
 
 **Estimated Time:** 1-2 months
@@ -30,6 +31,7 @@ By the end of this guide, you'll be able to:
 
 - [Level 10: Custom Architectures](#level-10-custom-architectures)
 - [Level 11: Advanced Automation](#level-11-advanced-automation)
+- [Agentic Use](#agentic-use)
 - [Level 12: Research Workflow Integration](#level-12-research-workflow-integration)
 
 ---
@@ -144,6 +146,23 @@ if __name__ == '__main__':
 ## Level 11: Advanced Automation
 
 **Goal**: Implement CI/CD and automated documentation
+
+### Agentic Use
+
+The template is easiest for agents to use when the local skill surface stays
+the primary router:
+
+- Start with [`docs/prompts/SKILL.md`](../prompts/SKILL.md) for workflow routing.
+- Browse [`docs/_generated/skills_index.md`](../_generated/skills_index.md) for the live skill inventory.
+- Regenerate `.cursor/skill_manifest.json` after skill changes with `uv run python -m infrastructure.skills write`.
+- Validate prompt-skill metadata with `uv run python -m infrastructure.skills check-contracts`.
+
+Use [`docs/prompts/agentic-use/SKILL.md`](../prompts/agentic-use/SKILL.md)
+when the task is skill discovery, agent onboarding, routing hardening, or
+external-skill review. External skills such as skill creators, MCP builders,
+paper-reproduction helpers, or architecture-review companions are optional
+developer-level installs. Do not vendor external skill packages into this
+public repository unless a maintainer explicitly asks for that change.
 
 ### Continuous Integration
 

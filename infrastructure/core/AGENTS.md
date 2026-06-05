@@ -85,8 +85,9 @@ The Core module provides fundamental foundation utilities used across the entire
 **agent_memory.py**
 - Load/save gitignored continual-learning agent memory at `.cursor/hooks/state/continual-learning-memory.json`
 - Schema example (tracked): `.cursor/hooks/state/continual-learning-memory.example.json` — see [`.cursor/hooks/state/README.md`](../../.cursor/hooks/state/README.md)
+- `audit_memory_payload()` returns advisory warnings when local memory hard-codes public project rosters or measured counts; see [`docs/rules/memory_and_decision_records.md`](../../docs/rules/memory_and_decision_records.md)
 - Constants: `MEMORY_REL_PATH`, `EXAMPLE_REL_PATH`, `MAX_BULLETS` (12)
-- Public API: `memory_path(repo_root)`, `example_path(repo_root)`, `empty_memory_payload()`, `normalize_bullets(items, *, max_items=MAX_BULLETS)`, `load_memory(repo_root)`, `save_memory(repo_root, payload)`
+- Public API: `MemoryAdvisory`, `memory_path(repo_root)`, `example_path(repo_root)`, `empty_memory_payload()`, `normalize_bullets(items, *, max_items=MAX_BULLETS)`, `audit_memory_payload(payload)`, `load_memory(repo_root)`, `save_memory(repo_root, payload)`
 - Tests: `tests/infra_tests/core/test_agent_memory.py`
 
 **pytest_marker_exprs.py**

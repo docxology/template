@@ -29,6 +29,7 @@ This directory contains development standards, coding guidelines, and best pract
 | [manuscript_style.md](manuscript_style.md) | Manuscript formatting and style standards | Writing research manuscripts |
 | [reporting.md](reporting.md) | Reporting module standards and outputs | Using reporting utilities |
 | [refactoring.md](refactoring.md) | Refactoring and modularization standards | Refactoring code with clean breaks |
+| [memory_and_decision_records.md](memory_and_decision_records.md) | Decision memory, ADRs, local agent memory, and RedTeam negative controls | Capturing rationale without stale parallel ledgers |
 
 ## Key Principles
 
@@ -93,6 +94,7 @@ The template provides **two pipeline orchestrators** with different scope:
     - **Writing docs**: [documentation_standards.md](documentation_standards.md)
     - **Writing manuscripts**: [manuscript_style.md](manuscript_style.md)
     - **Writing tests**: [testing_standards.md](testing_standards.md)
+    - **Capturing rationale**: [memory_and_decision_records.md](memory_and_decision_records.md)
 3. **Follow the standards** - Apply the patterns and examples from the guide
 4. **Cross-reference** - See "See Also" sections for related guides
 

@@ -228,6 +228,7 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
     causal_ablation = _read_json(root / "output" / "data" / "causal_ablation_matrix.json")
     artifact_license = _read_json(root / "output" / "reports" / "artifact_license_audit.json")
     release_notes = _read_json(root / "output" / "reports" / "release_notes_evidence.json")
+    scholarship = _read_json(root / "output" / "data" / "scholarship_source_matrix.json")
     proof_dependency = _read_json(root / "output" / "data" / "proof_dependency_graph.json")
     transition_table = _read_json(root / "output" / "data" / "state_transition_table.json")
     ablation_sensitivity = _read_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
@@ -375,6 +376,11 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
         release_notes.get("schema") == "template_active_inference.release_notes_evidence.v1"
         and release_notes.get("all_notes_source_backed") is True
     )
+    checks["scholarship_source_matrix_schema"] = (
+        scholarship.get("schema") == "template_active_inference.scholarship_source_matrix.v1"
+        and scholarship.get("all_sources_connected") is True
+        and scholarship.get("all_expected_sources_present") is True
+    )
     checks["proof_dependency_graph_schema"] = (
         proof_dependency.get("schema") == "template_active_inference.proof_dependency_graph.v1"
         and proof_dependency.get("all_theorems_have_dependencies") is True
@@ -474,6 +480,7 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
             "causal_ablation_matrix_schema",
             "artifact_license_audit_schema",
             "release_notes_evidence_schema",
+            "scholarship_source_matrix_schema",
             "proof_dependency_graph_schema",
             "state_transition_table_schema",
             "ablation_sensitivity_report_schema",

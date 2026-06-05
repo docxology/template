@@ -122,7 +122,7 @@ def _check_code_path_match(
         is_valid_directory_reference,
     )
 
-    path_ref = match.group(0).strip()
+    path_ref = match.group(0).strip().rstrip(":")
     if len(path_ref) < 3:
         return None
 
@@ -144,7 +144,7 @@ def _check_code_path_match(
     if is_valid_directory_reference(path_ref) or not _should_validate_path(path_ref):
         return None
 
-    resolved_path = _resolve_template_path(path_ref, repo_root)
+    resolved_path = _resolve_template_path(path_ref, repo_root, file_path)
     if not resolved_path:
         return None
     try:
@@ -180,11 +180,11 @@ def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) 
     code_blocks = extract_code_blocks(content, file_path)
 
     path_patterns = [
-        r'projects/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',
-        r'output/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',
-        r'infrastructure/[^\'"\s\n\|`\)\]\}]+',
-        r'scripts/[^\'"\s\n\|`\)\]\}]+',
-        r'projects/[a-zA-Z_][a-zA-Z0-9_]*/[^\'"\s\n\|`\)\]\}]+',
+        r'(?<![\w./-])projects/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',
+        r'(?<![\w./-])output/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',
+        r'(?<![\w./-])infrastructure/[^\'"\s\n\|`\)\]\}]+',
+        r'(?<![\w./-])scripts/[^\'"\s\n\|`\)\]\}]+',
+        r'(?<![\w./-])projects/[a-zA-Z_][a-zA-Z0-9_]*/[^\'"\s\n\|`\)\]\}]+',
     ]
 
     for block in code_blocks:
@@ -327,8 +327,8 @@ def _should_validate_path(path_ref: str) -> bool:
     if any(pattern in path_ref for pattern in _PATH_SKIP_SUBSTRINGS):
         return False
 
-    # Template variables or angle-bracket placeholders
-    if ("{" in path_ref and "}" in path_ref) or ("<" in path_ref and ">" in path_ref):
+    # Template variables, angle-bracket placeholders, and globs are examples.
+    if "{" in path_ref or "}" in path_ref or "<" in path_ref or ">" in path_ref or "*" in path_ref:
         return False
 
     # URLs and email addresses
@@ -351,9 +351,48 @@ def _should_validate_path(path_ref: str) -> bool:
     return True
 
 
-def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
+_PROJECT_BUCKETS: frozenset[str] = frozenset({"templates", "active", "working", "published", "archive", "other"})
+
+
+def _nearest_project_root(source_file: Path | None, repo_root: Path) -> Path | None:
+    """Return the containing project root for docs under ``projects/``."""
+    if source_file is None:
+        return None
+
+    try:
+        relative = source_file.resolve().relative_to(repo_root.resolve())
+    except ValueError:
+        return None
+
+    parts = relative.parts
+    if len(parts) < 2 or parts[0] != "projects":
+        return None
+
+    if parts[1] in _PROJECT_BUCKETS:
+        if len(parts) < 4:
+            return None
+        return repo_root / "projects" / parts[1] / parts[2]
+
+    if len(parts) < 3 or not (repo_root / "projects" / parts[1]).is_dir():
+        return None
+
+    return repo_root / "projects" / parts[1]
+
+
+def _resolve_template_path(path_ref: str, repo_root: Path, source_file: Path | None = None) -> Path | None:
     """Resolve template paths like projects/{name}/ to actual paths."""
     try:
+        project_root = _nearest_project_root(source_file, repo_root)
+        if project_root is not None and path_ref.startswith(("scripts/", "output/")):
+            project_relative = project_root / path_ref
+            if project_relative.exists():
+                return project_relative
+            repo_relative = repo_root / path_ref
+            if repo_relative.exists():
+                return repo_relative
+            if path_ref.startswith("scripts/"):
+                return project_relative
+
         # Handle common template patterns
         if path_ref.startswith("projects/project/"):
             # Try actual project names first (discovered dynamically)

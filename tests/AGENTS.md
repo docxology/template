@@ -33,7 +33,8 @@ under ``tmp_path`` should use [`tests/_support/projects.py`](_support/projects.p
 
 Default slug ``template_test`` is the canonical synthetic stand-in. Do **not**
 create a git-tracked ``template_test`` project under ``projects/`` — contract,
-public-scope, and regression tests continue to reference the nine public exemplars.
+public-scope, and regression tests continue to reference the public exemplars in
+[`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md).
 
 ## Coverage Expectations
 
@@ -51,8 +52,10 @@ public-scope, and regression tests continue to reference the nine public exempla
 **Canonical:** Run **one pytest process per** `projects/<name>/tests/` tree. Use
 `infrastructure.core.test_runner.run_per_project_pytest` (from
 [`scripts/01_run_tests.py`](../scripts/01_run_tests.py)), or invoke
-`uv run pytest projects/<name>/tests/` for a single workspace. CI `test-project`
-merges coverage with `--cov-append` across per-project runs.
+`uv run pytest projects/<name>/tests/` for a single workspace. The local
+`--project-only --all-projects` orchestrator can merge coverage with
+`--cov-append`; CI `test-project` runs each public exemplar in its own matrix
+job.
 
 **Unsupported:** One `pytest` collection that spans multiple
 `projects/*/tests/` directories when **more than one** of them defines

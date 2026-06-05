@@ -103,6 +103,8 @@ def check_links(md_files: list[Path], repo_root: Path, all_headings: dict[str, s
 
                 # Check anchor links
                 if target.startswith("#"):
+                    if target.startswith("#gl:"):
+                        continue
                     anchor = target.lstrip("#")
                     if file_key in all_headings:
                         if anchor not in all_headings[file_key]:

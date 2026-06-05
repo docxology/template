@@ -9,6 +9,7 @@ import pytest
 
 from infrastructure.core.agent_memory import (
     MAX_BULLETS,
+    audit_memory_payload,
     empty_memory_payload,
     load_memory,
     normalize_bullets,
@@ -82,3 +83,48 @@ def test_load_memory_rejects_invalid_version(tmp_path: Path) -> None:
     )
     with pytest.raises(ValueError, match="unsupported memory version"):
         load_memory(tmp_path)
+
+
+def test_audit_memory_payload_flags_hardcoded_public_project_roster() -> None:
+    payload = empty_memory_payload()
+    payload["learned_workspace_facts"] = [
+        (
+            "Six public git-tracked exemplars under projects/templates/: "
+            "template_active_inference, template_autoresearch_project, "
+            "template_code_project, template_prose_project, template_sia, "
+            "template_template."
+        )
+    ]
+
+    advisories = audit_memory_payload(payload)
+
+    assert len(advisories) == 1
+    assert advisories[0].category == "public-project-roster"
+    assert advisories[0].field == "learned_workspace_facts"
+    assert "docs/_generated/active_projects.md" in advisories[0].detail
+
+
+def test_audit_memory_payload_flags_measured_counts_and_metrics() -> None:
+    payload = empty_memory_payload()
+    payload["learned_workspace_facts"] = [
+        "Final verification evidence: 360 passed with 93.01% coverage and 516 Python files."
+    ]
+
+    advisories = audit_memory_payload(payload)
+
+    assert len(advisories) == 1
+    assert advisories[0].category == "measured-count"
+    assert "docs/_generated/canonical_facts.md" in advisories[0].detail
+
+
+def test_audit_memory_payload_allows_generated_source_pointers() -> None:
+    payload = empty_memory_payload()
+    payload["learned_workspace_facts"] = [
+        (
+            "Default exemplar path: projects/templates/template_code_project; "
+            "public project names live in docs/_generated/active_projects.md."
+        ),
+        "Coverage and test counts should be re-derived from docs/_generated/canonical_facts.md.",
+    ]
+
+    assert audit_memory_payload(payload) == []

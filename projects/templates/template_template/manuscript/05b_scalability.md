@@ -2,7 +2,7 @@
 
 The Standalone Project Paradigm enables horizontal scaling: adding a new project requires creating a directory with `manuscript/config.yaml` and nothing else. No infrastructure code changes, no `pyproject.toml` modifications, no CI configuration updates. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
 
-We have validated scaling with nine canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (${project_template_template_test_count} tests) as a git-tracked public exemplar in the same automated discovery menus.
+We have validated scaling with ${project_count} canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (${project_template_template_test_count} tests) as a git-tracked public exemplar in the same automated discovery menus.
 
 Canonical trio:
 

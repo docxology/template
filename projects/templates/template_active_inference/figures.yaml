@@ -180,6 +180,19 @@ figures:
       joined to sensitivity and uncertainty artifacts; all effects source-backed:
       {{ablation_sensitivity_source_backed}}.
     width: 0.92
+  scholarship_source_map:
+    filename: scholarship_source_map.png
+    alt: >-
+      Four-column source map generated from the scholarship source matrix. Each row
+      links a bibliography key to a source family, method role, and generated evidence
+      artifact; green borders mark rows with bibliography entries, manuscript citations,
+      registered tracks, bound manuscript sections, and existing artifacts.
+    caption: >-
+      Scholarship source map: {{scholarship_source_count}} source rows across
+      {{scholarship_method_role_count}} method roles and
+      {{scholarship_source_family_count}} source families. Connected status:
+      {{scholarship_sources_connected}}.
+    width: 0.95
 
 section_figures:
   coverage_page:
@@ -207,6 +220,7 @@ section_figures:
   methods_sheaf:
     - id: sheaf_layers_overview
     - id: semantic_gluing_graph
+    - id: scholarship_source_map
   appendix_full_sheaf:
     - id: ising_mi_curve
       labeled: false
@@ -214,5 +228,7 @@ section_figures:
       labeled: false
     - id: theorem_traceability_graph
     - id: causal_ablation_heatmap
+    - id: scholarship_source_map
+      labeled: false
     - id: sheaf_coverage_heatmap
       labeled: false

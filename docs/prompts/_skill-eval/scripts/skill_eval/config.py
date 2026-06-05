@@ -39,6 +39,8 @@ EVAL_SKILL_MAP: dict[int, str] = {
     25: "docs/prompts/SKILL.md",
     26: "docs/prompts/SKILL.md",
     27: "docs/prompts/methods-orchestration/SKILL.md",
+    28: "docs/prompts/agentic-use/SKILL.md",
+    29: "docs/prompts/agentic-use/SKILL.md",
 }
 
 HUB_ROUTE_CHILD: dict[int, str] = {

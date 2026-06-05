@@ -1691,6 +1691,60 @@ class TestValidateFilePathsInCode:
         issues = validate_file_paths_in_code(content, tmp_path / "test.md", tmp_path)
         assert issues == []
 
+    def test_project_local_script_path_resolves_from_project_root(self, tmp_path):
+        project_root = tmp_path / "projects" / "templates" / "template_demo"
+        (project_root / "scripts").mkdir(parents=True)
+        (project_root / "scripts" / "compose_manuscript.py").write_text("")
+        md_file = project_root / "README.md"
+        content = "```bash\nuv run python scripts/compose_manuscript.py\n```"
+
+        issues = validate_file_paths_in_code(content, md_file, tmp_path)
+
+        assert issues == []
+
+    def test_project_local_missing_script_still_fails(self, tmp_path):
+        project_root = tmp_path / "projects" / "templates" / "template_demo"
+        project_root.mkdir(parents=True)
+        md_file = project_root / "README.md"
+        content = "```bash\nuv run python scripts/missing_project_script.py\n```"
+
+        issues = validate_file_paths_in_code(content, md_file, tmp_path)
+
+        assert len(issues) == 1
+        assert issues[0]["target"] == "scripts/missing_project_script.py"
+
+    def test_project_doc_script_path_falls_back_to_repo_root(self, tmp_path):
+        project_root = tmp_path / "projects" / "templates" / "template_demo"
+        project_root.mkdir(parents=True)
+        (tmp_path / "scripts").mkdir()
+        (tmp_path / "scripts" / "03_render_pdf.py").write_text("")
+        md_file = project_root / "README.md"
+        content = "```bash\nuv run python scripts/03_render_pdf.py --project template_demo\n```"
+
+        issues = validate_file_paths_in_code(content, md_file, tmp_path)
+
+        assert issues == []
+
+    def test_aggregate_projects_docs_use_repo_root_scripts(self, tmp_path):
+        (tmp_path / "projects").mkdir()
+        (tmp_path / "scripts").mkdir()
+        (tmp_path / "scripts" / "03_render_pdf.py").write_text("")
+        md_file = tmp_path / "projects" / "README.md"
+        content = "```bash\nuv run python scripts/03_render_pdf.py --project template_demo\n```"
+
+        issues = validate_file_paths_in_code(content, md_file, tmp_path)
+
+        assert issues == []
+
+    def test_embedded_docs_script_path_does_not_match_root_scripts_substring(self, tmp_path):
+        (tmp_path / "docs" / "operational" / "scripts").mkdir(parents=True)
+        (tmp_path / "docs" / "operational" / "scripts" / "rotate-logs.sh").write_text("")
+        content = "```bash\nbash docs/operational/scripts/rotate-logs.sh\n```"
+
+        issues = validate_file_paths_in_code(content, tmp_path / "docs" / "operational" / "README.md", tmp_path)
+
+        assert issues == []
+
 
 class TestGetActualProjectNamesAdditional:
     def test_no_projects_dir(self, tmp_path):

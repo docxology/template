@@ -7,7 +7,7 @@
 
 ## The problem
 
-The template currently enforces a **coverage floor** (60% infra, 90% per-project, 75% combined union) as its quality signal. Coverage is hygiene, not correctness. A function can be 100% covered and still wrong.
+The template currently enforces **coverage floors** (60% infra, 90% per-project, plus a 75% combined union in the local all-project orchestrator) as quality signals. Coverage is hygiene, not correctness. A function can be 100% covered and still wrong.
 
 The operator's own memory ledger documents this failure mode across several private workspaces (for example a large symlinked textbook checkout under `projects/`). Shape tests, count tests, "the file exists" tests — all pass while the underlying scientific claim is broken.
 

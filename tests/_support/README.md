@@ -13,7 +13,7 @@
 ## Key Conventions
 
 - Synthetic projects live under `tmp_path` only — **never** under the real `projects/` tree.
-- Default slug is `template_test`: a stable, readable stand-in that does not couple tests to the nine public exemplars.
+- Default slug is `template_test`: a stable, readable stand-in that does not couple tests to the public exemplars listed in [`docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md).
 - Pass `program="templates"` to nest under `projects/templates/<name>/` so discovery yields the qualified name `templates/<name>`.
 
 ## See Also

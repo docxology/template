@@ -15,6 +15,7 @@ from infrastructure.validation.docs.consistency_lint import (
     check_canonical_count_singularity,
     check_command_conventions,
     check_doc_imports_resolve,
+    check_memory_decision_rule_links,
     check_module_count_claims,
     check_no_ghost_projects,
     check_project_discovery_claims,
@@ -114,6 +115,7 @@ def run_consistency_lint(repo_root: Path, *, quiet: bool) -> list[Inconsistency]
     issues.extend(check_readme_files_list(repo_root))
     issues.extend(check_project_discovery_claims(repo_root))
     issues.extend(check_canonical_count_singularity(repo_root))
+    issues.extend(check_memory_decision_rule_links(repo_root))
     issues.extend(check_stale_shell_contracts(repo_root))
     if not quiet:
         logger.info("consistency: %d issues", len(issues))

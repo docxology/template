@@ -4,6 +4,8 @@ Technical reference for the deterministic AutoScientists exemplar. Companion to
 [README.md](README.md). All business logic lives in `src/`; `scripts/` are thin
 orchestrators that import from `src/`, run the loop, and write figures/JSON.
 
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+
 ## Module map (`src/`)
 
 | Module | Responsibility |

@@ -356,6 +356,32 @@
         "Mentions artifact manifest and evidence registry",
         "Does not edit generated output as fix"
       ]
+    },
+    {
+      "id": 28,
+      "eval_name": "agentic-use-inventory",
+      "prompt": "discover all relevant skills for working with template and make the repo more agentic without installing random external packages",
+      "expected_output": "Agentic-use workflow inventories local skills and keeps external skills optional",
+      "files": [],
+      "expectations": [
+        "Mentions skill inventory",
+        "Mentions infrastructure.skills check",
+        "Mentions external skills optional not vendored",
+        "Mentions generated skill manifest"
+      ]
+    },
+    {
+      "id": 29,
+      "eval_name": "agentic-use-routing-hardening",
+      "prompt": "improve agent routing, skill manifest freshness, and prompt eval coverage for docs/prompts",
+      "expected_output": "Agentic-use workflow hardens router, manifest, and eval coverage",
+      "files": [],
+      "expectations": [
+        "Mentions docs/prompts/SKILL.md router",
+        "Mentions trigger eval set or skill eval",
+        "Mentions .cursor/skill_manifest.json",
+        "Mentions no broad documentation normalization"
+      ]
     }
   ]
 }

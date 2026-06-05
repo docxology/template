@@ -62,18 +62,6 @@ claims:
   evidence:
     field: claim_count
     min: 1
-- id: evidence_fields_mapped
-  statement: Evidence-field index maps claim evidence fields to generated artifacts
-    and validators.
-  path: output/data/evidence_field_index.json
-  section: methods_sheaf
-  tracks:
-  - evidence_fields
-  - manuscript
-  - sheaf
-  evidence:
-    field: all_fields_mapped
-    equals: true
 - id: validation_dependency_graph
   statement: Validation dependency graph has no producer-configuration issues.
   path: output/data/validation_dependency_graph.json
@@ -410,8 +398,8 @@ claims:
     field: complete_grid
     equals: true
 - id: si_efe_rows_explained
-  statement: EFE values artifact explicitly records value availability or measured fallback
-    for every policy-comparison row.
+  statement: EFE values artifact explicitly records value availability or measured
+    fallback for every policy-comparison row.
   path: output/data/si_efe_terms.json
   section: results_invariants
   tracks:
@@ -723,12 +711,23 @@ claims:
     - release_bundle
     - theorem_traceability
     - gate_ergonomics
+    - scholarship
     - artifact_diffoscope
     - proof_extraction
     - state_space_catalog
     - causal_ablation
     - artifact_license
     - release_notes
+- id: evidence_fields_mapped
+  statement: Evidence-field index maps typed claim fields to generated artifacts
+    used by validation gates.
+  path: output/data/evidence_field_index.json
+  section: methods_sheaf
+  tracks:
+  - evidence_fields
+  evidence:
+    field: all_fields_mapped
+    equals: true
 - id: model_checking_exhaustive
   statement: Canonical model-checking witnesses record finite exhaustive checks without
     counterexamples.
@@ -913,8 +912,8 @@ claims:
     field: all_reachable_states_covered
     equals: true
 - id: ablation_sensitivity_source_backed
-  statement: Ablation sensitivity report joins every causal-ablation effect to
-    sensitivity and uncertainty source artifacts.
+  statement: Ablation sensitivity report joins every causal-ablation effect to sensitivity
+    and uncertainty source artifacts.
   path: output/reports/ablation_sensitivity_report.json
   section: results_invariants
   tracks:
@@ -924,9 +923,30 @@ claims:
   evidence:
     field: all_effects_source_backed
     equals: true
+- id: scholarship_source_matrix_connected
+  statement: Scholarship source matrix connects every cited source to a method role,
+    manuscript section, registered track, and evidence artifact.
+  path: output/data/scholarship_source_matrix.json
+  section: methods_sheaf
+  tracks:
+  - scholarship
+  - manuscript
+  - sheaf
+  evidence:
+    field: all_sources_connected
+    equals: true
+- id: scholarship_source_map_figure
+  statement: Scholarship source-map figure is generated from the source matrix.
+  path: output/figures/scholarship_source_map.png
+  section: methods_sheaf
+  tracks:
+  - scholarship
+  - visualization
+  evidence:
+    predicate: file_exists
 - id: release_attestation_complete
-  statement: Release attestation binds validation, bundle hash, license audit,
-    semantic certificate, and blocked-scope status.
+  statement: Release attestation binds validation, bundle hash, license audit, semantic
+    certificate, and blocked-scope status.
   path: output/reports/release_attestation.json
   section: discussion_outlook
   tracks:

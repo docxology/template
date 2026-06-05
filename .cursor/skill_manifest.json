@@ -15,12 +15,12 @@
     },
     {
       "name": "template-workflows",
-      "description": "Router and workflow hub for the Research Project Template — code, tests, manuscripts,\npipeline, validation, docs, and reproducibility. USE WHEN the user wants to audit the\nrepo, debug ./run.sh or execute_pipeline.py, add a feature, write tests, scaffold a\nmanuscript, verify claims, fix cross-references, run validation gates, refactor, or\nprepare a Zenodo release, research a topic, write/review/revise a paper, or run a\nresearch-to-publication workflow — even if they never say \"prompt\", \"skill\", or docs/prompts.\nAlso USE WHEN intent is ambiguous (\"something wrong with my manuscript\", \"full health\ncheck\", \"fix the pipeline\") — pick ONE child skill from the routing table and follow it.\nDo NOT use for generic homework, unrelated app security scans, or casual PDF summarization.\n",
+      "description": "Router and workflow hub for the Research Project Template — code, tests, manuscripts,\npipeline, validation, docs, and reproducibility. USE WHEN the user wants to audit the\nrepo, debug ./run.sh or execute_pipeline.py, add a feature, write tests, scaffold a\nmanuscript, verify claims, fix cross-references, run validation gates, refactor, or\nprepare a Zenodo release, discover relevant template skills, improve agent routing,\nresearch a topic, write/review/revise a paper, or run a research-to-publication workflow\n— even if they never say \"prompt\", \"skill\", or docs/prompts.\nAlso USE WHEN intent is ambiguous (\"something wrong with my manuscript\", \"full health\ncheck\", \"fix the pipeline\") — pick ONE child skill from the routing table and follow it.\nDo NOT use for generic homework, unrelated app security scans, or casual PDF summarization.\n",
       "path": "docs/prompts/SKILL.md",
       "cursor_at": "docs/prompts/SKILL.md",
       "metadata": {
         "version": "1.1.0",
-        "last_updated": "2026-05-25",
+        "last_updated": "2026-06-04",
         "status": "active",
         "data_access_level": "raw",
         "task_type": "open-ended",
@@ -33,7 +33,8 @@
           "template-academic-paper-reviewer",
           "template-academic-pipeline",
           "template-methods-orchestration",
-          "template-comprehensive-assessment"
+          "template-comprehensive-assessment",
+          "template-agentic-use"
         ]
       }
     },
@@ -113,6 +114,31 @@
           "template-academic-paper-reviewer",
           "template-manuscript-claim-verification",
           "template-reproducibility-audit"
+        ]
+      }
+    },
+    {
+      "name": "template-agentic-use",
+      "description": "Agentic-use and skill-routing workflow for the Research Project Template. USE WHEN\ndiscovering relevant skills, making template easier for agents to navigate, auditing\ndocs/prompts skill coverage, checking .cursor/skill_manifest.json, evaluating external\nskills, or improving agent onboarding/routing without changing project behavior.\n",
+      "path": "docs/prompts/agentic-use/SKILL.md",
+      "cursor_at": "docs/prompts/agentic-use/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-06-04",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "inventory",
+          "route",
+          "harden",
+          "external-review"
+        ],
+        "related_skills": [
+          "template-workflows",
+          "template-comprehensive-assessment",
+          "template-documentation-creation",
+          "template-validation-quality"
         ]
       }
     },

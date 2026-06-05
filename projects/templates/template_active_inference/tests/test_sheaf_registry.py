@@ -85,6 +85,7 @@ def test_methods_sheaf_binds_layers_tracks() -> None:
         "gate_ergonomics",
         "artifact_diffoscope",
         "artifact_license",
+        "scholarship",
         "manuscript_staleness",
         "layers",
     )
@@ -97,6 +98,7 @@ def test_methods_sheaf_binds_layers_tracks() -> None:
     assert "gate_ergonomics" in section.tracks
     assert "artifact_diffoscope" in section.tracks
     assert "artifact_license" in section.tracks
+    assert "scholarship" in section.tracks
     assert "manuscript_staleness" in section.tracks
     assert "layers" in section.tracks
     assert "formalism" in section.tracks

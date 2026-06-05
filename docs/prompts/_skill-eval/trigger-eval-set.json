@@ -18,5 +18,7 @@
   {"query": "write AGENTS.md README for scripts folder with real commands", "should_trigger": true},
   {"query": "synthesize 15 arxiv papers thematic clusters citekey only", "should_trigger": true},
   {"query": "implement adam optimizer in project src typed tests", "should_trigger": true},
+  {"query": "discover all relevant skills for working with template and make the repo more agentic", "should_trigger": true},
+  {"query": "improve agent routing skill manifest and prompt eval coverage", "should_trigger": true},
   {"query": "docker compose postgres tuning for production", "should_trigger": false}
 ]
