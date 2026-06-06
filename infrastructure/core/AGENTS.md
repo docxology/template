@@ -837,20 +837,6 @@ def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
     """
 ```
 
-#### get_config_as_env_vars (function)
-```python
-def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True) -> Dict[str, str]:
-    """Get configuration as environment variables.
-
-    Args:
-        repo_root: Root directory of the repository
-        respect_existing: If True, don't override existing environment variables
-
-    Returns:
-        Dictionary of environment variable assignments
-    """
-```
-
 #### find_config_file (function)
 ```python
 def find_config_file(repo_root: Path | str) -> Optional[Path]:
@@ -864,9 +850,11 @@ def find_config_file(repo_root: Path | str) -> Optional[Path]:
     """
 ```
 
+### config/queries.py
+
 #### get_translation_languages (function)
 ```python
-def get_translation_languages(repo_root: Path | str) -> List[str]:
+def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> List[str]:
     """Get list of enabled translation languages from config.
 
     Reads the llm.translations section from config.yaml and returns
@@ -874,6 +862,7 @@ def get_translation_languages(repo_root: Path | str) -> List[str]:
 
     Args:
         repo_root: Root directory of the repository
+        project_name: Name of the project whose config.yaml to read
 
     Returns:
         List of language codes (e.g., ['zh', 'hi', 'ru']) if translations
@@ -883,7 +872,7 @@ def get_translation_languages(repo_root: Path | str) -> List[str]:
 
 #### get_testing_config (function)
 ```python
-def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
+def get_testing_config(repo_root: Path | str) -> ResolvedTestingConfig:
     """Get testing configuration from config.yaml.
 
     Reads the testing section from config.yaml and returns
@@ -893,11 +882,10 @@ def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
         repo_root: Root directory of the repository
 
     Returns:
-        Dictionary with testing configuration values:
+        ResolvedTestingConfig with testing configuration values:
         - max_test_failures: Maximum acceptable test failures (default: 0)
         - max_infra_test_failures: Maximum acceptable infrastructure test failures (default: 0)
         - max_project_test_failures: Maximum acceptable project test failures (default: 0)
-        Returns empty dict if config file not found or invalid
     """
 ```
 

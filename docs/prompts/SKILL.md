@@ -12,8 +12,8 @@ description: |
   check", "fix the pipeline") — pick ONE child skill from the routing table and follow it.
   Do NOT use for generic homework, unrelated app security scans, or casual PDF summarization.
 metadata:
-  version: "1.1.0"
-  last_updated: "2026-06-04"
+  version: "1.2.0"
+  last_updated: "2026-06-06"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -86,3 +86,19 @@ This workflow set includes original, template-native adaptations of patterns obs
 mode registries, data-access labels, provenance checkpoints, and benchmark disclosure. ARS
 content is not vendored or copied because ARS is CC-BY-NC-4.0 while this repository is
 Apache-2.0.
+
+Several ARS ideas are now backed by **deterministic infrastructure** (code, not
+prompts), in keeping with the template's "Code Before Prompts" principle:
+
+- **Reference-existence verification** — `infrastructure/reference/verification`
+  resolves each cited DOI/arXiv id/title against Crossref/OpenAlex/arXiv and
+  flags fabricated/mismatched/anachronistic citations. Offline-first with a
+  persistent SQLite cache; live resolution is opt-in. This is the anti-leakage
+  tier-0 gate distilled from the ARS hallucination taxonomy and verification
+  cache. CLI: `python -m infrastructure.reference.verification verify <bib>`.
+- **AI-writing fingerprint scan** — `infrastructure/validation/content/ai_writing.py`
+  scores em-dash density, stock LLM phrasing, and sentence-length burstiness.
+  CLI: `python -m infrastructure.validation.cli prose-quality <path>`.
+
+These run fully offline in CI; only the optional `--live` resolution pass
+touches the network.

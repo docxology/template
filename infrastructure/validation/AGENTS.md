@@ -291,18 +291,15 @@ def find_manuscript_directory(repo_root: str | Path) -> Path:
 ```python
 @dataclass
 class IntegrityReport:
-    """integrity report for output validation."""
-    total_files: int = 0
-    file_integrity: Dict[str, bool] = field(default_factory=dict)
-    cross_references: Dict[str, bool] = field(default_factory=dict)
-    data_consistency: Dict[str, bool] = field(default_factory=dict)
-    academic_standards: Dict[str, bool] = field(default_factory=dict)
-    build_artifacts: Dict[str, Any] = field(default_factory=dict)
-    completeness: Dict[str, Any] = field(default_factory=dict)
-    permissions: Dict[str, Any] = field(default_factory=dict)
-    errors: List[str] = field(default_factory=list)
-    warnings: List[str] = field(default_factory=list)
-    recommendations: List[str] = field(default_factory=list)
+    """Container for integrity verification results."""
+    file_integrity: dict[str, bool] = field(default_factory=dict)
+    cross_reference_integrity: dict[str, bool] = field(default_factory=dict)
+    data_consistency: dict[str, bool] = field(default_factory=dict)
+    academic_standards: dict[str, bool] = field(default_factory=dict)
+    overall_integrity: bool = True
+    issues: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
 ```
 
 #### verify_file_integrity (function)
@@ -380,11 +377,12 @@ def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
 
 #### verify_output_integrity (function)
 ```python
-def verify_output_integrity(output_dir: Path) -> IntegrityReport:
+def verify_output_integrity(output_dir: Path, manuscript_dir: Path | None = None) -> IntegrityReport:
     """output integrity verification.
 
     Args:
         output_dir: Output directory to verify
+        manuscript_dir: Optional manuscript directory for cross-reference checks
 
     Returns:
         integrity report
@@ -543,6 +541,36 @@ def validate_links_command(args):
 
     Args:
         args: Parsed command line arguments
+    """
+```
+
+#### validate_prerender_command (function)
+```python
+def validate_prerender_command(args):
+    """CLI command for the strict source-markdown pre-render gate.
+
+    Invoked as `python -m infrastructure.validation.cli prerender <manuscript_dir>`
+    (options: `--repo-root`, `--bib`).
+    """
+```
+
+#### validate_evidence_command (function)
+```python
+def validate_evidence_command(args):
+    """CLI command validating manuscript claims against registered evidence.
+
+    Invoked as `python -m infrastructure.validation.cli evidence <project_root>`
+    (options: `--manuscript-dir`, `--output-json`, `--fail-on-issues`).
+    """
+```
+
+#### validate_prose_quality_command (function)
+```python
+def validate_prose_quality_command(args):
+    """CLI command scanning manuscript prose for AI-writing fingerprints.
+
+    Invoked as `python -m infrastructure.validation.cli prose-quality <path>`
+    (options: `--json`, `--fail-on-flags`).
     """
 ```
 

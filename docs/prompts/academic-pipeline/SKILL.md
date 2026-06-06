@@ -5,8 +5,8 @@ description: |
   review, revise, reproduce, validate, and finalize. USE WHEN the user wants the whole
   paper workflow or enters midstream with an existing paper or reviewer comments.
 metadata:
-  version: "1.0.0"
-  last_updated: "2026-05-25"
+  version: "1.1.0"
+  last_updated: "2026-06-06"
   status: active
   data_access_level: verified_only
   task_type: open-ended
@@ -48,7 +48,7 @@ autonomous hidden approval loop.
 1. **Stage map** - research -> paper plan/draft -> claim verification -> read-only review -> revision -> re-review -> reproducibility -> validation -> final package.
 2. **Material passport** - record handoffs as file paths and generated artifacts: search corpus, claim ledger, evidence registry, artifact manifest, snapshots, validation reports, and reviewer matrices.
 3. **Human checkpoints** - use existing HITL controls for gate-only or checkpoint approvals; detached review files live under `output/hitl/`.
-4. **Integrity gates** - run claim verification before review and finalization; run double-run reproducibility before release claims.
+4. **Integrity gates** - run claim verification before review and finalization; run the deterministic reference-existence gate (no fabricated/mismatched/anachronistic citations) and the prose-quality scan; run double-run reproducibility before release claims. These gates are file-backed and deterministic, mirroring the ARS mandatory integrity-check stages but as code, not a hidden agent loop.
 5. **Finalize** - render from source, validate outputs, copy deliverables, and document residual risks. Never hand-edit `output/` as the fix.
 
 ## Deliverables
@@ -63,6 +63,8 @@ autonomous hidden approval loop.
 ```bash
 uv run python scripts/execute_pipeline.py --project <project> --core-only
 uv run python -m infrastructure.validation.cli evidence projects/<project> --fail-on-issues
+uv run python -m infrastructure.reference.verification verify projects/<project>/manuscript/references.bib --live --as-of-year <year> --fail-on-issues
+uv run python -m infrastructure.validation.cli prose-quality projects/<project>/manuscript
 uv run python -m infrastructure.validation.cli integrity output/<project>/
 uv run python -m infrastructure.core.pipeline.snapshot compare <left> <right> --output-dir projects/<project>/output
 ```

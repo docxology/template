@@ -13,6 +13,7 @@ public/private task splits. Implements contracts inspired by
 
 ```bash
 uv run python -m infrastructure.sia.cli validate projects/templates/template_sia/tasks/mini_classify
+uv run python -m infrastructure.sia.cli inspect-run RUN_SUMMARY_JSON [--json]
 uv run python scripts/02_run_analysis.py --project templates/template_sia
 ```
 
@@ -34,9 +35,10 @@ from infrastructure.sia import (
 Each task directory exposes:
 
 - `data/public/` — agent-visible inputs
+  - `data/public/task.md` — required task description (`validate_task_dir` hard-fails if absent)
+  - `data/public/evaluate.py` — writes `results.json` with `metric_name`, `metric_value`, `n_samples`
 - `data/private/` — evaluation-only labels
-- `reference/` — baseline target agent
-- `evaluate.py` — writes `results.json` with `metric_name`, `metric_value`, `n_samples`
+- `reference/` — baseline target agent (`reference/reference_target_agent.py` required)
 
 ## Exemplar project
 

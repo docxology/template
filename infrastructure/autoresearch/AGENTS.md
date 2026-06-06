@@ -26,6 +26,9 @@ without autonomous research execution.
 - `ExperimentCandidate`
 - `ResearchProgram`
 - `RunLedger`
+- `SecurityProfile`
+- `AutoResearchStage`
+- `ValidationPhase`
 - `AutoResearchPlan`
 - `AutoResearchIssue`
 - `AutoResearchReport`
@@ -43,7 +46,7 @@ without autonomous research execution.
 | Phase | Checks |
 | --- | --- |
 | `intrinsic` | `domain_profile`, `experiment_plan`, `pipeline_contracts`, `thin_orchestrators`, `ai_disclosure` |
-| `extrinsic` | `evidence_registry`, `artifact_manifest`, `method_contracts`, `review_gates`, `benchmark_tasks` |
+| `extrinsic` | `evidence_registry`, `artifact_manifest`, `method_contracts`, `review_gates`, `benchmark_tasks`, `security_profile` |
 | `all` | every configured check (default) |
 
 Stage-gate and unknown quality-check validation always runs regardless of
@@ -81,6 +84,7 @@ Valid `quality_checks` are:
 - `review_gates`
 - `benchmark_tasks`
 - `ai_disclosure`
+- `security_profile`
 
 Strict mode promotes advisory readiness defects to errors. Configuration
 defects such as unknown stage names or unknown checks are always errors.

@@ -91,7 +91,7 @@ from infrastructure.steganography.overlays import create_watermark_overlay
 
 # Generate a single-page watermark overlay as PDF bytes
 wm_bytes = create_watermark_overlay(
-    width=612, height=792,
+    page_width=612, page_height=792,
     text="CONFIDENTIAL",
     opacity=0.08,
     color_rgb=(128, 128, 128),

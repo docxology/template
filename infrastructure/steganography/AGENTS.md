@@ -54,7 +54,7 @@ Chains: hashing → overlays → barcodes → metadata → encryption → manife
 ## Integration Points
 
 - **`infrastructure/__init__.py`** — lazy import under try/except
-- **`infrastructure/core/config_loader.py`** — `SteganographyConfigYAML` TypedDict in `ManuscriptConfig`
+- **`infrastructure/core/config/loader.py`** — `SteganographyConfigYAML` TypedDict in `ManuscriptConfig` (defined in `infrastructure/core/config/schema.py`)
 - **`secure_run.sh`** — shell entry; `uv sync --group steganography`, then `python -m infrastructure.orchestration secure` ([`run_secure_pipeline`](../orchestration/secure_run.py)); pipeline DAG matches `./run.sh` via Python, not a `./run.sh` subprocess
 - **`infrastructure/config/secure_config.yaml`** — repository secure-run defaults
 - **`config.yaml`** — project `manuscript/config.yaml` `steganography:` section with per-technique booleans and overrides

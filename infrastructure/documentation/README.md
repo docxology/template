@@ -110,7 +110,7 @@ flowchart TD
         B["Register Figure<br/>FigureManager.register_figure"]
         C["Generate LaTeX<br/>FigureManager.generate_latex_figure_block"]
         D["Insert Reference<br/>ImageManager.insert_figure"]
-        E["Validate References<br/>ImageManager.validate_figure_references"]
+        E["Validate References<br/>ImageManager.validate_figures"]
         F[Render Document<br/>Include in manuscript]
     end
 
@@ -125,7 +125,7 @@ flowchart TD
     subgraph IntegrationWorkflow["Manuscript Integration"]
         L["Detect Sections<br/>MarkdownIntegration.detect_sections"]
         M["Insert Figures<br/>insert_figure_in_section"]
-        N["Update References<br/>update_cross_references"]
+        N["Update References<br/>update_all_references"]
         O["Generate ToF<br/>generate_table_of_figures"]
         P["Validate Manuscript<br/>validate_manuscript"]
     end
@@ -142,6 +142,8 @@ flowchart TD
 ## Quick Start
 
 ```python
+from pathlib import Path
+
 from infrastructure.documentation import (
     FigureManager,
     ImageManager,
@@ -165,11 +167,8 @@ metadata = fm.register_figure(
 )
 
 # 2. Generate LaTeX figure block for publication
-latex_block = fm.generate_latex_figure_block(
-    "fig:convergence",
-    width=0.8,  # 80% of text width
-    placement="h"  # 'here' placement
-)
+#    (width/placement come from the registered FigureMetadata)
+latex_block = fm.generate_latex_figure_block("fig:convergence")
 
 # 3. Insert figure reference into markdown manuscript
 success = im.insert_figure(
@@ -190,16 +189,16 @@ updated_content = inject_between_markers(
     api_table
 )
 
-# 6. Generate table of figures
-mi.generate_table_of_figures(
-    Path("manuscript/table_of_figures.md"),
-    format="markdown"
-)
+# 6. Generate table of figures (returns the written Path)
+mi.generate_table_of_figures(Path("manuscript/00_table_of_figures.md"))
 
 # 7. Validate entire manuscript
+#    Returns {file_path: [(label, error), ...]} for files with errors.
 validation_results = mi.validate_manuscript()
-if validation_results['errors']:
-    print("Manuscript validation errors:", validation_results['errors'])
+for md_path, errors in validation_results.items():
+    print(f"{md_path}:")
+    for label, error in errors:
+        print(f"  - {label}: {error}")
 ```
 
 ## Module Organization
@@ -212,6 +211,8 @@ if validation_results['errors']:
 | **glossary_gen.py** | API documentation from source | `build_api_index()`, `generate_markdown_table()` | Automatic glossary generation |
 | **generate_glossary_cli.py** | CLI for glossary generation | `main()` | Pipeline integration script |
 | **architecture_overview.py** | One-page architecture diagram from live repo state | `build_architecture_mermaid()`, `render_architecture_svg()` | Driven by `scripts/generate_architecture_overview.py` |
+| **active_projects_doc.py** | Render the authoritative public active-projects doc | `render_active_projects_doc()`, `write_active_projects_doc()` | Generates `docs/_generated/active_projects.md` |
+| **publication_records.py** | Load/render project publication metadata (DOIs, archives) | `PublicationRecord`, `load_publication_records()`, `render_publication_records_doc()`, `refresh_external_records()` | Publication doc + GitHub README block |
 
 ## Figure Management
 
@@ -228,7 +229,7 @@ metadata = fm.register_figure(
     section="Results"  # Used for organization
 )
 print(f"Figure registered with label: {metadata.label}")
-print(f"Figure number: {metadata.number}")
+print(f"Figure id: {metadata.figure_id}")
 
 # Manual label specification
 metadata2 = fm.register_figure(
@@ -242,18 +243,16 @@ metadata2 = fm.register_figure(
 ### LaTeX Figure Block Generation
 
 ```python
-# Generate publication-ready LaTeX figure blocks
-latex_code = fm.generate_latex_figure_block(
-    "fig:results",
-    width=0.9,        # 90% of text width
-    placement="htbp"  # LaTeX placement options
-)
+# Generate publication-ready LaTeX figure blocks.
+# Width/placement are taken from the registered FigureMetadata
+# (set them at register_figure() time via width=/placement=).
+latex_code = fm.generate_latex_figure_block("fig:results")
 
 print(latex_code)
 # Output:
-# \begin{figure}[htbp]
+# \begin{figure}[h]
 #     \centering
-#     \includegraphics[width=0.9\textwidth]{experiment_results.png}
+#     \includegraphics[width=0.8\textwidth]{../output/figures/experiment_results.png}
 #     \caption{Experimental results showing statistical significance}
 #     \label{fig:results}
 # \end{figure}
@@ -262,17 +261,20 @@ print(latex_code)
 ### Figure Registry Persistence
 
 ```python
-# Persistent figure registry across pipeline runs
+# Persistent figure registry across pipeline runs.
+# FigureManager loads the existing registry on construction and saves
+# automatically after each register_figure() call (atomic JSON write).
 fm = FigureManager()  # Loads existing registry if available
 
-# Registry is automatically saved to JSON
-fm.save_registry()  # Manual save
-fm.load_registry()  # Manual load
+# Inspect all registered figures
+for fig in fm.get_all_figures():
+    print(f"{fig.figure_id}: {fig.label} ({fig.section})")
 
-# Get registry statistics
-stats = fm.get_statistics()
+# Aggregate statistics live on MarkdownIntegration
+mi = MarkdownIntegration(Path("manuscript"), fm)
+stats = mi.get_figure_statistics()
 print(f"Total figures: {stats['total_figures']}")
-print(f"Figures by section: {stats['by_section']}")
+print(f"Figures by section: {stats['figures_by_section']}")
 ```
 
 ## Markdown Integration System
@@ -284,63 +286,61 @@ print(f"Figures by section: {stats['by_section']}")
 mi = MarkdownIntegration(Path("manuscript"))
 
 # Detect available sections in manuscript
+# (returns dicts with keys: name, level, anchor, position, line_number)
 sections = mi.detect_sections(Path("manuscript/03_results.md"))
-print(f"Available sections: {sections}")
+print(f"Available sections: {[s['name'] for s in sections]}")
 
 # Insert figure in specific section
 success = mi.insert_figure_in_section(
     Path("manuscript/03_results.md"),
     "fig:convergence",
-    "Results",  # Section name
-    width=0.8
+    "Results",       # Section name
+    position="after"  # before | after
 )
 
-# Update cross-references across all manuscript files
+# Update figure references within a single manuscript file
+# (returns the number of references added)
 markdown_files = [
     Path("manuscript/01_abstract.md"),
     Path("manuscript/02_introduction.md"),
-    Path("manuscript/03_results.md")
+    Path("manuscript/03_results.md"),
 ]
-mi.update_cross_references(markdown_files)
+for md in markdown_files:
+    mi.update_all_references(md)
 ```
 
 ### Table of Figures Generation
 
 ```python
-# Automatic table of figures creation
-mi.generate_table_of_figures(
-    Path("manuscript/table_of_figures.md"),
-    format="markdown"  # or "latex"
-)
+# Automatic table of figures creation (Markdown; returns the written Path).
+# With no argument it defaults to manuscript_dir/00_table_of_figures.md.
+mi.generate_table_of_figures(Path("manuscript/00_table_of_figures.md"))
 
-# Markdown format output:
+# Markdown output (one section per figure):
 # # Table of Figures
 #
-# 1. Figure 1: Experimental results showing statistical significance (Results)
-# 2. Figure 2: Research methodology overview (Methods)
-# 3. Figure 3: Algorithm convergence over iterations (Results)
+# ## fig:results
+# **Caption**: Experimental results showing statistical significance
+# **Section**: Results
+# **File**: `experiment_results.png`
 ```
 
 ### Manuscript Validation
 
 ```python
-# manuscript validation
+# Manuscript validation.
+# Returns {file_path: [(label, error), ...]} for files that have errors;
+# an empty dict means every figure validated cleanly.
 validation = mi.validate_manuscript()
 
-print("Validation Results:")
-print(f"Total sections: {validation['total_sections']}")
-print(f"Figures referenced: {validation['figures_referenced']}")
-print(f"Cross-references: {validation['cross_references']}")
-
-if validation['errors']:
-    print("Errors found:")
-    for error in validation['errors']:
-        print(f"  - {error}")
-
-if validation['warnings']:
-    print("Warnings:")
-    for warning in validation['warnings']:
-        print(f"  - {warning}")
+if not validation:
+    print("All figures validated cleanly.")
+else:
+    print("Validation Results:")
+    for md_path, errors in validation.items():
+        print(f"{md_path}:")
+        for label, error in errors:
+            print(f"  - {label}: {error}")
 ```
 
 ## API Documentation Generation
@@ -430,48 +430,46 @@ uv run python scripts/03_render_pdf.py --project project
 
 ```python
 # Collect figure statistics
-stats = mi.collect_figure_statistics()
+stats = mi.get_figure_statistics()
 
 print("Figure Statistics:")
 print(f"Total figures: {stats['total_figures']}")
-print(f"Figures by section: {stats['by_section']}")
-print(f"Most referenced: {stats['most_referenced']}")
-print(f"Average figures per section: {stats['avg_per_section']}")
+print(f"Figures by section: {stats['figures_by_section']}")
+print(f"Figures by generator: {stats['figures_by_generator']}")
+print(f"Registered labels: {stats['registered_labels']}")
 ```
 
 ### Cross-Reference Validation
 
 ```python
-# Validate all figure references in manuscript
+# Validate all figure references in a markdown file.
+# Returns a list of (figure_label, error_message) tuples; labels are
+# checked against the ImageManager's FigureManager registry.
 im = ImageManager(fm)
 
-errors = im.validate_figure_references(
-    Path("manuscript/complete_manuscript.md"),
-    available_labels=fm.get_all_labels()
-)
+errors = im.validate_figures(Path("manuscript/complete_manuscript.md"))
 
 if errors:
     print("Reference validation errors:")
-    for error in errors:
-        print(f"  - {error}")
+    for label, error in errors:
+        print(f"  - {label}: {error}")
 ```
 
 ### Registry Management
 
 ```python
-# Advanced registry operations
+# Registry operations
 fm = FigureManager()
 
-# Bulk operations
+# Retrieve all registered figures, then filter in Python as needed
 all_figures = fm.get_all_figures()
-figures_by_section = fm.get_figures_by_section("Results")
+figures_by_section = [f for f in all_figures if f.section == "Results"]
 
-# Registry maintenance
-fm.clear_registry()  # Reset for fresh build
-fm.backup_registry()  # Create backup before major changes
-
-# Export for external tools
-registry_data = fm.export_registry(format="json")
+# The registry is persisted automatically (atomic JSON write) on each
+# register_figure() call; the on-disk file lives at fm.registry_file.
+# To start fresh, delete fm.registry_file before constructing a new
+# FigureManager. A corrupted registry is auto-backed-up on load.
+print(f"Registry file: {fm.registry_file}")
 ```
 
 ## Configuration
@@ -489,10 +487,10 @@ fm = FigureManager(
 
 ```python
 # Configure manuscript integration
+# Constructor accepts manuscript_dir and an optional shared FigureManager.
 mi = MarkdownIntegration(
     manuscript_dir=Path("manuscript"),
-    figure_section_marker="#",  # Section header marker
-    reference_format="markdown"  # or "latex"
+    figure_manager=FigureManager(),  # optional; a new one is created if omitted
 )
 ```
 
@@ -500,17 +498,14 @@ mi = MarkdownIntegration(
 
 ```bash
 # Run all documentation tests
-uv run pytest tests/infra_tests/test_documentation/ -v
+uv run pytest tests/infra_tests/documentation/ -v
 
 # Test specific components
-uv run pytest tests/infra_tests/test_documentation/test_figure_manager.py -v
-uv run pytest tests/infra_tests/test_documentation/test_glossary_gen.py -v
-
-# Integration tests
-uv run pytest tests/integration/test_documentation_pipeline.py -v
+uv run pytest tests/infra_tests/documentation/test_figure_manager.py -v
+uv run pytest tests/infra_tests/documentation/test_glossary_gen.py -v
 
 # With coverage
-uv run pytest tests/infra_tests/test_documentation/ --cov=infrastructure.documentation --cov-report=html
+uv run pytest tests/infra_tests/documentation/ --cov=infrastructure.documentation --cov-report=html
 ```
 
 ## Performance Considerations
@@ -540,20 +535,21 @@ print(f"Registry path: {registry_path}")
 print(f"Writable: {registry_path.parent.exists() and os.access(registry_path.parent, os.W_OK)}")
 
 # Manual registry inspection
-registry_data = fm.export_registry()
+registry_data = fm.get_all_figures()
 print(f"Registered figures: {len(registry_data)}")
 ```
 
 **Problem**: Figure numbering incorrect
 ```python
 # Check for duplicate labels
-all_labels = fm.get_all_labels()
+all_labels = [f.label for f in fm.get_all_figures()]
 duplicates = [label for label in all_labels if all_labels.count(label) > 1]
 if duplicates:
     print(f"Duplicate labels: {duplicates}")
 
-# Reset numbering
-fm.clear_registry()
+# Reset numbering: delete the on-disk registry, then re-construct
+fm.registry_file.unlink(missing_ok=True)
+fm = FigureManager(registry_file=str(fm.registry_file))
 # Re-register figures in desired order
 ```
 
@@ -561,23 +557,25 @@ fm.clear_registry()
 
 **Problem**: Figures not inserted in correct sections
 ```python
-# Debug section detection
+# Debug section detection (detect_sections returns dicts)
 sections = mi.detect_sections(markdown_file)
-print(f"Detected sections: {sections}")
+section_names = [s["name"] for s in sections]
+print(f"Detected sections: {section_names}")
 
 # Check section name matching
 target_section = "Results"
-if target_section not in sections:
+if target_section not in section_names:
     print(f"Section '{target_section}' not found")
-    print("Available sections:", sections)
+    print("Available sections:", section_names)
 ```
 
 **Problem**: Cross-references not updating
 ```python
-# Manual cross-reference update
+# Manual cross-reference update (per file; returns count of refs added)
 files_to_update = [Path("manuscript/01_intro.md"), Path("manuscript/03_results.md")]
-success = mi.update_cross_references(files_to_update)
-print(f"Cross-reference update: {'successful' if success else 'failed'}")
+for md in files_to_update:
+    added = mi.update_all_references(md)
+    print(f"{md}: {added} reference(s) added")
 ```
 
 ### API Documentation Issues
@@ -702,7 +700,7 @@ This script automatically scans `projects/{name}/src/` for public APIs and updat
 ## Testing
 
 ```bash
-uv run pytest tests/infra_tests/test_documentation/
+uv run pytest tests/infra_tests/documentation/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).

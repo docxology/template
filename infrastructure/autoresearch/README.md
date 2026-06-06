@@ -11,16 +11,28 @@ autonomous idea-to-paper runner.
 
 ## Public API
 
+The full exported surface is defined by `__all__` in
+`infrastructure/autoresearch/__init__.py` (authoritative):
+
 ```python
 from infrastructure.autoresearch import (
+    AutoResearchConfig,
+    AutoResearchIssue,
+    AutoResearchPlan,
+    AutoResearchReport,
+    AutoResearchStage,
     BenchmarkTask,
     BudgetPolicy,
+    EXTRINSIC_QUALITY_CHECKS,
     EvidenceLink,
     ExperimentCandidate,
+    INTRINSIC_QUALITY_CHECKS,
     ResearchIdea,
     ResearchProgram,
     ReviewGate,
     RunLedger,
+    SecurityProfile,
+    ValidationPhase,
     build_autoresearch_plan,
     load_autoresearch_config,
     parse_string_sequence,
@@ -73,6 +85,16 @@ quality_checks:
   - review_gates
   - benchmark_tasks
   - ai_disclosure
+  - security_profile
+security_profile:
+  enabled: true
+  mode: local_deterministic
+  integrity_algorithm: sha256
+  network_policy: default_offline
+  external_signing: false
+  threat_model_frameworks: []
+source_manifests:
+  - output/reports/source_manifest.json
 stage_gates:
   - Project Analysis
   - Output Validation
@@ -95,6 +117,13 @@ that are not configuration errors are warnings. The extended method checks are
 file-backed only: they validate allowlists, evidence-linked accepted ideas,
 budget stop reasons, human review decisions, benchmark grading outputs, and
 configured AI-assisted disclosure text or its manuscript injection token.
+
+The optional `security_profile` mapping declares the deterministic security
+posture used by the `security_profile` quality check: `enabled` (bool),
+`mode` (`local_deterministic`), `integrity_algorithm` (`sha256`),
+`network_policy` (`default_offline`), `external_signing` (bool), and
+`threat_model_frameworks` (list of strings). `source_manifests` is a list of
+file paths to source-manifest artifacts the plan tracks.
 
 ## CLI
 

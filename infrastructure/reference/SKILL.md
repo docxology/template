@@ -1,6 +1,6 @@
 ---
 name: infrastructure-reference
-description: Bibliographic-reference utilities for research projects. Read, write, and convert BibTeX entries that match the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib during PDF render -- see infrastructure/rendering/_pdf_combined_renderer.py). Currently exposes the `citation` submodule (BibTeX I/O + Paper→BibEntry conversion); designed to host additional reference workflows (e.g. CSL-JSON export, ORCID lookups) without breaking the public API.
+description: Bibliographic-reference utilities for research projects. Read, write, and convert BibTeX entries that match the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib during PDF render -- see infrastructure/rendering/_pdf_combined_pandoc.py). Exposes the `citation` submodule (BibTeX I/O + Paper→BibEntry conversion) and the `verification` submodule (deterministic reference-existence gate against Crossref/OpenAlex/arXiv with a persistent SQLite cache); designed to host additional reference workflows without breaking the public API.
 ---
 
 # Reference Module
@@ -92,6 +92,35 @@ uv run python -m infrastructure.reference.citation.cli format path/to/refs.bib
 uv run python -m infrastructure.reference.citation.cli convert \
     output/papers.json output/references.bib
 ```
+
+## `verification` — reference-existence anti-hallucination gate
+
+Resolves each cited reference against Crossref → OpenAlex (DOI), arXiv (id), or
+Crossref title search, and classifies it `ok` / `mismatch` / `fabricated` /
+`unverifiable` / `unchecked` / `anachronism`. Offline-first (consults only the
+persistent SQLite cache unless `allow_network=True`); reports `unchecked` on an
+offline cache miss so a skipped check never reads as clean.
+
+```python
+from infrastructure.reference.verification import (
+    ReferenceResolver, ResolutionCache, verify_bibfile, verify_database, verify_entry,
+    VerificationStatus, VerificationReport, ReferenceVerdict, BLOCKING_STATUSES,
+)
+
+resolver = ReferenceResolver(cache=ResolutionCache("cache.db"), allow_network=True)
+report = verify_bibfile("references.bib", resolver, as_of_year=2026)
+print(report.summary_line())
+assert not report.has_blocking  # no fabricated / mismatch / anachronism
+```
+
+```bash
+# Offline (cache-only, CI-safe) vs live resolution; gate on blocking verdicts.
+uv run python -m infrastructure.reference.verification verify references.bib
+uv run python -m infrastructure.reference.verification verify references.bib --live --as-of-year 2026 --fail-on-issues
+uv run python -m infrastructure.reference.verification cache-clear
+```
+
+See [`verification/SKILL.md`](verification/SKILL.md) for the full descriptor.
 
 ## Format Guarantees
 

@@ -162,10 +162,10 @@ print(review_text)
 from infrastructure.llm.prompts import PromptComposer
 
 composer = PromptComposer()
-prompt = composer.compose_prompt('manuscript_reviews', {
-    'manuscript_content': manuscript,
-    'review_type': 'technical'
-})
+prompt = composer.compose_template(
+    'manuscript_reviews.json#manuscript_quality_review',
+    text=manuscript,
+)
 ```
 
 ## Testing

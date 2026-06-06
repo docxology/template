@@ -44,8 +44,13 @@ Project-local `autoresearch.yaml` supports:
 - `quality_checks`
 - `stage_gates`
 - `required_artifacts`
+- `security_profile` (mapping: `enabled`, `mode`, `integrity_algorithm`,
+  `network_policy`, `external_signing`, `threat_model_frameworks`)
+- `source_manifests` (list of source-manifest artifact paths)
 
-`stage_gates` must use exact stage names from `pipeline.yaml`.
+`stage_gates` must use exact stage names from `pipeline.yaml`. The full
+accepted key set is defined by `_CONFIG_KEYS` in
+`infrastructure/autoresearch/config.py`.
 
 ## Guardrails
 

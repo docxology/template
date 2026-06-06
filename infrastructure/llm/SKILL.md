@@ -51,8 +51,8 @@ response = client.query("Summarize this paper...", options=GenerationOptions(
 from infrastructure.llm.core import ConversationContext, Message
 
 context = ConversationContext()
-context.add(Message(role="user", content="What is active inference?"))
-context.add(Message(role="assistant", content="Active inference is..."))
+context.add_message(role="user", content="What is active inference?")
+context.add_message(role="assistant", content="Active inference is...")
 ```
 
 ## Prompt Templates (`templates/`)
@@ -73,7 +73,7 @@ template = get_template("paper_summarization")
 
 # Use specific template classes
 summary_template = ManuscriptExecutiveSummary()
-prompt = summary_template.format(manuscript_text=text)
+prompt = summary_template.render(text=text)
 ```
 
 ## Output Validation (`validation/`)
@@ -152,7 +152,10 @@ from infrastructure.llm.prompts import PromptFragmentLoader, PromptComposer
 
 loader = PromptFragmentLoader()
 composer = PromptComposer(loader)
-prompt = composer.compose(task="review", context=manuscript_text)
+prompt = composer.compose_template(
+    "manuscript_reviews.json#manuscript_executive_summary",
+    text=manuscript_text,
+)
 ```
 
 ## CLI Usage
@@ -166,4 +169,10 @@ uv run python -m infrastructure.llm.cli.main check
 
 # List available models
 uv run python -m infrastructure.llm.cli.main models
+
+# List available research templates
+uv run python -m infrastructure.llm.cli.main template --list
+
+# Apply a research template (reads input from --input or stdin)
+uv run python -m infrastructure.llm.cli.main template paper_summarization --input "Abstract text..."
 ```

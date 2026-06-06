@@ -221,6 +221,43 @@ def validate_evidence_command(args: argparse.Namespace) -> None:
     raise SystemExit(1 if report.has_issues and args.fail_on_issues else 0)
 
 
+def validate_prose_quality_command(args: argparse.Namespace) -> None:
+    """Scan manuscript prose for AI-writing fingerprints (advisory by default)."""
+    from infrastructure.validation.content.ai_writing import analyze_prose
+
+    target = Path(args.path)
+    if not target.exists():
+        logger.error(f"Path not found: {target}")
+        raise SystemExit(1)
+
+    if target.is_dir():
+        md_files = sorted(p for p in target.rglob("*.md") if p.is_file())
+        text = "\n\n".join(p.read_text(encoding="utf-8") for p in md_files)
+    else:
+        text = target.read_text(encoding="utf-8")
+
+    report = analyze_prose(text)
+
+    if args.json:
+        logger.info(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+    else:
+        logger.info("Prose quality report:")
+        logger.info(
+            "words=%d sentences=%d em-dash/1k=%.1f ai-terms/1k=%.1f burstiness=%.2f",
+            report.word_count,
+            report.sentence_count,
+            report.em_dash_per_1k,
+            report.ai_term_per_1k,
+            report.burstiness,
+        )
+        for hit in report.ai_term_hits:
+            logger.info("  ai-term: %r ×%d", hit.term, hit.count)
+        for flag in report.flags:
+            logger.info("  ⚠ %s", flag)
+
+    raise SystemExit(1 if report.has_flags and args.fail_on_flags else 0)
+
+
 def main() -> None:
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(description="Validate research output (PDFs, Markdown, integrity).")
@@ -280,6 +317,20 @@ def main() -> None:
         help="Exit non-zero when unsupported facts are found",
     )
     evidence_parser.set_defaults(func=validate_evidence_command)
+
+    # Prose quality (AI-writing fingerprint) scan
+    prose_parser = subparsers.add_parser(
+        "prose-quality",
+        help="Scan manuscript prose for AI-writing fingerprints (em-dash density, stock phrasing, burstiness)",
+    )
+    prose_parser.add_argument("path", help="Markdown file or directory to scan")
+    prose_parser.add_argument("--json", action="store_true", help="Emit the report as JSON")
+    prose_parser.add_argument(
+        "--fail-on-flags",
+        action="store_true",
+        help="Exit non-zero when any AI-writing flag is raised (advisory by default)",
+    )
+    prose_parser.set_defaults(func=validate_prose_quality_command)
 
     args = parser.parse_args()
 

@@ -22,7 +22,7 @@
 
 ```bash
 uv run python -m infrastructure.orchestration                 # interactive menu
-uv run python -m infrastructure.orchestration --pipeline      # default full pipeline
+uv run python -m infrastructure.orchestration pipeline --project <name>   # single-project full pipeline
 uv run python -m infrastructure.orchestration secure --project <name>
 ```
 

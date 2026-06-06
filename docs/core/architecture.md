@@ -34,7 +34,7 @@ graph TB
 
 ## Core pipeline (`--core-only`)
 
-The default [`pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) defines a DAG. With **`--core-only`**, stages tagged `llm` are omitted: **eight** core stages run (clean → setup → infra tests → project tests → analysis → PDF render → validate → copy). The **full** graph adds two optional LLM stages (review and translations) for **ten** named stages total. `run.sh` displays progress as `[0/9]`–`[9/9]` where stage 0 is the clean step.
+The default [`pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) defines a DAG. With **`--core-only`**, stages tagged `llm` are omitted: **eight** core stages run (clean → setup → infra tests → project tests → analysis → PDF render → validate → copy). The **full** graph adds two optional LLM stages (review and translations) for **ten** core+LLM stages on the default full path (`pipeline.yaml` declares two additional opt-in bundle/archival stages). `run.sh` displays progress as `[0/9]`–`[9/9]` where stage 0 is the clean step.
 
 | Order | Stage (from `pipeline.yaml`) |
 |-------|------------------------------|

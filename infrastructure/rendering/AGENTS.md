@@ -83,6 +83,8 @@ Configuration is managed via `RenderingConfig` or environment variables.
    - `revealjs`: HTML interactive slides.
 3. **Web**: HTML5 with MathJax support.
 4. **Posters**: Large format PDF posters.
+5. **DOCX**: Microsoft Word documents via pandoc (`render_docx`, package-level export).
+6. **EPUB**: E-reader EPUB via pandoc (`render_epub`, package-level export).
 
 ## Title Page Generation
 
@@ -165,42 +167,42 @@ class RenderManager:
             figures_dir: Figures directory path (optional)
         """
 
-    def render_all(self, source_path: Path) -> list[Path]:
+    def render_all(self, source_file: Path) -> list[Path]:
         """Render to all supported formats.
 
         Args:
-            source_path: Path to source manuscript
+            source_file: Path to source manuscript
 
         Returns:
-            Dictionary mapping format names to output paths
+            List of generated output paths
         """
 
-    def render_pdf(self, source_path: Path) -> Path:
+    def render_pdf(self, source_file: Path) -> Path:
         """Render to PDF format.
 
         Args:
-            source_path: Path to source manuscript
+            source_file: Path to source manuscript
 
         Returns:
             Path to generated PDF
         """
 
-    def render_slides(self, source_path: Path, output_format: str = "beamer") -> Path:
+    def render_slides(self, source_file: Path, output_format: str = "beamer") -> Path:
         """Render presentation slides.
 
         Args:
-            source_path: Path to source manuscript
+            source_file: Path to source manuscript
             output_format: Slide format ("beamer" or "revealjs")
 
         Returns:
             Path to generated slides
         """
 
-    def render_web(self, source_path: Path) -> Path:
+    def render_web(self, source_file: Path) -> Path:
         """Render to web HTML format.
 
         Args:
-            source_path: Path to source manuscript
+            source_file: Path to source manuscript
 
         Returns:
             Path to generated HTML

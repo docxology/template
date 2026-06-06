@@ -13,8 +13,10 @@ with layered security and steganographic techniques.
 | `core.py` | `SteganographyProcessor` orchestrator class |
 | `overlays.py` | Diagonal watermark + footer + invisible text overlays (reportlab) |
 | `barcodes.py` | QR code, Code128, barcode strip generation |
+| `barcode_generators.py` | Low-level barcode image generators |
+| `barcode_payload.py` | Barcode payload encoding and structure |
 | `metadata.py` | PDF Info dictionary + XMP metadata injection (pypdf) |
-| `hashing.py` | SHA-256/512/BLAKE2b computation, JSON manifest sidecar |
+| `hashing.py` | SHA-256/512 (any `hashlib.new` algorithm) computation, JSON manifest sidecar |
 | `encryption.py` | AES-256-GCM payload encryption, PDF password protection |
 
 ## Dependencies

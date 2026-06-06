@@ -73,18 +73,20 @@ from infrastructure.validation import (
 )
 
 output_dir = Path("output/template_code_project")
+manuscript_dir = Path("projects/templates/template_code_project/manuscript")
+markdown_files = sorted(manuscript_dir.glob("*.md"))
 
 # Full integrity check across all output artifacts
 report = verify_output_integrity(output_dir)
 
-# Targeted checks
-verify_file_integrity(output_dir / "pdf" / "template_code_project_combined.pdf")
-verify_cross_references(Path("projects/templates/template_code_project/manuscript"))
-verify_data_consistency(output_dir / "data")
-verify_academic_standards(Path("projects/templates/template_code_project/manuscript"))
+# Targeted checks (each takes a list of paths)
+verify_file_integrity([output_dir / "pdf" / "template_code_project_combined.pdf"])
+verify_cross_references(markdown_files)
+verify_data_consistency(sorted((output_dir / "data").glob("*")))
+verify_academic_standards(markdown_files)
 
-# Generate a structured integrity report
-integrity_report = generate_integrity_report(output_dir)
+# Generate a structured integrity report from the IntegrityReport
+integrity_report = generate_integrity_report(report)
 ```
 
 ### Figure Validation
@@ -177,8 +179,8 @@ The validation package is organized into four logical subpackage groups:
 |-------|---------|---------|
 | **Content** | `pdf_validator`, `markdown_validator`, `figure_validator` | File-type-specific validation |
 | **Integrity** | `integrity`, `link_validator`, `check_links` | Cross-reference and link verification |
-| **Repository** | `repo_scanner`, `audit_orchestrator`, `issue_categorizer` | Project-wide scanning and triage |
-| **Output** | `output_validator` | Pipeline output structure checks |
+| **Repository** | `scanner`, `audit_orchestrator`, `issue_categorizer` | Project-wide scanning and triage |
+| **Output** | `validator` | Pipeline output structure checks |
 
 All public functions are re-exported from `infrastructure.validation` for convenient single-import access.
 

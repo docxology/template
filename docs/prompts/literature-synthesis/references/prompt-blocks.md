@@ -63,6 +63,6 @@ CORPUS
 ```python
 from infrastructure.llm import LLMClient, OllamaClientConfig
 
-llm = LLMClient(OllamaClientConfig(model="gemma3:4b", seed=42, temperature=0.0))
-# Format paper_block, call llm.generate(PROMPT.format(...))
+llm = LLMClient(OllamaClientConfig(default_model="gemma3:4b", seed=42, temperature=0.0))
+# Format paper_block, call llm.query(PROMPT.format(...))
 ```

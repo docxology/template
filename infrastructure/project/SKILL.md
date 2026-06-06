@@ -114,9 +114,20 @@ for p in discover_projects(Path('.')):
 
 | Export | Type |
 |--------|------|
-| `discover_projects` | Function |
-| `validate_project_structure` | Function |
-| `get_project_metadata` | Function |
+| `CodeGraphCommand` | Dataclass |
+| `PUBLIC_PROJECT_NAMES` | Constant (tuple) |
 | `ProjectInfo` | Dataclass |
+| `build_codegraph_files_command` | Function |
 | `build_codegraph_init_command` | Function |
+| `build_scope_check_command` | Function |
+| `discover_projects` | Function |
+| `find_setup_hook` | Function |
+| `get_project_metadata` | Function |
+| `preflight_setup_hook` | Function |
+| `public_ci_source_paths` | Function |
+| `public_project_infos` | Function |
+| `public_project_names` | Function |
+| `resolve_project_root` | Function |
+| `run_project_setup_hook` | Function |
+| `validate_project_structure` | Function |
 | `verify_codegraph_scope_payload` | Function |

@@ -1,6 +1,6 @@
 ---
 name: infrastructure-search
-description: Discovery utilities for academic literature. Currently exposes the `literature` submodule — Paperclip-style multi-source search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI. Use when the user wants to find papers, build reading lists, populate references.bib from a query, or replay a prior search reproducibly. Designed to host additional discovery workflows without breaking the public API.
+description: Discovery utilities. Hosts two subpackages — `literature` for Paperclip-style multi-source academic search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI; and `exa` for Exa-backed general web search, content extraction, grounded answers, and find-similar via `ExaClient` (search/contents/answer/find_similar) and a CLI. Use when the user wants to find papers, build reading lists, populate references.bib from a query, replay a prior search reproducibly, or run general web search / content extraction / grounded answers. Designed to host additional discovery workflows without breaking the public API.
 ---
 
 # Search Module
@@ -103,6 +103,40 @@ uv run python -m infrastructure.search.literature.cli to-bibtex \
 uv run python -m infrastructure.search.literature.cli search \
     "convex" --source local --corpus data/corpus.json \
     --cache-dir output/cache
+```
+
+## `exa` — Web search, contents, answers, find-similar
+
+General web search, content extraction, and grounded answers via the
+[Exa](https://exa.ai) API. The client never reads the environment at import
+time — construct it explicitly. See [`exa/README.md`](exa/README.md) for the
+full reference.
+
+```bash
+export EXA_API_KEY="YOUR_API_KEY"   # keys: https://dashboard.exa.ai/api-keys
+```
+
+```python
+from infrastructure.search.exa import ExaClient
+
+client = ExaClient.from_env()  # or ExaClient(ExaConfig(api_key=...)) for tests
+
+resp = client.search("Next.js route handler authentication example", num_results=10)
+for r in resp.results:
+    print(r.title, r.url)
+
+client.contents(["https://example.com/post"], text=True)   # parsed content for known URLs
+client.answer("What is retrieval-augmented generation?")    # grounded answer + citations
+client.find_similar("https://example.com/post")             # similar pages for a seed URL
+```
+
+### CLI
+
+```bash
+uv run python -m infrastructure.search.exa search "scaling laws" --num-results 10
+uv run python -m infrastructure.search.exa contents "https://example.com/post" --text
+uv run python -m infrastructure.search.exa answer "What is RAG?"
+uv run python -m infrastructure.search.exa find-similar "https://example.com/post"
 ```
 
 ## End-to-End: search → BibTeX → PDF

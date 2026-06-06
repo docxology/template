@@ -264,8 +264,7 @@ graph TD
 
 ### Configuration Management
 - **`load_config()`** - YAML configuration file loading with validation
-- **`get_config_as_dict()`** - Convert config to environment variable format
-- **`get_config_as_env_vars()`** - Export config as shell environment variables
+- **`get_config_as_dict()`** - Convert config to a dictionary of key-value pairs
 - **`find_config_file()`** - Discover config at standard `projects/{project_name}/manuscript/config.yaml` location
 - **`get_translation_languages()`** - Extract LLM translation languages from config
 - **`get_testing_config()`** - Load test failure tolerance settings
@@ -275,8 +274,7 @@ graph TD
 - **`get_security_headers()`** - HTTP security header generation (module-level function)
 - **`RateLimiter`** - Configurable request rate limiting
 - **`SecurityMonitor`** - Security event tracking and alerting
-- **`SystemHealthChecker`** - Component-level health monitoring
-- **`get_health_api()`**, **`quick_health_check()`** - Health status APIs
+- **`SystemHealthChecker`** - Component-level health monitoring; call `SystemHealthChecker().get_health_status()` for a status report
 
 ### Progress & Checkpoint Management
 - **`ProgressBar`** - Visual progress indicators with ETA calculation
@@ -293,7 +291,7 @@ graph TD
 ### Performance & Resource Monitoring
 - **`PerformanceMonitor`** - Resource usage tracking (CPU, memory, I/O)
 - **`monitor_performance()`** - Context manager for operation performance monitoring
-- **`benchmark_function()`**, **`benchmark_llm_query()`** - Performance benchmarking
+- **`CodeProfiler.benchmark_function()`** - Performance benchmarking (method of `CodeProfiler`)
 - **`get_system_resources()`** - System resource queries (psutil integration)
 - **`StagePerformanceTracker`** - Pipeline stage performance analysis
 

@@ -16,15 +16,16 @@ from infrastructure.documentation import FigureManager, FigureMetadata
 
 manager = FigureManager()
 
-# Register a figure
-manager.register(
-    name="results_plot",
-    path="figures/results.png",
+# Register a figure (label auto-generated from filename if omitted)
+manager.register_figure(
+    filename="results.png",
     caption="Experimental results showing...",
+    label="fig:results",
+    section="Results",
 )
 
-# Get figure metadata
-meta = manager.get("results_plot")  # Returns FigureMetadata
+# Get figure metadata by label
+meta = manager.get_figure("fig:results")  # Returns FigureMetadata | None
 ```
 
 ## ImageManager (`image_manager.py`)
@@ -32,13 +33,16 @@ meta = manager.get("results_plot")  # Returns FigureMetadata
 Image file management and processing:
 
 ```python
-from infrastructure.documentation import ImageManager
+from pathlib import Path
+from infrastructure.documentation import ImageManager, FigureManager
 
-img_manager = ImageManager()
+img_manager = ImageManager(FigureManager())
 
-# Manage images in a project
-img_manager.scan(figures_dir)
-img_manager.get_image_path("results.png")
+# Insert a registered figure into a markdown file under a section
+img_manager.insert_figure(Path("manuscript/01_intro.md"), "fig:results", section="Results")
+
+# Validate that referenced figures exist and labels are registered
+errors = img_manager.validate_figures(Path("manuscript/01_intro.md"))  # list[(label, error)]
 ```
 
 ## MarkdownIntegration (`markdown_integration.py`)
@@ -46,12 +50,13 @@ img_manager.get_image_path("results.png")
 Auto-insertion of figures and content into markdown manuscripts:
 
 ```python
-from infrastructure.documentation import MarkdownIntegration
+from pathlib import Path
+from infrastructure.documentation import MarkdownIntegration, FigureManager
 
-integrator = MarkdownIntegration()
+integrator = MarkdownIntegration(Path("manuscript"), FigureManager())
 
-# Insert figure references into markdown
-integrator.insert_figures(manuscript_path, figure_manager)
+# Insert a figure into a named section of a markdown file
+integrator.insert_figure_in_section(Path("manuscript/01_intro.md"), "fig:results", "Results")
 ```
 
 ## Glossary & API Documentation (`glossary_gen.py`)
@@ -80,5 +85,9 @@ updated_text = inject_between_markers(
 **CLI:**
 
 ```bash
-uv run python -m infrastructure.documentation.generate_glossary_cli --project {name}
+# Positional args: SRC_DIR GLOSSARY_MD (no --project flag)
+uv run python -m infrastructure.documentation.generate_glossary_cli \
+  projects/{name}/src projects/{name}/manuscript/98_symbols_glossary.md
+
+# With no args, defaults to <repo>/project/src and <repo>/project/manuscript/98_symbols_glossary.md
 ```

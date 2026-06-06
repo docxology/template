@@ -9,6 +9,7 @@ Modules:
 - documentation: Scientific documentation generation
 - validation: Implementation validation and best practices
 - templates: Module and workflow templates
+- confirmation: Independent improvement confirmation (confirm_improvement)
 
 All functions follow the thin orchestrator pattern and maintain
 comprehensive test coverage requirements.

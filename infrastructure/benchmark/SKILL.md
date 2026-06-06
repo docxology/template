@@ -29,9 +29,14 @@ uv run python -m infrastructure.benchmark.template_harness \
 
 ## Public Imports
 
+- `BenchmarkManifest`
+- `BenchmarkScore`
+- `RubricScore`
+- `RubricSet`
 - `load_benchmark_manifest`
 - `run_benchmark_manifest`
 - `score_project_against_manifest`
+- `score_rubric`
 - `scores_to_dict`
 - `scores_to_markdown`
 - `write_default_manifest`

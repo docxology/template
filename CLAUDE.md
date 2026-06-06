@@ -138,8 +138,8 @@ uv run python scripts/codegraph_local.py commands .
 codegraph init "$(pwd)" --index
 codegraph files "$(pwd)" --json | uv run python scripts/codegraph_local.py verify-scope
 
-# Generate API documentation
-uv run python -m infrastructure.documentation.generate_glossary_cli --project {project_name}
+# Generate API documentation (positional SRC_DIR GLOSSARY_MD; no --project flag)
+uv run python -m infrastructure.documentation.generate_glossary_cli projects/{project_name}/src projects/{project_name}/manuscript/98_symbols_glossary.md
 
 # Agent SKILL.md manifest (Cursor / editors)
 uv run python -m infrastructure.skills write

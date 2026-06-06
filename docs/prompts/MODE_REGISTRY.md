@@ -35,6 +35,7 @@ without copying ARS prompt content, schemas, or scripts.
 | `template-academic-paper` | `revision` | High | Revised manuscript and response notes | `template-academic-paper-reviewer` |
 | `template-academic-paper` | `format` | Medium | Render-safe formatting changes | `template-validation-quality` |
 | `template-academic-paper` | `citation-check` | Medium | Citation audit and repairs | `template-validation-quality` |
+| `template-academic-paper` | `prose-quality` | Medium | AI-writing fingerprint scan results | finalization |
 | `template-academic-paper` | `disclosure` | Medium | AI-use disclosure grounded in evidence | finalization |
 | `template-academic-paper-reviewer` | `full` | High | Read-only review package | `template-academic-paper` |
 | `template-academic-paper-reviewer` | `quick` | Low | Triage review | `template-academic-paper` |
@@ -54,7 +55,7 @@ without copying ARS prompt content, schemas, or scripts.
 | `template-comprehensive-assessment` | `full-audit` | validation, claim verification, reproducibility |
 | `template-pipeline-debugging` | `stage-triage`, `resume` | validation or reproducibility |
 | `template-reproducibility-audit` | `double-run`, `release-readiness` | claim verification |
-| `template-manuscript-claim-verification` | `claim-inventory`, `pre-submission` | academic paper or validation |
+| `template-manuscript-claim-verification` | `claim-inventory`, `pre-submission`, `reference-existence` | academic paper or validation |
 | `template-manuscript-cross-references` | `registry-audit` | validation |
 | `template-manuscript-creation` | `scaffold`, `from-brief` | academic paper |
 | `template-literature-synthesis` | `per-paper`, `corpus`, `gap-analysis` | academic paper |

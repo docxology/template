@@ -93,9 +93,9 @@ config_dict = get_config_as_dict(config_path)
 ```python
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 
-config = PipelineConfig(project_name="template_code_project", core_only=True)
+config = PipelineConfig(project_name="template_code_project", skip_llm=True)
 executor = PipelineExecutor(config)
-result = executor.run()
+result = executor.execute_core_pipeline()
 ```
 
 ### Multi-Project Orchestration
@@ -105,20 +105,24 @@ from infrastructure.core.pipeline.multi_project import MultiProjectConfig, Multi
 
 config = MultiProjectConfig(projects=["proj_a", "proj_b"])
 orchestrator = MultiProjectOrchestrator(config)
-result = orchestrator.run()
+result = orchestrator.execute_all_projects_full()
 ```
 
 ### Checkpoint and Resume
 
 ```python
 from infrastructure.core import CheckpointManager
-from infrastructure.core.runtime.checkpoint import PipelineCheckpoint
 
 manager = CheckpointManager(checkpoint_dir)
-manager.save(PipelineCheckpoint(stage=5, status="complete"))
+manager.save_checkpoint(
+    pipeline_start_time=0.0,
+    last_stage_completed=5,
+    stage_results=[],
+    total_stages=10,
+)
 
 # Resume from saved state on next run
-checkpoint = manager.load()
+checkpoint = manager.load_checkpoint()
 ```
 
 ### Health Checks
@@ -155,7 +159,7 @@ resources = get_system_resources()
 ```python
 from infrastructure.core import ProgressBar
 
-progress = ProgressBar(total=100, prefix="Rendering")
+progress = ProgressBar(total=100, task="Rendering")
 for i in range(100):
     do_work(i)
     progress.update(1)
@@ -208,9 +212,9 @@ infrastructure/core/
     checkpoint.py          # CheckpointManager, PipelineCheckpoint
     environment.py         # check_python_version, setup_directories
     function_profiler.py   # CodeProfiler, monitor_performance
-    health_check.py        # SystemHealthChecker, quick_health_check
+    health_check.py        # SystemHealthChecker
   security.py              # SecurityValidator, RateLimiter, SecurityMonitor, get_security_headers
-  telemetry.py             # TelemetryCollector, TelemetryConfig
+  telemetry/               # TelemetryCollector, TelemetryConfig
 ```
 
 ---

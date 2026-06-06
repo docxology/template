@@ -50,16 +50,36 @@ md_report = format_benchmark_report([result])
 perf_report = generate_performance_report([result])
 ```
 
+## Improvement Confirmation (`confirmation.py`)
+
+```python
+from infrastructure.scientific import confirm_improvement, Confirmation
+
+# Confirm a candidate beats a baseline metric beyond the noise band
+result = confirm_improvement(
+    evaluate=my_evaluator,        # (params, seed) -> metric
+    candidate=(0.1, 0.2),
+    baseline_metric=1.0,
+    seeds=[0, 1, 2, 3],
+    noise_scale=0.05,
+    sigma=2.0,                     # noise band width in standard errors of the mean
+)
+
+# Inspect the Confirmation dataclass
+print(result.candidate_mean, result.baseline_metric, result.delta)
+print(result.noise_band, result.confirmed)
+```
+
 ## Scientific Documentation (`documentation.py`)
 
 ```python
 from infrastructure.scientific import generate_scientific_documentation, generate_api_documentation
 
-# Generate scientific documentation for a module
-docs = generate_scientific_documentation(module_path)
+# Generate scientific documentation for a function
+docs = generate_scientific_documentation(my_func)
 
-# Generate API documentation
-api_docs = generate_api_documentation(module_path)
+# Generate API documentation for a module
+api_docs = generate_api_documentation(my_module)
 ```
 
 ## Implementation Validation (`validation.py`)
@@ -72,13 +92,13 @@ from infrastructure.scientific import (
 )
 
 # Validate implementation against scientific standards
-issues = validate_scientific_implementation(source_dir)
+issues = validate_scientific_implementation(my_func, [(input_1, expected_1), (input_2, expected_2)])
 
 # Check best practices
-bp_issues = validate_scientific_best_practices(source_dir)
+bp_issues = validate_scientific_best_practices(my_module)
 
 # Check research compliance
-compliance = check_research_compliance(project_path)
+compliance = check_research_compliance(my_func)
 ```
 
 ## Templates (`templates.py`)
@@ -92,21 +112,12 @@ from infrastructure.scientific import (
     create_scientific_workflow_template,
 )
 
-# Create a new scientific module
-create_scientific_module_template(
-    module_name="signal_processing",
-    output_dir=project_src_dir,
-)
+# Create a new scientific module (returns the template source as a string)
+module_src = create_scientific_module_template("signal_processing")
 
 # Create matching test suite
-create_scientific_test_suite(
-    module_name="signal_processing",
-    output_dir=project_tests_dir,
-)
+test_src = create_scientific_test_suite("signal_processing")
 
 # Create a workflow template
-create_scientific_workflow_template(
-    workflow_name="spectral_analysis",
-    output_dir=project_scripts_dir,
-)
+workflow_src = create_scientific_workflow_template("spectral_analysis")
 ```

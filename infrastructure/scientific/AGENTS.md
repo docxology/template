@@ -16,6 +16,7 @@ flowchart TB
     SCI --> INIT[__init__.py<br/>Public API exports]
     SCI --> STAB[stability.py<br/>Numerical stability checking]
     SCI --> BEN[benchmarking.py<br/>Performance benchmarking]
+    SCI --> CONF[confirmation.py<br/>Improvement confirmation]
     SCI --> DOC[documentation.py<br/>Scientific documentation generation]
     SCI --> VAL[validation.py<br/>Implementation validation]
     SCI --> TPL[templates.py<br/>Module &amp; workflow templates]
@@ -23,7 +24,7 @@ flowchart TB
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#1e3a8a,stroke:#0f172a,color:#fff
     class SCI d
-    class INIT,STAB,BEN,DOC,VAL,TPL f
+    class INIT,STAB,BEN,CONF,DOC,VAL,TPL f
 ```
 
 **stability.py** (~100 lines)
@@ -34,6 +35,10 @@ flowchart TB
 - `benchmark_function()` - Performance measurement with memory tracking
 - `format_benchmark_report()` - performance analysis
 - `BenchmarkResult` dataclass - Benchmark results with timing and memory
+
+**confirmation.py**
+- `confirm_improvement()` - Confirm a candidate beats a baseline metric beyond the noise band
+- `Confirmation` dataclass - Result with `candidate_mean`, `baseline_metric`, `delta`, `noise_band`, `confirmed`
 
 **documentation.py** (~120 lines)
 - `generate_scientific_documentation()` - Function documentation from signatures
@@ -81,6 +86,25 @@ benchmark = benchmark_function(
 )
 ```
 
+### Improvement Confirmation
+```python
+# Import from main module (recommended)
+from infrastructure.scientific import confirm_improvement, Confirmation
+
+# Or import from specific module
+from infrastructure.scientific.confirmation import confirm_improvement
+
+result = confirm_improvement(
+    evaluate=your_evaluator,   # (params, seed) -> metric
+    candidate=(0.1, 0.2),
+    baseline_metric=1.0,
+    seeds=[0, 1, 2, 3],
+    noise_scale=0.05,
+    sigma=2.0,
+)
+print(result.delta, result.noise_band, result.confirmed)
+```
+
 ### Scientific Documentation
 ```python
 # Import from main module (recommended)
@@ -122,7 +146,7 @@ template = create_scientific_module_template("my_algorithm")
 
 Run scientific tests with:
 ```bash
-uv run pytest tests/infra_tests/test_scientific/
+uv run pytest tests/infra_tests/scientific/
 ```
 
 ## Configuration

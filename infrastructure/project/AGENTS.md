@@ -363,7 +363,7 @@ A project is invalid if:
 
 ```bash
 # Copy the default template project
-cp -r projects/project projects/myresearch
+cp -r projects/templates/template_code_project projects/active/myresearch
 
 # Customize pyproject.toml
 vim projects/myresearch/pyproject.toml
@@ -469,17 +469,20 @@ projects = discover_projects(repo_root)
 
 ## Testing
 
-The module includes tests in `tests/infra_tests/test_project_discovery.py`:
+The module includes tests under `tests/infra_tests/project/`:
 
 ```bash
 # Run project discovery tests
-uv run python -m pytest tests/infra_tests/test_project_discovery.py -v
+uv run python -m pytest tests/infra_tests/project/test_discovery.py -v
 
-# Expected tests:
-# test_discover_projects - Finds all valid projects
-# test_validate_project_structure - Validates required directories
-# test_get_project_metadata - Extracts metadata correctly
-# test_invalid_project_handling - Handles invalid projects gracefully
+# Run the full project test suite (discovery, validation, metadata)
+uv run python -m pytest tests/infra_tests/project/ -v
+
+# Representative tests:
+# test_project_scaffold_factory.py::test_discover_projects_finds_flat_project - Finds valid projects
+# test_validation.py::TestValidateProjectStructure::test_returns_true_for_valid_structure - Validates required directories
+# test_info.py::test_collect_project_info_happy_path - Extracts metadata correctly
+# test_validation.py::TestValidateProjectStructure::test_returns_false_for_nonexistent_dir - Handles invalid projects gracefully
 ```
 
 ## See Also

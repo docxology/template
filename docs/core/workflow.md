@@ -209,7 +209,7 @@ With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (un
 
 ### Source Code (`projects/{name}/src/`)
 
-- **`example.py`**: Basic mathematical functions (add, multiply, average, etc.)
+- **`optimizer.py`**, **`sweeps.py`**, **`invariants.py`**: Project-specific algorithms and computations
 - Additional modules can be added for specific project needs
 
 **Critical Principle**: ALL business logic and algorithms must live in `projects/{name}/src/` modules.
@@ -281,7 +281,7 @@ flowchart LR
 uv sync
 
 # Run tests with coverage
-uv run pytest projects/templates/template_code_project/tests/ --cov=projects.template_code_project.src --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=term-missing
 
 # Generate figures
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py

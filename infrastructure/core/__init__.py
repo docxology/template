@@ -11,7 +11,7 @@ from their submodules:
     infrastructure.core.runtime.checkpoint    — PipelineCheckpoint, StageResult
     infrastructure.core.pipeline      — PipelineConfig, PipelineExecutor
     infrastructure.core.pipeline.multi_project — MultiProjectConfig, MultiProjectResult
-    infrastructure.core.runtime.health_check  — quick_health_check, get_health_status
+    infrastructure.core.runtime.health_check  — SystemHealthChecker (get_health_status), HealthStatus
     infrastructure.core.telemetry     — TelemetryCollector, TelemetryConfig
 """
 

@@ -4,7 +4,7 @@
 
 The Reference module provides utilities for working with bibliographic
 references in the format consumed by the template's PDF rendering pipeline
-(`infrastructure/rendering/_pdf_combined_renderer.py` calling Pandoc with
+(`infrastructure/rendering/_pdf_combined_pandoc.py` calling Pandoc with
 `--natbib` plus the `pandoc-crossref` filter). It
 sits opposite [`infrastructure/search/`](../search/) in the literature
 workflow:
@@ -33,6 +33,20 @@ flowchart LR
 | `bibtex_parser.py` | Hand-rolled state-machine parser. Forgiving about whitespace / quoting style; supports `{…}`, `"…"`, and bare numeric values; tolerates trailing commas; preserves field order. |
 | `converter.py` | Bridge from `infrastructure.search.literature.Paper` to `BibEntry`. Generates citation keys in the exemplar's `<author><year><title-word>` style; routes venue → `journal` / `booktitle` / nothing based on entry type. |
 | `cli.py` | `validate` / `format` / `convert` subcommands. |
+
+### `verification/` — reference-existence gate
+
+| File | Role |
+|---|---|
+| `models.py` | `VerificationStatus` (ok/mismatch/fabricated/unverifiable/unchecked/anachronism), `ReferenceVerdict`, `VerificationReport`, `BLOCKING_STATUSES`. |
+| `resolver.py` | `ReferenceResolver` — resolve DOI (Crossref→OpenAlex), arXiv id, or title (Crossref search) to a `Paper`; offline-first; distinguishes definitive not-found from transient failure. |
+| `cache.py` | `ResolutionCache` — persistent SQLite cache (positive + negative results, 90-day TTL). |
+| `verifier.py` | `verify_entry`/`verify_database`/`verify_bibfile` — classify each cited entry; folds in temporal-integrity (anachronism) detection. |
+| `cli.py` | `verify` / `cache-clear` subcommands. |
+
+Reuses `infrastructure.search.literature` backends so search and verification
+field-mapping cannot drift. Clean-room distillation of academic-research-skills
+ideas (CC-BY-NC-4.0); no code vendored. See [`verification/AGENTS.md`](verification/AGENTS.md).
 
 ## Key Features
 
@@ -180,6 +194,7 @@ The `--strict` flag exits non-zero when entries are missing required fields
 - [README.md](README.md) — quick reference
 - [SKILL.md](SKILL.md) — agent-oriented API
 - [`citation/`](citation/) — BibTeX submodule
+- [`verification/`](verification/) — reference-existence anti-hallucination gate
 - [`infrastructure/search/`](../search/) — discovery side of the workflow
 - [`infrastructure/publishing/`](../publishing/) — APA / MLA / human-facing
   citations

@@ -16,13 +16,13 @@ Repo-scoped configuration defaults used by infrastructure modules.
 
 ## Use Cases
 
-1. **Loading repo configuration**: Use `infrastructure.core.config.loader` to read config values
+1. **Loading manuscript configuration**: Use `infrastructure.core.config.loader` to read per-project `projects/{name}/manuscript/config.yaml` values (this directory's repo-scoped `secure_config.yaml` is loaded separately by `infrastructure.orchestration.secure_run`)
 2. **Secure pipeline defaults**: Reference `secure_config.yaml` for steganography settings
 3. **Environment setup**: Copy `.env.template` to `.env` and fill in values
 
 ## Integration Points
 
-- Referenced by `infrastructure/core/config_loader.py`
+- Referenced by `infrastructure/core/config/loader.py`
 - Project-level overrides in `projects/{name}/manuscript/config.yaml`
 
 ## See Also

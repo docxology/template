@@ -77,6 +77,7 @@ graph TD
 
 - **stability.py** - Numerical stability checking and algorithm robustness analysis
 - **benchmarking.py** - Performance measurement and optimization analysis
+- **confirmation.py** - Confirm a candidate beats a baseline metric beyond the noise band
 - **documentation.py** - Scientific documentation generation from code
 - **validation.py** - Best practices compliance and research standards validation
 - **templates.py** - Research workflow and module boilerplate generation
@@ -88,6 +89,9 @@ graph TD
 
 ### Performance Analysis
 - `benchmark_function()` - Function performance measurement
+
+### Improvement Confirmation
+- `confirm_improvement()` - Confirm a candidate beats a baseline beyond the noise band (returns a `Confirmation`)
 
 ### Documentation
 - `generate_scientific_documentation()` - API documentation from docstrings
@@ -103,7 +107,7 @@ The scientific module is a library module. Import functions from `infrastructure
 ## Testing
 
 ```bash
-uv run pytest tests/infra_tests/test_scientific/
+uv run pytest tests/infra_tests/scientific/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).

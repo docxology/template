@@ -4,14 +4,15 @@ Bibliographic-reference workflows: read, write, and convert BibTeX records
 that match the syntax of
 [`projects/templates/template_code_project/manuscript/references.bib`](../../projects/templates/template_code_project/manuscript/references.bib)
 (consumed by Pandoc with `--natbib` during PDF render — see
-[`infrastructure/rendering/_pdf_combined_renderer.py`](../rendering/_pdf_combined_renderer.py)
-line 225).
+[`infrastructure/rendering/_pdf_combined_pandoc.py`](../rendering/_pdf_combined_pandoc.py),
+the `--natbib` invocation site).
 
 ## Submodules
 
 | Submodule | Purpose |
 |---|---|
 | [`citation`](citation/) | BibTeX I/O: `parse_bibfile`, `render_database`, `paper_to_bibentry`, `generate_citation_key`. |
+| [`verification`](verification/) | Reference-existence anti-hallucination gate: resolve cited DOIs/arXiv ids/titles against Crossref/OpenAlex/arXiv; classify `ok`/`mismatch`/`fabricated`/`unverifiable`/`unchecked`/`anachronism`. Offline-first + persistent SQLite cache. |
 
 ## Quick Start
 
@@ -45,6 +46,9 @@ uv run python -m infrastructure.reference.citation.cli format refs.bib
 
 # Convert literature-search JSON → BibTeX
 uv run python -m infrastructure.reference.citation.cli convert papers.json refs.bib
+
+# Verify cited references exist (offline cache-only; add --live to resolve)
+uv run python -m infrastructure.reference.verification verify refs.bib --live --as-of-year 2026 --fail-on-issues
 ```
 
 ## Format Conventions

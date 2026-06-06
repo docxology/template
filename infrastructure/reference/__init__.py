@@ -4,6 +4,10 @@ This package contains tools for working with bibliographic references:
 
 * :mod:`infrastructure.reference.citation` — BibTeX read/write/convert
   matching the syntax used by ``projects/templates/template_code_project/manuscript/references.bib``.
+* :mod:`infrastructure.reference.verification` — deterministic reference-existence
+  gate (resolve cited DOIs/arXiv ids/titles against Crossref/OpenAlex/arXiv; flag
+  fabricated/mismatched/anachronistic citations). Imported on demand to keep this
+  package's import light; see ``verification/__init__.py`` for its API.
 
 The reference module is the export side of the literature workflow; see
 :mod:`infrastructure.search.literature` for the discovery side.

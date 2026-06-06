@@ -230,6 +230,8 @@ uv run python -m infrastructure.rendering.cli slides presentation.md --format re
 | Reveal.js | `render_slides(..., format="revealjs")` | HTML presentation slides |
 | HTML | `render_web()` | Web-ready HTML with MathJax |
 | Posters | `render_poster()` | Large-format PDF poster |
+| DOCX | `render_docx(combined_md, output_path)` | Microsoft Word document (via pandoc) |
+| EPUB | `render_epub(combined_md, output_path)` | E-reader EPUB (via pandoc) |
 
 ## Documentation
 

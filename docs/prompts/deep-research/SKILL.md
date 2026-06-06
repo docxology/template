@@ -6,8 +6,8 @@ description: |
   topic, build a literature corpus, fact-check claims, prepare a PRISMA-style review,
   or clarify a research question before manuscript work.
 metadata:
-  version: "1.0.0"
-  last_updated: "2026-05-25"
+  version: "1.1.0"
+  last_updated: "2026-06-06"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -48,7 +48,7 @@ systems instead of running an autonomous external agent suite.
 
 1. **Question framing** - turn vague topics into scoped research questions, explicit in/out boundaries, and search terms. Guided mode asks before converging.
 2. **Source discovery** - use `infrastructure.search.literature` and project-local corpora; record query, backend, date, DOI/arXiv IDs, and failures.
-3. **Source verification** - check DOI/arXiv metadata, citation keys, retraction or source-tier warnings where available; do not invent unavailable bibliographic fields.
+3. **Source verification** - resolve every candidate reference against Crossref / OpenAlex / arXiv with the deterministic reference-existence gate before it enters the corpus; reject `fabricated`/`mismatch` records, surface `unverifiable`/`unchecked` honestly, and never invent unavailable bibliographic fields. This is the tier-0 anti-leakage step: flag the gap, do not hallucinate the citation.
 4. **Synthesis** - hand off to [literature-synthesis](../literature-synthesis/SKILL.md) for per-paper notes, thematic clusters, contradictions, and gap analysis.
 5. **Claim bridge** - when research supports manuscript prose, create citekey-linked notes that [manuscript-claim-verification](../manuscript-claim-verification/SKILL.md) can audit later.
 
@@ -62,8 +62,9 @@ systems instead of running an autonomous external agent suite.
 ## Verification commands
 
 ```bash
-uv run python -m infrastructure.search.literature search "QUERY" --limit 20
+uv run python -m infrastructure.search.literature search "QUERY" --max-results 20
 uv run python -m infrastructure.reference.citation validate projects/<project>/manuscript/references.bib
+uv run python -m infrastructure.reference.verification verify projects/<project>/manuscript/references.bib --live --json
 uv run python -m infrastructure.validation.cli evidence projects/<project> --fail-on-issues
 ```
 

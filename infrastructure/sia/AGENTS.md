@@ -9,7 +9,7 @@ Target → Feedback artifact contract without vendoring upstream LLM orchestrati
 
 - `validate_task_dir(path)` — task layout gate
 - `load_agent_execution(path)` — single/multi trajectory logs
-- `run_evaluation(script, gen_dir=..., task_dir=...)` — subprocess evaluate.py
+- `run_evaluation(evaluate_script, *, gen_dir=..., task_dir=..., timeout_sec=120)` — subprocess evaluate.py
 - `run_sia_loop(RunConfig)` — generation state machine
 - `RunConfig`, `GenerationArtifacts`, `EvaluationResult`, `TaskLayout`
 
@@ -23,7 +23,11 @@ Target → Feedback artifact contract without vendoring upstream LLM orchestrati
 ## CLI
 
 ```bash
+# validate task layout (bare TASK_DIR is shorthand for `validate TASK_DIR`)
+uv run python -m infrastructure.sia.cli validate tasks/mini_classify
 uv run python -m infrastructure.sia.cli tasks/mini_classify
+# summarize a run_summary.json (add --json for machine-readable output)
+uv run python -m infrastructure.sia.cli inspect-run RUN_SUMMARY_JSON
 ```
 
 ## See Also

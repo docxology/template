@@ -40,7 +40,7 @@ metadata:
 
 3. **Orchestrate** — `projects/<n>/scripts/` or root `scripts/` stage hook if pipeline-visible.
 
-4. **Manuscript** — figures/data paths, `[[VAR:]]` or generated variables if numbers appear in prose.
+4. **Manuscript** — figures/data paths, `{{VARIABLE}}` generated variables if numbers appear in prose.
 
 5. **Docs** — AGENTS.md/README at affected dirs; no roster duplication.
 

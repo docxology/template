@@ -253,9 +253,9 @@ saved_files = save_validation_report(validation_results, Path("output/reports"))
 - `generate_pipeline_report()` - Create consolidated pipeline report
 - `save_pipeline_report()` - Save report in multiple formats (JSON, HTML, Markdown)
 - `generate_test_report()` - Generate test results report
-- `generate_validation_report()` - Generate validation report
-- `generate_performance_report()` - Generate performance metrics report
-- `generate_error_summary()` - Generate error summary report
+- `save_validation_report()` - Save validation report
+- `save_performance_report()` - Save performance metrics report
+- `save_error_summary()` - Save error summary report
 
 ### Executive Reporting
 

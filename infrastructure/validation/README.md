@@ -185,10 +185,10 @@ if problems:
 
 # output integrity check
 integrity_report = verify_output_integrity(Path("output/"))
-if integrity_report.errors:
+if integrity_report.issues:
     print("Integrity issues found:")
-    for error in integrity_report.errors[:3]:
-        print(f"  ERROR: {error}")
+    for issue in integrity_report.issues[:3]:
+        print(f"  ERROR: {issue}")
 if integrity_report.warnings:
     print("Integrity warnings:")
     for warning in integrity_report.warnings[:3]:
@@ -290,7 +290,7 @@ stateDiagram-v2
 - URLs are accessible (optional)
 - Internal links resolve correctly
 
-### Integrity Validation (`integrity.py`)
+### Integrity Validation (`integrity/checks.py`)
 **Purpose**: file and data integrity verification
 
 **Capabilities**:
@@ -317,7 +317,7 @@ stateDiagram-v2
 from infrastructure.validation.docs.scanner import DocumentationScanner
 
 scanner = DocumentationScanner(Path("."))
-results = scanner.scan_repository()
+results, report = scanner.run_full_scan()
 
 print(f"Found {len(results.accuracy_issues)} accuracy issues")
 print(f"Found {len(results.completeness_gaps)} completeness gaps")
@@ -329,10 +329,11 @@ print(f"Found {len(results.completeness_gaps)} completeness gaps")
 from infrastructure.validation.integrity.link_validator import LinkValidator
 
 validator = LinkValidator(Path("."))
-issues = validator.validate_all_links()
+results = validator.validate_all_markdown_files()
 
-for issue in issues:
-    print(f"Link issue in {issue.source_file}: {issue.description}")
+for source_file, file_results in results.items():
+    for broken in file_results["broken"]:
+        print(f"Link issue in {source_file}: {broken['target']} (line {broken['line']})")
 ```
 
 ### Repository Scanning
@@ -341,9 +342,9 @@ for issue in issues:
 from infrastructure.validation.repo.scanner import RepositoryScanner
 
 scanner = RepositoryScanner(Path("."))
-results = scanner.scan_repository()
+results = scanner.scan_all()
 
-print(f"Scanned {results.scanned_files} files")
+print(f"Scan statistics: {results.statistics}")
 print(f"Accuracy issues: {len(results.accuracy_issues)}")
 print(f"Completeness gaps: {len(results.completeness_gaps)}")
 ```
@@ -356,7 +357,7 @@ print(f"Completeness gaps: {len(results.completeness_gaps)}")
 uv run python -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
 
 # Validate with custom word preview length
-uv run python -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --words 300
+uv run python -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --preview-words 300
 
 # Validate PDF from different path
 uv run python -m infrastructure.validation.cli.main pdf /path/to/document.pdf
@@ -383,17 +384,17 @@ uv run python -m infrastructure.validation.cli.main integrity output/
 uv run python -m infrastructure.validation.cli.main integrity output/{project_name}/pdf/
 uv run python -m infrastructure.validation.cli.main integrity output/data/
 
-# Generate integrity manifest for future comparison
-uv run python -m infrastructure.validation.cli.main integrity output/ --manifest
+# Verbose integrity output
+uv run python -m infrastructure.validation.cli.main integrity output/ --verbose
 ```
 
 ### Link Validation
 ```bash
-# Validate all links in repository
+# Validate all links in repository (defaults to current directory)
 uv run python -m infrastructure.validation.cli.main links
 
-# Validate links in specific directory
-uv run python -m infrastructure.validation.cli.main links docs/
+# Validate links against a specific repository root
+uv run python -m infrastructure.validation.cli.main links --repo-root docs/
 ```
 
 ## Integration with Build Pipeline
@@ -473,17 +474,14 @@ except PDFValidationError as e:
 ```python
 @dataclass
 class IntegrityReport:
-    total_files: int
-    file_integrity: Dict[str, bool]
-    cross_references: Dict[str, bool]
-    data_consistency: Dict[str, bool]
-    academic_standards: Dict[str, bool]
-    build_artifacts: Dict[str, Any]
-    completeness: Dict[str, Any]
-    permissions: Dict[str, Any]
-    errors: List[str]
-    warnings: List[str]
-    recommendations: List[str]
+    file_integrity: dict[str, bool]
+    cross_reference_integrity: dict[str, bool]
+    data_consistency: dict[str, bool]
+    academic_standards: dict[str, bool]
+    overall_integrity: bool
+    issues: list[str]
+    warnings: list[str]
+    recommendations: list[str]
 ```
 
 ## Configuration

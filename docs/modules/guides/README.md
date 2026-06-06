@@ -28,6 +28,7 @@
 | **Prose** | [prose-module.md](prose-module.md) | Readability metrics, editorial heuristics |
 | **Search** | [search-module.md](search-module.md) | Literature discovery and indexing |
 | **Reference** | [reference-module.md](reference-module.md) | BibTeX / citation toolkit |
+| **SIA** | [sia-module.md](sia-module.md) | Meta → Target → Feedback self-improvement harness |
 
 ## See Also
 

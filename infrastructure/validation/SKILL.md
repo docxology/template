@@ -7,7 +7,7 @@ description: Skill for the validation infrastructure module providing PDF valida
 
 Quality assurance and content validation tools for research outputs. Covers PDFs, markdown, links, output integrity, and comprehensive audits.
 
-## PDF Validation (`pdf_validator.py`)
+## PDF Validation (`content/pdf_validator.py`)
 
 ```python
 from infrastructure.validation import validate_pdf_rendering, extract_text_from_pdf, scan_for_issues
@@ -64,7 +64,7 @@ uv run python -m infrastructure.validation.cli.main markdown projects/{name}/man
 uv run python -m infrastructure.validation.cli.markdown projects/{name}/manuscript/
 ```
 
-## Output Integrity (`integrity.py`)
+## Output Integrity (`integrity/checks.py`)
 
 ```python
 from infrastructure.validation import (
@@ -83,7 +83,7 @@ verify_data_consistency(data_dir)
 verify_academic_standards(manuscript_dir)
 ```
 
-## Output Structure Validation (`output_validator.py`)
+## Output Structure Validation (`output/validator.py`)
 
 ```python
 from infrastructure.validation import validate_output_structure, validate_copied_outputs
@@ -92,13 +92,14 @@ validate_output_structure(output_dir)
 validate_copied_outputs(source_dir, dest_dir)
 ```
 
-## Link Verification (`check_links.py`, `link_validator.py`)
+## Link Verification (`integrity/check_links.py`, `integrity/link_validator.py`)
 
 ```python
+from pathlib import Path
 from infrastructure.validation import LinkValidator
 
-validator = LinkValidator()
-results = validator.check_all(docs_dir)
+validator = LinkValidator(Path("."))
+results = validator.validate_all_markdown_files()
 ```
 
 ## Figure Validation (`figure_validator.py`)
@@ -117,7 +118,7 @@ Both registry shapes are accepted: ``{"fig:label": {...}, ...}`` (dict, emitted
 by ``FigureManager``) and ``[{"label": "fig:label", ...}, ...]`` (list, emitted
 by project-side scripts that produce a flat manifest).
 
-## Audit Orchestration (`audit_orchestrator.py`)
+## Audit Orchestration (`repo/audit_orchestrator.py`)
 
 ```python
 from infrastructure.validation import run_comprehensive_audit, generate_audit_report
@@ -127,7 +128,7 @@ audit_results = run_comprehensive_audit(project_path)
 report = generate_audit_report(audit_results)
 ```
 
-## Issue Categorization (`issue_categorizer.py`)
+## Issue Categorization (`repo/issue_categorizer.py`)
 
 ```python
 from infrastructure.validation import (
@@ -164,6 +165,19 @@ completeness_report, gaps = analyze_documentation_completeness(repo_root, docume
 from infrastructure.validation.repo.scanner import RepositoryScanner
 scanner = RepositoryScanner(repo_root)
 results = scanner.scan_all()
+```
+
+## Additional CLI Subcommands
+
+```bash
+# Strict source-markdown gate: pitfalls + undefined citations
+uv run python -m infrastructure.validation.cli prerender projects/{name}/manuscript/
+
+# Validate manuscript claims against registered project evidence
+uv run python -m infrastructure.validation.cli evidence projects/{name} --fail-on-issues
+
+# Scan manuscript prose for AI-writing fingerprints
+uv run python -m infrastructure.validation.cli prose-quality projects/{name}/manuscript/
 ```
 
 ## Mock Validation (`output/no_mock_enforcer.py`)

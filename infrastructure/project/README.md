@@ -95,7 +95,7 @@ else:
 from infrastructure.project import get_project_metadata
 
 # Extract metadata from project files
-metadata = get_project_metadata(Path("projects/project"))
+metadata = get_project_metadata(Path("projects/templates/template_code_project"))
 
 print(f"Name: {metadata['name']}")
 print(f"Authors: {metadata['authors']}")
@@ -216,10 +216,10 @@ The project module includes tests:
 
 ```bash
 # Test project discovery functionality
-uv run pytest tests/infra_tests/test_project_discovery.py -v
+uv run pytest tests/infra_tests/project/test_discovery.py -v
 
 # Test with real project structures
-uv run pytest tests/infra_tests/test_project_discovery.py::test_discover_projects -v
+uv run pytest tests/infra_tests/project/test_project_scaffold_factory.py::test_discover_projects_finds_flat_project -v
 ```
 
 ## Error Handling

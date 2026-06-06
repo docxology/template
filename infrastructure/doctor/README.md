@@ -58,12 +58,17 @@ infrastructure/doctor/
 ├── __init__.py           # Public API
 ├── __main__.py           # `python -m infrastructure.doctor`
 ├── cli.py                # Argparse, subcommand dispatch
-├── detectors.py          # Read-only diagnostic checks
+├── detectors/            # Read-only diagnostic checks (package)
+│   ├── registry.py       # DETECTORS tuple + run_detectors()
+│   ├── tooling.py        # DOC1xx environment / DOC4xx tooling state
+│   ├── layout.py         # DOC2xx project layout
+│   ├── hygiene.py        # DOC3xx hygiene
+│   └── state.py          # DOC5xx optional services / DOC6xx safety
 ├── fixers.py             # FixPlan builders (no FS writes here)
 ├── models.py             # Severity, Finding, FixPlan, MutateRecord, ...
 ├── reporter.py           # Text + JSON renderers, exit codes
 ├── safety.py             # The mutate() chokepoint, backup, journal, undo
-├── scorecard.py          # 10-dimension rubric
+├── scorecard.py          # 6-dimension rubric
 ├── SKILL.md
 ├── README.md
 └── AGENTS.md
@@ -84,7 +89,7 @@ infrastructure/doctor/
 uv run pytest tests/infra_tests/doctor/ -v --no-cov
 ```
 
-46 tests, no mocks, sub-second wall time. Covers:
+49 tests, no mocks, sub-second wall time. Covers:
 
 * `mutate()` refuses paths outside the repo or inside `.doctor/`.
 * Every action kind (`delete_paths`, `chmod`, `write_file`,
@@ -102,7 +107,9 @@ uv run pytest tests/infra_tests/doctor/ -v --no-cov
 ## Adding a new detector
 
 1. Append a function `detect_<thing>(repo_root) -> list[Finding]` to
-   `infrastructure/doctor/detectors.py`.
+   the matching concern module under `infrastructure/doctor/detectors/`
+   (`tooling.py`, `layout.py`, `hygiene.py`, or `state.py`), then add it
+   to the `DETECTORS` tuple in `infrastructure/doctor/detectors/registry.py`.
 2. Pick a stable `code` — prefix decides the scorecard dimension:
    `DOC1xx` environment, `DOC2xx` project layout, `DOC3xx` hygiene,
    `DOC4xx` tooling state, `DOC5xx` optional services, `DOC6xx`
@@ -112,8 +119,8 @@ uv run pytest tests/infra_tests/doctor/ -v --no-cov
    to the finding.
 4. Add a test in `tests/infra_tests/doctor/`.
 
-The detector never imports `fixers.py`; the fixer never imports
-`detectors.py`. They communicate via stable string `fix_id`s on
+The detector modules never import `fixers.py`; the fixer never imports
+the `detectors/` package. They communicate via stable string `fix_id`s on
 `RepairLevel`. Keeping that boundary clean is what lets agents reason
 about either side independently.
 

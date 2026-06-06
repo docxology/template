@@ -26,15 +26,14 @@ from infrastructure.documentation import FigureManager, FigureMetadata
 manager = FigureManager()
 
 # Register a generated figure
-metadata = FigureMetadata(
-    label="fig:architecture",
+metadata = manager.register_figure(
+    filename="output/figures/architecture_overview.png",
     caption="Two-Layer Architecture Overview",
-    path="output/figures/architecture_overview.png",
+    label="fig:architecture",
 )
-manager.register(metadata)
 
 # Get all registered figures
-figures = manager.get_all()
+figures = manager.get_all_figures()
 ```
 
 ### API Glossary Generation
@@ -61,10 +60,15 @@ uv run python -m infrastructure.documentation.generate_glossary_cli \
 ### Image Integration
 
 ```python
+from pathlib import Path
+
 from infrastructure.documentation import ImageManager
 
 img_mgr = ImageManager()
-img_mgr.insert("figures/result.png", caption="Experimental Results")
+img_mgr.insert_figure(
+    markdown_file=Path("manuscript/03_results.md"),
+    figure_label="fig:results",
+)
 ```
 
 ---

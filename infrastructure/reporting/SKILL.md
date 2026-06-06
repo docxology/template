@@ -19,10 +19,13 @@ from infrastructure.reporting.report_generator import generate_test_report
 
 # Generate comprehensive pipeline report
 report = generate_pipeline_report(
+    stage_results=stage_results,
+    total_duration=total_duration,
+    repo_root=Path("."),
     test_results=test_data,
     validation_results=validation_data,
     performance_metrics=perf_data,
-    errors=error_list,
+    error_summary=error_summary,
 )
 
 # Save report to file
@@ -43,11 +46,15 @@ from infrastructure.reporting import (
 
 # Singleton aggregator
 aggregator = get_error_aggregator()
-aggregator.add(ErrorEntry(stage="rendering", message="Missing figure"))
-aggregator.add(ErrorEntry(stage="validation", message="Broken link"))
+aggregator.add_error(error_type="rendering", message="Missing figure", stage="rendering")
+aggregator.add_error(error_type="validation", message="Broken link", stage="validation")
 
-# Get summary
-summary = aggregator.summarize()
+# Construct ErrorEntry directly (type and message are required)
+entry = ErrorEntry(type="rendering", message="Missing figure", stage="rendering")
+
+# Get summary and save report
+summary = aggregator.get_summary()
+saved = aggregator.save_report(output_dir)
 reset_error_aggregator()
 ```
 
@@ -64,7 +71,7 @@ summary = generate_executive_summary(repo_root, project_names)
 files = save_executive_summary(summary, output_dir)
 
 # Collect metrics for a single project
-metrics = collect_project_metrics(project_path)
+metrics = collect_project_metrics(repo_root, project_name)
 ```
 
 ## Dashboard Generation (`_dashboard_matplotlib.py`)
@@ -90,8 +97,8 @@ generate_plotly_dashboard(summary, output_dir)
 from infrastructure.reporting.pytest_output_parser import parse_pytest_output
 from infrastructure.reporting.report_generator import save_test_report_to_files
 
-# Parse pytest output into structured data
-results = parse_pytest_output(pytest_output_text, stderr="", exit_code=0)
+# Parse pytest output into structured data (stdout, stderr, exit_code all required)
+results = parse_pytest_output(stdout_text, stderr_text, exit_code)
 save_test_report_to_files(results, output_path)
 ```
 
@@ -133,7 +140,7 @@ run_test_summary_generation()
 
 ```python
 from infrastructure.reporting.manuscript_overview import generate_manuscript_overview
-overview = generate_manuscript_overview(project_path)
+overview = generate_manuscript_overview(pdf_path, output_dir, project_name)
 ```
 
 ## Coverage Parsing (`coverage_parser.py`)

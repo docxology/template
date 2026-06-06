@@ -74,7 +74,9 @@ renderer.render_combined(source_files, manuscript_dir, project_name="my_project"
 **CLI:**
 
 ```bash
-uv run python -m infrastructure.rendering.cli render --project {name}
+uv run python -m infrastructure.rendering.cli pdf manuscript.tex
+# Subcommands: pdf | all | slides | web — each takes a positional source file (TeX or Markdown)
+uv run python -m infrastructure.rendering.cli all manuscript.tex
 uv run python -m infrastructure.rendering.render_all_cli
 ```
 
@@ -132,6 +134,29 @@ uv run python -m infrastructure.rendering.latex_package_validator
 sudo tlmgr install multirow cleveref doi newunicodechar
 ```
 
+## DOCX / EPUB Rendering (`docx_renderer.py`, `epub_renderer.py`)
+
+Re-exported at package level — render Microsoft Word and e-reader outputs from a combined Markdown file (both via pandoc):
+
+```python
+from pathlib import Path
+from infrastructure.rendering import render_docx, render_epub
+
+docx_result = render_docx(Path("combined.md"), Path("output.docx"), bibliography=None)
+epub_result = render_epub(Path("combined.md"), Path("output.epub"), cover_image=None)
+```
+
+Signatures:
+
+```python
+render_docx(combined_md: Path, output_path: Path, *, bibliography: Path | None = None,
+            reference_doc: Path | None = None, pandoc_path: str = "pandoc",
+            extra_args: list[str] | None = None) -> DocxRenderResult
+render_epub(combined_md: Path, output_path: Path, *, bibliography: Path | None = None,
+            cover_image: Path | None = None, pandoc_path: str = "pandoc",
+            extra_args: list[str] | None = None) -> EpubRenderResult
+```
+
 ## Supporting Files
 
 - `convert_latex_images.lua` — Pandoc Lua filter for LaTeX image conversion
@@ -145,5 +170,12 @@ Only these are re-exported at package level:
 | --- | --- |
 | `RenderManager` | Class |
 | `RenderingConfig` | Class |
+| `DocxRenderResult` | Class |
+| `EpubRenderResult` | Class |
 | `discover_manuscript_files` | Function |
 | `verify_figures_exist` | Function |
+| `render_docx` | Function |
+| `render_epub` | Function |
+| `substitute_manuscript_text` | Function |
+| `write_resolved_manuscript_tree` | Function |
+| `EXCLUDED_DOC_FILENAMES` | Constant |

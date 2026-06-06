@@ -2,9 +2,11 @@
 
 ## Purpose
 
-The Search module provides discovery utilities for academic literature. It
-sits opposite [`infrastructure/reference/`](../reference/) in the literature
-workflow:
+The Search module provides discovery utilities for academic literature
+(`literature/`) and Exa-backed general web search, content extraction, and
+grounded answers (`exa/` — see [`exa/README.md`](exa/README.md) and
+[`exa/AGENTS.md`](exa/AGENTS.md)). The literature side sits opposite
+[`infrastructure/reference/`](../reference/) in the literature workflow:
 
 ```mermaid
 flowchart LR
@@ -30,10 +32,28 @@ treat results uniformly regardless of source.
 | File | Role |
 |---|---|
 | `models.py` | `Paper`, `SearchQuery`, `SearchResult` data models, plus `merge_papers()` for DOI / arXiv-aware deduplication. |
-| `backends.py` | Abstract `SearchBackend` plus four concrete backends: `LocalBackend` (JSON corpus on disk), `CrossrefBackend` (Crossref REST), `ArxivBackend` (arXiv Atom export), `PaperclipBackend` (Paperclip API, opt-in). Plus the `HttpClient` protocol and a stdlib-only `UrllibHttpClient` so backends have no required HTTP dependency. |
+| `base.py` | Abstract `SearchBackend` (plus `BackendError`). |
+| `local_backend.py` / `crossref_backend.py` / `arxiv_backend.py` / `paperclip_backend.py` | The four concrete backends: `LocalBackend` (JSON corpus on disk), `CrossrefBackend` (Crossref REST), `ArxivBackend` (arXiv Atom export), `PaperclipBackend` (Paperclip API, opt-in). |
+| `http_client.py` | The `HttpResponse` record, the `HttpClient` protocol, a stdlib-only `UrllibHttpClient`, and `HttpGetMixin` so backends have no required HTTP dependency. |
+| `backends/` | Convenience re-export subpackage: `from infrastructure.search.literature.backends import SearchBackend, LocalBackend, ...`. |
 | `client.py` | `LiteratureClient` — runs a query across configured backends, applies year filters defensively, deduplicates with `merge_papers`, sorts by score, caps at `query.max_results`. Per-backend errors are recorded into `result.errors`, never raised. |
 | `cache.py` | `SearchCache` — JSON-file cache keyed on query identity. Pretty-printed for greppability; supports optional TTL. |
 | `cli.py` | `search` / `to-bibtex` subcommands. |
+
+### `exa/` — Exa-backed web search, contents, and grounded answers
+
+| File | Role |
+|---|---|
+| `config.py` | `ExaConfig` (`EXA_API_KEY`, host, defaults). |
+| `errors.py` | `ExaError`. |
+| `http.py` | `ExaHttpClient` protocol, `UrllibExaHttpClient`, `ExaResponse`. |
+| `models.py` | `ExaResult`, `SearchResponse`, `ContentsResponse`, `AnswerResponse`, etc. |
+| `client.py` | `ExaClient` — facade over the four interfaces; `ExaClient.from_env()` reads `EXA_API_KEY`. |
+| `search/` / `contents/` / `answer/` / `find_similar/` | One subpackage per interface (`POST /search`, `/contents`, `/answer`, `/findSimilar`). |
+| `cli.py` | `search` / `contents` / `answer` / `find-similar` subcommands (`python -m infrastructure.search.exa`). |
+
+See [`exa/README.md`](exa/README.md), [`exa/AGENTS.md`](exa/AGENTS.md), and
+[`exa/CAPABILITIES.md`](exa/CAPABILITIES.md) for full detail.
 
 ## Key Features
 

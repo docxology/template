@@ -19,8 +19,8 @@
       "path": "docs/prompts/SKILL.md",
       "cursor_at": "docs/prompts/SKILL.md",
       "metadata": {
-        "version": "1.1.0",
-        "last_updated": "2026-06-04",
+        "version": "1.2.0",
+        "last_updated": "2026-06-06",
         "status": "active",
         "data_access_level": "raw",
         "task_type": "open-ended",
@@ -69,8 +69,8 @@
       "path": "docs/prompts/academic-paper/SKILL.md",
       "cursor_at": "docs/prompts/academic-paper/SKILL.md",
       "metadata": {
-        "version": "1.0.0",
-        "last_updated": "2026-05-25",
+        "version": "1.1.0",
+        "last_updated": "2026-06-06",
         "status": "active",
         "data_access_level": "redacted",
         "task_type": "open-ended",
@@ -81,6 +81,7 @@
           "revision",
           "format",
           "citation-check",
+          "prose-quality",
           "disclosure"
         ],
         "related_skills": [
@@ -97,8 +98,8 @@
       "path": "docs/prompts/academic-pipeline/SKILL.md",
       "cursor_at": "docs/prompts/academic-pipeline/SKILL.md",
       "metadata": {
-        "version": "1.0.0",
-        "last_updated": "2026-05-25",
+        "version": "1.1.0",
+        "last_updated": "2026-06-06",
         "status": "active",
         "data_access_level": "verified_only",
         "task_type": "open-ended",
@@ -189,8 +190,8 @@
       "path": "docs/prompts/deep-research/SKILL.md",
       "cursor_at": "docs/prompts/deep-research/SKILL.md",
       "metadata": {
-        "version": "1.0.0",
-        "last_updated": "2026-05-25",
+        "version": "1.1.0",
+        "last_updated": "2026-06-06",
         "status": "active",
         "data_access_level": "raw",
         "task_type": "open-ended",
@@ -297,14 +298,15 @@
       "path": "docs/prompts/manuscript-claim-verification/SKILL.md",
       "cursor_at": "docs/prompts/manuscript-claim-verification/SKILL.md",
       "metadata": {
-        "version": "1.0.0",
-        "last_updated": "2026-05-25",
+        "version": "1.1.0",
+        "last_updated": "2026-06-06",
         "status": "active",
         "data_access_level": "verified_only",
         "task_type": "open-ended",
         "modes": [
           "claim-inventory",
-          "pre-submission"
+          "pre-submission",
+          "reference-existence"
         ],
         "related_skills": [
           "template-reproducibility-audit",
@@ -574,7 +576,7 @@
     },
     {
       "name": "infrastructure-reference",
-      "description": "Bibliographic-reference utilities for research projects. Read, write, and convert BibTeX entries that match the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib during PDF render -- see infrastructure/rendering/_pdf_combined_renderer.py). Currently exposes the `citation` submodule (BibTeX I/O + Paper→BibEntry conversion); designed to host additional reference workflows (e.g. CSL-JSON export, ORCID lookups) without breaking the public API.",
+      "description": "Bibliographic-reference utilities for research projects. Read, write, and convert BibTeX entries that match the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib during PDF render -- see infrastructure/rendering/_pdf_combined_pandoc.py). Exposes the `citation` submodule (BibTeX I/O + Paper→BibEntry conversion) and the `verification` submodule (deterministic reference-existence gate against Crossref/OpenAlex/arXiv with a persistent SQLite cache); designed to host additional reference workflows without breaking the public API.",
       "path": "infrastructure/reference/SKILL.md",
       "cursor_at": "infrastructure/reference/SKILL.md"
     },
@@ -583,6 +585,12 @@
       "description": "BibTeX read/write/convert that matches the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_renderer.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.",
       "path": "infrastructure/reference/citation/SKILL.md",
       "cursor_at": "infrastructure/reference/citation/SKILL.md"
+    },
+    {
+      "name": "reference-verification",
+      "description": "Deterministic anti-hallucination gate for cited references. Resolves each entry in a manuscript .bib file against Crossref, OpenAlex, and arXiv; flags fabricated (identifier resolves to nothing), mismatched (title/author/year disagree), unverifiable (no identifier), unchecked (offline cache miss — never silently OK), and anachronistic (future-dated) citations. Offline-first with a persistent SQLite cache; live network resolution is opt-in. Use when verifying citation existence, auditing a references.bib before submission, or wiring a claim-verification / pipeline integrity gate.",
+      "path": "infrastructure/reference/verification/SKILL.md",
+      "cursor_at": "infrastructure/reference/verification/SKILL.md"
     },
     {
       "name": "infrastructure-rendering",
@@ -604,7 +612,7 @@
     },
     {
       "name": "infrastructure-search",
-      "description": "Discovery utilities for academic literature. Currently exposes the `literature` submodule — Paperclip-style multi-source search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI. Use when the user wants to find papers, build reading lists, populate references.bib from a query, or replay a prior search reproducibly. Designed to host additional discovery workflows without breaking the public API.",
+      "description": "Discovery utilities. Hosts two subpackages — `literature` for Paperclip-style multi-source academic search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI; and `exa` for Exa-backed general web search, content extraction, grounded answers, and find-similar via `ExaClient` (search/contents/answer/find_similar) and a CLI. Use when the user wants to find papers, build reading lists, populate references.bib from a query, replay a prior search reproducibly, or run general web search / content extraction / grounded answers. Designed to host additional discovery workflows without breaking the public API.",
       "path": "infrastructure/search/SKILL.md",
       "cursor_at": "infrastructure/search/SKILL.md"
     },

@@ -57,6 +57,31 @@ class ArxivBackend(SearchBackend, HttpGetMixin):
                 papers.append(paper)
         return papers
 
+    def fetch_by_id(self, arxiv_id: str) -> Paper | None:
+        """Resolve a single arXiv identifier (e.g. ``"2501.12948"``).
+
+        Used by the reference-verification resolver to confirm a cited arXiv
+        preprint exists. Returns ``None`` when arXiv reports no matching entry.
+        Raises :class:`BackendError` on transport or parse failure.
+        """
+        cleaned = arxiv_id.strip()
+        if cleaned.lower().startswith("arxiv:"):
+            cleaned = cleaned.split(":", 1)[1].strip()
+        if not cleaned:
+            return None
+        resp = self._http_get({"id_list": cleaned, "max_results": 1}, label="arXiv")
+        if resp.status_code != 200:
+            raise BackendError(f"arXiv returned HTTP {resp.status_code}")
+        try:
+            root = ET.fromstring(resp.text)
+        except ET.ParseError as exc:
+            raise BackendError(f"arXiv returned non-XML body: {exc}") from exc
+        for entry in root.findall("atom:entry", self._ATOM_NS):
+            paper = self._entry_to_paper(entry)
+            if paper is not None:
+                return paper
+        return None
+
     def _entry_to_paper(self, entry: XMLElement) -> Paper | None:
         def text(tag: str, ns: str = "atom") -> str | None:
             el = entry.find(f"{ns}:{tag}", self._ATOM_NS)

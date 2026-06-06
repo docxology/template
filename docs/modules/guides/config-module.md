@@ -40,8 +40,9 @@ cp infrastructure/config/.env.template .env
 # Run steganographic post-processing with default settings
 ./secure_run.sh --project template_code_project
 
-# Override individual settings in your own YAML
-./secure_run.sh --project template_code_project --config my_secure_config.yaml
+# Override individual settings by editing infrastructure/config/secure_config.yaml,
+# then re-run (the secure subcommand has no --config flag)
+./secure_run.sh --project template_code_project
 ```
 
 **From Python** (via steganography module):

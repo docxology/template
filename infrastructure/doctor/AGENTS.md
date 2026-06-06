@@ -118,8 +118,11 @@ situation the safety contract is designed to refuse.
 
 ## Extending — quick reference
 
-* New detector → `infrastructure/doctor/detectors.py`, append to
-  `DETECTORS`, allocate `DOC<NNN>` in the right band.
+* New detector → add it to the matching concern module under
+  `infrastructure/doctor/detectors/` (`tooling.py`, `layout.py`,
+  `hygiene.py`, `state.py`), append it to the `DETECTORS` tuple in
+  `infrastructure/doctor/detectors/registry.py`, allocate `DOC<NNN>` in
+  the right band.
 * New fixer → `infrastructure/doctor/fixers.py`, register in
   `FIXER_REGISTRY`, ensure the new `fix_id` appears in some
   `RepairLevel`.

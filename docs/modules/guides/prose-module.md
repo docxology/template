@@ -40,7 +40,7 @@ from pathlib import Path
 from infrastructure.prose import analyze_manuscript
 
 report = analyze_manuscript(Path("projects/templates/template_prose_project/manuscript"))
-print(report.summary())
+print(report.to_json())
 ```
 
 ---

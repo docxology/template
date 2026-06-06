@@ -351,13 +351,13 @@ Same as full pipeline but **skips infrastructure tests** (`--skip-infra` / fast 
 # Core Build Operations
 ./run.sh --pipeline          # Full DAG (10 stages in pipeline.yaml; bash shows [0/9] clean + [1/9]–[9/9] tracked steps)
 ./run.sh --pipeline --resume # Resume from last checkpoint
-./run.sh --infra-tests        # Run infrastructure tests only
-./run.sh --project-tests      # Run project tests only
-./run.sh --render-pdf         # Render PDF manuscript only
+uv run python scripts/01_run_tests.py --infra-only          # Run infrastructure tests only
+uv run python scripts/01_run_tests.py --project-only        # Run project tests only
+uv run python scripts/03_render_pdf.py --project {name}      # Render PDF manuscript only
 
 # LLM Operations (requires Ollama)
-./run.sh --reviews            # LLM manuscript review only (English)
-./run.sh --translations       # LLM translations only
+uv run python scripts/06_llm_review.py --reviews-only        # LLM manuscript review only (English)
+uv run python scripts/06_llm_review.py --translations-only   # LLM translations only
 
 # Show help
 ./run.sh --help
@@ -519,7 +519,7 @@ configuration matrix.
 |----------|---------|-------------|
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Max chars to send to LLM. Set to `0` for unlimited. |
 | `LLM_REVIEW_TIMEOUT` | `300` | Timeout per review in seconds |
-| `LLM_LONG_MAX_TOKENS` | `4096` | Maximum tokens per review response |
+| `LLM_LONG_MAX_TOKENS` | `16384` | Maximum tokens per review response |
 
 ## Error Handling
 
