@@ -44,16 +44,19 @@ export NO_EMOJI=1   # Disable emojis
 
 ### Pipeline Configuration
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PIPELINE_RESUME` | (unset) | Resume from checkpoint if available |
-| `PIPELINE_CLEAN` | (unset) | Clean output directories before run |
+Resume and clean are CLI flags on `execute_pipeline.py` / `run.sh`, not
+environment variables:
+
+| Flag | Effect |
+|------|--------|
+| `--resume` | Resume from the last successful checkpoint if one exists |
+| (Stage 0 runs by default) | The pipeline cleans output directories at Stage 0 (`Clean Output Directories`) every run unless `--resume` is supplied |
 
 ### Telemetry Retention
 
 `TelemetryCollector.finalize()` writes
 `projects/{name}/output/reports/telemetry.json` (and the matching
-`output/{name}/reports/telemetry.json` once `09_copy_outputs` has run).
+`output/{name}/reports/telemetry.json` once `05_copy_outputs` has run).
 Without rotation those files would accumulate one report per run and
 nothing else. Before each write, the collector calls
 `infrastructure.core.telemetry.retention.rotate(reports_dir, keep=N)`
@@ -132,26 +135,24 @@ analysis:
 
 ### Performance Monitoring
 
+Resource tracking (timing, memory, CPU, I/O) is always on via the telemetry
+collector — there is no enable flag. The only knob is archive retention:
+
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ENABLE_PERFORMANCE_MONITORING` | (unset) | Enable resource tracking |
-| `PERFORMANCE_LOG_FILE` | (unset) | Path to performance log file |
+| `TELEMETRY_KEEP` | `10` | Max archived `telemetry.json` files kept in `<reports_dir>/.history/`. See [Telemetry Retention](#telemetry-retention). |
 
 ### Checkpoint System
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `CHECKPOINT_DIR` | `projects/{name}/output/.checkpoints` | Checkpoint directory |
-| `CHECKPOINT_ENABLED` | `true` | Enable checkpoint saving |
+Checkpointing is always on; the checkpoint directory defaults to
+`projects/{name}/output/.checkpoints` and can be overridden only programmatically
+via `CheckpointManager(checkpoint_dir=...)` (no environment variable). Resume is
+the `--resume` CLI flag.
 
 **Usage:**
 ```bash
 # Resume from checkpoint
-export PIPELINE_RESUME=1
-uv run python scripts/execute_pipeline.py --project {name} --core-only
-
-# Disable checkpoints
-export CHECKPOINT_ENABLED=false
+uv run python scripts/execute_pipeline.py --project {name} --core-only --resume
 ```
 
 ### Retry Configuration
@@ -187,11 +188,14 @@ Name disambiguation: [`docs/reference/opengauss-naming.md`](../../reference/open
 
 ### Literature Search
 
+Result caps are passed per call via `SearchQuery(max_results=...)` (default
+`10`), not via environment variables. The backends read these secrets/config
+from the environment (see [`infrastructure/search/`](../../../infrastructure/search/)):
 
 **Key Variables:**
-- `LITERATURE_DEFAULT_LIMIT` - Results per source (default: 25)
-- `LITERATURE_MAX_RESULTS` - Maximum total results (default: 100)
-- `SEMANTICSCHOLAR_API_KEY` - API key for Semantic Scholar
+- `EXA_API_KEY` - API key for the Exa client (`infrastructure/search/exa`)
+- `PAPERCLIP_API_KEY` - API key for `PaperclipBackend` (off by default)
+- `CROSSREF_MAILTO` - Contact email for the Crossref backend (default `you@example.org`)
 
 ### LLM Integration
 
@@ -206,7 +210,6 @@ See [LLM Configuration](../../../infrastructure/llm/AGENTS.md) for options.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `RENDERING_ENGINE` | `xelatex` | LaTeX engine: `xelatex`, `pdflatex`, `lualatex` |
 | `ENABLE_PDF` | `1` | Per-format toggle — combined PDF + per-section LaTeX/PDF. Values: `0/1`, `true/false`, `yes/no` (case-insensitive). |
 | `ENABLE_HTML` | `1` | Per-format toggle — combined HTML index + per-section HTML. |
 | `ENABLE_SLIDES` | `1` | Per-format toggle — per-section Beamer PDFs. |
@@ -283,21 +286,20 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ### Resume from Checkpoint
 
 ```bash
-# Enable resume
-export PIPELINE_RESUME=1
-
-# Pipeline will resume from last successful stage
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+# Pipeline will resume from last successful stage (CLI flag, not an env var)
+uv run python scripts/execute_pipeline.py --project {name} --core-only --resume
 ```
 
 ### Performance Monitoring — Configuration Examples
 
-```bash
-# Enable performance tracking
-export ENABLE_PERFORMANCE_MONITORING=1
-export PERFORMANCE_LOG_FILE="output/performance.log"
+Telemetry (per-stage timing, memory, CPU, I/O) is always collected and written
+to `projects/{name}/output/reports/telemetry.json`; there is no enable flag.
+Control archive retention with `TELEMETRY_KEEP` (see
+[Telemetry Retention](#telemetry-retention)):
 
-# Run with monitoring
+```bash
+# Keep more telemetry history, then run
+export TELEMETRY_KEEP=25
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 

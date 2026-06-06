@@ -8,11 +8,13 @@ The default suite keeps credential-free coverage hermetic with local HTTP server
 
 ## Quick Start
 
-1. **Copy the example files:**
+1. **Create the credential files at the repository root:**
 
    ```bash
-   cp .env.example .env
-   cp test_credentials.yaml.example test_credentials.yaml
+   # Copy the non-secret env template that ships with the repo
+   cp infrastructure/config/.env.template .env
+   # Optionally create test_credentials.yaml directly (no committed example;
+   # see the YAML Configuration section below for the schema)
    ```
 
 2. **Add your credentials** to `.env` (see sections below)
@@ -248,7 +250,7 @@ git push --delete origin test-release-12345678
 
 1. **Never commit credentials:**
    - `.env` and `test_credentials.yaml` are in `.gitignore`
-   - Always use `.env.example` for templates
+   - Always use `infrastructure/config/.env.template` for templates
 
 2. **Use sandbox environments:**
    - Always use Zenodo *sandbox*, not production

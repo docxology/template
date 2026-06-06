@@ -163,12 +163,14 @@ Stage 4 with `LOG_LEVEL=0` to find the underlying renderer error.
 **Symptom:** `Failed to connect to Ollama at http://localhost:11434`.
 
 **Fix:** `ollama serve` (in another shell), then `ollama pull gemma3:4b`. The
-LLM stages are gated; if you don't want them, run with `--core-only` or
-`--no-llm`.
+LLM stages are gated; if you don't want them, run `execute_pipeline.py` with
+`--core-only` or `--skip-llm` (the multi-project orchestrator
+`execute_multi_project.py` uses `--no-llm`).
 
 **Symptom:** LLM review times out.
 
-**Fix:** Bump `LLM_TIMEOUT_SEC` env (default 600). Slow CPUs may need 1200+.
+**Fix:** Bump `LLM_REVIEW_TIMEOUT` env (default 300; the per-request
+`LLM_TIMEOUT` default is 60). Slow CPUs may need 600+.
 
 ---
 

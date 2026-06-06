@@ -50,31 +50,39 @@ A "publication" in this context means a manuscript + its reproducibility bundle.
 
 The current publishing pipeline produces some of these; the rest are the gap this guide is addressing.
 
-## Implementation plan (scaffolding)
+## Implementation
 
-The actual code addition lives at `infrastructure/publishing/archival.py` — see that file for the API. Sketch:
+The code lives at `infrastructure/publishing/archival.py` (driven by the
+opt-in Stage 11 wrapper `scripts/09_archive_publication.py`). The public entry
+point is `archive_publication()`:
 
 ```python
 def archive_publication(
-    bundle_dir: Path,
-    targets: list[str] = ["zenodo", "software_heritage", "ipfs_pinata", "ipfs_web3storage"],
-    dry_run: bool = False,
-) -> ArchivalResult:
+    bundle: Path,
+    *,
+    providers: list[ArchivalProvider],
+    dry_run: bool = True,
+    output_receipts_path: Path | None = None,
+) -> ArchivalRun:
     """Mirror a publication bundle to N independent archival targets.
 
-    Returns a structured result with one record per target including:
-    - target name
-    - URL / DOI / CID / SWHID of the deposited artifact
-    - timestamp of successful deposit
-    - any partial-failure modes
+    dry_run defaults to True; pass dry_run=False to perform real deposits.
+    Never raises on a per-provider failure — failures surface as
+    status="error" receipts inside the returned ArchivalRun. Each receipt
+    records the target name, the URL / DOI / CID / SWHID of the deposited
+    artifact, a timestamp, and any partial-failure mode.
     """
 ```
+
+Concrete provider classes (`ZenodoProvider`, `IPFSPinataProvider`,
+`IPFSWeb3StorageProvider`, `SoftwareHeritageProvider`) implement the
+`ArchivalProvider` protocol; `load_credentials()` resolves their tokens.
 
 The function:
 
 1. Validates the bundle is complete (PDF, sources, lockfile, manifest)
 2. For each target, calls the target-specific deposit API (Zenodo REST API, IPFS HTTP API, SWH save-code-now API)
-3. Records every CID/DOI/SWHID in a `ARCHIVAL_RECEIPTS.json` committed to the publication branch
+3. Records every CID/DOI/SWHID in a receipts JSON written to the caller-supplied `output_receipts_path` (recommended: commit it alongside the publication)
 4. Updates `STATUS.md` with the most recent successful archival run
 
 ## Credentials & secrets
@@ -84,7 +92,11 @@ The function:
 - Web3.Storage token: per-user, not in repo
 - Software Heritage: no token needed for save-code-now; uses GitHub URL
 
-The `archive_publication()` function reads credentials from `~/.config/template-archival/credentials.toml` (per-user) and **never** from any in-repo file. If credentials are missing, the function emits a structured "partial result" indicating which targets were unreachable.
+`load_credentials()` reads credentials from environment variables first
+(`ZENODO_API_TOKEN`, `PINATA_JWT`, `WEB3_STORAGE_TOKEN`), then falls back to a
+per-user JSON file at `~/.config/template-archival/credentials.json` — **never**
+from any in-repo file. If credentials are missing, each provider emits a
+structured per-target receipt indicating it was unreachable rather than raising.
 
 ## Verifying archival
 
@@ -115,7 +127,11 @@ The verification step is part of `STATUS.md` row "Publishing" — refresh quarte
 
 ## Status
 
-Scaffold-only as of 2026-05-20. The `archive_publication()` function does not yet exist; this guide is the design document. Implementation is the next step — see [`MAINTAINERS.md`](../../MAINTAINERS.md) for the `infrastructure/publishing/` owner.
+Implemented as the opt-in Stage 11 archival path. `archive_publication()` and
+its provider classes live in `infrastructure/publishing/archival.py`; invoke via
+`scripts/09_archive_publication.py` (dry-run by default — pass `--commit` plus
+`--providers` for real deposits; see the CLAUDE.md quick-reference). See
+[`MAINTAINERS.md`](../../MAINTAINERS.md) for the `infrastructure/publishing/` owner.
 
 ## Related
 

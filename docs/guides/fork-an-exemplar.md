@@ -60,7 +60,7 @@ fork should grow into. Detectors:
 | `oversize_src_file` | any `src/*.py` over 1,500 lines (a refactor smell) |
 | `blanket_except` | `except Exception` in `src/*.py` without a `noqa: BLE001` justification |
 | `mock_in_tests` | mock primitives in `tests/` |
-| `missing_canonical_file` | the ten files every exemplar must ship |
+| `missing_canonical_file` | the eleven files every exemplar must ship |
 
 A WARNING-rated `except Exception` block whose surrounding comment
 contains `TOP-LEVEL MAIN SAFETY NET` / `safety net` / `final handler` /

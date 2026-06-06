@@ -120,7 +120,7 @@ with ProcessPoolExecutor() as executor:
 ./run.sh --pipeline  # LLM stages are optional
 
 # Use faster model
-export LLM_MODEL="llama3:8b"  # Smaller, faster model
+export OLLAMA_MODEL="smollm2"  # Smaller, faster model
 ```
 
 ## Resource Monitoring

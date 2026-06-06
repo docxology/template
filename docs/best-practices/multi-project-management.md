@@ -23,7 +23,7 @@ The repository uses typed subfolders under `projects/` to manage projects at dif
 | Subfolder | Purpose | Rendered by `./run.sh`? |
 |-----------|---------|------------------------|
 | `projects/templates/` | **Public exemplars** – canonical reference projects | ✅ Yes |
-| `projects/active/` | **Hot-seat** – ready for the pipeline | ✅ Yes |
+| `projects/active/` | **Optional hot-seat** – private projects deliberately reintroduced for default discovery | ✅ Yes, when present |
 | `projects/working/` | **Work-in-progress** – not yet publication-ready | ❌ No |
 | `projects/published/` | **Shipped** – published, kept for reference | ❌ No |
 | `projects/archive/` | **Completed / paused** – kept for reference | ❌ No |
@@ -31,9 +31,10 @@ The repository uses typed subfolders under `projects/` to manage projects at dif
 
 **Rules:**
 
-- `./run.sh` only discovers projects under the rendered subfolders `projects/templates/` and `projects/active/`. The non-rendered subfolders are ignored.
-- A project retains its full structure (src/, manuscript/, tests/, output/) in any subfolder, so it can be moved into `projects/active/` at any time without modification.
-- Use `projects/working/` while actively writing; move to `projects/active/` only when ready for a full pipeline render.
+- `./run.sh` only discovers projects under the rendered subfolders `projects/templates/` and optional `projects/active/`. The non-rendered subfolders are ignored by default discovery.
+- The simplified private sidecar requires `working/` and `archive/`; `active/`, `published/`, and `other/` are optional legacy mirrors when present.
+- A project retains its full structure (src/, manuscript/, tests/, output/) in any subfolder, so it can be rendered explicitly with a qualified name such as `working/<name>` without entering the default render set.
+- Use `projects/working/` while actively writing; restore to optional `projects/active/` only when it should appear in the normal menu and all-project runs.
 - Use `projects/archive/` for completed or low-priority projects so they do not increase pipeline runtime.
 
 **Authoritative roster:** [`docs/_generated/active_projects.md`](../_generated/active_projects.md) from `discover_projects()`. Default path examples in docs use [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/); an active project may maintain its own reference hub (for example [`projects/templates/template_code_project/docs/`](../../projects/templates/template_code_project/docs/)), and work-in-progress copies may live under `projects/working/` until promoted.
@@ -41,14 +42,14 @@ The repository uses typed subfolders under `projects/` to manage projects at dif
 **Moving a project:**
 
 ```bash
-# Promote a WIP project to active
-mv projects/working/my_paper projects/active/my_paper
+# Render a WIP project explicitly without moving it into default discovery
+uv run python scripts/03_render_pdf.py --project working/my_paper
 
-# Archive a completed project
-mv projects/active/{name} projects/archive/{name}
+# Retire a private sidecar project
+mv ../projects/working/{name} ../projects/archive/{name}
 
 # Return an archived project for revisions
-mv projects/archive/{name} projects/working/{name}
+mv ../projects/archive/{name} ../projects/working/{name}
 ```
 
 **Advanced: running the pipeline against a different directory:**
@@ -66,7 +67,7 @@ config = PipelineConfig(
 PipelineExecutor(config).execute_core_pipeline()
 ```
 
-Infrastructure modules (`discovery.py`, `script_discovery.py`, `config_loader.py`,
+Infrastructure modules (`discovery.py`, `script_discovery.py`, `config/loader.py`,
 `checkpoint.py`, and the reporting layer) accept a `projects_dir` string (or resolve paths via `PipelineConfig`, whose **`project_dir`** property is the computed `repo_root / projects_dir / project_name` path), so this configuration propagates throughout the pipeline.
 
 ## Organizing Multiple Projects

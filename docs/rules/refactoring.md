@@ -30,13 +30,16 @@ When modularizing or restructuring:
 
 ### File Organization Best Practices
 
-**Maximum file length**: 600 lines (excluding docstrings)
+**Maximum file length**: aim for ≤600 lines as a soft target. The enforced
+`module_line_count` gate (`infrastructure/validation/line_count.py`,
+`DEFAULT_INFRA_THRESHOLDS`) warns at **800** lines and fails at **950** lines for
+infrastructure code (project scripts: warn 150, fail 250).
 
 **When to split a file**:
 
 - Multiple independent classes/functions that could be separate modules
 - Mixed concerns that would benefit from separation
-- File exceeds 600 lines of actual code
+- File approaches the gate thresholds (800 warn / 950 fail for infra code)
 
 **How to split**:
 
@@ -162,5 +165,5 @@ Before marking refactoring:
 
 ## See Also
 
-- **[Development Standards](../rules/README.md)** — Rule index
-- **[Rules AGENTS](../rules/AGENTS.md)** — Rules for AI agents
+- **[Development Standards](README.md)** — Rule index
+- **[Rules AGENTS](AGENTS.md)** — Rules for AI agents

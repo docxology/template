@@ -35,23 +35,23 @@ uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=
 flowchart TB
     T[/tests//]
     T --> META[__init__.py · conftest.py<br/>shared fixtures]
-    T --> INFRA[/infrastructure<br/>Infrastructure module tests/]
-    T --> SCI[/scientific<br/>Scientific code tests/]
+    T --> INFRA[/infra_tests<br/>Infrastructure module tests/]
     T --> INTEG[/integration<br/>End-to-end tests/]
+    T --> REG[/regression<br/>Claim-binding regression tests/]
 
-    INFRA --> CORE[/test_core<br/>core functionality/]
+    INFRA --> CORE[/core<br/>core functionality/]
     INFRA --> VAL[/validation<br/>example module/]
-    CORE --> CORE_F[__init__.py · conftest.py ·<br/>test_basic · test_edge_cases · test_integration]
+    CORE --> CORE_F[__init__.py · conftest.py ·<br/>test_*.py]
     VAL --> VAL_F[__init__.py · test_*.py]
-    SCI --> SCI_F[test_*.py]
     INTEG --> INTEG_F[test_*.py]
+    REG --> REG_F[test_*.py]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class INFRA,SCI,INTEG,CORE,VAL pkg
-    class META,CORE_F,VAL_F,SCI_F,INTEG_F f
+    class INFRA,INTEG,REG,CORE,VAL pkg
+    class META,CORE_F,VAL_F,INTEG_F,REG_F f
 ```
 
 ### Module Test Organization
@@ -60,7 +60,7 @@ For each infrastructure module:
 
 ```mermaid
 flowchart LR
-    T[/tests/infra_tests/test_&lt;module&gt;//]
+    T[/tests/infra_tests/&lt;module&gt;//]
     T --> INIT[__init__.py]
     T --> CFG[conftest.py<br/>Fixtures · sample data · temp files]
     T --> CORE[test_core.py<br/>Core functionality]
@@ -394,10 +394,10 @@ def logger_fixture(caplog):
 uv run pytest tests/
 
 # Run specific test file
-uv run pytest tests/infra_tests/test_core/test_basic.py
+uv run pytest tests/infra_tests/core/test_agent_memory.py
 
 # Run specific test function
-uv run pytest tests/infra_tests/test_core/test_basic.py::test_validation_passes
+uv run pytest tests/infra_tests/core/test_agent_memory.py::test_empty_memory_payload_has_required_keys
 
 # Run with verbose output
 uv run pytest tests/ -v

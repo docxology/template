@@ -185,7 +185,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[development/validation_gates.md](development/validation_gates.md)** - Validation gates
 - **[development/code-review-checklist.md](development/code-review-checklist.md)** - Eight-criterion review checklist (clarity, composability, functionality/SSOT, testability, validation, documentation, conventions, reproducibility)
 - **[maintenance/README.md](maintenance/README.md)** - Maintenance hub index
-- **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (`active/`, `working/`, `published/`, `archive/`, `other/`) and symlink sync into `projects/`
+- **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (required `working/` + `archive/`, optional legacy `active/`, `published/`, `other/`) and symlink sync into `projects/`
 - **[maintenance/toolchain-migration.md](maintenance/toolchain-migration.md)** - Toolchain migration notes
 - **[maintenance/regression-testing.md](maintenance/regression-testing.md)** - Regression testing workflow
 - **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Stage 11 archival providers
@@ -248,7 +248,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[operational/build/dependency-management.md](operational/build/dependency-management.md)** - Dependency management
 - **[plans/README.md](plans/README.md)** - Strategic plans and architecture decisions
 - **Live doc linter** — `scripts/lint_docs.py`: `uv run python scripts/lint_docs.py` ([script entrypoint](../scripts/lint_docs.py)) — repo-wide mermaid block validation + cross-link integrity + sibling-doc consistency; replaces the older point-in-time `scripts/audit_filepaths.py` snapshots
-- **Template drift checker** — `scripts/check_template_drift.py`: `uv run python scripts/check_template_drift.py` ([script entrypoint](../scripts/check_template_drift.py)) — 9 per-exemplar detectors + 2 repo-level checks (`repo_docs_hardcoded_counts` against `docs/` and the thin-orchestrator `check_repo_scripts`)
+- **Template drift checker** — `scripts/check_template_drift.py`: `uv run python scripts/check_template_drift.py` ([script entrypoint](../scripts/check_template_drift.py)) — 10 per-exemplar detectors + 2 repo-level checks (`check_repo_docs_hardcoded_counts` against `docs/` and the thin-orchestrator `check_repo_scripts`)
 - **Audit hub** — [audit/README.md](audit/README.md) (historical snapshots under [audit/archived/](audit/archived/) with `-YYYY-MM-DD.md` suffixes; use the live linters above as the canonical reference)
 - **[guides/fork-an-exemplar.md](guides/fork-an-exemplar.md)** - Top-level entry: pick the right exemplar and start a 5-minute fork
 

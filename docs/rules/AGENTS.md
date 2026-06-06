@@ -187,7 +187,7 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 - Type hints on all functions
 - Follow thin orchestrator pattern
 - Use custom exceptions from `core.exceptions`
-- Use unified logging from `core.logging_utils`
+- Use unified logging from `core.logging.utils`
 
 **Structure**:
 
@@ -404,7 +404,7 @@ flowchart TB
     ROOT --> DOC[/docs<br/>Documentation/]
     ROOT --> RULES[/docs/rules<br/>Development standards · this dir/]
 
-    INFRA --> INFRA_SUB[core · doctor · documentation · llm · orchestration ·<br/>project · prose · publishing · reference · rendering ·<br/>reporting · scientific · search · skills · steganography · validation]
+    INFRA --> INFRA_SUB[autoresearch · benchmark · core · doctor · documentation · llm ·<br/>methods · orchestration · project · prose · publishing · reference ·<br/>rendering · reporting · scientific · search · sia · skills ·<br/>steganography · validation]
 
     PROJ --> P_NAME[/&lt;name&gt;/]
     P_NAME --> P_SUB[src/ · tests/ · scripts/ · manuscript/]
@@ -613,8 +613,8 @@ When creating a new rules file:
 
 ---
 
-**Version**: 2.6.0
-**Last Updated**: 2026-03-15
-**Files**: 17 (AGENTS.md + README.md + 15 guideline files)
-**Status**: All 15 guideline files cross-referenced
+**Version**: 3.2.0
+**Last Updated**: 2026-06-06
+**Files**: 18 (AGENTS.md + README.md + 16 guideline files)
+**Status**: All 16 guideline files cross-referenced
 **Updates**: All development rules and standards synchronized with docs/

@@ -17,6 +17,7 @@ The `best-practices/` directory contains consolidated best practices, project ma
 | [`multi-project-management.md`](multi-project-management.md) | Managing multiple projects | Developers |
 | [`migration-guide.md`](migration-guide.md) | Migration from other templates | Developers |
 | [`backup-recovery.md`](backup-recovery.md) | Backup strategies and recovery | All users |
+| [`literature-search-best-practices.md`](literature-search-best-practices.md) | Operating the literature search and citation modules | Developers |
 
 ## Quick Navigation
 
@@ -39,6 +40,10 @@ The `best-practices/` directory contains consolidated best practices, project ma
 ### Backup and Recovery
 
 → Review **[Backup Recovery](backup-recovery.md)** - Backup strategies
+
+### Literature Search
+
+→ Read **[Literature Search Best Practices](literature-search-best-practices.md)** - Operating `infrastructure.search.literature` and `infrastructure.reference.citation`
 
 ## Related Documentation
 

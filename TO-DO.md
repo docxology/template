@@ -14,7 +14,7 @@ project rosters belong in
 
 ## Live state snapshot
 
-Refreshed on **2026-06-05** from the post-`v3.2.0` release state and local
+Refreshed on **2026-06-06** from the post-`v3.2.0` release state and local
 inspection. Re-run the commands in the **Source** column before copying any
 number into prose.
 
@@ -24,7 +24,7 @@ number into prose.
 | Latest template release | `v3.2.0` (published 2026-06-04) | [`CHANGELOG.md`](CHANGELOG.md), GitHub release tag |
 | Public source scope | `infrastructure` plus nine public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
 | Public exemplars | `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook` | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
-| Canonical generated facts | 20 importable infrastructure packages; 518 infrastructure Python modules; nine exemplar coverage gates at or above 90 % | [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) |
+| Canonical generated facts | 20 importable infrastructure packages; 526 infrastructure Python modules; nine exemplar coverage gates at or above 90 % | [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) |
 | Open GitHub PRs | 5 open: 3 Dependabot (`codecov-action` #5, `actions/stale` #4, `astral-sh/setup-uv` #3) + 2 maintainer (#23 sheaf integrity gates, #14 infrastructure composability audit) | `/opt/homebrew/bin/gh-axi pr list` |
 | Docs lint status | links-only, consistency-only, and doc-pairs checks were clean in the `v3.2.0` release verification | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
 | Mermaid lint status | clean with chunked batch rendering under the default total budget | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
@@ -36,6 +36,20 @@ number into prose.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **Reference-existence + AI-writing infrastructure (2026-06-06):** new
+  `infrastructure/reference/verification/` deterministic anti-hallucination gate
+  (Crossref→OpenAlex/arXiv resolver, SQLite cache, offline-first) and
+  `infrastructure/validation/content/ai_writing.py` AI-writing fingerprint
+  detector (`validation.cli prose-quality`); wired into the `docs/prompts`
+  workflows. Clean-room distillation of academic-research-skills ideas
+  (CC-BY-NC-4.0); no code vendored.
+- **Infra test parallelization (2026-06-06):** `pytest-xdist` + `-n auto` on the
+  CI `test-infra` job cut each leg from ~892s to ~585s; suite verified
+  parallel-safe; default `-v` dropped from `addopts`.
+- **Docs accuracy sweep (2026-06-06):** audited `docs/` + every
+  `infrastructure/*/{SKILL,README,AGENTS}.md`; corrected examples that cited
+  methods/params/CLI flags/test paths that did not exist (every fixed command
+  re-verified to resolve).
 - **Docs/infrastructure/.github review pass (2026-06-05, PR #24 + follow-up):**
   `CODEOWNERS` aligned to the 9-exemplar CI matrix; `concurrency:` guards on
   `release.yml`/`stale.yml`; `find_repo_root` centralized in

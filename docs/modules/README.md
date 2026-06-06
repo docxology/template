@@ -42,6 +42,7 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 | Prose | [`guides/prose-module.md`](guides/prose-module.md) | Readability metrics, editorial heuristics |
 | Search | [`guides/search-module.md`](guides/search-module.md) | Literature discovery and indexing |
 | Reference | [`guides/reference-module.md`](guides/reference-module.md) | BibTeX and citation utilities |
+| SIA | [`guides/sia-module.md`](guides/sia-module.md) | Meta → Target → Feedback self-improvement harness |
 
 ## Quick Navigation
 

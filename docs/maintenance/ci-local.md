@@ -30,9 +30,10 @@ docker info >/dev/null     # should succeed
 # Run the full default workflow (everything on push to main)
 ./scripts/ci_local.sh
 
-# Run a specific job
+# Run a specific job (job IDs match .github/workflows/ci.yml)
 ./scripts/ci_local.sh -j lint
-./scripts/ci_local.sh -j tests-ubuntu-py311
+./scripts/ci_local.sh -j test-infra
+./scripts/ci_local.sh -j test-project
 ./scripts/ci_local.sh -j security
 
 # Dry-run (show what would execute without running)
@@ -73,13 +74,13 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 
 | CI job | Reproducible via act? | Notes |
 | --- | --- | --- |
-| `lint` (ruff + mypy + bandit) | ✅ Yes | Fully Linux-portable |
-| `tests-ubuntu-py3.10/3.11/3.12` | ✅ Yes | Set `--matrix python-version:3.X` |
-| `tests-macos-py3.10/3.11/3.12` | ⚠️ Partial | Runs on Linux container; macOS-specific failure modes won't surface |
-| `security` (bandit) | ✅ Yes | Fully Linux-portable |
-| `docs` | ✅ Yes | Markdown lint, doc-tree integrity |
-| `coverage` | ✅ Yes | Coverage gates run in container |
-| `confidentiality` (`check_tracked_projects.py`) | ✅ Yes | Pure Python script |
+| `lint` (ruff + mypy; also runs `check_tracked_projects.py` confidentiality guard) | ✅ Yes | Fully Linux-portable |
+| `test-infra` (matrix: ubuntu py3.10/3.11/3.12 + macos py3.12) | ✅ Yes (ubuntu legs) | Set `--matrix python-version:3.X`; coverage gate runs inside this job |
+| `test-project` (matrix: per-project × py3.10/3.12) | ✅ Yes | Per-project 90% coverage runs inside this job; macOS not exercised here |
+| `security` (bandit + pip-audit) | ✅ Yes | Fully Linux-portable |
+| `docs-lint` | ✅ Yes | Markdown lint, doc-tree integrity |
+| `validate` (manuscript validation) | ✅ Yes | Pure Python |
+| `performance` (import benchmarks) | ✅ Yes | Runs in container |
 
 ## Fallback: pure-Python reproduction
 

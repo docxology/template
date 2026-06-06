@@ -23,7 +23,7 @@ metadata:
 
 ## Natural invoke
 
-- "Audit the whole repo for template_active_inference, template_autoresearch_project, template_code_project, template_prose_project, and template_template" (current public roster: [`docs/_generated/active_projects.md`](../../_generated/active_projects.md))
+- "Audit the whole repo for template_active_inference, template_autoresearch_project, template_code_project, template_prose_project, and template_template" (example names only — the authoritative public roster is [`docs/_generated/active_projects.md`](../../_generated/active_projects.md))
 - "Full health check — tests, docs, manuscript, pipeline"
 - "What's broken across all active projects?"
 

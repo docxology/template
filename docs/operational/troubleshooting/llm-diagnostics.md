@@ -22,7 +22,7 @@ Default pytest runs for `tests/infra_tests/llm/` use HTTP stubs, not your daemon
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Max characters to send to LLM (0 = unlimited) |
 | `LLM_REVIEW_TIMEOUT` | `300` | Timeout per review in seconds |
 | `LLM_LONG_MAX_TOKENS` | `16384` | Maximum tokens per review response |
-| `LLM_CONTEXT_WINDOW` | `262144` | Context window size (for 256K models) |
+| `LLM_CONTEXT_WINDOW` | `131072` | Context window size (128K default; raise for larger-context models) |
 | `LOG_LEVEL` | `1` | Logging verbosity (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR) |
 
 ### Usage Examples
@@ -97,13 +97,12 @@ ls -la projects/{name}/output/pdf/{name}_combined.pdf
 # Test PDF text extraction
 uv run python -c "
 from pathlib import Path
-import PyPDF2
+from pypdf import PdfReader
 pdf_path = Path('projects/{name}/output/pdf/{name}_combined.pdf')
 if pdf_path.exists():
-    with open(pdf_path, 'rb') as f:
-        reader = PyPDF2.PdfReader(f)
-        print(f'Pages: {len(reader.pages)}')
-        print(f'First 200 chars: {reader.pages[0].extract_text()[:200]}')
+    reader = PdfReader(pdf_path)
+    print(f'Pages: {len(reader.pages)}')
+    print(f'First 200 chars: {reader.pages[0].extract_text()[:200]}')
 else:
     print('PDF not found')
 "

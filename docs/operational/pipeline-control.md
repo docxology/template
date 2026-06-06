@@ -278,11 +278,13 @@ uv run python -m infrastructure.benchmark.template_harness --repo-root .
 uv run python -m infrastructure.benchmark.template_harness --repo-root . --write-default-manifest
 ```
 
-It scores canonical exemplars only by default:
-
-- `template_autoresearch_project`
-- `template_code_project`
-- `template_prose_project`
+The default manifest written by `--write-default-manifest` scores the public
+canonical exemplars only — the full `PUBLIC_PROJECT_NAMES` set in
+[`infrastructure/project/public_scope.py`](../../infrastructure/project/public_scope.py)
+(authoritative roster → [`docs/_generated/active_projects.md`](../_generated/active_projects.md)).
+The shipped fixed smoke manifest
+(`infrastructure/benchmark/template_smoke_manifest.json`) is a smaller subset
+(`template_code_project`, `template_prose_project`).
 
 Benchmark manifests may attach a weighted rubric for reproducibility, evidence
 grounding, rendering, cross-reference integrity, source quality, and publication

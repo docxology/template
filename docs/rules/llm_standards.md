@@ -14,7 +14,7 @@ flowchart LR
     LLM --> INIT[__init__.py<br/>Public API exports]
     LLM --> CORE[/core<br/>LLMClient · configuration · context/]
     LLM --> TPL[/templates<br/>ResearchTemplate system/]
-    LLM --> VAL[/validation<br/>OutputValidator/]
+    LLM --> VAL[/validation<br/>validate_complete · is_off_topic · checks/]
     LLM --> UT[/utils/ollama.py<br/>Model discovery &amp; Ollama helpers/]
     LLM --> CLI[/cli/main.py<br/>Command-line interface/]
     LLM --> DOCS[AGENTS.md · README.md · SKILL.md]
@@ -34,7 +34,7 @@ flowchart LR
 | `LLMClient` | Main interface for queries | `from infrastructure.llm import LLMClient` |
 | `OllamaClientConfig` | Configuration management | `from infrastructure.llm import OllamaClientConfig` |
 | `GenerationOptions` | Per-query generation control | `from infrastructure.llm import GenerationOptions` |
-| `OutputValidator` | Response validation | `from infrastructure.llm import OutputValidator` |
+| `validate_complete` / `is_off_topic` | Response validation (function-based; the old `OutputValidator` class was removed) | `from infrastructure.llm import validate_complete, is_off_topic` |
 
 ## Configuration Patterns
 
@@ -149,28 +149,38 @@ opts = GenerationOptions(
 ### Output Validation
 
 ```python
-from infrastructure.llm import OutputValidator  # noqa: docs-lint
+# Top-level convenience entrypoints
+from infrastructure.llm import validate_complete, is_off_topic
+
+# Individual checks live in the validation subpackage
+from infrastructure.llm.validation import (
+    validate_json,
+    validate_short_response,
+    validate_long_response,
+    validate_structure,
+)
 
 # Validate JSON
-data = OutputValidator.validate_json(response)
+data = validate_json(response)
 
 # Validate response length
-OutputValidator.validate_short_response(response)  # < 150 tokens
-OutputValidator.validate_long_response(response)   # > 500 tokens
+validate_short_response(response)  # max_tokens default 150
+validate_long_response(response)   # min_tokens default 500
 
-# Validate structure
-OutputValidator.validate_structure(data, schema)
+# Validate structure against a schema
+validate_structure(data, schema)
 
-# validation
-OutputValidator.validate_complete(response, mode="structured", schema=schema)
+# Mode-aware validation (ResponseMode is a str-enum; "structured" also works)
+validate_complete(response, mode="structured", schema=schema)
 ```
 
 ### Review Quality Validation
 
-For manuscript reviews, use the validation functions from the review script:
+For manuscript reviews, use the validation functions from the review subpackage:
 
 ```python
-from scripts import validate_review_quality, is_off_topic
+from infrastructure.llm.review import validate_review_quality
+from infrastructure.llm import is_off_topic
 
 # Check for off-topic responses first
 if is_off_topic(response):
@@ -195,7 +205,7 @@ if format_info.get("emojis_found"):
 Detect when the LLM has gone off-topic:
 
 ```python
-from scripts import is_off_topic
+from infrastructure.llm import is_off_topic
 
 # Patterns detected:
 # - Email format (Re:, Dear, Subject:, From:, To:)
@@ -214,7 +224,7 @@ if is_off_topic(response):
 The validation system uses **structure-only validation** for general-purpose use. Emojis and tables are allowed to give LLMs formatting flexibility.
 
 ```python
-from scripts import (
+from infrastructure.llm.validation import (
     detect_conversational_phrases,
     check_format_compliance,
     is_off_topic,
@@ -385,7 +395,8 @@ except ValidationError as e:
 ### Connection Checking
 
 ```python
-from infrastructure.llm import is_ollama_running, select_best_model, OllamaClientConfig  # noqa: docs-lint
+from infrastructure.llm import OllamaClientConfig
+from infrastructure.llm.utils import is_ollama_running, select_best_model
 
 # Check before starting
 if not is_ollama_running():
@@ -505,8 +516,8 @@ summary = client.apply_template(
 )
 
 # List available templates
-from infrastructure.llm.templates import TEMPLATE_REGISTRY  # noqa: docs-lint
-print(list(TEMPLATE_REGISTRY.keys()))
+from infrastructure.llm.templates import TEMPLATES  # noqa: docs-lint
+print(list(TEMPLATES.keys()))
 ```
 
 ### Creating Custom Templates
@@ -535,7 +546,7 @@ result = template.render(content=methodology_text)
 The system includes a translation template for generating technical abstracts in multiple languages:
 
 ```python
-from infrastructure.llm import ManuscriptTranslationAbstract, TRANSLATION_LANGUAGES  # noqa: docs-lint
+from infrastructure.llm.templates import ManuscriptTranslationAbstract, TRANSLATION_LANGUAGES  # noqa: docs-lint
 
 # Supported languages
 TRANSLATION_LANGUAGES = {
@@ -622,7 +633,7 @@ LLMs can sometimes get stuck in output loops, repeating the same content. The va
 | < 50% | Error | Fail validation, retry |
 
 ```python
-from infrastructure.llm import detect_repetition, deduplicate_sections  # noqa: docs-lint
+from infrastructure.llm.validation import detect_repetition, deduplicate_sections  # noqa: docs-lint
 
 # Check for repetition
 has_rep, duplicates, unique_ratio = detect_repetition(response)

@@ -8,11 +8,11 @@
 
 ## Terminology Standards
 
-**Preferred Terms (as of v2.0):**
+**Preferred Terms:**
 
 - **Thin Orchestrator Pattern**: Core architectural principle (capitalized when referring to the pattern name, lowercase in prose)
 - **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
-- **Version**: v2.0 (current system version)
+- **Version**: see `pyproject.toml` `[project].version` / the latest git tag for the current package version
 - **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code (live % → [`canonical_facts.md`](../_generated/canonical_facts.md), [`coverage-gaps.md`](../development/coverage-gaps.md))
 - **Build Pipeline**: Orchestrated sequence from environment setup through copied deliverables. **Core** (`execute_pipeline.py --project {name} --core-only`): eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF, validate, copy). **Full** adds optional LLM stages before copy. `./run.sh --pipeline` logs main steps as [1/9]–[9/9] with an initial clean line as [0/9]. Stage scripts are `scripts/00_*.py`–`scripts/05_*.py` plus `06`/`07` for LLM and executive reporting where used.
 
@@ -143,7 +143,7 @@ Auto-generated API reference from `src/` code. Updated automatically during buil
 
 **File**: `manuscript/98_symbols_glossary.md`
 
-**Generation**: `uv run python infrastructure/documentation/generate_glossary_cli.py projects/templates/template_code_project/src/ projects/templates/template_code_project/manuscript/98_symbols_glossary.md` (or your project’s paths; see [`docs/modules/modules-guide.md`](../modules/modules-guide.md))
+**Generation**: `uv run python -m infrastructure.documentation.generate_glossary_cli projects/templates/template_code_project/src/ projects/templates/template_code_project/manuscript/98_symbols_glossary.md` (or your project’s paths; see [`docs/modules/modules-guide.md`](../modules/modules-guide.md))
 
 ### Guard Clause
 
@@ -266,7 +266,7 @@ Process of converting markdown sources to professional PDF documents using Pando
 
 **Pipeline**: Markdown → Pandoc → LaTeX → XeLaTeX → PDF
 
-**Time**: ~84 seconds for rebuild (without optional LLM review)
+**Time**: varies by manuscript size and machine (measure with `/usr/bin/time`); LLM stages add to this when enabled
 
 **See**: [RUN_GUIDE.md](../RUN_GUIDE.md)
 
@@ -285,7 +285,7 @@ Automated checking of generated PDFs for rendering issues, unresolved references
 Required system dependencies and software that must be installed before using the template.
 
 **System**: pandoc, texlive-xetex, fonts
-**Python**: uv or pip, python 3.9+
+**Python**: uv or pip, Python 3.10+ (CI matrix: 3.10–3.12)
 
 **See**: [getting-started.md](../guides/getting-started.md) | [README.md](../README.md)
 
@@ -488,7 +488,7 @@ Automated checking of various aspects: tests, markdown, PDFs, coverage, etc.
 **Types**:
 
 - Test validation (pytest)
-- Markdown validation (validate_markdown.py)
+- Markdown validation (`infrastructure.validation.cli markdown`)
 - PDF validation (scripts/04_validate_output.py)
 - Coverage validation (pyproject.toml `[tool.coverage.*]`)
 

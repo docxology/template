@@ -54,15 +54,26 @@ Guidelines for using and extending the reporting utilities (multi-format reports
 ## Quick Example
 
 ```python
-from infrastructure.reporting import generate_pipeline_report, get_error_aggregator
+from pathlib import Path
+
+from infrastructure.reporting import (
+    generate_pipeline_report,
+    get_error_aggregator,
+    save_pipeline_report,
+)
 
 errors = get_error_aggregator()
-errors.add("validation", "missing figure", context={"file": "02_results.md"})
+errors.add_error("validation", "missing figure", context={"file": "02_results.md"})
 
 report = generate_pipeline_report(
-    stages=["setup", "tests", "analysis"],
-    durations={"setup": 3.2, "tests": 28.5, "analysis": 12.1},
-    errors=errors,
+    stage_results=[
+        {"name": "setup", "exit_code": 0, "duration": 3.2},
+        {"name": "tests", "exit_code": 0, "duration": 28.5},
+        {"name": "analysis", "exit_code": 0, "duration": 12.1},
+    ],
+    total_duration=43.8,
+    repo_root=Path("."),
+    error_summary=errors.get_summary(),
 )
-report.save_markdown("output/reports/pipeline.md")
+save_pipeline_report(report, Path("output/reports"), formats=["markdown"])
 ```

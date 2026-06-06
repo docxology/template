@@ -11,6 +11,7 @@ The Research Project Template pipelines integrate optional cryptographic hashing
 | [secure_execution.md](secure_execution.md) | Guide to the interactive orchestration environment `./secure_run.sh` |
 | [steganography.md](steganography.md) | How the `SteganographyProcessor` overlays watermarks and dynamic `mailto:` QR codes |
 | [hashing_and_manifests.md](hashing_and_manifests.md) | How cryptographic hashing ensures document provenance integrity |
+| [literature-fetch-security.md](literature-fetch-security.md) | Trust boundaries, threat model, and hardening for `infrastructure/search/literature/` web fetching |
 
 ## Quick Start
 

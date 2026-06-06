@@ -4,9 +4,11 @@ This document explains the markdown template structure and cross-referencing sys
 
 ## Template Structure
 
-The template demonstrates a academic paper structure with the following markdown files:
+The template demonstrates an academic paper structure organized as numbered markdown sections.
 
-### Core Sections
+> **Note:** The section file names, section labels (`{#sec:...}`), and the `eq:`/`fig:` labels listed throughout this guide are *illustrative naming patterns*, not the literal contents of any one exemplar. The canonical `template_code_project` ships `00_abstract.md`, `01_introduction.md`, `02_methodology.md`, `03_results.md`, `04_conclusion.md`, `05_experimental_setup.md`, `06_reproducibility.md`, `07_scope_and_related_work.md`, and `99_references.md` (plus `preamble.md`). List the real files for your checkout with `ls projects/templates/template_code_project/manuscript/`.
+
+### Core Sections (illustrative)
 
 1. **`manuscript/preamble.md`** - LaTeX preamble with styling and packages
 2. **`manuscript/01_abstract.md`** - Research overview and key contributions

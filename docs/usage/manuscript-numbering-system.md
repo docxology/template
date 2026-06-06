@@ -135,22 +135,18 @@ S02_supplemental_results.md
 
 ## 🛠️ Build System Changes
 
-### 1. **Pipeline Orchestrator (scripts/execute_pipeline.py)**
+### 1. **Manuscript discovery (`infrastructure/rendering/manuscript_discovery.py`)**
 
-#### Updated `discover_markdown_modules()` function
+#### `discover_manuscript_files()` function
 
-```bash
-discover_markdown_modules() {
-  # Main sections (01-09)
-  find "$MARKDOWN_DIR" -maxdepth 1 -name "0[0-9]_*.md" | sort
-  # Supplemental sections (S01-S99)
-  find "$MARKDOWN_DIR" -maxdepth 1 -name "S[0-9][0-9]_*.md" | sort
-  # Glossary (98)
-  find "$MARKDOWN_DIR" -maxdepth 1 -name "98_*.md"
-  # References (99 - always last)
-  find "$MARKDOWN_DIR" -maxdepth 1 -name "99_*.md"
-}
-```
+The render pipeline (driven by `scripts/03_render_pdf.py` / `scripts/execute_pipeline.py`)
+delegates section discovery and ordering to the Python function
+`discover_manuscript_files()`, which buckets and sorts sections by prefix:
+
+1. Main sections (`00_*.md`–`09_*.md` and any other non-`98`/`99` sections)
+2. Supplemental sections (`S##_*.md`)
+3. Glossary (`98_*.md`)
+4. References (`99_*.md`, always last)
 
 **Effect:** Ensures correct document ordering regardless of filesystem ordering.
 
@@ -160,7 +156,7 @@ Glossary generation simplified:
 
 ```bash
 # Run glossary generation (example: template_code_project)
-uv run python infrastructure/documentation/generate_glossary_cli.py \
+uv run python -m infrastructure.documentation.generate_glossary_cli \
   projects/templates/template_code_project/src/ projects/templates/template_code_project/manuscript/98_symbols_glossary.md
 ```
 
@@ -209,7 +205,7 @@ uv run python infrastructure/documentation/generate_glossary_cli.py \
 **Current status:**
 
 ```markdown
-**Note:** This glossary is auto-generated from `src/` via `infrastructure/documentation/generate_glossary_cli.py` (see [`docs/modules/modules-guide.md`](../modules/modules-guide.md)); run manually with explicit `src/` and glossary markdown paths per project.
+**Note:** This glossary is auto-generated from `src/` via `python -m infrastructure.documentation.generate_glossary_cli` (see [`docs/modules/modules-guide.md`](../modules/modules-guide.md)); run manually with explicit `src/` and glossary markdown paths per project.
 ```
 
 ---
@@ -295,7 +291,7 @@ The `markdown/` directory was a temporary staging area that is no longer needed.
 **Current workflow:**
 
 ```
-generate_glossary_cli.py → manuscript/98_symbols_glossary.md
+python -m infrastructure.documentation.generate_glossary_cli → manuscript/98_symbols_glossary.md
                            ↓ (include)
                        Combined PDF
 ```

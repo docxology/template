@@ -342,18 +342,23 @@ Demonstrates statistical or simulation workflows for other projects:
 uv run python projects/{name}/scripts/<your_analysis>.py
 ```
 
-### Generate Scientific Figures (`scripts/generate_scientific_figures.py`)
+### Generate Scientific Figures (per-project analysis script)
 
-Automated figure generation workflow:
+Project analysis scripts under `projects/{name}/scripts/` own the figure
+generation workflow (there is no repo-level `generate_scientific_figures.py`):
 1. Run simulations
 2. Perform analysis
 3. Generate visualizations
 4. Insert figures with captions automatically
 5. Update cross-references
 
-**Run:**
+These scripts are executed automatically by `scripts/02_run_analysis.py`
+(Stage 4); see the [`template_code_project`](../../projects/templates/template_code_project/scripts/optimization_analysis.py)
+exemplar for the canonical pattern.
+
+**Run a single project's analysis directly:**
 ```bash
-uv run python scripts/generate_scientific_figures.py
+uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 ```
 
 ## Integration with Build System

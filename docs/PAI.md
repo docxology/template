@@ -26,12 +26,12 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 
 ## PAI v5 Alignment
 
-As of 2026-05-15, this repository treats upstream PAI `v5.0.0` as the current Life Operating System doctrine: DA-centered operation, Pulse on port `31337`, Algorithm `v6.5.0`, and ISA-first execution. For non-trivial work, articulate the Ideal State Artifact before implementation; PRD language is historical only and should not be presented as current PAI doctrine.
+As of 2026-05-15, this repository treats upstream PAI `v5.0.0` as the current Life Operating System doctrine: DA-centered operation, Pulse on port `31337`, Algorithm `v6.6.0`, and ISA-first execution. For non-trivial work, articulate the Ideal State Artifact before implementation; PRD language is historical only and should not be presented as current PAI doctrine.
 
 Operational smoke checks for the local PAI install live outside this template's Python APIs:
 
 - `~/.claude/PAI/PAI_SYSTEM_PROMPT.md`
-- `~/.claude/PAI/ALGORITHM/v6.5.0.md`
+- `~/.claude/PAI/ALGORITHM/v6.6.0.md`
 - `~/.claude/skills/ISA/SKILL.md`
 - `http://localhost:31337/api/pulse/health`
 - `http://localhost:31337/readiness`
@@ -54,7 +54,7 @@ curl -s http://127.0.0.1:31337/api/pulse/self-audit | jq '{ready,counts,pointers
 
 `subsystems.cron` should report no active failure rows after the 2026-05-15 assistant scaffold validation; any new failure row should be treated as a fresh regression.
 
-The `pulse-self-audit` job runs daily at 06:00 and writes its latest report to `~/.claude/PAI/MEMORY/PAISYSTEMUPDATES/pulse-self-audit.json`. Re-enable staged jobs only when this report has zero critical findings and the specific job target exists. The report also checks backup retention and confirms that `settings.json` and `PAI/ALGORITHM/LATEST` agree on Algorithm `6.3.0`.
+The `pulse-self-audit` job runs daily at 06:00 and writes its latest report to `~/.claude/PAI/MEMORY/PAISYSTEMUPDATES/pulse-self-audit.json`. Re-enable staged jobs only when this report has zero critical findings and the specific job target exists. The report also checks backup retention and confirms that `settings.json` and `PAI/ALGORITHM/LATEST` agree on Algorithm `6.6.0`.
 
 Pulse process management runs this self-audit before `start` and `install`; a future critical finding blocks daemon launch until the missing enabled target or v5 baseline issue is fixed.
 
@@ -79,7 +79,7 @@ flowchart TB
     ROOT --> DOCS[docs/CLOUD_DEPLOY.md<br/>Headless cloud server guide]
     ROOT --> DOCKER[infrastructure/docker<br/>Dockerfile · docker-compose.yml]
 
-    INFRA --> INFRA_PKGS[benchmark · core · doctor · documentation · llm ·<br/>orchestration · project · prose · publishing · reference ·<br/>rendering · reporting · scientific · search · skills ·<br/>steganography · validation]
+    INFRA --> INFRA_PKGS[autoresearch · benchmark · core · doctor · documentation ·<br/>llm · methods · orchestration · project · prose ·<br/>publishing · reference · rendering · reporting · scientific ·<br/>search · sia · skills · steganography · validation]
 
     SCR --> SCR_FILES[shell_bootstrap.sh · bash_utils.sh ops only ·<br/>00_setup_environment → 06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
 

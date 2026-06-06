@@ -47,7 +47,7 @@
 3. **Generate the PDF**
 
    ```bash
-   # Run core pipeline (ten stages by default; see RUN_GUIDE.md)
+   # Run core pipeline (eight stages with --core-only; see RUN_GUIDE.md)
    uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
@@ -768,7 +768,7 @@ def test_process_negative():
 5. **Run build**
 
    ```bash
-   # Core pipeline (ten stages by default)
+   # Core pipeline (eight stages with --core-only)
    uv run python scripts/execute_pipeline.py --project {name} --core-only
 
    # Or use unified interactive menu

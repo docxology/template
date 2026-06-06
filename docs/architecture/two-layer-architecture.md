@@ -47,7 +47,7 @@ flowchart TB
     INFRA --> REND[/rendering<br/>multi-format · PDF · HTML · slides · DOCX · EPUB/]
     INFRA --> SCI[/scientific<br/>scientific dev tools/]
     INFRA --> SEARCH[/search<br/>multi-source literature search/]
-    INFRA --> REF[/reference<br/>BibTeX I/O/]
+    INFRA --> REF[/reference<br/>citation BibTeX I/O · verification reference-existence gate/]
     INFRA --> REP[/reporting<br/>pipeline reports/]
     INFRA --> STEG[/steganography<br/>secure PDF post-processing/]
 
@@ -278,7 +278,7 @@ flowchart TB
     INFRA --> STEG[/steganography<br/>PDF hardening/]
     INFRA --> VAL[/validation<br/>PDF · markdown · integrity · audit/]
     INFRA --> SEARCH[/search<br/>literature search/]
-    INFRA --> REF[/reference<br/>BibTeX I/O/]
+    INFRA --> REF[/reference<br/>citation BibTeX I/O · verification reference-existence gate/]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff

@@ -13,6 +13,7 @@ Technical guide for `docs/best-practices/` — code organization, version contro
 | `multi-project-management.md` | Managing multiple projects in the template |
 | `migration-guide.md` | Migrating from other templates |
 | `backup-recovery.md` | Backup strategies and recovery procedures |
+| `literature-search-best-practices.md` | Operating `infrastructure.search.literature` and `infrastructure.reference.citation` |
 
 ## Key Conventions
 

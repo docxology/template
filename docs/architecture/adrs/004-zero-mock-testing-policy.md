@@ -40,7 +40,7 @@ This policy applies to both `infrastructure/` and `projects/*/tests/` code.
 
 - Tests are more realistic but may be slower
 - Requires real data fixtures or HTTP test fixtures
-- Some tests may need network access (marked with `@pytest.mark.net`)
+- Some tests may need network access (marked with `@pytest.mark.requires_network`)
 
 ## References
 
