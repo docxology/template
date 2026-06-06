@@ -92,6 +92,11 @@ uv run python scripts/01_run_tests.py --project {project_name}
 # Infrastructure tests only (60% coverage minimum)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 
+# Faster infra run: parallelize across cores with pytest-xdist (CI uses -n auto).
+# The suite is parallel-safe (per-test tmp_path + random-port httpserver);
+# pytest-cov combines per-worker data before the coverage gate.
+uv run pytest tests/infra_tests/ -n auto --cov=infrastructure --cov-fail-under=60
+
 # Project tests only (90% coverage minimum)
 uv run pytest projects/{project_name}/tests/ --cov=projects/{project_name}/src --cov-fail-under=90
 

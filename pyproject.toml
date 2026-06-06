@@ -159,7 +159,7 @@ testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --tb=short --strict-markers -W ignore::pytest.PytestDeprecationWarning --durations=10 -m 'not slow and not bench and not private_project and not external_fixture'"
+addopts = "--tb=short --strict-markers -W ignore::pytest.PytestDeprecationWarning --durations=10 -m 'not slow and not bench and not private_project and not external_fixture'"
 timeout = 10  # Timeout individual tests after 10 seconds to prevent hanging
 timeout_method = "thread"  # Use thread-based timeout (safer for network operations)
 markers = [
