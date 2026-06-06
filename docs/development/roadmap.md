@@ -5,12 +5,23 @@ infrastructure. Architecture details:
 [`architecture.md`](../core/architecture.md) and
 [`workflow.md`](../core/workflow.md).
 
-**Last verified:** 2026-05-31 (post-`v3.1.0` backlog refresh; measured
+**Last verified:** 2026-06-05 (post-`v3.2.0` release; measured
 metrics defer to [`TO-DO.md`](../../TO-DO.md) and
 [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)
 unless this file is re-measured)
 
 ## Completed Releases
+
+### v3.2.0 — Format, Logging, and Exemplar Hardening (2026-06-04)
+
+- added optional Pandoc-backed DOCX/EPUB rendering with per-format toggles
+  (default off)
+- extended the Active Inference validation spine with producer completeness,
+  stale-artifact checks, and dependency graph v2
+- hardened the public SIA harness boundary and re-baselined coverage gaps
+- closed GitHub supply-chain hygiene (SHA-pinned actions, `actionlint` gate,
+  guarded Dependabot automerge) and the XML-parser policy
+- see [`CHANGELOG.md`](../../CHANGELOG.md) for the full entry
 
 ### v3.1.0 — Public Exemplar / Validation-Spine Release (2026-05-30)
 
@@ -90,13 +101,12 @@ and **Major**.
 - land the Active Inference gate-cache follow-up without changing the immutable
   `v3.1.0` tag
 
-### v3.2.0 — Format, Logging, and Exemplar Hardening
+### Next (open backlog)
 
-- finish terminal logging cleanup and preserve verbose file logs
-- add optional DOCX/EPUB rendering with per-format toggles
-- extend the Active Inference validation spine with producer completeness,
-  stale-artifact checks, and dependency graph v2
-- harden the public SIA harness boundary and re-baseline coverage gaps
+- finish terminal logging cleanup and preserve verbose file logs (LOG-CLEAN-1)
+- land the Active Inference gate-cache follow-up (AI-GATE-CACHE-1)
+- consolidate the defensive markdown-read helper and derive the CI project
+  matrix from the generated roster (READFILE-SAFE-1, CI-MATRIX-DYNAMIC-1)
 
 ### Next Generation (vision)
 

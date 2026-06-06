@@ -6,8 +6,8 @@ We actively maintain security for the following versions:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 3.1.x   | ✅ Yes             |
-| < 3.1   | ❌ No              |
+| 3.2.x   | ✅ Yes             |
+| < 3.2   | ❌ No              |
 
 ## 🐛 **Reporting a Vulnerability**
 

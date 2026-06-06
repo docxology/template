@@ -105,11 +105,11 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **214** project-scope infrastructure tests collected and **381** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (2026-05-27):
+**Exemplar `pytest --collect-only` totals** (2026-05-27; `template_active_inference` re-derived 2026-06-05 after the v3.2.0 validation-spine additions):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_active_inference` | 269 | 91.35 % |
+| `template_active_inference` | 343 | 91.35 % |
 | `template_autoresearch_project` | 220 | 92.81 % |
 | `template_autoscientists` | 79 | 99.59 % |
 | `template_code_project` | 196 | 98.25 % |
