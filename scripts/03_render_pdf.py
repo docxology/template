@@ -44,13 +44,21 @@ def main() -> int:
         default="project",
         help="Project directory name; resolves projects/active/<name> first, else projects/working/<name>",
     )
+    parser.add_argument(
+        "--skip-manuscript-hydration",
+        action="store_true",
+        help="Skip the (slow) manuscript-variable hydration step before rendering "
+        "(for fast title-page/metadata re-renders)",
+    )
     args = parser.parse_args()
 
     log_header(f"STAGE 03: Render PDF (Project: {args.project})", logger)
 
     try:
         # Run rendering pipeline
-        exit_code = execute_render_pipeline(args.project)
+        exit_code = execute_render_pipeline(
+            args.project, skip_manuscript_hydration=args.skip_manuscript_hydration
+        )
         return exit_code
 
     except Exception as e:

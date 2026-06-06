@@ -467,7 +467,7 @@ def _render_combined_epub(
         logger.warning(f"⚠️  Unexpected error generating combined EPUB: {e}")
 
 
-def _render_pipeline_impl(project_name: str = "project") -> int:
+def _render_pipeline_impl(project_name: str = "project", *, skip_manuscript_hydration: bool = False) -> int:
     """Execute the PDF rendering pipeline using infrastructure rendering.
 
     This pipeline:
@@ -493,7 +493,9 @@ def _render_pipeline_impl(project_name: str = "project") -> int:
     )
     reporter.clear_report()
 
-    if _run_manuscript_variable_script(project_root, template_repo_root=repo_root) != 0:
+    if skip_manuscript_hydration:
+        logger.info("Skipping manuscript-variable hydration (--skip-manuscript-hydration)")
+    elif _run_manuscript_variable_script(project_root, template_repo_root=repo_root) != 0:
         return 1
 
     manuscript_dir = _resolve_manuscript_dir(project_root)
@@ -584,15 +586,21 @@ def _render_pipeline_impl(project_name: str = "project") -> int:
     return 0
 
 
-def execute_render_pipeline(project_name: str = "project") -> int:
+def execute_render_pipeline(project_name: str = "project", *, skip_manuscript_hydration: bool = False) -> int:
     """Execute PDF rendering orchestration.
+
+    Args:
+        project_name: Name of project in projects/ directory.
+        skip_manuscript_hydration: when True, skip the (slow) manuscript-variable
+            hydration step before rendering — for fast title-page/metadata
+            re-renders that do not need an analysis rebuild.
 
     Returns:
         Exit code (0=success, 1=failure)
     """
     log_live_resource_usage("PDF rendering stage start", logger)
     try:
-        exit_code = _render_pipeline_impl(project_name)
+        exit_code = _render_pipeline_impl(project_name, skip_manuscript_hydration=skip_manuscript_hydration)
         if exit_code == 0:
             outputs_valid = verify_pdf_outputs(project_name)
             if outputs_valid:

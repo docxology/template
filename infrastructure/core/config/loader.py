@@ -42,6 +42,23 @@ from infrastructure.core.config.formatting import (  # noqa: F401
 
 logger = get_logger(__name__)
 
+# Standard Pandoc / manuscript frontmatter keys used by projects that author a
+# "Pandoc-flat" manuscript config (e.g. ``bibliography: refs.bib`` at top level
+# with sibling Pandoc keys) rather than the nested template blocks. Recognized so
+# they do not surface as spurious "Unknown config key" warnings. Several are
+# hyphenated (Pandoc style) and so cannot be ``ManuscriptConfig`` TypedDict
+# fields; they are whitelisted here instead.
+_PANDOC_FRONTMATTER_KEYS = frozenset(
+    {
+        "csl",
+        "link-citations",
+        "reference-section-title",
+        "chapters",
+        "preamble",
+        "fail_on_missing",
+    }
+)
+
 try:
     import yaml
 
@@ -82,6 +99,8 @@ def validate_config_keys(
         canonical_keys.update(get_project_schema_extensions(project_name).keys())
     # Globally registered extensions (under "") apply to all projects.
     canonical_keys.update(get_project_schema_extensions("").keys())
+    # Standard Pandoc-flat frontmatter keys (csl, link-citations, chapters, …).
+    canonical_keys.update(_PANDOC_FRONTMATTER_KEYS)
     known_keys = frozenset(canonical_keys)
     warnings: list[str] = []
 
