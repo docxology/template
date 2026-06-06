@@ -301,8 +301,12 @@ jobs:
           COVERAGE_FILE: .coverage.infra
         # macOS runners have socket.getfqdn timeout issues with werkzeug/httpserver
         continue-on-error: ${{ runner.os == 'macOS' }}
+        # -n auto parallelizes across runner cores (pytest-xdist); the suite is
+        # parallel-safe (no-mocks tests use per-test tmp_path + random-port
+        # httpserver). pytest-cov combines per-worker data before the gate.
         run: >-
           uv run pytest tests/infra_tests/
+          -n auto
           --cov=infrastructure
           --cov-report=term-missing
           --cov-report=xml:coverage-infra.xml
