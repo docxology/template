@@ -172,7 +172,7 @@ Reference it: \ref{fig:my_figure}
 | **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project template_code_project` first |
 | **References show ??** | Check label spelling and existence |
 | **Project not discovered** | Ensure the directory is under `projects/`, has `src/` with Python files, and has `tests/`; add `manuscript/config.yaml` before rendering |
-| **Stage 4 fails silently** | Check root pyproject.toml has project deps ([details](../guides/new-project-setup.md#pitfall-6-project-specific-packages-absent-from-root-venv--silent-stage-4-failure)) |
+| **Stage 4 fails silently** | Check root pyproject.toml has project deps ([details](../guides/new-project-setup.md#pitfall-6-root-venv)) |
 | **Config warnings** | Nest custom keys under `project_config:` |
 
 ## 📊 Key Metrics

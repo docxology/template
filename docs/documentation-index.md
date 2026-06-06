@@ -41,7 +41,7 @@ This index lists documentation files in the Research Project Template by categor
 ---
 
 > [!IMPORTANT]
-> **Multi-project pipeline pitfalls** (root venv deps, `matplotlib` in core deps, `project_config:` namespace, idempotency) — authoritative copy in [docs/AGENTS.md](AGENTS.md#learnings--known-issues) and [guides/new-project-setup.md](guides/new-project-setup.md#pitfall-6-project-specific-packages-absent-from-root-venv--silent-stage-4-failure).
+> **Multi-project pipeline pitfalls** (root venv deps, `matplotlib` in core deps, `project_config:` namespace, idempotency) — authoritative copy in [docs/AGENTS.md](AGENTS.md#learnings--known-issues) and [guides/new-project-setup.md](guides/new-project-setup.md#pitfall-6-root-venv).
 
 ## Topic routing (canonical → deep dives)
 
@@ -71,6 +71,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[`rules/infrastructure_modules.md`](rules/infrastructure_modules.md)** - Infrastructure module development
 - **[`rules/testing_standards.md`](rules/testing_standards.md)** - Testing patterns
 - **[`rules/documentation_standards.md`](rules/documentation_standards.md)** - Documentation writing guide
+- **[`rules/memory_and_decision_records.md`](rules/memory_and_decision_records.md)** - Decision-memory and rationale tiering
 - **[`rules/type_hints_standards.md`](rules/type_hints_standards.md)** - Type annotation patterns
 - **[`rules/llm_standards.md`](rules/llm_standards.md)** - LLM/Ollama integration
 - **[`rules/code_style.md`](rules/code_style.md)** - Code formatting
@@ -124,6 +125,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[architecture/adrs/002-declarative-dag-pipeline.md](architecture/adrs/002-declarative-dag-pipeline.md)** - ADR-002: Declarative DAG pipeline
 - **[architecture/adrs/003-multi-format-rendering-and-toggles.md](architecture/adrs/003-multi-format-rendering-and-toggles.md)** - ADR-003: Multi-format rendering and toggles
 - **[architecture/adrs/004-zero-mock-testing-policy.md](architecture/adrs/004-zero-mock-testing-policy.md)** - ADR-004: Zero-mock testing policy
+- **[architecture/adrs/005-decision-memory-and-adversarial-validation.md](architecture/adrs/005-decision-memory-and-adversarial-validation.md)** - ADR-005: Decision memory and adversarial validation
 - **[core/workflow.md](core/workflow.md)** - Development workflow
 - **[architecture/testing-strategy.md](architecture/testing-strategy.md)** - Testing strategy overview
 - **[architecture/discovery-export-synthesis.md](architecture/discovery-export-synthesis.md)** - Discovery and export patterns
@@ -330,6 +332,12 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[prompts/comprehensive-assessment/SKILL.md](prompts/comprehensive-assessment/SKILL.md)** - Assessment and review
 - **[prompts/reproducibility-audit/SKILL.md](prompts/reproducibility-audit/SKILL.md)** - Determinism and regenerate-from-clean audit
 - **[prompts/pipeline-debugging/SKILL.md](prompts/pipeline-debugging/SKILL.md)** - Pipeline DAG-stage failure triage
+- **[prompts/academic-paper/SKILL.md](prompts/academic-paper/SKILL.md)** - Academic paper authoring
+- **[prompts/academic-paper-reviewer/SKILL.md](prompts/academic-paper-reviewer/SKILL.md)** - Academic paper review
+- **[prompts/academic-pipeline/SKILL.md](prompts/academic-pipeline/SKILL.md)** - Full academic pipeline
+- **[prompts/agentic-use/SKILL.md](prompts/agentic-use/SKILL.md)** - Agentic-use planning
+- **[prompts/deep-research/SKILL.md](prompts/deep-research/SKILL.md)** - Deep research synthesis
+- **[prompts/methods-orchestration/SKILL.md](prompts/methods-orchestration/SKILL.md)** - Methods orchestration
 
 ---
 
