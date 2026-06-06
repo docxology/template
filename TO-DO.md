@@ -4,7 +4,7 @@
 > documented. Real methods only; never mocks or fakes. Every release ships with
 > green tests and accurate docs.
 
-This file tracks live work after the `v3.1.0` template release. Historical
+This file tracks live work after the `v3.2.0` template release. Historical
 release detail belongs in [`CHANGELOG.md`](CHANGELOG.md); generated counts and
 project rosters belong in
 [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) and
@@ -14,21 +14,21 @@ project rosters belong in
 
 ## Live state snapshot
 
-Refreshed on **2026-05-31** from the post-`v3.1.0` release state and local
+Refreshed on **2026-06-05** from the post-`v3.2.0` release state and local
 inspection. Re-run the commands in the **Source** column before copying any
 number into prose.
 
 | Gate or surface | Current value | Source |
 | --- | --- | --- |
-| Package version | `3.1.0` | `pyproject.toml#[project].version` |
-| Latest template release | `v3.1.0` (published 2026-05-30) | [`CHANGELOG.md`](CHANGELOG.md), GitHub release tag |
+| Package version | `3.2.0` | `pyproject.toml#[project].version` |
+| Latest template release | `v3.2.0` (published 2026-06-04) | [`CHANGELOG.md`](CHANGELOG.md), GitHub release tag |
 | Public source scope | `infrastructure` plus nine public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
 | Public exemplars | `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook` | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
-| Canonical generated facts | 20 importable infrastructure packages; 492 infrastructure Python modules; nine exemplar coverage gates at or above 90 % | [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) |
-| Open GitHub PRs | 3 Dependabot PRs: Codecov action, `actions/stale`, `astral-sh/setup-uv` | `/opt/homebrew/bin/gh-axi pr list` |
-| Docs lint status | links-only, consistency-only, and doc-pairs checks were clean in the `v3.1.0` release verification | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
+| Canonical generated facts | 20 importable infrastructure packages; 518 infrastructure Python modules; nine exemplar coverage gates at or above 90 % | [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) |
+| Open GitHub PRs | 5 open: 3 Dependabot (`codecov-action` #5, `actions/stale` #4, `astral-sh/setup-uv` #3) + 2 maintainer (#23 sheaf integrity gates, #14 infrastructure composability audit) | `/opt/homebrew/bin/gh-axi pr list` |
+| Docs lint status | links-only, consistency-only, and doc-pairs checks were clean in the `v3.2.0` release verification | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
 | Mermaid lint status | clean with chunked batch rendering under the default total budget | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
-| Release verification baseline | public project tests, Active Inference focused gate, docs invariant suite, Ruff, format, mypy, drift, skills, exports, SIA validation, tracked-project/generated-artifact guards, and pre-push hooks passed | `v3.1.0` release notes and local command history |
+| Release verification baseline | public project tests, Active Inference focused gate, docs invariant suite, Ruff, format, mypy, drift, skills, exports, SIA validation, tracked-project/generated-artifact guards, and pre-push hooks passed | `v3.2.0` release notes and local command history |
 
 ---
 
@@ -36,8 +36,26 @@ number into prose.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **Docs/infrastructure/.github review pass (2026-06-05, PR #24 + follow-up):**
+  `CODEOWNERS` aligned to the 9-exemplar CI matrix; `concurrency:` guards on
+  `release.yml`/`stale.yml`; `find_repo_root` centralized in
+  `infrastructure.core.project_paths` (fixing a latent `parents[4]` bug in
+  `multi_project_cli`); infra quick wins (dead-code removal, portable cache
+  default, redundant-`normpath` drop, facade-test + regex-doc hygiene); docs
+  fixes (core/README index row, Pitfall-6 anchor); and `integration_audit.py`
+  split into a facade + two builder modules to clear the line-count WARN.
+- **DOCX/EPUB renderers + format toggles (FMT-BUNDLE-1):** real Pandoc-backed
+  `docx_renderer.py`/`epub_renderer.py` with `enable_docx`/`enable_epub` config
+  toggles (default off) and `test_docx_renderer.py`/`test_epub_renderer.py`.
+- **Active Inference validation spine v2 (AI-SPINE-V2):** producer-completeness,
+  integration dependency graph, and seed/commit artifact provenance shipped with
+  stale / missing-producer / missing-consumer negative controls in
+  `test_roadmap_promotion.py`.
+- **Infrastructure coverage gaps rebaselined (COVERAGE-REBASE-1):**
+  [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md)
+  re-measured against the current tree.
 - **GitHub workflow supply-chain hardening (GH-PIN-1, GH-ACTIONLINT-1,
-  GH-AUTOMERGE-1):** all 44 workflow `uses:` refs SHA-pinned (version comments
+  GH-AUTOMERGE-1):** all workflow `uses:` refs SHA-pinned (version comments
   retained); a read-only `actionlint` CI gate added; a guarded Dependabot
   automerge workflow (actor + minor/patch + green-checks) added.
 - **XML parser policy (DEP-DEFUSEDXML-1):** `defusedxml` confirmed as the single
@@ -71,7 +89,7 @@ Keep this section short. Details live in release notes or archived audits.
 
 ## Minor
 
-### TODO-REBASE-1 - Keep the live backlog synchronized with `v3.1.0`
+### TODO-REBASE-1 - Keep the live backlog synchronized with `v3.2.0`
 
 - **Problem:** `TO-DO.md` can drift behind release metadata, generated facts,
   and public exemplar scope.
@@ -79,52 +97,11 @@ Keep this section short. Details live in release notes or archived audits.
   create false priorities.
 - **Smallest next step:** after each release, refresh the live snapshot and move
   shipped rows to [`CHANGELOG.md`](CHANGELOG.md) or archived audit docs.
-- **Acceptance:** `rg -n '3\.1\.0|v3\.1\.0' TO-DO.md CHANGELOG.md pyproject.toml`
+- **Acceptance:** `rg -n '3\.2\.0|v3\.2\.0' TO-DO.md CHANGELOG.md pyproject.toml`
   finds the current release, and
   `uv run python -m infrastructure.project.public_scope source-paths` prints
   `infrastructure` plus the nine public exemplar source paths.
 - **Out of scope:** re-running generated docs unless generated facts changed.
-
-### GH-PIN-1 - SHA-pin GitHub Actions
-> **✅ Shipped 2026-06-03** — see [Recently shipped](#recently-shipped).
-
-
-- **Problem:** workflows still use mutable action tags such as
-  `actions/checkout@v6.0.2`.
-- **Why it matters:** mutable tags are a supply-chain risk and make CI
-  provenance weaker.
-- **Smallest next step:** replace every workflow `uses:` version tag with a full
-  40-character commit SHA and retain a trailing version comment such as
-  `# v6.0.2` for humans and Dependabot.
-- **Acceptance:** `rg -n 'uses: .+@(v[0-9]|main|master)$' .github/workflows`
-  returns no matches.
-- **Out of scope:** renaming workflow jobs or required-check contexts.
-
-### GH-ACTIONLINT-1 - Add an Actionlint CI gate
-> **✅ Shipped 2026-06-03** — see [Recently shipped](#recently-shipped).
-
-
-- **Problem:** workflow syntax regressions are currently caught late.
-- **Why it matters:** a small workflow-expression error can disable useful CI
-  coverage or fail every PR.
-- **Smallest next step:** add an `actionlint` job with read-only permissions and
-  no dependency on project setup.
-- **Acceptance:** the CI job exists and `actionlint` passes locally or on a PR.
-- **Out of scope:** broad workflow restructuring.
-
-### GH-AUTOMERGE-1 - Automerge safe Dependabot bumps
-> **✅ Shipped 2026-06-03** — see [Recently shipped](#recently-shipped).
-
-
-- **Problem:** low-risk action bumps still require manual merge work.
-- **Why it matters:** dependency PR toil distracts from higher-value template
-  work while leaving stale automation open.
-- **Smallest next step:** add a Dependabot automerge workflow gated on
-  `github.actor == 'dependabot[bot]'`, minor/patch update metadata, and green
-  required checks.
-- **Acceptance:** a Dependabot minor/patch PR enters auto-merge only after
-  required checks pass.
-- **Out of scope:** automerging major versions or non-Dependabot PRs.
 
 ### AI-GATE-CACHE-1 - Formalize Active Inference gate bootstrap caching
 
@@ -165,37 +142,28 @@ Keep this section short. Details live in release notes or archived audits.
 - **Smallest next step:** split console/file formatters, disable spinners around
   streaming subprocess output, centralize separator widths, and demote per-file
   render internals to DEBUG.
-- **Acceptance:** a pipeline run shows clean terminal lines without redundant
-  timestamps while `projects/.../output/logs/pipeline.log` keeps timestamped
-  file logs.
+- **Acceptance:** a focused run shows no DEBUG/spinner chrome on stdout —
+  `uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only 2>&1 | rg -c 'DEBUG|SPINNER'`
+  returns `0` — while the project's `output/logs/pipeline.log` still carries
+  timestamped file logs; a rendering test asserts the console formatter strips
+  DEBUG that the file formatter retains.
 - **Out of scope:** changing JSON report schemas.
 
-### FMT-BUNDLE-1 - Add DOCX/EPUB renderers and format toggles
+### READFILE-SAFE-1 - Consolidate the defensive markdown-read pattern
 
-- **Problem:** the pipeline cannot emit DOCX/EPUB and cannot cheaply skip
-  unneeded render formats.
-- **Why it matters:** collaborators often need DOCX for markup and EPUB for
-  reading, while PDF-only work should not pay for every renderer.
-- **Smallest next step:** add real Pandoc-backed DOCX and EPUB renderers, then
-  expose per-format booleans in rendering config with DOCX/EPUB defaulting off.
-- **Acceptance:** tests produce valid `.docx` and `.epub` files with real
-  Pandoc, and default pipeline output remains unchanged until toggles are set.
-- **Out of scope:** replacing the PDF renderer.
-
-### AI-SPINE-V2 - Extend the Active Inference validation spine
-
-- **Problem:** `provenance`, `reproducibility`, and `counterexample` are live,
-  but producer completeness, richer dependency edges, and seed/commit provenance
-  remain future work.
-- **Why it matters:** the exemplar should make stale artifacts and unsupported
-  manuscript evidence fail closed.
-- **Smallest next step:** add producer-completeness and dependency-graph-v2
-  artifacts, then extend provenance rows with deterministic seed and source
-  commit metadata.
-- **Acceptance:** stale, missing-producer, and missing-consumer negative controls
-  fail under project tests or output validation.
-- **Out of scope:** empirical data claims or network-dependent Active Inference
-  research.
+- **Problem:** the `path.read_text(encoding="utf-8")` + `except (OSError,
+  UnicodeDecodeError)` guard is duplicated across many validation/publishing
+  modules; `validation/docs/consistency/_shared.py` already exposes a safe
+  `read_markdown` helper that most call sites do not use.
+- **Why it matters:** divergent error handling means a corrupt file is skipped
+  in one linter and crashes another.
+- **Smallest next step:** route the byte-identical call sites (start with
+  `validation/docs/`) through the shared safe-read helper; do it incrementally
+  with tests, not as one sweeping change.
+- **Acceptance:** the targeted modules import the shared helper, their tests
+  still pass, and a deliberately corrupt fixture is handled identically across
+  them.
+- **Out of scope:** changing the helper's error-handling contract.
 
 ### SIA-HARNESS-2 - Harden the SIA exemplar boundary
 
@@ -209,32 +177,22 @@ Keep this section short. Details live in release notes or archived audits.
   and focused SIA tests pass.
 - **Out of scope:** enabling live LLM calls by default.
 
-### COVERAGE-REBASE-1 - Remeasure real infrastructure coverage gaps
+### CI-MATRIX-DYNAMIC-1 - Derive the CI project matrix from the generated roster
 
-- **Problem:** [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md)
-  predates the SIA and validation-spine release work.
-- **Why it matters:** old low-coverage rows send contributors to stale modules
-  instead of the current risk surface.
-- **Smallest next step:** rerun the documented infra coverage command and
-  replace historical low-coverage rows with current actionable targets.
-- **Acceptance:** the coverage gaps doc includes fresh command output, current
-  date, and no copied stale numbers.
-- **Out of scope:** raising coverage floors in the same change.
-
-### DEP-DEFUSEDXML-1 - Re-evaluate XML dependency ownership
-> **✅ Shipped 2026-06-03** — see [Recently shipped](#recently-shipped).
-
-
-- **Problem:** several XML parsers still import `defusedxml`, while prior
-  backlog notes conflicted about whether that dependency should remain.
-- **Why it matters:** XML parsing is security-sensitive and should have a single
-  current policy.
-- **Smallest next step:** decide whether to keep `defusedxml` as the explicit
-  hardened parser or replace selected call sites with documented stdlib-safe
-  parsing on supported Python versions.
-- **Acceptance:** `rg defusedxml` matches the documented policy, Bandit remains
-  clean, and XML regression tests use real sample files.
-- **Out of scope:** broad parser rewrites unrelated to XML.
+- **Problem:** the `test-project` matrix in
+  [`.github/workflows/ci.yml`](.github/workflows/ci.yml) hard-codes the nine
+  `templates/template_*` exemplars; adding or retiring an exemplar requires a
+  manual edit kept in sync with `CODEOWNERS` and
+  [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
+- **Why it matters:** a hand-maintained matrix drifts from the canonical roster
+  (the `CODEOWNERS` gap fixed on 2026-06-05 was exactly this failure mode).
+- **Smallest next step:** add a `detect`-style job that emits the exemplar list
+  from `infrastructure.project.public_scope` as a matrix output, and have
+  `test-project` consume it via `fromJSON`.
+- **Acceptance:** adding an exemplar under `projects/templates/` extends the CI
+  matrix without editing `ci.yml`'s matrix literal; `CODEOWNERS` drift is caught
+  by an existing guard.
+- **Out of scope:** restructuring the other CI jobs.
 
 ---
 
@@ -313,6 +271,12 @@ entries.
 
 - Backlog IDs are stable. Use them in commit messages when closing related
   work; do not silently reuse retired IDs for new work.
+- **ID scheme:** `<AREA>-<SLUG>-<N>`, where `AREA` names the surface — `GH`
+  (GitHub workflows/CI), `ARCH` (architecture/test rules), `LOG` (logging), `AI`
+  (Active Inference exemplar), `SIA` (SIA exemplar), `DEP` (dependencies), `FMT`
+  (rendering formats), `COVERAGE`/`READFILE`/`CI-MATRIX` (named gates/patterns),
+  `EVIDENCE`/`INCREMENTAL`/`PLUGIN`/`REPRO`/`DASHBOARD` (major capabilities), and
+  `TODO` (backlog hygiene itself). `N` is a monotonic counter within that area.
 - Every active item must include a problem, why it matters, smallest next step,
   acceptance check, and out-of-scope boundary.
 - Completion requires evidence from a command, file diff, or generated artifact;
