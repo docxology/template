@@ -273,7 +273,11 @@ def test_canonical_facts_test_collections_match_current_counts() -> None:
             text=True,
             check=True,
         )
-        count_match = re.search(r"=+ (?P<count>\d+) tests? collected", proc.stdout)
+        # Match the collected-count summary regardless of pytest verbosity: at
+        # normal verbosity it is decorated ("===== 214 tests collected ====="),
+        # at quiet ("-q") it is bare ("214 tests collected in 0.13s"). Don't
+        # require the "=" rule bars, which depend on the inherited addopts -v/-q.
+        count_match = re.search(r"(?P<count>\d+) tests? collected", proc.stdout)
         assert count_match, proc.stdout
         return int(count_match.group("count"))
 
