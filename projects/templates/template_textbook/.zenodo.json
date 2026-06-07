@@ -4,7 +4,7 @@
   "upload_type": "publication",
   "publication_type": "book",
   "license": "cc-by-4.0",
-  "version": "0.1",
+  "version": "0.1.0",
   "language": "eng",
   "creators": [
     {
@@ -19,6 +19,13 @@
     "reproducible publishing",
     "computational backbone",
     "Python"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20533125",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
   ],
   "doi": "10.5281/zenodo.20533126"
 }

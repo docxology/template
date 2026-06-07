@@ -6,7 +6,7 @@
       "orcid": "0000-0001-6232-9096"
     }
   ],
-  "description": "Source code for Self-Improvement Agent Harness — A Deterministic SIA Exemplar (2026).",
+  "description": "Source code for Self-Improvement Agent Harness: A Deterministic SIA Exemplar (2026).",
   "keywords": [
     "self-improvement agents",
     "benchmark harness",
@@ -14,7 +14,14 @@
     "agent evaluation"
   ],
   "license": "MIT",
-  "title": "Self-Improvement Agent Harness — A Deterministic SIA Exemplar",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20453879",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
+  "title": "Self-Improvement Agent Harness: A Deterministic SIA Exemplar",
   "upload_type": "software",
   "version": "0.1.0"
 }

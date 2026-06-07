@@ -460,6 +460,7 @@ def check_publication_metadata_consistency(project_root: Path, report: Report, p
         )
 
     cff_path = project_root / "CITATION.cff"
+    cff_version = ""
     if cff_path.is_file():
         cff = _load_yaml_mapping(cff_path)
         cff_version = str(cff.get("version", "")).strip().strip("'\"")
@@ -480,7 +481,7 @@ def check_publication_metadata_consistency(project_root: Path, report: Report, p
             )
 
     zenodo_path = project_root / ".zenodo.json"
-    if zenodo_path.is_file() and paper_version:
+    if zenodo_path.is_file():
         try:
             zenodo = json.loads(zenodo_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
@@ -492,13 +493,47 @@ def check_publication_metadata_consistency(project_root: Path, report: Report, p
             )
             return
         zenodo_version = str(zenodo.get("version", "")).strip()
-        if zenodo_version and zenodo_version != paper_version:
+        if zenodo_version and paper_version and zenodo_version != paper_version:
             report.add(
                 "ERROR",
                 project,
                 "publication_zenodo_version_drift",
                 (f"paper.version {paper_version!r} disagrees with .zenodo.json version {zenodo_version!r}"),
             )
+        # Schema-agnostic: CITATION.cff and .zenodo.json must agree on version
+        # (catches book-schema exemplars where paper.version is absent).
+        if cff_version and zenodo_version and cff_version != zenodo_version:
+            report.add(
+                "ERROR",
+                project,
+                "publication_cff_zenodo_version_drift",
+                (
+                    f"CITATION.cff version {cff_version!r} disagrees with "
+                    f".zenodo.json version {zenodo_version!r}"
+                ),
+            )
+        # Comprehensive DOI cross-referencing: when a concept DOI is declared,
+        # .zenodo.json must point back to it via related_identifiers isVersionOf.
+        if concept_doi:
+            related = zenodo.get("related_identifiers")
+            related = related if isinstance(related, list) else []
+            has_concept_xlink = any(
+                isinstance(entry, dict)
+                and str(entry.get("relation", "")).strip() == "isVersionOf"
+                and _normalize_doi(entry.get("identifier")) == concept_doi
+                for entry in related
+            )
+            if not has_concept_xlink:
+                report.add(
+                    "ERROR",
+                    project,
+                    "publication_zenodo_missing_concept_xlink",
+                    (
+                        f"{_rel(zenodo_path, project_root)} lacks a related_identifiers "
+                        f"isVersionOf entry for concept DOI {concept_doi!r} — Zenodo deposit "
+                        "must cross-reference the concept DOI (see docs/guides/zenodo-doi-strategy.md)"
+                    ),
+                )
 
 
 def check_required_files_exist(project_root: Path, report: Report, project: str) -> None:

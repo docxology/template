@@ -35,6 +35,7 @@ publication:
   doi: "10.5281/zenodo.20533675"  # Concept DOI — stable citation
   version_doi: "10.5281/zenodo.20533676"  # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/20533676"
+  year: "2026"  # Zenodo publication_date / deposit description year
 
 metadata:
   license: "MIT"

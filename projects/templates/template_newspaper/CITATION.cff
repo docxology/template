@@ -1,23 +1,20 @@
-cff-version: 1.2.0
-message: "If you use this template, please cite it."
-title: "The Triplicate: A Data-Driven Large-Format Newspaper Layout Engine"
-abstract: >-
-  A pure-Python ReportLab engine that renders a complete 12-page large-format
-  newspaper PDF from structured YAML content, demonstrating designed multi-column
-  page layout — mastheads, spanning headlines, rails, modular boxes, tables,
-  halftone figures and folios — as a reproducible research-template exemplar.
-type: software
 authors:
-  - family-names: Friedman
-    given-names: Daniel Ari
-    affiliation: Active Inference Institute
-    orcid: "https://orcid.org/0000-0001-6232-9096"
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
+cff-version: 1.2.0
+date-released: '2026-05-31'
+doi: 10.5281/zenodo.20533675
 keywords:
-  - newspaper layout
-  - typography
-  - reportlab
-  - reproducible publishing
-  - document engineering
+- newspaper layout
+- typography
+- reportlab
+- reproducible publishing
+- document engineering
 license: MIT
-version: "1.0.0"
-date-released: "2026-05-31"
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template_newspaper
+title: 'The Triplicate: A Data-Driven Large-Format Newspaper Layout Engine'
+type: software
+version: 1.0.0

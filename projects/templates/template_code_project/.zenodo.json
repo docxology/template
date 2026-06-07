@@ -17,6 +17,13 @@
     "infrastructure automation"
   ],
   "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20417136",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
   "title": "Convergence Analysis of Gradient Descent Optimization",
   "upload_type": "software",
   "version": "2.5.0"

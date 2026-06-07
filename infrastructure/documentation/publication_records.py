@@ -56,6 +56,20 @@ class PublicationRecord:
     external_findings: tuple[str, ...] = ()
 
     @property
+    def github_repo_slug(self) -> str:
+        """Return ``owner/repo``, falling back to a github.com ``repository_url``.
+
+        Book-schema exemplars declare ``publication.repository_url`` instead of
+        ``publication.github_repository``; both should surface a GitHub link.
+        """
+        if self.github_repository:
+            return self.github_repository
+        url = self.repository_url
+        if url and "github.com/" in url:
+            return url.split("github.com/", 1)[1].strip("/")
+        return ""
+
+    @property
     def sidecar_status(self) -> str:
         """Return a compact sidecar consistency status."""
         return "ok" if not self.sidecar_findings else "; ".join(self.sidecar_findings)
@@ -169,10 +183,12 @@ def load_publication_records(repo_root: Path) -> list[PublicationRecord]:
         config_path = project_root / "manuscript" / "config.yaml"
         config = _load_yaml_mapping(config_path)
         paper = _section_mapping(config, "paper")
+        book = _section_mapping(config, "book")
         publication = _section_mapping(config, "publication")
 
-        title = str(paper.get("title") or project_name)
-        paper_version = str(paper.get("version") or "").strip()
+        # Prose/code exemplars use `paper:`; book-length exemplars use `book:`.
+        title = str(paper.get("title") or book.get("title") or project_name)
+        paper_version = str(paper.get("version") or book.get("version") or "").strip()
         concept_doi = str(publication.get("doi") or "").strip()
         version_doi = str(publication.get("version_doi") or "").strip()
         version_record = str(publication.get("version_record") or "").strip()
@@ -229,10 +245,11 @@ def refresh_external_records(records: list[PublicationRecord], *, timeout: float
     for record in records:
         findings: list[str] = []
 
-        if record.github_repository:
-            repo_status, _ = _fetch_json(f"https://api.github.com/repos/{record.github_repository}", timeout)
+        repo_slug = record.github_repo_slug
+        if repo_slug:
+            repo_status, _ = _fetch_json(f"https://api.github.com/repos/{repo_slug}", timeout)
             release_status, release_payload = _fetch_json(
-                f"https://api.github.com/repos/{record.github_repository}/releases/latest",
+                f"https://api.github.com/repos/{repo_slug}/releases/latest",
                 timeout,
             )
             record.github_repo_status = repo_status
@@ -316,7 +333,7 @@ def render_publication_records_doc(
     ]
     for record in records:
         project_label = f"`{record.project_name}`"
-        github = _markdown_link(record.github_repository, _github_repo_url(record.github_repository))
+        github = _markdown_link(record.github_repo_slug, _github_repo_url(record.github_repo_slug))
         release_label = record.github_latest_release_tag or record.github_release_status
         release = _markdown_link(release_label, record.github_latest_release_url)
         concept = _markdown_link(record.concept_doi, _doi_url(record.concept_doi))
@@ -389,7 +406,7 @@ def render_github_readme_publication_block(records: list[PublicationRecord]) -> 
     ]
     for record in records:
         project = _markdown_link(f"`{record.project_name}`", f"../projects/{record.project_name}/")
-        github = _markdown_link(record.github_repository, _github_repo_url(record.github_repository))
+        github = _markdown_link(record.github_repo_slug, _github_repo_url(record.github_repo_slug))
         release_label = record.github_latest_release_tag or record.github_release_status
         release = _markdown_link(release_label, record.github_latest_release_url)
         concept = _markdown_link(record.concept_doi, _doi_url(record.concept_doi))

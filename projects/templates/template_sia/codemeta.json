@@ -13,17 +13,16 @@
       "givenName": "Daniel Ari"
     }
   ],
-  "codeRepository": "https://github.com/docxology/template_newspaper",
-  "dateModified": "2026-05-31",
-  "identifier": "10.5281/zenodo.20533675",
+  "codeRepository": "https://github.com/docxology/template",
+  "dateModified": "2026-05-29",
+  "identifier": "10.5281/zenodo.20453879",
   "keywords": [
-    "newspaper layout",
-    "typography",
-    "reportlab",
-    "reproducible publishing",
-    "document engineering"
+    "self-improvement agents",
+    "benchmark harness",
+    "reproducible research",
+    "agent evaluation"
   ],
   "license": "https://spdx.org/licenses/MIT",
-  "name": "The Triplicate: A Data-Driven Large-Format Newspaper Layout Engine",
-  "version": "1.0.0"
+  "name": "Self-Improvement Agent Harness: A Deterministic SIA Exemplar",
+  "version": "0.1.0"
 }

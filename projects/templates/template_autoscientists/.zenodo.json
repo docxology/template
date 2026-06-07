@@ -1,0 +1,29 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for A Deterministic Testbed for Self-Organizing Agent-Team Coordination (2026).",
+  "keywords": [
+    "agent coordination",
+    "scientific discovery",
+    "noise-band confirmation",
+    "ablation study",
+    "reproducible research",
+    "language-model agents"
+  ],
+  "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20533669",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
+  "title": "A Deterministic Testbed for Self-Organizing Agent-Team Coordination",
+  "upload_type": "software",
+  "version": "1.0.0"
+}

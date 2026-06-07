@@ -383,6 +383,78 @@ def test_publication_metadata_flags_cff_version_drift(drift_module, tmp_path):
     assert any(f.rule == "publication_cff_version_drift" for f in rep.findings)
 
 
+def test_publication_metadata_flags_missing_concept_xlink(drift_module, tmp_path):
+    """A .zenodo.json with a concept DOI but no isVersionOf cross-link is drift."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper:\n  version: '1.0.0'\npublication:\n"
+        "  doi: '10.5281/zenodo.11111'\n"
+        "  version_doi: '10.5281/zenodo.22222'\n"
+        "  version_record: 'https://zenodo.org/records/22222'\n",
+        encoding="utf-8",
+    )
+    (root / "CITATION.cff").write_text(
+        "version: '1.0.0'\ndoi: 10.5281/zenodo.11111\n", encoding="utf-8"
+    )
+    (root / ".zenodo.json").write_text(
+        '{"version": "1.0.0", "title": "X"}\n', encoding="utf-8"
+    )
+    rep = drift_module.Report()
+    drift_module.check_publication_metadata_consistency(root, rep, "fake_project")
+    assert any(f.rule == "publication_zenodo_missing_concept_xlink" for f in rep.findings)
+
+
+def test_publication_metadata_accepts_present_concept_xlink(drift_module, tmp_path):
+    """A .zenodo.json carrying the isVersionOf concept cross-link is clean."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper:\n  version: '1.0.0'\npublication:\n"
+        "  doi: '10.5281/zenodo.11111'\n"
+        "  version_doi: '10.5281/zenodo.22222'\n"
+        "  version_record: 'https://zenodo.org/records/22222'\n",
+        encoding="utf-8",
+    )
+    (root / "CITATION.cff").write_text(
+        "version: '1.0.0'\ndoi: 10.5281/zenodo.11111\n", encoding="utf-8"
+    )
+    (root / ".zenodo.json").write_text(
+        '{"version": "1.0.0", "title": "X", "related_identifiers": '
+        '[{"relation": "isVersionOf", "identifier": "10.5281/zenodo.11111", '
+        '"scheme": "doi"}]}\n',
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_publication_metadata_consistency(root, rep, "fake_project")
+    assert not any(f.rule == "publication_zenodo_missing_concept_xlink" for f in rep.findings)
+
+
+def test_publication_metadata_flags_cff_zenodo_version_drift_without_paper_version(
+    drift_module, tmp_path
+):
+    """Book-schema exemplars (no paper.version) still get CITATION/zenodo agreement."""
+    root = _scaffold_minimal_project(tmp_path)
+    # No paper.version (mirrors book-schema textbook); concept DOI present.
+    (root / "manuscript" / "config.yaml").write_text(
+        "publication:\n"
+        "  doi: '10.5281/zenodo.11111'\n"
+        "  version_doi: '10.5281/zenodo.22222'\n"
+        "  version_record: 'https://zenodo.org/records/22222'\n",
+        encoding="utf-8",
+    )
+    (root / "CITATION.cff").write_text(
+        "version: '0.1.0'\ndoi: 10.5281/zenodo.11111\n", encoding="utf-8"
+    )
+    (root / ".zenodo.json").write_text(
+        '{"version": "0.1", "title": "X", "related_identifiers": '
+        '[{"relation": "isVersionOf", "identifier": "10.5281/zenodo.11111", '
+        '"scheme": "doi"}]}\n',
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_publication_metadata_consistency(root, rep, "fake_project")
+    assert any(f.rule == "publication_cff_zenodo_version_drift" for f in rep.findings)
+
+
 def test_end_to_end_run_on_live_exemplars_is_clean(drift_module):
     """Final smoke: the actual checked-in exemplars must be clean.
 

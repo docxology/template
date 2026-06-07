@@ -15,6 +15,13 @@
     "manuscript quality"
   ],
   "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20417104",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
   "title": "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline",
   "upload_type": "software",
   "version": "0.4.0"

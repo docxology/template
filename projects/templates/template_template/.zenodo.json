@@ -10,11 +10,25 @@
   "keywords": [
     "reproducible research",
     "infrastructure-as-code",
+    "steganography",
+    "cryptographic provenance",
+    "LaTeX rendering",
+    "modular infrastructure",
+    "publication integrity",
+    "zero-mock testing",
     "thin orchestrator",
     "two-layer architecture",
-    "publication integrity"
+    "FAIR4RS",
+    "research software engineering"
   ],
   "license": "Apache-2.0",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20419007",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
   "title": "A template/ approach to Reproducible Generative Research",
   "upload_type": "software",
   "version": "1.0.6"

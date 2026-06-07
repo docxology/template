@@ -265,7 +265,7 @@ The table below is auto-injected from public project config files plus optional 
 | [`templates/template_prose_project`](../projects/templates/template_prose_project/) | 0.4.0 | [docxology/template_prose_project](https://github.com/docxology/template_prose_project) | not checked | [10.5281/zenodo.20417104](https://doi.org/10.5281/zenodo.20417104) | [10.5281/zenodo.20420342](https://doi.org/10.5281/zenodo.20420342) |
 | [`templates/template_sia`](../projects/templates/template_sia/) | 0.1.0 | [docxology/template](https://github.com/docxology/template) | not checked | [10.5281/zenodo.20453879](https://doi.org/10.5281/zenodo.20453879) | [10.5281/zenodo.20453880](https://doi.org/10.5281/zenodo.20453880) |
 | [`templates/template_template`](../projects/templates/template_template/) | 1.0.6 | [docxology/template_template](https://github.com/docxology/template_template) | not checked | [10.5281/zenodo.20419007](https://doi.org/10.5281/zenodo.20419007) | [10.5281/zenodo.20420387](https://doi.org/10.5281/zenodo.20420387) |
-| [`templates/template_textbook`](../projects/templates/template_textbook/) | n/a | n/a | not checked | [10.5281/zenodo.20533125](https://doi.org/10.5281/zenodo.20533125) | [10.5281/zenodo.20533126](https://doi.org/10.5281/zenodo.20533126) |
+| [`templates/template_textbook`](../projects/templates/template_textbook/) | 0.1.0 | [docxology/template_textbook](https://github.com/docxology/template_textbook) | not checked | [10.5281/zenodo.20533125](https://doi.org/10.5281/zenodo.20533125) | [10.5281/zenodo.20533126](https://doi.org/10.5281/zenodo.20533126) |
 
 Full generated matrix: [`docs/_generated/publication_records.md`](../docs/_generated/publication_records.md).
 

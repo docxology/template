@@ -1,0 +1,28 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for The Triplicate: A Data-Driven Large-Format Newspaper Layout Engine (2026).",
+  "keywords": [
+    "newspaper layout",
+    "typography",
+    "reportlab",
+    "reproducible publishing",
+    "document engineering"
+  ],
+  "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20533675",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
+  "title": "The Triplicate: A Data-Driven Large-Format Newspaper Layout Engine",
+  "upload_type": "software",
+  "version": "1.0.0"
+}
