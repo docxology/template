@@ -10,7 +10,7 @@ uv run pytest projects/templates/template_template/tests/ -v --tb=short \
   --cov=projects/templates/template_template/src/template_template --cov-fail-under=90
 ```
 
-Expected: all tests passed (currently 75), 90%+ coverage on `src/template/`.
+Expected: all tests passed, 90%+ coverage on `src/template_template/`.
 
 ## 2. Generate Figures
 
@@ -41,7 +41,7 @@ Expected:
 ```bash
 uv run python -c "
 from pathlib import Path
-from template.introspection import build_infrastructure_report
+from template_template.introspection import build_infrastructure_report
 r = build_infrastructure_report(Path('.'))
 assert r.pipeline_stages_declared >= 12
 assert r.pipeline_stages_core_only == 8
@@ -63,7 +63,7 @@ uv run python scripts/03_render_pdf.py --project template_template
 
 | Check | Pass criteria |
 |-------|---------------|
-| Tests | All passed, ≥90% cov on `src/template/` |
+| Tests | All passed, ≥90% cov on `src/template_template/` |
 | Figures | 4 PNG files in `output/figures/` |
 | Metrics | Valid JSON; pipeline keys present |
 | Manuscript | No unresolved `${` in numbered chapters |

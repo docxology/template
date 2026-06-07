@@ -6,7 +6,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+# scripts/00_preflight.py → projects/templates/<name>/scripts/; repo root is four levels up.
+REPO_ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(REPO_ROOT))
 
 from infrastructure.rendering.preflight import run_manuscript_preflight  # noqa: E402

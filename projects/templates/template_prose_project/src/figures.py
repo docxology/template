@@ -62,12 +62,12 @@ def plot_section_word_counts(report: ManuscriptReport, output_dir: Path | str) -
     return out_path
 
 
-def plot_readability_radar(report: ManuscriptReport, output_dir: Path | str) -> Path:
-    """Bar chart comparing the three readability scores per file.
+def plot_readability_metrics(report: ManuscriptReport, output_dir: Path | str) -> Path:
+    """Grouped bar chart comparing the three readability scores per file.
 
-    A radar chart sounds appealing here, but with mixed value ranges
-    (FRE ∈ [0, 100], FKGL ∈ [0, 25], Fog ∈ [0, 25]) a normalised bar
-    chart is clearer.
+    A grouped bar chart (rather than a radar) is used deliberately: with mixed
+    value ranges (FRE ∈ [0, 100], FKGL ∈ [0, 25], Fog ∈ [0, 25]) a normalised
+    bar chart reads more clearly. Output: ``readability_metrics.png``.
     """
     out_dir = _ensure_outdir(output_dir)
     names = [f.name for f in report.files]
@@ -131,6 +131,6 @@ def generate_all_figures(report: ManuscriptReport, output_dir: Path | str) -> li
     """Render every figure in stable order."""
     return [
         plot_section_word_counts(report, output_dir),
-        plot_readability_radar(report, output_dir),
+        plot_readability_metrics(report, output_dir),
         plot_citation_density(report, output_dir),
     ]

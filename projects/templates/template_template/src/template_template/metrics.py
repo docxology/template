@@ -87,6 +87,7 @@ def build_module_inventory_table(modules: list[ModuleInfo]) -> str:
         "prose": "Markdown readability + prose tooling",
         "reference": "BibTeX models, parsers, converters",
         "search": "`infrastructure.search.literature` clients + cache",
+        "sia": "Self-Improving-AI loop: task validation, harness, metric capture",
         "project": "`discover_projects`, workspace management",
         "publishing": "Zenodo, executable bundle, archival targets",
         "rendering": "PDF/HTML/slide rendering, Pandoc filters",
@@ -161,6 +162,9 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
     metrics: dict[str, Any] = {
         # ── Top-level infrastructure metrics ──────────────────────────
         "module_count": len(report.modules),
+        # Subdirectories that are importable Python packages (carry __init__.py).
+        # The remainder (config/, docker/, logrotate.d/) are config-only subdirs.
+        "importable_package_count": sum(1 for m in report.modules if m.has_init),
         "stage_count": len(report.numbered_scripts),
         "pipeline_stages_declared": report.pipeline_stages_declared,
         "pipeline_stages_default_full": report.pipeline_stages_default_full,

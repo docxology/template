@@ -9,14 +9,14 @@ The `template` meta-project is a self-referential study: it uses the `template/`
 | Layer | Location | Contents |
 |-------|----------|----------|
 | **Infrastructure** (Layer 1) | `infrastructure/` (repo root) | Live module inventory via `discover_infrastructure_modules()` |
-| **Project** (Layer 2) | `projects/templates/template_template/` | `src/template/`, manuscript, scripts, tests |
+| **Project** (Layer 2) | `projects/templates/template_template/` | `src/template_template/`, manuscript, scripts, tests |
 
 The project imports from infrastructure but never modifies it.
 
 ## Source Module Architecture
 
 ```
-src/template/
+src/template_template/
 ├── __init__.py           # Public API surface
 ├── introspection.py      # Repository analysis engine
 ├── architecture_viz.py   # Figure generation (matplotlib)
@@ -69,7 +69,7 @@ introspection.py → InfrastructureReport
 
 ## Script Architecture (Thin Orchestrators)
 
-Both `generate_architecture_viz.py` and `generate_manuscript_metrics.py` resolve the Layer-1 repo via `_locate_repo_root()` (works from `projects/templates/template_template/`), then delegate to `src/template/`.
+Both `generate_architecture_viz.py` and `generate_manuscript_metrics.py` resolve the Layer-1 repo via `_locate_repo_root()` (works from `projects/templates/template_template/`), then delegate to `src/template_template/`.
 
 ## Verification
 

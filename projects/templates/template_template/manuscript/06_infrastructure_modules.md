@@ -16,8 +16,9 @@ Readiness planner, validation CLI, and report models for AutoResearch-style proj
 
 Template harness scoring and comparative gate helpers exercised in CI smoke paths.
 
+### `infrastructure/config` (non-package subdirectory)
 
-Repository-wide YAML templates and secure manifests (`.env.template`, hardened defaults referenced by Docker + CLI).
+Repository-wide YAML templates and secure manifests (`.env.template`, hardened defaults referenced by Docker + CLI). `config/` carries no `__init__.py`, so it is a configuration subdirectory rather than an importable package.
 
 ### `infrastructure.core` (${module_core_python_file_count} files)
 
@@ -38,6 +39,10 @@ Figure registries plus glossary tooling feeding manuscript automation.
 ### `infrastructure.llm` (${module_llm_python_file_count} files)
 
 Ollama integrations, sanitization adapters, templated reviewer flows. **Literature ingestion now lives primarily in `search/literature` + citation helpers in `reference/`.**
+
+### `infrastructure.methods` (${module_methods_python_file_count} files)
+
+Deterministic methods-orchestration contracts (`MethodStage`, `MethodsOrchestrationPlan`, `MethodsIssue`): builds and validates an ordered methods plan for a research project so the manuscript's "Methods" track stays bound to executable stages.
 
 ### `infrastructure.orchestration` (${module_orchestration_python_file_count} files)
 
@@ -74,6 +79,10 @@ Stability probing, benchmarking hooks—consumed heavily by optimization exempla
 ### `infrastructure.search` (${module_search_python_file_count} files)
 
 `literature/` client stack (`client.py`, backends, caches) powering archive-only `template_search_project` literature workflows when copied locally from `projects/archive/`.
+
+### `infrastructure.sia` (${module_sia_python_file_count} files)
+
+Generic Self-Improving-AI loop utilities: task-layout validation, execution harness, and metric capture reused by `template_sia` (fixture-replay by default).
 
 ### `infrastructure.skills` (${module_skills_python_file_count} files)
 

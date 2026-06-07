@@ -19,7 +19,7 @@ Agents must read [`agent_instructions.md`](agent_instructions.md) before editing
 | [`testing_philosophy.md`](testing_philosophy.md) | Fixture replay, coverage, no mocks |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Stage 02 → variables → Stage 05 |
 | [`style_guide.md`](style_guide.md) | Python conventions under `src/` |
-| [`syntax_guide.md`](syntax_guide.md) | Manuscript `${SIA_*}` tokens |
+| [`syntax_guide.md`](syntax_guide.md) | Manuscript `{{SIA_*}}` tokens |
 | [`quickstart.md`](quickstart.md) | Minimal command sequence |
 | [`output_conventions.md`](output_conventions.md) | `output/runs/` layout |
 | [`troubleshooting.md`](troubleshooting.md) | Failure diagnostics |

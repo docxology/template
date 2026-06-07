@@ -1,7 +1,7 @@
 """Comprehensive tests for the template introspection module.
 
-Tests every public function in ``template.introspection`` against the real
-repository structure (Zero-Mock policy).
+Tests every public function in ``template_template.introspection`` against the
+real repository structure (Zero-Mock policy).
 """
 
 from pathlib import Path
@@ -518,3 +518,38 @@ class TestInjectMetrics:
         assert int(loaded["pipeline_stages_core_only"]) == 8
         assert int(loaded["total_infra_python_files"]) >= 50
         assert loaded["infrastructure_version"] != "unknown"
+
+
+class TestSelfDescriptionPins:
+    """Guard the meta-template's #1 invariant: its self-description cannot drift.
+
+    These pins exist because §06 once silently lost the ``methods``/``sia``
+    subsections (no test bound the prose to the live module list), and the
+    ``importable_package_count`` claim must stay distinct from ``module_count``.
+    """
+
+    def _section06_text(self) -> str:
+        return (PROJECT_DIR / "manuscript" / "06_infrastructure_modules.md").read_text(
+            encoding="utf-8"
+        )
+
+    def test_every_importable_package_has_a_section06_subsection(self):
+        modules = discover_infrastructure_modules(REPO_ROOT)
+        text = self._section06_text()
+        missing = [
+            m.name
+            for m in modules
+            if m.has_init and f"infrastructure.{m.name}`" not in text
+        ]
+        assert not missing, f"§06 omits importable packages: {missing}"
+
+    def test_importable_package_count_matches_live_has_init(self):
+        from template_template import build_manuscript_metrics_dict
+
+        metrics = build_manuscript_metrics_dict(REPO_ROOT)
+        modules = discover_infrastructure_modules(REPO_ROOT)
+        live_packages = sum(1 for m in modules if m.has_init)
+        assert int(metrics["importable_package_count"]) == live_packages
+        # At least one non-package subdir (config/docker/logrotate.d) exists,
+        # so the importable count is strictly below the subdirectory count.
+        assert int(metrics["importable_package_count"]) < int(metrics["module_count"])

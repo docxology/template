@@ -6,13 +6,13 @@ Technical specification for the template project's analysis scripts.
 
 | Script | Pattern | Input | Output |
 |--------|---------|-------|--------|
-| `generate_manuscript_metrics.py` | Stage 02 Thin Orchestrator | `src/template/metrics.py`, `src/template/inject_metrics.py` | `output/data/metrics.json`, rendered `output/manuscript/*` |
-| `generate_architecture_viz.py` | Stage 02 Thin Orchestrator | `src/template/architecture_viz.py` | 4 PNG figures in `output/figures/` |
+| `generate_manuscript_metrics.py` | Stage 02 Thin Orchestrator | `src/template_template/metrics.py`, `src/template_template/inject_metrics.py` | `output/data/metrics.json`, rendered `output/manuscript/*` |
+| `generate_architecture_viz.py` | Stage 02 Thin Orchestrator | `src/template_template/architecture_viz.py` | 4 PNG figures in `output/figures/` |
 
 ## Design Contract
 
 - Scripts are orchestration only: path bootstrap, logging, and module entrypoint invocation.
-- Data/model/plot logic lives in `src/template/`.
+- Data/model/plot logic lives in `src/template_template/`.
 - All reusable script behavior must be covered by tests in `projects/templates/template_template/tests/`.
 
 ## `generate_architecture_viz.py` Outputs

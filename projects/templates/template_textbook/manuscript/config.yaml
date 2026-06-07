@@ -15,7 +15,8 @@
 #   typography:   Fonts, link colour, sizes
 #   front_matter: Front-matter files and ordering
 #   rendering:    Chapter/figure/equation auto-numbering
-#   parts:        Part order and the chapters inside each part (THE STRUCTURE)
+#   units:        Part order and the chapters inside each part (THE STRUCTURE;
+#                 the key is `units:`, also accepted as `parts:`)
 #   appendices:   Labs, question banks, and reference appendices
 # =============================================================================
 
@@ -134,7 +135,8 @@ render:
     slides: false
 
 # ---------------------------------------------------------------------------
-# PARTS — the structure. Chapters number sequentially across the whole book.
+# UNITS (a.k.a. parts) — the structure. Chapters number sequentially across the
+# whole book. The live key is `units:` (the loader also accepts `parts:`).
 # Add a part: append a block here + a directory under manuscript/.
 # Skip a chapter without deleting it: add `enabled: false` to its entry.
 # ---------------------------------------------------------------------------

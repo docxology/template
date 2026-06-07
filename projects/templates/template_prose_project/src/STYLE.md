@@ -157,7 +157,7 @@ from .config import ProjectConfig, load_project_config
 from .figures import (
     generate_all_figures,
     plot_citation_density,
-    plot_readability_radar,
+    plot_readability_metrics,
     plot_section_word_counts,
 )
 from .manuscript_variables import (
@@ -178,7 +178,7 @@ __all__ = [
     "run_prose_pipeline",
     # Figures
     "generate_all_figures",
-    "plot_readability_radar",
+    "plot_readability_metrics",
     "plot_section_word_counts",
     "plot_citation_density",
     # Manuscript variables

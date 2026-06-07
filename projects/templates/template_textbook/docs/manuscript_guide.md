@@ -23,7 +23,8 @@ manuscript/
   assets/            # cover image, etc.
 ```
 
-The current book has **four parts and twelve chapters**:
+The book's parts and chapters are declared in `manuscript/config.yaml` (the single
+source of truth); the shipped scaffold is organised as:
 
 | Part | Title | Chapters |
 | --- | --- | --- |

@@ -36,15 +36,21 @@ The shipped art is **procedural** (Pillow halftone scenes — harbor, lighthouse
 redwoods, lily fields, baseball, crab boat — plus Matplotlib charts), which is
 deterministic and needs no API. To use **AI-generated** photos or engravings
 instead, generate them with the `/art` skill (requires an image-model API key —
-`GOOGLE_API_KEY` / `OPENAI_API_KEY` / Flux), save them under `assets/`, and point
-the figure `path` at them. The engine treats any image path identically.
+`GOOGLE_API_KEY` / `OPENAI_API_KEY` / Flux), save them under `output/figures/`
+(the configured `figures_dir`, where the generators also write), and point the
+figure `path` at them. `_resolve_image_path` resolves any path relative to the
+project root, so the engine treats a custom image identically to a generated one.
 
 ## 4. Tune the look (optional)
 
 - Trim size, columns, rail width, gutter: `edition.yaml` → `render`.
 - Type scale, colors, fonts: `src/newspaper/typography.py` (the *only* place a
   font is named).
-- Page archetypes: `front | standard | opinion | feature | classified`.
+- Page templates: `front | standard | opinion | feature | classified`. Only
+  `front` (nameplate) and `classified` (dense grid) change the layout path;
+  `standard`/`opinion`/`feature` share the standard inside-page furniture and are
+  semantic/section tags — distinct looks (A5 masthead, A4 jump) come from the
+  page's *content* blocks, not the template.
 
 ## 5. Render and verify
 

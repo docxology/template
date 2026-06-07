@@ -45,7 +45,8 @@ uv run pytest projects/templates/template_autoscientists/tests -m "not requires_
 ## Prerequisites & verification
 
 **Test/coverage gate (authoritative per-project command).** Exit code 0 alone is
-not proof — confirm tests collected > 0 and coverage is 100% on `src/`:
+not proof — confirm tests collected > 0 and coverage clears the 90% `src/` gate
+(read the `TOTAL` line of the report for the live figure):
 
 ```bash
 uv run pytest projects/templates/template_autoscientists/tests \

@@ -24,8 +24,10 @@
 
 ## Layout conventions
 
-- Tabloid 11×17 default; **4-column** editorial measure (~2.4″ on full-width
-  pages, ~1.95″ on the front beside the rail); classifieds run a denser 6-column
+- Tabloid 11×17 default; the bundled edition uses a **4-column** editorial measure
+  (~2.4″ on full-width pages, ~1.95″ on the front beside the rail) by pinning
+  `columns_default: 4` in `content/edition.yaml`; the engine default when a page/edition
+  omits it is 5 (`config.py`). Classifieds run a denser 6-column
   grid; 0.16″ gutters; hairline rules centred in gutters.
 - A spanning lead headline is *drawn furniture*; secondary headlines flow at
   single-column width (keep them `secondary`/`minor`).

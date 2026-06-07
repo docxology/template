@@ -8,7 +8,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
-sys.path.insert(0, str(PROJECT_ROOT.parent.parent))
+sys.path.insert(0, str(PROJECT_ROOT.parents[2]))
 
 from infrastructure.core.logging.utils import get_logger, log_success  # noqa: E402
 

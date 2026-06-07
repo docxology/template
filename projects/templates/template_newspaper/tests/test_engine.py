@@ -32,6 +32,19 @@ def test_render_real_edition(project_root, tmp_path) -> None:
     assert out.stat().st_size > 50_000  # a real 12-page paper is not trivially small
 
 
+def test_render_edition_accepts_str_output_path(project_root, tmp_path) -> None:
+    """`render_edition` accepts a str output_path symmetrically with `build_and_render`."""
+    from newspaper.content import load_edition
+    from newspaper.config import load_newspaper_config
+
+    out = tmp_path / "triplicate.pdf"
+    edition = load_edition(project_root / "content")
+    config = load_newspaper_config(project_root / "content")
+    result = render_edition(edition, config, project_root=project_root, output_path=str(out))
+    assert out.exists()
+    assert result.page_count == 12
+
+
 def test_build_and_render_default_path(project_root, tmp_path) -> None:
     out = tmp_path / "out.pdf"
     result = build_and_render(project_root, output_path=out)

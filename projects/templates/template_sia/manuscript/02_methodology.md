@@ -8,14 +8,7 @@ The harness implements a three-agent cycle:
 2. **Target** — runs against public task data and writes `agent_execution.json`.
 3. **Feedback** — reads private evaluation metrics and proposes improvements for generation $n+1$.
 
-```mermaid
-flowchart LR
-  meta[Meta agent] --> target[Target agent]
-  target --> feedback[Feedback agent]
-  feedback --> meta
-```
-
-![Loop topology diagram.](../output/figures/sia_loop_topology.png){#fig:sia-loop-topology width=0.9}
+![Meta → Target → Feedback loop topology for the SIA harness, generated programmatically by `write_sia_loop_topology`.](../output/figures/sia_loop_topology.png){#fig:sia-loop-topology width=90%}
 
 Artifacts land under `output/runs/run_{id}/gen_{n}/` with `target_agent.py`, `agent_execution.json`, optional `improvement.md`, and canonical `results.json`.
 

@@ -46,7 +46,7 @@ Reference equations with `[@eq:label]` (parenthetical) or `@eq:label` (narrative
 |---|---|---|
 | `{#eq:optimization_problem}` | $\min_x f(x)$ | `01_introduction.md` |
 | `{#eq:gradient_descent_update}` | $x_{k+1} = x_k - \alpha \nabla f(x_k)$ | `01_introduction.md` |
-| `{#eq:convergence_factor}` | $\rho = (\lambda_{\max}-\alpha\lambda_{\min}) / (\lambda_{\min}+\alpha\lambda_{\max})$ | `02_methodology.md` |
+| `{#eq:convergence_factor}` | $\rho = |\lambda_{\max}-\alpha\lambda_{\min}| / |\lambda_{\min}+\alpha\lambda_{\max}|$ | `02_methodology.md` |
 | `{#eq:scalar_linear_update}` | $x_{k+1}-x^\ast = (1-\alpha)(x_k-x^\ast)$ | `03_results.md` |
 | `{#eq:convergence_bound}` | Per-iteration objective bound | `03_results.md` |
 | `{#eq:error_bound}` | Iterate-error contraction | `03_results.md` |

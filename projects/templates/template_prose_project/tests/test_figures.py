@@ -10,7 +10,7 @@ from infrastructure.prose.report import load_report_json
 from src.figures import (
     generate_all_figures,
     plot_citation_density,
-    plot_readability_radar,
+    plot_readability_metrics,
     plot_section_word_counts,
 )
 
@@ -28,8 +28,8 @@ def test_section_word_counts(tmp_path: Path):
     assert out.exists() and out.stat().st_size > 0
 
 
-def test_readability_radar(tmp_path: Path):
-    out = plot_readability_radar(_sample_report(), tmp_path)
+def test_readability_metrics(tmp_path: Path):
+    out = plot_readability_metrics(_sample_report(), tmp_path)
     assert out.exists() and out.stat().st_size > 0
 
 

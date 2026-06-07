@@ -24,8 +24,9 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 Each experiment: pick the next team's axes → drop fully-retired axes (when
 dead-ends on) → ask the proposer for a `Proposal` (passing the registry's
 `avoid` set) → evaluate with noise-band confirmation → record/promote →
-reorganize if stagnant. With every toggle off and one team, the loop reduces
-exactly to the single-thread baseline (`SearchConfig.single_thread_baseline`).
+reorganize if stagnant. With every *structural* coordination toggle off and one
+team — confirmation stays on — the loop reduces exactly to the single-thread
+baseline (`SearchConfig.single_thread_baseline`, which sets `use_confirmation=True`).
 
 The loop is deterministic given `(objective, proposer, config)`, so trajectories
 and figures are byte-reproducible.
@@ -60,7 +61,9 @@ re-probes. Two figures: `ablation.png` (metric/noise) and
 ## Conventions
 
 - **No mocks** (absolute): real deterministic objects only.
-- **Coverage**: `src/` gated at 90%, currently 100%. The live Hermes network
+- **Coverage**: `src/` gated at 90% (`fail_under = 90`); the suite covers it
+  comfortably above the floor — read the `TOTAL` line of the coverage report for
+  the live figure rather than trusting a pinned number. The live Hermes network
   boundary is `# pragma: no cover`; Protocol stub bodies (`...`) are excluded.
 - **Thin orchestrators**: scripts never implement algorithms; they import from
   `src/`, plot, and print output paths for manifest collection.

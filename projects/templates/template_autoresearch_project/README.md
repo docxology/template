@@ -24,9 +24,9 @@ The analysis stage runs two thin scripts:
   into `output/manuscript/` for rendering and fails when strict run-derived
   manuscript values are not tokenized.
 
-Reusable behavior lives under `src/` (`loop`, `ml_data`, `ml_models`,
-`ml_training`, `ml_selection`, `ml_task`, `diagnostics_records`,
-`diagnostics_metrics`, `diagnostics_intervals`, `diagnostics_reports`,
+Reusable behavior lives under `src/` in typed packages (`loop`, `ml.data`,
+`ml.models`, `ml.training`, `ml.selection`, `ml.task`, `diagnostics.records`,
+`diagnostics.metrics`, `diagnostics.intervals`, `diagnostics.reports`,
 `models`, `config`, `writers`, `reports`, `figures`, `manuscript_variables`).
 No network calls, LLM calls, runtime dataset downloads, generated-code
 execution, or autonomous approval loops are used.

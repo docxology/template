@@ -48,7 +48,7 @@ for each experiment in the budget:
     if reorganization is on and the search is stagnant, re-partition teams
 ```
 
-Every mechanism is gated by a boolean in `SearchConfig`. With all toggles off and a single team, the loop reduces exactly to the single-thread baseline — which is what makes the ablation a clean subtraction.
+Every mechanism is gated by a boolean in `SearchConfig`. With all *structural* coordination toggles off and a single team — confirmation stays on, so the baseline is itself noise-honest (@sec:setup) — the loop reduces exactly to the single-thread baseline, which is what makes the ablation a clean subtraction.
 
 ## The proposer seam
 

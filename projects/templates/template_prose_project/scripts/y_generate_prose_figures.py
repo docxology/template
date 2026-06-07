@@ -17,7 +17,8 @@ from pathlib import Path
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
 _DEFAULT_PROJECT_ROOT = _SCRIPT_DIR.parent
-_REPO_ROOT = _DEFAULT_PROJECT_ROOT.parent.parent
+# Project lives at projects/templates/<name>/; repo root is three levels up.
+_REPO_ROOT = _DEFAULT_PROJECT_ROOT.parents[2]
 
 sys.path.insert(0, str(_DEFAULT_PROJECT_ROOT))
 sys.path.insert(0, str(_DEFAULT_PROJECT_ROOT / "src"))

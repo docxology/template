@@ -62,7 +62,7 @@ def scaffold_chapter(chapter: ChapterRef) -> str:
     return f"""# {chapter.title} {{#{sec}}}
 
 ![Overview schematic for "{chapter.title}". Replace this generated placeholder \
-with a real figure produced by `src/visualization/plots.py`.](../figures/{chapter.part_id}_{stem}.png){{#{fig} width=90%}}
+with a real figure produced by `src/visualization/plots.py`.](../../output/figures/{chapter.part_id}_{stem}.png){{#{fig} width=90%}}
 
 <!-- alt: Placeholder overview schematic for the chapter "{chapter.title}". \
 TODO: write descriptive alt text once the real figure exists. -->
@@ -244,6 +244,16 @@ def validate_chapter(text: str) -> list[str]:
 
     if "(#gl:" not in text:
         issues.append("missing at least one glossary link ((#gl:...))")
+
+    # Chapters live at manuscript/<part>/<chap>.md, so every figure image path
+    # must reach the project figure dir as ``../../output/figures/...``. A bare
+    # ``../figures/...`` (the old scaffold bug) resolves to a nonexistent
+    # manuscript/figures/ dir and renders as a missing image.
+    for image_path in re.findall(r"!\[[^\]]*\]\(([^)]*figures/[^)]*)\)", text):
+        if not image_path.startswith("../../output/figures/"):
+            issues.append(
+                f"figure path does not resolve from a chapter (expected '../../output/figures/...'): {image_path!r}"
+            )
 
     return issues
 

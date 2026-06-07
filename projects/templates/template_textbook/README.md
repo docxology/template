@@ -38,7 +38,7 @@ template_textbook/
 │   ├── config.yaml            # SINGLE SOURCE OF TRUTH (parts → chapters)
 │   ├── references.bib         # citation keys ([@key] must resolve here)
 │   ├── glossary.md            # glossary anchors ([**term**](#gl:anchor))
-│   ├── part_0/ … part_III/    # 12 chapter .md files (4 parts × 3 chapters)
+│   ├── part_0/ … part_III/    # one .md per chapter; parts & chapters declared in config.yaml
 │   ├── labs/<part>/           # one lab per chapter (lab_<stem>.md)
 │   ├── questions/<part>/      # one question bank per chapter (q_<stem>.md)
 │   ├── appendices/            # reference appendices

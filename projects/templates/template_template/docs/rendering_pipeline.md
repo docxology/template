@@ -17,7 +17,7 @@ Stage 03 (Rendering)
 ├── Discovers output/manuscript/*.md (preference over manuscript/)
 ├── Pandoc: Markdown → LaTeX (with config.yaml metadata)
 ├── XeLaTeX: LaTeX → PDF (with biber for bibliography)
-└── Output: output/template/pdf/template_combined.pdf
+└── Output: output/template_template/pdf/template_template_combined.pdf
 ```
 
 ## Stage 02: Analysis Scripts
@@ -90,11 +90,11 @@ projects/templates/template_template/output/
 │   ├── config.yaml                  # Copied verbatim
 │   └── preamble.md                  # Copied verbatim
 └── pdf/
-    └── template_combined.pdf        # Final rendered PDF
+    └── template_template_combined.pdf        # Final rendered PDF
 
-output/template/                      # Copies from Stage 05
+output/template_template/                      # Copies from Stage 05
 └── pdf/
-    └── template_combined.pdf
+    └── template_template_combined.pdf
 ```
 
 ## Troubleshooting

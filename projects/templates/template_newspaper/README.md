@@ -126,7 +126,7 @@ different title.
 ## Tests & quality
 
 ```bash
-python -m pytest                       # 28 tests
+python -m pytest                       # full suite
 python -m pytest --cov=newspaper       # ~95% coverage
 ruff check src scripts tests           # clean
 mypy src/newspaper                     # clean

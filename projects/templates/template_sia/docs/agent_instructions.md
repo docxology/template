@@ -14,7 +14,7 @@ Read this file before modifying any file in this project.
 
 5. **Coverage gate.** `src/` must stay ≥ 90% line+branch. Live counts: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
 
-6. **Manuscript tokens.** Numeric results in prose use `${SIA_*}` placeholders hydrated by `scripts/z_generate_manuscript_variables.py` after analysis — never hard-code generation metrics in committed manuscript sources.
+6. **Manuscript tokens.** Numeric results in prose use `{{SIA_*}}` placeholders hydrated by `scripts/z_generate_manuscript_variables.py` after analysis — never hard-code generation metrics in committed manuscript sources.
 
 7. **Scope.** This exemplar demonstrates the harness contract inspired by [arXiv:2605.27276](https://arxiv.org/abs/2605.27276). Do not vendor upstream `hexo-ai/sia` code or claim benchmark SOTA without live runs.
 

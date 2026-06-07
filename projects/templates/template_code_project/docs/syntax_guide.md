@@ -88,7 +88,7 @@ Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_
 | `{{CONFIG_BENCHMARK_DIMS}}` | `1, 2, 5, 10, 20, 50` | `experiment.benchmark_dimensions` |
 | `{{CONFIG_BENCHMARK_MIN_DIM}}` | `1` | `min(experiment.benchmark_dimensions)` |
 | `{{CONFIG_BENCHMARK_MAX_DIM}}` | `50` | `max(experiment.benchmark_dimensions)` |
-| `{{CONFIG_VERSION}}` | `2.0` | `paper.version` |
+| `{{CONFIG_VERSION}}` | `2.5.0` | `paper.version` |
 | `{{CONFIG_FIRST_AUTHOR}}` | First author name | `authors[0].name` |
 | `{{CONFIG_KEYWORDS}}` | `"optimization algorithms, gradient descent, …"` (comma-joined) | `", ".join(keywords)` |
 | `{{CONFIG_HASH}}` | SHA-256 of config.yaml (truncated) | Computed |

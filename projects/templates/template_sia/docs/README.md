@@ -33,7 +33,7 @@ flowchart LR
 | [`testing_philosophy.md`](testing_philosophy.md) | Fixture replay default; live Ollama opt-in |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Analysis scripts → manuscript tokens → PDF |
 | [`style_guide.md`](style_guide.md) | Thin orchestrator and determinism conventions |
-| [`syntax_guide.md`](syntax_guide.md) | `${SIA_*}` tokens and task directory layout |
+| [`syntax_guide.md`](syntax_guide.md) | `{{SIA_*}}` tokens and task directory layout |
 | [`quickstart.md`](quickstart.md) | First-run commands |
 | [`output_conventions.md`](output_conventions.md) | Where loop artifacts land on disk |
 | [`troubleshooting.md`](troubleshooting.md) | Diagnostic flow for failed stages |

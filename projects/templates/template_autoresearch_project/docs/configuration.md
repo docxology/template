@@ -87,9 +87,9 @@ plan, not a second parse of `autoresearch.yaml` in project code.
 
 ## ML task implementation
 
-The executable task is split across `src/ml_data.py`, `src/ml_models.py`,
-`src/ml_training.py`, and `src/ml_selection.py`, with compatibility exports
-through `src/ml_task.py`. The implementation uses `numpy` only. It loads the
+The executable task is split across `src/ml/data.py`, `src/ml/models.py`,
+`src/ml/training.py`, and `src/ml/selection.py`, with public exports
+through `src/ml/task.py`. The implementation uses `numpy` only. It loads the
 local MNIST subset, evaluates a nearest-centroid baseline, trains bounded
 neural candidates by deterministic SGD or a fixed patch-attention
 representation plus softmax head, and selects the best result with
@@ -180,7 +180,7 @@ unrecognised keys.
 | `metrics_colormap` | matplotlib colormap | `YlGnBu` | Per-class precision/recall/F1 and robustness heatmaps. |
 | `palette` | mapping role → hex | colourblind-safe | Semantic colours (see below). Merged over the built-in palette, so a partial map only overrides named roles. |
 
-`load_figure_style(project_root)` parses the file; `writers.py` wraps figure
+`load_figure_style(project_root)` parses the file; the `writers/` package wraps figure
 generation in `apply_style(...)`, a context manager that activates the config and
 scopes a matplotlib `rc_context`, restoring both on exit (so nothing leaks across
 the batch). The exact style used for a run is recorded at

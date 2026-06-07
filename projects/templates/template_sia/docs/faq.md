@@ -24,4 +24,4 @@ Reproducibility and cost. Default runs copy recorded generations from `src/fixtu
 
 ## Where are live metrics documented?
 
-Only in generated outputs and manuscript tokens after a live run. Committed manuscript prose uses `${SIA_*}` placeholders — not hard-coded benchmark numbers.
+Only in generated outputs and manuscript tokens after a live run. Committed manuscript prose uses `{{SIA_*}}` placeholders — not hard-coded benchmark numbers.

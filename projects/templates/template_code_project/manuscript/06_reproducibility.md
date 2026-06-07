@@ -9,7 +9,7 @@ This section provides a machine-verifiable reproducibility certificate for the c
 | Config hash (SHA-256, truncated)  | `{{CONFIG_HASH}}`     |
 | Paper version                     | {{CONFIG_VERSION}}    |
 | First author                      | {{CONFIG_FIRST_AUTHOR}} |
-| Keyword count                     | {{CONFIG_KEYWORDS}}   |
+| Keywords                          | {{CONFIG_KEYWORDS}}   |
 
 The configuration hash changes whenever any parameter in `config.yaml` is modified, ensuring that every rendered PDF is traceable to a specific configuration state.
 

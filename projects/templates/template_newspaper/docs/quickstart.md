@@ -45,7 +45,7 @@ descriptive `manuscript/`.
 ## Tests & checks
 
 ```bash
-python -m pytest                  # 28 tests
+python -m pytest                  # full suite
 python -m pytest --cov=newspaper  # ~95%
 mypy src/newspaper                # clean
 ruff check src scripts tests      # clean

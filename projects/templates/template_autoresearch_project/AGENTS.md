@@ -11,18 +11,18 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 - Business logic: [`src/`](src/) — see [`src/AGENTS.md`](src/AGENTS.md) for package layout and conventions.
 
-Implementation lives in typed packages; root-level `src/*.py` stubs preserve legacy
-import paths (explicit re-exports, star-import stubs, or `sys.modules` aliases where
-tests monkeypatch private helpers).
+Implementation lives in typed packages under `src/`; each package's `__init__.py`
+is the public facade (import `src.<package>` or a specific submodule). There are no
+root-level `src/*.py` compatibility stubs — the flat→package migration is complete.
 
-| Package | Role | Root stubs (if any) |
+| Package | Role | Key submodules |
 | --- | --- | --- |
-| `ml/` | MNIST task config, models, training, selection | `ml_task.py`, `ml_data.py`, … |
-| `diagnostics/` | Records, metrics, intervals, reports | `diagnostics_*.py`, `diagnostics.py` |
-| `figures/` | Figure specs and ML/process/security charts | `figure_specs.py`, `figures_core.py`, … |
-| `manuscript/` | Token builders, tables, hydration facade | `manuscript_variables.py`, `manuscript_tables.py`, … |
-| `writers/` | JSON/CSV/manifest I/O, payloads, benchmark dispatch | `writers_benchmark.py`, `writers_figure_dispatch.py` |
-| `security/` | Local security profile, threat model, attestation | — |
+| `ml/` | MNIST task config, models, training, selection | `ml/task.py`, `ml/data.py`, `ml/models.py`, `ml/training.py`, `ml/selection.py` |
+| `diagnostics/` | Records, metrics, intervals, reports | `diagnostics/{records,metrics,intervals,reports}.py` (`__init__.py` facade) |
+| `figures/` | Figure specs and ML/process/security charts | `figures/figure_specs.py`, `figures/figures_core.py`, `figures/figures_ml_*.py` (`__init__.py` barrel) |
+| `manuscript/` | Token builders, tables, hydration | `manuscript/manuscript_tables.py`, `manuscript/manuscript_tokens_*.py` (root `manuscript_variables.py` is the hydration facade) |
+| `writers/` | JSON/CSV/manifest I/O, payloads, benchmark dispatch | `writers/{benchmark,figure_dispatch,io,manifests,payloads}.py` |
+| `security/` | Local security profile, threat model, attestation | `security/{artifacts,payloads,render}.py` |
 
 Top-level orchestration (not in packages above):
 

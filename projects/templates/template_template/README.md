@@ -6,8 +6,8 @@ A self-referential research study that programmatically analyzes and documents t
 
 ## Overview
 
-- **Repository introspection:** `src/template/introspection.py` loads the YAML pipeline DAG, discovers modules/projects, and aggregates file counts.
-- **Metrics injection:** `src/template/metrics.py` computes manuscript variables; `inject_metrics.py` renders `${var}` tokens into `output/manuscript/`.
+- **Repository introspection:** `src/template_template/introspection.py` loads the YAML pipeline DAG, discovers modules/projects, and aggregates file counts.
+- **Metrics injection:** `src/template_template/metrics.py` computes manuscript variables; `inject_metrics.py` renders `${var}` tokens into `output/manuscript/`.
 - **Figures:** `scripts/generate_architecture_viz.py` produces four PNGs from live introspection data.
 
 ## Quick Start
@@ -30,15 +30,15 @@ uv run python projects/templates/template_template/scripts/generate_manuscript_m
 |--------|----------|
 | `manuscript/` | 21 Markdown chapters + `config.yaml` + `references.bib` |
 | `scripts/` | Two thin orchestrators (figures, metrics) |
-| `src/template/` | Introspection, metrics, injection, visualization |
-| `tests/` | 75 tests, 90%+ coverage on `src/template/` |
+| `src/template_template/` | Introspection, metrics, injection, visualization |
+| `tests/` | full suite, 90%+ coverage on `src/template_template/` |
 | `output/` | PDF, figures, metrics JSON, rendered manuscript |
 
 ## Pipeline Outputs
 
 | Artifact | Path |
 |----------|------|
-| Rendered PDF | `output/pdf/template_combined.pdf` |
+| Rendered PDF | `output/pdf/template_template_combined.pdf` |
 | Metrics JSON | `output/data/metrics.json` |
 | Rendered chapters | `output/manuscript/*.md` |
 | Figures | `output/figures/*.png` |

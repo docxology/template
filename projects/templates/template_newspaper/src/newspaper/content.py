@@ -22,6 +22,11 @@ from typing import Any
 
 import yaml
 
+# Page templates select inside-page *furniture*. Only ``front`` (nameplate) and
+# ``classified`` (dense unboxed grid) change the layout path (see layout.py);
+# ``standard``/``opinion``/``feature`` share the standard inside-page furniture
+# and act as semantic/section tags — their distinct look on A4/A5 comes from
+# *content* (boxes, mastheads, jumps), not from the template branch.
 VALID_TEMPLATES: frozenset[str] = frozenset({"front", "standard", "opinion", "feature", "classified"})
 VALID_LEVELS: frozenset[str] = frozenset({"lead", "primary", "secondary", "minor"})
 VALID_BLOCK_KINDS: frozenset[str] = frozenset({"p", "subhead", "pull"})

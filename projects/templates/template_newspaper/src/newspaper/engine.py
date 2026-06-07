@@ -47,9 +47,10 @@ def render_edition(
     config: NewspaperConfig,
     *,
     project_root: Path,
-    output_path: Path,
+    output_path: Path | str,
 ) -> RenderResult:
     """Render ``edition`` to ``output_path`` and return a :class:`RenderResult`."""
+    output_path = Path(output_path)
     geom = config.geometry()
     fonts = register_fonts()
     styles = build_stylesheet(fonts)

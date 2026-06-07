@@ -15,7 +15,7 @@ def test_build_infrastructure_report(repo_root):
 
 # ❌ PROHIBITED: Mock objects substitute assumptions for reality
 def test_build_report_mocked():
-    with patch('template.introspection.Path.rglob') as mock_rglob:
+    with patch('template_template.introspection.Path.rglob') as mock_rglob:
         mock_rglob.return_value = [Path('a.py'), Path('b.py')]
         report = build_infrastructure_report(Path('.'))
         assert report.total_python_files == 2  # tests the mock, not the code

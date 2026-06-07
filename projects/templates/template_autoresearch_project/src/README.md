@@ -6,20 +6,20 @@ Reusable AutoResearch project logic lives here. See [`AGENTS.md`](AGENTS.md) for
 
 - `config.py` — loop configuration from `autoresearch.yaml` + manuscript settings
 - `loop.py` — deterministic plan/evidence/claim/artifact/readiness orchestration
-- `writers.py` — artifact I/O; `writers_figure_dispatch.py` (`FIGURE_DISPATCH`, `render_figure_batch`); `writers_benchmark.py` — benchmark grading
+- `writers/io.py`, `writers/manifests.py`, `writers/payloads.py` — artifact I/O; `writers/figure_dispatch.py` (`FIGURE_DISPATCH`, `render_figure_batch`); `writers/benchmark.py` — benchmark grading (`writers/__init__.py` facade)
 
 ## ML task
 
-- `ml_training.py` — numpy-only training primitives; `ml_task.py` — public exports
-- `ml_data.py`, `ml_models.py`, `ml_selection.py` — data, evaluation, candidate selection
-- `diagnostics_*.py` — probability records, metrics, intervals, reports (`diagnostics.py` facade)
+- `ml/training.py` — numpy-only training primitives; `ml/task.py` — public exports
+- `ml/data.py`, `ml/models.py`, `ml/selection.py` — data, evaluation, candidate selection
+- `diagnostics/*.py` — probability records, metrics, intervals, reports (`diagnostics/__init__.py` facade)
 
 ## Figures
 
-- `figures_core.py` — shared matplotlib primitives
-- `figures_ml_*.py` — ML/MNIST/calibration/matrices writers (`figures_ml.py` barrel)
-- `figures_process.py`, `figures_security.py` — process and security figure families
-- `figure_registry.py` (facade), `figure_registry_{captions,records}.py` — registry metadata for `figure_registry.json`
+- `figures/figures_core.py` — shared matplotlib primitives
+- `figures/figures_ml_*.py` — ML/MNIST/calibration/matrices writers (`figures/__init__.py` barrel)
+- `figures/figures_process.py`, `figures/figures_security.py` — process and security figure families
+- `figures/figure_registry.py` (facade), `figures/figure_registry_{captions,records}.py` — registry metadata for `figure_registry.json`
 
 ## Manuscript hydration
 

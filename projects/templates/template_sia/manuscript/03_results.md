@@ -10,4 +10,4 @@ Metric delta (final − first generation): {{SIA_METRIC_DELTA}}.
 
 Final injected token: {{SIA_FINAL_METRIC_NAME}}={{SIA_FINAL_METRIC_VALUE}} (n={{SIA_FINAL_N_SAMPLES}}).
 
-![SIA metric progression across generations.](../output/figures/sia_metric_progression.png){#fig:sia-metric-progression width=0.85}
+![SIA metric progression across generations.](../output/figures/sia_metric_progression.png){#fig:sia-metric-progression width=85%}

@@ -41,7 +41,18 @@ def test_load_config_non_mapping(tmp_path):
 def test_iter_chapters_default_and_disabled():
     config = load_config()
     chapters = iter_chapters(config)
-    assert len(chapters) == 12
+    # Derive the expected count from the config (single source of truth) rather
+    # than a literal, so editing units/chapters in config.yaml — the edit the
+    # template invites — does not break this test.
+    enabled_in_config = sum(
+        1
+        for unit in config.get("units", [])
+        for chap in unit.get("chapters", [])
+        if chap.get("enabled", True)
+    )
+    assert len(chapters) == enabled_in_config
+    # Disabled chapters are excluded from the default view.
+    assert len(iter_chapters(config, include_disabled=True)) >= len(chapters)
     first = chapters[0]
     assert isinstance(first, ChapterRef)
     assert first.stem == first.file[:-3]

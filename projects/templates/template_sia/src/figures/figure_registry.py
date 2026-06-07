@@ -15,16 +15,22 @@ class FigureSpec:
     caption: str
 
 
+# NOTE: captions here mirror the canonical captions authored inline in the
+# manuscript (`manuscript/02_methodology.md`, `manuscript/03_results.md`), which
+# are the single source of truth rendered into the PDF. Keep them in sync.
 FIGURE_SPECS: tuple[FigureSpec, ...] = (
     FigureSpec(
         figure_id="fig:sia-metric-progression",
         filename="sia_metric_progression.png",
-        caption="SIA metric progression across generations (fixture replay).",
+        caption="SIA metric progression across generations.",
     ),
     FigureSpec(
         figure_id="fig:sia-loop-topology",
         filename="sia_loop_topology.png",
-        caption="Meta → Target → Feedback loop topology for the SIA harness.",
+        caption=(
+            "Meta → Target → Feedback loop topology for the SIA harness, "
+            "generated programmatically by write_sia_loop_topology."
+        ),
     ),
 )
 

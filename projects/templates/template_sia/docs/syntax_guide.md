@@ -6,14 +6,19 @@ Hydrated by `scripts/z_generate_manuscript_variables.py` from loop outputs:
 
 | Token | Source |
 | --- | --- |
-| `${CONFIG_TITLE}` | `manuscript/config.yaml` → `paper.title` |
-| `${SIA_GENERATION_COUNT}` | Number of completed generations |
-| `${SIA_FINAL_METRIC}` | Last generation `metric_value` |
-| `${SIA_FINAL_METRIC_NAME}` | Last generation `metric_name` |
-| `${SIA_IMPROVEMENT_DELTA}` | Final minus first metric |
-| `${SIA_TASK_NAME}` | `sia.task_name` from config |
+| `{{CONFIG_TITLE}}` | `manuscript/config.yaml` → `paper.title` |
+| `{{SIA_RUN_ID}}` | Identifier of the replayed/executed run |
+| `{{SIA_TASK_NAME}}` | `sia.task_name` from config |
+| `{{SIA_LIVE_MODE}}` | Whether the run was live or fixture-replay |
+| `{{SIA_GENERATION_COUNT}}` | Number of completed generations |
+| `{{SIA_MAX_GENERATIONS}}` | Configured generation budget |
+| `{{SIA_FINAL_METRIC_NAME}}` | Last generation `metric_name` |
+| `{{SIA_FINAL_METRIC_VALUE}}` | Last generation `metric_value` |
+| `{{SIA_FINAL_N_SAMPLES}}` | Last generation `n_samples` |
+| `{{SIA_METRIC_DELTA}}` | Final minus first metric |
+| `{{SIA_METRICS_TABLE}}` | Per-generation metrics table |
 
-Use `${TOKEN}` form in manuscript markdown (resolved to `{{TOKEN}}` internally by the injection pass).
+Write tokens in the `{{TOKEN}}` double-brace form **directly** in manuscript markdown — that is exactly what the injection pass (`scripts/z_generate_manuscript_variables.py`) resolves. (There is no `${...}` indirection.)
 
 ## Task directory layout
 
@@ -41,7 +46,7 @@ uv run python -m infrastructure.sia.cli validate projects/templates/template_sia
 {
   "metric_name": "accuracy",
   "metric_value": 0.8333,
-  "n_samples": 12
+  "n_samples": 6
 }
 ```
 

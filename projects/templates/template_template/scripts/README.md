@@ -1,7 +1,7 @@
 # Template Scripts
 
 Thin orchestrator scripts for the template meta-project. Testable logic lives in
-`src/template/`; scripts only set paths and invoke module entrypoints.
+`src/template_template/`; scripts only set paths and invoke module entrypoints.
 
 ## Scripts
 
@@ -15,8 +15,8 @@ uv run python projects/templates/template_template/scripts/generate_manuscript_m
 
 Module logic:
 
-- `src/template/metrics.py` — metrics computation, module inventory table, and JSON save
-- `src/template/inject_metrics.py` — `${variable}` substitution and chapter rendering
+- `src/template_template/metrics.py` — metrics computation, module inventory table, and JSON save
+- `src/template_template/inject_metrics.py` — `${variable}` substitution and chapter rendering
 
 Outputs:
 
@@ -33,8 +33,8 @@ uv run python projects/templates/template_template/scripts/generate_architecture
 
 Module logic:
 
-- `src/template/architecture_viz.py` — all figure construction, colour palette, and comparative matrix data
-- `src/template/introspection.py` — repository data used by figure generators
+- `src/template_template/architecture_viz.py` — all figure construction, colour palette, and comparative matrix data
+- `src/template_template/introspection.py` — repository data used by figure generators
 
 Outputs (`output/figures/`):
 

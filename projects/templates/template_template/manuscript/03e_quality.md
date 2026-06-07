@@ -31,7 +31,7 @@ These thresholds are enforced at Stage 01 of the pipeline. If project test cover
 
 The repository maintains three test suites:
 
-- **Infrastructure tests** (`tests/`): ~${infra_test_count_approx} tests validating the ${module_count} infrastructure subpackages, covering logging, rendering, validation, steganography, reporting, and LLM integration.
+- **Infrastructure tests** (`tests/`): ~${infra_test_count_approx} tests validating the ${module_count} infrastructure subdirectories, covering logging, rendering, validation, steganography, reporting, and LLM integration.
 - **Project tests** (`projects/*/tests/`): Per-project suites; counts span ${project_template_code_project_test_count} (`template_code_project`) → ${project_template_autoresearch_project_test_count} (`template_autoresearch_project`) exemplars with higher surface area.
 - **Integration tests**: Embedded within infrastructure tests, these exercise full pipeline stages against real manuscript inputs, validating end-to-end behavior from Markdown source to rendered PDF.
 

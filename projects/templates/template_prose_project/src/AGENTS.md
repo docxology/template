@@ -16,7 +16,7 @@ manuscript directory and the project's configuration.
 | `__init__.py` | Public re-exports. |
 | `config.py` | `ProjectConfig` typed YAML loader (`ProseAnalysisConfig`, `BibliographyConfig`, `ReportConfig`). |
 | `pipeline/` | `run_prose_pipeline` plus `pipeline/checks.py` (`CHECK_REGISTRY`) — read manuscript, analyse, cross-check bib, evaluate checks, write JSON. |
-| `figures.py` | `plot_section_word_counts`, `plot_readability_radar`, `plot_citation_density`, `generate_all_figures`. Scripts load typed reports via `infrastructure.prose.report.load_report_json`. |
+| `figures.py` | `plot_section_word_counts`, `plot_readability_metrics`, `plot_citation_density`, `generate_all_figures`. Scripts load typed reports via `infrastructure.prose.report.load_report_json`. |
 | `manuscript_variables.py` | `load_report_payload`, `compute_variables`, `substitute_in_text`, `write_variables` for abstract substitution. |
 | `report.py` | `write_review_report` — assemble the markdown review. |
 

@@ -130,3 +130,35 @@ def test_format_gallery_figure_refs_match_generator():
     assert referenced, "format gallery references no gallery figures"
     missing = referenced - producible
     assert missing == set(), f"format gallery references non-producible figures: {missing}"
+
+
+def test_every_chapter_figure_resolves_and_is_producible(tmp_path):
+    """Every chapter's `![](...png)` must (1) resolve under output/figures/ from the
+    chapter's own location and (2) be produced by a figure generator.
+
+    This is the irreducible gate for a fillable-textbook template: it catches a
+    figure path that does not resolve (e.g. the old scaffolder bug that emitted
+    ``../figures/`` instead of ``../../output/figures/``) and any chapter that
+    references a figure no generator produces. Without it those defects ship green.
+    """
+    from visualization import plots
+    from visualization.gallery import generate_gallery_figures
+
+    produced = {p.name for p in plots.generate_all_figures(tmp_path)}
+    produced |= {p.name for p in generate_gallery_figures(tmp_path)}
+
+    figures_root = (MANUSCRIPT.parent / "output" / "figures").resolve()
+    problems: list[str] = []
+    for chapter in CHAPTERS:
+        chapter_path = chapter.path(MANUSCRIPT)
+        text = chapter_path.read_text(encoding="utf-8")
+        for image in re.findall(r"!\[[^\]]*\]\(([^)]+\.png)\)", text):
+            resolved = (chapter_path.parent / image).resolve()
+            try:
+                resolved.relative_to(figures_root)
+            except ValueError:
+                problems.append(f"{chapter.file}: '{image}' does not resolve under output/figures/")
+                continue
+            if resolved.name not in produced:
+                problems.append(f"{chapter.file}: '{resolved.name}' is not produced by any generator")
+    assert not problems, problems

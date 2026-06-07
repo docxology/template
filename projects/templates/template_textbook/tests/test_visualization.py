@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from textbook.config import load_config
+from textbook.config import iter_chapters, load_config
 from visualization import _scaffold, plots
 
 
@@ -38,17 +38,20 @@ def test_placeholder_overview(tmp_path):
 def test_generate_chapter_placeholders_matches_config(tmp_path):
     config = load_config()
     paths = plots.generate_chapter_placeholders(tmp_path, config)
-    assert len(paths) == 12
+    # One placeholder per enabled chapter — derive from config, not a literal.
+    assert len(paths) == len(iter_chapters(config))
     for path in paths:
         _png_is_nonempty(path)
 
 
 def test_generate_all_figures(tmp_path):
+    worked = plots.generate_worked_figures(tmp_path)
     paths = plots.generate_all_figures(tmp_path)
-    assert len(paths) == 16  # 4 worked + 12 chapter placeholders
+    # all figures = worked figures + one placeholder per enabled chapter.
+    assert len(paths) == len(worked) + len(iter_chapters(load_config()))
     names = {p.name for p in paths}
-    assert "logistic_growth.png" in names
-    assert "part_I_first_principles.png" in names
+    assert "logistic_growth.png" in names  # a worked figure
+    assert "part_0_orientation.png" in names  # a chapter placeholder that is displayed
 
 
 def test_scaffold_new_figure_and_save(tmp_path):

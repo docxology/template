@@ -40,7 +40,7 @@ write_review_report(
 |---|---|
 | `config.py` | `ProjectConfig`, `ProseAnalysisConfig`, `BibliographyConfig`, `ReportConfig`, `load_project_config`. |
 | `pipeline/` | `run_prose_pipeline`, `ProseRunArtifacts`, `CheckResult`, and configured check functions. |
-| `figures.py` | `plot_section_word_counts`, `plot_readability_radar`, `plot_citation_density`, `generate_all_figures`. |
+| `figures.py` | `plot_section_word_counts`, `plot_readability_metrics`, `plot_citation_density`, `generate_all_figures`. |
 | `manuscript_variables.py` | `ManuscriptVariables`, `load_report_payload`, `compute_variables`, `substitute_in_text`, `write_variables`. |
 | `report.py` | `write_review_report`. |
 
