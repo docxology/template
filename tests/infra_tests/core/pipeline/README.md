@@ -14,6 +14,8 @@ uv run pytest tests/infra_tests/core/pipeline/ -q
 | File | Purpose |
 | --- | --- |
 | `test_multi_project_parallel.py` | Parallel project execution, stream isolation, failure isolation |
+| `test_plugins.py` | Plugin-stage schema/loader/merge (PLUGIN-STAGES-1), default-off contract |
+| `test_plugins_executor.py` | Executor merges opt-in plugin stages; default-off plan unchanged |
 
 ## See Also
 

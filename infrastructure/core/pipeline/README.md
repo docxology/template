@@ -6,6 +6,7 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 
 - `executor.py`
 - `dag.py`
+- `incremental.py` — opt-in content-hash stage skipping (default OFF)
 - `multi_project.py`
 - `multi_project_parallel.py`
 - `resume.py`

@@ -70,6 +70,12 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         self._telemetry: TelemetryCollector | None = None
         self._init_telemetry()
 
+        # Incremental (content-hash) skip manifest. Stays ``None`` unless the
+        # opt-in feature is enabled and a run loads it. DEFAULT-OFF.
+        from infrastructure.core.pipeline.incremental import HashManifest
+
+        self._incremental_manifest: HashManifest | None = None
+
     def _setup_log_file_handler(self) -> None:
         """Set up or recreate the log file handler.
 
@@ -175,6 +181,11 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             if exclude_tags:
                 dag.filter_tags(exclude=exclude_tags)
 
+            # DEFAULT-OFF plugin stages: merge only when the project declares
+            # extra stages in projects/{name}/pipeline_plugins.yaml. With no
+            # declaration this is a no-op and the plan is unchanged.
+            self._merge_plugin_stages_into_dag(dag)
+
             return dag.to_stage_specs(self)
 
         # Hardcoded fallback when no pipeline.yaml is available (e.g. tests).
@@ -200,7 +211,30 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             skip_names.add("Infrastructure Tests")
         if skip_llm:
             skip_names.update({"LLM Scientific Review", "LLM Translations"})
-        return [s for s in all_stages if s.name not in skip_names]
+        base_specs = [s for s in all_stages if s.name not in skip_names]
+
+        # DEFAULT-OFF plugin stages on the fallback path too (no-op when absent).
+        return self._append_plugin_stages_to_specs(base_specs)
+
+    # -- Plugin-stage integration (DEFAULT-OFF) ------------------------------
+
+    def _load_plugin_stages(self) -> list:
+        """Load validated plugin declarations for this project (``[]`` if none)."""
+        from infrastructure.core.pipeline.plugins import load_plugin_stages
+
+        return load_plugin_stages(self.config.project_dir)
+
+    def _merge_plugin_stages_into_dag(self, dag) -> None:
+        """Merge declared plugin stages into the DAG (no-op when none declared)."""
+        from infrastructure.core.pipeline.plugins import merge_plugin_stages
+
+        merge_plugin_stages(dag, self._load_plugin_stages())
+
+    def _append_plugin_stages_to_specs(self, specs: list[StageSpec]) -> list[StageSpec]:
+        """Append declared plugin stages to a fallback spec list (no-op when none)."""
+        from infrastructure.core.pipeline.plugins import append_plugin_specs
+
+        return append_plugin_specs(specs, self._load_plugin_stages(), self)
 
     # -- Pipeline execution --------------------------------------------------
 
@@ -237,7 +271,18 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         results: list[PipelineStageResult],
         pipeline_start: float,
     ) -> PipelineStageResult:
-        """Execute a stage, append to results, and checkpoint on success."""
+        """Execute a stage, append to results, and checkpoint on success.
+
+        When incremental mode is opt-in enabled, a stage whose declared inputs
+        are unchanged and whose declared outputs are present is SKIPPED. With the
+        feature disabled (the default) this path is never entered and behavior is
+        byte-identical to before.
+        """
+        skipped = self._maybe_skip_stage_incremental(stage_num, stage_spec)
+        if skipped is not None:
+            results.append(skipped)
+            return skipped
+
         result = self._execute_stage(
             stage_num,
             stage_spec.name,
@@ -249,15 +294,81 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         if not result.success:
             logger.error(PIPELINE_STAGE_FAILED.format(stage_num=stage_num, stage_name=stage_spec.name))
         elif result.stage_completed:
+            self._record_incremental_hash(stage_spec)
             self._write_artifact_manifest(stage_num, stage_spec)
             self._write_snapshot(stage_num, stage_spec)
             self._save_checkpoint(pipeline_start, stage_num, results)
         return result
 
+    # -- Incremental (content-hash) stage skipping (DEFAULT-OFF) -------------
+
+    def _incremental_enabled(self) -> bool:
+        return bool(getattr(self.config, "incremental", None) and self.config.incremental.enabled)
+
+    def _maybe_skip_stage_incremental(self, stage_num: int, stage_spec: StageSpec) -> PipelineStageResult | None:
+        """Return a skip result when the stage can be skipped, else ``None``.
+
+        No-op (returns ``None``) when incremental mode is disabled — the default.
+        """
+        if not self._incremental_enabled() or self._incremental_manifest is None:
+            return None
+        from infrastructure.core.pipeline.incremental import should_skip_stage
+
+        decision = should_skip_stage(
+            config=self.config.incremental,
+            manifest=self._incremental_manifest,
+            repo_root=self.config.repo_root,
+            project_dir=self.config.project_dir,
+            stage_name=stage_spec.name,
+            contract=stage_spec.contract,
+        )
+        if not decision.skip:
+            return None
+        logger.info(f"⏭ Stage {stage_num} skipped (unchanged inputs): {stage_spec.name}")
+        return PipelineStageResult(
+            stage_num=stage_num,
+            stage_name=stage_spec.name,
+            success=True,
+            duration=0.0,
+            lessons=(f"incremental skip: {stage_spec.name} inputs unchanged",),
+        )
+
+    def _record_incremental_hash(self, stage_spec: StageSpec) -> None:
+        """Record the stage's input/output hashes (no-op when feature disabled)."""
+        if not self._incremental_enabled() or self._incremental_manifest is None:
+            return
+        from infrastructure.core.pipeline.incremental import record_stage_hash, save_hash_manifest
+
+        try:
+            # Pass empty upstream hashes: transitive invalidation flows through
+            # declared-input file content (see should_skip_stage), and this keeps
+            # the recorded input hash symmetric with the skip-check computation.
+            record_stage_hash(
+                manifest=self._incremental_manifest,
+                repo_root=self.config.repo_root,
+                project_dir=self.config.project_dir,
+                stage_name=stage_spec.name,
+                contract=stage_spec.contract,
+                upstream_output_hashes={},
+            )
+            save_hash_manifest(self.config.project_dir / "output", self._incremental_manifest)
+        except OSError as exc:
+            logger.warning(f"Failed to record incremental hash: {exc}")
+
+    def _load_incremental_manifest(self) -> None:
+        """Load the hash manifest for this run (no-op when feature disabled)."""
+        self._incremental_manifest = None
+        if not self._incremental_enabled():
+            return
+        from infrastructure.core.pipeline.incremental import load_hash_manifest
+
+        self._incremental_manifest = load_hash_manifest(self.config.project_dir / "output")
+
     def _execute_pipeline(self, stages: list[StageSpec]) -> list[PipelineStageResult]:
         """Execute pipeline stages."""
         results: list[PipelineStageResult] = []
         pipeline_start = time.time()
+        self._load_incremental_manifest()
 
         for stage_num, stage_spec in enumerate(stages, 1):
             result = self._run_stage_and_checkpoint(stage_num, stage_spec, results, pipeline_start)

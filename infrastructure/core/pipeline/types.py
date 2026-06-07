@@ -7,7 +7,22 @@ PipelineExecutor and its heavy dependency chain.
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, NamedTuple
+from typing import TYPE_CHECKING, Callable, NamedTuple
+
+if TYPE_CHECKING:
+    from infrastructure.core.pipeline.incremental import IncrementalConfig
+
+
+def _default_incremental_config() -> "IncrementalConfig":
+    """Build the default (disabled) incremental config.
+
+    Imported lazily to avoid a circular import: ``incremental`` imports
+    ``StageContract`` from this module. The default is always feature-OFF, so
+    existing pipelines are unaffected.
+    """
+    from infrastructure.core.pipeline.incremental import IncrementalConfig
+
+    return IncrementalConfig()
 
 
 @dataclass(frozen=True)
@@ -97,6 +112,7 @@ class PipelineConfig:
     resume: bool = False
     hitl_mode: str = "full-auto"
     control: PipelineControlConfig = field(default_factory=PipelineControlConfig)
+    incremental: "IncrementalConfig" = field(default_factory=lambda: _default_incremental_config())
     total_stages: int = 10
 
     @property
