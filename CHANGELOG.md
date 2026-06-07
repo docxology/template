@@ -11,6 +11,21 @@ not to the contents of any specific workspace.
 
 - No unreleased changes yet.
 
+## [3.3.1] — 2026-06-07
+
+### Fixed
+
+- 📄 **DOCX output completion** — Pandoc DOCX rendering now embeds figures and
+  resolves cross-references (`infrastructure/rendering/pipeline.py`).
+- 🔢 **Generated-count reconciliation** — `docs/_generated/canonical_facts.md`
+  project-scope collection count refreshed to 216 after test additions.
+
+### Changed
+
+- 📦 **Public-exemplar outputs tracked** — refreshed rendered `output/` artifacts
+  for the public template exemplars are committed alongside the source so the
+  repository ships reproducible, inspectable deliverables.
+
 ## [3.3.0] — 2026-06-07
 
 ### Added

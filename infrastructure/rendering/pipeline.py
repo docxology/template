@@ -432,6 +432,41 @@ def _render_combined_docx(
     if bibliography is not None:
         extra_args.extend(["--citeproc", f"--bibliography={bibliography}"])
 
+    # Inject title/author front matter from config.yaml. The PDF gets this via
+    # LaTeX title-page injection; the shared combined markdown carries no
+    # metadata block, so without this the DOCX would have no title or authors.
+    import yaml as _yaml
+    from infrastructure.rendering._pdf_title_page import _load_render_config
+
+    config, _ = _load_render_config(manuscript_dir)
+    if isinstance(config, dict):
+        paper = config.get("paper") or {}
+        meta: dict[str, Any] = {}
+        if paper.get("title"):
+            meta["title"] = str(paper["title"])
+        if paper.get("subtitle"):
+            meta["subtitle"] = str(paper["subtitle"])
+        authors: list[str] = []
+        for entry in config.get("authors") or []:
+            if isinstance(entry, dict) and entry.get("name"):
+                name = str(entry["name"])
+                affiliations = entry.get("affiliations") or []
+                if affiliations:
+                    name += " (" + "; ".join(str(a) for a in affiliations) + ")"
+                authors.append(name)
+            elif isinstance(entry, str):
+                authors.append(entry)
+        if authors:
+            meta["author"] = authors
+        date = paper.get("date") or (config.get("publication") or {}).get("year")
+        if date:
+            meta["date"] = str(date)
+        if meta:
+            meta_path = docx_dir / "_docx_metadata.yaml"
+            with meta_path.open("w", encoding="utf-8") as handle:
+                _yaml.safe_dump(meta, handle, allow_unicode=True, sort_keys=False)
+            extra_args.append(f"--metadata-file={meta_path}")
+
     logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined DOCX manuscript...")
     try:
