@@ -507,10 +507,7 @@ def check_publication_metadata_consistency(project_root: Path, report: Report, p
                 "ERROR",
                 project,
                 "publication_cff_zenodo_version_drift",
-                (
-                    f"CITATION.cff version {cff_version!r} disagrees with "
-                    f".zenodo.json version {zenodo_version!r}"
-                ),
+                (f"CITATION.cff version {cff_version!r} disagrees with .zenodo.json version {zenodo_version!r}"),
             )
         # Comprehensive DOI cross-referencing: when a concept DOI is declared,
         # .zenodo.json must point back to it via related_identifiers isVersionOf.

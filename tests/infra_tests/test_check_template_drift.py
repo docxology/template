@@ -226,8 +226,7 @@ def test_dead_link_still_catches_non_output_missing_target(drift_module, tmp_pat
     root = _scaffold_minimal_project(tmp_path)
     (root / "manuscript").mkdir(exist_ok=True)
     (root / "manuscript" / "12_results.md").write_text(
-        "See [the appendix](./99_appendix_missing.md) and a figure "
-        "[chart](../assets/not_output.png).\n",
+        "See [the appendix](./99_appendix_missing.md) and a figure [chart](../assets/not_output.png).\n",
         encoding="utf-8",
     )
     rep = drift_module.Report()
@@ -246,9 +245,7 @@ def test_dead_link_scans_beyond_docs_dir(drift_module, tmp_path):
     """
     root = _scaffold_minimal_project(tmp_path)
     (root / "AGENTS.md").write_text("See [guide](../../docs/guides/missing.md).", encoding="utf-8")
-    (root / "manuscript" / "01_intro.md").write_text(
-        "Ref [syntax](../../docs/missing_syntax.md).", encoding="utf-8"
-    )
+    (root / "manuscript" / "01_intro.md").write_text("Ref [syntax](../../docs/missing_syntax.md).", encoding="utf-8")
     rep = drift_module.Report()
     drift_module.check_referenced_files_exist(root, rep, "fake_project")
     flagged = [f.message for f in rep.findings if f.rule == "dead_link"]
@@ -282,9 +279,9 @@ def test_oversize_src_file_catches_file_in_subdirectory(drift_module, tmp_path):
     (subdir / "large.py").write_text("# line\n" * 1600, encoding="utf-8")
     rep = drift_module.Report()
     drift_module.check_no_oversize_src_files(root, rep, "fake_project")
-    assert any(
-        f.rule == "oversize_src_file" and "large.py" in f.message for f in rep.findings
-    ), f"Expected oversize_src_file finding for src/submodule/large.py, got: {rep.findings}"
+    assert any(f.rule == "oversize_src_file" and "large.py" in f.message for f in rep.findings), (
+        f"Expected oversize_src_file finding for src/submodule/large.py, got: {rep.findings}"
+    )
 
 
 def test_blanket_except_error_when_no_noqa(drift_module, tmp_path):
@@ -393,12 +390,8 @@ def test_publication_metadata_flags_missing_concept_xlink(drift_module, tmp_path
         "  version_record: 'https://zenodo.org/records/22222'\n",
         encoding="utf-8",
     )
-    (root / "CITATION.cff").write_text(
-        "version: '1.0.0'\ndoi: 10.5281/zenodo.11111\n", encoding="utf-8"
-    )
-    (root / ".zenodo.json").write_text(
-        '{"version": "1.0.0", "title": "X"}\n', encoding="utf-8"
-    )
+    (root / "CITATION.cff").write_text("version: '1.0.0'\ndoi: 10.5281/zenodo.11111\n", encoding="utf-8")
+    (root / ".zenodo.json").write_text('{"version": "1.0.0", "title": "X"}\n', encoding="utf-8")
     rep = drift_module.Report()
     drift_module.check_publication_metadata_consistency(root, rep, "fake_project")
     assert any(f.rule == "publication_zenodo_missing_concept_xlink" for f in rep.findings)
@@ -414,9 +407,7 @@ def test_publication_metadata_accepts_present_concept_xlink(drift_module, tmp_pa
         "  version_record: 'https://zenodo.org/records/22222'\n",
         encoding="utf-8",
     )
-    (root / "CITATION.cff").write_text(
-        "version: '1.0.0'\ndoi: 10.5281/zenodo.11111\n", encoding="utf-8"
-    )
+    (root / "CITATION.cff").write_text("version: '1.0.0'\ndoi: 10.5281/zenodo.11111\n", encoding="utf-8")
     (root / ".zenodo.json").write_text(
         '{"version": "1.0.0", "title": "X", "related_identifiers": '
         '[{"relation": "isVersionOf", "identifier": "10.5281/zenodo.11111", '
@@ -428,9 +419,7 @@ def test_publication_metadata_accepts_present_concept_xlink(drift_module, tmp_pa
     assert not any(f.rule == "publication_zenodo_missing_concept_xlink" for f in rep.findings)
 
 
-def test_publication_metadata_flags_cff_zenodo_version_drift_without_paper_version(
-    drift_module, tmp_path
-):
+def test_publication_metadata_flags_cff_zenodo_version_drift_without_paper_version(drift_module, tmp_path):
     """Book-schema exemplars (no paper.version) still get CITATION/zenodo agreement."""
     root = _scaffold_minimal_project(tmp_path)
     # No paper.version (mirrors book-schema textbook); concept DOI present.
@@ -441,9 +430,7 @@ def test_publication_metadata_flags_cff_zenodo_version_drift_without_paper_versi
         "  version_record: 'https://zenodo.org/records/22222'\n",
         encoding="utf-8",
     )
-    (root / "CITATION.cff").write_text(
-        "version: '0.1.0'\ndoi: 10.5281/zenodo.11111\n", encoding="utf-8"
-    )
+    (root / "CITATION.cff").write_text("version: '0.1.0'\ndoi: 10.5281/zenodo.11111\n", encoding="utf-8")
     (root / ".zenodo.json").write_text(
         '{"version": "0.1", "title": "X", "related_identifiers": '
         '[{"relation": "isVersionOf", "identifier": "10.5281/zenodo.11111", '
