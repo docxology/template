@@ -67,7 +67,8 @@ semantic certificate, dependency graph, provenance, replay, counterexample,
 evidence-field, release-bundle, theorem-traceability, gate-index, diffoscope,
 proof-extraction, state-space, causal-ablation, license, release-note,
 proof-dependency, transition-table, ablation-sensitivity, release-attestation,
-track-improvement, blocked-scope, section-status, and render-log artifacts.
+track-improvement, blocked-scope, section-status, render-log, and visualization
+quality artifacts.
 
 ## Figure rendering contract
 
@@ -79,6 +80,16 @@ figures must use unlabeled references rather than duplicate labels.
 The appendix theorem-traceability graph and causal-ablation heatmap are generated
 from JSON rows and validated by the same figure registry contract as the main
 figures.
+`output/reports/visualization_quality_audit.json` joins registry metadata,
+figure-source mappings, figure hashes, image dimensions, color mode, and
+alt/caption lengths into one fail-closed report. It also marks figures backed by
+generated statistical data or report artifacts and fails when those bridge
+sources are missing. `output/data/statistical_visualization_bridge.json` expands
+those marked rows into a sheaf/scholarship crosswalk with manuscript sections,
+registered tracks, statistical source links, and the manuscript sections that
+actually reference each statistically backed figure. Each referenced section is
+resolved back through `manuscript/sheaf/manifest.yaml`, and validation requires
+the section to carry a `visualization` track binding.
 
 ## Sheaf reproducibility
 

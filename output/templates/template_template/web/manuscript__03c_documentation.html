@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>03c_documentation</title>
+  <title>03c_documentation.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -257,11 +257,9 @@ invariants. Second, it creates a self-documenting feedback loop: as AI
 agents modify the codebase, they update the corresponding
 <code>AGENTS.md</code> files, keeping documentation synchronized with
 implementation. Lau and Guo’s survey of 90 AI coding assistant systems
-<span class="citation"
-data-cites="lau2025aicoding">[@lau2025aicoding]</span> identifies
-contextual code understanding as a primary bottleneck; the Documentation
-Duality standard addresses this by providing pre-structured context at
-every directory level.</p>
+[lau2025aicoding] identifies contextual code understanding as a primary
+bottleneck; the Documentation Duality standard addresses this by
+providing pre-structured context at every directory level.</p>
 <p>The template additionally includes <code>CLAUDE.md</code> at the
 repository root, providing system-level instructions for AI coding
 assistants—architectural principles, testing requirements, and naming
@@ -322,14 +320,11 @@ imports, usage pattern</td>
 </tbody>
 </table>
 <p>Tier 1 and Tier 2 have direct analogues in the prompt-engineering
-literature: system prompts and retrieval-augmented context <span
-class="citation" data-cites="lau2025aicoding">[@lau2025aicoding]</span>.
-Tier 3 is novel. The <code>SKILL.md</code> files follow a YAML
-frontmatter + Markdown instruction format precisely aligned with the
-tool-descriptor schemas of the Model Context Protocol <span
-class="citation"
-data-cites="anthropic2024mcp">[@anthropic2024mcp]</span>. The following
-is the exact frontmatter from
+literature: system prompts and retrieval-augmented context
+[lau2025aicoding]. Tier 3 is novel. The <code>SKILL.md</code> files
+follow a YAML frontmatter + Markdown instruction format precisely
+aligned with the tool-descriptor schemas of the Model Context Protocol
+[anthropic2024mcp]. The following is the exact frontmatter from
 <code>infrastructure/rendering/SKILL.md</code>:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
@@ -342,12 +337,10 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="
 <p>An MCP client reading this block immediately knows the module name,
 its natural-language activation condition (“use for”), and which Python
 symbols to import. No source-code inspection is required. This is the
-practical implementation of Toolformer-style self-documented tools <span
-class="citation"
-data-cites="schick2023toolformer">[@schick2023toolformer]</span>—rather
-than a language model learning tool APIs from training data, the APIs
-are encoded directly in version-controlled, co-located skill files that
-evolve with the codebase.</p>
+practical implementation of Toolformer-style self-documented tools
+[schick2023toolformer]—rather than a language model learning tool APIs
+from training data, the APIs are encoded directly in version-controlled,
+co-located skill files that evolve with the codebase.</p>
 <h3 id="module-skill-coverage">Module Skill Coverage</h3>
 <p>Each infrastructure subdirectory surfaced by
 <code>discover_infrastructure_modules()</code> carries paired
@@ -362,11 +355,10 @@ immediately; Tier‑3 SKILL assets follow once APIs stabilize.</p>
 <h3 id="mcp-server-mapping">MCP Server Mapping</h3>
 <p>The mapping from <code>SKILL.md</code> descriptors to MCP server
 endpoints is intentional but not yet automated; it represents the
-principal next integration step. In the MCP architecture <span
-class="citation"
-data-cites="anthropic2024mcp">[@anthropic2024mcp]</span>, a server
-exposes three primitive types: <strong>Tools</strong> (executable
-functions), <strong>Resources</strong> (data the model can read), and
+principal next integration step. In the MCP architecture
+[anthropic2024mcp], a server exposes three primitive types:
+<strong>Tools</strong> (executable functions),
+<strong>Resources</strong> (data the model can read), and
 <strong>Prompts</strong> (structured query templates). Each
 <code>infrastructure</code> module maps naturally onto this
 taxonomy:</p>
@@ -398,23 +390,20 @@ compose these MCP tools to reproduce the declarative DAG
 programmatically—discovering capabilities via <code>SKILL.md</code>
 frontmatter, executing them via MCP protocol calls, and consuming their
 outputs as Resources. The <code>SKILL.md</code> files parallel Voyager’s
-skill library <span class="citation"
-data-cites="wang2023voyager">[@wang2023voyager]</span>—Voyager’s agent
-accumulates a growing library of executable Minecraft skills represented
-as JavaScript functions; <code>template/</code>’s agent accumulates a
-curated library of research pipeline skills represented as
-YAML-frontmattered <code>SKILL.md</code> files. In both cases, the skill
-representation is machine-readable, version-controlled, and
-self-describing. Wang et al.’s LLM agent survey <span class="citation"
-data-cites="wang2024llmagents">[@wang2024llmagents]</span> identifies
-tool use, planning, and memory as the three fundamental capabilities of
-autonomous agents; Yao et al.’s ReAct framework <span class="citation"
-data-cites="yao2023react">[@yao2023react]</span> demonstrates that
-interleaving reasoning traces with tool actions dramatically improves
-agent reliability in interactive settings. The <code>template/</code>
-skill architecture provides the tool-use layer aligned with these
-frameworks, the 12 declared stages in <code>pipeline.yaml</code>;
-default full runs use 10 provides the planning scaffold, and the
-checkpoint system provides the memory layer.</p>
+skill library [wang2023voyager]—Voyager’s agent accumulates a growing
+library of executable Minecraft skills represented as JavaScript
+functions; <code>template/</code>’s agent accumulates a curated library
+of research pipeline skills represented as YAML-frontmattered
+<code>SKILL.md</code> files. In both cases, the skill representation is
+machine-readable, version-controlled, and self-describing. Wang et al.’s
+LLM agent survey [wang2024llmagents] identifies tool use, planning, and
+memory as the three fundamental capabilities of autonomous agents; Yao
+et al.’s ReAct framework [yao2023react] demonstrates that interleaving
+reasoning traces with tool actions dramatically improves agent
+reliability in interactive settings. The <code>template/</code> skill
+architecture provides the tool-use layer aligned with these frameworks,
+the 12 declared stages in <code>pipeline.yaml</code>; default full runs
+use 10 provides the planning scaffold, and the checkpoint system
+provides the memory layer.</p>
 </body>
 </html>

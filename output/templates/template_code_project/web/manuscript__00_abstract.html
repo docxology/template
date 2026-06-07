@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>00_abstract</title>
+  <title>00_abstract.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -180,9 +180,9 @@ gradient descent</strong> on a convex quadratic, framed as the
 computational exemplar of the <a
 href="https://github.com/docxology/template">Research Project
 Template</a>. The implementation lives in
-<code>projects/template_code_project/src/optimizer.py</code>;
+<code>projects/templates/template_code_project/src/optimizer.py</code>;
 experiments and figures are orchestrated by
-<code>projects/template_code_project/scripts/optimization_analysis.py</code>
+<code>projects/templates/template_code_project/scripts/optimization_analysis.py</code>
 and hydrated into the manuscript through
 <code>scripts/z_generate_manuscript_variables.py</code>, so tables and
 prose track <code>output/data/optimization_results.csv</code> after
@@ -206,11 +206,10 @@ cases where runs hit <span class="math inline">\(N_{\max} =
 1000\)</span> before meeting the gradient tolerance. On the architecture
 side, we demonstrate a zero-mock test suite on project <code>src/</code>
 (see <a
-href="https://github.com/docxology/template/blob/main/projects/template_code_project/tests/test_optimizer.py">test_optimizer.py</a>),
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/test_optimizer.py">test_optimizer.py</a>),
 automated six-figure analysis, and reproducibility metadata
-(configuration hash, artifact counts) injected into <span
-class="citation"
-data-cites="sec:reproducibility">[@sec:reproducibility]</span>.</p>
+(configuration hash, artifact counts) injected into
+[sec:reproducibility].</p>
 <p><strong>Results (this configuration):</strong> 4 of 6 grid points
 report <code>converged=True</code> in the CSV; non-convergent rows flag
 either slow progress at small <span

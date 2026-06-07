@@ -78,22 +78,19 @@ Projects under `projects/templates/` (tracked exemplars) and `projects/active/` 
 - **Validated** by `04_validate_output.py`
 - **Copied** to `output/<subfolder>/{name}/` by `05_copy_outputs.py`
 
-Private lifecycle projects normally live in an external private repository:
-its `active/*` is symlinked into `projects/active/` before discovery/rendering,
-while `working/*`, `published/*`, `archive/*`, and `other/*` are symlinked into
-the matching `projects/<subfolder>/` for non-rendered inspection. Preview with
+Private lifecycle projects normally live in an external private repository. The simplified sidecar uses `working/` and `archive/` by default: `working/*` is symlinked into `projects/working/`, and `archive/*` into `projects/archive/`, for explicit targeted work. Optional legacy `active/*`, `published/*`, and `other/*` are still recognized if present; optional `active/*` is symlinked into `projects/active/` before discovery/rendering. Preview with
 `uv run python -m infrastructure.orchestration link-projects --dry-run`;
 override the private root with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root`; disable one auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.
 
-#### ❌ **Non-Rendered Projects (`working/`, `published/`, `archive/`, `other/`)**
+#### ❌ **Non-Rendered Projects (`working/`, `archive/`, optional legacy mirrors)**
 
-Projects under `projects/working/`, `projects/published/`, `projects/archive/`, and `projects/other/` are:
+Projects under `projects/working/` and `projects/archive/` are non-rendered by default; optional legacy `projects/published/` and `projects/other/` are treated the same way when present:
 
-- **NOT discovered** by infrastructure discovery functions
-- **NOT listed** in `run.sh` menu
-- **NOT executed** by any pipeline scripts
-- **Preserved** for historical reference and potential reactivation
+- **NOT discovered** by default infrastructure discovery functions
+- **NOT listed** in the normal `run.sh` menu
+- **NOT executed** by all-project pipeline scripts
+- **Preserved** for explicit targeted work, historical reference, or later reactivation
 
 ```mermaid
 graph TD
@@ -138,21 +135,21 @@ graph TD
 
 ### Project Lifecycle
 
-#### Archiving a Project
+#### Retiring or resuming a sidecar project
 
-To archive a rendered project:
+The normal private sidecar lifecycle is `working/` ↔ `archive/`:
 
-1. Move project from `projects/active/{name}/` to `projects/archive/{name}/`
-2. Project will no longer appear in discovery or execution
-3. Can be reactivated by moving back to `projects/active/`
+1. Retire: move `working/{name}/` to `archive/{name}/` in the sidecar repo.
+2. Resume: move `archive/{name}/` back to `working/{name}/` in the sidecar repo.
+3. Re-sync with `uv run python -m infrastructure.orchestration link-projects`.
 
-#### Reactivating an Archived Project
+#### Rendering a sidecar project
 
-To reactivate an archived project:
-
-1. Move project from `projects/archive/{name}/` to `projects/active/{name}/`
-2. Ensure project structure is valid (has `src/` and `tests/`)
-3. Project will be automatically discovered on next `run.sh` execution
+For a one-off render, keep the project under `working/` and use an explicit
+qualified command such as `--project working/{name}`. To include a private
+project in default discovery and the normal `run.sh` menu, deliberately place it
+under the sidecar's optional `active/{name}/` folder so it syncs into
+`projects/active/{name}/`.
 
 ## Project Structure Requirements
 

@@ -1,0 +1,419 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/data/manuscript_variables.json",
+      "sha256": "f06586c2983fd1771c004732285132622a45be25bda2ad611dab6f9eda7412f5",
+      "size_bytes": 859,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/sia_loop_topology.png",
+      "sha256": "de866112810f222bfcd114eb988db241a2b18e6bdb5f727c1303b5343736b830",
+      "size_bytes": 9891,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/sia_metric_progression.png",
+      "sha256": "eeb1d0a07387bc8697820373eab955e456c6cfd0ab8006e8cd084e524ffd4ad6",
+      "size_bytes": 26693,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "5464fa69c20d8d0b375dc0690959ebea5b912bb0d564ac3db75263b7b578d176",
+      "size_bytes": 667,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "a3d25ca43de424a0f8e43b89a4d6d62d844dca07b3a0da5866eae12c4b4998a1",
+      "size_bytes": 950,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "57aa7885bbe58f89f6f3f46ef22cc01fdec2e355c4ccc3eae3204d06c4c8c5ee",
+      "size_bytes": 1400,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "4d8fa750780a99371cd4cdb96928f01d117d5cfefd41d1e6116476e49728f1fd",
+      "size_bytes": 539,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/04_conclusion.md",
+      "sha256": "af551e991ce45612bba9679d22e70e7b320683b752d64ca794ce12a706dbbbb1",
+      "size_bytes": 727,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "799f575a7a6c31f7863c189973720a058d3833ec723a3211cf6891462185a286",
+      "size_bytes": 182,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/config.yaml",
+      "sha256": "325c0a6fa3666a619b71908517fa61ca9deefbb94aed4e478bc5dbab2c27a9f8",
+      "size_bytes": 1049,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/preamble.md",
+      "sha256": "cb91cd9cc3e1409c8bdc3170a070729018279a775d3ba281b2378ea6a07fc8b7",
+      "size_bytes": 34,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/references.bib",
+      "sha256": "7a67eadaa4284bc20cd6f7e456c60dd88520d132387222508fadca61df0ce95d",
+      "size_bytes": 423,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/sia_loop_report.md",
+      "sha256": "c29ed2e40bb6bbd30010a808a6f6cd23151790031770a06dbfa5342033ecfb74",
+      "size_bytes": 250,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.json",
+      "sha256": "f70f2fe8b7df7b14c95bcfdf70a003695cb0e235bc81a8af8ba780259b27ac5f",
+      "size_bytes": 608,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.md",
+      "sha256": "80fcd72f6adec94ee7202c62769526c226d1437fc17ad33348534388b6b101ed",
+      "size_bytes": 290,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/context.md",
+      "sha256": "fdc00880f98056e7ff79315d7457618d3c2a6492d1e24c3a9195a14d0e063ad4",
+      "size_bytes": 4440,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_1/agent_execution.json",
+      "sha256": "8ffb5263911834731bd28ec4b61b4eba3734659f55b9d014b7848fb6e75a99f2",
+      "size_bytes": 51,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_1/results.json",
+      "sha256": "48a949a4a51a514596a86176018c90b8f4bb94918bb90bcc0cde8565708f3751",
+      "size_bytes": 60,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_1/target_agent.py",
+      "sha256": "2979300632a41ffa3f0e6e3cd0b1d8ce8f0cad36f945185deb3759f45db38f2d",
+      "size_bytes": 1630,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_2/agent_execution.json",
+      "sha256": "b17e996e29d6fd2cce10d88886a9a50d5f6c3ceb2086468d90762f6b2a9e4604",
+      "size_bytes": 51,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_2/improvement.md",
+      "sha256": "8fc03054a72f2b5fa07b619b8f99de2fbe44cc11b38d4381bbcffa737a5e900b",
+      "size_bytes": 47,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_2/results.json",
+      "sha256": "008615bf1c29a333b4ceb36f43504676cc90747e8b83cb05ac125ebcf29d8959",
+      "size_bytes": 63,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_2/target_agent.py",
+      "sha256": "2979300632a41ffa3f0e6e3cd0b1d8ce8f0cad36f945185deb3759f45db38f2d",
+      "size_bytes": 1630,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_3/agent_execution.json",
+      "sha256": "8c447c0b63ae15ae3d5411623337588658cf80524c19f440d015b78ad59103b8",
+      "size_bytes": 51,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_3/improvement.md",
+      "sha256": "db6fa923a54fde17bf48c05e587dc9bba8f0c6d18020a774f36cdc2821bc8883",
+      "size_bytes": 48,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_3/results.json",
+      "sha256": "e23e8f4454142ad3435b5a02510ccbe42b457451f64f1ee63a91fc9097e69d80",
+      "size_bytes": 63,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_3/target_agent.py",
+      "sha256": "2979300632a41ffa3f0e6e3cd0b1d8ce8f0cad36f945185deb3759f45db38f2d",
+      "size_bytes": 1630,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/run_summary.json",
+      "sha256": "3d08b3b99f7c4d4b27116b6006454407de207ab921073cf592dca148273291cc",
+      "size_bytes": 2472,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-07T04:19:52+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/context.md",
+      "sha256": "60f9e7a813f5930eb5a7bbb1a50ea2b9a60b4ae91c734af6aa442d5876a7345a",
+      "size_bytes": 4990,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-07T04:19:53+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/_combined_manuscript.bbl",
+      "sha256": "ca67134713bea04d1f4a1bf476ef61c34b243642344597476bcad279e580b854",
+      "size_bytes": 418,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/_combined_manuscript.blg",
+      "sha256": "f45fe9defa5ca4069181835150968e7e7523ac47c5cf55112472cb0ffb36a203",
+      "size_bytes": 938,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/_combined_manuscript.md",
+      "sha256": "d0b341e959e6308a00b5fc2c73edf8d43e425c659db74bff5dc24db6444f49d3",
+      "size_bytes": 4601,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/_combined_manuscript.tex",
+      "sha256": "8bd0556cd5dcbea4673b96a943a18c8e9dbfcbe94445215dd215a0cdc466c99e",
+      "size_bytes": 11191,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/references.bib",
+      "sha256": "7a67eadaa4284bc20cd6f7e456c60dd88520d132387222508fadca61df0ce95d",
+      "size_bytes": 423,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/template_sia_combined.pdf",
+      "sha256": "d2b35b084875196283e6b860877733e9e0a06bebbe518df7f595fbfda9efc77c",
+      "size_bytes": 82577,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "091e0184e426b008ff54863dc56ecb0cd20809bcea81f51b40827df4e0c6803a",
+      "size_bytes": 4497,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/index.html",
+      "sha256": "6d06c1b62fb4d8aa521c5e99aca95b883cc1421453ad6ed71af0152a9736ad4a",
+      "size_bytes": 13194,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__00_abstract.html",
+      "sha256": "899c09810a2ed406ffe7ec56a5f24dd91a2e8a6bf2eada98ba4453d172bc1d90",
+      "size_bytes": 4531,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__01_introduction.html",
+      "sha256": "c12ee60fa52e4e377564cedadc065d04d3e0da342bb9da9b0e1f62851d8bfd2e",
+      "size_bytes": 4859,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__02_methodology.html",
+      "sha256": "39a0cfa204ab0a3d4db71692ec6c950faa8b92d8c28f495b501742ebbe795a09",
+      "size_bytes": 5987,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__03_results.html",
+      "sha256": "f9acfd16d351ad70581fe4b938a88e710e0ea07849c2b1e27a09c19c676f6a69",
+      "size_bytes": 4921,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__04_conclusion.html",
+      "sha256": "d73a84c83bca33a5080e90de1ee3741d916c33e0d03297fe7ae15034272cb668",
+      "size_bytes": 4539,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__99_references.html",
+      "sha256": "015fcfab65600aafdee6481a8aa623dfbbfdc6795ce70f347e856dc0843bc891",
+      "size_bytes": 3986,
+      "stage_name": "PDF Rendering",
+      "stage_num": 6,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/diagnostics.json",
+      "sha256": "ba5e7a192c2113ad9c919c80ef3ae6bb572534a99bc0f9ce47ecae5705fa285d",
+      "size_bytes": 545,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/validation_report.json",
+      "sha256": "fd47e066ed5d3b9b8891620789247f58e69a3e85ef57294868835881b7a1dfd8",
+      "size_bytes": 5825,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/validation_report.md",
+      "sha256": "2894e27277db87ab76390391932c0f17babfed6dcc0327f21305578ca8d12d53",
+      "size_bytes": 332,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-07T04:19:58+00:00"
+    }
+  ],
+  "issues": []
+}

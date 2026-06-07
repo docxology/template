@@ -7,6 +7,9 @@ from visualizations.figure_io import save_figure_png
 from visualizations.figure_registry import load_figure_registry, render_figure_markdown
 from visualizations.figure_style import apply_style, load_figure_style
 
+ALLOWED_VISUAL_ROLES = {"trend", "comparison", "trace", "matrix", "diagram", "table", "flow", "dashboard"}
+ALLOWED_EVIDENCE_ROLES = {"statistical", "source_mapped", "formal", "schematic", "scholarship", "sheaf"}
+
 
 def test_load_figure_style_defaults() -> None:
     root = Path(__file__).resolve().parents[1]
@@ -63,6 +66,16 @@ def test_figure_registry_and_markdown() -> None:
     assert "../output/figures/ising_mi_curve.png" in md
     assert md.count("{#fig:ising_mi_curve") == 1
     assert "Closed-form" in md
+
+
+def test_figure_registry_declares_intent_metadata() -> None:
+    root = Path(__file__).resolve().parents[1]
+    registry = load_figure_registry(root)
+    assert len(registry) == 20
+    for figure_id, spec in registry.items():
+        assert spec.visual_role in ALLOWED_VISUAL_ROLES, figure_id
+        assert spec.evidence_role in ALLOWED_EVIDENCE_ROLES, figure_id
+        assert len(spec.paper_claim.split()) >= 6, figure_id
 
 
 def test_render_section_figures_for_results_mi_sweep() -> None:

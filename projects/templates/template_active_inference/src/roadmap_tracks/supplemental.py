@@ -258,17 +258,27 @@ def build_release_attestation(project_root: Path) -> dict[str, Any]:
     release = _load_json(root / "output" / "reports" / "release_bundle_manifest.json")
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     blocked = _load_json(root / "output" / "reports" / "blocked_scope_manifest.json")
+    visualization = _load_json(root / "output" / "reports" / "visualization_quality_audit.json")
+    statistical_bridge = _load_json(root / "output" / "data" / "statistical_visualization_bridge.json")
     semantic = _load_json(semantic_path)
     validation_deferred = not validation_path.is_file()
     if validation_path.is_file() and release_path.is_file():
         validation_deferred = validation_path.stat().st_mtime < release_path.stat().st_mtime
     semantic_false_restrictions = [key for key, value in (semantic.get("restrictions") or {}).items() if value is False]
-    semantic_passed = semantic.get("ok") is True or semantic_false_restrictions == ["release_attestation_complete"]
+    semantic_non_self_false = [
+        restriction for restriction in semantic_false_restrictions if restriction != "release_attestation_complete"
+    ]
+    semantic_passed = semantic.get("ok") is True or (bool(semantic.get("restrictions")) and not semantic_non_self_false)
+    validation_passed = (
+        validation.get("all_passed") is True
+        or validation.get("ok") is True
+        or (validation.get("summary") or {}).get("all_passed") is True
+    )
     rows = [
         {
             "id": "validation_report",
             "source": "output/reports/validation_report.json",
-            "passed": bool(validation.get("all_passed") or validation.get("ok")) if not validation_deferred else False,
+            "passed": validation_passed if not validation_deferred else False,
             "deferred_until_validation": validation_deferred,
         },
         {
@@ -292,11 +302,43 @@ def build_release_attestation(project_root: Path) -> dict[str, Any]:
             "deferred_until_validation": False,
         },
         {
+            "id": "visualization_quality",
+            "source": "output/reports/visualization_quality_audit.json",
+            "passed": visualization.get("all_quality_ok") is True
+            and visualization.get("all_sources_mapped") is True
+            and visualization.get("all_rendered") is True
+            and visualization.get("all_accessibility_text_ok") is True
+            and visualization.get("all_hashes_present") is True
+            and visualization.get("all_visual_roles_present") is True
+            and visualization.get("all_evidence_roles_present") is True
+            and visualization.get("all_paper_claims_present") is True
+            and visualization.get("all_figures_section_bound") is True
+            and visualization.get("all_statistical_sources_present") is True
+            and int(visualization.get("statistically_backed_count", 0) or 0) >= 6,
+            "statistical_bridge_passed": visualization.get("all_statistical_sources_present") is True
+            and int(visualization.get("statistically_backed_count", 0) or 0) >= 6,
+            "deferred_until_validation": False,
+        },
+        {
+            "id": "statistical_visualization_bridge",
+            "source": "output/data/statistical_visualization_bridge.json",
+            "passed": statistical_bridge.get("all_rows_connected") is True
+            and statistical_bridge.get("all_statistical_sources_present") is True
+            and statistical_bridge.get("all_figures_referenced") is True
+            and statistical_bridge.get("all_reference_sections_sheaf_bound") is True
+            and statistical_bridge.get("all_reference_sections_visualization_bound") is True
+            and statistical_bridge.get("all_sheaf_tracks_registered") is True
+            and int(statistical_bridge.get("row_count", 0) or 0) >= 6,
+            "deferred_until_validation": False,
+        },
+        {
             "id": "semantic_certificate",
             "source": "output/data/sheaf_gluing_certificate.json",
             "passed": semantic_passed,
             "ignored_self_restrictions": (
-                semantic_false_restrictions if semantic_false_restrictions == ["release_attestation_complete"] else []
+                ["release_attestation_complete"]
+                if "release_attestation_complete" in semantic_false_restrictions
+                else []
             ),
             "deferred_until_validation": False,
         },

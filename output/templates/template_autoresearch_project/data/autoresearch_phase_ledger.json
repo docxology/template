@@ -1,6 +1,6 @@
 {
   "claim_boundary": "Phase ledger records deterministic artifact-settlement order only; it is not runtime autonomy, self-approval, or external workflow certification.",
-  "generated_at": "2026-05-27T23:33:29+00:00",
+  "generated_at": "2026-06-07T04:22:03+00:00",
   "phases": [
     {
       "artifact_group": "readiness",

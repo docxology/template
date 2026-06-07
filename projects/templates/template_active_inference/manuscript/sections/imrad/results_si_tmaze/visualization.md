@@ -1,1 +1,3 @@
+The T-maze results use a trace-plus-analysis figure set. [@fig:cue_tmaze_advantage], [@fig:efe_decomposition], [@fig:precision_sweep], and [@fig:dirichlet_convergence] support closed-form policy, precision, cue-value, and likelihood-learning claims; [@fig:si_belief_entropy_curve], [@fig:si_obs_action_trace], and [@fig:si_tmaze_actions] expose the finite saved rollout behind the reported statistics. The visual claim is deliberately modest: these are deterministic toy traces and closed-form calculations, not sampled performance estimates.
+
 <!-- Registry-driven figure block: see figures.yaml section_figures.results_si_tmaze -->

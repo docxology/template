@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>02_methodology</title>
+  <title>02_methodology.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -189,15 +189,11 @@ than manuscript prose.</p>
 <li><p><strong>Metrics</strong>
 (<code>infrastructure.prose.analysis.metrics</code>) — word, sentence,
 paragraph, syllable counts; average words per sentence; average
-syllables per word; complex-word fraction; Flesch Reading Ease <span
-class="citation" data-cites="flesch1948new">[@flesch1948new]</span>;
-Flesch-Kincaid Grade Level <span class="citation"
-data-cites="kincaid1975derivation">[@kincaid1975derivation]</span>;
-Gunning Fog Index <span class="citation"
-data-cites="gunning1952technique">[@gunning1952technique]</span>. The
-implementations are textbook formulae over a vowel-group syllable
-heuristic; they’re good enough for a writer-facing signal, not for
-linguistic research.</p></li>
+syllables per word; complex-word fraction; Flesch Reading Ease
+[flesch1948new]; Flesch-Kincaid Grade Level [kincaid1975derivation];
+Gunning Fog Index [gunning1952technique]. The implementations are
+textbook formulae over a vowel-group syllable heuristic; they’re good
+enough for a writer-facing signal, not for linguistic research.</p></li>
 <li><p><strong>Structure</strong>
 (<code>infrastructure.prose.analysis.structure</code>) — heading
 outline, per-section word counts, max heading depth, presence of an H1,
@@ -206,7 +202,7 @@ H3).</p></li>
 <li><p><strong>Quality</strong>
 (<code>infrastructure.prose.analysis.quality</code>) — passive-voice
 candidates (heuristic: “be” form + past participle), hedge-word density,
-citation density (Pandoc-style <code>[@key]</code> extraction),
+citation density (Pandoc-style <code>[key]</code> extraction),
 long-sentence flagging.</p></li>
 </ul>
 <p>The results are aggregated into a <code>ManuscriptReport</code> whose
@@ -229,7 +225,7 @@ behaviours via <code>config.yaml</code>:</p>
 <tbody>
 <tr>
 <td><code>fail_on_missing: true</code></td>
-<td>Any cited <code>[@key]</code> that does not exist in the bib fails
+<td>Any cited <code>[key]</code> that does not exist in the bib fails
 the check.</td>
 </tr>
 <tr>
@@ -247,7 +243,7 @@ the check.</td>
 </tbody>
 </table>
 <p>The check uses <a
-href="../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
+href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
 so it sees exactly the same view of the bibliography that the rendering
 pipeline uses.</p>
 <h2 id="evaluate">Evaluate</h2>

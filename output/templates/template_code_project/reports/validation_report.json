@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-27T15:12:13.539976",
+  "timestamp": "2026-06-06T21:21:12.430903",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -22,27 +22,27 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 1.64,
+            "size_mb": 1.65,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.88,
+            "size_mb": 1.89,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 12,
-            "size_mb": 0.35,
+            "size_mb": 0.34,
             "readable": true,
             "optional": false
           },
           "slides": {
             "exists": true,
             "files": 73,
-            "size_mb": 2.5,
+            "size_mb": 2.49,
             "readable": true,
             "optional": false
           },
@@ -62,7 +62,7 @@
           },
           "reports": {
             "exists": true,
-            "files": 13,
+            "files": 14,
             "size_mb": 0.05,
             "readable": true,
             "optional": false
@@ -94,19 +94,19 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.88",
+          "size_mb": "1.89",
           "largest_file": "template_code_project_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 12,
-          "size_mb": "0.35",
+          "size_mb": "0.34",
           "largest_file": "dashboard.html"
         },
         "slides": {
           "exists": true,
           "file_count": 73,
-          "size_mb": "2.50",
+          "size_mb": "2.49",
           "largest_file": "03_results_slides.pdf"
         },
         "figures": {
@@ -123,7 +123,7 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 13,
+          "file_count": 14,
           "size_mb": "0.05",
           "largest_file": "artifact_manifest.json"
         },
@@ -152,12 +152,12 @@
         "slides": 73,
         "figures": 9,
         "data": 5,
-        "reports": 13,
+        "reports": 14,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 6.464491844177246,
+      "total_size_mb": 6.451986312866211,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -167,15 +167,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.8776416778564453
+      "size_mb": 1.886702537536621
     },
     "figures": {
       "files": 9,
-      "size_mb": 1.504425048828125
+      "size_mb": 1.5044441223144531
     },
     "data": {
       "files": 5,
-      "size_mb": 0.17685794830322266
+      "size_mb": 0.17686176300048828
     }
   },
   "summary": {

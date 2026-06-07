@@ -12,32 +12,34 @@
 
 **State:** unpublished / pending pairing
 
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
+
 ```{=latex}
 \subsubsection*{Release metadata}
 ```
 
-- **Title:** Convergence Analysis of Gradient Descent Optimization
-- **Version:** 2.3
-- **DOI:** 10.5281/zenodo.20417136
-- **GitHub:** docxology/template_code_project
-- **Zenodo:** https://zenodo.org/records/20417136
-- **SHA-256:** `5870d648def95d923ce5bc37a9061d56e2980c704fb6e3f5dfc46221a8bb6325`
-- **SHA-512:** `97205f75992d100491631d9c5f16de22eaad6a98cf195276fa641ee7b2bae80ddd0d93b3590b6ab5ac6319f128961da5e317bb17b5d05af807115ae577862355`
-
-**Pairing:** pending — unresolved:
-- ✗ GitHub release URL: `pending`
-
-![Integrity QR strip](../figures/transmission_integrity_strip.png){width=98%}
+| Field | Value |
+| --- | --- |
+| Title | Convergence Analysis of Gradient Descent Optimization |
+| Version | 2.5.0 |
+| Concept DOI | 10.5281/zenodo.20417136 |
+| Version DOI | 10.5281/zenodo.20420368 |
+| GitHub | docxology/template_code_project |
+| Zenodo | [https://zenodo.org/records/20417136](https://zenodo.org/records/20417136) |
+| SHA-256 | pending |
+| SHA-512 | pending |
 
 ```{=latex}
-\subsubsection*{Transmission manifest}
+\subsubsection*{How to verify}
 ```
 
-```
-title=Convergence Analysis of Gradient Descent Optimiz
-version=2.3 doi=10.5281/zenodo.20417136
-sha256=5870d648def95d92… manifest={"t":"Convergence Analysis of ","v":"2.3","d":"10.5281/zenodo.20417136","s":"5870d648def95d92"}
-```
+- Scan **Integrity** QR and compare the embedded SHA-256 prefix to the table above.
+- Scan **Zenodo** / **GitHub** QR codes and confirm they resolve to this release pairing.
+- Full hashes and structured fields: `../data/transmission_manifest.json`.
+
+![Integrity QR strip](../figures/transmission_integrity_strip.png){width=98%}
 
 Structured manifest: `../data/transmission_manifest.json`
 
@@ -62,11 +64,11 @@ Structured manifest: `../data/transmission_manifest.json`
 
 # Abstract {#sec:abstract}
 
-This paper presents a convergence study of **fixed-step gradient descent** on a convex quadratic, framed as the computational exemplar of the [Research Project Template](https://github.com/docxology/template). The implementation lives in `projects/template_code_project/src/optimizer.py`; experiments and figures are orchestrated by `projects/template_code_project/scripts/optimization_analysis.py` and hydrated into the manuscript through `scripts/z_generate_manuscript_variables.py`, so tables and prose track `output/data/optimization_results.csv` after every pipeline run.
+This paper presents a convergence study of **fixed-step gradient descent** on a convex quadratic, framed as the computational exemplar of the [Research Project Template](https://github.com/docxology/template). The implementation lives in `projects/templates/template_code_project/src/optimizer.py`; experiments and figures are orchestrated by `projects/templates/template_code_project/scripts/optimization_analysis.py` and hydrated into the manuscript through `scripts/z_generate_manuscript_variables.py`, so tables and prose track `output/data/optimization_results.csv` after every pipeline run.
 
 We evaluate 6 step sizes from $\alpha = 0.01$ to $\alpha = 2.5$, spanning conservative, near-optimal, aggressive, and divergent regimes for a unit Hessian model. The build chain exercises template infrastructure end-to-end: scientific helpers (`infrastructure.scientific.stability`, `infrastructure.scientific.benchmarking`), validation, rendering (`infrastructure/rendering/pdf_renderer.py`), and reporting. Accessibility-oriented plotting defaults (colourblind-safe palette, 300 dpi exports) are centralized in `src/figures/` and `src/analysis/`.
 
-Contributions are **methodological** and **architectural**. On the methods side, we relate empirical iteration counts and error decay to the scalar contraction factor $\rho(\alpha) = |1-\alpha|$ and document cases where runs hit $N_{\max} = 1000$ before meeting the gradient tolerance. On the architecture side, we demonstrate a zero-mock test suite on project `src/` (see [test_optimizer.py](https://github.com/docxology/template/blob/main/projects/template_code_project/tests/test_optimizer.py)), automated six-figure analysis, and reproducibility metadata (configuration hash, artifact counts) injected into [@sec:reproducibility].
+Contributions are **methodological** and **architectural**. On the methods side, we relate empirical iteration counts and error decay to the scalar contraction factor $\rho(\alpha) = |1-\alpha|$ and document cases where runs hit $N_{\max} = 1000$ before meeting the gradient tolerance. On the architecture side, we demonstrate a zero-mock test suite on project `src/` (see [test_optimizer.py](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/test_optimizer.py)), automated six-figure analysis, and reproducibility metadata (configuration hash, artifact counts) injected into [@sec:reproducibility].
 
 **Results (this configuration):** 4 of 6 grid points report `converged=True` in the CSV; non-convergent rows flag either slow progress at small $\alpha$ under the iteration cap or instability when $|1-\alpha| \geq 1$. The analytical minimizer remains $x^\ast = 1.0$ with $f(x^\ast) = -0.5$ for the configured $(A,b)$.
 
@@ -88,10 +90,10 @@ This `template_code_project` serves as the foundational exemplar for the [Resear
 Scientific engineering requires mathematical accuracy combined with software reliability. This project unifies theoretical optimization with the repository's three foundational pillars:
 
 1. **`infrastructure/` Layer (Root Directory)**: A modular stack of importable Python packages providing the computational scaffolding. The current package count is measured in the template repository's generated canonical facts rather than repeated here because it changes as infrastructure modules are added or retired.
-2. **`tests/` Framework (`projects/template_code_project/tests/`)**: An uncompromising validation layer maintaining a zero-mock testing policy. This is enforced automatically via the [CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) mapping to `pyproject.toml` directives.
-3. **`docs/` Knowledge Base (`projects/template_code_project/docs/`)**: A structured repository of architectural guidelines, operational patterns, and the Rigorous Agentic Scientific Protocol (RASP) that governs the AI-assisted agents writing these very texts.
+2. **`tests/` Framework (`projects/templates/template_code_project/tests/`)**: An uncompromising validation layer maintaining a zero-mock testing policy. This is enforced automatically via the [CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) mapping to `pyproject.toml` directives.
+3. **`docs/` Knowledge Base (`projects/templates/template_code_project/docs/`)**: A structured repository of architectural guidelines, operational patterns, and the Rigorous Agentic Scientific Protocol (RASP) that governs the AI-assisted agents writing these very texts.
 
-This implementation of gradient descent algorithms for solving optimization problems is used as the vehicle to demonstrate these pillars. The theoretical problem stated in [@eq:optimization_problem] is mapped programmatically inside the [optimizer module](https://github.com/docxology/template/blob/main/projects/template_code_project/src/optimizer.py):
+This implementation of gradient descent algorithms for solving optimization problems is used as the vehicle to demonstrate these pillars. The theoretical problem stated in [@eq:optimization_problem] is mapped programmatically inside the [optimizer module](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py):
 
 \begin{equation}
 \label{eq:optimization_problem}
@@ -155,9 +157,9 @@ This section describes the implementation methodology, explicitly detailing how 
 
 ### Gradient Descent Algorithm
 
-The core algorithm implements the iterative procedure for unconstrained optimization. The [`optimizer` module](https://github.com/docxology/template/blob/main/projects/template_code_project/src/optimizer.py) uses the standard-library `logging` logger for optional verbose diagnostics; the [analysis orchestrator](https://github.com/docxology/template/blob/main/projects/template_code_project/scripts/optimization_analysis.py) uses `infrastructure.core.logging.utils.get_logger`. Tests run under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/template_code_project/tests/conftest.py).
+The core algorithm implements the iterative procedure for unconstrained optimization. The [`optimizer` module](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py) uses the standard-library `logging` logger for optional verbose diagnostics; the [analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/scripts/optimization_analysis.py) uses `infrastructure.core.logging.utils.get_logger`. Tests run under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/conftest.py).
 
-**Algorithm — Gradient Descent (implemented in the [optimizer module](https://github.com/docxology/template/blob/main/projects/template_code_project/src/optimizer.py#L87-L173))**
+**Algorithm — Gradient Descent (implemented in the [optimizer module](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py#L87-L173))**
 
 > **Input:** Initial point $x_0$, step size $\alpha$, tolerance $\epsilon$, max iterations $N_{\max}$
 >
@@ -209,11 +211,11 @@ Labels follow the same agency taxonomy used for plot colours (`_agency_category`
 
 ### Zero-Mock Testing Methodology
 
-The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/template_code_project/tests/` during the infrastructure build phase.
+The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/templates/template_code_project/tests/` during the infrastructure build phase.
 
-1. **Project tests**: [`projects/template_code_project/tests/test_optimizer.py`](../tests/test_optimizer.py) exercises `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
+1. **Project tests**: [`projects/templates/template_code_project/tests/test_optimizer.py`](../tests/test_optimizer.py) exercises `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
 2. **Infrastructure validation**: The repository-level `tests/infra_tests/` suite validates shared template modules (e.g. pipeline and discovery helpers) independently of this project’s manuscript.
-3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/template_code_project/src/` prior to treating the project as build-green.
+3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/templates/template_code_project/src/` prior to treating the project as build-green.
 
 ### Stopping rule and reporting
 
@@ -238,7 +240,7 @@ The research template supports advanced LaTeX customization through the `preambl
 
 # Results {#sec:results}
 
-This section presents the experimental results from the gradient descent optimization study, including convergence analysis and performance comparisons. Every table, figure, and quantitative assertion in this section was compiled autonomously by the template's `infrastructure.reporting` subsystem executing the [optimization analysis script](https://github.com/docxology/template/blob/main/projects/template_code_project/scripts/optimization_analysis.py). No manual transcription was permitted.
+This section presents the experimental results from the gradient descent optimization study, including convergence analysis and performance comparisons. Every table, figure, and quantitative assertion in this section was compiled autonomously by the template's `infrastructure.reporting` subsystem executing the [optimization analysis script](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/scripts/optimization_analysis.py). No manual transcription was permitted.
 
 ## Convergence Analysis
 
@@ -258,11 +260,11 @@ This section presents the experimental results from the gradient descent optimiz
 
 [@fig:step_sensitivity] examines how the choice of step size affects the convergence path and solution quality. The analysis reveals the trade-off between convergence speed and numerical stability.
 
-![Sensitivity sweep produced by `generate_step_size_sensitivity_plot()` over an independent dense grid $\alpha \in [0.005, 0.4]$ (15 points), distinct from the discrete `experiment.step_sizes` used elsewhere in this section. Left: iterations to convergence on log--log axes — the curve drops sharply from 501 iterations at the smallest $\alpha$ (the `max_iterations` cap in this sub-experiment) to 38 iterations at $\alpha=0.4$, illustrating the geometric speedup as $\rho(\alpha)=|1-\alpha|$ shrinks. Right: final $f(x)$ versus $\alpha$ with horizontal reference lines at $f(x_0)=0$ (initial) and $f(x^\ast)=-0.5$ (analytic optimum); every $\alpha$ in this stable window lands on the optimum.](../figures/step_size_sensitivity.png){#fig:step_sensitivity}
+![Sensitivity sweep produced by `generate_step_size_sensitivity_plot()` over an independent dense grid $\alpha \in [0.005, 0.4]$ (10 points), distinct from the discrete `experiment.step_sizes` used elsewhere in this section. Left: iterations to convergence on log--log axes — the curve drops sharply from 500 iterations at the smallest $\alpha$ (the `max_iterations` cap in this sub-experiment) to 37 iterations at $\alpha=0.4$, illustrating the geometric speedup as $\rho(\alpha)=|1-\alpha|$ shrinks. Right: final $f(x)$ versus $\alpha$ with horizontal reference lines at $f(x_0)=0$ (initial) and $f(x^\ast)=-0.5$ (analytic optimum); every $\alpha$ in this stable window lands on the optimum.](../figures/step_size_sensitivity.png){#fig:step_sensitivity}
 
 ## Quantitative Results
 
-The optimization results for different step sizes are synthesized computationally by orchestrating [`infrastructure.reporting.executive_reporter`](https://github.com/docxology/template/blob/main/infrastructure/reporting/executive_reporter.py), feeding directly into the [optimization results data](https://github.com/docxology/template/blob/main/projects/template_code_project/output/data/optimization_results.csv) that acts as the source of truth for [@tbl:opt_results]. Rows follow `experiment.step_sizes` in `config.yaml`; the body rows below are injected at render time from that CSV (`RESULT_TABLE_ROWS` in `scripts/z_generate_manuscript_variables.py`).
+The optimization results for different step sizes are synthesized computationally by orchestrating [`infrastructure.reporting.executive_reporter`](https://github.com/docxology/template/blob/main/infrastructure/reporting/executive_reporter.py), feeding directly into the [optimization results data](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/data/optimization_results.csv) that acts as the source of truth for [@tbl:opt_results]. Rows follow `experiment.step_sizes` in `config.yaml`; the body rows below are injected at render time from that CSV (`RESULT_TABLE_ROWS` in `scripts/z_generate_manuscript_variables.py`).
 
 | Step Size (α) | Final Solution | Objective Value | Iterations | Converged |
 |---------------|----------------|-----------------|------------|-----------|
@@ -452,7 +454,7 @@ The hallmark of this implementation is the test matrix:
 
 - **Analytical Automation**: `infrastructure.core.progress` (`ProgressBar`, `SubStageProgress`) executing deterministic optimization experiments.
 - **Reporting & Integrity**: `infrastructure.reporting.executive_reporter` and `infrastructure.validation.output.validator` assuring CSV/JSON configurations conform.
-- **Visual Cryptography**: Publication-ready graphics compiled by `infrastructure.rendering.pdf_renderer.py` using metadata from `projects/template_code_project/manuscript/config.yaml`, automatically linked via the LaTeX configuration in `projects/template_code_project/manuscript/preamble.md`.
+- **Visual Cryptography**: Publication-ready graphics compiled by `infrastructure.rendering.pdf_renderer.py` using metadata from `projects/templates/template_code_project/manuscript/config.yaml`, automatically linked via the LaTeX configuration in `projects/templates/template_code_project/manuscript/preamble.md`.
 
 ## Research Pipeline Validation
 
@@ -480,9 +482,9 @@ This foundation could be extended to:
 
 ## Final Assessment
 
-This work demonstrates that the research template supports projects spanning the full spectrum—from prose-focused manuscripts to fully-tested algorithmic ecosystems. The optimization exemplar ties every quantitative claim to `output/data/` artifacts and enforces a zero-mock test policy on `projects/template_code_project/src/` with coverage gates documented in the root `pyproject.toml`.
+This work demonstrates that the research template supports projects spanning the full spectrum—from prose-focused manuscripts to fully-tested algorithmic ecosystems. The optimization exemplar ties every quantitative claim to `output/data/` artifacts and enforces a zero-mock test policy on `projects/templates/template_code_project/src/` with coverage gates documented in the root `pyproject.toml`.
 
-The pipeline produced the figures referenced in [@sec:results], wrote `optimization_results.csv`, and rendered this markdown (`projects/template_code_project/manuscript/04_conclusion.md`) together with `config.yaml` into PDF through `infrastructure.rendering`. The `template_code_project` tree remains the canonical reference for how algorithm code, analysis scripts, variable injection, and manuscript stay synchronized across rebuilds.
+The pipeline produced the figures referenced in [@sec:results], wrote `optimization_results.csv`, and rendered this markdown (`projects/templates/template_code_project/manuscript/04_conclusion.md`) together with `config.yaml` into PDF through `infrastructure.rendering`. The `template_code_project` tree remains the canonical reference for how algorithm code, analysis scripts, variable injection, and manuscript stay synchronized across rebuilds.
 
 
 
@@ -525,14 +527,14 @@ To validate robustness, the optimizer is exercised across a grid of 8 starting p
 
 ## Dimensional Scaling
 
-Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}$, from the scalar case ($d = 1$) to moderate dimensionality ($d = 50$), using identity-Hessian quadratics to isolate algorithmic scaling from problem conditioning effects. Representative single-call execution time from the last benchmark run: **2.9 μs** (recorded in `output/reports/performance_benchmark.json`).
+Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}$, from the scalar case ($d = 1$) to moderate dimensionality ($d = 50$), using identity-Hessian quadratics to isolate algorithmic scaling from problem conditioning effects. Representative single-call execution time from the last benchmark run: **1.8 μs** (recorded in `output/reports/performance_benchmark.json`).
 
 ## Computational Environment
 
 - **Python**: 3.12.13
 - **NumPy**: 2.4.1
 - **Platform**: Darwin arm64
-- **Generated**: 2026-05-27T23:36:51Z
+- **Generated**: 2026-06-07T04:20:32Z
 
 ## Pipeline ordering
 
@@ -572,10 +574,10 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `ce4d9aa7e33077fa`     |
-| Paper version                     | 2.3    |
+| Config hash (SHA-256, truncated)  | `4b048fd838bc337c`     |
+| Paper version                     | 2.5.0    |
 | First author                      | Daniel Ari Friedman |
-| Keyword count                     | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
+| Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
 
 The configuration hash changes whenever any parameter in `config.yaml` is modified, ensuring that every rendered PDF is traceable to a specific configuration state.
 
@@ -585,10 +587,10 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |
-| Publication-quality figures        | 8   |
+| Publication-quality figures        | 7   |
 | Structured data files (CSV/JSON)   | 5 |
-| Analysis reports                   | 18   |
-| **Total artifacts**                | **31** |
+| Analysis reports                   | 8   |
+| **Total artifacts**                | **20** |
 
 ## Numerical Validation Summary
 
@@ -666,7 +668,7 @@ To validate that `references.bib` is syntactically clean and contains the requir
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/template_code_project/manuscript/references.bib --strict
+    projects/templates/template_code_project/manuscript/references.bib --strict
 ```
 
 
@@ -690,7 +692,7 @@ uv run python -m infrastructure.reference.citation.cli validate \
 \section*{END OF TRANSMISSION}\label{end-of-transmission}
 ```
 
-**Release:** v2.3 · DOI `10.5281/zenodo.20417136` · SHA-256 `5870d648def9…` · pairing pending
+**Release:** v2.5.0 · DOI `10.5281/zenodo.20417136` · SHA-256 `pending…` · pairing pending
 
 ![Integrity QR strip](../figures/transmission_integrity_strip.png){width=88%}
 

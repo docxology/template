@@ -24,7 +24,7 @@ The hallmark of this implementation is the test matrix:
 
 - **Analytical Automation**: `infrastructure.core.progress` (`ProgressBar`, `SubStageProgress`) executing deterministic optimization experiments.
 - **Reporting & Integrity**: `infrastructure.reporting.executive_reporter` and `infrastructure.validation.output.validator` assuring CSV/JSON configurations conform.
-- **Visual Cryptography**: Publication-ready graphics compiled by `infrastructure.rendering.pdf_renderer.py` using metadata from `projects/template_code_project/manuscript/config.yaml`, automatically linked via the LaTeX configuration in `projects/template_code_project/manuscript/preamble.md`.
+- **Visual Cryptography**: Publication-ready graphics compiled by `infrastructure.rendering.pdf_renderer.py` using metadata from `projects/templates/template_code_project/manuscript/config.yaml`, automatically linked via the LaTeX configuration in `projects/templates/template_code_project/manuscript/preamble.md`.
 
 ## Research Pipeline Validation
 
@@ -52,6 +52,6 @@ This foundation could be extended to:
 
 ## Final Assessment
 
-This work demonstrates that the research template supports projects spanning the full spectrum—from prose-focused manuscripts to fully-tested algorithmic ecosystems. The optimization exemplar ties every quantitative claim to `output/data/` artifacts and enforces a zero-mock test policy on `projects/template_code_project/src/` with coverage gates documented in the root `pyproject.toml`.
+This work demonstrates that the research template supports projects spanning the full spectrum—from prose-focused manuscripts to fully-tested algorithmic ecosystems. The optimization exemplar ties every quantitative claim to `output/data/` artifacts and enforces a zero-mock test policy on `projects/templates/template_code_project/src/` with coverage gates documented in the root `pyproject.toml`.
 
-The pipeline produced the figures referenced in [@sec:results], wrote `optimization_results.csv`, and rendered this markdown (`projects/template_code_project/manuscript/04_conclusion.md`) together with `config.yaml` into PDF through `infrastructure.rendering`. The `template_code_project` tree remains the canonical reference for how algorithm code, analysis scripts, variable injection, and manuscript stay synchronized across rebuilds.
+The pipeline produced the figures referenced in [@sec:results], wrote `optimization_results.csv`, and rendered this markdown (`projects/templates/template_code_project/manuscript/04_conclusion.md`) together with `config.yaml` into PDF through `infrastructure.rendering`. The `template_code_project` tree remains the canonical reference for how algorithm code, analysis scripts, variable injection, and manuscript stay synchronized across rebuilds.

@@ -15,8 +15,8 @@ from pathlib import Path
 
 #: Typed subfolders under ``projects/`` that hold non-rendered lifecycle mirrors.
 #: Their nested projects are deliberately excluded from discovery so they never
-#: enter the render set. Only ``templates/`` (public exemplars) and ``active/``
-#: (the hot seat) are discovered. Keep in sync with
+#: enter the render set. Only ``templates/`` (public exemplars) and optional
+#: ``active/`` hot-seat entries are discovered. Keep in sync with
 #: :data:`infrastructure.project.linking.LIFECYCLE_LINK_DIRS`.
 NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "published", "archive", "other"})
 

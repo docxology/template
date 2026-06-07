@@ -2,7 +2,7 @@
 # Comprehensive research project demonstrating advanced optimization algorithms
 # This file serves as a meta-artifact linking the prose of the manuscript to the execution
 # layer. It is loaded by `yaml.safe_load` inside `infrastructure/rendering/_pdf_combined_renderer.py`
-# (manuscript metadata) and `projects/template_code_project/scripts/z_generate_manuscript_variables.py`
+# (manuscript metadata) and `projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py`
 # (experiment parameters).
 
 # Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_report_model.py`
@@ -10,7 +10,7 @@ paper:
   # RASP Standard: Title must be descriptive and objective
   title: "Convergence Analysis of Gradient Descent Optimization"
   subtitle: "Theoretical Bounds and Empirical Performance in Quadratic Minimization"
-  version: "2.3"
+  version: "2.5.0"
   date: "" # Auto-generated via `infrastructure/validation/output/validator.py` if empty
 
 # Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
@@ -24,8 +24,8 @@ authors:
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
   doi: "10.5281/zenodo.20417136" # Concept DOI — stable citation; cover page and CITATION.cff
-  version_doi: "10.5281/zenodo.20417137" # Latest Zenodo deposit (updated by publish_project_release.py)
-  version_record: "https://zenodo.org/records/20417137"
+  version_doi: "10.5281/zenodo.20420368" # Latest Zenodo deposit (updated by publish_project_release.py)
+  version_record: "https://zenodo.org/records/20420368"
   github_repository: "docxology/template_code_project"
   transmission_bookends:
     enabled: true
@@ -78,7 +78,7 @@ render:
     epub: true
 
 # Consumed by: `infrastructure.llm.LLMClient` (in `infrastructure/llm/core/client.py`)
-# See projects/template_code_project/docs/ for details
+# See projects/templates/template_code_project/docs/ for details
 llm:
   reviews:
     # Explicitly enabled for this exemplar to demonstrate AI-aided analysis

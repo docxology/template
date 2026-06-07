@@ -12,8 +12,8 @@
       "metric_name": "test_accuracy",
       "status": "proposed",
       "touched_paths": [
-        "projects/template_autoresearch_project/mnist_task.yaml",
-        "projects/template_autoresearch_project/src/ml_task.py"
+        "projects/templates/template_autoresearch_project/mnist_task.yaml",
+        "projects/templates/template_autoresearch_project/src/ml_task.py"
       ]
     },
     {
@@ -28,8 +28,8 @@
       "metric_name": "test_accuracy",
       "status": "proposed",
       "touched_paths": [
-        "projects/template_autoresearch_project/mnist_task.yaml",
-        "projects/template_autoresearch_project/src/ml_task.py"
+        "projects/templates/template_autoresearch_project/mnist_task.yaml",
+        "projects/templates/template_autoresearch_project/src/ml_task.py"
       ]
     },
     {
@@ -46,8 +46,8 @@
       "metric_name": "test_accuracy",
       "status": "proposed",
       "touched_paths": [
-        "projects/template_autoresearch_project/mnist_task.yaml",
-        "projects/template_autoresearch_project/src/ml_task.py"
+        "projects/templates/template_autoresearch_project/mnist_task.yaml",
+        "projects/templates/template_autoresearch_project/src/ml_task.py"
       ]
     },
     {
@@ -61,8 +61,8 @@
       "metric_name": "test_accuracy",
       "status": "proposed",
       "touched_paths": [
-        "projects/template_autoresearch_project/mnist_task.yaml",
-        "projects/template_autoresearch_project/src/ml_task.py"
+        "projects/templates/template_autoresearch_project/mnist_task.yaml",
+        "projects/templates/template_autoresearch_project/src/ml_task.py"
       ]
     },
     {
@@ -76,8 +76,8 @@
       "metric_name": "test_accuracy",
       "status": "proposed",
       "touched_paths": [
-        "projects/template_autoresearch_project/mnist_task.yaml",
-        "projects/template_autoresearch_project/src/ml_task.py"
+        "projects/templates/template_autoresearch_project/mnist_task.yaml",
+        "projects/templates/template_autoresearch_project/src/ml_task.py"
       ]
     },
     {
@@ -91,7 +91,7 @@
       "metric_name": "readiness_valid",
       "status": "deferred",
       "touched_paths": [
-        "projects/template_autoresearch_project/src/loop.py"
+        "projects/templates/template_autoresearch_project/src/loop.py"
       ]
     },
     {
@@ -104,11 +104,11 @@
       "metric_name": "benchmark_status",
       "status": "deferred",
       "touched_paths": [
-        "projects/template_autoresearch_project/src/reports.py"
+        "projects/templates/template_autoresearch_project/src/reports.py"
       ]
     }
   ],
-  "generated_at": "2026-05-27T23:33:29+00:00",
+  "generated_at": "2026-06-07T04:22:03+00:00",
   "ideas": [
     {
       "evidence_links": [

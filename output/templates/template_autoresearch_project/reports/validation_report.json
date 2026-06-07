@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-27T15:10:38.739612",
+  "timestamp": "2026-06-06T21:22:40.969185",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -8,10 +8,14 @@
     "Figure registry": true,
     "Evidence registry": true,
     "Project design overlays": true,
-    "Artifact manifest": true
+    "Artifact manifest": false
   },
   "figure_issues": [],
   "output_statistics": {
+    "artifact_manifest_issues": [
+      "changed artifact: output/reports/autoresearch_readiness.json",
+      "changed artifact: output/reports/autoresearch_readiness.md"
+    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -22,20 +26,20 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 1.27,
+            "size_mb": 1.28,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.65,
+            "size_mb": 1.66,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 8,
-            "size_mb": 0.34,
+            "size_mb": 0.33,
             "readable": true,
             "optional": false
           },
@@ -49,7 +53,7 @@
           "figures": {
             "exists": true,
             "files": 28,
-            "size_mb": 1.11,
+            "size_mb": 1.12,
             "readable": true,
             "optional": false
           },
@@ -62,8 +66,8 @@
           },
           "reports": {
             "exists": true,
-            "files": 19,
-            "size_mb": 0.22,
+            "files": 20,
+            "size_mb": 0.21,
             "readable": true,
             "optional": false
           },
@@ -94,13 +98,13 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.65",
+          "size_mb": "1.66",
           "largest_file": "template_autoresearch_project_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 8,
-          "size_mb": "0.34",
+          "size_mb": "0.33",
           "largest_file": "index.html"
         },
         "slides": {
@@ -112,7 +116,7 @@
         "figures": {
           "exists": true,
           "file_count": 28,
-          "size_mb": "1.11",
+          "size_mb": "1.12",
           "largest_file": "autoresearch_security_control_matrix.png"
         },
         "data": {
@@ -123,8 +127,8 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 19,
-          "size_mb": "0.22",
+          "file_count": 20,
+          "size_mb": "0.21",
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
@@ -152,12 +156,12 @@
         "slides": 49,
         "figures": 28,
         "data": 45,
-        "reports": 19,
+        "reports": 20,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 7.660914421081543,
+      "total_size_mb": 7.65708065032959,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -167,23 +171,30 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.6475629806518555
+      "size_mb": 1.6573734283447266
     },
     "figures": {
       "files": 28,
-      "size_mb": 1.1092100143432617
+      "size_mb": 1.1155509948730469
     },
     "data": {
       "files": 45,
-      "size_mb": 2.4695234298706055
+      "size_mb": 2.4694900512695312
     }
   },
   "summary": {
     "total_checks": 8,
-    "passed": 8,
-    "failed": 0,
+    "passed": 7,
+    "failed": 1,
     "figure_issues_count": 0,
-    "all_passed": true
+    "all_passed": false
   },
-  "recommendations": []
+  "recommendations": [
+    {
+      "priority": "medium",
+      "issue": "Artifact manifest reported drift or missing declared outputs",
+      "action": "Regenerate declared outputs or update the stage contract",
+      "file": "projects/templates/template_autoresearch_project/output/reports/artifact_manifest.json"
+    }
+  ]
 }

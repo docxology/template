@@ -25,7 +25,7 @@ For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-s
 
 **Thin-orchestrator gates:** `uv run python scripts/check_template_drift.py --strict`, `uv run python scripts/gates/module_line_count_check.py`, `uv run python -m infrastructure.core.health` — details in [`docs/architecture/thin-orchestrator-summary.md`](docs/architecture/thin-orchestrator-summary.md).
 
-**Assistants and editors:** [`.cursorrules`](.cursorrules) summarizes architecture and tooling for Cursor; [`CLAUDE.md`](CLAUDE.md) is the command cheat sheet; [`AGENTS.md`](AGENTS.md) is the full system manual (pipeline, validation, configuration).
+**Assistants and editors:** [`.cursorrules`](.cursorrules) summarizes architecture and tooling for Cursor; [`CLAUDE.md`](CLAUDE.md) is the command cheat sheet; [`AGENTS.md`](AGENTS.md) is the full system manual (pipeline, validation, configuration). For routable agent workflows, start at [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) and the generated skill index [`docs/_generated/skills_index.md`](docs/_generated/skills_index.md).
 
 **Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) ([agent entry point](.github/README.md#agent--automation-entry-point), doc map, CI inventory) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
 
@@ -105,6 +105,29 @@ index, not a hard-coded file count, which drifts). Top-level layout:
 - `docs/modules/` — module-by-module guides
 - `docs/development/` — contributing, testing, roadmap
 
+## 🤖 Agentic operation and SKILLS
+
+Agents should load the smallest applicable workflow before editing. The routing
+surface is first-class and generated from live `SKILL.md` discovery:
+
+- **Workflow router:** [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md)
+  (`template-workflows`) routes broad requests such as full audits, pipeline
+  debugging, code changes, tests, validation, manuscript work, and release
+  checks to exactly one child workflow.
+- **Agentic-use hardening:**
+  [`docs/prompts/agentic-use/SKILL.md`](docs/prompts/agentic-use/SKILL.md)
+  covers skill inventory, routing checks, `.cursor/skill_manifest.json`, and
+  generated skill-index maintenance.
+- **Infrastructure module skills:** [`infrastructure/SKILL.md`](infrastructure/SKILL.md)
+  is the Layer-1 hub; pair the relevant `infrastructure/<module>/SKILL.md`
+  with that module's `AGENTS.md` before editing code.
+- **Human skill index:** [`docs/_generated/skills_index.md`](docs/_generated/skills_index.md)
+  lists all discovered skills. Regenerate after skill changes with
+  `uv run python -m infrastructure.skills write-index`; refresh the editor
+  manifest with `uv run python -m infrastructure.skills write`; verify both
+  with `uv run python -m infrastructure.skills check` and
+  `uv run python -m infrastructure.skills check-contracts`.
+
 ## 🔀 Multi-Project Support
 
 The repo can host multiple research projects in parallel. Each project owns its
@@ -151,26 +174,24 @@ autonomous agents.
 > discovery, then never commit it.
 
 **Private lifecycle projects.** In Daniel's working checkout, confidential
-projects live outside this public repo at `$TEMPLATE_PRIVATE_PROJECTS_ROOT`
-with the lifecycle folders `active/`, `working/`, `published/`, `archive/`, and
-`other/`. `run.sh` and `python -m infrastructure.orchestration` auto-sync each
-into the matching typed subfolder under `projects/`: `active/*` into
-`projects/active/*` for listing, selecting, running, and rendering; and
-`working/*`, `published/*`, `archive/*`, `other/*` into the matching
-`projects/<subfolder>/*`. `templates/` and `active/` links behave like native
-rendered entries; the other lifecycle links are visible but not default-rendered.
-Inspect without changing the tree:
-`uv run python -m infrastructure.orchestration link-projects --dry-run`.
+projects live outside this public repo at `$TEMPLATE_PRIVATE_PROJECTS_ROOT`.
+The simplified sidecar uses `working/` and `archive/`; optional legacy
+`active/`, `published/`, and `other/` folders are still supported when present.
+`run.sh` and `python -m infrastructure.orchestration` auto-sync existing folders
+into matching typed subfolders under `projects/`: `working/*` into
+`projects/working/*`, `archive/*` into `projects/archive/*`, and optional
+`active/*` into `projects/active/*`. `templates/` and optional `active/` links
+behave like native rendered entries; `working/` and `archive/` links are visible
+for explicit targeted work but are not default-rendered. Inspect without changing
+the tree: `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 Override the sibling path with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.
 The symlinked project keeps working outputs at `projects/<subfolder>/<name>/output/`
 (the private target), while final deliverables still copy to
 `output/<subfolder>/<name>/` in this template checkout.
 
-Other entries rotate between `projects/working/`, `projects/active/`, and
-`projects/archive/` as work progresses (Lean toolchain
-projects, domain catalogues, case studies). Never hard-code their paths in
-long-lived docs — consult
+Other entries rotate between `projects/working/` and `projects/archive/` as work
+progresses. Never hard-code their paths in long-lived docs — consult
 [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)
 (authoritative public scope, regenerated from `infrastructure.project.public_scope`) and
 [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md)
@@ -186,11 +207,11 @@ instead.
 mkdir -p projects/my_research/{src,tests,manuscript,scripts}  # Scaffold new project
 ```
 
-**Lifecycle:** rendered = `projects/templates/` + `projects/active/` (discovered,
-executed). To park a project: `mv projects/active/{name}/ projects/archive/{name}/`.
-To promote scaffolding: `mv projects/working/{name}/ projects/active/{name}/`. See
-[`projects/PROJECTS_PARADIGM.md`](projects/PROJECTS_PARADIGM.md) for the full
-lifecycle, slug rules, and discovery semantics.
+**Lifecycle:** rendered = `projects/templates/` plus optional `projects/active/`
+(discovered, executed). The simplified private sidecar normally uses
+`working/` and `archive/`; render sidecar projects explicitly with a qualified
+name such as `working/{name}`. See [`projects/PROJECTS_PARADIGM.md`](projects/PROJECTS_PARADIGM.md)
+for lifecycle, slug rules, and discovery semantics.
 
 ## 🚀 Quick Start {#quick-start}
 

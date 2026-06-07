@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>99_references</title>
+  <title>99_references.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -240,7 +240,7 @@
 <p>Bibliography lives in <a
 href="references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
-<code>--natbib</code>, so every <code>[@key]</code> citation in the
+<code>--natbib</code>, so every <code>[key]</code> citation in the
 manuscript is rewritten to the appropriate
 <code>\cite{}</code>/<code>\citep{}</code>/<code>\citet{}</code> LaTeX
 command and resolved against the bib file.</p>
@@ -248,6 +248,6 @@ command and resolved against the bib file.</p>
 and contains the required fields per entry type:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    projects/template_code_project/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_code_project/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
 </body>
 </html>

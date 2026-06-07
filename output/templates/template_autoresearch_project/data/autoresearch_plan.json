@@ -23,9 +23,9 @@
     "disclosure_required": true,
     "disclosure_text": "AI-assisted AutoResearch",
     "edit_allowlist": [
-      "projects/template_autoresearch_project/mnist_task.yaml",
-      "projects/template_autoresearch_project/src/",
-      "projects/template_autoresearch_project/manuscript/"
+      "projects/templates/template_autoresearch_project/mnist_task.yaml",
+      "projects/templates/template_autoresearch_project/src/",
+      "projects/templates/template_autoresearch_project/manuscript/"
     ],
     "enabled": true,
     "metric_direction": "maximize",
@@ -149,7 +149,7 @@
       "output/reports/evidence_registry.json",
       "manuscript/source_ledger.yaml"
     ],
-    "source_path": "/Users/4d/Documents/GitHub/template/projects/template_autoresearch_project/autoresearch.yaml",
+    "source_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoresearch_project/autoresearch.yaml",
     "stage_gates": [
       "Project Tests",
       "Project Analysis",
@@ -174,7 +174,7 @@
   ],
   "experiment_protocol": "Load the local balanced small MNIST subset, evaluate bounded numpy neural-network candidates without external calls or runtime downloads, select the highest test accuracy with deterministic parameter-count tie-breaking, then require readiness reports and evidence-linked claims to pass.",
   "project_name": "template_autoresearch_project",
-  "project_root": "/Users/4d/Documents/GitHub/template/projects/template_autoresearch_project",
+  "project_root": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoresearch_project",
   "quality_checks": [
     "domain_profile",
     "experiment_plan",

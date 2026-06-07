@@ -44,6 +44,8 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
 
     summary_path = root / "output" / "data" / "si_tmaze_summary.json"
     trace_path = root / "output" / "data" / "si_tmaze_trace.json"
+    analysis_stats_path = root / "output" / "data" / "analysis_statistics.json"
+    analysis_stats = _read_json(analysis_stats_path)
     si_inv_path = root / "output" / "reports" / "si_invariants.json"
     si_summary_present = summary_path.exists()
     if si_summary_present and not si_inv_path.exists():
@@ -71,6 +73,16 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
             and float(summary.get("mean_belief_entropy", -1.0)) >= 0.0
             and "mode" in summary
             and "config" in summary
+        )
+    si_stats = analysis_stats.get("si_tmaze") or {}
+    if analysis_stats:
+        checks["analysis_statistics_schema"] = (
+            analysis_stats.get("sweep", {}).get("grid_points", 0) >= 1
+            and si_stats.get("trace_summary_steps_match") is True
+            and si_stats.get("finite_trace") is True
+            and int(si_stats.get("action_switch_count", -1) or -1) >= 0
+            and float(si_stats.get("action_switch_rate", -1.0) or -1.0) >= 0.0
+            and "entropy_drop" in si_stats
         )
 
     comparison_path = root / "output" / "data" / "si_policy_comparison.json"
@@ -212,6 +224,8 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
     render_log = _read_json(root / "output" / "reports" / "sheaf_render_log.json")
     figure_source = _read_json(root / "output" / "data" / "figure_source_map.json")
     figure_hash = _read_json(root / "output" / "reports" / "figure_hash_manifest.json")
+    visualization_quality = _read_json(root / "output" / "reports" / "visualization_quality_audit.json")
+    statistical_bridge = _read_json(root / "output" / "data" / "statistical_visualization_bridge.json")
     scope = _read_json(root / "output" / "reports" / "scope_boundary_audit.json")
     adversarial = _read_json(root / "output" / "reports" / "adversarial_audit.json")
     assumptions = _read_json(root / "output" / "data" / "analytical_assumption_index.json")
@@ -317,6 +331,31 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
     )
     checks["figure_source_map_schema"] = figure_source.get("all_figures_mapped") is True
     checks["figure_hash_manifest_schema"] = figure_hash.get("all_hashes_present") is True
+    checks["visualization_quality_audit_schema"] = (
+        visualization_quality.get("schema") == "template_active_inference.visualization_quality_audit.v1"
+        and visualization_quality.get("all_quality_ok") is True
+        and visualization_quality.get("all_sources_mapped") is True
+        and visualization_quality.get("all_rendered") is True
+        and visualization_quality.get("all_accessibility_text_ok") is True
+        and visualization_quality.get("all_hashes_present") is True
+        and visualization_quality.get("all_visual_roles_present") is True
+        and visualization_quality.get("all_evidence_roles_present") is True
+        and visualization_quality.get("all_paper_claims_present") is True
+        and visualization_quality.get("all_figures_section_bound") is True
+        and int(visualization_quality.get("statistically_backed_count", 0) or 0) >= 6
+        and visualization_quality.get("all_statistical_sources_present") is True
+    )
+    checks["statistical_visualization_bridge_schema"] = (
+        statistical_bridge.get("schema") == "template_active_inference.statistical_visualization_bridge.v1"
+        and int(statistical_bridge.get("row_count", 0) or 0) >= 6
+        and statistical_bridge.get("all_rows_connected") is True
+        and statistical_bridge.get("all_statistical_sources_present") is True
+        and statistical_bridge.get("all_figures_referenced") is True
+        and statistical_bridge.get("all_reference_sections_sheaf_bound") is True
+        and statistical_bridge.get("all_reference_sections_visualization_bound") is True
+        and statistical_bridge.get("all_sheaf_tracks_registered") is True
+        and "statistical_visualization_bridge" in set(statistical_bridge.get("scholarship_method_roles") or [])
+    )
     checks["scope_boundary_audit_schema"] = scope.get("scope_boundary_status") == "toy_only_pass"
     checks["adversarial_audit_schema"] = (
         adversarial.get("all_expected_failures_documented") is True
@@ -465,6 +504,7 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
         checks.get(key, False)
         for key in (
             "toy_sweep_track_schemas",
+            "analysis_statistics_schema",
             "formal_interop_track_schemas",
             "integration_audit_track_schemas",
             "animation_frame_deltas_schema",
@@ -472,6 +512,8 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
             "pymdp_runtime_diagnostics_schema",
             "si_graph_world_topology_traces_schema",
             "canonical_sheaf_track_schemas",
+            "visualization_quality_audit_schema",
+            "statistical_visualization_bridge_schema",
             "sheaf_section_status_matrix_schema",
             "sheaf_render_log_schema",
             "artifact_diffoscope_schema",

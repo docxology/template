@@ -11,136 +11,202 @@ tracks:
     order: 10
     renderer: markdown
     label: Narrative prose
+    paper_role: Narrative framing and argument flow
+    paper_use: Supports the narrative spine for each composed paper section.
   formalism:
     order: 20
     renderer: markdown
     label: Mathematical formalism
+    paper_role: Mathematical definitions and equations
+    paper_use: States the finite equations, laws, and boundary assumptions used by prose claims.
   simulation:
     order: 30
     renderer: markdown
     label: Analytical simulation notes
+    paper_role: Deterministic toy analysis evidence
+    paper_use: Connects analytical sweeps and toy simulations to results claims.
   assumption_index:
     order: 32
     renderer: markdown
     label: Analytical assumption index
+    paper_role: Assumption boundary ledger
+    paper_use: Lists finite-model assumptions so analytical claims stay scoped.
   layers:
     order: 35
     renderer: layers_report
     label: Sheaf layers tables
+    paper_role: Registry and binding disclosure
+    paper_use: Generates the track registry, binding matrix, and evidence crosswalk tables.
     optional: true
   pymdp:
     order: 40
     renderer: markdown
     label: pymdp harness artifacts
+    paper_role: Active-inference implementation evidence
+    paper_use: Binds pymdp traces, runtime diagnostics, and policy comparisons to methods and results.
   interop:
     order: 41
     renderer: markdown
     label: GNN/ontology/JSON interop checks
+    paper_role: Cross-format compatibility evidence
+    paper_use: Shows that GNN, ontology, and JSON artifacts preserve model meaning.
   provenance:
     order: 42
     renderer: markdown
     label: Artifact provenance and bundle lineage spine
+    paper_role: Artifact lineage evidence
+    paper_use: Documents producers, hashes, seeds, and bundle lineage for generated claims.
   replay_matrix:
     order: 45
     renderer: markdown
     label: Deterministic replay matrix
+    paper_role: Reproducibility replay evidence
+    paper_use: Shows configured producers replay and match their expected artifacts.
   counterexample:
     order: 48
     renderer: markdown
     label: Expected-failure counterexamples
+    paper_role: Falsifiability negative controls
+    paper_use: Records known-bad fixtures that must fail validation gates.
   adversarial_audit:
     order: 50
     renderer: markdown
     label: Adversarial audit matrix
+    paper_role: Adversarial robustness evidence
+    paper_use: Documents stress cases and expected failures for sheaf-track claims.
   evidence_fields:
     order: 52
     renderer: markdown
     label: Evidence field index
+    paper_role: Claim field traceability
+    paper_use: Maps evidence fields to sections and artifacts for claim hydration.
   release_bundle:
     order: 53
     renderer: markdown
     label: Release bundle parity manifest
+    paper_role: Release artifact parity evidence
+    paper_use: Checks that required deliverables exist and copied outputs match or defer explicitly.
   gate_ergonomics:
     order: 54
     renderer: markdown
     label: Validation gate ergonomics
+    paper_role: Validation workflow index
+    paper_use: Explains the gates a reader or maintainer can rerun locally.
   artifact_diffoscope:
     order: 55
     renderer: markdown
     label: Artifact diffoscope
+    paper_role: Artifact equality evidence
+    paper_use: Compares generated and copied artifacts to surface publication drift.
   artifact_license:
     order: 56
     renderer: markdown
     label: Artifact license audit
+    paper_role: License safety evidence
+    paper_use: Records license status for artifacts included in release surfaces.
   scholarship:
     order: 57
     renderer: markdown
     label: Source-backed scholarship matrix
+    paper_role: Scholarship and method-source lineage
+    paper_use: Connects cited sources to method roles, sections, and generated evidence.
   sensitivity:
     order: 60
     renderer: markdown
     label: Toy sensitivity sweep
+    paper_role: Parameter sensitivity evidence
+    paper_use: Summarizes deterministic toy perturbations behind robustness claims.
   uncertainty:
     order: 62
     renderer: markdown
     label: Toy uncertainty summaries
+    paper_role: Uncertainty summary evidence
+    paper_use: Reports normalized uncertainty bins and summaries for finite toy analyses.
   benchmark:
     order: 65
     renderer: markdown
     label: Compact toy benchmark matrix
+    paper_role: Toy benchmark comparison evidence
+    paper_use: Shows compact model comparisons used to bound toy-only claims.
   manuscript_staleness:
     order: 66
     renderer: markdown
     label: Hydrated manuscript staleness report
+    paper_role: Manuscript freshness evidence
+    paper_use: Checks hydrated sections against current generated artifacts and variables.
   visualization:
     order: 67
     renderer: section_figures
     label: Figure references
+    paper_role: Figure evidence and communication
+    paper_use: Injects registry figures into section-specific evidence blocks.
   lean:
     order: 70
     renderer: markdown
     label: Lean boundary fragment
+    paper_role: Formal proof boundary evidence
+    paper_use: Separates proved Lean witnesses from intentionally scoped formal boundaries.
   model_checking:
     order: 75
     renderer: markdown
     label: Finite-state model checking witnesses
+    paper_role: Exhaustive finite-model evidence
+    paper_use: Lists model-checking witnesses for finite state-space claims.
   theorem_traceability:
     order: 76
     renderer: markdown
     label: Lean theorem traceability matrix
+    paper_role: Theorem dependency traceability
+    paper_use: Links theorem rows to proof dependencies and finite model witnesses.
   proof_extraction:
     order: 77
     renderer: markdown
     label: Lean proof extraction index
+    paper_role: Constructive proof extraction evidence
+    paper_use: Shows extracted theorem artifacts remain constructive and available.
   state_space_catalog:
     order: 78
     renderer: markdown
     label: Finite state-space catalog
+    paper_role: Finite model catalog evidence
+    paper_use: Enumerates reachable states so toy models remain explicitly finite.
   causal_ablation:
     order: 79
     renderer: markdown
     label: Deterministic causal ablation matrix
+    paper_role: Causal ablation evidence
+    paper_use: Summarizes deterministic perturbation effects across toy topologies.
   gnn:
     order: 80
     renderer: markdown
     label: GNN notation fragment
+    paper_role: GNN notation evidence
+    paper_use: Documents notation and round-trip status for the analytical model.
   ontology:
     order: 90
     renderer: ontology_yaml
     label: Active Inference Ontology bindings
+    paper_role: Ontology binding evidence
+    paper_use: Maps local variables to ontology terms for semantic consistency.
   animation:
     order: 100
     renderer: markdown
     label: Animation fragment
+    paper_role: Dynamic trace visualization
+    paper_use: Provides a deterministic GIF trace as optional appendix evidence.
     optional: true
   animation_delta:
     order: 102
     renderer: markdown
     label: Animation frame-delta manifest
+    paper_role: Animation integrity evidence
+    paper_use: Confirms animation frames change and support the visual trace.
   release_notes:
     order: 110
     renderer: markdown
     label: Release notes evidence
+    paper_role: Release narrative evidence
+    paper_use: Binds release-note statements to source-backed artifacts.
 
 renderers:
   markdown:

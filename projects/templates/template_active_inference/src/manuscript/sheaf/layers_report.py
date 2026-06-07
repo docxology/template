@@ -15,12 +15,15 @@ def render_track_registry_table(registry: TrackRegistry) -> str:
         "",
         "Compose order and renderer bindings from `manuscript/sheaf/tracks.yaml`.",
         "",
-        "| Order | Track id | Label | Renderer | Optional |",
-        "| ---: | --- | --- | --- | --- |",
+        "| Order | Track id | Label | Renderer | Paper role | Paper use | Optional |",
+        "| ---: | --- | --- | --- | --- | --- | --- |",
     ]
     for track_id, spec in sorted(registry.tracks.items(), key=lambda item: item[1].order):
         optional = "Yes" if spec.optional else "No"
-        lines.append(f"| {spec.order} | `{track_id}` | {spec.label} | `{spec.renderer}` | {optional} |")
+        lines.append(
+            f"| {spec.order} | `{track_id}` | {spec.label} | `{spec.renderer}` | "
+            f"{spec.paper_role} | {spec.paper_use} | {optional} |"
+        )
     lines.append("")
     lines.append("**Track count:** {{sheaf_track_count}} registered fragment types.")
     lines.append("")

@@ -1,14 +1,17 @@
 """Symlink private lifecycle projects into the template checkout.
 
 The private companion repo (default: the sibling ``<repo_root.parent>/projects``,
-i.e. ``docxology/projects``) holds real work in five lifecycle folders, each
-mirrored into a same-named *typed subfolder* under ``<repo_root>/projects/``:
+i.e. ``docxology/projects``) holds real work in lifecycle folders. The current
+minimal sidecar shape is ``working/`` + ``archive/``; optional legacy folders
+(``active/``, ``published/``, ``other/``) are still supported when present. Each
+existing lifecycle folder is mirrored into a same-named *typed subfolder* under
+``<repo_root>/projects/``:
 
 - ``active/``    — symlinked into ``projects/active/``   and rendered every run
-- ``working/``   — symlinked into ``projects/working/``   (not rendered)
-- ``published/`` — symlinked into ``projects/published/`` (not rendered)
+- ``working/``   — symlinked into ``projects/working/``   (not rendered by default)
+- ``published/`` — symlinked into ``projects/published/`` (optional, not rendered)
 - ``archive/``   — symlinked into ``projects/archive/``   (not rendered)
-- ``other/``     — symlinked into ``projects/other/``     (not rendered)
+- ``other/``     — symlinked into ``projects/other/``     (optional, not rendered)
 
 The public canonical exemplars live in ``projects/templates/`` and are tracked
 natively in this repo — they are NOT part of the private companion repo and are
@@ -62,7 +65,8 @@ WORKING_SUBDIR = "working"
 PUBLISHED_SUBDIR = "published"
 ARCHIVE_SUBDIR = "archive"
 OTHER_SUBDIR = "other"
-#: The full lifecycle signature that identifies the private companion repo.
+#: All supported lifecycle subdirectories. Some are optional in the simplified
+#: sidecar repo; missing folders simply produce no links.
 LIFECYCLE_SUBDIRS = (
     ACTIVE_SUBDIR,
     WORKING_SUBDIR,
@@ -70,6 +74,10 @@ LIFECYCLE_SUBDIRS = (
     ARCHIVE_SUBDIR,
     OTHER_SUBDIR,
 )
+#: Minimal implicit-sibling signature for ``docxology/projects``. The current
+#: sidecar keeps in-progress work in ``working/`` and retired/history work in
+#: ``archive/``; ``active/``/``published/``/``other/`` are optional.
+REQUIRED_PRIVATE_ROOT_SUBDIRS = (WORKING_SUBDIR, ARCHIVE_SUBDIR)
 #: Mapping from private lifecycle subdirectory to local template mirror.
 #: Each lifecycle folder mirrors into a same-named typed subfolder under
 #: ``projects/``. The public ``projects/templates/`` exemplars are tracked
@@ -129,13 +137,12 @@ def private_projects_root(repo_root: Path) -> Path | None:
     2. ``<repo_root>/.private_projects_root`` (one-line path, gitignored)
     3. sibling ``<repo_root.parent>/projects``
 
-    Explicit candidates (env, config) are accepted if they contain an
-    ``active/`` subdirectory. The **implicit sibling fallback** is held to a
-    stricter bar — it must contain the full
-    ``active/``+``working/``+``published/``+``archive/``+``other/`` lifecycle
-    signature — so a coincidental sibling ``projects/active/`` on another
-    developer's machine or a CI runner can never be mistaken for the private
-    companion repo and silently linked into the public tree.
+    Explicit candidates (env, config) are accepted if they contain at least one
+    supported lifecycle subdirectory. The **implicit sibling fallback** is held
+    to a stricter bar — it must contain the simplified sidecar signature
+    ``working/``+``archive/`` — so a coincidental sibling ``projects/`` on
+    another developer's machine or a CI runner can never be mistaken for the
+    private companion repo and silently linked into the public tree.
 
     Args:
         repo_root: Template repository root (directory containing ``projects/``).
@@ -160,9 +167,9 @@ def private_projects_root(repo_root: Path) -> Path | None:
     candidates.append((repo_root.parent / "projects", True))
 
     for cand, require_full in candidates:
-        if not (cand / ACTIVE_SUBDIR).is_dir():
+        if not any((cand / sub).is_dir() for sub in LIFECYCLE_SUBDIRS):
             continue
-        if require_full and not all((cand / sub).is_dir() for sub in LIFECYCLE_SUBDIRS):
+        if require_full and not all((cand / sub).is_dir() for sub in REQUIRED_PRIVATE_ROOT_SUBDIRS):
             continue
         return cand.resolve()
     return None
@@ -405,10 +412,11 @@ def sync_active_links(
     """Compatibility wrapper for the lifecycle-aware linker.
 
     Historically this function synced only ``active/`` into ``projects/``. It
-    now delegates to :func:`sync_private_project_links`, which mirrors all five
-    lifecycle folders (``active``/``working``/``published``/``archive``/``other``)
-    into same-named typed subfolders under ``projects/`` — only ``active`` is
-    rendered.
+    now delegates to :func:`sync_private_project_links`, which mirrors every
+    supported lifecycle folder that exists in the private sidecar
+    (``working``/``archive`` plus optional ``active``/``published``/``other``)
+    into same-named typed subfolders under ``projects/``. Only ``active`` is
+    rendered by default.
     """
     return sync_private_project_links(repo_root, private_root, prune=prune, dry_run=dry_run)
 

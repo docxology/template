@@ -27,10 +27,14 @@ Each subpackage (and the package root) includes a **`SKILL.md`** with YAML front
 | [prose/SKILL.md](prose/SKILL.md) | `infrastructure-prose` |
 | [publishing/SKILL.md](publishing/SKILL.md) | `infrastructure-publishing` |
 | [reference/SKILL.md](reference/SKILL.md) | `infrastructure-reference` |
+| [reference/citation/SKILL.md](reference/citation/SKILL.md) | `infrastructure-reference-citation` |
+| [reference/verification/SKILL.md](reference/verification/SKILL.md) | `reference-verification` |
 | [rendering/SKILL.md](rendering/SKILL.md) | `infrastructure-rendering` |
 | [reporting/SKILL.md](reporting/SKILL.md) | `infrastructure-reporting` |
 | [scientific/SKILL.md](scientific/SKILL.md) | `infrastructure-scientific` |
 | [search/SKILL.md](search/SKILL.md) | `infrastructure-search` |
+| [search/literature/SKILL.md](search/literature/SKILL.md) | `infrastructure-search-literature` |
+| [sia/SKILL.md](sia/SKILL.md) | `infrastructure-sia` |
 | [skills/SKILL.md](skills/SKILL.md) | `infrastructure-skills` |
 | [steganography/SKILL.md](steganography/SKILL.md) | `infrastructure-steganography` |
 | [core/telemetry/SKILL.md](core/telemetry/SKILL.md) | `telemetry` |

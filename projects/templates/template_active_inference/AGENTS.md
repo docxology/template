@@ -49,7 +49,7 @@ Full compose calls `emit_coverage_artifacts()` → JSON only. `generate_figures.
 | `pymdp_runtime_known_warning_count`, `pymdp_runtime_unexpected_warning_count`, `pymdp_policy_posterior_row_count` | scoped pymdp/JAX runtime diagnostics + posterior grid |
 | `sensitivity_cell_count`, `uncertainty_row_count`, `benchmark_model_count`, `analytical_assumption_count`, `si_graph_world_topology_trace_count` | promoted toy sweep artifacts |
 | `model_checking_witness_count`, `interop_check_count`, `adversarial_audit_count` | formal interop and audit artifacts |
-| `semantic_restriction_count`, `dependency_edge_type_count`, `stale_artifact_fresh_count`, `manuscript_staleness_row_count`, `figure_source_coverage_count`, `scope_boundary_status` | semantic and integration audit artifacts |
+| `semantic_restriction_count`, `dependency_edge_type_count`, `stale_artifact_fresh_count`, `manuscript_staleness_row_count`, `figure_source_coverage_count`, `visualization_quality_figure_count`, `visualization_statistics_backed_count`, `statistical_visualization_bridge_row_count`, `scope_boundary_status` | semantic and integration audit artifacts |
 | `provenance_bundle_count`, `evidence_field_count`, `release_bundle_artifact_count`, `theorem_traceability_row_count`, `validation_gate_index_count`, `track_improvement_row_count` | canonical sheaf-track artifacts |
 | `artifact_diffoscope_row_count`, `proof_extraction_theorem_count`, `state_space_catalog_row_count`, `causal_ablation_row_count`, `artifact_license_row_count`, `release_notes_row_count` | promoted canonical proof, finite-scope, license, and release-note artifacts |
 | `scholarship_source_count`, `scholarship_method_role_count`, `scholarship_sources_connected` | source-backed scholarship matrix |
@@ -65,8 +65,8 @@ shared GNN/ontology symbols, typed claim evidence, artifact producers, artifact
 consumers, validation gates, and manuscript variables. `validate_manuscript`
 fails if the certificate is missing, stale, or records cross-track disagreement.
 `generate_integration_audit.py` writes producer, stale-artifact, token-provenance,
-figure-source, claim-audit, scope-boundary, manuscript-staleness, and adversarial
-audit reports. `generate_sheaf_tracks.py` is the canonical promotion producer: it
+figure-source, figure-hash, visualization-quality, statistical-visualization bridge, claim-audit, scope-boundary,
+manuscript-staleness, and adversarial audit reports. `generate_sheaf_tracks.py` is the canonical promotion producer: it
 writes `output/data/sheaf_gluing_certificate.json`,
 `output/data/validation_dependency_graph.json`,
 `output/data/evidence_field_index.json`,

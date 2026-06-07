@@ -10,33 +10,36 @@
 \section*{BEGINNING OF TRANSMISSION}\label{beginning-of-transmission}
 ```
 
-**State:** published
+**State:** unpublished / pending pairing
+
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
 
 ```{=latex}
 \subsubsection*{Release metadata}
 ```
 
-- **Title:** Editorial Quality at Scale: A Reproducible Prose-Review Pipeline
-- **Version:** 0.4.0
-- **DOI:** 10.5281/zenodo.20417104
-- **GitHub:** https://github.com/docxology/template_prose_project/releases/tag/v0.4.0
-- **Zenodo:** https://zenodo.org/records/20417104
-- **SHA-256:** `cbe5adae0be78b58c77637042257e9faa61a21b6c5101da52600cf8e2e80c0e2`
-- **SHA-512:** `45c0f0052a193397f8c877bf51b467040d731f23b6abf10500c2f91426c0ace3157dfd6ad5057b65c27a3987a4349a147f58db836ce4bfc1d9347a3ca9808b04`
-
-**Pairing:** complete (DOI, GitHub, SHA-256, Zenodo URL)
-
-![Integrity QR strip](../figures/transmission_integrity_strip.png){width=98%}
+| Field | Value |
+| --- | --- |
+| Title | Editorial Quality at Scale: A Reproducible Prose-Review Pipeline |
+| Version | 0.4.0 |
+| Concept DOI | 10.5281/zenodo.20417104 |
+| Version DOI | 10.5281/zenodo.20420342 |
+| GitHub | docxology/template_prose_project |
+| Zenodo | [https://zenodo.org/records/20417104](https://zenodo.org/records/20417104) |
+| SHA-256 | pending |
+| SHA-512 | pending |
 
 ```{=latex}
-\subsubsection*{Transmission manifest}
+\subsubsection*{How to verify}
 ```
 
-```
-title=Editorial Quality at Scale: A Reproducible Prose
-version=0.4.0 doi=10.5281/zenodo.20417104
-sha256=cbe5adae0be78b58… manifest={"t":"Editorial Quality at Sca","v":"0.4.0","d":"10.5281/zenodo.20417104","s":"cbe5adae0be78b58"}
-```
+- Scan **Integrity** QR and compare the embedded SHA-256 prefix to the table above.
+- Scan **Zenodo** / **GitHub** QR codes and confirm they resolve to this release pairing.
+- Full hashes and structured fields: `../data/transmission_manifest.json`.
+
+![Integrity QR strip](../figures/transmission_integrity_strip.png){width=98%}
 
 Structured manifest: `../data/transmission_manifest.json`
 

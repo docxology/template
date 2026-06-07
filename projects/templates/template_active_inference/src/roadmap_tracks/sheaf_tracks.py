@@ -74,6 +74,7 @@ CANONICAL_ARTIFACTS: dict[str, str] = {
     "causal_ablation": "output/data/causal_ablation_matrix.json",
     "artifact_license": "output/reports/artifact_license_audit.json",
     "release_notes": "output/reports/release_notes_evidence.json",
+    "statistical_visualization_bridge": "output/data/statistical_visualization_bridge.json",
     "proof_dependency_graph": "output/data/proof_dependency_graph.json",
     "state_transition_table": "output/data/state_transition_table.json",
     "ablation_sensitivity_report": "output/reports/ablation_sensitivity_report.json",
@@ -171,6 +172,16 @@ def _load_structured(path: Path) -> dict[str, Any]:
     if path.suffix.lower() in {".yaml", ".yml"}:
         return _load_yaml(path)
     return _load_json(path)
+
+
+def _bridge_reference_section_status(row: dict[str, Any]) -> tuple[bool, bool]:
+    sections = [str(section) for section in row.get("figure_reference_sections") or []]
+    bindings = row.get("reference_track_bindings") or {}
+    sheaf_bound = bool(sections) and all(bool(bindings.get(section)) for section in sections)
+    visualization_bound = sheaf_bound and all(
+        "visualization" in set(bindings.get(section) or []) for section in sections
+    )
+    return sheaf_bound, visualization_bound
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> Path:
@@ -493,6 +504,8 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
             "output/figures/theorem_traceability_graph.png",
             "output/figures/causal_ablation_heatmap.png",
             "output/figures/scholarship_source_map.png",
+            "output/reports/visualization_quality_audit.json",
+            CANONICAL_ARTIFACTS["statistical_visualization_bridge"],
             "output/figures/si_belief_trajectory.gif",
             "output/data/animation_frame_deltas.json",
             "output/reports/figure_hash_manifest.json",
@@ -1057,6 +1070,8 @@ def build_release_bundle_manifest(project_root: Path) -> dict[str, Any]:
         "output/figures/theorem_traceability_graph.png",
         "output/figures/causal_ablation_heatmap.png",
         "output/figures/scholarship_source_map.png",
+        "output/reports/visualization_quality_audit.json",
+        CANONICAL_ARTIFACTS["statistical_visualization_bridge"],
         "output/pdf/template_active_inference_combined.pdf",
         "output/web/template_active_inference.html",
         CANONICAL_ARTIFACTS["artifact_diffoscope"],
@@ -1155,7 +1170,7 @@ def _track_artifact(track_id: str) -> str:
         "ontology": "output/data/ontology_profile_matrix.json",
         "pymdp": "output/data/si_policy_comparison.json",
         "simulation": "output/data/analytical_observable_sweep.json",
-        "visualization": "output/data/figure_source_map.json",
+        "visualization": "output/reports/visualization_quality_audit.json",
         "animation": "output/figures/si_belief_trajectory.gif",
         "animation_delta": "output/data/animation_frame_deltas.json",
         "artifact_diffoscope": CANONICAL_ARTIFACTS["artifact_diffoscope"],
@@ -1370,11 +1385,93 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
     license_audit = _load_json(root / CANONICAL_ARTIFACTS["artifact_license"])
     release_notes = _load_json(root / CANONICAL_ARTIFACTS["release_notes"])
     scholarship = _load_json(root / CANONICAL_ARTIFACTS["scholarship"])
+    visualization_quality = _load_json(root / "output" / "reports" / "visualization_quality_audit.json")
+    statistical_bridge = _load_json(root / CANONICAL_ARTIFACTS["statistical_visualization_bridge"])
     proof_dependency = _load_json(root / CANONICAL_ARTIFACTS["proof_dependency_graph"])
     transition = _load_json(root / CANONICAL_ARTIFACTS["state_transition_table"])
     ablation_sensitivity = _load_json(root / CANONICAL_ARTIFACTS["ablation_sensitivity_report"])
     release_attestation = _load_json(root / CANONICAL_ARTIFACTS["release_attestation"])
     claims_by_path = _claim_ids_by_path(root)
+    visualization_rows = visualization_quality.get("rows") or []
+    visualization_rows_ok = bool(visualization_rows) and all(row.get("quality_ok") for row in visualization_rows)
+    from roadmap_tracks.visualization_audit import (
+        ALLOWED_EVIDENCE_ROLES,
+        ALLOWED_VISUAL_ROLES,
+        MIN_PAPER_CLAIM_WORDS,
+    )
+
+    visualization_visual_roles_ok = bool(visualization_rows) and all(
+        row.get("visual_role") in ALLOWED_VISUAL_ROLES and row.get("visual_role_ok") is True
+        for row in visualization_rows
+    )
+    visualization_evidence_roles_ok = bool(visualization_rows) and all(
+        row.get("evidence_role") in ALLOWED_EVIDENCE_ROLES and row.get("evidence_role_ok") is True
+        for row in visualization_rows
+    )
+    visualization_claim_rows_ok = bool(visualization_rows) and all(
+        len(re.findall(r"[A-Za-z0-9]+(?:[-'][A-Za-z0-9]+)?", str(row.get("paper_claim", "")))) >= MIN_PAPER_CLAIM_WORDS
+        and row.get("paper_claim_ok") is True
+        for row in visualization_rows
+    )
+    visualization_section_rows_ok = bool(visualization_rows) and all(
+        bool(row.get("section_bindings")) and row.get("section_bound") is True for row in visualization_rows
+    )
+    visualization_intent_ok = (
+        visualization_quality.get("all_visual_roles_present") is True
+        and visualization_quality.get("all_evidence_roles_present") is True
+        and visualization_visual_roles_ok
+        and visualization_evidence_roles_ok
+    )
+    visualization_claims_ok = (
+        visualization_quality.get("all_paper_claims_present") is True and visualization_claim_rows_ok
+    )
+    visualization_sections_ok = (
+        visualization_quality.get("all_figures_section_bound") is True and visualization_section_rows_ok
+    )
+    statistical_visualization_rows = [row for row in visualization_rows if row.get("statistical_sources")]
+    statistically_backed_count = sum(1 for row in statistical_visualization_rows if row.get("statistically_backed"))
+    statistical_visualizations_ok = (
+        len(statistical_visualization_rows) >= 6
+        and visualization_quality.get("statistically_backed_count") == statistically_backed_count
+        and visualization_quality.get("all_statistical_sources_present") is True
+        and all(
+            row.get("statistical_sources_present") and row.get("statistically_backed")
+            for row in statistical_visualization_rows
+        )
+    )
+    statistical_bridge_rows = statistical_bridge.get("rows") or []
+    statistical_bridge_reference_status = [_bridge_reference_section_status(row) for row in statistical_bridge_rows]
+    statistical_bridge_references_sheaf_bound = bool(statistical_bridge_rows) and all(
+        row.get("reference_sections_sheaf_bound") is True and status[0]
+        for row, status in zip(statistical_bridge_rows, statistical_bridge_reference_status, strict=True)
+    )
+    statistical_bridge_references_visualization_bound = bool(statistical_bridge_rows) and all(
+        row.get("reference_sections_visualization_bound") is True and status[1]
+        for row, status in zip(statistical_bridge_rows, statistical_bridge_reference_status, strict=True)
+    )
+    statistical_bridge_rows_connected = bool(statistical_bridge_rows) and all(
+        row.get("connected")
+        and row.get("statistical_sources_present")
+        and row.get("sheaf_tracks_registered")
+        and row.get("referenced_in_manuscript")
+        and row.get("reference_sections_sheaf_bound")
+        and row.get("reference_sections_visualization_bound")
+        for row in statistical_bridge_rows
+    )
+    statistical_crosswalk_ok = (
+        statistical_bridge.get("schema") == "template_active_inference.statistical_visualization_bridge.v1"
+        and statistical_bridge.get("row_count") == statistically_backed_count
+        and statistical_bridge.get("all_rows_connected") is True
+        and statistical_bridge_rows_connected
+        and statistical_bridge.get("all_statistical_sources_present") is True
+        and statistical_bridge.get("all_figures_referenced") is True
+        and statistical_bridge.get("all_reference_sections_sheaf_bound") is True
+        and statistical_bridge_references_sheaf_bound
+        and statistical_bridge.get("all_reference_sections_visualization_bound") is True
+        and statistical_bridge_references_visualization_bound
+        and statistical_bridge.get("all_sheaf_tracks_registered") is True
+        and "statistical_visualization_bridge" in set(statistical_bridge.get("scholarship_method_roles") or [])
+    )
     return {
         "no_versioned_live_tracks": not any(VERSIONED_TRACK_RE.search(track_id) for track_id in registry),
         "all_canonical_tracks_registered": set(CANONICAL_TRACKS).issubset(registry),
@@ -1413,6 +1510,27 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
         "release_notes_source_backed": release_notes.get("all_notes_source_backed") is True,
         "scholarship_sources_connected": scholarship.get("all_sources_connected") is True
         and scholarship.get("all_expected_sources_present") is True,
+        "visualization_quality_ok": visualization_quality.get("all_quality_ok") is True
+        and visualization_rows_ok
+        and visualization_quality.get("all_sources_mapped") is True
+        and visualization_quality.get("all_rendered") is True
+        and visualization_intent_ok
+        and visualization_claims_ok
+        and visualization_sections_ok,
+        "visualization_intent_metadata_complete": visualization_intent_ok,
+        "visualization_paper_claims_complete": visualization_claims_ok,
+        "visualization_figures_section_bound": visualization_sections_ok,
+        "visualization_statistics_bridge_ok": statistical_visualizations_ok,
+        "statistical_visualization_crosswalk_ok": statistical_crosswalk_ok,
+        "statistical_visualization_figures_referenced": statistical_bridge.get("all_figures_referenced") is True,
+        "statistical_visualization_reference_sections_sheaf_bound": (
+            statistical_bridge.get("all_reference_sections_sheaf_bound") is True
+            and statistical_bridge_references_sheaf_bound
+        ),
+        "statistical_visualization_reference_sections_visualization_bound": (
+            statistical_bridge.get("all_reference_sections_visualization_bound") is True
+            and statistical_bridge_references_visualization_bound
+        ),
         "proof_dependency_graph_resolved": proof_dependency.get("all_theorems_have_dependencies") is True
         and proof_dependency.get("all_edges_resolved") is True,
         "state_transition_table_complete": transition.get("all_transitions_deterministic") is True

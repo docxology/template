@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>00_abstract</title>
+  <title>00_abstract.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -188,16 +188,16 @@ own.</p>
 grade-level bands, citation-density floors, structural rules (every
 section has an H1, no heading levels skipped), and
 bibliography-consistency policy. The pipeline reads the manuscript, runs
-the prose analysers, cross-checks every <code>[@key]</code> citation
+the prose analysers, cross-checks every <code>[key]</code> citation
 against <code>manuscript/references.bib</code>, evaluates the configured
 checks, and writes a deterministic markdown review report alongside
 three figures (per-file word counts, readability metrics, citation
 density) and a JSON <code>manuscript_report.json</code> suitable for CI
 artefacts.</p>
 <p><strong>Run snapshot.</strong> The current configuration analyses 8
-file(s) totalling 1676 words across 84 sentence(s) and 63 paragraph(s).
-Average Flesch-Kincaid grade level is 15.92; average Gunning Fog index
-is 16.69; the manuscript references 6 unique citation key(s); the
+file(s) totalling 1731 words across 86 sentence(s) and 64 paragraph(s).
+Average Flesch-Kincaid grade level is 15.87; average Gunning Fog index
+is 16.67; the manuscript references 6 unique citation key(s); the
 longest section is 413 words and the shortest is 17. These numbers are
 auto-substituted by
 <code>scripts/z_generate_manuscript_variables.py</code> after every run,
@@ -206,8 +206,8 @@ so the abstract tracks the JSON outputs in <code>output/</code>.</p>
 reusable</em> prose-quality module (<code>infrastructure/prose/</code>)
 that any project in the template can opt into, plus a <em>minimal,
 configurable</em> exemplar
-(<code>projects/template_prose_project/</code>) that wires it to the
-bibliography and the manuscript pipeline.</p>
+(<code>projects/templates/template_prose_project/</code>) that wires it
+to the bibliography and the manuscript pipeline.</p>
 <p><strong>Keywords:</strong> prose analysis, readability, editorial
 review, reproducible manuscript review, scientific infrastructure</p>
 </body>

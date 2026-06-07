@@ -60,9 +60,9 @@
     },
     "disclosure_text": "AI-assisted AutoResearch",
     "edit_allowlist": [
-      "projects/template_autoresearch_project/mnist_task.yaml",
-      "projects/template_autoresearch_project/src/",
-      "projects/template_autoresearch_project/manuscript/"
+      "projects/templates/template_autoresearch_project/mnist_task.yaml",
+      "projects/templates/template_autoresearch_project/src/",
+      "projects/templates/template_autoresearch_project/manuscript/"
     ],
     "human_review": {
       "decisions": {
@@ -237,7 +237,7 @@
     },
     "topic": "Deterministic bounded AutoResearch for a small MNIST neural-network task"
   },
-  "generated_at": "2026-05-27T23:33:29+00:00",
+  "generated_at": "2026-06-07T04:22:03+00:00",
   "metrics": {
     "readiness_valid": true,
     "required_artifact_count": 78,

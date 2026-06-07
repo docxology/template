@@ -6,10 +6,10 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `ce4d9aa7e33077fa`     |
-| Paper version                     | 2.3    |
+| Config hash (SHA-256, truncated)  | `4b048fd838bc337c`     |
+| Paper version                     | 2.5.0    |
 | First author                      | Daniel Ari Friedman |
-| Keyword count                     | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
+| Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
 
 The configuration hash changes whenever any parameter in `config.yaml` is modified, ensuring that every rendered PDF is traceable to a specific configuration state.
 
@@ -19,10 +19,10 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |
-| Publication-quality figures        | 8   |
+| Publication-quality figures        | 7   |
 | Structured data files (CSV/JSON)   | 5 |
-| Analysis reports                   | 18   |
-| **Total artifacts**                | **31** |
+| Analysis reports                   | 8   |
+| **Total artifacts**                | **20** |
 
 ## Numerical Validation Summary
 

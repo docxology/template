@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05d_ai_collaboration</title>
+  <title>05d_ai_collaboration.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -181,31 +181,24 @@ section reports our key observations.</p>
 <p>The documentation investment creates a positive feedback loop: as
 agents produce higher-quality outputs from structured context,
 developers maintain that documentation, which in turn improves future
-interactions <span class="citation"
-data-cites="lau2025aicoding">[@lau2025aicoding]</span>. We observed this
-concretely during <code>template/</code> development—each module’s
-<code>SKILL.md</code> was refined through iterative AI-assisted
-generation, serving as both input prompt and output validator.</p>
+interactions [lau2025aicoding]. We observed this concretely during
+<code>template/</code> development—each module’s <code>SKILL.md</code>
+was refined through iterative AI-assisted generation, serving as both
+input prompt and output validator.</p>
 <p>The <code>SKILL.md</code> layer, with its MCP-aligned YAML
-frontmatter <span class="citation"
-data-cites="anthropic2024mcp">[@anthropic2024mcp]</span>, provides a
-critical bridge to the agentic software paradigm. Lu et al.’s AI
-Scientist <span class="citation"
-data-cites="lu2024aiscientist">[@lu2024aiscientist]</span> demonstrates
-end-to-end autonomous research; Wang et al.’s OpenHands <span
-class="citation"
-data-cites="wang2024opendevin">[@wang2024opendevin]</span> achieved 53%
-on SWE-Bench Verified <span class="citation"
-data-cites="jimenez2024swebench">[@jimenez2024swebench]</span>—the first
-open-source system to exceed 50%. These systems require structured,
-protocol-aligned tool inventories to navigate unfamiliar codebases. An
-OpenHands-class agent navigating <code>template/</code> reads
-<code>CLAUDE.md</code> for global constraints, scans
-<code>AGENTS.md</code> for module surfaces, and invokes capabilities via
-<code>SKILL.md</code> without hallucinating function signatures. All 22
-infrastructure modules carry <code>AGENTS.md</code> and
-<code>README.md</code>; all additionally carry <code>SKILL.md</code>,
-ensuring no documentation blind spots.</p>
+frontmatter [anthropic2024mcp], provides a critical bridge to the
+agentic software paradigm. Lu et al.’s AI Scientist [lu2024aiscientist]
+demonstrates end-to-end autonomous research; Wang et al.’s OpenHands
+[wang2024opendevin] achieved 53% on SWE-Bench Verified
+[jimenez2024swebench]—the first open-source system to exceed 50%. These
+systems require structured, protocol-aligned tool inventories to
+navigate unfamiliar codebases. An OpenHands-class agent navigating
+<code>template/</code> reads <code>CLAUDE.md</code> for global
+constraints, scans <code>AGENTS.md</code> for module surfaces, and
+invokes capabilities via <code>SKILL.md</code> without hallucinating
+function signatures. All 23 infrastructure modules carry
+<code>AGENTS.md</code> and <code>README.md</code>; all additionally
+carry <code>SKILL.md</code>, ensuring no documentation blind spots.</p>
 <p>This three-tier model is, to our knowledge, novel in the research
 software engineering literature. The scale of the
 investment—approximately 170 documentation files across

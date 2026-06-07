@@ -43,7 +43,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | Developer | `core/architecture.md` → `architecture/two-layer-architecture.md` |
 | **New project** | **`guides/new-project-setup.md`** → **`guides/new-project-one-shot-prompt.md`** (optional LLM scaffold) → `architecture/thin-orchestrator-summary.md` |
 | Contributor | `development/contributing.md` → `development/testing/` |
-| AI Agent | `rules/AGENTS.md` → `rules/README.md` |
+| AI Agent | `prompts/SKILL.md` → `prompts/agentic-use/SKILL.md` → `rules/AGENTS.md` |
 | Troubleshooter | `operational/troubleshooting/` → `reference/faq.md` |
 
 ## Learnings & Known Issues
@@ -96,21 +96,21 @@ This ensures the pipeline remains reproducible and does not make expensive netwo
 
 ## Typed-Subfolder Project Lifecycle
 
-Project lifecycle state is expressed as **typed subfolders under `projects/`**. Two are discovered and rendered; the rest are non-rendered mirrors of the private projects repo. Authoritative, always-current roster: [`docs/_generated/active_projects.md`](_generated/active_projects.md).
+Project lifecycle state is expressed as **typed subfolders under `projects/`**. Public exemplars are always discovered/rendered; optional `active/` entries are discovered/rendered when present; simplified sidecar `working/` and `archive/` mirrors are non-rendered by default. Authoritative public roster: [`docs/_generated/active_projects.md`](_generated/active_projects.md).
 
 | Subfolder | Purpose | Discovered + rendered? |
 | ---------- | ------- | ------------------------ |
 | `projects/templates/` | The nine git-tracked public exemplars (this repo) | ✅ Yes |
-| `projects/active/` | Hot-seat render set — symlinks to the private repo's `active/` | ✅ Yes |
-| `projects/working/` | Backburner / in-progress — symlinks, non-rendered | ❌ No |
-| `projects/published/` | Shipped — symlinks, non-rendered | ❌ No |
-| `projects/archive/` | Retired — symlinks, non-rendered | ❌ No |
-| `projects/other/` | Misc — symlinks, non-rendered | ❌ No |
+| `projects/active/` | Optional hot-seat render set — symlinks to deliberately reintroduced private `active/` | ✅ Yes when present |
+| `projects/working/` | Simplified sidecar working set — symlinks, explicit targeted renders only | ❌ No |
+| `projects/archive/` | Simplified sidecar archive — symlinks, historical/reference | ❌ No |
+| `projects/published/` | Optional legacy shipped mirror | ❌ No |
+| `projects/other/` | Optional legacy miscellaneous mirror | ❌ No |
 
 **Movement rules:**
 
-- Only `projects/templates/*` and `projects/active/*` are discovered and rendered (qualified names `templates/<name>` and `active/<name>`).
-- Private lifecycle projects live in the sibling `docxology/projects` repo and are symlinked into the matching typed subfolder on every `./run.sh` (or `uv run python -m infrastructure.orchestration link-projects`). To render a private project, move it into that repo's `active/`; to retire it, move it to `archive/`.
+- Only `projects/templates/*` and optional `projects/active/*` are discovered and rendered (qualified names `templates/<name>` and `active/<name>`).
+- Private lifecycle projects live in the sibling `docxology/projects` repo. Its default folders are `working/` and `archive/`, symlinked into matching typed subfolders on every `./run.sh` (or `uv run python -m infrastructure.orchestration link-projects`). Render a working project explicitly with a lifecycle-qualified name such as `working/<name>`.
 - The git-tracked public exemplars under `projects/templates/` never move — they are owned by this repo. Every other path under `projects/` is local-only and never committed (enforced by `scripts/check_tracked_projects.py`).
 
 **Configuring the active directory (advanced):**

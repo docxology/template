@@ -2,7 +2,7 @@
 
 ## Overview
 
-Self-referential publication describing `template/`; sources live under `projects_in_progress/template/` until promotion into `projects/`. Tokens such as `${module_count}` hydrate from `projects_in_progress/template/scripts/generate_manuscript_metrics.py` before PDF rendering (`output/manuscript/`). Long-form facts that rotate with repository layout belong in [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md); link instead of copying counts.
+Self-referential publication describing `template/`; sources live under `projects/templates/template_template/` alongside the other public exemplars. Tokens such as `${module_count}` hydrate from `projects/templates/template_template/scripts/generate_manuscript_metrics.py` before PDF rendering (`output/manuscript/`). Long-form facts that rotate with repository layout belong in [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md); link instead of copying counts.
 
 ## Chapters (numbered segments + appendix set)
 
@@ -36,14 +36,15 @@ Supporting assets: `preamble.md`, `config.yaml`, `references.bib`.
 
 | Token | Meaning |
 |-------|---------|
-| `${module_count}` | Infrastructure subpackages from live discovery |
+| `${module_count}` | Infrastructure subdirectories from live discovery |
+| `${importable_package_count}` | Subdirectories that are importable Python packages (carry `__init__.py`) |
 | `${pipeline_stages_declared}` | YAML stage count (12) |
 | `${pipeline_stages_default_full}` | Default full run (10) |
 | `${pipeline_stages_core_only}` | `--core-only` run (8) |
 | `${stage_count}` | Numbered `scripts/NN_*.py` files only |
 | `${public_exemplar_list}` | Git-tracked exemplars from `public_scope` |
-| `${project_template_*}` | Meta-project metrics from `projects_in_progress/template` |
+| `${project_template_*}` | Meta-project metrics from `projects/templates/template_template` |
 | `${project_template_code_project_*}` | Code exemplar |
 | `${project_template_prose_project_*}` | Prose exemplar |
 | `${project_template_autoresearch_project_*}` | AutoResearch exemplar |
-| `${project_template_search_project_*}` | Archive-only when `projects_archive/template_search_project` is present |
+| `${project_template_search_project_*}` | Archive-only when `projects/archive/template_search_project` is present |

@@ -6,10 +6,12 @@ safety-critical guarantee under test is that pruning only ever removes lifecycle
 links the syncer itself manages and never a real directory, an unmanaged
 symlink, or a protected exemplar.
 
-The private companion repo carries five lifecycle folders
-(``active``/``working``/``published``/``archive``/``other``); each mirrors into a
-same-named *typed subfolder* under ``projects/`` (``projects/active/<name>``,
-``projects/working/<name>``, …). Only ``active`` is rendered by default.
+The private companion repo currently needs only ``working`` and ``archive``;
+optional legacy lifecycle folders (``active``/``published``/``other``) are still
+mirrored when present. Each lifecycle folder mirrors into a same-named typed
+subfolder under ``projects/`` (``projects/working/<name>``,
+``projects/archive/<name>``, …). Only ``active`` is rendered by default when
+that optional folder exists.
 """
 
 from __future__ import annotations
@@ -31,6 +33,7 @@ from infrastructure.project.linking import (
     ENV_VAR,
     LIFECYCLE_SUBDIRS,
     PROTECTED_NAMES,
+    REQUIRED_PRIVATE_ROOT_SUBDIRS,
     WORKING_SUBDIR,
     is_managed_symlink,
     private_projects_root,
@@ -51,7 +54,7 @@ def _make_repo(tmp_path: Path) -> Path:
 
 
 def _make_private(tmp_path: Path, *, active: Sequence[str] = (), name: str = "projects") -> Path:
-    """A private companion repo with the full five-folder lifecycle signature."""
+    """A private companion repo with every supported lifecycle folder."""
     private = tmp_path / name
     for sub in LIFECYCLE_SUBDIRS:
         (private / sub).mkdir(parents=True)
@@ -102,20 +105,30 @@ def test_private_root_sibling_default(tmp_path: Path, monkeypatch) -> None:
     assert private_projects_root(repo) == sibling.resolve()
 
 
-def test_private_root_none_when_no_active(tmp_path: Path, monkeypatch) -> None:
+def test_private_root_none_without_lifecycle_dirs(tmp_path: Path, monkeypatch) -> None:
     repo = _make_repo(tmp_path)
     monkeypatch.delenv(ENV_VAR, raising=False)
-    # A sibling 'projects' dir without an active/ subdir is NOT the private repo.
+    # A sibling 'projects' dir without lifecycle subdirs is NOT the private repo.
     (tmp_path / "projects").mkdir()
     assert private_projects_root(repo) is None
 
 
-def test_sibling_fallback_requires_full_lifecycle(tmp_path: Path, monkeypatch) -> None:
-    """A coincidental sibling projects/active/ (no full lifecycle) is rejected."""
+def test_sibling_fallback_requires_simplified_signature(tmp_path: Path, monkeypatch) -> None:
+    """A coincidental sibling projects/active/ is rejected without working+archive."""
     repo = _make_repo(tmp_path)
     monkeypatch.delenv(ENV_VAR, raising=False)
     (tmp_path / "projects" / "active").mkdir(parents=True)  # active/ only
     assert private_projects_root(repo) is None
+
+
+def test_sibling_fallback_accepts_working_archive_signature(tmp_path: Path, monkeypatch) -> None:
+    """The simplified sidecar root is recognized with working/ + archive/."""
+    repo = _make_repo(tmp_path)
+    monkeypatch.delenv(ENV_VAR, raising=False)
+    sibling = tmp_path / "projects"
+    for sub in REQUIRED_PRIVATE_ROOT_SUBDIRS:
+        (sibling / sub).mkdir(parents=True)
+    assert private_projects_root(repo) == sibling.resolve()
 
 
 def test_env_root_accepts_active_only(tmp_path: Path, monkeypatch) -> None:

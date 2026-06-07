@@ -41,11 +41,14 @@ class FigureStyleConfig:
         base = 10.0 * float(self.font_scale)
         return {
             "font.size": base,
-            "axes.titlesize": base * 1.05,
+            "axes.titlesize": base * 1.18,
+            "axes.titleweight": "bold",
             "axes.labelsize": base,
             "xtick.labelsize": base * 0.9,
             "ytick.labelsize": base * 0.9,
             "legend.fontsize": base * 0.8,
+            "figure.titlesize": base * 1.28,
+            "figure.titleweight": "bold",
         }
 
 

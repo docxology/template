@@ -15,7 +15,7 @@ from matplotlib.ticker import MaxNLocator
 
 from analytical.hyperparameters import lambda_grid, load_hyperparameters
 from analytical.sweep_io import read_parameter_sweep
-from .figure_helpers import save_styled_figure, style_grid
+from .figure_helpers import add_note, add_value_labels, save_styled_figure, style_grid, wrap_text
 from .figure_registry import figure_output_path, load_figure_registry
 from .figure_style import FigureStyleConfig, apply_style, load_figure_style
 from .figures_diagrams import (
@@ -64,6 +64,15 @@ def figure_ising_mi_curve(project_root: Path) -> Path:
         ax_main.set_title("Bernoulli–Ising MI sweep")
         style_grid(ax_main, style)
         ax_main.legend(frameon=False, fontsize=8)
+        max_idx = int(np.argmax(closed))
+        ax_main.annotate(
+            f"max {closed[max_idx]:.3f} nats",
+            xy=(lambdas[max_idx], closed[max_idx]),
+            xytext=(0.52, 0.18),
+            textcoords="axes fraction",
+            arrowprops={"arrowstyle": "->", "color": style.color("muted")},
+            fontsize=8,
+        )
         residuals = [e - c for e, c in zip(empirical, closed, strict=True)]
         ax_resid.axhline(0.0, color=style.color("reference"), linewidth=1)
         ax_resid.plot(lambdas, residuals, color=style.color("accent"), linewidth=1.5)
@@ -71,6 +80,15 @@ def figure_ising_mi_curve(project_root: Path) -> Path:
         ax_resid.set_ylabel("residual")
         ax_resid.set_title("recompute − closed", fontsize=9)
         style_grid(ax_resid, style)
+        ax_resid.text(
+            0.05,
+            0.93,
+            f"max |resid|={max(abs(v) for v in residuals):.1e}",
+            transform=ax_resid.transAxes,
+            va="top",
+            fontsize=8,
+            color=style.color("muted"),
+        )
         save_styled_figure(fig, out, style)
     return out
 
@@ -84,13 +102,25 @@ def figure_si_belief_entropy_curve(project_root: Path) -> Path:
     entropies = [float(step.get("belief_entropy", 0.0)) for step in steps_data]
     out = figure_output_path(root, "si_belief_entropy_curve")
     with apply_style(style):
-        fig, ax = plt.subplots(figsize=(7, 3.2))
+        fig, ax = plt.subplots(figsize=(7.4, 3.6))
         xs = list(range(len(entropies)))
-        ax.plot(xs, entropies, linewidth=2, color=style.color("primary"))
-        ax.fill_between(xs, entropies, step="pre", alpha=0.08, color=style.color("secondary"))
+        ax.plot(xs, entropies, linewidth=2.2, marker="o", markersize=5, color=style.color("primary"))
+        ax.fill_between(xs, entropies, min(entropies) if entropies else 0.0, alpha=0.08, color=style.color("secondary"))
+        if entropies:
+            span = max(max(entropies) - min(entropies), 0.05)
+            ax.set_ylim(min(entropies) - span * 0.35, max(entropies) + span * 0.35)
+            ax.annotate(
+                f"finite trace: {len(entropies)} steps",
+                xy=(xs[-1], entropies[-1]),
+                xytext=(0.58, 0.78),
+                textcoords="axes fraction",
+                arrowprops={"arrowstyle": "->", "color": style.color("muted")},
+                fontsize=8,
+            )
         ax.set_xlabel("Timestep")
         ax.set_ylabel("Belief entropy (nats)")
-        ax.set_title("T-maze belief entropy")
+        ax.set_title("T-maze belief entropy trace")
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         style_grid(ax, style)
         save_styled_figure(fig, out, style)
     return out
@@ -105,17 +135,22 @@ def figure_si_obs_action_trace(project_root: Path) -> Path:
     actions = data.get("actions") or []
     out = figure_output_path(root, "si_obs_action_trace")
     with apply_style(style):
-        fig, axes = plt.subplots(2, 1, figsize=(7, 4.2), sharex=True)
+        fig, axes = plt.subplots(2, 1, figsize=(7.4, 4.6), sharex=True)
         obs_ax, act_ax = axes
         xs = list(range(len(observations)))
         obs_ax.step(xs, observations, where="post", linewidth=2, color=style.color("secondary"))
+        obs_ax.plot(xs, observations, "o", color=style.color("secondary"), markersize=4)
         obs_ax.set_ylabel("Observation")
         obs_ax.set_title("T-maze observation and action traces")
         _style_discrete_y(obs_ax, style)
         act_ax.step(xs, actions, where="post", linewidth=2, color=style.color("primary"))
+        act_ax.plot(xs, actions, "o", color=style.color("primary"), markersize=4)
         act_ax.set_xlabel("Timestep")
         act_ax.set_ylabel("Action")
+        act_ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         _style_discrete_y(act_ax, style)
+        goal = data.get("goal_reached", "--")
+        add_note(obs_ax, f"summary artifact: {len(xs)} samples; goal_reached={goal}", style, x=0.62, y=0.92, width=32)
         save_styled_figure(fig, out, style)
     return out
 
@@ -129,14 +164,20 @@ def figure_si_tmaze_actions(project_root: Path) -> Path:
     policy_len = data.get("policy_len", "?")
     out = figure_output_path(root, "si_tmaze_actions")
     with apply_style(style):
-        fig, ax = plt.subplots(figsize=(7, 3.2))
+        fig, ax = plt.subplots(figsize=(7.4, 3.6))
         steps = list(range(len(actions)))
         ax.step(steps, actions, where="post", linewidth=2, color=style.color("primary"))
+        ax.plot(steps, actions, "o", color=style.color("primary"), markersize=4)
         ax.fill_between(steps, actions, step="post", alpha=0.08, color=style.color("secondary"))
         ax.set_xlabel("Timestep")
         ax.set_ylabel("Action index")
         ax.set_title(f"T-maze SI actions (policy_len={policy_len})")
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         _style_discrete_y(ax, style)
+        switches = sum(1 for left, right in zip(actions, actions[1:], strict=False) if left != right)
+        add_note(
+            ax, f"action switches: {switches}; saved summary drives the manuscript statistics", style, x=0.54, y=0.94
+        )
         save_styled_figure(fig, out, style)
     return out
 
@@ -176,9 +217,10 @@ def figure_free_energy_curve(project_root: Path) -> Path:
         )
         ax.set_xlabel(r"Coupling strength $\lambda$")
         ax.set_ylabel("Free energy (nats)")
-        ax.set_title("Free energy against entangled prior")
+        ax.set_title("Free energy against mean-field prior")
         style_grid(ax, style)
         ax.legend(frameon=False, fontsize=8)
+        add_note(ax, "Mean-field prior comparison: coupling raises F away from the independence point.", style)
         save_styled_figure(fig, out, style)
     return out
 
@@ -208,45 +250,57 @@ def figure_semantic_gluing_graph(project_root: Path) -> Path:
     artifacts = graph.get("artifacts") or {}
     out = figure_output_path(root, "semantic_gluing_graph")
     with apply_style(style):
-        fig, ax = plt.subplots(figsize=(9.6, 5.6))
+        fig, ax = plt.subplots(figsize=(10.2, 6.0))
         ax.axis("off")
-        producer_x, artifact_x, consumer_x = 0.05, 0.42, 0.78
-        y_positions = np.linspace(0.86, 0.14, len(selected))
-        ax.text(producer_x, 0.96, "Producer script", weight="bold", color=style.color("primary"))
-        ax.text(artifact_x, 0.96, "Evidence artifact", weight="bold", color=style.color("primary"))
-        ax.text(consumer_x, 0.96, "Consumer / gate", weight="bold", color=style.color("primary"))
+        producer_x, artifact_x, consumer_x = 0.03, 0.38, 0.75
+        y_positions = np.linspace(0.86, 0.13, len(selected))
+        ax.text(producer_x, 0.955, "Producer script", weight="bold", color=style.color("primary"), fontsize=9)
+        ax.text(artifact_x, 0.955, "Evidence artifact", weight="bold", color=style.color("primary"), fontsize=9)
+        ax.text(consumer_x, 0.955, "Consumer / gate", weight="bold", color=style.color("primary"), fontsize=9)
+        produced_count = 0
         for y, rel in zip(y_positions, selected, strict=True):
             record = artifacts.get(rel, {})
-            producer = str(record.get("producer", "?"))
+            producer = wrap_text(str(record.get("producer", "?")), 26)
             consumers = ", ".join(record.get("consumers") or record.get("validation_gates") or ["validate_outputs"])
             ok = bool(record.get("produced_by_configured_analysis"))
+            produced_count += int(ok)
             box_color = style.color("pass") if ok else style.color("fail")
             ax.text(
                 producer_x,
                 y,
                 producer,
-                fontsize=8,
+                fontsize=7,
                 va="center",
+                linespacing=1.05,
                 bbox=dict(boxstyle="round,pad=0.25", facecolor="#f8fafc", edgecolor=box_color),
             )
             ax.text(
                 artifact_x,
                 y,
-                rel.replace("output/", ""),
-                fontsize=8,
+                wrap_text(rel.replace("output/", ""), 30),
+                fontsize=7,
                 va="center",
+                linespacing=1.05,
                 bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor=style.color("secondary")),
             )
             ax.text(
                 consumer_x,
                 y,
-                consumers,
-                fontsize=8,
+                wrap_text(consumers, 28),
+                fontsize=7,
                 va="center",
+                linespacing=1.05,
                 bbox=dict(boxstyle="round,pad=0.25", facecolor="#f8fafc", edgecolor=style.color("accent")),
             )
-            ax.annotate("", xy=(artifact_x - 0.02, y), xytext=(producer_x + 0.24, y), arrowprops={"arrowstyle": "->"})
-            ax.annotate("", xy=(consumer_x - 0.02, y), xytext=(artifact_x + 0.29, y), arrowprops={"arrowstyle": "->"})
+            ax.annotate("", xy=(artifact_x - 0.025, y), xytext=(producer_x + 0.25, y), arrowprops={"arrowstyle": "->"})
+            ax.annotate("", xy=(consumer_x - 0.025, y), xytext=(artifact_x + 0.28, y), arrowprops={"arrowstyle": "->"})
+        ax.text(
+            0.03,
+            0.045,
+            f"{produced_count}/{len(selected)} selected artifacts produced by configured analysis; rows feed sheaf restrictions.",
+            fontsize=8,
+            color=style.color("muted"),
+        )
         ax.set_title("Semantic sheaf gluing dependency graph", loc="left", pad=16)
         save_styled_figure(fig, out, style)
     return out
@@ -271,19 +325,16 @@ def figure_theorem_traceability_graph(project_root: Path) -> Path:
     }
     out = figure_output_path(root, "theorem_traceability_graph")
     with apply_style(style):
-        fig, ax = plt.subplots(figsize=(9.2, 4.8))
+        fig, ax = plt.subplots(figsize=(9.8, 5.2))
         ax.axis("off")
-        columns = [0.05, 0.42, 0.78]
+        columns = [0.04, 0.40, 0.75]
         headers = ["Lean theorem", "Proof dependency rows", "Finite witnesses"]
         for x, header in zip(columns, headers, strict=True):
             ax.text(x, 0.94, header, weight="bold", color=style.color("primary"), fontsize=10)
         y_positions = np.linspace(0.82, 0.14, max(1, len(rows)))
         for y, row in zip(y_positions, rows, strict=False):
             theorem_id = str(row.get("theorem", ""))
-            theorem_words = theorem_id.split("_")
-            theorem_label = "\n".join(
-                " ".join(theorem_words[index : index + 3]) for index in range(0, len(theorem_words), 3)
-            )
+            theorem_label = wrap_text(theorem_id.replace("_", " "), 30)
             witness_count = len(row.get("model_witnesses") or [])
             linked = row.get("linked") is True
             edge_color = style.color("pass") if linked else style.color("fail")
@@ -295,6 +346,7 @@ def figure_theorem_traceability_graph(project_root: Path) -> Path:
                 theorem_label,
                 fontsize=7.5,
                 va="center",
+                linespacing=1.05,
                 bbox=dict(boxstyle="round,pad=0.25", facecolor="#f8fafc", edgecolor=edge_color),
             )
             ax.text(
@@ -315,6 +367,14 @@ def figure_theorem_traceability_graph(project_root: Path) -> Path:
             )
             ax.annotate("", xy=(columns[1] - 0.03, y), xytext=(columns[0] + 0.24, y), arrowprops={"arrowstyle": "->"})
             ax.annotate("", xy=(columns[2] - 0.03, y), xytext=(columns[1] + 0.24, y), arrowprops={"arrowstyle": "->"})
+        linked_count = sum(1 for row in rows if row.get("linked") is True)
+        ax.text(
+            0.04,
+            0.045,
+            f"{linked_count}/{len(rows)} displayed theorem rows linked; witnesses come from generated JSON evidence.",
+            fontsize=8,
+            color=style.color("muted"),
+        )
         ax.set_title("Theorem traceability graph", loc="left", pad=16)
         save_styled_figure(fig, out, style)
     return out
@@ -344,18 +404,31 @@ def figure_causal_ablation_heatmap(project_root: Path) -> Path:
             matrix[i, j] = max(effects) if effects else 0.0
     out = figure_output_path(root, "causal_ablation_heatmap")
     with apply_style(style):
-        fig, ax = plt.subplots(figsize=(8.2, 4.8))
-        image = ax.imshow(matrix, cmap="viridis", aspect="auto")
-        ax.set_xticks(range(len(perturbations)), [label.replace("_", "\n") for label in perturbations], fontsize=8)
-        ax.set_yticks(range(len(topologies)), topologies, fontsize=9)
+        fig, ax = plt.subplots(figsize=(8.8, 5.0))
+        image = ax.imshow(matrix, cmap="magma", aspect="auto")
+        ax.set_xticks(
+            range(len(perturbations)), [wrap_text(label.replace("_", " "), 14) for label in perturbations], fontsize=8
+        )
+        ax.set_yticks(range(len(topologies)), [wrap_text(label, 18) for label in topologies], fontsize=9)
         ax.set_xlabel("Perturbation")
         ax.set_ylabel("Toy topology")
         ax.set_title("Causal-ablation sensitivity")
+        threshold = float(matrix.max()) * 0.55 if matrix.size else 0.0
         for i in range(matrix.shape[0]):
             for j in range(matrix.shape[1]):
-                ax.text(j, i, f"{matrix[i, j]:.2f}", ha="center", va="center", color="white", fontsize=8)
+                color = "white" if matrix[i, j] >= threshold else "#111827"
+                ax.text(j, i, f"{matrix[i, j]:.2f}", ha="center", va="center", color=color, fontsize=8)
         cbar = fig.colorbar(image, ax=ax, shrink=0.86)
         cbar.set_label("|effect|")
+        max_effect = float(matrix.max()) if matrix.size else 0.0
+        ax.text(
+            0.0,
+            -0.22,
+            f"{len(rows)} source rows; max absolute effect {max_effect:.3f}.",
+            transform=ax.transAxes,
+            fontsize=8,
+            color=style.color("muted"),
+        )
         save_styled_figure(fig, out, style)
     return out
 
@@ -373,9 +446,10 @@ def figure_scholarship_source_map(project_root: Path) -> Path:
     rows = matrix.get("rows") or []
     out = figure_output_path(root, "scholarship_source_map")
     with apply_style(style):
-        fig, ax = plt.subplots(figsize=(10.4, 5.8))
+        fig_h = max(6.2, 0.42 * len(rows) + 1.6)
+        fig, ax = plt.subplots(figsize=(11.2, fig_h))
         ax.axis("off")
-        columns = [0.03, 0.28, 0.55, 0.82]
+        columns = [0.025, 0.27, 0.51, 0.76]
         headers = ["Citation", "Source family", "Method role", "Evidence artifact"]
         for x, header in zip(columns, headers, strict=True):
             ax.text(x, 0.95, header, weight="bold", color=style.color("primary"), fontsize=9)
@@ -384,26 +458,25 @@ def figure_scholarship_source_map(project_root: Path) -> Path:
             connected = row.get("connected") is True
             edge_color = style.color("pass") if connected else style.color("fail")
             artifact = str(row.get("artifact", "")).replace("output/", "")
-            if len(artifact) > 32:
-                artifact = artifact[:29] + "..."
             labels = [
-                f"@{row.get('citation_key', '')}",
-                str(row.get("source_family", "")).replace("_", "\n"),
-                str(row.get("method_role", "")).replace("_", "\n"),
-                artifact,
+                wrap_text(f"@{row.get('citation_key', '')}", 22),
+                wrap_text(str(row.get("source_family", "")).replace("_", " "), 22),
+                wrap_text(str(row.get("method_role", "")).replace("_", " "), 23),
+                wrap_text(artifact, 30),
             ]
             for x, label in zip(columns, labels, strict=True):
                 ax.text(
                     x,
                     y,
                     label,
-                    fontsize=7.4,
+                    fontsize=7.0,
                     va="center",
+                    linespacing=1.05,
                     bbox=dict(boxstyle="round,pad=0.2", facecolor="#ffffff", edgecolor=edge_color),
                 )
-            ax.annotate("", xy=(columns[1] - 0.025, y), xytext=(columns[0] + 0.13, y), arrowprops={"arrowstyle": "->"})
-            ax.annotate("", xy=(columns[2] - 0.025, y), xytext=(columns[1] + 0.17, y), arrowprops={"arrowstyle": "->"})
-            ax.annotate("", xy=(columns[3] - 0.025, y), xytext=(columns[2] + 0.17, y), arrowprops={"arrowstyle": "->"})
+            ax.annotate("", xy=(columns[1] - 0.025, y), xytext=(columns[0] + 0.17, y), arrowprops={"arrowstyle": "->"})
+            ax.annotate("", xy=(columns[2] - 0.025, y), xytext=(columns[1] + 0.18, y), arrowprops={"arrowstyle": "->"})
+            ax.annotate("", xy=(columns[3] - 0.025, y), xytext=(columns[2] + 0.18, y), arrowprops={"arrowstyle": "->"})
         summary = (
             f"{matrix.get('source_count', 0)} sources, "
             f"{matrix.get('method_role_count', 0)} method roles, "
@@ -459,6 +532,8 @@ def figure_efe_decomposition(project_root: Path) -> Path:
         ax_g.set_ylabel("Expected free energy (nats)")
         ax_g.set_title(r"$G(\pi)$ = risk + ambiguity")
         style_grid(ax_g, style)
+        for idx, total in enumerate(totals):
+            ax_g.text(idx, total + 0.015, f"{total:.2f}", ha="center", va="bottom", fontsize=7.5)
         ax_g.legend(frameon=False, fontsize=7)
 
         width = 0.4
@@ -472,6 +547,7 @@ def figure_efe_decomposition(project_root: Path) -> Path:
         ax_pe.set_title(r"$G(\pi)$ = -(pragmatic + epistemic)")
         style_grid(ax_pe, style)
         ax_pe.legend(frameon=False, fontsize=7)
+        add_note(ax_pe, f"identity residual <= {float(result['max_identity_residual']):.1e}", style, x=0.05, y=0.95)
 
         save_styled_figure(fig, out, style)
     return out
@@ -530,10 +606,12 @@ def figure_precision_sweep(project_root: Path) -> Path:
                 s=45,
                 label=rf"mass $\geq$ {threshold:g} at $\gamma$={float(gamma_det):g}",
             )
+            ax_h.axvline(float(gamma_det), color=style.color("fail"), linewidth=0.8, linestyle=":")
 
         lines_h, labels_h = ax_h.get_legend_handles_labels()
         lines_m, labels_m = ax_m.get_legend_handles_labels()
-        ax_h.legend(lines_h + lines_m, labels_h + labels_m, frameon=False, fontsize=7, loc="center right")
+        ax_h.legend(lines_h + lines_m, labels_h + labels_m, frameon=False, fontsize=7, loc="upper right")
+        add_note(ax_h, f"{result['optimal_set_size']} tied optima create the entropy floor.", style, x=0.04, y=0.23)
 
         save_styled_figure(fig, out, style)
     return out
@@ -566,16 +644,17 @@ def figure_cue_tmaze_advantage(project_root: Path) -> Path:
             adv.greedy_reward_log_pref,
         ]
         adv_colors = [style.color("accent"), style.color("pass"), style.color("fail")]
-        ax_adv.bar(np.arange(3), adv_values, color=adv_colors)
+        bars = ax_adv.bar(np.arange(3), adv_values, color=adv_colors)
         ax_adv.axhline(0.0, color=style.color("reference"), linewidth=0.8)
         ax_adv.set_xticks(np.arange(3))
         ax_adv.set_xticklabels(adv_labels, fontsize=8)
         ax_adv.set_ylabel("Value (nats)")
         ax_adv.set_title(f"Cue is required: +{adv.behavioral_advantage:.2f} nat advantage", loc="left", fontsize=9)
         style_grid(ax_adv, style)
+        add_value_labels(ax_adv, bars)
 
         flat_values = [adv.flat_efe_cue, adv.flat_efe_greedy]
-        ax_flat.bar(
+        flat_bars = ax_flat.bar(
             ["cue-first\npolicy", "greedy\npolicy"],
             flat_values,
             color=[style.color("secondary"), style.color("muted")],
@@ -587,6 +666,7 @@ def figure_cue_tmaze_advantage(project_root: Path) -> Path:
             fontsize=9,
         )
         style_grid(ax_flat, style)
+        add_value_labels(ax_flat, flat_bars)
 
         save_styled_figure(fig, out, style)
     return out
@@ -636,6 +716,7 @@ def figure_dirichlet_convergence(project_root: Path) -> Path:
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         style_grid(ax, style)
         ax.legend(frameon=False, fontsize=8)
+        add_note(ax, f"final KL={kls[-1]:.2e}; deterministic expected-count stream", style, x=0.48, y=0.95, width=36)
         save_styled_figure(fig, out, style)
     return out
 

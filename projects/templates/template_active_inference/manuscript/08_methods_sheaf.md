@@ -4,13 +4,13 @@
 
 ## Compose contract
 
-Each manifest row in `manuscript/sheaf/manifest.yaml` binds fragment tracks from `manuscript/sheaf/tracks.yaml`. A track supplies a renderer, compose order, label, and optional flag; the composer flattens the binding set into one Markdown section for PDF and web output.
+Each manifest row in `manuscript/sheaf/manifest.yaml` binds fragment tracks from `manuscript/sheaf/tracks.yaml`. A track supplies a renderer, compose order, label, optional flag, general paper role, and paper-specific use statement; the composer flattens the binding set into one Markdown section for PDF and web output.
 
 The operational claim is auditable binding: analytical, simulation, pymdp, visualization, Lean, GNN, ontology, scholarship, and optional media fragments attach to each IMRAD row under [@eq:coverage_cell] (**P** present, **—** unbound, **M** missing). This is an applied local-to-global consistency contract in the spirit of cellular sheaf and sheaf-signal-processing work [@curry2014sheaves; @robinson2014topological], but instantiated here as a finite manuscript artifact gate.
 
 ## Coverage and figures
 
-[@fig:sheaf_layers_overview] summarizes {{sheaf_track_count}} fragment types and their IMRAD bindings. Generated tables below list every track definition and section×track binding at compose time.
+[@fig:sheaf_layers_overview] summarizes {{sheaf_track_count}} fragment types and their IMRAD bindings. Generated tables below list every track definition and section×track binding at compose time. The visualization track has its own generated quality audit at `output/reports/visualization_quality_audit.json`: {{visualization_quality_rendered_count}} / {{visualization_quality_figure_count}} registered figures are rendered, {{visualization_quality_source_mapped_count}} are source-mapped, and {{visualization_quality_accessibility_count}} have sufficient alt-text/caption metadata; the all-quality flag is `{{visualization_quality_all_ok}}`. The stricter paper-integration gates also require declared visual/evidence roles (`{{visualization_intent_metadata_complete}}`), artifact-backed paper claims (`{{visualization_paper_claims_complete}}`), and at least one section binding per registered figure (`{{visualization_figures_section_bound}}`). The same audit marks {{visualization_statistics_backed_count}} figures as statistically backed by generated data or report artifacts, with bridge status `{{visualization_statistics_bridge_ok}}`; `output/data/statistical_visualization_bridge.json` expands that into {{statistical_visualization_bridge_row_count}} figure-source-scholarship rows with connected status `{{statistical_visualization_bridge_all_connected}}`, manuscript-reference status `{{statistical_visualization_bridge_all_referenced}}`, and visualization-bound reference status `{{statistical_visualization_bridge_references_visualization_bound}}`.
 
 ## Compose commands
 
@@ -25,7 +25,7 @@ Each run emits `output/data/sheaf_coverage_matrix.json` and regenerates coverage
 
 `--validate-only --strict` runs the structural gate before any fragment is glued. Beyond per-cell coverage, it invokes the sheaf-law oracle (`verify_sheaf_laws`, `src/manuscript/sheaf/laws.py`), which checks {{sheaf_law_count}} axioms — poset, presheaf functoriality, separation, gluing, typing, and compositionality — and reports {{sheaf_laws_verified}}/{{sheaf_law_count}} satisfied for the current manifest. A violation is raised as an error-level issue and aborts the build, so a malformed manifest (a section colliding on an output file, an off-chain block, a mistyped fragment, a fragment shared between sections) can never compose. The formal statements are in the formalism block below; the negative-control suite (`tests/test_sheaf_laws.py`) proves each check is falsifiable.
 
-The semantic layer is separate from those structural laws. `output/data/sheaf_gluing_certificate.json` records cross-track symbols, typed claim evidence, artifact sources, and manuscript-variable restrictions; validation fails when the analytical, pymdp, GNN, ontology, Lean, visualization, or manuscript tracks disagree about a shared symbol or measured claim. [@fig:semantic_gluing_graph] renders this gluing graph: the configured producers, the generated evidence artifacts, and the validation consumers that read each shared symbol.
+The semantic layer is separate from those structural laws. `output/data/sheaf_gluing_certificate.json` records cross-track symbols, typed claim evidence, artifact sources, and manuscript-variable restrictions; validation fails when the analytical, pymdp, GNN, ontology, Lean, visualization, or manuscript tracks disagree about a shared symbol or measured claim. The visualization-quality audit is one of those restrictions, so a missing source map, missing statistical bridge source, missing hash, underspecified caption, non-RGB render, or undersized figure breaks the same semantic sheaf contract that checks statistics and theorem witnesses. [@fig:semantic_gluing_graph] renders this gluing graph: the configured producers, the generated evidence artifacts, and the validation consumers that read each shared symbol.
 
 <!-- sheaf-track:formalism -->
 
@@ -38,7 +38,7 @@ $$
 \mathsf{Introduction} \prec \mathsf{Methods} \prec \mathsf{Results} \prec \mathsf{Discussion} \prec \mathsf{Appendix},
 $$ {#eq:imrad_chain}
 
-with, in each block, a *group* node above its *section* nodes (written $G \sqsupseteq s$). $P$ is therefore a finite poset (equivalently a finite Alexandrov space). Let $\mathcal{T}$ be the registered fragment-track set from `manuscript/sheaf/tracks.yaml`; each track $t \in \mathcal{T}$ carries a renderer $R(t)$, label $L(t)$, optional flag $O(t)$, and a strict compose-order index $\pi(t)$.
+with, in each block, a *group* node above its *section* nodes (written $G \sqsupseteq s$). $P$ is therefore a finite poset (equivalently a finite Alexandrov space). Let $\mathcal{T}$ be the registered fragment-track set from `manuscript/sheaf/tracks.yaml`; each track $t \in \mathcal{T}$ carries a renderer $R(t)$, label $L(t)$, optional flag $O(t)$, a general paper role $U(t)$, a section-use statement $V(t)$, and a strict compose-order index $\pi(t)$.
 
 The **presheaf** $\mathcal{F}$ is a contravariant functor on $P$ — $\mathcal{F}\colon P \to \mathbf{Set}$ with restriction maps along $\sqsupseteq$ — assigning to each composing section $s$ its bound fragment set $\mathcal{F}(s) = \{\,(t, F_s(t)) : t \text{ bound in } s\,\}$, where $F_s : \mathcal{T} \rightharpoonup \mathbf{Path}$ is the section's partial binding map. Restriction along $G \sqsupseteq s$ is projection onto a section's own bindings; group nodes carry the empty assignment and do not compose.
 
@@ -133,8 +133,10 @@ The `scholarship` fragment turns citations into an audited method surface rather
 than decorative bibliography. `output/data/scholarship_source_matrix.json`
 records {{scholarship_source_count}} source rows across
 {{scholarship_method_role_count}} method roles and
-{{scholarship_source_family_count}} source families; [@fig:scholarship_source_map]
-renders the resulting source-to-artifact map. The row set connects foundational
+{{scholarship_source_family_count}} source families, including
+{{scholarship_quantitative_method_role_count}} quantitative/statistical or
+visualization-quality method roles; [@fig:scholarship_source_map] renders the
+resulting source-to-artifact map. The row set connects foundational
 free-energy and active-inference references [@friston2010fep; @buckley2017mathreview;
 @dacosta2020discrete; @parr2022active; @smith2022tutorial], implementation and
 notation anchors [@pymdp2024; @gnn2023], and applied sheaf sources
@@ -144,9 +146,13 @@ role they support.
 The validation claim is deliberately narrow: every row must have a bibliography
 entry with a DOI or URL, a manuscript citation, a registered sheaf track, a bound
 manifest section, an existing evidence artifact, and a claim-boundary statement.
-The hydrated flag `{{scholarship_sources_connected}}` is therefore a
-source-traceability claim, not a claim that the toy results inherit empirical
-support from the cited literature.
+The added statistics and visualization rows point to `analysis_statistics.json`
+and `visualization_quality_audit.json`, including a statistical-visualization
+bridge row, so the scholarship track now distinguishes method lineage from the
+generated numerical, figure-quality, and figure-provenance evidence. The
+hydrated flag `{{scholarship_sources_connected}}` is therefore a source-traceability
+claim, not a claim that the toy results inherit empirical support from the cited
+literature.
 
 <!-- sheaf-track:manuscript_staleness -->
 
@@ -161,41 +167,41 @@ This is a publication-systems claim, not a domain result. A stale hydrated value
 
 Compose order and renderer bindings from `manuscript/sheaf/tracks.yaml`.
 
-| Order | Track id | Label | Renderer | Optional |
-| ---: | --- | --- | --- | --- |
-| 10 | `prose` | Narrative prose | `markdown` | No |
-| 20 | `formalism` | Mathematical formalism | `markdown` | No |
-| 30 | `simulation` | Analytical simulation notes | `markdown` | No |
-| 32 | `assumption_index` | Analytical assumption index | `markdown` | No |
-| 35 | `layers` | Sheaf layers tables | `layers_report` | Yes |
-| 40 | `pymdp` | pymdp harness artifacts | `markdown` | No |
-| 41 | `interop` | GNN/ontology/JSON interop checks | `markdown` | No |
-| 42 | `provenance` | Artifact provenance and bundle lineage spine | `markdown` | No |
-| 45 | `replay_matrix` | Deterministic replay matrix | `markdown` | No |
-| 48 | `counterexample` | Expected-failure counterexamples | `markdown` | No |
-| 50 | `adversarial_audit` | Adversarial audit matrix | `markdown` | No |
-| 52 | `evidence_fields` | Evidence field index | `markdown` | No |
-| 53 | `release_bundle` | Release bundle parity manifest | `markdown` | No |
-| 54 | `gate_ergonomics` | Validation gate ergonomics | `markdown` | No |
-| 55 | `artifact_diffoscope` | Artifact diffoscope | `markdown` | No |
-| 56 | `artifact_license` | Artifact license audit | `markdown` | No |
-| 57 | `scholarship` | Source-backed scholarship matrix | `markdown` | No |
-| 60 | `sensitivity` | Toy sensitivity sweep | `markdown` | No |
-| 62 | `uncertainty` | Toy uncertainty summaries | `markdown` | No |
-| 65 | `benchmark` | Compact toy benchmark matrix | `markdown` | No |
-| 66 | `manuscript_staleness` | Hydrated manuscript staleness report | `markdown` | No |
-| 67 | `visualization` | Figure references | `section_figures` | No |
-| 70 | `lean` | Lean boundary fragment | `markdown` | No |
-| 75 | `model_checking` | Finite-state model checking witnesses | `markdown` | No |
-| 76 | `theorem_traceability` | Lean theorem traceability matrix | `markdown` | No |
-| 77 | `proof_extraction` | Lean proof extraction index | `markdown` | No |
-| 78 | `state_space_catalog` | Finite state-space catalog | `markdown` | No |
-| 79 | `causal_ablation` | Deterministic causal ablation matrix | `markdown` | No |
-| 80 | `gnn` | GNN notation fragment | `markdown` | No |
-| 90 | `ontology` | Active Inference Ontology bindings | `ontology_yaml` | No |
-| 100 | `animation` | Animation fragment | `markdown` | Yes |
-| 102 | `animation_delta` | Animation frame-delta manifest | `markdown` | No |
-| 110 | `release_notes` | Release notes evidence | `markdown` | No |
+| Order | Track id | Label | Renderer | Paper role | Paper use | Optional |
+| ---: | --- | --- | --- | --- | --- | --- |
+| 10 | `prose` | Narrative prose | `markdown` | Narrative framing and argument flow | Supports the narrative spine for each composed paper section. | No |
+| 20 | `formalism` | Mathematical formalism | `markdown` | Mathematical definitions and equations | States the finite equations, laws, and boundary assumptions used by prose claims. | No |
+| 30 | `simulation` | Analytical simulation notes | `markdown` | Deterministic toy analysis evidence | Connects analytical sweeps and toy simulations to results claims. | No |
+| 32 | `assumption_index` | Analytical assumption index | `markdown` | Assumption boundary ledger | Lists finite-model assumptions so analytical claims stay scoped. | No |
+| 35 | `layers` | Sheaf layers tables | `layers_report` | Registry and binding disclosure | Generates the track registry, binding matrix, and evidence crosswalk tables. | Yes |
+| 40 | `pymdp` | pymdp harness artifacts | `markdown` | Active-inference implementation evidence | Binds pymdp traces, runtime diagnostics, and policy comparisons to methods and results. | No |
+| 41 | `interop` | GNN/ontology/JSON interop checks | `markdown` | Cross-format compatibility evidence | Shows that GNN, ontology, and JSON artifacts preserve model meaning. | No |
+| 42 | `provenance` | Artifact provenance and bundle lineage spine | `markdown` | Artifact lineage evidence | Documents producers, hashes, seeds, and bundle lineage for generated claims. | No |
+| 45 | `replay_matrix` | Deterministic replay matrix | `markdown` | Reproducibility replay evidence | Shows configured producers replay and match their expected artifacts. | No |
+| 48 | `counterexample` | Expected-failure counterexamples | `markdown` | Falsifiability negative controls | Records known-bad fixtures that must fail validation gates. | No |
+| 50 | `adversarial_audit` | Adversarial audit matrix | `markdown` | Adversarial robustness evidence | Documents stress cases and expected failures for sheaf-track claims. | No |
+| 52 | `evidence_fields` | Evidence field index | `markdown` | Claim field traceability | Maps evidence fields to sections and artifacts for claim hydration. | No |
+| 53 | `release_bundle` | Release bundle parity manifest | `markdown` | Release artifact parity evidence | Checks that required deliverables exist and copied outputs match or defer explicitly. | No |
+| 54 | `gate_ergonomics` | Validation gate ergonomics | `markdown` | Validation workflow index | Explains the gates a reader or maintainer can rerun locally. | No |
+| 55 | `artifact_diffoscope` | Artifact diffoscope | `markdown` | Artifact equality evidence | Compares generated and copied artifacts to surface publication drift. | No |
+| 56 | `artifact_license` | Artifact license audit | `markdown` | License safety evidence | Records license status for artifacts included in release surfaces. | No |
+| 57 | `scholarship` | Source-backed scholarship matrix | `markdown` | Scholarship and method-source lineage | Connects cited sources to method roles, sections, and generated evidence. | No |
+| 60 | `sensitivity` | Toy sensitivity sweep | `markdown` | Parameter sensitivity evidence | Summarizes deterministic toy perturbations behind robustness claims. | No |
+| 62 | `uncertainty` | Toy uncertainty summaries | `markdown` | Uncertainty summary evidence | Reports normalized uncertainty bins and summaries for finite toy analyses. | No |
+| 65 | `benchmark` | Compact toy benchmark matrix | `markdown` | Toy benchmark comparison evidence | Shows compact model comparisons used to bound toy-only claims. | No |
+| 66 | `manuscript_staleness` | Hydrated manuscript staleness report | `markdown` | Manuscript freshness evidence | Checks hydrated sections against current generated artifacts and variables. | No |
+| 67 | `visualization` | Figure references | `section_figures` | Figure evidence and communication | Injects registry figures into section-specific evidence blocks. | No |
+| 70 | `lean` | Lean boundary fragment | `markdown` | Formal proof boundary evidence | Separates proved Lean witnesses from intentionally scoped formal boundaries. | No |
+| 75 | `model_checking` | Finite-state model checking witnesses | `markdown` | Exhaustive finite-model evidence | Lists model-checking witnesses for finite state-space claims. | No |
+| 76 | `theorem_traceability` | Lean theorem traceability matrix | `markdown` | Theorem dependency traceability | Links theorem rows to proof dependencies and finite model witnesses. | No |
+| 77 | `proof_extraction` | Lean proof extraction index | `markdown` | Constructive proof extraction evidence | Shows extracted theorem artifacts remain constructive and available. | No |
+| 78 | `state_space_catalog` | Finite state-space catalog | `markdown` | Finite model catalog evidence | Enumerates reachable states so toy models remain explicitly finite. | No |
+| 79 | `causal_ablation` | Deterministic causal ablation matrix | `markdown` | Causal ablation evidence | Summarizes deterministic perturbation effects across toy topologies. | No |
+| 80 | `gnn` | GNN notation fragment | `markdown` | GNN notation evidence | Documents notation and round-trip status for the analytical model. | No |
+| 90 | `ontology` | Active Inference Ontology bindings | `ontology_yaml` | Ontology binding evidence | Maps local variables to ontology terms for semantic consistency. | No |
+| 100 | `animation` | Animation fragment | `markdown` | Dynamic trace visualization | Provides a deterministic GIF trace as optional appendix evidence. | Yes |
+| 102 | `animation_delta` | Animation frame-delta manifest | `markdown` | Animation integrity evidence | Confirms animation frames change and support the visual trace. | No |
+| 110 | `release_notes` | Release notes evidence | `markdown` | Release narrative evidence | Binds release-note statements to source-backed artifacts. | No |
 
 **Track count:** {{sheaf_track_count}} registered fragment types.
 
@@ -262,7 +268,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | --- | --- | ---: | ---: | ---: | ---: | --- |
 | `prose` | `markdown` | 12 | 12 | 0 | 0 | `complete` |
 | `formalism` | `markdown` | 5 | 5 | 0 | 0 | `complete` |
-| `simulation` | `markdown` | 5 | 5 | 0 | 9 | `complete` |
+| `simulation` | `markdown` | 5 | 5 | 0 | 11 | `complete` |
 | `assumption_index` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
 | `layers` | `layers_report` | 1 | 1 | 0 | 1 | `complete` |
 | `pymdp` | `markdown` | 3 | 3 | 0 | 15 | `complete` |
@@ -276,12 +282,12 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `gate_ergonomics` | `markdown` | 2 | 2 | 0 | 5 | `complete` |
 | `artifact_diffoscope` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
 | `artifact_license` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `scholarship` | `markdown` | 3 | 3 | 0 | 2 | `complete` |
+| `scholarship` | `markdown` | 3 | 3 | 0 | 4 | `complete` |
 | `sensitivity` | `markdown` | 2 | 2 | 0 | 9 | `complete` |
 | `uncertainty` | `markdown` | 2 | 2 | 0 | 4 | `complete` |
 | `benchmark` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
 | `manuscript_staleness` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `visualization` | `section_figures` | 10 | 10 | 0 | 11 | `complete` |
+| `visualization` | `section_figures` | 10 | 10 | 0 | 14 | `complete` |
 | `lean` | `markdown` | 2 | 2 | 0 | 8 | `complete` |
 | `model_checking` | `markdown` | 2 | 2 | 0 | 7 | `complete` |
 | `theorem_traceability` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
@@ -306,7 +312,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `coverage_matrix_built` | `sheaf.coverage` | `output/data/sheaf_coverage_matrix.json` | `ok` | 93 present cells |
 | `section_status_matrix_built` | `sheaf.status` | `output/data/sheaf_section_status_matrix.json` | `ok` | 561 section-track cells |
 | `layers_renderer_bound` | `sheaf.layers_report` | `manuscript/08_methods_sheaf.md` | `ok` | methods sheaf layer tables |
-| `semantic_artifacts_indexed` | `sheaf.semantic` | `output/data/validation_dependency_graph.json` | `ok` | 78 artifact producer rows |
+| `semantic_artifacts_indexed` | `sheaf.semantic` | `output/data/validation_dependency_graph.json` | `ok` | 80 artifact producer rows |
 | `validation_gates_indexed` | `gates` | `output/data/validation_gate_index.json` | `ok` | 3 gate groups |
 | `manuscript_sections_composed` | `sheaf.compose` | `manuscript/*.md` | `ok` | 16 composed markdown files |
 
@@ -326,7 +332,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `validation_dependency_graph` | `output/data/validation_dependency_graph.json` | `generate_sheaf_tracks.py` | validate_manuscript, validate_outputs |
 | `semantic_gluing_graph_figure` | `output/figures/semantic_gluing_graph.png` | `generate_figures.py` | validate_outputs, figure_registry |
 
-**Claim rows:** 87 typed evidence claims.
+**Claim rows:** 90 typed evidence claims.
 
 <!-- sheaf-layers:artifact-producers -->
 ## Artifact producer graph
@@ -370,6 +376,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/data/si_tmaze_trace.json` | `simulate_si_tmaze.py` | Yes | methods_pymdp, results_si_tmaze |
 | `output/data/state_space_catalog.json` | `generate_toy_sweep_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/data/state_transition_table.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
+| `output/data/statistical_visualization_bridge.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/data/theorem_traceability_matrix.json` | `generate_sheaf_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/data/toy_benchmark_matrix.json` | `generate_toy_sweep_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/data/track_improvement_scope.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
@@ -404,6 +411,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/reports/si_invariants.json` | `simulate_si_tmaze.py` | Yes | results_si_tmaze |
 | `output/reports/si_tmaze_run_report.json` | `simulate_si_tmaze.py` | Yes | results_si_tmaze |
 | `output/reports/stale_artifact_report.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
+| `output/reports/visualization_quality_audit.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
 
 **Producer issues:** 0.
 

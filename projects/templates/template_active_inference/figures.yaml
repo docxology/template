@@ -3,7 +3,7 @@
 
 dpi: 160
 transparent: false
-font_scale: 1.0
+font_scale: 1.08
 grid: true
 
 palette:
@@ -23,6 +23,11 @@ palette:
 figures:
   efe_decomposition:
     filename: efe_decomposition.png
+    visual_role: comparison
+    evidence_role: formal
+    paper_claim: >-
+      Expected-free-energy policy scores split into equivalent pragmatic and
+      epistemic decompositions across the finite T-maze policy set.
     alt: >-
       Two-panel bar chart of the Expected Free Energy term decomposition across the
       four length-two T-maze policies (action sequences 00, 01, 10, 11). The left
@@ -42,6 +47,11 @@ figures:
     width: 0.95
   precision_sweep:
     filename: precision_sweep.png
+    visual_role: trend
+    evidence_role: formal
+    paper_claim: >-
+      Increasing precision concentrates posterior mass on the tied
+      expected-free-energy optimal policy set rather than a single policy.
     alt: >-
       Dual-axis line plot of how the T-maze policy posterior q(pi) = softmax(-gamma G)
       sharpens as the precision gamma increases from 0 to 16. The left axis plots the
@@ -63,6 +73,11 @@ figures:
     width: 0.9
   cue_tmaze_advantage:
     filename: cue_tmaze_advantage.png
+    visual_role: comparison
+    evidence_role: formal
+    paper_claim: >-
+      The cue-then-reward variant shows why observation-conditioned evaluation is
+      needed for information-seeking to have behavioral value.
     alt: >-
       Two-panel bar chart for the cue-then-reward T-maze. The left panel shows the
       cue information gain I(context; observation) in nats and the expected reward
@@ -84,6 +99,11 @@ figures:
     width: 0.95
   dirichlet_convergence:
     filename: dirichlet_convergence.png
+    visual_role: trend
+    evidence_role: formal
+    paper_claim: >-
+      Deterministic Dirichlet updates monotonically move the learned likelihood
+      toward the true finite T-maze observation model.
     alt: >-
       Single-panel semilog line chart of the Kullback-Leibler divergence from the
       true T-maze likelihood matrix A to the Dirichlet-learned expected likelihood,
@@ -102,6 +122,11 @@ figures:
     width: 0.85
   ising_mi_curve:
     filename: ising_mi_curve.png
+    visual_role: trend
+    evidence_role: statistical
+    paper_claim: >-
+      The analytical mutual-information curve is reproduced by an independent
+      exact total-correlation computation across the lambda grid.
     alt: >-
       Two-panel plot of mutual information versus coupling strength lambda for the
       symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark
@@ -118,6 +143,11 @@ figures:
     width: 0.9
   free_energy_curve:
     filename: free_energy_curve.png
+    visual_role: trend
+    evidence_role: formal
+    paper_claim: >-
+      Free energy against the mean-field prior is minimized at the independence
+      point and rises as coupling increases.
     alt: >-
       Line plot of free energy in nats versus coupling strength lambda for the
       entangled posterior relative to a mean-field prior. A single dark curve traces
@@ -129,6 +159,11 @@ figures:
     width: 0.9
   si_tmaze_actions:
     filename: si_tmaze_actions.png
+    visual_role: trace
+    evidence_role: statistical
+    paper_claim: >-
+      The saved T-maze action trace records the finite rollout policy behavior
+      used by the manuscript statistics.
     alt: >-
       Step plot of discrete action index versus timestep for the pymdp
       T-maze rollout in {{pymdp_mode}} mode. Actions change at each timestep with
@@ -139,6 +174,11 @@ figures:
     width: 0.9
   si_belief_entropy_curve:
     filename: si_belief_entropy_curve.png
+    visual_role: trend
+    evidence_role: statistical
+    paper_claim: >-
+      The belief entropy trace shows the finite toy rollout posterior remains
+      stable across the observed timesteps.
     alt: >-
       Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout.
       Entropy ranges from {{si_entropy_min}} to {{si_entropy_max}} nats across
@@ -148,6 +188,11 @@ figures:
     width: 0.9
   si_obs_action_trace:
     filename: si_obs_action_trace.png
+    visual_role: trace
+    evidence_role: statistical
+    paper_claim: >-
+      Observation and action traces expose the exact finite sequence behind the
+      reported T-maze rollout summary.
     alt: >-
       Dual-panel plot of observation index and action index versus timestep for the
       pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel
@@ -158,6 +203,11 @@ figures:
     width: 0.9
   sheaf_coverage_heatmap:
     filename: sheaf_coverage_heatmap.png
+    visual_role: matrix
+    evidence_role: sheaf
+    paper_claim: >-
+      The coverage matrix makes every manifest-section by sheaf-track binding
+      auditable before composition.
     alt: >-
       Heatmap matrix of IMRAD manuscript rows versus {{sheaf_track_count}} sheaf
       fragment track columns. Black cells mean the track is bound and the fragment
@@ -172,6 +222,11 @@ figures:
     width: 0.95
   sheaf_layers_overview:
     filename: sheaf_layers_overview.png
+    visual_role: dashboard
+    evidence_role: sheaf
+    paper_claim: >-
+      The sheaf layer overview links the registry stack to the IMRAD binding
+      matrix used by strict composition.
     alt: >-
       Two-panel overview of sheaf fragment layers. Left panel shows
       {{sheaf_track_count}} composable track types in registry compose order with
@@ -186,6 +241,11 @@ figures:
     width: 0.98
   invariant_dashboard:
     filename: invariant_dashboard.png
+    visual_role: dashboard
+    evidence_role: statistical
+    paper_claim: >-
+      The invariant dashboard shows that all analytical and simulation checks
+      pass on the merged validation report.
     alt: >-
       Horizontal bar checklist of analytical and simulation invariant names with pass or fail
       status. {{invariants_passed}} of {{invariants_total}} checks pass on the merged report.
@@ -195,6 +255,11 @@ figures:
     width: 0.9
   tmaze_schematic:
     filename: tmaze_schematic.png
+    visual_role: diagram
+    evidence_role: schematic
+    paper_claim: >-
+      The T-maze schematic fixes the finite state, observation, action, and
+      policy-horizon assumptions used by pymdp.
     alt: >-
       Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and
       observations, and planning horizon policy_len = {{si_tmaze_policy_len}}.
@@ -204,6 +269,11 @@ figures:
     width: 0.85
   multi_track_architecture:
     filename: multi_track_architecture.png
+    visual_role: flow
+    evidence_role: sheaf
+    paper_claim: >-
+      The architecture diagram connects scientific lanes, pipeline gates, and
+      sheaf fragments into one reproducible manuscript system.
     alt: >-
       Process diagram linking three scientific tracks to {{pipeline_track_count}} pipeline gates
       and {{sheaf_track_count}} sheaf fragment types across {{imrad_manifest_rows}} manifest rows.
@@ -213,6 +283,11 @@ figures:
     width: 0.95
   lean_boundary_status:
     filename: lean_boundary_status.png
+    visual_role: table
+    evidence_role: formal
+    paper_claim: >-
+      The Lean boundary table distinguishes proved finite witnesses from
+      intentionally scoped formalization boundaries.
     alt: >-
       Table figure listing Lean modules, declaration kinds, names, and proved versus sorry status
       under lean/TemplateActiveInference/.
@@ -221,6 +296,11 @@ figures:
     width: 0.9
   gnn_ontology_concordance:
     filename: gnn_ontology_concordance.png
+    visual_role: flow
+    evidence_role: formal
+    paper_claim: >-
+      The concordance diagram maps analytical symbols through GNN variables into
+      Active Inference Ontology terms.
     alt: >-
       Layered concordance diagram linking analytical symbols, GNN variables from
       bernoulli_toy.gnn.md ({{gnn_spec_version}}), and Active Inference Ontology terms.
@@ -229,6 +309,11 @@ figures:
     width: 0.9
   semantic_gluing_graph:
     filename: semantic_gluing_graph.png
+    visual_role: flow
+    evidence_role: sheaf
+    paper_claim: >-
+      The semantic gluing graph shows which generated artifacts connect producers
+      to manuscript consumers and validation gates.
     alt: >-
       Dependency diagram linking configured analysis scripts to generated evidence
       artifacts, manuscript consumers, and validation gates for the semantic sheaf
@@ -239,6 +324,11 @@ figures:
     width: 0.95
   theorem_traceability_graph:
     filename: theorem_traceability_graph.png
+    visual_role: flow
+    evidence_role: formal
+    paper_claim: >-
+      The theorem traceability graph connects Lean theorem rows to dependency
+      edges and finite model witnesses.
     alt: >-
       Three-column graph generated from theorem traceability and proof dependency JSON.
       Each row links a Lean theorem to its proof-dependency edge count and finite
@@ -250,6 +340,11 @@ figures:
     width: 0.95
   causal_ablation_heatmap:
     filename: causal_ablation_heatmap.png
+    visual_role: matrix
+    evidence_role: statistical
+    paper_claim: >-
+      The causal-ablation heatmap summarizes source-backed deterministic effects
+      across toy topologies and perturbations.
     alt: >-
       Heatmap generated from the causal ablation and sensitivity reports. Rows are
       toy graph topologies, columns are perturbation types, and each cell shows the
@@ -261,6 +356,11 @@ figures:
     width: 0.92
   scholarship_source_map:
     filename: scholarship_source_map.png
+    visual_role: flow
+    evidence_role: scholarship
+    paper_claim: >-
+      The scholarship source map separates bibliography lineage from generated
+      evidence artifacts and method roles.
     alt: >-
       Four-column source map generated from the scholarship source matrix. Each row
       links a bibliography key to a source family, method role, and generated evidence

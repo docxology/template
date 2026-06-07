@@ -88,14 +88,14 @@ The project uses `uv` as the Python package manager and resolver. All dependenci
 uv pip list --outdated
 ```
 
-**2. Upgrade dependencies interactively or wholesale:**
+**2. Upgrade dependencies (all at once, or a single package):**
 
 ```bash
-# Interactive mode — review each update
+# Upgrade everything, ignoring pinned versions in uv.lock — use cautiously
 uv sync --upgrade
 
-# Non-interactive (accept all updates) — use cautiously in CI
-uv sync --upgrade --no-interaction
+# Upgrade just one package
+uv sync --upgrade-package <name>
 ```
 
 **3. Regenerate lock file:**
@@ -311,7 +311,7 @@ Track how long the test and pipeline gates take so build-time regressions surfac
 
 ### Security Scan Review {#security-scan-review}
 
-- Dependency advisories: `uv pip audit` (triage any reported CVEs).
+- Dependency advisories: `uv run pip-audit` (ignore IDs from `.github/pip-audit-ignore.txt`; triage any reported CVEs).
 - Static analysis: `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/`.
 - Optional deeper scan: `uv run python scripts/gates/security_scan.py` (missing tools report `skipped`, not clean).
 

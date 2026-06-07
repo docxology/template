@@ -216,6 +216,8 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
     stale_data = _load_json(root / "output" / "reports" / "stale_artifact_report.json")
     manuscript_staleness_data = _load_json(root / "output" / "reports" / "manuscript_staleness_report.json")
     figure_source_data = _load_json(root / "output" / "data" / "figure_source_map.json")
+    visualization_quality_data = _load_json(root / "output" / "reports" / "visualization_quality_audit.json")
+    statistical_bridge_data = _load_json(root / "output" / "data" / "statistical_visualization_bridge.json")
     scope_data = _load_json(root / "output" / "reports" / "scope_boundary_audit.json")
     gate_index_data = _load_json(root / "output" / "data" / "validation_gate_index.json")
     section_status_data = _load_json(root / "output" / "data" / "sheaf_section_status_matrix.json")
@@ -271,6 +273,15 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "si_tmaze_mean_belief_entropy_formatted": f"{mean_entropy:.4f}",
         "si_goal_reached": int(bool(si_data.get("goal_reached", si_stats.get("goal_reached", False)))),
         "si_action_diversity": si_data.get("action_diversity", si_stats.get("action_diversity", 0)),
+        "si_action_switch_count": si_stats.get("action_switch_count", 0),
+        "si_action_switch_rate_formatted": f"{float(si_stats.get('action_switch_rate', 0.0)):.3f}",
+        "si_observation_diversity": si_stats.get("observation_diversity", 0),
+        "si_entropy_initial": si_stats.get("entropy_initial", 0.0),
+        "si_entropy_terminal": si_stats.get("entropy_terminal", 0.0),
+        "si_entropy_drop": si_stats.get("entropy_drop", 0.0),
+        "si_entropy_drop_formatted": f"{float(si_stats.get('entropy_drop', 0.0)):.4f}",
+        "si_trace_steps_match": bool(si_stats.get("trace_summary_steps_match", False)),
+        "si_trace_finite": bool(si_stats.get("finite_trace", False)),
         "si_entropy_min": si_stats.get("entropy_min", 0.0),
         "si_entropy_max": si_stats.get("entropy_max", 0.0),
         "sweep_max_residual": sweep_stats.get("max_residual", 0.0),
@@ -347,6 +358,35 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "manuscript_staleness_all_fresh": bool(manuscript_staleness_data.get("all_fresh", False)),
         "figure_source_coverage_count": sum(1 for row in figure_source_data.get("rows") or [] if row.get("mapped")),
         "figure_source_all_mapped": bool(figure_source_data.get("all_figures_mapped", False)),
+        "visualization_quality_figure_count": visualization_quality_data.get("figure_count", 0),
+        "visualization_quality_rendered_count": visualization_quality_data.get("rendered_count", 0),
+        "visualization_quality_source_mapped_count": visualization_quality_data.get("source_mapped_count", 0),
+        "visualization_quality_accessibility_count": visualization_quality_data.get("accessibility_text_count", 0),
+        "visualization_quality_all_ok": bool(visualization_quality_data.get("all_quality_ok", False)),
+        "visualization_intent_metadata_complete": bool(
+            visualization_quality_data.get("all_visual_roles_present", False)
+            and visualization_quality_data.get("all_evidence_roles_present", False)
+        ),
+        "visualization_paper_claims_complete": bool(visualization_quality_data.get("all_paper_claims_present", False)),
+        "visualization_figures_section_bound": bool(visualization_quality_data.get("all_figures_section_bound", False)),
+        "visualization_statistics_backed_count": visualization_quality_data.get("statistically_backed_count", 0),
+        "visualization_statistics_bridge_ok": bool(
+            visualization_quality_data.get("all_statistical_sources_present", False)
+        ),
+        "statistical_visualization_bridge_row_count": statistical_bridge_data.get("row_count", 0),
+        "statistical_visualization_bridge_source_count": statistical_bridge_data.get("statistical_source_count", 0),
+        "statistical_visualization_bridge_all_connected": bool(
+            statistical_bridge_data.get("all_rows_connected", False)
+        ),
+        "statistical_visualization_bridge_all_referenced": bool(
+            statistical_bridge_data.get("all_figures_referenced", False)
+        ),
+        "statistical_visualization_bridge_references_sheaf_bound": bool(
+            statistical_bridge_data.get("all_reference_sections_sheaf_bound", False)
+        ),
+        "statistical_visualization_bridge_references_visualization_bound": bool(
+            statistical_bridge_data.get("all_reference_sections_visualization_bound", False)
+        ),
         "scope_boundary_status": "toy_only_pass" if scope_data.get("all_current_claims_toy") else "scope_leak",
         "validation_gate_index_count": gate_index_data.get("gate_count", 0),
         "sheaf_section_status_cell_count": section_status_data.get("cell_count", 0),
@@ -394,6 +434,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "scholarship_method_role_count": scholarship_data.get("method_role_count", 0),
         "scholarship_source_family_count": scholarship_data.get("source_family_count", 0),
         "scholarship_primary_source_count": scholarship_data.get("primary_source_count", 0),
+        "scholarship_quantitative_method_role_count": scholarship_data.get("quantitative_method_role_count", 0),
         "scholarship_sources_connected": bool(scholarship_data.get("all_sources_connected", False)),
         "proof_dependency_edge_count": proof_dependency_data.get("edge_count", 0),
         "proof_dependency_all_resolved": bool(proof_dependency_data.get("all_edges_resolved", False)),

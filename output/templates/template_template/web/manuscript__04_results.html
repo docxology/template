@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>04_results</title>
+  <title>04_results.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -206,7 +206,7 @@ after success without redrawing the TUI banner.</p>
 <td><code>template_code_project</code></td>
 <td>8</td>
 <td>~40 s</td>
-<td>196/196</td>
+<td>197/197</td>
 <td>90%+</td>
 </tr>
 <tr>
@@ -231,7 +231,7 @@ with cached fixtures.</p>
 <p>²Counts show passing tests versus discovered tests for the sampled
 configuration.</p>
 <p>³<code>template_search_project</code> lives under
-<code>projects_archive/</code> (local-only literature-search exemplar);
+<code>projects/archive/</code> (local-only literature-search exemplar);
 it is not part of the public CI roster.</p>
 <p><strong><em>Overall success:</em></strong> 100 % pipeline completion
 for sampled runs.</p>
@@ -256,11 +256,11 @@ downstream.</p>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>367+</td>
+<td>404+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~7,024</td>
+<td>~7,385</td>
 </tr>
 <tr>
 <td>Infrastructure coverage gate</td>
@@ -277,8 +277,9 @@ YAML-driven pipeline DAG resolution, HTTPS-bound optional suites
 (<code>pytest-httpserver</code>), and local Ollama-gated subsets.</p>
 <h2 id="infrastructure-module-inventory">Infrastructure Module
 Inventory</h2>
-<p>The introspection module (<code>template.introspection</code>) emits
-the authoritative table below—every row reflects
+<p>The introspection module
+(<code>template_template.introspection</code>) emits the authoritative
+table below—every row reflects
 <code>discover_infrastructure_modules(REPO_ROOT)</code>.</p>
 <table>
 <colgroup>
@@ -321,7 +322,7 @@ the authoritative table below—every row reflects
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">97</td>
+<td style="text-align: center;">104</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -336,21 +337,21 @@ the authoritative table below—every row reflects
 </tr>
 <tr>
 <td><code>doctor</code></td>
-<td style="text-align: center;">9</td>
+<td style="text-align: center;">14</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Checkout diagnose/fix/undo repairs</td>
 </tr>
 <tr>
 <td><code>documentation</code></td>
-<td style="text-align: center;">10</td>
+<td style="text-align: center;">11</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>FigureManager</code>, <code>generate_glossary</code></td>
 </tr>
 <tr>
 <td><code>llm</code></td>
-<td style="text-align: center;">53</td>
+<td style="text-align: center;">54</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Ollama helpers, sanitization, review + translation pipelines</td>
@@ -380,7 +381,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">19</td>
+<td style="text-align: center;">21</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -394,35 +395,35 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">42</td>
+<td style="text-align: center;">44</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
 </tr>
 <tr>
 <td><code>reference</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">16</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>BibTeX models, parsers, converters</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">45</td>
+<td style="text-align: center;">47</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">51</td>
+<td style="text-align: center;">56</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
 </tr>
 <tr>
 <td><code>scientific</code></td>
-<td style="text-align: center;">6</td>
+<td style="text-align: center;">7</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>check_numerical_stability</code>,
@@ -430,10 +431,18 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>search</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">32</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>infrastructure.search.literature</code> clients + cache</td>
+</tr>
+<tr>
+<td><code>sia</code></td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Self-Improving-AI loop: task validation, harness, metric
+capture</td>
 </tr>
 <tr>
 <td><code>skills</code></td>
@@ -451,14 +460,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">61</td>
+<td style="text-align: center;">69</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF + Markdown + integrity CLIs</td>
 </tr>
 </tbody>
 </table>
-<p>All 22 enumerated subdirectories carry Tier‑1/<code>README.md</code>
+<p>All 23 enumerated subdirectories carry Tier‑1/<code>README.md</code>
 and Tier‑2/<code>AGENTS.md</code> coverage wherever the Documentation
 Duality standard applies; subsets ship Tier‑3 <code>SKILL.md</code>
 descriptors for MCP routing (<code>infrastructure/skills</code> manifest
@@ -496,7 +505,7 @@ Documentation Coverage</h2>
 </tr>
 </tbody>
 </table>
-<p><code>351+</code> Markdown shards under <code>docs/</code> capture
+<p><code>367+</code> Markdown shards under <code>docs/</code> capture
 operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 id="dag-reference-declarative-executor">DAG Reference (Declarative
@@ -641,24 +650,24 @@ iterating active projects—not a tenth DAG node for single-repo runs
 <p>Measurements single-thread Apple Silicon; dominated by watermark
 overlay complexity.</p>
 <h2 id="self-referential-analysis">Self-Referential Analysis</h2>
-<p>Rendered via <code>projects_in_progress/template</code>
+<p>Rendered via <code>projects/templates/template_template</code>
 (<code>generate_manuscript_metrics.py</code> → injected tokens such as
-<code>22</code>). Architecture figures stem from <a
-href="../../src/template/architecture_viz.py"><code>template.architecture_viz</code></a>—font
+<code>23</code>). Architecture figures stem from <a
+href="../src/template_template/architecture_viz.py"><code>template_template.architecture_viz</code></a>—font
 sizes constrained by §QA.</p>
-<p><img src="figures/architecture_overview.png"
+<p><img src="../figures/architecture_overview.png"
 alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live
 Two-Layer graph with documentation badges <code>[ARSP]</code> and
 per-module file counts derived from introspection snapshots.</p>
-<p><img src="figures/pipeline_stages.png" alt="Pipeline Stage Flow" />
-<strong>Figure 2.</strong> Pipeline DAG with 12 YAML-declared stages
-(core, LLM, bundle, archival tags).</p>
-<p><img src="figures/module_inventory.png"
+<p><img src="../figures/pipeline_stages.png"
+alt="Pipeline Stage Flow" /> <strong>Figure 2.</strong> Pipeline DAG
+with 12 YAML-declared stages (core, LLM, bundle, archival tags).</p>
+<p><img src="../figures/module_inventory.png"
 alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
 File-count histogram for each infrastructure subdirectory.</p>
 <h2 id="comparative-feature-analysis">Comparative Feature Analysis</h2>
 <p>Figure 4 summarizes the Appendix F capability matrix.</p>
-<p><img src="figures/comparative_feature_matrix.png"
+<p><img src="../figures/comparative_feature_matrix.png"
 alt="Comparative Feature Analysis Heatmap" /> <strong>Figure 4.</strong>
 14 × 10 heatmap annotated in appendix text—green <strong>✓</strong> full
 native capability, yellow <strong>◐</strong> partial / plugin-hosted,

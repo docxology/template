@@ -600,28 +600,68 @@ class="toc-section-number">9</span> References</a></li>
 </ul>
 </nav>
 <p><strong>State:</strong> unpublished / pending pairing</p>
-<ul>
-<li><strong>Title:</strong> Convergence Analysis of Gradient Descent
-Optimization</li>
-<li><strong>Version:</strong> 2.3</li>
-<li><strong>DOI:</strong> 10.5281/zenodo.20417136</li>
-<li><strong>GitHub:</strong> docxology/template_code_project</li>
-<li><strong>Zenodo:</strong> https://zenodo.org/records/20417136</li>
-<li><strong>SHA-256:</strong>
-<code>5870d648def95d923ce5bc37a9061d56e2980c704fb6e3f5dfc46221a8bb6325</code></li>
-<li><strong>SHA-512:</strong>
-<code>97205f75992d100491631d9c5f16de22eaad6a98cf195276fa641ee7b2bae80ddd0d93b3590b6ab5ac6319f128961da5e317bb17b5d05af807115ae577862355</code></li>
-</ul>
 <p><strong>Pairing:</strong> pending — unresolved: - ✗ GitHub release
-URL: <code>pending</code></p>
+URL: <code>pending</code> - ✗ PDF SHA-256: <code>pending</code></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Title</td>
+<td>Convergence Analysis of Gradient Descent Optimization</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>2.5.0</td>
+</tr>
+<tr>
+<td>Concept DOI</td>
+<td>10.5281/zenodo.20417136</td>
+</tr>
+<tr>
+<td>Version DOI</td>
+<td>10.5281/zenodo.20420368</td>
+</tr>
+<tr>
+<td>GitHub</td>
+<td>docxology/template_code_project</td>
+</tr>
+<tr>
+<td>Zenodo</td>
+<td><a
+href="https://zenodo.org/records/20417136">https://zenodo.org/records/20417136</a></td>
+</tr>
+<tr>
+<td>SHA-256</td>
+<td>pending</td>
+</tr>
+<tr>
+<td>SHA-512</td>
+<td>pending</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Scan <strong>Integrity</strong> QR and compare the embedded SHA-256
+prefix to the table above.</li>
+<li>Scan <strong>Zenodo</strong> / <strong>GitHub</strong> QR codes and
+confirm they resolve to this release pairing.</li>
+<li>Full hashes and structured fields:
+<code>../data/transmission_manifest.json</code>.</li>
+</ul>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" />
 <figcaption aria-hidden="true">Integrity QR strip</figcaption>
 </figure>
-<pre><code>title=Convergence Analysis of Gradient Descent Optimiz
-version=2.3 doi=10.5281/zenodo.20417136
-sha256=5870d648def95d92… manifest={&quot;t&quot;:&quot;Convergence Analysis of &quot;,&quot;v&quot;:&quot;2.3&quot;,&quot;d&quot;:&quot;10.5281/zenodo.20417136&quot;,&quot;s&quot;:&quot;5870d648def95d92&quot;}</code></pre>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
@@ -640,9 +680,9 @@ gradient descent</strong> on a convex quadratic, framed as the
 computational exemplar of the <a
 href="https://github.com/docxology/template">Research Project
 Template</a>. The implementation lives in
-<code>projects/template_code_project/src/optimizer.py</code>;
+<code>projects/templates/template_code_project/src/optimizer.py</code>;
 experiments and figures are orchestrated by
-<code>projects/template_code_project/scripts/optimization_analysis.py</code>
+<code>projects/templates/template_code_project/scripts/optimization_analysis.py</code>
 and hydrated into the manuscript through
 <code>scripts/z_generate_manuscript_variables.py</code>, so tables and
 prose track <code>output/data/optimization_results.csv</code> after
@@ -666,9 +706,10 @@ cases where runs hit <span class="math inline">\(N_{\max} =
 1000\)</span> before meeting the gradient tolerance. On the architecture
 side, we demonstrate a zero-mock test suite on project <code>src/</code>
 (see <a
-href="https://github.com/docxology/template/blob/main/projects/template_code_project/tests/test_optimizer.py">test_optimizer.py</a>),
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/test_optimizer.py">test_optimizer.py</a>),
 automated six-figure analysis, and reproducibility metadata
-(configuration hash, artifact counts) injected into sec. 7.</p>
+(configuration hash, artifact counts) injected into
+[sec:reproducibility].</p>
 <p><strong>Results (this configuration):</strong> 4 of 6 grid points
 report <code>converged=True</code> in the CSV; non-convergent rows flag
 either slow progress at small <span
@@ -706,23 +747,22 @@ measured in the template repository’s generated canonical facts rather
 than repeated here because it changes as infrastructure modules are
 added or retired.</li>
 <li><strong><code>tests/</code> Framework
-(<code>projects/template_code_project/tests/</code>)</strong>: An
-uncompromising validation layer maintaining a zero-mock testing policy.
-This is enforced automatically via the <a
+(<code>projects/templates/template_code_project/tests/</code>)</strong>:
+An uncompromising validation layer maintaining a zero-mock testing
+policy. This is enforced automatically via the <a
 href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml">CI
 workflow</a> mapping to <code>pyproject.toml</code> directives.</li>
 <li><strong><code>docs/</code> Knowledge Base
-(<code>projects/template_code_project/docs/</code>)</strong>: A
-structured repository of architectural guidelines, operational patterns,
-and the Rigorous Agentic Scientific Protocol (RASP) that governs the
-AI-assisted agents writing these very texts.</li>
+(<code>projects/templates/template_code_project/docs/</code>)</strong>:
+A structured repository of architectural guidelines, operational
+patterns, and the Rigorous Agentic Scientific Protocol (RASP) that
+governs the AI-assisted agents writing these very texts.</li>
 </ol>
 <p>This implementation of gradient descent algorithms for solving
 optimization problems is used as the vehicle to demonstrate these
-pillars. The theoretical problem stated in
-eq. <strong>¿eq:optimization_problem?</strong> is mapped
-programmatically inside the <a
-href="https://github.com/docxology/template/blob/main/projects/template_code_project/src/optimizer.py">optimizer
+pillars. The theoretical problem stated in [eq:optimization_problem] is
+mapped programmatically inside the <a
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py">optimizer
 module</a>:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:optimization_problem}
@@ -753,8 +793,7 @@ manuscript.</li>
 <h2 data-number="2.3" id="algorithm-overview"><span
 class="header-section-number">2.3</span> Algorithm Overview</h2>
 <p>The reference gradient descent algorithm iteratively updates the
-solution using the rule shown in
-eq. <strong>¿eq:gradient_descent_update?</strong>:</p>
+solution using the rule shown in [eq:gradient_descent_update]:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:gradient_descent_update}
 x_{k+1} = x_k - \alpha \nabla f(x_k)
@@ -787,21 +826,21 @@ intelligence.</li>
 class="header-section-number">2.5</span> Reader’s guide to the
 manuscript</h2>
 <ul>
-<li><strong>sec. 3</strong> ties pseudocode to
+<li><strong>[sec:methodology]</strong> ties pseudocode to
 <code>gradient_descent()</code> and explains how stability checks and
 benchmarks call into <code>infrastructure.scientific</code>.</li>
-<li><strong>sec. 4</strong> is figure-centric: every panel references a
-generator in <code>src/figures/</code> (orchestrated via
+<li><strong>[sec:results]</strong> is figure-centric: every panel
+references a generator in <code>src/figures/</code> (orchestrated via
 <code>scripts/optimization_analysis.py</code>) and uses
 <code>{{CONFIG_*}}</code> / <code>{{RESULT_*}}</code> placeholders for
 numeric values.</li>
-<li><strong>sec. 6</strong> lists the exact YAML fields
-(<code>experiment:</code> block) that controlled the run whose artifacts
-you are viewing.</li>
-<li><strong>sec. 7</strong> records the configuration hash and artifact
-inventory produced alongside the PDF.</li>
-<li><strong>sec. 8</strong> states scope and related literature so the
-exemplar is not mistaken for a general-purpose optimizer benchmark
+<li><strong>[sec:experimental_setup]</strong> lists the exact YAML
+fields (<code>experiment:</code> block) that controlled the run whose
+artifacts you are viewing.</li>
+<li><strong>[sec:reproducibility]</strong> records the configuration
+hash and artifact inventory produced alongside the PDF.</li>
+<li><strong>[sec:scope]</strong> states scope and related literature so
+the exemplar is not mistaken for a general-purpose optimizer benchmark
 suite.</li>
 </ul>
 <h2 data-number="2.6" id="why-a-quadratic-model"><span
@@ -813,11 +852,11 @@ gradient, and spectral data explicit. For <span class="math inline">\(A
 the optimal point is <span class="math inline">\(x^\ast =
 \mathbf{1}\)</span> and gradient descent with fixed <span
 class="math inline">\(\alpha\)</span> reduces to a linear iteration in
-the error (see eq. <strong>¿eq:scalar_linear_update?</strong> in the
-results section). That simplicity isolates step-size effects and makes
-divergent choices (<span class="math inline">\(\alpha \geq 2\)</span> in
-1D) visible in both plots and CSV rows without requiring trust-region or
-line-search fixes—those extensions are left to future work (sec. 8).</p>
+the error (see [eq:scalar_linear_update] in the results section). That
+simplicity isolates step-size effects and makes divergent choices (<span
+class="math inline">\(\alpha \geq 2\)</span> in 1D) visible in both
+plots and CSV rows without requiring trust-region or line-search
+fixes—those extensions are left to future work ([sec:scope]).</p>
 <hr />
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
@@ -832,17 +871,17 @@ class="header-section-number">3.1.1</span> Gradient Descent
 Algorithm</h3>
 <p>The core algorithm implements the iterative procedure for
 unconstrained optimization. The <a
-href="https://github.com/docxology/template/blob/main/projects/template_code_project/src/optimizer.py"><code>optimizer</code>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py"><code>optimizer</code>
 module</a> uses the standard-library <code>logging</code> logger for
 optional verbose diagnostics; the <a
-href="https://github.com/docxology/template/blob/main/projects/template_code_project/scripts/optimization_analysis.py">analysis
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/scripts/optimization_analysis.py">analysis
 orchestrator</a> uses
 <code>infrastructure.core.logging.utils.get_logger</code>. Tests run
 under the hermetic boundaries defined in the <a
-href="https://github.com/docxology/template/blob/main/projects/template_code_project/tests/conftest.py">test
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/conftest.py">test
 configuration</a>.</p>
 <p><strong>Algorithm — Gradient Descent (implemented in the <a
-href="https://github.com/docxology/template/blob/main/projects/template_code_project/src/optimizer.py#L87-L173">optimizer
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py#L87-L173">optimizer
 module</a>)</strong></p>
 <blockquote>
 <p><strong>Input:</strong> Initial point <span
@@ -898,8 +937,7 @@ class="header-section-number">3.3</span> Convergence Analysis</h2>
 <p>For quadratic functions <span class="math inline">\(f(x) =
 \frac{1}{2}x^T A x - b^T x\)</span> where <span
 class="math inline">\(A\)</span> is positive definite, the convergence
-factor becomes <span class="citation"
-data-cites="bertsekas1999nonlinear">[@bertsekas1999nonlinear]</span>:</p>
+factor becomes [bertsekas1999nonlinear]:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:convergence_factor}
 \rho = \frac{|\lambda_{\max} - \alpha\lambda_{\min}|}{|\lambda_{\min} +
@@ -949,17 +987,17 @@ Methodology</h3>
 <p>The most critical aspect of the project’s methodology is its
 validation framework. The project is governed by a strict Zero-Mock
 testing policy, evaluated actively by executing
-<code>uv run pytest projects/template_code_project/tests/</code> during
-the infrastructure build phase.</p>
+<code>uv run pytest projects/templates/template_code_project/tests/</code>
+during the infrastructure build phase.</p>
 <ol type="1">
 <li><strong>Project tests</strong>: <a
-href="../tests/test_optimizer.py"><code>projects/template_code_project/tests/test_optimizer.py</code></a>
+href="../tests/test_optimizer.py"><code>projects/templates/template_code_project/tests/test_optimizer.py</code></a>
 exercises <code>src/optimizer.py</code> (typical, edge, boundary, and
 pathological inputs including NaN/Inf and zero gradients) and, when
 infrastructure imports succeed, call into
 <code>optimization_analysis.py</code> helpers—without mocks. Suite size:
 <a
-href="../../../docs/_generated/canonical_facts.md"><code>docs/_generated/canonical_facts.md</code></a>.</li>
+href="../../../../docs/_generated/canonical_facts.md"><code>docs/_generated/canonical_facts.md</code></a>.</li>
 <li><strong>Infrastructure validation</strong>: The repository-level
 <code>tests/infra_tests/</code> suite validates shared template modules
 (e.g. pipeline and discovery helpers) independently of this project’s
@@ -967,8 +1005,8 @@ manuscript.</li>
 <li><strong>Coverage Gates</strong>: The <a
 href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml">GitHub
 Actions CI workflow</a> enforces a mandatory ≥90% statement coverage
-gate on <code>projects/template_code_project/src/</code> prior to
-treating the project as build-green.</li>
+gate on <code>projects/templates/template_code_project/src/</code> prior
+to treating the project as build-green.</li>
 </ol>
 <h3 data-number="3.4.3" id="stopping-rule-and-reporting"><span
 class="header-section-number">3.4.3</span> Stopping rule and
@@ -1021,37 +1059,29 @@ descent optimization study, including convergence analysis and
 performance comparisons. Every table, figure, and quantitative assertion
 in this section was compiled autonomously by the template’s
 <code>infrastructure.reporting</code> subsystem executing the <a
-href="https://github.com/docxology/template/blob/main/projects/template_code_project/scripts/optimization_analysis.py">optimization
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/scripts/optimization_analysis.py">optimization
 analysis script</a>. No manual transcription was permitted.</p>
 <h2 data-number="4.1" id="convergence-analysis-1"><span
 class="header-section-number">4.1</span> Convergence Analysis</h2>
 <h3 data-number="4.1.1" id="convergence-trajectories"><span
 class="header-section-number">4.1.1</span> Convergence Trajectories</h3>
-<p>fig. 1 illustrates the convergence behavior of gradient descent for
-different step sizes, starting from the initial point <span
+<p>[fig:convergence] illustrates the convergence behavior of gradient
+descent for different step sizes, starting from the initial point <span
 class="math inline">\(x_0 = 0\)</span>. The algorithm iteratively
 updates the solution using the rule <span class="math inline">\(x_{k+1}
 = x_k - \alpha \nabla f(x_k)\)</span>.</p>
-<figure id="fig:convergence">
-<img src="../figures/convergence_plot.png"
-alt="Figure 1: Objective value f(x_k)=\tfrac{1}{2}x_k^2 - x_k versus iteration k for gradient descent at six step sizes (legend colours follow the agency taxonomy in sec. 3: blue = conservative, green = near-optimal, orange = aggressive, red = divergent). Trajectories are produced by simulate_trajectory() in src/optimizer.py, which calls the same gradient_descent() used in tbl. 1; the upper bound on the y-axis clips the divergent \alpha=2.5 curve so that stable trajectories remain visible. Dashed grey reference line marks the analytic optimum f(x^\ast)=-0.5. Fastest configuration in this experiment: \alpha=1.0 converges in 1 iteration(s)." />
-<figcaption aria-hidden="true">Figure 1: Objective value <span
-class="math inline">\(f(x_k)=\tfrac{1}{2}x_k^2 - x_k\)</span> versus
-iteration <span class="math inline">\(k\)</span> for gradient descent at
-six step sizes (legend colours follow the agency taxonomy in sec. 3:
-blue = conservative, green = near-optimal, orange = aggressive, red =
-divergent). Trajectories are produced by
+<p>![sec:methodology]: blue = conservative, green = near-optimal, orange
+= aggressive, red = divergent). Trajectories are produced by
 <code>simulate_trajectory()</code> in <code>src/optimizer.py</code>,
-which calls the same <code>gradient_descent()</code> used in tbl. 1; the
-upper bound on the y-axis clips the divergent <span
-class="math inline">\(\alpha=2.5\)</span> curve so that stable
+which calls the same <code>gradient_descent()</code> used in
+[tbl:opt_results]; the upper bound on the y-axis clips the divergent
+<span class="math inline">\(\alpha=2.5\)</span> curve so that stable
 trajectories remain visible. Dashed grey reference line marks the
 analytic optimum <span class="math inline">\(f(x^\ast)=-0.5\)</span>.
 Fastest configuration in this experiment: <span
 class="math inline">\(\alpha=1.0\)</span> converges in 1
-iteration(s).</figcaption>
-</figure>
-<p><strong>Key observations from fig. 1:</strong></p>
+iteration(s).](../figures/convergence_plot.png){#fig:convergence}</p>
+<p><strong>Key observations from [fig:convergence]:</strong></p>
 <ol type="1">
 <li><strong>Step size impact</strong>: Larger step sizes exhibit faster
 initial progress; <span class="math inline">\(\alpha = 1.0\)</span>
@@ -1069,21 +1099,21 @@ class="math inline">\(\alpha \geq 2\)</span> diverges</li>
 <h3 data-number="4.1.2" id="step-size-sensitivity-analysis"><span
 class="header-section-number">4.1.2</span> Step Size Sensitivity
 Analysis</h3>
-<p>fig. 2 examines how the choice of step size affects the convergence
-path and solution quality. The analysis reveals the trade-off between
-convergence speed and numerical stability.</p>
+<p>[fig:step_sensitivity] examines how the choice of step size affects
+the convergence path and solution quality. The analysis reveals the
+trade-off between convergence speed and numerical stability.</p>
 <figure id="fig:step_sensitivity">
 <img src="../figures/step_size_sensitivity.png"
-alt="Figure 2: Sensitivity sweep produced by generate_step_size_sensitivity_plot() over an independent dense grid \alpha \in [0.005, 0.4] (15 points), distinct from the discrete experiment.step_sizes used elsewhere in this section. Left: iterations to convergence on log–log axes — the curve drops sharply from 501 iterations at the smallest \alpha (the max_iterations cap in this sub-experiment) to 38 iterations at \alpha=0.4, illustrating the geometric speedup as \rho(\alpha)=|1-\alpha| shrinks. Right: final f(x) versus \alpha with horizontal reference lines at f(x_0)=0 (initial) and f(x^\ast)=-0.5 (analytic optimum); every \alpha in this stable window lands on the optimum." />
-<figcaption aria-hidden="true">Figure 2: Sensitivity sweep produced by
+alt="Figure 1: Sensitivity sweep produced by generate_step_size_sensitivity_plot() over an independent dense grid \alpha \in [0.005, 0.4] (10 points), distinct from the discrete experiment.step_sizes used elsewhere in this section. Left: iterations to convergence on log–log axes — the curve drops sharply from 500 iterations at the smallest \alpha (the max_iterations cap in this sub-experiment) to 37 iterations at \alpha=0.4, illustrating the geometric speedup as \rho(\alpha)=|1-\alpha| shrinks. Right: final f(x) versus \alpha with horizontal reference lines at f(x_0)=0 (initial) and f(x^\ast)=-0.5 (analytic optimum); every \alpha in this stable window lands on the optimum." />
+<figcaption aria-hidden="true">Figure 1: Sensitivity sweep produced by
 <code>generate_step_size_sensitivity_plot()</code> over an independent
 dense grid <span class="math inline">\(\alpha \in [0.005, 0.4]\)</span>
-(15 points), distinct from the discrete
+(10 points), distinct from the discrete
 <code>experiment.step_sizes</code> used elsewhere in this section. Left:
 iterations to convergence on log–log axes — the curve drops sharply from
-501 iterations at the smallest <span
+500 iterations at the smallest <span
 class="math inline">\(\alpha\)</span> (the <code>max_iterations</code>
-cap in this sub-experiment) to 38 iterations at <span
+cap in this sub-experiment) to 37 iterations at <span
 class="math inline">\(\alpha=0.4\)</span>, illustrating the geometric
 speedup as <span class="math inline">\(\rho(\alpha)=|1-\alpha|\)</span>
 shrinks. Right: final <span class="math inline">\(f(x)\)</span> versus
@@ -1099,11 +1129,11 @@ class="header-section-number">4.2</span> Quantitative Results</h2>
 computationally by orchestrating <a
 href="https://github.com/docxology/template/blob/main/infrastructure/reporting/executive_reporter.py"><code>infrastructure.reporting.executive_reporter</code></a>,
 feeding directly into the <a
-href="https://github.com/docxology/template/blob/main/projects/template_code_project/output/data/optimization_results.csv">optimization
-results data</a> that acts as the source of truth for tbl. 1. Rows
-follow <code>experiment.step_sizes</code> in <code>config.yaml</code>;
-the body rows below are injected at render time from that CSV
-(<code>RESULT_TABLE_ROWS</code> in
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/data/optimization_results.csv">optimization
+results data</a> that acts as the source of truth for [tbl:opt_results].
+Rows follow <code>experiment.step_sizes</code> in
+<code>config.yaml</code>; the body rows below are injected at render
+time from that CSV (<code>RESULT_TABLE_ROWS</code> in
 <code>scripts/z_generate_manuscript_variables.py</code>).</p>
 <table id="tbl:opt_results">
 <caption>Table 1: Gradient descent outcomes per configured step size:
@@ -1182,21 +1212,11 @@ class="header-section-number">4.3</span> Convergence Rate Analysis</h2>
 class="header-section-number">4.3.1</span> Theoretical vs Empirical
 Convergence</h3>
 <p>Modern convergence analysis builds on foundational work in gradient
-methods <span class="citation"
-data-cites="nesterov2013gradient">[@nesterov2013gradient]</span>.</p>
-<p>fig. 3 provides a comparative analysis of convergence rates across
-different step sizes, validating theoretical predictions against
-empirical results.</p>
-<figure id="fig:convergence_rate">
-<img src="../figures/convergence_rate_comparison.png"
-alt="Figure 3: Absolute objective error |f(x_k)-f(x^\ast)| versus iteration on a logarithmic y-axis, generated by generate_convergence_rate_plot(). Stable step sizes produce straight lines whose slopes equal 2\log_{10}\rho(\alpha) (per eq. ¿eq:convergence_bound?); \alpha=1.0 (\rho=0) collapses to the optimum in one step (vertical green line at k=1); \alpha=1.5 (orange) descends fastest among the multi-step contractions because \rho=0.5; the divergent \alpha=2.5 curve (red) climbs upward at slope 2\log_{10}(1.5). Horizontal dashed line marks the gradient-norm tolerance \varepsilon = 10^{-8} read from experiment.convergence_tolerance." />
-<figcaption aria-hidden="true">Figure 3: Absolute objective error <span
-class="math inline">\(|f(x_k)-f(x^\ast)|\)</span> versus iteration on a
-logarithmic y-axis, generated by
-<code>generate_convergence_rate_plot()</code>. Stable step sizes produce
-straight lines whose slopes equal <span
-class="math inline">\(2\log_{10}\rho(\alpha)\)</span> (per
-eq. <strong>¿eq:convergence_bound?</strong>); <span
+methods [nesterov2013gradient].</p>
+<p>[fig:convergence_rate] provides a comparative analysis of convergence
+rates across different step sizes, validating theoretical predictions
+against empirical results.</p>
+<p>![eq:convergence_bound]); <span
 class="math inline">\(\alpha=1.0\)</span> (<span
 class="math inline">\(\rho=0\)</span>) collapses to the optimum in one
 step (vertical green line at <span class="math inline">\(k=1\)</span>);
@@ -1207,8 +1227,7 @@ class="math inline">\(\alpha=2.5\)</span> curve (red) climbs upward at
 slope <span class="math inline">\(2\log_{10}(1.5)\)</span>. Horizontal
 dashed line marks the gradient-norm tolerance <span
 class="math inline">\(\varepsilon = 10^{-8}\)</span> read from
-<code>experiment.convergence_tolerance</code>.</figcaption>
-</figure>
+<code>experiment.convergence_tolerance</code>.](../figures/convergence_rate_comparison.png){#fig:convergence_rate}</p>
 <p>For the scalar problem with <span class="math inline">\(A =
 1\)</span> and optimum <span class="math inline">\(x^\ast = b\)</span>,
 one step of gradient descent with fixed <span
@@ -1226,9 +1245,9 @@ class="math display">\[\begin{equation}
 |f(x_{k+1}) - f(x^\ast)| \approx \rho(\alpha)^2 \, |f(x_k) - f(x^\ast)|
 \end{equation}\]</span> in the neighbourhood of <span
 class="math inline">\(x^\ast\)</span> for this model (the per-iteration
-objective contraction in eq. <strong>¿eq:convergence_bound?</strong>),
-which explains the straight-line segments on the log–error plot in
-fig. 3 for stable <span class="math inline">\(\alpha\)</span>.</p>
+objective contraction in [eq:convergence_bound]), which explains the
+straight-line segments on the log–error plot in [fig:convergence_rate]
+for stable <span class="math inline">\(\alpha\)</span>.</p>
 <p>Our experimental grid uses <span class="math inline">\(\alpha \in
 \{0.01, 0.1, 0.5, 1.0, 1.5, 2.5\}\)</span>, spanning conservative,
 near-optimal, aggressive, and divergent regimes for <span
@@ -1236,7 +1255,7 @@ class="math inline">\(H = I\)</span>.</p>
 <h3 data-number="4.3.2" id="error-bounds"><span
 class="header-section-number">4.3.2</span> Error Bounds</h3>
 <p>The error after <span class="math inline">\(k\)</span> iterations is
-bounded geometrically by eq. <strong>¿eq:error_bound?</strong>:</p>
+bounded geometrically by [eq:error_bound]:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:error_bound}
 \|x_k - x^*\| \leq \left(\frac{\kappa - 1}{\kappa + 1}\right)^k \|x_0 -
@@ -1247,17 +1266,17 @@ x^*\|
 For our test problem with <span class="math inline">\(A = I\)</span>, we
 have <span class="math inline">\(\kappa = 1\)</span>, which yields a
 linear contraction factor of <span class="math inline">\(\rho = |1 -
-\alpha|\)</span> in the iterate error
-(eq. <strong>¿eq:scalar_linear_update?</strong>). Thus <span
-class="math inline">\(\alpha = 1\)</span> is the exact minimizer step in
-one update for this quadratic, <span class="math inline">\(\alpha &lt;
-1\)</span> gives monotone geometric decay, <span class="math inline">\(1
-&lt; \alpha &lt; 2\)</span> yields signed oscillations but still <span
-class="math inline">\(\rho &lt; 1\)</span>, and <span
-class="math inline">\(\alpha \geq 2\)</span> implies <span
-class="math inline">\(\rho \geq 1\)</span> (divergence). tbl. 1 and
-figs. 1-3 ground these statements in the numbers produced by this
-repository run.</p>
+\alpha|\)</span> in the iterate error ([eq:scalar_linear_update]). Thus
+<span class="math inline">\(\alpha = 1\)</span> is the exact minimizer
+step in one update for this quadratic, <span
+class="math inline">\(\alpha &lt; 1\)</span> gives monotone geometric
+decay, <span class="math inline">\(1 &lt; \alpha &lt; 2\)</span> yields
+signed oscillations but still <span class="math inline">\(\rho &lt;
+1\)</span>, and <span class="math inline">\(\alpha \geq 2\)</span>
+implies <span class="math inline">\(\rho \geq 1\)</span> (divergence).
+[tbl:opt_results] and [fig:convergence; fig:step_sensitivity;
+fig:convergence_rate] ground these statements in the numbers produced by
+this repository run.</p>
 <h3 data-number="4.3.3" id="performance-metrics"><span
 class="header-section-number">4.3.3</span> Performance Metrics</h3>
 <p><strong>Iteration Complexity</strong>: The number of iterations
@@ -1268,13 +1287,11 @@ class="math inline">\(\epsilon\)</span> is:</p>
 k \geq \frac{\log(\epsilon)}{\log(\rho)}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\rho = \sqrt{\frac{\kappa -
-1}{\kappa + 1}}\)</span> is the convergence factor <span
-class="citation"
-data-cites="polyak1964some">[@polyak1964some]</span>.</p>
+1}{\kappa + 1}}\)</span> is the convergence factor [polyak1964some].</p>
 <p>Per-step contraction factors <span class="math inline">\(\rho =
 |1-\alpha|\)</span> and qualitative iteration demand for small fixed
 <span class="math inline">\(\epsilon\)</span> (see
-eq. <strong>¿eq:iteration_complexity?</strong>) are:</p>
+[eq:iteration_complexity]) are:</p>
 <ul>
 <li><span class="math inline">\(\alpha = 0.01\)</span>: <span
 class="math inline">\(\rho \approx 0.99\)</span>, requiring ~1375
@@ -1354,41 +1371,13 @@ class="header-section-number">4.6</span> Computational Performance</h2>
 <h3 data-number="4.6.1" id="algorithm-complexity-visualization"><span
 class="header-section-number">4.6.1</span> Algorithm Complexity
 Visualization</h3>
-<p>fig. 4 provides a visualization of the algorithm’s computational
-characteristics, including time and space complexity analysis across
-different problem scales.</p>
-<figure id="fig:complexity">
-<img src="../figures/algorithm_complexity.png"
-alt="Figure 4: Four-panel diagnostic from generate_complexity_visualization(). Top left: bars give the empirical iteration count per configured \alpha, coloured by agency category; \alpha=1.0 achieves the global minimum of 1 step(s), while \alpha=0.01 and \alpha=2.5 both saturate at the iteration cap N_{\max}=1000 (slow convergence and divergence respectively). Top right: \log_{10}|f(x)-f(x^\ast)| at termination; the four converged rows reach \approx 10^{-16} (machine precision) while \alpha=0.01 stops near 10^{-9} at the cap. Dashed reference at \log_{10}\varepsilon for \varepsilon= experiment.convergence_tolerance. Bottom left: empirical iterations (solid) versus the smooth proxy 1/(2\alpha(1-\alpha)) (dashed) on log axes — a shape comparison, not a tight count prediction for every \alpha. Bottom right: per-step error contraction factor \rho=|1-\alpha| from the unit-Hessian linear recurrence (eq. ¿eq:scalar_linear_update?); the dashed reference at \rho=1 separates stable bars (left of it) from divergent ones (right)." />
-<figcaption aria-hidden="true">Figure 4: Four-panel diagnostic from
-<code>generate_complexity_visualization()</code>. <strong>Top
-left</strong>: bars give the empirical iteration count per configured
-<span class="math inline">\(\alpha\)</span>, coloured by agency
-category; <span class="math inline">\(\alpha=1.0\)</span> achieves the
-global minimum of 1 step(s), while <span
-class="math inline">\(\alpha=0.01\)</span> and <span
-class="math inline">\(\alpha=2.5\)</span> both saturate at the iteration
-cap <span class="math inline">\(N_{\max}=1000\)</span> (slow convergence
-and divergence respectively). <strong>Top right</strong>: <span
-class="math inline">\(\log_{10}|f(x)-f(x^\ast)|\)</span> at termination;
-the four converged rows reach <span class="math inline">\(\approx
-10^{-16}\)</span> (machine precision) while <span
-class="math inline">\(\alpha=0.01\)</span> stops near <span
-class="math inline">\(10^{-9}\)</span> at the cap. Dashed reference at
-<span class="math inline">\(\log_{10}\varepsilon\)</span> for <span
-class="math inline">\(\varepsilon=\)</span>
-<code>experiment.convergence_tolerance</code>. <strong>Bottom
-left</strong>: empirical iterations (solid) versus the smooth proxy
-<span class="math inline">\(1/(2\alpha(1-\alpha))\)</span> (dashed) on
-log axes — a shape comparison, not a tight count prediction for every
-<span class="math inline">\(\alpha\)</span>. <strong>Bottom
-right</strong>: per-step error contraction factor <span
-class="math inline">\(\rho=|1-\alpha|\)</span> from the unit-Hessian
-linear recurrence (eq. <strong>¿eq:scalar_linear_update?</strong>); the
-dashed reference at <span class="math inline">\(\rho=1\)</span>
-separates stable bars (left of it) from divergent ones
-(right).</figcaption>
-</figure>
+<p>[fig:complexity] provides a visualization of the algorithm’s
+computational characteristics, including time and space complexity
+analysis across different problem scales.</p>
+<p>![eq:scalar_linear_update]); the dashed reference at <span
+class="math inline">\(\rho=1\)</span> separates stable bars (left of it)
+from divergent ones
+(right).](../figures/algorithm_complexity.png){#fig:complexity}</p>
 <p>The algorithm demonstrates efficient performance for small-scale
 optimization problems:</p>
 <ul>
@@ -1406,14 +1395,14 @@ suitable for high-dimensional problems</li>
 </ul>
 <h3 data-number="4.6.2" id="performance-benchmarking-1"><span
 class="header-section-number">4.6.2</span> Performance Benchmarking</h3>
-<p>fig. 5 shows how <code>gradient_descent()</code> scales with problem
-dimension by running the optimizer on identity-Hessian quadratics of
-dimension <span class="math inline">\(d \in \{1, 2, 5, 10, 20,
-50\}\)</span>.</p>
+<p>[fig:benchmark] shows how <code>gradient_descent()</code> scales with
+problem dimension by running the optimizer on identity-Hessian
+quadratics of dimension <span class="math inline">\(d \in \{1, 2, 5, 10,
+20, 50\}\)</span>.</p>
 <figure id="fig:benchmark">
 <img src="../figures/performance_benchmark.png"
-alt="Figure 5: Dimensional scaling from generate_benchmark_visualization(). Dimensions d \in \{1, 2, 5, 10, 20, 50\} run on identity-Hessian quadratics with \alpha=0.1 and gradient tolerance 10^{-10} (both hardcoded in the script for benchmark stability). Left: mean wall-clock time per gradient_descent() call (μs). The flat regime at d \leq 20 reflects per-iteration overhead (Python dispatch, NumPy bookkeeping); the upturn at d=50 shows the O(d) matrix-vector cost beginning to dominate. Right: iterations-to-convergence rises only modestly across two decades of d (219 \to 238). This near-invariance is expected: \kappa(I_d)=1 regardless of dimension, so the contraction factor \rho=|1-\alpha|=0.9 is identical for every d, and only the per-coordinate residual norm grows mildly." />
-<figcaption aria-hidden="true">Figure 5: Dimensional scaling from
+alt="Figure 2: Dimensional scaling from generate_benchmark_visualization(). Dimensions d \in \{1, 2, 5, 10, 20, 50\} run on identity-Hessian quadratics with \alpha=0.1 and gradient tolerance 10^{-10} (both hardcoded in the script for benchmark stability). Left: mean wall-clock time per gradient_descent() call (μs). The flat regime at d \leq 20 reflects per-iteration overhead (Python dispatch, NumPy bookkeeping); the upturn at d=50 shows the O(d) matrix-vector cost beginning to dominate. Right: iterations-to-convergence rises only modestly across two decades of d (219 \to 238). This near-invariance is expected: \kappa(I_d)=1 regardless of dimension, so the contraction factor \rho=|1-\alpha|=0.9 is identical for every d, and only the per-coordinate residual norm grows mildly." />
+<figcaption aria-hidden="true">Figure 2: Dimensional scaling from
 <code>generate_benchmark_visualization()</code>. Dimensions <span
 class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span> run on
 identity-Hessian quadratics with <span
@@ -1437,16 +1426,16 @@ per-coordinate residual norm grows mildly.</figcaption>
 <h3 data-number="4.6.3" id="numerical-stability-analysis-1"><span
 class="header-section-number">4.6.3</span> Numerical Stability
 Analysis</h3>
-<p>fig. 6 maps the optimizer’s accuracy across a grid of 8 starting
-points (<span class="math inline">\(x_0 \in [-50, 50]\)</span>) and 6
-step sizes (<span class="math inline">\(\alpha \in [0.01,
+<p>[fig:stability] maps the optimizer’s accuracy across a grid of 8
+starting points (<span class="math inline">\(x_0 \in [-50, 50]\)</span>)
+and 6 step sizes (<span class="math inline">\(\alpha \in [0.01,
 0.9]\)</span>), directly exercising <code>gradient_descent()</code>,
 <code>quadratic_function()</code>, and <code>compute_gradient()</code>
 across the parameter space.</p>
 <figure id="fig:stability">
 <img src="../figures/stability_analysis.png"
-alt="Figure 6: Numerical stability heatmap from generate_stability_visualization(). Each cell shows \log_{10}|f(x)-f(x^\ast)| at termination for one (starting point x_0, step size \alpha) combination, evaluated by gradient_descent() over the 8-by-6 grid (48 cells). The leftmost column (\alpha=0.01, conservative) reaches only 10^{-6} to 10^{-9} within the iteration cap, while every other column saturates at machine precision (10^{-16}) regardless of how far x_0 starts from the optimum (range [-50, 50]). The right panel summarises this uniformity as the aggregate stability score of 1.00/1.00 returned by infrastructure.scientific.stability.check_numerical_stability(), which exercises the same objective with extreme inputs (NaN, \pm\infty, \pm 10^{10})." />
-<figcaption aria-hidden="true">Figure 6: Numerical stability heatmap
+alt="Figure 3: Numerical stability heatmap from generate_stability_visualization(). Each cell shows \log_{10}|f(x)-f(x^\ast)| at termination for one (starting point x_0, step size \alpha) combination, evaluated by gradient_descent() over the 8-by-6 grid (48 cells). The leftmost column (\alpha=0.01, conservative) reaches only 10^{-6} to 10^{-9} within the iteration cap, while every other column saturates at machine precision (10^{-16}) regardless of how far x_0 starts from the optimum (range [-50, 50]). The right panel summarises this uniformity as the aggregate stability score of 1.00/1.00 returned by infrastructure.scientific.stability.check_numerical_stability(), which exercises the same objective with extreme inputs (NaN, \pm\infty, \pm 10^{10})." />
+<figcaption aria-hidden="true">Figure 3: Numerical stability heatmap
 from <code>generate_stability_visualization()</code>. Each cell shows
 <span class="math inline">\(\log_{10}|f(x)-f(x^\ast)|\)</span> at
 termination for one (starting point <span
@@ -1475,7 +1464,7 @@ non-converged runs):</strong></p>
 <ul>
 <li>Smallest iteration count recorded: 1</li>
 <li>Largest iteration count recorded: 1000</li>
-<li>Mean iterations across rows in tbl. 1: 372</li>
+<li>Mean iterations across rows in [tbl:opt_results]: 372</li>
 </ul>
 <p><strong>Numerical Accuracy:</strong></p>
 <ul>
@@ -1506,12 +1495,12 @@ logging pathways without the use of mocks.</p>
 <h2 data-number="4.8" id="discussion"><span
 class="header-section-number">4.8</span> Discussion</h2>
 <p>The experimental results validate the gradient descent implementation
-and confirm the theoretical convergence predictions from sec. 3. The
-monotonic relationship between step size and iteration count (tbl. 1)
-aligns with the convergence factor analysis in
-eq. <strong>¿eq:convergence_factor?</strong>, while the uniform solution
-accuracy across all step sizes demonstrates the robustness of the
-convergence criterion <span class="math inline">\(\|\nabla f(x)\| &lt;
+and confirm the theoretical convergence predictions from
+[sec:methodology]. The monotonic relationship between step size and
+iteration count ([tbl:opt_results]) aligns with the convergence factor
+analysis in [eq:convergence_factor], while the uniform solution accuracy
+across all step sizes demonstrates the robustness of the convergence
+criterion <span class="math inline">\(\|\nabla f(x)\| &lt;
 \epsilon\)</span>. The automated analysis pipeline successfully
 generated six publication-quality visualizations and structured
 numerical outputs, validating the template’s end-to-end research
@@ -1519,7 +1508,7 @@ workflow from algorithmic implementation through automated
 infrastructure-driven reporting and manuscript integration.</p>
 <p><em>As a meta-architectural note: the perfect embedding of these
 outputs into this document, including all dynamic references (e.g.,
-fig. 6), confirms the absolute reliability of the
+[fig:stability]), confirms the absolute reliability of the
 <code>infrastructure/rendering/pdf_renderer.py</code> module handling
 the Pandoc conversion.</em></p>
 <hr />
@@ -1578,9 +1567,9 @@ CSV/JSON configurations conform.</li>
 <li><strong>Visual Cryptography</strong>: Publication-ready graphics
 compiled by <code>infrastructure.rendering.pdf_renderer.py</code> using
 metadata from
-<code>projects/template_code_project/manuscript/config.yaml</code>,
+<code>projects/templates/template_code_project/manuscript/config.yaml</code>,
 automatically linked via the LaTeX configuration in
-<code>projects/template_code_project/manuscript/preamble.md</code>.</li>
+<code>projects/templates/template_code_project/manuscript/preamble.md</code>.</li>
 </ul>
 <h2 data-number="5.3" id="research-pipeline-validation"><span
 class="header-section-number">5.3</span> Research Pipeline
@@ -1619,9 +1608,8 @@ approaches</li>
 <li><strong>Constrained optimization</strong>: Handling inequality
 constraints</li>
 <li><strong>Stochastic methods</strong>: Mini-batch and online learning
-variants, including adaptive optimization algorithms such as Adam <span
-class="citation"
-data-cites="kingma2014adam">[@kingma2014adam]</span></li>
+variants, including adaptive optimization algorithms such as Adam
+[kingma2014adam]</li>
 <li><strong>Agentic Generation Systems</strong>: Extending validation
 tools built over <code>infrastructure.validation</code> to analyze novel
 model interactions automatically.</li>
@@ -1633,11 +1621,11 @@ spanning the full spectrum—from prose-focused manuscripts to
 fully-tested algorithmic ecosystems. The optimization exemplar ties
 every quantitative claim to <code>output/data/</code> artifacts and
 enforces a zero-mock test policy on
-<code>projects/template_code_project/src/</code> with coverage gates
-documented in the root <code>pyproject.toml</code>.</p>
-<p>The pipeline produced the figures referenced in sec. 4, wrote
+<code>projects/templates/template_code_project/src/</code> with coverage
+gates documented in the root <code>pyproject.toml</code>.</p>
+<p>The pipeline produced the figures referenced in [sec:results], wrote
 <code>optimization_results.csv</code>, and rendered this markdown
-(<code>projects/template_code_project/manuscript/04_conclusion.md</code>)
+(<code>projects/templates/template_code_project/manuscript/04_conclusion.md</code>)
 together with <code>config.yaml</code> into PDF through
 <code>infrastructure.rendering</code>. The
 <code>template_code_project</code> tree remains the canonical reference
@@ -1653,7 +1641,7 @@ pipeline — no value is hardcoded in the manuscript source.</p>
 <h2 data-number="6.1" id="problem-definition"><span
 class="header-section-number">6.1</span> Problem Definition</h2>
 <p>The optimization target is the quadratic objective function defined
-in eq. <strong>¿eq:quadratic_objective?</strong>:</p>
+in [eq:quadratic_objective]:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:quadratic_objective}
 f(x) = \frac{1}{2} x^T A x - b^T x
@@ -1700,7 +1688,7 @@ scalar case (<span class="math inline">\(d = 1\)</span>) to moderate
 dimensionality (<span class="math inline">\(d = 50\)</span>), using
 identity-Hessian quadratics to isolate algorithmic scaling from problem
 conditioning effects. Representative single-call execution time from the
-last benchmark run: <strong>2.9 μs</strong> (recorded in
+last benchmark run: <strong>1.8 μs</strong> (recorded in
 <code>output/reports/performance_benchmark.json</code>).</p>
 <h2 data-number="6.5" id="computational-environment"><span
 class="header-section-number">6.5</span> Computational Environment</h2>
@@ -1708,7 +1696,7 @@ class="header-section-number">6.5</span> Computational Environment</h2>
 <li><strong>Python</strong>: 3.12.13</li>
 <li><strong>NumPy</strong>: 2.4.1</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-05-27T23:36:51Z</li>
+<li><strong>Generated</strong>: 2026-06-07T04:20:32Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
@@ -1738,7 +1726,7 @@ class="header-section-number">6.7</span> Relation to figures</h2>
 </colgroup>
 <thead>
 <tr>
-<th>Figure (sec. 4)</th>
+<th>Figure ([sec:results])</th>
 <th>Primary inputs</th>
 </tr>
 </thead>
@@ -1803,18 +1791,18 @@ class="header-section-number">7.1</span> Configuration Provenance</h2>
 <tbody>
 <tr>
 <td>Config hash (SHA-256, truncated)</td>
-<td><code>ce4d9aa7e33077fa</code></td>
+<td><code>4b048fd838bc337c</code></td>
 </tr>
 <tr>
 <td>Paper version</td>
-<td>2.3</td>
+<td>2.5.0</td>
 </tr>
 <tr>
 <td>First author</td>
 <td>Daniel Ari Friedman</td>
 </tr>
 <tr>
-<td>Keyword count</td>
+<td>Keywords</td>
 <td>optimization algorithms, gradient descent, convergence analysis,
 numerical methods, mathematical programming, reproducible research,
 infrastructure automation</td>
@@ -1840,7 +1828,7 @@ validated by
 <tbody>
 <tr>
 <td>Publication-quality figures</td>
-<td>8</td>
+<td>7</td>
 </tr>
 <tr>
 <td>Structured data files (CSV/JSON)</td>
@@ -1848,11 +1836,11 @@ validated by
 </tr>
 <tr>
 <td>Analysis reports</td>
-<td>18</td>
+<td>8</td>
 </tr>
 <tr>
 <td><strong>Total artifacts</strong></td>
-<td><strong>31</strong></td>
+<td><strong>20</strong></td>
 </tr>
 </tbody>
 </table>
@@ -1909,33 +1897,24 @@ class="header-section-number">8</span> Scope, Related Work, and
 Positioning</h1>
 <p>This section situates the exemplar scientifically and states explicit
 boundaries. The goal is not to compete with monographs on nonlinear
-programming <span class="citation"
-data-cites="nocedal2006numerical bertsekas1999nonlinear">[@nocedal2006numerical;
-@bertsekas1999nonlinear]</span>, but to show how a minimal, test-backed
-optimization story fits the template’s reproducibility and rendering
-stack <span class="citation"
-data-cites="peng2011reproducible">[@peng2011reproducible]</span>.</p>
+programming [nocedal2006numerical; bertsekas1999nonlinear], but to show
+how a minimal, test-backed optimization story fits the template’s
+reproducibility and rendering stack [peng2011reproducible].</p>
 <h2 data-number="8.1" id="classical-gradient-methods"><span
 class="header-section-number">8.1</span> Classical gradient methods</h2>
 <p>Smooth unconstrained minimization via first-order updates has a long
-lineage, from Cauchy’s early descent perspective <span class="citation"
-data-cites="cauchy1847methode">[@cauchy1847methode]</span> to modern
-treatments of convex problems <span class="citation"
-data-cites="boyd2004convex">[@boyd2004convex]</span> and accelerated
-gradient schemes <span class="citation"
-data-cites="nesterov2013gradient">[@nesterov2013gradient]</span>.
-Polyak’s classical discussion of gradient convergence factors remains
-relevant when interpreting empirical iteration counts <span
-class="citation" data-cites="polyak1964some">[@polyak1964some]</span>.
-The present manuscript restricts attention to
-<strong>fixed-step</strong> gradient descent on a <strong>convex
-quadratic</strong>, where rates reduce to scalar linear recurrences in
-the error (sec. 4, eq. <strong>¿eq:scalar_linear_update?</strong>).</p>
+lineage, from Cauchy’s early descent perspective [cauchy1847methode] to
+modern treatments of convex problems [boyd2004convex] and accelerated
+gradient schemes [nesterov2013gradient]. Polyak’s classical discussion
+of gradient convergence factors remains relevant when interpreting
+empirical iteration counts [polyak1964some]. The present manuscript
+restricts attention to <strong>fixed-step</strong> gradient descent on a
+<strong>convex quadratic</strong>, where rates reduce to scalar linear
+recurrences in the error ([sec:results], [eq:scalar_linear_update]).</p>
 <h2 data-number="8.2" id="adaptive-and-stochastic-extensions"><span
 class="header-section-number">8.2</span> Adaptive and stochastic
 extensions</h2>
-<p>Practical machine-learning optimizers (e.g., Adam <span
-class="citation" data-cites="kingma2014adam">[@kingma2014adam]</span>)
+<p>Practical machine-learning optimizers (e.g., Adam [kingma2014adam])
 introduce momentum, adaptive preconditioning, or noise from
 minibatching. Those methods are <strong>out of scope</strong> for
 <code>template_code_project</code>: the exemplar deliberately keeps the
@@ -1946,9 +1925,10 @@ without confounding from stochastic sampling or line-search logic.</p>
 id="what-this-project-proves-about-the-template"><span
 class="header-section-number">8.3</span> What this project proves about
 the template</h2>
-<p>The scientific claims through sec. 2, sec. 3, and sec. 4 are standard
-textbook material. The <strong>non-standard</strong> contribution is
-procedural: configuration in <code>manuscript/config.yaml</code> drives
+<p>The scientific claims through [sec:introduction], [sec:methodology],
+and [sec:results] are standard textbook material. The
+<strong>non-standard</strong> contribution is procedural: configuration
+in <code>manuscript/config.yaml</code> drives
 <code>run_convergence_experiment()</code>, figures, CSV exports, and
 <code>{{RESULT_*}}</code> substitution
 (<code>scripts/z_generate_manuscript_variables.py</code>) so that PDF,
@@ -1982,19 +1962,19 @@ class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
 href="references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
-<code>--natbib</code>, so every <code>[@key]</code> citation in the
+<code>--natbib</code>, so every <code>[key]</code> citation in the
 manuscript is rewritten to the appropriate
 <code>\cite{}</code>/<code>\citep{}</code>/<code>\citet{}</code> LaTeX
 command and resolved against the bib file.</p>
 <p>To validate that <code>references.bib</code> is syntactically clean
 and contains the required fields per entry type:</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    projects/template_code_project/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_code_project/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
 <hr />
-<p><strong>Release:</strong> v2.3 · DOI
-<code>10.5281/zenodo.20417136</code> · SHA-256
-<code>5870d648def9…</code> · pairing pending</p>
+<p><strong>Release:</strong> v2.5.0 · DOI
+<code>10.5281/zenodo.20417136</code> · SHA-256 <code>pending…</code> ·
+pairing pending</p>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" />

@@ -613,6 +613,44 @@ claims:
   evidence:
     field: all_hashes_present
     equals: true
+- id: visualization_quality_audit_complete
+  statement: Visualization quality audit confirms every registered figure is rendered,
+    source-mapped, hashed, and backed by sufficient alt-text and caption metadata.
+  path: output/reports/visualization_quality_audit.json
+  section: methods_sheaf
+  tracks:
+  - visualization
+  - manuscript
+  - sheaf
+  evidence:
+    field: all_quality_ok
+    equals: true
+- id: visualization_statistics_bridge_complete
+  statement: Visualization audit identifies statistically backed figures and verifies
+    their generated data or report sources are present.
+  path: output/reports/visualization_quality_audit.json
+  section: methods_sheaf
+  tracks:
+  - visualization
+  - simulation
+  - scholarship
+  - sheaf
+  evidence:
+    field: all_statistical_sources_present
+    equals: true
+- id: statistical_visualization_crosswalk_complete
+  statement: Statistical visualization bridge crosswalk connects statistically backed
+    figures to source artifacts, scholarship roles, sheaf tracks, and manuscript sections.
+  path: output/data/statistical_visualization_bridge.json
+  section: methods_sheaf
+  tracks:
+  - visualization
+  - simulation
+  - scholarship
+  - sheaf
+  evidence:
+    field: all_rows_connected
+    equals: true
 - id: scope_boundary_toy_only
   statement: Scope boundary audit keeps current claims confined to deterministic toy
     artifacts.

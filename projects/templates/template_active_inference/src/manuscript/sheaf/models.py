@@ -36,6 +36,8 @@ class TrackSpec:
     renderer: str
     label: str
     optional: bool = False
+    paper_role: str = ""
+    paper_use: str = ""
 
 
 @dataclass(frozen=True)

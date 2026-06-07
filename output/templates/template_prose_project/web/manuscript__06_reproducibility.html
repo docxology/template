@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>06_reproducibility</title>
+  <title>06_reproducibility.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -239,8 +239,7 @@
 <h1 id="sec:reproducibility">Reproducibility</h1>
 <p>The bundled <code>manuscript/config.yaml</code> is configured for the
 <strong>strict reproducibility</strong> discipline advocated for
-computational science by <span class="citation"
-data-cites="peng2011reproducible">[@peng2011reproducible]</span>:</p>
+computational science by [peng2011reproducible]:</p>
 <ol type="1">
 <li><strong>No network calls.</strong> All analysis is local: prose
 metrics, structure, quality flags, and bibliography validation are
@@ -268,12 +267,12 @@ are required.</li>
 locally</h2>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run twice; check there are no diffs in the JSON artefacts.</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/template_prose_project/scripts/run_prose_pipeline.py</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> projects/template_prose_project/output projects/template_prose_project/output_first</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/template_prose_project/scripts/run_prose_pipeline.py</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> projects/templates/template_prose_project/output projects/templates/template_prose_project/output_first</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> <span class="at">-ru</span> <span class="dt">\</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    projects/template_prose_project/output_first/manuscript_report.json <span class="dt">\</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    projects/template_prose_project/output/manuscript_report.json</span></code></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_prose_project/output_first/manuscript_report.json <span class="dt">\</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_prose_project/output/manuscript_report.json</span></code></pre></div>
 <p>The diff should be empty. If it is not, the pipeline has acquired
 non-determinism — file an issue.</p>
 <h2 id="determinism-guarantees">Determinism guarantees</h2>

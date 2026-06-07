@@ -31,6 +31,10 @@ private data, or nondeterministic research behavior.
 - `integration_audit.py` - validation dependency graph, producer completeness,
   stale-artifact, claim-evidence, token-provenance, artifact diffoscope,
   artifact-license, release-note, and scope-boundary audits.
+- `visualization_audit.py` - registry-backed figure quality report joining
+  rendered image dimensions, RGB mode, hashes, source mappings, statistical
+  figure-source bridges, explicit scholarship/sheaf crosswalk rows, and
+  alt/caption metadata.
 - `sheaf_tracks.py` - canonical provenance, replay matrix, sensitivity,
   uncertainty, counterexample, model-checking, interop, adversarial-audit,
   evidence-field, release-bundle, theorem-traceability, gate-index, artifact

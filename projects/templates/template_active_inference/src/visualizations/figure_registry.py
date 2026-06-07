@@ -22,6 +22,9 @@ class FigureSpec:
     alt: str
     caption: str
     width: float = 0.9
+    visual_role: str = ""
+    evidence_role: str = ""
+    paper_claim: str = ""
 
 
 @dataclass(frozen=True)
@@ -58,6 +61,9 @@ def load_figure_registry(project_root: Path) -> dict[str, FigureSpec]:
             alt=str(entry.get("alt", fid)),
             caption=str(entry.get("caption", "")),
             width=float(entry.get("width", 0.9)),
+            visual_role=str(entry.get("visual_role", "")),
+            evidence_role=str(entry.get("evidence_role", "")),
+            paper_claim=str(entry.get("paper_claim", "")),
         )
     if not registry:
         raise ValueError("figures.yaml must declare at least one figure entry")
@@ -165,6 +171,9 @@ def build_figure_registry_payload(project_root: Path) -> dict[str, dict[str, obj
             "alt": spec.alt,
             "caption": spec.caption,
             "width": spec.width,
+            "visual_role": spec.visual_role,
+            "evidence_role": spec.evidence_role,
+            "paper_claim": spec.paper_claim,
             "generated_by": f"visualizations.figures::{figure_id}",
         }
     return payload

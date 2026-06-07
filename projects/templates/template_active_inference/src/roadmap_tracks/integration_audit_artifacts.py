@@ -238,6 +238,8 @@ def build_manuscript_evidence_tables(project_root: Path) -> dict[str, Any]:
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     release_notes = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
     scholarship = _load_json(root / "output" / "data" / "scholarship_source_matrix.json")
+    visualization_quality = _load_json(root / "output" / "reports" / "visualization_quality_audit.json")
+    statistical_bridge = _load_json(root / "output" / "data" / "statistical_visualization_bridge.json")
     proof_dependency = _load_json(root / "output" / "data" / "proof_dependency_graph.json")
     transition_table = _load_json(root / "output" / "data" / "state_transition_table.json")
     ablation_sensitivity = _load_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
@@ -322,6 +324,16 @@ def build_manuscript_evidence_tables(project_root: Path) -> dict[str, Any]:
             "id": "scholarship_sources",
             "row_count": int(scholarship.get("source_count", 0)),
             "source": "output/data/scholarship_source_matrix.json",
+        },
+        {
+            "id": "visualization_quality",
+            "row_count": int(visualization_quality.get("figure_count", 0)),
+            "source": "output/reports/visualization_quality_audit.json",
+        },
+        {
+            "id": "statistical_visualization_bridge",
+            "row_count": int(statistical_bridge.get("row_count", 0)),
+            "source": "output/data/statistical_visualization_bridge.json",
         },
         {
             "id": "proof_dependency_graph",

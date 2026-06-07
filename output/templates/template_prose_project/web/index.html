@@ -392,30 +392,70 @@ class="toc-section-number">7.2</span> Determinism guarantees</a></li>
 class="toc-section-number">8</span> References</a></li>
 </ul>
 </nav>
-<p><strong>State:</strong> published</p>
+<p><strong>State:</strong> unpublished / pending pairing</p>
+<p><strong>Pairing:</strong> pending — unresolved: - ✗ GitHub release
+URL: <code>pending</code> - ✗ PDF SHA-256: <code>pending</code></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Title</td>
+<td>Editorial Quality at Scale: A Reproducible Prose-Review
+Pipeline</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>0.4.0</td>
+</tr>
+<tr>
+<td>Concept DOI</td>
+<td>10.5281/zenodo.20417104</td>
+</tr>
+<tr>
+<td>Version DOI</td>
+<td>10.5281/zenodo.20420342</td>
+</tr>
+<tr>
+<td>GitHub</td>
+<td>docxology/template_prose_project</td>
+</tr>
+<tr>
+<td>Zenodo</td>
+<td><a
+href="https://zenodo.org/records/20417104">https://zenodo.org/records/20417104</a></td>
+</tr>
+<tr>
+<td>SHA-256</td>
+<td>pending</td>
+</tr>
+<tr>
+<td>SHA-512</td>
+<td>pending</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li><strong>Title:</strong> Editorial Quality at Scale: A Reproducible
-Prose-Review Pipeline</li>
-<li><strong>Version:</strong> 0.4.0</li>
-<li><strong>DOI:</strong> 10.5281/zenodo.20417104</li>
-<li><strong>GitHub:</strong>
-https://github.com/docxology/template_prose_project/releases/tag/v0.4.0</li>
-<li><strong>Zenodo:</strong> https://zenodo.org/records/20417104</li>
-<li><strong>SHA-256:</strong>
-<code>cbe5adae0be78b58c77637042257e9faa61a21b6c5101da52600cf8e2e80c0e2</code></li>
-<li><strong>SHA-512:</strong>
-<code>45c0f0052a193397f8c877bf51b467040d731f23b6abf10500c2f91426c0ace3157dfd6ad5057b65c27a3987a4349a147f58db836ce4bfc1d9347a3ca9808b04</code></li>
+<li>Scan <strong>Integrity</strong> QR and compare the embedded SHA-256
+prefix to the table above.</li>
+<li>Scan <strong>Zenodo</strong> / <strong>GitHub</strong> QR codes and
+confirm they resolve to this release pairing.</li>
+<li>Full hashes and structured fields:
+<code>../data/transmission_manifest.json</code>.</li>
 </ul>
-<p><strong>Pairing:</strong> complete (DOI, GitHub, SHA-256, Zenodo
-URL)</p>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" />
 <figcaption aria-hidden="true">Integrity QR strip</figcaption>
 </figure>
-<pre><code>title=Editorial Quality at Scale: A Reproducible Prose
-version=0.4.0 doi=10.5281/zenodo.20417104
-sha256=cbe5adae0be78b58… manifest={&quot;t&quot;:&quot;Editorial Quality at Sca&quot;,&quot;v&quot;:&quot;0.4.0&quot;,&quot;d&quot;:&quot;10.5281/zenodo.20417104&quot;,&quot;s&quot;:&quot;cbe5adae0be78b58&quot;}</code></pre>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
@@ -445,16 +485,16 @@ own.</p>
 grade-level bands, citation-density floors, structural rules (every
 section has an H1, no heading levels skipped), and
 bibliography-consistency policy. The pipeline reads the manuscript, runs
-the prose analysers, cross-checks every <code>[@key]</code> citation
+the prose analysers, cross-checks every <code>[key]</code> citation
 against <code>manuscript/references.bib</code>, evaluates the configured
 checks, and writes a deterministic markdown review report alongside
 three figures (per-file word counts, readability metrics, citation
 density) and a JSON <code>manuscript_report.json</code> suitable for CI
 artefacts.</p>
 <p><strong>Run snapshot.</strong> The current configuration analyses 8
-file(s) totalling 1676 words across 84 sentence(s) and 63 paragraph(s).
-Average Flesch-Kincaid grade level is 15.92; average Gunning Fog index
-is 16.69; the manuscript references 6 unique citation key(s); the
+file(s) totalling 1731 words across 86 sentence(s) and 64 paragraph(s).
+Average Flesch-Kincaid grade level is 15.87; average Gunning Fog index
+is 16.67; the manuscript references 6 unique citation key(s); the
 longest section is 413 words and the shortest is 17. These numbers are
 auto-substituted by
 <code>scripts/z_generate_manuscript_variables.py</code> after every run,
@@ -463,8 +503,8 @@ so the abstract tracks the JSON outputs in <code>output/</code>.</p>
 reusable</em> prose-quality module (<code>infrastructure/prose/</code>)
 that any project in the template can opt into, plus a <em>minimal,
 configurable</em> exemplar
-(<code>projects/template_prose_project/</code>) that wires it to the
-bibliography and the manuscript pipeline.</p>
+(<code>projects/templates/template_prose_project/</code>) that wires it
+to the bibliography and the manuscript pipeline.</p>
 <p><strong>Keywords:</strong> prose analysis, readability, editorial
 review, reproducible manuscript review, scientific infrastructure</p>
 <hr />
@@ -472,20 +512,17 @@ review, reproducible manuscript review, scientific infrastructure</p>
 class="header-section-number">2</span> Introduction</h1>
 <p>Editorial review is one of the longest-lived bottlenecks in
 scientific writing — and an obvious target for the kind of
-<em>reproducible computational workflow</em> advocated by <span
-class="citation"
-data-cites="peng2011reproducible">[@peng2011reproducible]</span>. A
-working draft accumulates structural drift (skipped heading levels,
-sections that have grown to 2,000 words while their siblings sit at
-200), readability drift (a once-clean introduction now reads at the
-Gunning Fog level of a legal contract <span class="citation"
-data-cites="gunning1952technique">[@gunning1952technique]</span>), and
-citation drift (<code>[@key]</code> references that no longer exist in
-<code>references.bib</code>, or bibliography entries that nobody
-actually cites). The traditional remedy — a senior co-author re-reading
-the manuscript with <span class="citation"
-data-cites="strunk2000elements">[@strunk2000elements]</span> in hand —
-is slow, non-reproducible, and impossible to apply continuously.</p>
+<em>reproducible computational workflow</em> advocated by
+[peng2011reproducible]. A working draft accumulates structural drift
+(skipped heading levels, sections that have grown to 2,000 words while
+their siblings sit at 200), readability drift (a once-clean introduction
+now reads at the Gunning Fog level of a legal contract
+[gunning1952technique]), and citation drift (<code>[key]</code>
+references that no longer exist in <code>references.bib</code>, or
+bibliography entries that nobody actually cites). The traditional remedy
+— a senior co-author re-reading the manuscript with [strunk2000elements]
+in hand — is slow, non-reproducible, and impossible to apply
+continuously.</p>
 <p><code>template_prose_project</code> exists to demonstrate that the
 editorial-review pass can be expressed as a <strong>deterministic,
 configurable, infrastructure-backed pipeline</strong>. This project
@@ -497,19 +534,19 @@ defines policy: target grade-level band, citation-density floor,
 heading-structure rules, bibliography-consistency policy.
 <code>src/pipeline/__init__.py::run_prose_pipeline</code> reads the
 manuscript directory, calls <a
-href="../../../infrastructure/prose/SKILL.md"><code>infrastructure.prose.analyze_manuscript</code></a>
+href="../../../../infrastructure/prose/SKILL.md"><code>infrastructure.prose.analyze_manuscript</code></a>
 to produce a <code>ManuscriptReport</code>, cross-checks the cited keys
 against <a
-href="../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
+href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
 for the <code>references.bib</code>, evaluates each configured check,
 and writes a markdown review report alongside JSON artefacts and three
 figures. None of this is project-specific: a different project can
 re-use the same infrastructure with a different <code>config.yaml</code>
 and a different manuscript directory.</p>
-<p>The remainder of this paper documents the methodology (sec. 3), the
-run-time results on the bundled manuscript (sec. 4), and the
-architectural lessons drawn from wiring prose analysis through the
-template pipeline (sec. 5).</p>
+<p>The remainder of this paper documents the methodology
+([sec:methodology]), the run-time results on the bundled manuscript
+([sec:results]), and the architectural lessons drawn from wiring prose
+analysis through the template pipeline ([sec:conclusion]).</p>
 <hr />
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
@@ -532,15 +569,11 @@ class="header-section-number">3.2</span> Analyse</h2>
 <li><p><strong>Metrics</strong>
 (<code>infrastructure.prose.analysis.metrics</code>) — word, sentence,
 paragraph, syllable counts; average words per sentence; average
-syllables per word; complex-word fraction; Flesch Reading Ease <span
-class="citation" data-cites="flesch1948new">[@flesch1948new]</span>;
-Flesch-Kincaid Grade Level <span class="citation"
-data-cites="kincaid1975derivation">[@kincaid1975derivation]</span>;
-Gunning Fog Index <span class="citation"
-data-cites="gunning1952technique">[@gunning1952technique]</span>. The
-implementations are textbook formulae over a vowel-group syllable
-heuristic; they’re good enough for a writer-facing signal, not for
-linguistic research.</p></li>
+syllables per word; complex-word fraction; Flesch Reading Ease
+[flesch1948new]; Flesch-Kincaid Grade Level [kincaid1975derivation];
+Gunning Fog Index [gunning1952technique]. The implementations are
+textbook formulae over a vowel-group syllable heuristic; they’re good
+enough for a writer-facing signal, not for linguistic research.</p></li>
 <li><p><strong>Structure</strong>
 (<code>infrastructure.prose.analysis.structure</code>) — heading
 outline, per-section word counts, max heading depth, presence of an H1,
@@ -549,7 +582,7 @@ H3).</p></li>
 <li><p><strong>Quality</strong>
 (<code>infrastructure.prose.analysis.quality</code>) — passive-voice
 candidates (heuristic: “be” form + past participle), hedge-word density,
-citation density (Pandoc-style <code>[@key]</code> extraction),
+citation density (Pandoc-style <code>[key]</code> extraction),
 long-sentence flagging.</p></li>
 </ul>
 <p>The results are aggregated into a <code>ManuscriptReport</code> whose
@@ -573,7 +606,7 @@ behaviours via <code>config.yaml</code>:</p>
 <tbody>
 <tr>
 <td><code>fail_on_missing: true</code></td>
-<td>Any cited <code>[@key]</code> that does not exist in the bib fails
+<td>Any cited <code>[key]</code> that does not exist in the bib fails
 the check.</td>
 </tr>
 <tr>
@@ -591,7 +624,7 @@ the check.</td>
 </tbody>
 </table>
 <p>The check uses <a
-href="../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
+href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
 so it sees exactly the same view of the bibliography that the rendering
 pipeline uses.</p>
 <h2 data-number="3.4" id="evaluate"><span
@@ -673,6 +706,13 @@ words per file.</li>
 <li><code>output/data/manuscript_variables.json</code> — substitution
 variables for the abstract.</li>
 </ul>
+<p>By design the three figures are <strong>standalone CI/diagnostic
+artefacts</strong>, not embedded manuscript images: this is a
+prose-review template, so its own rendered PDF deliberately contains no
+figure floats and runs cleanly through the very prose gate it documents.
+A fork that wants figures inside the manuscript embeds them with
+<code>![caption](../figures/&lt;name&gt;.png){#fig:&lt;label&gt;}</code>
+in the usual way; see <code>docs/syntax_guide.md</code>.</p>
 <p>Because the pipeline does not consult any external service, every
 artefact is reproducible from the manuscript text +
 <code>config.yaml</code> alone. A second run on the same inputs produces
@@ -697,14 +737,13 @@ in this manuscript uses contiguous heading levels.</li>
 <li><strong><code>every_file_has_h1</code></strong> — every prose file
 starts with an H1.</li>
 <li><strong><code>bibliography_consistency</code></strong> — every
-<code>[@key]</code> in the prose resolves against
+<code>[key]</code> in the prose resolves against
 <code>manuscript/references.bib</code>.</li>
 </ul>
 <p>The figures in <code>../figures/</code> are colour-blind-safe (Wong
-2011 palette) <span class="citation"
-data-cites="wong2011points">[@wong2011points]</span>, 300 dpi, and
-PNG-only for archival stability. They are referenced in sec. 6 where we
-walk through the on-disk artefact set in full.</p>
+2011 palette) [wong2011points], 300 dpi, and PNG-only for archival
+stability. They are referenced in [sec:pipeline_internals] where we walk
+through the on-disk artefact set in full.</p>
 <p>The full pass/fail summary lands in
 <code>output/review_report.md</code>, which is itself a Markdown file
 rendered alongside the manuscript by Pandoc — i.e. the project reports
@@ -758,7 +797,7 @@ class="header-section-number">6</span> Pipeline Internals</h1>
 <p>This section documents the artefacts produced by the prose-review
 run.</p>
 <pre class="mermaid"><code>flowchart TB
-    P[/projects/template_prose_project//]
+    P[/projects/templates/template_prose_project//]
     P --&gt; M[/manuscript//]
     P --&gt; OUT[/output/&lt;br/&gt;regenerable · gitignored/]
 
@@ -849,8 +888,7 @@ class="header-section-number">6.1</span> Data structures</h2>
 class="header-section-number">7</span> Reproducibility</h1>
 <p>The bundled <code>manuscript/config.yaml</code> is configured for the
 <strong>strict reproducibility</strong> discipline advocated for
-computational science by <span class="citation"
-data-cites="peng2011reproducible">[@peng2011reproducible]</span>:</p>
+computational science by [peng2011reproducible]:</p>
 <ol type="1">
 <li><strong>No network calls.</strong> All analysis is local: prose
 metrics, structure, quality flags, and bibliography validation are
@@ -877,14 +915,14 @@ are required.</li>
 <h2 data-number="7.1" id="verifying-reproducibility-locally"><span
 class="header-section-number">7.1</span> Verifying reproducibility
 locally</h2>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run twice; check there are no diffs in the JSON artefacts.</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/template_prose_project/scripts/run_prose_pipeline.py</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> projects/template_prose_project/output projects/template_prose_project/output_first</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/template_prose_project/scripts/run_prose_pipeline.py</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> <span class="at">-ru</span> <span class="dt">\</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    projects/template_prose_project/output_first/manuscript_report.json <span class="dt">\</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    projects/template_prose_project/output/manuscript_report.json</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run twice; check there are no diffs in the JSON artefacts.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> projects/templates/template_prose_project/output projects/templates/template_prose_project/output_first</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> <span class="at">-ru</span> <span class="dt">\</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_prose_project/output_first/manuscript_report.json <span class="dt">\</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_prose_project/output/manuscript_report.json</span></code></pre></div>
 <p>The diff should be empty. If it is not, the pipeline has acquired
 non-determinism — file an issue.</p>
 <h2 data-number="7.2" id="determinism-guarantees"><span
@@ -942,25 +980,25 @@ class="header-section-number">8</span> References</h1>
 <p>Bibliography lives in <a
 href="references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
-<code>--natbib</code>, so every <code>[@key]</code> citation in the
+<code>--natbib</code>, so every <code>[key]</code> citation in the
 manuscript is rewritten to the appropriate
 <code>\cite{}</code>/<code>\citep{}</code>/<code>\citet{}</code> LaTeX
 command and resolved against the bib file.</p>
 <p>This project does not auto-generate the bibliography — it
-<strong>validates</strong> that every <code>[@key]</code> cited in the
+<strong>validates</strong> that every <code>[key]</code> cited in the
 prose has a matching entry, via <a
-href="../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>.
+href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>.
 The check policy is configured under <code>bibliography:</code> in <a
 href="config.yaml"><code>config.yaml</code></a>.</p>
 <p>To validate that <code>references.bib</code> is syntactically
 clean:</p>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    projects/template_prose_project/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_prose_project/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
 <hr />
 <p><strong>Release:</strong> v0.4.0 · DOI
-<code>10.5281/zenodo.20417104</code> · SHA-256
-<code>cbe5adae0be7…</code> · pairing complete</p>
+<code>10.5281/zenodo.20417104</code> · SHA-256 <code>pending…</code> ·
+pairing pending</p>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" />

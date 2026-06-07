@@ -111,6 +111,8 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     release_attestation = _load(project_root / "output" / "reports" / "release_attestation.json")
     section_status = _load(project_root / "output" / "data" / "sheaf_section_status_matrix.json")
     render_log = _load(project_root / "output" / "reports" / "sheaf_render_log.json")
+    visualization_quality = _load(project_root / "output" / "reports" / "visualization_quality_audit.json")
+    statistical_bridge = _load(project_root / "output" / "data" / "statistical_visualization_bridge.json")
 
     assert semantic["ok"] is True
     assert semantic["restrictions"]["no_versioned_live_tracks"] is True
@@ -125,6 +127,7 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert license_audit["all_license_safe"] is True
     assert release_notes["all_notes_source_backed"] is True
     assert scholarship["all_sources_connected"] is True
+    assert scholarship["quantitative_method_role_count"] >= 3
     assert proof_dependency["all_theorems_have_dependencies"] is True
     assert transition_table["all_reachable_states_covered"] is True
     assert ablation_sensitivity["all_effects_source_backed"] is True
@@ -134,6 +137,38 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert section_status["cell_count"] == section_status["section_count"] * section_status["track_count"]
     assert render_log["all_events_ok"] is True
     assert render_log["event_count"] >= 6
+    assert visualization_quality["all_quality_ok"] is True
+    assert visualization_quality["all_rendered"] is True
+    assert visualization_quality["figure_count"] >= 20
+    assert visualization_quality["statistically_backed_count"] >= 6
+    assert visualization_quality["all_statistical_sources_present"] is True
+    assert visualization_quality["all_visual_roles_present"] is True
+    assert visualization_quality["all_evidence_roles_present"] is True
+    assert visualization_quality["all_paper_claims_present"] is True
+    assert visualization_quality["all_figures_section_bound"] is True
+    entropy_row = next(row for row in visualization_quality["rows"] if row["figure_id"] == "si_belief_entropy_curve")
+    assert entropy_row["statistically_backed"] is True
+    assert "output/data/si_tmaze_trace.json" in entropy_row["statistical_sources"]
+    assert entropy_row["visual_role"] == "trend"
+    assert entropy_row["evidence_role"] == "statistical"
+    assert "belief entropy" in entropy_row["paper_claim"]
+    assert "results_si_tmaze" in entropy_row["section_bindings"]
+    assert statistical_bridge["schema"] == "template_active_inference.statistical_visualization_bridge.v1"
+    assert statistical_bridge["row_count"] == visualization_quality["statistically_backed_count"]
+    assert statistical_bridge["all_rows_connected"] is True
+    assert statistical_bridge["all_sheaf_tracks_registered"] is True
+    assert statistical_bridge["all_figures_referenced"] is True
+    assert statistical_bridge["all_reference_sections_sheaf_bound"] is True
+    assert statistical_bridge["all_reference_sections_visualization_bound"] is True
+    entropy_bridge = next(row for row in statistical_bridge["rows"] if row["figure_id"] == "si_belief_entropy_curve")
+    assert "output/data/si_tmaze_trace.json" in entropy_bridge["statistical_sources"]
+    assert "statistical_visualization_bridge" in entropy_bridge["scholarship_method_roles"]
+    assert {"simulation", "visualization", "scholarship"} <= set(entropy_bridge["sheaf_tracks"])
+    assert "results_si_tmaze" in entropy_bridge["figure_reference_sections"]
+    assert "visualization" in entropy_bridge["reference_track_bindings"]["results_si_tmaze"]
+    assert entropy_bridge["reference_sections_sheaf_bound"] is True
+    assert entropy_bridge["reference_sections_visualization_bound"] is True
+    assert entropy_bridge["referenced_in_manuscript"] is True
 
 
 def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
@@ -169,6 +204,8 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         "release_attestation": project_root / "output" / "reports" / "release_attestation.json",
         "section_status": project_root / "output" / "data" / "sheaf_section_status_matrix.json",
         "render_log": project_root / "output" / "reports" / "sheaf_render_log.json",
+        "visualization_quality": project_root / "output" / "reports" / "visualization_quality_audit.json",
+        "statistical_bridge": project_root / "output" / "data" / "statistical_visualization_bridge.json",
         "semantic": project_root / "output" / "data" / "sheaf_gluing_certificate.json",
     }
     originals = {path: path.read_text(encoding="utf-8") for path in paths.values()}
@@ -366,6 +403,65 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         _write(paths["render_log"], data)
         assert any("failed render events" in issue for issue in validate_sheaf_track_artifacts(project_root))
         paths["render_log"].write_text(originals[paths["render_log"]], encoding="utf-8")
+
+        data = _load(paths["visualization_quality"])
+        data["rows"][0]["quality_ok"] = False
+        data["all_quality_ok"] = True
+        _write(paths["visualization_quality"], data)
+        assert any("visualization_quality_ok" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["visualization_quality"].write_text(originals[paths["visualization_quality"]], encoding="utf-8")
+
+        data = _load(paths["visualization_quality"])
+        statistical_index = next(
+            index for index, row in enumerate(data["rows"]) if row.get("figure_id") == "si_belief_entropy_curve"
+        )
+        data["rows"][statistical_index]["statistically_backed"] = False
+        data["all_statistical_sources_present"] = True
+        _write(paths["visualization_quality"], data)
+        assert any(
+            "visualization_statistics_bridge_ok" in issue
+            for issue in validate_sheaf_track_artifacts(project_root)
+        )
+        paths["visualization_quality"].write_text(originals[paths["visualization_quality"]], encoding="utf-8")
+
+        data = _load(paths["visualization_quality"])
+        data["rows"][0]["visual_role"] = ""
+        data["all_visual_roles_present"] = True
+        _write(paths["visualization_quality"], data)
+        assert any("visualization_quality_ok" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["visualization_quality"].write_text(originals[paths["visualization_quality"]], encoding="utf-8")
+
+        data = _load(paths["statistical_bridge"])
+        data["rows"][0]["connected"] = False
+        data["all_rows_connected"] = True
+        _write(paths["statistical_bridge"], data)
+        assert any(
+            "statistical_visualization_crosswalk_ok" in issue
+            for issue in validate_sheaf_track_artifacts(project_root)
+        )
+        paths["statistical_bridge"].write_text(originals[paths["statistical_bridge"]], encoding="utf-8")
+
+        data = _load(paths["statistical_bridge"])
+        data["rows"][0]["referenced_in_manuscript"] = False
+        data["all_figures_referenced"] = True
+        _write(paths["statistical_bridge"], data)
+        assert any(
+            "statistical_visualization_crosswalk_ok" in issue
+            for issue in validate_sheaf_track_artifacts(project_root)
+        )
+        paths["statistical_bridge"].write_text(originals[paths["statistical_bridge"]], encoding="utf-8")
+
+        data = _load(paths["statistical_bridge"])
+        first_section = data["rows"][0]["figure_reference_sections"][0]
+        data["rows"][0]["reference_track_bindings"][first_section] = ["prose"]
+        data["rows"][0]["reference_sections_visualization_bound"] = True
+        data["all_reference_sections_visualization_bound"] = True
+        _write(paths["statistical_bridge"], data)
+        assert any(
+            "statistical_visualization_crosswalk_ok" in issue
+            for issue in validate_sheaf_track_artifacts(project_root)
+        )
+        paths["statistical_bridge"].write_text(originals[paths["statistical_bridge"]], encoding="utf-8")
 
         data = _load(paths["semantic"])
         data["restrictions"]["replay_matrix_all_matched"] = False

@@ -1,10 +1,10 @@
 {
-  "total_words": 1676,
-  "total_sentences": 84,
-  "total_paragraphs": 63,
-  "avg_flesch_reading_ease": 19.11,
-  "avg_flesch_kincaid_grade": 15.92,
-  "avg_gunning_fog": 16.69,
+  "total_words": 1731,
+  "total_sentences": 86,
+  "total_paragraphs": 64,
+  "avg_flesch_reading_ease": 19.66,
+  "avg_flesch_kincaid_grade": 15.87,
+  "avg_gunning_fog": 16.67,
   "citation_keys": [
     "peng2011reproducible",
     "gunning1952technique",
@@ -31,7 +31,7 @@
         "gunning_fog": 20.4
       },
       "structure": {
-        "total_words": 295,
+        "total_words": 296,
         "max_depth": 1,
         "has_h1": true,
         "has_skipped_level": false,
@@ -47,7 +47,7 @@
             "level": 1,
             "title": "Abstract {#sec:abstract}",
             "line": 1,
-            "word_count": 295
+            "word_count": 296
           }
         ]
       },
@@ -76,7 +76,7 @@
     {
       "name": "01_introduction.md",
       "metrics": {
-        "char_count": 1977,
+        "char_count": 1983,
         "word_count": 258,
         "sentence_count": 9,
         "paragraph_count": 5,
@@ -131,14 +131,14 @@
         "long_sentences": [
           "A working draft accumulates structural drift (skipped heading levels, sections that have grown to 2,000 words while their siblings sit at 200), readability drift (a once-clean introduction now reads at the Gunning Fog level of a legal contract [@gunning1952technique]), and citation drift ( references that no longer exist in , or bibliography entries that nobody actually cites).",
           "The traditional remedy — a senior co-author re-reading the manuscript with [@strunk2000elements] in hand — is slow, non-reproducible, and impossible to apply continuously.\n\n exists to demonstrate that the editorial-review pass can be expressed as a **deterministic, configurable, infrastructure-backed pipeline**.",
-          "The architecture is simple.  defines policy: target grade-level band, citation-density floor, heading-structure rules, bibliography-consistency policy.  reads the manuscript directory, calls [](../../../infrastructure/prose/SKILL.md) to produce a , cross-checks the cited keys against [](../../../infrastructure/reference/citation/SKILL.md) for the , evaluates each configured check, and writes a markdown review report alongside JSON artefacts and three figures."
+          "The architecture is simple.  defines policy: target grade-level band, citation-density floor, heading-structure rules, bibliography-consistency policy.  reads the manuscript directory, calls [](../../../../infrastructure/prose/SKILL.md) to produce a , cross-checks the cited keys against [](../../../../infrastructure/reference/citation/SKILL.md) for the , evaluates each configured check, and writes a markdown review report alongside JSON artefacts and three figures."
         ]
       }
     },
     {
       "name": "02_methodology.md",
       "metrics": {
-        "char_count": 3047,
+        "char_count": 3050,
         "word_count": 413,
         "sentence_count": 26,
         "paragraph_count": 23,
@@ -244,14 +244,14 @@
         "passive_sentences": [
           "Scaffolding files (, , , , ) are excluded by default — they hold infrastructure documentation rather than manuscript prose.\n\n## Analyse\n\nFor each file, three analysers run in parallel:\n\n* **Metrics** () — word, sentence, paragraph, syllable counts; average words per sentence; average syllables per word; complex-word fraction; Flesch Reading Ease [@flesch1948new]; Flesch-Kincaid Grade Level [@kincaid1975derivation]; Gunning Fog Index [@gunning1952technique].",
           "The results are aggregated into a  whose JSON form is small, greppable, and diff-friendly.\n\n## Cross-check\n\nEvery cited key is matched against the BibTeX file at .",
-          "The check has four tunable behaviours via :\n\n| Setting | Effect |\n|---|---|\n|  | Any cited  that does not exist in the bib fails the check. |\n|  | Missing citations are warned but do not fail the run. |\n|  | Bib entries that are never cited fail the check. |\n|  | Unused entries are warned but do not fail. |\n\nThe check uses [](../../../infrastructure/reference/citation/SKILL.md) so it sees exactly the same view of the bibliography that the rendering pipeline uses.\n\n## Evaluate\n\nThe report runs through a set of pure check functions:\n\n*  — the manuscript-wide weighted average FKGL falls within .\n*  — citations per 1000 words ≥ .\n*  — no file uses a skipped heading level (when ).\n*  — every file has an H1 (when ).\n*  — citation/bib consistency per the  policy block."
+          "The check has four tunable behaviours via :\n\n| Setting | Effect |\n|---|---|\n|  | Any cited  that does not exist in the bib fails the check. |\n|  | Missing citations are warned but do not fail the run. |\n|  | Bib entries that are never cited fail the check. |\n|  | Unused entries are warned but do not fail. |\n\nThe check uses [](../../../../infrastructure/reference/citation/SKILL.md) so it sees exactly the same view of the bibliography that the rendering pipeline uses.\n\n## Evaluate\n\nThe report runs through a set of pure check functions:\n\n*  — the manuscript-wide weighted average FKGL falls within .\n*  — citations per 1000 words ≥ .\n*  — no file uses a skipped heading level (when ).\n*  — every file has an H1 (when ).\n*  — citation/bib consistency per the  policy block."
         ],
         "hedge_words": [],
         "long_sentences": [
           "# Methodology {#sec:methodology}\n\nThe pipeline runs in five stages, each a pure function in the project's  modules; the orchestrator script in  does only argument parsing and filesystem I/O.\n\n## Read\n\n walks the configured manuscript directory and returns a sorted  mapping.",
           "Scaffolding files (, , , , ) are excluded by default — they hold infrastructure documentation rather than manuscript prose.\n\n## Analyse\n\nFor each file, three analysers run in parallel:\n\n* **Metrics** () — word, sentence, paragraph, syllable counts; average words per sentence; average syllables per word; complex-word fraction; Flesch Reading Ease [@flesch1948new]; Flesch-Kincaid Grade Level [@kincaid1975derivation]; Gunning Fog Index [@gunning1952technique].",
           "The implementations are textbook formulae over a vowel-group syllable heuristic; they're good enough for a writer-facing signal, not for linguistic research.\n\n* **Structure** () — heading outline, per-section word counts, max heading depth, presence of an H1, detection of skipped heading levels (e.g. an H1 followed directly by an H3).\n\n* **Quality** () — passive-voice candidates (heuristic: \"be\" form + past participle), hedge-word density, citation density (Pandoc-style  extraction), long-sentence flagging.",
-          "The check has four tunable behaviours via :\n\n| Setting | Effect |\n|---|---|\n|  | Any cited  that does not exist in the bib fails the check. |\n|  | Missing citations are warned but do not fail the run. |\n|  | Bib entries that are never cited fail the check. |\n|  | Unused entries are warned but do not fail. |\n\nThe check uses [](../../../infrastructure/reference/citation/SKILL.md) so it sees exactly the same view of the bibliography that the rendering pipeline uses.\n\n## Evaluate\n\nThe report runs through a set of pure check functions:\n\n*  — the manuscript-wide weighted average FKGL falls within .\n*  — citations per 1000 words ≥ .\n*  — no file uses a skipped heading level (when ).\n*  — every file has an H1 (when ).\n*  — citation/bib consistency per the  policy block.",
+          "The check has four tunable behaviours via :\n\n| Setting | Effect |\n|---|---|\n|  | Any cited  that does not exist in the bib fails the check. |\n|  | Missing citations are warned but do not fail the run. |\n|  | Bib entries that are never cited fail the check. |\n|  | Unused entries are warned but do not fail. |\n\nThe check uses [](../../../../infrastructure/reference/citation/SKILL.md) so it sees exactly the same view of the bibliography that the rendering pipeline uses.\n\n## Evaluate\n\nThe report runs through a set of pure check functions:\n\n*  — the manuscript-wide weighted average FKGL falls within .\n*  — citations per 1000 words ≥ .\n*  — no file uses a skipped heading level (when ).\n*  — every file has an H1 (when ).\n*  — citation/bib consistency per the  policy block.",
           "Each check produces a ; the run's  flag is the conjunction.\n\n## Render\n\n writes a markdown file with:\n\n* Top-line counts (files, words, sentences, paragraphs, averages).\n* A pass/fail table for every check.\n* Per-file metrics table (word count, sentence count, FRE, FKGL, Fog, citations, hedges, passives).\n* Heading outline per file.\n* Quality-flag callouts (long sentences, passive candidates, hedges) per file.",
           "Three orchestrators run in lexicographic order (so the figure and variable\nstages always see a fresh review):\n\n*  writes \n  (the raw ),  (the list of check\n  results),  (the human-readable review report),\n  and  (one-line metadata).\n*  reads \n  and writes .\n*  reads \n  +  and writes \n  along with a resolved manuscript tree under .\n*  is **not** modified by this pipeline — the prose project does not generate citations, only validates them."
         ]
@@ -260,21 +260,21 @@
     {
       "name": "03_results.md",
       "metrics": {
-        "char_count": 1760,
-        "word_count": 253,
-        "sentence_count": 13,
-        "paragraph_count": 8,
-        "syllable_count": 443,
-        "avg_words_per_sentence": 19.462,
-        "avg_syllables_per_word": 1.751,
-        "complex_word_count": 41,
-        "complex_word_fraction": 0.162,
-        "flesch_reading_ease": 38.95,
-        "flesch_kincaid_grade": 12.66,
-        "gunning_fog": 14.27
+        "char_count": 2110,
+        "word_count": 308,
+        "sentence_count": 15,
+        "paragraph_count": 9,
+        "syllable_count": 537,
+        "avg_words_per_sentence": 20.533,
+        "avg_syllables_per_word": 1.744,
+        "complex_word_count": 49,
+        "complex_word_fraction": 0.159,
+        "flesch_reading_ease": 38.49,
+        "flesch_kincaid_grade": 12.99,
+        "gunning_fog": 14.58
       },
       "structure": {
-        "total_words": 335,
+        "total_words": 401,
         "max_depth": 1,
         "has_h1": true,
         "has_skipped_level": false,
@@ -290,19 +290,19 @@
             "level": 1,
             "title": "Results {#sec:results}",
             "line": 1,
-            "word_count": 335
+            "word_count": 401
           }
         ]
       },
       "quality": {
-        "word_count": 253,
+        "word_count": 308,
         "passive_count": 4,
         "hedge_count": 0,
         "citation_count": 1,
-        "long_sentence_count": 3,
-        "passive_density_per_1000": 15.81,
+        "long_sentence_count": 4,
+        "passive_density_per_1000": 12.99,
         "hedge_density_per_1000": 0.0,
-        "citation_density_per_1000": 3.95,
+        "citation_density_per_1000": 3.25,
         "citation_keys": [
           "wong2011points"
         ],
@@ -315,6 +315,7 @@
         "hedge_words": [],
         "long_sentences": [
           "# Results {#sec:results}\n\nAfter running  with the bundled  and the manuscript described in this paper, the project produces the following on-disk artefacts:\n\n*  — the raw  JSON.\n*  — one  per configured check.\n*  — the assembled markdown review report.\n*  — per-file word counts.\n*  — Flesch / Flesch-Kincaid / Gunning Fog per file.\n*  — citations per 1000 words per file.\n*  — substitution variables for the abstract.",
+          "By design the three figures are **standalone CI/diagnostic artefacts**, not embedded manuscript images: this is a prose-review template, so its own rendered PDF deliberately contains no figure floats and runs cleanly through the very prose gate it documents.",
           "The bundled config sets the floor to  (disabled) so the run is green out of the box; researchers should raise it to match the publication target.\n* **** — every file in this manuscript uses contiguous heading levels.\n* **** — every prose file starts with an H1.\n* **** — every  in the prose resolves against .",
           "The full pass/fail summary lands in , which is itself a Markdown file rendered alongside the manuscript by Pandoc — i.e. the project reports on itself in the same compilation step that produces the manuscript PDF."
         ]
@@ -394,7 +395,7 @@
         "gunning_fog": 14.03
       },
       "structure": {
-        "total_words": 316,
+        "total_words": 317,
         "max_depth": 2,
         "has_h1": true,
         "has_skipped_level": false,
@@ -415,7 +416,7 @@
             "level": 1,
             "title": "Pipeline Internals {#sec:pipeline_internals}",
             "line": 1,
-            "word_count": 182
+            "word_count": 183
           },
           {
             "level": 2,
@@ -457,7 +458,7 @@
         "gunning_fog": 16.43
       },
       "structure": {
-        "total_words": 302,
+        "total_words": 308,
         "max_depth": 2,
         "has_h1": true,
         "has_skipped_level": false,
@@ -489,7 +490,7 @@
             "level": 2,
             "title": "Verifying reproducibility locally",
             "line": 11,
-            "word_count": 84
+            "word_count": 90
           },
           {
             "level": 2,
@@ -526,7 +527,7 @@
     {
       "name": "99_references.md",
       "metrics": {
-        "char_count": 566,
+        "char_count": 569,
         "word_count": 81,
         "sentence_count": 6,
         "paragraph_count": 4,
@@ -540,7 +541,7 @@
         "gunning_fog": 12.81
       },
       "structure": {
-        "total_words": 115,
+        "total_words": 116,
         "max_depth": 1,
         "has_h1": true,
         "has_skipped_level": false,
@@ -556,7 +557,7 @@
             "level": 1,
             "title": "References {#sec:references}",
             "line": 1,
-            "word_count": 115
+            "word_count": 116
           }
         ]
       },

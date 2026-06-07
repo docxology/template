@@ -26,6 +26,14 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
         == "generate_sheaf_tracks.py"
     )
     assert cert["artifact_graph"]["output/reports/sheaf_render_log.json"]["producer"] == "generate_sheaf_tracks.py"
+    assert (
+        cert["artifact_graph"]["output/reports/visualization_quality_audit.json"]["producer"]
+        == "generate_integration_audit.py"
+    )
+    assert (
+        cert["artifact_graph"]["output/data/statistical_visualization_bridge.json"]["producer"]
+        == "generate_integration_audit.py"
+    )
     assert "results_si_tmaze" in cert["artifact_graph"]["output/data/si_policy_comparison.json"]["consumers"]
     assert cert["artifact_graph"]["output/data/pymdp_policy_posterior_grid.json"]["producer"] == "simulate_si_tmaze.py"
     assert cert["restrictions"]["animation_frame_count"] >= 3
@@ -36,6 +44,21 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
     assert cert["restrictions"]["section_status_all_sections_have_status"] is True
     assert cert["restrictions"]["section_status_cell_count"] > 0
     assert cert["restrictions"]["sheaf_render_log_all_events_ok"] is True
+    assert cert["restrictions"]["visualization_quality_ok"] is True
+    assert cert["restrictions"]["visualization_intent_metadata_complete"] is True
+    assert cert["restrictions"]["visualization_paper_claims_complete"] is True
+    assert cert["restrictions"]["visualization_figures_section_bound"] is True
+    assert cert["restrictions"]["visualization_statistics_bridge_ok"] is True
+    assert cert["restrictions"]["statistical_visualization_crosswalk_ok"] is True
+    assert cert["restrictions"]["statistical_visualization_figures_referenced"] is True
+    assert cert["restrictions"]["statistical_visualization_reference_sections_sheaf_bound"] is True
+    assert cert["restrictions"]["statistical_visualization_reference_sections_visualization_bound"] is True
+    tracks_by_id = {track["id"]: track for track in cert["tracks"]}
+    assert tracks_by_id["prose"]["paper_role"] == "Narrative framing and argument flow"
+    assert (
+        tracks_by_id["visualization"]["paper_use"]
+        == "Injects registry figures into section-specific evidence blocks."
+    )
 
     methods_pymdp = next(section for section in cert["sections"] if section["id"] == "methods_pymdp")
     assert {

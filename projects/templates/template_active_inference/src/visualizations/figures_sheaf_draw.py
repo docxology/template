@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from textwrap import fill
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,6 +14,10 @@ from visualizations.figures_sheaf_payload import HeatmapPayload
 
 def _imrad_group_label(imrad: str) -> str:
     return imrad.replace("_", " ").strip().title()
+
+
+def _wrap_label(text: object, width: int) -> str:
+    return fill(str(text), width=width, break_long_words=False, break_on_hyphens=False)
 
 
 def _draw_imrad_group_labels(
@@ -88,9 +93,11 @@ def draw_coverage_heatmap(
     for boundary in payload.group_boundaries:
         ax.axhline(boundary + 0.5, color=style.color("muted"), linewidth=boundary_width, zorder=3)
     ax.set_xticks(np.arange(len(payload.track_ids)) + 0.5)
-    ax.set_xticklabels(payload.track_ids, rotation=45, ha="right", fontsize=label_fontsize)
+    ax.set_xticklabels(
+        [_wrap_label(track_id, 18) for track_id in payload.track_ids], rotation=45, ha="right", fontsize=label_fontsize
+    )
     ax.set_yticks(np.arange(len(payload.y_labels)) + 0.5)
-    ax.set_yticklabels(payload.y_labels, fontsize=label_fontsize)
+    ax.set_yticklabels([_wrap_label(label, 44) for label in payload.y_labels], fontsize=label_fontsize)
     ax.set_xlabel("Fragment tracks", fontsize=label_fontsize)
     _draw_imrad_group_labels(ax, payload, style=style, label_fontsize=label_fontsize)
     ax.set_title(title or cfg.report.title, fontsize=label_fontsize + 1, pad=8)
@@ -155,10 +162,11 @@ def draw_track_layers_panel(ax, project_root: Path) -> bool:
         ax.text(
             0.02,
             idx,
-            f"{spec.order:02d}  {spec.id}  —  {spec.label}{optional}",
+            _wrap_label(f"{spec.order:02d}  {spec.id}  —  {spec.label}{optional}", 50),
             va="center",
             ha="left",
-            fontsize=8,
+            fontsize=7,
+            linespacing=1.05,
             color=style.color("primary"),
             fontweight="bold",
         )
@@ -168,7 +176,7 @@ def draw_track_layers_panel(ax, project_root: Path) -> bool:
             spec.renderer,
             va="center",
             ha="right",
-            fontsize=7,
+            fontsize=6,
             color=style.color("muted"),
             family="monospace",
         )
@@ -181,7 +189,7 @@ def draw_track_layers_panel(ax, project_root: Path) -> bool:
     ax.text(
         0.02,
         -0.55,
-        "Blue = required track · Gray = optional",
+        "Blue = required track · Gray = optional · Paper role/use columns appear in the generated registry table",
         transform=ax.transAxes,
         fontsize=7,
         color=style.color("muted"),
@@ -191,4 +199,4 @@ def draw_track_layers_panel(ax, project_root: Path) -> bool:
 
 def layers_overview_figure_height(n_rows: int, row_height: float) -> float:
     """Figure height (inches) for the two-panel sheaf layers overview."""
-    return max(6.5, n_rows * row_height + 2.0)
+    return max(8.5, n_rows * max(row_height, 0.42) + 2.0)

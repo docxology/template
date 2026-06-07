@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>04_conclusion</title>
+  <title>04_conclusion.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -221,9 +221,9 @@ CSV/JSON configurations conform.</li>
 <li><strong>Visual Cryptography</strong>: Publication-ready graphics
 compiled by <code>infrastructure.rendering.pdf_renderer.py</code> using
 metadata from
-<code>projects/template_code_project/manuscript/config.yaml</code>,
+<code>projects/templates/template_code_project/manuscript/config.yaml</code>,
 automatically linked via the LaTeX configuration in
-<code>projects/template_code_project/manuscript/preamble.md</code>.</li>
+<code>projects/templates/template_code_project/manuscript/preamble.md</code>.</li>
 </ul>
 <h2 id="research-pipeline-validation">Research Pipeline Validation</h2>
 <p>The project validates the research template’s ability to handle
@@ -258,9 +258,8 @@ approaches</li>
 <li><strong>Constrained optimization</strong>: Handling inequality
 constraints</li>
 <li><strong>Stochastic methods</strong>: Mini-batch and online learning
-variants, including adaptive optimization algorithms such as Adam <span
-class="citation"
-data-cites="kingma2014adam">[@kingma2014adam]</span></li>
+variants, including adaptive optimization algorithms such as Adam
+[kingma2014adam]</li>
 <li><strong>Agentic Generation Systems</strong>: Extending validation
 tools built over <code>infrastructure.validation</code> to analyze novel
 model interactions automatically.</li>
@@ -271,12 +270,11 @@ spanning the full spectrum—from prose-focused manuscripts to
 fully-tested algorithmic ecosystems. The optimization exemplar ties
 every quantitative claim to <code>output/data/</code> artifacts and
 enforces a zero-mock test policy on
-<code>projects/template_code_project/src/</code> with coverage gates
-documented in the root <code>pyproject.toml</code>.</p>
-<p>The pipeline produced the figures referenced in <span
-class="citation" data-cites="sec:results">[@sec:results]</span>, wrote
+<code>projects/templates/template_code_project/src/</code> with coverage
+gates documented in the root <code>pyproject.toml</code>.</p>
+<p>The pipeline produced the figures referenced in [sec:results], wrote
 <code>optimization_results.csv</code>, and rendered this markdown
-(<code>projects/template_code_project/manuscript/04_conclusion.md</code>)
+(<code>projects/templates/template_code_project/manuscript/04_conclusion.md</code>)
 together with <code>config.yaml</code> into PDF through
 <code>infrastructure.rendering</code>. The
 <code>template_code_project</code> tree remains the canonical reference

@@ -1,9 +1,9 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 193,
+  "fact_count": 195,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 130,
+    "artifact": 132,
     "citation": 7,
     "figure": 10,
     "number": 29,
@@ -13,7 +13,7 @@
   "sample_facts": [
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_words",
       "source_field": "$.total_words",
@@ -21,11 +21,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "1822"
+      "value": "1731"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_words (numeric variant)",
       "source_field": "$.total_words",
@@ -33,11 +33,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "18.22"
+      "value": "17.31"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_sentences",
       "source_field": "$.total_sentences",
@@ -49,7 +49,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_sentences (numeric variant)",
       "source_field": "$.total_sentences",
@@ -61,7 +61,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_paragraphs",
       "source_field": "$.total_paragraphs",
@@ -69,11 +69,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "63"
+      "value": "64"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_paragraphs (numeric variant)",
       "source_field": "$.total_paragraphs",
@@ -81,11 +81,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.63"
+      "value": "0.64"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_grade_level",
       "source_field": "$.avg_grade_level",
@@ -93,11 +93,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "16.79"
+      "value": "15.87"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_grade_level (numeric variant)",
       "source_field": "$.avg_grade_level",
@@ -105,11 +105,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "16.8"
+      "value": "0.1587"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_grade_level (numeric variant)",
       "source_field": "$.avg_grade_level",
@@ -117,11 +117,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.1679"
+      "value": "15.9"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_reading_ease",
       "source_field": "$.avg_reading_ease",
@@ -129,11 +129,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "16.37"
+      "value": "19.66"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_reading_ease (numeric variant)",
       "source_field": "$.avg_reading_ease",
@@ -141,11 +141,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "16.4"
+      "value": "0.1966"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_reading_ease (numeric variant)",
       "source_field": "$.avg_reading_ease",
@@ -153,11 +153,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.1637"
+      "value": "19.7"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_gunning_fog",
       "source_field": "$.avg_gunning_fog",
@@ -165,11 +165,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "17.84"
+      "value": "16.67"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_gunning_fog (numeric variant)",
       "source_field": "$.avg_gunning_fog",
@@ -177,11 +177,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.1784"
+      "value": "0.1667"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_gunning_fog (numeric variant)",
       "source_field": "$.avg_gunning_fog",
@@ -189,11 +189,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "17.8"
+      "value": "16.7"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.citation_count",
       "source_field": "$.citation_count",
@@ -205,7 +205,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.citation_count (numeric variant)",
       "source_field": "$.citation_count",
@@ -217,7 +217,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.files_analysed",
       "source_field": "$.files_analysed",
@@ -229,7 +229,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.files_analysed (numeric variant)",
       "source_field": "$.files_analysed",
@@ -241,7 +241,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.longest_section_words",
       "source_field": "$.longest_section_words",
@@ -253,7 +253,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.longest_section_words (numeric variant)",
       "source_field": "$.longest_section_words",
@@ -265,7 +265,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.shortest_section_words",
       "source_field": "$.shortest_section_words",
@@ -277,7 +277,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.shortest_section_words (numeric variant)",
       "source_field": "$.shortest_section_words",
@@ -289,9 +289,9 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
-      "source": "projects/template_prose_project/src/figures.py export settings",
+      "source": "projects/templates/template_prose_project/src/figures.py export settings",
       "source_field": "figure-export-dpi",
       "source_path": "output/figures/",
       "source_tier": "project_source",
@@ -301,9 +301,9 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
-      "source": "projects/template_prose_project/src/figures.py export settings (numeric variant)",
+      "source": "projects/templates/template_prose_project/src/figures.py export settings (numeric variant)",
       "source_field": "figure-export-dpi",
       "source_path": "output/figures/",
       "source_tier": "project_source",
@@ -313,9 +313,9 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
-      "source": "projects/template_prose_project/manuscript/01_introduction.md editorial-drift example",
+      "source": "projects/templates/template_prose_project/manuscript/01_introduction.md editorial-drift example",
       "source_field": "comparison-sibling-word-count",
       "source_path": "manuscript/01_introduction.md",
       "source_tier": "manuscript_claim",
@@ -325,9 +325,9 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
-      "source": "projects/template_prose_project/manuscript/01_introduction.md editorial-drift example (numeric variant)",
+      "source": "projects/templates/template_prose_project/manuscript/01_introduction.md editorial-drift example (numeric variant)",
       "source_field": "comparison-sibling-word-count",
       "source_path": "manuscript/01_introduction.md",
       "source_tier": "manuscript_claim",
@@ -337,9 +337,9 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
-      "source": "projects/template_prose_project/src/pipeline.py citation density metric",
+      "source": "projects/templates/template_prose_project/src/pipeline.py citation density metric",
       "source_field": "citation-density-denominator",
       "source_path": "output/data/manuscript_report.json",
       "source_tier": "project_source",
@@ -349,9 +349,9 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "number",
-      "source": "projects/template_prose_project/src/pipeline.py citation density metric (numeric variant)",
+      "source": "projects/templates/template_prose_project/src/pipeline.py citation density metric (numeric variant)",
       "source_field": "citation-density-denominator",
       "source_path": "output/data/manuscript_report.json",
       "source_tier": "project_source",
@@ -361,7 +361,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -373,7 +373,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -385,7 +385,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -397,7 +397,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -409,7 +409,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -421,7 +421,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -433,7 +433,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -445,7 +445,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/03_results.md",
       "source_field": "",
@@ -457,7 +457,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -469,7 +469,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -481,7 +481,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/00_abstract.md",
       "source_field": "",
@@ -493,7 +493,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -505,7 +505,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/01_introduction.md",
       "source_field": "",
@@ -517,7 +517,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -529,7 +529,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/02_methodology.md",
       "source_field": "",
@@ -541,7 +541,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -553,7 +553,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/04_conclusion.md",
       "source_field": "",
@@ -565,7 +565,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -577,7 +577,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/05_pipeline_internals.md",
       "source_field": "",
@@ -589,7 +589,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -601,7 +601,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/06_reproducibility.md",
       "source_field": "",
@@ -613,7 +613,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -625,7 +625,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/99_references.md",
       "source_field": "",
@@ -637,7 +637,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -649,7 +649,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -661,7 +661,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -673,7 +673,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -685,7 +685,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -697,7 +697,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -709,7 +709,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -721,7 +721,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -733,7 +733,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -745,7 +745,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -757,7 +757,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -769,7 +769,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -781,7 +781,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -793,7 +793,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -805,7 +805,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -817,7 +817,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -829,7 +829,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -841,7 +841,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -853,7 +853,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -865,7 +865,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -877,7 +877,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -889,7 +889,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -901,7 +901,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -913,7 +913,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -925,7 +925,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -937,7 +937,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -949,7 +949,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -961,7 +961,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -973,7 +973,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -985,7 +985,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -997,7 +997,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1009,7 +1009,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1021,7 +1021,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1033,7 +1033,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1045,7 +1045,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1057,7 +1057,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1069,7 +1069,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1081,7 +1081,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1093,7 +1093,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1105,7 +1105,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1117,7 +1117,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1129,7 +1129,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1141,7 +1141,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1153,7 +1153,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1165,7 +1165,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1177,7 +1177,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1189,7 +1189,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1201,7 +1201,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1213,7 +1213,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1225,7 +1225,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1237,7 +1237,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1249,7 +1249,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1261,7 +1261,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1273,7 +1273,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1285,7 +1285,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1297,7 +1297,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1309,7 +1309,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1321,7 +1321,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1333,7 +1333,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1345,7 +1345,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1357,7 +1357,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1369,7 +1369,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1381,7 +1381,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1393,7 +1393,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1405,7 +1405,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1417,7 +1417,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1429,7 +1429,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1441,7 +1441,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1453,7 +1453,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1465,7 +1465,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1477,7 +1477,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1489,7 +1489,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1501,7 +1501,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1513,7 +1513,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1525,7 +1525,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1537,7 +1537,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1549,7 +1549,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1561,7 +1561,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1573,7 +1573,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1585,7 +1585,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1597,7 +1597,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1609,7 +1609,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1621,7 +1621,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1633,7 +1633,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1645,7 +1645,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1657,7 +1657,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1669,7 +1669,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1681,7 +1681,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1693,7 +1693,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1705,7 +1705,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1717,7 +1717,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1729,7 +1729,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1741,7 +1741,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1753,7 +1753,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1765,7 +1765,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1777,7 +1777,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1789,7 +1789,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1801,7 +1801,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1813,7 +1813,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1825,7 +1825,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1837,7 +1837,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1849,7 +1849,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1861,7 +1861,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1873,7 +1873,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1885,7 +1885,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1897,7 +1897,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1909,7 +1909,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1921,7 +1921,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1933,7 +1933,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1945,7 +1945,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1957,7 +1957,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1969,7 +1969,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1981,19 +1981,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
-      "source_path": "output/docx/template_prose_project_combined.docx",
+      "source_path": "output/reports/diagnostics.json",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "output/docx/template_prose_project_combined.docx"
+      "value": "output/reports/diagnostics.json"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2005,7 +2005,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2017,7 +2017,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2029,19 +2029,31 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
-      "source_path": "output/.pipeline/artifacts/stage-04-project-analysis.json",
+      "source_path": "output/.pipeline/artifacts/stage-04-project-tests.json",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "output/.pipeline/artifacts/stage-04-project-analysis.json"
+      "value": "output/.pipeline/artifacts/stage-04-project-tests.json"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/.pipeline/artifacts/stage-03-infrastructure-tests.json",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/.pipeline/artifacts/stage-03-infrastructure-tests.json"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2053,31 +2065,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
-      "source_path": "output/.pipeline/artifacts/stage-05-pdf-rendering.json",
+      "source_path": "output/.pipeline/artifacts/stage-06-pdf-rendering.json",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "output/.pipeline/artifacts/stage-05-pdf-rendering.json"
+      "value": "output/.pipeline/artifacts/stage-06-pdf-rendering.json"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/.pipeline/artifacts/stage-03-project-tests.json",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/.pipeline/artifacts/stage-03-project-tests.json"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2089,7 +2089,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/.pipeline/artifacts/stage-05-project-analysis.json",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/.pipeline/artifacts/stage-05-project-analysis.json"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2101,7 +2113,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2113,19 +2125,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
-      "source_path": "output/figures/mermaid_inline/inline_mermaid_0001_12653844f6c5.mmd",
+      "source_path": "output/figures/mermaid_inline/inline_mermaid_0001_7aa6f1f4fc80.png",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "output/figures/mermaid_inline/inline_mermaid_0001_12653844f6c5.mmd"
+      "value": "output/figures/mermaid_inline/inline_mermaid_0001_7aa6f1f4fc80.png"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2137,31 +2149,43 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
-      "source_path": "output/figures/mermaid_inline/inline_mermaid_0001_12653844f6c5.png",
+      "source_path": "output/figures/mermaid_inline/inline_mermaid_0001_7aa6f1f4fc80.mmd",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "output/figures/mermaid_inline/inline_mermaid_0001_12653844f6c5.png"
+      "value": "output/figures/mermaid_inline/inline_mermaid_0001_7aa6f1f4fc80.mmd"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
-      "source_path": "output/reports/snapshots/stage-04-project-analysis.json",
+      "source_path": "output/reports/snapshots/stage-04-project-tests.json",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "output/reports/snapshots/stage-04-project-analysis.json"
+      "value": "output/reports/snapshots/stage-04-project-tests.json"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/reports/snapshots/stage-03-infrastructure-tests.json",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/reports/snapshots/stage-03-infrastructure-tests.json"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2173,31 +2197,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
-      "source_path": "output/reports/snapshots/stage-05-pdf-rendering.json",
+      "source_path": "output/reports/snapshots/stage-06-pdf-rendering.json",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "output/reports/snapshots/stage-05-pdf-rendering.json"
+      "value": "output/reports/snapshots/stage-06-pdf-rendering.json"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/reports/snapshots/stage-03-project-tests.json",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/reports/snapshots/stage-03-project-tests.json"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2209,7 +2221,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/reports/snapshots/stage-05-project-analysis.json",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/reports/snapshots/stage-05-project-analysis.json"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "figure",
       "source": "output/figures/transmission_integrity_strip.png",
       "source_field": "",
@@ -2221,7 +2245,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "figure",
       "source": "output/figures/citation_density.png",
       "source_field": "",
@@ -2233,7 +2257,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "figure",
       "source": "output/figures/transmission_pairing.png",
       "source_field": "",
@@ -2245,7 +2269,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "figure",
       "source": "output/figures/readability_metrics.png",
       "source_field": "",
@@ -2257,7 +2281,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "figure",
       "source": "output/figures/section_word_counts.png",
       "source_field": "",
@@ -2269,7 +2293,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "figure",
       "source": "output/figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.png",
       "source_field": "",
@@ -2281,7 +2305,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "figure",
       "source": "output/figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.mmd",
       "source_field": "",
@@ -2293,31 +2317,31 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "figure",
-      "source": "output/figures/mermaid_inline/inline_mermaid_0001_12653844f6c5.mmd",
+      "source": "output/figures/mermaid_inline/inline_mermaid_0001_7aa6f1f4fc80.png",
       "source_field": "",
-      "source_path": "output/figures/mermaid_inline/inline_mermaid_0001_12653844f6c5.mmd",
+      "source_path": "output/figures/mermaid_inline/inline_mermaid_0001_7aa6f1f4fc80.png",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "fig:inline_mermaid_0001_12653844f6c5"
+      "value": "fig:inline_mermaid_0001_7aa6f1f4fc80"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "figure",
-      "source": "output/figures/mermaid_inline/inline_mermaid_0001_12653844f6c5.png",
+      "source": "output/figures/mermaid_inline/inline_mermaid_0001_7aa6f1f4fc80.mmd",
       "source_field": "",
-      "source_path": "output/figures/mermaid_inline/inline_mermaid_0001_12653844f6c5.png",
+      "source_path": "output/figures/mermaid_inline/inline_mermaid_0001_7aa6f1f4fc80.mmd",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "fig:inline_mermaid_0001_12653844f6c5"
+      "value": "fig:inline_mermaid_0001_7aa6f1f4fc80"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:13:07+00:00",
+      "checked_at": "2026-06-07T04:17:20+00:00",
       "kind": "figure",
       "source": "output/figures/mermaid_inline/inline_mermaid.puppeteer.json",
       "source_field": "",
@@ -2330,7 +2354,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 157,
+    "artifact": 159,
     "bibliography": 7,
     "generated_metric": 23,
     "manuscript_claim": 2,

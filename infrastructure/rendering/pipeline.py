@@ -413,14 +413,34 @@ def _render_combined_docx(
     out_path = docx_dir / f"{project_name}_combined.docx"
     bibliography = _resolve_bibliography(manuscript_dir)
 
+    # Mirror the combined-PDF pandoc setup so figures embed and
+    # @fig:/@sec:/@tbl:/@eq: cross-references resolve in DOCX. pandoc-crossref
+    # MUST precede citeproc, otherwise crossref refs are consumed as unknown
+    # citations. Bibliography/citeproc is therefore passed via extra_args (after
+    # the crossref filter) rather than through render_docx's own --citeproc.
+    import shutil
+
+    extra_args = [
+        "--resource-path=" + str(manuscript_dir),
+        "--resource-path=" + str(manager.config.figures_dir),
+    ]
+    crossref = shutil.which("pandoc-crossref")
+    if crossref:
+        extra_args.extend(["--filter", crossref])
+    else:
+        logger.warning("pandoc-crossref not on PATH; DOCX @fig:/@sec:/@tbl:/@eq: will not resolve.")
+    if bibliography is not None:
+        extra_args.extend(["--citeproc", f"--bibliography={bibliography}"])
+
     logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined DOCX manuscript...")
     try:
         result = render_docx(
             combined_md,
             out_path,
-            bibliography=bibliography,
+            bibliography=None,  # handled in extra_args (must follow pandoc-crossref)
             pandoc_path=manager.config.pandoc_path,
+            extra_args=extra_args,
         )
         logger.info(f"✅ Generated combined DOCX: {result.output_path.name} ({result.size_bytes / 1024:.1f} KB)")
     except RenderingError as re:

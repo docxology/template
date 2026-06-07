@@ -47,6 +47,12 @@ from .integration_audit_builders import (
     build_stale_artifact_report,
     build_validation_gate_index,
 )
+from .visualization_audit import (
+    build_statistical_visualization_bridge,
+    build_visualization_quality_audit,
+    validate_statistical_visualization_bridge,
+    validate_visualization_quality_audit,
+)
 
 __all__ = [
     "LATE_HYDRATION_PRODUCER",
@@ -75,7 +81,11 @@ __all__ = [
     "build_release_notes_evidence",
     "build_scope_boundary_audit",
     "build_stale_artifact_report",
+    "build_statistical_visualization_bridge",
     "build_validation_gate_index",
+    "build_visualization_quality_audit",
+    "validate_statistical_visualization_bridge",
+    "validate_visualization_quality_audit",
     "write_integration_audit_artifacts",
     "write_manuscript_staleness_report",
     "validate_integration_audit_artifacts",
@@ -125,6 +135,14 @@ def write_integration_audit_artifacts(project_root: Path) -> dict[str, Path]:
         "figure_hash_manifest": _write_json(
             root / "output" / "reports" / "figure_hash_manifest.json",
             build_figure_hash_manifest(root),
+        ),
+        "visualization_quality": _write_json(
+            root / "output" / "reports" / "visualization_quality_audit.json",
+            build_visualization_quality_audit(root),
+        ),
+        "statistical_visualization_bridge": _write_json(
+            root / "output" / "data" / "statistical_visualization_bridge.json",
+            build_statistical_visualization_bridge(root),
         ),
         "scope_boundary": _write_json(
             root / "output" / "reports" / "scope_boundary_audit.json",
@@ -207,6 +225,8 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
         or figure_hash.get("all_hashes_present") != figure_hash_derived
     ):
         issues.append("figure_hash_manifest.json lacks hashes")
+    issues.extend(validate_visualization_quality_audit(root))
+    issues.extend(validate_statistical_visualization_bridge(root))
     tables = _load_json(root / "output" / "data" / "manuscript_evidence_tables.json")
     tables_derived = bool(tables.get("tables")) and all(
         int(table.get("row_count", 0) or 0) > 0 and table.get("source") for table in tables.get("tables") or []

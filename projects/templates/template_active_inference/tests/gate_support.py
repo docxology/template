@@ -70,6 +70,8 @@ _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
     "output/data/validation_dependency_graph.json",
     "output/data/sheaf_section_status_matrix.json",
     "output/reports/sheaf_render_log.json",
+    "output/reports/visualization_quality_audit.json",
+    "output/data/statistical_visualization_bridge.json",
     "output/figures/semantic_gluing_graph.png",
     "output/figures/si_belief_trajectory.gif",
     "output/data/animation_frame_deltas.json",

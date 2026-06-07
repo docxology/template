@@ -43,8 +43,8 @@ def figure_sheaf_layers_overview(project_root: Path) -> Path | None:
         fig, axes = plt.subplots(
             1,
             2,
-            figsize=(13.5, heatmap_height),
-            gridspec_kw={"width_ratios": [1.05, 1.65], "wspace": 0.28},
+            figsize=(14.5, heatmap_height),
+            gridspec_kw={"width_ratios": [1.25, 1.55], "wspace": 0.26},
         )
         layer_ax, heatmap_ax = axes
         if not draw_track_layers_panel(layer_ax, root):
@@ -59,7 +59,7 @@ def figure_sheaf_layers_overview(project_root: Path) -> Path | None:
             label_fontsize=7,
         )
         fig.suptitle("Sheaf fragment layers and IMRAD bindings", fontsize=11, y=0.98)
-        fig.subplots_adjust(left=0.06, right=0.98, top=0.92, wspace=0.28)
+        fig.subplots_adjust(left=0.06, right=0.98, top=0.92, wspace=0.26)
         save_figure_png(fig, out, dpi=dpi)
     return out
 

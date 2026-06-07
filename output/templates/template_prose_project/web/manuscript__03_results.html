@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>03_results</title>
+  <title>03_results.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -186,11 +186,18 @@ report.</li>
 counts.</li>
 <li><code>../figures/readability_metrics.png</code> — Flesch /
 Flesch-Kincaid / Gunning Fog per file.</li>
-<li><code>../figures/citation_density.png</code> — citations per
-1000 words per file.</li>
+<li><code>../figures/citation_density.png</code> — citations per 1000
+words per file.</li>
 <li><code>output/data/manuscript_variables.json</code> — substitution
 variables for the abstract.</li>
 </ul>
+<p>By design the three figures are <strong>standalone CI/diagnostic
+artefacts</strong>, not embedded manuscript images: this is a
+prose-review template, so its own rendered PDF deliberately contains no
+figure floats and runs cleanly through the very prose gate it documents.
+A fork that wants figures inside the manuscript embeds them with
+<code>![caption](../figures/&lt;name&gt;.png){#fig:&lt;label&gt;}</code>
+in the usual way; see <code>docs/syntax_guide.md</code>.</p>
 <p>Because the pipeline does not consult any external service, every
 artefact is reproducible from the manuscript text +
 <code>config.yaml</code> alone. A second run on the same inputs produces
@@ -215,16 +222,13 @@ in this manuscript uses contiguous heading levels.</li>
 <li><strong><code>every_file_has_h1</code></strong> — every prose file
 starts with an H1.</li>
 <li><strong><code>bibliography_consistency</code></strong> — every
-<code>[@key]</code> in the prose resolves against
+<code>[key]</code> in the prose resolves against
 <code>manuscript/references.bib</code>.</li>
 </ul>
-<p>The figures in <code>../figures/</code> are colour-blind-safe
-(Wong 2011 palette) <span class="citation"
-data-cites="wong2011points">[@wong2011points]</span>, 300 dpi, and
-PNG-only for archival stability. They are referenced in <span
-class="citation"
-data-cites="sec:pipeline_internals">[@sec:pipeline_internals]</span>
-where we walk through the on-disk artefact set in full.</p>
+<p>The figures in <code>../figures/</code> are colour-blind-safe (Wong
+2011 palette) [wong2011points], 300 dpi, and PNG-only for archival
+stability. They are referenced in [sec:pipeline_internals] where we walk
+through the on-disk artefact set in full.</p>
 <p>The full pass/fail summary lands in
 <code>output/review_report.md</code>, which is itself a Markdown file
 rendered alongside the manuscript by Pandoc — i.e. the project reports

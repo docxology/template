@@ -25,7 +25,22 @@ def test_generate_variables_with_outputs() -> None:
     assert vars_["lean_graph_world_topology_witness_count"] >= 3
     assert vars_["lean_graph_world_all_topologies_witnessed"] is True
     assert vars_["scholarship_source_count"] >= 8
+    assert vars_["scholarship_quantitative_method_role_count"] >= 3
     assert vars_["scholarship_sources_connected"] is True
+    assert vars_["visualization_quality_figure_count"] >= 20
+    assert vars_["visualization_quality_all_ok"] is True
+    assert vars_["visualization_intent_metadata_complete"] is True
+    assert vars_["visualization_paper_claims_complete"] is True
+    assert vars_["visualization_figures_section_bound"] is True
+    assert vars_["visualization_statistics_backed_count"] >= 6
+    assert vars_["visualization_statistics_bridge_ok"] is True
+    assert vars_["statistical_visualization_bridge_row_count"] >= 6
+    assert vars_["statistical_visualization_bridge_all_connected"] is True
+    assert vars_["statistical_visualization_bridge_all_referenced"] is True
+    assert vars_["statistical_visualization_bridge_references_sheaf_bound"] is True
+    assert vars_["statistical_visualization_bridge_references_visualization_bound"] is True
+    assert vars_["si_trace_steps_match"] is True
+    assert vars_["si_trace_finite"] is True
 
 
 def test_invariant_counts_include_simulation_when_merged() -> None:

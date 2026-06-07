@@ -248,3 +248,4 @@ tests/.scope
 docs/prompts/_skill-eval/latest/
 docs/prompts/_skill-eval/baseline/
 docs/prompts/_skill-eval/iteration-*/
+/.supergoal

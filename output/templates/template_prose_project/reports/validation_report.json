@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-27T15:13:07.792530",
+  "timestamp": "2026-06-06T21:17:20.638759",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -22,13 +22,13 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 0.25,
+            "size_mb": 0.26,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 0.37,
+            "size_mb": 0.38,
             "readable": true,
             "optional": false
           },
@@ -49,7 +49,7 @@
           "figures": {
             "exists": true,
             "files": 10,
-            "size_mb": 0.49,
+            "size_mb": 0.51,
             "readable": true,
             "optional": false
           },
@@ -62,7 +62,7 @@
           },
           "reports": {
             "exists": true,
-            "files": 8,
+            "files": 10,
             "size_mb": 0.03,
             "readable": true,
             "optional": false
@@ -94,7 +94,7 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "0.37",
+          "size_mb": "0.38",
           "largest_file": "template_prose_project_combined.pdf"
         },
         "web": {
@@ -112,7 +112,7 @@
         "figures": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "0.49",
+          "size_mb": "0.51",
           "largest_file": "readability_metrics.png"
         },
         "data": {
@@ -123,7 +123,7 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 8,
+          "file_count": 10,
           "size_mb": "0.03",
           "largest_file": "artifact_manifest.json"
         },
@@ -152,12 +152,12 @@
         "slides": 65,
         "figures": 10,
         "data": 2,
-        "reports": 8,
+        "reports": 10,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 1.7855072021484375,
+      "total_size_mb": 1.8056039810180664,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -167,11 +167,11 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 0.36702632904052734
+      "size_mb": 0.3761453628540039
     },
     "figures": {
       "files": 5,
-      "size_mb": 0.3522520065307617
+      "size_mb": 0.3686494827270508
     },
     "data": {
       "files": 2,

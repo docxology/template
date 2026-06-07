@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>07_scope_and_related_work</title>
+  <title>07_scope_and_related_work.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -177,33 +177,22 @@
 <h1 id="sec:scope">Scope, Related Work, and Positioning</h1>
 <p>This section situates the exemplar scientifically and states explicit
 boundaries. The goal is not to compete with monographs on nonlinear
-programming <span class="citation"
-data-cites="nocedal2006numerical bertsekas1999nonlinear">[@nocedal2006numerical;
-@bertsekas1999nonlinear]</span>, but to show how a minimal, test-backed
-optimization story fits the template’s reproducibility and rendering
-stack <span class="citation"
-data-cites="peng2011reproducible">[@peng2011reproducible]</span>.</p>
+programming [nocedal2006numerical; bertsekas1999nonlinear], but to show
+how a minimal, test-backed optimization story fits the template’s
+reproducibility and rendering stack [peng2011reproducible].</p>
 <h2 id="classical-gradient-methods">Classical gradient methods</h2>
 <p>Smooth unconstrained minimization via first-order updates has a long
-lineage, from Cauchy’s early descent perspective <span class="citation"
-data-cites="cauchy1847methode">[@cauchy1847methode]</span> to modern
-treatments of convex problems <span class="citation"
-data-cites="boyd2004convex">[@boyd2004convex]</span> and accelerated
-gradient schemes <span class="citation"
-data-cites="nesterov2013gradient">[@nesterov2013gradient]</span>.
-Polyak’s classical discussion of gradient convergence factors remains
-relevant when interpreting empirical iteration counts <span
-class="citation" data-cites="polyak1964some">[@polyak1964some]</span>.
-The present manuscript restricts attention to
-<strong>fixed-step</strong> gradient descent on a <strong>convex
-quadratic</strong>, where rates reduce to scalar linear recurrences in
-the error (<span class="citation"
-data-cites="sec:results">[@sec:results]</span>, <span class="citation"
-data-cites="eq:scalar_linear_update">[@eq:scalar_linear_update]</span>).</p>
+lineage, from Cauchy’s early descent perspective [cauchy1847methode] to
+modern treatments of convex problems [boyd2004convex] and accelerated
+gradient schemes [nesterov2013gradient]. Polyak’s classical discussion
+of gradient convergence factors remains relevant when interpreting
+empirical iteration counts [polyak1964some]. The present manuscript
+restricts attention to <strong>fixed-step</strong> gradient descent on a
+<strong>convex quadratic</strong>, where rates reduce to scalar linear
+recurrences in the error ([sec:results], [eq:scalar_linear_update]).</p>
 <h2 id="adaptive-and-stochastic-extensions">Adaptive and stochastic
 extensions</h2>
-<p>Practical machine-learning optimizers (e.g., Adam <span
-class="citation" data-cites="kingma2014adam">[@kingma2014adam]</span>)
+<p>Practical machine-learning optimizers (e.g., Adam [kingma2014adam])
 introduce momentum, adaptive preconditioning, or noise from
 minibatching. Those methods are <strong>out of scope</strong> for
 <code>template_code_project</code>: the exemplar deliberately keeps the
@@ -212,13 +201,10 @@ class="math inline">\(\alpha\)</span>, iteration caps) are interpretable
 without confounding from stochastic sampling or line-search logic.</p>
 <h2 id="what-this-project-proves-about-the-template">What this project
 proves about the template</h2>
-<p>The scientific claims through <span class="citation"
-data-cites="sec:introduction">[@sec:introduction]</span>, <span
-class="citation" data-cites="sec:methodology">[@sec:methodology]</span>,
-and <span class="citation"
-data-cites="sec:results">[@sec:results]</span> are standard textbook
-material. The <strong>non-standard</strong> contribution is procedural:
-configuration in <code>manuscript/config.yaml</code> drives
+<p>The scientific claims through [sec:introduction], [sec:methodology],
+and [sec:results] are standard textbook material. The
+<strong>non-standard</strong> contribution is procedural: configuration
+in <code>manuscript/config.yaml</code> drives
 <code>run_convergence_experiment()</code>, figures, CSV exports, and
 <code>{{RESULT_*}}</code> substitution
 (<code>scripts/z_generate_manuscript_variables.py</code>) so that PDF,

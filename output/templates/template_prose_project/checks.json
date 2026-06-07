@@ -2,9 +2,9 @@
   {
     "name": "grade_level_in_band",
     "passed": true,
-    "message": "avg FKGL = 15.92 (target 10.0–18.0)",
+    "message": "avg FKGL = 15.87 (target 10.0–18.0)",
     "details": {
-      "value": 15.92,
+      "value": 15.87,
       "min": 10.0,
       "max": 18.0
     }
@@ -12,13 +12,13 @@
   {
     "name": "citation_density_above_floor",
     "passed": true,
-    "message": "density = 4.77/1000 words (min 0.0)",
+    "message": "density = 4.62/1000 words (min 0.0)",
     "details": {
-      "density_per_1000": 4.77,
+      "density_per_1000": 4.62,
       "min": 0.0,
       "citation_count": 8,
       "unique_keys": 6,
-      "word_count": 1676
+      "word_count": 1731
     }
   },
   {

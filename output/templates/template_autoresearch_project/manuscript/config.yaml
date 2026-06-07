@@ -1,7 +1,7 @@
 paper:
   title: "Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task"
   subtitle: "A public exemplar for autoresearch, metric loops, evidence ledgers, review gates, and template orchestration"
-  version: "0.2"
+  version: "0.3.0"
 
 authors:
   - name: "Daniel Ari Friedman"
@@ -12,8 +12,8 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.20417016" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20417017" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20417017"
+  version_doi: "10.5281/zenodo.20420357" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20420357"
   year: "2026"
   github_repository: "docxology/template_autoresearch_project"
   transmission_bookends:

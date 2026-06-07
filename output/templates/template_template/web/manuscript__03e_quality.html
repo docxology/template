@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>03e_quality</title>
+  <title>03e_quality.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -238,19 +238,15 @@
 <body>
 <h2 id="quality-assurance">Quality Assurance</h2>
 <h3 id="zero-mock-testing-policy">Zero-Mock Testing Policy</h3>
-<p>All tests use real methods exclusively <span class="citation"
-data-cites="martin2008clean meszaros2007xunit">[@martin2008clean;
-@meszaros2007xunit]</span>. No <code>unittest.mock</code>, no
+<p>All tests use real methods exclusively [martin2008clean;
+meszaros2007xunit]. No <code>unittest.mock</code>, no
 <code>MagicMock</code>, no <code>patch</code> decorators. Tests that
 require external services (Ollama, network) use <code>pytest.mark</code>
 markers for conditional execution. The philosophical
 motivation—analogizing mock objects to Simmons et al.’s <em>researcher
-degrees of freedom</em> <span class="citation"
-data-cites="simmons2011falsepositive">[@simmons2011falsepositive]</span>
-and the pre-registration remedy <span class="citation"
-data-cites="nosek2018preregistration">[@nosek2018preregistration]</span>—is
-developed fully in the <a
-href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Zero-Mock
+degrees of freedom</em> [simmons2011falsepositive] and the
+pre-registration remedy [nosek2018preregistration]—is developed fully in
+the <a href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Zero-Mock
 Tradeoff</a> discussion. To our knowledge, no prior research software
 engineering framework has formalized a zero-mock policy as an
 <em>architectural invariant enforced by pipeline gates</em>, where mock
@@ -313,12 +309,12 @@ source code.</p>
 <h3 id="test-suite-composition">Test Suite Composition</h3>
 <p>The repository maintains three test suites:</p>
 <ul>
-<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~7,024
-tests validating the 22 infrastructure subpackages, covering logging,
+<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~7,385
+tests validating the 23 infrastructure subdirectories, covering logging,
 rendering, validation, steganography, reporting, and LLM
 integration.</li>
 <li><strong>Project tests</strong> (<code>projects/*/tests/</code>):
-Per-project suites; counts span 196 (<code>template_code_project</code>)
+Per-project suites; counts span 197 (<code>template_code_project</code>)
 → 151 (<code>template_autoresearch_project</code>) exemplars with higher
 surface area.</li>
 <li><strong>Integration tests</strong>: Embedded within infrastructure

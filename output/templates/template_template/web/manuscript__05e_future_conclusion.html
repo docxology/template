@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05e_future_conclusion</title>
+  <title>05e_future_conclusion.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -174,12 +174,10 @@
 <h2 id="future-directions">Future Directions</h2>
 <ol type="1">
 <li><strong>Supply-chain provenance</strong>: Integration with software
-supply chain frameworks such as in-toto <span class="citation"
-data-cites="torresarias2019intoto">[@torresarias2019intoto]</span> and
-SLSA (Supply-chain Levels for Software Artifacts) <span class="citation"
-data-cites="openssf2023slsa">[@openssf2023slsa]</span> to provide
-end-to-end attestation from source commit through build pipeline to
-published artifact. SLSA’s four graduated levels of build integrity
+supply chain frameworks such as in-toto [torresarias2019intoto] and SLSA
+(Supply-chain Levels for Software Artifacts) [openssf2023slsa] to
+provide end-to-end attestation from source commit through build pipeline
+to published artifact. SLSA’s four graduated levels of build integrity
 (from basic provenance to hermetic, reproducible builds) provide a
 natural extension ladder for the template’s currently document-centric
 provenance model. The template’s existing steganographic layer embeds
@@ -200,11 +198,9 @@ assets and automated DOI registration via Zenodo.</li>
 Orchestrator pattern to R, Julia, and Rust projects, enabling polyglot
 research workflows within the Two-Layer Architecture.</li>
 <li><strong>Automated FAIR4RS assessment</strong>: Periodic self-scoring
-against FAIRsoft metrics <span class="citation"
-data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span>, with
-quality indicators (executability, documentation completeness, metadata
-richness) tracked as pipeline artifacts alongside test coverage and
-rendering status.</li>
+against FAIRsoft metrics [garijo2024fairsoft], with quality indicators
+(executability, documentation completeness, metadata richness) tracked
+as pipeline artifacts alongside test coverage and rendering status.</li>
 <li><strong>Knowledge graph integration</strong>: Connecting pipeline
 outputs to Active Inference Knowledge Base entries for automated
 meta-analysis and cross-project citation tracking.</li>
@@ -215,34 +211,30 @@ algorithmic logic and that <code>src/</code> modules do not import from
 <li><strong>Agentic research pipelines via MCP</strong>: The
 <code>SKILL.md</code> descriptors already define the interface contracts
 for each infrastructure module; the natural next step is to expose them
-as MCP server endpoints <span class="citation"
-data-cites="anthropic2024mcp">[@anthropic2024mcp]</span>. An MCP server
-wrapping <code>infrastructure.llm</code> would expose
-<code>query</code>, <code>review_manuscript</code>, and
-<code>translate_abstract</code> as protocol-native Tools; an MCP server
-wrapping <code>infrastructure.publishing</code> would expose
+as MCP server endpoints [anthropic2024mcp]. An MCP server wrapping
+<code>infrastructure.llm</code> would expose <code>query</code>,
+<code>review_manuscript</code>, and <code>translate_abstract</code> as
+protocol-native Tools; an MCP server wrapping
+<code>infrastructure.publishing</code> would expose
 <code>publish_to_zenodo</code> and
 <code>generate_citation_bibtex</code>. A research agent could then
 compose these Tools to execute the full pipeline—environment setup →
 test execution → analysis → rendering → validation → LLM review → DOI
 registration—without any human in the loop. This closes the loop opened
-by Lu et al.’s AI Scientist <span class="citation"
-data-cites="lu2024aiscientist">[@lu2024aiscientist]</span>, which
-demonstrated automated hypothesis generation and experimental iteration
-but relied on ad hoc laboratory scaffolding. <code>template/</code>’s
-pipeline, fully exposed as MCP tools, provides that scaffolding in a
-reproducible, versioned, and certified form. Longer-term, the
-Agent2Agent (A2A) protocol <span class="citation"
-data-cites="google2025a2a">[@google2025a2a]</span> enables heterogeneous
-specialist agents—a statistical analyst, a figure designer, a
-peer-review simulator—to coordinate via a shared, protocol-mediated
-workspace built on precisely the kind of modular, well-documented
-infrastructure that <code>template/</code> provides.</li>
+by Lu et al.’s AI Scientist [lu2024aiscientist], which demonstrated
+automated hypothesis generation and experimental iteration but relied on
+ad hoc laboratory scaffolding. <code>template/</code>’s pipeline, fully
+exposed as MCP tools, provides that scaffolding in a reproducible,
+versioned, and certified form. Longer-term, the Agent2Agent (A2A)
+protocol [google2025a2a] enables heterogeneous specialist agents—a
+statistical analyst, a figure designer, a peer-review simulator—to
+coordinate via a shared, protocol-mediated workspace built on precisely
+the kind of modular, well-documented infrastructure that
+<code>template/</code> provides.</li>
 <li><strong>Research Infrastructure as Code and software
 citation</strong>: The DevOps IaC paradigm, applied to research, means
 the entire manuscript pipeline is a version-controlled, reproducible
-artifact in its own right. Software Heritage <span class="citation"
-data-cites="cosmo2020softwareheritage">[@cosmo2020softwareheritage]</span>
+artifact in its own right. Software Heritage [cosmo2020softwareheritage]
 provides persistent SWHIDs (Software Hash Identifiers) for source-code
 snapshots, enabling <code>template/</code> itself to be cited as a
 software artifact with a DOI-equivalent stable identifier. Combining
@@ -250,21 +242,19 @@ this with Zenodo DOI registration (already supported by
 <code>infrastructure.publishing</code>) creates a full citation chain:
 the paper cites the data (DOI), the data provenance cites the pipeline
 (SWHID), and the pipeline cites the framework release (Zenodo DOI). This
-three-link citation chain operationalizes the Katz et al. <span
-class="citation"
-data-cites="katz2021software">[@katz2021software]</span> software
-citation principles at the infrastructure level.</li>
+three-link citation chain operationalizes the Katz et
+al. [katz2021software] software citation principles at the
+infrastructure level.</li>
 </ol>
 <h2 id="conclusion">Conclusion</h2>
 <p><code>template/</code> demonstrates that high-integrity, reproducible
 research need not be onerous. By embedding provenance, testing, and
 documentation into the architecture itself—rather than layering them
 atop a fragmented workflow—the template transforms “best practices” from
-aspirational guidelines into enforced invariants <span class="citation"
-data-cites="wilson2017good sandve2013ten lamprecht2020towards">[@wilson2017good;
-@sandve2013ten; @lamprecht2020towards]</span>. The Two-Layer
-Architecture ensures that infrastructure improvements propagate to all
-projects without coupling. The Zero-Mock policy ensures that tests <a
+aspirational guidelines into enforced invariants [wilson2017good;
+sandve2013ten; lamprecht2020towards]. The Two-Layer Architecture ensures
+that infrastructure improvements propagate to all projects without
+coupling. The Zero-Mock policy ensures that tests <a
 href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">reflect
 reality</a>. The steganographic provenance layer ensures that published
 artifacts carry their own <a
@@ -280,15 +270,12 @@ orchestration—within a single enforced pipeline.</p>
 commitment. It asserts that a research paper is not a static document
 but a build artifact—reproducible, verifiable, and traceable to the code
 that generated it. As Knuth observed, programs should be written for
-humans to read and only incidentally for machines to execute <span
-class="citation"
-data-cites="knuth1984literate">[@knuth1984literate]</span>. We extend
-this dictum: research manuscripts should be <em>built</em> for
-verification and only incidentally for reading. In an era of generative
-AI, AI-native research workspaces, and synthetic media—where the
-boundary between human-authored and machine-generated text grows
-increasingly indeterminate <span class="citation"
-data-cites="gruenpeter2021research">[@gruenpeter2021research]</span>—the
+humans to read and only incidentally for machines to execute
+[knuth1984literate]. We extend this dictum: research manuscripts should
+be <em>built</em> for verification and only incidentally for reading. In
+an era of generative AI, AI-native research workspaces, and synthetic
+media—where the boundary between human-authored and machine-generated
+text grows increasingly indeterminate [gruenpeter2021research]—the
 provenance chain from source code to published PDF is not an
 administrative convenience. It is the epistemic ground on which
 scientific trust must be rebuilt. That this manuscript was itself built,

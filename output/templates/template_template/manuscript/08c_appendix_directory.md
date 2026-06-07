@@ -14,16 +14,20 @@ template/
 ├── scripts/
 │   ├── 00_setup_environment.py … 07_generate_executive_report.py
 │   ├── execute_pipeline.py execute_multi_project.py
-├── projects/                    # ACTIVE exemplars (`discover_projects`)
-│   ├── template_code_project/
-│   ├── template_prose_project/
-│   ├── template_search_project/
-│   └── … rotated research trees + `_test_project` CI fixture stubs
-├── projects_in_progress/
-│   └── template/                # Present manuscript (`manuscript/` here)
-├── projects_archive/            # Preserved workspaces (inactive)
-├── docs/ (17 top-level areas, 351+ markdown files per live counter)
-├── tests/                       # Infra suites (367+ files)
+├── projects/                    # Typed program subfolders (`discover_projects`)
+│   ├── templates/               # Public exemplars (git-tracked)
+│   │   ├── template_active_inference/
+│   │   ├── template_autoresearch_project/
+│   │   ├── template_code_project/
+│   │   ├── template_prose_project/
+│   │   └── template_template/   # Present manuscript (`manuscript/` here)
+│   ├── active/                  # Hot-seat rendered set (symlinked, private)
+│   ├── working/                 # Non-rendered backburner (symlinked, private)
+│   ├── published/               # Non-rendered published (symlinked, private)
+│   ├── archive/                 # Non-rendered retired (symlinked, private)
+│   └── other/                   # Non-rendered misc (symlinked, private)
+├── docs/ (17 top-level areas, 367+ markdown files per live counter)
+├── tests/                       # Infra suites (404+ files)
 ├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 ├── run.sh / secure_run.sh
 └── output/ …                    # Mirrors after copy stage

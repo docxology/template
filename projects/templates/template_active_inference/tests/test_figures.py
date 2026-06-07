@@ -89,7 +89,7 @@ def test_generate_all_figures_complete(project_root: Path) -> None:
 
 
 def test_figure_registry_json_matches_yaml(project_root: Path) -> None:
-    from visualizations.figure_registry import build_figure_registry_payload, write_figure_registry_json
+    from visualizations.figure_registry import write_figure_registry_json
 
     registry = load_figure_registry(project_root)
     path = write_figure_registry_json(project_root)
@@ -99,6 +99,23 @@ def test_figure_registry_json_matches_yaml(project_root: Path) -> None:
         record = payload[f"fig:{figure_id}"]
         assert record["filename"] == spec.filename
         assert record["generated_by"] == f"visualizations.figures::{figure_id}"
+        assert record["visual_role"] == spec.visual_role
+        assert record["evidence_role"] == spec.evidence_role
+        assert record["paper_claim"] == spec.paper_claim
+
+
+def test_layout_sensitive_figures_have_publication_dimensions(project_root: Path) -> None:
+    expected_minima = {
+        "multi_track_architecture": (1500, 1050),
+        "scholarship_source_map": (1700, 950),
+        "semantic_gluing_graph": (1450, 850),
+        "lean_boundary_status": (1300, 900),
+    }
+    for figure_id, (min_width, min_height) in expected_minima.items():
+        path = figure_output_path(project_root, figure_id)
+        if not path.is_file():
+            path = run_figure(figure_id, project_root)
+        _assert_png(path, min_width=min_width, min_height=min_height)
 
 
 def test_figure_ising_mi_curve_dimensions(project_root: Path) -> None:

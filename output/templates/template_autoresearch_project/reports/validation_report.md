@@ -1,6 +1,6 @@
 # Validation Report
 
-**Generated:** 2026-05-27T15:10:38.754739
+**Generated:** 2026-06-06T21:22:41.091936
 
 ## Validation Checks
 
@@ -11,4 +11,4 @@
 - ✅ PASS: Figure registry
 - ✅ PASS: Evidence registry
 - ✅ PASS: Project design overlays
-- ✅ PASS: Artifact manifest
+- ❌ FAIL: Artifact manifest

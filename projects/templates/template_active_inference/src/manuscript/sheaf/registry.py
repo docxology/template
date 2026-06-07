@@ -22,6 +22,8 @@ def load_track_registry(registry_path: Path) -> TrackRegistry:
             renderer=renderer,
             label=str(entry.get("label", track_id)),
             optional=bool(entry.get("optional", False)),
+            paper_role=str(entry.get("paper_role", "")),
+            paper_use=str(entry.get("paper_use", "")),
         )
     renderers_raw = raw.get("renderers") or {}
     suffixes: dict[str, tuple[str, ...]] = {}

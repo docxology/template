@@ -13,6 +13,8 @@
 | `analysis.workflow` | `main` | function | Run the full optimization analysis pipeline. |
 | `analysis.workflow` | `run_analysis_pipeline` | function | Execute the full optimization analysis workflow. |
 | `dashboard` | `build_dashboard_html` | function | Build the dashboard with config defaults and write HTML to ``output/web/``. |
+| `dashboard` | `cli_main` | function | Build dashboard artifacts from CLI arguments. |
+| `dashboard` | `parse_dashboard_args` | function | Parse CLI arguments for the dashboard builder. |
 | `dashboard_panels` | `build_dashboard` | function |  |
 | `dashboard_panels` | `to_dashboard_invariant` | function |  |
 | `dashboard_payload` | `compute_payload` | function |  |

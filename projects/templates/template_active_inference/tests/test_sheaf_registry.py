@@ -19,6 +19,28 @@ def test_registry_defines_track_order() -> None:
     assert registry.renderer_suffixes["ontology_yaml"] == (".yaml", ".yml")
 
 
+def test_registry_declares_paper_roles() -> None:
+    root = Path(__file__).resolve().parents[1]
+    registry = load_track_registry(root / "manuscript" / "sheaf" / "tracks.yaml")
+    assert registry.tracks
+    for track_id, spec in registry.tracks.items():
+        assert spec.paper_role, f"{track_id} missing general paper role"
+        assert spec.paper_use, f"{track_id} missing paper-specific use"
+        assert len(spec.paper_role.split()) >= 3
+        assert len(spec.paper_use.split()) >= 5
+
+
+def test_layers_report_exposes_track_roles() -> None:
+    root = Path(__file__).resolve().parents[1]
+    registry = load_track_registry(root / "manuscript" / "sheaf" / "tracks.yaml")
+    from manuscript.sheaf.layers_report import render_track_registry_table
+
+    table = render_track_registry_table(registry)
+    assert "| Order | Track id | Label | Renderer | Paper role | Paper use | Optional |" in table
+    assert "Supports the narrative spine" in table
+    assert "Injects registry figures into section-specific evidence blocks" in table
+
+
 def test_list_registered_tracks() -> None:
     root = Path(__file__).resolve().parents[1]
     specs = list_registered_tracks(root)

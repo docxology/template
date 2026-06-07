@@ -63,9 +63,9 @@ Generic, Layer-1 facts for working in this repository.
 
 ## Confidentiality invariant (this is a PUBLIC repo)
 
-`.gitignore` ignores `projects/*` and negates **only** the `projects/templates/` exemplar trees — `projects/templates/template_active_inference/`, `projects/templates/template_autoresearch_project/`, `projects/templates/template_code_project/`, `projects/templates/template_prose_project/`, `projects/templates/template_sia/`, and `projects/templates/template_template/` (plus the repo-level `projects/*.md` docs). Those public canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in a **separate, external private repository** whose location is configured with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; `run.sh`/`infrastructure.orchestration` sync that repo's lifecycle folders into matching typed subfolders under `projects/`: `active/*` → `projects/active/*` (rendered), and `working/*`, `published/*`, `archive/*`, `other/*` → `projects/{working,published,archive,other}/*` (linked, not rendered). Only `projects/templates/*` and `projects/active/*` are discovered/rendered by default.
+`.gitignore` ignores `projects/*` and negates **only** the `projects/templates/` exemplar trees — `projects/templates/template_active_inference/`, `projects/templates/template_autoresearch_project/`, `projects/templates/template_code_project/`, `projects/templates/template_prose_project/`, `projects/templates/template_sia/`, and `projects/templates/template_template/` (plus the repo-level `projects/*.md` docs). Those public canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in a **separate, external private repository** whose location is configured with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; the simplified sidecar normally has `working/` and `archive/`, with optional legacy `active/`, `published/`, and `other/` folders still supported by the linker. `run.sh`/`infrastructure.orchestration` sync existing lifecycle folders into matching typed subfolders under `projects/`: `working/*` → `projects/working/*`, `archive/*` → `projects/archive/*`, and optional `active/*` → `projects/active/*` (rendered). Only `projects/templates/*` and optional `projects/active/*` are discovered/rendered by default.
 
-Every path under `projects/` other than `templates/` — the `active/` hot-seat set, the `working/`/`published/`/`archive/`/`other/` lifecycle folders, and the optional `template_search_project` literature-search exemplar — is **local-only and must never be committed**. This is enforced, not conventional: `scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any project path in docs.
+Every path under `projects/` other than `templates/` — especially the local-only `working/`, `archive/`, optional `active/`, `published/`, `other/` mirrors, and the optional `template_search_project` literature-search exemplar — is **local-only and must never be committed**. This is enforced, not conventional: `scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any project path in docs.
 
 Operational gotchas: running **all** `projects/*/tests/` in **one** pytest process fails when projects each ship `tests/conftest` under the `tests.conftest` package name — run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage), or follow `.github/workflows/ci.yml`. `resolve_project_root` accepts a qualified `<subfolder>/<name>` path (e.g. `templates/template_code_project`, `active/demo`) and resolves it directly under `projects/`. For a bare name it prefers `projects/active/<name>/` (the hot seat) when that tree has project markers, then `projects/working/<name>/`, then a flat standalone `projects/<name>/`, falling back to `projects/active/<name>/` for error messages.
 
@@ -151,16 +151,14 @@ The template now supports **multiple independent projects** within a single repo
 **Active projects** (under `projects/`): the set **rotates** as workspaces are promoted, archived, or moved. Authoritative names **at any moment** are only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (regenerate after layout changes). The **only** path **guaranteed** to remain the **control-positive** exemplar for docs and commands is `projects/templates/template_code_project/` (optimization research exemplar).
 
 Private projects normally live in a separate external private repository
-(location configurable via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`) and are symlinked by lifecycle into matching typed subfolders under `projects/`:
-`active/*` into `projects/active/*` for discovery/rendering, and `working/*`,
-`published/*`, `archive/*`, `other/*` into `projects/{working,published,archive,other}/*`
-for inspection. Use
+(location configurable via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`) and are symlinked by lifecycle into matching typed subfolders under `projects/`.
+The simplified private sidecar uses `working/` and `archive/` by default; optional legacy `active/`, `published/`, and `other/` folders are still recognized when present. `working/*` mirrors into `projects/working/*` and `archive/*` into `projects/archive/*` for explicit inspection/rendering; optional `active/*` mirrors into `projects/active/*` for discovery/rendering. Use
 `uv run python -m infrastructure.orchestration link-projects --dry-run` to
 inspect the planned links, `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root` to override the sibling repo, and
 `TEMPLATE_SKIP_LINK_SYNC=1` to disable auto-sync for a command.
 
-**Note:** Exemplars such as `blake_bimetalism`, `traditional_newspaper`, `area_handbook`, `density_bioscales` may live under [`projects/archive/`](projects/archive/). In-progress trees live under [`projects/working/`](projects/working/) until promoted (roster varies by checkout). Active names are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
+**Note:** Exemplars such as `blake_bimetalism`, `traditional_newspaper`, `area_handbook`, `density_bioscales` may live under [`projects/archive/`](projects/archive/). In-progress trees live under [`projects/working/`](projects/working/) until retired or explicitly rendered. Active names are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 ## 📂 Project Organization: Rendered vs Non-Rendered Subfolders
 
@@ -173,21 +171,25 @@ Projects under `projects/templates/` (tracked exemplars) and `projects/active/` 
 - **Executed** by all pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
 - **Outputs** generated in `projects/<subfolder>/{name}/output/` and copied to `output/<subfolder>/{name}/`
 
-### Non-Rendered Projects (`working/`, `published/`, `archive/`, `other/`)
+### Non-Rendered Projects (`working/`, `archive/`, optional legacy mirrors)
 
-Projects under `projects/working/`, `projects/published/`, `projects/archive/`, and `projects/other/` are **preserved but not executed**:
+Projects under `projects/working/` and `projects/archive/` are **preserved for explicit targeted work but not executed by default**. Optional legacy `projects/published/` and `projects/other/` mirrors are treated the same way when present:
 
-- **NOT discovered** by infrastructure discovery functions
-- **NOT listed** in `run.sh` menu
-- **NOT executed** by any pipeline scripts
-- **Preserved** for historical reference and potential reactivation
+- **NOT discovered** by default infrastructure discovery functions
+- **NOT listed** in the normal `run.sh` menu
+- **NOT executed** by all-project pipeline scripts
+- **Preserved** for in-progress work, historical reference, and explicit qualified commands such as `--project working/<name>`
 
 ### Project Lifecycle
 
-**Archiving:** Move `projects/active/{name}/` → `projects/archive/{name}/`
-**Reactivation:** Move `projects/archive/{name}/` → `projects/active/{name}/`
+**Retiring in the sidecar:** Move `working/{name}/` → `archive/{name}/`
+**Resuming in the sidecar:** Move `archive/{name}/` → `working/{name}/`
+**Explicit render:** From the template checkout, run `uv run python scripts/03_render_pdf.py --project working/{name}` after `link-projects`.
 
-Projects are automatically discovered when moved into `projects/active/`.
+Projects are automatically discovered when a deliberately restored sidecar
+`active/{name}` entry is synced into `projects/active/{name}`. Normal sidecar
+work can also be rendered explicitly with a qualified name such as
+`working/{name}` without moving it into the default render set.
 
 ### In-Progress Projects (`projects/working/`)
 
@@ -196,11 +198,14 @@ An intermediate staging area for projects that are under active development but 
 - **NOT discovered** by infrastructure discovery functions
 - **NOT listed** in `run.sh` menu
 - **NOT executed** by any pipeline scripts
-- Useful for drafting new project scaffolding before promoting to `projects/active/`
+- Useful for drafting new project scaffolding before explicitly rendering with a
+  qualified name or deliberately restoring into optional `projects/active/`
 
-**Current in-progress projects:** the roster rotates every checkout, so it is deliberately **not** hard-coded here — run `ls projects/working/` for the live set (not executed by `./run.sh` until promoted to `projects/active/`). Rendered projects are listed only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
+**Current in-progress projects:** the roster rotates every checkout, so it is deliberately **not** hard-coded here — run `ls projects/working/` for the live set (not executed by default by `./run.sh`; render explicitly with a qualified project name such as `working/<name>`). Rendered projects are listed only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
-**To promote:** Move `projects/working/{name}/` → `projects/active/{name}/`
+**To render by default:** restore/sync the project through the sidecar's optional
+`active/{name}` folder so it appears as `projects/active/{name}`. Keep ordinary
+backburner work in sidecar `working/` or `archive/`.
 
 ## 📚 Repository Structure
 
@@ -267,11 +272,11 @@ Each directory contains documentation for easy navigation:
 | [`projects/templates/template_template/`](projects/templates/template_template/) | [AGENTS.md](projects/templates/template_template/AGENTS.md) | [README.md](projects/templates/template_template/README.md) | Meta-template exemplar (canonical, always present) |
 | [`projects/templates/template_textbook/`](projects/templates/template_textbook/) | [AGENTS.md](projects/templates/template_textbook/AGENTS.md) | [README.md](projects/templates/template_textbook/README.md) | Modular fillable-textbook scaffold exemplar (canonical, always present) |
 | [`projects/archive/template_search_project/`](projects/archive/template_search_project/) | [AGENTS.md](projects/archive/template_search_project/AGENTS.md) | [README.md](projects/archive/template_search_project/README.md) | Literature-search exemplar — **local-only, NOT git-tracked**; copy under `projects/active/` locally to run, never commit |
-| Rotating projects (e.g. `actinf_policy_entanglement_lean`, private symlinked workspaces) | see project tree when checked out under `projects/active/` | see project tree when checked out under `projects/active/` | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current roster; rotates between `projects/working/` and `projects/archive/` |
+| Rotating projects (e.g. `actinf_policy_entanglement_lean`, private symlinked workspaces) | see project tree when checked out under a typed subfolder | see project tree when checked out under a typed subfolder | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current rendered roster; ordinary sidecar work rotates between `projects/working/` and `projects/archive/` |
 
-**In-progress projects** live under [`projects/working/`](projects/working/) and are not executed by the pipeline until promoted to `projects/active/`. The roster rotates every checkout, so it is deliberately **not** hard-coded here (cf. the rotation rule above — hard-coding rotating project paths is the recurring staleness defect this guidance prevents): run `ls projects/working/` for the live set, and see [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for the rendered roster.
+**In-progress projects** live under [`projects/working/`](projects/working/) and are not executed by default pipeline discovery. Render one explicitly with a qualified project name such as `working/<name>`, or deliberately restore it through optional sidecar `active/` only when it should enter default discovery. The roster rotates every checkout, so it is deliberately **not** hard-coded here (cf. the rotation rule above — hard-coding rotating project paths is the recurring staleness defect this guidance prevents): run `ls projects/working/` for the live set, and see [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for the rendered roster.
 
-**Archived projects** live under [`projects/archive/`](projects/archive/) when present, but the roster is checkout-specific and is not discovered or executed until a project is moved to `projects/active/`. Use `ls projects/archive/` for local inspection. The authoritative list of rendered projects is in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md). Regenerate it after layout changes: `uv run python scripts/generate_active_projects_doc.py`.
+**Archived projects** live under [`projects/archive/`](projects/archive/) when present, but the roster is checkout-specific and is not discovered or executed by default. Resume by moving them back to sidecar `working/`, render explicitly with `archive/<name>` when appropriate, or deliberately restore through optional sidecar `active/` for default discovery. Use `ls projects/archive/` for local inspection. The authoritative list of rendered projects is in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md). Regenerate it after layout changes: `uv run python scripts/generate_active_projects_doc.py`.
 
 ### Documentation Directories
 

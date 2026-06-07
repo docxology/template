@@ -9,8 +9,12 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_code_project/`](templates/template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
 - [`templates/template_prose_project/`](templates/template_prose_project/) — prose-centric exemplar (editorial review, BibTeX validation, readability metrics)
 - [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
+- [`templates/template_autoscientists/`](templates/template_autoscientists/) — AutoScientists coordination-mechanism testbed
 - [`templates/template_active_inference/`](templates/template_active_inference/) — Active Inference multi-track exemplar (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
+- [`templates/template_newspaper/`](templates/template_newspaper/) — newspaper layout/typography exemplar
+- [`templates/template_sia/`](templates/template_sia/) — SIA self-improvement harness exemplar
 - [`templates/template_template/`](templates/template_template/) — meta-template (introspects `infrastructure/` and the public exemplar roster)
+- [`templates/template_textbook/`](templates/template_textbook/) — modular fillable textbook scaffold
 
 They are **standalone** projects with the same core layout (`src/`, `tests/`, `scripts/`, `manuscript/`, `output/`) and the same verification commands. The optional `template_search_project` literature-search exemplar is **local-only** — it lives at [`archive/template_search_project/`](archive/template_search_project/) and is **not git-tracked**. This is a public repo: only the public canonical exemplars under `templates/` are tracked; copy `template_search_project` under `projects/active/` *locally* to exercise literature-search workflows, but never commit it (`scripts/check_tracked_projects.py` blocks any non-template project in pre-push + CI). Examples in this documentation default to `projects/templates/template_code_project/` unless a doc explicitly compares projects.
 
@@ -23,8 +27,12 @@ They are **standalone** projects with the same core layout (`src/`, `tests/`, `s
 | [`template_code_project`](templates/template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
 | [`template_prose_project`](templates/template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
 | [`template_autoresearch_project`](templates/template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
+| [`template_autoscientists`](templates/template_autoscientists/) | Coordination-mechanism testbed | yes (`src/coordination/*`) | no (curated) | no | see canonical facts | see canonical facts |
 | [`template_active_inference`](templates/template_active_inference/) | Active Inference multi-track research | yes (multiple tracks) | no (curated) | yes | see canonical facts | see canonical facts |
+| [`template_newspaper`](templates/template_newspaper/) | Newspaper layout engine | no (layout orchestration) | n/a | yes (page-layout output) | see canonical facts | see canonical facts |
+| [`template_sia`](templates/template_sia/) | Self-Improvement Agent harness | yes (`src/loop.py`) | no (curated) | registry-backed | see canonical facts | see canonical facts |
 | [`template_template`](templates/template_template/) | Meta-template (infrastructure introspection) | yes (`src/template_template/introspection.py`) | no (curated) | yes (architecture figures) | see canonical facts | see canonical facts |
+| [`template_textbook`](templates/template_textbook/) | Book-length scaffold with labs/question banks | yes (`src/textbook/*`) | no (curated) | deterministic figures/diagrams | see canonical facts | see canonical facts |
 
 The measured test and coverage totals drift as the exemplars evolve; confirm
 current numbers in
@@ -47,7 +55,7 @@ lifecycle repo's `active/` tree; inspect planned syncs with
 
 These are actively being developed under [`working/`](working/) but are not yet pipeline-ready. The roster is deliberately not copied here; use `ls projects/working/` for the current checkout and [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) for projects actually discovered by `./run.sh`.
 
-**Note:** Use `projects/templates/template_code_project/` for concrete paths, commands, and layout examples unless a document explicitly compares project shapes. Promote projects from `projects/working/` or `projects/archive/` to `projects/active/` when they are ready for pipeline execution.
+**Note:** Use `projects/templates/template_code_project/` for concrete paths, commands, and layout examples unless a document explicitly compares project shapes. Keep ordinary private work in the sidecar's `working/` or `archive/` folders; render it explicitly with qualified names such as `working/<name>`, or deliberately restore it to optional sidecar `active/` only when it should enter default discovery.
 
 ### Archived exemplars (under `projects/archive/`)
 
@@ -94,31 +102,32 @@ Projects under `projects/templates/` (the tracked exemplars) and `projects/activ
 - **Rendered** independently with project-specific manuscripts
 - **Outputs** organized in `projects/<subfolder>/{name}/output/` and `output/<subfolder>/{name}/`
 
-#### 📦 **Non-Rendered Projects (`working/`, `published/`, `archive/`, `other/`)**
+#### 📦 **Non-Rendered Projects (`working/`, `archive/`, optional legacy mirrors)**
 
-Projects under `projects/working/`, `projects/published/`, `projects/archive/`, and `projects/other/` are **preserved but not executed**:
+Projects under `projects/working/` and `projects/archive/` are **preserved but not executed by default**. Optional legacy `projects/published/` and `projects/other/` mirrors are treated the same way when present:
 
 - **NOT discovered** by infrastructure discovery functions
 - **NOT listed** in `run.sh` menu
 - **NOT executed** by any pipeline scripts
-- **Preserved** for historical reference and potential reactivation
+- **Preserved** for historical reference, explicit qualified renders, or deliberate restoration into optional `active/`
 
 ```bash
-# Move project to archive
-mv projects/active/myproject projects/archive/myproject
+# Retire a private sidecar project
+mv ../projects/working/myproject ../projects/archive/myproject
 
-# Move project back to the rendered hot-seat set
-mv projects/archive/myproject projects/active/myproject
+# Run a non-rendered working project explicitly from this checkout
+uv run python scripts/03_render_pdf.py --project working/myproject
 
-# Project will be automatically discovered on next run.sh execution
+# To enter default discovery, restore it through optional sidecar active/
+mv ../projects/working/myproject ../projects/active/myproject
 ```
 
 For confidential work, prefer the configured external private lifecycle repo:
-its `active/` is linked into `projects/active/`, and `working/`, `published/`,
-`archive/`, `other/` are linked into the matching `projects/<subfolder>/`.
-Only `templates/` and `active/` are discovered/rendered by default; the other
-mirrors are for inspection or explicit targeted work. Move private work between
-lifecycle folders instead of committing it here.
+the simplified sidecar uses `working/` and `archive/` by default; optional
+legacy `active/`, `published/`, and `other/` folders are linked when present.
+Only `templates/` and optional `active/` are discovered/rendered by default; the
+other mirrors are for inspection or explicit targeted work. Move private work
+between lifecycle folders instead of committing it here.
 
 | Directory            | Role                      | Tests | Coverage |
 |----------------------|---------------------------|-------|----------|
@@ -709,14 +718,15 @@ for p in projects:
 # Check if project is in the archive subfolder
 ls -la projects/archive/
 
-# If found in archive, reactivate it
-mv projects/archive/myproject projects/active/myproject
+# If found in archive, either render explicitly or resume it through sidecar working/
+uv run python scripts/03_render_pdf.py --project archive/myproject
+mv ../projects/archive/myproject ../projects/working/myproject
 
 # Verify project structure is valid
-uv run python -c "from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/active/myproject')))"
+uv run python -c "from pathlib import Path; from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/working/myproject')))"
 
-# Project should now be discoverable
-./run.sh
+# To put it in the normal run.sh menu, deliberately restore optional active/
+mv ../projects/working/myproject ../projects/active/myproject
 ```
 
 **Symptoms:**
@@ -728,9 +738,9 @@ uv run python -c "from infrastructure.project import validate_project_structure;
 **Solution:**
 
 1. Check if project exists in `projects/archive/` (or `working/`, `other/`)
-2. If archived, move it back to `projects/active/`
+2. Render it explicitly with a qualified name (`archive/<name>` or `working/<name>`) when you do not want default discovery
 3. Validate project structure (must have `src/` and `tests/`)
-4. Project will be automatically discovered on next execution
+4. Move through optional sidecar `active/` only when it should appear in the normal menu and all-project runs
 
 ### "Missing required directory: src" or "src/ directory contains no Python files"
 

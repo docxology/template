@@ -1,18 +1,18 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 381,
+  "fact_count": 395,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 248,
+    "artifact": 256,
     "citation": 62,
-    "figure": 4,
-    "number": 67
+    "figure": 6,
+    "number": 71
   },
-  "omitted_fact_count": 181,
+  "omitted_fact_count": 195,
   "sample_facts": [
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_count",
       "source_field": "$.module_count",
@@ -20,11 +20,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "22"
+      "value": "23"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_count (numeric variant)",
       "source_field": "$.module_count",
@@ -32,11 +32,35 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.22"
+      "value": "0.23"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.importable_package_count",
+      "source_field": "$.importable_package_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "20"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.importable_package_count (numeric variant)",
+      "source_field": "$.importable_package_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.2"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.stage_count",
       "source_field": "$.stage_count",
@@ -44,23 +68,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "10"
+      "value": "11"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.pipeline_stages_default_full",
-      "source_field": "$.pipeline_stages_default_full",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "10"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_documentation_python_file_count",
       "source_field": "$.module_documentation_python_file_count",
@@ -68,23 +80,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "10"
+      "value": "11"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.module_steganography_python_file_count",
-      "source_field": "$.module_steganography_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "10"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.stage_count (numeric variant)",
       "source_field": "$.stage_count",
@@ -92,23 +92,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.1"
+      "value": "0.11"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.pipeline_stages_default_full (numeric variant)",
-      "source_field": "$.pipeline_stages_default_full",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_documentation_python_file_count (numeric variant)",
       "source_field": "$.module_documentation_python_file_count",
@@ -116,23 +104,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.1"
+      "value": "0.11"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.module_steganography_python_file_count (numeric variant)",
-      "source_field": "$.module_steganography_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.pipeline_stages_declared",
       "source_field": "$.pipeline_stages_declared",
@@ -144,7 +120,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.pipeline_stages_declared (numeric variant)",
       "source_field": "$.pipeline_stages_declared",
@@ -156,7 +132,55 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.pipeline_stages_default_full",
+      "source_field": "$.pipeline_stages_default_full",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "10"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_steganography_python_file_count",
+      "source_field": "$.module_steganography_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "10"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.pipeline_stages_default_full (numeric variant)",
+      "source_field": "$.pipeline_stages_default_full",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_steganography_python_file_count (numeric variant)",
+      "source_field": "$.module_steganography_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.pipeline_stages_core_only",
       "source_field": "$.pipeline_stages_core_only",
@@ -168,7 +192,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_orchestration_python_file_count",
       "source_field": "$.module_orchestration_python_file_count",
@@ -180,7 +204,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_prose_python_file_count",
       "source_field": "$.module_prose_python_file_count",
@@ -192,31 +216,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.module_reference_python_file_count",
-      "source_field": "$.module_reference_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "8"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.module_search_python_file_count",
-      "source_field": "$.module_search_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "8"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.pipeline_stages_core_only (numeric variant)",
       "source_field": "$.pipeline_stages_core_only",
@@ -228,7 +228,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_orchestration_python_file_count (numeric variant)",
       "source_field": "$.module_orchestration_python_file_count",
@@ -240,7 +240,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_prose_python_file_count (numeric variant)",
       "source_field": "$.module_prose_python_file_count",
@@ -252,31 +252,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.module_reference_python_file_count (numeric variant)",
-      "source_field": "$.module_reference_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.08"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.module_search_python_file_count (numeric variant)",
-      "source_field": "$.module_search_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.08"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.project_count",
       "source_field": "$.project_count",
@@ -284,23 +260,23 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "5"
+      "value": "9"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.module_methods_python_file_count",
-      "source_field": "$.module_methods_python_file_count",
+      "source": "output/data/metrics.json:$.module_sia_python_file_count",
+      "source_field": "$.module_sia_python_file_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "5"
+      "value": "9"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.project_count (numeric variant)",
       "source_field": "$.project_count",
@@ -308,23 +284,23 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.05"
+      "value": "0.09"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.module_methods_python_file_count (numeric variant)",
-      "source_field": "$.module_methods_python_file_count",
+      "source": "output/data/metrics.json:$.module_sia_python_file_count (numeric variant)",
+      "source_field": "$.module_sia_python_file_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.05"
+      "value": "0.09"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.total_infra_python_files",
       "source_field": "$.total_infra_python_files",
@@ -332,11 +308,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "456"
+      "value": "531"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.total_infra_python_files (numeric variant)",
       "source_field": "$.total_infra_python_files",
@@ -344,14 +320,110 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "4.56"
+      "value": "5.31"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.infra_test_file_count",
       "source_field": "$.infra_test_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "404"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.infra_test_file_count (numeric variant)",
+      "source_field": "$.infra_test_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "4.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.infra_test_count",
+      "source_field": "$.infra_test_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "7385"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.infra_test_count (numeric variant)",
+      "source_field": "$.infra_test_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "73.85"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.all_projects_test_count",
+      "source_field": "$.all_projects_test_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "1099"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.all_projects_test_count (numeric variant)",
+      "source_field": "$.all_projects_test_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "10.99"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.total_test_count",
+      "source_field": "$.total_test_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "8484"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.total_test_count (numeric variant)",
+      "source_field": "$.total_test_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "84.84"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.docs_file_count",
+      "source_field": "$.docs_file_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -360,10 +432,10 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.infra_test_file_count (numeric variant)",
-      "source_field": "$.infra_test_file_count",
+      "source": "output/data/metrics.json:$.docs_file_count (numeric variant)",
+      "source_field": "$.docs_file_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -372,103 +444,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.infra_test_count",
-      "source_field": "$.infra_test_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "7024"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.infra_test_count (numeric variant)",
-      "source_field": "$.infra_test_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "70.24"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.all_projects_test_count",
-      "source_field": "$.all_projects_test_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "646"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.all_projects_test_count (numeric variant)",
-      "source_field": "$.all_projects_test_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "6.46"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.total_test_count",
-      "source_field": "$.total_test_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "7670"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.total_test_count (numeric variant)",
-      "source_field": "$.total_test_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "76.7"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.docs_file_count",
-      "source_field": "$.docs_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "351"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.docs_file_count (numeric variant)",
-      "source_field": "$.docs_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "3.51"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.docs_subdir_count",
       "source_field": "$.docs_subdir_count",
@@ -480,7 +456,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.docs_subdir_count (numeric variant)",
       "source_field": "$.docs_subdir_count",
@@ -492,7 +468,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_autoresearch_python_file_count",
       "source_field": "$.module_autoresearch_python_file_count",
@@ -504,7 +480,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_scientific_python_file_count",
+      "source_field": "$.module_scientific_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "7"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_autoresearch_python_file_count (numeric variant)",
       "source_field": "$.module_autoresearch_python_file_count",
@@ -516,7 +504,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_scientific_python_file_count (numeric variant)",
+      "source_field": "$.module_scientific_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.07"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_benchmark_python_file_count",
       "source_field": "$.module_benchmark_python_file_count",
@@ -528,7 +528,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_benchmark_python_file_count (numeric variant)",
       "source_field": "$.module_benchmark_python_file_count",
@@ -540,7 +540,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_config_python_file_count",
       "source_field": "$.module_config_python_file_count",
@@ -552,7 +552,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_docker_python_file_count",
       "source_field": "$.module_docker_python_file_count",
@@ -564,7 +564,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_logrotate_d_python_file_count",
       "source_field": "$.module_logrotate_d_python_file_count",
@@ -576,7 +576,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_core_python_file_count",
       "source_field": "$.module_core_python_file_count",
@@ -584,11 +584,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "97"
+      "value": "104"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_core_python_file_count (numeric variant)",
       "source_field": "$.module_core_python_file_count",
@@ -596,11 +596,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.97"
+      "value": "1.04"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_doctor_python_file_count",
       "source_field": "$.module_doctor_python_file_count",
@@ -608,11 +608,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "9"
+      "value": "14"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_doctor_python_file_count (numeric variant)",
       "source_field": "$.module_doctor_python_file_count",
@@ -620,11 +620,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.09"
+      "value": "0.14"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_llm_python_file_count",
       "source_field": "$.module_llm_python_file_count",
@@ -632,11 +632,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "53"
+      "value": "54"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_llm_python_file_count (numeric variant)",
       "source_field": "$.module_llm_python_file_count",
@@ -644,11 +644,35 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.53"
+      "value": "0.54"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_methods_python_file_count",
+      "source_field": "$.module_methods_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_methods_python_file_count (numeric variant)",
+      "source_field": "$.module_methods_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_project_python_file_count",
       "source_field": "$.module_project_python_file_count",
@@ -656,11 +680,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "19"
+      "value": "21"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_project_python_file_count (numeric variant)",
       "source_field": "$.module_project_python_file_count",
@@ -668,11 +692,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.19"
+      "value": "0.21"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_publishing_python_file_count",
       "source_field": "$.module_publishing_python_file_count",
@@ -680,11 +704,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "42"
+      "value": "44"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_publishing_python_file_count (numeric variant)",
       "source_field": "$.module_publishing_python_file_count",
@@ -692,11 +716,35 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.42"
+      "value": "0.44"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_reference_python_file_count",
+      "source_field": "$.module_reference_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "16"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_reference_python_file_count (numeric variant)",
+      "source_field": "$.module_reference_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.16"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_rendering_python_file_count",
       "source_field": "$.module_rendering_python_file_count",
@@ -704,11 +752,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "45"
+      "value": "47"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_rendering_python_file_count (numeric variant)",
       "source_field": "$.module_rendering_python_file_count",
@@ -716,11 +764,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.45"
+      "value": "0.47"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_reporting_python_file_count",
       "source_field": "$.module_reporting_python_file_count",
@@ -728,11 +776,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "51"
+      "value": "56"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_reporting_python_file_count (numeric variant)",
       "source_field": "$.module_reporting_python_file_count",
@@ -740,23 +788,35 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.51"
+      "value": "0.56"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.module_scientific_python_file_count",
-      "source_field": "$.module_scientific_python_file_count",
+      "source": "output/data/metrics.json:$.module_search_python_file_count",
+      "source_field": "$.module_search_python_file_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "6"
+      "value": "32"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_search_python_file_count (numeric variant)",
+      "source_field": "$.module_search_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.32"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_skills_python_file_count",
       "source_field": "$.module_skills_python_file_count",
@@ -768,19 +828,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.module_scientific_python_file_count (numeric variant)",
-      "source_field": "$.module_scientific_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.06"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_skills_python_file_count (numeric variant)",
       "source_field": "$.module_skills_python_file_count",
@@ -792,7 +840,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_validation_python_file_count",
       "source_field": "$.module_validation_python_file_count",
@@ -800,11 +848,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "61"
+      "value": "69"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_validation_python_file_count (numeric variant)",
       "source_field": "$.module_validation_python_file_count",
@@ -812,11 +860,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.61"
+      "value": "0.69"
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -828,7 +876,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -840,7 +888,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -852,7 +900,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -864,7 +912,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -876,7 +924,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -888,7 +936,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -900,7 +948,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -912,7 +960,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -924,7 +972,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -936,7 +984,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -948,7 +996,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -960,7 +1008,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -972,7 +1020,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -984,7 +1032,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -996,7 +1044,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1008,7 +1056,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1020,7 +1068,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1032,7 +1080,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1044,7 +1092,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1056,7 +1104,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1068,7 +1116,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1080,7 +1128,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1092,7 +1140,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1104,7 +1152,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1116,7 +1164,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1128,7 +1176,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1140,7 +1188,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1152,7 +1200,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1164,7 +1212,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1176,7 +1224,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1188,7 +1236,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1200,7 +1248,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1212,7 +1260,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1224,7 +1272,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1236,7 +1284,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1248,7 +1296,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1260,7 +1308,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1272,7 +1320,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1284,7 +1332,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1296,7 +1344,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1308,7 +1356,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1320,7 +1368,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1332,7 +1380,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1344,7 +1392,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1356,7 +1404,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1368,7 +1416,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1380,7 +1428,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1392,7 +1440,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1404,7 +1452,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1416,7 +1464,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1428,7 +1476,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1440,7 +1488,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1452,7 +1500,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1464,7 +1512,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1476,7 +1524,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1488,7 +1536,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1500,7 +1548,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1512,7 +1560,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1524,7 +1572,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1536,7 +1584,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1548,7 +1596,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1560,7 +1608,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1572,7 +1620,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1584,7 +1632,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1596,7 +1644,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1608,7 +1656,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/config.yaml.example",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/config.yaml.example"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1620,7 +1680,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1632,7 +1692,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1644,7 +1704,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1656,7 +1716,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1668,7 +1728,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1680,7 +1740,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1692,7 +1752,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/99_zz_transmission_end.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/99_zz_transmission_end.md"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1704,7 +1776,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1716,7 +1788,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1728,7 +1800,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1740,7 +1812,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1752,7 +1824,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1764,7 +1836,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1776,7 +1848,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1788,7 +1860,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1800,7 +1872,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/00_00_transmission_begin.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/00_00_transmission_begin.md"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1812,7 +1896,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1824,7 +1908,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1836,7 +1920,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1848,7 +1932,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1860,7 +1944,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1872,7 +1956,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1884,7 +1968,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1896,7 +1980,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1908,7 +1992,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1920,7 +2004,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1932,7 +2016,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1944,7 +2028,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1956,7 +2040,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1968,7 +2052,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1980,7 +2064,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1992,7 +2076,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2004,7 +2088,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2016,7 +2100,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2028,7 +2112,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2040,7 +2124,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2052,7 +2136,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2064,7 +2148,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2076,7 +2160,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2088,7 +2172,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2100,7 +2184,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2112,7 +2196,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2124,7 +2208,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2136,7 +2220,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2148,7 +2232,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2160,7 +2244,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2172,7 +2256,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2184,7 +2268,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2196,7 +2280,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2208,7 +2292,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2220,7 +2304,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2232,7 +2316,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2244,7 +2328,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2256,7 +2340,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2268,7 +2352,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2280,7 +2364,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2292,7 +2376,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2304,7 +2388,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2316,7 +2400,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
+      "checked_at": "2026-06-07T04:19:33+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2325,96 +2409,12 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "output/slides/03a_architecture_slides.vrb"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/slides/02_introduction_slides.toc",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/slides/02_introduction_slides.toc"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/slides/08f_appendix_matrix_slides.vrb",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/slides/08f_appendix_matrix_slides.vrb"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/slides/02_introduction_slides.tex",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/slides/02_introduction_slides.tex"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/slides/08d_appendix_exemplars_slides.log",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/slides/08d_appendix_exemplars_slides.log"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/slides/05e_future_conclusion_slides.log",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/slides/05e_future_conclusion_slides.log"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/slides/00_abstract_slides.toc",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/slides/00_abstract_slides.toc"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-27T22:14:53+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/slides/08a_appendix_pipeline_slides.log",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/slides/08a_appendix_pipeline_slides.log"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 252,
+    "artifact": 262,
     "bibliography": 62,
-    "generated_metric": 67
+    "generated_metric": 71
   }
 }

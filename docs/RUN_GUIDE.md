@@ -124,14 +124,17 @@ The template now supports **multiple research projects** in a single repository.
 Projects are discovered dynamically from `projects/` (see `infrastructure.project.discovery.discover_projects()`). **Authoritative names:** [_generated/active_projects.md](_generated/active_projects.md) (see [_generated/README.md](_generated/README.md) for policy and regeneration). **Examples in this guide** use **`template_code_project`** as the stable control-positive layout under `projects/`.
 
 Archived and in-progress work lives under `projects/archive/` and
-`projects/working/` and is not executed by `./run.sh` until moved into
-`projects/`.
+`projects/working/` and is not executed by default `./run.sh` discovery. Render
+it explicitly with a qualified name such as `--project working/<name>`, or
+deliberately restore it through optional sidecar `active/` when it should appear
+in the normal menu.
 
-Private active work normally lives in the sibling repo
-`$TEMPLATE_PRIVATE_PROJECTS_ROOT/active/`. `run.sh` auto-syncs those
-directories into `template/projects/` as symlinks before discovery, so they
-appear in the menu and run/render like native projects without being tracked by
-this public repository. Use
+Private work normally lives in the sibling repo configured by
+`$TEMPLATE_PRIVATE_PROJECTS_ROOT`. The simplified sidecar uses `working/` and
+`archive/` by default; optional legacy `active/`, `published/`, and `other/`
+folders are still linked when present. `run.sh` auto-syncs existing lifecycle
+folders into matching `template/projects/<subfolder>/` symlinks before
+discovery. Use
 `uv run python -m infrastructure.orchestration link-projects --dry-run` to
 preview link changes, `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root` to override the sibling repo, and

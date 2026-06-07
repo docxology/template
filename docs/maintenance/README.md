@@ -30,5 +30,5 @@ These guides exist to close that gap by giving every binding a documented swap p
 
 - [`MAINTAINERS.md`](../../MAINTAINERS.md) — who owns what
 - [`STATUS.md`](../../STATUS.md) — per-subsystem heartbeat
-- [`private-projects-repo.md`](private-projects-repo.md) — the implemented sibling private repo (active/working/published/archive/other + lifecycle-link mechanism)
+- [`private-projects-repo.md`](private-projects-repo.md) — the implemented sibling private repo (required working/archive sidecar, optional legacy active/published/other mirrors + lifecycle-link mechanism)
 - [`AGENTS.md`](../../AGENTS.md) — full system manual

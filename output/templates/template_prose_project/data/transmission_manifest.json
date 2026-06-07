@@ -1,10 +1,10 @@
 {
   "doi": "10.5281/zenodo.20417104",
-  "github_release_url": "https://github.com/docxology/template_prose_project/releases/tag/v0.4.0",
+  "github_release_url": null,
   "github_repository": "docxology/template_prose_project",
-  "pdf_sha256": "cbe5adae0be78b58c77637042257e9faa61a21b6c5101da52600cf8e2e80c0e2",
-  "pdf_sha512": "45c0f0052a193397f8c877bf51b467040d731f23b6abf10500c2f91426c0ace3157dfd6ad5057b65c27a3987a4349a147f58db836ce4bfc1d9347a3ca9808b04",
-  "published": true,
+  "pdf_sha256": null,
+  "pdf_sha512": null,
+  "published": false,
   "title": "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline",
   "version": "0.4.0",
   "zenodo_record_url": "https://zenodo.org/records/20417104"

@@ -12,32 +12,34 @@
 
 **State:** unpublished / pending pairing
 
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
+
 ```{=latex}
 \subsubsection*{Release metadata}
 ```
 
-- **Title:** Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task
-- **Version:** 0.2
-- **DOI:** 10.5281/zenodo.20417016
-- **GitHub:** docxology/template_autoresearch_project
-- **Zenodo:** https://zenodo.org/records/20417016
-- **SHA-256:** `5a2e9988c32cf22445e16039baba422044ee529c5c19eba38dcef9d89f2cd5f8`
-- **SHA-512:** `5751b777a0b795ed7b98443e9b2e41cdbee0fe68260c40a9131ea0fae71d95325061e8a56534326739f9e35937695df683d8a80bafd5fe9fb13a8f1d2c149a89`
-
-**Pairing:** pending — unresolved:
-- ✗ GitHub release URL: `pending`
-
-![Integrity QR strip](../figures/transmission_integrity_strip.png){width=98%}
+| Field | Value |
+| --- | --- |
+| Title | Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task |
+| Version | 0.3.0 |
+| Concept DOI | 10.5281/zenodo.20417016 |
+| Version DOI | 10.5281/zenodo.20420357 |
+| GitHub | docxology/template_autoresearch_project |
+| Zenodo | [https://zenodo.org/records/20417016](https://zenodo.org/records/20417016) |
+| SHA-256 | pending |
+| SHA-512 | pending |
 
 ```{=latex}
-\subsubsection*{Transmission manifest}
+\subsubsection*{How to verify}
 ```
 
-```
-title=Bounded AutoResearch for a Tiny Reproducible Mac
-version=0.2 doi=10.5281/zenodo.20417016
-sha256=5a2e9988c32cf224… manifest={"t":"Bounded AutoResearch for","v":"0.2","d":"10.5281/zenodo.20417016","s":"5a2e9988c32cf224"}
-```
+- Scan **Integrity** QR and compare the embedded SHA-256 prefix to the table above.
+- Scan **Zenodo** / **GitHub** QR codes and confirm they resolve to this release pairing.
+- Full hashes and structured fields: `../data/transmission_manifest.json`.
+
+![Integrity QR strip](../figures/transmission_integrity_strip.png){width=98%}
 
 Structured manifest: `../data/transmission_manifest.json`
 
@@ -974,22 +976,22 @@ figure(s) with validity `false`.
 | output/data/autoresearch_claims.json | Loop artifact | 1766 |
 | output/data/autoresearch_integrity_attestation.json | Security evidence | 21905 |
 | output/data/autoresearch_inventory_export.json | Security evidence | 19464 |
-| output/data/autoresearch_loop.json | Loop artifact | 15901 |
+| output/data/autoresearch_loop.json | Loop artifact | 15931 |
 | output/data/autoresearch_phase_ledger.json | Run or candidate ledger | 3779 |
-| output/data/autoresearch_plan.json | Loop artifact | 17222 |
-| output/data/autoresearch_review_packet.json | Review packet | 16020 |
+| output/data/autoresearch_plan.json | Loop artifact | 17272 |
+| output/data/autoresearch_review_packet.json | Review packet | 16050 |
 | output/data/autoresearch_schema_manifest.json | Loop artifact | 6959 |
 | output/data/autoresearch_security_profile.json | Security evidence | 1537 |
 | output/data/autoresearch_stage_matrix.csv | Loop artifact | 749 |
-| output/data/autoresearch_supply_chain_inventory.json | Security evidence | 20683 |
+| output/data/autoresearch_supply_chain_inventory.json | Security evidence | 20684 |
 | output/data/autoresearch_threat_model.json | Security evidence | 6370 |
 | output/data/benchmark_scores.json | Benchmark grading | 621 |
-| output/data/figure_quality_report.json | Loop artifact | 16040 |
+| output/data/figure_quality_report.json | Loop artifact | 15966 |
 | output/data/figure_style.json | Loop artifact | 1117 |
-| output/data/idea_ledger.json | Run or candidate ledger | 5113 |
+| output/data/idea_ledger.json | Run or candidate ledger | 5233 |
 | output/data/manuscript_figure_blocks.json | Manuscript hydration | 13062 |
 | output/data/manuscript_variable_provenance.json | Manuscript hydration | 30625 |
-| output/data/manuscript_variables.json | Manuscript hydration | 54579 |
+| output/data/manuscript_variables.json | Manuscript hydration | 54578 |
 | output/data/ml_bootstrap_intervals.json | Loop artifact | 615 |
 | output/data/ml_calibration_bin_intervals.json | Loop artifact | 2879 |
 | output/data/ml_calibration_report.json | Loop artifact | 2201 |
@@ -1011,41 +1013,78 @@ figure(s) with validity `false`.
 | output/data/ml_training_diagnostics.json | Loop artifact | 2968 |
 | output/data/ml_training_history.csv | Loop artifact | 6775 |
 | output/data/mnist_task_config.json | Loop artifact | 3926 |
-| output/data/research_object_manifest.json | Loop artifact | 20107 |
-| output/data/research_program.json | Loop artifact | 935 |
+| output/data/research_object_manifest.json | Loop artifact | 19904 |
+| output/data/research_program.json | Loop artifact | 965 |
 | output/data/review_decisions.json | Review packet | 669 |
 | output/data/run_ledger.json | Run or candidate ledger | 328 |
-| ../figures/autoresearch_candidate_lifecycle.png | Generated figure | 28053 |
-| ../figures/autoresearch_closure_flow.png | Generated figure | 40410 |
-| ../figures/autoresearch_integrity_chain.png | Generated figure | 46980 |
-| ../figures/autoresearch_security_control_matrix.png | Generated figure | 86574 |
-| ../figures/ml_bootstrap_intervals.png | Generated figure | 21834 |
-| ../figures/ml_calibration_reliability.png | Generated figure | 73889 |
-| ../figures/ml_candidate_rank_stability.png | Generated figure | 43692 |
-| ../figures/ml_candidate_scores.png | Generated figure | 59953 |
-| ../figures/ml_classification_metrics_heatmap.png | Generated figure | 55092 |
-| ../figures/ml_complexity_accuracy.png | Generated figure | 35135 |
-| ../figures/ml_confusion_matrix.png | Generated figure | 65820 |
+| output/data/transmission_manifest.json | Loop artifact | 366 |
+| ../figures/autoresearch_candidate_lifecycle.png | Generated figure | 28056 |
+| ../figures/autoresearch_closure_flow.png | Generated figure | 40873 |
+| ../figures/autoresearch_integrity_chain.png | Generated figure | 46946 |
+| ../figures/autoresearch_security_control_matrix.png | Generated figure | 86494 |
+| ../figures/autoresearch_stage_matrix.png | Generated figure | 23486 |
+| ../figures/figure_registry.json | Loop artifact | 30674 |
+| ../figures/ml_bootstrap_intervals.png | Generated figure | 21830 |
+| ../figures/ml_calibration_reliability.png | Generated figure | 73855 |
+| ../figures/ml_candidate_rank_stability.png | Generated figure | 43670 |
+| ../figures/ml_candidate_scores.png | Generated figure | 59947 |
+| ../figures/ml_classification_metrics_heatmap.png | Generated figure | 55133 |
+| ../figures/ml_complexity_accuracy.png | Generated figure | 35016 |
+| ../figures/ml_confusion_matrix.png | Generated figure | 65918 |
 | ../figures/ml_confusion_pairs.png | Generated figure | 33982 |
-| ../figures/ml_generalization_gap.png | Generated figure | 48512 |
-| ../figures/ml_learning_curves.png | Generated figure | 59258 |
-| ../figures/ml_paired_correctness.png | Generated figure | 43309 |
-| ../figures/ml_per_class_accuracy.png | Generated figure | 34800 |
-| ../figures/ml_probability_margin_distribution.png | Generated figure | 41754 |
-| ../figures/ml_probability_quality.png | Generated figure | 38071 |
-| ../figures/ml_robustness_matrix.png | Generated figure | 51332 |
-| ../figures/ml_selective_accuracy.png | Generated figure | 48274 |
-| ../figures/ml_training_dynamics.png | Generated figure | 51004 |
-| ../figures/mnist_class_balance.png | Generated figure | 27059 |
-| ../figures/mnist_error_examples.png | Generated figure | 28431 |
-| ../figures/mnist_subset_contact_sheet.png | Generated figure | 23617 |
-| output/reports/autoresearch_loop.json | Loop artifact | 15901 |
+| ../figures/ml_generalization_gap.png | Generated figure | 48554 |
+| ../figures/ml_learning_curves.png | Generated figure | 59360 |
+| ../figures/ml_paired_correctness.png | Generated figure | 43306 |
+| ../figures/ml_per_class_accuracy.png | Generated figure | 34938 |
+| ../figures/ml_probability_margin_distribution.png | Generated figure | 41747 |
+| ../figures/ml_probability_quality.png | Generated figure | 38072 |
+| ../figures/ml_robustness_matrix.png | Generated figure | 51292 |
+| ../figures/ml_selective_accuracy.png | Generated figure | 48332 |
+| ../figures/ml_training_dynamics.png | Generated figure | 50908 |
+| ../figures/mnist_class_balance.png | Generated figure | 27006 |
+| ../figures/mnist_error_examples.png | Generated figure | 28446 |
+| ../figures/mnist_subset_contact_sheet.png | Generated figure | 23682 |
+| ../figures/transmission_pairing.png | Generated figure | 10729 |
+| output/manuscript/00_abstract.md | Manuscript hydration | 1451 |
+| output/manuscript/01_introduction.md | Manuscript hydration | 14774 |
+| output/manuscript/02_methodology.md | Manuscript hydration | 20531 |
+| output/manuscript/03_results.md | Manuscript hydration | 39136 |
+| output/manuscript/04_conclusion.md | Manuscript hydration | 2642 |
+| output/manuscript/99_references.md | Manuscript hydration | 58 |
+| output/manuscript/config.yaml | Manuscript hydration | 2507 |
+| output/manuscript/preamble.md | Manuscript hydration | 137 |
+| output/manuscript/references.bib | Manuscript hydration | 23228 |
+| output/reports/autoresearch_loop.json | Loop artifact | 15931 |
+| output/reports/autoresearch_loop.md | Loop artifact | 1982 |
+| output/reports/autoresearch_readiness.json | Readiness validation | 18395 |
+| output/reports/autoresearch_readiness.md | Readiness validation | 500 |
 | output/reports/autoresearch_review_packet.md | Review packet | 912 |
 | output/reports/autoresearch_security_review.md | Review packet | 1104 |
 | output/reports/autoresearch_summary.md | Loop artifact | 255 |
 | output/reports/benchmark_readiness_smoke.json | Benchmark grading | 778 |
 | output/reports/ml_benchmark_score.json | Benchmark grading | 382 |
 | output/reports/ml_experiment_report.md | Loop artifact | 1687 |
+| output/reports/test_results.json | Loop artifact | 616 |
+| output/reports/test_results.md | Loop artifact | 293 |
+| output/data/autoresearch_integrity_attestation.json | Security evidence | 21905 |
+| output/data/autoresearch_inventory_export.json | Security evidence | 19464 |
+| output/data/autoresearch_loop.json | Loop artifact | 15931 |
+| output/data/autoresearch_phase_ledger.json | Run or candidate ledger | 3779 |
+| output/data/autoresearch_review_packet.json | Review packet | 16050 |
+| output/data/autoresearch_schema_manifest.json | Loop artifact | 6959 |
+| output/data/autoresearch_security_profile.json | Security evidence | 1537 |
+| output/data/autoresearch_supply_chain_inventory.json | Security evidence | 20684 |
+| output/data/autoresearch_threat_model.json | Security evidence | 6370 |
+| output/data/benchmark_scores.json | Benchmark grading | 621 |
+| output/data/figure_quality_report.json | Loop artifact | 16001 |
+| output/data/figure_style.json | Loop artifact | 1117 |
+| output/data/idea_ledger.json | Run or candidate ledger | 5233 |
+| output/data/manuscript_variables.json | Manuscript hydration | 54579 |
+| output/data/ml_candidate_ledger.json | Run or candidate ledger | 570872 |
+| output/data/research_object_manifest.json | Loop artifact | 19970 |
+| output/data/review_decisions.json | Review packet | 669 |
+| output/manuscript/03_results.md | Manuscript hydration | 39137 |
+| output/reports/autoresearch_loop.json | Loop artifact | 15931 |
 
 : Generated artifact manifest from `output/reports/artifact_manifest.json`. {#tbl:autoresearch-loop}
 
@@ -1086,18 +1125,18 @@ figure(s) with validity `false`.
 
 | Figure | Pixels | Variance | Source exists | Nonblank |
 | --- | --- | --- | --- | --- |
-| fig:autoresearch_candidate_lifecycle | 1184x480 | 0.083 | True | True |
+| fig:autoresearch_candidate_lifecycle | 1184x480 | 0.082 | True | True |
 | fig:autoresearch_closure_flow | 1664x448 | 0.015 | True | True |
-| fig:autoresearch_integrity_chain | 1440x734 | 0.040 | True | True |
-| fig:autoresearch_security_control_matrix | 1470x734 | 0.014 | True | True |
-| fig:autoresearch_stage_matrix | 1120x416 | 0.080 | True | True |
+| fig:autoresearch_integrity_chain | 1440x736 | 0.040 | True | True |
+| fig:autoresearch_security_control_matrix | 1472x736 | 0.014 | True | True |
+| fig:autoresearch_stage_matrix | 1120x416 | 0.079 | True | True |
 | fig:ml_bootstrap_intervals | 1152x448 | 0.009 | True | True |
 | fig:ml_calibration_reliability | 1152x832 | 0.015 | True | True |
 | fig:ml_candidate_rank_stability | 1408x608 | 0.053 | True | True |
 | fig:ml_candidate_scores | 1376x688 | 0.013 | True | True |
 | fig:ml_classification_metrics_heatmap | 928x832 | 0.092 | True | True |
 | fig:ml_complexity_accuracy | 1120x608 | 0.010 | True | True |
-| fig:ml_confusion_matrix | 896x768 | 0.046 | True | True |
+| fig:ml_confusion_matrix | 896x768 | 0.045 | True | True |
 | fig:ml_confusion_pairs | 1152x576 | 0.129 | True | True |
 | fig:ml_generalization_gap | 1184x864 | 0.059 | True | True |
 | fig:ml_learning_curves | 1216x608 | 0.018 | True | True |
@@ -1109,8 +1148,8 @@ figure(s) with validity `false`.
 | fig:ml_selective_accuracy | 1088x608 | 0.016 | True | True |
 | fig:ml_training_dynamics | 1408x608 | 0.072 | True | True |
 | fig:mnist_class_balance | 1216x544 | 0.071 | True | True |
-| fig:mnist_error_examples | 1280x734 | 0.234 | True | True |
-| fig:mnist_subset_contact_sheet | 1216x544 | 0.228 | True | True |
+| fig:mnist_error_examples | 1280x736 | 0.234 | True | True |
+| fig:mnist_subset_contact_sheet | 1216x544 | 0.230 | True | True |
 
 : Figure-quality checks from `output/data/figure_quality_report.json`; 25 registered figure(s) were checked. {#tbl:figure-quality}
 
@@ -1264,7 +1303,7 @@ References are managed in `references.bib`.
 \section*{END OF TRANSMISSION}\label{end-of-transmission}
 ```
 
-**Release:** v0.2 · DOI `10.5281/zenodo.20417016` · SHA-256 `5a2e9988c32c…` · pairing pending
+**Release:** v0.3.0 · DOI `10.5281/zenodo.20417016` · SHA-256 `pending…` · pairing pending
 
 ![Integrity QR strip](../figures/transmission_integrity_strip.png){width=88%}
 

@@ -48,6 +48,43 @@ Required fields: `metadata.version`, `metadata.last_updated`, `metadata.status`,
 `metadata.data_access_level`, `metadata.task_type`, `metadata.modes`, and
 `metadata.related_skills`.
 
+## Adding or changing a workflow skill
+
+When a new `docs/prompts/<skill>/SKILL.md` is added, removed, renamed, or given
+new routing semantics, keep the whole agent-facing surface synchronized in the
+same change:
+
+1. Create or update the child directory's `SKILL.md`, `README.md`, and
+   `AGENTS.md` (and the same doc pair under `references/` when reference files
+   are added).
+2. Update the hub routing table in [`SKILL.md`](SKILL.md) and keep ambiguous
+   routing examples specific enough that agents choose one child skill.
+3. Update [`MODE_REGISTRY.md`](MODE_REGISTRY.md) when modes, handoffs,
+   oversight level, or data-access semantics change.
+4. Update [`README.md`](README.md) if the human-facing skill inventory changes.
+5. Add or adjust eval cases in `_skill-eval/evals/evals.json` and
+   `_skill-eval/trigger-eval-set.json` when a new trigger phrase or routing
+   boundary matters.
+6. Regenerate generated skill artifacts:
+
+   ```bash
+   uv run python -m infrastructure.skills write
+   uv run python -m infrastructure.skills write-index
+   ```
+
+7. Verify contracts, discovery, evals, and links:
+
+   ```bash
+   uv run python -m infrastructure.skills check
+   uv run python -m infrastructure.skills check-contracts
+   uv run pytest tests/infra_tests/skills -q
+   uv run python docs/prompts/_skill-eval/scripts/run_eval_harness.py --write-review --fail-under 0.96
+   uv run python scripts/lint_docs.py --json --repo-root .
+   ```
+
+Avoid editing `docs/_generated/skills_index.md` or `.cursor/skill_manifest.json`
+by hand; both are generated from live `SKILL.md` discovery.
+
 ## Eval workspace
 
 [`_skill-eval/`](_skill-eval/) holds `evals/evals.json`, regenerated harness output under `latest/` (benchmark + review HTML), optional pinned `baseline/` for compare, and the importable [`scripts/skill_eval/`](_skill-eval/scripts/skill_eval/) package. Measured synthetic benchmark: **100%** with_skill, **100%** positive-only (keyword grader over extracted skill sections).

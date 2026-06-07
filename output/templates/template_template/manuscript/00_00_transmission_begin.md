@@ -12,32 +12,34 @@
 
 **State:** unpublished / pending pairing
 
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
+
 ```{=latex}
 \subsubsection*{Release metadata}
 ```
 
-- **Title:** A template/ approach to Reproducible Generative Research
-- **Version:** 1.0
-- **DOI:** 10.5281/zenodo.20419007
-- **GitHub:** docxology/template_template
-- **Zenodo:** https://zenodo.org/records/20419007
-- **SHA-256:** `25a4dd91e0df57b53e98016b1e58b8cd668090492784ef093795bd8d33f88561`
-- **SHA-512:** `3f8cee2bdb007a9f778552929cb8162143a207d77b1e258eecb8050216844ede2c5bd006c37a480f05a7004f91042a5783610f5c502e27c93ec27ffed9e35f99`
-
-**Pairing:** pending — unresolved:
-- ✗ GitHub release URL: `pending`
-
-![Integrity QR strip](../figures/transmission_integrity_strip.png){width=98%}
+| Field | Value |
+| --- | --- |
+| Title | A template/ approach to Reproducible Generative Research |
+| Version | 1.0.6 |
+| Concept DOI | 10.5281/zenodo.20419007 |
+| Version DOI | 10.5281/zenodo.20420387 |
+| GitHub | docxology/template_template |
+| Zenodo | [https://zenodo.org/records/20419007](https://zenodo.org/records/20419007) |
+| SHA-256 | pending |
+| SHA-512 | pending |
 
 ```{=latex}
-\subsubsection*{Transmission manifest}
+\subsubsection*{How to verify}
 ```
 
-```
-title=A template/ approach to Reproducible Generative 
-version=1.0 doi=10.5281/zenodo.20419007
-sha256=25a4dd91e0df57b5… manifest={"t":"A template/ approach to ","v":"1.0","d":"10.5281/zenodo.20419007","s":"25a4dd91e0df57b5"}
-```
+- Scan **Integrity** QR and compare the embedded SHA-256 prefix to the table above.
+- Scan **Zenodo** / **GitHub** QR codes and confirm they resolve to this release pairing.
+- Full hashes and structured fields: `../data/transmission_manifest.json`.
+
+![Integrity QR strip](../figures/transmission_integrity_strip.png){width=98%}
 
 Structured manifest: `../data/transmission_manifest.json`
 

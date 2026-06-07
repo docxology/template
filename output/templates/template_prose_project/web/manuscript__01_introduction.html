@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>01_introduction</title>
+  <title>01_introduction.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -174,20 +174,17 @@
 <h1 id="sec:introduction">Introduction</h1>
 <p>Editorial review is one of the longest-lived bottlenecks in
 scientific writing — and an obvious target for the kind of
-<em>reproducible computational workflow</em> advocated by <span
-class="citation"
-data-cites="peng2011reproducible">[@peng2011reproducible]</span>. A
-working draft accumulates structural drift (skipped heading levels,
-sections that have grown to 2,000 words while their siblings sit at
-200), readability drift (a once-clean introduction now reads at the
-Gunning Fog level of a legal contract <span class="citation"
-data-cites="gunning1952technique">[@gunning1952technique]</span>), and
-citation drift (<code>[@key]</code> references that no longer exist in
-<code>references.bib</code>, or bibliography entries that nobody
-actually cites). The traditional remedy — a senior co-author re-reading
-the manuscript with <span class="citation"
-data-cites="strunk2000elements">[@strunk2000elements]</span> in hand —
-is slow, non-reproducible, and impossible to apply continuously.</p>
+<em>reproducible computational workflow</em> advocated by
+[peng2011reproducible]. A working draft accumulates structural drift
+(skipped heading levels, sections that have grown to 2,000 words while
+their siblings sit at 200), readability drift (a once-clean introduction
+now reads at the Gunning Fog level of a legal contract
+[gunning1952technique]), and citation drift (<code>[key]</code>
+references that no longer exist in <code>references.bib</code>, or
+bibliography entries that nobody actually cites). The traditional remedy
+— a senior co-author re-reading the manuscript with [strunk2000elements]
+in hand — is slow, non-reproducible, and impossible to apply
+continuously.</p>
 <p><code>template_prose_project</code> exists to demonstrate that the
 editorial-review pass can be expressed as a <strong>deterministic,
 configurable, infrastructure-backed pipeline</strong>. This project
@@ -199,22 +196,18 @@ defines policy: target grade-level band, citation-density floor,
 heading-structure rules, bibliography-consistency policy.
 <code>src/pipeline/__init__.py::run_prose_pipeline</code> reads the
 manuscript directory, calls <a
-href="../../../infrastructure/prose/SKILL.md"><code>infrastructure.prose.analyze_manuscript</code></a>
+href="../../../../infrastructure/prose/SKILL.md"><code>infrastructure.prose.analyze_manuscript</code></a>
 to produce a <code>ManuscriptReport</code>, cross-checks the cited keys
 against <a
-href="../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
+href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
 for the <code>references.bib</code>, evaluates each configured check,
 and writes a markdown review report alongside JSON artefacts and three
 figures. None of this is project-specific: a different project can
 re-use the same infrastructure with a different <code>config.yaml</code>
 and a different manuscript directory.</p>
-<p>The remainder of this paper documents the methodology (<span
-class="citation"
-data-cites="sec:methodology">[@sec:methodology]</span>), the run-time
-results on the bundled manuscript (<span class="citation"
-data-cites="sec:results">[@sec:results]</span>), and the architectural
-lessons drawn from wiring prose analysis through the template pipeline
-(<span class="citation"
-data-cites="sec:conclusion">[@sec:conclusion]</span>).</p>
+<p>The remainder of this paper documents the methodology
+([sec:methodology]), the run-time results on the bundled manuscript
+([sec:results]), and the architectural lessons drawn from wiring prose
+analysis through the template pipeline ([sec:conclusion]).</p>
 </body>
 </html>

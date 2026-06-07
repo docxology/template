@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>06_infrastructure_modules</title>
+  <title>06_infrastructure_modules.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -174,9 +174,9 @@
 <h1 id="infrastructure-module-reference">Infrastructure Module
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
-<code>22</code> <code>discover_infrastructure_modules(repo_root)</code>.
-File totals use <code>456</code> Python sources across infra +
-<code>7,024</code> infra tests guarding them. Documentation Duality =
+<code>23</code> <code>discover_infrastructure_modules(repo_root)</code>.
+File totals use <code>531</code> Python sources across infra +
+<code>7,385</code> infra tests guarding them. Documentation Duality =
 paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <code>SKILL.md</code> manifests feed
 <code>python -m infrastructure.skills</code>.</p>
@@ -221,7 +221,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">97</td>
+<td style="text-align: center;">104</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -236,21 +236,21 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>doctor</code></td>
-<td style="text-align: center;">9</td>
+<td style="text-align: center;">14</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Checkout diagnose/fix/undo repairs</td>
 </tr>
 <tr>
 <td><code>documentation</code></td>
-<td style="text-align: center;">10</td>
+<td style="text-align: center;">11</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>FigureManager</code>, <code>generate_glossary</code></td>
 </tr>
 <tr>
 <td><code>llm</code></td>
-<td style="text-align: center;">53</td>
+<td style="text-align: center;">54</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Ollama helpers, sanitization, review + translation pipelines</td>
@@ -280,7 +280,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">19</td>
+<td style="text-align: center;">21</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -294,35 +294,35 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">42</td>
+<td style="text-align: center;">44</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
 </tr>
 <tr>
 <td><code>reference</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">16</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>BibTeX models, parsers, converters</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">45</td>
+<td style="text-align: center;">47</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">51</td>
+<td style="text-align: center;">56</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
 </tr>
 <tr>
 <td><code>scientific</code></td>
-<td style="text-align: center;">6</td>
+<td style="text-align: center;">7</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>check_numerical_stability</code>,
@@ -330,10 +330,18 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>search</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">32</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>infrastructure.search.literature</code> clients + cache</td>
+</tr>
+<tr>
+<td><code>sia</code></td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Self-Improving-AI loop: task validation, harness, metric
+capture</td>
 </tr>
 <tr>
 <td><code>skills</code></td>
@@ -351,7 +359,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">61</td>
+<td style="text-align: center;">69</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF + Markdown + integrity CLIs</td>
@@ -372,17 +380,21 @@ id="infrastructure.benchmark-3-files"><code>infrastructure.benchmark</code>
 (3 files)</h3>
 <p>Template harness scoring and comparative gate helpers exercised in CI
 smoke paths.</p>
+<h3
+id="infrastructureconfig-non-package-subdirectory"><code>infrastructure/config</code>
+(non-package subdirectory)</h3>
 <p>Repository-wide YAML templates and secure manifests
 (<code>.env.template</code>, hardened defaults referenced by Docker +
-CLI).</p>
-<h3 id="infrastructure.core-97-files"><code>infrastructure.core</code>
-(97 files)</h3>
+CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
+a configuration subdirectory rather than an importable package.</p>
+<h3 id="infrastructure.core-104-files"><code>infrastructure.core</code>
+(104 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
 <h3
-id="infrastructure.doctor-9-files"><code>infrastructure.doctor</code> (9
-files)</h3>
+id="infrastructure.doctor-14-files"><code>infrastructure.doctor</code>
+(14 files)</h3>
 <p>Checkout diagnose/fix/undo repairs for broken local workspace
 states.</p>
 <h3
@@ -391,16 +403,24 @@ files)</h3>
 <p>Pinned images / compose scaffolding for reproducible CI + remote
 builds.</p>
 <h3
-id="infrastructure.documentation-10-files"><code>infrastructure.documentation</code>
-(10 files)</h3>
+id="infrastructure.documentation-11-files"><code>infrastructure.documentation</code>
+(11 files)</h3>
 <p>Figure registries plus glossary tooling feeding manuscript
 automation.</p>
-<h3 id="infrastructure.llm-53-files"><code>infrastructure.llm</code> (53
+<h3 id="infrastructure.llm-54-files"><code>infrastructure.llm</code> (54
 files)</h3>
 <p>Ollama integrations, sanitization adapters, templated reviewer flows.
 <strong>Literature ingestion now lives primarily in
 <code>search/literature</code> + citation helpers in
 <code>reference/</code>.</strong></p>
+<h3
+id="infrastructure.methods-5-files"><code>infrastructure.methods</code>
+(5 files)</h3>
+<p>Deterministic methods-orchestration contracts
+(<code>MethodStage</code>, <code>MethodsOrchestrationPlan</code>,
+<code>MethodsIssue</code>): builds and validates an ordered methods plan
+for a research project so the manuscript’s “Methods” track stays bound
+to executable stages.</p>
 <h3
 id="infrastructure.orchestration-8-files"><code>infrastructure.orchestration</code>
 (8 files)</h3>
@@ -409,8 +429,8 @@ interactive menus, subprocess wiring for thin shell wrappers
 (<code>run.sh</code>, <code>secure_run.sh</code>), and stubs used in CI
 for menu parsing tests.</p>
 <h3
-id="infrastructure.project-19-files"><code>infrastructure.project</code>
-(19 files)</h3>
+id="infrastructure.project-21-files"><code>infrastructure.project</code>
+(21 files)</h3>
 <p>Canonical discovery (<code>discover_projects</code>) enforcing
 <code>src/</code> + <code>tests/</code>, slug validation, nested WIP
 namespaces.</p>
@@ -419,37 +439,42 @@ namespaces.</p>
 <p>Readability metrics + Markdown tooling for prose-centric manuscripts
 / CI gates.</p>
 <h3
-id="infrastructure.publishing-42-files"><code>infrastructure.publishing</code>
-(42 files)</h3>
+id="infrastructure.publishing-44-files"><code>infrastructure.publishing</code>
+(44 files)</h3>
 <p>Metadata models, APA/BibTeX/MLA formatters, optional Zenodo
 clients.</p>
 <h3
-id="infrastructure.reference-8-files"><code>infrastructure.reference</code>
-(8 files)</h3>
+id="infrastructure.reference-16-files"><code>infrastructure.reference</code>
+(16 files)</h3>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
 <h3
-id="infrastructure.rendering-45-files"><code>infrastructure.rendering</code>
-(45 files)</h3>
+id="infrastructure.rendering-47-files"><code>infrastructure.rendering</code>
+(47 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
 <h3
-id="infrastructure.reporting-51-files"><code>infrastructure.reporting</code>
-(51 files)</h3>
+id="infrastructure.reporting-56-files"><code>infrastructure.reporting</code>
+(56 files)</h3>
 <p>Parses pytest + coverage artefacts for dashboards; pairs with
 Stage 01 summaries and downstream executive exports.</p>
 <h3
-id="infrastructure.scientific-6-files"><code>infrastructure.scientific</code>
-(6 files)</h3>
+id="infrastructure.scientific-7-files"><code>infrastructure.scientific</code>
+(7 files)</h3>
 <p>Stability probing, benchmarking hooks—consumed heavily by
 optimization exemplars (<code>template_code_project</code> scripts).</p>
 <h3
-id="infrastructure.search-8-files"><code>infrastructure.search</code> (8
-files)</h3>
+id="infrastructure.search-32-files"><code>infrastructure.search</code>
+(32 files)</h3>
 <p><code>literature/</code> client stack (<code>client.py</code>,
 backends, caches) powering archive-only
 <code>template_search_project</code> literature workflows when copied
-locally from <code>projects_archive/</code>.</p>
+locally from <code>projects/archive/</code>.</p>
+<h3 id="infrastructure.sia-9-files"><code>infrastructure.sia</code> (9
+files)</h3>
+<p>Generic Self-Improving-AI loop utilities: task-layout validation,
+execution harness, and metric capture reused by
+<code>template_sia</code> (fixture-replay by default).</p>
 <h3
 id="infrastructure.skills-6-files"><code>infrastructure.skills</code> (6
 files)</h3>
@@ -461,8 +486,8 @@ id="infrastructure.steganography-10-files"><code>infrastructure.steganography</c
 <p>Watermark overlays, hashing companions triggered by secure pipeline
 path.</p>
 <h3
-id="infrastructure.validation-61-files"><code>infrastructure.validation</code>
-(61 files)</h3>
+id="infrastructure.validation-69-files"><code>infrastructure.validation</code>
+(69 files)</h3>
 <p>Markdown + PDF + integrity CLIs underpinning Stage 04
 diagnostics.</p>
 <h3
@@ -477,7 +502,6 @@ newly promoted modules automatically flow into manuscripts after
 <code>generate_manuscript_metrics.py</code>.</p>
 <p><strong>FAIR+RSE linkage:</strong> MCP-ready <code>SKILL.md</code>
 artefacts align with evaluator heuristics (executability + metadata
-richness) emphasized by FAIRsoft guidance <span class="citation"
-data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span>.</p>
+richness) emphasized by FAIRsoft guidance [garijo2024fairsoft].</p>
 </body>
 </html>

@@ -69,15 +69,18 @@ untracked.
 
 ## Rendered vs Non-Rendered Subfolders
 
-- **Rendered:** `projects/templates/` (public exemplars) and `projects/active/` (hot-seat) — Discovered and executed by infrastructure
-- **Non-rendered:** `projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/` — Preserved but not executed
+- **Rendered:** `projects/templates/` (public exemplars) and optional `projects/active/` (hot-seat) — discovered and executed by infrastructure when present.
+- **Non-rendered:** `projects/working/` and `projects/archive/` in the simplified sidecar; optional legacy `projects/published/` and `projects/other/` are also preserved but not executed.
 
 ```bash
-# Archive a project
-mv projects/active/{name}/ projects/archive/{name}/
+# Retire a sidecar working project
+mv projects/working/{name}/ projects/archive/{name}/
 
-# Reactivate a project
-mv projects/archive/{name}/ projects/active/{name}/
+# Resume a sidecar archived project
+mv projects/archive/{name}/ projects/working/{name}/
+
+# Render explicitly from the template checkout
+uv run python scripts/03_render_pdf.py --project working/{name}
 ```
 
 ## Multi-Project Pipeline Usage

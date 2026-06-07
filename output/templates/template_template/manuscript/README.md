@@ -9,7 +9,7 @@ Appendices (**`08a–08f`**) consolidate pipeline YAML mapping, directory sketch
 From repo root:
 
 ```bash
-uv run python projects_in_progress/template/scripts/generate_manuscript_metrics.py
+uv run python projects/templates/template_template/scripts/generate_manuscript_metrics.py
 ```
 
-Promotion note: whilst this tree remains under **`projects_in_progress/template`**, follow `CLAUDE.md`/`resolve_project_root` snippets for `./run.sh` compatibility; canonical exemplars authoritative list → `docs/_generated/active_projects.md`.
+Location note: this tree is git-tracked at **`projects/templates/template_template`**, so standard `./run.sh` discovery applies; canonical exemplars authoritative list → `docs/_generated/active_projects.md`.

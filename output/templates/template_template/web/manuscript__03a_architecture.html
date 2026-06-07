@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>03a_architecture</title>
+  <title>03a_architecture.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -247,10 +247,12 @@ research templates.</p>
 <h2 id="the-two-layer-architecture">The Two-Layer Architecture</h2>
 <p>The repository is organized into two strictly separated layers:</p>
 <p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
-22 Python subpackages comprising ~456 modules and providing reusable
-services. Each subpackage is independently importable, has its own
-<code>__init__.py</code>, <code>AGENTS.md</code>, and
-<code>README.md</code>, and exports a well-defined public API. The
+23 infrastructure subdirectories—20 of them independently-importable
+Python packages—comprising ~531 modules and providing reusable services.
+Each importable package has its own <code>__init__.py</code>,
+<code>AGENTS.md</code>, and <code>README.md</code>, and exports a
+well-defined public API (the remaining subdirectories,
+e.g. <code>config/</code>, hold shared configuration). The
 infrastructure layer knows nothing about any specific project—it
 provides generic capabilities (logging, rendering, validation,
 steganography) that any project may consume.</p>
@@ -314,18 +316,24 @@ N independent projects within a single repository, sharing
 infrastructure without coupling. Each project declares its own testing
 tolerances, manuscript metadata, LLM review preferences, and rendering
 configuration in its <code>config.yaml</code>. The system currently
-hosts three public canonical exemplars
-(<code>template_active_inference</code>,
-<code>template_autoresearch_project</code>,
-<code>template_code_project</code>, <code>template_prose_project</code>,
-<code>template_template</code>) plus this meta-manuscript under
-<code>projects_in_progress/template/</code>.</p>
+hosts its public canonical exemplars under
+<code>projects/templates/</code>
+(<code>templates/template_active_inference</code>,
+<code>templates/template_autoresearch_project</code>,
+<code>templates/template_autoscientists</code>,
+<code>templates/template_code_project</code>,
+<code>templates/template_newspaper</code>,
+<code>templates/template_prose_project</code>,
+<code>templates/template_sia</code>,
+<code>templates/template_template</code>,
+<code>templates/template_textbook</code>), including this
+meta-manuscript at
+<code>projects/templates/template_template/</code>.</p>
 <h2 id="the-thin-orchestrator-pattern">The Thin Orchestrator
 Pattern</h2>
 <p>All scripts in <code>scripts/</code> (both infrastructure-level and
-project-level) follow the Thin Orchestrator pattern <span
-class="citation"
-data-cites="gamma1995design">[@gamma1995design]</span>:</p>
+project-level) follow the Thin Orchestrator pattern
+[gamma1995design]:</p>
 <ul>
 <li><strong>No domain logic</strong>: Scripts contain zero algorithmic
 implementation. They import functions from <code>src/</code> modules and
@@ -341,10 +349,10 @@ invocations.</li>
 <p>This pattern ensures that all testable logic lives in
 <code>src/</code> where it is subject to the Zero-Mock testing policy,
 while scripts remain thin enough to be audited by visual inspection. The
-separation draws on the Mediator pattern from Gamma et al. <span
-class="citation" data-cites="gamma1995design">[@gamma1995design]</span>,
-where scripts mediate between infrastructure services and
-project-specific code without implementing any logic of their own.</p>
+separation draws on the Mediator pattern from Gamma et
+al. [gamma1995design], where scripts mediate between infrastructure
+services and project-specific code without implementing any logic of
+their own.</p>
 <p>To make this concrete, the following contrasts the anti-pattern with
 the correct pattern:</p>
 <div class="sourceCode" id="cb1"><pre

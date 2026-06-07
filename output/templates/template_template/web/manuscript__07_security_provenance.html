@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>07_security_provenance</title>
+  <title>07_security_provenance.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -176,16 +176,13 @@
 verifiable authorship. In an era of generative AI, automated scraping,
 and synthetic media, the ability to prove that a document was produced
 by a specific pipeline at a specific time is a critical defense against
-fabrication and misattribution. The W3C PROV data model <span
-class="citation"
-data-cites="moreau2013provdm">[@moreau2013provdm]</span> establishes a
-formal vocabulary for expressing provenance records—entities,
-activities, and agents connected by derivation, generation, and
-attribution relations. Digital watermarking, pioneered by Cox et al.
-<span class="citation"
-data-cites="cox1997secure">[@cox1997secure]</span> for multimedia
-integrity verification, provides the foundational signal-processing
-theory for embedding imperceptible provenance markers within artifacts.
+fabrication and misattribution. The W3C PROV data model
+[moreau2013provdm] establishes a formal vocabulary for expressing
+provenance records—entities, activities, and agents connected by
+derivation, generation, and attribution relations. Digital watermarking,
+pioneered by Cox et al. [cox1997secure] for multimedia integrity
+verification, provides the foundational signal-processing theory for
+embedding imperceptible provenance markers within artifacts.
 <code>template/</code> implements a domain-specific provenance layer
 that embeds these relations directly into the PDF artifact itself, using
 four complementary steganographic and cryptographic mechanisms.</p>
@@ -314,16 +311,14 @@ Software Supply Chain Integrity</h2>
 level</em>—it certifies the integrity of a specific PDF artifact. A
 complementary concern is <em>build-level</em> provenance: certifying
 that the pipeline itself was executed with verified source code and
-dependencies. Frameworks such as in-toto <span class="citation"
-data-cites="torresarias2019intoto">[@torresarias2019intoto]</span> and
+dependencies. Frameworks such as in-toto [torresarias2019intoto] and
 SLSA (Supply-chain Levels for Software Artifacts) address this concern
 by defining attestation chains from source commit through build steps to
 final artifact. The NTIA’s minimum elements for a Software Bill of
-Materials (SBOM) <span class="citation"
-data-cites="ntia2021sbom">[@ntia2021sbom]</span> further standardize the
-enumeration of software components and dependencies—essential for
-establishing the provenance lineage of build environments. SLSA defines
-four graduated levels of build integrity:</p>
+Materials (SBOM) [ntia2021sbom] further standardize the enumeration of
+software components and dependencies—essential for establishing the
+provenance lineage of build environments. SLSA defines four graduated
+levels of build integrity:</p>
 <table>
 <colgroup>
 <col style="width: 27%" />
@@ -370,31 +365,26 @@ at a specific time.</p>
 id="relationship-to-fair-and-formal-provenance-standards">Relationship
 to FAIR and Formal Provenance Standards</h2>
 <p>The steganographic layer supports the FAIR for Research Software
-(FAIR4RS) principles <span class="citation"
-data-cites="barker2022fair4rs">[@barker2022fair4rs]</span> at the
-artifact level. PDFs carry embedded metadata (Findability) in
-standardized XMP format (Interoperability). The SHA-256 hash manifest
-enables persistent integrity verification (a prerequisite for
-Reusability). The Documentation Duality standard ensures that the
-software producing the artifact is inspectable and well-documented
-(satisfying FAIRsoft <span class="citation"
-data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span> metadata
-and documentation indicators). Full PROV-compliant provenance
-traces—capturing the derivation chain from source data through analysis
-scripts to rendered PDF—are a natural extension and a primary target for
-future development.</p>
-<p>Software Heritage <span class="citation"
-data-cites="cosmo2020softwareheritage">[@cosmo2020softwareheritage]</span>
-complements this picture at the source-code level: by archiving the
+(FAIR4RS) principles [barker2022fair4rs] at the artifact level. PDFs
+carry embedded metadata (Findability) in standardized XMP format
+(Interoperability). The SHA-256 hash manifest enables persistent
+integrity verification (a prerequisite for Reusability). The
+Documentation Duality standard ensures that the software producing the
+artifact is inspectable and well-documented (satisfying FAIRsoft
+[garijo2024fairsoft] metadata and documentation indicators). Full
+PROV-compliant provenance traces—capturing the derivation chain from
+source data through analysis scripts to rendered PDF—are a natural
+extension and a primary target for future development.</p>
+<p>Software Heritage [cosmo2020softwareheritage] complements this
+picture at the source-code level: by archiving the
 <code>template/</code> repository and assigning a reproducible SWHID
 (Software Hash Identifier) to each commit, Software Heritage makes the
 pipeline itself—not just its output—a citable, persistent digital
 artifact. A published SWHID alongside the PDF DOI creates a complete,
 two-artifact citation record: the paper’s content is versioned via DOI;
 the code that generated it is versioned via SWHID. This combination
-satisfies the Katz et al. <span class="citation"
-data-cites="katz2021software">[@katz2021software]</span> software
-citation principles’ requirement that software used in research be
-independently citable and permanently accessible.</p>
+satisfies the Katz et al. [katz2021software] software citation
+principles’ requirement that software used in research be independently
+citable and permanently accessible.</p>
 </body>
 </html>

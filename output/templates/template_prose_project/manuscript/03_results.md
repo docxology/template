@@ -10,6 +10,8 @@ After running `scripts/run_prose_pipeline.py` with the bundled `manuscript/confi
 * `output/figures/citation_density.png` — citations per 1000 words per file.
 * `output/data/manuscript_variables.json` — substitution variables for the abstract.
 
+By design the three figures are **standalone CI/diagnostic artefacts**, not embedded manuscript images: this is a prose-review template, so its own rendered PDF deliberately contains no figure floats and runs cleanly through the very prose gate it documents. A fork that wants figures inside the manuscript embeds them with `![caption](../output/figures/<name>.png){#fig:<label>}` in the usual way; see `docs/syntax_guide.md`.
+
 Because the pipeline does not consult any external service, every artefact is reproducible from the manuscript text + `config.yaml` alone. A second run on the same inputs produces byte-identical JSON (modulo timestamp metadata in any caches the project later adds).
 
 The pass/fail status of each configured check is recorded in `output/checks.json`. With the bundled configuration:

@@ -186,26 +186,23 @@ flowchart TB
 
 ### Rendered vs Non-Rendered Subfolders
 
-All projects live under typed subfolders of `projects/`. The infrastructure distinguishes between **rendered subfolders** (`templates/`, `active/`) and **non-rendered subfolders** (`working/`, `published/`, `archive/`, `other/`):
+All projects live under typed subfolders of `projects/`. The infrastructure distinguishes between **rendered subfolders** (`templates/`, optional `active/`) and **non-rendered subfolders** (`working/`, `archive/`, plus optional legacy `published/`/`other/`):
 
-#### ✅ **Rendered Subfolders (`projects/templates/`, `projects/active/`)**
+#### ✅ **Rendered Subfolders (`projects/templates/`, optional `projects/active/`)**
 - **Scanned** by `discover_projects()` as program directories (projects get qualified names `templates/<name>`, `active/<name>`)
 - **Validated** for structure requirements
 - **Listed** in `run.sh` interactive menu
 - **Executed** by pipeline scripts
 
-#### ❌ **Non-Rendered Subfolders (`projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/`)**
+#### ❌ **Non-Rendered Subfolders (`projects/working/`, `projects/archive/`, optional legacy mirrors)**
 - **NOT scanned** by `discover_projects()` (skipped via `NON_RENDERED_SUBDIRS`)
-- **NOT validated** by infrastructure
 - **NOT listed** in `run.sh` menu
 - **NOT executed** by pipeline scripts
-- **Preserved** for backburner, published, retired, or miscellaneous work
-
-### Discovery Behavior
+- **Preserved** for working, archived, or optional legacy sidecar work
 
 ```python
-# discover_projects() scans projects/ and treats templates/ + active/ as program directories;
-# working/, published/, archive/, other/ are skipped (NON_RENDERED_SUBDIRS).
+# discover_projects() scans projects/ and treats templates/ + optional active/ as program directories;
+# working/, archive/, and optional legacy published/other/ are skipped (NON_RENDERED_SUBDIRS).
 projects = discover_projects(repo_root)
 
 # Advanced: scan a different directory explicitly

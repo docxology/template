@@ -528,47 +528,63 @@ uv run python scripts/execute_pipeline.py --project template_code_project --core
 
 ## Project Lifecycle and Archiving
 
-### Active Projects (`projects/`)
+### Rendered projects (`projects/templates/`, optional `projects/active/`)
 
-Active projects are discovered and executed by infrastructure:
+Rendered projects are discovered and executed by infrastructure:
 
 - **Discovered** by `infrastructure.project.discovery.discover_projects()`
 - **Listed** in `run.sh` interactive menu
 - **Executed** by pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
-- **Outputs** generated in `projects/{name}/output/` and `output/{name}/`
+- **Outputs** generated in `projects/<subfolder>/{name}/output/` and `output/<subfolder>/{name}/`
 
-### Non-Rendered Projects (`projects/working/`, `published/`, `archive/`, `other/`)
+`projects/templates/` is the permanent public exemplar set. `projects/active/`
+is an optional hot-seat mirror for private sidecar projects that should enter
+normal discovery.
 
-Non-rendered projects are preserved but not executed:
+### Non-rendered projects (`projects/working/`, `archive/`, optional legacy mirrors)
 
-- **NOT discovered** by infrastructure discovery functions
-- **NOT listed** in `run.sh` menu
-- **NOT executed** by pipeline scripts
-- **Preserved** for historical reference and potential reactivation
+Non-rendered projects are preserved but not executed by default:
 
-### Archiving a Project
+- **NOT discovered** by default infrastructure discovery functions
+- **NOT listed** in the normal `run.sh` menu
+- **NOT executed** by all-project pipeline scripts
+- **Preserved** for historical reference, explicit qualified renders, or later
+  deliberate restoration into optional `active/`
 
-To archive a rendered project:
+The simplified private sidecar requires `working/` and `archive/`; optional
+legacy `active/`, `published/`, and `other/` folders are still linked when
+present.
 
-1. Move project from `projects/active/{name}/` to `projects/archive/{name}/`
-2. Project will no longer appear in discovery or execution
-3. Can be reactivated by moving back to `projects/active/`
+### Retiring or resuming a sidecar project
 
-### Reactivating an Archived Project
+Use the sidecar lifecycle folders, not git-tracked project copies:
 
-To reactivate an archived project:
+1. Retire: move `../projects/working/{name}/` to `../projects/archive/{name}/`.
+2. Resume: move `../projects/archive/{name}/` back to `../projects/working/{name}/`.
+3. Re-sync with `uv run python -m infrastructure.orchestration link-projects`.
 
-1. Move project from `projects/archive/{name}/` to `projects/active/{name}/`
-2. Ensure project structure is valid (has `src/` and `tests/`)
-3. Project will be automatically discovered on next `run.sh` execution
+### Rendering a sidecar project
+
+For a one-off render, keep the project under `working/` and run an explicit
+qualified command such as:
+
+```bash
+uv run python scripts/03_render_pdf.py --project working/{name}
+```
+
+To include a private project in default discovery and the normal `run.sh` menu,
+deliberately place it under the sidecar's optional `active/{name}/` folder so it
+syncs into `projects/active/{name}/`.
 
 ### Project Lifecycle Workflow
 
 ```mermaid
 graph TD
     subgraph "Project States"
-        ACTIVE[Rendered<br/>projects/active/{name}/]
-        ARCHIVED[Non-rendered<br/>projects/archive/{name}/]
+        TEMPLATES[Permanent public exemplars<br/>projects/templates/{name}/]
+        ACTIVE[Optional rendered hot-seat<br/>projects/active/{name}/]
+        WORKING[Non-rendered WIP<br/>projects/working/{name}/]
+        ARCHIVED[Non-rendered archive<br/>projects/archive/{name}/]
     end
 
     subgraph "Infrastructure Operations"
@@ -577,17 +593,20 @@ graph TD
         LIST[List in run.sh menu<br/>Interactive selection]
     end
 
-    ACTIVE -->|Move to archive| ARCHIVED
-    ARCHIVED -->|Move to active/| ACTIVE
+    WORKING -->|Retire in sidecar| ARCHIVED
+    ARCHIVED -->|Resume in sidecar| WORKING
+    WORKING -->|Explicit --project working/name| EXECUTE
+    WORKING -->|Deliberately restore optional active/| ACTIVE
 
+    TEMPLATES -->|Discovered| DISCOVER
     ACTIVE -->|Discovered| DISCOVER
     DISCOVER -->|Listed| LIST
     LIST -->|Selected| EXECUTE
     EXECUTE -->|Executed| ACTIVE
+    EXECUTE -->|Executed| TEMPLATES
 
-    ARCHIVED -.->|NOT discovered| DISCOVER
-    ARCHIVED -.->|NOT listed| LIST
-    ARCHIVED -.->|NOT executed| EXECUTE
+    WORKING -.->|NOT default-discovered| DISCOVER
+    ARCHIVED -.->|NOT default-discovered| DISCOVER
 ```
 
 ## Conclusion

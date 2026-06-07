@@ -109,11 +109,15 @@ Each subpackage has a `SKILL.md` (YAML frontmatter + body) for agent discovery�
 - `infrastructure/project/SKILL.md` — Project discovery and validation
 - `infrastructure/publishing/SKILL.md` — Academic publishing
 - `infrastructure/reference/SKILL.md` — Bibliographic reference workflows
+- `infrastructure/reference/citation/SKILL.md` — BibTeX read/write/convert subpackage
 - `infrastructure/rendering/SKILL.md` — Output generation
 - `infrastructure/reporting/SKILL.md` — Pipeline reporting
 - `infrastructure/scientific/SKILL.md` — Scientific computing
 - `infrastructure/search/SKILL.md` — Literature discovery and search workflows
+- `infrastructure/search/literature/SKILL.md` — Academic literature-search subpackage
+- `infrastructure/sia/SKILL.md` — Self-Improvement Agent harness contracts
 - `infrastructure/skills/SKILL.md` — Programmatic skill discovery and manifest I/O
 - `infrastructure/steganography/SKILL.md` — Secure PDF post-processing
 - `infrastructure/core/telemetry/SKILL.md` — Unified pipeline telemetry (nested under `core/`)
+- `infrastructure/reference/verification/SKILL.md` — Reference-existence verification gate
 - `infrastructure/validation/SKILL.md` — Quality assurance

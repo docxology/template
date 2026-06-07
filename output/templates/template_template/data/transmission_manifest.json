@@ -2,10 +2,10 @@
   "doi": "10.5281/zenodo.20419007",
   "github_release_url": null,
   "github_repository": "docxology/template_template",
-  "pdf_sha256": "25a4dd91e0df57b53e98016b1e58b8cd668090492784ef093795bd8d33f88561",
-  "pdf_sha512": "3f8cee2bdb007a9f778552929cb8162143a207d77b1e258eecb8050216844ede2c5bd006c37a480f05a7004f91042a5783610f5c502e27c93ec27ffed9e35f99",
+  "pdf_sha256": null,
+  "pdf_sha512": null,
   "published": false,
   "title": "A template/ approach to Reproducible Generative Research",
-  "version": "1.0",
+  "version": "1.0.6",
   "zenodo_record_url": "https://zenodo.org/records/20419007"
 }

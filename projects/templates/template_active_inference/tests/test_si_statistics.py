@@ -30,6 +30,15 @@ def test_summarize_si_trace_from_fixture() -> None:
     assert stats["goal_reached"] is True
     assert stats["entropy_min"] == pytest.approx(0.2)
     assert stats["entropy_max"] == pytest.approx(0.5)
+    assert stats["entropy_initial"] == pytest.approx(0.5)
+    assert stats["entropy_terminal"] == pytest.approx(0.2)
+    assert stats["entropy_drop"] == pytest.approx(0.3)
+    assert stats["entropy_monotone_nonincreasing"] is True
+    assert stats["action_switch_count"] == 0
+    assert stats["action_switch_rate"] == pytest.approx(0.0)
+    assert stats["observation_diversity"] == 2
+    assert stats["trace_summary_steps_match"] is True
+    assert stats["finite_trace"] is True
 
 
 def test_summarize_sweep(tmp_path: Path) -> None:
@@ -57,3 +66,5 @@ def test_write_analysis_statistics(project_root: Path, tmp_path: Path) -> None:
     assert "sweep" in payload
     assert "si_tmaze" in payload
     assert "pymdp_mode" in payload
+    assert payload["si_tmaze"]["trace_summary_steps_match"] is True
+    assert payload["si_tmaze"]["finite_trace"] is True

@@ -46,7 +46,8 @@ The promoted validation-spine and canonical roadmap artifacts cover provenance,
 replay, counterexamples, toy sweeps, uncertainty summaries, benchmark rows,
 finite model-checking witnesses, interop reports, semantic gluing, dependency
 graphs, evidence-field indexing, release-bundle parity, theorem traceability,
-gate ergonomics, scholarship source mapping, artifact diffing, Lean proof extraction, finite state-space
+gate ergonomics, scholarship source mapping, visualization-quality and statistical-bridge auditing,
+artifact diffing, Lean proof extraction, finite state-space
 catalogs, causal ablations, artifact license checks, release-note evidence,
 track-improvement scope, and adversarial/scope audits. Live track IDs are stable
 canonical names; future work improves those tracks rather than adding `_vN`
