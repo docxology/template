@@ -30,7 +30,7 @@ logger = get_logger(__name__)
 
 
 def main() -> None:
-    """Generate all architecture figures via src/template module logic."""
+    """Generate all architecture figures via src/template_template module logic."""
     logger.info("Starting architecture visualization generation...")
     paths = generate_all_architecture_figures(REPO_ROOT, PROJECT_DIR)
     logger.info("Architecture visualization generation complete")

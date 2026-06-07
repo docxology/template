@@ -1,6 +1,6 @@
 # Results {#sec:results}
 
-Table @tbl:sia-metrics summarizes fixture-replay metrics for the bundled run.
+@tbl:sia-metrics summarizes fixture-replay metrics for the bundled run.
 
 {{SIA_METRICS_TABLE}}
 

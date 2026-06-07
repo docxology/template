@@ -80,7 +80,7 @@ cd projects/$NEW
 # 1. Edit manuscript/config.yaml (title, thresholds, bibliography policy) — the only knob
 # 2. Replace manuscript/*.md with your prose; keep H1-per-section + {{TOKEN}} conventions
 # 3. Curate manuscript/references.bib (validated, never auto-written)
-# 4. Adjust src/ only if you need new checks — keep pipeline.py as the sole infra seam
+# 4. Adjust src/ only if you need new checks — keep pipeline/ as the sole infra seam
 uv run pytest projects/$NEW/tests/ --cov=projects/$NEW/src --cov-fail-under=90
 uv run python scripts/execute_pipeline.py --project $NEW --core-only
 ```

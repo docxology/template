@@ -18,7 +18,7 @@ from reportlab.pdfgen.canvas import Canvas
 from .config import NewspaperConfig, load_newspaper_config
 from .content import Edition, load_edition
 from .layout import render_page
-from .typography import build_stylesheet, register_fonts
+from .typography import Fonts, build_stylesheet, register_fonts
 
 
 @dataclass
@@ -48,11 +48,17 @@ def render_edition(
     *,
     project_root: Path,
     output_path: Path | str,
+    fonts: Fonts | None = None,
 ) -> RenderResult:
-    """Render ``edition`` to ``output_path`` and return a :class:`RenderResult`."""
+    """Render ``edition`` to ``output_path`` and return a :class:`RenderResult`.
+
+    ``fonts`` defaults to :func:`register_fonts` (resolving real faces from disk
+    with base-14 fallback). Inject a :class:`Fonts` to render with a known set —
+    e.g. all base-14 — so the cross-platform fallback path can be tested directly.
+    """
     output_path = Path(output_path)
     geom = config.geometry()
-    fonts = register_fonts()
+    fonts = fonts or register_fonts()
     styles = build_stylesheet(fonts)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

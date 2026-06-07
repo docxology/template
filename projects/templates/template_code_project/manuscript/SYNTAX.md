@@ -26,16 +26,17 @@ All citation keys must exist in [`references.bib`](references.bib). Pandoc with 
 <!-- Numbered equation with label (preferred Pandoc-crossref form) -->
 $$
 \nabla f(x) = Ax - b
-$$ {#eq:gradient}
+$$ {#eq:example_gradient}
 
 <!-- Equivalent LaTeX form (also recognised by pandoc-crossref) -->
 \begin{equation}
-\label{eq:gradient_descent}
+\label{eq:example_iteration}
 x_{k+1} = x_k - \alpha \nabla f(x_k)
 \end{equation}
 
-<!-- Reference in text -->
-[@eq:gradient] gives the gradient; [@eq:gradient_descent] is the iteration.
+<!-- Reference in text (these eq:example_* labels are illustrative only — the live
+     manuscript labels live in the registry table below) -->
+[@eq:example_gradient] gives the gradient; [@eq:example_iteration] is the iteration.
 ```
 
 Reference equations with `[@eq:label]` (parenthetical) or `@eq:label` (narrative). **Never** use raw LaTeX `\ref` / `\eqref` macros in Markdown source — the Pandoc bracket form renders portably across PDF / HTML.

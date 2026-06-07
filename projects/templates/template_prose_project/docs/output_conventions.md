@@ -45,7 +45,7 @@ flowchart TB
 | `output/run_summary.json` | `run_prose_pipeline.py` | downstream tooling |
 | `output/data/manuscript_variables.json` | `z_generate_manuscript_variables.py` | rendering (substituted into markdown) |
 | `output/figures/*.png` | `y_generate_prose_figures.py` | manuscript via `infrastructure.documentation.FigureManager` |
-| `manuscript/references.bib` | **NOT** modified by this pipeline (read-only) | `pipeline.py` cross-checks against it |
+| `manuscript/references.bib` | **NOT** modified by this pipeline (read-only) | `pipeline/` cross-checks against it |
 
 ## Conventions
 

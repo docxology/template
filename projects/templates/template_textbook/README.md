@@ -73,7 +73,9 @@ uv run python projects/templates/template_textbook/scripts/generate_figures.py
 uv run python projects/templates/template_textbook/scripts/generate_diagrams.py
 
 # 4. Run the test suite with coverage (must collect >0 tests, ≥90% coverage)
-uv run --extra dev python -m pytest projects/templates/template_textbook/tests/ \
+#    From the monorepo root, `dev` is a default dependency-group (plain `uv run`);
+#    the `--extra dev` form only works from inside the project dir.
+uv run python -m pytest projects/templates/template_textbook/tests/ \
   --cov=projects/templates/template_textbook/src --cov-fail-under=90
 
 # 5. Audit the manuscript against the structural contract

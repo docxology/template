@@ -69,7 +69,7 @@ sub-module level inside `src/`:
 | `src/pipeline/` | **Yes** — the primary infra-operations entry point | Calls `analyze_manuscript`, `write_report`, `parse_bibfile` |
 | `src/figures.py` | **Yes** — `infrastructure.prose.ManuscriptReport` (top-level type only) | Must not re-implement analysis — plot only over a typed report |
 | `src/report.py` | **Yes** — `infrastructure.prose.{ManuscriptReport, render_outline}` (type + pure helper) | No `analyze_*`, no `parse_*`, no I/O into infrastructure |
-| `src/manuscript_variables.py` | **Yes** — `load_report_payload` for raw JSON; calls `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` inside `write_resolved_manuscript_tree` and the `{{TOKEN}}` substitution path | Reads JSON written by `pipeline.py`; rendering helpers are pure delegations to infrastructure |
+| `src/manuscript_variables.py` | **Yes** — `load_report_payload` for raw JSON; calls `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` inside `write_resolved_manuscript_tree` and the `{{TOKEN}}` substitution path | Reads JSON written by `pipeline/`; rendering helpers are pure delegations to infrastructure |
 | `scripts/y_generate_prose_figures.py` | **Yes** — `infrastructure.prose.report.load_report_json` rehydrates a typed `ManuscriptReport` before calling `src/figures.py` | No inline analysis logic |
 | `src/config.py` | No | Pure YAML loading + dataclasses |
 | `scripts/*.py` | No analysis logic — only CLI shim | `run_prose_pipeline.py` is a wrapper around `src.pipeline.run_prose_pipeline` |
@@ -185,13 +185,13 @@ uv run pytest projects/templates/template_prose_project/tests/ \
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
     projects/templates/template_prose_project/tests/ || echo "Clean — no mocks found"
 
-# 3. pipeline.py is the only module performing infrastructure operations
+# 3. pipeline/ is the only module performing infrastructure operations
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
     projects/templates/template_prose_project/src/figures.py \
     projects/templates/template_prose_project/src/report.py \
     projects/templates/template_prose_project/src/manuscript_variables.py \
     projects/templates/template_prose_project/src/config.py \
-    || echo "Clean — only pipeline.py performs infrastructure operations"
+    || echo "Clean — only pipeline/ performs infrastructure operations"
 ```
 
 All three must produce zero violations (or the "Clean" message for checks 2 and 3).

@@ -71,7 +71,7 @@ types, pure helpers, and operations as needed; logic must stay in
 | `src/pipeline/` | `infrastructure.prose.{ManuscriptReport, analyze_manuscript, write_report}`, `infrastructure.reference.citation.parse_bibfile` | I/O outside the documented `write_outputs=True` branch |
 | `src/figures.py` | `infrastructure.prose.ManuscriptReport` (top-level type only) | re-implement readability/structure analysis; plot over a typed report, never recompute metrics |
 | `src/report.py` | `infrastructure.prose.{ManuscriptReport, render_outline}` (type + pure helper) | `analyze_*`, `parse_*`, `write_*` |
-| `src/manuscript_variables.py` | `load_report_payload` (raw JSON dict) and `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` for the {{TOKEN}} substitution path | re-implement substitution; reads JSON written by `pipeline.py`, delegates writes to infrastructure |
+| `src/manuscript_variables.py` | `load_report_payload` (raw JSON dict) and `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` for the {{TOKEN}} substitution path | re-implement substitution; reads JSON written by `pipeline/`, delegates writes to infrastructure |
 | `scripts/y_generate_prose_figures.py` | `infrastructure.prose.report.load_report_json` → typed `ManuscriptReport` for `src/figures.py` | inline analysis logic |
 | `scripts/run_prose_pipeline.py` | `src.pipeline`, `src.config`, `src.report` | inline analysis logic, regex over prose, BibTeX parsing |
 | `scripts/z_generate_manuscript_variables.py` | `src.manuscript_variables` (`load_report_payload`) | inline analysis logic |

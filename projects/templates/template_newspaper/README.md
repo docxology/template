@@ -94,7 +94,7 @@ src/newspaper/
   typography.py  font registration + paragraph stylesheet
   content.py     typed content model + strict YAML loaders
   config.py      strict render configuration
-  figures.py     6 halftone engravings (Pillow) + 3 charts (Matplotlib)
+  figures.py     6 halftone engravings (Pillow) + 3 charts (Matplotlib) + 4 colour ad graphics (13 total)
   components.py  flowables: stories, drop caps, boxes, tables, pull quotes
   furniture.py   canvas-drawn nameplate, section bands, folios, column rules
   layout.py      column-frame construction + content flow

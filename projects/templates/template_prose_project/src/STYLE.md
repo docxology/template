@@ -191,7 +191,7 @@ __all__ = [
 ]
 ```
 
-Note: `CheckResult` (in `pipeline.py`) and `write_resolved_manuscript_tree`
+Note: `CheckResult` (in `pipeline/checks.py`) and `write_resolved_manuscript_tree`
 (in `manuscript_variables.py`) are intentionally NOT in `__all__` — tests
 import them directly via `from src.pipeline import CheckResult` /
 `from src.manuscript_variables import write_resolved_manuscript_tree`

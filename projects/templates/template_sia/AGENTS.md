@@ -18,7 +18,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `src/reports.py` | Loop markdown report + `${SIA_*}` manuscript variables |
 | `src/fixtures/recorded_generations/` | Fixture replay for gens 1–3 (default CI) |
 | `tasks/mini_classify/` | Public/private task split + `evaluate.py` |
-| `scripts/run_sia_loop.py` | Thin orchestrator (`--live-sia`, `--llm-model`) |
+| `scripts/run_sia_loop.py` | Thin orchestrator (`--project-root`, `--live-sia`) |
 | `scripts/z_generate_manuscript_variables.py` | Post-analysis token hydration |
 
 ## Run modes
@@ -27,7 +27,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | --- | --- |
 | `uv run python scripts/run_sia_loop.py` | Fixture replay (deterministic) |
 | `… --live-sia` | Bounded subprocess target + evaluation; target code unchanged each generation (deterministic stub, no code mutation, no sandbox) |
-| `… --live-sia --llm-model gemma3:4b` | Live mode with Ollama feedback note written but **not applied to code** |
+| `… --live-sia` (model set in `sia.yaml`) | Live mode with Ollama feedback note written but **not applied to code**; the LLM model is read from config (`sia.yaml`/settings), not a CLI flag |
 
 Live mode demonstrates the loop's execution/evaluation plumbing, not autonomous
 code modification. Cross-generation self-improvement is shown only via fixture

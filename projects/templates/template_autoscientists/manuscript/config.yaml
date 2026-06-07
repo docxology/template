@@ -3,9 +3,12 @@
 # mechanisms from AutoScientists (arXiv:2605.28655), framed honestly as a
 # noise-robustness testbed rather than a performance claim.
 #
-# This file links manuscript prose to the execution layer. It is loaded by
-# `yaml.safe_load` inside `infrastructure/rendering/_pdf_combined_renderer.py`
-# (manuscript metadata) and read by the project's analysis scripts.
+# This file supplies manuscript metadata (title, authors, DOIs) consumed by the
+# renderer (`infrastructure/rendering/_pdf_combined_renderer.py`). The
+# `experiment:` block below is a human-readable mirror of the code defaults; it is
+# NOT loaded by the analysis scripts (they construct SearchConfig/SyntheticObjective
+# directly) — the test `test_config_yaml_experiment_block_mirrors_code_defaults`
+# binds the two so the mirror cannot drift.
 
 # Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_report_model.py`
 paper:
@@ -66,8 +69,11 @@ testing:
   max_infra_test_failures: 0
   max_project_test_failures: 0
 
-# Experimental parameters — mirror SearchConfig defaults consumed by the
-# analysis scripts (run_search_comparison.py, run_ablation.py).
+# Experimental parameters — a documentation mirror of the code defaults:
+# budget/num_teams/confirm_seeds/base_seed/stagnation_window/dead_end_threshold/sigma
+# are SearchConfig defaults; dimensions/noise_scale/ripple are SyntheticObjective
+# defaults. The analysis scripts (run_search_comparison.py, run_ablation.py) do not
+# read this file — they build those objects directly; the mirror is pinned by tests.
 experiment:
   budget: 60
   num_teams: 3

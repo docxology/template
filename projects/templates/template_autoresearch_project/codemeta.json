@@ -25,5 +25,5 @@
   ],
   "license": "https://spdx.org/licenses/MIT",
   "name": "Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task",
-  "version": "0.1"
+  "version": "0.3.0"
 }

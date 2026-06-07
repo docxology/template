@@ -10,7 +10,7 @@ Canonical trio:
 - **`template_prose_project`**: Prose-heavy manuscript emphasizing narrative structure and bibliography discipline, ${project_template_prose_project_test_count} tests, 90%+ coverage—tests exercise rendering and Markdown integrity without heavyweight numerics.
 - **`template_autoresearch_project`**: AutoResearch readiness workflow invoking `projects/template_search_project/scripts/` to run corpus builders, scripted figures (`output/figures/`), and manifold-variable injection (the archive-only literature-search exemplar, restored on demand). Typical Stage 02 workloads include bibliography fusion, corpus JSON assembly, deep-search aggregates, and report composition.
 
-Meta manuscript (**`projects/templates/template_template`**) analyzes the repository via `src/template/` introspection metrics; it now lives alongside the other public exemplars under `projects/templates/`.
+Meta manuscript (**`projects/templates/template_template`**) analyzes the repository via `src/template_template/` introspection metrics; it now lives alongside the other public exemplars under `projects/templates/`.
 
 These workspaces share no project-level code—only Layer 1 (${module_count} infrastructure subdirectories, ~${total_infra_python_files} Python files)—validating insulation between domain repos and reusable services.
 

@@ -451,3 +451,22 @@ assert mod.logger.name == "manuscript_variables_isolated"
             check=False,
         )
         assert result.returncode == 0, result.stderr or result.stdout
+
+
+def test_step_sensitivity_caption_numbers_match_sweep():
+    """Pin the #fig:step_sensitivity caption's hardcoded numbers to the sweep the
+    figure is generated from, so prose cannot drift from the computation."""
+    from src.experiment_config import load_experiment_config
+    from src.sweeps import sensitivity_sweep
+
+    sweep = sensitivity_sweep(load_experiment_config())
+    n_points = len(sweep.alphas)
+    first_iters = sweep.iterations[0]
+    last_iters = sweep.iterations[-1]
+
+    caption = (Path(__file__).resolve().parent.parent / "manuscript" / "03_results.md").read_text(
+        encoding="utf-8"
+    )
+    assert f"({n_points} points)" in caption
+    assert f"{first_iters} iterations at the smallest" in caption
+    assert f"to {last_iters} iterations at" in caption

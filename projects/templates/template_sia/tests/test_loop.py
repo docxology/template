@@ -3,17 +3,35 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
-
-import pytest
 
 from src.loop import build_run_config, fixtures_dir, run_sia_loop_project
 from src.loop_config import load_paper_title, load_sia_settings
 from src.reports import compute_variables, write_loop_report, write_manuscript_variables
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+# Volatile/derived paths that must never be copied into a test sandbox: copying a
+# live coverage DB while pytest-cov rewrites it raises a mid-copy FileNotFoundError
+# (a real flaky failure that broke the render's Project-Tests stage). Copy source only.
+_COPY_IGNORE = shutil.ignore_patterns(
+    ".coverage*",
+    "coverage_project.json",
+    "htmlcov",
+    ".venv",
+    ".pytest_cache",
+    "__pycache__",
+    "output",
+    "*.egg-info",
+)
+
+
+def _copy_project(dst: Path) -> None:
+    """Copy the project into a sandbox, excluding volatile/derived artifacts."""
+    shutil.copytree(PROJECT_ROOT, dst, ignore=_COPY_IGNORE)
 
 
 def test_load_sia_settings():
@@ -32,10 +50,9 @@ def test_fixtures_dir_exists():
 
 def test_run_sia_loop_project_fixture_replay(tmp_path: Path):
     """Dry-run loop writes three generations and a summary."""
-    import shutil
 
     project = tmp_path / "proj"
-    shutil.copytree(PROJECT_ROOT, project)
+    _copy_project(project)
     for path in project.rglob("__pycache__"):
         if path.is_dir():
             shutil.rmtree(path)
@@ -59,10 +76,9 @@ def test_build_run_config_live_overrides_settings():
 
 
 def test_compute_variables_after_run(tmp_path: Path):
-    import shutil
 
     project = tmp_path / "proj"
-    shutil.copytree(PROJECT_ROOT, project)
+    _copy_project(project)
     if (project / "output").exists():
         shutil.rmtree(project / "output")
     run_sia_loop_project(project, live=False)
@@ -73,10 +89,9 @@ def test_compute_variables_after_run(tmp_path: Path):
 
 
 def test_write_manuscript_variables(tmp_path: Path):
-    import shutil
 
     project = tmp_path / "proj"
-    shutil.copytree(PROJECT_ROOT, project)
+    _copy_project(project)
     if (project / "output").exists():
         shutil.rmtree(project / "output")
     run_sia_loop_project(project, live=False)
@@ -119,10 +134,9 @@ def test_z_generate_manuscript_variables_script():
 
 
 def test_write_loop_report_standalone(tmp_path: Path):
-    import shutil
 
     project = tmp_path / "proj"
-    shutil.copytree(PROJECT_ROOT, project)
+    _copy_project(project)
     if (project / "output").exists():
         shutil.rmtree(project / "output")
     run_sia_loop_project(project, live=False)

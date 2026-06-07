@@ -22,7 +22,7 @@ claims:
     artifact_path: output/pdf/the-triplicate.pdf
   - claim_id: figure-count
     kind: number
-    value: 6
+    value: 13
     source: projects/templates/template_newspaper/src/newspaper/figures.py generate_all
     source_tier: project_source
     freshness: active

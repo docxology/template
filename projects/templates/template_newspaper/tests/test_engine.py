@@ -45,6 +45,32 @@ def test_render_edition_accepts_str_output_path(project_root, tmp_path) -> None:
     assert result.page_count == 12
 
 
+def test_render_with_base14_fallback_fonts_still_fits(project_root, tmp_path) -> None:
+    """Cross-platform guarantee (no mocks): rendering with the base-14 fallback
+    Fonts (what a machine lacking the macOS faces resolves to) still produces a
+    12-page paper with no over-set — the 'structurally identical' claim, tested."""
+    from newspaper.content import load_edition
+    from newspaper.config import load_newspaper_config
+    from newspaper.typography import Fonts
+
+    base14 = Fonts(
+        display="Times-Roman",
+        display_bold="Times-Bold",
+        body="Times-Roman",
+        body_bold="Times-Bold",
+        body_italic="Times-Italic",
+        body_bolditalic="Times-BoldItalic",
+        sans="Helvetica",
+        sans_bold="Helvetica-Bold",
+    )
+    out = tmp_path / "base14.pdf"
+    edition = load_edition(project_root / "content")
+    config = load_newspaper_config(project_root / "content")
+    result = render_edition(edition, config, project_root=project_root, output_path=out, fonts=base14)
+    assert result.page_count == 12
+    assert result.all_pages_fit, f"base-14 render over-set: {result.oversets}"
+
+
 def test_build_and_render_default_path(project_root, tmp_path) -> None:
     out = tmp_path / "out.pdf"
     result = build_and_render(project_root, output_path=out)

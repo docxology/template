@@ -99,7 +99,7 @@ uv run pytest projects/templates/template_prose_project/tests/ \
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
     projects/templates/template_prose_project/tests/ || echo "Clean"
 
-# 3. Only pipeline.py performs infrastructure operations
+# 3. Only pipeline/ performs infrastructure operations
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
     projects/templates/template_prose_project/src/figures.py \
     projects/templates/template_prose_project/src/report.py \

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from PIL import Image
 
 from newspaper import figures
@@ -54,3 +56,15 @@ def test_color_graphics_are_rgb(tmp_path) -> None:
         img = builder()
         assert isinstance(img, PILImage.Image)
         assert img.mode == "RGB"
+
+
+def test_claim_ledger_figure_count_matches_generator(tmp_path) -> None:
+    """Bind data/claim_ledger.yaml `figure-count` to what generate_all actually
+    produces — the ledger's own contract is that every number is traceable to its
+    source, so it must not drift from the generator."""
+    import yaml
+
+    ledger_path = Path(__file__).resolve().parent.parent / "data" / "claim_ledger.yaml"
+    ledger = yaml.safe_load(ledger_path.read_text(encoding="utf-8"))
+    claims = {c["claim_id"]: c["value"] for c in ledger["claims"]}
+    assert claims["figure-count"] == len(figures.generate_all(tmp_path))
