@@ -13,6 +13,7 @@ from typing import Any
 
 import yaml
 
+from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.rendering.latex_log_quality import (
     collect_latex_log_findings,
@@ -161,9 +162,9 @@ def log_rendering_summary(summary: dict[str, Any]) -> None:
 
     See docs/operational/logging/output-design.md for the schema.
     """
-    logger.info("\n" + "=" * 60)
+    logger.info("\n" + "=" * BANNER_WIDTH)
     logger.info("RENDERING RESULTS SUMMARY")
-    logger.info("=" * 60)
+    logger.info("=" * BANNER_WIDTH)
     logger.info(f"Project: {summary['project']}")
 
     if summary["combined_pdf"]:
@@ -194,7 +195,7 @@ def log_rendering_summary(summary: dict[str, Any]) -> None:
             logger.info(f"   {slide['name']:<40} {slide['size_kb']:>8.1f} KB")
 
     logger.info(f"\n📦 Total Output Size: {summary['total_size_kb']:.1f} KB ({summary['total_size_kb'] / 1024:.2f} MB)")
-    logger.info("=" * 60 + "\n")
+    logger.info("=" * BANNER_WIDTH + "\n")
 
 
 def _check_citations_used(manuscript_dir: Path) -> bool:

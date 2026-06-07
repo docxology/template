@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-06-03 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**526**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**214**), publishing suite collection/full run (**381**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-06-03 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**527**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**216**), publishing suite collection/full run (**381**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -20,7 +20,7 @@ This file aggregates verifiable facts from discovery scripts, CI configuration, 
 
 Optional add-on: `projects/archive/template_search_project` (mirrored read-only from the private repo's `archive/`) can be copied under `projects/active/` for literature-search workflows.
 
-Private lifecycle projects live outside this public repo in a separate external repository (location set via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`), organized into `active/`, `working/`, `published/`, `archive/`, and `other/`. `run.sh`/`infrastructure.orchestration` symlinks each private lifecycle folder into the same-named typed subfolder under `template/projects/` (`active/*` → `projects/active/*`, `working/*` → `projects/working/*`, …) before discovery/rendering; only `projects/templates/` and `projects/active/` are rendered, the rest are non-rendered mirrors for inspection. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
+Private lifecycle projects live outside this public repo in a separate external repository (location set via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`). The simplified sidecar defaults to `working/` and `archive/`; optional legacy `active/`, `published/`, and `other/` folders are still recognized when present. `run.sh`/`infrastructure.orchestration` symlinks existing private lifecycle folders into same-named typed subfolders under `template/projects/` (`working/*` → `projects/working/*`, `archive/*` → `projects/archive/*`, optional `active/*` → `projects/active/*`, …) before discovery/rendering; only `projects/templates/` and optional `projects/active/` are default-rendered, while `working/` and `archive/` are non-rendered mirrors for explicit targeted work. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
 **Public CI/documentation project scope** (`projects/`, filtered through `infrastructure.project.public_scope`; authoritative snapshot → [`active_projects.md`](active_projects.md)):
 
@@ -38,7 +38,7 @@ Private lifecycle projects live outside this public repo in a separate external 
 
 **Work-in-progress projects** (`projects/working/`, not discovered/rendered): local-only symlinks to the private repo's `working/` projects — roster omitted from public docs; list with `ls projects/working/`.
 
-**Archived projects** (`projects/archive/`, preserved but not executed): local-only symlinks to the private repo's `archive/` projects (roster omitted from public docs) — list with `ls projects/archive/`. `projects/published/` and `projects/other/` are additional non-rendered lifecycle mirrors.
+**Archived projects** (`projects/archive/`, preserved but not executed): local-only symlinks to the private repo's `archive/` projects (roster omitted from public docs) — list with `ls projects/archive/`. `projects/published/` and `projects/other/` are optional legacy non-rendered lifecycle mirrors.
 
 Regenerate [`active_projects.md`](active_projects.md) with:
 
@@ -86,7 +86,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **526** on 2026-06-06 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **527** on 2026-06-06 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -103,7 +103,7 @@ uv run pytest tests/infra_tests/project/ --collect-only -q --no-cov
 uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 ```
 
-Result: **214** project-scope infrastructure tests collected and **381** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
+Result: **216** project-scope infrastructure tests collected and **381** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
 **Exemplar `pytest --collect-only` totals** (2026-05-27; `template_active_inference` re-derived 2026-06-05 after the v3.2.0 validation-spine additions):
 

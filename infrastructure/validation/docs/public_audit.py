@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.project.public_scope import public_ci_source_paths
+from infrastructure.validation.docs._io import read_markdown
 from infrastructure.validation.docs.consistency._shared import Inconsistency, blank_fences
 from infrastructure.validation.docs.consistency.memory_decision import check_memory_decision_rule_links
 from infrastructure.validation.docs.lint_runner import doc_roots
@@ -159,9 +160,8 @@ def collect_public_markdown(repo_root: Path) -> list[PublicDocRecord]:
     """Inventory public Markdown under the existing docs-lint roots."""
     records: list[PublicDocRecord] = []
     for path in iter_markdown_files(doc_roots(repo_root), exclude_parts=DEFAULT_EXCLUDE_PARTS):
-        try:
-            text = path.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
+        text = read_markdown(path)
+        if text is None:
             continue
         records.append(
             PublicDocRecord(
@@ -183,10 +183,10 @@ def find_volatile_fact_claims(repo_root: Path) -> list[AuditFinding]:
     """Find drift-prone project roster/count claims without generated-source links."""
     findings: list[AuditFinding] = []
     for path in _iter_policy_docs(repo_root):
-        try:
-            lines = blank_fences(path.read_text(encoding="utf-8")).splitlines()
-        except (OSError, UnicodeDecodeError):
+        text = read_markdown(path)
+        if text is None:
             continue
+        lines = blank_fences(text).splitlines()
         in_generated_block = False
         for line_no, line in enumerate(lines, 1):
             if "<!-- BEGIN:" in line:
@@ -222,10 +222,10 @@ def find_gate_claims_without_negative_controls(repo_root: Path) -> list[AuditFin
     """Find verifier/gate enforcement claims whose local context lacks a negative control."""
     findings: list[AuditFinding] = []
     for path in _iter_policy_docs(repo_root):
-        try:
-            lines = blank_fences(path.read_text(encoding="utf-8")).splitlines()
-        except (OSError, UnicodeDecodeError):
+        text = read_markdown(path)
+        if text is None:
             continue
+        lines = blank_fences(text).splitlines()
         for line_no, line in enumerate(lines, 1):
             if not _GATE_CLAIM_RE.search(line):
                 continue
@@ -275,10 +275,10 @@ def _adjacent_doc_text(directory: Path) -> str:
         path = directory / name
         if not path.is_file():
             continue
-        try:
-            parts.append(path.read_text(encoding="utf-8").lower())
-        except (OSError, UnicodeDecodeError):
+        text = read_markdown(path)
+        if text is None:
             continue
+        parts.append(text.lower())
     return "\n".join(parts)
 
 

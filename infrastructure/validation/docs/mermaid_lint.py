@@ -31,6 +31,7 @@ from pathlib import Path
 
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.docs._io import read_markdown
 from infrastructure.validation.docs.scan_scope import iter_markdown_files
 
 logger = get_logger(__name__)
@@ -106,10 +107,8 @@ def find_mermaid_blocks(roots: Iterable[Path]) -> list[MermaidBlock]:
     """
     blocks: list[MermaidBlock] = []
     for md in _iter_markdown_files(roots):
-        try:
-            text = md.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError) as e:
-            logger.debug("skipping %s: %s", md, e)
+        text = read_markdown(md)
+        if text is None:
             continue
         for match in _MERMAID_FENCE.finditer(text):
             body = match.group("body")

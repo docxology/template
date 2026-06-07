@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.exceptions import RenderingError, ValidationError
+from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger, log_success, log_live_resource_usage
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.rendering import RenderManager
@@ -185,9 +186,9 @@ def _log_manuscript_composition(source_files: list[Path]) -> None:
     """Log the manuscript file composition summary with file sizes."""
     md_files = [f for f in source_files if f.suffix == ".md"]
     tex_files = [f for f in source_files if f.suffix == ".tex"]
-    logger.info("\n" + "=" * 60)
+    logger.info("\n" + "=" * BANNER_WIDTH)
     logger.info(f"MANUSCRIPT COMPOSITION ({len(source_files)} files)")
-    logger.info("=" * 60)
+    logger.info("=" * BANNER_WIDTH)
     if md_files:
         logger.info(f"Markdown sections ({len(md_files)}):")
         for f in md_files:
@@ -200,7 +201,7 @@ def _log_manuscript_composition(source_files: list[Path]) -> None:
         for f in tex_files:
             size_kb = f.stat().st_size / 1024
             logger.info(f"  • {f.name:<40} ({size_kb:>6.1f} KB)")
-    logger.info("=" * 60 + "\n")
+    logger.info("=" * BANNER_WIDTH + "\n")
 
 
 def _load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
@@ -293,7 +294,7 @@ def _render_combined_outputs(
 
     # ── Combined PDF ───────────────────────────────────────────────
     if config.enable_pdf:
-        logger.debug("\n" + "=" * 60)
+        logger.debug("\n" + "=" * BANNER_WIDTH)
         logger.info("Generating combined PDF manuscript...")
         try:
             combined_pdf = manager.render_combined_pdf(_combined_source_files(md_files), manuscript_dir, project_name)
@@ -323,7 +324,7 @@ def _render_combined_outputs(
 
     # ── Combined HTML ──────────────────────────────────────────────
     if config.enable_html:
-        logger.debug("\n" + "=" * 60)
+        logger.debug("\n" + "=" * BANNER_WIDTH)
         logger.info("Generating combined HTML manuscript...")
         try:
             manager.render_combined_web(_combined_source_files(md_files), manuscript_dir, project_name)
@@ -412,7 +413,7 @@ def _render_combined_docx(
     out_path = docx_dir / f"{project_name}_combined.docx"
     bibliography = _resolve_bibliography(manuscript_dir)
 
-    logger.debug("\n" + "=" * 60)
+    logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined DOCX manuscript...")
     try:
         result = render_docx(
@@ -450,7 +451,7 @@ def _render_combined_epub(
     out_path = epub_dir / f"{project_name}_combined.epub"
     bibliography = _resolve_bibliography(manuscript_dir)
 
-    logger.debug("\n" + "=" * 60)
+    logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined EPUB manuscript...")
     try:
         result = render_epub(

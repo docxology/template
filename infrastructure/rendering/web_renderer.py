@@ -6,6 +6,7 @@ import subprocess
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 
@@ -117,9 +118,9 @@ class WebRenderer:
         Raises:
             RenderingError: If combination or rendering fails
         """
-        logger.info("\n" + "=" * 60)
+        logger.info("\n" + "=" * BANNER_WIDTH)
         logger.info("COMBINED HTML RENDERING")
-        logger.info("=" * 60)
+        logger.info("=" * BANNER_WIDTH)
         logger.info(f"Combining {len(source_files)} section(s):")
         for i, md_file in enumerate(source_files, 1):
             size_kb = md_file.stat().st_size / 1024
@@ -127,7 +128,7 @@ class WebRenderer:
 
         total_size_kb = sum(f.stat().st_size for f in source_files) / 1024
         logger.info(f"  {'Total input size:':<48} ({total_size_kb:>6.1f} KB)")
-        logger.info("=" * 60 + "\n")
+        logger.info("=" * BANNER_WIDTH + "\n")
 
         output_dir = Path(self.config.web_dir)
         output_dir.mkdir(parents=True, exist_ok=True)

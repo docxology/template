@@ -11,7 +11,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging.constants import EMOJIS, get_emoji_enabled
+from infrastructure.core.logging.constants import EMOJIS, TABLE_WIDTH, get_emoji_enabled
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -157,9 +157,9 @@ class DiagnosticReporter:
         yellow_flag = EMOJIS["warning"] if use_emojis else "[WARN]"
         info_flag = EMOJIS["info"] if use_emojis else "[INFO]"
 
-        logger.info(f"\n{'=' * 80}")
+        logger.info(f"\n{'=' * TABLE_WIDTH}")
         logger.info(f" DIAGNOSTIC REPORT: {self.project_name}")
-        logger.info(f"{'=' * 80}\n")
+        logger.info(f"{'=' * TABLE_WIDTH}\n")
 
         errors = [e for e in self.events if e.severity == DiagnosticSeverity.ERROR]
         warnings = [e for e in self.events if e.severity == DiagnosticSeverity.WARNING]
@@ -169,7 +169,7 @@ class DiagnosticReporter:
             if not items:
                 return
             logger.info(f"{icon} {title} ({len(items)})")
-            logger.info(f"{'-' * 80}")
+            logger.info(f"{'-' * TABLE_WIDTH}")
             for item in items:
                 loc = ""
                 if item.file_path:
@@ -188,7 +188,7 @@ class DiagnosticReporter:
         _log_group("YELLOW FLAGS (Warnings)", warnings, yellow_flag)
         _log_group("DIAGNOSTICS (Info)", infos, info_flag)
 
-        logger.info(f"{'=' * 80}\n")
+        logger.info(f"{'=' * TABLE_WIDTH}\n")
 
     def save_report(self) -> None:
         """Save the diagnostic report to JSON if output_dir is configured."""

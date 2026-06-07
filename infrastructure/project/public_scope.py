@@ -9,6 +9,7 @@ public template repository.
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 from typing import Sequence
 
@@ -72,7 +73,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "command",
-        choices=("source-paths", "project-names"),
+        choices=("source-paths", "project-names", "project-names-json"),
         help="Value to print for shell consumption.",
     )
     parser.add_argument(
@@ -86,6 +87,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     repo_root = args.repo_root.resolve()
     if args.command == "source-paths":
         print(_format_paths(public_ci_source_paths(repo_root)))
+    elif args.command == "project-names-json":
+        # Compact JSON array consumed by the CI test-project matrix via
+        # ``fromJSON(needs.detect-projects.outputs.projects)``. ``separators``
+        # keeps it on one line so it slots cleanly into ``$GITHUB_OUTPUT``.
+        print(json.dumps(public_project_names(repo_root), separators=(",", ":")))
     else:
         print(" ".join(public_project_names(repo_root)))
     return 0

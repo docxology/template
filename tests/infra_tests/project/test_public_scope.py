@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 
 import pytest
 
 from infrastructure.project.discovery import discover_projects
-from infrastructure.project.public_scope import public_ci_source_paths, public_project_names
+from infrastructure.project.public_scope import (
+    main,
+    public_ci_source_paths,
+    public_project_names,
+)
 
 
 def _scaffold_project(root: Path, qualified: str) -> Path:
@@ -73,9 +78,7 @@ def test_public_scope_excludes_local_private_symlink(tmp_path: Path) -> None:
     (external / "tests").mkdir()
     (external / "src" / "__init__.py").write_text("", encoding="utf-8")
     (tmp_path / "projects" / "active").mkdir(parents=True, exist_ok=True)
-    (tmp_path / "projects" / "active" / "example_private_project").symlink_to(
-        external, target_is_directory=True
-    )
+    (tmp_path / "projects" / "active" / "example_private_project").symlink_to(external, target_is_directory=True)
 
     discovered = {project.qualified_name for project in discover_projects(tmp_path)}
 
@@ -88,3 +91,32 @@ def test_public_scope_excludes_local_private_symlink(tmp_path: Path) -> None:
         "templates/template_sia",
         "templates/template_template",
     ]
+
+
+def test_project_names_json_cli_emits_matrix_array(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """``project-names-json`` prints a one-line JSON array for the CI matrix.
+
+    This is the exact value consumed by ``fromJSON(...)`` in the
+    ``test-project`` strategy matrix, so it must be valid JSON listing the
+    public exemplars present in the checkout.
+    """
+    _scaffold_exemplars(tmp_path)
+    _scaffold_project(tmp_path, "active/private_research_project")
+
+    exit_code = main(["project-names-json", "--repo-root", str(tmp_path)])
+
+    assert exit_code == 0
+    out = capsys.readouterr().out
+    # Single line (no embedded newlines) so it slots into $GITHUB_OUTPUT.
+    assert out.count("\n") == 1
+    parsed = json.loads(out)
+    assert parsed == [
+        "templates/template_active_inference",
+        "templates/template_autoresearch_project",
+        "templates/template_code_project",
+        "templates/template_prose_project",
+        "templates/template_sia",
+        "templates/template_template",
+    ]
+    # Private symlinked/active projects never leak into the public matrix.
+    assert "active/private_research_project" not in parsed

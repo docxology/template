@@ -46,13 +46,21 @@ def setup_logger(name: str, level: int | None = None, log_file: Path | str | Non
 
     if level is None:
         level = get_log_level_from_env()
-    logger.setLevel(level)
 
     logger.handlers.clear()
 
     is_test_env = _is_test_environment()
 
+    # Console (stdout) must stay calm: it never emits DEBUG chrome, even when the
+    # caller asks for a DEBUG logger via LOG_LEVEL=0. The file handler keeps DEBUG.
+    # To let DEBUG records reach the file handler while the console filters them
+    # out, the logger itself must admit DEBUG whenever a file handler exists.
+    console_level = max(level, logging.INFO)
+    logger_level = min(level, logging.DEBUG) if log_file else level
+    logger.setLevel(logger_level)
+
     console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(console_level)
     if get_structured_logging_enabled():
         console_handler.setFormatter(JSONFormatter())
     else:
@@ -63,6 +71,8 @@ def setup_logger(name: str, level: int | None = None, log_file: Path | str | Non
         log_path = Path(log_file)
         log_path.parent.mkdir(parents=True, exist_ok=True)
         file_handler = logging.FileHandler(log_path)
+        # File log retains DEBUG and keeps timestamped, leveled lines.
+        file_handler.setLevel(logging.DEBUG)
         file_formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s")
         file_handler.setFormatter(file_formatter)
         logger.addHandler(file_handler)
@@ -112,6 +122,9 @@ def setup_root_log_file_handler(log_file: Path) -> logging.FileHandler:
             root_logger.removeHandler(h)
 
     handler = logging.FileHandler(log_file)
+    # File log retains DEBUG so the complete record survives even though the
+    # console handler floors at INFO.
+    handler.setLevel(logging.DEBUG)
     handler.setFormatter(logging.Formatter("[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"))
     root_logger.addHandler(handler)
     return handler

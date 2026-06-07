@@ -77,7 +77,7 @@ class RenderManager:
             # Determine what to render based on extension/type
             if source_file.suffix == ".tex":
                 # LaTeX usually means PDF or Poster
-                logger.info(f"Rendering LaTeX file: {source_file.name}")
+                logger.debug(f"Rendering LaTeX file: {source_file.name}")
                 if self.config.enable_pdf:
                     rendered_paths.append(self.pdf_renderer.render(source_file))
                 else:
@@ -85,7 +85,7 @@ class RenderManager:
 
             elif source_file.suffix == ".md":
                 # Markdown supports slides and web formats
-                logger.info(f"Rendering Markdown file: {source_file.name}")
+                logger.debug(f"Rendering Markdown file: {source_file.name}")
                 source_text = source_file.read_text(encoding="utf-8")
                 skip_beamer = "<!-- render:skip-beamer -->" in source_text
 
@@ -161,7 +161,7 @@ class RenderManager:
                     f"{len(format_errors)} failed ({failed_names}). {failed_formats}"
                 )
 
-            logger.info(f"Successfully rendered {len(rendered_paths)} format(s) for {source_file.name}")
+            logger.debug(f"Successfully rendered {len(rendered_paths)} format(s) for {source_file.name}")
             return rendered_paths
 
         except TemplateError:

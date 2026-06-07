@@ -18,6 +18,7 @@ from urllib.parse import unquote, urlsplit
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.validation.docs._io import read_markdown
 from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, iter_markdown_files
 
 logger = get_logger(__name__)
@@ -207,10 +208,8 @@ def find_broken_links(
     """
     broken: list[BrokenLink] = []
     for md in _iter_markdown_files(roots, exclude_globs):
-        try:
-            raw = md.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError) as e:
-            logger.debug("skipping %s: %s", md, e)
+        raw = read_markdown(md)
+        if raw is None:
             continue
         scrubbed = _strip_code(raw)
         raw_lines = raw.splitlines()
@@ -273,10 +272,8 @@ def _collect_file_edges(roots: Iterable[Path], exclude_globs: Iterable[str]) -> 
     """Build adjacency list of repo-relative markdown paths."""
     graph: dict[str, set[str]] = {}
     for md in _iter_markdown_files(roots, exclude_globs):
-        try:
-            raw = md.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError) as e:
-            logger.debug("skipping %s: %s", md, e)
+        raw = read_markdown(md)
+        if raw is None:
             continue
         source = str(md.resolve())
         graph.setdefault(source, set())

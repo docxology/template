@@ -59,6 +59,43 @@ jobs:
             echo "fep_lean=false" >> "$GITHUB_OUTPUT"
           fi
 
+  # Derive the public-exemplar matrix for `test-project` from the canonical
+  # roster (`infrastructure.project.public_scope`) instead of a hard-coded list,
+  # so adding/retiring an exemplar under projects/templates/ extends or trims the
+  # matrix automatically (CI-MATRIX-DYNAMIC-1). The `project-names-json` command
+  # emits a one-line JSON array which `test-project` consumes via
+  # `fromJSON(needs.detect-projects.outputs.projects)`. No network calls — pure
+  # local filesystem discovery.
+  detect-projects:
+    name: Detect public exemplars
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      projects: ${{ steps.matrix.outputs.projects }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: "**/uv.lock"
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Emit exemplar matrix
+        id: matrix
+        run: |
+          set -euo pipefail
+          projects="$(uv run python -m infrastructure.project.public_scope project-names-json)"
+          echo "projects=${projects}" >> "$GITHUB_OUTPUT"
+
   # ───────────────────────────────────────────────────────────────────────────
   # Job 0b — Actionlint (workflow syntax gate; independent of project setup)
   #
@@ -341,23 +378,18 @@ jobs:
     # (ceiling) give cross-version coverage; macOS breadth is handled by test-infra.
     # 45 min is a generous backstop — only active_inference approaches it.
     timeout-minutes: 45
-    needs: [verify-no-mocks]
+    needs: [verify-no-mocks, detect-projects]
     permissions:
       contents: read
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.10", "3.12"]
-        project:
-          - templates/template_active_inference
-          - templates/template_autoresearch_project
-          - templates/template_autoscientists
-          - templates/template_code_project
-          - templates/template_newspaper
-          - templates/template_prose_project
-          - templates/template_sia
-          - templates/template_template
-          - templates/template_textbook
+        # Public-exemplar list is derived at runtime from the canonical roster
+        # (infrastructure.project.public_scope) by the detect-projects job, so
+        # adding/retiring an exemplar under projects/templates/ extends or trims
+        # this matrix without editing any literal here (CI-MATRIX-DYNAMIC-1).
+        project: ${{ fromJSON(needs.detect-projects.outputs.projects) }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
