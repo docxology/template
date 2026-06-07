@@ -14,17 +14,17 @@ project rosters belong in
 
 ## Live state snapshot
 
-Refreshed on **2026-06-06** from the post-`v3.2.0` release state and local
+Refreshed on **2026-06-07** from the post-`v3.3.0` release state and local
 inspection. Re-run the commands in the **Source** column before copying any
 number into prose.
 
 | Gate or surface | Current value | Source |
 | --- | --- | --- |
-| Package version | `3.2.0` | `pyproject.toml#[project].version` |
-| Latest template release | `v3.2.0` (published 2026-06-04) | [`CHANGELOG.md`](CHANGELOG.md), GitHub release tag |
+| Package version | `3.3.0` | `pyproject.toml#[project].version` |
+| Latest template release | `v3.3.0` (published 2026-06-07) | [`CHANGELOG.md`](CHANGELOG.md), GitHub release tag |
 | Public source scope | `infrastructure` plus nine public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
 | Public exemplars | `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook` | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
-| Canonical generated facts | 20 importable infrastructure packages; 526 infrastructure Python modules; nine exemplar coverage gates at or above 90 % | [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) |
+| Canonical generated facts | 20 importable infrastructure packages; 532 infrastructure Python modules; nine exemplar coverage gates at or above 90 % | [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) |
 | Open GitHub PRs | 5 open: 3 Dependabot (`codecov-action` #5, `actions/stale` #4, `astral-sh/setup-uv` #3) + 2 maintainer (#23 sheaf integrity gates, #14 infrastructure composability audit) | `/opt/homebrew/bin/gh-axi pr list` |
 | Docs lint status | links-only, consistency-only, and doc-pairs checks were clean in the `v3.2.0` release verification | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
 | Mermaid lint status | clean with chunked batch rendering under the default total budget | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
@@ -36,6 +36,13 @@ number into prose.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **`v3.3.0` release train (2026-06-07):** closed the three Medium backlog items
+  (READFILE-SAFE-1, CI-MATRIX-DYNAMIC-1, LOG-CLEAN-1) and all five Major items
+  (EVIDENCE-GRAPH-1, REPRO-BUNDLE-1, DASHBOARD-1, PLUGIN-STAGES-1,
+  INCREMENTAL-PIPELINE-1) — the two pipeline-core features are opt-in/default-off.
+  Full detail in [`CHANGELOG.md`](CHANGELOG.md). Residual next-increments:
+  evidence-graph claim/manifest enrichment; broader LOG-CLEAN separator/spinner
+  passes.
 - **Reference-existence + AI-writing infrastructure (2026-06-06):** new
   `infrastructure/reference/verification/` deterministic anti-hallucination gate
   (Crossref→OpenAlex/arXiv resolver, SQLite cache, offline-first) and

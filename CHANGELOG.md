@@ -11,6 +11,52 @@ not to the contents of any specific workspace.
 
 - No unreleased changes yet.
 
+## [3.3.0] — 2026-06-07
+
+### Added
+
+- 🔎 **Reference-existence verification** (`infrastructure/reference/verification`) —
+  deterministic anti-hallucination gate that resolves each cited reference against
+  Crossref → OpenAlex / arXiv, classifying it `ok` / `mismatch` / `fabricated` /
+  `unverifiable` / `unchecked` / `anachronism`. Offline-first with a persistent
+  SQLite cache; live resolution is opt-in. CLI: `python -m infrastructure.reference.verification verify <bib>`.
+- ✍️ **AI-writing fingerprint detector** (`infrastructure/validation/content/ai_writing.py`,
+  `validation.cli prose-quality`) — flags AI-typical phrasing, em-dash density, and
+  low sentence-length burstiness. Both distilled clean-room from Academic Research
+  Skills ideas (CC-BY-NC-4.0); no code vendored.
+- 🕸️ **Evidence graph** (`infrastructure/reporting/evidence_graph.py`) — typed
+  producer/consumer/validator/claim/artifact graph assembled from the real stage DAG,
+  with a query API and byte-stable JSON (EVIDENCE-GRAPH-1).
+- 📦 **Reproduction bundle** (`infrastructure/publishing/repro_bundle.py`,
+  `scripts/10_repro_bundle.py`) — deterministic repro manifest (lockfile, artifact
+  hashes, canonical-facts pointer, repro command) plus a fail-closed verifier (REPRO-BUNDLE-1).
+- 📊 **Release-readiness dashboard** (`infrastructure/reporting/release_readiness.py`) —
+  local, no-network report aggregating docs-lint, coverage/test facts, pipeline
+  snapshots, evidence-graph status, and release metadata (DASHBOARD-1).
+- 🧩 **Pipeline plugin stages** (`infrastructure/core/pipeline/plugins.py`) — schema-validated
+  `projects/{name}/pipeline_plugins.yaml` adds DAG stages without core edits. Opt-in;
+  default plan unchanged (PLUGIN-STAGES-1).
+- ⏭️ **Incremental pipeline skipping** (`infrastructure/core/pipeline/incremental.py`,
+  `IncrementalConfig`) — content-hash stage skipping with downstream invalidation and
+  fail-safe (never skip when outputs absent). Opt-in, default-off (INCREMENTAL-PIPELINE-1).
+
+### Changed
+
+- ⚡ **Parallel infrastructure tests** — CI `test-infra` runs with `pytest-xdist -n auto`
+  (~892s → ~585s per leg); suite verified parallel-safe.
+- 🧬 **Dynamic CI project matrix** — `test-project` derives its matrix from
+  `infrastructure.project.public_scope` via `fromJSON` (`detect-projects` job), so
+  adding/retiring a `templates/` exemplar no longer edits the matrix literal (CI-MATRIX-DYNAMIC-1).
+- 🔇 **Quieter terminal logging** — console handler floors at INFO (no DEBUG/spinner
+  chrome on stdout) while the file handler retains timestamped DEBUG; per-file render
+  internals demoted to DEBUG; default `-v` dropped from pytest `addopts` (LOG-CLEAN-1).
+- 🧱 **Consolidated safe markdown reader** — `infrastructure/validation/docs/_io.py`
+  hosts `read_markdown`; doc linters route their read-and-skip sites through it (READFILE-SAFE-1).
+- 📚 **Documentation accuracy passes** — deep audit + fixes across `docs/` and every
+  `infrastructure/*/{SKILL,README,AGENTS}.md`, correcting examples that cited
+  methods/params/CLI flags/test paths that no longer exist; new deterministic infra is
+  wired into the `docs/prompts` workflows.
+
 ## [3.2.0] — 2026-06-04
 
 ### Added
