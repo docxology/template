@@ -28,7 +28,7 @@ uv run python projects/templates/template_template/scripts/generate_manuscript_m
 
 | Folder | Contents |
 |--------|----------|
-| `manuscript/` | 21 Markdown chapters + `config.yaml` + `references.bib` |
+| `manuscript/` | 21 Markdown chapters + `config.yaml` (+ `config.yaml.example` copy-and-customize starting point) + `references.bib` |
 | `scripts/` | Two thin orchestrators (figures, metrics) |
 | `src/template_template/` | Introspection, metrics, injection, visualization |
 | `tests/` | full suite, 90%+ coverage on `src/template_template/` |

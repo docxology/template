@@ -4,8 +4,9 @@ Quick verification routine to run after changes.
 
 ## 1. Run Tests
 
+Run from the template repo root:
+
 ```bash
-cd /Users/4d/Documents/GitHub/template
 uv run pytest projects/templates/template_template/tests/ -v --tb=short \
   --cov=projects/templates/template_template/src/template_template --cov-fail-under=90
 ```

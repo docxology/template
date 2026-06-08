@@ -53,10 +53,10 @@ and section flags (`render.spot_color: true`).
 cd projects/templates/template_newspaper
 
 # 1. generate figures (halftone engravings + grayscale charts)
-python scripts/10_generate_figures.py
+uv run python scripts/10_generate_figures.py
 
 # 2. render the 12-page PDF
-python scripts/20_render_newspaper.py
+uv run python scripts/20_render_newspaper.py
 open output/pdf/the-triplicate.pdf
 ```
 
@@ -126,10 +126,10 @@ different title.
 ## Tests & quality
 
 ```bash
-python -m pytest                       # full suite
-python -m pytest --cov=newspaper       # ~95% coverage
-ruff check src scripts tests           # clean
-mypy src/newspaper                     # clean
+uv run pytest                          # full suite
+uv run pytest --cov=newspaper          # ~95% coverage
+uvx ruff check src scripts tests       # clean
+uv run mypy src/newspaper              # clean
 ```
 
 > *The Triplicate* is a real newspaper (founded 1879, Crescent City, CA, and

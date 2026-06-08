@@ -28,8 +28,10 @@ Requires local Ollama:
 ```bash
 ollama serve
 ollama pull gemma3:4b
-uv run python scripts/run_sia_loop.py --live-sia --llm-model gemma3:4b
+uv run python scripts/run_sia_loop.py --live-sia
 ```
+
+The LLM model is read from `manuscript/config.yaml` (`sia.llm_model`), not a CLI flag.
 
 Default pipeline and CI use fixture replay (`live: false` in `manuscript/config.yaml`).
 

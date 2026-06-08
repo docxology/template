@@ -80,5 +80,11 @@ class SharedState:
         return self.champion.metric
 
     def with_champion(self, champion: Champion) -> SharedState:
-        """Return a copy seeded from a different champion (fresh log)."""
+        """Return a copy seeded from a different champion (fresh log).
+
+        A public convenience for callers that want to re-seed a search from a
+        fixed champion (e.g. warm-starting a fresh run from a known-good point)
+        without mutating the original state. The coordination loop does not use
+        it — it is provided as an intentional extension point, not dead code.
+        """
         return replace(self, champion=champion, log=[])

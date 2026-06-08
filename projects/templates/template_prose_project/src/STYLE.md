@@ -66,29 +66,29 @@ Google-style with Args/Returns/Raises:
 
 ```python
 def write_review_report(
-    report: ManuscriptReport,
-    checks: list[CheckResult],
-    output_path: Path,
+    output_path: Path | str,
     *,
+    title: str,
+    manuscript_report: ManuscriptReport,
+    checks: Iterable[CheckResult],
     include_per_file_table: bool = True,
     include_outline: bool = True,
     include_quality_flags: bool = True,
 ) -> Path:
-    """Assemble the human-readable review report.
+    """Write a markdown review report and return its path.
 
     Args:
-        report: Aggregated ManuscriptReport from infrastructure.prose.
-        checks: List of CheckResult objects produced by src/pipeline/.
-        output_path: Where the markdown will be written.
+        output_path: Where the markdown will be written. The parent
+            directory is created if it does not yet exist.
+        title: Heading rendered as the report's H1.
+        manuscript_report: Aggregated ManuscriptReport from infrastructure.prose.
+        checks: CheckResult objects produced by src/pipeline/.
         include_per_file_table: Render the per-file metrics table.
         include_outline: Render heading outlines per file.
         include_quality_flags: Render quality-flag summaries (long sentences, hedges).
 
     Returns:
         Resolved path to the written report.
-
-    Raises:
-        FileNotFoundError: If output_path's parent does not exist.
     """
 ```
 

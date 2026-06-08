@@ -17,6 +17,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from reportlab.lib.styles import StyleSheet1
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import Flowable, Frame
 
@@ -67,7 +68,7 @@ def _flow(c: Canvas, frames: list[Frame], flowables: list[Flowable]) -> int:
 
 def _item_flowables(
     item: Story | Box | Figure | Ad,
-    styles,
+    styles: StyleSheet1,
     fonts: Fonts,
     *,
     measure: float,
@@ -98,7 +99,7 @@ def render_page(
     edition: Edition,
     geom: PageGeometry,
     config: NewspaperConfig,
-    styles,
+    styles: StyleSheet1,
     fonts: Fonts,
     project_root: Path,
     spot: object | None = None,

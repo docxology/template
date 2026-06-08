@@ -1,6 +1,6 @@
 """Confidentiality negative-control tests for the template_template meta-project.
 
-This meta-template is published as the 5th PUBLIC exemplar with a citable DOI.
+This meta-template is published as a PUBLIC exemplar with a citable DOI.
 Its repository introspection MUST therefore restrict to the public canonical
 exemplars (``infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES``, which live
 under ``projects/templates/``) plus the meta-project itself (emitted as
@@ -109,9 +109,7 @@ class TestDiscoveredProjectsArePublicOnly:
         offenders = [
             key
             for key in metrics
-            if key.startswith("project_")
-            and key != "project_count"
-            and not key.startswith(allowed_prefixes)
+            if key.startswith("project_") and key != "project_count" and not key.startswith(allowed_prefixes)
         ]
         assert not offenders, f"Project metric keys with disallowed prefix: {offenders}"
 
@@ -142,9 +140,7 @@ class TestSelfAndPublicIntrospectionStillWork:
             "template_autoresearch_project",
             "template_prose_project",
         ):
-            assert f"project_{name}_test_count" in metrics, (
-                f"Public exemplar '{name}' missing from metrics"
-            )
+            assert f"project_{name}_test_count" in metrics, f"Public exemplar '{name}' missing from metrics"
 
     def test_bare_template_name_is_never_emitted(self) -> None:
         """The on-disk staging name ``template`` must be rewritten, never emitted."""
@@ -213,6 +209,4 @@ class TestFlipTestSyntheticPrivateDirIsInvisible:
         self._write_project(tmp_path, "projects/archive", "SECRET_ARCHIVE_ONLY")
         self._write_project(tmp_path, "projects/working", "SECRET_WORKING_ONLY")
         discovered = {p.name for p in discover_projects(tmp_path)}
-        assert discovered == set(), (
-            f"Private-only repo leaked names: {sorted(discovered)}"
-        )
+        assert discovered == set(), f"Private-only repo leaked names: {sorted(discovered)}"

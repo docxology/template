@@ -120,7 +120,6 @@ class _Runner:
         params = list(self.state.champion.params)
         params[proposal.axis] += proposal.step
         candidate = tuple(params)
-        primary = self.objective.evaluate(candidate, self.config.base_seed)
         if self.config.use_confirmation:
             check = confirm_improvement(
                 self.objective.evaluate,
@@ -132,6 +131,8 @@ class _Runner:
             )
             metric, delta, confirmed = check.candidate_mean, check.delta, check.confirmed
         else:
+            # No confirmation: a single seeded evaluation is the candidate metric.
+            primary = self.objective.evaluate(candidate, self.config.base_seed)
             metric = primary
             delta = primary - self.state.champion.metric
             confirmed = delta > 0.0

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from .generation_records import generation_metrics, load_run_summary
 from .loop_config import load_sia_settings
-from .manuscript_tokens_core import _format_metric
+from .manuscript_tokens_core import format_metric
 
 
 def compute_metrics_variables(project_root: Path) -> dict[str, str]:
@@ -27,7 +27,7 @@ def compute_metrics_variables(project_root: Path) -> dict[str, str]:
         metric_name = str(row.get("metric_name", "accuracy"))
         metric_value = row.get("metric_value")
         n_samples = int(row.get("n_samples", 0))
-        formatted = _format_metric(metric_value)
+        formatted = format_metric(metric_value)
         variables[f"SIA_GEN{generation}_METRIC_NAME"] = metric_name
         variables[f"SIA_GEN{generation}_METRIC_VALUE"] = formatted
         variables[f"SIA_GEN{generation}_N_SAMPLES"] = str(n_samples)
@@ -38,7 +38,7 @@ def compute_metrics_variables(project_root: Path) -> dict[str, str]:
             last_value = float(metric_value)
     variables["SIA_METRICS_TABLE"] = "\n".join(table_lines)
     if first_value is not None and last_value is not None:
-        variables["SIA_METRIC_DELTA"] = _format_metric(last_value - first_value)
+        variables["SIA_METRIC_DELTA"] = format_metric(last_value - first_value)
     else:
         variables["SIA_METRIC_DELTA"] = "0"
     return variables

@@ -7,12 +7,14 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(PROJECT_ROOT / "src"))
-sys.path.insert(0, str(PROJECT_ROOT.parents[2]))
+for _path in (PROJECT_ROOT, PROJECT_ROOT / "src", PROJECT_ROOT.parents[2]):
+    path_text = str(_path)
+    if path_text not in sys.path:
+        sys.path.insert(0, path_text)
 
 from infrastructure.core.logging.utils import get_logger, log_success  # noqa: E402
 
-from documentation import run_api_doc_generation  # noqa: E402
+from src.documentation import run_api_doc_generation  # noqa: E402
 
 logger = get_logger(__name__)
 

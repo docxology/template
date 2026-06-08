@@ -29,7 +29,7 @@ The claim, figure-quality, and benchmark gates all delegate to this predicate, s
 | Gate | Binds | Enforcement | Source |
 | --- | --- | --- | --- |
 | **Claim support** | a research question is `supported` only if its evidence file is *substantive* | per-claim flag, surfaced in readiness | `src/loop.build_claims` |
-| **Figure quality** | a figure is `valid` only if its **source data artifact** is substantive (not just pixels non-uniform) | `valid` flag, all-figures gate | `src/figure_quality` |
+| **Figure quality** | a figure is `valid` only if its **source data artifact** is substantive (not just pixels non-uniform) | `valid` flag, all-figures gate | `src/figures/figure_quality.py` |
 | **Benchmark readiness** | measured: core artifacts substantive **+ ≥1 supported claim whose evidence is substantive + ML accuracy improved over baseline** by a configurable threshold | score `< 1.0` ⇒ `incomplete` | `src/writers._grade_absent_benchmark` |
 | **Schema conformance** | a tagged governance payload must satisfy its registered field/type contract | **HARD gate** — `write_schema_manifest` raises and aborts the loop on a nonconforming payload | `src/artifact_schemas` |
 | **Local integrity** | a present-but-empty required file → fail; the input MNIST fixture is cross-checked against its **committed declared** `npz_sha256` (external truth) | `status: "failed"` on any empty/mismatch/missing-declared-hash | `src/security.integrity_attestation_payload` |

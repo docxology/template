@@ -35,7 +35,7 @@ def main() -> int:
     )
     variables = compute_variables(PROJECT_ROOT)
     write_resolved_manuscript_tree(PROJECT_ROOT, variables)
-    loop_payload = json.loads((PROJECT_ROOT / "output" / "data" / "autoresearch_loop.json").read_text())
+    loop_payload = json.loads(_LOOP_JSON.read_text())
     declared_paths = [
         PROJECT_ROOT / str(path) for path in loop_payload.get("output_paths", []) if isinstance(path, str)
     ]

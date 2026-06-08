@@ -48,7 +48,7 @@ template_textbook/
 │   ├── visualization/         # deterministic matplotlib figures
 │   ├── mermaid/               # Mermaid sources (PNG or .mmd fallback)
 │   └── textbook_*.py          # paths, io, logging, visuals utilities
-├── scripts/                   # thin orchestrators (figures, diagrams, scaffold, audit)
+├── scripts/                   # thin orchestrators (figures, diagrams, analysis, scaffold, audit)
 ├── tests/                     # no-mocks suite incl. test_manuscript_integrity.py
 └── pyproject.toml             # project config (90% coverage gate)
 ```

@@ -83,7 +83,10 @@ mocks.
 
 To add a new check:
 
-1. Edit `src/config.py::ProseAnalysisConfig` to add the new field.
+1. Edit `src/config.py::ProseAnalysisConfig` to add the new field, and add
+   its YAML key to `_KNOWN_PROSE_KEYS` at the top of `src/config.py` —
+   the strict validator rejects any key not listed there. (See the full
+   "To add a new knob" recipe in [`docs/faq.md`](docs/faq.md).)
 2. Add a `_check_<name>` function in `src/pipeline/checks.py`.
 3. Wire it into `run_prose_pipeline` so it appears in `artifacts.checks`.
 4. Add a test in `tests/test_pipeline.py` covering both `passed=True`

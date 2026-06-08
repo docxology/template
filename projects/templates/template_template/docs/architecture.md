@@ -69,14 +69,13 @@ introspection.py → InfrastructureReport
 
 ## Script Architecture (Thin Orchestrators)
 
-Both `generate_architecture_viz.py` and `generate_manuscript_metrics.py` resolve the Layer-1 repo via `_locate_repo_root()` (works from `projects/templates/template_template/`), then delegate to `src/template_template/`.
+Both `generate_architecture_viz.py` and `generate_manuscript_metrics.py` resolve the Layer-1 repo via `locate_repo_root()` (from `src/template_template/paths.py`; works from `projects/templates/template_template/`), then delegate to `src/template_template/`.
 
 ## Verification
 
 From the public template repo root:
 
 ```bash
-cd /Users/4d/Documents/GitHub/template
 uv run pytest projects/templates/template_template/tests/ \
   --cov=projects/templates/template_template/src/template_template --cov-fail-under=90 -v
 uv run python projects/templates/template_template/scripts/generate_manuscript_metrics.py

@@ -236,7 +236,7 @@ _TYPED_PROJECT_SUBDIRS = frozenset({"templates", "active", "working", "published
 META_PROJECT_DIR_NAME = "template_template"
 
 #: Public identity of this meta-project. The ``src/`` package is named
-#: ``template_template`` and the project is published as the 5th public exemplar
+#: ``template_template`` and the project is published as a public exemplar
 #: under this name; its self-introspection metric keys are
 #: ``project_template_template_*`` accordingly.
 META_PROJECT_PUBLIC_NAME = "template_template"

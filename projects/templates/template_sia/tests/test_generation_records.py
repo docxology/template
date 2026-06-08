@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import shutil
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -10,6 +12,8 @@ import pytest
 from src.generation_records import generation_metrics, load_run_summary
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+Copy = Callable[[Path], Path]
 
 
 def test_load_run_summary_missing(tmp_path: Path):
@@ -30,11 +34,9 @@ def test_generation_metrics_parses_rows():
     assert rows[0]["metric_name"] == "accuracy"
 
 
-def test_load_run_summary_from_fixture_run(tmp_path: Path):
-    import shutil
-
+def test_load_run_summary_from_fixture_run(tmp_path: Path, copy_project_sandbox: Copy):
     project = tmp_path / "proj"
-    shutil.copytree(PROJECT_ROOT, project)
+    copy_project_sandbox(project)
     if (project / "output").exists():
         shutil.rmtree(project / "output")
     from src.loop import run_sia_loop_project

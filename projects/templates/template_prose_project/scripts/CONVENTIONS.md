@@ -78,9 +78,22 @@ for p in (REPO_ROOT, PROJECT_ROOT, PROJECT_ROOT / "src"):
 from src.config import load_project_config
 from src.pipeline import run_prose_pipeline
 
-# 5. Infrastructure with graceful fallback
+# 5. Infrastructure import
+from infrastructure.core.logging.utils import get_logger
+
+logger = get_logger(__name__)
+```
+
+The three bundled scripts import `get_logger` directly (see
+`run_prose_pipeline.py:24`): after the `sys.path` bootstrap above,
+`infrastructure/` is always importable, so no fallback is needed. If you
+fork a script to run in an environment where `infrastructure/` may be
+absent, wrap the import as optional hardening:
+
+```python
 try:
     from infrastructure.core.logging.utils import get_logger
+
     logger = get_logger(__name__)
 except ImportError:
     logger = logging.getLogger(__name__)
@@ -171,7 +184,8 @@ Before submitting a new or modified script:
   in the script.
 - [ ] Uses `logger`, never bare `print()` (except for stdout output paths
   consumed by the pipeline manifest collector).
-- [ ] Handles missing infrastructure with `try/except ImportError`.
+- [ ] Imports `get_logger` from infrastructure (optionally guarded by
+  `try/except ImportError` for environments where it may be absent).
 - [ ] Writes output under the documented layout above.
 - [ ] Supports `--project-root` for test isolation.
 - [ ] Returns/sets the documented exit code.

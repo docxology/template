@@ -102,8 +102,9 @@ All tokens defined in `src/manuscript_variables.py::ManuscriptVariables`:
 
 1. Add a field to the `ManuscriptVariables` dataclass in
    `projects/templates/template_prose_project/src/manuscript_variables.py`.
-2. Populate the new field inside `compute_variables(report)` from the
-   `ManuscriptReport` it receives.
+2. Populate the new field inside
+   `compute_variables(*, config_title=..., manuscript_report=...)` from the
+   `manuscript_report` mapping it receives (the function is keyword-only).
 3. Add a test in `projects/templates/template_prose_project/tests/test_manuscript_variables.py`
    asserting the new field's value on a known fixture.
 4. Reference the token in the appropriate `manuscript/*.md` file as

@@ -49,7 +49,16 @@ __all__ = [
 
 
 def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> AutoResearchLoopResult:
-    """Run the full deterministic AutoResearch loop for this exemplar."""
+    """Run the full deterministic AutoResearch loop for this exemplar.
+
+    Args:
+        project_root: Path to the project directory whose loop is executed.
+        repo_root: Optional repository root; defaults to the project's third parent.
+
+    Returns:
+        AutoResearchLoopResult snapshot of the completed loop (stages, claims,
+        readiness verdict, and existence-filtered output paths).
+    """
     project_root = project_root.resolve()
     repo_root = (repo_root or project_root.parents[2]).resolve()
     project_name = project_root.name
@@ -172,6 +181,7 @@ def _loop_result(
     output_paths: tuple[str, ...] | tuple[()],
     ml_result: MLTaskResult,
 ) -> AutoResearchLoopResult:
+    """Assemble an AutoResearchLoopResult snapshot from the supplied loop state."""
     return AutoResearchLoopResult(
         project_name=project_name,
         generated_at=generated_at,

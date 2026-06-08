@@ -41,8 +41,8 @@ def load_metrics(metrics_path: Path) -> dict[str, Any]:
         metrics_path: Path to the ``metrics.json`` file.
 
     Returns:
-        Dictionary of metric name → value, flat (nested keys are also flattened
-        into dotted names for convenience, e.g. ``projects.template_code_project.test_count``).
+        Dictionary of metric name → value, flat (nested keys are flattened
+        into underscore-joined names, e.g. ``projects_template_code_project_test_count``).
 
     Raises:
         FileNotFoundError: If the file does not exist.

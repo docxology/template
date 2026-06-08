@@ -36,7 +36,7 @@ def extract_optimization_metadata(results: dict[float, OptimizationResult]) -> d
                 f"Comparative analysis of gradient descent optimization with step sizes {list(results.keys())}"
             ),
             "algorithm": "Gradient Descent",
-            "objective_function": "Quadratic Function f(x) = x²",
+            "objective_function": "Quadratic Function f(x) = (1/2) x^T A x - b^T x",
             "step_sizes_tested": list(results.keys()),
             "best_step_size": best_step_size,
             "final_objective": best_result.objective_value,

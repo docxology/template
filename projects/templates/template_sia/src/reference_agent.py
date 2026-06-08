@@ -26,20 +26,17 @@ def write_predictions(
     working_dir: Path,
     threshold: float = 0.5,
 ) -> Path:
-    """Predict labels from feature_0 threshold rule with majority fallback."""
+    """Predict labels from a feature_0 threshold rule."""
     train_csv = dataset_dir / "train.csv"
-    label = majority_label(train_csv)
     working_dir.mkdir(parents=True, exist_ok=True)
     predictions_path = working_dir / "predictions.csv"
     rows: list[dict[str, str]] = []
     with train_csv.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
-        for index, row in enumerate(reader):
+        for row in reader:
             feature = float(row["feature_0"])
             predicted = "positive" if feature >= threshold else "negative"
-            if predicted not in {"positive", "negative"}:
-                predicted = label
-            rows.append({"id": str(index), "label": predicted})
+            rows.append({"id": row["id"], "label": predicted})
     with predictions_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=["id", "label"])
         writer.writeheader()

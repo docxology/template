@@ -48,6 +48,7 @@ class LoopRunContext:
 
 
 def append_paths(ctx: LoopRunContext, paths: list[Path] | Path) -> None:
+    """Append one path or a list of paths to the context's running output list."""
     if isinstance(paths, Path):
         ctx.output_paths.append(paths)
         return
@@ -55,10 +56,12 @@ def append_paths(ctx: LoopRunContext, paths: list[Path] | Path) -> None:
 
 
 def run_provisional_payload_phase(ctx: LoopRunContext, result: AutoResearchLoopResult) -> None:
+    """Write the provisional loop payloads from the current (pre-readiness) result."""
     append_paths(ctx, refresh_loop_payloads(ctx.project_root, result))
 
 
 def run_pre_readiness_visual_phase(ctx: LoopRunContext, result: AutoResearchLoopResult) -> None:
+    """Emit loop-bound figures, optional security artifacts, and best-effort hydration."""
     append_paths(
         ctx,
         write_loop_bound_figures(
@@ -83,6 +86,7 @@ def run_pre_readiness_visual_phase(ctx: LoopRunContext, result: AutoResearchLoop
 
 
 def run_final_payload_and_visual_phase(ctx: LoopRunContext, result: AutoResearchLoopResult) -> None:
+    """Rewrite payloads, final figures, the evidence registry, and validated hydration."""
     append_paths(ctx, refresh_loop_payloads(ctx.project_root, result))
     append_paths(
         ctx,
@@ -110,6 +114,7 @@ def run_settlement_manifest_phase(
     settlement_pass_count: int,
     write_final_manifest: bool,
 ) -> None:
+    """Write the phase ledger, schema and research-object manifests, and final manifest."""
     append_paths(
         ctx,
         write_autoresearch_phase_ledger(
@@ -143,6 +148,7 @@ def build_loop_context(
     ml_result: MLTaskResult,
     output_paths: list[Path],
 ) -> LoopRunContext:
+    """Assemble the shared loop context, computing the diagnostic bundle once."""
     return LoopRunContext(
         project_root=project_root,
         repo_root=repo_root,

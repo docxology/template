@@ -40,7 +40,7 @@ branch = true
 omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
 
 [tool.coverage.report]
-fail_under = 85
+fail_under = 90
 show_missing = true
 precision = 2
 exclude_lines = [

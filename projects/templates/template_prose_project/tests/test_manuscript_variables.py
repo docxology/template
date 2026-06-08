@@ -69,9 +69,7 @@ def test_compute_variables_empty():
 
 
 def test_uppercase_keys_format():
-    vars_ = compute_variables(
-        config_title="X", manuscript_report=_payload(files=[_file("a.md", 1)])
-    )
+    vars_ = compute_variables(config_title="X", manuscript_report=_payload(files=[_file("a.md", 1)]))
     keys = vars_.as_uppercase_keys()
     assert "{{TOTAL_WORDS}}" in keys
     assert "{{CONFIG_TITLE}}" in keys
@@ -94,9 +92,7 @@ def test_substitute_leaves_unmatched_markers():
 
 
 def test_write_variables_round_trip(tmp_path: Path):
-    vars_ = compute_variables(
-        config_title="X", manuscript_report=_payload(files=[_file("a.md", 5)])
-    )
+    vars_ = compute_variables(config_title="X", manuscript_report=_payload(files=[_file("a.md", 5)]))
     path = write_variables(vars_, tmp_path / "vars.json")
     payload = json.loads(path.read_text(encoding="utf-8"))
     assert payload["total_words"] == 5
@@ -108,6 +104,19 @@ def test_load_report_payload(tmp_path: Path):
     src.write_text(json.dumps(_payload()), encoding="utf-8")
     payload = load_report_payload(src)
     assert payload["total_paragraphs"] == 5
+
+
+def test_load_report_payload_rejects_non_object(tmp_path: Path):
+    """A top-level JSON array (or any non-object) is rejected.
+
+    Mirrors src/config.py::test_top_level_must_be_mapping — the report
+    loader's twin guard must reject a payload that is not a JSON object so
+    downstream code never indexes into a list.
+    """
+    src = tmp_path / "r.json"
+    src.write_text(json.dumps([1, 2, 3]), encoding="utf-8")
+    with pytest.raises(ValueError, match="must be an object"):
+        load_report_payload(src)
 
 
 def test_write_resolved_manuscript_tree(tmp_path: Path):
@@ -163,6 +172,7 @@ def test_write_resolved_manuscript_tree_no_aux(tmp_path: Path):
 # produced by compute_variables()
 # ---------------------------------------------------------------------------
 
+
 def test_all_manuscript_tokens_are_generated():
     """Regression guard: every {{TOKEN}} used in manuscript/*.md must be
     produced by compute_variables() so no placeholder can appear in a
@@ -196,9 +206,6 @@ def test_all_manuscript_tokens_are_generated():
             if token not in produced:
                 unresolved.setdefault(token, []).append(md_file.name)
 
-    assert not unresolved, (
-        "Manuscript tokens not produced by compute_variables():\n"
-        + "\n".join(
-            f"  {{{{{t}}}}}: {files}" for t, files in sorted(unresolved.items())
-        )
+    assert not unresolved, "Manuscript tokens not produced by compute_variables():\n" + "\n".join(
+        f"  {{{{{t}}}}}: {files}" for t, files in sorted(unresolved.items())
     )

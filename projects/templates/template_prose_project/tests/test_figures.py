@@ -47,6 +47,7 @@ def test_generate_all_stable_order(tmp_path: Path):
 
 def test_handles_empty_report(tmp_path: Path):
     from infrastructure.prose import analyze_files as af
+
     report = af({})
     paths = generate_all_figures(report, tmp_path)
     assert all(p.exists() for p in paths)

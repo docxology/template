@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import shutil
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -11,11 +12,13 @@ from infrastructure.sia import RunConfig, run_sia_loop
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
+Copy = Callable[[Path], Path]
 
-def test_live_single_generation(tmp_path: Path):
+
+def test_live_single_generation(tmp_path: Path, copy_project_sandbox: Copy):
     """Live mode runs reference agent and evaluates without fixtures."""
     project = tmp_path / "proj"
-    shutil.copytree(PROJECT_ROOT, project)
+    copy_project_sandbox(project)
     if (project / "output").exists():
         shutil.rmtree(project / "output")
     config = RunConfig(
@@ -36,10 +39,10 @@ def test_live_single_generation(tmp_path: Path):
 
 
 @pytest.mark.requires_ollama
-def test_live_feedback_with_ollama(tmp_path: Path):
+def test_live_feedback_with_ollama(tmp_path: Path, copy_project_sandbox: Copy):
     """Two live generations; feedback may use Ollama when configured."""
     project = tmp_path / "proj"
-    shutil.copytree(PROJECT_ROOT, project)
+    copy_project_sandbox(project)
     if (project / "output").exists():
         shutil.rmtree(project / "output")
     config = RunConfig(

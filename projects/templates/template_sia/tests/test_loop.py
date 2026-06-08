@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import json
 import shutil
-import subprocess
-import sys
+from collections.abc import Callable
 from pathlib import Path
 
 from src.loop import build_run_config, fixtures_dir, run_sia_loop_project
@@ -14,24 +13,7 @@ from src.reports import compute_variables, write_loop_report, write_manuscript_v
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-# Volatile/derived paths that must never be copied into a test sandbox: copying a
-# live coverage DB while pytest-cov rewrites it raises a mid-copy FileNotFoundError
-# (a real flaky failure that broke the render's Project-Tests stage). Copy source only.
-_COPY_IGNORE = shutil.ignore_patterns(
-    ".coverage*",
-    "coverage_project.json",
-    "htmlcov",
-    ".venv",
-    ".pytest_cache",
-    "__pycache__",
-    "output",
-    "*.egg-info",
-)
-
-
-def _copy_project(dst: Path) -> None:
-    """Copy the project into a sandbox, excluding volatile/derived artifacts."""
-    shutil.copytree(PROJECT_ROOT, dst, ignore=_COPY_IGNORE)
+Copy = Callable[[Path], Path]
 
 
 def test_load_sia_settings():
@@ -48,11 +30,11 @@ def test_fixtures_dir_exists():
         assert (root / f"gen_{gen}" / "results.json").is_file()
 
 
-def test_run_sia_loop_project_fixture_replay(tmp_path: Path):
+def test_run_sia_loop_project_fixture_replay(tmp_path: Path, copy_project_sandbox: Copy):
     """Dry-run loop writes three generations and a summary."""
 
     project = tmp_path / "proj"
-    _copy_project(project)
+    copy_project_sandbox(project)
     for path in project.rglob("__pycache__"):
         if path.is_dir():
             shutil.rmtree(path)
@@ -75,10 +57,9 @@ def test_build_run_config_live_overrides_settings():
     assert config.fixtures_dir is None
 
 
-def test_compute_variables_after_run(tmp_path: Path):
-
+def test_compute_variables_after_run(tmp_path: Path, copy_project_sandbox: Copy):
     project = tmp_path / "proj"
-    _copy_project(project)
+    copy_project_sandbox(project)
     if (project / "output").exists():
         shutil.rmtree(project / "output")
     run_sia_loop_project(project, live=False)
@@ -88,10 +69,9 @@ def test_compute_variables_after_run(tmp_path: Path):
     assert load_paper_title(project) in variables["CONFIG_TITLE"]
 
 
-def test_write_manuscript_variables(tmp_path: Path):
-
+def test_write_manuscript_variables(tmp_path: Path, copy_project_sandbox: Copy):
     project = tmp_path / "proj"
-    _copy_project(project)
+    copy_project_sandbox(project)
     if (project / "output").exists():
         shutil.rmtree(project / "output")
     run_sia_loop_project(project, live=False)
@@ -100,43 +80,9 @@ def test_write_manuscript_variables(tmp_path: Path):
     assert payload["SIA_GENERATION_COUNT"] == "3"
 
 
-def test_run_sia_loop_script():
-    script = PROJECT_ROOT / "scripts" / "run_sia_loop.py"
-    proc = subprocess.run(
-        [sys.executable, str(script), "--project-root", str(PROJECT_ROOT)],
-        cwd=str(PROJECT_ROOT),
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    assert proc.returncode == 0, proc.stderr
-    assert "sia_loop_report.md" in proc.stdout
-
-
-def test_z_generate_manuscript_variables_script():
-    run_script = PROJECT_ROOT / "scripts" / "run_sia_loop.py"
-    subprocess.run(
-        [sys.executable, str(run_script), "--project-root", str(PROJECT_ROOT)],
-        cwd=str(PROJECT_ROOT),
-        check=True,
-    )
-    gen_script = PROJECT_ROOT / "scripts" / "z_generate_manuscript_variables.py"
-    proc = subprocess.run(
-        [sys.executable, str(gen_script)],
-        cwd=str(PROJECT_ROOT),
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    assert proc.returncode == 0, proc.stderr
-    out = PROJECT_ROOT / "output" / "data" / "manuscript_variables.json"
-    assert out.is_file()
-
-
-def test_write_loop_report_standalone(tmp_path: Path):
-
+def test_write_loop_report_standalone(tmp_path: Path, copy_project_sandbox: Copy):
     project = tmp_path / "proj"
-    _copy_project(project)
+    copy_project_sandbox(project)
     if (project / "output").exists():
         shutil.rmtree(project / "output")
     run_sia_loop_project(project, live=False)

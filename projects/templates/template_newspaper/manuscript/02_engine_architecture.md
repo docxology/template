@@ -1,6 +1,6 @@
 # Engine Architecture
 
-The engine is eight small modules, each with one responsibility.
+The engine is nine small modules, each with one responsibility.
 
 `geometry` is pure arithmetic over points: the page trim, its margins, and a
 `ColumnGrid` that partitions a region into equal columns with gutters and
@@ -15,6 +15,16 @@ raises an error naming the offending value and the allowed set.
 
 `config` is the strict render configuration (trim size, default column count,
 rail width, gutter), validated the same way.
+
+`typography` owns every font name: it registers the Didot display, Georgia text
+and Helvetica label faces (with a base-14 fall-back when the system lacks them)
+and builds the paragraph stylesheet that the rest of the engine draws from
+through named `Fonts` roles.
+
+`figures` is the only module that *generates* imagery: the halftone harbour,
+lighthouse and redwood engravings (Pillow), the weather, tide and crab-landings
+charts (Matplotlib), and the colour display-ad graphics. It writes deterministic
+PNGs that `components` later places.
 
 `components` builds the flowables that live *inside* a column: a story's
 headline, byline and body; a raised drop cap; a pull quote; a ruled box; a data

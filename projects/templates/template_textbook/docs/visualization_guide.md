@@ -23,6 +23,12 @@ helpers [`src/visualization/_scaffold.py`](../src/visualization/_scaffold.py)
 (`new_figure`, `save_figure`) keep styling and the save path consistent and
 deterministic.
 
+The committed cover image
+[`manuscript/assets/cover/template_textbook_cover.png`](../manuscript/assets/cover/template_textbook_cover.png)
+is itself a deterministic, tested artifact: regenerate it by calling
+`cover_art(output_dir)` from [`src/visualization/plots.py`](../src/visualization/plots.py)
+(byte-stable nested modular blocks), then copy the result over the tracked asset.
+
 ### The filename contract
 
 Each chapter placeholder is named **`<part_id>_<stem>.png`** — for example
@@ -30,7 +36,7 @@ Each chapter placeholder is named **`<part_id>_<stem>.png`** — for example
 image path the scaffolded chapter already references:
 
 ```markdown
-![Overview schematic …](../output/figures/part_0_orientation.png){#fig:part_0_orientation width=90%}
+![Overview schematic …](../../output/figures/part_0_orientation.png){#fig:part_0_orientation width=90%}
 ```
 
 Because the filename is derived from the same `ChapterRef` the manuscript uses,

@@ -6,7 +6,13 @@ manuscript never drifts from its contract — even as you fill thousands of page
 
 ## Running the suite
 
-All commands use `uv`. The `dev` extra provides `pytest` and `pytest-cov`.
+All commands use `uv` and assume you are **inside the project directory**
+(`projects/templates/template_textbook/`); the `--extra dev` form only resolves
+there. From the monorepo root, use the repo-root form instead (`uv run python -m
+pytest projects/templates/template_textbook/tests/
+--cov=projects/templates/template_textbook/src --cov-fail-under=90`), as shown in
+the [`README.md`](../README.md) quick start. The `dev` extra provides `pytest`
+and `pytest-cov`.
 
 ```bash
 # Full suite
@@ -49,7 +55,7 @@ repository-wide rule — if you add a test, exercise the real function.
 
 Project code targets **90% coverage** (`fail_under = 90` in
 [`pyproject.toml`](../pyproject.toml), `source = ["src"]`). The current backbone
-sits at ~95% across ~75 tests. Keep new `src/` code covered: a function with no
+sits comfortably above the floor. Keep new `src/` code covered: a function with no
 test will pull coverage below the floor and fail the gate.
 
 ```bash

@@ -70,6 +70,9 @@ def _check_citation_density(report: ManuscriptReport, config: ProjectConfig, **_
 
 
 def _check_no_skipped_levels(report: ManuscriptReport, config: ProjectConfig, **_: object) -> CheckResult:
+    # `config` is unused on purpose: it is retained so every check shares the
+    # uniform CheckRunner signature (report, config, *, bib_path). This branch
+    # depends only on report.files.
     bad = [f.name for f in report.files if f.structure.has_skipped_level]
     return CheckResult(
         name="no_skipped_heading_levels",
@@ -80,6 +83,8 @@ def _check_no_skipped_levels(report: ManuscriptReport, config: ProjectConfig, **
 
 
 def _check_h1_per_file(report: ManuscriptReport, config: ProjectConfig, **_: object) -> CheckResult:
+    # `config` is unused on purpose (see _check_no_skipped_levels): kept for the
+    # uniform CheckRunner signature; this branch depends only on report.files.
     bad = [f.name for f in report.files if not f.structure.has_h1]
     return CheckResult(
         name="every_file_has_h1",

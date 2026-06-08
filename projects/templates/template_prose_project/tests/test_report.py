@@ -94,6 +94,30 @@ def test_quality_flags_section(tmp_path: Path):
     assert "perhaps" in text
 
 
+def test_quality_flags_partial_only_long_sentence(tmp_path: Path):
+    """One flag firing renders its bullet; the others are absent.
+
+    A long sentence with no "be + past participle" pair and no hedge words
+    triggers only `long_sentence_count`, exercising the false branches of
+    `if q.passive_count:` and `if q.hedge_count:` in report.py. This proves
+    the bullet list adapts to which flags actually fire.
+    """
+    long_sentence = " ".join(f"word{i}" for i in range(40))
+    report = analyze_files({"01_long.md": f"# Long\n\n{long_sentence}."})
+    out = write_review_report(
+        tmp_path / "r.md",
+        title="X",
+        manuscript_report=report,
+        checks=[],
+        include_quality_flags=True,
+    )
+    text = out.read_text(encoding="utf-8")
+    assert "## Quality flags" in text
+    assert "long sentence" in text
+    assert "passive-voice" not in text
+    assert "hedge word" not in text
+
+
 def test_minimal_report(tmp_path: Path):
     out = write_review_report(
         tmp_path / "r.md",

@@ -26,6 +26,8 @@ The deterministic core mirrors the AutoScientists shared state: an immutable **c
 
 ## The five mechanisms
 
+The shared state above underpins all five: every mechanism reads from or writes to the champion record and the experiment log. The five *active* coordination mechanisms layered on top of it are noise-band confirmation, the dead-end registry, effect-size ranking, stagnation-driven reorganization, and team partitioning. (The abstract and README count shared state itself as the first of the headline five and fold team partitioning into reorganization; the two groupings cover the same machinery — this section names the coordination *acts*, those entry points name the standing primitive.)
+
 **Noise-band confirmation.** Because a single observed gain may be noise, a candidate is confirmed only when its mean metric over several seeds exceeds the incumbent by more than an empirical noise band. For seeds $S$ and per-evaluation noise $\sigma_{\text{noise}}$, the band is $\sigma \cdot \sigma_{\text{noise}} / \sqrt{|S|}$ standard errors of the mean (default $\sigma = 2$), so it shrinks as more seeds are averaged. A candidate is confirmed iff its mean-over-seeds delta exceeds the band. This estimator is domain-agnostic; a synchronized generic copy lives at `infrastructure.scientific.confirmation` for reuse.
 
 **Dead-end registry.** A registry $D$ keyed by `(axis, direction)` tracks consecutive non-improving experiments. A direction is *retired* after it fails to improve the champion `threshold` times in a row (default $3$); a confirmed improvement clears the streak. Agents consult $D$ before proposing so exhausted directions are not re-explored. An axis is *fully retired* only when both its increase and decrease directions are retired.
@@ -52,7 +54,7 @@ Every mechanism is gated by a boolean in `SearchConfig`. With all *structural* c
 
 ## The proposer seam
 
-The loop depends only on a `Proposer` protocol — `propose(state, axes, proposer_id) -> Proposal`. Two *real* implementations are provided (no mocks):
+The loop depends only on a `Proposer` protocol — `propose(state, axes, proposer_id, avoid=frozenset()) -> Proposal`, where `avoid` is the dead-end registry's retired `(axis, direction)` pairs so a faithful proposer steers clear of them. Two *real* implementations are provided (no mocks):
 
 - **`DeterministicProposer`** — a rule-based policy that probes the next assigned axis in the direction that most recently improved it, defaulting toward the origin. It drives every rendered figure and test.
 - **`HermesProposer`** — renders the shared state to a prompt, asks a Hermes model (served by Ollama) for the next `(axis, step, rationale)` as JSON, and parses the reply, rejecting any axis outside the assigned set. Its infrastructure-LLM import is lazy, so the deterministic core tests and renders with no Ollama dependency.

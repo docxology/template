@@ -66,7 +66,7 @@ From the template repo root:
 
 ```bash
 uv run pytest projects/templates/template_template/tests/ \
-  --cov=projects/templates/template_template/src --cov-fail-under=90 -v
+  --cov=projects/templates/template_template/src/template_template --cov-fail-under=90 -v
 uv run python projects/templates/template_template/scripts/generate_manuscript_metrics.py
 uv run python projects/templates/template_template/scripts/generate_architecture_viz.py
 ```

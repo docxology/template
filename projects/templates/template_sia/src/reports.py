@@ -6,7 +6,7 @@ from pathlib import Path
 
 from .generation_records import generation_metrics, load_run_summary
 from .loop_config import load_sia_settings
-from .manuscript_tokens_core import _format_metric
+from .manuscript_tokens_core import format_metric
 from .manuscript_variables import compute_variables, save_variables
 
 
@@ -27,7 +27,7 @@ def write_loop_report(project_root: Path) -> Path:
         "| --- | --- | ---: | ---: |\n",
     ]
     for row in metrics:
-        value = _format_metric(row.get("metric_value"))
+        value = format_metric(row.get("metric_value"))
         lines.append(f"| {row.get('generation')} | {row.get('metric_name')} | {value} | {row.get('n_samples')} |\n")
     report_path = project_root / "output" / "reports" / "sia_loop_report.md"
     report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -41,7 +41,7 @@ def write_manuscript_variables(project_root: Path) -> Path:
 
 
 __all__ = [
-    "_format_metric",
+    "format_metric",
     "compute_variables",
     "write_loop_report",
     "write_manuscript_variables",

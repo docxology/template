@@ -12,10 +12,15 @@ import time
 
 import numpy as np
 import pytest
-from src.optimizer import (OptimizationResult, compute_gradient,
-                           gradient_descent, make_quadratic_problem,
-                           quadratic_function, quadratic_optimum,
-                           simulate_trajectory)
+from src.optimizer import (
+    OptimizationResult,
+    compute_gradient,
+    gradient_descent,
+    make_quadratic_problem,
+    quadratic_function,
+    quadratic_optimum,
+    simulate_trajectory,
+)
 
 
 class TestQuadraticFunction:
@@ -361,9 +366,7 @@ class TestGradientDescent:
 
         # For this unit-Hessian 1D problem the contraction factor is |1 - α|,
         # so α=0.2 (ρ=0.8) converges faster than α=0.1 (ρ=0.9) faster than α=0.01 (ρ=0.99).
-        assert (
-            results[0.2].iterations < results[0.1].iterations < results[0.01].iterations
-        )
+        assert results[0.2].iterations < results[0.1].iterations < results[0.01].iterations
 
     def test_numerical_stability(self):
         """Test numerical stability with ill-conditioned problems."""
@@ -490,6 +493,7 @@ class TestGradientDescent:
     def test_verbose_logging_does_not_affect_result(self):
         """Test verbose=True path (covers the iteration % 100 log branch)."""
         import functools
+
         _A = np.array([[1.0]])
         _b = np.array([1.0])
         obj_func = functools.partial(quadratic_function, A=_A, b=_b)
@@ -640,9 +644,7 @@ class TestMakeQuadraticProblem:
 
     def test_returns_callable_pair(self):
         """Factory returns two callables."""
-        obj_func, grad_func = make_quadratic_problem(
-            np.array([[1.0]]), np.array([1.0])
-        )
+        obj_func, grad_func = make_quadratic_problem(np.array([[1.0]]), np.array([1.0]))
         assert callable(obj_func)
         assert callable(grad_func)
 
@@ -662,9 +664,7 @@ class TestMakeQuadraticProblem:
 
     def test_factory_usable_with_gradient_descent(self):
         """Factory output passes cleanly into gradient_descent."""
-        obj_func, grad_func = make_quadratic_problem(
-            np.array([[1.0]]), np.array([1.0])
-        )
+        obj_func, grad_func = make_quadratic_problem(np.array([[1.0]]), np.array([1.0]))
         result = gradient_descent(
             initial_point=np.array([0.0]),
             objective_func=obj_func,
@@ -699,35 +699,23 @@ class TestSimulateTrajectory:
 
     def test_returns_dict_with_expected_keys(self):
         """Output dict has 'iterations' and 'objectives' keys."""
-        result = simulate_trajectory(
-            step_size=0.1, max_iter=20,
-            A=np.array([[1.0]]), b=np.array([1.0])
-        )
+        result = simulate_trajectory(step_size=0.1, max_iter=20, A=np.array([[1.0]]), b=np.array([1.0]))
         assert "iterations" in result
         assert "objectives" in result
 
     def test_objectives_decrease_toward_optimum(self):
         """Trajectory converges — final objective below initial objective."""
-        result = simulate_trajectory(
-            step_size=0.1, max_iter=50,
-            A=np.array([[1.0]]), b=np.array([1.0])
-        )
+        result = simulate_trajectory(step_size=0.1, max_iter=50, A=np.array([[1.0]]), b=np.array([1.0]))
         assert result["objectives"][-1] < result["objectives"][0]
 
     def test_iterations_and_objectives_same_length(self):
         """Iterations and objectives lists are parallel (same length)."""
-        result = simulate_trajectory(
-            step_size=0.05, max_iter=30,
-            A=np.array([[1.0]]), b=np.array([1.0])
-        )
+        result = simulate_trajectory(step_size=0.05, max_iter=30, A=np.array([[1.0]]), b=np.array([1.0]))
         assert len(result["iterations"]) == len(result["objectives"])
 
     def test_iterations_are_sequential(self):
         """Iterations list is 0-based sequential integers."""
-        result = simulate_trajectory(
-            step_size=0.1, max_iter=10,
-            A=np.array([[1.0]]), b=np.array([1.0])
-        )
+        result = simulate_trajectory(step_size=0.1, max_iter=10, A=np.array([[1.0]]), b=np.array([1.0]))
         iterations = result["iterations"]
         assert iterations[0] == 0
         for i in range(1, len(iterations)):

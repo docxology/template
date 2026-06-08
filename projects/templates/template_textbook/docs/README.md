@@ -51,6 +51,9 @@ live in the [authoring guide](authoring_guide.md).
 
 ## Tooling
 
-All commands use `uv` (never `pip`/`npm`). Tests:
-`uv run --extra dev python -m pytest`. Figures and diagrams are produced by the
+All commands use `uv` (never `pip`/`npm`). From inside the project directory,
+tests run with `uv run --extra dev python -m pytest`; from the monorepo root, use
+the repo-root form (`uv run python -m pytest
+projects/templates/template_textbook/tests/ …`) shown in the
+[`README.md`](../README.md) quick start. Figures and diagrams are produced by the
 scripts, never by hand. See each guide for exact invocations.

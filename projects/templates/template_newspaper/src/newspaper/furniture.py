@@ -14,8 +14,9 @@ or ``None`` for footer furniture that does not affect the body top.
 from __future__ import annotations
 
 from reportlab.lib.colors import Color
+from reportlab.lib.styles import StyleSheet1
 from reportlab.pdfgen.canvas import Canvas
-from reportlab.platypus import Paragraph
+from reportlab.platypus import Frame, Paragraph
 
 from .content import Edition, Page, Story
 from .geometry import ColumnGrid, PageGeometry
@@ -52,7 +53,7 @@ def _draw_top(c: Canvas, flowable: object, x: float, top_y: float, width: float)
 
 
 def draw_nameplate(
-    c: Canvas, edition: Edition, geom: PageGeometry, styles, fonts: Fonts, spot: Color | None = None
+    c: Canvas, edition: Edition, geom: PageGeometry, styles: StyleSheet1, fonts: Fonts, spot: Color | None = None
 ) -> float:
     """Draw the front-page nameplate block; return the body-top y-coordinate.
 
@@ -149,7 +150,13 @@ def draw_nameplate(
 
 
 def draw_section_band(
-    c: Canvas, page: Page, edition: Edition, geom: PageGeometry, styles, fonts: Fonts, spot: Color | None = None
+    c: Canvas,
+    page: Page,
+    edition: Edition,
+    geom: PageGeometry,
+    styles: StyleSheet1,
+    fonts: Fonts,
+    spot: Color | None = None,
 ) -> float:
     """Draw the inside-page section banner; return the body-top y-coordinate.
 
@@ -201,7 +208,9 @@ def draw_column_rules(c: Canvas, grid: ColumnGrid, top: float, bottom: float) ->
         _vrule(c, x, bottom, top, width=0.5, color=MUTED)
 
 
-def draw_lead_headline(c: Canvas, story: Story, x: float, top_y: float, width: float, styles, fonts: Fonts) -> float:
+def draw_lead_headline(
+    c: Canvas, story: Story, x: float, top_y: float, width: float, styles: StyleSheet1, fonts: Fonts
+) -> float:
     """Draw the spanning lead kicker + headline + deck; return consumed height."""
     consumed = 0.0
     if story.kicker:
@@ -228,7 +237,7 @@ def draw_lead_headline(c: Canvas, story: Story, x: float, top_y: float, width: f
     return consumed
 
 
-def draw_draft_grid(c: Canvas, frames: list, color: Color = Color(0.85, 0.2, 0.2)) -> None:  # pragma: no cover
+def draw_draft_grid(c: Canvas, frames: list[Frame], color: Color = Color(0.85, 0.2, 0.2)) -> None:  # pragma: no cover
     """Debug overlay: outline each frame."""
     c.saveState()
     c.setStrokeColor(color)

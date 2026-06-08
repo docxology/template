@@ -392,6 +392,7 @@ def _newsprint_axes(ax: "plt.Axes") -> None:
 
 
 def weather_chart(path: Path) -> Path:
+    """Write the 7-day high/low forecast chart to ``path``; return ``path``."""
     days = ["Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue"]
     highs = [59, 61, 60, 63, 65, 62, 60]
     lows = [48, 49, 47, 50, 52, 51, 49]
@@ -431,6 +432,7 @@ def weather_chart(path: Path) -> Path:
 
 
 def tide_chart(path: Path) -> Path:
+    """Write the 24-hour mixed-semidiurnal tide curve to ``path``; return ``path``."""
     hours = [h / 2 for h in range(0, 49)]
     # Mixed semidiurnal tide typical of the North Coast.
     tide = [3.6 + 2.7 * math.sin((h / 6.2 + 0.6) * math.pi) + 0.9 * math.sin((h / 3.05) * math.pi) for h in hours]
@@ -449,6 +451,7 @@ def tide_chart(path: Path) -> Path:
 
 
 def crab_landings_chart(path: Path) -> Path:
+    """Write the monthly Dungeness-crab landings bar chart to ``path``; return ``path``."""
     months = ["Dec", "Jan", "Feb", "Mar", "Apr", "May"]
     pounds = [410, 980, 1240, 760, 540, 305]  # thousands of lbs
     fig, ax = plt.subplots(figsize=(3.4, 2.1), dpi=300)

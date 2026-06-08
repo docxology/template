@@ -220,7 +220,7 @@ def simulate_trajectory(
     A: np.ndarray | None = None,
     b: np.ndarray | None = None,
     initial_point: np.ndarray | None = None,
-) -> dict[str, list]:
+) -> dict[str, list[int] | list[float]]:
     """Run gradient descent and return iteration/objective history.
 
     Uses gradient_descent() from this module — no reimplementation of the

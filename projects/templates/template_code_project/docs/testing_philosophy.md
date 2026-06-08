@@ -35,6 +35,7 @@ Live test count and coverage percentage: [`docs/_generated/canonical_facts.md`](
 | Class | Covers |
 | --- | --- |
 | `TestQuadraticFunction` | `quadratic_function()` evaluation, dimension mismatch errors |
+| `TestQuadraticOptimum` | `quadratic_optimum()` closed-form minimizer $x^\ast$ and $f(x^\ast)$ |
 | `TestComputeGradient` | `compute_gradient()` accuracy at 1D and nD |
 | `TestGradientDescent` | Convergence, iteration cap, multidimensional cases, divergent step size |
 | `TestOptimizationResult` | Dataclass construction; `objective_history` |

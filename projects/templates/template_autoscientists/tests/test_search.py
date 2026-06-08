@@ -1,4 +1,12 @@
-"""Tests for the coordination loop and its ablation toggles."""
+"""Tests for the coordination loop and its ablation toggles.
+
+The public entry point is :func:`run_search`. A few tests below deliberately
+reach into the private :class:`_Runner` and its ``_``-prefixed helpers
+(``_team_assignment``, ``_fully_retired``, ``state``) to unit-test individual
+branches in isolation — exercising them only through ``run_search`` would make
+the assertions indirect and brittle. This is a conscious testing trade-off, not
+a sign that callers should bypass the ``run_search`` seam.
+"""
 
 from __future__ import annotations
 

@@ -22,7 +22,7 @@ bug in the abstraction — fix the engine to be driven by data instead.
 
 | Path | Role | Edit when… |
 |------|------|-----------|
-| `src/newspaper/` | the engine (8 modules) | adding a layout *capability* |
+| `src/newspaper/` | the engine (9 modules) | adding a layout *capability* |
 | `content/` | the edition (YAML) | changing *this paper's* content |
 | `scripts/` | Stage-02 orchestrators (preflight, figures, render) | changing the pipeline wiring |
 | `manuscript/` | descriptive paper for Stage-03 infra render | documenting the engine |
@@ -34,10 +34,10 @@ bug in the abstraction — fix the engine to be driven by data instead.
 
 This project's correctness is **visual**. After any layout or content change:
 
-1. `python scripts/10_generate_figures.py && python scripts/20_render_newspaper.py`
+1. `uv run python scripts/10_generate_figures.py && uv run python scripts/20_render_newspaper.py`
 2. Raster pages with `pdftoppm -png -r 100 output/pdf/the-triplicate.pdf /tmp/p`
    and **look at them**. Do not claim a layout works from code alone.
-3. `python -m pytest`, `mypy src/newspaper`, `ruff check src scripts tests`.
+3. `uv run pytest`, `uv run mypy src/newspaper`, `uvx ruff check src scripts tests`.
 
 `RenderResult.all_pages_fit == False` means content was dropped off a page —
 treat it as a failure, not a warning.

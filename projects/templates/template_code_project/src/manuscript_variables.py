@@ -172,7 +172,6 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
 
     # ---- Configuration-derived ----
     paper = config.get("paper", {})
-    variables["CONFIG_TITLE"] = paper.get("title", "Untitled")
     variables["CONFIG_VERSION"] = paper.get("version", "1.0")
 
     step_sizes = list(exp_cfg.step_sizes)

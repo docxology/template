@@ -163,7 +163,7 @@ manuscript references without making live web calls.
 ## `figures.yaml` (visualization style)
 
 Every generated figure resolves its visual style from a single
-`FigureStyleConfig` (`src/figure_style.py`). The optional project-local
+`FigureStyleConfig` (`src/figures/figure_style.py`). The optional project-local
 `figures.yaml` overrides any of its fields; missing keys — and a missing file —
 fall back to the built-in defaults, which reproduce the historical figure
 appearance **byte-for-byte**. A dedicated file is used rather than

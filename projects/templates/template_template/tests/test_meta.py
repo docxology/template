@@ -24,12 +24,14 @@ from template_template import (
     render_chapter,
     resolve_template_repo_root,
 )
+from template_template.inject_metrics import validate_all_resolved
 from helpers import PROJECT_DIR, REPO_ROOT
 
 
 # ---------------------------------------------------------------------------
 # discover_infrastructure_modules
 # ---------------------------------------------------------------------------
+
 
 class TestDiscoverInfrastructureModules:
     """Tests for ``discover_infrastructure_modules``."""
@@ -93,6 +95,7 @@ class TestDiscoverInfrastructureModules:
 # discover_projects
 # ---------------------------------------------------------------------------
 
+
 class TestDiscoverProjects:
     """Tests for ``discover_projects``."""
 
@@ -110,9 +113,7 @@ class TestDiscoverProjects:
         """Canonical code exemplar must remain discoverable; exemplars live under projects/templates/."""
         projects = discover_projects(REPO_ROOT)
         names = {p.name for p in projects}
-        assert "template_code_project" in names, (
-            f"template_code_project not found in {names}"
-        )
+        assert "template_code_project" in names, f"template_code_project not found in {names}"
 
     def test_each_project_has_manuscript(self):
         projects = discover_projects(REPO_ROOT)
@@ -140,6 +141,7 @@ class TestDiscoverProjects:
 # ---------------------------------------------------------------------------
 # count_pipeline_stages
 # ---------------------------------------------------------------------------
+
 
 class TestCountPipelineStages:
     """Tests for ``count_pipeline_stages``."""
@@ -175,9 +177,7 @@ class TestCountPipelineStages:
     def test_each_stage_has_script_path(self):
         stages = count_pipeline_stages(REPO_ROOT / "scripts")
         for stage in stages:
-            assert stage.script_path.is_file(), (
-                f"Stage {stage.number} script missing: {stage.script_path}"
-            )
+            assert stage.script_path.is_file(), f"Stage {stage.number} script missing: {stage.script_path}"
 
     def test_invalid_dir_returns_empty(self):
         result = count_pipeline_stages(Path("/nonexistent/path"))
@@ -303,15 +303,11 @@ class TestBuildInfrastructureReport:
 
     def test_report_has_python_files(self):
         report = _cached_infrastructure_report()
-        assert report.total_python_files > 50, (
-            f"Expected >50 Python files, got {report.total_python_files}"
-        )
+        assert report.total_python_files > 50, f"Expected >50 Python files, got {report.total_python_files}"
 
     def test_report_has_test_files(self):
         report = _cached_infrastructure_report()
-        assert report.total_test_files > 5, (
-            f"Expected >5 test files, got {report.total_test_files}"
-        )
+        assert report.total_test_files > 5, f"Expected >5 test files, got {report.total_test_files}"
 
     def test_infrastructure_version_populated(self):
         report = _cached_infrastructure_report()
@@ -332,12 +328,14 @@ class TestBuildInfrastructureReport:
 # inject_metrics — load_metrics, render_chapter, render_all_chapters
 # ---------------------------------------------------------------------------
 
+
 class TestInjectMetrics:
     """Tests for the inject_metrics module (Zero-Mock policy)."""
 
     def _write_metrics(self, tmp_path, data: dict) -> "Path":
         """Write *data* as JSON to a temp metrics file and return its path."""
         import json
+
         metrics_file = tmp_path / "metrics.json"
         metrics_file.write_text(json.dumps(data), encoding="utf-8")
         return metrics_file
@@ -362,16 +360,24 @@ class TestInjectMetrics:
     def test_load_metrics_missing_file_raises(self, tmp_path):
         """load_metrics raises FileNotFoundError for a nonexistent path."""
         import pytest
+
         with pytest.raises(FileNotFoundError):
             load_metrics(tmp_path / "nonexistent.json")
 
     def test_load_metrics_invalid_json_raises(self, tmp_path):
         """load_metrics raises ValueError for invalid JSON."""
         import pytest
+
         bad = tmp_path / "bad.json"
         bad.write_text("not valid json{{{", encoding="utf-8")
         with pytest.raises(ValueError, match="Invalid JSON"):
             load_metrics(bad)
+
+    def test_load_metrics_flattens_list_to_length(self, tmp_path):
+        """A JSON list value flattens to its length (as a string)."""
+        path = self._write_metrics(tmp_path, {"langs": ["zh", "hi"]})
+        result = load_metrics(path)
+        assert result["langs"] == "2"
 
     # --- render_chapter ---
 
@@ -464,12 +470,26 @@ class TestInjectMetrics:
         assert len(written) > 0
         # All numbered chapter files must be present in output
         chapter_names = [
-            f.name for f in manuscript_dir.iterdir()
-            if f.is_file() and f.name[0].isdigit() and f.suffix == ".md"
+            f.name for f in manuscript_dir.iterdir() if f.is_file() and f.name[0].isdigit() and f.suffix == ".md"
         ]
         out_names = {f.name for f in written}
         for ch in chapter_names:
             assert ch in out_names, f"Chapter {ch} not in rendered output"
+
+    # --- validate_all_resolved ---
+
+    def test_validate_all_resolved_missing_dir_reports_issue(self, tmp_path):
+        """validate_all_resolved on a nonexistent directory returns a 'not found' issue."""
+        issues = validate_all_resolved(tmp_path / "does_not_exist")
+        assert len(issues) == 1
+        assert "not found" in issues[0]
+
+    def test_validate_all_resolved_clean_output_has_no_issues(self, tmp_path):
+        """A fully-substituted chapter directory yields zero issues."""
+        out_dir = tmp_path / "rendered"
+        out_dir.mkdir()
+        (out_dir / "01_chapter.md").write_text("All 12 modules resolved.", encoding="utf-8")
+        assert validate_all_resolved(out_dir) == []
 
     def test_discovery_criterion_divergence_is_documented(self):
         """Template and infrastructure discover_projects use intentionally different criteria.
@@ -486,17 +506,14 @@ class TestInjectMetrics:
 
         # Criteria diverge by design — manuscript-only trees differ from infra's src/+tests/.
         slug = "template_code_project"
-        assert slug in template_names, (
-            f"{slug} missing from template introspection discovery: {template_names}"
-        )
-        assert slug in infra_names, (
-            f"{slug} missing from infra discovery: {infra_names}"
-        )
+        assert slug in template_names, f"{slug} missing from template introspection discovery: {template_names}"
+        assert slug in infra_names, f"{slug} missing from infra discovery: {infra_names}"
 
     def test_load_metrics_round_trip_with_generate_script(self, tmp_path):
         """generate_manuscript_metrics produces valid load_metrics input."""
         import json
         import sys
+
         # Import generate_manuscript_metrics as a module (real invocation)
         scripts_dir = str(PROJECT_DIR / "scripts")
         if scripts_dir not in sys.path:
@@ -529,18 +546,12 @@ class TestSelfDescriptionPins:
     """
 
     def _section06_text(self) -> str:
-        return (PROJECT_DIR / "manuscript" / "06_infrastructure_modules.md").read_text(
-            encoding="utf-8"
-        )
+        return (PROJECT_DIR / "manuscript" / "06_infrastructure_modules.md").read_text(encoding="utf-8")
 
     def test_every_importable_package_has_a_section06_subsection(self):
         modules = discover_infrastructure_modules(REPO_ROOT)
         text = self._section06_text()
-        missing = [
-            m.name
-            for m in modules
-            if m.has_init and f"infrastructure.{m.name}`" not in text
-        ]
+        missing = [m.name for m in modules if m.has_init and f"infrastructure.{m.name}`" not in text]
         assert not missing, f"§06 omits importable packages: {missing}"
 
     def test_importable_package_count_matches_live_has_init(self):

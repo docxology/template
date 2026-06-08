@@ -8,4 +8,4 @@ Contributions are **methodological** and **architectural**. On the methods side,
 
 **Results (this configuration):** {{RESULT_NUM_CONVERGED}} of {{CONFIG_NUM_STEP_SIZES}} grid points report `converged=True` in the CSV; non-convergent rows flag either slow progress at small $\alpha$ under the iteration cap or instability when $|1-\alpha| \geq 1$. The analytical minimizer remains $x^\ast = {{RESULT_OPTIMUM_X}}$ with $f(x^\ast) = {{RESULT_OPTIMUM_F}}$ for the configured $(A,b)$.
 
-**Keywords:** gradient descent, reproducible research, zero-mock testing, scientific infrastructure, pipeline orchestration
+**Keywords:** {{CONFIG_KEYWORDS}}
