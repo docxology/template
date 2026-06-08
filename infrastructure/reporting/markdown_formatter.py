@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.logging.constants import TABLE_WIDTH
 from infrastructure.core.logging.utils import get_logger
 
 from .report_builder import generate_summary_report
@@ -124,9 +125,9 @@ def _format_console_summary(report_data: dict[str, Any]) -> str:
     projects = report_data.get("projects", {})
     lines = [
         "",
-        "=" * 80,
+        "=" * TABLE_WIDTH,
         "FULL REPOSITORY TEST SUITE SUMMARY",
-        "=" * 80,
+        "=" * TABLE_WIDTH,
         f"Overall Status: {'PASSED' if report_data['overall_success'] else 'FAILED'}",
         f"Total Tests: {summary['total_tests']:,} ({summary['pass_rate']:.1f}% pass rate)",
         f"Total Duration: {summary['total_duration_seconds']:.1f}s",
@@ -140,7 +141,7 @@ def _format_console_summary(report_data: dict[str, Any]) -> str:
         lines.append(
             f"  {display_name:<24} {proj_data['passed']:,} passed ({proj_data['coverage_percent']:.1f}% coverage)"  # noqa: E501
         )
-    lines.append("=" * 80)
+    lines.append("=" * TABLE_WIDTH)
     return "\n".join(lines)
 
 

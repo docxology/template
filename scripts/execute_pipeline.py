@@ -16,6 +16,7 @@ if str(repo_root) not in sys.path:
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from infrastructure.core.pipeline.hitl_cli import PipelineArgs, handle_hitl_command
+from infrastructure.core.pipeline.incremental import IncrementalConfig
 from infrastructure.core.pipeline.single_stage import execute_single_stage
 from infrastructure.core.runtime.environment import validate_interpreter
 
@@ -33,6 +34,7 @@ def execute_pipeline(
     resume: bool = False,
     core_only: bool = False,
     hitl_mode: str = "full-auto",
+    incremental: bool = False,
 ) -> int:
     """Execute pipeline for a single project."""
     try:
@@ -44,6 +46,7 @@ def execute_pipeline(
             skip_llm=skip_llm,
             resume=resume,
             hitl_mode=hitl_mode,
+            incremental=IncrementalConfig(enabled=incremental),
         )
         executor = PipelineExecutor(config)
         results = executor.execute_core_pipeline() if core_only else executor.execute_full_pipeline()
@@ -70,6 +73,11 @@ def main() -> int:
     parser.add_argument("--skip-llm", action="store_true", help="Skip LLM stages")
     parser.add_argument("--resume", action="store_true", help="Resume from checkpoint")
     parser.add_argument("--core-only", action="store_true", help="Run core pipeline only (no LLM)")
+    parser.add_argument(
+        "--incremental",
+        action="store_true",
+        help="Enable incremental stage skipping when stage inputs/outputs are unchanged (opt-in; default off)",
+    )
     parser.add_argument(
         "--hitl-mode",
         default="full-auto",
@@ -106,6 +114,7 @@ def main() -> int:
         skip_llm=raw_args.skip_llm,
         resume=raw_args.resume,
         core_only=raw_args.core_only,
+        incremental=raw_args.incremental,
         stage=raw_args.stage,
         hitl_mode=raw_args.hitl_mode,
         hitl_command=raw_args.hitl_command,
@@ -128,6 +137,7 @@ def main() -> int:
         resume=args.resume,
         core_only=args.core_only,
         hitl_mode=args.hitl_mode,
+        incremental=args.incremental,
     )
     if result == 0:
         log_success(f"Pipeline complete: {args.project}", logger)

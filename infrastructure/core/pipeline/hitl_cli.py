@@ -18,6 +18,7 @@ class PipelineArgs:
     skip_llm: bool = False
     resume: bool = False
     core_only: bool = False
+    incremental: bool = False
     stage: str | None = None
     hitl_mode: str = "full-auto"
     hitl_command: str | None = None

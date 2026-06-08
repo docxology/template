@@ -328,3 +328,37 @@ def test_html_renders_not_available_when_empty(tmp_path: Path) -> None:
     html = rr.render_html(report)
     assert NOT_AVAILABLE_LOWER in html.lower()
     assert "<!DOCTYPE html>" in html
+
+
+def test_documented_module_invocation_writes_report(tmp_path: Path) -> None:
+    """DASHBOARD-CLI-1: the documented ``python -m`` command writes a report and exits 0.
+
+    Exercises the real ``__main__`` entrypoint as a subprocess (the in-process
+    tests above call ``main()`` directly), matching the CLAUDE.md Quick Reference
+    invocation a maintainer would copy-paste.
+    """
+    import subprocess
+    import sys
+
+    repo_root = Path(__file__).resolve().parents[3]
+    out_path = tmp_path / "release_readiness.md"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "infrastructure.reporting.release_readiness",
+            "--repo-root",
+            str(repo_root),
+            "--out",
+            str(out_path),
+            "--generated-at",
+            FIXED_TS,
+        ],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert result.returncode == 0, result.stderr
+    assert out_path.is_file()
+    assert "Release Readiness" in out_path.read_text(encoding="utf-8")

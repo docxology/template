@@ -12,6 +12,8 @@ and prior log content is preserved (the function appends, never clobbers).
 from datetime import datetime, timezone
 from pathlib import Path
 
+from infrastructure.core.logging.constants import PIPELINE_STAGE_WIDTH
+
 DEFAULT_LOG_NAME = "pipeline.log"
 
 
@@ -65,7 +67,8 @@ def setup_stage_log(
     log_path.parent.mkdir(parents=True, exist_ok=True)
 
     timestamp = (now or datetime.now(timezone.utc)).strftime("%Y-%m-%d %H:%M:%S UTC")
-    banner = "\n" + "=" * 70 + "\n" + f"[{timestamp}] Starting: {stage_name}\n" + "=" * 70 + "\n"
+    bar = "=" * PIPELINE_STAGE_WIDTH
+    banner = f"\n{bar}\n[{timestamp}] Starting: {stage_name}\n{bar}\n"
     with log_path.open("a", encoding="utf-8") as fh:
         fh.write(banner)
 
@@ -82,7 +85,8 @@ def setup_multiproject_log(
     log_path = repo_root / "output" / "multi_project_summary" / log_name
     log_path.parent.mkdir(parents=True, exist_ok=True)
     timestamp = (now or datetime.now(timezone.utc)).strftime("%Y-%m-%d %H:%M:%S UTC")
-    banner = "\n" + "=" * 70 + "\n" + f"[{timestamp}] Multi-Project Pipeline Started\n" + "=" * 70 + "\n"
+    bar = "=" * PIPELINE_STAGE_WIDTH
+    banner = f"\n{bar}\n[{timestamp}] Multi-Project Pipeline Started\n{bar}\n"
     with log_path.open("a", encoding="utf-8") as fh:
         fh.write(banner)
     return log_path

@@ -19,11 +19,13 @@ from infrastructure.core.pipeline.artifacts import (
     validate_artifact_manifest,
 )
 from infrastructure.core.files import find_combined_pdf
+from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.project.domain_profile import load_domain_profile
 from infrastructure.project.experiment_plan import load_experiment_plan, validate_experiment_plan
+from infrastructure.validation.content.ai_writing import analyze_prose
 from infrastructure.validation.content.figure_validator import validate_figure_registry
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
@@ -486,6 +488,82 @@ def generate_validation_report(
     return validation_results
 
 
+def _load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
+    """Load the manuscript ``config.yaml`` as a plain dict for validation toggles.
+
+    Returns ``None`` when the file is missing, unparseable, or PyYAML is
+    unavailable — callers fall back to defaults. Best-effort by design, mirroring
+    the opt-in pattern used for DOCX/EPUB rendering in
+    :mod:`infrastructure.rendering.pipeline`.
+    """
+    cfg = manuscript_dir / "config.yaml"
+    if not cfg.is_file():
+        return None
+    try:
+        import yaml
+    except ImportError:
+        logger.debug("PyYAML not available; cannot read validation toggles from config.yaml")
+        return None
+    try:
+        with cfg.open("r", encoding="utf-8") as fh:
+            data = yaml.safe_load(fh)
+        return data if isinstance(data, dict) else None
+    except (OSError, yaml.YAMLError) as exc:
+        logger.debug("Could not parse %s for validation toggles: %s", cfg.name, exc)
+        return None
+
+
+def _prose_quality_enabled(project_name: str) -> bool:
+    """Whether the opt-in AI-writing prose gate is enabled for *project_name*.
+
+    Toggle lives in ``manuscript/config.yaml`` under
+    ``validation.prose_quality.enabled`` and defaults to ``False`` so existing
+    runs are unaffected.
+    """
+    config = _load_project_config_yaml(_project_root(project_name) / "manuscript")
+    if not config:
+        return False
+    validation = config.get("validation") or {}
+    prose = validation.get("prose_quality") or {}
+    return bool(prose.get("enabled"))
+
+
+def validate_prose_quality(project_name: str = "project") -> bool:
+    """Report-only AI-writing fingerprint scan over manuscript Markdown.
+
+    Flags prose patterns typical of unedited LLM output (stock-phrase density,
+    em-dash overuse, uniform sentence length) via
+    :func:`infrastructure.validation.content.ai_writing.analyze_prose`. This is a
+    warning gate: it always returns ``True`` and never fails the pipeline. It is
+    only invoked when ``validation.prose_quality.enabled`` is set in the project
+    config, so disabled runs are byte-identical to the legacy behavior.
+    """
+    log_substep("Analyzing prose quality (AI-writing fingerprints)...", logger)
+    manuscript_dir = _project_root(project_name) / "manuscript"
+    if not manuscript_dir.is_dir():
+        logger.warning("Prose quality: manuscript directory not found at %s", manuscript_dir)
+        return True
+
+    flagged = 0
+    for md_file in sorted(manuscript_dir.glob("*.md")):
+        try:
+            report = analyze_prose(md_file.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError) as exc:
+            logger.warning("Prose quality: could not read %s: %s", md_file.name, exc)
+            continue
+        if report.has_flags:
+            flagged += 1
+            logger.info("  %s (%d words):", md_file.name, report.word_count)
+            for flag in report.flags:
+                logger.info("    • %s", flag)
+
+    if flagged:
+        logger.info("Prose quality: %d manuscript file(s) flagged (informational only)", flagged)
+    else:
+        log_success("Prose quality: no AI-writing fingerprints flagged", logger)
+    return True
+
+
 def execute_validation_pipeline(project_name: str = "project") -> int:
     """Execute validation orchestration.
 
@@ -504,6 +582,10 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
         ("Transmission bookends", lambda: validate_transmission_bookends(project_name)),
         ("Markdown validation", lambda: validate_manuscript_output_markdown(project_name)),
     ]
+    # Opt-in, report-only AI-writing prose gate (PROSE-GATE-WIRE-1). Appended
+    # only when enabled in config so disabled runs stay byte-identical.
+    if _prose_quality_enabled(project_name):
+        checks.append(("Prose quality", lambda: validate_prose_quality(project_name)))
 
     results = []
     figure_issues = []
@@ -591,9 +673,9 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
 
     generate_validation_report(results, figure_issues, output_statistics, project_name)
 
-    logger.info("\n" + "=" * 60)
+    logger.info("\n" + "=" * BANNER_WIDTH)
     logger.info("VALIDATION SUMMARY")
-    logger.info("=" * 60)
+    logger.info("=" * BANNER_WIDTH)
     logger.info(f"Project: {project_name}")
     logger.info(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     logger.info("")
@@ -647,7 +729,7 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
                 logger.warning(f"  • {issue}")
 
     logger.info("")
-    logger.info("=" * 60)
+    logger.info("=" * BANNER_WIDTH)
 
     if all_passed and warning_count == 0 and critical_count == 0:
         log_success("✅ VALIDATION COMPLETE - All checks passed!", logger)

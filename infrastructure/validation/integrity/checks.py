@@ -21,11 +21,12 @@ from typing import Any, TypedDict
 
 from infrastructure.core._optional_deps import np
 from infrastructure.core.files.operations import calculate_file_hash
+from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
-_REPORT_SEPARATOR = "=" * 60
+_REPORT_SEPARATOR = "=" * BANNER_WIDTH
 
 
 @dataclass
