@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.logging.constants import BANNER_WIDTH
+
 SEVERITY_LEVELS = ("LOW", "MEDIUM", "HIGH")
 TOOLS = ("bandit", "safety", "pip_audit")
 
@@ -175,9 +177,9 @@ def write_security_report(report: dict[str, Any], report_path: Path) -> None:
 
 def run_security_scan(repo_root: Path) -> tuple[dict[str, Any], int]:
     """Run security scanners and return (report, exit_code)."""
-    print("=" * 60)
+    print("=" * BANNER_WIDTH)
     print("SECURITY SCAN GATE")
-    print("=" * 60)
+    print("=" * BANNER_WIDTH)
 
     results: list[dict[str, Any]] = []
     print("\n[1/3] Running bandit...")
@@ -195,9 +197,9 @@ def run_security_scan(repo_root: Path) -> tuple[dict[str, Any], int]:
     print("\nAggregating findings...")
     report = aggregate_security_findings(results)
 
-    print("\n" + "=" * 60)
+    print("\n" + "=" * BANNER_WIDTH)
     print("SECURITY SCAN SUMMARY")
-    print("=" * 60)
+    print("=" * BANNER_WIDTH)
     print(f"Tools run: {', '.join(report['tools_run']) if report['tools_run'] else 'none'}")
     print(f"Total findings: {report['total_findings']}")
     print("\nSeverity breakdown:")

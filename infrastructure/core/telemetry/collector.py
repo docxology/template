@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core._optional_deps import psutil
+from infrastructure.core.logging.constants import TELEMETRY_WIDTH
 from infrastructure.core.logging.diagnostic import (
     DiagnosticReporter,
     DiagnosticSeverity,
@@ -368,9 +369,9 @@ class TelemetryCollector:
         lines: list[str] = []
         r = self._report
 
-        lines.append("=" * 72)
+        lines.append("=" * TELEMETRY_WIDTH)
         lines.append(f" TELEMETRY REPORT: {r.project_name}")
-        lines.append("=" * 72)
+        lines.append("=" * TELEMETRY_WIDTH)
         lines.append("")
         lines.append(f"Total Duration : {r.total_duration:.1f}s")
         lines.append(f"Total Stages   : {r.total_stages}")
@@ -397,7 +398,7 @@ class TelemetryCollector:
                     lines.append(f"    → {w.suggestion}")
 
         lines.append("")
-        lines.append("=" * 72)
+        lines.append("=" * TELEMETRY_WIDTH)
         return "\n".join(lines)
 
     # ------------------------------------------------------------------

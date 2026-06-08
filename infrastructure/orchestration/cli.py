@@ -84,6 +84,11 @@ def build_parser() -> argparse.ArgumentParser:
     pipe.add_argument("--skip-infra", action="store_true")
     pipe.add_argument("--skip-llm", action="store_true")
     pipe.add_argument("--resume", action="store_true")
+    pipe.add_argument(
+        "--incremental",
+        action="store_true",
+        help="Enable incremental stage skipping when inputs/outputs are unchanged (opt-in; default off).",
+    )
 
     # 'multi' subcommand
     multi = sub.add_parser("multi", help="Run all-projects orchestration.")
@@ -281,6 +286,7 @@ def _cmd_pipeline(ns: argparse.Namespace) -> int:
             skip_llm=ns.skip_llm,
             resume=ns.resume,
             core_only=ns.core_only,
+            incremental=ns.incremental,
         )
     )
 

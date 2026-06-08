@@ -443,3 +443,77 @@ class TestExecuteValidationPipeline:
 
         assert selected is not None
         assert selected.entries[0].stage_name == "project contract"
+
+
+class TestProseQualityGate:
+    """PROSE-GATE-WIRE-1: opt-in, report-only AI-writing prose gate."""
+
+    def _scaffold(self, tmp_path, *, enabled: bool | None, prose: str):
+        project_dir = tmp_path / "projects" / "active" / "test"
+        (project_dir / "output").mkdir(parents=True)
+        ms_dir = project_dir / "manuscript"
+        ms_dir.mkdir(parents=True)
+        (ms_dir / "01_intro.md").write_text(prose, encoding="utf-8")
+        if enabled is not None:
+            (ms_dir / "config.yaml").write_text(
+                "paper:\n  title: Test\n"
+                "validation:\n  prose_quality:\n    enabled: " + ("true" if enabled else "false") + "\n",
+                encoding="utf-8",
+            )
+        return project_dir
+
+    def test_disabled_by_default_when_no_config(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        self._scaffold(tmp_path, enabled=None, prose="# Intro\n\nShort prose here.")
+        assert mod._prose_quality_enabled("test") is False
+
+    def test_enabled_via_config(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        self._scaffold(tmp_path, enabled=True, prose="# Intro\n\nShort prose here.")
+        assert mod._prose_quality_enabled("test") is True
+
+    def test_explicit_false_config_stays_disabled(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        self._scaffold(tmp_path, enabled=False, prose="# Intro\n\nShort prose here.")
+        assert mod._prose_quality_enabled("test") is False
+
+    def test_validate_prose_quality_is_report_only(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        ai_prose = (
+            "It is worth noting that we delve into a rich tapestry of behaviors. "
+            "Moreover, this plays a crucial role in the realm of complexity. "
+            "Furthermore, navigating the landscape underscores the importance of synergy. "
+            "Additionally, it is important to note the multifaceted nature of the framework."
+        )
+        self._scaffold(tmp_path, enabled=True, prose=ai_prose)
+        # Report-only: flagged prose still returns True (never fails the pipeline).
+        assert mod.validate_prose_quality("test") is True
+
+    def test_validate_prose_quality_missing_manuscript_returns_true(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        (tmp_path / "projects" / "active" / "test" / "output").mkdir(parents=True)
+        assert mod.validate_prose_quality("test") is True
+
+    def test_pipeline_invokes_prose_check_only_when_enabled(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        calls: list[str] = []
+        real = mod.validate_prose_quality
+
+        def _recorder(project_name: str = "project") -> bool:
+            calls.append(project_name)
+            return real(project_name)
+
+        monkeypatch.setattr(mod, "validate_prose_quality", _recorder)
+
+        # Disabled (no config): prose check must NOT run -> byte-identical legacy path.
+        self._scaffold(tmp_path, enabled=None, prose="# Intro\n\nShort prose here.")
+        mod.execute_validation_pipeline("test")
+        assert calls == []
+
+        # Enabled via config: prose check runs exactly once for this project.
+        (tmp_path / "projects" / "active" / "test" / "manuscript" / "config.yaml").write_text(
+            "paper:\n  title: Test\nvalidation:\n  prose_quality:\n    enabled: true\n",
+            encoding="utf-8",
+        )
+        mod.execute_validation_pipeline("test")
+        assert calls == ["test"]

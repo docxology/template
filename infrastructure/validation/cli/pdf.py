@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.exceptions import PDFValidationError
+from infrastructure.core.logging.constants import PIPELINE_STAGE_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
 
@@ -49,9 +50,9 @@ def print_validation_report(report: dict[str, Any], verbose: bool = False) -> No
         report: Validation report from src/pdf_validator
         verbose: If True, print full details
     """
-    logger.info("\n" + "=" * 70)
+    logger.info("\n" + "=" * PIPELINE_STAGE_WIDTH)
     logger.info("📋 PDF VALIDATION REPORT")
-    logger.info("=" * 70)
+    logger.info("=" * PIPELINE_STAGE_WIDTH)
 
     pdf_name = Path(report["pdf_path"]).name
     logger.info(f"📄 File: {pdf_name}")
@@ -87,7 +88,7 @@ def print_validation_report(report: dict[str, Any], verbose: bool = False) -> No
         logger.info(f"   Has Issues: {report['summary']['has_issues']}")
         logger.info(f"   Word Count: {report['summary']['word_count']}")
 
-    logger.info("=" * 70)
+    logger.info("=" * PIPELINE_STAGE_WIDTH)
     logger.info("")
 
 

@@ -13,7 +13,9 @@ from pathlib import Path
 from infrastructure.publishing.repro_bundle import (
     BUNDLE_MANIFEST_NAME,
     SCHEMA_VERSION,
+    build_public_repro_bundles,
     build_repro_bundle,
+    main,
     verify_repro_bundle,
 )
 from tests._support.projects import make_project, write_doc
@@ -158,3 +160,81 @@ def test_cli_build_then_verify(tmp_path: Path) -> None:
     (tmp_path / "uv.lock").write_text("# changed\n", encoding="utf-8")
     rc_fail = main(["verify", str(manifest), "--checkout-root", str(tmp_path)])
     assert rc_fail == 1
+
+
+# --------------------------------------------------------------------------- #
+# REPRO-MULTI-1: multi-exemplar (--all-public) bundles
+# --------------------------------------------------------------------------- #
+
+_TS = "2026-06-06T00:00:00+00:00"
+
+
+def _scaffold_public_exemplar(root: Path, name: str) -> Path:
+    """Scaffold a discoverable public exemplar under ``projects/templates/<name>``."""
+    project = make_project(root, name, program="templates", with_manuscript=True, with_scripts=True)
+    qualified = f"templates/{name}"
+    fig = root / "output" / qualified / "figures" / "result.png"
+    write_doc(fig, f"PNG-{name}")
+    artifact_manifest = project / "output" / "reports" / "artifact_manifest.json"
+    write_doc(
+        artifact_manifest,
+        json.dumps({"entries": [{"path": f"output/{qualified}/figures/result.png"}]}),
+    )
+    return project
+
+
+def _scaffold_two_public_exemplars(root: Path) -> tuple[str, str]:
+    """Create two real public-roster exemplars plus the repo-level repro inputs."""
+    # Names must be members of PUBLIC_PROJECT_NAMES for the roster to include them.
+    a, b = "template_sia", "template_code_project"
+    _scaffold_public_exemplar(root, a)
+    _scaffold_public_exemplar(root, b)
+    write_doc(root / "uv.lock", "# lock contents\n")
+    write_doc(root / "pyproject.toml", "[project]\nname = 'demo'\n")
+    write_doc(root / "docs" / "_generated" / "canonical_facts.md", "# Canonical Facts\n\n- 214\n")
+    return f"templates/{a}", f"templates/{b}"
+
+
+def test_build_all_public_emits_manifest_per_exemplar(tmp_path: Path) -> None:
+    qa, qb = _scaffold_two_public_exemplars(tmp_path)
+
+    results = build_public_repro_bundles(tmp_path, out_dir=tmp_path / "bundles", generated_at=_TS)
+
+    assert set(results) == {qa, qb}
+    for qualified in (qa, qb):
+        manifest = results[qualified] / BUNDLE_MANIFEST_NAME
+        assert manifest.is_file()
+        data = json.loads(manifest.read_text(encoding="utf-8"))
+        assert data["project"] == qualified
+        assert data["schema_version"] == SCHEMA_VERSION
+
+
+def test_cli_build_all_public_then_verify_each_independently(tmp_path: Path) -> None:
+    qa, qb = _scaffold_two_public_exemplars(tmp_path)
+    out_dir = tmp_path / "bundles"
+
+    rc = main(["build", "--all-public", "--repo-root", str(tmp_path), "--out", str(out_dir), "--generated-at", _TS])
+    assert rc == 0
+
+    manifest_a = out_dir / qa / "repro_bundle" / BUNDLE_MANIFEST_NAME
+    manifest_b = out_dir / qb / "repro_bundle" / BUNDLE_MANIFEST_NAME
+    assert manifest_a.is_file() and manifest_b.is_file()
+
+    # Both verify clean on the unchanged checkout.
+    assert verify_repro_bundle(manifest_a, checkout_root=tmp_path).ok is True
+    assert verify_repro_bundle(manifest_b, checkout_root=tmp_path).ok is True
+
+    # Mutating one exemplar's input fails only that exemplar — verification is
+    # per-bundle, not merged across the roster.
+    (tmp_path / "output" / qa / "figures" / "result.png").write_text("tampered", encoding="utf-8")
+    assert verify_repro_bundle(manifest_a, checkout_root=tmp_path).ok is False
+    assert verify_repro_bundle(manifest_b, checkout_root=tmp_path).ok is True
+
+
+def test_build_requires_project_or_all_public(tmp_path: Path) -> None:
+    """``build`` with neither a project nor --all-public is a usage error (exit 2)."""
+    import pytest
+
+    with pytest.raises(SystemExit) as exc:
+        main(["build", "--repo-root", str(tmp_path)])
+    assert exc.value.code == 2

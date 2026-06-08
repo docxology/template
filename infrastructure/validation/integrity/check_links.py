@@ -10,6 +10,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from infrastructure.core.logging.constants import TABLE_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.project_paths import find_repo_root
 from infrastructure.validation.content.discovery import discover_markdown_files
@@ -71,9 +72,9 @@ def generate_comprehensive_report(issues: dict[str, list[LinkCheckResult]], tota
     """Generate a comprehensive validation report."""
     total_issues = sum(len(issue_list) for issue_list in issues.values())
 
-    logger.info("=" * 80)
+    logger.info("=" * TABLE_WIDTH)
     logger.info("COMPREHENSIVE FILEPATH AND REFERENCE AUDIT REPORT")
-    logger.info("=" * 80)
+    logger.info("=" * TABLE_WIDTH)
     logger.info(f"Files scanned: {total_files}")
     logger.info(f"Total issues found: {total_issues}")
 

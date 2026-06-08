@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -25,9 +26,9 @@ def log_output_summary(
         stats: Dictionary with copy statistics
         structure_validation: Optional validation results dict
     """
-    logger.info("\n" + "=" * 60)
+    logger.info("\n" + "=" * BANNER_WIDTH)
     logger.info("Output Copying Summary")
-    logger.info("=" * 60)
+    logger.info("=" * BANNER_WIDTH)
 
     logger.info(f"\nOutput directory: {output_dir}")
     logger.info("\nFiles copied by directory:")
@@ -209,7 +210,7 @@ def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> 
     lines = [
         "",
         "OUTPUT STATISTICS REPORT",
-        "=" * 60,
+        "=" * BANNER_WIDTH,
         "",
         f"Output Directory: {output_dir}",
         "",

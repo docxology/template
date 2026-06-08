@@ -27,6 +27,9 @@ BANNER_WIDTH = 60  # top-level banner separators (== bar)
 STAGE_WIDTH = 46  # per-stage section header (━ bar)
 SUBSECTION_WIDTH = 50  # in-stage subsection (== bar)
 TABLE_WIDTH = 80  # data-table containers (- bar)
+PIPELINE_STAGE_WIDTH = 70  # stage/pipeline run banners (orchestration, validation CLIs)
+TELEMETRY_WIDTH = 72  # telemetry collector report frames
+DOCTOR_WIDTH = 78  # doctor diagnostic report frame
 
 
 def get_emoji_enabled() -> bool:

@@ -16,6 +16,7 @@ from typing import Any
 
 import yaml
 
+from infrastructure.core.logging.constants import PIPELINE_STAGE_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.validation.docs.models import CompletenessGap, ScanAccuracyIssue
 from infrastructure.validation.repo._repo_ast import extract_imports, verify_import
@@ -476,9 +477,9 @@ def main() -> int:
         _tmp.unlink(missing_ok=True)
         raise
 
-    logger.info("\n" + "=" * 70)
+    logger.info("\n" + "=" * PIPELINE_STAGE_WIDTH)
     logger.info("SCAN COMPLETE")
-    logger.info("=" * 70)
+    logger.info("=" * PIPELINE_STAGE_WIDTH)
     logger.info(f"\nReport saved to: {report_path}")
     logger.info("\nSummary:")
     logger.info(f"  Accuracy Issues: {len(results.accuracy_issues)}")

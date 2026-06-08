@@ -29,6 +29,7 @@ from typing import Any
 
 from infrastructure.core.files.operations import calculate_file_hash
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.project.public_scope import public_project_names
 
 logger = get_logger(__name__)
 
@@ -234,6 +235,46 @@ def build_repro_bundle(
     return out_dir
 
 
+def build_public_repro_bundles(
+    repo_root: Path,
+    *,
+    out_dir: Path | None = None,
+    generated_at: str = "1970-01-01T00:00:00+00:00",
+) -> dict[str, Path]:
+    """Build a repro bundle for every public template exemplar in this checkout.
+
+    The roster is resolved via :func:`infrastructure.project.public_scope.public_project_names`,
+    so it stays in lockstep with the CI/publication scope rather than a hard-coded
+    list. Each exemplar gets its own manifest; nothing is merged, so every bundle
+    remains independently verifiable.
+
+    Args:
+        repo_root: Repository / checkout root.
+        out_dir: Parent directory for the per-exemplar bundles. When given, each
+            bundle is written to ``<out_dir>/<project_name>/repro_bundle/``. When
+            ``None``, each bundle falls back to its default
+            ``output/<project>/repro_bundle/`` location under *repo_root*.
+        generated_at: Provenance timestamp baked into every manifest.
+
+    Returns:
+        Mapping of exemplar project name -> output directory containing its
+        ``repro_manifest.json``.
+    """
+    repo_root = repo_root.resolve()
+    names = public_project_names(repo_root)
+    results: dict[str, Path] = {}
+    for name in names:
+        target = (out_dir / name / "repro_bundle") if out_dir is not None else None
+        results[name] = build_repro_bundle(
+            repo_root,
+            name,
+            out_dir=target,
+            generated_at=generated_at,
+        )
+    logger.info("Built %d public exemplar repro bundle(s)", len(results))
+    return results
+
+
 def verify_repro_bundle(manifest_path: Path, *, checkout_root: Path) -> VerifyReport:
     """Verify a manifest against *checkout_root*, failing closed on any drift.
 
@@ -291,9 +332,23 @@ def _build_argv(parser: argparse.ArgumentParser) -> None:
     sub = parser.add_subparsers(dest="command", required=True)
 
     build = sub.add_parser("build", help="Build a repro bundle for an exemplar.")
-    build.add_argument("project", help="Project name (or templates/<name>).")
+    build.add_argument(
+        "project",
+        nargs="?",
+        default=None,
+        help="Project name (or templates/<name>). Omit when using --all-public.",
+    )
+    build.add_argument(
+        "--all-public",
+        action="store_true",
+        help="Build a bundle for every public template exemplar (roster from public_scope).",
+    )
     build.add_argument("--repo-root", default=".", help="Repository root (default: cwd).")
-    build.add_argument("--out", default=None, help="Output directory for the bundle.")
+    build.add_argument(
+        "--out",
+        default=None,
+        help="Output directory. With --all-public this is the parent for per-exemplar bundles.",
+    )
     build.add_argument(
         "--generated-at",
         default="1970-01-01T00:00:00+00:00",
@@ -315,6 +370,23 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "build":
+        if args.all_public:
+            results = build_public_repro_bundles(
+                Path(args.repo_root),
+                out_dir=Path(args.out) if args.out else None,
+                generated_at=args.generated_at,
+            )
+            if not results:
+                logger.error("No public exemplars discovered under %s", args.repo_root)
+                return 1
+            for name in sorted(results):
+                manifest_path = results[name] / BUNDLE_MANIFEST_NAME
+                logger.info("Repro bundle written to %s", manifest_path)
+                print(str(manifest_path))
+            return 0
+
+        if not args.project:
+            parser.error("build requires a project name unless --all-public is given")
         out_dir = build_repro_bundle(
             Path(args.repo_root),
             args.project,
@@ -343,6 +415,7 @@ __all__ = [
     "BundleEntry",
     "VerifyReport",
     "build_manifest_dict",
+    "build_public_repro_bundles",
     "build_repro_bundle",
     "collect_entries",
     "main",

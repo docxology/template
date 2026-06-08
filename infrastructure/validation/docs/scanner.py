@@ -17,6 +17,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.accuracy import verify_documentation_accuracy
@@ -183,7 +184,7 @@ class DocumentationScanner:
     def run_full_scan(self) -> tuple[ScanResults, str]:
         """Run all steps of the documentation scan."""
         logger.info("Starting comprehensive documentation scan...")
-        logger.info("=" * 60)
+        logger.info("=" * BANNER_WIDTH)
 
         self.discover_inventory()
         self.verify_accuracy()
@@ -193,7 +194,7 @@ class DocumentationScanner:
         self.run_verification_checks()
         report = self.build_scan_report()
 
-        logger.info("=" * 60)
+        logger.info("=" * BANNER_WIDTH)
         logger.info("Scan complete!")
 
         return self.results, report

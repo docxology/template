@@ -18,6 +18,7 @@ Exit codes (BSD-style, stable across versions):
 import json
 from collections.abc import Iterable
 
+from infrastructure.core.logging.constants import DOCTOR_WIDTH
 from infrastructure.doctor.models import (
     DoctorReport,
     Finding,
@@ -72,7 +73,7 @@ def compute_exit_code(findings: Iterable[Finding]) -> int:
 # ---------------------------------------------------------------------------
 
 
-_BAR = "=" * 78
+_BAR = "=" * DOCTOR_WIDTH
 
 
 def _sev_badge(severity: Severity, healthy: bool) -> str:

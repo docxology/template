@@ -7,6 +7,7 @@ and generating human-readable log summary reports.
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -78,7 +79,7 @@ def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str
     lines = [
         "",
         f"LOG ANALYSIS: {log_file.name}",
-        "=" * 60,
+        "=" * BANNER_WIDTH,
         "",
         f"Total Lines: {stats['total_lines']}",
         "",

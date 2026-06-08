@@ -22,6 +22,7 @@ from infrastructure.core.pipeline import (
     PipelineConfig,
     PipelineExecutor,
 )
+from infrastructure.core.pipeline.incremental import IncrementalConfig
 from infrastructure.core.pipeline.multi_project import (
     format_multi_project_detailed_report,
     format_multi_project_outcome_lines,
@@ -45,6 +46,7 @@ class PipelineInvocation:
     skip_llm: bool = False
     resume: bool = False
     core_only: bool = False
+    incremental: bool = False
     log_layout: str = "per_project"
 
 
@@ -108,6 +110,7 @@ class PipelineRunner:
             skip_infra=invocation.skip_infra,
             skip_llm=invocation.skip_llm or invocation.core_only,
             resume=invocation.resume,
+            incremental=IncrementalConfig(enabled=invocation.incremental),
         )
         executor = PipelineExecutor(config)
 

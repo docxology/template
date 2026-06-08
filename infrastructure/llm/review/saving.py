@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.llm.review.formatting import (
     _build_combined_review_content,
@@ -198,9 +199,9 @@ def generate_review_summary(
         output_dir: Output directory path
         session_metrics: Complete session metrics
     """
-    logger.info("\n" + "=" * 60)
+    logger.info("\n" + "=" * BANNER_WIDTH)
     logger.info("LLM Manuscript Review Summary")
-    logger.info("=" * 60)
+    logger.info("=" * BANNER_WIDTH)
 
     # Input manuscript metrics
     m = session_metrics.manuscript

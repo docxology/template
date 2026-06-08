@@ -6,6 +6,7 @@ This module serves as the entry point, re-exporting from focused submodules:
 """
 
 # Re-exports for backwards compatibility
+from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.rendering.latex_discovery import (  # noqa: F401
     PackageStatus,
     check_latex_package,
@@ -37,7 +38,7 @@ __all__ = [
 def main() -> None:
     """CLI entry point for package validation."""
     print("LaTeX Package Validator")
-    print("=" * 60)
+    print("=" * BANNER_WIDTH)
 
     # Check for kpsewhich
     kpsewhich = find_kpsewhich()
