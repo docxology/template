@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-06-03 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**532**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**216**), publishing suite collection/full run (**387**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-06-03 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `generate_publication_records_doc.py --refresh-external`, `generate_api_reference_doc.py --write`, `generate_stage_table_doc.py --write`, `infrastructure.skills write`, `infrastructure.skills write-index`, `find infrastructure -name '*.py' -type f | wc -l` (**533**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**222**), publishing suite collection/full run (**393**), exemplar project coverage gates (see Test Status), strict drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -86,7 +86,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **532** on 2026-06-06 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **533** on 2026-06-09 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -103,7 +103,7 @@ uv run pytest tests/infra_tests/project/ --collect-only -q --no-cov
 uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 ```
 
-Result: **216** project-scope infrastructure tests collected and **387** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
+Result: **222** project-scope infrastructure tests collected and **393** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
 **Exemplar `pytest --collect-only` totals** (2026-05-27; `template_active_inference` re-derived 2026-06-05 after the v3.2.0 validation-spine additions):
 
@@ -133,7 +133,7 @@ Drift-checker coverage: `uv run python scripts/check_template_drift.py --strict`
 | Tracked projects | `uv run python scripts/check_tracked_projects.py` | non-exemplar paths under `projects/` |
 | Generated artifacts | `uv run python scripts/check_tracked_generated_artifacts.py` | disposable `output/` trees |
 
-Current line-count result: no failing modules; `infrastructure/rendering/_pdf_combined_renderer.py` is a warning at 861 lines.
+Current line-count result: no failing or warning modules in `infrastructure/` or `scripts/` (gate thresholds: warn ≥800 / fail ≥950). Largest infra module measured: `infrastructure/autoresearch/validation.py` at 763 lines; `_pdf_combined_renderer.py` is a 49-line facade re-exporting `_pdf_combined_*.py` leaves.
 
 Coverage gates (enforced in CI):
 
