@@ -82,6 +82,52 @@ def test_execute_pipeline_incremental_disabled_by_default(monkeypatch) -> None:
     assert default_cfg.incremental.enabled is False
 
 
+def _capture_runner_config(monkeypatch, tmp_path, *, incremental: bool, core_only: bool = False):
+    """Run PipelineRunner.run with a real capture-executor; return the config it built."""
+    import io
+
+    import infrastructure.orchestration.pipeline_runner as pr
+
+    captured: dict[str, object] = {}
+
+    class _CaptureExecutor:
+        def __init__(self, config: object) -> None:
+            captured["config"] = config
+
+        def execute_full_pipeline(self) -> list:
+            return []
+
+        def execute_core_pipeline(self) -> list:
+            return []
+
+    monkeypatch.setattr(pr, "PipelineExecutor", _CaptureExecutor)
+    runner = pr.PipelineRunner(repo_root=tmp_path, stream=io.StringIO())
+    rc = runner.run(pr.PipelineInvocation(project="demo", incremental=incremental, core_only=core_only))
+    assert rc == 0
+    return captured["config"]
+
+
+def test_orchestration_runner_threads_incremental_into_config(monkeypatch, tmp_path) -> None:
+    """PipelineRunner.run must propagate the flag to PipelineConfig.incremental.enabled.
+
+    This pins the orchestration threading that the parser-only tests miss: dropping
+    `incremental=invocation.incremental` in pipeline_runner.run would leave the
+    parser tests green but silently disable the feature for the documented
+    `python -m infrastructure.orchestration pipeline --incremental` entrypoint.
+    """
+    assert _capture_runner_config(monkeypatch, tmp_path, incremental=True).incremental.enabled is True
+
+
+def test_orchestration_runner_incremental_disabled_by_default(monkeypatch, tmp_path) -> None:
+    assert _capture_runner_config(monkeypatch, tmp_path, incremental=False).incremental.enabled is False
+
+
+def test_orchestration_runner_incremental_with_core_only(monkeypatch, tmp_path) -> None:
+    cfg = _capture_runner_config(monkeypatch, tmp_path, incremental=True, core_only=True)
+    assert cfg.incremental.enabled is True
+    assert cfg.skip_llm is True  # core_only implies skip_llm; incremental is orthogonal
+
+
 def test_execute_pipeline_help_advertises_incremental() -> None:
     result = subprocess.run(
         [sys.executable, "scripts/execute_pipeline.py", "--help"],

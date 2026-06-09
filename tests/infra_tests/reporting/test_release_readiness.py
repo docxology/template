@@ -342,18 +342,10 @@ def test_documented_module_invocation_writes_report(tmp_path: Path) -> None:
 
     repo_root = Path(__file__).resolve().parents[3]
     out_path = tmp_path / "release_readiness.md"
+    # Documented argv form: only --out (repo-root/format/timestamp use their
+    # documented defaults). Exercises exactly the CLAUDE.md copy-paste string.
     result = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "infrastructure.reporting.release_readiness",
-            "--repo-root",
-            str(repo_root),
-            "--out",
-            str(out_path),
-            "--generated-at",
-            FIXED_TS,
-        ],
+        [sys.executable, "-m", "infrastructure.reporting.release_readiness", "--out", str(out_path)],
         cwd=repo_root,
         capture_output=True,
         text=True,
@@ -361,4 +353,12 @@ def test_documented_module_invocation_writes_report(tmp_path: Path) -> None:
     )
     assert result.returncode == 0, result.stderr
     assert out_path.is_file()
-    assert "Release Readiness" in out_path.read_text(encoding="utf-8")
+    text = out_path.read_text(encoding="utf-8")
+    assert "Release Readiness" in text  # static heading
+
+    # Assert a NON-static, repo-derived field so a fully-degraded report can't
+    # green-wash this: the report's release version must reflect the real repo.
+    import tomllib
+
+    version = tomllib.loads((repo_root / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
+    assert version in text, f"expected repo version {version} in the rendered report"

@@ -22,7 +22,9 @@ _INFRA = _REPO_ROOT / "infrastructure"
 
 # Widths that now have a named constant. New code must use the constant.
 _CENTRALIZED_WIDTHS = (60, 70, 72, 78, 80)
-_AD_HOC = re.compile(r'"=" \* (?:' + "|".join(str(w) for w in _CENTRALIZED_WIDTHS) + r")\b")
+# Match an `=` bar in either quote style — `"=" * 60` or `'=' * 60` — at a
+# centralized width. Single-quoted bars were a blind spot in the first cut.
+_AD_HOC = re.compile(r"""['"]=['"] \* (?:""" + "|".join(str(w) for w in _CENTRALIZED_WIDTHS) + r")\b")
 
 # constants.py legitimately assigns the integer values; it is the single source.
 _ALLOWED = {_INFRA / "core" / "logging" / "constants.py"}

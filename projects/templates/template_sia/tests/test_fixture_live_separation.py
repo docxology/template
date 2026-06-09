@@ -112,15 +112,36 @@ def test_replay_fails_closed_when_fixtures_missing(tmp_path: Path, copy_project_
         run_sia_loop_project(project, live=False)
 
 
-def test_replay_fails_closed_when_one_generation_fixture_removed(
-    tmp_path: Path, copy_project_sandbox: Copy
-) -> None:
+def test_replay_fails_closed_when_one_generation_fixture_removed(tmp_path: Path, copy_project_sandbox: Copy) -> None:
     """Removing a single generation's fixture is also caught (no partial fabrication)."""
     project = _fresh_sandbox(tmp_path, copy_project_sandbox)
     shutil.rmtree(fixtures_dir(project) / "gen_2")
 
     with pytest.raises(ValidationError, match="(?i)fixture"):
         run_sia_loop_project(project, live=False)
+
+
+def test_zero_generations_fails_closed_not_vacuous_pass(tmp_path: Path, copy_project_sandbox: Copy) -> None:
+    """A non-positive max_generations must raise, not return an empty 'successful' run.
+
+    Regression for the silent-pass hole: with ``max_generations=0`` the loop body
+    never executes, so the fixture-presence checks inside it are never reached —
+    a run over deleted fixtures would otherwise return ``[]`` with no error.
+    """
+    project = _fresh_sandbox(tmp_path, copy_project_sandbox)
+    shutil.rmtree(fixtures_dir(project))  # even with NO fixtures it must fail closed
+    config = RunConfig(
+        task_dir=project / "tasks" / "mini_classify",
+        output_dir=project / "output",
+        run_id=42,
+        max_generations=0,
+        live=False,
+        fixtures_dir=None,
+        target_timeout_sec=60,
+        llm_model="",
+    )
+    with pytest.raises(ValidationError, match="(?i)max_generations"):
+        run_sia_loop(config)
 
 
 # --------------------------------------------------------------------------- #
