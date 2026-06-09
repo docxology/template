@@ -355,23 +355,76 @@ def build_evidence_graph(repo_root: Path | str, project_name: str) -> EvidenceGr
     return graph
 
 
+# Well-known claim-ledger locations, searched in priority order. The first
+# matching file wins. Globs are expanded (sorted) so an exemplar that writes a
+# project-specific ledger name is still discovered. The AutoResearch exemplar
+# writes its deterministic claim list to ``output/data/n.json`` (a bare JSON
+# list of ``AutoResearchClaim`` dicts: ``identifier``, ``statement``,
+# ``evidence_path``, ``supported``), so that exact name is included.
+_CLAIM_LEDGER_CANDIDATES: tuple[str, ...] = (
+    "output/data/claims.json",
+    "output/data/*claims*.json",
+    "output/data/n.json",
+    "manuscript/claims.json",
+    "claims.json",
+)
+
+
+def _find_claim_ledger(project_root: Path) -> Path | None:
+    """Return the first existing claim ledger under *project_root*, or ``None``.
+
+    Plain relative paths are probed directly; entries containing a glob
+    metacharacter are expanded with :meth:`Path.glob` and matched in sorted
+    order for deterministic selection.
+    """
+    for candidate in _CLAIM_LEDGER_CANDIDATES:
+        if any(ch in candidate for ch in "*?[]"):
+            for match in sorted(project_root.glob(candidate)):
+                if match.is_file():
+                    return match
+        else:
+            path = project_root / candidate
+            if path.is_file():
+                return path
+    return None
+
+
+def _claim_id(entry: dict[str, Any]) -> str | None:
+    """Return a claim's stable identifier from either ``id`` or ``identifier``."""
+    for key in ("id", "identifier"):
+        value = entry.get(key)
+        if value not in (None, ""):
+            return str(value)
+    return None
+
+
+def _claim_status(entry: dict[str, Any]) -> str:
+    """Derive a claim status from ``status`` or a boolean ``supported`` flag."""
+    if "status" in entry and entry["status"] not in (None, ""):
+        return str(entry["status"])
+    if "supported" in entry:
+        return "supported" if bool(entry["supported"]) else "unsupported"
+    return "unknown"
+
+
 def _ingest_claims(graph: EvidenceGraph, project_root: Path) -> None:
     """Ingest a claim ledger if one exists; otherwise record a gap note.
 
-    Looks for a JSON claim ledger at well-known locations. When none is found
+    Looks for a JSON claim ledger at well-known locations (see
+    :data:`_CLAIM_LEDGER_CANDIDATES`). Both a bare JSON list of claim dicts and
+    the wrapped ``{"claims": [...]}`` shape are accepted, and each claim's id is
+    read from either an ``id`` or an ``identifier`` key. When a claim names an
+    ``evidence_path``, an artifact node for that evidence file is ensured and a
+    ``supports`` edge (artifact → claim) is recorded. When no ledger is found
     (as with ``template_code_project``), claim nodes are left empty and a note
     is appended — the graph never fabricates claim data.
     """
-    candidates = [
-        project_root / "output" / "data" / "claims.json",
-        project_root / "manuscript" / "claims.json",
-        project_root / "claims.json",
-    ]
-    ledger = next((c for c in candidates if c.is_file()), None)
+    ledger = _find_claim_ledger(project_root)
     if ledger is None:
         graph.notes.append(
             "No claim ledger found for this project; claim nodes are empty. "
-            "Searched: output/data/claims.json, manuscript/claims.json, claims.json."
+            "Searched: output/data/claims.json, output/data/*claims*.json, "
+            "output/data/n.json, manuscript/claims.json, claims.json."
         )
         return
 
@@ -386,18 +439,27 @@ def _ingest_claims(graph: EvidenceGraph, project_root: Path) -> None:
         graph.notes.append(f"Claim ledger {ledger.name} has unexpected shape; claims left empty.")
         return
 
+    claim_artifacts: set[str] = {n.id for n in graph.nodes if n.type is NodeType.ARTIFACT}
     for entry in claims:
-        if not isinstance(entry, dict) or "id" not in entry:
+        if not isinstance(entry, dict):
             continue
+        identifier = _claim_id(entry)
+        if identifier is None:
+            continue
+        claim_id = f"claim:{_slug(identifier)}"
         graph.add_node(
             EvidenceNode(
-                id=f"claim:{_slug(str(entry['id']))}",
+                id=claim_id,
                 type=NodeType.CLAIM,
-                source_of_truth=f"{ledger.name}::{entry['id']}",
-                label=str(entry.get("statement", entry["id"])),
-                attributes={"status": str(entry.get("status", "unknown"))},
+                source_of_truth=f"{ledger.name}::{identifier}",
+                label=str(entry.get("statement", identifier)),
+                attributes={"status": _claim_status(entry)},
             )
         )
+        evidence_path = entry.get("evidence_path")
+        if isinstance(evidence_path, str) and evidence_path:
+            artifact_id = _ensure_artifact(graph, evidence_path, claim_artifacts)
+            graph.add_edge(EvidenceEdge(source=artifact_id, target=claim_id, relation=RelationType.SUPPORTS))
 
 
 def graph_to_json(graph: EvidenceGraph) -> str:
