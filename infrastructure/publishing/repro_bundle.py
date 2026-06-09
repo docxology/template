@@ -279,8 +279,15 @@ def verify_repro_bundle(manifest_path: Path, *, checkout_root: Path) -> VerifyRe
     """Verify a manifest against *checkout_root*, failing closed on any drift.
 
     Each manifest entry is recomputed; an entry is a mismatch when the file is
-    missing or its SHA-256 differs from the recorded value. Entries recorded as
-    absent at build time (``present=False``) must remain absent.
+    missing or its SHA-256 differs from the recorded value.
+
+    Output artifacts (``kind == "output-artifact"``) are the *reproduced product*
+    of the bundle, so a declared output that is missing is **always** a mismatch
+    (REPRO-VERIFY-1): a bundle that "reproduces nothing" must never certify as
+    reproducible, even if the output was already absent when the bundle was
+    built. Infra inputs (lockfile, pyproject, canonical-facts) are legitimately
+    allowed to be absent — if recorded ``present=False`` they must simply remain
+    absent.
 
     Args:
         manifest_path: Path to a ``repro_manifest.json`` emitted by the builder.
@@ -301,12 +308,18 @@ def verify_repro_bundle(manifest_path: Path, *, checkout_root: Path) -> VerifyRe
             mismatches.append({"path": "<malformed>", "reason": "malformed-entry"})
             continue
         path = str(entry.get("path", ""))
+        kind = str(entry.get("kind", ""))
         expected = entry.get("sha256")
         expected_present = bool(entry.get("present", expected is not None))
         checked += 1
 
         actual, _size, present = _hash_relpath(checkout_root, path)
 
+        if kind == _KIND_OUTPUT_ARTIFACT and not present:
+            # A declared output must be reproducible. Absent at build time AND
+            # still absent now means the bundle reproduces nothing — fail closed.
+            mismatches.append({"path": path, "reason": "missing-declared-output"})
+            continue
         if not expected_present:
             # Recorded as absent at build time; it must stay absent.
             if present:
