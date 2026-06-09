@@ -82,9 +82,7 @@ class TestValidateTransmissionBookends:
         config_path = project_dir / "manuscript" / "config.yaml"
         config_path.parent.mkdir(parents=True)
         config_path.write_text(
-            "publication:\n"
-            "  transmission_bookends:\n"
-            "    enabled: true\n",
+            "publication:\n  transmission_bookends:\n    enabled: true\n",
             encoding="utf-8",
         )
 
@@ -493,6 +491,73 @@ class TestProseQualityGate:
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
         (tmp_path / "projects" / "active" / "test" / "output").mkdir(parents=True)
         assert mod.validate_prose_quality("test") is True
+
+    def _run_capturing_check_results(self, monkeypatch, project_name="test"):
+        """Run the pipeline, capturing the (name, result) list fed to the report."""
+        captured: dict[str, object] = {}
+        real = mod.generate_validation_report
+
+        def _rec(results, figure_issues, output_statistics, project, *a, **k):
+            captured["results"] = list(results)
+            return real(results, figure_issues, output_statistics, project, *a, **k)
+
+        monkeypatch.setattr(mod, "generate_validation_report", _rec)
+        rc = mod.execute_validation_pipeline(project_name)
+        return rc, captured["results"]
+
+    def test_disabled_run_check_results_identical_to_legacy(self, tmp_path, monkeypatch):
+        """No-config (legacy) and enabled:false runs must produce identical checks.
+
+        Proves the byte-identity claim at the level that determines report bytes:
+        the disabled gate adds nothing to the results list.
+        """
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        project_dir = self._scaffold(tmp_path, enabled=None, prose="# Intro\n\nShort human prose.")
+        (project_dir / "output" / "pdf").mkdir(parents=True, exist_ok=True)
+        (project_dir / "output" / "pdf" / "p.pdf").write_bytes(_minimal_structural_pdf())
+
+        rc_legacy, legacy = self._run_capturing_check_results(monkeypatch)
+
+        # Now add an explicit disabled toggle; results must be unchanged.
+        (project_dir / "manuscript" / "config.yaml").write_text(
+            "paper:\n  title: Test\nvalidation:\n  prose_quality:\n    enabled: false\n", encoding="utf-8"
+        )
+        rc_disabled, disabled = self._run_capturing_check_results(monkeypatch)
+
+        assert rc_legacy == rc_disabled
+        assert legacy == disabled
+        assert "Prose quality" not in [n for n, _ in legacy]
+
+    def test_enabled_run_with_flagged_prose_still_exits_zero(self, tmp_path, monkeypatch):
+        """Report-only contract: an enabled run over AI-flagged prose returns 0."""
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        ai_prose = (
+            "It is worth noting that we delve into a rich tapestry. Moreover, this plays a crucial "
+            "role in the realm of complexity. Furthermore, navigating the landscape underscores the "
+            "importance of synergy. Additionally, it is important to note the multifaceted framework."
+        )
+        project_dir = self._scaffold(tmp_path, enabled=True, prose=ai_prose)
+        pdf_dir = project_dir / "output" / "pdf"
+        pdf_dir.mkdir(parents=True, exist_ok=True)
+        (pdf_dir / "p.pdf").write_bytes(_minimal_structural_pdf())
+
+        rc, results = self._run_capturing_check_results(monkeypatch)
+        assert rc == 0
+        assert ("Prose quality", True) in results
+
+    def test_enabled_run_survives_undecodable_manuscript(self, tmp_path, monkeypatch):
+        """A manuscript file that can't be decoded must not crash the report-only gate."""
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        project_dir = self._scaffold(tmp_path, enabled=True, prose="# ok\n\nfine.")
+        # Add a second .md with invalid UTF-8 bytes -> UnicodeDecodeError path.
+        (project_dir / "manuscript" / "bad.md").write_bytes(b"\xff\xfe not utf-8 \x80\x81")
+        pdf_dir = project_dir / "output" / "pdf"
+        pdf_dir.mkdir(parents=True, exist_ok=True)
+        (pdf_dir / "p.pdf").write_bytes(_minimal_structural_pdf())
+
+        assert mod.validate_prose_quality("test") is True
+        rc, _ = self._run_capturing_check_results(monkeypatch)
+        assert rc == 0
 
     def test_pipeline_invokes_prose_check_only_when_enabled(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)

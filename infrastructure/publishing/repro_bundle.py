@@ -370,6 +370,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "build":
+        if args.all_public and args.project is not None:
+            parser.error("pass a project name OR --all-public, not both")
         if args.all_public:
             results = build_public_repro_bundles(
                 Path(args.repo_root),

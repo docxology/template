@@ -238,3 +238,16 @@ def test_build_requires_project_or_all_public(tmp_path: Path) -> None:
     with pytest.raises(SystemExit) as exc:
         main(["build", "--repo-root", str(tmp_path)])
     assert exc.value.code == 2
+
+
+def test_build_rejects_project_and_all_public_together(tmp_path: Path) -> None:
+    """A positional project AND --all-public is ambiguous and must error (exit 2),
+
+    never silently ignore the named project and build the whole roster.
+    """
+    import pytest
+
+    _scaffold_two_public_exemplars(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        main(["build", "template_sia", "--all-public", "--repo-root", str(tmp_path), "--out", str(tmp_path / "o")])
+    assert exc.value.code == 2

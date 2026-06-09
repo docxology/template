@@ -28,6 +28,11 @@ def run_sia_loop(config: RunConfig) -> list[GenerationArtifacts]:
     Returns:
         Artifact records for each completed generation.
     """
+    if config.max_generations < 1:
+        # Fail closed: a zero/negative generation count would skip the loop body
+        # entirely, returning an empty (vacuously "successful") run without ever
+        # reading a fixture or executing an agent.
+        raise ValidationError(f"max_generations must be >= 1, got {config.max_generations}")
     layout = validate_task_dir(config.task_dir)
     state = GenerationState(config=config, layout=layout)
     state.config.run_root().mkdir(parents=True, exist_ok=True)
