@@ -235,8 +235,7 @@ def _classify_filesystem_only(audit: ProjectAudit) -> tuple[str, bool]:
     if audit.status.startswith("PASS"):
         return "PARTIAL — pipeline passed; top PDF missing", False
     if not audit.structure_ok or any(
-        n.startswith("missing tests") or n.startswith("missing manuscript")
-        for n in audit.structure_notes
+        n.startswith("missing tests") or n.startswith("missing manuscript") for n in audit.structure_notes
     ):
         return "FAIL — structure", False
     return "FAIL — no PDF", False
