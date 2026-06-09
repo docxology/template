@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-_TEXTTT_RE = re.compile(r"\\texttt\{(?P<value>[^{}]*(?:/|\\_|\.|\*)[^{}]*)\}")
+_TEXTTT_RE = re.compile(r"\\texttt\{(?P<value>[^{}]+)\}")
 _PANDOC_REF_RE = re.compile(r"\{\[\}@(?P<target>[^{}]+)\{\]\}")
 _BREAKTT_PREAMBLE = r"""
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -26,15 +26,19 @@ def _ensure_breaktt_preamble(tex_content: str) -> str:
     return tex_content[:begin_doc] + _BREAKTT_PREAMBLE + "\n" + tex_content[begin_doc:]
 
 
-def make_long_texttt_breakable(tex_content: str, *, min_chars: int = 18) -> tuple[str, int]:
-    """Convert path-like ``\texttt{...}`` spans to a breakable monospace macro.
+def make_long_texttt_breakable(tex_content: str, *, min_chars: int = 16) -> tuple[str, int]:
+    r"""Convert long ``\texttt{...}`` spans to a breakable monospace macro.
 
     Pandoc emits inline code as ``\texttt{...}``, which is intentionally
     unbreakable.  That is desirable for short identifiers but a common source
-    of overfull boxes for paths, metric filenames, and wildcard globs in
-    tables and slides.  This function rewrites only path-like spans (slashes,
-    escaped underscores, or wildcards) above a small length threshold and
-    injects the macro required to typeset them.
+    of overfull boxes in narrow table columns and dense slides — not only for
+    paths and globs but also for long separator-less CamelCase identifiers
+    (e.g. ``MutatingSubsystemRule``, ``SingletonAccessRule``), which carry no
+    slash/underscore/dot to break on and therefore run off the right margin.
+    This function rewrites every monospace span above a small length threshold
+    and injects the macro required to typeset it. ``\seqsplit`` only *adds*
+    break opportunities — a span that already fits is rendered unchanged and no
+    characters are inserted — so spans that copy cleanly stay copyable.
     """
     replacements = 0
 

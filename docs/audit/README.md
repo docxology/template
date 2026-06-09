@@ -33,7 +33,8 @@ hardening pass:
 - `documentation-review-summary-2026-05-15.md`
 - `filepath-audit-report-2026-05-16.md`
 - `literature-modules-audit-2026-05-01.md` (`infrastructure/search/` + `infrastructure/reference/`)
-- `pai-v5-upgrade-audit-2026-05-15.md` (PAI v5.0.0 upgrade alignment)
+- `thermo-nuclear-code-quality-2026-06-08.md` (v3.3 infra/docs audit — Waves A–E approve)
+- `thermo-nuclear-code-quality-2026-06-02.md` (reserve-DOI + title-page split close-out)
 
 When generating a new snapshot, suffix the filename with the generation
 date and archive it directly — don't park it at the top level where it

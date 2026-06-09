@@ -14,6 +14,7 @@ proven to reject bad input, not just accept good input.
 | [`manuscript_checks.py`](manuscript_checks.py) | Sheaf manifest, tokens, hydration, layers markers |
 | [`claim_ledger.py`](claim_ledger.py) | Claim ledger vs on-disk artifacts (`data/claim_ledger.yaml` required) |
 | [`lean.py`](lean.py) | Conditional `lake build` when `lean/lakefile.lean` exists |
+| [`documentation_contract.py`](documentation_contract.py) | Markdown links, generated-doc links, README/AGENTS pairs, command context, and historical evidence wording |
 | [`method_inventory.py`](method_inventory.py) | AST-backed report for every `def` and `class` under `src/` and `scripts/` |
 
 ## Manuscript gates (`validate_manuscript`)
@@ -59,3 +60,11 @@ every source/script `def` and `class`; entries without inline docstrings are
 marked `inventory fallback` so missing method-level docstrings stay visible.
 `tests/test_method_inventory.py` pins the generated inventory shape and docs
 signposts.
+
+## Documentation contract (`check_documentation_contract.py`)
+
+[`documentation_contract.py`](documentation_contract.py) checks relative
+Markdown links, hydrated manuscript output links, README/AGENTS pairs, stale
+root-shaped project commands, explicit historical labeling of old suite counts,
+and required verification signposts. Run it with
+`uv run python scripts/check_documentation_contract.py --check`.

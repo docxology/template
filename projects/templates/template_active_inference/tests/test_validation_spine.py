@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -16,6 +17,41 @@ def _ensure_validation_spine_inputs(project_root: Path) -> None:
 
     if not all((project_root / rel).is_file() for rel in CORE_ARTIFACT_PRODUCERS):
         ensure_gate_artifacts(project_root)
+
+
+def test_artifact_provenance_looks_up_source_commit_once(project_root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from validation_spine import artifacts
+
+    calls: list[list[str]] = []
+
+    def fake_run(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        cmd = args[0]
+        assert isinstance(cmd, list)
+        calls.append([str(part) for part in cmd])
+        assert kwargs["timeout"] == 5
+        return subprocess.CompletedProcess(args=args[0], returncode=0, stdout="abc123\n", stderr="")
+
+    monkeypatch.setattr(artifacts.subprocess, "run", fake_run)
+
+    provenance = artifacts.build_artifact_provenance(project_root)
+
+    assert calls == [["git", "-C", str(project_root.resolve()), "rev-parse", "HEAD"]]
+    assert {
+        record["source_commit"] for record in (provenance.get("artifacts") or {}).values()
+    } == {"abc123"}
+
+
+def test_validation_spine_source_commit_times_out_to_unknown(
+    project_root: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from validation_spine import artifacts
+
+    def fake_run(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(cmd=args[0], timeout=kwargs["timeout"])
+
+    monkeypatch.setattr(artifacts.subprocess, "run", fake_run)
+
+    assert artifacts._source_commit(project_root) == "unknown"
 
 
 @pytest.mark.timeout(30)

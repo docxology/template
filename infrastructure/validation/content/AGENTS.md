@@ -13,8 +13,28 @@ LaTeX/pandoc warnings.
 - `markdown_validator.py` - markdown structure validation, including
   Pandoc-pitfall and citation-key checks
 - `figure_validator.py` - figure validation
+- `ai_writing.py` - advisory AI-writing fingerprint detector (em-dash density, burstiness, stock phrases); **not** a hard pipeline gate
 - `diagnostic_codes.py` - stable, dotted IDs (`MarkdownCode`, `BibtexCode`)
   attached to every `DiagnosticEvent` emitted by `markdown_validator`
+
+## `ai_writing.py` — advisory prose quality
+
+| Symbol | Role |
+| --- | --- |
+| `analyze_prose(text)` | Deterministic report over stripped prose (no LLM, no network) |
+| `ProseQualityReport` | Word/sentence counts, em-dash per 1k words, AI-term hits, burstiness |
+| `ProseQualityThresholds` | Optional caller thresholds for flagging |
+
+CLI entry (advisory by default):
+
+```bash
+uv run python -m infrastructure.validation.cli prose-quality projects/templates/template_prose_project/manuscript
+uv run python -m infrastructure.validation.cli prose-quality path/to/file.md --json
+```
+
+Relationship to `markdown_validator`: prose-quality scans writing-style fingerprints;
+markdown validation checks structure, citations, and Pandoc pitfalls. Neither
+replaces the other.
 
 ## `markdown_validator.py` — public API
 

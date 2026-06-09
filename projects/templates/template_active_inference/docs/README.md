@@ -9,7 +9,7 @@ and adversarial audit) composed into a sheaf manuscript.
 
 - `reference/method-inventory.md` — generated coverage for every Python `def`
   and `class` under `src/` and `scripts/`; refresh with
-  `uv run python scripts/generate_method_inventory.py`.
+  `uv run python scripts/generate_method_inventory.py --check`.
 - `reference/rendering-reproducibility.md` — authored contract for sheaf
   composition, hydration, figure rendering, artifact regeneration order, and
   root output parity.
@@ -19,6 +19,14 @@ and adversarial audit) composed into a sheaf manuscript.
 Run the project:
 
 ```bash
-uv run python -m pytest projects/templates/template_active_inference/tests -q
+uv run python scripts/check_documentation_contract.py --check
+uv run python scripts/generate_method_inventory.py --check
+uv run pytest tests -q
+uv run python scripts/validate_outputs.py
+```
+
+From the template repository root:
+
+```bash
 ./run.sh --pipeline --project template_active_inference --core-only --skip-infra
 ```

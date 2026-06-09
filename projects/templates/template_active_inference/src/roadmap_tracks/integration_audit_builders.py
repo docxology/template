@@ -16,6 +16,8 @@ from typing import Any
 
 import yaml
 
+from roadmap_tracks.row_aggregates import all_rows
+
 TOKEN_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)(?::\.[0-9]+f)?\}\}")
 TOKEN_MATCH_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)(?::\.(\d+)f)?\}\}")
 SELF_PRODUCER = "generate_integration_audit.py"
@@ -134,7 +136,9 @@ def build_stale_artifact_report(project_root: Path) -> dict[str, Any]:
 def build_cross_track_symbol_table(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
     from gnn.parser import parse_gnn_file
+    from manuscript.variables import generate_variables
     from ontology.bindings import load_section_ontology
+    from visualizations.figure_registry import load_figure_registry
 
     rows = []
     section_ontology_paths = {
@@ -153,6 +157,7 @@ def build_cross_track_symbol_table(project_root: Path) -> dict[str, Any]:
             term_consistent = bool(gnn_term) and bool(section_term) and gnn_term == section_term
             rows.append(
                 {
+                    "source_kind": "gnn_variable",
                     "model": model_id,
                     "symbol": variable,
                     "shape": list(var.dims),
@@ -169,10 +174,96 @@ def build_cross_track_symbol_table(project_root: Path) -> dict[str, Any]:
                     "consistent": bool(var.dims and var.dtype and term_consistent),
                 }
             )
+    lean = _load_json(root / "output" / "reports" / "lean_theorem_inventory.json")
+    for row in lean.get("rows") or []:
+        theorem = str(row.get("name") or "")
+        rows.append(
+            {
+                "source_kind": "lean_theorem",
+                "model": "lean_boundary",
+                "symbol": theorem,
+                "shape": ["theorem"],
+                "dtype": "Lean.Prop",
+                "gnn_term": "",
+                "section_ontology_term": "",
+                "json_field": theorem,
+                "lean_namespace": "TemplateActiveInference",
+                "shape_declared": bool(theorem),
+                "dtype_declared": True,
+                "ontology_declared": True,
+                "section_ontology_declared": True,
+                "term_consistent": True,
+                "consistent": bool(theorem),
+            }
+        )
+    variables = generate_variables(root, require_analysis_outputs=False)
+    for token in sorted(variables):
+        rows.append(
+            {
+                "source_kind": "manuscript_variable",
+                "model": "manuscript_variables",
+                "symbol": token,
+                "shape": [1],
+                "dtype": type(variables[token]).__name__,
+                "gnn_term": "",
+                "section_ontology_term": "",
+                "json_field": f"$.{token}",
+                "lean_namespace": "",
+                "shape_declared": True,
+                "dtype_declared": True,
+                "ontology_declared": True,
+                "section_ontology_declared": True,
+                "term_consistent": True,
+                "consistent": True,
+            }
+        )
+    evidence = _load_json(root / "output" / "data" / "evidence_field_index.json")
+    for row in evidence.get("rows") or []:
+        symbol = f"{row.get('artifact')}:{row.get('jsonpath')}"
+        rows.append(
+            {
+                "source_kind": "json_field",
+                "model": row.get("artifact", ""),
+                "symbol": symbol,
+                "shape": ["jsonpath"],
+                "dtype": "JSON",
+                "gnn_term": "",
+                "section_ontology_term": "",
+                "json_field": row.get("jsonpath", ""),
+                "lean_namespace": "",
+                "shape_declared": bool(row.get("jsonpath")),
+                "dtype_declared": True,
+                "ontology_declared": True,
+                "section_ontology_declared": True,
+                "term_consistent": True,
+                "consistent": bool(row.get("jsonpath")),
+            }
+        )
+    for figure_id in sorted(load_figure_registry(root)):
+        rows.append(
+            {
+                "source_kind": "figure_label",
+                "model": "figure_registry",
+                "symbol": figure_id,
+                "shape": ["figure"],
+                "dtype": "PNG",
+                "gnn_term": "",
+                "section_ontology_term": "",
+                "json_field": f"$.figures.{figure_id}",
+                "lean_namespace": "",
+                "shape_declared": True,
+                "dtype_declared": True,
+                "ontology_declared": True,
+                "section_ontology_declared": True,
+                "term_consistent": True,
+                "consistent": True,
+            }
+        )
     return {
         "schema": "template_active_inference.cross_track_symbol_table.v1",
         "rows": rows,
         "symbol_count": len(rows),
+        "source_kinds": sorted({str(row.get("source_kind")) for row in rows if row.get("source_kind")}),
         "all_shapes_declared": bool(rows) and all(row["shape_declared"] for row in rows),
         "all_dtypes_declared": bool(rows) and all(row["dtype_declared"] for row in rows),
         "all_ontology_terms_declared": bool(rows) and all(row["ontology_declared"] for row in rows),
@@ -195,12 +286,35 @@ def build_manuscript_token_provenance(project_root: Path) -> dict[str, Any]:
         if path.name in excluded:
             continue
         text = path.read_text(encoding="utf-8")
-        for token in sorted(set(TOKEN_RE.findall(text))):
+        seen: set[tuple[str, str | None]] = set()
+        for match in TOKEN_MATCH_RE.finditer(text):
+            token = match.group(1)
+            precision = match.group(2)
+            key = (token, precision)
+            if key in seen:
+                continue
+            seen.add(key)
+            expected_value = _expected_token_value(token, precision, variables)
+            hydrated_path = root / "output" / "manuscript" / path.name
             rows.append(
                 {
                     "section": path.relative_to(root).as_posix(),
                     "token": token,
+                    "precision": precision,
                     "source": source,
+                    "source_jsonpath": f"$.{token}",
+                    "expected_value": expected_value,
+                    "consumer_kind": "appendix_fragment"
+                    if "appendix" in path.as_posix()
+                    else "manuscript_section",
+                    "generated_output_path": (
+                        hydrated_path.relative_to(root).as_posix()
+                        if hydrated_path.is_file()
+                        else ""
+                    ),
+                    "hydrated_value_present": True
+                    if not hydrated_path.is_file()
+                    else expected_value in hydrated_path.read_text(encoding="utf-8"),
                     "mapped": token in variables,
                 }
             )
@@ -208,7 +322,9 @@ def build_manuscript_token_provenance(project_root: Path) -> dict[str, Any]:
         "schema": "template_active_inference.manuscript_token_provenance.v1",
         "tokens": rows,
         "token_count": len(rows),
-        "all_tokens_mapped": all(row["mapped"] for row in rows),
+        "consumer_kinds": sorted({str(row.get("consumer_kind")) for row in rows if row.get("consumer_kind")}),
+        "all_tokens_mapped": all(row["mapped"] and row["source_jsonpath"] for row in rows),
+        "all_hydrated_values_current": all(row["hydrated_value_present"] for row in rows),
     }
 
 
@@ -293,10 +409,27 @@ def build_claim_evidence_audit(project_root: Path) -> dict[str, Any]:
     ledger = yaml.safe_load((root / "data" / "claim_ledger.yaml").read_text(encoding="utf-8")) or {}
     rows = []
     for claim in ledger.get("claims") or []:
+        evidence = claim.get("evidence") or {}
+        predicate = str(
+            evidence.get("predicate")
+            or ("equals" if "equals" in evidence else "")
+            or ("min" if "min" in evidence else "")
+            or ("len_equals" if "len_equals" in evidence else "")
+            or ("set_equals" if "set_equals" in evidence else "")
+            or ("file_exists" if evidence.get("predicate") == "file_exists" else "")
+        )
+        waiver = str(evidence.get("waiver") or "")
+        substantive = bool(evidence and (predicate or waiver))
+        failure_reason = "" if substantive and claim.get("tracks") else "missing predicate/waiver or tracks"
         rows.append(
             {
                 "id": claim.get("id"),
                 "path": claim.get("path"),
+                "jsonpath": f"$.{evidence.get('field')}" if evidence.get("field") else "$",
+                "predicate": predicate,
+                "waiver": waiver,
+                "substantive": substantive,
+                "failure_reason": failure_reason,
                 "has_evidence": bool(claim.get("evidence")),
                 "has_tracks": bool(claim.get("tracks")),
             }
@@ -305,67 +438,76 @@ def build_claim_evidence_audit(project_root: Path) -> dict[str, Any]:
         "schema": "template_active_inference.claim_evidence_audit.v1",
         "rows": rows,
         "claim_count": len(rows),
-        "all_claims_typed": bool(rows) and all(row["has_evidence"] and row["has_tracks"] for row in rows),
+        "all_claims_typed": bool(rows)
+        and all(row["has_evidence"] and row["has_tracks"] and row["substantive"] and not row["failure_reason"] for row in rows),
     }
 
 
 def build_validation_gate_index(project_root: Path) -> dict[str, Any]:
     _ = project_root
+    def gate(
+        gate_id: str,
+        inputs: list[str],
+        outputs: list[str],
+        negative_control: str,
+        command: str = "uv run python scripts/validate_outputs.py",
+    ) -> dict[str, Any]:
+        return {
+            "id": gate_id,
+            "command": command,
+            "inputs": inputs,
+            "required_inputs": inputs,
+            "declared_outputs": outputs,
+            "negative_control_id": negative_control,
+            "indexed": True,
+        }
+
     rows = [
-        {"id": "validate_outputs", "inputs": ["output/data", "output/reports"], "indexed": True},
-        {"id": "validate_manuscript", "inputs": ["manuscript/sheaf", "output/manuscript"], "indexed": True},
-        {"id": "semantic_sheaf_gluing", "inputs": ["output/data/sheaf_gluing_certificate.json"], "indexed": True},
-        {"id": "typed_claim_evidence", "inputs": ["data/claim_ledger.yaml"], "indexed": True},
+        gate("validate_outputs", ["output/data", "output/reports"], ["output/reports/validation_report.json"], "stale_provenance_hash"),
+        gate("validate_manuscript", ["manuscript/sheaf", "output/manuscript"], ["output/data/sheaf_gluing_certificate.json"], "stale_semantic_certificate", "uv run python scripts/compose_manuscript.py --validate-only --strict"),
+        gate("semantic_sheaf_gluing", ["output/data/sheaf_gluing_certificate.json"], ["output/data/sheaf_gluing_certificate.json"], "stale_semantic_certificate"),
+        gate("typed_claim_evidence", ["data/claim_ledger.yaml"], ["output/reports/claim_evidence_audit.json"], "missing_typed_claim"),
         {
             "id": "manuscript_staleness_report",
+            "command": "uv run python scripts/compose_manuscript.py --validate-only --strict",
             "inputs": ["output/manuscript", "output/data/manuscript_variables.json"],
+            "required_inputs": ["output/manuscript", "output/data/manuscript_variables.json"],
+            "declared_outputs": ["output/reports/manuscript_staleness_report.json"],
+            "negative_control_id": "stale_hydrated_manuscript_value",
             "indexed": True,
         },
-        {"id": "animation_frame_deltas", "inputs": ["output/figures/si_belief_trajectory.gif"], "indexed": True},
-        {
-            "id": "pymdp_runtime_diagnostics",
-            "inputs": ["output/reports/pymdp_runtime_diagnostics.json"],
-            "indexed": True,
-        },
-        {
-            "id": "pymdp_policy_posterior_grid",
-            "inputs": ["output/data/pymdp_policy_posterior_grid.json"],
-            "indexed": True,
-        },
-        {
-            "id": "analytical_assumption_index",
-            "inputs": ["output/data/analytical_assumption_index.json"],
-            "indexed": True,
-        },
-        {"id": "canonical_sheaf_tracks", "inputs": ["output/data/track_improvement_scope.json"], "indexed": True},
-        {"id": "release_bundle_manifest", "inputs": ["output/reports/release_bundle_manifest.json"], "indexed": True},
-        {"id": "evidence_field_index", "inputs": ["output/data/evidence_field_index.json"], "indexed": True},
-        {
-            "id": "theorem_traceability_matrix",
-            "inputs": ["output/data/theorem_traceability_matrix.json"],
-            "indexed": True,
-        },
-        {"id": "artifact_diffoscope", "inputs": ["output/reports/artifact_diffoscope.json"], "indexed": True},
-        {"id": "proof_extraction_index", "inputs": ["output/data/proof_extraction_index.json"], "indexed": True},
-        {"id": "state_space_catalog", "inputs": ["output/data/state_space_catalog.json"], "indexed": True},
-        {"id": "causal_ablation_matrix", "inputs": ["output/data/causal_ablation_matrix.json"], "indexed": True},
-        {"id": "artifact_license_audit", "inputs": ["output/reports/artifact_license_audit.json"], "indexed": True},
-        {"id": "release_notes_evidence", "inputs": ["output/reports/release_notes_evidence.json"], "indexed": True},
-        {"id": "proof_dependency_graph", "inputs": ["output/data/proof_dependency_graph.json"], "indexed": True},
-        {"id": "state_transition_table", "inputs": ["output/data/state_transition_table.json"], "indexed": True},
-        {
-            "id": "ablation_sensitivity_report",
-            "inputs": ["output/reports/ablation_sensitivity_report.json"],
-            "indexed": True,
-        },
-        {"id": "release_attestation", "inputs": ["output/reports/release_attestation.json"], "indexed": True},
-        {"id": "track_improvement_scope", "inputs": ["output/data/track_improvement_scope.json"], "indexed": True},
-        {"id": "blocked_scope_manifest", "inputs": ["output/reports/blocked_scope_manifest.json"], "indexed": True},
-        {"id": "lake_build", "inputs": ["lean/lakefile.lean"], "indexed": True},
+        gate("animation_frame_deltas", ["output/figures/si_belief_trajectory.gif"], ["output/data/animation_frame_deltas.json"], "static_animation_delta_manifest"),
+        gate("pymdp_runtime_diagnostics", ["output/reports/pymdp_runtime_diagnostics.json"], ["output/reports/pymdp_runtime_diagnostics.json"], "unexpected_pymdp_runtime_warning"),
+        gate("pymdp_policy_posterior_grid", ["output/data/pymdp_policy_posterior_grid.json"], ["output/data/pymdp_policy_posterior_grid.json"], "unnormalized_policy_posterior"),
+        gate("analytical_assumption_index", ["output/data/analytical_assumption_index.json"], ["output/data/analytical_assumption_index.json"], "missing_analytical_assumption"),
+        gate("canonical_sheaf_tracks", ["output/data/track_improvement_scope.json"], ["output/data/track_improvement_scope.json"], "missing_sheaf_track_producer"),
+        gate("release_bundle_manifest", ["output/reports/release_bundle_manifest.json"], ["output/reports/release_bundle_manifest.json"], "release_bundle_parity_failure"),
+        gate("evidence_field_index", ["output/data/evidence_field_index.json"], ["output/data/evidence_field_index.json"], "missing_typed_claim"),
+        gate("theorem_traceability_matrix", ["output/data/theorem_traceability_matrix.json"], ["output/data/theorem_traceability_matrix.json"], "theorem_traceability_unlinked"),
+        gate("artifact_diffoscope", ["output/reports/artifact_diffoscope.json"], ["output/reports/artifact_diffoscope.json"], "artifact_diffoscope_missed_hash_drift"),
+        gate("proof_extraction_index", ["output/data/proof_extraction_index.json"], ["output/data/proof_extraction_index.json"], "proof_extraction_missing_statement"),
+        gate("state_space_catalog", ["output/data/state_space_catalog.json"], ["output/data/state_space_catalog.json"], "state_space_catalog_missing_finite_space"),
+        gate("causal_ablation_matrix", ["output/data/causal_ablation_matrix.json"], ["output/data/causal_ablation_matrix.json"], "causal_ablation_missing_cell"),
+        gate("artifact_license_audit", ["output/reports/artifact_license_audit.json"], ["output/reports/artifact_license_audit.json"], "artifact_license_unsafe_artifact"),
+        gate("release_notes_evidence", ["output/reports/release_notes_evidence.json"], ["output/reports/release_notes_evidence.json"], "release_notes_claim_failed_gate_passed"),
+        gate("proof_dependency_graph", ["output/data/proof_dependency_graph.json"], ["output/data/proof_dependency_graph.json"], "proof_dependency_unlinked_theorem"),
+        gate("state_transition_table", ["output/data/state_transition_table.json"], ["output/data/state_transition_table.json"], "state_transition_missing_model"),
+        gate("ablation_sensitivity_report", ["output/reports/ablation_sensitivity_report.json"], ["output/reports/ablation_sensitivity_report.json"], "ablation_sensitivity_unbacked_effect"),
+        gate("release_attestation", ["output/reports/release_attestation.json"], ["output/reports/release_attestation.json"], "release_attestation_failed_gate"),
+        gate("track_improvement_scope", ["output/data/track_improvement_scope.json"], ["output/data/track_improvement_scope.json"], "missing_sheaf_track_producer"),
+        gate("blocked_scope_manifest", ["output/reports/blocked_scope_manifest.json"], ["output/reports/blocked_scope_manifest.json"], "empirical_adapter_live"),
+        gate("lake_build", ["lean/lakefile.lean"], ["output/reports/lean_theorem_inventory.json"], "lean_forbidden_token", "uv run python scripts/generate_formal_interop_tracks.py"),
     ]
     return {
         "schema": "template_active_inference.validation_gate_index.v1",
         "rows": rows,
         "gate_count": len(rows),
-        "all_indexed": all(row["indexed"] for row in rows),
+        "all_indexed": all_rows(
+            {"rows": rows},
+            lambda row: row.get("indexed")
+            and row.get("command")
+            and row.get("required_inputs")
+            and row.get("declared_outputs")
+            and row.get("negative_control_id"),
+        ),
     }

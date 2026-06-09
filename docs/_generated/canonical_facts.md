@@ -133,7 +133,7 @@ Drift-checker coverage: `uv run python scripts/check_template_drift.py --strict`
 | Tracked projects | `uv run python scripts/check_tracked_projects.py` | non-exemplar paths under `projects/` |
 | Generated artifacts | `uv run python scripts/check_tracked_generated_artifacts.py` | disposable `output/` trees |
 
-Current line-count result: no failing modules; `infrastructure/rendering/_pdf_combined_renderer.py` is a warning at 861 lines.
+Current line-count result: no failing or warning modules in `infrastructure/` or `scripts/` (gate thresholds: warn ≥800 / fail ≥950). Largest infra module measured: `infrastructure/autoresearch/validation.py` at 763 lines; `_pdf_combined_renderer.py` is a 49-line facade re-exporting `_pdf_combined_*.py` leaves.
 
 Coverage gates (enforced in CI):
 

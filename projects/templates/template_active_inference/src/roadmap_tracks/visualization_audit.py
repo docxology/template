@@ -170,7 +170,7 @@ def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
         metrics = _image_metrics(root / rel_path)
         source_row = sources_by_id.get(figure_id, {})
         hash_row = hashes_by_path.get(rel_path, {})
-        sources = source_row.get("sources") or []
+        sources = source_row.get("source_artifacts") or source_row.get("sources") or []
         statistical_sources, statistical_sources_present = _statistical_sources(
             root, [str(source) for source in sources]
         )

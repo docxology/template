@@ -26,7 +26,7 @@ uv run python scripts/z_generate_manuscript_variables.py
 
 Full compose calls `emit_coverage_artifacts()` → JSON only. `generate_figures.py` calls `ensure_coverage_artifacts()` for heatmap PNG + regenerated [`manuscript/00_00_sheaf_coverage.md`](manuscript/00_00_sheaf_coverage.md). Coverage PNG/page emission is no longer part of `compose_all_sections()` (script is a thin CLI wrapper).
 
-**Visualization track:** renderer `section_figures` in [`tracks.yaml`](manuscript/sheaf/tracks.yaml); `resolve_track_body()` calls `render_section_figures()` (fragment `.md` files are stubs).
+**Visualization track:** renderer `section_figures` in [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml); `resolve_track_body()` calls `render_section_figures()` (fragment `.md` files are stubs).
 
 **Generated renderers:** `section_figures` (figures from `figures.yaml`) and `layers_report` (registry + binding matrix tables). Dispatch is centralized in [`renderers.resolve_track_body()`](src/manuscript/sheaf/renderers.py) — no section-specific branches in `compose.py`.
 
@@ -173,12 +173,13 @@ Edit fragments only under [`manuscript/sections/imrad/`](manuscript/sections/imr
 
 ```bash
 uv run python scripts/compose_manuscript.py
+uv run python scripts/check_documentation_contract.py --check
 uv run pytest tests/ --cov=src --cov-fail-under=90
 uv run python scripts/validate_outputs.py
 ```
 
 ## Parent docs
 
-- Root [`AGENTS.md`](../../AGENTS.md)
+- Root [`AGENTS.md`](../../../AGENTS.md)
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md)
 - [`tracks.yaml`](tracks.yaml)

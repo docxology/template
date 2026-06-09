@@ -351,11 +351,57 @@ def build_evidence_graph(repo_root: Path | str, project_name: str) -> EvidenceGr
             art_id = _ensure_artifact(graph, in_ref, seen_artifacts)
             graph.add_edge(EvidenceEdge(source=stage_id, target=art_id, relation=RelationType.CONSUMES))
 
-    _ingest_claims(graph, project_root)
+    _ingest_claims(graph, project_root, seen_artifacts)
+    _ingest_evidence_registry(graph, project_root, seen_artifacts)
     return graph
 
 
-def _ingest_claims(graph: EvidenceGraph, project_root: Path) -> None:
+def _artifact_refs_from_claim(entry: dict[str, Any]) -> list[str]:
+    """Collect artifact path references declared on a claim ledger row."""
+    refs: list[str] = []
+    for key in ("artifacts", "artifact_paths", "evidence"):
+        value = entry.get(key)
+        if isinstance(value, list):
+            refs.extend(str(item).strip() for item in value if item)
+    for key in ("artifact_path", "source_path"):
+        value = entry.get(key)
+        if isinstance(value, str) and value.strip():
+            refs.append(value.strip())
+    # stable dedupe preserving order
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for ref in refs:
+        if ref not in seen:
+            seen.add(ref)
+            ordered.append(ref)
+    return ordered
+
+
+def _normalize_artifact_template(path_ref: str) -> str:
+    """Map project-relative artifact paths to pipeline contract templates."""
+    cleaned = path_ref.strip().lstrip("/")
+    if cleaned.startswith("projects/{project}/"):
+        return cleaned
+    return f"projects/{{project}}/{cleaned}"
+
+
+def _link_supports_artifact_to_claim(
+    graph: EvidenceGraph,
+    *,
+    artifact_ref: str,
+    claim_node_id: str,
+    seen_artifacts: set[str],
+) -> None:
+    """Add artifact→claim SUPPORTS edge when both endpoints exist."""
+    claim_ids = {n.id for n in graph.nodes if n.type is NodeType.CLAIM}
+    if claim_node_id not in claim_ids:
+        return
+    template = _normalize_artifact_template(artifact_ref)
+    art_id = _ensure_artifact(graph, template, seen_artifacts)
+    graph.add_edge(EvidenceEdge(source=art_id, target=claim_node_id, relation=RelationType.SUPPORTS))
+
+
+def _ingest_claims(graph: EvidenceGraph, project_root: Path, seen_artifacts: set[str]) -> None:
     """Ingest a claim ledger if one exists; otherwise record a gap note.
 
     Looks for a JSON claim ledger at well-known locations. When none is found
@@ -389,14 +435,73 @@ def _ingest_claims(graph: EvidenceGraph, project_root: Path) -> None:
     for entry in claims:
         if not isinstance(entry, dict) or "id" not in entry:
             continue
+        claim_node_id = f"claim:{_slug(str(entry['id']))}"
         graph.add_node(
             EvidenceNode(
-                id=f"claim:{_slug(str(entry['id']))}",
+                id=claim_node_id,
                 type=NodeType.CLAIM,
                 source_of_truth=f"{ledger.name}::{entry['id']}",
                 label=str(entry.get("statement", entry["id"])),
                 attributes={"status": str(entry.get("status", "unknown"))},
             )
+        )
+        for artifact_ref in _artifact_refs_from_claim(entry):
+            _link_supports_artifact_to_claim(
+                graph,
+                artifact_ref=artifact_ref,
+                claim_node_id=claim_node_id,
+                seen_artifacts=seen_artifacts,
+            )
+
+
+def _ingest_evidence_registry(
+    graph: EvidenceGraph,
+    project_root: Path,
+    seen_artifacts: set[str],
+) -> None:
+    """Merge ``output/reports/evidence_registry.json`` facts into SUPPORTS edges."""
+    report_path = project_root / "output" / "reports" / "evidence_registry.json"
+    facts: list[dict[str, Any]] = []
+    if report_path.is_file():
+        try:
+            raw = json.loads(report_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            graph.notes.append(f"Evidence registry {report_path.name} unreadable ({exc}); skipped.")
+            return
+        if isinstance(raw, dict):
+            facts = list(raw.get("facts") or raw.get("sample_facts") or [])
+    else:
+        try:
+            from infrastructure.validation.evidence_registry import build_project_evidence_registry
+
+            registry = build_project_evidence_registry(project_root)
+            facts = [
+                {
+                    "source_path": fact.source_path,
+                    "source_field": fact.source_field,
+                    "source_tier": fact.source_tier,
+                }
+                for fact in registry.facts()
+                if fact.source_path
+            ]
+            if facts:
+                graph.notes.append("evidence_registry.json absent; ingested live registry source_path facts.")
+        except OSError as exc:
+            graph.notes.append(f"Could not build live evidence registry ({exc}); skipped.")
+            return
+
+    for row in facts:
+        if not isinstance(row, dict):
+            continue
+        source_path = str(row.get("source_path") or "").strip()
+        claim_ref = str(row.get("source_field") or row.get("claim_id") or "").strip()
+        if not source_path or not claim_ref:
+            continue
+        _link_supports_artifact_to_claim(
+            graph,
+            artifact_ref=source_path,
+            claim_node_id=f"claim:{_slug(claim_ref)}",
+            seen_artifacts=seen_artifacts,
         )
 
 

@@ -5,12 +5,45 @@ infrastructure. Architecture details:
 [`architecture.md`](../core/architecture.md) and
 [`workflow.md`](../core/workflow.md).
 
-**Last verified:** 2026-06-05 (post-`v3.2.0` release; measured
-metrics defer to [`TO-DO.md`](../../TO-DO.md) and
+**Last verified:** 2026-06-08 (package at `v3.3.1`; latest **published** release
+`v3.3.0` — the `v3.3.1` tag is pending, see `RELEASE-TAG-1` in
+[`TO-DO.md`](../../TO-DO.md)). Measured metrics defer to
+[`TO-DO.md`](../../TO-DO.md) and
 [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)
-unless this file is re-measured)
+unless this file is re-measured.
 
 ## Completed Releases
+
+### v3.3.1 — DOCX Completion and Reproducible Exemplar Outputs (2026-06-07, tag pending)
+
+- completed Pandoc DOCX rendering so output embeds figures and resolves
+  cross-references (`infrastructure/rendering/pipeline.py`)
+- ran a deep per-exemplar quality pass across the eight tracked public templates
+  and completed + cross-linked sidecar publication metadata for all nine
+- reconciled the generated project-scope collection count in
+  [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md) to 216
+- committed refreshed rendered `output/` artifacts for the public exemplars
+  alongside source so the repo ships reproducible, inspectable deliverables
+- see [`CHANGELOG.md`](../../CHANGELOG.md) for the full entry
+
+### v3.3.0 — Deterministic Evidence and Anti-Hallucination Infrastructure (2026-06-07)
+
+- added reference-existence verification
+  (`infrastructure/reference/verification`) — a deterministic anti-hallucination
+  gate resolving each cited reference against Crossref → OpenAlex / arXiv
+  (offline-first, opt-in live, SQLite cache)
+- added an AI-writing fingerprint detector
+  (`infrastructure/validation/content/ai_writing.py`, `validation.cli prose-quality`)
+- shipped the evidence graph (EVIDENCE-GRAPH-1), reproduction bundle
+  (REPRO-BUNDLE-1), release-readiness dashboard (DASHBOARD-1), pipeline plugin
+  stages (PLUGIN-STAGES-1), and incremental pipeline skipping
+  (INCREMENTAL-PIPELINE-1) — all opt-in, default plan unchanged
+- parallelized CI infrastructure tests (`pytest-xdist -n auto`) and derived the
+  `test-project` matrix dynamically from `public_scope` (CI-MATRIX-DYNAMIC-1)
+- quieted terminal logging (LOG-CLEAN-1), consolidated the safe markdown reader
+  (READFILE-SAFE-1), and ran documentation-accuracy passes across `docs/` and
+  infrastructure `{SKILL,README,AGENTS}.md`
+- see [`CHANGELOG.md`](../../CHANGELOG.md) for the full entry
 
 ### v3.2.0 — Format, Logging, and Exemplar Hardening (2026-06-04)
 
@@ -92,50 +125,67 @@ The active planning surface is [`TO-DO.md`](../../TO-DO.md). It is intentionally
 more specific than this roadmap and now groups work as **Minor**, **Medium**,
 and **Major**.
 
-### v3.1.x — Hygiene and Backlog Accuracy
+### Ongoing — Hygiene and Backlog Accuracy
 
 - keep `TO-DO.md`, generated facts, release metadata, and public-scope docs in
-  sync after each release
-- close GitHub hygiene items: SHA-pinned actions, `actionlint`, and safe
-  Dependabot automerge
-- land the Active Inference gate-cache follow-up without changing the immutable
-  `v3.1.0` tag
+  sync after each release (TODO-REBASE-1)
+- land the Active Inference gate-cache follow-up without changing any immutable
+  release tag (AI-GATE-CACHE-1)
+
+> The GitHub supply-chain hygiene items (SHA-pinned actions, `actionlint`, safe
+> Dependabot automerge) shipped in `v3.2.0`; terminal logging cleanup
+> (LOG-CLEAN-1), the safe markdown-read helper (READFILE-SAFE-1), and the dynamic
+> CI project matrix (CI-MATRIX-DYNAMIC-1) shipped in `v3.3.0`. See Completed
+> Releases above.
 
 ### Next (open backlog)
 
-- finish terminal logging cleanup and preserve verbose file logs (LOG-CLEAN-1)
-- land the Active Inference gate-cache follow-up (AI-GATE-CACHE-1)
-- consolidate the defensive markdown-read helper and derive the CI project
-  matrix from the generated roster (READFILE-SAFE-1, CI-MATRIX-DYNAMIC-1)
+The authoritative open backlog lives in [`TO-DO.md`](../../TO-DO.md). Current
+themes (post-`v3.3.0`) are the **follow-up next-increments** of the just-shipped
+capabilities — making each reachable and complete in practice rather than only
+present in the tree:
+
+- **Evidence-graph claim layer** (EVIDENCE-CLAIM-1): the shipped claim/`supports`
+  layer is empty for every exemplar because no exemplar emits the `claims.json`
+  the ingest looks for — reconcile the ledger contract
+- **Reach the shipped opt-in features from the CLI**: incremental skipping has no
+  flag (PIPELINE-INCR-FLAG-1), the release-readiness dashboard has no runnable
+  entrypoint (DASHBOARD-CLI-1), the AI-writing gate is not run by output
+  validation (PROSE-GATE-WIRE-1), and reproduction bundles are single-project
+  only (REPRO-MULTI-1)
+- **Logging separator centralization** (LOG-SEP-CENTRAL-1): the LOG-CLEAN-1
+  residual — route scattered `"=" * N` banner literals through `BANNER_WIDTH`
 
 ### Next Generation (vision)
 
-- **Evidence graph**: unify pipeline DAG, artifact registry, claim ledger,
-  provenance, and manuscript tokens into one queryable release-readiness graph
-- **Incremental pipeline**: skip unchanged stages via content hashing
-- **Plugin architecture**: user-defined pipeline stages with schema validation
-- **Hermetic release bundles**: lockfile, artifact manifest, hashes, and
-  reproduction commands from a clean checkout
-- **Local dashboard**: static, no-network view of pipeline status, coverage
-  trends, evidence graph status, and release readiness
+> The prior vision list — evidence graph (EVIDENCE-GRAPH-1), incremental pipeline
+> (INCREMENTAL-PIPELINE-1), plugin architecture (PLUGIN-STAGES-1), hermetic
+> release bundles (REPRO-BUNDLE-1), and local dashboard (DASHBOARD-1) — **all
+> shipped in `v3.3.0`** (opt-in/default-off). See Completed Releases above. The
+> live follow-up work for these capabilities is tracked in the open backlog
+> above and in [`TO-DO.md`](../../TO-DO.md); new long-horizon vision items should
+> replace this note as they are defined.
 
 ---
 
 ## Next Up
 
 Use [`TO-DO.md`](../../TO-DO.md) as the authoritative backlog and live snapshot.
-The current top items are:
+The current open top items (post-`v3.3.1`) are:
 
-- **Minor:** `GH-PIN-1`, `GH-ACTIONLINT-1`, `GH-AUTOMERGE-1`,
-  `AI-GATE-CACHE-1`
-- **Medium:** `LOG-CLEAN-1`, `FMT-BUNDLE-1`, `AI-SPINE-V2`,
-  `SIA-HARNESS-2`, `COVERAGE-REBASE-1`
-- **Major:** `EVIDENCE-GRAPH-1`, `INCREMENTAL-PIPELINE-1`,
-  `PLUGIN-STAGES-1`, `REPRO-BUNDLE-1`, `DASHBOARD-1`
+- **Minor:** `TODO-REBASE-1`, `AI-GATE-CACHE-1`, `ARCH-CONFTEST-1`,
+  `LOG-SEP-CENTRAL-1`
+- **Medium:** `SIA-HARNESS-2`, `PIPELINE-INCR-FLAG-1`, `DASHBOARD-CLI-1`,
+  `REPRO-MULTI-1`, `PROSE-GATE-WIRE-1`
+- **Major:** `EVIDENCE-CLAIM-1`
 
-Shipped elsewhere and not re-tracked here: pip-audit blocking CI, Bandit LOW
-triage, docs-lint CI, the per-project test runner, SIA public-exemplar
-promotion, and the first Active Inference validation-spine tracks. See
+Shipped and not re-tracked here: the GitHub supply-chain hygiene set
+(`GH-PIN-1`, `GH-ACTIONLINT-1`, `GH-AUTOMERGE-1`), `LOG-CLEAN-1`,
+`READFILE-SAFE-1`, `CI-MATRIX-DYNAMIC-1`, `FMT-BUNDLE-1`, `AI-SPINE-V2`,
+`COVERAGE-REBASE-1`, and the five `v3.3.0` Major capabilities
+(`EVIDENCE-GRAPH-1`, `INCREMENTAL-PIPELINE-1`, `PLUGIN-STAGES-1`,
+`REPRO-BUNDLE-1`, `DASHBOARD-1`), plus pip-audit blocking CI, Bandit LOW triage,
+docs-lint CI, the per-project test runner, and SIA public-exemplar promotion. See
 [`CHANGELOG.md`](../../CHANGELOG.md) for the release history.
 
 ---

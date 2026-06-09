@@ -613,8 +613,8 @@ When creating a new rules file:
 
 ---
 
-**Version**: 3.3.0
-**Last Updated**: 2026-06-07
+**Version**: 3.3.1
+**Last Updated**: 2026-06-08
 **Files**: 18 (AGENTS.md + README.md + 16 guideline files)
 **Status**: All 16 guideline files cross-referenced
 **Updates**: All development rules and standards synchronized with docs/

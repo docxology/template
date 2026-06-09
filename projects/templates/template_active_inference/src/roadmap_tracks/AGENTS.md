@@ -49,7 +49,5 @@ private data, or nondeterministic research behavior.
 Run focused project tests after touching this package:
 
 ```bash
-uv run --directory projects/templates/template_active_inference \
-  --with pytest --with pytest-cov --with pytest-timeout --with coverage==7.13.2 \
-  --extra dev python -m pytest tests/test_track_consolidation.py tests/test_roadmap_promotion.py -q --no-cov
+uv run pytest tests/test_track_consolidation.py tests/test_roadmap_promotion.py -q --no-cov
 ```

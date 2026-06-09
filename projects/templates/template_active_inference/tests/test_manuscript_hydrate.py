@@ -99,3 +99,18 @@ def test_write_resolved_manuscript_removes_tokens(tmp_path: Path) -> None:
     resolved = (out_dir / "00_abstract.md").read_text(encoding="utf-8")
     assert _TOKEN_RE.search(resolved) is None
     assert "Tracks: 30" in resolved
+
+
+def test_write_resolved_manuscript_retargets_output_links(tmp_path: Path) -> None:
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    (manuscript / "00_abstract.md").write_text(
+        "![Figure](../output/figures/example.png){width=90%}\n",
+        encoding="utf-8",
+    )
+
+    out_dir = write_resolved_manuscript(tmp_path, {})
+    resolved = (out_dir / "00_abstract.md").read_text(encoding="utf-8")
+
+    assert "](../figures/example.png)" in resolved
+    assert "../output/figures" not in resolved

@@ -274,7 +274,7 @@ def test_ingest_claims_reads_real_ledger(tmp_path: Path) -> None:
     (data_dir / "claims.json").write_text(json.dumps(ledger), encoding="utf-8")
 
     graph = EvidenceGraph(project="fixture")
-    _ingest_claims(graph, tmp_path)
+    _ingest_claims(graph, tmp_path, set())
 
     claims = graph.nodes_by_type(NodeType.CLAIM)
     assert {c.id for c in claims} == {"claim:c1", "claim:c2"}
@@ -286,13 +286,76 @@ def test_ingest_claims_handles_bare_list_ledger(tmp_path: Path) -> None:
     (tmp_path / "claims.json").write_text(json.dumps(ledger), encoding="utf-8")
 
     graph = EvidenceGraph(project="fixture")
-    _ingest_claims(graph, tmp_path)
+    _ingest_claims(graph, tmp_path, set())
     assert [c.id for c in graph.nodes_by_type(NodeType.CLAIM)] == ["claim:x1"]
 
 
 def test_ingest_claims_unexpected_shape_notes_gap(tmp_path: Path) -> None:
     (tmp_path / "claims.json").write_text(json.dumps({"claims": 5}), encoding="utf-8")
     graph = EvidenceGraph(project="fixture")
-    _ingest_claims(graph, tmp_path)
+    _ingest_claims(graph, tmp_path, set())
     assert graph.nodes_by_type(NodeType.CLAIM) == []
     assert any("unexpected shape" in n for n in graph.notes)
+
+
+def test_ingest_claims_emits_supports_edges_for_artifact_refs(tmp_path: Path) -> None:
+    """Claim ledger artifact refs yield artifact→claim SUPPORTS edges."""
+    data_dir = tmp_path / "output" / "data"
+    data_dir.mkdir(parents=True)
+    ledger = {
+        "claims": [
+            {
+                "id": "C1",
+                "statement": "Optimizer converges",
+                "status": "supported",
+                "artifacts": ["output/data/optimization_results.csv"],
+            }
+        ]
+    }
+    (data_dir / "claims.json").write_text(json.dumps(ledger), encoding="utf-8")
+
+    graph = EvidenceGraph(project="fixture")
+    seen: set[str] = set()
+    _ingest_claims(graph, tmp_path, seen)
+
+    supports = [e for e in graph.edges if e.relation is RelationType.SUPPORTS]
+    assert len(supports) == 1
+    assert supports[0].source.startswith("artifact:")
+    assert supports[0].target == "claim:c1"
+
+
+def test_ingest_evidence_registry_links_facts_to_claims(tmp_path: Path) -> None:
+    from infrastructure.reporting.evidence_graph import _ingest_evidence_registry
+
+    data_dir = tmp_path / "output" / "data"
+    reports = tmp_path / "output" / "reports"
+    data_dir.mkdir(parents=True)
+    reports.mkdir(parents=True)
+    (data_dir / "claims.json").write_text(
+        json.dumps({"claims": [{"id": "C1", "statement": "bounded", "status": "open"}]}),
+        encoding="utf-8",
+    )
+    registry_payload = {
+        "schema": "template-evidence-registry-report-v1",
+        "sample_facts": [
+            {
+                "kind": "number",
+                "value": "42",
+                "source": "metrics:answer",
+                "source_path": "output/data/metrics.json",
+                "source_field": "C1",
+                "source_tier": "claim_ledger",
+                "active": True,
+                "stale": False,
+            }
+        ],
+    }
+    (reports / "evidence_registry.json").write_text(json.dumps(registry_payload), encoding="utf-8")
+
+    graph = EvidenceGraph(project="fixture")
+    seen: set[str] = set()
+    _ingest_claims(graph, tmp_path, seen)
+    _ingest_evidence_registry(graph, tmp_path, seen)
+
+    supports = [e for e in graph.edges if e.relation is RelationType.SUPPORTS]
+    assert any(e.target == "claim:c1" for e in supports)

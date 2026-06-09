@@ -20,7 +20,9 @@ manuscript staleness) or sheaf section:
   hydration, figure rendering, copied output parity, or sheaf reproducibility
   contracts change.
 - Keep pymdp simulation claims aligned with what `src/simulation/si_runner.py`
-  actually logs (default T-maze via `simulate_si_tmaze.py`; `policy_inference` mode).
+  actually logs (`simulate_si_tmaze.py`; configured default
+  `state_inference` in `pymdp.yaml`, with comparison artifacts also covering
+  `policy_inference`).
 - Extension tracks in `../tracks.yaml` `extension_tracks`: `render_animation.py`
   writes a deterministic trace-derived GIF and frame-delta manifest; `simulate_si_graph_world.py` writes
   deterministic graph-world summary/trace JSON. Do not claim non-toy graph-world

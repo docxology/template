@@ -136,18 +136,24 @@ def _source_commit(root: Path) -> str:
             check=True,
             capture_output=True,
             text=True,
+            timeout=5,
         )
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return "unknown"
     return result.stdout.strip() or "unknown"
 
 
-def _artifact_record(root: Path, rel: str, producer: str) -> dict[str, Any]:
+def _artifact_record(
+    root: Path,
+    rel: str,
+    producer: str,
+    *,
+    config_digest: str,
+    seed: int,
+    source_commit: str,
+) -> dict[str, Any]:
     path = root / rel
     exists, size_bytes, sha256 = _file_fingerprint(path)
-    config_digest = _config_digest(root)
-    seed = _deterministic_seed(root)
-    source_commit = _source_commit(root)
     return {
         "path": rel,
         "producer": producer,
@@ -174,8 +180,19 @@ def _config_record(root: Path, rel: str) -> dict[str, Any]:
 def build_artifact_provenance(project_root: Path) -> dict[str, Any]:
     """Build deterministic artifact lineage and hash records."""
     root = project_root.resolve()
+    config_digest = _config_digest(root)
+    seed = _deterministic_seed(root)
+    source_commit = _source_commit(root)
     artifacts = {
-        rel: _artifact_record(root, rel, producer) for rel, producer in sorted(CORE_ARTIFACT_PRODUCERS.items())
+        rel: _artifact_record(
+            root,
+            rel,
+            producer,
+            config_digest=config_digest,
+            seed=seed,
+            source_commit=source_commit,
+        )
+        for rel, producer in sorted(CORE_ARTIFACT_PRODUCERS.items())
     }
     configured = _configured_analysis_scripts(root)
     producer_coverage = {producer: producer in configured for producer in sorted(set(CORE_ARTIFACT_PRODUCERS.values()))}
@@ -188,7 +205,7 @@ def build_artifact_provenance(project_root: Path) -> dict[str, Any]:
         "artifact_count": len(artifacts),
         "all_hashed": all(record["exists"] and bool(record["sha256"]) for record in artifacts.values()),
         "all_seeded": all(isinstance(record.get("deterministic_seed"), int) for record in artifacts.values()),
-        "all_config_digests": all(record.get("config_digest") == _config_digest(root) for record in artifacts.values()),
+        "all_config_digests": all(record.get("config_digest") == config_digest for record in artifacts.values()),
         "all_source_commits": all(bool(record.get("source_commit")) for record in artifacts.values()),
         "all_producers_configured": all(producer_coverage.values()),
     }

@@ -89,6 +89,11 @@ def substitute_snake_case_tokens(
     return _TOKEN_RE.sub(_replace, text), unresolved
 
 
+def retarget_resolved_output_links(text: str) -> str:
+    """Retarget output links for hydrated copies under output/manuscript/."""
+    return text.replace("](../output/", "](../").replace("](<../output/", "](<../")
+
+
 def write_resolved_manuscript(project_root: Path, variables: dict[str, Any]) -> Path:
     """Write token-substituted markdown copies to output/manuscript/."""
     root = project_root.resolve()
@@ -113,6 +118,7 @@ def write_resolved_manuscript(project_root: Path, variables: dict[str, Any]) -> 
         if malformed:
             raise ValueError(f"malformed single-brace tokens in {md_file.name}: {', '.join(malformed)}")
         resolved, unresolved = substitute_snake_case_tokens(text, string_vars)
+        resolved = retarget_resolved_output_links(resolved)
         all_unresolved.extend(unresolved)
         out_dir.joinpath(md_file.name).write_text(resolved, encoding="utf-8")
 

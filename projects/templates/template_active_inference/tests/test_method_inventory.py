@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
 from pathlib import Path
 
 from gates.method_inventory import (
@@ -48,3 +50,16 @@ def test_docs_signpost_method_inventory(project_root: Path) -> None:
 
     assert "method-inventory.md" in docs_readme
     assert "generate_method_inventory.py" in project_readme
+
+
+def test_method_inventory_check_command(project_root: Path) -> None:
+    result = subprocess.run(
+        [sys.executable, "scripts/generate_method_inventory.py", "--check"],
+        cwd=project_root,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "method_inventory: current" in result.stdout

@@ -61,4 +61,5 @@ uv run python scripts/compose_manuscript.py --validate-only --strict
 ## Parent docs
 
 - [`manuscript/sheaf/AGENTS.md`](../../../manuscript/sheaf/AGENTS.md) — YAML registries
-- [`../../AGENTS.md`](../../AGENTS.md) — project overview
+- [`../../AGENTS.md`](../../AGENTS.md) — source package overview
+- [`../../../AGENTS.md`](../../../AGENTS.md) — project overview

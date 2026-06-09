@@ -16,6 +16,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from roadmap_tracks.row_aggregates import all_rows
+
 from .integration_audit_artifacts import (
     build_adversarial_audit,
     build_artifact_diffoscope,
@@ -197,21 +199,51 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
         if row.get("sha256") != _sha256(path):
             issues.append(f"stale_artifact_report.json hash mismatch for {row.get('artifact')}")
     tokens = _load_json(root / "output" / "data" / "manuscript_token_provenance.json")
-    tokens_derived = bool(tokens.get("tokens")) and all(row.get("mapped") for row in tokens.get("tokens") or [])
+    tokens_derived = bool(tokens.get("tokens")) and all(
+        row.get("mapped") and row.get("source_jsonpath") and row.get("hydrated_value_present")
+        for row in tokens.get("tokens") or []
+    )
     if tokens.get("all_tokens_mapped") is not True or tokens.get("all_tokens_mapped") != tokens_derived:
         issues.append("manuscript_token_provenance.json has unmapped tokens")
     figures = _load_json(root / "output" / "data" / "figure_source_map.json")
-    figures_derived = bool(figures.get("rows")) and all(row.get("mapped") for row in figures.get("rows") or [])
+    figures_derived = all_rows(
+        figures,
+        lambda row: row.get("mapped")
+        and row.get("source_artifact")
+        and row.get("source_jsonpath")
+        and row.get("renderer")
+        and row.get("dimensions", {}).get("width", 0) > 0
+        and row.get("dimensions", {}).get("height", 0) > 0
+        and row.get("image_sha256")
+        and row.get("axis_channel_mapping")
+        and row.get("section_bindings")
+        and row.get("pixel_provenance_ok") is True,
+    )
     if figures.get("all_figures_mapped") is not True or figures.get("all_figures_mapped") != figures_derived:
         issues.append("figure_source_map.json has unmapped figures")
     claim_audit = _load_json(root / "output" / "reports" / "claim_evidence_audit.json")
     claims_derived = bool(claim_audit.get("rows")) and all(
-        row.get("has_evidence") and row.get("has_tracks") for row in claim_audit.get("rows") or []
+        row.get("has_evidence")
+        and row.get("has_tracks")
+        and row.get("substantive")
+        and (row.get("predicate") or row.get("waiver"))
+        and not row.get("failure_reason")
+        for row in claim_audit.get("rows") or []
     )
     if claim_audit.get("all_claims_typed") is not True or claim_audit.get("all_claims_typed") != claims_derived:
         issues.append("claim_evidence_audit.json has untyped claims")
     scope = _load_json(root / "output" / "reports" / "scope_boundary_audit.json")
-    if scope.get("all_current_claims_toy") is not True:
+    scope_rows_ok = all_rows(
+        scope,
+        lambda row: row.get("ok") is True
+        and row.get("classification") in {"current", "future", "empirical"}
+        and row.get("context") in {"toy_result", "blocked_language"}
+        and (
+            (row.get("classification") == "current" and row.get("current_result_toy_only") is True)
+            or row.get("classification") in {"future", "empirical"}
+        ),
+    )
+    if scope.get("all_current_claims_toy") is not True or not scope_rows_ok:
         issues.append("scope_boundary_audit.json records empirical scope leakage")
     adversarial = _load_json(root / "output" / "reports" / "adversarial_audit.json")
     if adversarial.get("all_expected_failures_documented") is not True:
@@ -250,10 +282,22 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
         issues.append("manuscript_staleness_report.json is stale relative to live manuscript tokens")
     symbols = _load_json(root / "output" / "data" / "cross_track_symbol_table.json")
     symbols_derived = bool(symbols.get("rows")) and all(row.get("consistent") for row in symbols.get("rows") or [])
-    if symbols.get("all_consistent") is not True or symbols.get("all_consistent") != symbols_derived:
+    required_symbol_kinds = {"gnn_variable", "lean_theorem", "manuscript_variable", "json_field", "figure_label"}
+    if (
+        symbols.get("all_consistent") is not True
+        or symbols.get("all_consistent") != symbols_derived
+        or not required_symbol_kinds.issubset(set(symbols.get("source_kinds") or []))
+    ):
         issues.append("cross_track_symbol_table.json has inconsistent symbols")
     gate_index = _load_json(root / "output" / "data" / "validation_gate_index.json")
-    gates_derived = bool(gate_index.get("rows")) and all(row.get("indexed") for row in gate_index.get("rows") or [])
+    gates_derived = all_rows(
+        gate_index,
+        lambda row: row.get("indexed")
+        and row.get("command")
+        and row.get("required_inputs")
+        and row.get("declared_outputs")
+        and row.get("negative_control_id"),
+    )
     if gate_index.get("all_indexed") is not True or gate_index.get("all_indexed") != gates_derived:
         issues.append("validation_gate_index.json has unindexed gates")
     diffoscope = _load_json(root / "output" / "reports" / "artifact_diffoscope.json")

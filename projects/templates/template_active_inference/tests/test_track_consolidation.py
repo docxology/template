@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -29,6 +30,19 @@ def _write(path: Path, payload: dict) -> None:
 
 def _relative_posix(path: Path, root: Path) -> str:
     return path.relative_to(root).as_posix()
+
+
+def test_sheaf_track_source_commit_times_out_to_unknown(
+    project_root: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from roadmap_tracks import sheaf_tracks
+
+    def fake_run(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(cmd=args[0], timeout=kwargs["timeout"])
+
+    monkeypatch.setattr(sheaf_tracks.subprocess, "run", fake_run)
+
+    assert sheaf_tracks._source_commit(project_root) == "unknown"
 
 
 def test_live_track_surface_uses_canonical_ids(project_root: Path) -> None:
@@ -116,10 +130,23 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
 
     assert semantic["ok"] is True
     assert semantic["restrictions"]["no_versioned_live_tracks"] is True
+    assert semantic["all_proof_obligations_ok"] is True
+    assert semantic["proof_obligations"]
+    assert all(row["class"] and row["restriction"] and row["ok"] for row in semantic["proof_obligations"])
+    dependency = _load(project_root / "output" / "data" / "validation_dependency_graph.json")
+    assert dependency["all_field_edges_mapped"] is True
+    assert dependency["field_edges"]
     assert evidence["all_fields_mapped"] is True
+    assert all(row["jsonpath"] and row["validator"] and row["semantic_restriction"] for row in evidence["rows"])
     assert release["all_required_sources_present"] is True
+    assert release["all_copied_outputs_match_or_deferred"] is True
     assert theorem["all_theorems_linked"] is True
+    assert all(row["claim_ids"] and row["evidence_fields"] for row in theorem["rows"])
     assert gate_index["all_indexed"] is True
+    assert all(
+        row["command"] and row["required_inputs"] and row["declared_outputs"] and row["negative_control_id"]
+        for row in gate_index["rows"]
+    )
     assert diffoscope["all_equal"] is True
     assert proof["all_extracted"] is True
     assert catalog["all_finite"] is True
@@ -270,6 +297,13 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         assert any("lacks required edge types" in issue for issue in validate_sheaf_track_artifacts(project_root))
         paths["dependency"].write_text(originals[paths["dependency"]], encoding="utf-8")
 
+        data = _load(paths["dependency"])
+        data["field_edges"][0]["validator"] = ""
+        data["all_field_edges_mapped"] = True
+        _write(paths["dependency"], data)
+        assert any("field-level edges" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["dependency"].write_text(originals[paths["dependency"]], encoding="utf-8")
+
         data = _load(paths["scope"])
         data["promotion_matrix"][0]["promotion_complete"] = False
         data["all_live_tracks_valid"] = False
@@ -284,7 +318,7 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         paths["blocked"].write_text(originals[paths["blocked"]], encoding="utf-8")
 
         data = _load(paths["evidence"])
-        data["rows"][0]["mapped"] = False
+        data["rows"][0]["semantic_restriction"] = ""
         data["all_fields_mapped"] = False
         _write(paths["evidence"], data)
         assert any("unmapped evidence fields" in issue for issue in validate_sheaf_track_artifacts(project_root))
@@ -297,15 +331,23 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         assert any("missing required deliverables" in issue for issue in validate_sheaf_track_artifacts(project_root))
         paths["release"].write_text(originals[paths["release"]], encoding="utf-8")
 
+        data = _load(paths["release"])
+        data["copied_output_parity"]["rows"][0]["status"] = "mismatch"
+        data["copied_output_parity"]["all_copied_outputs_match_or_deferred"] = True
+        data["all_copied_outputs_match_or_deferred"] = True
+        _write(paths["release"], data)
+        assert any("copied output parity" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["release"].write_text(originals[paths["release"]], encoding="utf-8")
+
         data = _load(paths["theorem"])
-        data["rows"][0]["linked"] = False
+        data["rows"][0]["evidence_fields"] = []
         data["all_theorems_linked"] = False
         _write(paths["theorem"], data)
         assert any("unlinked theorem rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
         paths["theorem"].write_text(originals[paths["theorem"]], encoding="utf-8")
 
         data = _load(paths["gate"])
-        data["rows"][0]["indexed"] = False
+        data["rows"][0]["command"] = ""
         data["all_indexed"] = False
         _write(paths["gate"], data)
         assert any("unindexed gates" in issue for issue in validate_sheaf_track_artifacts(project_root))
@@ -462,6 +504,13 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
             for issue in validate_sheaf_track_artifacts(project_root)
         )
         paths["statistical_bridge"].write_text(originals[paths["statistical_bridge"]], encoding="utf-8")
+
+        data = _load(paths["semantic"])
+        data["proof_obligations"][0]["ok"] = False
+        data["all_proof_obligations_ok"] = True
+        _write(paths["semantic"], data)
+        assert any("proof obligations" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["semantic"].write_text(originals[paths["semantic"]], encoding="utf-8")
 
         data = _load(paths["semantic"])
         data["restrictions"]["replay_matrix_all_matched"] = False

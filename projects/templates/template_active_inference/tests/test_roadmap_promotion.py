@@ -201,10 +201,16 @@ def test_toy_sweep_uses_measured_policy_and_topology_trace_artifacts(project_roo
     assert {row["observable"] for row in observable["rows"]} >= {
         "same_state_probability",
         "posterior_correlation",
+        "ising_spin_correlation",
         "joint_entropy",
     }
+    ising_rows = [row for row in observable["rows"] if row["observable"] == "ising_spin_correlation"]
+    assert ising_rows
+    assert all(row["equation_id"] == "eq:ising_spin_correlation" for row in ising_rows)
+    assert all(abs(float(row["closed_form"]) - float(row["empirical"])) <= 1e-9 for row in ising_rows)
     assert all(row["terms_available"] or row["fallback_reason"] for row in efe_terms["rows"])
     assert topology["topology_count"] >= 3
+    assert "diamond5" in {row["topology"] for row in topology["rows"]}
     assert topology_traces["topology_count"] == topology["topology_count"]
     assert topology_traces["all_trace_summary_agree"] is True
     assert efe_terms["schema"] == "template_active_inference.si_efe_values.v1"
@@ -218,13 +224,25 @@ def test_formal_interop_negative_controls(project_root: Path) -> None:
     model_checking = project_root / "output" / "reports" / "model_checking_witnesses.json"
     interop = project_root / "output" / "data" / "interop_roundtrip_report.json"
     ontology_alias = project_root / "output" / "data" / "ontology_alias_index.json"
+    ontology_profile = project_root / "output" / "data" / "ontology_profile_matrix.json"
+    gnn_lint = project_root / "output" / "reports" / "gnn_lint_report.json"
     topology_sweep = project_root / "output" / "data" / "si_graph_world_topology_sweep.json"
     lean_graph = project_root / "output" / "reports" / "lean_graph_world_inventory.json"
     proof = project_root / "output" / "data" / "proof_extraction_index.json"
     lean_file = project_root / "lean" / "TemplateActiveInference" / "SophisticatedInference.lean"
     originals = {
         path: path.read_text(encoding="utf-8")
-        for path in (model_checking, interop, ontology_alias, topology_sweep, lean_graph, proof, lean_file)
+        for path in (
+            model_checking,
+            interop,
+            ontology_alias,
+            ontology_profile,
+            gnn_lint,
+            topology_sweep,
+            lean_graph,
+            proof,
+            lean_file,
+        )
     }
     try:
         data = _load(model_checking)
@@ -248,6 +266,24 @@ def test_formal_interop_negative_controls(project_root: Path) -> None:
         _write(ontology_alias, data)
         assert any("conflicting aliases" in issue for issue in validate_formal_interop_artifacts(project_root))
         ontology_alias.write_text(originals[ontology_alias], encoding="utf-8")
+
+        data = _load(gnn_lint)
+        data["rows"][0]["shape"] = []
+        data["rows"][0]["shape_declared"] = True
+        data["all_variables_mapped_once"] = True
+        _write(gnn_lint, data)
+        assert any(
+            "type, shape, ontology, or round-trip rows" in issue
+            for issue in validate_formal_interop_artifacts(project_root)
+        )
+        gnn_lint.write_text(originals[gnn_lint], encoding="utf-8")
+
+        data = _load(ontology_profile)
+        data["rows"] = [row for row in data["rows"] if row.get("profile_kind") != "toy_benchmark_model"]
+        data["all_mapped_once"] = True
+        _write(ontology_profile, data)
+        assert any("ontology_profile_matrix.json" in issue for issue in validate_formal_interop_artifacts(project_root))
+        ontology_profile.write_text(originals[ontology_profile], encoding="utf-8")
 
         lean_file.write_text(originals[lean_file] + "\naxiom bad_placeholder : True\n", encoding="utf-8")
         write_formal_interop_artifacts(project_root)
@@ -300,6 +336,8 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         project_root / "output" / "reports" / "stale_artifact_report.json",
         project_root / "output" / "data" / "manuscript_token_provenance.json",
         project_root / "output" / "data" / "figure_source_map.json",
+        project_root / "output" / "reports" / "claim_evidence_audit.json",
+        project_root / "output" / "data" / "validation_gate_index.json",
         project_root / "output" / "reports" / "scope_boundary_audit.json",
         project_root / "output" / "reports" / "adversarial_audit.json",
         project_root / "output" / "reports" / "manuscript_staleness_report.json",
@@ -331,7 +369,24 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         assert any("unmapped figures" in issue for issue in validate_integration_audit_artifacts(project_root))
         figure_source.write_text(originals[figure_source], encoding="utf-8")
 
-        scope = paths[3]
+        claim_audit = paths[3]
+        data = _load(claim_audit)
+        data["rows"][0]["substantive"] = True
+        data["rows"][0]["predicate"] = ""
+        data["all_claims_typed"] = True
+        _write(claim_audit, data)
+        assert any("untyped claims" in issue for issue in validate_integration_audit_artifacts(project_root))
+        claim_audit.write_text(originals[claim_audit], encoding="utf-8")
+
+        gate_index = paths[4]
+        data = _load(gate_index)
+        data["rows"][0]["declared_outputs"] = []
+        data["all_indexed"] = True
+        _write(gate_index, data)
+        assert any("unindexed gates" in issue for issue in validate_integration_audit_artifacts(project_root))
+        gate_index.write_text(originals[gate_index], encoding="utf-8")
+
+        scope = paths[5]
         data = _load(scope)
         data["all_current_claims_toy"] = False
         data["scope_boundary_status"] = "scope_leak"
@@ -339,7 +394,7 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         assert any("scope leakage" in issue for issue in validate_integration_audit_artifacts(project_root))
         scope.write_text(originals[scope], encoding="utf-8")
 
-        adversarial = paths[4]
+        adversarial = paths[6]
         data = _load(adversarial)
         data["rows"][0]["expected_failure"] = False
         data["all_expected_failures_documented"] = False
@@ -347,7 +402,7 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         assert any("expected failures" in issue for issue in validate_integration_audit_artifacts(project_root))
         adversarial.write_text(originals[adversarial], encoding="utf-8")
 
-        staleness = paths[5]
+        staleness = paths[7]
         data = _load(staleness)
         data["rows"][0]["expected"] = "definitely stale"
         _write(staleness, data)
@@ -357,7 +412,7 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         )
         staleness.write_text(originals[staleness], encoding="utf-8")
 
-        diffoscope = paths[6]
+        diffoscope = paths[8]
         data = _load(diffoscope)
         data["rows"][0]["equal"] = False
         data["all_equal"] = False
@@ -368,7 +423,7 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         )
         diffoscope.write_text(originals[diffoscope], encoding="utf-8")
 
-        license_audit = paths[7]
+        license_audit = paths[9]
         data = _load(license_audit)
         data["rows"][0]["license_safe"] = False
         data["all_license_safe"] = False
@@ -379,7 +434,7 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         )
         license_audit.write_text(originals[license_audit], encoding="utf-8")
 
-        release_notes = paths[8]
+        release_notes = paths[10]
         data = _load(release_notes)
         data["rows"][0]["passed"] = False
         data["all_notes_source_backed"] = False

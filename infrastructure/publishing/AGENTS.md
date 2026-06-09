@@ -276,5 +276,5 @@ Environment variables:
 ## See also
 
 - [README.md](README.md)
-- [`zenodo/AGENTS.md`](zenodo/AGENTS.md) · [`github/AGENTS.md`](github/AGENTS.md) · [`arxiv/AGENTS.md`](arxiv/AGENTS.md)
+- [`zenodo/AGENTS.md`](zenodo/AGENTS.md) · [`github/AGENTS.md`](github/AGENTS.md) · [`arxiv/AGENTS.md`](arxiv/AGENTS.md) · [`archival/AGENTS.md`](archival/AGENTS.md)
 - [`../core/`](../core/) · [`../validation/`](../validation/)

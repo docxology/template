@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from . import sheaf_tracks as _tracks
+from .row_aggregates import all_rows
 from .supplemental import validate_supplemental_artifacts
 
 
@@ -40,6 +41,20 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         issues.append("artifact_provenance.json schema mismatch")
     if provenance.get("all_records_complete") is not True or provenance.get("all_bundles_complete") is not True:
         issues.append("artifact_provenance.json has incomplete provenance rows or bundles")
+    field_provenance_ok = bool(provenance.get("field_provenance_rows")) and all(
+        row.get("source_commit")
+        and row.get("config_digest")
+        and isinstance(row.get("seed"), int)
+        and row.get("producer")
+        and row.get("jsonpath")
+        and row.get("complete") is True
+        for row in provenance.get("field_provenance_rows") or []
+    )
+    if (
+        provenance.get("all_field_provenance_complete") is not True
+        or provenance.get("all_field_provenance_complete") != field_provenance_ok
+    ):
+        issues.append("artifact_provenance.json has incomplete field-level provenance rows")
 
     replay = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["replay_matrix"])
     if replay.get("schema") != "template_active_inference.replay_matrix.v1":
@@ -136,6 +151,18 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         issues.append("validation_dependency_graph.json schema mismatch")
     if dependency.get("all_required_edge_types_present") is not True:
         issues.append("validation_dependency_graph.json lacks required edge types")
+    field_edges_ok = bool(dependency.get("field_edges")) and all(
+        row.get("artifact")
+        and row.get("jsonpath")
+        and row.get("validator")
+        and row.get("rendered_target")
+        and row.get("kind")
+        for row in dependency.get("field_edges") or []
+    )
+    if dependency.get("all_field_edges_mapped") is not True or dependency.get(
+        "all_field_edges_mapped"
+    ) != field_edges_ok:
+        issues.append("validation_dependency_graph.json has incomplete field-level edges")
 
     section_status = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["section_status"])
     if section_status.get("schema") != "template_active_inference.sheaf_section_status_matrix.v1":
@@ -177,7 +204,14 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     if evidence.get("schema") != "template_active_inference.evidence_field_index.v1":
         issues.append("evidence_field_index.json schema mismatch")
     evidence_fields_mapped = bool(evidence.get("rows")) and all(
-        row.get("artifact") and row.get("field_present") and row.get("claim_id") for row in evidence.get("rows") or []
+        row.get("artifact")
+        and row.get("source_artifact")
+        and row.get("field_present")
+        and row.get("claim_id")
+        and row.get("jsonpath")
+        and row.get("validator")
+        and row.get("semantic_restriction")
+        for row in evidence.get("rows") or []
     )
     if evidence.get("all_fields_mapped") is not True or evidence.get("all_fields_mapped") != evidence_fields_mapped:
         issues.append("evidence_field_index.json has unmapped evidence fields")
@@ -187,16 +221,38 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         issues.append("release_bundle_manifest.json schema mismatch")
     if release.get("all_required_sources_present") is not True:
         issues.append("release_bundle_manifest.json is missing required deliverables")
+    copied = release.get("copied_output_parity") or {}
+    copied_rows_ok = bool(copied.get("rows")) and all(
+        row.get("status") in {"matched", "deferred"} and row.get("matches_when_copied") is True
+        for row in copied.get("rows") or []
+    )
+    if (
+        release.get("all_copied_outputs_match_or_deferred") is not True
+        or copied.get("all_copied_outputs_match_or_deferred") is not True
+        or release.get("all_copied_outputs_match_or_deferred") != copied_rows_ok
+        or copied.get("all_copied_outputs_match_or_deferred") != copied_rows_ok
+    ):
+        issues.append("release_bundle_manifest.json has copied output parity drift")
 
     theorem = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["theorem_traceability"])
     if theorem.get("schema") != "template_active_inference.theorem_traceability_matrix.v1":
         issues.append("theorem_traceability_matrix.json schema mismatch")
-    theorem_linked = _all_rows(theorem, "linked")
+    theorem_linked = bool(theorem.get("rows")) and all(
+        row.get("linked") and row.get("claim_ids") and row.get("evidence_fields") and row.get("finite_models")
+        for row in theorem.get("rows") or []
+    )
     if theorem.get("all_theorems_linked") is not True or theorem.get("all_theorems_linked") != theorem_linked:
         issues.append("theorem_traceability_matrix.json has unlinked theorem rows")
 
     gate_index = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["gate_ergonomics"])
-    gate_indexed = _all_rows(gate_index, "indexed")
+    gate_indexed = all_rows(
+        gate_index,
+        lambda row: row.get("indexed")
+        and row.get("command")
+        and row.get("required_inputs")
+        and row.get("declared_outputs")
+        and row.get("negative_control_id"),
+    )
     if gate_index.get("all_indexed") is not True or gate_index.get("all_indexed") != gate_indexed:
         issues.append("validation_gate_index.json has unindexed gates")
 
@@ -289,6 +345,15 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
             issues.append("sheaf_gluing_certificate.json schema mismatch")
         if semantic.get("ok") is not True:
             issues.append("sheaf_gluing_certificate.json is not ok")
+        proof_obligations_ok = bool(semantic.get("proof_obligations")) and all(
+            row.get("class") and row.get("restriction") and row.get("ok") is True
+            for row in semantic.get("proof_obligations") or []
+        )
+        if (
+            semantic.get("all_proof_obligations_ok") is not True
+            or semantic.get("all_proof_obligations_ok") != proof_obligations_ok
+        ):
+            issues.append("sheaf_gluing_certificate.json has failing proof obligations")
         saved_restrictions = semantic.get("restrictions") or {}
         for key, expected in restrictions.items():
             if saved_restrictions.get(key) != expected:

@@ -224,6 +224,7 @@ def validate_evidence_command(args: argparse.Namespace) -> None:
 def validate_prose_quality_command(args: argparse.Namespace) -> None:
     """Scan manuscript prose for AI-writing fingerprints (advisory by default)."""
     from infrastructure.validation.content.ai_writing import analyze_prose
+    from infrastructure.validation.docs._io import read_markdown
 
     target = Path(args.path)
     if not target.exists():
@@ -232,9 +233,13 @@ def validate_prose_quality_command(args: argparse.Namespace) -> None:
 
     if target.is_dir():
         md_files = sorted(p for p in target.rglob("*.md") if p.is_file())
-        text = "\n\n".join(p.read_text(encoding="utf-8") for p in md_files)
+        chunks = [read_markdown(p) for p in md_files]
+        text = "\n\n".join(chunk for chunk in chunks if chunk is not None)
     else:
-        text = target.read_text(encoding="utf-8")
+        text = read_markdown(target)
+        if text is None:
+            logger.error(f"Could not read: {target}")
+            raise SystemExit(1)
 
     report = analyze_prose(text)
 

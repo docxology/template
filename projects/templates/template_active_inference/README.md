@@ -4,9 +4,16 @@ Public exemplar: **sheaf-composed** Active Inference manuscript with configurabl
 
 ## Quick start
 
+From the template repository root:
+
 ```bash
 uv sync --directory projects/templates/template_active_inference --extra dev
 cd projects/templates/template_active_inference
+```
+
+From this project root:
+
+```bash
 uv run python scripts/compose_manuscript.py
 uv run python scripts/run_analytical_sweep.py
 uv run python scripts/simulate_si_tmaze.py
@@ -83,10 +90,16 @@ Non-blocking future work is tracked in [`TODO.md`](TODO.md); current publication
 
 Every Python `def` and `class` under `src/` and `scripts/` is documented in the
 generated reference [`docs/reference/method-inventory.md`](docs/reference/method-inventory.md).
-Regenerate it after method, script, or module changes:
+Regenerate it after method, script, or module changes.
+
+## Documentation verification
+
+Run the documentation and artifact contract checks from this project root:
 
 ```bash
-uv run python scripts/generate_method_inventory.py
+uv run python scripts/check_documentation_contract.py --check
+uv run python scripts/generate_method_inventory.py --check
+uv run python scripts/validate_outputs.py
 ```
 
 The inventory distinguishes inline docstrings from inventory fallbacks, so missing

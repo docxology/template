@@ -360,10 +360,35 @@ def _runtime_diagnostics_restrictions(root: Path) -> dict[str, Any]:
     data = _load_json(root / "output" / "reports" / "pymdp_runtime_diagnostics.json")
     return {
         "ok": data.get("ok") is True,
+        "phase_rows_ok": data.get("all_phase_rows_ok") is True,
         "construction_count": int(data.get("construction_count", 0) or 0),
         "known_warning_count": int(data.get("known_warning_count", 0) or 0),
         "unexpected_warning_count": int(data.get("unexpected_warning_count", 0) or 0),
     }
+
+
+def _restriction_class(restriction: str) -> str:
+    if restriction.startswith(("blocked_", "scope_")) or "empirical" in restriction:
+        return "scope_boundary"
+    if any(token in restriction for token in ("proof", "theorem", "lean", "model_checking", "interop")):
+        return "formal_witness"
+    if any(token in restriction for token in ("provenance", "dependency", "release", "evidence", "gate")):
+        return "artifact_contract"
+    if any(token in restriction for token in ("visualization", "figure", "animation", "statistical")):
+        return "rendered_artifact"
+    return "semantic_restriction"
+
+
+def _proof_obligation_rows(restrictions: dict[str, bool]) -> list[dict[str, Any]]:
+    return [
+        {
+            "restriction": restriction,
+            "class": _restriction_class(restriction),
+            "obligation": f"prove_{restriction}",
+            "ok": bool(ok),
+        }
+        for restriction, ok in sorted(restrictions.items())
+    ]
 
 
 def _graph_world_restrictions(root: Path) -> dict[str, Any]:
@@ -692,10 +717,14 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
         canonical_restrictions = {}
     from validation_spine import validate_validation_spine
 
+    proof_obligations = _proof_obligation_rows(canonical_restrictions)
     return {
         "schema": SEMANTIC_SCHEMA,
         "ok": not issues,
         "issues": issues,
+        "restriction_classes": sorted({row["class"] for row in proof_obligations}),
+        "proof_obligations": proof_obligations,
+        "all_proof_obligations_ok": bool(proof_obligations) and all(row["ok"] for row in proof_obligations),
         "tracks": [
             {
                 "id": tid,
@@ -805,6 +834,7 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
             "policy_posterior_available_row_count": posterior["available_row_count"],
             "policy_posterior_normalized": posterior["all_available_posteriors_normalized"],
             "pymdp_runtime_ok": runtime["ok"],
+            "pymdp_runtime_phase_rows_ok": runtime["phase_rows_ok"],
             "pymdp_runtime_known_warning_count": runtime["known_warning_count"],
             "pymdp_runtime_unexpected_warning_count": runtime["unexpected_warning_count"],
             "graph_world_steps_match": graph_world["steps_match"],

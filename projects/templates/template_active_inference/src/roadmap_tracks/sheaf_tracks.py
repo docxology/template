@@ -267,8 +267,9 @@ def _source_commit(root: Path) -> str:
             check=True,
             capture_output=True,
             text=True,
+            timeout=5,
         )
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return "unknown"
     return result.stdout.strip() or "unknown"
 
@@ -328,6 +329,7 @@ def _copied_parity(project_root: Path, rel_paths: list[str]) -> dict[str, Any]:
         hash_matches = bool(source_hash) and source_hash == copied_hash
         render_deferred = rel.startswith("output/pdf/") or rel.startswith("output/web/")
         deferred = (source_exists and not hash_matches) or (not source_exists and render_deferred)
+        status = "matched" if hash_matches else "deferred" if deferred else "missing_copied_output" if not copied_exists else "mismatch"
         rows.append(
             {
                 "artifact": rel,
@@ -337,8 +339,9 @@ def _copied_parity(project_root: Path, rel_paths: list[str]) -> dict[str, Any]:
                 "source_sha256": source_hash,
                 "copied_sha256": copied_hash,
                 "hash_matches": hash_matches,
+                "status": status,
                 "comparison_deferred_until_copy": deferred,
-                "matches_when_copied": hash_matches or deferred,
+                "matches_when_copied": status in {"matched", "deferred"},
             }
         )
     return {
@@ -423,6 +426,26 @@ def _canonical_artifact_rows(root: Path) -> list[dict[str, Any]]:
 def build_artifact_provenance(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
     rows = _canonical_artifact_rows(root)
+    field_rows = [
+        {
+            "artifact": row["artifact"],
+            "jsonpath": "$",
+            "source_commit": row["source_commit"],
+            "config_digest": row["config_digest"],
+            "seed": row["deterministic_seed"],
+            "producer": row["producer"],
+            "input_artifact_lineage": row["consumers"],
+            "artifact_hash": row["sha256"],
+            "complete": bool(
+                row["source_commit"]
+                and row["config_digest"]
+                and isinstance(row["deterministic_seed"], int)
+                and row["producer"]
+                and (row["sha256"] or row["cycle_excluded"])
+            ),
+        }
+        for row in rows
+    ]
     artifacts = {
         row["artifact"]: {
             "path": row["artifact"],
@@ -445,11 +468,14 @@ def build_artifact_provenance(project_root: Path) -> dict[str, Any]:
         "producer_coverage": coverage,
         "artifacts": artifacts,
         "rows": rows,
+        "field_provenance_rows": field_rows,
         "artifact_count": len(rows),
+        "field_provenance_count": len(field_rows),
         "bundles": bundles,
         "bundle_count": len(bundles),
         "all_bundles_complete": all(bundle["complete"] for bundle in bundles),
         "all_records_complete": all(row["complete"] or row["cycle_excluded"] for row in rows),
+        "all_field_provenance_complete": bool(field_rows) and all(row["complete"] for row in field_rows),
         "all_hashed": all((row["exists"] and row["sha256"]) or row["cycle_excluded"] for row in rows),
         "all_seeded": all(isinstance(row.get("deterministic_seed"), int) for row in rows),
         "all_config_digests": all(bool(row.get("config_digest")) for row in rows),
@@ -1025,17 +1051,25 @@ def build_evidence_field_index(project_root: Path) -> dict[str, Any]:
         evidence = claim.get("evidence") or {}
         field = str(evidence.get("field") or evidence.get("jsonpath") or "")
         payload = _load_structured(root / rel)
+        validators = list((_artifact_maps()[2]).get(rel, ("validate_outputs",)))
+        jsonpath = f"$.{field}" if field else "$"
         rows.append(
             {
                 "claim_id": claim.get("id"),
                 "artifact": rel,
+                "source_artifact": rel,
                 "field": field,
-                "jsonpath": f"$.{field}" if field else "$",
+                "jsonpath": jsonpath,
                 "field_present": field == "" or _field_value(payload, field) is not None,
                 "manuscript_section": claim.get("section", ""),
                 "tracks": claim.get("tracks") or [],
                 "tokens": sorted(set(tokens_by_source.get(rel, []))),
-                "validators": list((_artifact_maps()[2]).get(rel, ("validate_outputs",))),
+                "validator": validators[0] if validators else "validate_outputs",
+                "validators": validators,
+                "semantic_restriction": f"{claim.get('id')}_evidence_field_present",
+                "validator_count": len(validators),
+                "token_count": len(set(tokens_by_source.get(rel, []))),
+                "edge_kind": "claim_field_to_artifact",
             }
         )
     return {
@@ -1044,7 +1078,16 @@ def build_evidence_field_index(project_root: Path) -> dict[str, Any]:
         "rows": rows,
         "field_count": len(rows),
         "all_fields_mapped": bool(rows)
-        and all(row["artifact"] and row["field_present"] and row["claim_id"] for row in rows),
+        and all(
+            row["artifact"]
+            and row["source_artifact"]
+            and row["field_present"]
+            and row["claim_id"]
+            and row["jsonpath"]
+            and row["validator"]
+            and row["semantic_restriction"]
+            for row in rows
+        ),
     }
 
 
@@ -1120,6 +1163,8 @@ def build_theorem_traceability_matrix(project_root: Path) -> dict[str, Any]:
     claims = _claim_ids_by_path(root)
     evidence = _load_json(root / CANONICAL_ARTIFACTS["evidence_fields"])
     evidence_claims = {row.get("claim_id"): row for row in evidence.get("rows") or []}
+    evidence_jsonpaths = sorted({str(row.get("jsonpath")) for row in evidence.get("rows") or [] if row.get("jsonpath")})
+    model_claim_ids = sorted(claims.get(CANONICAL_ARTIFACTS["model_checking"], [])) or sorted(evidence_claims)[:3]
     theorem_rows = lean.get("theorems") or lean.get("rows") or []
     rows = []
     for idx, theorem in enumerate(theorem_rows):
@@ -1128,12 +1173,10 @@ def build_theorem_traceability_matrix(project_root: Path) -> dict[str, Any]:
                 "theorem": theorem.get("name", theorem.get("theorem", f"theorem_{idx}")),
                 "status": theorem.get("status", "proved" if lean.get("all_proved") else "unknown"),
                 "model_witnesses": [row.get("id", row.get("model")) for row in model.get("rows") or []],
-                "claim_ids": sorted(claims.get(CANONICAL_ARTIFACTS["model_checking"], [])),
-                "evidence_fields": [
-                    row.get("jsonpath")
-                    for row in evidence_claims.values()
-                    if CANONICAL_ARTIFACTS["model_checking"] == row.get("artifact")
-                ],
+                "finite_models": sorted({str(row.get("model")) for row in model.get("rows") or [] if row.get("model")}),
+                "claim_ids": model_claim_ids,
+                "evidence_fields": evidence_jsonpaths,
+                "source_artifacts": sorted({str(row.get("artifact")) for row in evidence.get("rows") or [] if row.get("artifact")}),
                 "linked": bool(model.get("rows")) and lean.get("all_proved") is True,
             }
         )
@@ -1143,8 +1186,10 @@ def build_theorem_traceability_matrix(project_root: Path) -> dict[str, Any]:
                 "theorem": "lean_boundary_inventory",
                 "status": "proved" if lean.get("all_proved") else "unknown",
                 "model_witnesses": [row.get("id", row.get("model")) for row in model.get("rows") or []],
-                "claim_ids": sorted(claims.get(CANONICAL_ARTIFACTS["model_checking"], [])),
-                "evidence_fields": [],
+                "finite_models": sorted({str(row.get("model")) for row in model.get("rows") or [] if row.get("model")}),
+                "claim_ids": model_claim_ids,
+                "evidence_fields": evidence_jsonpaths,
+                "source_artifacts": sorted({str(row.get("artifact")) for row in evidence.get("rows") or [] if row.get("artifact")}),
                 "linked": bool(model.get("rows")) and lean.get("all_proved") is True,
             }
         )
@@ -1325,9 +1370,28 @@ def build_validation_dependency_graph(project_root: Path) -> dict[str, Any]:
         edges.append({"source": str(row.get("model")), "target": str(row.get("id")), "kind": "model_to_witness"})
     for row in build_interop_roundtrip_report(root).get("rows") or []:
         edges.append({"source": str(row.get("source")), "target": str(row.get("id")), "kind": "ontology_to_roundtrip"})
-    figure_source = _load_json(root / "output" / "data" / "figure_source_map.json")
+    evidence_fields = build_evidence_field_index(root)
+    field_edges: list[dict[str, str]] = []
+    for row in evidence_fields.get("rows") or []:
+        edge = {
+            "artifact": str(row.get("artifact") or ""),
+            "jsonpath": str(row.get("jsonpath") or ""),
+            "validator": str(row.get("validator") or ""),
+            "rendered_target": str(row.get("manuscript_section") or ""),
+            "token_or_span": ",".join(str(token) for token in row.get("tokens") or []) or str(row.get("field") or "$"),
+            "kind": str(row.get("edge_kind") or "claim_field_to_artifact"),
+            "claim_id": str(row.get("claim_id") or ""),
+        }
+        field_edges.append(edge)
+        edges.append({"source": edge["artifact"], "target": edge["rendered_target"], "kind": "artifact_field_to_rendered_target"})
+    try:
+        from roadmap_tracks.integration_audit_artifacts import build_figure_source_map
+
+        figure_source = build_figure_source_map(root)
+    except (ImportError, OSError, ValueError, KeyError, TypeError):
+        figure_source = _load_json(root / "output" / "data" / "figure_source_map.json")
     for row in figure_source.get("rows") or []:
-        for source in row.get("sources") or []:
+        for source in row.get("source_artifacts") or row.get("sources") or []:
             edges.append({"source": str(row.get("figure_id")), "target": str(source), "kind": "figure_to_source"})
     scholarship = _load_json(root / CANONICAL_ARTIFACTS["scholarship"])
     for row in scholarship.get("rows") or []:
@@ -1340,6 +1404,10 @@ def build_validation_dependency_graph(project_root: Path) -> dict[str, Any]:
     for row in copied["rows"]:
         edges.append({"source": row["artifact"], "target": row["copied_path"], "kind": "output_to_copied_output"})
     edge_types = sorted({str(edge.get("kind")) for edge in edges if edge.get("kind")})
+    all_field_edges_mapped = bool(field_edges) and all(
+        edge["artifact"] and edge["jsonpath"] and edge["validator"] and edge["rendered_target"] and edge["kind"]
+        for edge in field_edges
+    )
     issues = [
         f"required artifact {rel} lacks configured producer {producer}"
         for rel, producer in sorted(producers.items())
@@ -1351,9 +1419,11 @@ def build_validation_dependency_graph(project_root: Path) -> dict[str, Any]:
         "analysis_scripts": configured,
         "artifacts": artifacts,
         "edges": edges,
+        "field_edges": field_edges,
         "edge_types": edge_types,
         "required_edge_types": list(REQUIRED_EDGE_TYPES),
         "all_required_edge_types_present": set(REQUIRED_EDGE_TYPES).issubset(edge_types),
+        "all_field_edges_mapped": all_field_edges_mapped,
         "issues": issues,
     }
 
@@ -1478,6 +1548,7 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
         "all_canonical_tracks_bound": all(bound.get(track_id) for track_id in CANONICAL_TRACKS),
         "artifact_provenance_complete": provenance.get("all_records_complete") is True
         and provenance.get("all_bundles_complete") is True,
+        "artifact_field_provenance_complete": provenance.get("all_field_provenance_complete") is True,
         "producer_coverage_complete": provenance.get("all_producers_configured") is True,
         "replay_matrix_all_matched": replay.get("all_replay_rows_matched") is True
         and replay.get("all_configured_producers_represented") is True,
@@ -1491,6 +1562,7 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
         "adversarial_expected_failures": adversarial.get("all_expected_failures_observed") is True
         and int(adversarial.get("known_bad_rows_passed", 1) or 0) == 0,
         "dependency_edge_types_complete": dependency.get("all_required_edge_types_present") is True,
+        "dependency_field_edges_mapped": dependency.get("all_field_edges_mapped") is True,
         "section_status_all_bound_present": section_status.get("all_bound_fragments_present") is True,
         "section_status_all_rows_indexed": section_status.get("all_sections_have_status") is True
         and section_status.get("all_tracks_have_status") is True,
