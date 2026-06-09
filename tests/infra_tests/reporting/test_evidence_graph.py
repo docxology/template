@@ -296,3 +296,105 @@ def test_ingest_claims_unexpected_shape_notes_gap(tmp_path: Path) -> None:
     _ingest_claims(graph, tmp_path)
     assert graph.nodes_by_type(NodeType.CLAIM) == []
     assert any("unexpected shape" in n for n in graph.notes)
+
+
+def test_ingest_claims_autoresearch_ledger_yields_nodes_and_supports(tmp_path: Path) -> None:
+    """The AutoResearch exemplar ledger shape (a bare list of claim dicts with
+    ``identifier`` / ``supported`` / ``evidence_path``) is found at
+    ``output/data/autoresearch_claims.json`` and ingested as claim nodes plus
+    ``supports`` edges (evidence artifact -> claim). No mocks: a real on-disk
+    fixture mirrors what ``payloads.py`` writes via ``AutoResearchClaim.to_dict``.
+    """
+    data_dir = tmp_path / "output" / "data"
+    data_dir.mkdir(parents=True)
+    ledger = [
+        {
+            "identifier": "rq1",
+            "statement": "Bounded loop expressible",
+            "evidence_path": "output/reports/autoresearch_loop.md",
+            "supported": True,
+        },
+        {
+            "identifier": "rq2",
+            "statement": "Readiness gate holds",
+            "evidence_path": "output/reports/autoresearch_readiness.json",
+            "supported": False,
+        },
+    ]
+    (data_dir / "autoresearch_claims.json").write_text(json.dumps(ledger), encoding="utf-8")
+
+    graph = EvidenceGraph(project="fixture")
+    _ingest_claims(graph, tmp_path)
+
+    claims = graph.nodes_by_type(NodeType.CLAIM)
+    assert {c.id for c in claims} == {"claim:rq1", "claim:rq2"}
+    # The boolean ``supported`` flag maps to a human-readable status.
+    status = {c.id: c.attributes["status"] for c in claims}
+    assert status == {"claim:rq1": "supported", "claim:rq2": "unsupported"}
+    # No gap note when a ledger is present.
+    assert graph.notes == []
+    # Each claim has a supports edge from its evidence artifact.
+    supports = [e for e in graph.edges if e.relation is RelationType.SUPPORTS]
+    assert {e.target for e in supports} == {"claim:rq1", "claim:rq2"}
+    for edge in supports:
+        # supports edges run artifact -> claim
+        src = next(n for n in graph.nodes if n.id == edge.source)
+        assert src.type is NodeType.ARTIFACT
+
+
+def test_ingest_claims_glob_discovers_named_ledger(tmp_path: Path) -> None:
+    """A project-specific ledger filename is found via the ``*claims*`` glob."""
+    data_dir = tmp_path / "output" / "data"
+    data_dir.mkdir(parents=True)
+    (data_dir / "my_project_claims.json").write_text(
+        json.dumps([{"identifier": "C9", "statement": "globbed"}]), encoding="utf-8"
+    )
+
+    graph = EvidenceGraph(project="fixture")
+    _ingest_claims(graph, tmp_path)
+    assert [c.id for c in graph.nodes_by_type(NodeType.CLAIM)] == ["claim:c9"]
+    assert graph.notes == []
+
+
+def test_ingest_claims_no_ledger_keeps_note(tmp_path: Path) -> None:
+    """A project with no ledger anywhere still records the gap note."""
+    graph = EvidenceGraph(project="fixture")
+    _ingest_claims(graph, tmp_path)
+    assert graph.nodes_by_type(NodeType.CLAIM) == []
+    assert any("No claim ledger found" in n for n in graph.notes)
+
+
+def test_build_evidence_graph_ingests_real_autoresearch_ledger(tmp_path: Path) -> None:
+    """End-to-end: dropping a real ledger into a project tree surfaces claim
+    nodes and supports edges through ``build_evidence_graph`` (CLI-equivalent).
+    """
+    project = "template_code_project"
+    data_dir = REPO_ROOT / "projects" / "templates" / project / "output" / "data"
+    ledger_path = data_dir / "claims.json"
+    created_dir = not data_dir.exists()
+    data_dir.mkdir(parents=True, exist_ok=True)
+    ledger = [
+        {
+            "identifier": "demo-claim",
+            "statement": "Pipeline produces deterministic output",
+            "evidence_path": "output/data/results.json",
+            "supported": True,
+        }
+    ]
+    ledger_path.write_text(json.dumps(ledger), encoding="utf-8")
+    try:
+        graph = build_evidence_graph(REPO_ROOT, project)
+        claims = graph.nodes_by_type(NodeType.CLAIM)
+        assert [c.id for c in claims] == ["claim:demo-claim"]
+        assert not any("No claim ledger found" in n for n in graph.notes)
+        supports = [e for e in graph.edges if e.relation is RelationType.SUPPORTS]
+        assert [e.target for e in supports] == ["claim:demo-claim"]
+    finally:
+        ledger_path.unlink()
+        if created_dir:
+            # Remove only directories we created, leaving the tree as found.
+            try:
+                data_dir.rmdir()
+                data_dir.parent.rmdir()
+            except OSError:
+                pass
