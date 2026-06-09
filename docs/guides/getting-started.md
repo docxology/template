@@ -435,7 +435,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    vim projects/templates/template_code_project/manuscript/preamble.md
    ```
 
-2. **Find color definitions** (around line 97-103):
+2. **Add `\definecolor` declarations** near the top of the preamble (the shipped file keeps its color setup above the `\hypersetup` block):
 
    ```latex
    \definecolor{codebg}{RGB}{248, 248, 248}
@@ -449,7 +449,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    \definecolor{mygreen}{RGB}{0, 158, 115}
    ```
 
-4. **Use in hyperlinks** (around line 54-60):
+4. **Use in hyperlinks** (in the `\hypersetup` block):
 
    ```latex
    \hypersetup{

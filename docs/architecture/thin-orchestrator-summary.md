@@ -88,12 +88,20 @@ Project-specific scripts in `projects/{name}/scripts/` are thin orchestrators th
 
 ```python
 # scripts/01_run_tests.py - Root orchestrator
-from infrastructure.reporting.pytest_output_parser import parse_pytest_output
-from infrastructure.reporting.report_generator import generate_test_report, save_test_report_to_files
+from infrastructure.reporting.pipeline_test_runner import (
+    INFRASTRUCTURE_TEST_SCOPES,
+    execute_test_pipeline,
+)
 
-# Use infrastructure methods for business logic
-test_results = parse_pytest_output(stdout, stderr, exit_code)
-report = generate_test_report(infra_results, project_results, repo_root)
+# Delegate all business logic to the infrastructure entry point;
+# execute_test_pipeline internally parses pytest output and generates the report.
+exit_code = execute_test_pipeline(
+    project_name=args.project,
+    repo_root=repo_root,
+    run_infra=run_infra,
+    run_project=run_project,
+    infra_scope=args.infra_scope,
+)
 save_test_report_to_files(report, output_dir)
 ```
 

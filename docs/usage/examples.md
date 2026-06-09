@@ -170,7 +170,7 @@ Validate that everything works:
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
-### 5. Customize Further
+### 4. Customize Further
 
 Edit additional files as needed:
 

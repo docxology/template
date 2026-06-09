@@ -7,11 +7,13 @@ from pathlib import Path
 from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.project.working_render import (
     ProjectAudit,
+    _classify_filesystem_only,
     _combined_pdf_path,
     check_structure,
     classify_status,
     failure_category,
     first_failure,
+    has_manuscript,
     list_working_projects,
     stage_summaries,
     write_audit_report,
@@ -42,6 +44,46 @@ def test_classify_status_partial_local_only(tmp_path: Path) -> None:
         pdf_validation_ok=None,
     )
     assert status == "PARTIAL — local PDF only"
+
+
+def test_has_manuscript_true_when_markdown_present(tmp_path: Path) -> None:
+    (tmp_path / "manuscript").mkdir()
+    (tmp_path / "manuscript" / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+    assert has_manuscript(tmp_path) is True
+
+
+def test_has_manuscript_false_when_dir_missing_or_empty(tmp_path: Path) -> None:
+    assert has_manuscript(tmp_path) is False
+    (tmp_path / "manuscript").mkdir()
+    assert has_manuscript(tmp_path) is False  # dir present but no *.md
+
+
+def test_classify_filesystem_only_rubric() -> None:
+    def audit(**kw: object) -> ProjectAudit:
+        base = dict(name="p", status="", pipeline_success=False, duration_sec=0.0)
+        base.update(kw)
+        return ProjectAudit(**base)  # type: ignore[arg-type]
+
+    assert _classify_filesystem_only(audit(top_pdf="/t.pdf", pdf_validation_ok=True)) == (
+        "PASS — full top-level PDF",
+        True,
+    )
+    assert _classify_filesystem_only(audit(top_pdf="/t.pdf")) == (
+        "PARTIAL — PDF validation issues",
+        False,
+    )
+    assert _classify_filesystem_only(audit(local_pdf="/l.pdf")) == (
+        "PARTIAL — local PDF only",
+        False,
+    )
+    assert _classify_filesystem_only(audit(status="PASS — pipeline")) == (
+        "PARTIAL — pipeline passed; top PDF missing",
+        False,
+    )
+    assert _classify_filesystem_only(
+        audit(structure_ok=False, structure_notes=["missing tests/"])
+    ) == ("FAIL — structure", False)
+    assert _classify_filesystem_only(audit()) == ("FAIL — no PDF", False)
 
 
 def test_check_structure_requires_tests_and_manuscript(tmp_path: Path) -> None:

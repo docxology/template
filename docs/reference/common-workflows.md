@@ -144,7 +144,7 @@
    ```
 
    ```python
-   from data_analysis import analyze_data
+   from projects.template_code_project.src.data_analysis import analyze_data
 
    def test_analyze_data():
        result = analyze_data([1, 2, 3, 4, 5])
@@ -381,7 +381,7 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
 4. **Use in scripts (thin orchestrator)**
 
    ```python
-   from statistics import calculate_std_dev
+   from projects.template_code_project.src.statistics import calculate_std_dev
 
    data = [1, 2, 3, 4, 5]
    std = calculate_std_dev(data)  # Use src/ method

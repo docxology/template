@@ -19,6 +19,7 @@ from infrastructure.core.logging.utils import get_logger, log_header  # noqa: E4
 from infrastructure.project.working_render import (  # noqa: E402
     ProjectAudit,
     audit_project,
+    audit_project_filesystem_only,
     consolidate_audits,
     list_working_projects,
     run_project_pipeline,
@@ -79,45 +80,15 @@ def main() -> int:
 
     if args.consolidate is not None:
         log_path = args.consolidate if args.consolidate.is_file() else None
-        audits = consolidate_audits(repo, log_path)
-        json_path, md_path = write_audit_report(repo, audits)
+        consolidated = consolidate_audits(repo, log_path)
+        json_path, md_path = write_audit_report(repo, consolidated)
         logger.info("Consolidated audit: %s", json_path)
         return 0
 
     if args.audit_only:
-        audits = [
-            audit_project(
-                repo,
-                name,
-                results=[],
-                duration_sec=0.0,
-            )
-            for name in names
-        ]
-        # Re-classify without pipeline stage data (filesystem + PDF validator only).
-        for audit in audits:
-            if audit.top_pdf and audit.pdf_validation_ok is True:
-                audit.status = "PASS — full top-level PDF"
-                audit.pipeline_success = True
-            elif audit.top_pdf:
-                audit.status = "PARTIAL — PDF validation issues"
-                audit.pipeline_success = False
-            elif audit.local_pdf:
-                audit.status = "PARTIAL — local PDF only"
-                audit.pipeline_success = False
-            elif audit.status.startswith("PASS"):
-                audit.status = "PARTIAL — pipeline passed; top PDF missing"
-                audit.pipeline_success = False
-            elif not audit.structure_ok or any(
-                n.startswith("missing tests") or n.startswith("missing manuscript")
-                for n in audit.structure_notes
-            ):
-                audit.status = "FAIL — structure"
-                audit.pipeline_success = False
-            else:
-                audit.status = "FAIL — no PDF"
-                audit.pipeline_success = False
-        json_path, md_path = write_audit_report(repo, audits)
+        # Filesystem + PDF-validator only (no pipeline run); rubric lives in infrastructure.
+        records = [audit_project_filesystem_only(repo, name) for name in names]
+        json_path, md_path = write_audit_report(repo, records)
         logger.info("Audit-only report: %s", json_path)
         logger.info("Summary: %s", md_path)
         return 0

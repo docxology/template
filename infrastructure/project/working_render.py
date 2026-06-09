@@ -53,6 +53,12 @@ def list_working_projects(repo: Path) -> list[str]:
     return names
 
 
+def has_manuscript(project_dir: Path) -> bool:
+    """Return True when *project_dir* holds a ``manuscript/`` dir with ``*.md`` files."""
+    manuscript = project_dir / "manuscript"
+    return manuscript.is_dir() and any(manuscript.glob("*.md"))
+
+
 def _combined_pdf_path(output_dir: Path, project_name: str) -> Path | None:
     """Resolve a combined PDF under *output_dir* using the shared locator."""
     search_root = output_dir.parent if output_dir.name == "pdf" else output_dir
@@ -214,6 +220,39 @@ def audit_project(
     )
 
 
+def _classify_filesystem_only(audit: ProjectAudit) -> tuple[str, bool]:
+    """PASS/PARTIAL/FAIL rubric for filesystem-only audits (no pipeline results).
+
+    Distinct from :func:`classify_status` (which assumes pipeline-stage data): this
+    rubric derives status from rendered-PDF presence and structure markers alone.
+    """
+    if audit.top_pdf and audit.pdf_validation_ok is True:
+        return "PASS — full top-level PDF", True
+    if audit.top_pdf:
+        return "PARTIAL — PDF validation issues", False
+    if audit.local_pdf:
+        return "PARTIAL — local PDF only", False
+    if audit.status.startswith("PASS"):
+        return "PARTIAL — pipeline passed; top PDF missing", False
+    if not audit.structure_ok or any(
+        n.startswith("missing tests") or n.startswith("missing manuscript")
+        for n in audit.structure_notes
+    ):
+        return "FAIL — structure", False
+    return "FAIL — no PDF", False
+
+
+def audit_project_filesystem_only(repo: Path, name: str) -> ProjectAudit:
+    """Audit a working project from filesystem + PDF validator only (no pipeline run).
+
+    Builds the standard audit record with empty pipeline results, then re-derives
+    status via :func:`_classify_filesystem_only`. Backs the ``--audit-only`` path.
+    """
+    audit = audit_project(repo, name, results=[], duration_sec=0.0)
+    audit.status, audit.pipeline_success = _classify_filesystem_only(audit)
+    return audit
+
+
 _PIPELINE_FAIL_RE = re.compile(r"Pipeline failed at stage (\d+):\s*([^—\n]+)")
 
 
@@ -335,7 +374,9 @@ __all__ = [
     "ProjectAudit",
     "WORKING_DIR",
     "audit_project",
+    "audit_project_filesystem_only",
     "check_structure",
+    "has_manuscript",
     "classify_status",
     "failure_category",
     "first_failure",

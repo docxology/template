@@ -42,7 +42,7 @@ flowchart TB
 
 **Layer 2: Stage Scripts (Thin Orchestrators)**
 
-- **`scripts/00_*.py`–`scripts/07_*.py`**: Import from `infrastructure/` for business logic (numbered stage entry points; not all run in a single `--core-only` pass)
+- **`scripts/00_*.py`–`scripts/09_*.py`**: Import from `infrastructure/` for business logic (numbered stage entry points; stages 0-7 are core pipeline orchestrators, stages 8-9 are opt-in bundle/archival orchestrators tagged `[bundle]`/`[archival]`; not all run in a single `--core-only` pass)
 - **`projects/{name}/scripts/*.py`**: Import from `projects/{name}/src/` for business logic
 - **Purpose**: Stage-specific coordination and I/O handling
 

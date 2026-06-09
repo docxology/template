@@ -39,28 +39,28 @@ The template provides **two pipeline orchestrators** with different scope and st
 
 ### Core Pipeline: Python Orchestrator (`execute_pipeline.py`)
 
-**10 named stages (stage 0 = Clean, then 9 numbered); `--core-only` runs 8 stages by excluding the two LLM-tagged stages — no LLM dependencies required in core mode:**
+**Core mode (`--core-only`) runs the 8 core-tagged stages with no LLM dependencies; the two LLM-tagged stages (Scientific Review, Translations) are excluded. The contiguous core sequence:**
 
 ```mermaid
 flowchart TD
-    START([Start execute_pipeline.py]) --> STAGE0[Stage 00: Setup Environment]
-    STAGE0 --> STAGE1[Stage 01: Run Tests]
-    STAGE1 --> STAGE2[Stage 02: Run Analysis]
-    STAGE2 --> STAGE3[Stage 03: Render PDF]
-    STAGE3 --> STAGE4[Stage 04: Validate Output]
-    STAGE4 --> STAGE5[Stage 05: Copy Outputs]
-    STAGE5 --> STAGE6[Stage 06: LLM Review]
-    STAGE6 --> STAGE7[Stage 07: Executive Report]
+    START([Start execute_pipeline.py --core-only]) --> STAGE0[Stage 0: Clean Output Directories]
+    STAGE0 --> STAGE1[Stage 1: Environment Setup]
+    STAGE1 --> STAGE2[Stage 2: Infrastructure Tests]
+    STAGE2 --> STAGE3[Stage 3: Project Tests]
+    STAGE3 --> STAGE4[Stage 4: Project Analysis]
+    STAGE4 --> STAGE5[Stage 5: PDF Rendering]
+    STAGE5 --> STAGE6[Stage 6: Output Validation]
+    STAGE6 --> STAGE7[Stage 7: Copy Outputs]
     STAGE7 --> SUCCESS[Build successful]
 
-    STAGE0 -->|Fail| FAIL0[Setup failed]
-    STAGE1 -->|Fail| FAIL1[Tests failed]
-    STAGE2 -->|Fail| FAIL2[Analysis failed]
-    STAGE3 -->|Fail| FAIL3[PDF build failed]
-    STAGE4 -->|Fail| FAIL4[Validation failed]
-    STAGE5 -->|Fail| FAIL5[Copy failed]
-    STAGE6 -->|Fail| FAIL6[LLM review failed]
-    STAGE7 -->|Fail| FAIL7[Report failed]
+    STAGE0 -->|Fail| FAIL0[Clean failed]
+    STAGE1 -->|Fail| FAIL1[Setup failed]
+    STAGE2 -->|Fail| FAIL2[Infra tests failed]
+    STAGE3 -->|Fail| FAIL3[Project tests failed]
+    STAGE4 -->|Fail| FAIL4[Analysis failed]
+    STAGE5 -->|Fail| FAIL5[PDF build failed]
+    STAGE6 -->|Fail| FAIL6[Validation failed]
+    STAGE7 -->|Fail| FAIL7[Copy failed]
 
     FAIL0 --> END([Exit with error])
     FAIL1 --> END
@@ -84,32 +84,32 @@ flowchart TD
 
 ### Extended Pipeline: Interactive Orchestrator (`./run.sh --pipeline`)
 
-**10 named stages displayed as `[0/9]` (Clean) then `[1/9]`–`[9/9]` for the nine numbered stages, includes optional LLM features:**
+**Default full run is 10 stages displayed as `[0/9]` (Clean) then `[1/9]`–`[9/9]`; includes optional LLM features (numbering matches `pipeline.yaml` and the CLAUDE.md stage table):**
 
-- Stage 1: Clean Output Directories
-- Stage 2: Environment Setup
-- Stage 3: Infrastructure Tests (may be skipped)
-- Stage 4: Project Tests
-- Stage 5: Project Analysis
-- Stage 6: PDF Rendering
-- Stage 7: Output Validation
-- Stage 8: LLM Scientific Review (optional, requires Ollama)
-- Stage 9: LLM Translations (optional, requires Ollama)
-- Stage 10: Copy Outputs
+- Stage 0: Clean Output Directories
+- Stage 1: Environment Setup
+- Stage 2: Infrastructure Tests (may be skipped)
+- Stage 3: Project Tests
+- Stage 4: Project Analysis
+- Stage 5: PDF Rendering
+- Stage 6: Output Validation
+- Stage 7: LLM Scientific Review (optional, requires Ollama)
+- Stage 8: LLM Translations (optional, requires Ollama)
+- Stage 9: Copy Outputs
 
 ```mermaid
 flowchart TD
     START([Start ./run.sh --pipeline]) --> CLEAN[Stage 0: Clean Output Directories]
-    CLEAN --> SETUP[Stage 1: Setup Environment]
+    CLEAN --> SETUP[Stage 1: Environment Setup]
     SETUP --> INFRA_TESTS[Stage 2: Infrastructure Tests]
     INFRA_TESTS --> PROJ_TESTS[Stage 3: Project Tests]
     PROJ_TESTS --> ANALYSIS[Stage 4: Project Analysis]
     ANALYSIS --> PDF[Stage 5: PDF Rendering]
     PDF --> VALIDATE[Stage 6: Output Validation]
-    VALIDATE --> COPY[Stage 7: Copy Outputs]
-    COPY --> LLM_REVIEW[Stage 8: LLM Scientific Review]
-    LLM_REVIEW --> LLM_TRANSLATE[Stage 9: LLM Translations]
-    LLM_TRANSLATE --> SUCCESS[Build successful]
+    VALIDATE --> LLM_REVIEW[Stage 7: LLM Scientific Review]
+    LLM_REVIEW --> LLM_TRANSLATE[Stage 8: LLM Translations]
+    LLM_TRANSLATE --> COPY[Stage 9: Copy Outputs]
+    COPY --> SUCCESS[Build successful]
 
     classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef failure fill:#ffebee,stroke:#c62828,stroke-width:2px
@@ -127,11 +127,12 @@ flowchart TD
 
 | Stage | Time | Percentage | Description |
 | ------- | ------ | ------------ | ------------- |
-| **Setup Environment** | 1s | 1% | Dependency validation |
-| **Run Tests** | ~35s | 36% | Pipeline-smoke infrastructure contract + selected project tests |
-| **Run Analysis** | 6s | 7% | Execute project scripts |
-| **Render PDF** | 50s | 60% | Generate manuscript PDFs |
-| **Validate Output** | 1s | 1% | Quality checks |
+| **Clean Output Directories** | <1s | <1% | Fresh build state |
+| **Environment Setup** | 1s | 1% | Dependency validation |
+| **Infrastructure + Project Tests** | ~35s | 36% | Pipeline-smoke infrastructure contract + selected project tests |
+| **Project Analysis** | 6s | 7% | Execute project scripts |
+| **PDF Rendering** | 50s | 60% | Generate manuscript PDFs |
+| **Output Validation** | 1s | 1% | Quality checks |
 | **Copy Outputs** | 0s | 0% | Final deliverables |
 | **Total** | **84s** | **100%** | Core pipeline |
 
@@ -155,7 +156,7 @@ flowchart TD
 
 - Core pipeline (`execute_pipeline.py`): Fast, no LLM dependencies, programmatic use
 - Extended pipeline (`./run.sh --pipeline`):, includes AI features
-- LLM stages (8-9) are optional and add ~20.5 minutes to execution time
+- LLM stages (7-8: Scientific Review, Translations) are optional and add ~20.5 minutes to execution time
 
 ---
 

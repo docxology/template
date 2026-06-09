@@ -2,7 +2,7 @@
 
 > **File integrity and cross-reference validation**
 
-**Location:** `infrastructure/validation/integrity/checks.py`
+**Location:** `infrastructure/validation/integrity/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---

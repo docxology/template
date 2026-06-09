@@ -2,7 +2,7 @@
 
 > **Multi-format output generation from single source**
 
-**Location:** `infrastructure/rendering/core.py`
+**Location:** `infrastructure/rendering/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---

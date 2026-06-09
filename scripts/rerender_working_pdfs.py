@@ -22,14 +22,12 @@ if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
 
 from infrastructure.core.logging.utils import get_logger, log_header  # noqa: E402
-from infrastructure.project.working_render import list_working_projects  # noqa: E402
+from infrastructure.project.working_render import (  # noqa: E402
+    has_manuscript,
+    list_working_projects,
+)
 
 logger = get_logger(__name__)
-
-
-def _has_manuscript(project_dir: Path) -> bool:
-    manuscript = project_dir / "manuscript"
-    return manuscript.is_dir() and any(manuscript.glob("*.md"))
 
 
 def main() -> int:
@@ -51,7 +49,7 @@ def main() -> int:
 
     repo = repo_root
     names = args.projects if args.projects else list_working_projects(repo)
-    names = [n for n in names if _has_manuscript(repo / "projects" / "working" / n)]
+    names = [n for n in names if has_manuscript(repo / "projects" / "working" / n)]
 
     if not names:
         logger.error("No working projects with manuscript/*.md found")

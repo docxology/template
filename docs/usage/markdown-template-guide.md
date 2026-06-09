@@ -11,13 +11,15 @@ The template demonstrates an academic paper structure organized as numbered mark
 ### Core Sections (illustrative)
 
 1. **`manuscript/preamble.md`** - LaTeX preamble with styling and packages
-2. **`manuscript/01_abstract.md`** - Research overview and key contributions
-3. **`manuscript/02_introduction.md`** - Introduction with section references and overview
-4. **`manuscript/03_methodology.md`** - Mathematical framework with numbered equations
-5. **`manuscript/04_experimental_results.md`** - Results with figure and equation references
-6. **`manuscript/05_discussion.md`** - Discussion with cross-references to previous sections
-7. **`manuscript/06_conclusion.md`** - Conclusion summarizing all contributions
-8. **`manuscript/98_symbols_glossary.md`** - Auto-generated API reference from `projects/{name}/src/`
+2. **`manuscript/00_abstract.md`** - Research overview and key contributions
+3. **`manuscript/01_introduction.md`** - Introduction with section references and overview
+4. **`manuscript/02_methodology.md`** - Mathematical framework with numbered equations
+5. **`manuscript/03_results.md`** - Results with figure and equation references
+6. **`manuscript/04_conclusion.md`** - Conclusion summarizing all contributions
+7. **`manuscript/05_experimental_setup.md`** - Experimental setup and methodology details
+8. **`manuscript/06_reproducibility.md`** - Reproducibility and code availability
+9. **`manuscript/07_scope_and_related_work.md`** - Scope and related work
+10. **`manuscript/99_references.md`** - Bibliography and references
 
 ## Cross-Referencing System
 
