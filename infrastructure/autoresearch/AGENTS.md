@@ -39,6 +39,9 @@ without autonomous research execution.
 - `validate_autoresearch_plan(plan, project_root, *, phase="all")`
 - `write_autoresearch_report(project_root, report)`
 
+Implementation split: [`validation.py`](validation.py) orchestrates;
+[`validation_checks.py`](validation_checks.py) holds per-check validators.
+
 ## Validation phases
 
 `validate_autoresearch_plan(..., phase=...)`:

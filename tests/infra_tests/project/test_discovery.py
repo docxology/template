@@ -1384,19 +1384,46 @@ def test_resolve_project_root_templates_stub_without_markers_does_not_win(tmp_pa
     assert resolved == wip.resolve()
 
 
-def test_resolve_project_root_qualified_templates_prefix(tmp_path: Path) -> None:
-    """A qualified 'templates/<name>' path resolves directly under projects/templates/.
+def test_resolve_project_root_output_only_flat_shadow_does_not_hide_exemplar(
+    tmp_path: Path,
+) -> None:
+    """An output-only flat ``projects/<name>/`` skeleton must not shadow the exemplar.
 
-    Regression guard: ensure the qualified-prefix fast-path (lines 151-156 of
-    discovery.py) correctly bypasses the active/working/flat search.
+    Regression: a stale ``projects/template_code_project/output/`` minted by a
+    prior run made ``resolve_project_root`` return the empty flat path, so
+    ``build_evidence_graph`` silently found no claim ledger for the real
+    exemplar under ``projects/templates/``.
     """
+    (tmp_path / "projects" / "template_demo" / "output").mkdir(parents=True)
     exemplar = tmp_path / "projects" / "templates" / "template_demo"
     (exemplar / "src").mkdir(parents=True)
-    (exemplar / "tests").mkdir()
-    (exemplar / "src" / "__init__.py").write_text("")
+    (exemplar / "manuscript").mkdir()
 
-    resolved = resolve_project_root(tmp_path, "templates/template_demo")
+    resolved = resolve_project_root(tmp_path, "template_demo")
     assert resolved == exemplar.resolve()
+
+
+def test_resolve_project_root_flat_tree_with_markers_still_wins(tmp_path: Path) -> None:
+    """A real flat standalone tree (with source markers) keeps beating templates/."""
+    flat = tmp_path / "projects" / "template_demo"
+    (flat / "src").mkdir(parents=True)
+    (flat / "tests").mkdir()
+    templated = tmp_path / "projects" / "templates" / "template_demo"
+    (templated / "src").mkdir(parents=True)
+
+    resolved = resolve_project_root(tmp_path, "template_demo")
+    assert resolved == flat.resolve()
+
+
+def test_resolve_project_root_markerless_flat_without_exemplar_falls_back(
+    tmp_path: Path,
+) -> None:
+    """With no exemplar counterpart, a marker-less flat dir is still returned."""
+    flat = tmp_path / "projects" / "bespoke_layout"
+    (flat / "data").mkdir(parents=True)
+
+    resolved = resolve_project_root(tmp_path, "bespoke_layout")
+    assert resolved == flat.resolve()
 
 
 def test_resolve_project_root_templates_stub_without_markers_falls_through(tmp_path: Path) -> None:

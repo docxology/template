@@ -74,8 +74,13 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     wip = repo_root / "projects" / "working" / project_name
     if wip.is_dir():
         return wip.resolve()
+    # A flat standalone tree only wins outright when it carries source markers.
+    # An output-only flat skeleton (e.g. a stale ``projects/<name>/output/``
+    # minted by a prior run) must not shadow a real exemplar under
+    # ``projects/templates/`` — that shadow made bare-name consumers such as
+    # ``build_evidence_graph`` silently see an empty project.
     flat = repo_root / "projects" / project_name
-    if flat.is_dir():
+    if flat.is_dir() and has_project_markers(flat):
         return flat.resolve()
     # Public canonical exemplars live under ``projects/templates/<name>`` and
     # must resolve by bare name as well. Without this, an output-only shadow
@@ -87,6 +92,10 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     templated = repo_root / "projects" / "templates" / project_name
     if templated.is_dir() and has_project_markers(templated):
         return templated.resolve()
+    # Marker-less flat tree with no exemplar counterpart: keep the historical
+    # behavior of returning it so bespoke layouts and error paths still resolve.
+    if flat.is_dir():
+        return flat.resolve()
     if primary.is_dir():
         return primary.resolve()
     return primary
