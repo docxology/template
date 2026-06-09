@@ -29,51 +29,38 @@ class TestValidatePdfCliModule:
         assert "__name__" in module_attrs
 
 
-class TestValidatePdfCliIntegration:
-    """Integration tests for PDF validation CLI."""
+class TestDiscoverCombinedPdf:
+    """Test discover_combined_pdf against a real output/ layout."""
 
-    def test_validate_pdf_workflow(self, tmp_path):
-        """Test PDF validation workflow if available."""
-        pdf_file = tmp_path / "test.pdf"
-        pdf_file.write_bytes(b"%PDF-1.4 mock content")
-        assert validate_pdf_cli is not None
+    def test_named_project_found(self, tmp_path):
+        """Named project resolves to output/{name}/pdf/{name}_combined.pdf."""
+        pdf_dir = tmp_path / "output" / "proj" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        combined = pdf_dir / "proj_combined.pdf"
+        combined.write_bytes(b"%PDF-1.4")
 
+        result = validate_pdf_cli.discover_combined_pdf(tmp_path, "proj")
+        assert result == combined
 
-class TestValidatePdfCliImport:
-    """Test module import."""
+    def test_named_project_missing(self, tmp_path):
+        """Named project without a combined PDF returns None."""
+        (tmp_path / "output" / "proj" / "pdf").mkdir(parents=True)
+        assert validate_pdf_cli.discover_combined_pdf(tmp_path, "proj") is None
 
-    def test_module_imports(self):
-        """Test that module imports correctly."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
+    def test_unnamed_picks_first_sorted(self, tmp_path):
+        """Without a project name, the first sorted glob match wins."""
+        for name in ("beta", "alpha"):
+            pdf_dir = tmp_path / "output" / name / "pdf"
+            pdf_dir.mkdir(parents=True)
+            (pdf_dir / f"{name}_combined.pdf").write_bytes(b"%PDF-1.4")
 
-        assert validate_pdf_cli is not None
+        result = validate_pdf_cli.discover_combined_pdf(tmp_path)
+        assert result is not None
+        assert result.name == "alpha_combined.pdf"
 
-
-class TestValidatePdfFunction:
-    """Test validate_pdf function using real PDFs."""
-
-    def test_validate_pdf_exists(self, tmp_path):
-        """Test validating an existing PDF using real PDF."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
-
-        # Create a real PDF
-        pdf = tmp_path / "test.pdf"
-        c = canvas.Canvas(str(pdf), pagesize=letter)
-        c.drawString(100, 750, "Test content")
-        c.save()
-
-        if hasattr(validate_pdf_cli, "validate_pdf"):
-            result = validate_pdf_cli.validate_pdf(str(pdf))
-            assert result is not None
-
-    def test_validate_pdf_not_found(self, tmp_path):
-        """Test validating nonexistent PDF."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
-
-        if hasattr(validate_pdf_cli, "validate_pdf"):
-            result = validate_pdf_cli.validate_pdf(str(tmp_path / "missing.pdf"))
-            # Should handle gracefully
-            assert result is not None or True
+    def test_no_output_dir(self, tmp_path):
+        """Empty repo root (no output/) returns None."""
+        assert validate_pdf_cli.discover_combined_pdf(tmp_path) is None
 
 
 class TestMainFunctionWithRealPdf:

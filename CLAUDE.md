@@ -98,6 +98,10 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 # Faster infra run: parallelize across cores with pytest-xdist (CI uses -n auto).
 # The suite is parallel-safe (per-test tmp_path + random-port httpserver);
 # pytest-cov combines per-worker data before the coverage gate.
+# On loaded dev machines (resident Ollama/LLM server, many cores) -n auto can
+# trip the wall-clock timeouts of real LaTeX/subprocess tests nondeterministically;
+# drop to a fixed worker count (e.g. -n 6) — failures that vanish serially are
+# load contention, not code defects.
 uv run pytest tests/infra_tests/ -n auto --cov=infrastructure --cov-fail-under=60
 
 # Project tests only (90% coverage minimum)

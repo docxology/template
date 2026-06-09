@@ -8,6 +8,7 @@ No mocks used — all tests use real data structures and real function calls.
 
 from __future__ import annotations
 
+import logging
 import re
 
 
@@ -206,7 +207,7 @@ class TestLogDiscoveredTests:
 class TestReportSuiteFailure:
     """Test _report_suite_failure reporting."""
 
-    def test_report_with_failed_tests(self):
+    def test_report_with_failed_tests(self, caplog):
         """Test failure report with failed test details."""
         results = {
             "failed": 3,
@@ -218,23 +219,35 @@ class TestReportSuiteFailure:
                 {"test": "test_c", "error_type": "Unknown", "error_message": ""},
             ],
         }
-        # Should not raise
-        _report_suite_failure("Infrastructure", results)
+        with caplog.at_level(logging.INFO):
+            _report_suite_failure("Infrastructure", results)
+        assert "Failed: 3 test(s) failed" in caplog.text
+        assert "test_a" in caplog.text
+        assert "AssertionError: expected 1 got 2" in caplog.text
+        # Unknown error types must not emit a detail line.
+        assert "Unknown:" not in caplog.text
 
-    def test_report_with_many_failures(self):
+    def test_report_with_many_failures(self, caplog):
         """Test failure report truncates at 5."""
         failed_tests = [
             {"test": f"test_{i}", "error_type": "AssertionError", "error_message": f"msg {i}"} for i in range(10)
         ]
         results = {"failed": 10, "skipped": 0, "warnings": 0, "failed_tests": failed_tests}
-        _report_suite_failure("Project", results, "myproject")
+        with caplog.at_level(logging.INFO):
+            _report_suite_failure("Project", results, "myproject")
+        assert "test_4" in caplog.text
+        assert "test_5" not in caplog.text  # truncated after 5 entries
+        assert "and 5 more failures" in caplog.text
 
-    def test_report_with_empty_results(self):
+    def test_report_with_empty_results(self, caplog):
         """Test failure report with minimal results."""
         results = {"failed": 0, "skipped": 0, "warnings": 0, "failed_tests": []}
-        _report_suite_failure("Infrastructure", results)
+        with caplog.at_level(logging.INFO):
+            _report_suite_failure("Infrastructure", results)
+        assert "Failed: 0 test(s) failed" in caplog.text
+        assert "Failed Tests:" not in caplog.text
 
-    def test_report_with_long_error_messages(self):
+    def test_report_with_long_error_messages(self, caplog):
         """Test failure report with long error messages (truncated at 60)."""
         results = {
             "failed": 1,
@@ -248,13 +261,16 @@ class TestReportSuiteFailure:
                 },
             ],
         }
-        _report_suite_failure("Infrastructure", results)
+        with caplog.at_level(logging.INFO):
+            _report_suite_failure("Infrastructure", results)
+        assert "A" * 60 + "..." in caplog.text
+        assert "A" * 61 not in caplog.text
 
 
 class TestReportSuiteSuccess:
     """Test _report_suite_success reporting."""
 
-    def test_report_success_with_coverage(self):
+    def test_report_success_with_coverage(self, caplog):
         """Test success report with coverage above threshold."""
         results = {
             "passed": 50,
@@ -264,9 +280,12 @@ class TestReportSuiteSuccess:
             "execution_phases": {"setup": 0.5, "call": 3.0, "teardown": 0.1},
         }
         report = {}
-        _report_suite_success("Infrastructure", results, 60.0, report)
+        with caplog.at_level(logging.INFO):
+            _report_suite_success("Infrastructure", results, 60.0, report)
+        assert "50" in caplog.text
+        assert "85.5" in caplog.text
 
-    def test_report_success_below_threshold(self):
+    def test_report_success_below_threshold(self, caplog):
         """Test success report with coverage below threshold."""
         results = {
             "passed": 50,
@@ -276,9 +295,11 @@ class TestReportSuiteSuccess:
             "execution_phases": {},
         }
         report = {}
-        _report_suite_success("Project", results, 90.0, report)
+        with caplog.at_level(logging.INFO):
+            _report_suite_success("Project", results, 90.0, report)
+        assert "55.0" in caplog.text
 
-    def test_report_success_no_phases(self):
+    def test_report_success_no_phases(self, caplog):
         """Test success report with no execution phases."""
         results = {
             "passed": 10,
@@ -287,7 +308,9 @@ class TestReportSuiteSuccess:
             "warnings": 0,
         }
         report = {}
-        _report_suite_success("Project", results, 90.0, report)
+        with caplog.at_level(logging.INFO):
+            _report_suite_success("Project", results, 90.0, report)
+        assert "92.0" in caplog.text
 
 
 class TestReportResults:

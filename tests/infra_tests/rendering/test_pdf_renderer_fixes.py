@@ -8,6 +8,7 @@ This module tests the critical fixes for:
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
+import shutil
 import unicodedata
 
 import pytest
@@ -22,8 +23,13 @@ from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 class TestBibliographyProcessing:
     """Test bibliography processing functionality."""
 
+    @pytest.mark.skipif(shutil.which("bibtex") is None, reason="bibtex not installed")
     def test_process_bibliography_success(self, tmp_path):
-        """Test successful bibliography processing."""
+        """Test successful bibliography processing with real bibtex.
+
+        Local-only coverage: CI installs pandoc but not TeX Live, so this
+        skips on GitHub runners and is enforced on developer machines.
+        """
         # Create necessary files
         tex_file = tmp_path / "test.tex"
         aux_file = tmp_path / "pdf" / "test.aux"
@@ -34,14 +40,10 @@ class TestBibliographyProcessing:
         aux_file.write_text("some aux content")
         bib_file.write_text("@article{test,\n  title={Test}\n}")
 
-        # Use real bibtex execution - may fail if bibtex not available
-        try:
-            result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
-            # May succeed or fail depending on bibtex availability
-            assert isinstance(result, bool)
-        except Exception:
-            # Expected to fail if bibtex not available
-            pass
+        result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
+        assert isinstance(result, bool)
+        # The bib file must have been copied next to the aux file either way.
+        assert (tmp_path / "pdf" / "references.bib").exists()
 
     def test_process_bibliography_missing_bib_file(self, tmp_path):
         """Test bibliography processing with missing bib file."""
@@ -93,14 +95,9 @@ class TestBibliographyProcessing:
         aux_file.write_text("aux content")
         bib_file.write_text("@article{test, title={Test}}")
 
-        # Use real bibtex execution
-        try:
-            result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
-            # May succeed or fail depending on bibtex availability
-            assert isinstance(result, bool)
-        except Exception:
-            # Expected to fail if bibtex not available
-            pass
+        result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
+        assert isinstance(result, bool)
+        assert (tmp_path / "pdf" / "references.bib").exists()
 
 
 class TestFigurePathResolution:
@@ -198,8 +195,16 @@ class TestCitationProcessing:
     """Test citation processing in rendering pipeline."""
 
     @pytest.mark.timeout(90)
+    @pytest.mark.skipif(
+        shutil.which("pandoc") is None or shutil.which("xelatex") is None,
+        reason="pandoc/xelatex not installed",
+    )
     def test_render_combined_includes_bibliography(self, tmp_path):
-        """Test that render_combined includes bibliography processing."""
+        """Test that render_combined includes bibliography processing.
+
+        Local-only coverage: CI installs pandoc but not TeX Live (xelatex),
+        so this skips on GitHub runners and is enforced on developer machines.
+        """
         config = RenderingConfig(
             manuscript_dir=str(tmp_path / "manuscript"),
             output_dir=str(tmp_path / "output"),
@@ -219,14 +224,11 @@ class TestCitationProcessing:
         bib_file = tmp_path / "manuscript" / "references.bib"
         bib_file.write_text("@article{test, title={Test}, year={2024}}")
 
-        # Use real execution - may fail if pandoc/LaTeX not available
-        try:
-            renderer.render_combined([md_file], tmp_path / "manuscript")
-            # If successful, should create output files
-            assert True  # Test passes if no exception
-        except Exception:
-            # Expected to fail if dependencies not available
-            pass
+        # Real execution: tools are present (skipif above), so demand a real PDF.
+        result = renderer.render_combined([md_file], tmp_path / "manuscript")
+        assert result.exists(), f"render_combined returned {result} but no file exists"
+        assert result.suffix == ".pdf"
+        assert result.stat().st_size > 0
 
 
 class TestIntegration:

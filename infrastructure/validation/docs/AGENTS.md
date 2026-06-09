@@ -90,6 +90,23 @@ reduces subprocess churn; a repo-wide total timeout caps wall time on large doc 
 | `TEMPLATE_MERMAID_LINT_TIMEOUT` | `30` | Per-file `mmdc` timeout (seconds) |
 | `TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT` | `120` | Total budget across all files in one lint run |
 | `TEMPLATE_MERMAID_LINT_BATCH_SIZE` | `20` | Max diagrams per batch `mmdc` invocation |
+| `CHROME_EXECUTABLE_PATH` | unset | Explicit Chrome/Chromium binary for puppeteer (overrides detection) |
+
+### Browser provisioning (required for `mmdc`)
+
+`mmdc` renders through puppeteer, which needs a Chrome binary. `_resolve_chrome()` prefers,
+in order: an explicit path argument, `CHROME_EXECUTABLE_PATH`, a `chrome-headless-shell`
+under `~/.cache/puppeteer/`, then macOS system Chrome. **If none of these resolve — or the
+puppeteer cache is missing its pinned browser — every diagram fails (exit 124 timeouts or
+"Could not find Chrome"), which reads as a lint failure but is an environment defect.**
+Provision the headless shell once per machine:
+
+```bash
+npx -y @puppeteer/browsers install chrome-headless-shell --path ~/.cache/puppeteer
+```
+
+System GUI Chrome works as a fallback but can hang under `--no-sandbox` batch rendering;
+the headless shell is the reliable lane.
 
 ## See Also
 

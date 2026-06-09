@@ -125,73 +125,6 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
         item.add_marker(ollama_timeout)
 
 
-# ============================================================================
-# Credential Fixtures
-# ============================================================================
-
-
-@pytest.fixture(scope="session")
-def credential_manager():
-    """Provide CredentialManager for tests.
-
-    Returns:
-        CredentialManager instance configured for testing
-    """
-    from infrastructure.core.credentials import CredentialManager
-
-    # Try to load test credentials config if it exists
-    config_file = Path(ROOT) / "test_credentials.yaml"
-    return CredentialManager(config_file=config_file if config_file.exists() else None)
-
-
-@pytest.fixture(scope="session")
-def zenodo_credentials(credential_manager):
-    """Provide Zenodo credentials for tests (sandbox by default).
-
-    Returns:
-        Dictionary with Zenodo API credentials
-
-    Raises:
-        pytest.skip: If Zenodo credentials are not available
-    """
-    if not credential_manager.has_zenodo_credentials(use_sandbox=True):
-        pytest.skip("Zenodo sandbox credentials not available. Set ZENODO_SANDBOX_TOKEN in .env file.")
-
-    return credential_manager.get_zenodo_credentials(use_sandbox=True)
-
-
-@pytest.fixture(scope="session")
-def github_credentials(credential_manager):
-    """Provide GitHub credentials for tests.
-
-    Returns:
-        Dictionary with GitHub API credentials
-
-    Raises:
-        pytest.skip: If GitHub credentials are not available
-    """
-    if not credential_manager.has_github_credentials():
-        pytest.skip("GitHub credentials not available. Set GITHUB_TOKEN and GITHUB_REPO in .env file.")
-
-    return credential_manager.get_github_credentials()
-
-
-@pytest.fixture(scope="session")
-def arxiv_credentials(credential_manager):
-    """Provide arXiv credentials for tests (optional).
-
-    Returns:
-        Dictionary with arXiv API credentials
-
-    Raises:
-        pytest.skip: If arXiv credentials are not available
-    """
-    if not credential_manager.has_arxiv_credentials():
-        pytest.skip("arXiv credentials not available. Set ARXIV_USERNAME and ARXIV_PASSWORD in .env file.")
-
-    return credential_manager.get_arxiv_credentials()
-
-
 @pytest.fixture
 def skip_if_no_latex():
     """Skip test if LaTeX is not installed."""
@@ -328,6 +261,33 @@ def ensure_ollama_for_tests():
 
     if not models:
         _fail_no_models()
+
+    # Capability probe: a listed model proves nothing about the runtime — a
+    # broken install (e.g. Homebrew Ollama whose bundled llama-server binary is
+    # missing) lists models fine and then returns HTTP 500 on every generate.
+    # Probe actual inference once per session so 20+ LLM tests fail with one
+    # actionable diagnosis instead of identical confusing per-test errors.
+    from infrastructure.llm.utils.models import preload_model, select_small_fast_model
+
+    probe_model = select_small_fast_model() or models[0]
+    probe_ok, probe_err = preload_model(probe_model, timeout=120.0, retries=1)
+    if not probe_ok:
+        pytest.fail(
+            "\n" + "=" * 80 + "\n"
+            "❌ CRITICAL: Ollama lists models but cannot run inference!\n"
+            "=" * 80 + "\n"
+            f"Probe model: {probe_model}\n"
+            f"Error: {probe_err}\n\n"
+            "The server is up and models are installed, but loading a model failed —\n"
+            "this usually means a broken Ollama runtime (e.g. a Homebrew upgrade that\n"
+            "left the llama-server binary missing).\n\n"
+            "Troubleshooting:\n"
+            "  1. ollama run " + probe_model + " 'hi'   # reproduce directly\n"
+            "  2. brew reinstall ollama && brew services restart ollama\n"
+            "  3. Or reinstall from https://ollama.ai\n\n"
+            "To deselect Ollama tests: pytest -m 'not requires_ollama'\n"
+            "=" * 80
+        )
 
     logger.info("✓ Ollama ready for tests with %d model(s): %s", len(models), ", ".join(models[:5]))
     return True

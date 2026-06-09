@@ -20,7 +20,6 @@ from infrastructure.publishing.metadata_from_config import (
     publication_metadata_from_config,
 )
 from infrastructure.publishing import release_workflow as release_workflow_module
-from infrastructure.publishing import release_workflow_zenodo as zenodo_phase_module
 from infrastructure.publishing.release_workflow import (
     ReleaseRequest,
     prepare_release_bundle,
@@ -28,8 +27,6 @@ from infrastructure.publishing.release_workflow import (
     run_release_workflow,
     validate_release_tag,
 )
-from infrastructure.publishing.zenodo.models import DepositionResult, PublishResult
-
 
 def _write_minimal_project(
     repo_root: Path,
@@ -375,71 +372,87 @@ class TestReleaseWorkflow:
     def test_reserve_doi_first_rerenders_before_upload(
         self,
         tmp_path: Path,
-        monkeypatch,
     ) -> None:
+        """Reserve-first flow against a real HTTP Zenodo stand-in (no mocks).
+
+        Proves the ordering property end-to-end: the deposition is created
+        (reserving the version DOI), the manuscript is re-rendered with that
+        DOI baked in, and only then are the bytes uploaded to the bucket.
+        """
+        import re as _re
+
+        from pytest_httpserver import HTTPServer
+        from werkzeug.wrappers import Response
+
         config_path = _write_minimal_project(tmp_path)
         render_calls: list[str] = []
         upload_seen: list[bytes] = []
 
-        def fake_reserve(*_args, **_kwargs) -> DepositionResult:
-            return DepositionResult(
-                deposition_id="22222",
-                bucket_url="https://zenodo.test/files/bucket222",
-                reserved_doi="10.5281/zenodo.22222",
-                concept_doi="10.5281/zenodo.11111",
-                concept_record_id="11111",
+        server = HTTPServer()
+        server.start()
+        try:
+            base = server.url_for("")
+
+            # Reserve: create deposition with a pre-reserved version DOI.
+            server.expect_request("/deposit/depositions", method="POST").respond_with_json(
+                {
+                    "id": 22222,
+                    "conceptrecid": "11111",
+                    "links": {"bucket": f"{base}/files/bucket222"},
+                    "metadata": {"prereserve_doi": {"doi": "10.5281/zenodo.22222"}},
+                }
+            )
+            # Draft metadata update + best-effort post-publish description patch.
+            server.expect_request("/deposit/depositions/22222", method="PUT").respond_with_json(
+                {"id": 22222, "metadata": {"title": "Updated"}}
             )
 
-        def fake_render(repo_root: Path, project_name: str) -> int:
-            render_calls.append(project_name)
-            pdf_path = repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf"
-            pdf_path.write_bytes(b"%PDF DOI 10.5281/zenodo.22222")
-            return 0
+            # Bucket upload: capture the actual uploaded bytes.
+            def _capture_upload(request):
+                upload_seen.append(request.get_data())
+                return Response(json.dumps({"key": "uploaded"}), status=201, content_type="application/json")
 
-        def fake_publish_reserved(
-            _metadata,
-            file_paths,
-            *_args,
-            **_kwargs,
-        ) -> PublishResult:
-            payload = file_paths[0].read_bytes()
-            upload_seen.append(payload)
-            assert b"10.5281/zenodo.22222" in payload
-            return PublishResult(
-                doi="10.5281/zenodo.22222",
-                deposition_id="22222",
-                concept_doi="10.5281/zenodo.11111",
+            server.expect_request(
+                _re.compile(r"/files/bucket222/.+"),
+                method="PUT",
+            ).respond_with_handler(_capture_upload)
+
+            server.expect_request(
+                "/deposit/depositions/22222/actions/publish",
+                method="POST",
+            ).respond_with_json(
+                {
+                    "id": 22222,
+                    "doi": "10.5281/zenodo.22222",
+                    "conceptdoi": "10.5281/zenodo.11111",
+                    "state": "done",
+                }
             )
 
-        monkeypatch.setattr(
-            zenodo_phase_module,
-            "reserve_zenodo_deposition",
-            fake_reserve,
-        )
-        monkeypatch.setattr(
-            zenodo_phase_module,
-            "publish_reserved_deposition_to_zenodo",
-            fake_publish_reserved,
-        )
-        monkeypatch.setattr(
-            release_workflow_module,
-            "patch_deposition_description",
-            lambda *_args, **_kwargs: None,
-        )
+            def fake_render(repo_root: Path, project_name: str) -> int:
+                render_calls.append(project_name)
+                pdf_path = repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf"
+                pdf_path.write_bytes(b"%PDF DOI 10.5281/zenodo.22222")
+                return 0
 
-        request = ReleaseRequest(
-            repo_root=tmp_path,
-            project_name="test_release",
-            tag="v1.0.0",
-            github_repo="testuser/testrepo",
-            zenodo_token="zen-test",
-            skip_github=True,
-            reserve_doi_first=True,
-        )
-        result = run_release_workflow(request, render_fn=fake_render)
+            request = ReleaseRequest(
+                repo_root=tmp_path,
+                project_name="test_release",
+                tag="v1.0.0",
+                github_repo="testuser/testrepo",
+                zenodo_token="zen-test",
+                skip_github=True,
+                reserve_doi_first=True,
+                zenodo_base_url=base,
+            )
+            result = run_release_workflow(request, render_fn=fake_render)
+        finally:
+            server.stop()
 
         assert render_calls == ["test_release"]
-        assert upload_seen
+        assert upload_seen, "no bytes were uploaded to the Zenodo bucket"
+        # The re-rendered PDF (containing the reserved DOI) is what got uploaded.
+        assert any(b"10.5281/zenodo.22222" in payload for payload in upload_seen)
         assert result.doi == "10.5281/zenodo.22222"
         assert result.concept_doi == "10.5281/zenodo.11111"
         assert result.version_doi == "10.5281/zenodo.22222"
