@@ -27,11 +27,7 @@ USE_WHEN_HEADING = "## When to use this template"
 # Exemplars temporarily allowed to lack the use-when section. Keep this empty
 # unless a concurrent workstream owns the README (then pin it here with a date
 # so the gap is tracked, not forgotten).
-KNOWN_MISSING_USE_WHEN: tuple[str, ...] = (
-    # Owned by the sheaf-integrity workstream (PR #23) as of 2026-06-10; add
-    # the section there and remove this entry.
-    "templates/template_active_inference",
-)
+KNOWN_MISSING_USE_WHEN: tuple[str, ...] = ()
 
 DOC_RELATIVE_PATH = Path("docs/_generated/exemplar_roster.md")
 
