@@ -14,6 +14,8 @@ STATISTICAL_VISUALIZATION_BRIDGE_SCHEMA = "template_active_inference.statistical
 MIN_RENDER_WIDTH = 400
 MIN_RENDER_HEIGHT = 200
 MIN_RENDER_BYTES = 5_000
+MIN_ASPECT_RATIO = 0.45
+MAX_ASPECT_RATIO = 4.2
 MIN_ALT_WORDS = 12
 MIN_CAPTION_WORDS = 8
 MIN_PAPER_CLAIM_WORDS = 6
@@ -54,23 +56,18 @@ def _word_count(text: str) -> int:
 
 
 def _image_metrics(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {"exists": False, "width_px": 0, "height_px": 0, "mode": "", "size_bytes": 0}
-    try:
-        from PIL import Image
+    from visualizations.figure_io import image_render_metrics
 
-        with Image.open(path) as image:
-            width, height = image.size
-            mode = image.mode
-    except (ImportError, OSError, ValueError, EOFError):
-        width, height, mode = 0, 0, ""
-    return {
-        "exists": path.is_file(),
-        "width_px": int(width),
-        "height_px": int(height),
-        "mode": mode,
-        "size_bytes": path.stat().st_size if path.is_file() else 0,
-    }
+    metrics = dict(image_render_metrics(path))
+    aspect_ratio = float(metrics["aspect_ratio"])
+    render_size_ok = (
+        int(metrics["width_px"]) >= MIN_RENDER_WIDTH
+        and int(metrics["height_px"]) >= MIN_RENDER_HEIGHT
+        and int(metrics["size_bytes"]) >= MIN_RENDER_BYTES
+    )
+    metrics["render_size_ok"] = render_size_ok
+    metrics["aspect_ratio_ok"] = MIN_ASPECT_RATIO <= aspect_ratio <= MAX_ASPECT_RATIO
+    return metrics
 
 
 def _statistical_sources(root: Path, sources: list[str]) -> tuple[list[str], bool]:
@@ -154,9 +151,8 @@ def _reference_section_status(row: dict[str, Any]) -> tuple[bool, bool]:
     return sheaf_bound, visualization_bound
 
 
-def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
-    """Build figure accessibility, source, hash, and render-readiness rows."""
-    root = project_root.resolve()
+def _figure_evidence_rows(root: Path) -> list[dict[str, Any]]:
+    """Derive live figure evidence rows from registry, source maps, hashes, and renders."""
     from visualizations.figure_registry import load_figure_registry
 
     source_map = _load_json(root / "output" / "data" / "figure_source_map.json")
@@ -170,7 +166,7 @@ def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
         metrics = _image_metrics(root / rel_path)
         source_row = sources_by_id.get(figure_id, {})
         hash_row = hashes_by_path.get(rel_path, {})
-        sources = source_row.get("sources") or []
+        sources = source_row.get("source_artifacts") or source_row.get("sources") or []
         statistical_sources, statistical_sources_present = _statistical_sources(
             root, [str(source) for source in sources]
         )
@@ -187,9 +183,9 @@ def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
         section_bound = bool(section_bindings)
         rendered = (
             metrics["exists"]
-            and metrics["width_px"] >= MIN_RENDER_WIDTH
-            and metrics["height_px"] >= MIN_RENDER_HEIGHT
-            and metrics["size_bytes"] >= MIN_RENDER_BYTES
+            and metrics["render_size_ok"]
+            and metrics["aspect_ratio_ok"]
+            and metrics["nonblank"]
             and metrics["mode"] == "RGB"
         )
         accessibility_ok = alt_word_count >= MIN_ALT_WORDS and caption_word_count >= MIN_CAPTION_WORDS
@@ -231,6 +227,13 @@ def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
             and row["section_bound"]
         )
         rows.append(row)
+    return rows
+
+
+def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
+    """Build figure accessibility, source, hash, and render-readiness rows."""
+    root = project_root.resolve()
+    rows = _figure_evidence_rows(root)
     return {
         "schema": VISUALIZATION_AUDIT_SCHEMA,
         "rows": rows,
@@ -380,12 +383,83 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
     payload = _load_json(path)
     if not payload:
         return ["visualization_quality_audit.json missing"]
+    from visualizations.figure_registry import load_figure_registry
+
     issues: list[str] = []
     rows = payload.get("rows") or []
+    rows_by_id = {str(row.get("figure_id")): row for row in rows}
+    registry = load_figure_registry(root)
+    expected_rows_by_id = {str(row["figure_id"]): row for row in _figure_evidence_rows(root)}
+    source_map = _load_json(root / "output" / "data" / "figure_source_map.json")
+    source_rows = {str(row.get("figure_id")): row for row in source_map.get("rows") or []}
+    hash_manifest = _load_json(root / "output" / "reports" / "figure_hash_manifest.json")
+    hash_rows = {str(row.get("path")): row for row in hash_manifest.get("rows") or []}
+    section_bindings = _figure_section_bindings(root)
     visual_roles_present = bool(rows) and all(row.get("visual_role_ok") for row in rows)
     evidence_roles_present = bool(rows) and all(row.get("evidence_role_ok") for row in rows)
     paper_claims_present = bool(rows) and all(row.get("paper_claim_ok") for row in rows)
     figures_section_bound = bool(rows) and all(row.get("section_bound") for row in rows)
+    live_rendered: list[bool] = []
+    live_sources_mapped: list[bool] = []
+    live_sources_backed: list[bool] = []
+    live_section_bound: list[bool] = []
+    live_hashes_present: list[bool] = []
+    live_statistically_backed: list[dict[str, Any]] = []
+    for figure_id, spec in sorted(registry.items()):
+        row = rows_by_id.get(figure_id)
+        if row is None:
+            issues.append(f"visualization_quality_audit.json missing row for {figure_id}")
+            continue
+        expected_row = expected_rows_by_id.get(figure_id, {})
+        rel_path = f"output/figures/{spec.filename}"
+        metrics = _image_metrics(root / rel_path)
+        rendered = (
+            metrics["exists"]
+            and metrics["render_size_ok"]
+            and metrics["aspect_ratio_ok"]
+            and metrics["nonblank"]
+            and metrics["mode"] == "RGB"
+        )
+        live_rendered.append(rendered)
+        if not rendered:
+            issues.append(f"visualization_quality_audit.json live render failed or blank for {figure_id}")
+        if any(row.get(key) != metrics[key] for key in ("width_px", "height_px", "mode", "nonblank")):
+            issues.append(f"visualization_quality_audit.json stale live render metrics for {figure_id}")
+        for key in (
+            "visual_role",
+            "visual_role_ok",
+            "evidence_role",
+            "evidence_role_ok",
+            "paper_claim",
+            "paper_claim_ok",
+            "accessibility_text_ok",
+            "quality_ok",
+        ):
+            if expected_row and row.get(key) != expected_row.get(key):
+                issues.append(f"visualization_quality_audit.json stale figure evidence for {figure_id}")
+                break
+        expected_source_row = source_rows.get(figure_id, {})
+        expected_sources = [str(source) for source in expected_source_row.get("source_artifacts") or []]
+        row_sources = [str(source) for source in row.get("sources") or []]
+        source_mapped = expected_source_row.get("mapped") is True and row_sources == expected_sources
+        source_backed = source_mapped and _all_sources_present(root, expected_sources)
+        live_sources_mapped.append(source_mapped)
+        live_sources_backed.append(source_backed)
+        if row.get("source_mapped") is not source_mapped or row.get("source_backed") is not source_backed:
+            issues.append(f"visualization_quality_audit.json stale source metadata for {figure_id}")
+        expected_sections = section_bindings.get(figure_id, [])
+        row_sections = [str(section) for section in row.get("section_bindings") or []]
+        section_bound = bool(expected_sections) and row_sections == expected_sections
+        live_section_bound.append(section_bound)
+        if row.get("section_bound") is not section_bound:
+            issues.append(f"visualization_quality_audit.json stale section binding for {figure_id}")
+        hash_present = bool(hash_rows.get(rel_path, {}).get("sha256"))
+        live_hashes_present.append(hash_present)
+        if row.get("hash_present") is not hash_present:
+            issues.append(f"visualization_quality_audit.json stale hash metadata for {figure_id}")
+        statistical_sources, statistical_sources_present = _statistical_sources(root, expected_sources)
+        if statistical_sources and statistical_sources_present:
+            live_statistically_backed.append({"figure_id": figure_id, "statistical_sources_present": True})
     if payload.get("schema") != VISUALIZATION_AUDIT_SCHEMA:
         issues.append("visualization_quality_audit.json schema mismatch")
     if payload.get("all_quality_ok") is not True or not (bool(rows) and all(row.get("quality_ok") for row in rows)):
@@ -394,10 +468,20 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
         issues.append("visualization_quality_audit.json has unmapped figure sources")
     if payload.get("all_rendered") is not True:
         issues.append("visualization_quality_audit.json has unrendered figures")
+    if live_rendered and (payload.get("all_rendered") != all(live_rendered) or not all(live_rendered)):
+        issues.append("visualization_quality_audit.json live render evidence disagrees with summary")
     if payload.get("all_accessibility_text_ok") is not True:
         issues.append("visualization_quality_audit.json has insufficient alt text or captions")
     if payload.get("all_hashes_present") is not True:
         issues.append("visualization_quality_audit.json lacks figure hashes")
+    if live_hashes_present and payload.get("all_hashes_present") != all(live_hashes_present):
+        issues.append("visualization_quality_audit.json live hash evidence disagrees with summary")
+    if live_sources_mapped and payload.get("all_sources_mapped") != all(live_sources_mapped):
+        issues.append("visualization_quality_audit.json source metadata disagrees with source map")
+    if live_sources_backed and payload.get("all_sources_backed") != all(live_sources_backed):
+        issues.append("visualization_quality_audit.json source backing disagrees with source map")
+    if live_section_bound and payload.get("all_figures_section_bound") != all(live_section_bound):
+        issues.append("visualization_quality_audit.json section binding evidence disagrees with registry")
     if (
         payload.get("all_visual_roles_present") is not True
         or payload.get("all_visual_roles_present") != visual_roles_present
@@ -415,6 +499,7 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
     )
     if (
         payload.get("statistically_backed_count") != len(statistically_backed)
+        or payload.get("statistically_backed_count") != len(live_statistically_backed)
         or payload.get("all_statistical_sources_present") is not True
         or payload.get("all_statistical_sources_present") != statistical_sources_present
     ):

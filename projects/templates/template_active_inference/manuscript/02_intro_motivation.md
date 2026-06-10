@@ -10,7 +10,7 @@
 
 ## Scientific scope
 
-This manuscript couples three tracks on toy Active Inference models: a Bernoulli–Ising analytical oracle, a pymdp T-maze rollout, and a sheaf-indexed assembly contract that binds {{sheaf_track_count}} optional fragment tracks under an IMRAD outline. The conceptual lineage is the free-energy and active-inference literature [@friston2010fep; @parr2022active], but the scientific claims stay within these models and their generated artifacts; they are not empirical statements about biological agents.
+This manuscript couples three tracks on toy Active Inference models: a Bernoulli–Ising analytical oracle, a pymdp T-maze rollout, and a sheaf-indexed assembly contract that binds {{sheaf_track_count}} optional fragment tracks under an IMRAD outline. The conceptual lineage is the free-energy and active-inference literature [@friston2010fep; @buckley2017mathreview; @parr2022active], with critical scope pressure from accounts that separate FEP's broad organizing role from direct empirical brain claims [@gershman2019fepbrain]. Here that distinction is operational: the scientific claims stay within these models and their generated artifacts, not biological agents.
 
 ## Manuscript structure
 

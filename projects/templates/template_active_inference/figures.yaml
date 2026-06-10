@@ -3,7 +3,7 @@
 
 dpi: 160
 transparent: false
-font_scale: 1.08
+font_scale: 1.12
 grid: true
 
 palette:
@@ -17,8 +17,8 @@ palette:
   fail: "#b91c1c"
   proved: "#dcfce7"
   sorry: "#fee2e2"
-  panel_bg: "#f8fafc"
-  header_bg: "#e2e8f0"
+  panel_bg: "#f9fafb"
+  header_bg: "#dbeafe"
 
 figures:
   efe_decomposition:
@@ -150,12 +150,15 @@ figures:
       point and rises as coupling increases.
     alt: >-
       Line plot of free energy in nats versus coupling strength lambda for the
-      entangled posterior relative to a mean-field prior. A single dark curve traces
-      free energy across the sweep; the minimum is marked with a teal scatter point
-      and labeled with the argmin lambda value.
+      entangled posterior relative to a mean-field prior. The entangled-prior free
+      energy is identically zero, so this plotted comparison isolates mean-field
+      prior mismatch. A single dark curve traces free energy across the sweep; the
+      minimum is marked with a teal scatter point and labeled with the argmin
+      lambda value.
     caption: >-
       Free energy of the entangled posterior relative to the mean-field prior across
-      the hyperparameter sweep (grid points {{param_sweep_grid_points}}).
+      the hyperparameter sweep (grid points {{param_sweep_grid_points}}); relative
+      to the entangled prior, the same posterior has identically zero free energy.
     width: 0.9
   si_tmaze_actions:
     filename: si_tmaze_actions.png
@@ -218,7 +221,7 @@ figures:
       Sheaf track coverage matrix: {{imrad_manifest_rows}} IMRAD rows ×
       {{sheaf_track_count}} fragment columns. Black = present (P), white = absent (—),
       gray = missing (M). Counts: {{coverage_present}} present / {{coverage_bound}} bound /
-      {{coverage_missing}} missing.
+      {{coverage_missing}} missing. Generated from `output/data/sheaf_coverage_matrix.json`.
     width: 0.95
   sheaf_layers_overview:
     filename: sheaf_layers_overview.png
@@ -237,7 +240,7 @@ figures:
       Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding
       heatmap for {{sheaf_track_count}} fragment types across {{imrad_manifest_rows}} manifest
       rows ({{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}}
-      missing).
+      missing), generated from `output/data/sheaf_coverage_matrix.json`.
     width: 0.98
   invariant_dashboard:
     filename: invariant_dashboard.png

@@ -7,18 +7,30 @@ semantic gluing, dependency graph, evidence fields, release bundle, theorem
 traceability, gate ergonomics, generated track-improvement scope, blocked-scope,
 and adversarial audit) composed into a sheaf manuscript.
 
+- `conceptual-foundations.md` — the intellectual grounding: Active Inference
+  and EFE, cellular sheaves over the IMRAD poset, semantic gluing, the Lean 4
+  boundary, GNN/AIO notation contracts, and further reading.
 - `reference/method-inventory.md` — generated coverage for every Python `def`
   and `class` under `src/` and `scripts/`; refresh with
-  `uv run python scripts/generate_method_inventory.py`.
+  `uv run python scripts/generate_method_inventory.py --check`.
 - `reference/rendering-reproducibility.md` — authored contract for sheaf
   composition, hydration, figure rendering, artifact regeneration order, and
   root output parity.
 - See the project root `README.md` for the overview and `AGENTS.md` for agent
   guidance; per-directory `README.md`/`AGENTS.md` pairs document each component.
 
-Run the project:
+Verify the documentation and output contracts from the project root:
 
 ```bash
-uv run python -m pytest projects/templates/template_active_inference/tests -q
-./run.sh --pipeline --project template_active_inference --core-only --skip-infra
+uv run python scripts/check_documentation_contract.py --check
+uv run python scripts/generate_method_inventory.py --check
+uv run python scripts/compose_manuscript.py --validate-only --strict
+uv run python scripts/validate_outputs.py
+uv run pytest tests/ --cov=src --cov-fail-under=90
+```
+
+From the template repository root:
+
+```bash
+./run.sh --pipeline --project templates/template_active_inference --core-only --skip-infra
 ```

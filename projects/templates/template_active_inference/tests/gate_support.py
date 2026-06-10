@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import json
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
+import yaml
 
 from analysis import run_analysis, write_analysis_statistics
 from manuscript.variables import generate_variables
@@ -83,6 +87,48 @@ _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
 )
 
 
+def _write_json(path: Path, payload: dict) -> None:
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+@contextmanager
+def temporary_json_mutation(path: Path, mutate: Callable[[dict], None]) -> Iterator[dict]:
+    """Temporarily mutate a JSON artifact and restore it byte-for-byte."""
+    original = path.read_text(encoding="utf-8")
+    payload = json.loads(original)
+    mutate(payload)
+    _write_json(path, payload)
+    try:
+        yield payload
+    finally:
+        path.write_text(original, encoding="utf-8")
+
+
+@contextmanager
+def temporary_text_mutation(path: Path, mutate: Callable[[str], str]) -> Iterator[str]:
+    """Temporarily mutate a text file and restore it byte-for-byte."""
+    original = path.read_text(encoding="utf-8")
+    mutated = mutate(original)
+    path.write_text(mutated, encoding="utf-8")
+    try:
+        yield mutated
+    finally:
+        path.write_text(original, encoding="utf-8")
+
+
+@contextmanager
+def temporary_yaml_mutation(path: Path, mutate: Callable[[dict], None]) -> Iterator[dict]:
+    """Temporarily mutate a YAML mapping and restore the source byte-for-byte."""
+    original = path.read_text(encoding="utf-8")
+    payload = yaml.safe_load(original) or {}
+    mutate(payload)
+    path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
+    try:
+        yield payload
+    finally:
+        path.write_text(original, encoding="utf-8")
+
+
 def _hydrate_fixed_point(project_root: Path, out: Path) -> None:
     import json
 
@@ -93,18 +139,16 @@ def _hydrate_fixed_point(project_root: Path, out: Path) -> None:
         write_manuscript_staleness_report(project_root)
 
 
-def refresh_generated_gate_artifacts(project_root: Path) -> None:
+def refresh_generated_gate_artifacts(project_root: Path, *, force: bool = True) -> None:
     """Refresh generated manuscript/semantic artifacts after mutation tests.
 
-    Negative-control tests restore the single file they mutated byte-for-byte in
-    their own ``finally`` *before* calling this. When that restore already leaves
-    the gate artifacts valid (the common case), skip the expensive regeneration and
-    keep the session bootstrap cache warm so the next test reuses it instead of
-    triggering a full ~80s rebuild. Only regenerate when the artifacts are actually
-    stale (e.g. a test that mutated a generated ``output/`` artifact in place).
+    Post-mutation cleanup forces regeneration by default because source and
+    generated-output negative controls can leave derived artifacts stale even
+    after the edited file is restored byte-for-byte. Callers that know no source
+    or generated artifact changed may pass ``force=False`` to reuse the cache.
     """
     root = project_root.resolve()
-    if root in _BOOTSTRAPPED_ROOTS and _gate_artifacts_present(root):
+    if not force and root in _BOOTSTRAPPED_ROOTS and _required_gate_artifacts_exist(root):
         return
     out = root / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -112,11 +156,11 @@ def refresh_generated_gate_artifacts(project_root: Path) -> None:
     compose_all_sections(root)
     _hydrate_fixed_point(root, out)
     write_semantic_gluing_outputs(root)
-    _BOOTSTRAPPED_ROOTS.discard(root)
+    _BOOTSTRAPPED_ROOTS.add(root)
 
 
 def _gate_artifacts_present(project_root: Path) -> bool:
-    if not all((project_root / rel).is_file() for rel in _REQUIRED_GATE_ARTIFACTS):
+    if not _required_gate_artifacts_exist(project_root):
         return False
     try:
         from manuscript.sheaf.semantic import validate_semantic_gluing
@@ -127,10 +171,14 @@ def _gate_artifacts_present(project_root: Path) -> bool:
         return False
 
 
+def _required_gate_artifacts_exist(project_root: Path) -> bool:
+    return all((project_root / rel).is_file() for rel in _REQUIRED_GATE_ARTIFACTS)
+
+
 def ensure_gate_artifacts(project_root: Path) -> None:
     """Rebuild analysis, simulation, sheaf, and figure outputs for gate checks."""
     root = project_root.resolve()
-    if root in _BOOTSTRAPPED_ROOTS and _gate_artifacts_present(root):
+    if root in _BOOTSTRAPPED_ROOTS and _required_gate_artifacts_exist(root):
         return
 
     run_analysis(project_root)

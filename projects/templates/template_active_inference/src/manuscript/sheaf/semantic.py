@@ -360,10 +360,35 @@ def _runtime_diagnostics_restrictions(root: Path) -> dict[str, Any]:
     data = _load_json(root / "output" / "reports" / "pymdp_runtime_diagnostics.json")
     return {
         "ok": data.get("ok") is True,
+        "phase_rows_ok": data.get("all_phase_rows_ok") is True,
         "construction_count": int(data.get("construction_count", 0) or 0),
         "known_warning_count": int(data.get("known_warning_count", 0) or 0),
         "unexpected_warning_count": int(data.get("unexpected_warning_count", 0) or 0),
     }
+
+
+def _restriction_class(restriction: str) -> str:
+    if restriction.startswith(("blocked_", "scope_")) or "empirical" in restriction:
+        return "scope_boundary"
+    if any(token in restriction for token in ("proof", "theorem", "lean", "model_checking", "interop")):
+        return "formal_witness"
+    if any(token in restriction for token in ("provenance", "dependency", "release", "evidence", "gate")):
+        return "artifact_contract"
+    if any(token in restriction for token in ("visualization", "figure", "animation", "statistical")):
+        return "rendered_artifact"
+    return "semantic_restriction"
+
+
+def _proof_obligation_rows(restrictions: dict[str, bool]) -> list[dict[str, Any]]:
+    return [
+        {
+            "restriction": restriction,
+            "class": _restriction_class(restriction),
+            "obligation": f"prove_{restriction}",
+            "ok": bool(ok),
+        }
+        for restriction, ok in sorted(restrictions.items())
+    ]
 
 
 def _graph_world_restrictions(root: Path) -> dict[str, Any]:
@@ -642,14 +667,105 @@ def validate_configured_artifact_producers(
     return issues
 
 
+SEMANTIC_ARTIFACT_SOURCE_PATHS: dict[str, str] = {
+    "coverage_matrix": "output/data/sheaf_coverage_matrix.json",
+    "si_summary": "output/data/si_tmaze_summary.json",
+    "analysis_statistics": "output/data/analysis_statistics.json",
+    "claim_ledger": "data/claim_ledger.yaml",
+    "evidence_crosswalk": "output/data/sheaf_evidence_crosswalk.json",
+    "dependency_graph": "output/data/validation_dependency_graph.json",
+    "analytical_assumption_index": "output/data/analytical_assumption_index.json",
+    "animation_frame_deltas": "output/data/animation_frame_deltas.json",
+    "manuscript_staleness": "output/reports/manuscript_staleness_report.json",
+    "track_improvement_scope": "output/data/track_improvement_scope.json",
+    "evidence_field_index": "output/data/evidence_field_index.json",
+    "release_bundle": "output/reports/release_bundle_manifest.json",
+    "theorem_traceability": "output/data/theorem_traceability_matrix.json",
+    "section_status_matrix": "output/data/sheaf_section_status_matrix.json",
+    "sheaf_render_log": "output/reports/sheaf_render_log.json",
+    "proof_dependency_graph": "output/data/proof_dependency_graph.json",
+    "state_transition_table": "output/data/state_transition_table.json",
+    "ablation_sensitivity_report": "output/reports/ablation_sensitivity_report.json",
+    "release_attestation": "output/reports/release_attestation.json",
+}
+
+SEMANTIC_PAYLOAD_PATHS: dict[str, str] = {
+    "sensitivity": "output/data/sensitivity_sweep.json",
+    "uncertainty": "output/data/uncertainty_summary.json",
+    "benchmark": "output/data/toy_benchmark_matrix.json",
+    "model_checking": "output/reports/model_checking_witnesses.json",
+    "interop": "output/data/interop_roundtrip_report.json",
+    "adversarial": "output/reports/adversarial_audit.json",
+    "stale": "output/reports/stale_artifact_report.json",
+    "manuscript_staleness": "output/reports/manuscript_staleness_report.json",
+    "tokens": "output/data/manuscript_token_provenance.json",
+    "figures": "output/data/figure_source_map.json",
+    "scope": "output/reports/scope_boundary_audit.json",
+    "provenance": "output/data/artifact_provenance.json",
+    "assumptions": "output/data/analytical_assumption_index.json",
+    "animation_deltas": "output/data/animation_frame_deltas.json",
+    "release_bundle": "output/reports/release_bundle_manifest.json",
+    "evidence_fields": "output/data/evidence_field_index.json",
+    "theorem_traceability": "output/data/theorem_traceability_matrix.json",
+    "gate_index": "output/data/validation_gate_index.json",
+    "section_status": "output/data/sheaf_section_status_matrix.json",
+    "render_log": "output/reports/sheaf_render_log.json",
+    "track_scope": "output/data/track_improvement_scope.json",
+    "blocked_scope": "output/reports/blocked_scope_manifest.json",
+    "replay_matrix": "output/reports/replay_matrix.json",
+    "proof_dependency": "output/data/proof_dependency_graph.json",
+    "transition_table": "output/data/state_transition_table.json",
+    "ablation_sensitivity": "output/reports/ablation_sensitivity_report.json",
+    "release_attestation": "output/reports/release_attestation.json",
+}
+
+
+def _semantic_artifact_sources(root: Path) -> dict[str, dict[str, Any]]:
+    return {key: {"path": rel, "exists": (root / rel).exists()} for key, rel in SEMANTIC_ARTIFACT_SOURCE_PATHS.items()}
+
+
+def _semantic_payloads(root: Path) -> dict[str, dict[str, Any]]:
+    return {key: _load_json(root / rel) for key, rel in SEMANTIC_PAYLOAD_PATHS.items()}
+
+
+def _semantic_track_rows(ctx: Any) -> list[dict[str, Any]]:
+    return [
+        {
+            "id": tid,
+            "renderer": spec.renderer,
+            "optional": spec.optional,
+            "order": spec.order,
+            "paper_role": spec.paper_role,
+            "paper_use": spec.paper_use,
+        }
+        for tid, spec in sorted(ctx.registry.tracks.items(), key=lambda item: item[1].order)
+    ]
+
+
+def _semantic_shared_symbols(root: Path) -> dict[str, dict[str, str | None]]:
+    bernoulli_symbols = _gnn_symbols(root, "gnn/bernoulli_toy.gnn.md")
+    si_symbols = _gnn_symbols(root, "gnn/si_tmaze.gnn.md")
+    return {
+        "bernoulli": {var: bernoulli_symbols.get(var) for var in BERNOULLI_EXPECTED_TERMS},
+        "si_tmaze": {var: si_symbols.get(var) for var in SI_EXPECTED_TERMS},
+    }
+
+
+def _canonical_restriction_snapshot(root: Path) -> dict[str, bool]:
+    try:
+        from roadmap_tracks.sheaf_tracks import _canonical_restrictions
+
+        return dict(_canonical_restrictions(root))
+    except (ImportError, OSError, ValueError, KeyError, TypeError):
+        return {}
+
+
 def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
     """Build a JSON-serializable semantic certificate from live project state."""
     root = project_root.resolve()
     ctx = load_sheaf_coverage_context(root)
     issues = semantic_gluing_issues(root)
     variables = generate_variables(root, require_analysis_outputs=False)
-    bernoulli_symbols = _gnn_symbols(root, "gnn/bernoulli_toy.gnn.md")
-    si_symbols = _gnn_symbols(root, "gnn/si_tmaze.gnn.md")
     dependency_graph = build_validation_dependency_graph(root)
     policy = _policy_comparison_restrictions(root)
     posterior = _policy_posterior_restrictions(root)
@@ -657,139 +773,49 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
     graph_world = _graph_world_restrictions(root)
     pymdp_hash = _pymdp_hash_restrictions(root)
     lean = _lean_status(root)
-    sensitivity = _load_json(root / "output" / "data" / "sensitivity_sweep.json")
-    uncertainty = _load_json(root / "output" / "data" / "uncertainty_summary.json")
-    benchmark = _load_json(root / "output" / "data" / "toy_benchmark_matrix.json")
-    model_checking = _load_json(root / "output" / "reports" / "model_checking_witnesses.json")
-    interop = _load_json(root / "output" / "data" / "interop_roundtrip_report.json")
-    adversarial = _load_json(root / "output" / "reports" / "adversarial_audit.json")
-    stale = _load_json(root / "output" / "reports" / "stale_artifact_report.json")
-    manuscript_staleness = _load_json(root / "output" / "reports" / "manuscript_staleness_report.json")
-    tokens = _load_json(root / "output" / "data" / "manuscript_token_provenance.json")
-    figures = _load_json(root / "output" / "data" / "figure_source_map.json")
-    scope = _load_json(root / "output" / "reports" / "scope_boundary_audit.json")
-    provenance = _load_json(root / "output" / "data" / "artifact_provenance.json")
-    assumptions = _load_json(root / "output" / "data" / "analytical_assumption_index.json")
-    animation_deltas = _load_json(root / "output" / "data" / "animation_frame_deltas.json")
-    release_bundle = _load_json(root / "output" / "reports" / "release_bundle_manifest.json")
-    evidence_fields = _load_json(root / "output" / "data" / "evidence_field_index.json")
-    theorem_traceability = _load_json(root / "output" / "data" / "theorem_traceability_matrix.json")
-    gate_index = _load_json(root / "output" / "data" / "validation_gate_index.json")
-    section_status = _load_json(root / "output" / "data" / "sheaf_section_status_matrix.json")
-    render_log = _load_json(root / "output" / "reports" / "sheaf_render_log.json")
-    track_scope = _load_json(root / "output" / "data" / "track_improvement_scope.json")
-    blocked_scope = _load_json(root / "output" / "reports" / "blocked_scope_manifest.json")
-    replay_matrix = _load_json(root / "output" / "reports" / "replay_matrix.json")
-    proof_dependency = _load_json(root / "output" / "data" / "proof_dependency_graph.json")
-    transition_table = _load_json(root / "output" / "data" / "state_transition_table.json")
-    ablation_sensitivity = _load_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
-    release_attestation = _load_json(root / "output" / "reports" / "release_attestation.json")
-    try:
-        from roadmap_tracks.sheaf_tracks import _canonical_restrictions
-
-        canonical_restrictions = _canonical_restrictions(root)
-    except (ImportError, OSError, ValueError, KeyError, TypeError):
-        canonical_restrictions = {}
+    payloads = _semantic_payloads(root)
+    sensitivity = payloads["sensitivity"]
+    uncertainty = payloads["uncertainty"]
+    benchmark = payloads["benchmark"]
+    model_checking = payloads["model_checking"]
+    interop = payloads["interop"]
+    adversarial = payloads["adversarial"]
+    stale = payloads["stale"]
+    manuscript_staleness = payloads["manuscript_staleness"]
+    tokens = payloads["tokens"]
+    figures = payloads["figures"]
+    scope = payloads["scope"]
+    provenance = payloads["provenance"]
+    assumptions = payloads["assumptions"]
+    animation_deltas = payloads["animation_deltas"]
+    release_bundle = payloads["release_bundle"]
+    evidence_fields = payloads["evidence_fields"]
+    theorem_traceability = payloads["theorem_traceability"]
+    gate_index = payloads["gate_index"]
+    section_status = payloads["section_status"]
+    render_log = payloads["render_log"]
+    track_scope = payloads["track_scope"]
+    blocked_scope = payloads["blocked_scope"]
+    replay_matrix = payloads["replay_matrix"]
+    proof_dependency = payloads["proof_dependency"]
+    transition_table = payloads["transition_table"]
+    ablation_sensitivity = payloads["ablation_sensitivity"]
+    release_attestation = payloads["release_attestation"]
+    canonical_restrictions = _canonical_restriction_snapshot(root)
     from validation_spine import validate_validation_spine
 
+    proof_obligations = _proof_obligation_rows(canonical_restrictions)
     return {
         "schema": SEMANTIC_SCHEMA,
         "ok": not issues,
         "issues": issues,
-        "tracks": [
-            {
-                "id": tid,
-                "renderer": spec.renderer,
-                "optional": spec.optional,
-                "order": spec.order,
-                "paper_role": spec.paper_role,
-                "paper_use": spec.paper_use,
-            }
-            for tid, spec in sorted(ctx.registry.tracks.items(), key=lambda item: item[1].order)
-        ],
+        "restriction_classes": sorted({row["class"] for row in proof_obligations}),
+        "proof_obligations": proof_obligations,
+        "all_proof_obligations_ok": bool(proof_obligations) and all(row["ok"] for row in proof_obligations),
+        "tracks": _semantic_track_rows(ctx),
         "sections": _section_records(root),
-        "shared_symbols": {
-            "bernoulli": {var: bernoulli_symbols.get(var) for var in BERNOULLI_EXPECTED_TERMS},
-            "si_tmaze": {var: si_symbols.get(var) for var in SI_EXPECTED_TERMS},
-        },
-        "artifact_sources": {
-            "coverage_matrix": {
-                "path": "output/data/sheaf_coverage_matrix.json",
-                "exists": (root / "output" / "data" / "sheaf_coverage_matrix.json").exists(),
-            },
-            "si_summary": {
-                "path": "output/data/si_tmaze_summary.json",
-                "exists": (root / "output" / "data" / "si_tmaze_summary.json").exists(),
-            },
-            "analysis_statistics": {
-                "path": "output/data/analysis_statistics.json",
-                "exists": (root / "output" / "data" / "analysis_statistics.json").exists(),
-            },
-            "claim_ledger": {
-                "path": "data/claim_ledger.yaml",
-                "exists": (root / "data" / "claim_ledger.yaml").exists(),
-            },
-            "evidence_crosswalk": {
-                "path": "output/data/sheaf_evidence_crosswalk.json",
-                "exists": (root / "output" / "data" / "sheaf_evidence_crosswalk.json").exists(),
-            },
-            "dependency_graph": {
-                "path": "output/data/validation_dependency_graph.json",
-                "exists": (root / "output" / "data" / "validation_dependency_graph.json").exists(),
-            },
-            "analytical_assumption_index": {
-                "path": "output/data/analytical_assumption_index.json",
-                "exists": (root / "output" / "data" / "analytical_assumption_index.json").exists(),
-            },
-            "animation_frame_deltas": {
-                "path": "output/data/animation_frame_deltas.json",
-                "exists": (root / "output" / "data" / "animation_frame_deltas.json").exists(),
-            },
-            "manuscript_staleness": {
-                "path": "output/reports/manuscript_staleness_report.json",
-                "exists": (root / "output" / "reports" / "manuscript_staleness_report.json").exists(),
-            },
-            "track_improvement_scope": {
-                "path": "output/data/track_improvement_scope.json",
-                "exists": (root / "output" / "data" / "track_improvement_scope.json").exists(),
-            },
-            "evidence_field_index": {
-                "path": "output/data/evidence_field_index.json",
-                "exists": (root / "output" / "data" / "evidence_field_index.json").exists(),
-            },
-            "release_bundle": {
-                "path": "output/reports/release_bundle_manifest.json",
-                "exists": (root / "output" / "reports" / "release_bundle_manifest.json").exists(),
-            },
-            "theorem_traceability": {
-                "path": "output/data/theorem_traceability_matrix.json",
-                "exists": (root / "output" / "data" / "theorem_traceability_matrix.json").exists(),
-            },
-            "section_status_matrix": {
-                "path": "output/data/sheaf_section_status_matrix.json",
-                "exists": (root / "output" / "data" / "sheaf_section_status_matrix.json").exists(),
-            },
-            "sheaf_render_log": {
-                "path": "output/reports/sheaf_render_log.json",
-                "exists": (root / "output" / "reports" / "sheaf_render_log.json").exists(),
-            },
-            "proof_dependency_graph": {
-                "path": "output/data/proof_dependency_graph.json",
-                "exists": (root / "output" / "data" / "proof_dependency_graph.json").exists(),
-            },
-            "state_transition_table": {
-                "path": "output/data/state_transition_table.json",
-                "exists": (root / "output" / "data" / "state_transition_table.json").exists(),
-            },
-            "ablation_sensitivity_report": {
-                "path": "output/reports/ablation_sensitivity_report.json",
-                "exists": (root / "output" / "reports" / "ablation_sensitivity_report.json").exists(),
-            },
-            "release_attestation": {
-                "path": "output/reports/release_attestation.json",
-                "exists": (root / "output" / "reports" / "release_attestation.json").exists(),
-            },
-        },
+        "shared_symbols": _semantic_shared_symbols(root),
+        "artifact_sources": _semantic_artifact_sources(root),
         "restrictions": {
             "coverage_missing": gray_cell_count(ctx.matrix),
             "section_count": len(ctx.manifest.sections),
@@ -805,6 +831,7 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
             "policy_posterior_available_row_count": posterior["available_row_count"],
             "policy_posterior_normalized": posterior["all_available_posteriors_normalized"],
             "pymdp_runtime_ok": runtime["ok"],
+            "pymdp_runtime_phase_rows_ok": runtime["phase_rows_ok"],
             "pymdp_runtime_known_warning_count": runtime["known_warning_count"],
             "pymdp_runtime_unexpected_warning_count": runtime["unexpected_warning_count"],
             "graph_world_steps_match": graph_world["steps_match"],

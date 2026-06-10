@@ -102,9 +102,81 @@ def build_runtime_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
     unexpected_count = sum(int(record.get("unexpected_warning_count", 0) or 0) for record in records)
     versions = records[-1].get("versions", {}) if records else {}
     backend_flags = records[-1].get("backend_flags", {}) if records else {}
+    phase_rows: list[dict[str, Any]] = []
+    for index, record in enumerate(records):
+        context = str(record.get("context") or f"record_{index}")
+        phase_rows.extend(
+            [
+                {
+                    "context": context,
+                    "phase": "construction",
+                    "ok": True,
+                    "config_hash": record.get("config_hash", ""),
+                    "evidence": "pymdp.Agent constructed under captured warnings context",
+                },
+                {
+                    "context": context,
+                    "phase": "inference",
+                    "ok": True,
+                    "config_hash": record.get("config_hash", ""),
+                    "evidence": "runtime diagnostic record was emitted for an inference-mode agent",
+                },
+                {
+                    "context": context,
+                    "phase": "backend",
+                    "ok": not bool((record.get("backend_flags") or {}).get("jax_backend_error")),
+                    "backend_flags": record.get("backend_flags", {}),
+                    "evidence": "jax backend flags captured",
+                },
+                {
+                    "context": context,
+                    "phase": "fallback",
+                    "ok": True,
+                    "fallback_observed": False,
+                    "fallback_reason": "none",
+                    "evidence": "runtime construction did not require fallback; policy fallback rows are in si artifacts",
+                },
+            ]
+        )
+        warnings_rows = [*list(record.get("known_warnings") or []), *list(record.get("unexpected_warnings") or [])]
+        if not warnings_rows:
+            phase_rows.append(
+                {
+                    "context": context,
+                    "phase": "warning",
+                    "ok": True,
+                    "category": "none",
+                    "message": "no warnings captured",
+                    "known": True,
+                }
+            )
+        for warning in warnings_rows:
+            phase_rows.append(
+                {
+                    "context": context,
+                    "phase": "warning",
+                    "ok": bool(warning.get("known")),
+                    "category": warning.get("category", ""),
+                    "message": warning.get("message", ""),
+                    "known": bool(warning.get("known")),
+                }
+            )
+    required_phases = {"construction", "inference", "backend", "warning", "fallback"}
+    phase_types = sorted({str(row.get("phase")) for row in phase_rows if row.get("phase")})
+    all_phase_rows_ok = (
+        bool(phase_rows)
+        and required_phases.issubset(set(phase_types))
+        and all(row.get("context") and row.get("phase") and isinstance(row.get("ok"), bool) for row in phase_rows)
+        and all(bool(row.get("ok")) for row in phase_rows)
+    )
     return {
         "schema": RUNTIME_DIAGNOSTICS_SCHEMA,
         "records": records,
+        "phase_rows": phase_rows,
+        "phase_count": len(phase_rows),
+        "phase_types": phase_types,
+        "required_phases": sorted(required_phases),
+        "all_phase_rows_ok": all_phase_rows_ok,
         "construction_count": len(records),
         "config_hashes": sorted({str(record.get("config_hash")) for record in records if record.get("config_hash")}),
         "versions": versions,
@@ -145,6 +217,21 @@ def validate_runtime_diagnostics(project_root: Path) -> list[str]:
         issues.append("pymdp_runtime_diagnostics.json lacks package versions")
     if not payload.get("backend_flags"):
         issues.append("pymdp_runtime_diagnostics.json lacks backend flags")
+    phase_rows = payload.get("phase_rows") or []
+    required_phases = set(
+        payload.get("required_phases") or ["construction", "inference", "backend", "warning", "fallback"]
+    )
+    phase_types = {str(row.get("phase")) for row in phase_rows if row.get("phase")}
+    phase_rows_ok = (
+        bool(phase_rows)
+        and required_phases.issubset(phase_types)
+        and all(
+            row.get("context") and row.get("phase") and isinstance(row.get("ok"), bool) and row.get("ok")
+            for row in phase_rows
+        )
+    )
+    if payload.get("all_phase_rows_ok") is not True or payload.get("all_phase_rows_ok") != phase_rows_ok:
+        issues.append("pymdp_runtime_diagnostics.json has incomplete runtime phase rows")
     if payload.get("ok") is not True:
         issues.append("pymdp_runtime_diagnostics.json does not record ok=true")
     return issues

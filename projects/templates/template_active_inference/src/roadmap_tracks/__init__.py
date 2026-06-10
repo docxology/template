@@ -11,6 +11,7 @@ from .integration_audit import (
 )
 from .sheaf_tracks import (
     validate_sheaf_track_artifacts,
+    validate_sheaf_track_source_contract,
     write_sheaf_track_artifacts,
 )
 from .scholarship import (
@@ -36,6 +37,7 @@ __all__ = [
     "validate_formal_interop_artifacts",
     "validate_integration_audit_artifacts",
     "validate_sheaf_track_artifacts",
+    "validate_sheaf_track_source_contract",
     "validate_scholarship_source_matrix",
     "validate_supplemental_artifacts",
     "validate_statistical_visualization_bridge",

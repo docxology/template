@@ -123,7 +123,8 @@ def build_release_notes_evidence(project_root: Path) -> dict[str, Any]:
 
 def build_figure_source_map(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
-    from visualizations.figure_registry import load_figure_registry
+    from PIL import Image
+    from visualizations.figure_registry import figure_output_path, load_figure_registry, load_section_figures
 
     sources = {
         "efe_decomposition": ["src/simulation/efe_decomposition.py", "src/simulation/tmaze_model.py"],
@@ -162,15 +163,50 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
         "scholarship_source_map": ["output/data/scholarship_source_matrix.json", "manuscript/references.bib"],
     }
     rows = []
-    for figure_id in sorted(load_figure_registry(root)):
+    section_bindings: dict[str, list[str]] = {}
+    for section_id, refs in load_section_figures(root).items():
+        for ref in refs:
+            section_bindings.setdefault(ref.figure_id, []).append(section_id)
+    axis_mappings = {
+        "ising_mi_curve": {"x": "lambda", "y": "mutual_information"},
+        "si_belief_entropy_curve": {"x": "step", "y": "belief_entropy"},
+        "causal_ablation_heatmap": {"x": "lambda", "y": "perturbation", "channel": "effect"},
+        "sheaf_coverage_heatmap": {"x": "section", "y": "track", "channel": "coverage_status"},
+    }
+    registry = load_figure_registry(root)
+    for figure_id in sorted(registry):
+        image_path = figure_output_path(root, figure_id)
+        dimensions = {"width": 0, "height": 0}
+        if image_path.is_file():
+            with Image.open(image_path) as image:
+                dimensions = {"width": int(image.width), "height": int(image.height)}
+        source_artifacts = sources.get(figure_id, [])
+        source_jsonpaths = ["$" for _ in source_artifacts]
+        image_hash = _sha256(image_path) if image_path.is_file() else ""
+        pixel_ok = bool(source_artifacts and image_hash and dimensions["width"] > 0 and dimensions["height"] > 0)
         rows.append(
-            {"figure_id": figure_id, "sources": sources.get(figure_id, []), "mapped": bool(sources.get(figure_id))}
+            {
+                "figure_id": figure_id,
+                "source_artifact": source_artifacts[0] if source_artifacts else "",
+                "sources": source_artifacts,
+                "source_artifacts": source_artifacts,
+                "source_jsonpath": source_jsonpaths[0] if source_jsonpaths else "",
+                "source_jsonpaths": source_jsonpaths,
+                "renderer": "visualizations.figures.generate_all_figures",
+                "dimensions": dimensions,
+                "image_sha256": image_hash,
+                "axis_channel_mapping": axis_mappings.get(figure_id, {"channel": "pixels"}),
+                "section_bindings": sorted(section_bindings.get(figure_id, [])),
+                "caption": registry[figure_id].caption,
+                "mapped": bool(source_artifacts),
+                "pixel_provenance_ok": pixel_ok,
+            }
         )
     return {
         "schema": "template_active_inference.figure_source_map.v1",
         "rows": rows,
         "figure_count": len(rows),
-        "all_figures_mapped": all(row["mapped"] for row in rows),
+        "all_figures_mapped": all(row["mapped"] and row["pixel_provenance_ok"] for row in rows),
     }
 
 
@@ -207,7 +243,20 @@ def build_scope_boundary_audit(project_root: Path) -> dict[str, Any]:
         negated = "not empirical" in text or "future" in text
         allowed = path.name in allowed_future_files
         ok = not forbidden or negated or allowed
-        rows.append({"section": path.name, "classification": "toy_or_future", "ok": ok})
+        classification = "future" if path.name in allowed_future_files else "current"
+        if forbidden and not negated:
+            classification = "empirical"
+        rows.append(
+            {
+                "section": path.name,
+                "classification": classification,
+                "context": "blocked_language" if forbidden else "toy_result",
+                "current_result_toy_only": classification == "current" and not forbidden,
+                "future_only": classification == "future",
+                "blocked_language_ok": not forbidden or negated or allowed,
+                "ok": ok,
+            }
+        )
         if not ok:
             violations.append(path.name)
     return {
@@ -422,7 +471,8 @@ def build_integration_semantic_snapshot(project_root: Path) -> dict[str, Any]:
         "stale_flags_clear": stale["all_fresh"],
         "token_provenance_complete": tokens["all_tokens_mapped"],
         "figure_source_coverage": figures["all_figures_mapped"],
-        "animation_deltas_nonzero": animation.get("all_nonzero") is True,
+        "animation_deltas_nonzero": animation.get("all_nonzero") is True
+        and animation.get("all_adjacent_hashes_distinct") is True,
         "scope_boundary_toy_only": scope["all_current_claims_toy"],
         "manuscript_staleness_fresh": staleness["all_fresh"],
         "artifact_provenance_seed_config_complete": provenance.get("all_seeded") is True

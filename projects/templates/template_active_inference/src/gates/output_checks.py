@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 from gates.artifact_manifest import REQUIRED_OUTPUTS
 
@@ -37,11 +38,12 @@ def _efe_values_explained(payload: dict) -> bool:
     )
 
 
-def validate_outputs(project_root: Path) -> dict[str, bool]:
-    root = project_root.resolve()
+def _required_output_checks(root: Path) -> dict[str, bool]:
     required = [root / rel for rel in REQUIRED_OUTPUTS]
-    checks = {str(p.relative_to(root)): p.exists() for p in required}
+    return {str(path.relative_to(root)): path.exists() for path in required}
 
+
+def _add_simulation_checks(root: Path, checks: dict[str, bool]) -> dict[str, Any]:
     summary_path = root / "output" / "data" / "si_tmaze_summary.json"
     trace_path = root / "output" / "data" / "si_tmaze_trace.json"
     analysis_stats_path = root / "output" / "data" / "analysis_statistics.json"
@@ -134,6 +136,15 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
             and "not_implemented" not in json.dumps(graph_summary)
         )
 
+    return {
+        "summary_path": summary_path,
+        "si_summary_present": si_summary_present,
+        "comparison_path": comparison_path,
+        "graph_summary_path": graph_summary_path,
+    }
+
+
+def _add_validation_spine_checks(root: Path, checks: dict[str, bool]) -> dict[str, Path]:
     crosswalk_path = root / "output" / "data" / "sheaf_evidence_crosswalk.json"
     dependency_path = root / "output" / "data" / "validation_dependency_graph.json"
     if crosswalk_path.exists():
@@ -188,65 +199,106 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
             and not validate_counterexample_matrix(root)
         )
 
-    from roadmap_tracks import (
-        validate_formal_interop_artifacts,
-        validate_integration_audit_artifacts,
-        validate_sheaf_track_artifacts,
-        validate_toy_sweep_artifacts,
-    )
+    return {
+        "crosswalk_path": crosswalk_path,
+        "dependency_path": dependency_path,
+        "provenance_path": provenance_path,
+        "replay_path": replay_path,
+        "counterexample_path": counterexample_path,
+    }
 
-    sensitivity = _read_json(root / "output" / "data" / "sensitivity_sweep.json")
-    uncertainty = _read_json(root / "output" / "data" / "uncertainty_summary.json")
-    benchmark = _read_json(root / "output" / "data" / "toy_benchmark_matrix.json")
-    policy_grid = _read_json(root / "output" / "data" / "si_policy_grid.json")
-    efe_terms = _read_json(root / "output" / "data" / "si_efe_terms.json")
-    topology = _read_json(root / "output" / "data" / "si_graph_world_topology_sweep.json")
-    topology_traces = _read_json(root / "output" / "data" / "si_graph_world_topology_traces.json")
-    graph_invariants = _read_json(root / "output" / "reports" / "graph_world_invariants.json")
-    observable = _read_json(root / "output" / "data" / "analytical_observable_sweep.json")
-    model_checking = _read_json(root / "output" / "reports" / "model_checking_witnesses.json")
-    interop = _read_json(root / "output" / "data" / "interop_roundtrip_report.json")
-    gnn_roundtrip = _read_json(root / "output" / "data" / "gnn_roundtrip_report.json")
-    gnn_lint = _read_json(root / "output" / "reports" / "gnn_lint_report.json")
-    ontology_alias = _read_json(root / "output" / "data" / "ontology_alias_index.json")
-    ontology_profile = _read_json(root / "output" / "data" / "ontology_profile_matrix.json")
-    lean_theorems = _read_json(root / "output" / "reports" / "lean_theorem_inventory.json")
-    lean_graph = _read_json(root / "output" / "reports" / "lean_graph_world_inventory.json")
-    producer_completeness = _read_json(root / "output" / "reports" / "producer_completeness.json")
-    stale_report = _read_json(root / "output" / "reports" / "stale_artifact_report.json")
-    manuscript_staleness = _read_json(root / "output" / "reports" / "manuscript_staleness_report.json")
-    cross_symbols = _read_json(root / "output" / "data" / "cross_track_symbol_table.json")
-    evidence_tables = _read_json(root / "output" / "data" / "manuscript_evidence_tables.json")
-    token_provenance = _read_json(root / "output" / "data" / "manuscript_token_provenance.json")
-    claim_audit = _read_json(root / "output" / "reports" / "claim_evidence_audit.json")
-    gate_index = _read_json(root / "output" / "data" / "validation_gate_index.json")
-    section_status = _read_json(root / "output" / "data" / "sheaf_section_status_matrix.json")
-    render_log = _read_json(root / "output" / "reports" / "sheaf_render_log.json")
-    figure_source = _read_json(root / "output" / "data" / "figure_source_map.json")
-    figure_hash = _read_json(root / "output" / "reports" / "figure_hash_manifest.json")
-    visualization_quality = _read_json(root / "output" / "reports" / "visualization_quality_audit.json")
-    statistical_bridge = _read_json(root / "output" / "data" / "statistical_visualization_bridge.json")
-    scope = _read_json(root / "output" / "reports" / "scope_boundary_audit.json")
-    adversarial = _read_json(root / "output" / "reports" / "adversarial_audit.json")
-    assumptions = _read_json(root / "output" / "data" / "analytical_assumption_index.json")
-    animation_deltas = _read_json(root / "output" / "data" / "animation_frame_deltas.json")
-    replay_matrix = _read_json(root / "output" / "reports" / "replay_matrix.json")
-    track_scope = _read_json(root / "output" / "data" / "track_improvement_scope.json")
-    blocked_scope = _read_json(root / "output" / "reports" / "blocked_scope_manifest.json")
-    evidence_fields = _read_json(root / "output" / "data" / "evidence_field_index.json")
-    release_bundle = _read_json(root / "output" / "reports" / "release_bundle_manifest.json")
-    theorem_traceability = _read_json(root / "output" / "data" / "theorem_traceability_matrix.json")
-    artifact_diffoscope = _read_json(root / "output" / "reports" / "artifact_diffoscope.json")
-    proof_extraction = _read_json(root / "output" / "data" / "proof_extraction_index.json")
-    state_space_catalog = _read_json(root / "output" / "data" / "state_space_catalog.json")
-    causal_ablation = _read_json(root / "output" / "data" / "causal_ablation_matrix.json")
-    artifact_license = _read_json(root / "output" / "reports" / "artifact_license_audit.json")
-    release_notes = _read_json(root / "output" / "reports" / "release_notes_evidence.json")
-    scholarship = _read_json(root / "output" / "data" / "scholarship_source_matrix.json")
-    proof_dependency = _read_json(root / "output" / "data" / "proof_dependency_graph.json")
-    transition_table = _read_json(root / "output" / "data" / "state_transition_table.json")
-    ablation_sensitivity = _read_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
-    release_attestation = _read_json(root / "output" / "reports" / "release_attestation.json")
+
+PROMOTED_ARTIFACTS: dict[str, str] = {
+    "sensitivity": "output/data/sensitivity_sweep.json",
+    "uncertainty": "output/data/uncertainty_summary.json",
+    "benchmark": "output/data/toy_benchmark_matrix.json",
+    "policy_grid": "output/data/si_policy_grid.json",
+    "efe_terms": "output/data/si_efe_terms.json",
+    "topology": "output/data/si_graph_world_topology_sweep.json",
+    "topology_traces": "output/data/si_graph_world_topology_traces.json",
+    "graph_invariants": "output/reports/graph_world_invariants.json",
+    "observable": "output/data/analytical_observable_sweep.json",
+    "model_checking": "output/reports/model_checking_witnesses.json",
+    "interop": "output/data/interop_roundtrip_report.json",
+    "gnn_roundtrip": "output/data/gnn_roundtrip_report.json",
+    "gnn_lint": "output/reports/gnn_lint_report.json",
+    "ontology_alias": "output/data/ontology_alias_index.json",
+    "ontology_profile": "output/data/ontology_profile_matrix.json",
+    "lean_theorems": "output/reports/lean_theorem_inventory.json",
+    "lean_graph": "output/reports/lean_graph_world_inventory.json",
+    "producer_completeness": "output/reports/producer_completeness.json",
+    "stale_report": "output/reports/stale_artifact_report.json",
+    "manuscript_staleness": "output/reports/manuscript_staleness_report.json",
+    "cross_symbols": "output/data/cross_track_symbol_table.json",
+    "evidence_tables": "output/data/manuscript_evidence_tables.json",
+    "token_provenance": "output/data/manuscript_token_provenance.json",
+    "claim_audit": "output/reports/claim_evidence_audit.json",
+    "gate_index": "output/data/validation_gate_index.json",
+    "section_status": "output/data/sheaf_section_status_matrix.json",
+    "render_log": "output/reports/sheaf_render_log.json",
+    "figure_source": "output/data/figure_source_map.json",
+    "figure_hash": "output/reports/figure_hash_manifest.json",
+    "visualization_quality": "output/reports/visualization_quality_audit.json",
+    "statistical_bridge": "output/data/statistical_visualization_bridge.json",
+    "scope": "output/reports/scope_boundary_audit.json",
+    "adversarial": "output/reports/adversarial_audit.json",
+    "assumptions": "output/data/analytical_assumption_index.json",
+    "animation_deltas": "output/data/animation_frame_deltas.json",
+    "replay_matrix": "output/reports/replay_matrix.json",
+    "track_scope": "output/data/track_improvement_scope.json",
+    "blocked_scope": "output/reports/blocked_scope_manifest.json",
+    "evidence_fields": "output/data/evidence_field_index.json",
+    "release_bundle": "output/reports/release_bundle_manifest.json",
+    "theorem_traceability": "output/data/theorem_traceability_matrix.json",
+    "artifact_diffoscope": "output/reports/artifact_diffoscope.json",
+    "proof_extraction": "output/data/proof_extraction_index.json",
+    "state_space_catalog": "output/data/state_space_catalog.json",
+    "causal_ablation": "output/data/causal_ablation_matrix.json",
+    "artifact_license": "output/reports/artifact_license_audit.json",
+    "release_notes": "output/reports/release_notes_evidence.json",
+    "scholarship": "output/data/scholarship_source_matrix.json",
+    "proof_dependency": "output/data/proof_dependency_graph.json",
+    "transition_table": "output/data/state_transition_table.json",
+    "ablation_sensitivity": "output/reports/ablation_sensitivity_report.json",
+    "release_attestation": "output/reports/release_attestation.json",
+}
+
+
+def _load_promoted_artifacts(root: Path) -> dict[str, dict]:
+    return {name: _read_json(root / rel_path) for name, rel_path in PROMOTED_ARTIFACTS.items()}
+
+
+def _add_toy_formal_integration_checks(checks: dict[str, bool], artifacts: dict[str, dict]) -> None:
+    sensitivity = artifacts["sensitivity"]
+    uncertainty = artifacts["uncertainty"]
+    benchmark = artifacts["benchmark"]
+    policy_grid = artifacts["policy_grid"]
+    efe_terms = artifacts["efe_terms"]
+    topology = artifacts["topology"]
+    topology_traces = artifacts["topology_traces"]
+    graph_invariants = artifacts["graph_invariants"]
+    observable = artifacts["observable"]
+    model_checking = artifacts["model_checking"]
+    interop = artifacts["interop"]
+    gnn_roundtrip = artifacts["gnn_roundtrip"]
+    gnn_lint = artifacts["gnn_lint"]
+    ontology_alias = artifacts["ontology_alias"]
+    ontology_profile = artifacts["ontology_profile"]
+    lean_theorems = artifacts["lean_theorems"]
+    lean_graph = artifacts["lean_graph"]
+    producer_completeness = artifacts["producer_completeness"]
+    stale_report = artifacts["stale_report"]
+    manuscript_staleness = artifacts["manuscript_staleness"]
+    cross_symbols = artifacts["cross_symbols"]
+    evidence_tables = artifacts["evidence_tables"]
+    token_provenance = artifacts["token_provenance"]
+    claim_audit = artifacts["claim_audit"]
+    gate_index = artifacts["gate_index"]
+    section_status = artifacts["section_status"]
+    render_log = artifacts["render_log"]
+    scope = artifacts["scope"]
+    adversarial = artifacts["adversarial"]
+    assumptions = artifacts["assumptions"]
 
     checks["analytical_observable_sweep_schema"] = (
         observable.get("schema") == "template_active_inference.analytical_observable_sweep.v1"
@@ -294,9 +346,8 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
     checks["ontology_alias_schema"] = ontology_alias.get("no_conflicts") is True
     checks["ontology_profile_schema"] = ontology_profile.get("all_mapped_once") is True
     checks["lean_theorem_inventory_schema"] = lean_theorems.get("all_proved") is True
-    checks["lean_graph_world_inventory_schema"] = lean_graph.get("all_topologies_witnessed") is True
     checks["lean_graph_world_inventory_schema"] = (
-        checks["lean_graph_world_inventory_schema"]
+        lean_graph.get("all_topologies_witnessed") is True
         and lean_graph.get("all_policy_witnesses_present") is True
         and int(lean_graph.get("topology_count", 0) or 0) == int(topology.get("topology_count", 0) or 0)
     )
@@ -329,6 +380,20 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
         and render_log.get("all_events_ok") is True
         and int(render_log.get("event_count", 0) or 0) > 0
     )
+    checks["scope_boundary_audit_schema"] = scope.get("scope_boundary_status") == "toy_only_pass"
+    checks["adversarial_audit_schema"] = (
+        adversarial.get("all_expected_failures_documented") is True
+        and adversarial.get("all_expected_failures_observed") is True
+        and int(adversarial.get("known_bad_rows_passed", 0) or 0) == 0
+    )
+
+
+def _add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict]) -> None:
+    figure_source = artifacts["figure_source"]
+    figure_hash = artifacts["figure_hash"]
+    visualization_quality = artifacts["visualization_quality"]
+    statistical_bridge = artifacts["statistical_bridge"]
+
     checks["figure_source_map_schema"] = figure_source.get("all_figures_mapped") is True
     checks["figure_hash_manifest_schema"] = figure_hash.get("all_hashes_present") is True
     checks["visualization_quality_audit_schema"] = (
@@ -356,12 +421,27 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
         and statistical_bridge.get("all_sheaf_tracks_registered") is True
         and "statistical_visualization_bridge" in set(statistical_bridge.get("scholarship_method_roles") or [])
     )
-    checks["scope_boundary_audit_schema"] = scope.get("scope_boundary_status") == "toy_only_pass"
-    checks["adversarial_audit_schema"] = (
-        adversarial.get("all_expected_failures_documented") is True
-        and adversarial.get("all_expected_failures_observed") is True
-        and int(adversarial.get("known_bad_rows_passed", 0) or 0) == 0
-    )
+
+
+def _add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, dict]) -> None:
+    replay_matrix = artifacts["replay_matrix"]
+    track_scope = artifacts["track_scope"]
+    blocked_scope = artifacts["blocked_scope"]
+    evidence_fields = artifacts["evidence_fields"]
+    release_bundle = artifacts["release_bundle"]
+    theorem_traceability = artifacts["theorem_traceability"]
+    artifact_diffoscope = artifacts["artifact_diffoscope"]
+    proof_extraction = artifacts["proof_extraction"]
+    state_space_catalog = artifacts["state_space_catalog"]
+    causal_ablation = artifacts["causal_ablation"]
+    artifact_license = artifacts["artifact_license"]
+    release_notes = artifacts["release_notes"]
+    scholarship = artifacts["scholarship"]
+    proof_dependency = artifacts["proof_dependency"]
+    transition_table = artifacts["transition_table"]
+    ablation_sensitivity = artifacts["ablation_sensitivity"]
+    release_attestation = artifacts["release_attestation"]
+
     checks["replay_matrix_schema"] = (
         replay_matrix.get("schema") == "template_active_inference.replay_matrix.v1"
         and replay_matrix.get("all_replay_rows_matched") is True
@@ -438,6 +518,15 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
         release_attestation.get("schema") == "template_active_inference.release_attestation.v1"
         and release_attestation.get("all_attested") is True
     )
+
+
+def _add_track_validator_checks(root: Path, checks: dict[str, bool], animation_deltas: dict) -> None:
+    from roadmap_tracks import (
+        validate_formal_interop_artifacts,
+        validate_integration_audit_artifacts,
+        validate_sheaf_track_artifacts,
+        validate_toy_sweep_artifacts,
+    )
     from visualizations.animation import validate_animation_frame_deltas
 
     checks["animation_frame_deltas_schema"] = (
@@ -450,52 +539,62 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
     checks["integration_audit_track_schemas"] = not validate_integration_audit_artifacts(root)
     checks["canonical_sheaf_track_schemas"] = not validate_sheaf_track_artifacts(root)
 
+
+def _add_log_check(root: Path, checks: dict[str, bool]) -> None:
     log_path = root / "output" / "logs" / "pymdp_runs.jsonl"
     if _pymdp_logging_expected(root):
         checks["si_log_present"] = log_path.exists() and any(
             line.strip() for line in log_path.read_text(encoding="utf-8").splitlines()
         )
 
+
+def _set_experiment_plan_metrics(
+    root: Path,
+    checks: dict[str, bool],
+    simulation_context: dict[str, Any],
+    spine_context: dict[str, Path],
+) -> None:
+    summary_path = simulation_context["summary_path"]
     checks["experiment_plan_metrics"] = checks.get("invariants_all_pass", False) and checks.get(
         str(summary_path.relative_to(root)),
         False,
     )
-    if si_summary_present:
+    if simulation_context["si_summary_present"]:
         checks["experiment_plan_metrics"] = checks["experiment_plan_metrics"] and checks.get(
             "si_invariants_all_pass",
             False,
         )
-    if comparison_path.exists():
+    if simulation_context["comparison_path"].exists():
         checks["experiment_plan_metrics"] = checks["experiment_plan_metrics"] and checks.get(
             "si_policy_comparison_schema",
             False,
         )
-    if graph_summary_path.exists():
+    if simulation_context["graph_summary_path"].exists():
         checks["experiment_plan_metrics"] = checks["experiment_plan_metrics"] and checks.get(
             "si_graph_world_schema",
             False,
         )
-    if crosswalk_path.exists():
+    if spine_context["crosswalk_path"].exists():
         checks["experiment_plan_metrics"] = checks["experiment_plan_metrics"] and checks.get(
             "sheaf_evidence_crosswalk_schema",
             False,
         )
-    if dependency_path.exists():
+    if spine_context["dependency_path"].exists():
         checks["experiment_plan_metrics"] = checks["experiment_plan_metrics"] and checks.get(
             "validation_dependency_graph_schema",
             False,
         )
-    if provenance_path.exists():
+    if spine_context["provenance_path"].exists():
         checks["experiment_plan_metrics"] = checks["experiment_plan_metrics"] and checks.get(
             "artifact_provenance_schema",
             False,
         )
-    if replay_path.exists():
+    if spine_context["replay_path"].exists():
         checks["experiment_plan_metrics"] = checks["experiment_plan_metrics"] and checks.get(
             "reproducibility_replay_schema",
             False,
         )
-    if counterexample_path.exists():
+    if spine_context["counterexample_path"].exists():
         checks["experiment_plan_metrics"] = checks["experiment_plan_metrics"] and checks.get(
             "counterexample_matrix_schema",
             False,
@@ -530,4 +629,18 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
         )
     )
 
+
+def validate_outputs(project_root: Path) -> dict[str, bool]:
+    """Validate every registered output artifact and return gate booleans by name."""
+    root = project_root.resolve()
+    checks = _required_output_checks(root)
+    simulation_context = _add_simulation_checks(root, checks)
+    spine_context = _add_validation_spine_checks(root, checks)
+    artifacts = _load_promoted_artifacts(root)
+    _add_toy_formal_integration_checks(checks, artifacts)
+    _add_visualization_checks(checks, artifacts)
+    _add_canonical_sheaf_checks(checks, artifacts)
+    _add_track_validator_checks(root, checks, artifacts["animation_deltas"])
+    _add_log_check(root, checks)
+    _set_experiment_plan_metrics(root, checks, simulation_context, spine_context)
     return checks

@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from gate_support import ensure_gate_artifacts
+from gate_support import ensure_gate_artifacts, temporary_json_mutation, temporary_text_mutation
 
 # These tests regenerate heavy sheaf gluing + roadmap-promotion artifacts (the negative
 # controls mutate generated output/ artifacts, defeating the bootstrap cache). They run
@@ -101,84 +101,56 @@ def test_toy_sweep_negative_controls(project_root: Path) -> None:
     topology_traces = project_root / "output" / "data" / "si_graph_world_topology_traces.json"
     state_catalog = project_root / "output" / "data" / "state_space_catalog.json"
     causal_ablation = project_root / "output" / "data" / "causal_ablation_matrix.json"
-    originals = {
-        path: path.read_text(encoding="utf-8")
-        for path in (
-            sensitivity,
-            assumptions,
-            uncertainty,
-            benchmark,
-            observable,
-            topology_traces,
-            state_catalog,
-            causal_ablation,
-        )
-    }
-    try:
-        data = _load(sensitivity)
+
+    def break_sensitivity(data: dict) -> None:
         data["rows"] = data["rows"][:-1]
         data["row_count"] = len(data["rows"])
         data["complete_grid"] = False
-        _write(sensitivity, data)
-        assert any("grid is incomplete" in issue for issue in validate_toy_sweep_artifacts(project_root))
-        sensitivity.write_text(originals[sensitivity], encoding="utf-8")
 
-        data = _load(assumptions)
+    def break_assumptions(data: dict) -> None:
         data["equation_ids"] = ["eq:entangled_joint"]
         data["all_equations_indexed"] = False
-        _write(assumptions, data)
-        assert any("equation set is incomplete" in issue for issue in validate_toy_sweep_artifacts(project_root))
-        assumptions.write_text(originals[assumptions], encoding="utf-8")
 
-        data = _load(uncertainty)
+    def break_uncertainty(data: dict) -> None:
         data["rows"][0]["posterior_sum"] = 1.5
         data["rows"][0]["normalized"] = False
         data["all_normalized"] = False
-        _write(uncertainty, data)
-        assert any("unnormalized" in issue for issue in validate_toy_sweep_artifacts(project_root))
-        uncertainty.write_text(originals[uncertainty], encoding="utf-8")
 
-        data = _load(benchmark)
+    def break_benchmark(data: dict) -> None:
         data["models"] = ["bernoulli_ising"]
         data["all_models_complete"] = False
-        _write(benchmark, data)
-        assert any("model set is incomplete" in issue for issue in validate_toy_sweep_artifacts(project_root))
-        benchmark.write_text(originals[benchmark], encoding="utf-8")
 
-        data = _load(observable)
+    def break_observable(data: dict) -> None:
         data["rows"][0]["residual"] = 0.01
         data["max_abs_residual"] = 0.01
-        _write(observable, data)
-        assert any("residual exceeds tolerance" in issue for issue in validate_toy_sweep_artifacts(project_root))
-        observable.write_text(originals[observable], encoding="utf-8")
 
-        data = _load(topology_traces)
+    def break_topology_traces(data: dict) -> None:
         data["rows"][0]["trace_steps"] = 999
         data["rows"][0]["trace_summary_agree"] = False
         data["all_trace_summary_agree"] = False
-        _write(topology_traces, data)
-        assert any(
-            "topology_traces.json summary/trace mismatch" in issue
-            for issue in validate_toy_sweep_artifacts(project_root)
-        )
-        topology_traces.write_text(originals[topology_traces], encoding="utf-8")
 
-        data = _load(state_catalog)
+    def break_state_catalog(data: dict) -> None:
         data["rows"][0]["finite"] = False
         data["all_finite"] = False
-        _write(state_catalog, data)
-        assert any("state_space_catalog.json" in issue for issue in validate_toy_sweep_artifacts(project_root))
-        state_catalog.write_text(originals[state_catalog], encoding="utf-8")
 
-        data = _load(causal_ablation)
+    def break_causal_ablation(data: dict) -> None:
         data["rows"] = data["rows"][:-1]
         data["row_count"] = len(data["rows"])
         data["complete_grid"] = False
-        _write(causal_ablation, data)
-        assert any("causal_ablation_matrix.json" in issue for issue in validate_toy_sweep_artifacts(project_root))
-    finally:
-        for path, text in originals.items():
-            path.write_text(text, encoding="utf-8")
+
+    cases = (
+        (sensitivity, break_sensitivity, "grid is incomplete"),
+        (assumptions, break_assumptions, "equation set is incomplete"),
+        (uncertainty, break_uncertainty, "unnormalized"),
+        (benchmark, break_benchmark, "model set is incomplete"),
+        (observable, break_observable, "residual exceeds tolerance"),
+        (topology_traces, break_topology_traces, "topology_traces.json summary/trace mismatch"),
+        (state_catalog, break_state_catalog, "state_space_catalog.json"),
+        (causal_ablation, break_causal_ablation, "causal_ablation_matrix.json"),
+    )
+    for path, mutate, expected in cases:
+        with temporary_json_mutation(path, mutate):
+            assert any(expected in issue for issue in validate_toy_sweep_artifacts(project_root)), path.name
 
 
 def test_toy_sweep_uses_measured_policy_and_topology_trace_artifacts(project_root: Path) -> None:
@@ -201,10 +173,16 @@ def test_toy_sweep_uses_measured_policy_and_topology_trace_artifacts(project_roo
     assert {row["observable"] for row in observable["rows"]} >= {
         "same_state_probability",
         "posterior_correlation",
+        "ising_spin_correlation",
         "joint_entropy",
     }
+    ising_rows = [row for row in observable["rows"] if row["observable"] == "ising_spin_correlation"]
+    assert ising_rows
+    assert all(row["equation_id"] == "eq:ising_spin_correlation" for row in ising_rows)
+    assert all(abs(float(row["closed_form"]) - float(row["empirical"])) <= 1e-9 for row in ising_rows)
     assert all(row["terms_available"] or row["fallback_reason"] for row in efe_terms["rows"])
     assert topology["topology_count"] >= 3
+    assert "diamond5" in {row["topology"] for row in topology["rows"]}
     assert topology_traces["topology_count"] == topology["topology_count"]
     assert topology_traces["all_trace_summary_agree"] is True
     assert efe_terms["schema"] == "template_active_inference.si_efe_values.v1"
@@ -218,44 +196,35 @@ def test_formal_interop_negative_controls(project_root: Path) -> None:
     model_checking = project_root / "output" / "reports" / "model_checking_witnesses.json"
     interop = project_root / "output" / "data" / "interop_roundtrip_report.json"
     ontology_alias = project_root / "output" / "data" / "ontology_alias_index.json"
+    ontology_profile = project_root / "output" / "data" / "ontology_profile_matrix.json"
+    gnn_lint = project_root / "output" / "reports" / "gnn_lint_report.json"
     topology_sweep = project_root / "output" / "data" / "si_graph_world_topology_sweep.json"
-    lean_graph = project_root / "output" / "reports" / "lean_graph_world_inventory.json"
     proof = project_root / "output" / "data" / "proof_extraction_index.json"
     lean_file = project_root / "lean" / "TemplateActiveInference" / "SophisticatedInference.lean"
-    originals = {
-        path: path.read_text(encoding="utf-8")
-        for path in (model_checking, interop, ontology_alias, topology_sweep, lean_graph, proof, lean_file)
-    }
-    try:
-        data = _load(model_checking)
+
+    def break_model_checking(data: dict) -> None:
         data["rows"][0]["counterexamples"] = ["start cannot reach goal"]
         data["rows"][0]["passed"] = False
         data["all_passed"] = False
-        _write(model_checking, data)
-        assert any("finite counterexample" in issue for issue in validate_formal_interop_artifacts(project_root))
-        model_checking.write_text(originals[model_checking], encoding="utf-8")
 
-        data = _load(interop)
+    def break_interop(data: dict) -> None:
         data["rows"][0]["lossless"] = False
         data["all_lossless"] = False
-        _write(interop, data)
-        assert any("not lossless" in issue for issue in validate_formal_interop_artifacts(project_root))
-        interop.write_text(originals[interop], encoding="utf-8")
 
-        data = _load(ontology_alias)
+    def break_ontology_alias(data: dict) -> None:
         data["conflicts"] = ["x: A != B"]
         data["no_conflicts"] = False
-        _write(ontology_alias, data)
-        assert any("conflicting aliases" in issue for issue in validate_formal_interop_artifacts(project_root))
-        ontology_alias.write_text(originals[ontology_alias], encoding="utf-8")
 
-        lean_file.write_text(originals[lean_file] + "\naxiom bad_placeholder : True\n", encoding="utf-8")
-        write_formal_interop_artifacts(project_root)
-        assert any("not fully proved" in issue for issue in validate_formal_interop_artifacts(project_root))
-        lean_file.write_text(originals[lean_file], encoding="utf-8")
-        lean_graph.write_text(originals[lean_graph], encoding="utf-8")
+    def break_gnn_lint(data: dict) -> None:
+        data["rows"][0]["shape"] = []
+        data["rows"][0]["shape_declared"] = True
+        data["all_variables_mapped_once"] = True
 
-        data = _load(topology_sweep)
+    def break_ontology_profile(data: dict) -> None:
+        data["rows"] = [row for row in data["rows"] if row.get("profile_kind") != "toy_benchmark_model"]
+        data["all_mapped_once"] = True
+
+    def break_topology_sweep(data: dict) -> None:
         data["rows"].append(
             {
                 "goal_reached": True,
@@ -267,18 +236,29 @@ def test_formal_interop_negative_controls(project_root: Path) -> None:
             }
         )
         data["topology_count"] = len(data["rows"])
-        _write(topology_sweep, data)
-        assert any("topology sweep" in issue for issue in validate_formal_interop_artifacts(project_root))
-        topology_sweep.write_text(originals[topology_sweep], encoding="utf-8")
 
-        data = _load(proof)
+    def break_proof(data: dict) -> None:
         data["rows"][0]["extracted"] = False
         data["all_extracted"] = False
-        _write(proof, data)
-        assert any("proof_extraction_index.json" in issue for issue in validate_formal_interop_artifacts(project_root))
+
+    cases = (
+        (model_checking, break_model_checking, "finite counterexample"),
+        (interop, break_interop, "not lossless"),
+        (ontology_alias, break_ontology_alias, "conflicting aliases"),
+        (gnn_lint, break_gnn_lint, "type, shape, ontology, or round-trip rows"),
+        (ontology_profile, break_ontology_profile, "ontology_profile_matrix.json"),
+        (topology_sweep, break_topology_sweep, "topology sweep"),
+        (proof, break_proof, "proof_extraction_index.json"),
+    )
+    for path, mutate, expected in cases:
+        with temporary_json_mutation(path, mutate):
+            assert any(expected in issue for issue in validate_formal_interop_artifacts(project_root)), path.name
+
+    try:
+        with temporary_text_mutation(lean_file, lambda text: text + "\naxiom bad_placeholder : True\n"):
+            write_formal_interop_artifacts(project_root)
+            assert any("not fully proved" in issue for issue in validate_formal_interop_artifacts(project_root))
     finally:
-        for path, text in originals.items():
-            path.write_text(text, encoding="utf-8")
         write_formal_interop_artifacts(project_root)
 
 
@@ -296,101 +276,78 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
     # ensure_gate_artifacts() is run-once per session, so a prior test could leave these stale;
     # regenerate them here so the diffoscope-drift control below has a populated row to mutate.
     write_sheaf_track_artifacts(project_root)
-    paths = [
-        project_root / "output" / "reports" / "stale_artifact_report.json",
-        project_root / "output" / "data" / "manuscript_token_provenance.json",
-        project_root / "output" / "data" / "figure_source_map.json",
-        project_root / "output" / "reports" / "scope_boundary_audit.json",
-        project_root / "output" / "reports" / "adversarial_audit.json",
-        project_root / "output" / "reports" / "manuscript_staleness_report.json",
-        project_root / "output" / "reports" / "artifact_diffoscope.json",
-        project_root / "output" / "reports" / "artifact_license_audit.json",
-        project_root / "output" / "reports" / "release_notes_evidence.json",
-    ]
-    originals = {path: path.read_text(encoding="utf-8") for path in paths}
-    try:
-        stale = paths[0]
-        data = _load(stale)
+    paths = {
+        "stale": project_root / "output" / "reports" / "stale_artifact_report.json",
+        "tokens": project_root / "output" / "data" / "manuscript_token_provenance.json",
+        "figure_source": project_root / "output" / "data" / "figure_source_map.json",
+        "claim_audit": project_root / "output" / "reports" / "claim_evidence_audit.json",
+        "gate_index": project_root / "output" / "data" / "validation_gate_index.json",
+        "scope": project_root / "output" / "reports" / "scope_boundary_audit.json",
+        "adversarial": project_root / "output" / "reports" / "adversarial_audit.json",
+        "staleness": project_root / "output" / "reports" / "manuscript_staleness_report.json",
+        "diffoscope": project_root / "output" / "reports" / "artifact_diffoscope.json",
+        "license_audit": project_root / "output" / "reports" / "artifact_license_audit.json",
+        "release_notes": project_root / "output" / "reports" / "release_notes_evidence.json",
+    }
+
+    def break_stale(data: dict) -> None:
         data["rows"][0]["sha256"] = "0" * 64
-        _write(stale, data)
-        assert any("hash mismatch" in issue for issue in validate_integration_audit_artifacts(project_root))
-        stale.write_text(originals[stale], encoding="utf-8")
 
-        tokens = paths[1]
-        data = _load(tokens)
+    def break_tokens(data: dict) -> None:
         data["all_tokens_mapped"] = False
-        _write(tokens, data)
-        assert any("unmapped tokens" in issue for issue in validate_integration_audit_artifacts(project_root))
-        tokens.write_text(originals[tokens], encoding="utf-8")
 
-        figure_source = paths[2]
-        data = _load(figure_source)
+    def break_figure_source(data: dict) -> None:
         data["rows"][0]["mapped"] = False
         data["all_figures_mapped"] = False
-        _write(figure_source, data)
-        assert any("unmapped figures" in issue for issue in validate_integration_audit_artifacts(project_root))
-        figure_source.write_text(originals[figure_source], encoding="utf-8")
 
-        scope = paths[3]
-        data = _load(scope)
+    def break_claim_audit(data: dict) -> None:
+        data["rows"][0]["substantive"] = True
+        data["rows"][0]["predicate"] = ""
+        data["all_claims_typed"] = True
+
+    def break_gate_index(data: dict) -> None:
+        data["rows"][0]["declared_outputs"] = []
+        data["all_indexed"] = True
+
+    def break_scope(data: dict) -> None:
         data["all_current_claims_toy"] = False
         data["scope_boundary_status"] = "scope_leak"
-        _write(scope, data)
-        assert any("scope leakage" in issue for issue in validate_integration_audit_artifacts(project_root))
-        scope.write_text(originals[scope], encoding="utf-8")
 
-        adversarial = paths[4]
-        data = _load(adversarial)
+    def break_adversarial(data: dict) -> None:
         data["rows"][0]["expected_failure"] = False
         data["all_expected_failures_documented"] = False
-        _write(adversarial, data)
-        assert any("expected failures" in issue for issue in validate_integration_audit_artifacts(project_root))
-        adversarial.write_text(originals[adversarial], encoding="utf-8")
 
-        staleness = paths[5]
-        data = _load(staleness)
+    def break_staleness(data: dict) -> None:
         data["rows"][0]["expected"] = "definitely stale"
-        _write(staleness, data)
-        assert any(
-            "manuscript_staleness_report.json is stale" in issue
-            for issue in validate_integration_audit_artifacts(project_root)
-        )
-        staleness.write_text(originals[staleness], encoding="utf-8")
 
-        diffoscope = paths[6]
-        data = _load(diffoscope)
+    def break_diffoscope(data: dict) -> None:
         data["rows"][0]["equal"] = False
         data["all_equal"] = False
-        _write(diffoscope, data)
-        assert any(
-            "artifact_diffoscope.json records artifact drift" in issue
-            for issue in validate_integration_audit_artifacts(project_root)
-        )
-        diffoscope.write_text(originals[diffoscope], encoding="utf-8")
 
-        license_audit = paths[7]
-        data = _load(license_audit)
+    def break_license_audit(data: dict) -> None:
         data["rows"][0]["license_safe"] = False
         data["all_license_safe"] = False
-        _write(license_audit, data)
-        assert any(
-            "artifact_license_audit.json records unsafe artifacts" in issue
-            for issue in validate_integration_audit_artifacts(project_root)
-        )
-        license_audit.write_text(originals[license_audit], encoding="utf-8")
 
-        release_notes = paths[8]
-        data = _load(release_notes)
+    def break_release_notes(data: dict) -> None:
         data["rows"][0]["passed"] = False
         data["all_notes_source_backed"] = False
-        _write(release_notes, data)
-        assert any(
-            "release_notes_evidence.json has unsupported notes" in issue
-            for issue in validate_integration_audit_artifacts(project_root)
-        )
-    finally:
-        for path, text in originals.items():
-            path.write_text(text, encoding="utf-8")
+
+    cases = (
+        ("stale", break_stale, "hash mismatch"),
+        ("tokens", break_tokens, "unmapped tokens"),
+        ("figure_source", break_figure_source, "unmapped figures"),
+        ("claim_audit", break_claim_audit, "untyped claims"),
+        ("gate_index", break_gate_index, "unindexed gates"),
+        ("scope", break_scope, "scope leakage"),
+        ("adversarial", break_adversarial, "expected failures"),
+        ("staleness", break_staleness, "manuscript_staleness_report.json is stale"),
+        ("diffoscope", break_diffoscope, "artifact_diffoscope.json records artifact drift"),
+        ("license_audit", break_license_audit, "artifact_license_audit.json records unsafe artifacts"),
+        ("release_notes", break_release_notes, "release_notes_evidence.json has unsupported notes"),
+    )
+    for artifact_key, mutate, expected in cases:
+        with temporary_json_mutation(paths[artifact_key], mutate):
+            assert any(expected in issue for issue in validate_integration_audit_artifacts(project_root)), artifact_key
 
 
 def test_cross_track_symbol_table_binds_type_shape_and_section_ontology(project_root: Path) -> None:
@@ -406,15 +363,14 @@ def test_cross_track_symbol_table_binds_type_shape_and_section_ontology(project_
     assert pi_row["section_ontology_term"] == "PolicyPosterior"
 
     ontology_path = project_root / "manuscript" / "sections" / "imrad" / "methods_pymdp" / "ontology.yaml"
-    original = ontology_path.read_text(encoding="utf-8")
-    try:
-        ontology_path.write_text(original.replace("pi: PolicyPosterior", "pi: HiddenState"), encoding="utf-8")
+    with temporary_text_mutation(
+        ontology_path,
+        lambda text: text.replace("pi: PolicyPosterior", "pi: HiddenState"),
+    ):
         drifted = build_cross_track_symbol_table(project_root)
         drifted_pi = next(row for row in drifted["rows"] if row["model"] == "si_tmaze" and row["symbol"] == "pi")
         assert drifted["all_consistent"] is False
         assert drifted_pi["term_consistent"] is False
-    finally:
-        ontology_path.write_text(original, encoding="utf-8")
 
 
 def test_promoted_scripts_are_configured_between_validation_spine_and_hydration(project_root: Path) -> None:
@@ -459,17 +415,15 @@ def test_scholarship_matrix_has_row_level_negative_control(project_root: Path) -
     ensure_gate_artifacts(project_root)
     write_sheaf_track_artifacts(project_root)
     path = project_root / "output" / "data" / "scholarship_source_matrix.json"
-    original = path.read_text(encoding="utf-8")
-    try:
-        data = json.loads(original)
+
+    def break_scholarship_row(data: dict) -> None:
         assert validate_scholarship_source_matrix(project_root) == []
         data["rows"][0]["cited_in_manuscript"] = False
         data["rows"][0]["connected"] = True
         data["all_sources_connected"] = True
-        path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    with temporary_json_mutation(path, break_scholarship_row):
         assert any("disconnected source rows" in issue for issue in validate_scholarship_source_matrix(project_root))
-    finally:
-        path.write_text(original, encoding="utf-8")
 
 
 def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) -> None:
@@ -479,8 +433,6 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
     hide under a stale `true` summary. Mutating the row (not the bit) proves the gate tests
     artifact truth, not mere sensitivity to summary tampering.
     """
-    import json
-
     from roadmap_tracks import validate_integration_audit_artifacts, validate_toy_sweep_artifacts
 
     def break_producer(data: dict) -> None:
@@ -518,17 +470,11 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
     ]
     for path, mutate, validator, expected_issue in cases:
         assert path.is_file(), f"missing artifact {path}"
-        original = path.read_text(encoding="utf-8")
-        try:
-            data = json.loads(original)
-            assert all(expected_issue not in issue for issue in validator(project_root)), (
-                f"{path.name}: expected a clean baseline before mutation"
-            )
-            mutate(data)
-            path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+        assert all(expected_issue not in issue for issue in validator(project_root)), (
+            f"{path.name}: expected a clean baseline before mutation"
+        )
+        with temporary_json_mutation(path, mutate):
             issues = validator(project_root)
             assert any(expected_issue in issue for issue in issues), (
                 f"{path.name}: gate did not catch a failing ROW under a true summary"
             )
-        finally:
-            path.write_text(original, encoding="utf-8")

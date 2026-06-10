@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+from io import BytesIO
 import json
 from pathlib import Path
 from typing import Any
@@ -62,6 +64,23 @@ def write_belief_trajectory_gif(project_root: Path) -> Path:
     return out
 
 
+def _frame_sha256(frame: Any) -> str:
+    buffer = BytesIO()
+    frame.save(buffer, format="PNG")
+    return hashlib.sha256(buffer.getvalue()).hexdigest()
+
+
+def _perceptual_hash(frame: Any) -> str:
+    """Return a deterministic 8x8 average hash for a frame."""
+    from PIL import Image
+
+    grayscale = frame.convert("L").resize((8, 8), Image.Resampling.LANCZOS)
+    pixels = list(grayscale.getdata())
+    mean = sum(pixels) / len(pixels)
+    bits = "".join("1" if value >= mean else "0" for value in pixels)
+    return f"{int(bits, 2):016x}"
+
+
 def build_animation_frame_deltas(project_root: Path) -> dict[str, Any]:
     """Compute a deterministic manifest proving adjacent GIF frames change."""
     from PIL import Image, ImageChops, ImageSequence
@@ -74,12 +93,26 @@ def build_animation_frame_deltas(project_root: Path) -> dict[str, Any]:
             "artifact": "output/figures/si_belief_trajectory.gif",
             "frame_count": 0,
             "delta_count": 0,
+            "frames": [],
             "rows": [],
+            "all_frame_hashes_present": False,
+            "all_adjacent_hashes_distinct": False,
             "all_nonzero": False,
         }
 
     with Image.open(gif_path) as image:
         frames = [frame.convert("RGB") for frame in ImageSequence.Iterator(image)]
+    frame_rows = [
+        {
+            "frame_index": idx,
+            "width": int(frame.width),
+            "height": int(frame.height),
+            "mode": frame.mode,
+            "sha256": _frame_sha256(frame),
+            "perceptual_hash": _perceptual_hash(frame),
+        }
+        for idx, frame in enumerate(frames)
+    ]
     rows: list[dict[str, Any]] = []
     for idx, (left, right) in enumerate(zip(frames, frames[1:], strict=False), start=1):
         diff = ImageChops.difference(left, right)
@@ -97,15 +130,23 @@ def build_animation_frame_deltas(project_root: Path) -> dict[str, Any]:
                 "to_frame": idx,
                 "changed_bbox": bbox_values,
                 "delta_bbox_area": area,
+                "from_perceptual_hash": frame_rows[idx - 1]["perceptual_hash"],
+                "to_perceptual_hash": frame_rows[idx]["perceptual_hash"],
+                "hash_changed": frame_rows[idx - 1]["perceptual_hash"] != frame_rows[idx]["perceptual_hash"],
                 "nonzero": bool(bbox is not None and area > 0),
             }
         )
+    all_frame_hashes_present = bool(frame_rows) and all(row["perceptual_hash"] and row["sha256"] for row in frame_rows)
+    all_adjacent_hashes_distinct = len(frames) >= 2 and bool(rows) and all(row["hash_changed"] for row in rows)
     return {
         "schema": ANIMATION_DELTAS_SCHEMA,
         "artifact": "output/figures/si_belief_trajectory.gif",
         "frame_count": len(frames),
         "delta_count": len(rows),
+        "frames": frame_rows,
         "rows": rows,
+        "all_frame_hashes_present": all_frame_hashes_present,
+        "all_adjacent_hashes_distinct": all_adjacent_hashes_distinct,
         "all_nonzero": len(frames) >= 2 and bool(rows) and all(row["nonzero"] for row in rows),
     }
 
@@ -135,8 +176,36 @@ def validate_animation_frame_deltas(project_root: Path) -> list[str]:
         issues.append("animation_frame_deltas.json delta count does not match frame count")
     if payload.get("all_nonzero") is not True:
         issues.append("animation_frame_deltas.json contains static adjacent frames")
+    frames = payload.get("frames") or []
+    if len(frames) != int(payload.get("frame_count", 0) or 0):
+        issues.append("animation_frame_deltas.json frame metadata count does not match frame count")
+    frame_hashes_present = bool(frames) and all(
+        row.get("perceptual_hash") and row.get("sha256") and row.get("width") and row.get("height") for row in frames
+    )
+    if (
+        payload.get("all_frame_hashes_present") is not True
+        or payload.get("all_frame_hashes_present") != frame_hashes_present
+    ):
+        issues.append("animation_frame_deltas.json lacks frame hashes")
+    adjacent_hashes_distinct = bool(payload.get("rows")) and all(
+        row.get("from_perceptual_hash") != row.get("to_perceptual_hash") and row.get("hash_changed")
+        for row in payload.get("rows") or []
+    )
+    if (
+        payload.get("all_adjacent_hashes_distinct") is not True
+        or payload.get("all_adjacent_hashes_distinct") != adjacent_hashes_distinct
+    ):
+        issues.append("animation_frame_deltas.json has duplicate frame hashes")
     live = build_animation_frame_deltas(root)
-    stable_keys = ("frame_count", "delta_count", "rows", "all_nonzero")
+    stable_keys = (
+        "frame_count",
+        "delta_count",
+        "frames",
+        "rows",
+        "all_frame_hashes_present",
+        "all_adjacent_hashes_distinct",
+        "all_nonzero",
+    )
     if payload and {key: payload.get(key) for key in stable_keys} != {key: live.get(key) for key in stable_keys}:
         issues.append("animation_frame_deltas.json is stale relative to GIF frames")
     return issues

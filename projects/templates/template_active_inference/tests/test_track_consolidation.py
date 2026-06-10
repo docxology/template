@@ -4,18 +4,19 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
 import yaml
 
-from gate_support import ensure_gate_artifacts
+from gate_support import ensure_gate_artifacts, temporary_json_mutation, temporary_text_mutation, temporary_yaml_mutation
 
 VERSIONED_TRACK_RE = re.compile(r"(?:^|_)v[2-9]$")
-# test_canonical_track_contract_negative_controls regenerates the full sheaf-track
-# artifact set 5x (4 negative controls + restore); ~85s locally but ubuntu CI runners
-# have been observed ~3.5x slower, breaching a 300s ceiling. 600s gives margin for the
-# slowest leg without masking a real hang (the test is correct, just heavy).
+# The end-to-end sheaf gates exercise figure, formal, semantic, and roadmap
+# artifact writers; keep a bounded timeout but route source-only negative
+# controls through the fast source-contract validator.
 pytestmark = pytest.mark.timeout(600)
 
 
@@ -29,6 +30,105 @@ def _write(path: Path, payload: dict) -> None:
 
 def _relative_posix(path: Path, root: Path) -> str:
     return path.relative_to(root).as_posix()
+
+
+JsonMutation = Callable[[dict], None]
+
+
+def _set_value(path: tuple[str | int, ...], value: object) -> JsonMutation:
+    def mutate(data: dict) -> None:
+        target: object = data
+        for key in path[:-1]:
+            target = target[key]  # type: ignore[index]
+        target[path[-1]] = value  # type: ignore[index]
+
+    return mutate
+
+
+def _drop_last_row(*, update_row_count: bool = False) -> JsonMutation:
+    def mutate(data: dict) -> None:
+        data["rows"] = data["rows"][:-1]
+        if update_row_count:
+            data["row_count"] = len(data["rows"])
+
+    return mutate
+
+
+def _combine_mutations(*mutations: JsonMutation) -> JsonMutation:
+    def mutate(data: dict) -> None:
+        for mutation in mutations:
+            mutation(data)
+
+    return mutate
+
+
+def _break_visualization_statistical_row(data: dict) -> None:
+    statistical_index = next(
+        index for index, row in enumerate(data["rows"]) if row.get("figure_id") == "si_belief_entropy_curve"
+    )
+    data["rows"][statistical_index]["statistically_backed"] = False
+    data["all_statistical_sources_present"] = True
+
+
+def _break_statistical_bridge_visualization_binding(data: dict) -> None:
+    first_section = data["rows"][0]["figure_reference_sections"][0]
+    data["rows"][0]["reference_track_bindings"][first_section] = ["prose"]
+    data["rows"][0]["reference_sections_visualization_bound"] = True
+    data["all_reference_sections_visualization_bound"] = True
+
+
+def _drop_transition_covered_model(data: dict) -> None:
+    data["covered_models"] = data["covered_models"][:-1]
+    data["all_reachable_states_covered"] = True
+
+
+def test_sheaf_track_source_commit_times_out_to_unknown(project_root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from roadmap_tracks import sheaf_tracks
+
+    def fake_run(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(cmd=args[0], timeout=kwargs["timeout"])
+
+    monkeypatch.setattr(sheaf_tracks.subprocess, "run", fake_run)
+
+    assert sheaf_tracks._source_commit(project_root) == "unknown"
+
+
+def test_temporary_json_mutation_restores_after_exception(tmp_path: Path) -> None:
+    path = tmp_path / "artifact.json"
+    original = {"ok": True, "rows": [{"passed": True}]}
+    _write(path, original)
+
+    with pytest.raises(RuntimeError, match="forced failure"):
+        with temporary_json_mutation(path, _set_value(("rows", 0, "passed"), False)):
+            assert _load(path)["rows"][0]["passed"] is False
+            raise RuntimeError("forced failure")
+
+    assert _load(path) == original
+
+
+def test_text_and_yaml_mutation_helpers_restore_after_exception(tmp_path: Path) -> None:
+    text_path = tmp_path / "note.md"
+    yaml_path = tmp_path / "config.yaml"
+    text_original = "alpha: keep\n"
+    yaml_original = "tracks:\n  prose:\n    renderer: markdown\n"
+    text_path.write_text(text_original, encoding="utf-8")
+    yaml_path.write_text(yaml_original, encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="text failure"):
+        with temporary_text_mutation(text_path, lambda text: text.replace("keep", "break")):
+            assert text_path.read_text(encoding="utf-8") == "alpha: break\n"
+            raise RuntimeError("text failure")
+
+    with pytest.raises(RuntimeError, match="yaml failure"):
+        with temporary_yaml_mutation(
+            yaml_path,
+            lambda payload: payload["tracks"]["prose"].update({"renderer": "broken"}),
+        ):
+            assert yaml.safe_load(yaml_path.read_text(encoding="utf-8"))["tracks"]["prose"]["renderer"] == "broken"
+            raise RuntimeError("yaml failure")
+
+    assert text_path.read_text(encoding="utf-8") == text_original
+    assert yaml_path.read_text(encoding="utf-8") == yaml_original
 
 
 def test_live_track_surface_uses_canonical_ids(project_root: Path) -> None:
@@ -116,10 +216,23 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
 
     assert semantic["ok"] is True
     assert semantic["restrictions"]["no_versioned_live_tracks"] is True
+    assert semantic["all_proof_obligations_ok"] is True
+    assert semantic["proof_obligations"]
+    assert all(row["class"] and row["restriction"] and row["ok"] for row in semantic["proof_obligations"])
+    dependency = _load(project_root / "output" / "data" / "validation_dependency_graph.json")
+    assert dependency["all_field_edges_mapped"] is True
+    assert dependency["field_edges"]
     assert evidence["all_fields_mapped"] is True
+    assert all(row["jsonpath"] and row["validator"] and row["semantic_restriction"] for row in evidence["rows"])
     assert release["all_required_sources_present"] is True
+    assert release["all_copied_outputs_match_or_deferred"] is True
     assert theorem["all_theorems_linked"] is True
+    assert all(row["claim_ids"] and row["evidence_fields"] for row in theorem["rows"])
     assert gate_index["all_indexed"] is True
+    assert all(
+        row["command"] and row["required_inputs"] and row["declared_outputs"] and row["negative_control_id"]
+        for row in gate_index["rows"]
+    )
     assert diffoscope["all_equal"] is True
     assert proof["all_extracted"] is True
     assert catalog["all_finite"] is True
@@ -171,6 +284,28 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert entropy_bridge["referenced_in_manuscript"] is True
 
 
+def test_sheaf_track_writer_looks_up_source_commit_once(
+    project_root: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from roadmap_tracks import sheaf_tracks
+
+    ensure_gate_artifacts(project_root)
+    calls = 0
+
+    def fake_source_commit(root: Path) -> str:
+        nonlocal calls
+        calls += 1
+        assert root == project_root.resolve()
+        return "test-source-commit"
+
+    monkeypatch.setattr(sheaf_tracks, "_source_commit", fake_source_commit)
+
+    sheaf_tracks.write_sheaf_track_artifacts(project_root)
+
+    assert calls == 1
+
+
 def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import validate_sheaf_track_artifacts, write_sheaf_track_artifacts
 
@@ -208,322 +343,278 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         "statistical_bridge": project_root / "output" / "data" / "statistical_visualization_bridge.json",
         "semantic": project_root / "output" / "data" / "sheaf_gluing_certificate.json",
     }
-    originals = {path: path.read_text(encoding="utf-8") for path in paths.values()}
-    try:
-        data = _load(paths["replay"])
-        data["rows"][0]["matched"] = False
-        data["all_replay_rows_matched"] = False
-        _write(paths["replay"], data)
-        assert any("replay mismatch" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["replay"].write_text(originals[paths["replay"]], encoding="utf-8")
+    cases: tuple[tuple[str, JsonMutation, str], ...] = (
+        (
+            "replay",
+            _combine_mutations(
+                _set_value(("rows", 0, "matched"), False), _set_value(("all_replay_rows_matched",), False)
+            ),
+            "replay mismatch",
+        ),
+        (
+            "sensitivity",
+            _combine_mutations(_drop_last_row(update_row_count=True), _set_value(("complete_grid",), False)),
+            "grid is incomplete",
+        ),
+        (
+            "uncertainty",
+            _combine_mutations(
+                _set_value(("rows", 0, "distribution_sum"), 1.5),
+                _set_value(("rows", 0, "normalized"), False),
+                _set_value(("all_normalized",), False),
+            ),
+            "unnormalized",
+        ),
+        (
+            "counterexample",
+            _combine_mutations(
+                _set_value(("rows", 0, "fixture_replay_status"), "passed"),
+                _set_value(("all_expected_failures_observed",), False),
+            ),
+            "fixtures passing",
+        ),
+        (
+            "model",
+            _combine_mutations(
+                _set_value(("rows", 0, "counterexamples"), ["finite miss"]),
+                _set_value(("rows", 0, "passed"), False),
+                _set_value(("all_passed",), False),
+            ),
+            "finite counterexample",
+        ),
+        (
+            "interop",
+            _combine_mutations(
+                _set_value(("rows", 0, "shape_diff"), ["policy_shape"]),
+                _set_value(("all_shape_diffs_empty",), False),
+                _set_value(("all_lossless",), False),
+            ),
+            "not lossless",
+        ),
+        (
+            "adversarial",
+            _combine_mutations(
+                _set_value(("rows", 0, "known_bad_passed"), True), _set_value(("known_bad_rows_passed",), 1)
+            ),
+            "known-bad rows passing",
+        ),
+        (
+            "dependency",
+            _combine_mutations(
+                _set_value(("edge_types",), ["producer_to_track"]),
+                _set_value(("all_required_edge_types_present",), False),
+            ),
+            "lacks required edge types",
+        ),
+        (
+            "dependency",
+            _combine_mutations(
+                _set_value(("field_edges", 0, "validator"), ""), _set_value(("all_field_edges_mapped",), True)
+            ),
+            "field-level edges",
+        ),
+        (
+            "scope",
+            _combine_mutations(
+                _set_value(("promotion_matrix", 0, "promotion_complete"), False),
+                _set_value(("all_live_tracks_valid",), False),
+            ),
+            "promotion rows",
+        ),
+        ("blocked", _set_value(("all_blocked",), False), "empirical scope blocked"),
+        (
+            "evidence",
+            _combine_mutations(
+                _set_value(("rows", 0, "semantic_restriction"), ""), _set_value(("all_fields_mapped",), False)
+            ),
+            "unmapped evidence fields",
+        ),
+        (
+            "release",
+            _combine_mutations(
+                _set_value(("rows", 0, "source_present"), False), _set_value(("all_required_sources_present",), False)
+            ),
+            "missing required deliverables",
+        ),
+        (
+            "release",
+            _combine_mutations(
+                _set_value(("copied_output_parity", "rows", 0, "status"), "mismatch"),
+                _set_value(("copied_output_parity", "all_copied_outputs_match_or_deferred"), True),
+                _set_value(("all_copied_outputs_match_or_deferred",), True),
+            ),
+            "copied output parity",
+        ),
+        (
+            "theorem",
+            _combine_mutations(
+                _set_value(("rows", 0, "evidence_fields"), []), _set_value(("all_theorems_linked",), False)
+            ),
+            "unlinked theorem rows",
+        ),
+        (
+            "gate",
+            _combine_mutations(_set_value(("rows", 0, "command"), ""), _set_value(("all_indexed",), False)),
+            "unindexed gates",
+        ),
+        (
+            "diffoscope",
+            _combine_mutations(_set_value(("rows", 0, "equal"), False), _set_value(("all_equal",), False)),
+            "artifact drift",
+        ),
+        (
+            "scholarship",
+            _combine_mutations(
+                _set_value(("rows", 0, "bib_has_locator"), False),
+                _set_value(("rows", 0, "connected"), True),
+                _set_value(("all_sources_connected",), True),
+            ),
+            "disconnected source rows",
+        ),
+        (
+            "proof",
+            _combine_mutations(_set_value(("rows", 0, "extracted"), False), _set_value(("all_extracted",), False)),
+            "missing statements",
+        ),
+        (
+            "catalog",
+            _combine_mutations(_set_value(("rows", 0, "finite"), False), _set_value(("all_finite",), False)),
+            "missing finite spaces",
+        ),
+        (
+            "ablation",
+            _combine_mutations(_drop_last_row(update_row_count=True), _set_value(("complete_grid",), False)),
+            "incomplete deterministic rows",
+        ),
+        (
+            "license",
+            _combine_mutations(
+                _set_value(("rows", 0, "license_safe"), False), _set_value(("all_license_safe",), False)
+            ),
+            "unsafe artifacts",
+        ),
+        (
+            "release_notes",
+            _combine_mutations(
+                _set_value(("rows", 0, "passed"), False), _set_value(("all_notes_source_backed",), False)
+            ),
+            "unsupported notes",
+        ),
+        (
+            "proof_dependency",
+            _combine_mutations(
+                _set_value(("rows", 0, "linked"), False), _set_value(("all_theorems_have_dependencies",), True)
+            ),
+            "unlinked theorem dependencies",
+        ),
+        ("transition_table", _drop_transition_covered_model, "omits a reachable finite model"),
+        (
+            "ablation_sensitivity",
+            _combine_mutations(
+                _set_value(("rows", 0, "source_backed"), False), _set_value(("all_effects_source_backed",), True)
+            ),
+            "unsupported ablation effects",
+        ),
+        (
+            "release_attestation",
+            _combine_mutations(_set_value(("rows", 1, "passed"), False), _set_value(("all_attested",), True)),
+            "failed gate passed",
+        ),
+        (
+            "section_status",
+            _combine_mutations(
+                _set_value(("missing_required_count",), 1), _set_value(("all_bound_fragments_present",), False)
+            ),
+            "missing bound fragments",
+        ),
+        (
+            "render_log",
+            _combine_mutations(_set_value(("events", 0, "status"), "failed"), _set_value(("all_events_ok",), False)),
+            "failed render events",
+        ),
+        (
+            "visualization_quality",
+            _combine_mutations(_set_value(("rows", 0, "quality_ok"), False), _set_value(("all_quality_ok",), True)),
+            "visualization_quality_ok",
+        ),
+        ("visualization_quality", _break_visualization_statistical_row, "visualization_statistics_bridge_ok"),
+        (
+            "visualization_quality",
+            _combine_mutations(
+                _set_value(("rows", 0, "visual_role"), ""), _set_value(("all_visual_roles_present",), True)
+            ),
+            "visualization_quality_ok",
+        ),
+        (
+            "statistical_bridge",
+            _combine_mutations(_set_value(("rows", 0, "connected"), False), _set_value(("all_rows_connected",), True)),
+            "statistical_visualization_crosswalk_ok",
+        ),
+        (
+            "statistical_bridge",
+            _combine_mutations(
+                _set_value(("rows", 0, "referenced_in_manuscript"), False),
+                _set_value(("all_figures_referenced",), True),
+            ),
+            "statistical_visualization_crosswalk_ok",
+        ),
+        (
+            "statistical_bridge",
+            _break_statistical_bridge_visualization_binding,
+            "statistical_visualization_crosswalk_ok",
+        ),
+        (
+            "semantic",
+            _combine_mutations(
+                _set_value(("proof_obligations", 0, "ok"), False), _set_value(("all_proof_obligations_ok",), True)
+            ),
+            "proof obligations",
+        ),
+        (
+            "semantic",
+            _set_value(("restrictions", "replay_matrix_all_matched"), False),
+            "stale relative to canonical restrictions",
+        ),
+    )
 
-        data = _load(paths["sensitivity"])
-        data["rows"] = data["rows"][:-1]
-        data["row_count"] = len(data["rows"])
-        data["complete_grid"] = False
-        _write(paths["sensitivity"], data)
-        assert any("grid is incomplete" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["sensitivity"].write_text(originals[paths["sensitivity"]], encoding="utf-8")
-
-        data = _load(paths["uncertainty"])
-        data["rows"][0]["distribution_sum"] = 1.5
-        data["rows"][0]["normalized"] = False
-        data["all_normalized"] = False
-        _write(paths["uncertainty"], data)
-        assert any("unnormalized" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["uncertainty"].write_text(originals[paths["uncertainty"]], encoding="utf-8")
-
-        data = _load(paths["counterexample"])
-        data["rows"][0]["fixture_replay_status"] = "passed"
-        data["all_expected_failures_observed"] = False
-        _write(paths["counterexample"], data)
-        assert any("fixtures passing" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["counterexample"].write_text(originals[paths["counterexample"]], encoding="utf-8")
-
-        data = _load(paths["model"])
-        data["rows"][0]["counterexamples"] = ["finite miss"]
-        data["rows"][0]["passed"] = False
-        data["all_passed"] = False
-        _write(paths["model"], data)
-        assert any("finite counterexample" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["model"].write_text(originals[paths["model"]], encoding="utf-8")
-
-        data = _load(paths["interop"])
-        data["rows"][0]["shape_diff"] = ["policy_shape"]
-        data["all_shape_diffs_empty"] = False
-        data["all_lossless"] = False
-        _write(paths["interop"], data)
-        assert any("not lossless" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["interop"].write_text(originals[paths["interop"]], encoding="utf-8")
-
-        data = _load(paths["adversarial"])
-        data["rows"][0]["known_bad_passed"] = True
-        data["known_bad_rows_passed"] = 1
-        _write(paths["adversarial"], data)
-        assert any("known-bad rows passing" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["adversarial"].write_text(originals[paths["adversarial"]], encoding="utf-8")
-
-        data = _load(paths["dependency"])
-        data["edge_types"] = ["producer_to_track"]
-        data["all_required_edge_types_present"] = False
-        _write(paths["dependency"], data)
-        assert any("lacks required edge types" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["dependency"].write_text(originals[paths["dependency"]], encoding="utf-8")
-
-        data = _load(paths["scope"])
-        data["promotion_matrix"][0]["promotion_complete"] = False
-        data["all_live_tracks_valid"] = False
-        _write(paths["scope"], data)
-        assert any("promotion rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["scope"].write_text(originals[paths["scope"]], encoding="utf-8")
-
-        data = _load(paths["blocked"])
-        data["all_blocked"] = False
-        _write(paths["blocked"], data)
-        assert any("empirical scope blocked" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["blocked"].write_text(originals[paths["blocked"]], encoding="utf-8")
-
-        data = _load(paths["evidence"])
-        data["rows"][0]["mapped"] = False
-        data["all_fields_mapped"] = False
-        _write(paths["evidence"], data)
-        assert any("unmapped evidence fields" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["evidence"].write_text(originals[paths["evidence"]], encoding="utf-8")
-
-        data = _load(paths["release"])
-        data["rows"][0]["source_present"] = False
-        data["all_required_sources_present"] = False
-        _write(paths["release"], data)
-        assert any("missing required deliverables" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["release"].write_text(originals[paths["release"]], encoding="utf-8")
-
-        data = _load(paths["theorem"])
-        data["rows"][0]["linked"] = False
-        data["all_theorems_linked"] = False
-        _write(paths["theorem"], data)
-        assert any("unlinked theorem rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["theorem"].write_text(originals[paths["theorem"]], encoding="utf-8")
-
-        data = _load(paths["gate"])
-        data["rows"][0]["indexed"] = False
-        data["all_indexed"] = False
-        _write(paths["gate"], data)
-        assert any("unindexed gates" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["gate"].write_text(originals[paths["gate"]], encoding="utf-8")
-
-        data = _load(paths["diffoscope"])
-        data["rows"][0]["equal"] = False
-        data["all_equal"] = False
-        _write(paths["diffoscope"], data)
-        assert any("artifact drift" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["diffoscope"].write_text(originals[paths["diffoscope"]], encoding="utf-8")
-
-        data = _load(paths["scholarship"])
-        data["rows"][0]["bib_has_locator"] = False
-        data["rows"][0]["connected"] = True
-        data["all_sources_connected"] = True
-        _write(paths["scholarship"], data)
-        assert any("disconnected source rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["scholarship"].write_text(originals[paths["scholarship"]], encoding="utf-8")
-
-        data = _load(paths["proof"])
-        data["rows"][0]["extracted"] = False
-        data["all_extracted"] = False
-        _write(paths["proof"], data)
-        assert any("missing statements" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["proof"].write_text(originals[paths["proof"]], encoding="utf-8")
-
-        data = _load(paths["catalog"])
-        data["rows"][0]["finite"] = False
-        data["all_finite"] = False
-        _write(paths["catalog"], data)
-        assert any("missing finite spaces" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["catalog"].write_text(originals[paths["catalog"]], encoding="utf-8")
-
-        data = _load(paths["ablation"])
-        data["rows"] = data["rows"][:-1]
-        data["row_count"] = len(data["rows"])
-        data["complete_grid"] = False
-        _write(paths["ablation"], data)
-        assert any("incomplete deterministic rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["ablation"].write_text(originals[paths["ablation"]], encoding="utf-8")
-
-        data = _load(paths["license"])
-        data["rows"][0]["license_safe"] = False
-        data["all_license_safe"] = False
-        _write(paths["license"], data)
-        assert any("unsafe artifacts" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["license"].write_text(originals[paths["license"]], encoding="utf-8")
-
-        data = _load(paths["release_notes"])
-        data["rows"][0]["passed"] = False
-        data["all_notes_source_backed"] = False
-        _write(paths["release_notes"], data)
-        assert any("unsupported notes" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["release_notes"].write_text(originals[paths["release_notes"]], encoding="utf-8")
-
-        data = _load(paths["proof_dependency"])
-        data["rows"][0]["linked"] = False
-        data["all_theorems_have_dependencies"] = True
-        _write(paths["proof_dependency"], data)
-        assert any("unlinked theorem dependencies" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["proof_dependency"].write_text(originals[paths["proof_dependency"]], encoding="utf-8")
-
-        data = _load(paths["transition_table"])
-        data["covered_models"] = data["covered_models"][:-1]
-        data["all_reachable_states_covered"] = True
-        _write(paths["transition_table"], data)
-        assert any("omits a reachable finite model" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["transition_table"].write_text(originals[paths["transition_table"]], encoding="utf-8")
-
-        data = _load(paths["ablation_sensitivity"])
-        data["rows"][0]["source_backed"] = False
-        data["all_effects_source_backed"] = True
-        _write(paths["ablation_sensitivity"], data)
-        assert any("unsupported ablation effects" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["ablation_sensitivity"].write_text(originals[paths["ablation_sensitivity"]], encoding="utf-8")
-
-        data = _load(paths["release_attestation"])
-        data["rows"][1]["passed"] = False
-        data["all_attested"] = True
-        _write(paths["release_attestation"], data)
-        assert any("failed gate passed" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["release_attestation"].write_text(originals[paths["release_attestation"]], encoding="utf-8")
-
-        data = _load(paths["section_status"])
-        data["missing_required_count"] = 1
-        data["all_bound_fragments_present"] = False
-        _write(paths["section_status"], data)
-        assert any("missing bound fragments" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["section_status"].write_text(originals[paths["section_status"]], encoding="utf-8")
-
-        data = _load(paths["render_log"])
-        data["events"][0]["status"] = "failed"
-        data["all_events_ok"] = False
-        _write(paths["render_log"], data)
-        assert any("failed render events" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["render_log"].write_text(originals[paths["render_log"]], encoding="utf-8")
-
-        data = _load(paths["visualization_quality"])
-        data["rows"][0]["quality_ok"] = False
-        data["all_quality_ok"] = True
-        _write(paths["visualization_quality"], data)
-        assert any("visualization_quality_ok" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["visualization_quality"].write_text(originals[paths["visualization_quality"]], encoding="utf-8")
-
-        data = _load(paths["visualization_quality"])
-        statistical_index = next(
-            index for index, row in enumerate(data["rows"]) if row.get("figure_id") == "si_belief_entropy_curve"
-        )
-        data["rows"][statistical_index]["statistically_backed"] = False
-        data["all_statistical_sources_present"] = True
-        _write(paths["visualization_quality"], data)
-        assert any(
-            "visualization_statistics_bridge_ok" in issue
-            for issue in validate_sheaf_track_artifacts(project_root)
-        )
-        paths["visualization_quality"].write_text(originals[paths["visualization_quality"]], encoding="utf-8")
-
-        data = _load(paths["visualization_quality"])
-        data["rows"][0]["visual_role"] = ""
-        data["all_visual_roles_present"] = True
-        _write(paths["visualization_quality"], data)
-        assert any("visualization_quality_ok" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        paths["visualization_quality"].write_text(originals[paths["visualization_quality"]], encoding="utf-8")
-
-        data = _load(paths["statistical_bridge"])
-        data["rows"][0]["connected"] = False
-        data["all_rows_connected"] = True
-        _write(paths["statistical_bridge"], data)
-        assert any(
-            "statistical_visualization_crosswalk_ok" in issue
-            for issue in validate_sheaf_track_artifacts(project_root)
-        )
-        paths["statistical_bridge"].write_text(originals[paths["statistical_bridge"]], encoding="utf-8")
-
-        data = _load(paths["statistical_bridge"])
-        data["rows"][0]["referenced_in_manuscript"] = False
-        data["all_figures_referenced"] = True
-        _write(paths["statistical_bridge"], data)
-        assert any(
-            "statistical_visualization_crosswalk_ok" in issue
-            for issue in validate_sheaf_track_artifacts(project_root)
-        )
-        paths["statistical_bridge"].write_text(originals[paths["statistical_bridge"]], encoding="utf-8")
-
-        data = _load(paths["statistical_bridge"])
-        first_section = data["rows"][0]["figure_reference_sections"][0]
-        data["rows"][0]["reference_track_bindings"][first_section] = ["prose"]
-        data["rows"][0]["reference_sections_visualization_bound"] = True
-        data["all_reference_sections_visualization_bound"] = True
-        _write(paths["statistical_bridge"], data)
-        assert any(
-            "statistical_visualization_crosswalk_ok" in issue
-            for issue in validate_sheaf_track_artifacts(project_root)
-        )
-        paths["statistical_bridge"].write_text(originals[paths["statistical_bridge"]], encoding="utf-8")
-
-        data = _load(paths["semantic"])
-        data["restrictions"]["replay_matrix_all_matched"] = False
-        _write(paths["semantic"], data)
-        assert any(
-            "stale relative to canonical restrictions" in issue
-            for issue in validate_sheaf_track_artifacts(project_root)
-        )
-    finally:
-        for path, text in originals.items():
-            path.write_text(text, encoding="utf-8")
-        write_sheaf_track_artifacts(project_root)
+    for artifact_key, mutate, expected in cases:
+        with temporary_json_mutation(paths[artifact_key], mutate):
+            assert any(expected in issue for issue in validate_sheaf_track_artifacts(project_root)), artifact_key
 
 
 def test_canonical_track_contract_negative_controls(project_root: Path) -> None:
-    from roadmap_tracks import validate_sheaf_track_artifacts, write_sheaf_track_artifacts
+    from roadmap_tracks import validate_sheaf_track_source_contract
 
     ensure_gate_artifacts(project_root)
     config_path = project_root / "manuscript" / "config.yaml"
     manifest_path = project_root / "manuscript" / "sheaf" / "manifest.yaml"
     registry_path = project_root / "manuscript" / "sheaf" / "tracks.yaml"
     ledger_path = project_root / "data" / "claim_ledger.yaml"
-    originals = {
-        config_path: config_path.read_text(encoding="utf-8"),
-        manifest_path: manifest_path.read_text(encoding="utf-8"),
-        registry_path: registry_path.read_text(encoding="utf-8"),
-        ledger_path: ledger_path.read_text(encoding="utf-8"),
-    }
-    try:
-        config_path.write_text(
-            originals[config_path].replace("    - generate_sheaf_tracks.py\n", ""),
-            encoding="utf-8",
-        )
-        write_sheaf_track_artifacts(project_root)
-        assert any("producer_coverage_complete" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        config_path.write_text(originals[config_path], encoding="utf-8")
 
-        manifest_payload = yaml.safe_load(originals[manifest_path])
+    def remove_sheaf_producer(text: str) -> str:
+        return text.replace("    - generate_sheaf_tracks.py\n", "")
+
+    def unbind_evidence_fields(manifest_payload: dict) -> None:
         for section in manifest_payload["sections"]:
             (section.get("tracks") or {}).pop("evidence_fields", None)
-        manifest_path.write_text(yaml.safe_dump(manifest_payload, sort_keys=False), encoding="utf-8")
-        write_sheaf_track_artifacts(project_root)
-        assert any("missing manuscript bindings" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        manifest_path.write_text(originals[manifest_path], encoding="utf-8")
 
-        registry_payload = yaml.safe_load(originals[registry_path])
+    def promote_empirical_adapter(registry_payload: dict) -> None:
         registry_payload["tracks"]["empirical_adapter"] = {"order": 999, "renderer": "markdown", "label": "Empirical"}
-        registry_path.write_text(yaml.safe_dump(registry_payload, sort_keys=False), encoding="utf-8")
-        write_sheaf_track_artifacts(project_root)
-        assert any("empirical_adapter blocked" in issue for issue in validate_sheaf_track_artifacts(project_root))
-        registry_path.write_text(originals[registry_path], encoding="utf-8")
 
-        ledger_payload = yaml.safe_load(originals[ledger_path])
+    def remove_evidence_field_claim(ledger_payload: dict) -> None:
         ledger_payload["claims"] = [
             claim for claim in ledger_payload["claims"] if claim.get("path") != "output/data/evidence_field_index.json"
         ]
-        ledger_path.write_text(yaml.safe_dump(ledger_payload, sort_keys=False), encoding="utf-8")
-        write_sheaf_track_artifacts(project_root)
-        assert any(
-            "all_canonical_artifacts_have_claims" in issue for issue in validate_sheaf_track_artifacts(project_root)
-        )
-    finally:
-        for path, text in originals.items():
-            path.write_text(text, encoding="utf-8")
-        write_sheaf_track_artifacts(project_root)
+
+    cases = (
+        ("producer_coverage_complete", lambda: temporary_text_mutation(config_path, remove_sheaf_producer)),
+        ("missing manuscript bindings", lambda: temporary_yaml_mutation(manifest_path, unbind_evidence_fields)),
+        ("empirical_adapter blocked", lambda: temporary_yaml_mutation(registry_path, promote_empirical_adapter)),
+        (
+            "all_canonical_artifacts_have_claims",
+            lambda: temporary_yaml_mutation(ledger_path, remove_evidence_field_claim),
+        ),
+    )
+    for expected, context_factory in cases:
+        with context_factory():
+            assert any(expected in issue for issue in validate_sheaf_track_source_contract(project_root)), expected

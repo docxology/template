@@ -89,6 +89,11 @@ def test_animation_extension_renders_distinct_trace_frames(project_root: Path) -
     assert len(frames) >= 3
     assert any(ImageChops.difference(frames[0], frame).getbbox() is not None for frame in frames[1:])
     assert deltas["all_nonzero"] is True
+    assert deltas["all_frame_hashes_present"] is True
+    assert deltas["all_adjacent_hashes_distinct"] is True
+    assert len(deltas["frames"]) == deltas["frame_count"]
+    assert all(row["perceptual_hash"] and row["width"] > 0 and row["height"] > 0 for row in deltas["frames"])
+    assert all(row["hash_changed"] for row in deltas["rows"])
     assert validate_animation_frame_deltas(project_root) == []
 
 
@@ -106,14 +111,16 @@ def test_animation_frame_delta_manifest_rejects_static_manifest(project_root: Pa
     original = path.read_text(encoding="utf-8")
     try:
         payload = json.loads(original)
-        payload["rows"][0]["nonzero"] = False
-        payload["all_nonzero"] = False
+        payload["frames"][1]["perceptual_hash"] = payload["frames"][0]["perceptual_hash"]
+        payload["rows"][0]["to_perceptual_hash"] = payload["rows"][0]["from_perceptual_hash"]
+        payload["rows"][0]["hash_changed"] = False
+        payload["all_adjacent_hashes_distinct"] = True
         path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
         issues = validate_animation_frame_deltas(project_root)
     finally:
         path.write_text(original, encoding="utf-8")
 
-    assert any("static adjacent frames" in issue or "stale" in issue for issue in issues)
+    assert any("duplicate frame hashes" in issue or "stale" in issue for issue in issues)
 
 
 def test_validate_outputs_rejects_graph_world_summary_trace_mismatch(project_root: Path) -> None:
@@ -171,6 +178,8 @@ def test_pymdp_runtime_diagnostics_captures_known_warning_and_rejects_unexpected
 
         assert payload["known_warning_count"] >= 1
         assert payload["unexpected_warning_count"] == 1
+        assert {"construction", "inference", "backend", "warning", "fallback"} <= set(payload["phase_types"])
+        assert payload["all_phase_rows_ok"] is False
         assert any("unexpected warning" in issue for issue in validate_runtime_diagnostics(project_root))
     finally:
         if original is None:

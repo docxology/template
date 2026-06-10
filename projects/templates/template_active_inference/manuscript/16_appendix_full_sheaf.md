@@ -199,7 +199,7 @@ counts are caught after composition, not only during source-file linting.
 
 ![](../output/figures/sheaf_coverage_heatmap.png){width=95%}
 
-*Reproduced from [@fig:sheaf_coverage_heatmap]. Sheaf track coverage matrix: {{imrad_manifest_rows}} IMRAD rows × {{sheaf_track_count}} fragment columns. Black = present (P), white = absent (—), gray = missing (M). Counts: {{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing.*
+*Reproduced from [@fig:sheaf_coverage_heatmap]. Sheaf track coverage matrix: {{imrad_manifest_rows}} IMRAD rows × {{sheaf_track_count}} fragment columns. Black = present (P), white = absent (—), gray = missing (M). Counts: {{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing. Generated from `output/data/sheaf_coverage_matrix.json`.*
 
 <!-- sheaf-track:lean -->
 

@@ -7,10 +7,86 @@ from pathlib import Path
 
 import pytest
 
-from gates.artifact_manifest import REQUIRED_OUTPUT_CHECK_KEYS
+from gates.artifact_manifest import REQUIRED_OUTPUT_CHECK_KEYS, REQUIRED_OUTPUTS
 from gates.validation import validate_outputs
 
 from gate_support import ensure_gate_artifacts
+
+EXPECTED_DERIVED_OUTPUT_CHECK_KEYS = {
+    "ablation_sensitivity_report_schema",
+    "adversarial_audit_schema",
+    "analysis_statistics_schema",
+    "analytical_assumption_index_schema",
+    "analytical_observable_sweep_schema",
+    "animation_frame_deltas_schema",
+    "artifact_diffoscope_schema",
+    "artifact_license_audit_schema",
+    "artifact_provenance_schema",
+    "blocked_scope_manifest_schema",
+    "canonical_sheaf_track_schemas",
+    "causal_ablation_matrix_schema",
+    "claim_evidence_audit_schema",
+    "counterexample_matrix_schema",
+    "cross_track_symbol_table_schema",
+    "evidence_field_index_schema",
+    "experiment_plan_metrics",
+    "figure_hash_manifest_schema",
+    "figure_source_map_schema",
+    "formal_interop_track_schemas",
+    "gnn_lint_schema",
+    "gnn_roundtrip_schema",
+    "graph_world_invariants_schema",
+    "integration_audit_track_schemas",
+    "interop_roundtrip_schema",
+    "invariants_all_pass",
+    "lean_graph_world_inventory_schema",
+    "lean_theorem_inventory_schema",
+    "manuscript_evidence_tables_schema",
+    "manuscript_staleness_report_schema",
+    "manuscript_token_provenance_schema",
+    "model_checking_witnesses_schema",
+    "ontology_alias_schema",
+    "ontology_profile_schema",
+    "producer_completeness_schema",
+    "proof_dependency_graph_schema",
+    "proof_extraction_index_schema",
+    "pymdp_policy_posterior_grid_schema",
+    "pymdp_runtime_diagnostics_schema",
+    "release_attestation_schema",
+    "release_bundle_manifest_schema",
+    "release_notes_evidence_schema",
+    "replay_matrix_schema",
+    "reproducibility_replay_schema",
+    "scholarship_source_matrix_schema",
+    "scope_boundary_audit_schema",
+    "sensitivity_sweep_schema",
+    "sheaf_evidence_crosswalk_schema",
+    "sheaf_render_log_schema",
+    "sheaf_section_status_matrix_schema",
+    "si_efe_terms_schema",
+    "si_graph_world_schema",
+    "si_graph_world_topology_sweep_schema",
+    "si_graph_world_topology_traces_schema",
+    "si_invariants_all_pass",
+    "si_log_present",
+    "si_policy_comparison_schema",
+    "si_policy_grid_schema",
+    "si_summary_schema",
+    "si_trace_present",
+    "simulation_invariants_all_pass",
+    "stale_artifact_report_schema",
+    "state_space_catalog_schema",
+    "state_transition_table_schema",
+    "statistical_visualization_bridge_schema",
+    "theorem_traceability_matrix_schema",
+    "toy_benchmark_matrix_schema",
+    "toy_sweep_track_schemas",
+    "track_improvement_scope_schema",
+    "uncertainty_summary_schema",
+    "validation_dependency_graph_schema",
+    "validation_gate_index_schema",
+    "visualization_quality_audit_schema",
+}
 
 
 def test_validate_outputs_after_analysis() -> None:
@@ -32,6 +108,14 @@ def test_validate_outputs_required_artifacts(project_root: Path) -> None:
         assert checks.get(key), f"missing validate_outputs key: {key}"
     assert checks.get("si_invariants_all_pass") is True
     assert checks.get("invariants_all_pass") is True
+
+
+@pytest.mark.timeout(300)
+def test_validate_outputs_key_surface_is_stable(project_root: Path) -> None:
+    ensure_gate_artifacts(project_root)
+    checks = validate_outputs(project_root)
+
+    assert set(checks) == set(REQUIRED_OUTPUTS) | EXPECTED_DERIVED_OUTPUT_CHECK_KEYS
 
 
 def test_validate_outputs_negative_si_invariants_fail(project_root: Path, tmp_path: Path) -> None:

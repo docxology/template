@@ -10,6 +10,7 @@ from typing import Any
 from gnn.model import GnnModel
 from gnn.parser import GNNParseError, parse_gnn, parse_gnn_file
 from ontology.bindings import load_section_ontology
+from roadmap_tracks.row_aggregates import all_rows
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -211,8 +212,10 @@ def build_gnn_lint_report(project_root: Path) -> dict[str, Any]:
         "bernoulli_toy": BERNOULLI_EXPECTED_TERMS,
         "si_tmaze": SI_EXPECTED_TERMS,
     }
+    roundtrip = {row["model"]: row for row in build_gnn_roundtrip_report(root)["rows"]}
     rows = []
     issues: list[str] = []
+    seen_variables: set[tuple[str, str]] = set()
     for path in _gnn_paths(root):
         model_id = path.stem.replace(".gnn", "")
         try:
@@ -224,7 +227,23 @@ def build_gnn_lint_report(project_root: Path) -> dict[str, Any]:
         for name, var in sorted(model.variables.items()):
             ontology = model.ontology.get(name)
             expected = expected_terms.get(name)
-            ok = bool(var.dims and var.dtype and ontology and expected and ontology == expected)
+            key = (model_id, name)
+            duplicate = key in seen_variables
+            seen_variables.add(key)
+            ontology_terms = [ontology] if ontology else []
+            shape_declared = bool(var.dims)
+            dtype_declared = bool(var.dtype)
+            roundtrip_row = roundtrip.get(model_id, {})
+            roundtrip_lossless = roundtrip_row.get("lossless") is True
+            ok = (
+                shape_declared
+                and dtype_declared
+                and len(ontology_terms) == 1
+                and bool(expected)
+                and ontology == expected
+                and roundtrip_lossless
+                and not duplicate
+            )
             if not ok:
                 issues.append(f"{path.name}:{name} missing or conflicting type, shape, or ontology")
             rows.append(
@@ -234,7 +253,15 @@ def build_gnn_lint_report(project_root: Path) -> dict[str, Any]:
                     "dtype": var.dtype,
                     "shape": list(var.dims),
                     "ontology": ontology,
+                    "ontology_terms": ontology_terms,
+                    "ontology_term_count": len(ontology_terms),
                     "expected_ontology": expected,
+                    "shape_declared": shape_declared,
+                    "dtype_declared": dtype_declared,
+                    "roundtrip_row_id": model_id,
+                    "roundtrip_lossless": roundtrip_lossless,
+                    "mapped_once": len(ontology_terms) == 1 and not duplicate,
+                    "duplicate": duplicate,
                     "ok": ok,
                 }
             )
@@ -279,17 +306,55 @@ def build_ontology_profile_matrix(project_root: Path) -> dict[str, Any]:
         for variable in sorted(model.variables):
             rows.append(
                 {
+                    "profile_kind": "gnn_variable",
                     "model": path.stem.replace(".gnn", ""),
                     "variable": variable,
                     "ontology": model.ontology.get(variable),
+                    "dtype": model.variables[variable].dtype,
+                    "shape": list(model.variables[variable].dims),
                     "mapped_once": bool(model.ontology.get(variable)),
+                    "profile_complete": bool(model.ontology.get(variable)),
+                    "source": path.relative_to(root).as_posix(),
                 }
             )
+    topology = _load_json(root / "output" / "data" / "si_graph_world_topology_sweep.json")
+    for row in topology.get("rows") or []:
+        topology_id = str(row.get("topology") or "")
+        rows.append(
+            {
+                "profile_kind": "graph_world_model",
+                "model": f"graph_world_{topology_id}",
+                "variable": "finite_topology",
+                "ontology": "FiniteGraphWorld",
+                "dtype": "record",
+                "shape": [int(row.get("node_count", 0) or 0)],
+                "mapped_once": bool(topology_id),
+                "profile_complete": bool(topology_id) and int(row.get("node_count", 0) or 0) > 0,
+                "source": "output/data/si_graph_world_topology_sweep.json",
+            }
+        )
+    benchmark = _load_json(root / "output" / "data" / "toy_benchmark_matrix.json")
+    for row in benchmark.get("rows") or []:
+        rows.append(
+            {
+                "profile_kind": "toy_benchmark_model",
+                "model": row.get("model", ""),
+                "variable": str(row.get("metric") or ""),
+                "ontology": "ToyBenchmarkMetric",
+                "dtype": "float",
+                "shape": [1],
+                "mapped_once": bool(row.get("model") and row.get("metric")),
+                "profile_complete": bool(row.get("artifact") and row.get("metric")),
+                "source": "output/data/toy_benchmark_matrix.json",
+            }
+        )
     return {
         "schema": "template_active_inference.ontology_profile_matrix.v1",
         "rows": rows,
         "row_count": len(rows),
-        "all_mapped_once": bool(rows) and all(row["mapped_once"] for row in rows),
+        "profile_kinds": sorted({str(row.get("profile_kind")) for row in rows if row.get("profile_kind")}),
+        "profile_models": sorted({str(row.get("model")) for row in rows if row.get("model")}),
+        "all_mapped_once": bool(rows) and all(row["mapped_once"] and row["profile_complete"] for row in rows),
     }
 
 
@@ -306,13 +371,19 @@ def build_lean_theorem_inventory(project_root: Path) -> dict[str, Any]:
     text = _lean_text(root)
     names = re.findall(r"^theorem\s+([A-Za-z0-9_']+)", text, flags=re.MULTILINE)
     forbidden = [word for word in ("sorry", "axiom", "native_decide") if re.search(rf"\b{word}\b", text)]
+    required = {
+        "two_state_belief_weights_sum_to_two": "finite_two_state_belief_update_normalization",
+        "two_policy_posterior_weights_sum_to_two": "finite_two_policy_posterior_normalization",
+    }
     rows = [{"name": name, "status": "proved"} for name in sorted(names)]
     return {
         "schema": "template_active_inference.lean_theorem_inventory.v1",
         "rows": rows,
         "theorem_count": len(rows),
+        "required_theorems": required,
+        "all_required_theorems_present": set(required).issubset(set(names)),
         "forbidden_tokens": forbidden,
-        "all_proved": bool(rows) and not forbidden,
+        "all_proved": bool(rows) and not forbidden and set(required).issubset(set(names)),
     }
 
 
@@ -484,16 +555,45 @@ def validate_formal_interop_artifacts(project_root: Path) -> list[str]:
     if interop.get("all_lossless") is not True:
         issues.append("interop_roundtrip_report.json is not lossless")
     gnn_lint = _load_json(root / "output" / "reports" / "gnn_lint_report.json")
-    if gnn_lint.get("all_variables_mapped_once") is not True:
-        issues.append("gnn_lint_report.json has unmapped variables")
+    gnn_lint_rows_ok = all_rows(
+        gnn_lint,
+        lambda row: (
+            row.get("ok") is True
+            and row.get("shape")
+            and row.get("dtype")
+            and row.get("ontology_term_count") == 1
+            and row.get("roundtrip_lossless") is True
+            and row.get("mapped_once") is True
+        ),
+    )
+    if gnn_lint.get("all_variables_mapped_once") is not True or not gnn_lint_rows_ok:
+        issues.append("gnn_lint_report.json has unmapped type, shape, ontology, or round-trip rows")
     ontology_alias = _load_json(root / "output" / "data" / "ontology_alias_index.json")
     if ontology_alias.get("no_conflicts") is not True:
         issues.append("ontology_alias_index.json has conflicting aliases")
     ontology_profile = _load_json(root / "output" / "data" / "ontology_profile_matrix.json")
-    if ontology_profile.get("all_mapped_once") is not True:
+    profile_rows_ok = all_rows(
+        ontology_profile,
+        lambda row: (
+            row.get("profile_kind") in {"gnn_variable", "graph_world_model", "toy_benchmark_model"}
+            and row.get("model")
+            and row.get("variable")
+            and row.get("ontology")
+            and row.get("mapped_once") is True
+            and row.get("profile_complete") is True
+        ),
+    )
+    profile_kinds = {
+        str(row.get("profile_kind")) for row in ontology_profile.get("rows") or [] if row.get("profile_kind")
+    }
+    if (
+        ontology_profile.get("all_mapped_once") is not True
+        or not profile_rows_ok
+        or not {"gnn_variable", "graph_world_model", "toy_benchmark_model"}.issubset(profile_kinds)
+    ):
         issues.append("ontology_profile_matrix.json has unmapped variables")
     lean_theorems = _load_json(root / "output" / "reports" / "lean_theorem_inventory.json")
-    if lean_theorems.get("all_proved") is not True:
+    if lean_theorems.get("all_proved") is not True or lean_theorems.get("all_required_theorems_present") is not True:
         issues.append("lean_theorem_inventory.json is not fully proved")
     lean_graph = _load_json(root / "output" / "reports" / "lean_graph_world_inventory.json")
     if lean_graph.get("all_topologies_witnessed") is not True:

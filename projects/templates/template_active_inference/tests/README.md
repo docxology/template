@@ -13,7 +13,9 @@ computations and fixed seeds rather than mocks.
   ontology, semantic gluing, and promoted artifact concordance.
 - `test_invariants.py`, `test_validation_spine.py`, `test_roadmap_promotion.py`,
   `test_track_consolidation.py` — cross-track invariants, replay, provenance,
-  counterexamples, and canonical roadmap artifacts.
+  counterexamples, and canonical roadmap artifacts. Generated-artifact mutation
+  tests use `gate_support.temporary_json_mutation()` so negative controls restore
+  touched JSON even when the assertion path fails.
 - `test_figures.py`, `test_figure_style.py` — figure registry parity, PNG dimensions, sheaf heatmaps.
 - `test_sheaf_compose.py`, `test_sheaf_manifest.py`, `test_sheaf_registry.py`,
   `test_sheaf_coverage.py`, `test_sheaf_laws.py`, `test_layers_report.py` —

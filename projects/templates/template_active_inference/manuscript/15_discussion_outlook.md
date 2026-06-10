@@ -10,11 +10,11 @@
 
 ## What this demonstrates
 
-The result of this manuscript is a *discipline*, not a domain claim: across three toy models every reported number is hydrated from a generated artifact, {{sheaf_law_count}} sheaf axioms are machine-checked before composition, and {{counterexample_count}} negative controls keep each failure path live. No statistic, figure, or cross-track claim here can drift from its artifact without failing a gate before the PDF is built.
+The result of this manuscript is a *discipline*, not a domain claim: across three toy models every reported number is hydrated from a generated artifact, {{sheaf_law_count}} sheaf axioms are machine-checked before composition, and {{counterexample_count}} negative controls keep each failure path live. That posture follows the caution that FEP and active-inference formalisms need explicit methodological scope before they become empirical brain claims [@gershman2019fepbrain]. No statistic, figure, or cross-track claim here can drift from its artifact without failing a gate before the PDF is built.
 
 ## Limitations
 
-The Bernoulli–Ising toy, T-maze harness, and sheaf composition model are pedagogical. They validate analytical consistency, artifact wiring, renderer dispatch, and manuscript hydration—not empirical claims about biological agents. Default pymdp mode is `{{pymdp_mode}}` with planning horizon {{si_tmaze_policy_len}}; the policy-comparison artifact exposes policy-inference rows without changing the default rollout ([@sec:methods_pymdp]).
+The Bernoulli–Ising toy, T-maze harness, and sheaf composition model are pedagogical. They validate analytical consistency, artifact wiring, renderer dispatch, and manuscript hydration, not empirical claims about biological agents. Default pymdp mode is `{{pymdp_mode}}` with planning horizon {{si_tmaze_policy_len}}; the policy-comparison artifact exposes policy-inference rows without changing the default rollout ([@sec:methods_pymdp]).
 
 ## Sheaf audit and outlook
 

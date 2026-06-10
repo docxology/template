@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from gate_support import ensure_gate_artifacts
+from gate_support import ensure_gate_artifacts, temporary_json_mutation, temporary_text_mutation
 
 
 def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: Path) -> None:
@@ -72,18 +72,69 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
     } <= set(methods_pymdp["tracks"])
 
 
+def test_semantic_certificate_key_surface_is_stable(project_root: Path) -> None:
+    from manuscript.sheaf.semantic import build_semantic_gluing_certificate, validate_semantic_gluing
+
+    ensure_gate_artifacts(project_root)
+    cert = build_semantic_gluing_certificate(project_root)
+
+    assert set(cert) == {
+        "schema",
+        "ok",
+        "issues",
+        "restriction_classes",
+        "proof_obligations",
+        "all_proof_obligations_ok",
+        "tracks",
+        "sections",
+        "shared_symbols",
+        "artifact_sources",
+        "restrictions",
+        "artifact_graph",
+        "evidence_crosswalk",
+        "claims",
+        "manuscript_variables",
+    }
+    assert set(cert["artifact_sources"]) >= {
+        "coverage_matrix",
+        "si_summary",
+        "analysis_statistics",
+        "claim_ledger",
+        "evidence_crosswalk",
+        "dependency_graph",
+        "track_improvement_scope",
+        "evidence_field_index",
+        "release_bundle",
+        "theorem_traceability",
+        "section_status_matrix",
+        "sheaf_render_log",
+    }
+    assert set(cert["restrictions"]) >= {
+        "coverage_missing",
+        "section_count",
+        "track_count",
+        "policy_comparison_complete_grid",
+        "policy_posterior_normalized",
+        "visualization_quality_ok",
+        "statistical_visualization_crosswalk_ok",
+        "release_attestation_complete",
+        "no_versioned_live_tracks",
+    }
+    assert validate_semantic_gluing(project_root) == []
+
+
 def test_semantic_gluing_rejects_wrong_si_ontology(project_root: Path) -> None:
     from manuscript.sheaf.semantic import validate_semantic_gluing
 
     ensure_gate_artifacts(project_root)
     ontology_path = project_root / "manuscript" / "sections" / "imrad" / "methods_pymdp" / "ontology.yaml"
-    original = ontology_path.read_text(encoding="utf-8")
-    try:
-        ontology_path.write_text(original.replace("pi: PolicyPosterior", "pi: HiddenState"), encoding="utf-8")
+    with temporary_text_mutation(
+        ontology_path,
+        lambda text: text.replace("pi: PolicyPosterior", "pi: HiddenState"),
+    ):
         issues = validate_semantic_gluing(project_root)
-        assert any("si_tmaze" in issue and "PolicyPosterior" in issue for issue in issues)
-    finally:
-        ontology_path.write_text(original, encoding="utf-8")
+
+    assert any("si_tmaze" in issue and "PolicyPosterior" in issue for issue in issues)
 
 
 def test_semantic_certificate_is_written_as_generated_artifact(project_root: Path) -> None:
@@ -110,15 +161,12 @@ def test_semantic_gluing_rejects_stale_saved_certificate(project_root: Path) -> 
 
     ensure_gate_artifacts(project_root)
     paths = write_semantic_gluing_outputs(project_root)
-    original = paths["certificate"].read_text(encoding="utf-8")
-    payload = json.loads(original)
-    try:
-        payload["artifact_graph"]["output/data/si_graph_world_trace.json"]["producer"] = "tests_only.py"
-        paths["certificate"].write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
+    def break_certificate(payload: dict) -> None:
+        payload["artifact_graph"]["output/data/si_graph_world_trace.json"]["producer"] = "tests_only.py"
+
+    with temporary_json_mutation(paths["certificate"], break_certificate):
         issues = validate_semantic_gluing(project_root)
-    finally:
-        paths["certificate"].write_text(original, encoding="utf-8")
 
     assert any("stale" in issue or "producer" in issue for issue in issues)
 
@@ -152,12 +200,11 @@ def test_dependency_graph_rejects_required_artifact_without_configured_producer(
     from manuscript.sheaf.semantic import validate_configured_artifact_producers
 
     config_path = project_root / "manuscript" / "config.yaml"
-    original = config_path.read_text(encoding="utf-8")
-    try:
-        config_path.write_text(original.replace("    - simulate_si_graph_world.py\n", ""), encoding="utf-8")
+    with temporary_text_mutation(
+        config_path,
+        lambda text: text.replace("    - simulate_si_graph_world.py\n", ""),
+    ):
         issues = validate_configured_artifact_producers(project_root)
-    finally:
-        config_path.write_text(original, encoding="utf-8")
 
     assert any("si_graph_world_summary.json" in issue for issue in issues)
 
@@ -187,17 +234,15 @@ def test_semantic_gluing_rejects_mutated_policy_posterior(project_root: Path) ->
     write_policy_comparison(project_root)
     posterior_path = write_policy_posterior_grid(project_root)
     write_semantic_gluing_outputs(project_root)
-    original = posterior_path.read_text(encoding="utf-8")
-    try:
-        payload = json.loads(original)
+
+    def break_posterior(payload: dict) -> None:
         row = next(row for row in payload["rows"] if row["posterior_available"])
         row["q_pi"] = [0.7, 0.7]
         row["normalized"] = False
         payload["all_available_posteriors_normalized"] = False
-        posterior_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    with temporary_json_mutation(posterior_path, break_posterior):
         issues = validate_semantic_gluing(project_root)
-    finally:
-        posterior_path.write_text(original, encoding="utf-8")
 
     assert any("stale relative to live semantic fields" in issue for issue in issues)
 

@@ -9,6 +9,38 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 
+def image_render_metrics(path: Path) -> dict[str, object]:
+    """Return deterministic live PNG metrics used by render validators."""
+    if not path.is_file():
+        return {
+            "exists": False,
+            "width_px": 0,
+            "height_px": 0,
+            "mode": "",
+            "size_bytes": 0,
+            "aspect_ratio": 0.0,
+            "nonblank": False,
+        }
+    try:
+        with Image.open(path) as image:
+            width, height = image.size
+            mode = image.mode
+            extrema = image.convert("RGB").getextrema()
+    except (OSError, ValueError, EOFError):
+        width, height, mode, extrema = 0, 0, "", ()
+    aspect_ratio = float(width / height) if height else 0.0
+    nonblank = bool(extrema) and any(low != high for low, high in extrema)
+    return {
+        "exists": path.is_file(),
+        "width_px": int(width),
+        "height_px": int(height),
+        "mode": mode,
+        "size_bytes": path.stat().st_size if path.is_file() else 0,
+        "aspect_ratio": aspect_ratio,
+        "nonblank": nonblank,
+    }
+
+
 def save_figure_png(
     fig,
     path: Path,

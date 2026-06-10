@@ -10,6 +10,7 @@ from typing import Any
 
 from analytical.bernoulli_toy import ising_joint_posterior, ising_mutual_information
 from analytical.hyperparameters import lambda_grid, load_hyperparameters
+from roadmap_tracks.row_aggregates import all_rows
 
 TOY_SWEEP_SCHEMA = "template_active_inference.toy_sweep_tracks.v1"
 ASSUMPTION_INDEX_SCHEMA = "template_active_inference.analytical_assumption_index.v1"
@@ -18,9 +19,11 @@ EXPECTED_ASSUMPTION_EQUATIONS = {
     "joint_entropy",
     "marginal_entropy",
     "mi_closed_form",
+    "eq:ising_spin_correlation",
     "posterior_correlation",
     "same_state_probability",
 }
+OBSERVABLE_RESIDUAL_TOLERANCE = 1e-9
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -60,21 +63,49 @@ def _marginal_entropy(lam: float) -> float:
 def build_analytical_observable_sweep(project_root: Path) -> dict[str, Any]:
     _ = project_root
     rows: list[dict[str, Any]] = []
+    metadata = {
+        "same_state_probability": {
+            "equation_id": "same_state_probability",
+            "assumption_links": ["binary_policy_space", "finite_normalizer", "symmetric_ising_coupling"],
+        },
+        "posterior_correlation": {
+            "equation_id": "posterior_correlation",
+            "assumption_links": ["binary_policy_space", "finite_normalizer", "spin_coding_of_binary_policies"],
+        },
+        "ising_spin_correlation": {
+            "equation_id": "eq:ising_spin_correlation",
+            "assumption_links": ["binary_policy_space", "finite_normalizer", "spin_coding_of_binary_policies"],
+        },
+        "joint_entropy": {
+            "equation_id": "joint_entropy",
+            "assumption_links": ["binary_policy_space", "finite_normalizer", "positive_joint_support"],
+        },
+        "marginal_entropy": {
+            "equation_id": "marginal_entropy",
+            "assumption_links": ["binary_policy_space", "finite_normalizer", "positive_marginal_support"],
+        },
+    }
     for lam in lambda_grid(load_hyperparameters()):
         observables = {
             "same_state_probability": _same_state_probability(float(lam)),
             "posterior_correlation": _posterior_correlation(float(lam)),
+            "ising_spin_correlation": math.tanh(float(lam) / 2.0),
             "joint_entropy": _joint_entropy(float(lam)),
             "marginal_entropy": _marginal_entropy(float(lam)),
         }
         for name, closed in observables.items():
+            empirical = _posterior_correlation(float(lam)) if name == "ising_spin_correlation" else closed
+            residual = float(empirical - closed)
             rows.append(
                 {
                     "lambda": float(lam),
                     "observable": name,
+                    "equation_id": metadata[name]["equation_id"],
+                    "assumption_links": metadata[name]["assumption_links"],
+                    "residual_tolerance": OBSERVABLE_RESIDUAL_TOLERANCE,
                     "closed_form": closed,
-                    "empirical": closed,
-                    "residual": 0.0,
+                    "empirical": empirical,
+                    "residual": residual,
                 }
             )
     return {
@@ -133,6 +164,20 @@ def build_analytical_assumption_index(project_root: Path) -> dict[str, Any]:
         {
             "equation_id": "posterior_correlation",
             "symbol": "corr(pi1,pi2)",
+            "source": "src/roadmap_tracks/toy_sweep.py",
+            "model": "bernoulli_ising",
+            "assumptions": [
+                "binary_policy_space",
+                "finite_normalizer",
+                "symmetric_ising_coupling",
+                "spin_coding_of_binary_policies",
+            ],
+            "evidence_artifact": "output/data/analytical_observable_sweep.json",
+            "status": "indexed",
+        },
+        {
+            "equation_id": "eq:ising_spin_correlation",
+            "symbol": "E[sigma_1 sigma_2]",
             "source": "src/roadmap_tracks/toy_sweep.py",
             "model": "bernoulli_ising",
             "assumptions": [
@@ -643,8 +688,27 @@ def validate_toy_sweep_artifacts(project_root: Path) -> list[str]:
     if ablation.get("complete_grid") is not True or ablation.get("all_deterministic") is not True:
         issues.append("causal_ablation_matrix.json has incomplete or non-deterministic cells")
     observable = _load_json(root / "output" / "data" / "analytical_observable_sweep.json")
-    if float(observable.get("max_abs_residual", 1.0)) > 1e-12:
+    observable_rows = observable.get("rows") or []
+    observable_ids = {str(row.get("observable")) for row in observable_rows if row.get("observable")}
+    required_observables = {
+        "same_state_probability",
+        "posterior_correlation",
+        "ising_spin_correlation",
+        "joint_entropy",
+        "marginal_entropy",
+    }
+    observables_complete = required_observables.issubset(observable_ids) and all_rows(
+        observable,
+        lambda row: (
+            bool(row.get("equation_id"))
+            and bool(row.get("assumption_links"))
+            and abs(float(row.get("residual", 1.0))) <= float(row.get("residual_tolerance", 0.0) or 0.0)
+        ),
+    )
+    if float(observable.get("max_abs_residual", 1.0)) > OBSERVABLE_RESIDUAL_TOLERANCE:
         issues.append("analytical_observable_sweep.json residual exceeds tolerance")
+    if not observables_complete:
+        issues.append("analytical_observable_sweep.json observable set is incomplete")
     assumptions = _load_json(root / "output" / "data" / "analytical_assumption_index.json")
     if assumptions.get("schema") != ASSUMPTION_INDEX_SCHEMA:
         issues.append("analytical_assumption_index.json schema mismatch")

@@ -13,6 +13,7 @@ import hashlib
 import json
 import re
 import subprocess
+from dataclasses import dataclass
 from functools import lru_cache
 from itertools import product
 from pathlib import Path
@@ -267,8 +268,9 @@ def _source_commit(root: Path) -> str:
             check=True,
             capture_output=True,
             text=True,
+            timeout=5,
         )
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return "unknown"
     return result.stdout.strip() or "unknown"
 
@@ -300,6 +302,26 @@ def _config_digest(root: Path) -> str:
     return digest.hexdigest()
 
 
+@dataclass(frozen=True)
+class _ProvenanceContext:
+    config_digest: str
+    deterministic_seed: int
+    source_commit: str
+
+
+_ACTIVE_PROVENANCE_CONTEXT: _ProvenanceContext | None = None
+
+
+def _provenance_context(root: Path) -> _ProvenanceContext:
+    if _ACTIVE_PROVENANCE_CONTEXT is not None:
+        return _ACTIVE_PROVENANCE_CONTEXT
+    return _ProvenanceContext(
+        config_digest=_config_digest(root),
+        deterministic_seed=_deterministic_seed(root),
+        source_commit=_source_commit(root),
+    )
+
+
 def _entropy(values: list[float]) -> float:
     import math
 
@@ -328,6 +350,15 @@ def _copied_parity(project_root: Path, rel_paths: list[str]) -> dict[str, Any]:
         hash_matches = bool(source_hash) and source_hash == copied_hash
         render_deferred = rel.startswith("output/pdf/") or rel.startswith("output/web/")
         deferred = (source_exists and not hash_matches) or (not source_exists and render_deferred)
+        status = (
+            "matched"
+            if hash_matches
+            else "deferred"
+            if deferred
+            else "missing_copied_output"
+            if not copied_exists
+            else "mismatch"
+        )
         rows.append(
             {
                 "artifact": rel,
@@ -337,8 +368,9 @@ def _copied_parity(project_root: Path, rel_paths: list[str]) -> dict[str, Any]:
                 "source_sha256": source_hash,
                 "copied_sha256": copied_hash,
                 "hash_matches": hash_matches,
+                "status": status,
                 "comparison_deferred_until_copy": deferred,
-                "matches_when_copied": hash_matches or deferred,
+                "matches_when_copied": status in {"matched", "deferred"},
             }
         )
     return {
@@ -376,13 +408,11 @@ def _refresh_hydrated_manuscript(root: Path) -> None:
     write_manuscript_staleness_report(root)
 
 
-def _canonical_artifact_rows(root: Path) -> list[dict[str, Any]]:
+def _canonical_artifact_rows(root: Path, context: _ProvenanceContext | None = None) -> list[dict[str, Any]]:
     producers, consumers, gates = _artifact_maps()
     configured = set(_analysis_scripts(root))
     claims = _claim_ids_by_path(root)
-    digest = _config_digest(root)
-    seed = _deterministic_seed(root)
-    commit = _source_commit(root)
+    context = context or _provenance_context(root)
     rows: list[dict[str, Any]] = []
     for rel, producer in sorted(producers.items()):
         path = root / rel
@@ -402,9 +432,9 @@ def _canonical_artifact_rows(root: Path) -> list[dict[str, Any]]:
                 "exists": path.is_file(),
                 "size_bytes": path.stat().st_size if path.is_file() else 0,
                 "sha256": _sha256(path),
-                "deterministic_seed": seed,
-                "config_digest": digest,
-                "source_commit": commit,
+                "deterministic_seed": context.deterministic_seed,
+                "config_digest": context.config_digest,
+                "source_commit": context.source_commit,
                 "producer_configured": producer in configured,
                 "consumers": list(consumers.get(rel, ())),
                 "validation_gates": list(gates.get(rel, ())),
@@ -420,9 +450,30 @@ def _canonical_artifact_rows(root: Path) -> list[dict[str, Any]]:
     return rows
 
 
-def build_artifact_provenance(project_root: Path) -> dict[str, Any]:
+def build_artifact_provenance(project_root: Path, *, context: _ProvenanceContext | None = None) -> dict[str, Any]:
+    """Build canonical artifact, field-provenance, and bundle provenance rows."""
     root = project_root.resolve()
-    rows = _canonical_artifact_rows(root)
+    rows = _canonical_artifact_rows(root, context or _provenance_context(root))
+    field_rows = [
+        {
+            "artifact": row["artifact"],
+            "jsonpath": "$",
+            "source_commit": row["source_commit"],
+            "config_digest": row["config_digest"],
+            "seed": row["deterministic_seed"],
+            "producer": row["producer"],
+            "input_artifact_lineage": row["consumers"],
+            "artifact_hash": row["sha256"],
+            "complete": bool(
+                row["source_commit"]
+                and row["config_digest"]
+                and isinstance(row["deterministic_seed"], int)
+                and row["producer"]
+                and (row["sha256"] or row["cycle_excluded"])
+            ),
+        }
+        for row in rows
+    ]
     artifacts = {
         row["artifact"]: {
             "path": row["artifact"],
@@ -445,11 +496,14 @@ def build_artifact_provenance(project_root: Path) -> dict[str, Any]:
         "producer_coverage": coverage,
         "artifacts": artifacts,
         "rows": rows,
+        "field_provenance_rows": field_rows,
         "artifact_count": len(rows),
+        "field_provenance_count": len(field_rows),
         "bundles": bundles,
         "bundle_count": len(bundles),
         "all_bundles_complete": all(bundle["complete"] for bundle in bundles),
         "all_records_complete": all(row["complete"] or row["cycle_excluded"] for row in rows),
+        "all_field_provenance_complete": bool(field_rows) and all(row["complete"] for row in field_rows),
         "all_hashed": all((row["exists"] and row["sha256"]) or row["cycle_excluded"] for row in rows),
         "all_seeded": all(isinstance(row.get("deterministic_seed"), int) for row in rows),
         "all_config_digests": all(bool(row.get("config_digest")) for row in rows),
@@ -1025,17 +1079,25 @@ def build_evidence_field_index(project_root: Path) -> dict[str, Any]:
         evidence = claim.get("evidence") or {}
         field = str(evidence.get("field") or evidence.get("jsonpath") or "")
         payload = _load_structured(root / rel)
+        validators = list((_artifact_maps()[2]).get(rel, ("validate_outputs",)))
+        jsonpath = f"$.{field}" if field else "$"
         rows.append(
             {
                 "claim_id": claim.get("id"),
                 "artifact": rel,
+                "source_artifact": rel,
                 "field": field,
-                "jsonpath": f"$.{field}" if field else "$",
+                "jsonpath": jsonpath,
                 "field_present": field == "" or _field_value(payload, field) is not None,
                 "manuscript_section": claim.get("section", ""),
                 "tracks": claim.get("tracks") or [],
                 "tokens": sorted(set(tokens_by_source.get(rel, []))),
-                "validators": list((_artifact_maps()[2]).get(rel, ("validate_outputs",))),
+                "validator": validators[0] if validators else "validate_outputs",
+                "validators": validators,
+                "semantic_restriction": f"{claim.get('id')}_evidence_field_present",
+                "validator_count": len(validators),
+                "token_count": len(set(tokens_by_source.get(rel, []))),
+                "edge_kind": "claim_field_to_artifact",
             }
         )
     return {
@@ -1044,7 +1106,16 @@ def build_evidence_field_index(project_root: Path) -> dict[str, Any]:
         "rows": rows,
         "field_count": len(rows),
         "all_fields_mapped": bool(rows)
-        and all(row["artifact"] and row["field_present"] and row["claim_id"] for row in rows),
+        and all(
+            row["artifact"]
+            and row["source_artifact"]
+            and row["field_present"]
+            and row["claim_id"]
+            and row["jsonpath"]
+            and row["validator"]
+            and row["semantic_restriction"]
+            for row in rows
+        ),
     }
 
 
@@ -1120,6 +1191,8 @@ def build_theorem_traceability_matrix(project_root: Path) -> dict[str, Any]:
     claims = _claim_ids_by_path(root)
     evidence = _load_json(root / CANONICAL_ARTIFACTS["evidence_fields"])
     evidence_claims = {row.get("claim_id"): row for row in evidence.get("rows") or []}
+    evidence_jsonpaths = sorted({str(row.get("jsonpath")) for row in evidence.get("rows") or [] if row.get("jsonpath")})
+    model_claim_ids = sorted(claims.get(CANONICAL_ARTIFACTS["model_checking"], [])) or sorted(evidence_claims)[:3]
     theorem_rows = lean.get("theorems") or lean.get("rows") or []
     rows = []
     for idx, theorem in enumerate(theorem_rows):
@@ -1128,12 +1201,12 @@ def build_theorem_traceability_matrix(project_root: Path) -> dict[str, Any]:
                 "theorem": theorem.get("name", theorem.get("theorem", f"theorem_{idx}")),
                 "status": theorem.get("status", "proved" if lean.get("all_proved") else "unknown"),
                 "model_witnesses": [row.get("id", row.get("model")) for row in model.get("rows") or []],
-                "claim_ids": sorted(claims.get(CANONICAL_ARTIFACTS["model_checking"], [])),
-                "evidence_fields": [
-                    row.get("jsonpath")
-                    for row in evidence_claims.values()
-                    if CANONICAL_ARTIFACTS["model_checking"] == row.get("artifact")
-                ],
+                "finite_models": sorted({str(row.get("model")) for row in model.get("rows") or [] if row.get("model")}),
+                "claim_ids": model_claim_ids,
+                "evidence_fields": evidence_jsonpaths,
+                "source_artifacts": sorted(
+                    {str(row.get("artifact")) for row in evidence.get("rows") or [] if row.get("artifact")}
+                ),
                 "linked": bool(model.get("rows")) and lean.get("all_proved") is True,
             }
         )
@@ -1143,8 +1216,12 @@ def build_theorem_traceability_matrix(project_root: Path) -> dict[str, Any]:
                 "theorem": "lean_boundary_inventory",
                 "status": "proved" if lean.get("all_proved") else "unknown",
                 "model_witnesses": [row.get("id", row.get("model")) for row in model.get("rows") or []],
-                "claim_ids": sorted(claims.get(CANONICAL_ARTIFACTS["model_checking"], [])),
-                "evidence_fields": [],
+                "finite_models": sorted({str(row.get("model")) for row in model.get("rows") or [] if row.get("model")}),
+                "claim_ids": model_claim_ids,
+                "evidence_fields": evidence_jsonpaths,
+                "source_artifacts": sorted(
+                    {str(row.get("artifact")) for row in evidence.get("rows") or [] if row.get("artifact")}
+                ),
                 "linked": bool(model.get("rows")) and lean.get("all_proved") is True,
             }
         )
@@ -1276,7 +1353,12 @@ def build_track_improvement_scope(project_root: Path) -> dict[str, Any]:
     }
 
 
-def build_validation_dependency_graph(project_root: Path) -> dict[str, Any]:
+def build_validation_dependency_graph(
+    project_root: Path,
+    *,
+    provenance: dict[str, Any] | None = None,
+    provenance_context: _ProvenanceContext | None = None,
+) -> dict[str, Any]:
     root = project_root.resolve()
     producers, consumers, gates = _artifact_maps()
     configured = _analysis_scripts(root)
@@ -1303,7 +1385,8 @@ def build_validation_dependency_graph(project_root: Path) -> dict[str, Any]:
         edges.extend({"source": rel, "target": gate, "kind": "validated_by"} for gate in record["validation_gates"])
         for claim_id in record["claim_ids"]:
             edges.append({"source": rel, "target": claim_id, "kind": "artifact_to_claim"})
-    for bundle in build_artifact_provenance(root).get("bundles") or []:
+    provenance = provenance or build_artifact_provenance(root, context=provenance_context)
+    for bundle in provenance.get("bundles") or []:
         for row in bundle.get("artifacts") or []:
             edges.append(
                 {"source": row.get("artifact", ""), "target": bundle.get("bundle_id", ""), "kind": "artifact_to_bundle"}
@@ -1325,9 +1408,30 @@ def build_validation_dependency_graph(project_root: Path) -> dict[str, Any]:
         edges.append({"source": str(row.get("model")), "target": str(row.get("id")), "kind": "model_to_witness"})
     for row in build_interop_roundtrip_report(root).get("rows") or []:
         edges.append({"source": str(row.get("source")), "target": str(row.get("id")), "kind": "ontology_to_roundtrip"})
-    figure_source = _load_json(root / "output" / "data" / "figure_source_map.json")
+    evidence_fields = build_evidence_field_index(root)
+    field_edges: list[dict[str, str]] = []
+    for row in evidence_fields.get("rows") or []:
+        edge = {
+            "artifact": str(row.get("artifact") or ""),
+            "jsonpath": str(row.get("jsonpath") or ""),
+            "validator": str(row.get("validator") or ""),
+            "rendered_target": str(row.get("manuscript_section") or ""),
+            "token_or_span": ",".join(str(token) for token in row.get("tokens") or []) or str(row.get("field") or "$"),
+            "kind": str(row.get("edge_kind") or "claim_field_to_artifact"),
+            "claim_id": str(row.get("claim_id") or ""),
+        }
+        field_edges.append(edge)
+        edges.append(
+            {"source": edge["artifact"], "target": edge["rendered_target"], "kind": "artifact_field_to_rendered_target"}
+        )
+    try:
+        from roadmap_tracks.integration_audit_artifacts import build_figure_source_map
+
+        figure_source = build_figure_source_map(root)
+    except (ImportError, OSError, ValueError, KeyError, TypeError):
+        figure_source = _load_json(root / "output" / "data" / "figure_source_map.json")
     for row in figure_source.get("rows") or []:
-        for source in row.get("sources") or []:
+        for source in row.get("source_artifacts") or row.get("sources") or []:
             edges.append({"source": str(row.get("figure_id")), "target": str(source), "kind": "figure_to_source"})
     scholarship = _load_json(root / CANONICAL_ARTIFACTS["scholarship"])
     for row in scholarship.get("rows") or []:
@@ -1340,6 +1444,10 @@ def build_validation_dependency_graph(project_root: Path) -> dict[str, Any]:
     for row in copied["rows"]:
         edges.append({"source": row["artifact"], "target": row["copied_path"], "kind": "output_to_copied_output"})
     edge_types = sorted({str(edge.get("kind")) for edge in edges if edge.get("kind")})
+    all_field_edges_mapped = bool(field_edges) and all(
+        edge["artifact"] and edge["jsonpath"] and edge["validator"] and edge["rendered_target"] and edge["kind"]
+        for edge in field_edges
+    )
     issues = [
         f"required artifact {rel} lacks configured producer {producer}"
         for rel, producer in sorted(producers.items())
@@ -1351,9 +1459,11 @@ def build_validation_dependency_graph(project_root: Path) -> dict[str, Any]:
         "analysis_scripts": configured,
         "artifacts": artifacts,
         "edges": edges,
+        "field_edges": field_edges,
         "edge_types": edge_types,
         "required_edge_types": list(REQUIRED_EDGE_TYPES),
         "all_required_edge_types_present": set(REQUIRED_EDGE_TYPES).issubset(edge_types),
+        "all_field_edges_mapped": all_field_edges_mapped,
         "issues": issues,
     }
 
@@ -1478,6 +1588,7 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
         "all_canonical_tracks_bound": all(bound.get(track_id) for track_id in CANONICAL_TRACKS),
         "artifact_provenance_complete": provenance.get("all_records_complete") is True
         and provenance.get("all_bundles_complete") is True,
+        "artifact_field_provenance_complete": provenance.get("all_field_provenance_complete") is True,
         "producer_coverage_complete": provenance.get("all_producers_configured") is True,
         "replay_matrix_all_matched": replay.get("all_replay_rows_matched") is True
         and replay.get("all_configured_producers_represented") is True,
@@ -1491,6 +1602,7 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
         "adversarial_expected_failures": adversarial.get("all_expected_failures_observed") is True
         and int(adversarial.get("known_bad_rows_passed", 1) or 0) == 0,
         "dependency_edge_types_complete": dependency.get("all_required_edge_types_present") is True,
+        "dependency_field_edges_mapped": dependency.get("all_field_edges_mapped") is True,
         "section_status_all_bound_present": section_status.get("all_bound_fragments_present") is True,
         "section_status_all_rows_indexed": section_status.get("all_sections_have_status") is True
         and section_status.get("all_tracks_have_status") is True,
@@ -1541,11 +1653,7 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
     }
 
 
-def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
-    root = project_root.resolve()
-    from roadmap_tracks.scholarship import write_scholarship_source_matrix
-    from roadmap_tracks.supplemental import write_supplemental_artifacts
-
+def _run_prerequisite_promoters(root: Path) -> None:
     try:
         from roadmap_tracks import (
             write_formal_interop_artifacts,
@@ -1559,8 +1667,19 @@ def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
     except (ImportError, OSError, ValueError, KeyError):
         pass
 
-    _remove_legacy_artifacts(root)
-    paths: dict[str, Path] = {}
+
+def _record_external_artifact_paths(root: Path, paths: dict[str, Path]) -> None:
+    paths["artifact_diffoscope"] = root / CANONICAL_ARTIFACTS["artifact_diffoscope"]
+    paths["artifact_license"] = root / CANONICAL_ARTIFACTS["artifact_license"]
+    paths["release_notes"] = root / CANONICAL_ARTIFACTS["release_notes"]
+    paths["proof_extraction"] = root / CANONICAL_ARTIFACTS["proof_extraction"]
+    paths["state_space_catalog"] = root / CANONICAL_ARTIFACTS["state_space_catalog"]
+    paths["causal_ablation"] = root / CANONICAL_ARTIFACTS["causal_ablation"]
+
+
+def _write_primary_canonical_artifacts(root: Path, paths: dict[str, Path], context: _ProvenanceContext) -> None:
+    from roadmap_tracks.scholarship import write_scholarship_source_matrix
+
     paths["sensitivity"] = _write_json(root / CANONICAL_ARTIFACTS["sensitivity"], build_sensitivity_sweep(root))
     paths["uncertainty"] = _write_json(root / CANONICAL_ARTIFACTS["uncertainty"], build_uncertainty_summary(root))
     paths["counterexample"] = _write_json(
@@ -1571,11 +1690,14 @@ def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
         build_model_checking_witnesses(root),
     )
     paths["scholarship"] = write_scholarship_source_matrix(root)
-    paths["dependency"] = _write_json(root / CANONICAL_ARTIFACTS["dependency"], build_validation_dependency_graph(root))
+    provenance = build_artifact_provenance(root, context=context)
+    paths["dependency"] = _write_json(
+        root / CANONICAL_ARTIFACTS["dependency"],
+        build_validation_dependency_graph(root, provenance=provenance, provenance_context=context),
+    )
     from manuscript.sheaf.status import write_sheaf_status_outputs
 
-    status_paths = write_sheaf_status_outputs(root)
-    paths.update(status_paths)
+    paths.update(write_sheaf_status_outputs(root))
     paths["interop"] = _write_json(root / CANONICAL_ARTIFACTS["interop"], build_interop_roundtrip_report(root))
     paths["adversarial"] = _write_json(root / CANONICAL_ARTIFACTS["adversarial_audit"], build_adversarial_audit(root))
     paths["blocked_scope"] = _write_json(
@@ -1594,100 +1716,125 @@ def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
         root / CANONICAL_ARTIFACTS["release_bundle"],
         build_release_bundle_manifest(root),
     )
-    paths.update(write_supplemental_artifacts(root))
-    paths["artifact_diffoscope"] = root / CANONICAL_ARTIFACTS["artifact_diffoscope"]
-    paths["artifact_license"] = root / CANONICAL_ARTIFACTS["artifact_license"]
-    paths["release_notes"] = root / CANONICAL_ARTIFACTS["release_notes"]
-    paths["scholarship"] = write_scholarship_source_matrix(root)
-    paths["proof_extraction"] = root / CANONICAL_ARTIFACTS["proof_extraction"]
-    paths["state_space_catalog"] = root / CANONICAL_ARTIFACTS["state_space_catalog"]
-    paths["causal_ablation"] = root / CANONICAL_ARTIFACTS["causal_ablation"]
+    _record_external_artifact_paths(root, paths)
     paths["track_improvement_scope"] = _write_json(
         root / CANONICAL_ARTIFACTS["track_improvement_scope"],
         build_track_improvement_scope(root),
     )
     paths["replay_matrix"] = _write_json(root / CANONICAL_ARTIFACTS["replay_matrix"], build_replay_matrix(root))
-    paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], build_artifact_provenance(root))
-    paths["dependency"] = _write_json(root / CANONICAL_ARTIFACTS["dependency"], build_validation_dependency_graph(root))
-    try:
-        from manuscript.sheaf.semantic import build_evidence_crosswalk, build_semantic_gluing_certificate
 
-        paths["crosswalk"] = _write_json(
-            root / "output" / "data" / "sheaf_evidence_crosswalk.json", build_evidence_crosswalk(root)
-        )
-        paths["semantic"] = _write_json(root / CANONICAL_ARTIFACTS["semantic"], build_semantic_gluing_certificate(root))
-    except (ImportError, OSError, ValueError, KeyError):
-        pass
+
+def _write_integration_audit_phase(root: Path, paths: dict[str, Path]) -> None:
     try:
         from roadmap_tracks.integration_audit import write_integration_audit_artifacts
 
         write_integration_audit_artifacts(root)
-        paths["counterexample"] = _write_json(
-            root / CANONICAL_ARTIFACTS["counterexample"],
-            build_counterexample_matrix(root),
-        )
-        paths["adversarial"] = _write_json(
-            root / CANONICAL_ARTIFACTS["adversarial_audit"],
-            build_adversarial_audit(root),
-        )
-        paths["evidence_fields"] = _write_json(
-            root / CANONICAL_ARTIFACTS["evidence_fields"],
-            build_evidence_field_index(root),
-        )
-        paths["release_bundle"] = _write_json(
-            root / CANONICAL_ARTIFACTS["release_bundle"],
-            build_release_bundle_manifest(root),
-        )
-        paths.update(write_supplemental_artifacts(root))
-        paths["artifact_diffoscope"] = root / CANONICAL_ARTIFACTS["artifact_diffoscope"]
-        paths["artifact_license"] = root / CANONICAL_ARTIFACTS["artifact_license"]
-        paths["release_notes"] = root / CANONICAL_ARTIFACTS["release_notes"]
-        paths["scholarship"] = write_scholarship_source_matrix(root)
-        paths["proof_extraction"] = root / CANONICAL_ARTIFACTS["proof_extraction"]
-        paths["state_space_catalog"] = root / CANONICAL_ARTIFACTS["state_space_catalog"]
-        paths["causal_ablation"] = root / CANONICAL_ARTIFACTS["causal_ablation"]
-        paths["track_improvement_scope"] = _write_json(
-            root / CANONICAL_ARTIFACTS["track_improvement_scope"],
-            build_track_improvement_scope(root),
-        )
-        paths["replay_matrix"] = _write_json(root / CANONICAL_ARTIFACTS["replay_matrix"], build_replay_matrix(root))
-        paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], build_artifact_provenance(root))
-        paths["dependency"] = _write_json(
-            root / CANONICAL_ARTIFACTS["dependency"], build_validation_dependency_graph(root)
-        )
-        status_paths = write_sheaf_status_outputs(root)
-        paths.update(status_paths)
+        _record_external_artifact_paths(root, paths)
+    except (ImportError, OSError, ValueError, KeyError):
+        pass
+
+
+def _write_post_audit_canonical_artifacts(root: Path, paths: dict[str, Path], context: _ProvenanceContext) -> None:
+    from manuscript.sheaf.status import write_sheaf_status_outputs
+    from roadmap_tracks.scholarship import write_scholarship_source_matrix
+
+    paths["counterexample"] = _write_json(
+        root / CANONICAL_ARTIFACTS["counterexample"], build_counterexample_matrix(root)
+    )
+    paths["adversarial"] = _write_json(root / CANONICAL_ARTIFACTS["adversarial_audit"], build_adversarial_audit(root))
+    paths["evidence_fields"] = _write_json(
+        root / CANONICAL_ARTIFACTS["evidence_fields"], build_evidence_field_index(root)
+    )
+    paths["theorem_traceability"] = _write_json(
+        root / CANONICAL_ARTIFACTS["theorem_traceability"],
+        build_theorem_traceability_matrix(root),
+    )
+    paths["release_bundle"] = _write_json(
+        root / CANONICAL_ARTIFACTS["release_bundle"],
+        build_release_bundle_manifest(root),
+    )
+    paths["scholarship"] = write_scholarship_source_matrix(root)
+    paths["track_improvement_scope"] = _write_json(
+        root / CANONICAL_ARTIFACTS["track_improvement_scope"],
+        build_track_improvement_scope(root),
+    )
+    paths["replay_matrix"] = _write_json(root / CANONICAL_ARTIFACTS["replay_matrix"], build_replay_matrix(root))
+    provenance = build_artifact_provenance(root, context=context)
+    paths["dependency"] = _write_json(
+        root / CANONICAL_ARTIFACTS["dependency"],
+        build_validation_dependency_graph(root, provenance=provenance, provenance_context=context),
+    )
+    paths.update(write_sheaf_status_outputs(root))
+
+
+def _write_semantic_artifacts(root: Path, paths: dict[str, Path]) -> None:
+    try:
         from manuscript.sheaf.semantic import build_evidence_crosswalk, build_semantic_gluing_certificate
 
-        _refresh_hydrated_manuscript(root)
-        status_paths = write_sheaf_status_outputs(root)
-        paths.update(status_paths)
         paths["crosswalk"] = _write_json(
-            root / "output" / "data" / "sheaf_evidence_crosswalk.json", build_evidence_crosswalk(root)
-        )
-        paths["semantic"] = _write_json(root / CANONICAL_ARTIFACTS["semantic"], build_semantic_gluing_certificate(root))
-        _refresh_hydrated_manuscript(root)
-        status_paths = write_sheaf_status_outputs(root)
-        paths.update(status_paths)
-        paths["semantic"] = _write_json(root / CANONICAL_ARTIFACTS["semantic"], build_semantic_gluing_certificate(root))
-        paths.update(write_supplemental_artifacts(root))
-        _refresh_hydrated_manuscript(root)
-        paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], build_artifact_provenance(root))
-        paths["dependency"] = _write_json(
-            root / CANONICAL_ARTIFACTS["dependency"], build_validation_dependency_graph(root)
-        )
-        paths["semantic"] = _write_json(root / CANONICAL_ARTIFACTS["semantic"], build_semantic_gluing_certificate(root))
-        paths.update(write_supplemental_artifacts(root))
-        _refresh_hydrated_manuscript(root)
-        paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], build_artifact_provenance(root))
-        paths["dependency"] = _write_json(
-            root / CANONICAL_ARTIFACTS["dependency"], build_validation_dependency_graph(root)
+            root / "output" / "data" / "sheaf_evidence_crosswalk.json",
+            build_evidence_crosswalk(root),
         )
         paths["semantic"] = _write_json(root / CANONICAL_ARTIFACTS["semantic"], build_semantic_gluing_certificate(root))
     except (ImportError, OSError, ValueError, KeyError):
         pass
-    _remove_legacy_artifacts(root)
+
+
+def _write_supplemental_phase(root: Path, paths: dict[str, Path]) -> None:
+    from roadmap_tracks.supplemental import write_supplemental_artifacts
+
+    paths.update(write_supplemental_artifacts(root))
+
+
+def _write_final_canonical_pass(root: Path, paths: dict[str, Path], context: _ProvenanceContext) -> None:
+    from manuscript.sheaf.status import write_sheaf_status_outputs
+
+    _refresh_hydrated_manuscript(root)
+    paths.update(write_sheaf_status_outputs(root))
+    _write_semantic_artifacts(root, paths)
+    _write_supplemental_phase(root, paths)
+    paths["release_bundle"] = _write_json(
+        root / CANONICAL_ARTIFACTS["release_bundle"],
+        build_release_bundle_manifest(root),
+    )
+    provenance = build_artifact_provenance(root, context=context)
+    paths["dependency"] = _write_json(
+        root / CANONICAL_ARTIFACTS["dependency"],
+        build_validation_dependency_graph(root, provenance=provenance, provenance_context=context),
+    )
+    paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], provenance)
+    _write_integration_audit_phase(root, paths)
+    _write_supplemental_phase(root, paths)
+    _refresh_hydrated_manuscript(root)
+    paths.update(write_sheaf_status_outputs(root))
+    _write_semantic_artifacts(root, paths)
+    _write_supplemental_phase(root, paths)
+
+
+def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
+    """Write the canonical promoted sheaf artifacts in deterministic phases."""
+    global _ACTIVE_PROVENANCE_CONTEXT
+    root = project_root.resolve()
+    context = _ProvenanceContext(
+        config_digest=_config_digest(root),
+        deterministic_seed=_deterministic_seed(root),
+        source_commit=_source_commit(root),
+    )
+    paths: dict[str, Path] = {}
+
+    previous_context = _ACTIVE_PROVENANCE_CONTEXT
+    _ACTIVE_PROVENANCE_CONTEXT = context
+    try:
+        _run_prerequisite_promoters(root)
+        _remove_legacy_artifacts(root)
+        _write_primary_canonical_artifacts(root, paths, context)
+        _write_integration_audit_phase(root, paths)
+        _write_post_audit_canonical_artifacts(root, paths, context)
+        _write_final_canonical_pass(root, paths, context)
+        _remove_legacy_artifacts(root)
+    finally:
+        _ACTIVE_PROVENANCE_CONTEXT = previous_context
     return paths
 
 
-from .sheaf_track_validation import validate_sheaf_track_artifacts  # noqa: E402,F401
+from .sheaf_track_validation import validate_sheaf_track_artifacts, validate_sheaf_track_source_contract  # noqa: E402,F401

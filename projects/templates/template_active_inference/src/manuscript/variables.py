@@ -181,78 +181,69 @@ def _dirichlet_token_values() -> dict[str, Any]:
     }
 
 
-def generate_variables(project_root: Path, *, require_analysis_outputs: bool = True) -> dict[str, Any]:
-    root = project_root.resolve()
-    hp = load_hyperparameters()
-    pymdp_cfg = load_pymdp_config(root)
-    sweep_path = root / "output" / "data" / "parameter_sweep.csv"
-    si_summary = root / "output" / "data" / "si_tmaze_summary.json"
-    stats_path = root / "output" / "data" / "analysis_statistics.json"
-    inv_passed, inv_total = load_invariant_counts(root)
+VARIABLE_ARTIFACTS: dict[str, str] = {
+    "policy": "output/data/si_policy_comparison.json",
+    "posterior": "output/data/pymdp_policy_posterior_grid.json",
+    "runtime": "output/reports/pymdp_runtime_diagnostics.json",
+    "graph": "output/data/si_graph_world_summary.json",
+    "graph_topology_traces": "output/data/si_graph_world_topology_traces.json",
+    "provenance": "output/data/artifact_provenance.json",
+    "replay": "output/reports/reproducibility_replay.json",
+    "counterexample": "output/reports/counterexample_matrix.json",
+    "sensitivity": "output/data/sensitivity_sweep.json",
+    "uncertainty": "output/data/uncertainty_summary.json",
+    "benchmark": "output/data/toy_benchmark_matrix.json",
+    "model_checking": "output/reports/model_checking_witnesses.json",
+    "lean_graph": "output/reports/lean_graph_world_inventory.json",
+    "interop": "output/data/interop_roundtrip_report.json",
+    "adversarial": "output/reports/adversarial_audit.json",
+    "semantic": "output/data/sheaf_gluing_certificate.json",
+    "dependency": "output/data/validation_dependency_graph.json",
+    "stale": "output/reports/stale_artifact_report.json",
+    "manuscript_staleness": "output/reports/manuscript_staleness_report.json",
+    "figure_source": "output/data/figure_source_map.json",
+    "visualization_quality": "output/reports/visualization_quality_audit.json",
+    "statistical_bridge": "output/data/statistical_visualization_bridge.json",
+    "scope": "output/reports/scope_boundary_audit.json",
+    "gate_index": "output/data/validation_gate_index.json",
+    "section_status": "output/data/sheaf_section_status_matrix.json",
+    "render_log": "output/reports/sheaf_render_log.json",
+    "claim_audit": "output/reports/claim_evidence_audit.json",
+    "token_provenance": "output/data/manuscript_token_provenance.json",
+    "cross_symbol": "output/data/cross_track_symbol_table.json",
+    "assumption": "output/data/analytical_assumption_index.json",
+    "animation_delta": "output/data/animation_frame_deltas.json",
+    "replay_matrix": "output/reports/replay_matrix.json",
+    "track_scope": "output/data/track_improvement_scope.json",
+    "blocked_scope": "output/reports/blocked_scope_manifest.json",
+    "evidence_fields": "output/data/evidence_field_index.json",
+    "release_bundle": "output/reports/release_bundle_manifest.json",
+    "theorem_traceability": "output/data/theorem_traceability_matrix.json",
+    "artifact_diffoscope": "output/reports/artifact_diffoscope.json",
+    "proof_extraction": "output/data/proof_extraction_index.json",
+    "state_space_catalog": "output/data/state_space_catalog.json",
+    "causal_ablation": "output/data/causal_ablation_matrix.json",
+    "artifact_license": "output/reports/artifact_license_audit.json",
+    "release_notes": "output/reports/release_notes_evidence.json",
+    "scholarship": "output/data/scholarship_source_matrix.json",
+    "proof_dependency": "output/data/proof_dependency_graph.json",
+    "state_transition": "output/data/state_transition_table.json",
+    "ablation_sensitivity": "output/reports/ablation_sensitivity_report.json",
+    "release_attestation": "output/reports/release_attestation.json",
+}
 
-    if require_analysis_outputs and not sweep_path.exists():
-        raise FileNotFoundError(f"missing analysis artifact: {sweep_path}")
 
-    sweep_rows = read_parameter_sweep(sweep_path)
-    si_data = _load_json(si_summary)
-    stats_data = _load_json(stats_path)
-    policy_data = _load_json(root / "output" / "data" / "si_policy_comparison.json")
-    posterior_data = _load_json(root / "output" / "data" / "pymdp_policy_posterior_grid.json")
-    runtime_data = _load_json(root / "output" / "reports" / "pymdp_runtime_diagnostics.json")
-    graph_data = _load_json(root / "output" / "data" / "si_graph_world_summary.json")
-    graph_topology_traces = _load_json(root / "output" / "data" / "si_graph_world_topology_traces.json")
-    provenance_data = _load_json(root / "output" / "data" / "artifact_provenance.json")
-    replay_data = _load_json(root / "output" / "reports" / "reproducibility_replay.json")
-    counterexample_data = _load_json(root / "output" / "reports" / "counterexample_matrix.json")
-    sensitivity_data = _load_json(root / "output" / "data" / "sensitivity_sweep.json")
-    uncertainty_data = _load_json(root / "output" / "data" / "uncertainty_summary.json")
-    benchmark_data = _load_json(root / "output" / "data" / "toy_benchmark_matrix.json")
-    model_checking_data = _load_json(root / "output" / "reports" / "model_checking_witnesses.json")
-    lean_graph_data = _load_json(root / "output" / "reports" / "lean_graph_world_inventory.json")
-    interop_data = _load_json(root / "output" / "data" / "interop_roundtrip_report.json")
-    adversarial_data = _load_json(root / "output" / "reports" / "adversarial_audit.json")
-    semantic_data = _load_json(root / "output" / "data" / "sheaf_gluing_certificate.json")
-    dependency_data = _load_json(root / "output" / "data" / "validation_dependency_graph.json")
-    stale_data = _load_json(root / "output" / "reports" / "stale_artifact_report.json")
-    manuscript_staleness_data = _load_json(root / "output" / "reports" / "manuscript_staleness_report.json")
-    figure_source_data = _load_json(root / "output" / "data" / "figure_source_map.json")
-    visualization_quality_data = _load_json(root / "output" / "reports" / "visualization_quality_audit.json")
-    statistical_bridge_data = _load_json(root / "output" / "data" / "statistical_visualization_bridge.json")
-    scope_data = _load_json(root / "output" / "reports" / "scope_boundary_audit.json")
-    gate_index_data = _load_json(root / "output" / "data" / "validation_gate_index.json")
-    section_status_data = _load_json(root / "output" / "data" / "sheaf_section_status_matrix.json")
-    render_log_data = _load_json(root / "output" / "reports" / "sheaf_render_log.json")
-    claim_audit_data = _load_json(root / "output" / "reports" / "claim_evidence_audit.json")
-    token_provenance_data = _load_json(root / "output" / "data" / "manuscript_token_provenance.json")
-    cross_symbol_data = _load_json(root / "output" / "data" / "cross_track_symbol_table.json")
-    assumption_data = _load_json(root / "output" / "data" / "analytical_assumption_index.json")
-    animation_delta_data = _load_json(root / "output" / "data" / "animation_frame_deltas.json")
-    replay_matrix_data = _load_json(root / "output" / "reports" / "replay_matrix.json")
-    track_scope_data = _load_json(root / "output" / "data" / "track_improvement_scope.json")
-    blocked_scope_data = _load_json(root / "output" / "reports" / "blocked_scope_manifest.json")
-    evidence_fields_data = _load_json(root / "output" / "data" / "evidence_field_index.json")
-    release_bundle_data = _load_json(root / "output" / "reports" / "release_bundle_manifest.json")
-    theorem_traceability_data = _load_json(root / "output" / "data" / "theorem_traceability_matrix.json")
-    artifact_diffoscope_data = _load_json(root / "output" / "reports" / "artifact_diffoscope.json")
-    proof_extraction_data = _load_json(root / "output" / "data" / "proof_extraction_index.json")
-    state_space_catalog_data = _load_json(root / "output" / "data" / "state_space_catalog.json")
-    causal_ablation_data = _load_json(root / "output" / "data" / "causal_ablation_matrix.json")
-    artifact_license_data = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
-    release_notes_data = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
-    scholarship_data = _load_json(root / "output" / "data" / "scholarship_source_matrix.json")
-    proof_dependency_data = _load_json(root / "output" / "data" / "proof_dependency_graph.json")
-    state_transition_data = _load_json(root / "output" / "data" / "state_transition_table.json")
-    ablation_sensitivity_data = _load_json(root / "output" / "reports" / "ablation_sensitivity_report.json")
-    release_attestation_data = _load_json(root / "output" / "reports" / "release_attestation.json")
-    si_stats = stats_data.get("si_tmaze") or {}
-    sweep_stats = stats_data.get("sweep") or {}
-    policy_summary = policy_data.get("summary") or {}
-    policy_goal_by_mode = _policy_goal_counts_by_mode(policy_data)
+def _load_variable_artifacts(root: Path) -> dict[str, dict[str, Any]]:
+    """Load optional generated artifacts used by manuscript tokens."""
+    return {name: _load_json(root / rel_path) for name, rel_path in VARIABLE_ARTIFACTS.items()}
 
-    mean_entropy = float(si_data.get("mean_belief_entropy", si_stats.get("entropy_mean", 0.0)))
-    from manuscript.sheaf.counts import structural_counts
 
-    counts = structural_counts(root)
+def _core_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
+    """Return project, analytical, invariant, and structural manuscript tokens."""
+    root = ctx["root"]
+    hp = ctx["hp"]
+    pymdp_cfg = ctx["pymdp_cfg"]
+    sweep_rows = ctx["sweep_rows"]
     return {
         "project_name": root.name,
         "lambda_grid_points": hp.lambda_grid_points,
@@ -265,8 +256,29 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "ising_mi_saturation": _ising_mi_saturation_from_sweep(sweep_rows),
         "free_energy_argmin_lambda": _free_energy_argmin_lambda(hp),
         "bernoulli_ontology_term_count": len(BERNOULLI_EXPECTED_TERMS),
-        "invariants_passed": inv_passed,
-        "invariants_total": inv_total,
+        "invariants_passed": ctx["inv_passed"],
+        "invariants_total": ctx["inv_total"],
+        "sweep_max_residual": ctx["sweep_stats"].get("max_residual", 0.0),
+        "sweep_rmse_mi": ctx["sweep_stats"].get("rmse_mi", 0.0),
+        "pipeline_track_count": _pipeline_track_count(root),
+        **ctx["counts"],
+    }
+
+
+def _simulation_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
+    """Return SI, PyMDP runtime, posterior, and graph-world manuscript tokens."""
+    si_data = ctx["si_data"]
+    si_stats = ctx["si_stats"]
+    stats_data = ctx["stats_data"]
+    pymdp_cfg = ctx["pymdp_cfg"]
+    policy_summary = ctx["policy_summary"]
+    policy_goal_by_mode = ctx["policy_goal_by_mode"]
+    posterior_data = ctx["posterior_data"]
+    runtime_data = ctx["runtime_data"]
+    graph_data = ctx["graph_data"]
+    graph_topology_traces = ctx["graph_topology_traces"]
+    mean_entropy = ctx["mean_entropy"]
+    return {
         "si_tmaze_steps": si_data.get("steps", si_stats.get("steps", 0)),
         "si_tmaze_policy_len": si_data.get("policy_len", pymdp_cfg.policy_len),
         "si_tmaze_mean_belief_entropy": mean_entropy,
@@ -284,8 +296,6 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "si_trace_finite": bool(si_stats.get("finite_trace", False)),
         "si_entropy_min": si_stats.get("entropy_min", 0.0),
         "si_entropy_max": si_stats.get("entropy_max", 0.0),
-        "sweep_max_residual": sweep_stats.get("max_residual", 0.0),
-        "sweep_rmse_mi": sweep_stats.get("rmse_mi", 0.0),
         "pymdp_mode": stats_data.get("pymdp_mode", si_data.get("mode", pymdp_cfg.mode)),
         "pymdp_config_hash": stats_data.get("pymdp_config_hash", si_data.get("config_hash", "")),
         "si_policy_comparison_run_count": policy_summary.get("run_count", 0),
@@ -311,6 +321,15 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "si_graph_world_goal_reached": int(bool(graph_data.get("goal_reached", False))),
         "si_graph_world_topology_trace_count": graph_topology_traces.get("topology_count", 0),
         "si_graph_world_topology_traces_agree": int(bool(graph_topology_traces.get("all_trace_summary_agree", False))),
+    }
+
+
+def _validation_spine_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
+    """Return provenance, replay, and counterexample manuscript tokens."""
+    provenance_data = ctx["provenance_data"]
+    replay_data = ctx["replay_data"]
+    counterexample_data = ctx["counterexample_data"]
+    return {
         "validation_spine_artifact_count": provenance_data.get("artifact_count", 0),
         "provenance_seeded_count": sum(
             1
@@ -326,6 +345,21 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "counterexample_all_known_bad_fail": int(
             bool(counterexample_data.get("all_expected_failures_observed", False))
         ),
+    }
+
+
+def _toy_formal_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
+    """Return promoted toy-sweep, formal-interop, and animation manuscript tokens."""
+    sensitivity_data = ctx["sensitivity_data"]
+    assumption_data = ctx["assumption_data"]
+    uncertainty_data = ctx["uncertainty_data"]
+    benchmark_data = ctx["benchmark_data"]
+    model_checking_data = ctx["model_checking_data"]
+    lean_graph_data = ctx["lean_graph_data"]
+    interop_data = ctx["interop_data"]
+    adversarial_data = ctx["adversarial_data"]
+    animation_delta_data = ctx["animation_delta_data"]
+    return {
         "sensitivity_cell_count": sensitivity_data.get("row_count", 0),
         "sensitivity_complete_grid": bool(sensitivity_data.get("complete_grid", False)),
         "analytical_assumption_count": assumption_data.get("row_count", 0),
@@ -348,6 +382,26 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "adversarial_known_bad_passed": adversarial_data.get("known_bad_rows_passed", 0),
         "animation_delta_count": animation_delta_data.get("delta_count", 0),
         "animation_deltas_all_nonzero": bool(animation_delta_data.get("all_nonzero", False)),
+    }
+
+
+def _semantic_visualization_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
+    """Return semantic, visualization, staleness, and cross-track manuscript tokens."""
+    semantic_data = ctx["semantic_data"]
+    dependency_data = ctx["dependency_data"]
+    stale_data = ctx["stale_data"]
+    manuscript_staleness_data = ctx["manuscript_staleness_data"]
+    figure_source_data = ctx["figure_source_data"]
+    visualization_quality_data = ctx["visualization_quality_data"]
+    statistical_bridge_data = ctx["statistical_bridge_data"]
+    scope_data = ctx["scope_data"]
+    gate_index_data = ctx["gate_index_data"]
+    section_status_data = ctx["section_status_data"]
+    render_log_data = ctx["render_log_data"]
+    claim_audit_data = ctx["claim_audit_data"]
+    token_provenance_data = ctx["token_provenance_data"]
+    cross_symbol_data = ctx["cross_symbol_data"]
+    return {
         "semantic_restriction_count": len(semantic_data.get("restrictions") or {}),
         "semantic_ok": bool(semantic_data.get("ok", False)),
         "dependency_edge_type_count": len(dependency_data.get("edge_types") or []),
@@ -402,6 +456,31 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "token_provenance_count": token_provenance_data.get("token_count", 0),
         "cross_track_symbol_count": cross_symbol_data.get("symbol_count", 0),
         "cross_track_symbols_consistent": int(bool(cross_symbol_data.get("all_consistent", False))),
+    }
+
+
+def _canonical_sheaf_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
+    """Return canonical sheaf-track, release, proof, and scholarship tokens."""
+    provenance_data = ctx["provenance_data"]
+    replay_matrix_data = ctx["replay_matrix_data"]
+    uncertainty_data = ctx["uncertainty_data"]
+    track_scope_data = ctx["track_scope_data"]
+    blocked_scope_data = ctx["blocked_scope_data"]
+    evidence_fields_data = ctx["evidence_fields_data"]
+    release_bundle_data = ctx["release_bundle_data"]
+    theorem_traceability_data = ctx["theorem_traceability_data"]
+    artifact_diffoscope_data = ctx["artifact_diffoscope_data"]
+    proof_extraction_data = ctx["proof_extraction_data"]
+    state_space_catalog_data = ctx["state_space_catalog_data"]
+    causal_ablation_data = ctx["causal_ablation_data"]
+    artifact_license_data = ctx["artifact_license_data"]
+    release_notes_data = ctx["release_notes_data"]
+    scholarship_data = ctx["scholarship_data"]
+    proof_dependency_data = ctx["proof_dependency_data"]
+    state_transition_data = ctx["state_transition_data"]
+    ablation_sensitivity_data = ctx["ablation_sensitivity_data"]
+    release_attestation_data = ctx["release_attestation_data"]
+    return {
         "provenance_bundle_count": provenance_data.get("bundle_count", 0),
         "provenance_bundle_complete": bool(provenance_data.get("all_bundles_complete", False)),
         "replay_matrix_check_count": replay_matrix_data.get("check_count", replay_matrix_data.get("row_count", 0)),
@@ -444,6 +523,95 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         "ablation_sensitivity_source_backed": bool(ablation_sensitivity_data.get("all_effects_source_backed", False)),
         "release_attestation_row_count": release_attestation_data.get("row_count", 0),
         "release_attestation_all_attested": bool(release_attestation_data.get("all_attested", False)),
-        "pipeline_track_count": _pipeline_track_count(root),
-        **counts,
     }
+
+
+VARIABLE_TOKEN_BUILDERS = (
+    _core_token_values,
+    _simulation_token_values,
+    _validation_spine_token_values,
+    _toy_formal_token_values,
+    _semantic_visualization_token_values,
+    _canonical_sheaf_token_values,
+)
+
+
+def generate_variables(project_root: Path, *, require_analysis_outputs: bool = True) -> dict[str, Any]:
+    """Generate manuscript tokens from live configuration and output artifacts."""
+    root = project_root.resolve()
+    hp = load_hyperparameters()
+    pymdp_cfg = load_pymdp_config(root)
+    sweep_path = root / "output" / "data" / "parameter_sweep.csv"
+    si_summary = root / "output" / "data" / "si_tmaze_summary.json"
+    stats_path = root / "output" / "data" / "analysis_statistics.json"
+    inv_passed, inv_total = load_invariant_counts(root)
+
+    if require_analysis_outputs and not sweep_path.exists():
+        raise FileNotFoundError(f"missing analysis artifact: {sweep_path}")
+
+    sweep_rows = read_parameter_sweep(sweep_path)
+    si_data = _load_json(si_summary)
+    stats_data = _load_json(stats_path)
+    artifacts = _load_variable_artifacts(root)
+    policy_data = artifacts["policy"]
+    posterior_data = artifacts["posterior"]
+    runtime_data = artifacts["runtime"]
+    graph_data = artifacts["graph"]
+    graph_topology_traces = artifacts["graph_topology_traces"]
+    provenance_data = artifacts["provenance"]
+    replay_data = artifacts["replay"]
+    counterexample_data = artifacts["counterexample"]
+    sensitivity_data = artifacts["sensitivity"]
+    uncertainty_data = artifacts["uncertainty"]
+    benchmark_data = artifacts["benchmark"]
+    model_checking_data = artifacts["model_checking"]
+    lean_graph_data = artifacts["lean_graph"]
+    interop_data = artifacts["interop"]
+    adversarial_data = artifacts["adversarial"]
+    semantic_data = artifacts["semantic"]
+    dependency_data = artifacts["dependency"]
+    stale_data = artifacts["stale"]
+    manuscript_staleness_data = artifacts["manuscript_staleness"]
+    figure_source_data = artifacts["figure_source"]
+    visualization_quality_data = artifacts["visualization_quality"]
+    statistical_bridge_data = artifacts["statistical_bridge"]
+    scope_data = artifacts["scope"]
+    gate_index_data = artifacts["gate_index"]
+    section_status_data = artifacts["section_status"]
+    render_log_data = artifacts["render_log"]
+    claim_audit_data = artifacts["claim_audit"]
+    token_provenance_data = artifacts["token_provenance"]
+    cross_symbol_data = artifacts["cross_symbol"]
+    assumption_data = artifacts["assumption"]
+    animation_delta_data = artifacts["animation_delta"]
+    replay_matrix_data = artifacts["replay_matrix"]
+    track_scope_data = artifacts["track_scope"]
+    blocked_scope_data = artifacts["blocked_scope"]
+    evidence_fields_data = artifacts["evidence_fields"]
+    release_bundle_data = artifacts["release_bundle"]
+    theorem_traceability_data = artifacts["theorem_traceability"]
+    artifact_diffoscope_data = artifacts["artifact_diffoscope"]
+    proof_extraction_data = artifacts["proof_extraction"]
+    state_space_catalog_data = artifacts["state_space_catalog"]
+    causal_ablation_data = artifacts["causal_ablation"]
+    artifact_license_data = artifacts["artifact_license"]
+    release_notes_data = artifacts["release_notes"]
+    scholarship_data = artifacts["scholarship"]
+    proof_dependency_data = artifacts["proof_dependency"]
+    state_transition_data = artifacts["state_transition"]
+    ablation_sensitivity_data = artifacts["ablation_sensitivity"]
+    release_attestation_data = artifacts["release_attestation"]
+    si_stats = stats_data.get("si_tmaze") or {}
+    sweep_stats = stats_data.get("sweep") or {}
+    policy_summary = policy_data.get("summary") or {}
+    policy_goal_by_mode = _policy_goal_counts_by_mode(policy_data)
+
+    mean_entropy = float(si_data.get("mean_belief_entropy", si_stats.get("entropy_mean", 0.0)))
+    from manuscript.sheaf.counts import structural_counts
+
+    counts = structural_counts(root)
+    context = locals()
+    variables: dict[str, Any] = {}
+    for build_tokens in VARIABLE_TOKEN_BUILDERS:
+        variables.update(build_tokens(context))
+    return variables

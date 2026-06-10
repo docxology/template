@@ -1,12 +1,91 @@
 # template_active_inference
 
-Public exemplar: **sheaf-composed** Active Inference manuscript with configurable multi-track sections (analytical, pymdp, GNN, ontology, Lean, visualizations, provenance, replay matrix, counterexamples, sensitivity, uncertainty, benchmark, model-checking, interop, adversarial audit, evidence fields, scholarship, release bundle, theorem traceability, gate ergonomics, assumption indexing, animation deltas, and manuscript staleness).
+Public exemplar: **sheaf-composed** Active Inference manuscript with configurable
+multi-track sections. The live surface is declared in [`tracks.yaml`](tracks.yaml),
+[`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml), and
+[`figures.yaml`](figures.yaml); generated artifacts and gates, not prose lists,
+define the current contract.
+
+## When to use this template
+
+Use this template when **several independent research tracks must compose into
+one manuscript whose claims stay consistent where the tracks overlap** — here:
+a closed-form analytical oracle, a pymdp simulation harness, a Lean
+formalization boundary, and shared GNN/ontology notation. Every section of the
+paper is a typed fragment bound to one or more tracks, and machine-checked
+composition laws (not an editor's eyeball) prove the fragments glue into a
+single coherent document. If your project is single-method, start from
+[`template_code_project`](../template_code_project/) instead; for the full
+roster see
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+
+## Why sheaf composition?
+
+The problem: N tracks evolve independently (an analyst edits the closed-form
+derivation while a simulation run regenerates posterior tables), yet the
+manuscript must remain ONE document with no contradictions at the seams.
+"Sheaf" here means exactly what the code enforces — a coverage presheaf over
+the IMRAD section poset with law-verified gluing, not sheaf cohomology:
+
+- **Locality** — each section×track binding is validated in isolation
+  (fragment exists, renderer type-checks).
+- **Gluing** — sections compose in a strict linear extension of the IMRAD
+  order; every composing section appears exactly once.
+- **Separation** — distinct sections cannot collide on one output file.
+- **Semantic restriction** — symbols shared across tracks (e.g. the Bernoulli
+  entropy value) are cross-checked in
+  `output/data/sheaf_gluing_certificate.json`, so overlap consistency is an
+  artifact, not a hope.
+
+The six laws (poset, presheaf, separation, gluing, typing, compositionality)
+live in [`src/manuscript/sheaf/laws.py`](src/manuscript/sheaf/laws.py), each
+with a negative-control test that proves the law actually fires. See
+[`src/manuscript/sheaf/README.md`](src/manuscript/sheaf/README.md) for the
+engine's module map.
+
+## Adding a track
+
+1. Declare the track in
+   [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml) — id,
+   `order` (global compose position), `renderer`, `label`, `optional` flag.
+2. Bind it to sections in
+   [`manuscript/sheaf/manifest.yaml`](manuscript/sheaf/manifest.yaml)
+   (`tracks: {your_track: relative/fragment/path}` per section).
+3. Create the fragment files under `manuscript/sections/imrad/<section>/`.
+4. Validate the laws and coverage:
+   `uv run python scripts/compose_manuscript.py --validate-only --strict`.
+5. For a *validated* track (producer + artifact + gate + negative control),
+   follow the seven-step promotion checklist in [`TODO.md`](TODO.md).
+
+## Repository orientation
+
+- [`docs/conceptual-foundations.md`](docs/conceptual-foundations.md) — the
+  full intellectual grounding: Active Inference and EFE, cellular sheaves
+  over the IMRAD poset, semantic gluing, the Lean 4 boundary, GNN/AIO
+  notation contracts, and further reading.
+- [`ISA.md`](ISA.md) — the project's Ideal State Artifact (design record and
+  criteria history).
+- [`TODO.md`](TODO.md) — backlog and the track promotion rule (a capability is
+  live only when producer, artifact, manuscript consumer, claim evidence,
+  semantic restriction, validation gate, and negative control all exist).
+- [`STANDALONE.md`](STANDALONE.md) — how to copy this project out of the
+  monorepo and run it independently (the sheaf engine under
+  `src/manuscript/sheaf/` is deliberately generic; the registries are the
+  bespoke part).
+- [`AGENTS.md`](AGENTS.md) — module map and agent-facing contracts.
 
 ## Quick start
+
+From the template repository root:
 
 ```bash
 uv sync --directory projects/templates/template_active_inference --extra dev
 cd projects/templates/template_active_inference
+```
+
+From this project root:
+
+```bash
 uv run python scripts/compose_manuscript.py
 uv run python scripts/run_analytical_sweep.py
 uv run python scripts/simulate_si_tmaze.py
@@ -27,8 +106,8 @@ uv run pytest tests/ --cov=src --cov-fail-under=90
 From repo root:
 
 ```bash
-uv run python scripts/01_run_tests.py --project template_active_inference
-./run.sh --project template_active_inference --pipeline --core-only
+uv run python scripts/01_run_tests.py --project templates/template_active_inference
+./run.sh --project templates/template_active_inference --pipeline --core-only
 ```
 
 ## Sheaf composition
@@ -75,7 +154,14 @@ T-maze sophisticated inference uses planning horizon `policy_len` from measured 
 
 ## Pipeline tracks
 
-See [`tracks.yaml`](tracks.yaml). **Pipeline:** required tracks are declared there, including the core analytical/pymdp/formal/notation/visual tracks, validation spine, and canonical promoted roadmap tracks. **Sheaf registry:** fragment types live in [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml); the appendix binds the full proof row except `layers`, which is methods-only. **Deterministic extension artifacts** (thin scripts -> `src/`): `simulate_si_tmaze.py` writes policy comparison, posterior-grid, and runtime-diagnostic artifacts; `simulate_si_graph_world.py` writes graph-world summary/trace artifacts; `render_animation.py` writes a trace-derived multi-frame GIF plus frame-delta manifest; `generate_validation_spine.py`, `generate_toy_sweep_tracks.py`, `generate_formal_interop_tracks.py`, `generate_integration_audit.py`, and `generate_sheaf_tracks.py` write the canonical validation spine, semantic certificate, dependency graph, evidence-field index, release-bundle manifest, theorem traceability matrix, gate index, artifact diffoscope, proof extraction index, state-space catalog, causal-ablation matrix, artifact license audit, release-note evidence, and promoted audit artifacts.
+See [`tracks.yaml`](tracks.yaml). **Pipeline:** required tracks are declared
+there, including core analytical/pymdp/formal/notation/visual tracks plus the
+canonical validation and audit producers. **Sheaf registry:** fragment types live
+in [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml); the appendix
+binds the full proof row except `layers`, which is methods-only. Thin scripts in
+[`scripts/`](scripts/) delegate to `src/` and write deterministic local artifacts
+under `output/`; `scripts/README.md` names the current producers and
+`scripts/validate_outputs.py` checks their generated contracts.
 
 Non-blocking future work is tracked in [`TODO.md`](TODO.md); current publication claims remain confined to deterministic toy Active Inference artifacts.
 
@@ -83,10 +169,17 @@ Non-blocking future work is tracked in [`TODO.md`](TODO.md); current publication
 
 Every Python `def` and `class` under `src/` and `scripts/` is documented in the
 generated reference [`docs/reference/method-inventory.md`](docs/reference/method-inventory.md).
-Regenerate it after method, script, or module changes:
+Regenerate it after method, script, or module changes.
+
+## Documentation verification
+
+Run the documentation and artifact contract checks from this project root:
 
 ```bash
-uv run python scripts/generate_method_inventory.py
+uv run python scripts/check_documentation_contract.py --check
+uv run python scripts/generate_method_inventory.py --check
+uv run python scripts/compose_manuscript.py --validate-only --strict
+uv run python scripts/validate_outputs.py
 ```
 
 The inventory distinguishes inline docstrings from inventory fallbacks, so missing

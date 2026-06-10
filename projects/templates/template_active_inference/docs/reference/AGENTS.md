@@ -23,8 +23,8 @@ rendering reproducibility, replay expectations, and artifact provenance.
 ## Verification
 
 ```bash
-uv run --directory projects/templates/template_active_inference \
-  python scripts/generate_method_inventory.py --check
-uv run --directory projects/templates/template_active_inference \
-  python scripts/validate_outputs.py
+uv run python scripts/check_documentation_contract.py --check
+uv run python scripts/generate_method_inventory.py --check
+uv run python scripts/compose_manuscript.py --validate-only --strict
+uv run python scripts/validate_outputs.py
 ```

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import matplotlib
@@ -18,7 +17,16 @@ from gnn.parser import parse_gnn_file
 from manuscript.sheaf.counts import structural_counts
 from ontology.bindings import load_section_ontology
 from simulation.tmaze_model import TMazeSpec
-from .figure_helpers import save_styled_figure, styled_figure, style_grid, wrap_text
+from .figure_helpers import (
+    configure_axis,
+    draw_arrow,
+    draw_column_headers,
+    load_json_artifact,
+    save_styled_figure,
+    styled_figure,
+    text_box,
+    wrap_text,
+)
 from .lean_boundary import load_lean_boundary_rows
 
 
@@ -26,7 +34,7 @@ def _load_invariant_blocks(project_root: Path) -> list[tuple[str, str, bool]]:
     path = project_root / "output" / "reports" / "invariants.json"
     if not path.is_file():
         return []
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = load_json_artifact(project_root, "output/reports/invariants.json")
     rows: list[tuple[str, str, bool]] = []
     for name, passed in sorted((payload.get("invariants") or {}).items()):
         rows.append(("analytical", str(name), bool(passed)))
@@ -53,8 +61,12 @@ def figure_invariant_dashboard(project_root: Path) -> Path:
         ax.set_xlim(0, 1.15)
         ax.set_xticks([0, 1])
         ax.set_xticklabels(["fail", "pass"])
-        ax.set_xlabel("Invariant status")
-        ax.set_title(f"Analytical and simulation invariant dashboard ({sum(values):.0f}/{len(values)} pass)")
+        configure_axis(
+            ax,
+            style,
+            title=f"Analytical and simulation invariant dashboard ({sum(values):.0f}/{len(values)} pass)",
+            xlabel="Invariant status",
+        )
         for idx, (_, _, passed) in enumerate(rows):
             ax.text(
                 1.02,
@@ -64,7 +76,6 @@ def figure_invariant_dashboard(project_root: Path) -> Path:
                 fontsize=7,
                 color=style.color("primary"),
             )
-        style_grid(ax, style)
         ax.grid(axis="x", alpha=0.25)
         ax.text(
             0.0,
@@ -204,18 +215,8 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
         draw_group_column(3.45, f"Pipeline gates ({len(pipeline_labels)})", pipeline_groups, width=2.55)
         draw_group_column(6.75, f"Sheaf fragments ({counts['sheaf_track_count']})", sheaf_groups, width=2.75)
         for y in (3.0, 3.8, 4.6):
-            ax.annotate(
-                "",
-                xy=(3.35, y),
-                xytext=(2.95, y),
-                arrowprops=dict(arrowstyle="-|>", color=style.color("muted")),
-            )
-            ax.annotate(
-                "",
-                xy=(6.65, y),
-                xytext=(6.15, y),
-                arrowprops=dict(arrowstyle="-|>", color=style.color("muted")),
-            )
+            draw_arrow(ax, 2.95, 3.35, y, style)
+            draw_arrow(ax, 6.15, 6.65, y, style)
         ax.text(
             5.0,
             0.42,
@@ -283,26 +284,20 @@ def figure_gnn_ontology_concordance(project_root: Path) -> Path:
         ax.set_xlim(0, 10)
         ax.set_ylim(-0.5, len(pairs))
         ax.axis("off")
-        ax.text(1.2, len(pairs) - 0.1, "Analytical symbol", fontweight="bold", fontsize=9)
-        ax.text(4.0, len(pairs) - 0.1, "GNN variable", fontweight="bold", fontsize=9)
-        ax.text(7.0, len(pairs) - 0.1, "Ontology term", fontweight="bold", fontsize=9)
+        draw_column_headers(
+            ax,
+            [1.2, 4.0, 7.0],
+            ["Analytical symbol", "GNN variable", "Ontology term"],
+            style,
+            y=len(pairs) - 0.1,
+        )
         for idx, (symbol, var, onto) in enumerate(pairs):
             y = len(pairs) - idx - 1
-            ax.text(1.2, y, symbol, fontsize=8, va="center")
-            ax.text(4.0, y, wrap_text(var, 20), fontsize=8, va="center", color=style.color("secondary"))
-            ax.text(7.0, y, wrap_text(onto, 22), fontsize=8, va="center", color=style.color("accent"))
-            ax.annotate(
-                "",
-                xy=(3.6, y),
-                xytext=(2.0, y),
-                arrowprops=dict(arrowstyle="-", color=style.color("grid")),
-            )
-            ax.annotate(
-                "",
-                xy=(6.6, y),
-                xytext=(4.8, y),
-                arrowprops=dict(arrowstyle="-", color=style.color("grid")),
-            )
+            text_box(ax, 1.2, y, symbol, style, width=16, edge_role="grid", fontsize=8)
+            text_box(ax, 4.0, y, var, style, width=20, edge_role="secondary", fontsize=8)
+            text_box(ax, 7.0, y, onto, style, width=22, edge_role="accent", fontsize=8)
+            draw_arrow(ax, 2.0, 3.6, y, style)
+            draw_arrow(ax, 4.8, 6.6, y, style)
         ax.set_title(f"GNN ↔ ontology concordance ({model.version})")
         save_styled_figure(fig, out, style)
     return out

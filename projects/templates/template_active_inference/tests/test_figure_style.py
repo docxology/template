@@ -3,7 +3,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from PIL import Image
 
-from visualizations.figure_io import save_figure_png
+from visualizations.figure_io import image_render_metrics, save_figure_png
 from visualizations.figure_registry import load_figure_registry, render_figure_markdown
 from visualizations.figure_style import apply_style, load_figure_style
 
@@ -52,6 +52,23 @@ def test_save_figure_png_can_skip_rgb_normalization(tmp_path: Path) -> None:
 
     with Image.open(out) as img:
         assert img.mode in {"RGBA", "LA", "P"}
+
+
+def test_image_render_metrics_detects_blank_and_nonblank_png(tmp_path: Path) -> None:
+    blank = tmp_path / "blank.png"
+    nonblank = tmp_path / "nonblank.png"
+    Image.new("RGB", (80, 40), "white").save(blank)
+    image = Image.new("RGB", (80, 40), "white")
+    image.putpixel((10, 10), (0, 0, 0))
+    image.save(nonblank)
+
+    blank_metrics = image_render_metrics(blank)
+    nonblank_metrics = image_render_metrics(nonblank)
+
+    assert blank_metrics["exists"] is True
+    assert blank_metrics["nonblank"] is False
+    assert nonblank_metrics["nonblank"] is True
+    assert nonblank_metrics["aspect_ratio"] == 2.0
 
 
 def test_figure_registry_and_markdown() -> None:

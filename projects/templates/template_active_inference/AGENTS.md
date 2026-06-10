@@ -1,6 +1,10 @@
 # AGENTS.md — template_active_inference
 
-Multi-track Active Inference public exemplar. Manuscript sections follow an **IMRAD outline** composed from stable canonical sheaf fragment tracks (prose, formalism, simulation, assumption index, pymdp, interop, provenance, replay matrix, counterexample, adversarial audit, evidence fields, scholarship, release bundle, gate ergonomics, sensitivity, uncertainty, benchmark, manuscript staleness, visualization, Lean, model checking, theorem traceability, GNN, ontology, animation, animation delta).
+Multi-track Active Inference public exemplar. Manuscript sections follow an
+**IMRAD outline** composed from stable canonical sheaf fragment tracks. The live
+track surface is declared in [`tracks.yaml`](tracks.yaml) and
+[`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml), not by
+hand-maintained prose lists.
 
 Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
@@ -26,7 +30,7 @@ uv run python scripts/z_generate_manuscript_variables.py
 
 Full compose calls `emit_coverage_artifacts()` → JSON only. `generate_figures.py` calls `ensure_coverage_artifacts()` for heatmap PNG + regenerated [`manuscript/00_00_sheaf_coverage.md`](manuscript/00_00_sheaf_coverage.md). Coverage PNG/page emission is no longer part of `compose_all_sections()` (script is a thin CLI wrapper).
 
-**Visualization track:** renderer `section_figures` in [`tracks.yaml`](manuscript/sheaf/tracks.yaml); `resolve_track_body()` calls `render_section_figures()` (fragment `.md` files are stubs).
+**Visualization track:** renderer `section_figures` in [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml); `resolve_track_body()` calls `render_section_figures()` (fragment `.md` files are stubs).
 
 **Generated renderers:** `section_figures` (figures from `figures.yaml`) and `layers_report` (registry + binding matrix tables). Dispatch is centralized in [`renderers.resolve_track_body()`](src/manuscript/sheaf/renderers.py) — no section-specific branches in `compose.py`.
 
@@ -65,17 +69,13 @@ shared GNN/ontology symbols, typed claim evidence, artifact producers, artifact
 consumers, validation gates, and manuscript variables. `validate_manuscript`
 fails if the certificate is missing, stale, or records cross-track disagreement.
 `generate_integration_audit.py` writes producer, stale-artifact, token-provenance,
-figure-source, figure-hash, visualization-quality, statistical-visualization bridge, claim-audit, scope-boundary,
-manuscript-staleness, and adversarial audit reports. `generate_sheaf_tracks.py` is the canonical promotion producer: it
-writes `output/data/sheaf_gluing_certificate.json`,
-`output/data/validation_dependency_graph.json`,
-`output/data/evidence_field_index.json`,
-`output/reports/release_bundle_manifest.json`,
-`output/data/theorem_traceability_matrix.json`,
-`output/data/track_improvement_scope.json`, and the canonical replay, sensitivity,
-uncertainty, counterexample, model-checking, interop, adversarial, provenance, and
-blocked-scope artifacts. `validate_outputs` and `validate_manuscript` require the
-canonical saved artifacts after regeneration; versioned live track IDs and
+figure-source, figure-hash, visualization-quality, statistical-visualization
+bridge, claim-audit, scope-boundary, manuscript-staleness, and adversarial audit
+reports. `generate_sheaf_tracks.py` is the canonical promotion producer for the
+semantic certificate, dependency graph, evidence-field index, release bundle,
+theorem traceability, track-improvement, blocked-scope, and consolidated
+promoted track artifacts. `validate_outputs` and `validate_manuscript` require
+the canonical saved artifacts after regeneration; versioned live track IDs and
 versioned public output paths are intentionally not part of the live contract.
 
 ## pymdp configuration
@@ -173,12 +173,15 @@ Edit fragments only under [`manuscript/sections/imrad/`](manuscript/sections/imr
 
 ```bash
 uv run python scripts/compose_manuscript.py
+uv run python scripts/check_documentation_contract.py --check
+uv run python scripts/generate_method_inventory.py --check
+uv run python scripts/compose_manuscript.py --validate-only --strict
 uv run pytest tests/ --cov=src --cov-fail-under=90
 uv run python scripts/validate_outputs.py
 ```
 
 ## Parent docs
 
-- Root [`AGENTS.md`](../../AGENTS.md)
+- Root [`AGENTS.md`](../../../AGENTS.md)
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md)
 - [`tracks.yaml`](tracks.yaml)

@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -41,6 +42,19 @@ def test_generate_variables_with_outputs() -> None:
     assert vars_["statistical_visualization_bridge_references_visualization_bound"] is True
     assert vars_["si_trace_steps_match"] is True
     assert vars_["si_trace_finite"] is True
+
+
+def test_generate_variables_is_deterministic_and_matches_artifact_key_surface(project_root: Path) -> None:
+    snapshot_path = project_root / "output" / "data" / "manuscript_variables.json"
+    if not snapshot_path.is_file():
+        pytest.skip("manuscript variable artifact missing; run z_generate_manuscript_variables.py")
+
+    snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    actual = generate_variables(project_root, require_analysis_outputs=False)
+    repeated = generate_variables(project_root, require_analysis_outputs=False)
+
+    assert set(actual) == set(snapshot)
+    assert repeated == actual
 
 
 def test_invariant_counts_include_simulation_when_merged() -> None:

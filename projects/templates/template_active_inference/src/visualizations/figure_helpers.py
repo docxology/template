@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import json
 from collections.abc import Iterator
 from pathlib import Path
 from textwrap import fill
@@ -26,8 +27,11 @@ def save_styled_figure(fig, path: Path, style: FigureStyleConfig) -> Path:
 def style_grid(ax, style: FigureStyleConfig) -> None:
     if style.grid:
         ax.grid(True, alpha=0.25, color=style.color("grid"), linewidth=0.8)
+    ax.spines["left"].set_color(style.color("grid"))
+    ax.spines["bottom"].set_color(style.color("grid"))
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
+    ax.tick_params(color=style.color("grid"), labelcolor=style.color("primary"))
 
 
 def wrap_text(text: object, width: int = 22) -> str:
@@ -56,6 +60,89 @@ def add_note(
         color=style.color("primary"),
         bbox=dict(boxstyle="round,pad=0.3", facecolor="#ffffff", edgecolor=style.color("grid"), alpha=0.92),
     )
+
+
+def configure_axis(
+    ax,
+    style: FigureStyleConfig,
+    *,
+    title: str,
+    xlabel: str | None = None,
+    ylabel: str | None = None,
+    integer_x: bool = False,
+    integer_y: bool = False,
+    title_loc: str | None = None,
+    title_size: float | None = None,
+) -> None:
+    """Apply the common publication axis treatment."""
+    from matplotlib.ticker import MaxNLocator
+
+    if xlabel:
+        ax.set_xlabel(xlabel)
+    if ylabel:
+        ax.set_ylabel(ylabel)
+    if title_loc is None:
+        ax.set_title(title, fontsize=title_size)
+    else:
+        ax.set_title(title, loc=title_loc, fontsize=title_size)
+    if integer_x:
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    if integer_y:
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    style_grid(ax, style)
+
+
+def text_box(
+    ax,
+    x: float,
+    y: float,
+    text: object,
+    style: FigureStyleConfig,
+    *,
+    width: int = 28,
+    edge_role: str = "grid",
+    facecolor: str = "#ffffff",
+    fontsize: float = 7.5,
+    weight: str | None = None,
+    ha: str = "left",
+    va: str = "center",
+) -> None:
+    """Draw a wrapped labeled box in axes/data coordinates."""
+    ax.text(
+        x,
+        y,
+        wrap_text(text, width),
+        fontsize=fontsize,
+        va=va,
+        ha=ha,
+        linespacing=1.05,
+        weight=weight,
+        color=style.color("primary"),
+        bbox=dict(boxstyle="round,pad=0.25", facecolor=facecolor, edgecolor=style.color(edge_role)),
+    )
+
+
+def draw_column_headers(
+    ax, columns: list[float], headers: list[str], style: FigureStyleConfig, *, y: float = 0.94
+) -> None:
+    """Draw aligned column headers for flow/table figures."""
+    for x, header in zip(columns, headers, strict=True):
+        ax.text(x, y, header, weight="bold", color=style.color("primary"), fontsize=10)
+
+
+def draw_arrow(ax, start_x: float, end_x: float, y: float, style: FigureStyleConfig) -> None:
+    """Draw a compact left-to-right flow arrow."""
+    ax.annotate(
+        "",
+        xy=(end_x, y),
+        xytext=(start_x, y),
+        arrowprops={"arrowstyle": "->", "color": style.color("muted"), "linewidth": 0.9},
+    )
+
+
+def load_json_artifact(project_root: Path, relative_path: str) -> dict:
+    """Load a JSON artifact by project-relative path."""
+    return json.loads((project_root.resolve() / relative_path).read_text(encoding="utf-8"))
 
 
 def add_value_labels(ax, bars, *, fmt: str = "{:.2f}", pad: float = 0.02, fontsize: float = 8.0) -> None:

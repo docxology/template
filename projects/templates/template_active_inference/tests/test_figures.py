@@ -7,6 +7,7 @@ import pytest
 from PIL import Image
 
 from analytical.hyperparameters import lambda_grid, load_hyperparameters
+from gate_support import temporary_json_mutation
 from visualizations.figure_registry import figure_output_path, load_figure_registry, render_figure_markdown
 from visualizations.figures import (
     FIGURE_GENERATORS,
@@ -25,6 +26,10 @@ def _assert_png(path: Path, *, min_width: int = 400, min_height: int = 200) -> N
         assert width >= min_width, f"{path.name} width {width} < {min_width}"
         assert height >= min_height, f"{path.name} height {height} < {min_height}"
         assert img.mode == "RGB", f"expected RGB after normalization, got {img.mode} for {path.name}"
+        extrema = img.convert("RGB").getextrema()
+        assert any(low != high for low, high in extrema), f"blank figure: {path.name}"
+        aspect_ratio = width / height
+        assert 0.45 <= aspect_ratio <= 4.2, f"{path.name} aspect ratio {aspect_ratio:.2f} outside bounds"
 
 
 def test_figure_generators_match_registry(project_root: Path) -> None:
@@ -106,9 +111,15 @@ def test_figure_registry_json_matches_yaml(project_root: Path) -> None:
 
 def test_layout_sensitive_figures_have_publication_dimensions(project_root: Path) -> None:
     expected_minima = {
+        "causal_ablation_heatmap": (1200, 700),
+        "gnn_ontology_concordance": (1400, 650),
+        "invariant_dashboard": (1300, 800),
         "multi_track_architecture": (1500, 1050),
         "scholarship_source_map": (1700, 950),
         "semantic_gluing_graph": (1450, 850),
+        "sheaf_coverage_heatmap": (2400, 900),
+        "sheaf_layers_overview": (1800, 1400),
+        "theorem_traceability_graph": (1450, 760),
         "lean_boundary_status": (1300, 900),
     }
     for figure_id, (min_width, min_height) in expected_minima.items():
@@ -173,3 +184,99 @@ def test_figure_sheaf_coverage_heatmap_dimensions(project_root: Path) -> None:
 
 def test_coverage_heatmap_payload_none_without_sections(tmp_path: Path) -> None:
     assert coverage_heatmap_payload(tmp_path) is None
+
+
+def test_visualization_quality_audit_rejects_live_blank_render(project_root: Path) -> None:
+    from roadmap_tracks.visualization_audit import (
+        validate_visualization_quality_audit,
+        write_visualization_quality_audit,
+    )
+
+    from analysis import run_analysis
+    from simulation.si_runner import pymdp_available, run_and_persist
+
+    run_analysis(project_root)
+    if not pymdp_available():
+        pytest.skip("pymdp not installed")
+    run_and_persist(project_root)
+    run_figure("si_tmaze_actions", project_root)
+    write_visualization_quality_audit(project_root)
+
+    figure_path = project_root / "output" / "figures" / "si_tmaze_actions.png"
+    original = figure_path.read_bytes()
+    try:
+        with Image.open(figure_path) as img:
+            Image.new("RGB", img.size, "white").save(figure_path)
+        issues = validate_visualization_quality_audit(project_root)
+        assert any("blank" in issue or "live render" in issue for issue in issues)
+    finally:
+        figure_path.write_bytes(original)
+
+
+def test_visualization_quality_audit_rejects_stale_section_and_source_rows(project_root: Path) -> None:
+    from roadmap_tracks.visualization_audit import (
+        validate_visualization_quality_audit,
+        write_visualization_quality_audit,
+    )
+
+    write_visualization_quality_audit(project_root)
+    audit_path = project_root / "output" / "reports" / "visualization_quality_audit.json"
+
+    def break_source_and_section(payload: dict) -> None:
+        payload["rows"][0]["section_bindings"] = []
+        payload["rows"][0]["section_bound"] = True
+        payload["rows"][0]["sources"] = []
+        payload["rows"][0]["source_mapped"] = True
+        payload["rows"][0]["source_backed"] = True
+
+    with temporary_json_mutation(audit_path, break_source_and_section):
+        issues = validate_visualization_quality_audit(project_root)
+
+    assert any("section binding" in issue for issue in issues)
+    assert any("source metadata" in issue for issue in issues)
+
+
+def test_visualization_quality_audit_row_surface_and_hash_negative_control(project_root: Path) -> None:
+    from roadmap_tracks.visualization_audit import (
+        validate_visualization_quality_audit,
+        write_visualization_quality_audit,
+    )
+
+    write_visualization_quality_audit(project_root)
+    audit_path = project_root / "output" / "reports" / "visualization_quality_audit.json"
+    payload = json.loads(audit_path.read_text(encoding="utf-8"))
+    registry = load_figure_registry(project_root)
+
+    assert payload["figure_count"] == len(registry) == 20
+    assert set(payload["rows"][0]) >= {
+        "figure_id",
+        "path",
+        "sources",
+        "source_mapped",
+        "source_backed",
+        "statistical_sources",
+        "section_bindings",
+        "section_bound",
+        "visual_role",
+        "visual_role_ok",
+        "evidence_role",
+        "evidence_role_ok",
+        "paper_claim",
+        "paper_claim_ok",
+        "hash_present",
+        "rendered",
+        "width_px",
+        "height_px",
+        "mode",
+        "nonblank",
+        "quality_ok",
+    }
+
+    def break_hash(payload: dict) -> None:
+        payload["rows"][0]["hash_present"] = False
+        payload["all_hashes_present"] = True
+
+    with temporary_json_mutation(audit_path, break_hash):
+        issues = validate_visualization_quality_audit(project_root)
+
+    assert any("hash" in issue for issue in issues)

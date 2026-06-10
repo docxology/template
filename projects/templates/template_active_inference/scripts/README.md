@@ -24,6 +24,9 @@ Thin orchestrators that import from `../src/` and handle I/O only.
 - `generate_method_inventory.py` — regenerate `docs/reference/method-inventory.md`
   from the live `src/` and `scripts/` AST so every `def` and `class` has a
   documented reference entry.
+- `check_documentation_contract.py` — run the fail-closed documentation contract
+  oracle for Markdown links, generated-doc links, README/AGENTS pairs, command
+  context, and historical evidence wording.
 - `inject_variables.py` / `z_generate_manuscript_variables.py` — hydrate
   manuscript variables from run outputs.
 - `compose_manuscript.py` — sheaf-compose the multi-track sections.
