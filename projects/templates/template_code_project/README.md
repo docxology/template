@@ -2,6 +2,18 @@
 
 Research project demonstrating optimization algorithms with automated figure generation and publication-quality output. Exemplar roster: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
 
+## When to use this template
+
+Use this template for **code-driven computational research**: algorithms in
+`src/`, numerical experiments with deterministic seeds, automated
+publication-quality figures, and a manuscript that reports the computed
+results. It is the flagship demonstration of the thin-orchestrator pattern
+(scripts coordinate; `src/` implements; tests enforce ≥90% coverage with no
+mocks). If your project is primarily prose review, layout, or book-length
+structure, see [`template_prose_project`](../template_prose_project/),
+[`template_newspaper`](../template_newspaper/), or
+[`template_textbook`](../template_textbook/) instead.
+
 ## Quick Start
 
 ```bash

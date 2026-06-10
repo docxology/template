@@ -3,6 +3,20 @@
 Public exemplar for the SIA (Self-Improvement Agent) harness: Meta → Target → Feedback
 loops with public/private task splits and canonical generation artifacts.
 
+## When to use this template
+
+Use this template when you need a **self-improvement-agent evaluation
+harness**: Meta → Target → Feedback generation loops, public/private task
+splits to detect overfitting, deterministic fixture replay for testability,
+and fail-closed loop validation. It demonstrates the harness *mechanics* —
+not autonomous live code modification (see the honesty note below). For
+agent-team coordination mechanisms see
+[`template_autoscientists`](../template_autoscientists/); for a bounded
+AutoResearch loop see
+[`template_autoresearch_project`](../template_autoresearch_project/). Full
+roster:
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+
 ## Quick start
 
 ```bash

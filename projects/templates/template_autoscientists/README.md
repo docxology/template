@@ -10,6 +10,18 @@ It is a **microscope on the coordination primitives**, not a reproduction of the
 full agentic system. The deterministic core is fully tested; a live
 `HermesProposer` (Ollama) drops into the same loop for an opt-in agentic demo.
 
+## When to use this template
+
+Use this template when you need to **isolate and measure agent-coordination
+mechanisms**: coordinated teams vs single-thread baselines under matched
+budgets, deterministic ablation studies, and honest per-mechanism effect
+reporting (including nulls). Choose
+[`template_autoresearch_project`](../template_autoresearch_project/) instead
+if your focus is end-to-end AutoResearch **loop infrastructure** (evidence
+registries, review gates, artifact integrity) rather than coordination
+primitives. Full roster:
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+
 ## What it honestly shows
 
 The testbed is constructed so that **no performance claim would be honest**, and

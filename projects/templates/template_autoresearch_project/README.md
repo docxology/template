@@ -9,8 +9,32 @@ nearest-centroid baseline, and a bounded set of numpy-only neural-network
 candidates: softmax regression, a small MLP, and a tiny patch-attention
 classifier.
 
+## When to use this template
+
+Use this template when you need a **bounded, offline AutoResearch loop**:
+deterministic ML candidate evaluation over a fixed local dataset, with
+evidence-linked claims, machine-readable ledgers, artifact-integrity
+manifests, and deferred human-review gates. It demonstrates how to make the
+research *process* inspectable without claiming autonomous discovery.
+
+Choose [`template_autoscientists`](../template_autoscientists/) instead if
+your focus is agent-team **coordination primitives** (dead-end registries,
+noise-band confirmation, stagnation-driven reorganization) rather than
+AutoResearch loop infrastructure. For the full exemplar roster see
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+
+## Quick start
+
 ```bash
-./run.sh --pipeline --project template_autoresearch_project --core-only --skip-infra
+./run.sh --pipeline --project templates/template_autoresearch_project --core-only --skip-infra
+```
+
+The per-project test/coverage gate (≥90% on `src/`, enforced by
+`pyproject.toml` `fail_under = 90`):
+
+```bash
+uv run pytest projects/templates/template_autoresearch_project/tests/ \
+  --cov=projects/templates/template_autoresearch_project/src --cov-fail-under=90
 ```
 
 The analysis stage runs two thin scripts:
@@ -206,5 +230,5 @@ the full validation registry. Full fact serialization is opt-in with
 ## Tests
 
 ```bash
-uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only --quiet
+uv run python scripts/01_run_tests.py --project templates/template_autoresearch_project --project-only --quiet
 ```

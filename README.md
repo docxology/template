@@ -150,6 +150,8 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 
 *Test and coverage figures are representative; confirm against [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) after substantive changes.*
 
+**Choosing an exemplar:** every exemplar README opens with a `## When to use this template` section, and the generated differentiation map in [`docs/_generated/exemplar_roster.md`](docs/_generated/exemplar_roster.md) collects them into one "copy THIS when…" table (regenerate with `uv run python scripts/generate_exemplar_roster_doc.py`; sync is test-enforced).
+
 The permanent exemplars share the same core layout and verification checklist. The code/prose exemplars also carry the 12-file project `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`). New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) for the full comparison.
 
 Publication metadata for every public exemplar is generated from project config and sidecars into [`docs/_generated/publication_records.md`](docs/_generated/publication_records.md), and the GitHub-facing table in [`.github/README.md`](.github/README.md#published-exemplars--pipeline-productivity-advanced-provenance-and-autopoiesis) is auto-injected from that same source.

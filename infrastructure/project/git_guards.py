@@ -7,17 +7,13 @@ import re
 import subprocess
 from pathlib import Path
 
-ALLOWED_PROJECT_DIRS: tuple[str, ...] = (
-    "projects/templates/template_active_inference/",
-    "projects/templates/template_autoresearch_project/",
-    "projects/templates/template_code_project/",
-    "projects/templates/template_newspaper/",
-    "projects/templates/template_prose_project/",
-    "projects/templates/template_sia/",
-    "projects/templates/template_template/",
-    "projects/templates/template_textbook/",
-    "projects/templates/template_autoscientists/",
-)
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+# Both allowlists derive from PUBLIC_PROJECT_NAMES — the single roster source of
+# truth — so they can never drift from the public exemplar roster. (Before
+# 2026-06-10 these were hand-maintained literals and ALLOWED_TRACKED_OUTPUT_PREFIXES
+# had silently fallen two exemplars behind the roster.)
+ALLOWED_PROJECT_DIRS: tuple[str, ...] = tuple(f"projects/{name}/" for name in PUBLIC_PROJECT_NAMES)
 # Repo-level navigation docs may live directly under projects/ (projects/*.md).
 ALLOWED_PROJECTS_TOPLEVEL = re.compile(r"^projects/[^/]+\.md$")
 
@@ -39,20 +35,12 @@ GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
     "projects/*/*/output/*",
 )
 
-ALLOWED_TRACKED_OUTPUT_PREFIXES: tuple[str, ...] = (
-    # Public exemplar rendered output is tracked as living render-proof (the
-    # published papers). Scoped to the six PUBLIC_PROJECT_NAMES only — every
-    # other project's output (confidential/rotating) stays ignored and is NEVER
-    # listed here. Only repo-level output/<name>/ is allowed; project-local
-    # projects/<name>/output/ remains a disposable working tree.
-    "output/templates/template_active_inference/",
-    "output/templates/template_autoresearch_project/",
-    "output/templates/template_code_project/",
-    "output/templates/template_newspaper/",
-    "output/templates/template_prose_project/",
-    "output/templates/template_sia/",
-    "output/templates/template_template/",
-)
+# Public exemplar rendered output may be tracked as living render-proof (the
+# published papers). Scoped to PUBLIC_PROJECT_NAMES only — every other
+# project's output (confidential/rotating) stays ignored and is NEVER allowed
+# here. Only repo-level output/<name>/ is allowed; project-local
+# projects/<name>/output/ remains a disposable working tree.
+ALLOWED_TRACKED_OUTPUT_PREFIXES: tuple[str, ...] = tuple(f"output/{name}/" for name in PUBLIC_PROJECT_NAMES)
 
 
 def offending_tracked_projects(repo_root: Path) -> list[str]:

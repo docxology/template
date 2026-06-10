@@ -15,6 +15,17 @@ single source of truth: [`manuscript/config.yaml`](manuscript/config.yaml). To
 grow the book you edit that file, then run a thin orchestrator that materialises
 the missing stub files in the correct shape.
 
+## When to use this template
+
+Use this template for **book-length manuscripts**: parts → chapters → labs →
+question banks declared in a single `config.yaml`, with auto-numbering,
+deterministic figure/diagram generation, and structural-contract tests that
+keep hundreds of pages from drifting. For a single-paper computational
+project see [`template_code_project`](../template_code_project/); for
+editorial/prose review see
+[`template_prose_project`](../template_prose_project/). Full roster:
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+
 ## What this template is
 
 - **Modular.** Structure is declared in YAML, not hand-numbered. Add a part or a

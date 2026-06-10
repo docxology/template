@@ -14,6 +14,17 @@ sibling of [`template_code_project`](../template_code_project/) and
 hooks, same documentation conventions — but where those render a *manuscript*,
 this renders a *newspaper*.
 
+## When to use this template
+
+Use this template when you need **data-driven, large-format print layout**:
+multi-page broadsheets/tabloids with precise column geometry,
+typography-first constraints, and strict content/engine separation (YAML
+editions in `content/`, pure-Python ReportLab engine in `src/`). If you are
+producing a research manuscript rather than a designed layout, see
+[`template_code_project`](../template_code_project/) or
+[`template_prose_project`](../template_prose_project/) instead. Full roster:
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+
 ---
 
 ## What it produces
