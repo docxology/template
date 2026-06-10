@@ -219,6 +219,42 @@ def test_arxiv_non_200_raises(httpserver: HTTPServer):
         backend.search(SearchQuery(text="x"))
 
 
+def test_arxiv_fetch_by_id_retries_on_429_then_succeeds(httpserver: HTTPServer):
+    """Throttled responses are retried with exponential backoff until arXiv answers."""
+    httpserver.expect_ordered_request("/api/query").respond_with_data("slow down", status=429)
+    httpserver.expect_ordered_request("/api/query").respond_with_data("slow down", status=429)
+    httpserver.expect_ordered_request("/api/query").respond_with_data(
+        ARXIV_ATOM, content_type="application/atom+xml"
+    )
+    delays: list[float] = []
+    backend = ArxivBackend(
+        http_client=UrllibHttpClient(),
+        base_url=httpserver.url_for("/api/query"),
+        retry_base_delay=0.01,
+        sleeper=delays.append,
+    )
+    paper = backend.fetch_by_id("1412.6980")
+    assert paper is not None
+    assert paper.title.startswith("Adam: A Method")
+    assert delays == [0.01, 0.02]  # exponential backoff actually applied
+
+
+def test_arxiv_fetch_by_id_429_exhausts_retries(httpserver: HTTPServer):
+    """Persistent throttling still raises BackendError after max_retries attempts."""
+    for _ in range(4):  # initial request + 3 retries
+        httpserver.expect_ordered_request("/api/query").respond_with_data("slow down", status=429)
+    delays: list[float] = []
+    backend = ArxivBackend(
+        http_client=UrllibHttpClient(),
+        base_url=httpserver.url_for("/api/query"),
+        retry_base_delay=0.01,
+        sleeper=delays.append,
+    )
+    with pytest.raises(BackendError, match="HTTP 429"):
+        backend.fetch_by_id("1412.6980")
+    assert len(delays) == 3
+
+
 # ---------------------------------------------------------------------------
 # Paperclip
 # ---------------------------------------------------------------------------

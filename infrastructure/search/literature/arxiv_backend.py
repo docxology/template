@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import re
+import time
+from collections.abc import Callable
 
 import defusedxml.ElementTree as ET
 from xml.etree.ElementTree import Element as XMLElement
@@ -23,16 +25,27 @@ class ArxivBackend(SearchBackend, HttpGetMixin):
         "arxiv": "http://arxiv.org/schemas/atom",
     }
 
+    #: HTTP statuses arXiv uses for throttling; retried with backoff in
+    #: :meth:`fetch_by_id` because batch reference verification reliably
+    #: trips the rate limit partway through a bibliography.
+    _RETRY_STATUSES = frozenset({429, 503})
+
     def __init__(
         self,
         *,
         http_client: HttpClient | None = None,
         base_url: str | None = None,
         timeout: float = 15.0,
+        max_retries: int = 3,
+        retry_base_delay: float = 3.0,
+        sleeper: Callable[[float], None] = time.sleep,
     ) -> None:
         self.http = http_client or UrllibHttpClient()
         self.base_url = base_url or self.base_url
         self.timeout = timeout
+        self.max_retries = max_retries
+        self.retry_base_delay = retry_base_delay
+        self._sleep = sleeper
 
     def search(self, query: SearchQuery) -> list[Paper]:
         params = {
@@ -70,6 +83,11 @@ class ArxivBackend(SearchBackend, HttpGetMixin):
         if not cleaned:
             return None
         resp = self._http_get({"id_list": cleaned, "max_results": 1}, label="arXiv")
+        for attempt in range(self.max_retries):
+            if resp.status_code not in self._RETRY_STATUSES:
+                break
+            self._sleep(self.retry_base_delay * (2**attempt))
+            resp = self._http_get({"id_list": cleaned, "max_results": 1}, label="arXiv")
         if resp.status_code != 200:
             raise BackendError(f"arXiv returned HTTP {resp.status_code}")
         try:
