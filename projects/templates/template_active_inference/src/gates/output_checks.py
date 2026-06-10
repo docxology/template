@@ -8,6 +8,34 @@ from typing import Any
 
 from gates.artifact_manifest import REQUIRED_OUTPUTS
 
+# Matches the tests/test_figures.py::_assert_png lower bound. A 0-byte or blank
+# PNG has the empty-file sha (e3b0c4...) yet still satisfies Path.exists(); a
+# size floor plus a PIL decode of width/height closes that fail-open hole.
+_MIN_FIGURE_BYTES = 5_000
+
+
+def _figures_nonblank(root: Path) -> bool:
+    """Return True only if every required figure PNG is non-trivially sized and decodable."""
+    from PIL import Image
+
+    png_rels = [rel for rel in REQUIRED_OUTPUTS if rel.startswith("output/figures/") and rel.endswith(".png")]
+    if not png_rels:
+        return False
+    for rel in png_rels:
+        path = root / rel
+        if not path.is_file():
+            return False
+        if path.stat().st_size < _MIN_FIGURE_BYTES:
+            return False
+        try:
+            with Image.open(path) as img:
+                width, height = img.size
+        except (OSError, ValueError):
+            return False
+        if width <= 0 or height <= 0:
+            return False
+    return True
+
 
 def _read_json(path: Path) -> dict:
     if not path.exists():
@@ -602,6 +630,7 @@ def _set_experiment_plan_metrics(
     checks["experiment_plan_metrics"] = checks["experiment_plan_metrics"] and all(
         checks.get(key, False)
         for key in (
+            "figures_nonblank",
             "toy_sweep_track_schemas",
             "analysis_statistics_schema",
             "formal_interop_track_schemas",
@@ -634,6 +663,7 @@ def validate_outputs(project_root: Path) -> dict[str, bool]:
     """Validate every registered output artifact and return gate booleans by name."""
     root = project_root.resolve()
     checks = _required_output_checks(root)
+    checks["figures_nonblank"] = _figures_nonblank(root)
     simulation_context = _add_simulation_checks(root, checks)
     spine_context = _add_validation_spine_checks(root, checks)
     artifacts = _load_promoted_artifacts(root)

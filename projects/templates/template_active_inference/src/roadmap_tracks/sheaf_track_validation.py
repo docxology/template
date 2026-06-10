@@ -95,7 +95,22 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         "template_active_inference.artifact_provenance.v1",
         "artifact_provenance.json schema mismatch",
     )
-    if provenance.get("all_records_complete") is not True or provenance.get("all_bundles_complete") is not True:
+    provenance_rows = provenance.get("rows") or []
+    provenance_bundles = provenance.get("bundles") or []
+    # Recompute the aggregates exactly as build_artifact_provenance derives them so a
+    # row-only forgery (rows contradict a True stored flag) cannot pass. (PR#23)
+    provenance_records_complete = bool(provenance_rows) and all(
+        row.get("complete") or row.get("cycle_excluded") for row in provenance_rows
+    )
+    provenance_bundles_complete = bool(provenance_bundles) and all(
+        bundle.get("complete") for bundle in provenance_bundles
+    )
+    if (
+        provenance.get("all_records_complete") is not True
+        or provenance.get("all_records_complete") != provenance_records_complete
+        or provenance.get("all_bundles_complete") is not True
+        or provenance.get("all_bundles_complete") != provenance_bundles_complete
+    ):
         issues.append("artifact_provenance.json has incomplete provenance rows or bundles")
     field_provenance_ok = all_rows(
         provenance,
@@ -215,7 +230,15 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     dependency = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["dependency"])
     if dependency.get("schema") != _tracks.DEPENDENCY_SCHEMA:
         issues.append("validation_dependency_graph.json schema mismatch")
-    if dependency.get("all_required_edge_types_present") is not True:
+    # Recompute from the edge_types rows exactly as build_validation_dependency_graph
+    # derives the flag, so a row-only forgery (edge_types stripped while the flag stays
+    # True) cannot pass the trust-the-flag read.
+    dependency_edge_types = set(dependency.get("edge_types") or [])
+    dependency_required_present = set(_tracks.REQUIRED_EDGE_TYPES).issubset(dependency_edge_types)
+    if (
+        dependency.get("all_required_edge_types_present") is not True
+        or dependency.get("all_required_edge_types_present") != dependency_required_present
+    ):
         issues.append("validation_dependency_graph.json lacks required edge types")
     field_edges_ok = bool(dependency.get("field_edges")) and all(
         row.get("artifact")
@@ -230,28 +253,60 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         or dependency.get("all_field_edges_mapped") != field_edges_ok
     ):
         issues.append("validation_dependency_graph.json has incomplete field-level edges")
+    # NOTE (PR#23): a cross-linking check (flag any edge whose target is unresolvable
+    # to a known node) was evaluated and intentionally NOT added. The generated graph
+    # has dozens of legitimate target-only nodes (sections, claim ids, bundle ids,
+    # copied-output paths, ...) that never appear as an edge source or artifact key,
+    # so there is no cheap node registry that distinguishes a forged dangling target
+    # from a real leaf node without breaking the positive (correctly-produced)
+    # artifact. The edge-types and field-edges recomputes above are the hardening.
 
     section_status = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["section_status"])
     if section_status.get("schema") != "template_active_inference.sheaf_section_status_matrix.v1":
         issues.append("sheaf_section_status_matrix.json schema mismatch")
-    if section_status.get("all_bound_fragments_present") is not True:
+    # Recompute exactly as build_sheaf_section_status_matrix derives the flags so a
+    # row-only forgery (e.g. a section/track row with a blank status, or a stale
+    # missing_required_count) cannot pass a bare flag read.
+    section_status_bound_present = section_status.get("missing_required_count") == 0
+    section_summaries = section_status.get("sections") or []
+    track_summaries = section_status.get("tracks") or []
+    section_status_sections_have_status = bool(section_summaries) and all(
+        bool(row.get("status")) for row in section_summaries
+    )
+    section_status_tracks_have_status = bool(track_summaries) and all(
+        bool(row.get("status")) for row in track_summaries
+    )
+    if (
+        section_status.get("all_bound_fragments_present") is not True
+        or section_status.get("all_bound_fragments_present") != section_status_bound_present
+    ):
         issues.append("sheaf_section_status_matrix.json has missing bound fragments")
     if (
         section_status.get("all_sections_have_status") is not True
+        or section_status.get("all_sections_have_status") != section_status_sections_have_status
         or section_status.get("all_tracks_have_status") is not True
+        or section_status.get("all_tracks_have_status") != section_status_tracks_have_status
     ):
         issues.append("sheaf_section_status_matrix.json has incomplete status rows")
 
     render_log = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["render_log"])
     if render_log.get("schema") != "template_active_inference.sheaf_render_log.v1":
         issues.append("sheaf_render_log.json schema mismatch")
-    if render_log.get("all_events_ok") is not True:
+    # Recompute exactly as build_sheaf_render_log derives all_events_ok so a row-only
+    # forgery (a failed event row left while the flag stays True) cannot pass.
+    render_log_events = render_log.get("events") or []
+    render_log_events_ok = bool(render_log_events) and all(event.get("status") == "ok" for event in render_log_events)
+    if render_log.get("all_events_ok") is not True or render_log.get("all_events_ok") != render_log_events_ok:
         issues.append("sheaf_render_log.json has failed render events")
 
     scope = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["track_improvement_scope"])
     if scope.get("schema") != "template_active_inference.track_improvement_scope.v1":
         issues.append("track_improvement_scope.json schema mismatch")
-    if scope.get("all_live_tracks_valid") is not True:
+    # Recompute exactly as build_track_improvement_scope derives all_live_tracks_valid
+    # (from the promotion_matrix rows) so a row-only forgery cannot pass.
+    promotion_matrix = scope.get("promotion_matrix") or []
+    scope_live_tracks_valid = bool(promotion_matrix) and all(row.get("promotion_complete") for row in promotion_matrix)
+    if scope.get("all_live_tracks_valid") is not True or scope.get("all_live_tracks_valid") != scope_live_tracks_valid:
         issues.append("track_improvement_scope.json has incomplete live-track promotion rows")
 
     blocked = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["blocked_scope_manifest"])
@@ -286,7 +341,17 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     release = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["release_bundle"])
     if release.get("schema") != "template_active_inference.release_bundle_manifest.v1":
         issues.append("release_bundle_manifest.json schema mismatch")
-    if release.get("all_required_sources_present") is not True:
+    # Recompute exactly as build_release_bundle_manifest derives the flag (each row is
+    # present iff source_exists OR deferred_until_render) so a row-only forgery cannot
+    # pass a bare flag read.
+    release_rows = release.get("rows") or []
+    release_sources_present = bool(release_rows) and all(
+        row.get("source_exists") or row.get("deferred_until_render") for row in release_rows
+    )
+    if (
+        release.get("all_required_sources_present") is not True
+        or release.get("all_required_sources_present") != release_sources_present
+    ):
         issues.append("release_bundle_manifest.json is missing required deliverables")
     copied = release.get("copied_output_parity") or {}
     copied_rows_ok = bool(copied.get("rows")) and all(

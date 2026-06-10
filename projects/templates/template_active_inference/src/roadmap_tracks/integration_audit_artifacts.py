@@ -13,6 +13,7 @@ from typing import Any
 
 import yaml
 
+from .figure_provenance import _figure_sources_mapped
 from .integration_audit_builders import (
     LATE_HYDRATION_PRODUCER,
     SELF_PRODUCER,
@@ -198,7 +199,9 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
                 "axis_channel_mapping": axis_mappings.get(figure_id, {"channel": "pixels"}),
                 "section_bindings": sorted(section_bindings.get(figure_id, [])),
                 "caption": registry[figure_id].caption,
-                "mapped": bool(source_artifacts),
+                # Re-derived from the filesystem (PR#23): mapped requires every
+                # listed non-deferred source path to exist, not merely a dict entry.
+                "mapped": _figure_sources_mapped(root, source_artifacts),
                 "pixel_provenance_ok": pixel_ok,
             }
         )

@@ -481,6 +481,13 @@ def validate_reproducibility_replay(project_root: Path, *, rebuild: bool = False
     saved_checks = saved.get("checks") or []
     if not saved_checks:
         issues.append("reproducibility_replay.json has no checks")
+    # Re-derive the aggregate from the per-row results rather than trusting the
+    # stored scalar. A forger can flip a row's passed=false while leaving the
+    # top-level all_passed=true; recomputing and requiring agreement catches that
+    # rows-vs-aggregate forgery without re-running any producer.
+    recomputed_all_passed = all(row.get("passed") is True for row in saved_checks)
+    if bool(saved.get("all_passed")) != recomputed_all_passed:
+        issues.append("reproducibility_replay.json all_passed disagrees with per-row results")
     for row in saved_checks:
         row_id = row.get("id", "<unknown>")
         if row.get("passed") is not True:

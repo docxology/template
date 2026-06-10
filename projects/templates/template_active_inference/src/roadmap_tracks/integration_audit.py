@@ -18,6 +18,7 @@ from pathlib import Path
 
 from roadmap_tracks.row_aggregates import all_rows
 
+from .figure_provenance import _figure_sources_mapped
 from .integration_audit_artifacts import (
     build_adversarial_audit,
     build_artifact_diffoscope,
@@ -210,6 +211,10 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
         figures,
         lambda row: (
             row.get("mapped")
+            # Re-derive `mapped` from the filesystem rather than trusting the
+            # stored row field (PR#23 hardening: a forged mapped=true with a
+            # nonexistent source path must fail).
+            and _figure_sources_mapped(root, list(row.get("sources") or []))
             and row.get("source_artifact")
             and row.get("source_jsonpath")
             and row.get("renderer")
@@ -306,19 +311,27 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     )
     if gate_index.get("all_indexed") is not True or gate_index.get("all_indexed") != gates_derived:
         issues.append("validation_gate_index.json has unindexed gates")
+    # PR#23 hardening: every aggregate below is re-derived from its rows so a
+    # row-only forgery (rows contradict a True stored flag) cannot pass.
     diffoscope = _load_json(root / "output" / "reports" / "artifact_diffoscope.json")
     if diffoscope.get("schema") != "template_active_inference.artifact_diffoscope.v1":
         issues.append("artifact_diffoscope.json schema mismatch")
-    if diffoscope.get("all_equal") is not True:
+    diffoscope_equal = all_rows(diffoscope, lambda row: row.get("equal") is True)
+    if diffoscope.get("all_equal") is not True or diffoscope.get("all_equal") != diffoscope_equal:
         issues.append("artifact_diffoscope.json records artifact drift")
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     if license_audit.get("schema") != "template_active_inference.artifact_license_audit.v1":
         issues.append("artifact_license_audit.json schema mismatch")
-    if license_audit.get("all_license_safe") is not True:
+    license_safe = all_rows(license_audit, lambda row: row.get("license_safe") is True)
+    if license_audit.get("all_license_safe") is not True or license_audit.get("all_license_safe") != license_safe:
         issues.append("artifact_license_audit.json records unsafe artifacts")
     release_notes = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
     if release_notes.get("schema") != "template_active_inference.release_notes_evidence.v1":
         issues.append("release_notes_evidence.json schema mismatch")
-    if release_notes.get("all_notes_source_backed") is not True:
+    notes_backed = all_rows(release_notes, lambda row: bool(row.get("source")) and row.get("passed") is True)
+    if (
+        release_notes.get("all_notes_source_backed") is not True
+        or release_notes.get("all_notes_source_backed") != notes_backed
+    ):
         issues.append("release_notes_evidence.json has unsupported notes")
     return issues
