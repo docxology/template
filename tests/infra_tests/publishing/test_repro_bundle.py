@@ -31,10 +31,15 @@ def _scaffold_repro_project(root: Path, name: str) -> Path:
     write_doc(root / "pyproject.toml", "[project]\nname = 'demo'\n")
     write_doc(root / "docs" / "_generated" / "canonical_facts.md", "# Canonical Facts\n\n- 214\n")
 
-    # Declared output artifacts plus an artifact manifest pointing at them.
-    fig = root / "output" / name / "figures" / "result.png"
+    # Declared output artifacts live UNDER the project dir, and the artifact
+    # manifest stores their paths relative to the project dir — matching the
+    # real writer (infrastructure.core.pipeline.artifacts records
+    # ``path.relative_to(project_dir)``). The bundle then rebases these onto the
+    # repo root. (The earlier scaffold wrote repo-root-relative paths, which
+    # masked the resolver bug that made every artifact 'absent'.)
+    fig = project / "output" / "figures" / "result.png"
     write_doc(fig, "PNG-BYTES")
-    report = root / "output" / name / "reports" / "summary.json"
+    report = project / "output" / "reports" / "summary.json"
     write_doc(report, '{"value": 1}\n')
     artifact_manifest = project / "output" / "reports" / "artifact_manifest.json"
     write_doc(
@@ -42,13 +47,61 @@ def _scaffold_repro_project(root: Path, name: str) -> Path:
         json.dumps(
             {
                 "entries": [
-                    {"path": f"output/{name}/figures/result.png"},
-                    {"path": f"output/{name}/reports/summary.json"},
+                    {"path": "output/figures/result.png"},
+                    {"path": "output/reports/summary.json"},
                 ]
             }
         ),
     )
     return project
+
+
+def test_build_resolves_artifacts_from_real_manifest_writer(tmp_path: Path) -> None:
+    """End-to-end guard against the project-rel vs repo-rel path-root mismatch.
+
+    Builds the artifact manifest through the *real* pipeline writer
+    (``write_stage_artifact_manifest`` + ``aggregate_artifact_manifests``, which
+    record paths relative to the project dir), then asserts the repro bundle
+    rebases them correctly so the output artifact is ``present`` with a non-null
+    sha256. Before the fix the resolver looked under ``<repo_root>/output/...``
+    and every artifact was reported absent, so ``verify`` always failed.
+    """
+    from infrastructure.core.pipeline.artifacts import (
+        aggregate_artifact_manifests,
+        write_stage_artifact_manifest,
+    )
+    from infrastructure.core.pipeline.types import StageContract
+
+    name = "repro_real"
+    project = make_project(tmp_path, name, with_manuscript=True, with_scripts=True)
+    write_doc(tmp_path / "uv.lock", "# lock\n")
+    write_doc(tmp_path / "pyproject.toml", "[project]\nname = 'demo'\n")
+    write_doc(tmp_path / "docs" / "_generated" / "canonical_facts.md", "# Canonical Facts\n")
+
+    # A genuine output artifact under the project dir.
+    artifact = project / "output" / "data" / "result.json"
+    write_doc(artifact, '{"value": 42}\n')
+
+    contract = StageContract(output_artifacts=("output/data/result.json",))
+    write_stage_artifact_manifest(
+        repo_root=tmp_path,
+        project_dir=project,
+        stage_num=2,
+        stage_name="analysis",
+        contract=contract,
+    )
+    aggregate_artifact_manifests(project / "output")
+    assert (project / "output" / "reports" / "artifact_manifest.json").is_file()
+
+    out_dir = build_repro_bundle(tmp_path, name, generated_at="2026-06-06T00:00:00+00:00")
+    manifest = json.loads((out_dir / BUNDLE_MANIFEST_NAME).read_text(encoding="utf-8"))
+    output_entries = [e for e in manifest["entries"] if e["kind"] == "output-artifact"]
+    assert output_entries, "real manifest writer should yield at least one output artifact"
+    assert all(e["present"] for e in output_entries)
+    assert all(isinstance(e["sha256"], str) and len(e["sha256"]) == 64 for e in output_entries)
+
+    report = verify_repro_bundle(out_dir / BUNDLE_MANIFEST_NAME, checkout_root=tmp_path)
+    assert report.ok is True
 
 
 def test_build_writes_deterministic_sorted_manifest(tmp_path: Path) -> None:
@@ -70,7 +123,8 @@ def test_build_writes_deterministic_sorted_manifest(tmp_path: Path) -> None:
     assert paths == sorted(paths)  # deterministic, sorted entries
     assert "uv.lock" in paths
     assert "docs/_generated/canonical_facts.md" in paths
-    assert f"output/{name}/figures/result.png" in paths
+    # Project-relative manifest path rebased onto the repo root.
+    assert f"projects/{name}/output/figures/result.png" in paths
     for entry in manifest["entries"]:
         assert entry["present"] is True
         assert isinstance(entry["sha256"], str) and len(entry["sha256"]) == 64
@@ -172,13 +226,14 @@ _TS = "2026-06-06T00:00:00+00:00"
 def _scaffold_public_exemplar(root: Path, name: str) -> Path:
     """Scaffold a discoverable public exemplar under ``projects/templates/<name>``."""
     project = make_project(root, name, program="templates", with_manuscript=True, with_scripts=True)
-    qualified = f"templates/{name}"
-    fig = root / "output" / qualified / "figures" / "result.png"
+    # Output artifact under the project dir; manifest path project-relative
+    # (matches the real artifacts writer; the bundle rebases onto repo root).
+    fig = project / "output" / "figures" / "result.png"
     write_doc(fig, f"PNG-{name}")
     artifact_manifest = project / "output" / "reports" / "artifact_manifest.json"
     write_doc(
         artifact_manifest,
-        json.dumps({"entries": [{"path": f"output/{qualified}/figures/result.png"}]}),
+        json.dumps({"entries": [{"path": "output/figures/result.png"}]}),
     )
     return project
 
@@ -225,8 +280,9 @@ def test_cli_build_all_public_then_verify_each_independently(tmp_path: Path) -> 
     assert verify_repro_bundle(manifest_b, checkout_root=tmp_path).ok is True
 
     # Mutating one exemplar's input fails only that exemplar — verification is
-    # per-bundle, not merged across the roster.
-    (tmp_path / "output" / qa / "figures" / "result.png").write_text("tampered", encoding="utf-8")
+    # per-bundle, not merged across the roster. The artifact lives under the
+    # project dir (qa == "templates/<name>").
+    (tmp_path / "projects" / qa / "output" / "figures" / "result.png").write_text("tampered", encoding="utf-8")
     assert verify_repro_bundle(manifest_a, checkout_root=tmp_path).ok is False
     assert verify_repro_bundle(manifest_b, checkout_root=tmp_path).ok is True
 

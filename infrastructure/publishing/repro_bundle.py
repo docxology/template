@@ -96,13 +96,19 @@ def _make_entry(checkout_root: Path, kind: str, relpath: str) -> BundleEntry:
     return BundleEntry(kind=kind, path=relpath, sha256=digest, size_bytes=size, present=present)
 
 
-def _declared_output_relpaths(project_dir: Path) -> list[str]:
+def _declared_output_relpaths(repo_root: Path, project_dir: Path) -> list[str]:
     """Read declared output artifact paths from the project artifact manifest.
 
-    The artifact manifest lives at ``output/reports/artifact_manifest.json`` and
-    stores entries whose ``path`` values are relative to the repository root.
-    Missing or malformed manifests yield an empty list (the lockfile and
-    canonical-facts pointer still anchor the bundle).
+    The artifact manifest lives at ``output/reports/artifact_manifest.json``. Its
+    ``path`` values are stored **relative to the project directory** (see
+    ``infrastructure.core.pipeline.artifacts`` — ``path.relative_to(project_dir)``),
+    e.g. ``output/data/result.json``. Every other entry in the bundle resolves
+    against ``repo_root``, so these are rebased onto the repo root here
+    (``projects/templates/<name>/output/data/result.json``); without the rebase
+    the resolver looked for ``<repo_root>/output/data/...`` and reported every
+    artifact absent, so ``verify`` always failed. Missing/malformed manifests —
+    and any path that escapes the repo root — yield an empty/filtered list (the
+    lockfile and canonical-facts pointer still anchor the bundle).
     """
     manifest_path = project_dir / "output" / "reports" / "artifact_manifest.json"
     if not manifest_path.is_file():
@@ -117,12 +123,21 @@ def _declared_output_relpaths(project_dir: Path) -> list[str]:
     entries = raw.get("entries")
     if not isinstance(entries, list):
         return []
+    repo_root = repo_root.resolve()
     paths: list[str] = []
     for entry in entries:
-        if isinstance(entry, dict):
-            path = entry.get("path")
-            if isinstance(path, str) and path:
-                paths.append(path)
+        if not isinstance(entry, dict):
+            continue
+        path = entry.get("path")
+        if not (isinstance(path, str) and path):
+            continue
+        try:
+            repo_relative = (project_dir / path).resolve().relative_to(repo_root)
+        except ValueError:
+            # Path escapes the repo root (absolute or ``..`` traversal) — skip it.
+            logger.warning("Artifact manifest path %r escapes the repo root — skipping.", path)
+            continue
+        paths.append(repo_relative.as_posix())
     return sorted(set(paths))
 
 
@@ -164,7 +179,7 @@ def collect_entries(repo_root: Path, project_name: str) -> list[BundleEntry]:
     if artifact_manifest_rel is not None:
         entries.append(_make_entry(repo_root, _KIND_ARTIFACT_MANIFEST, artifact_manifest_rel))
 
-    for relpath in _declared_output_relpaths(project_dir):
+    for relpath in _declared_output_relpaths(repo_root, project_dir):
         entries.append(_make_entry(repo_root, _KIND_OUTPUT_ARTIFACT, relpath))
 
     # Deduplicate by path (stable) then sort for a deterministic manifest.
