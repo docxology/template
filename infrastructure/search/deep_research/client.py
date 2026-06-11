@@ -92,7 +92,22 @@ class DeepResearchClient:
         request: DeepResearchRequest,
         providers: tuple[str, ...] = ("openai", "gemini"),
     ) -> dict[str, DeepResearchJobHandle]:
-        """Submit the same request to multiple providers."""
+        """Submit the same request to multiple providers.
+
+        Validates every requested provider against ``available_providers()``
+        BEFORE submitting any of them. Previously, if a later provider was
+        unconfigured, ``submit`` raised only after an earlier provider's job
+        (a PAID job for OpenAI/Gemini) had already been submitted — orphaning it
+        with no handle returned to the caller.
+        """
+        available = set(self.available_providers())
+        missing = [p for p in providers if p not in available]
+        if missing:
+            raise RuntimeError(
+                "Cannot submit to unconfigured provider(s) "
+                f"{', '.join(missing)}; available: {', '.join(sorted(available)) or 'none'}. "
+                "No jobs were submitted (fail-fast to avoid orphaning a paid job)."
+            )
         handles: dict[str, DeepResearchJobHandle] = {}
         for provider in providers:
             handles[provider] = self.submit(replace(request, provider=provider))

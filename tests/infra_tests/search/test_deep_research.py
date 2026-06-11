@@ -33,7 +33,9 @@ def test_openai_payload_includes_required_controls() -> None:
         sources=DeepResearchSources(
             web=True,
             vector_store_ids=("vs_1", "vs_2"),
-            mcp_servers=(DeepResearchMCPServer(server_label="internal_docs", server_url="https://mcp.example.com/mcp"),),
+            mcp_servers=(
+                DeepResearchMCPServer(server_label="internal_docs", server_url="https://mcp.example.com/mcp"),
+            ),
         ),
     )
     payload = build_openai_payload(request)
@@ -66,7 +68,9 @@ def test_gemini_payload_includes_agent_controls() -> None:
         sources=DeepResearchSources(
             web=True,
             file_search_store_names=("fileSearchStores/internal_docs",),
-            mcp_servers=(DeepResearchMCPServer(server_label="internal_docs", server_url="https://mcp.example.com/mcp"),),
+            mcp_servers=(
+                DeepResearchMCPServer(server_label="internal_docs", server_url="https://mcp.example.com/mcp"),
+            ),
         ),
     )
     payload = build_gemini_payload(request)
@@ -100,6 +104,19 @@ def test_auto_provider_prefers_gemini_for_visualization() -> None:
     client = DeepResearchClient(config)
     request = DeepResearchRequest(query="Show trends.", visualization=True)
     assert client.select_provider(request) == "gemini"
+
+
+def test_submit_many_fails_fast_on_unconfigured_provider() -> None:
+    """submit_many validates all providers before submitting any (DR-1).
+
+    With only OpenAI configured, requesting ('openai', 'gemini') must raise
+    BEFORE the (paid) OpenAI job is submitted — otherwise that job is orphaned.
+    """
+    config = DeepResearchConfig(openai_api_key="sk-openai")  # gemini absent
+    client = DeepResearchClient(config)
+    request = DeepResearchRequest(query="anything")
+    with pytest.raises(RuntimeError, match="unconfigured provider"):
+        client.submit_many(request, providers=("openai", "gemini"))
 
 
 def test_client_from_env_reads_optional_keys(monkeypatch) -> None:
@@ -172,9 +189,7 @@ def test_save_deep_research_result_writes_full_artifacts(tmp_path: Path) -> None
         job_id="job-123",
         status="completed",
         output_text="Full report body\nwith multiple lines.",
-        citations=(
-            DeepResearchCitation(title="Example", url="https://example.com"),
-        ),
+        citations=(DeepResearchCitation(title="Example", url="https://example.com"),),
     )
 
     bundle = save_deep_research_result(tmp_path, result, request=request)
