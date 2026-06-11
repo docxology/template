@@ -44,17 +44,16 @@ uv run python scripts/07_generate_executive_report.py
 - `generate_architecture_overview.py` - regenerates `docs/_generated/architecture_overview.{mmd,svg}`
 - `generate_coverage_history.py` - regenerates the coverage-history page from CI artefacts
 - `generate_stage_table_doc.py` - regenerates the canonical stage-table marker block
+- `generate_exemplar_roster_doc.py` - regenerates the public exemplar roster doc (`infrastructure.project.exemplar_roster`)
+- `generate_publication_records_doc.py` - regenerates the publication-records doc (`infrastructure.documentation.publication_records`)
+- `10_repro_bundle.py` - builds/verifies reproduction bundles (`infrastructure.publishing.repro_bundle`)
 - `lint_docs.py` - runs Mermaid, link, consistency, and doc-pair documentation checks
 - `audit_documentation.py` - emits the advisory public documentation RedTeam audit
 - `verify_no_mocks.py` - checks tests for mock usage
 - `audit_filepaths.py` - repository filepath and reference audit
 - `check_tracked_generated_artifacts.py` - rejects tracked generated outputs and package metadata
-- `codegraph_local.py` - prints local CodeGraph commands and verifies indexed path scope
-- `setup_pre_commit.py` - installs and validates pre-commit hooks
-- `manage_workspace.py` - workspace management helper
-- `show_project_info.py` - project metadata helper (used by `run.sh` interactive menu)
-- `organize_executive_outputs.py` - reorganizes executive report outputs by file type
-- `batch_cogsec_improve.py` - thin orchestrator applying mechanical source improvements
+- `ci_local.sh` - local CI reproduction (`act` when available, otherwise a pure-Python CI fallback; see [`../docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md))
+- Maintenance helpers now live under [`maintenance/`](maintenance/) - `manage_workspace.py`, `show_project_info.py`, `render_working_projects.py`, `rerender_working_pdfs.py`, `organize_executive_outputs.py`, `merge_test_supplements.py`, `batch_cogsec_improve.py`, `setup_pre_commit.py`, `codegraph_local.py` (see [`maintenance/README.md`](maintenance/README.md) and [`maintenance/AGENTS.md`](maintenance/AGENTS.md)). `show_project_info.py` is a standalone project metadata CLI; it is **not** invoked by `run.sh` (the menu's `i` key prints only the current project name).
 - `bash_utils.sh` - shared shell helpers for backup/health scripts and integration tests (not sourced by `run.sh` / `secure_run.sh`)
 - `shell_bootstrap.sh` - shared `uv` bootstrap and sandbox env vars sourced by `run.sh` and `secure_run.sh`
 - `backup-daily.sh` / `backup-weekly.sh` / `backup-full.sh` - rsync backup tiers

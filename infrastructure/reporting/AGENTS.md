@@ -581,11 +581,13 @@ saved_files = save_executive_summary(summary, Path("output/executive_summary"))
 
 ### Dashboard System (`_dashboard_matplotlib.py` + extracted modules)
 
-**Decomposition note (`_dashboard_charts.py`, ~734 lines):** do not refactor wholesale
-on unrelated passes. On the next dashboard touch, split chart builders into
-focused modules — manuscript metrics, test/coverage charts, pipeline health,
-and cross-project aggregates — and keep `generate_all_dashboards()` as the
-single orchestrator entry point.
+**Decomposition note (`_dashboard_charts.py`, 43 lines):** the split is **done**.
+`_dashboard_charts.py` is now a thin facade that re-exports chart families from
+`_dashboard_charts_health.py` (coverage / test-count charts), `_dashboard_charts_outputs.py`
+(manuscript metrics, output distribution, executive-summary table), and
+`_dashboard_charts_pipeline.py` (pipeline duration / performance timeline). Do not
+re-attempt the split — add new chart builders to the matching focused module and
+re-export them through the facade.
 
 Creates visual dashboards and charts for executive reporting.
 

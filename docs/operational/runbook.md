@@ -83,7 +83,7 @@ Monitor the progress and address any failures immediately. Flagged projects will
 
 ### Gate Duration Monitoring
 
-Check the gate duration metrics to ensure stages are completing within acceptable time bounds. Gates are defined in `infrastructure/core/gates.py`.
+Check the gate duration metrics to ensure stages are completing within acceptable time bounds. Stage gates are declared in `infrastructure/core/pipeline/pipeline.yaml` (parsed by `infrastructure/core/pipeline/dag.py`); standalone gate scripts live under `scripts/gates/`.
 
 **Check gate timing:**
 

@@ -32,7 +32,7 @@ These thresholds are enforced at Stage 01 of the pipeline. If project test cover
 The repository maintains three test suites:
 
 - **Infrastructure tests** (`tests/`): ~${infra_test_count_approx} tests validating the ${module_count} infrastructure subdirectories, covering logging, rendering, validation, steganography, reporting, and LLM integration.
-- **Project tests** (`projects/*/tests/`): Per-project suites; counts span ${project_template_code_project_test_count} (`template_code_project`) → ${project_template_autoresearch_project_test_count} (`template_autoresearch_project`) exemplars with higher surface area.
+- **Project tests** (`projects/*/tests/`): Per-project suites whose sizes scale with each exemplar's surface area — for example ${project_template_autoresearch_project_test_count} tests in `template_autoresearch_project` and ${project_template_code_project_test_count} in `template_code_project`, with several exemplars larger still. (A true min/max span would require dedicated `project_test_count_min`/`project_test_count_max` tokens in `build_manuscript_metrics_dict`; see the meta-template's generator backlog.)
 - **Integration tests**: Embedded within infrastructure tests, these exercise full pipeline stages against real manuscript inputs, validating end-to-end behavior from Markdown source to rendered PDF.
 
 ### Visualization Standards

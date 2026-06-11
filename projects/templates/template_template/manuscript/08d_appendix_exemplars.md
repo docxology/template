@@ -3,9 +3,11 @@
 ## Appendix: Exemplar Project Summary {#appendix-exemplars}
 
 \begin{table}[h]
-\caption{Canonical workspaces under \texttt{projects/} illustrating heterogeneous domains while sharing Layer~1.}
+\caption{Three representative workspaces under \texttt{projects/templates/} illustrating heterogeneous domains while sharing Layer~1. This is a hand-picked sample, not the full roster: the complete public exemplar set (currently nine workspaces) is enumerated dynamically from \texttt{PUBLIC\_PROJECT\_NAMES} and listed below.}
 \label{tab:exemplar-projects}
 \end{table}
+
+The full public exemplar roster is: ${public_exemplar_list}. The three rows below are a representative sample; a future `exemplar_summary_table` token in `build_manuscript_metrics_dict` would let this table cover every exemplar without hand-editing.
 
 | Project slug | Purpose | Highlights | Tests | Figures (Stage 02 hint) |
 |--------------|---------|------------|:-----:|:-----------------------|

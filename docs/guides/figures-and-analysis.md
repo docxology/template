@@ -189,7 +189,7 @@ def test_calculate_std_dev():
 **Step 4: Run tests**
 
 ```bash
-uv run pytest projects/templates/template_code_project/tests/test_statistics.py --cov=projects.template_code_project.src.statistics --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/test_statistics.py --cov=projects/templates/template_code_project/src --cov-report=term-missing
 ```
 
 **Step 5: Create thin orchestrator script**
@@ -418,7 +418,7 @@ def linear_regression(x: list[float], y: list[float]) -> tuple[float, float]:
 **Step 4: Run tests**
 
 ```bash
-uv run pytest projects/templates/template_code_project/tests/test_correlation.py --cov=projects.template_code_project.src.correlation --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/test_correlation.py --cov=projects/templates/template_code_project/src --cov-report=term-missing
 ```
 
 Ensure coverage requirements are met before proceeding.
@@ -556,7 +556,7 @@ vim projects/{name}/src/my_module.py
 vim projects/templates/template_code_project/tests/test_my_module.py
 
 # 3. Run tests
-uv run pytest projects/templates/template_code_project/tests/test_my_module.py --cov=projects.template_code_project.src.my_module
+uv run pytest projects/templates/template_code_project/tests/test_my_module.py --cov=projects/templates/template_code_project/src
 
 # 4. Create/update script
 vim projects/templates/template_code_project/scripts/my_figure.py
@@ -597,7 +597,7 @@ echo "Running custom build pipeline..."
 
 # 1. Run specific tests
 echo "Testing analysis module..."
-uv run pytest projects/templates/template_code_project/tests/test_correlation.py --cov=projects.template_code_project.src.correlation
+uv run pytest projects/templates/template_code_project/tests/test_correlation.py --cov=projects/templates/template_code_project/src
 
 # 2. Generate specific figures
 echo "Generating figures..."

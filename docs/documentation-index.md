@@ -192,6 +192,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Stage 11 archival providers
 - **[maintenance/ci-local.md](maintenance/ci-local.md)** - Local CI reproduction (`scripts/ci_local.sh`)
 - **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Stage 10 executable bundle design
+- **[maintenance/local-only-template-exemplars.md](maintenance/local-only-template-exemplars.md)** - Local-only exemplar policy (`LOCAL_ONLY_TEMPLATE_NAMES`)
 
 ---
 
@@ -318,6 +319,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 
 - **[prompts/README.md](prompts/README.md)** - Navigation guide
 - **[prompts/SKILL.md](prompts/SKILL.md)** - Hub router (`template-workflows`)
+- **[prompts/MODE_REGISTRY.md](prompts/MODE_REGISTRY.md)** - Workflow-skill mode registry
 - **[prompts/_skill-eval/README.md](prompts/_skill-eval/README.md)** - Synthetic workflow-skill benchmark workspace
 - **[prompts/manuscript-creation/SKILL.md](prompts/manuscript-creation/SKILL.md)** - Manuscript creation
 - **[prompts/manuscript-cross-references/SKILL.md](prompts/manuscript-cross-references/SKILL.md)** - Registry/token manuscript cross-references

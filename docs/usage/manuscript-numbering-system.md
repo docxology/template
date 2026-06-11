@@ -1,30 +1,35 @@
 # Manuscript Section Numbering System - Documentation
 
-## ✅ Implementation Successfully updated the manuscript section numbering system to support main sections, supplemental sections, and proper reference ordering
+## Overview — the section numbering scheme supported by the render pipeline
+
+The render pipeline supports main sections, supplemental sections, and proper reference
+ordering. The file names below are **illustrative slots** the ordering rules support — not
+files that ship in any exemplar. The canonical `template_code_project/manuscript/` ships
+`00_*.md` through `07_*.md` plus `99_references.md`; add the optional `08`/`09`/`S##`/`98`
+slots only if your project needs them.
 
 ---
 
-## 📋 New Numbering Scheme
+## 📋 Numbering Scheme
 
-### Main Sections (01-09)
+### Main Sections (00-09)
 
-Core manuscript content with sequential numbering:
+Core manuscript content with sequential numbering (example titles):
 
-- `01_abstract.md` - Research overview
-- `02_introduction.md` - Project introduction
-- `03_methodology.md` - Methods and algorithms
-- `04_experimental_results.md` - Results and evaluation
-- `05_discussion.md` - Analysis and implications
-- `06_conclusion.md` - Summary and future work
-- `08_acknowledgments.md` - Funding and acknowledgments (NEW)
-- `09_appendix.md` - Technical details and proofs (NEW)
+- `00_abstract.md` - Research overview
+- `01_introduction.md` - Project introduction
+- `02_methodology.md` - Methods and algorithms
+- `03_results.md` - Results and evaluation
+- `04_conclusion.md` - Summary and future work
+- `08_acknowledgments.md` - Funding and acknowledgments (optional slot)
+- `09_appendix.md` - Technical details and proofs (optional slot)
 
 ### Supplemental Sections (S01-S0N)
 
-Additional material supporting main manuscript:
+Additional material supporting main manuscript (optional slots — none shipped by default):
 
-- `S01_supplemental_methods.md` - Extended methodological details (NEW)
-- `S02_supplemental_results.md` - Additional experimental results (NEW)
+- `S01_supplemental_methods.md` - Extended methodological details (optional slot)
+- `S02_supplemental_results.md` - Additional experimental results (optional slot)
 - `S##_*.md` - Future supplemental sections
 
 ### Reference Sections (98-99)
@@ -64,7 +69,10 @@ S02_supplemental_results.md
 
 ---
 
-## 🆕 New Sections Added
+## 🧩 Optional Section Slots (illustrative)
+
+The slots below are supported by the ordering rules but are **not shipped in any exemplar**.
+The content lists describe what each slot is *for* if you choose to add it.
 
 ### 1. **08_acknowledgments.md** (Main Section)
 
@@ -222,7 +230,7 @@ cd manuscript
  find . -maxdepth 1 -name "99_*.md")
 ```
 
-**Expected Output:**
+**Expected Output (illustrative — assumes all optional slots are populated):**
 
 ```
 01_abstract.md
@@ -239,7 +247,8 @@ S02_supplemental_results.md
 99_references.md
 ```
 
-✅ **VERIFIED** - Correct ordering achieved.
+The canonical `template_code_project/manuscript/` ships only `00_*.md`–`07_*.md` and
+`99_references.md`; the optional `08`/`09`/`S##`/`98` slots above appear only if you add them.
 
 ---
 
@@ -337,22 +346,18 @@ Citations in \ref{sec:references}...
 
 ## 📊 Section Summary
 
-| Section | File | Type | Lines | Status |
-|---------|------|------|-------|--------|
-| 01 | abstract.md | Main | 4 | ✅ Existing |
-| 02 | introduction.md | Main | 103 | ✅ Existing |
-| 03 | methodology.md | Main | 86 | ✅ Existing |
-| 04 | experimental_results.md | Main | 154 | ✅ Existing |
-| 05 | discussion.md | Main | 108 | ✅ Existing |
-| 06 | conclusion.md | Main | 84 | ✅ Existing |
-| 08 | acknowledgments.md | Main | 33 | ✅ NEW |
-| 09 | appendix.md | Main | 207 | ✅ NEW |
-| S01 | supplemental_methods.md | Supplement | 232 | ✅ NEW |
-| S02 | supplemental_results.md | Supplement | 304 | ✅ NEW |
-| 98 | symbols_glossary.md | Reference | 124 | ✅ Renamed |
-| 99 | references.md | Reference | 5 | ✅ Renamed |
+This table lists every slot the ordering rules support. "Slot status" indicates whether the
+canonical `template_code_project` exemplar ships a file for that slot.
 
-**Total:** 12 sections, 1,444 lines of content
+| Slot | Example File | Type | Slot Status |
+|------|--------------|------|-------------|
+| 00-07 | abstract / introduction / methodology / results / conclusion / setup / reproducibility / scope | Main | Shipped by `template_code_project` |
+| 08 | acknowledgments.md | Main | Optional (not shipped) |
+| 09 | appendix.md | Main | Optional (not shipped) |
+| S01 | supplemental_methods.md | Supplement | Optional (not shipped) |
+| S02 | supplemental_results.md | Supplement | Optional (not shipped) |
+| 98 | symbols_glossary.md | Reference | Optional, auto-generated when present |
+| 99 | references.md | Reference | Shipped by `template_code_project` |
 
 ---
 
@@ -384,14 +389,13 @@ Citations in \ref{sec:references}...
 
 ---
 
-## ✅ All Tasks - ✅ Added main sections (08, 09)
+## ✅ Capabilities Supported by the Numbering System
 
-- ✅ Added supplemental sections (S01, S02)
-- ✅ Renamed references to 99
-- ✅ Renamed glossary to 98
-- ✅ Updated build system
-- ✅ Updated documentation
-- ✅ Tested ordering
-- ✅ Verified cross-references
+- ✅ Optional main-section slots (08, 09)
+- ✅ Optional supplemental-section slots (S01, S02, …)
+- ✅ References pinned last (99)
+- ✅ Glossary pinned second-to-last (98), auto-generated when present
+- ✅ Deterministic ordering in the build system
+- ✅ Cross-referencing across main/supplemental/glossary/references
 
-**System is ready for use with section numbering support!**
+**The system is ready for use with section numbering support — add the optional slots as needed.**

@@ -402,7 +402,7 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy --strict
 
 # Check specific file
-uv run mypy infrastructure/core.py
+uv run mypy infrastructure/core/test_runner.py
 ```
 
 ### Configuration (mypy.ini)

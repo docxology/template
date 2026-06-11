@@ -1,88 +1,111 @@
-# 📋 Project Renaming Examples
+# 📋 Project Configuration Examples
 
-> **Step-by-step guide** for transforming the template into specific research projects
+> **Step-by-step guide** for configuring the template into specific research projects
 
 **Quick Reference:** [Examples Showcase](../usage/examples-showcase.md) | [Architecture](../core/architecture.md) | [How To Use](../core/how-to-use.md)
 
-This file shows examples of how to customize the template into specific research projects using configuration files and environment variables. For related information, see **[`examples-showcase.md`](../usage/examples-showcase.md)**, **[`configuration.md`](../operational/config/configuration.md)**, **[`README.md`](README.md)**, and **[`../core/architecture.md`](../core/architecture.md)**.
+This file shows examples of how to customize the template into specific research projects using each project's `manuscript/config.yaml` plus a small set of supported environment overrides. For related information, see **[`examples-showcase.md`](../usage/examples-showcase.md)**, **[`configuration.md`](../operational/config/configuration.md)**, **[`README.md`](README.md)**, and **[`../core/architecture.md`](../core/architecture.md)**.
+
+## How Configuration Works
+
+Project identity and metadata live in `projects/{name}/manuscript/config.yaml`.
+There is **no automated renaming script** and **no `.project_config` / `.env.template`
+generation** — you edit `config.yaml` directly (copy from `config.yaml.example`) and,
+optionally, override a few fields at runtime via environment variables.
+
+The config loader (`infrastructure/core/config/loader.py`) reads `config.yaml` and
+exports exactly these values, which may also be supplied via environment variables:
+
+- `PROJECT_TITLE`
+- `AUTHOR_NAME`
+- `AUTHOR_ORCID`
+- `AUTHOR_EMAIL`
+- `AUTHOR_DETAILS`
+- `DOI`
+
+Environment variables that are already set take precedence over `config.yaml`.
+Other identifiers (project directory name, package name in `pyproject.toml`) are
+set by how you create the project directory and edit `pyproject.toml` — not by any
+env var named `PROJECT_NAME`, `PROJECT_CALLSIGN`, or `PROJECT_DESCRIPTION`.
 
 ## Example 1: Machine Learning Research Project
 
-**Configuration in `projects/{name}/manuscript/config.yaml` (or environment variables):**
+**`projects/{name}/manuscript/config.yaml`:**
 
-```bash
-# Project Identity
-PROJECT_NAME="deep-learning-optimization"
-PROJECT_CALLSIGN="DLO"
-PROJECT_DESCRIPTION="Advanced optimization algorithms for deep neural networks using novel gradient-free methods"
+```yaml
+paper:
+  title: "Deep Learning Optimization"
+  version: "1.0"
 
-# Author Information
-AUTHOR_NAME="Dr. Alex Chen"
-AUTHOR_ORCID="0000-0001-2345-6789"
-AUTHOR_EMAIL="alex.chen@research.edu"
-DOI="10.5281/zenodo.98765432"
+authors:
+  - name: "Dr. Alex Chen"
+    orcid: "0000-0001-2345-6789"
+    email: "alex.chen@research.edu"
+    affiliation: "Research University"
+    corresponding: true
 
-# Technical Details
-PYTHON_VERSION=">=3.10"
-LICENSE="MIT"
+publication:
+  doi: "10.5281/zenodo.98765432"
+
+keywords:
+  - "deep learning"
+  - "optimization"
 ```
-
-**What gets updated:**
-
-- `pyproject.toml`: name becomes "deep-learning-optimization"
-- `README.md`: Title becomes "Deep Learning Optimization"
-- All markdown files: Generic references become project-specific
-- Pipeline scripts: Default author becomes "Dr. Alex Chen" (via config.yaml or environment variables)
 
 ## Example 2: Data Science Package
 
-**Configuration in `projects/{name}/manuscript/config.yaml` (or environment variables):**
+**`projects/{name}/manuscript/config.yaml`:**
 
-```bash
-# Project Identity
-PROJECT_NAME="pandas-extension-toolkit"
-PROJECT_CALLSIGN="PET"
-PROJECT_DESCRIPTION="A toolkit of pandas extensions for advanced data manipulation and analysis"
+```yaml
+paper:
+  title: "Pandas Extension Toolkit"
+  version: "0.1"
 
-# Author Information
-AUTHOR_NAME="Sarah Johnson"
-AUTHOR_ORCID="0000-0002-3456-7890"
-AUTHOR_EMAIL="sarah.johnson@datascience.com"
-DOI=""  # Not published yet
+authors:
+  - name: "Sarah Johnson"
+    orcid: "0000-0002-3456-7890"
+    email: "sarah.johnson@datascience.com"
+    affiliation: "Data Science Lab"
+    corresponding: true
 
-# Technical Details
-PYTHON_VERSION=">=3.8"
-LICENSE="Apache-2.0"
+# DOI omitted — not published yet
+
+keywords:
+  - "pandas"
+  - "data manipulation"
 ```
 
 ## Example 3: Academic Paper
 
-**Configuration in `projects/{name}/manuscript/config.yaml` (or environment variables):**
+**`projects/{name}/manuscript/config.yaml`:**
 
-```bash
-# Project Identity
-PROJECT_NAME="quantum-computing-survey"
-PROJECT_CALLSIGN="QCS"
-PROJECT_DESCRIPTION="A survey of quantum computing algorithms and their applications in optimization"
+```yaml
+paper:
+  title: "Quantum Computing Survey"
+  version: "1.0"
 
-# Author Information
-AUTHOR_NAME="Prof. Michael Rodriguez"
-AUTHOR_ORCID="0000-0003-4567-8901"
-AUTHOR_EMAIL="m.rodriguez@university.edu"
-DOI="10.1000/182.2024.001"
+authors:
+  - name: "Prof. Michael Rodriguez"
+    orcid: "0000-0003-4567-8901"
+    email: "m.rodriguez@university.edu"
+    affiliation: "University"
+    corresponding: true
 
-# Technical Details
-PYTHON_VERSION=">=3.9"
-LICENSE="CC-BY-4.0"
+publication:
+  doi: "10.1000/182.2024.001"
+
+keywords:
+  - "quantum computing"
+  - "algorithms"
 ```
 
-## Project Structure After Renaming
+## Project Structure
 
-After configuring your project, your project will have this structure:
+A configured project has this structure:
 
 ```mermaid
 graph TB
-    subgraph "Renamed Project"
+    subgraph "Project"
         ROOT[project_name/]
         SRC[src<br/>Core business logic]
         TESTS[tests<br/>tests]
@@ -93,8 +116,7 @@ graph TB
 
     subgraph "Key Files"
         PYPROJECT[pyproject.toml<br/>Project config]
-        README[README.md<br/>Project docs]
-        CURSORRULES[.cursorrules<br/>Development rules]
+        CONFIG[manuscript/config.yaml<br/>Paper + author metadata]
         RENDER[execute_pipeline.py<br/>Pipeline Orchestrator]
     end
 
@@ -105,43 +127,21 @@ graph TB
     ROOT --> OUTPUT
 
     ROOT --> PYPROJECT
-    ROOT --> README
-    ROOT --> CURSORRULES
+    MANUSCRIPT --> CONFIG
     SCRIPTS --> RENDER
 
     classDef dir fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef file fill:#fff3e0,stroke:#e65100,stroke-width:2px
 
     class ROOT,SRC,TESTS,SCRIPTS,MANUSCRIPT,OUTPUT dir
-    class PYPROJECT,README,CURSORRULES,RENDER file
+    class PYPROJECT,CONFIG,RENDER file
 ```
 
 ## Usage Workflow
 
-### 1. Edit Configuration
+### 1. Create the config
 
-Edit `projects/{name}/manuscript/config.yaml` or set environment variables:
-
-```bash
-# Project Identity
-PROJECT_NAME="your-project-name"
-PROJECT_CALLSIGN="YPN"
-PROJECT_DESCRIPTION="Your project description here"
-
-# Author Information
-AUTHOR_NAME="Your Name"
-AUTHOR_ORCID="0000-0000-0000-0000"
-AUTHOR_EMAIL="your.email@example.com"
-DOI="10.5281/zenodo.12345678"
-
-# Technical Details
-PYTHON_VERSION=">=3.9"
-LICENSE="MIT"
-```
-
-### 2. Configure Your Project
-
-**Option A: Use config.yaml (Recommended)**
+**Option A: Edit `config.yaml` (recommended)**
 
 ```bash
 # Copy the example config
@@ -151,49 +151,29 @@ cp projects/{name}/manuscript/config.yaml.example projects/{name}/manuscript/con
 vim projects/{name}/manuscript/config.yaml
 ```
 
-**Option B: Use Environment Variables**
+**Option B: Override fields via environment variables**
 
 ```bash
+export PROJECT_TITLE="Your Project Title"
 export AUTHOR_NAME="Your Name"
 export AUTHOR_ORCID="0000-0000-0000-0000"
 export AUTHOR_EMAIL="your.email@example.com"
-export PROJECT_TITLE="Your Project Title"
 export DOI="10.5281/zenodo.12345678"  # Optional
 ```
 
-### 3. Test the Build Process
-
-Validate that everything works:
+### 2. Test the Build Process
 
 ```bash
 # Pipeline automatically handles cleanup
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
-### 4. Customize Further
+### 3. Customize Further
 
 Edit additional files as needed:
 
-- `.project_config` - Project metadata
-- `.env.template` - Environment variables
+- `pyproject.toml` — package name and dependencies
 - Manuscript files in `manuscript/`
-
-## Generated Files
-
-After configuring your project, you'll have:
-
-### Configuration Files
-
-- **`.project_config`** - Project configuration (sourceable in scripts)
-- **`.env.template`** - Environment variable template
-- **Updated `pyproject.toml`** - Project name and metadata
-- **Updated `README.md`** - Project-specific documentation
-
-### Updated Documentation
-
-- **All markdown files** - Generic references become project-specific
-- **`.cursorrules`** - Development guidelines updated
-- **Pipeline configuration** - Author information updated (config.yaml or environment variables)
 
 ## Project Customization Examples
 
@@ -288,29 +268,23 @@ def main():
     # ... visualization code ...
 ```
 
-## Tips for Successful Renaming
+## Tips for Successful Configuration
 
 ### Project Naming
 
-- Use kebab-case for `PROJECT_NAME` (good for URLs and package names)
-- Keep `PROJECT_DESCRIPTION` concise but descriptive
-- Choose a meaningful `PROJECT_CALLSIGN` (2-3 characters)
+- Use kebab-case for the package name in `pyproject.toml` (good for URLs and package names)
+- Keep the manuscript `keywords` concise but descriptive
+- Pick a clear, descriptive `paper.title`
 
 ### Author Information
 
-- Set `DOI=""` if the project isn't published yet
+- Omit `publication.doi` (or set `DOI=""`) if the project isn't published yet
 - Use your actual ORCID if you have one
-- Choose appropriate license for your use case
-
-### Technical Details
-
-- Match `PYTHON_VERSION` to your development environment
-- Consider license implications for your use case
-- The script is idempotent - you can run it multiple times safely
+- Choose an appropriate license for your use case
 
 ## Validation Checklist
 
-After renaming, ensure:
+After configuring, ensure:
 
 - [ ] All tests pass with required coverage
 - [ ] Scripts can import from src/ modules
@@ -326,7 +300,7 @@ After renaming, ensure:
 1. **Permission denied**: Make script executable with `chmod +x scripts/execute_pipeline.py`
 2. **Script not found**: Ensure you're in the project root directory
 3. **Build failures**: Check that all dependencies are installed
-4. **Markdown errors**: Validate markdown files after renaming
+4. **Markdown errors**: Validate markdown files after editing
 
 ### Getting Help
 
@@ -336,14 +310,13 @@ After renaming, ensure:
 
 ## Summary
 
-The project configuration system transforms the generic template into a project-specific structure while maintaining:
+Per-project `manuscript/config.yaml` (plus the supported env overrides) configures the
+generic template into a project-specific deliverable while maintaining:
 
 - **Thin orchestrator pattern** - Scripts use projects/{name}/src/ methods
 - **test coverage** - All functionality validated
 - **Automated build pipeline** - PDF generation
 - **Generic utilities** - Reusable across projects
 - **Clear architecture** - Separation of concerns
-
-This enables rapid project setup while maintaining the high-quality standards established by the template.
 
 For more examples and showcase projects, see **[`examples-showcase.md`](../usage/examples-showcase.md)**.

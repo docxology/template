@@ -16,7 +16,7 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `05_copy_outputs.py` - output copying orchestration
 - `06_llm_review.py` - LLM review and translation orchestration
 - `07_generate_executive_report.py` - multi-project executive reporting
-- `render_working_projects.py` - batch core pipeline for `projects/working/` WIP trees
+- `10_repro_bundle.py` - reproduction-bundle build/verify (`infrastructure.publishing.repro_bundle`)
 - `execute_pipeline.py` - single-project pipeline runner
 - `execute_multi_project.py` - multi-project pipeline runner (serial; `--parallel` for process-pool)
 
@@ -27,6 +27,8 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `generate_architecture_overview.py` - architecture `.mmd`/`.svg` from live state
 - `generate_coverage_history.py` - coverage-history page from CI artefacts
 - `generate_stage_table_doc.py` - canonical pipeline stage table (marker block)
+- `generate_exemplar_roster_doc.py` - public exemplar roster doc (`infrastructure.project.exemplar_roster`)
+- `generate_publication_records_doc.py` - publication-records doc (`infrastructure.documentation.publication_records`)
 
 **Quality gates / audits:**
 
@@ -41,15 +43,22 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `08_executable_bundle.py` - bundle stage via `infrastructure.publishing.executable_bundle`
 - `09_archive_publication.py` - multi-target archival stage via `infrastructure.publishing.archival`
 - `publish_project_release.py` - unified GitHub + Zenodo release via `infrastructure.publishing.release_workflow` (opt-in)
-- `codegraph_local.py` - optional local CodeGraph command/scope helper via `infrastructure.project.codegraph`
 
-**Setup / workspace / helpers:**
+**Maintenance helpers (now under [`maintenance/`](maintenance/) — see [`maintenance/AGENTS.md`](maintenance/AGENTS.md)):**
 
-- `setup_pre_commit.py` - install and validate pre-commit hooks
-- `manage_workspace.py` - workspace helper (status, per-project deps)
-- `show_project_info.py` - project metadata helper (used by `run.sh` interactive menu)
-- `organize_executive_outputs.py` - executive output organizer
-- `batch_cogsec_improve.py` - thin orchestrator applying mechanical source improvements
+- `maintenance/setup_pre_commit.py` - install and validate pre-commit hooks
+- `maintenance/manage_workspace.py` - workspace helper (status, per-project deps)
+- `maintenance/show_project_info.py` - standalone project metadata CLI; **not** invoked by `run.sh` (the menu's `i` key prints only the current project name)
+- `maintenance/organize_executive_outputs.py` - executive output organizer
+- `maintenance/batch_cogsec_improve.py` - thin orchestrator applying mechanical source improvements
+- `maintenance/render_working_projects.py` - batch core pipeline for `projects/working/` WIP trees
+- `maintenance/rerender_working_pdfs.py` - re-render working-project PDFs via subprocess over the 03/05 render/copy stages
+- `maintenance/merge_test_supplements.py` - merge supplementary test results (`infrastructure.validation.test_supplements`)
+- `maintenance/codegraph_local.py` - optional local CodeGraph command/scope helper via `infrastructure.project.codegraph`
+
+**Local CI (shell):**
+
+- `ci_local.sh` - local CI reproduction (`act` when available, otherwise a pure-Python CI fallback; see [`../docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md))
 
 **Backup / operations (shell):**
 
@@ -97,20 +106,12 @@ by `scripts/generate_stage_table_doc.py`):
 
 ## Public Types
 
-### `PipelineStageDefinition`
-
-```python
-@dataclass
-class PipelineStageDefinition:
-    script: str
-    requires_ollama: bool
-    description: str
-    note: Optional[str] = None
-```
-
-### `MENU_SCRIPT_MAPPING`
-
-Typed mapping used by `scripts/__init__.py` to document the interactive menu-to-script relationship.
+`scripts/__init__.py` exports only `ensure_repo_root_on_path()` — the idempotent
+helper each script calls to put the repo root on `sys.path` (the repo sets
+`[tool.uv] package = false`, so it is never installed into the venv). The former
+`PipelineStageDefinition` / `MENU_SCRIPT_MAPPING` types were removed: they had no
+functional consumers and had drifted from the live interactive menu, whose single
+source of truth is `infrastructure.orchestration.menu.MENU_OPTIONS`.
 
 ## Execution Details
 
@@ -142,18 +143,23 @@ orchestrator:
 | `05_copy_outputs.py` | `infrastructure.reporting.output_organizer` | |
 | `06_llm_review.py` | `infrastructure.llm.review` | Skipped when Ollama is absent. |
 | `07_generate_executive_report.py` | `infrastructure.reporting.multi_project_reporter.generate_multi_project_report`, `infrastructure.reporting.output_organizer.OutputOrganizer.copy_combined_pdfs` | Multi-project only; skips when one project discovered. |
-| `render_working_projects.py` | `infrastructure.project.working_render` | Local WIP audit under `projects/working/`; not part of default pipeline. |
+| `maintenance/render_working_projects.py` | `infrastructure.project.working_render` | Local WIP audit under `projects/working/`; not part of default pipeline. |
+| `maintenance/rerender_working_pdfs.py` | subprocess over the `03_render_pdf.py` / `05_copy_outputs.py` stages (+ `infrastructure.project.working_render`) | Local-only working-PDF re-render; not part of default pipeline. |
+| `maintenance/merge_test_supplements.py` | `infrastructure.validation.test_supplements.merge_supplements` | Local maintenance helper. |
+| `10_repro_bundle.py` | `infrastructure.publishing.repro_bundle` | Opt-in reproduction-bundle build/verify. |
+| `generate_exemplar_roster_doc.py` | `infrastructure.project.exemplar_roster` | Derived public exemplar roster doc. |
+| `generate_publication_records_doc.py` | `infrastructure.documentation.publication_records.write_publication_records_doc` | Derived publication-records doc. |
 | `lint_docs.py` | `infrastructure.validation.docs.lint_runner` | |
 | `execute_pipeline.py` (post-run) | `infrastructure.core.pipeline.post_run_reporting` | |
 | `00_setup_environment.py` | `infrastructure.core.runtime.environment`, `setup_checks`, `env_deps` | |
-| `show_project_info.py` | `infrastructure.project.info.collect_project_info` | |
+| `maintenance/show_project_info.py` | `infrastructure.project.info.collect_project_info` | Standalone CLI; not invoked by `run.sh` (the menu's `i` key prints only the current project name). |
 | `check_tracked_projects.py` | `infrastructure.project.git_guards.offending_tracked_projects` | |
 | `check_tracked_generated_artifacts.py` | `infrastructure.project.git_guards.tracked_generated_artifacts` | |
-| `codegraph_local.py` | `infrastructure.project.codegraph` | Optional local-only index helper; never a pipeline dependency |
+| `maintenance/codegraph_local.py` | `infrastructure.project.codegraph` | Optional local-only index helper; never a pipeline dependency |
 | `08_executable_bundle.py` | `infrastructure.publishing.executable_bundle.bundle_project` | |
 | `check_template_drift.py` | `infrastructure.project.drift` (+ thin-orchestrator script checks) | |
-| `manage_workspace.py` | `infrastructure.project.workspace` | |
-| `batch_cogsec_improve.py` | `infrastructure.core.source_improve` | |
+| `maintenance/manage_workspace.py` | `infrastructure.project.workspace` | |
+| `maintenance/batch_cogsec_improve.py` | `infrastructure.core.source_improve` | |
 | `execute_pipeline.py` (HITL / single-stage) | `infrastructure.core.pipeline.hitl_cli`, `single_stage` | Post-run → `post_run_reporting` |
 | `execute_multi_project.py` | `infrastructure.core.pipeline.multi_project_cli` | Serial + `--parallel` paths |
 | `scripts/gates/module_line_count_check.py` | `infrastructure.validation.line_count` | |

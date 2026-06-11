@@ -27,7 +27,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | --- | --- |
 | `uv run python scripts/run_sia_loop.py` | Fixture replay (deterministic) |
 | `… --live-sia` | Bounded subprocess target + evaluation; target code unchanged each generation (deterministic stub, no code mutation, no sandbox) |
-| `… --live-sia` (model set in `sia.yaml`) | Live mode with Ollama feedback note written but **not applied to code**; the LLM model is read from config (`sia.yaml`/settings), not a CLI flag |
+| `… --live-sia` (model set in `manuscript/config.yaml`) | Live mode with Ollama feedback note written but **not applied to code**; the LLM model is read from the `sia.llm_model` key in `manuscript/config.yaml` (see `src/loop_config.py`), not a CLI flag. Shipped empty (`llm_model: ""`) = no LLM feedback |
 
 Live mode demonstrates the loop's execution/evaluation plumbing, not autonomous
 code modification. Cross-generation self-improvement is shown only via fixture
@@ -38,12 +38,16 @@ replay. See [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/si
 The harness exposes two validation surfaces:
 
 1. **Layout gate** — `uv run python -m infrastructure.sia.cli validate <task_dir>`
-   (add `--json`) checks the required task directory structure and exits non-zero
-   with a message on an invalid or missing task.
-2. **Pipeline contract** — each task's `sia.yaml` declares `required_artifacts`
-   and `quality_checks`; the loop fails closed when a required artifact is
-   missing or a quality check is unmet. Use these keys to define a project's own
-   acceptance profile without touching Layer-1 code.
+   (add `--json`) checks the required task directory structure (`validate_task_dir`
+   in `infrastructure/sia/task_layout.py`) and exits non-zero with a message on an
+   invalid or missing task — missing required directories, the public-data file, or
+   the `reference/reference_target_agent.py` scaffold.
+2. **Loop fail-closed behavior** — `run_sia_loop` (`infrastructure/sia/loop_runner.py`)
+   raises `ValidationError`/`BuildError` and aborts the loop when a required input is
+   absent: a missing fixture directory or fixture file in replay mode, a missing target
+   agent in live mode, a non-positive `max_generations`, or a non-zero target-agent exit.
+   There is no declarative `required_artifacts`/`quality_checks` contract — acceptance is
+   enforced in Layer-1 code, not by a per-task config file.
 
 ## Testing
 

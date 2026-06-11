@@ -96,7 +96,7 @@ unless this file is re-measured.
 | `v2.1.1` | CI Zero-Mock gate (`verify_no_mocks.py`); mock/fake patterns eliminated from suite |
 | `v2.2.0` | Orchestration hermeticity — script discovery, `get_subprocess_env()`, hermetic subprocess env |
 | `v2.3.0` | Type safety — TypedDicts for config, `ResolvedTestingConfig`, `ProjectInfo` dataclass |
-| `v2.4.0` | Monkeypatch elimination — real `tmp_path` + env-isolation fixtures |
+| `v2.4.0` | Test isolation — real `tmp_path` + env-isolation fixtures (pytest's `monkeypatch` fixture remains permitted by the no-mocks policy and is still used for boundary substitution and env isolation; it was not eliminated) |
 | `v2.5.0` | Structured log assertions — `caplog`-based, `log_parser.py` |
 | `v2.6.0` | Ruff lint remediation: 710 → 0 errors across `infrastructure/`, `scripts/`, `tests/` |
 | `v2.7.0` | Type narrowing & mypy baseline: 100 → 0 errors across `core/` |

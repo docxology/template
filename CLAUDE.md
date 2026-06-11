@@ -42,7 +42,7 @@ This is a research project template with a test-driven development workflow, aut
 | Archive publication real deposit | `uv run python scripts/09_archive_publication.py --project {name} --providers zenodo software_heritage ipfs_pinata --commit` (requires credentials — see [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md)) |
 | Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publishing-guide.md`](docs/guides/publishing-guide.md)) |
 | Reproduction bundle (single / all public exemplars) | `uv run python scripts/10_repro_bundle.py build {name}` or `... build --all-public --out output/repro_bundles` (verify with `... verify <manifest>`) |
-| Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
+| Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (scaffold-only until populated — exits 5 with 0 collected tests on a clean checkout; see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
 | Repo-wide doc linter | `uv run python scripts/lint_docs.py` |
 | Exemplar drift checker | `uv run python scripts/check_template_drift.py` (add `--strict` for focused gates) |
 | Module line count gate | `uv run python scripts/gates/module_line_count_check.py` |
@@ -83,7 +83,7 @@ uv run python scripts/execute_pipeline.py --project {project_name} --core-only
 # Resume from checkpoint
 ./run.sh --pipeline --resume
 
-# Deterministic steganography timestamps (also strips `--deterministic` in secure_run.sh)
+# Deterministic steganography timestamps (--deterministic is parsed by the Python `secure` subcommand, which sets STEGANOGRAPHY_DETERMINISTIC=1)
 ./secure_run.sh --deterministic --project {project_name}
 ```
 
@@ -139,7 +139,7 @@ uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 uv run python -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
 
 # Validate PDFs
-uv run python -m infrastructure.validation.cli pdf output/{project_name}/pdf/
+uv run python -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf
 
 # Local Ollama workflow
 ollama serve
@@ -263,12 +263,15 @@ avg = calculate_average(data)  # Use tested method
 
 ### Infrastructure Modules
 
+- `infrastructure/autoresearch/` - Deterministic research loops (plan/evidence/readiness reports, stage contracts)
+- `infrastructure/benchmark/` - Benchmarking helpers (timing, resource summaries, report payloads)
 - `infrastructure/config/` - Repository-wide configuration and defaults
 - `infrastructure/core/` - Core utilities (logging, exceptions, file operations, pipeline, telemetry, security)
 - `infrastructure/docker/` - Docker containerization settings and configuration
 - `infrastructure/doctor/` - Repository health diagnostics and self-check tooling
 - `infrastructure/documentation/` - Figure management, API docs, glossary generation
 - `infrastructure/llm/` - Local LLM integration (Ollama) for reviews and translations
+- `infrastructure/methods/` - Methods orchestration (DAG contracts, methods prose, artifacts, evidence)
 - `infrastructure/orchestration/` - Pipeline/multi-project/secure CLI entrypoints (`python -m infrastructure.orchestration`)
 - `infrastructure/project/` - Multi-project discovery and management
 - `infrastructure/prose/` - Prose-manuscript analysis helpers (prose-centric projects)
@@ -277,6 +280,7 @@ avg = calculate_average(data)  # Use tested method
 - `infrastructure/rendering/` - Multi-format rendering (PDF, HTML, slides)
 - `infrastructure/reporting/` - Pipeline reporting and error aggregation
 - `infrastructure/scientific/` - Scientific computing best practices and benchmarking
+- `infrastructure/sia/` - Self-improvement harness (task layout, fixture replay, evaluation runner)
 - `infrastructure/search/` - Literature search and reference discovery
 - `infrastructure/skills/` - Programmatic AI skill discovery and manifest generation
 - `infrastructure/steganography/` - Cryptographic PDF watermarking and verification

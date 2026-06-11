@@ -102,6 +102,45 @@ print(f"Authors: {metadata['authors']}")
 print(f"Description: {metadata['description']}")
 ```
 
+`get_project_metadata` is defined in `metadata.py` and re-exported from the
+`infrastructure.project` package (it is **not** re-exported by `discovery.py`).
+
+### Public CI Scope (`public_scope.py`)
+
+Single source of truth for the public exemplar roster and the source paths CI
+lints. Imported by `core/health.py`, `documentation/active_projects_doc.py`, and
+`publishing/repro_bundle.py`.
+
+```python
+from infrastructure.project.public_scope import (
+    PUBLIC_PROJECT_NAMES,      # canonical public exemplar names under projects/templates/
+    public_ci_source_paths,    # public src/ paths fed to Ruff/mypy in CI
+)
+```
+
+CLI: `python -m infrastructure.project.public_scope source-paths` (the command the
+CI `lint` job uses to compute scope).
+
+### Sidecar Symlink Sync (`linking.py`)
+
+Implements the private-projects sidecar symlink sync described in root
+`CLAUDE.md`. Imported by `orchestration/cli.py`; runs on `run.sh` /
+`python -m infrastructure.orchestration` unless `TEMPLATE_SKIP_LINK_SYNC=1`.
+`LIFECYCLE_LINK_DIRS` maps each private sidecar subdir to its `projects/<subfolder>/`
+link target (`working/*` → `projects/working/*`, `archive/*` → `projects/archive/*`,
+optional `active/`/`published/`/`other/`). Root override: `TEMPLATE_PRIVATE_PROJECTS_ROOT`
+or `.private_projects_root`.
+
+### Roster, Domain Profile, and Experiment Plan
+
+- `exemplar_roster.py` — `collect_entries(repo_root)` builds `ExemplarEntry`
+  records from each public exemplar README; backs `docs/_generated/exemplar_roster.md`.
+- `domain_profile.py` — `load_domain_profile(project_root)` returns a `DomainProfile`
+  describing a project's validators, render tracks, and defaults.
+- `experiment_plan.py` — `load_experiment_plan(project_root)` /
+  `validate_experiment_plan(plan)` parse and validate an optional experiment plan
+  (conditions, metrics, directions).
+
 ## Project Structure Requirements
 
 ### Required Directories

@@ -9,7 +9,27 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
-- No unreleased changes yet.
+### Added
+
+- 🔬 **Deep research dispatch** (`infrastructure/search/deep_research`) — opt-in,
+  paid multi-provider deep-research CLI (`providers`/`submit`/`poll`/`run-project`),
+  never part of the default pipeline or CI.
+- 🔐 **Kmyth TPM adapter + NSA `kmyth` submodule** — TPM-backed sealing adapter
+  added to the steganography surface, with the upstream `kmyth` repository
+  vendored as a git submodule.
+
+### Changed
+
+- 🧩 **Output-validation modularization** — refactored output-validation tooling
+  in `infrastructure/validation/` into smaller, focused modules.
+- 🧪 **Benchmark test rename** — renamed benchmark test module(s) for clarity.
+
+### Fixed
+
+- 📦 **Correction to [3.3.1] "Public-exemplar outputs tracked"** — the tracked
+  exemplar render outputs under `output/` were removed on 2026-06-08, so the
+  repository no longer ships committed `output/` artifacts (`git ls-files output/`
+  returns nothing). This supersedes the 3.3.1 "outputs tracked" claim below.
 
 ## [3.3.1] — 2026-06-07
 

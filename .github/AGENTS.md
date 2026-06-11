@@ -197,7 +197,7 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ru
 uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
 
 # Run tests locally (mirror CI)
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 -m "not requires_ollama"
+COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
 uv sync --group rendering --group monitoring --group discopy
 COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml

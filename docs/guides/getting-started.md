@@ -188,7 +188,7 @@ flowchart TB
 1. **Run pipeline**
 
    ```bash
-   # Core pipeline (ten stages by default: clean through copy outputs)
+   # Core pipeline (eight stages: clean through copy outputs; LLM stages excluded)
    uv run python scripts/execute_pipeline.py --project {name} --core-only
 
    # Or use unified interactive menu

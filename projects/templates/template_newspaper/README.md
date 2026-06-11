@@ -1,9 +1,11 @@
 # The Triplicate — `template_newspaper`
 
 > A data-driven, large-format **newspaper layout engine**. It renders a complete
-> 12-page broadsheet — *The Triplicate* of Crescent City, California — to a
-> print-ready PDF from structured YAML content, using pure-Python ReportLab.
-> Swapping editions is a data edit; the engine never changes.
+> 12-page US Tabloid (11″ × 17″) edition — *The Triplicate* of Crescent City,
+> California — to a print-ready PDF from structured YAML content, using
+> pure-Python ReportLab. Broadsheet is a supported alternate trim
+> (`render.page: broadsheet`); the shipped default is tabloid. Swapping editions
+> is a data edit; the engine never changes.
 
 ![12-page contact sheet](docs/contact-sheet.png)
 

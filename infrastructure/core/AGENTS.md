@@ -497,6 +497,25 @@ class MetadataError(PublishingError):
     pass
 ```
 
+#### NotADirectoryError (class)
+```python
+class NotADirectoryError(FileOperationError, builtins.NotADirectoryError):
+    """Raised when a path is not a directory when a directory is expected."""
+    pass
+```
+
+#### SecurityError (class)
+```python
+class SecurityError(SecurityViolation):
+    """Security violation in LLM input sanitization.
+
+    Subclass of SecurityViolation kept for backwards compatibility with call
+    sites that catch SecurityError. Re-exported from
+    infrastructure.core._exceptions_domains via exceptions.py.
+    """
+    pass
+```
+
 #### raise_with_context (function)
 ```python
 def raise_with_context(
@@ -623,26 +642,6 @@ def log_operation(
     """
 ```
 
-#### log_operation_silent (function)
-```python
-@contextmanager
-def log_operation_silent(
-    operation: str,
-    logger: Optional[logging.Logger] = None,
-    level: int = logging.DEBUG
-) -> Iterator[None]:
-    """Context manager for logging operation start only (no completion message).
-
-    Args:
-        operation: Description of the operation
-        logger: Logger instance (creates one if None)
-        level: Log level for messages
-
-    Yields:
-        None
-    """
-```
-
 #### log_timing (function)
 ```python
 @contextmanager
@@ -742,40 +741,6 @@ def log_substep(
 
     Args:
         message: Substep description
-        logger: Logger instance (creates one if None)
-    """
-```
-
-#### log_stage_with_eta (function)
-```python
-def log_stage_with_eta(
-    stage_num: int,
-    total_stages: int,
-    stage_name: str,
-    pipeline_start: Optional[float] = None,
-    logger: Optional[logging.Logger] = None
-) -> None:
-    """Log a pipeline stage header with ETA calculation.
-
-    Args:
-        stage_num: Current stage number (1-based)
-        total_stages: Total number of stages
-        stage_name: Name of the stage
-        pipeline_start: Pipeline start time (for ETA calculation)
-        logger: Logger instance (creates one if None)
-    """
-```
-
-#### log_resource_usage (function)
-```python
-def log_resource_usage(
-    stage_name: str = "",
-    logger: Optional[logging.Logger] = None
-) -> None:
-    """Log current resource usage (if psutil available).
-
-    Args:
-        stage_name: Name of the stage (for context)
         logger: Logger instance (creates one if None)
     """
 ```
@@ -891,58 +856,36 @@ def get_testing_config(repo_root: Path | str) -> ResolvedTestingConfig:
 
 ### credentials.py
 
-#### load_credentials (function)
+#### CredentialManager (class)
 ```python
-def load_credentials(
-    config_path: Optional[Path] = None,
-    env_file: Optional[str] = None,
-    required_keys: Optional[List[str]] = None
-) -> Dict[str, Any]:
-    """Load credentials from environment variables and config files.
+class CredentialManager:
+    """Manage credentials from .env and YAML config files.
 
-    Args:
-        config_path: Path to YAML config file (optional)
-        env_file: Path to .env file (optional)
-        required_keys: List of required credential keys
-
-    Returns:
-        Dictionary of loaded credentials
-
-    Raises:
-        MissingCredentialsError: If required credentials are missing
-        InvalidCredentialsError: If credentials are invalid
+    Loads credentials from environment variables, .env files (when
+    python-dotenv is installed), and YAML config files with env-var
+    substitution.
     """
+
+    def __init__(self, env_file: Path | None = None, config_file: Path | None = None): ...
+
+    def get_zenodo_credentials(self, use_sandbox: bool = True) -> dict[str, Any]: ...
+    def get_github_credentials(self) -> dict[str, Any]: ...
+    def get_arxiv_credentials(self) -> dict[str, Any]: ...
+    def has_zenodo_credentials(self, use_sandbox: bool = True) -> bool: ...
+    def has_github_credentials(self) -> bool: ...
+    def has_arxiv_credentials(self) -> bool: ...
 ```
 
-#### get_credential (function)
+#### make_bearer_auth_headers (function)
 ```python
-def get_credential(key: str, default: Optional[str] = None) -> Optional[str]:
-    """Get a single credential by key.
-
-    Args:
-        key: Credential key to retrieve
-        default: Default value if key not found
-
-    Returns:
-        Credential value or default
-    """
+def make_bearer_auth_headers(token: str) -> dict[str, str]:
+    """Return Authorization header dict using OAuth2 Bearer scheme."""
 ```
 
-#### validate_credentials (function)
+#### make_token_auth_headers (function)
 ```python
-def validate_credentials(
-    credentials: Dict[str, Any],
-    required_keys: List[str]
-) -> bool:
-    """Validate that required credentials are present.
-
-    Args:
-        credentials: Credentials dictionary to validate
-        required_keys: List of required credential keys
-
-    Returns:
-        True if all required credentials are present
-    """
+def make_token_auth_headers(token: str) -> dict[str, str]:
+    """Return Authorization header dict using GitHub token scheme."""
 ```
 
 ### progress.py
@@ -1277,29 +1220,6 @@ def check_build_tools(tools: List[str]) -> Dict[str, bool]:
     """
 ```
 
-#### setup_environment (function)
-```python
-def setup_environment(
-    repo_root: Path,
-    check_python: bool = True,
-    check_deps: bool = True,
-    check_tools: bool = True,
-    create_dirs: bool = True
-) -> Dict[str, Any]:
-    """Perform environment setup and validation.
-
-    Args:
-        repo_root: Repository root directory
-        check_python: Whether to check Python version
-        check_deps: Whether to check dependencies
-        check_tools: Whether to check build tools
-        create_dirs: Whether to create required directories
-
-    Returns:
-        Dictionary with setup results and status
-    """
-```
-
 ### analysis_timeout.py
 
 - ``parse_analysis_script_timeout_sec(environ=None) -> float | None`` — resolves ``ANALYSIS_SCRIPT_TIMEOUT_SEC`` for Stage 02 ``subprocess.run`` (default ``7200.0`` seconds = 2 hours; ``0`` / ``none`` / ``unlimited`` / ``inf`` → ``None``, no per-script timeout).
@@ -1332,50 +1252,7 @@ def discover_orchestrators(repo_root: Path) -> List[Path]:
     """
 ```
 
-#### validate_script (function)
-```python
-def validate_script(script_path: Path) -> Dict[str, Any]:
-    """Validate that a script file is executable and properly structured.
-
-    Args:
-        script_path: Path to script file
-
-    Returns:
-        Dictionary with validation results
-    """
-```
-
 ### files/operations.py
-
-#### clean_output_directory (function)
-```python
-def clean_output_directory(output_dir: Path) -> None:
-    """Clean an output directory by removing all files and subdirectories.
-
-    Args:
-        output_dir: Directory to clean
-
-    Returns:
-        True if cleaning was successful
-    """
-```
-
-#### clean_output_directories (function)
-```python
-def clean_output_directories(
-    repo_root: Path,
-    project_names: List[str]
-) -> Dict[str, bool]:
-    """Clean output directories for multiple projects.
-
-    Args:
-        repo_root: Repository root directory
-        project_names: List of project names
-
-    Returns:
-        Dictionary mapping project names to cleaning success status
-    """
-```
 
 #### copy_final_deliverables (function)
 ```python
@@ -1397,32 +1274,6 @@ def copy_final_deliverables(
 ```
 
 ### files/inventory.py
-
-#### generate_file_inventory (function)
-```python
-def generate_file_inventory(directory: Path) -> Dict[str, Any]:
-    """Generate file inventory for a directory.
-
-    Args:
-        directory: Directory to inventory
-
-    Returns:
-        Dictionary with file inventory information
-    """
-```
-
-#### calculate_directory_size (function)
-```python
-def calculate_directory_size(directory: Path) -> Dict[str, Any]:
-    """Calculate total size and file counts for a directory.
-
-    Args:
-        directory: Directory to analyze
-
-    Returns:
-        Dictionary with size and count information
-    """
-```
 
 #### format_file_size (function)
 ```python
@@ -1592,40 +1443,6 @@ def generate_pipeline_summary(
     """
 ```
 
-#### calculate_performance_metrics (function)
-```python
-def calculate_performance_metrics(
-    stage_durations: Dict[str, float],
-    total_duration: float
-) -> Dict[str, Any]:
-    """Calculate performance metrics from stage timing data.
-
-    Args:
-        stage_durations: Dictionary mapping stage names to durations
-        total_duration: Total pipeline duration
-
-    Returns:
-        Dictionary with performance metrics
-    """
-```
-
-#### generate_executive_summary (function)
-```python
-def generate_executive_summary(
-    multi_project_results: Dict[str, Any],
-    repo_root: Path
-) -> Dict[str, Any]:
-    """Generate executive summary across multiple projects.
-
-    Args:
-        multi_project_results: Results from multi-project execution
-        repo_root: Repository root directory
-
-    Returns:
-        Dictionary with executive summary information
-    """
-```
-
 ## Usage Examples
 
 ### Basic Logging Setup
@@ -1715,26 +1532,6 @@ class SystemHealthChecker:
         """
 ```
 
-#### get_health_api (function)
-```python
-def get_health_api() -> HealthCheckAPI:
-    """Get health check API instance.
-
-    Returns:
-        HealthCheckAPI instance
-    """
-```
-
-#### quick_health_check (function)
-```python
-def quick_health_check() -> bool:
-    """Perform quick system health check.
-
-    Returns:
-        True if all critical systems are healthy
-    """
-```
-
 #### get_health_status (function)
 ```python
 def get_health_status() -> Dict[str, Any]:
@@ -1742,16 +1539,6 @@ def get_health_status() -> Dict[str, Any]:
 
     Returns:
         Dictionary with health status information
-    """
-```
-
-#### get_health_metrics (function)
-```python
-def get_health_metrics() -> Dict[str, Any]:
-    """Get health metrics.
-
-    Returns:
-        Dictionary with health metrics
     """
 ```
 
@@ -1768,12 +1555,6 @@ class SecurityValidator:
         Args:
             max_length: Maximum allowed input length
         """
-```
-
-#### SecurityHeaders (class)
-```python
-class SecurityHeaders:
-    """Generate security headers for HTTP responses."""
 ```
 
 #### RateLimiter (class)
@@ -1905,48 +1686,6 @@ def calculate_eta(
     """
 ```
 
-#### calculate_eta_ema (function)
-```python
-def calculate_eta_ema(
-    current: int,
-    total: int,
-    start_time: float,
-    alpha: float = 0.1
-) -> Optional[float]:
-    """Calculate ETA using exponential moving average.
-
-    Args:
-        current: Current progress value
-        total: Total progress value
-        start_time: Start time
-        alpha: EMA smoothing factor
-
-    Returns:
-        Estimated seconds remaining
-    """
-```
-
-#### calculate_eta_with_confidence (function)
-```python
-def calculate_eta_with_confidence(
-    current: int,
-    total: int,
-    start_time: float,
-    alpha: float = 0.1
-) -> tuple[Optional[float], Optional[float], Optional[float]]:
-    """Calculate ETA with confidence intervals.
-
-    Args:
-        current: Current progress value
-        total: Total progress value
-        start_time: Start time
-        alpha: EMA smoothing factor
-
-    Returns:
-        Tuple of (realistic_eta, optimistic_eta, pessimistic_eta)
-    """
-```
-
 #### log_progress_bar (function)
 ```python
 def log_progress_bar(
@@ -2053,15 +1792,6 @@ def log_stage_with_eta(
 
 ### runtime/function_profiler.py
 
-#### PerformanceMonitor (class)
-```python
-class PerformanceMonitor:
-    """Monitor performance metrics for operations."""
-
-    def __init__(self):
-        """Initialize performance monitor."""
-```
-
 #### monitor_performance (function)
 ```python
 @contextmanager
@@ -2074,21 +1804,6 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
 
     Yields:
         PerformanceMonitor instance
-    """
-```
-
-#### benchmark_llm_query (function)
-```python
-def benchmark_llm_query(client, prompt: str, iterations: int = 3) -> Dict[str, Union[float, List[float]]]:
-    """Benchmark LLM query performance.
-
-    Args:
-        client: LLM client instance
-        prompt: Query prompt
-        iterations: Number of benchmark iterations
-
-    Returns:
-        Dictionary with performance metrics
     """
 ```
 
@@ -2105,12 +1820,6 @@ def profile_memory_usage(func: Callable, *args, **kwargs) -> Dict[str, Any]:
     Returns:
         Dictionary with memory usage data
     """
-```
-
-#### main (function)
-```python
-def main():
-    """Main function for performance monitoring CLI."""
 ```
 
 #### benchmark_function (function)
@@ -2721,20 +2430,6 @@ def update_memory(self) -> None:
     """Update peak memory tracking."""
 ```
 
-#### monitor_performance (function)
-```python
-@contextmanager
-def monitor_performance(operation_name: str = "Operation"):
-    """Context manager for monitoring operation performance.
-
-    Args:
-        operation_name: Name of the operation being monitored
-
-    Yields:
-        PerformanceMonitor instance
-    """
-```
-
 #### get_system_resources (function)
 ```python
 def get_system_resources() -> dict[str, Any]:
@@ -3141,33 +2836,6 @@ def verify_analysis_outputs(
 
 ### files/operations.py
 
-#### clean_output_directory (function)
-```python
-def clean_output_directory(output_dir: Path) -> None:
-    """Clean top-level output directory before copying.
-
-    Args:
-        output_dir: Path to top-level output directory
-
-    Returns:
-        True if cleanup successful, False otherwise
-    """
-```
-
-#### clean_output_directories (function)
-```python
-def clean_output_directories(repo_root: Path, subdirs: List[str] | None = None) -> None:
-    """Clean output directories for a fresh pipeline start.
-
-    Removes all contents from both project/output/ and output/ directories,
-    then recreates the expected subdirectory structure.
-
-    Args:
-        repo_root: Repository root directory
-        subdirs: List of subdirectories to recreate. If None, uses default list.
-    """
-```
-
 #### copy_final_deliverables (function)
 ```python
 def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
@@ -3433,44 +3101,10 @@ class SystemHealthChecker:
         """
 ```
 
-#### HealthCheckAPI (class)
-```python
-class HealthCheckAPI:
-    """API for health check operations."""
-    
-    def get_status(self) -> Dict[str, Any]:
-        """Get overall system status."""
-    
-    def get_metrics(self) -> Dict[str, Any]:
-        """Get health metrics."""
-```
-
-#### get_health_api (function)
-```python
-def get_health_api() -> HealthCheckAPI:
-    """Get health check API instance."""
-```
-
-#### quick_health_check (function)
-```python
-def quick_health_check() -> bool:
-    """Perform quick health check.
-    
-    Returns:
-        True if system is healthy, False otherwise
-    """
-```
-
 #### get_health_status (function)
 ```python
 def get_health_status() -> Dict[str, Any]:
     """Get current health status."""
-```
-
-#### get_health_metrics (function)
-```python
-def get_health_metrics() -> Dict[str, Any]:
-    """Get health metrics."""
 ```
 
 ### cli.py
@@ -3534,19 +3168,6 @@ def handle_inventory_command(args: argparse.Namespace) -> int:
     """
 ```
 
-#### handle_summary_command (function)
-```python
-def handle_summary_command(args: argparse.Namespace) -> int:
-    """Handle summary command.
-    
-    Args:
-        args: Parsed command arguments
-        
-    Returns:
-        Exit code
-    """
-```
-
 #### handle_discover_command (function)
 ```python
 def handle_discover_command(args: argparse.Namespace) -> int:
@@ -3574,7 +3195,7 @@ This module provides logging formatter utilities and custom log format definitio
 
 ### logging/helpers.py
 
-This module provides additional logging helper functions beyond those in `logging_utils.py`.
+This module provides additional logging helper functions beyond those in `logging/utils.py`.
 
 ### logging/progress.py
 

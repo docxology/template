@@ -13,7 +13,44 @@ The `infrastructure/project/` module provides project discovery, validation, and
 - `discover_projects(repo_root, projects_dir="projects")` - Find all valid projects in the active projects directory
 - `resolve_project_root(repo_root, project_name)` - Resolve a project root. A qualified `<subfolder>/<name>` path (head in `templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) resolves directly under `projects/<subfolder>/<name>`. A bare name prefers `projects/active/<name>` (if it carries project markers), then `projects/working/<name>`, then a flat standalone `projects/<name>`, falling back to `projects/active/<name>`
 - `validate_project_structure(project_dir)` - Validate required directories exist
-- `get_project_metadata(project_dir)` - Extract configuration from pyproject.toml and config.yaml (includes `[tool.template]` flags such as `skip_combined_pytest`)
+
+### Project Metadata (`metadata.py`)
+
+- `get_project_metadata(project_dir)` - Extract configuration from pyproject.toml and config.yaml (includes `[tool.template]` flags such as `skip_combined_pytest`). Defined in `metadata.py` and re-exported from `infrastructure.project` (`from infrastructure.project import get_project_metadata`); it is **not** re-exported by `discovery.py`.
+
+### Public CI Scope (`public_scope.py`)
+
+Single source of truth for which projects are public and which source paths CI lints. Imported by `core/health.py`, `documentation/active_projects_doc.py`, and `publishing/repro_bundle.py`; drives the lint scope via `python -m infrastructure.project.public_scope source-paths`.
+
+- `PUBLIC_PROJECT_NAMES: tuple[str, ...]` - canonical roster of git-tracked public exemplar names under `projects/templates/`
+- `public_project_names(repo_root)` / `public_project_infos(repo_root)` - resolve roster to names / `ProjectInfo` objects present in the checkout
+- `public_ci_source_paths(repo_root)` - public `src/` paths the CI `lint` job feeds to Ruff/mypy
+- `main(argv=None)` - CLI entry point for `source-paths` (and related) subcommands
+
+### Sidecar Symlink Sync (`linking.py`)
+
+Implements the private-projects sidecar symlink sync documented in root `CLAUDE.md`. Imported by `orchestration/cli.py`; auto-runs on `run.sh` / `python -m infrastructure.orchestration` unless `TEMPLATE_SKIP_LINK_SYNC=1`.
+
+- `LIFECYCLE_LINK_DIRS: dict[str, str]` - maps private sidecar subdirs to their `projects/<subfolder>/` link targets (`working/*` → `projects/working/*`, `archive/*` → `projects/archive/*`, optional `active/*`/`published/*`/`other/*`)
+- `private_projects_root(repo_root)` - resolve the sidecar root (env `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`, default sibling `../projects`)
+- `is_managed_symlink(path, private_root)` - classify a `projects/` entry as a managed sidecar symlink
+- Env vars: `TEMPLATE_PRIVATE_PROJECTS_ROOT` (root override), `TEMPLATE_SKIP_LINK_SYNC` (disable sync)
+
+### Exemplar Roster (`exemplar_roster.py`)
+
+- `collect_entries(repo_root)` - build `ExemplarEntry` records from each public exemplar's README (H1 title + "When to use this template" section)
+- `ExemplarEntry` - structured roster entry; backs `docs/_generated/exemplar_roster.md`
+
+### Domain Profile (`domain_profile.py`)
+
+- `load_domain_profile(project_root, *, default_profile="generic")` - load a project's optional domain profile (validators, render tracks, defaults)
+- `DomainProfile` - parsed profile dataclass
+
+### Experiment Plan (`experiment_plan.py`)
+
+- `load_experiment_plan(project_root)` - parse an optional `experiment_plan` config into an `ExperimentPlan`
+- `validate_experiment_plan(plan)` - validate roles/metrics/directions, returning `ExperimentPlanValidation`
+- `ExperimentPlan`, `ExperimentCondition`, `ExperimentMetric`, `ExperimentPlanValidation` - structured plan dataclasses
 
 ### Template Drift (`drift/`)
 

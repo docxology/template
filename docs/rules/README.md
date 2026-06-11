@@ -67,7 +67,7 @@ These terms are used consistently across the codebase:
 | **Layer 1** | Infrastructure (generic) | `infrastructure/validation/` |
 | **Layer 2** | Project-specific | `projects/{name}/src/` |
 | **Thin orchestrator** | Script that coordinates but doesn't implement | `scripts/03_render_pdf.py` |
-| **Business logic** | Core computation and algorithms | `infrastructure/validation/core.py` |
+| **Business logic** | Core computation and algorithms | `infrastructure/validation/evidence_registry.py` |
 | **Module** | Self-contained functionality | `infrastructure/rendering/` |
 | **CLI** | Command-line interface | `infrastructure/rendering/cli.py` |
 

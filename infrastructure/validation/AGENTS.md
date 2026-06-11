@@ -271,7 +271,7 @@ def validate_markdown(
 
 #### find_manuscript_directory (function)
 ```python
-def find_manuscript_directory(repo_root: str | Path) -> Path:
+def find_manuscript_directory(repo_root: str | Path, project_name: str = "project") -> Path:
     """Find the manuscript directory at the standard location.
 
     Args:
@@ -502,7 +502,7 @@ def verify_integrity_against_manifest(
     """
 ```
 
-### cli.py
+### cli/main.py
 
 #### validate_pdf_command (function)
 ```python
@@ -591,7 +591,9 @@ not passing an explicit path).
 
 Markdown validation CLI invoked as `python -m infrastructure.validation.cli markdown …`.
 Wraps manuscript/content validators (`discover_markdown_files`, `collect_symbols`,
-`validate_images`, `validate_refs`, `validate_math`) and exits non-zero on issues.
+`validate_images`, `validate_refs`, `validate_math`). Warn-only by default: it
+exits non-zero **only with `--strict`** (and only when ERROR-severity issues are
+found). Use `--strict` when invoking it as a quality gate.
 
 ### output/pipeline.py
 
@@ -612,7 +614,7 @@ def validate_manuscript_output_markdown(project_name: str = "project") -> bool:
     """
 ```
 
-### output_validator.py
+### output/validator.py
 
 #### validate_copied_outputs (function)
 ```python
@@ -653,7 +655,7 @@ def validate_output_structure(output_dir: Path) -> Dict:
     """
 ```
 
-### figure_validator.py
+### content/figure_validator.py
 
 #### validate_figure_registry (function)
 ```python
@@ -764,7 +766,7 @@ def main():
     """Main function for repository scanning CLI."""
 ```
 
-### doc_scanner.py
+### docs/scanner.py
 
 #### DocumentationScanner (class)
 ```python
@@ -794,7 +796,7 @@ def main():
     """Main function for documentation scanning CLI."""
 ```
 
-### doc_quality.py
+### docs/quality.py
 
 #### assess_clarity (function)
 ```python
@@ -1073,7 +1075,7 @@ def discover_documentation(repo_root: Path) -> Dict:
     """
 ```
 
-### doc_completeness.py
+### docs/completeness.py
 
 #### check_feature_documentation (function)
 ```python
@@ -1211,7 +1213,7 @@ def analyze_documentation_completeness(repo_root: Path, documentation_files: Lis
     """
 ```
 
-### doc_accuracy.py
+### docs/accuracy.py
 
 #### extract_headings (function)
 ```python
@@ -1347,7 +1349,7 @@ def verify_documentation_accuracy(
     """
 ```
 
-### check_links.py
+### integrity/check_links.py
 
 #### discover_markdown_files (function)
 ```python

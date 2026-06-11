@@ -184,7 +184,7 @@ def test_gradient_descent_tolerance():
 **Step 6: Check Coverage**
 
 ```bash
-uv run pytest projects/templates/template_code_project/tests/test_optimization.py --cov=projects.template_code_project.src.optimization --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/test_optimization.py --cov=projects/templates/template_code_project/src --cov-report=term-missing
 ```
 
 Expected: Coverage requirements met (90% project, 60% infra)
@@ -653,7 +653,7 @@ This creates a tamper-detectable PDF with embedded provenance metadata. See the 
 **Solution**:
 ```bash
 # Find uncovered lines
-uv run pytest --cov=projects.template_code_project.src --cov-report=term-missing
+uv run pytest --cov=projects/templates/template_code_project/src --cov-report=term-missing
 # Add tests for lines marked as "Missing"
 ```
 

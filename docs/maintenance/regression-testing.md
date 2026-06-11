@@ -15,7 +15,14 @@ A reproducibility template that claims to make science *reproducible* needs to b
 
 ## The contract this directory creates
 
-Every quantitative claim in a manuscript figure or table — a coefficient, a p-value, an effect size, a count, a percentage, a ratio — has a corresponding **pinned regression test** in `tests/regression/` that:
+> **Current state:** this tier is a **scaffold/contract awaiting population**. `tests/regression/`
+> currently ships only package `__init__.py` files and a single non-collected scaffold
+> (`tests/regression/projects/template_code_project/figures/test_figure_TEMPLATE.py`), so
+> `uv run pytest tests/regression/ -v` collects 0 tests today. The two `pinned_values/*.json`
+> files exist but are not yet bound to collected tests. The contract below describes the
+> **target** each project should reach; the layout block further down is the target shape.
+
+Every quantitative claim in a manuscript figure or table — a coefficient, a p-value, an effect size, a count, a percentage, a ratio — **should** have a corresponding **pinned regression test** in `tests/regression/` that:
 
 1. **Re-derives the value** from the deterministic pipeline (same code, same data, same seed)
 2. **Compares against a pinned ground-truth value** (committed to the repo at manuscript freeze)
@@ -33,6 +40,10 @@ If a value changes, the failure must be **investigated** — is the change corre
 | Necessary but not sufficient | The actual binding between code and claim |
 
 ## Directory layout
+
+The tree below is the **target shape** once the tier is populated; the
+`test_figure_*`/`test_table_*` files are illustrative names, not files that exist today
+(the only Python file currently present is the non-collected `test_figure_TEMPLATE.py` scaffold).
 
 ```
 tests/regression/

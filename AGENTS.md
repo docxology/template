@@ -1316,7 +1316,7 @@ Key log files for debugging:
 
    ```bash
    # Clean outputs before backup
-   uv run python -c "from pathlib import Path; from infrastructure.core.files.operations import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
+   uv run python -c "from pathlib import Path; from infrastructure.core.files import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
 
    # Backup source files only
    tar -czf project_backup.tar.gz projects/{name}/src/ projects/{name}/tests/ projects/{name}/scripts/ projects/{name}/manuscript/ docs/

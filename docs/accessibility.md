@@ -17,15 +17,19 @@ This guide describes the accessibility features of the template/ documentation s
 
 - PDF production uses black text on white background (high contrast)
 - Figures: avoid color-only distinction; add patterns/labels
-- Color palettes from `infrastructure/documentation/` adhere to WCAG AA
 
-## Key `manuscript/config.yaml` Accessibility Flags
+## Enforced Accessibility Checks
 
-| Key | Advisory | Test-Enforced |
-|-----|----------|---------------|
-| `include_alt_text` | ✓ | — |
-| `figure_captions_required` | — | ✓ |
-| `equation_label_prefix` (eq) | ✓ | ✓ |
+Accessibility is enforced by the markdown validator, not by `config.yaml` flags.
+Run `uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/`
+to check the manuscript. The validator inspects:
+
+| Check | What it verifies |
+|-------|------------------|
+| Image alt-text | Markdown images declare descriptive alt-text |
+| Figure captions | Figures carry caption text |
+| Link integrity | Internal and cross-references resolve; no bare "click here" links |
+| Heading structure | H1→H2→H3 hierarchy is well-formed |
 
 ## Testing Accessibility
 
@@ -34,7 +38,7 @@ This guide describes the accessibility features of the template/ documentation s
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # Check PDF structure with pdftotext + grep for heading levels
-pdftotext output/{name}/pdf/combined.pdf - | grep '^Chapter\|^Section'
+pdftotext output/{name}/pdf/{name}_combined.pdf - | grep '^Chapter\|^Section'
 ```
 
 ## Further Reading

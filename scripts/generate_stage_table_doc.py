@@ -56,7 +56,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument(
         "targets",
         nargs="*",
-        help="Markdown files to update (defaults to the 5 canonical doc files).",
+        help="Markdown files to update (defaults to the canonical doc files).",
     )
     parser.add_argument(
         "--write",

@@ -458,16 +458,16 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 Individual stages can also be run directly via Python:
 
 ```bash
-uv run python scripts/00_setup_environment.py  # Setup environment
-uv run python scripts/01_run_tests.py          # Run tests only
-uv run python scripts/01_run_tests.py --verbose  # Run tests with verbose output
-uv run python scripts/02_run_analysis.py       # Run project scripts
-uv run python scripts/03_render_pdf.py         # Render PDFs only
-uv run python scripts/04_validate_output.py    # Validate outputs only
-uv run python scripts/05_copy_outputs.py       # Copy final deliverables
-uv run python scripts/06_llm_review.py         # LLM manuscript review
-uv run python scripts/06_llm_review.py --reviews-only     # Reviews only
-uv run python scripts/06_llm_review.py --translations-only # Translations only
+uv run python scripts/00_setup_environment.py            # Setup environment
+uv run python scripts/01_run_tests.py --project {name}   # Run tests only
+uv run python scripts/01_run_tests.py --project {name} --verbose  # Run tests with verbose output
+uv run python scripts/02_run_analysis.py --project {name}       # Run project scripts
+uv run python scripts/03_render_pdf.py --project {name}         # Render PDFs only
+uv run python scripts/04_validate_output.py --project {name}    # Validate outputs only
+uv run python scripts/05_copy_outputs.py --project {name}       # Copy final deliverables
+uv run python scripts/06_llm_review.py --project {name}         # LLM manuscript review
+uv run python scripts/06_llm_review.py --project {name} --reviews-only     # Reviews only
+uv run python scripts/06_llm_review.py --project {name} --translations-only # Translations only
 ```
 
 ## Exit Codes
