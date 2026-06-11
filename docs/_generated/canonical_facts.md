@@ -183,7 +183,7 @@ Scripts in `scripts/` and `projects/{name}/scripts/` import computation from `in
 
 ## Pipeline Entry Points (from scripts/AGENTS.md)
 
-See `scripts/AGENTS.md` for `PipelineStageDefinition` and `MENU_SCRIPT_MAPPING`.
+See `scripts/AGENTS.md` for the pipeline entry-point inventory. The interactive menu's single source of truth is `infrastructure.orchestration.menu.MENU_OPTIONS`.
 
 Key signatures:
 

@@ -14,6 +14,22 @@ from infrastructure.search.literature.http_client import HttpClient, HttpGetMixi
 from infrastructure.search.literature.models import Paper, SearchQuery
 
 
+def _arxiv_id_from_url(id_text: str) -> str:
+    """Extract the arXiv identifier from an Atom ``id`` URL.
+
+    Handles both schemes without mangling either:
+    - new-style: ``http://arxiv.org/abs/2401.12345v2`` -> ``2401.12345``
+    - old-style: ``http://arxiv.org/abs/cs/0309040v1`` -> ``cs/0309040``
+
+    The previous ``rsplit("/", 1)[-1].split("v")[0]`` dropped the category
+    prefix of old-style IDs (yielding ``0309040`` and a 404 pdf URL) and could
+    truncate at a stray ``v``. Here we strip the ``/abs/`` prefix (preserving any
+    category slash) and remove only a trailing ``vN`` version suffix.
+    """
+    raw = id_text.rsplit("/abs/", 1)[-1] if "/abs/" in id_text else id_text.rsplit("/", 1)[-1]
+    return re.sub(r"v\d+$", "", raw.strip())
+
+
 class ArxivBackend(SearchBackend, HttpGetMixin):
     """arXiv export API. Returns Atom XML; we parse it locally."""
 
@@ -120,7 +136,7 @@ class ArxivBackend(SearchBackend, HttpGetMixin):
                 year = None
 
         id_text = text("id") or ""
-        arxiv_id = id_text.rsplit("/", 1)[-1].split("v")[0]
+        arxiv_id = _arxiv_id_from_url(id_text)
         url = id_text or None
         pdf_url = f"https://arxiv.org/pdf/{arxiv_id}.pdf" if arxiv_id else None
 

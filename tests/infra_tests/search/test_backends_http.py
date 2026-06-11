@@ -189,6 +189,20 @@ def test_arxiv_parses_atom_response(httpserver: HTTPServer):
     assert "first-order" in p.abstract
 
 
+def test_arxiv_id_extraction_preserves_old_style_category() -> None:
+    """Old-style (pre-2007) arXiv IDs keep their category prefix (ARX-1).
+
+    The previous extractor dropped the category (cs/0309040 -> 0309040),
+    producing a wrong Paper.id and a 404 pdf URL.
+    """
+    from infrastructure.search.literature.arxiv_backend import _arxiv_id_from_url
+
+    assert _arxiv_id_from_url("http://arxiv.org/abs/2401.12345v2") == "2401.12345"
+    assert _arxiv_id_from_url("http://arxiv.org/abs/cs/0309040v1") == "cs/0309040"
+    assert _arxiv_id_from_url("http://arxiv.org/abs/hep-ph/9901001") == "hep-ph/9901001"
+    assert _arxiv_id_from_url("2401.12345") == "2401.12345"
+
+
 def test_arxiv_year_filter_applied_post_fetch(httpserver: HTTPServer):
     httpserver.expect_request("/api/query").respond_with_data(ARXIV_ATOM, content_type="application/atom+xml")
     backend = ArxivBackend(
