@@ -57,7 +57,7 @@ Labels follow the same agency taxonomy used for plot colours (`_agency_category`
 
 The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/templates/template_code_project/tests/` during the infrastructure build phase.
 
-1. **Project tests**: [`projects/templates/template_code_project/tests/test_optimizer.py`](../tests/test_optimizer.py) exercises `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
+1. **Project tests**: [`projects/templates/template_code_project/tests/test_optimizer.py`](../tests/test_optimizer.py) exercises `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 2. **Infrastructure validation**: The repository-level `tests/infra_tests/` suite validates shared template modules (e.g. pipeline and discovery helpers) independently of this project’s manuscript.
 3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/templates/template_code_project/src/` prior to treating the project as build-green.
 

@@ -211,7 +211,7 @@ def find_volatile_fact_claims(repo_root: Path) -> list[AuditFinding]:
                     severity="warning",
                     detail=(
                         "appears to hard-code a project roster or count without linking "
-                        "to docs/_generated/active_projects.md or canonical_facts.md"
+                        "to docs/_generated/active_projects.md or COUNTS.md"
                     ),
                 )
             )

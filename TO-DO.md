@@ -8,7 +8,7 @@ This file tracks live work after the `v3.3.1` version bump (latest published
 release: `v3.3.0`; the `v3.3.1` tag is pending — see RELEASE-TAG-1). Historical
 release detail belongs in [`CHANGELOG.md`](CHANGELOG.md); generated counts and
 project rosters belong in
-[`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) and
+[`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) and
 [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 ---
@@ -25,7 +25,7 @@ number into prose.
 | Latest published release | `v3.3.0` (published 2026-06-07) — package is at `3.3.1` with a dated [`CHANGELOG.md`](CHANGELOG.md) `[3.3.1]` entry, but the `v3.3.1` git tag + GitHub release are **pending** (see RELEASE-TAG-1) | `/opt/homebrew/bin/gh-axi release list`, `git tag` |
 | Public source scope | `infrastructure` plus nine public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
 | Public exemplars | `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook` | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
-| Canonical generated facts | 20 importable infrastructure packages; 532 infrastructure Python modules; 216 project-scope infrastructure tests collected; nine exemplar coverage gates at or above 90 % | [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) |
+| Canonical generated facts | 20 importable infrastructure packages; 532 infrastructure Python modules; 216 project-scope infrastructure tests collected; nine exemplar coverage gates at or above 90 % | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) |
 | Open GitHub PRs | 3 open: 1 Dependabot (`codecov-action` 6.0.1→7.0.0 #28) + 2 maintainer (#23 sheaf integrity gates, #14 infrastructure composability audit) | `/opt/homebrew/bin/gh-axi pr list` |
 | Docs lint status | links-only, consistency-only, and doc-pairs all clean (re-verified 2026-06-08) | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
 | Mermaid lint status | clean with chunked batch rendering under the default total budget | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
@@ -149,7 +149,7 @@ Keep this section short. Details live in release notes or archived audits.
 - **Acceptance:** a bundle built for an exemplar with declared-but-absent outputs
   either refuses at build time or fails `verify`; a regression test pins it.
 - **Out of scope:** changing the hash algorithm or the infra-input (`uv.lock`,
-  `pyproject.toml`, `canonical_facts.md`) handling; archival deposit.
+  `pyproject.toml`, `COUNTS.md`) handling; archival deposit.
 
 ---
 

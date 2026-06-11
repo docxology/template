@@ -47,7 +47,7 @@ The default [`pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) 
 | 7 | Output Validation |
 | 8 | Copy Outputs |
 
-Coverage gates: 90% for `projects/{name}/src/`, 60% for `infrastructure/` (see [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)). Full stage reference: [`RUN_GUIDE.md`](../RUN_GUIDE.md).
+Coverage gates: 90% for `projects/{name}/src/`, 60% for `infrastructure/` (see [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)). Full stage reference: [`RUN_GUIDE.md`](../RUN_GUIDE.md).
 
 Run: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 

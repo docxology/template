@@ -64,8 +64,8 @@ open htmlcov/index.html
 
 | Layer | Minimum | Current | Target |
 |-------|---------|---------|--------|
-| **Infrastructure** (`infrastructure/`) | 60% | live → [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md) | gated by CI; never hardcode the percentage in prose |
-| **Project** (`projects/{name}/src/`) | 90% | live → `canonical_facts.md` | per-exemplar live percentages live there |
+| **Infrastructure** (`infrastructure/`) | 60% | live → [`../_generated/COUNTS.md`](../_generated/COUNTS.md) | gated by CI; never hardcode the percentage in prose |
+| **Project** (`projects/{name}/src/`) | 90% | live → `COUNTS.md` | per-exemplar live percentages live there |
 
 ## Best Practices
 

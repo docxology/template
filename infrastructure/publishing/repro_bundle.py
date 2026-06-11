@@ -3,7 +3,7 @@
 A *repro bundle* captures everything a third party needs to confirm that a
 public exemplar reproduces byte-for-byte: the lockfile, the project's artifact
 manifest, content hashes of declared output artifacts, a hash pointer to
-``docs/_generated/canonical_facts.md``, and the exact pipeline command used to
+``docs/_generated/COUNTS.md``, and the exact pipeline command used to
 regenerate the outputs.
 
 Two entry points:
@@ -35,7 +35,7 @@ logger = get_logger(__name__)
 
 SCHEMA_VERSION = "1.0"
 BUNDLE_MANIFEST_NAME = "repro_manifest.json"
-CANONICAL_FACTS_RELPATH = "docs/_generated/canonical_facts.md"
+CANONICAL_FACTS_RELPATH = "docs/_generated/COUNTS.md"
 
 # Reproduction-input file kinds, in the order they are collected.
 _KIND_LOCKFILE = "lockfile"

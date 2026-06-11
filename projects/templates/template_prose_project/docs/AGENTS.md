@@ -24,7 +24,7 @@ in this project.
 | [`architecture.md`](architecture.md) | Two-layer compliance + data-flow sequence diagram | 79 |
 | [`style_guide.md`](style_guide.md) | 7 rules: Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages | ~255 |
 | [`syntax_guide.md`](syntax_guide.md) | Pandoc-crossref `[@sec:…]`, all eleven `{{TOKEN}}`s, code blocks, no-figures rationale | ~210 |
-| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock standard; coverage mechanics; integration test (live counts in `docs/_generated/canonical_facts.md`) | ~140 |
+| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock standard; coverage mechanics; integration test (live counts in `docs/_generated/COUNTS.md`) | ~140 |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Four-phase manuscript→PDF flow; config.yaml controls; troubleshooting | ~225 |
 | [`output_conventions.md`](output_conventions.md) | Producer/consumer table for every artefact in `output/` | 64 |
 | [`quickstart.md`](quickstart.md) | 5-step first-run walkthrough | 81 |
@@ -51,7 +51,7 @@ delegation table.
 `create_autospec` anywhere in `tests/`. Tests use real Markdown, real
 BibTeX, real `tmp_path` directories, and real subprocess invocation. Live
 test count and achieved coverage are tracked in
-[`canonical_facts.md`](../../../../docs/_generated/canonical_facts.md); the
+[`COUNTS.md`](../../../../docs/_generated/COUNTS.md); the
 suite runs well above the 90% gate.
 
 **Show-not-tell.** Manuscript references must use explicit file paths and

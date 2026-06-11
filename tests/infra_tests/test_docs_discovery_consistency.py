@@ -42,9 +42,7 @@ def test_active_projects_doc_matches_discovery() -> None:
     # but are not yet registered in public_project_names().  If this assertion
     # fails, add the new project to public_scope.py (or remove it from disk).
     on_disk_templates = {
-        p.qualified_name
-        for p in discover_projects(root)
-        if p.path.is_relative_to(root / "projects" / "templates")
+        p.qualified_name for p in discover_projects(root) if p.path.is_relative_to(root / "projects" / "templates")
     }
     registered = set(public_project_names(root)) | set(LOCAL_ONLY_TEMPLATE_NAMES)
     unregistered = on_disk_templates - registered
@@ -130,8 +128,7 @@ def test_consistency_lint_roots_include_public_project_docs() -> None:
     expected = {f"projects/{name}" for name in public_project_names(root)}
     configured = set(DEFAULT_LONG_LIVED_DOC_ROOTS)
     assert expected.issubset(configured), (
-        "documentation consistency roots must track public_project_names(); "
-        f"missing={sorted(expected - configured)}"
+        f"documentation consistency roots must track public_project_names(); missing={sorted(expected - configured)}"
     )
 
 
@@ -228,11 +225,11 @@ def test_docs_markdown_no_broken_projects_paths() -> None:
 def test_canonical_facts_infrastructure_python_count_matches_tree() -> None:
     """The generated factsheet must not carry a stale infrastructure .py count."""
     root = _repo_root()
-    doc_path = root / "docs" / "_generated" / "canonical_facts.md"
+    doc_path = root / "docs" / "_generated" / "COUNTS.md"
     text = doc_path.read_text(encoding="utf-8")
 
     count_match = re.search(r"Last refreshed count: \*\*(?P<count>\d+)\*\*", text)
-    assert count_match, "canonical_facts.md must include the refreshed infrastructure Python-file count"
+    assert count_match, "COUNTS.md must include the refreshed infrastructure Python-file count"
 
     documented = int(count_match.group("count"))
     # Count git-tracked source files, not an on-disk rglob: build- or test-generated
@@ -248,22 +245,21 @@ def test_canonical_facts_infrastructure_python_count_matches_tree() -> None:
     ).stdout.splitlines()
     actual = sum(1 for path in tracked if path.endswith(".py"))
     assert documented == actual, (
-        "canonical_facts.md drifted from the tracked infrastructure Python-file count; "
-        f"documented={documented} actual={actual}"
+        f"COUNTS.md drifted from the tracked infrastructure Python-file count; documented={documented} actual={actual}"
     )
 
 
 def test_canonical_facts_test_collections_match_current_counts() -> None:
     """The generated factsheet must not carry stale infra test collection counts."""
     root = _repo_root()
-    doc_path = root / "docs" / "_generated" / "canonical_facts.md"
+    doc_path = root / "docs" / "_generated" / "COUNTS.md"
     text = doc_path.read_text(encoding="utf-8")
     match = re.search(
         r"Result: \*\*(?P<project>\d+)\*\* project-scope infrastructure tests collected "
         r"and \*\*(?P<publishing>\d+)\*\* publishing tests collected",
         text,
     )
-    assert match, "canonical_facts.md must include project and publishing collection counts"
+    assert match, "COUNTS.md must include project and publishing collection counts"
 
     def collected_count(path: str) -> int:
         proc = subprocess.run(
@@ -292,17 +288,17 @@ def test_canonical_facts_test_collections_match_current_counts() -> None:
 def test_canonical_facts_exemplar_table_matches_public_scope() -> None:
     """The exemplar collection table must include every public template project."""
     root = _repo_root()
-    text = (root / "docs" / "_generated" / "canonical_facts.md").read_text(encoding="utf-8")
+    text = (root / "docs" / "_generated" / "COUNTS.md").read_text(encoding="utf-8")
     expected = {name.split("/")[-1] for name in public_project_names(root)}
     table_match = re.search(
         r"\| Project \| Tests collected \| `src/` line\+branch coverage \|\n"
         r"\|[-| ]+\|\n(?P<body>(?:\| `template_[^`]+` \|[^\n]+\n)+)",
         text,
     )
-    assert table_match, "canonical_facts.md must include the exemplar collection table"
+    assert table_match, "COUNTS.md must include the exemplar collection table"
     documented = set(re.findall(r"\| `([^`]+)` \|", table_match.group("body")))
     assert documented == expected, (
-        "canonical_facts.md exemplar table drifted from public scope; "
+        "COUNTS.md exemplar table drifted from public scope; "
         f"missing={sorted(expected - documented)} extra={sorted(documented - expected)}"
     )
 
@@ -369,7 +365,7 @@ def test_publishing_cli_docs_do_not_advertise_apa_mla_formats() -> None:
     for doc_path in docs_to_check:
         text = doc_path.read_text(encoding="utf-8")
         assert not re.search(r"generate-citation[^\n`]*--format\s+(apa|mla)\b", text, re.IGNORECASE), doc_path
-        assert "`--format`,\n        choices=[\"bibtex\"]" not in text, doc_path
+        assert '`--format`,\n        choices=["bibtex"]' not in text, doc_path
 
 
 def test_api_reference_publish_to_zenodo_return_type() -> None:

@@ -108,7 +108,7 @@ your changes introduced into the shipped templates.
 |---|---|---|
 | `ModuleNotFoundError: optimizer` | Running a script from inside `src/` instead of the repo root | `cd` to the repo root; `uv run python projects/my_project/scripts/optimization_analysis.py` |
 | `PDF Rendering` stage fails with `mmdc could not find Chrome` | Manuscript embeds `mermaid` blocks; `mmdc` needs a pinned `chrome-headless-shell` not in your Puppeteer cache | One-time: `npx --yes puppeteer browsers install chrome-headless-shell`; the included `scripts/00_preflight.py` emits an actionable warning before the PDF stage if this is missing |
-| Test count drift / coverage drift | Docs in `docs/` hardcoded an old number | The drift checker now warns; replace literal numbers with a link to `docs/_generated/canonical_facts.md` |
+| Test count drift / coverage drift | Docs in `docs/` hardcoded an old number | The drift checker now warns; replace literal numbers with a link to `docs/_generated/COUNTS.md` |
 | `{{TOKEN}}` appears literally in rendered PDF | `scripts/z_generate_manuscript_variables.py` was not re-run, or the token is not in `generate_variables()` | Re-run `z_generate_manuscript_variables.py`; if still literal, add the token to `generate_variables()` |
 | Stale `*.egg-info/` after rename | `pip install -e .` regenerated it under the old package name | `rm -rf src/*.egg-info/`; the `.gitignore` glob already covers any future occurrence |
 

@@ -596,6 +596,15 @@ jobs:
         # Drift fails the build; regenerate locally and commit the result.
         run: uv run python scripts/generate_exemplar_roster_doc.py --check
 
+      - name: Verify COUNTS.md is in sync with the live tree
+        # Auto-generated from live repo state by `scripts/generate_counts.py`
+        # (tracked infrastructure .py count, project/publishing test-collection
+        # totals, exemplar roster, module list). Replaces the formerly
+        # hand-maintained COUNTS.md whose drift was chased across ~40
+        # commits. Drift fails the build; regenerate locally with `--write` and
+        # commit the result.
+        run: uv run python scripts/generate_counts.py --check
+
       - name: Verify project imports
         env:
           PUBLIC_PROJECTS: ${{ steps.project-scope.outputs.names }}

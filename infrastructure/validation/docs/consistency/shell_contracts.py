@@ -94,7 +94,7 @@ def check_command_conventions(repo_root: Path) -> list[Inconsistency]:
                         category="command-convention",
                         detail=(
                             f"command-line `{m.group('cmd')}` without `uv run` — "
-                            "canonical_facts.md mandates `uv run` (append "
+                            "COUNTS.md mandates `uv run` (append "
                             "`# noqa: docs-lint` to allow a deliberate counter-example)"
                         ),
                     )

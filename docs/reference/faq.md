@@ -33,7 +33,7 @@
 
 ### **Q: What are the test coverage requirements?**
 
-**A:** Coverage requirements are: **90% minimum** for project code (`projects/{name}/src/`) and **60% minimum** for `infrastructure/`. The build pipeline enforces these via CI. Live achieved percentages per exemplar live in [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md) — don't hardcode them into prose; link to the canonical source.
+**A:** Coverage requirements are: **90% minimum** for project code (`projects/{name}/src/`) and **60% minimum** for `infrastructure/`. The build pipeline enforces these via CI. Live achieved percentages per exemplar live in [`../_generated/COUNTS.md`](../_generated/COUNTS.md) — don't hardcode them into prose; link to the canonical source.
 
 ## 📚 **Documentation & PDF Generation**
 
@@ -132,7 +132,7 @@
 
 ### **Q: What are the advanced modules?**
 
-**A:** Importable infrastructure package names and measured counts are tracked in [canonical_facts.md](../_generated/canonical_facts.md). See the [Modules Guide](../modules/modules-guide.md) for the current package map and per-module guides.
+**A:** Importable infrastructure package names and measured counts are tracked in [COUNTS.md](../_generated/COUNTS.md). See the [Modules Guide](../modules/modules-guide.md) for the current package map and per-module guides.
 
 ### **Q: How do I use the advanced modules?**
 

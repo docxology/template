@@ -449,7 +449,7 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
    - Lines marked with `>>>>>` are not covered
    - Add tests to cover all branches
 
-6. **Repeat until ≥90%** (project `src/` gate; see [`canonical_facts.md`](../_generated/canonical_facts.md))
+6. **Repeat until ≥90%** (project `src/` gate; see [`COUNTS.md`](../_generated/COUNTS.md))
 
 **Expected Result**: All critical code paths tested, coverage requirements met
 

@@ -17,10 +17,10 @@ NOT_AVAILABLE_LOWER = "not available"
 
 
 def _write_canonical_facts(repo_root: Path) -> None:
-    """Write a minimal canonical_facts.md with a coverage table."""
+    """Write a minimal COUNTS.md with a coverage table."""
     gen = repo_root / "docs" / "_generated"
     gen.mkdir(parents=True, exist_ok=True)
-    (gen / "canonical_facts.md").write_text(
+    (gen / "COUNTS.md").write_text(
         "# Canonical Factsheet\n"
         "\n"
         "## Test Status\n"

@@ -13,7 +13,7 @@
 - **Thin Orchestrator Pattern**: Core architectural principle (capitalized when referring to the pattern name, lowercase in prose)
 - **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
 - **Version**: see `pyproject.toml` `[project].version` / the latest git tag for the current package version
-- **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code (live % → [`canonical_facts.md`](../_generated/canonical_facts.md), [`coverage-gaps.md`](../development/coverage-gaps.md))
+- **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code (live % → [`COUNTS.md`](../_generated/COUNTS.md), [`coverage-gaps.md`](../development/coverage-gaps.md))
 - **Build Pipeline**: Orchestrated sequence from environment setup through copied deliverables. **Core** (`execute_pipeline.py --project {name} --core-only`): eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF, validate, copy). **Full** adds optional LLM stages before copy. `./run.sh --pipeline` logs main steps as [1/9]–[9/9] with an initial clean line as [0/9]. Stage scripts are `scripts/00_*.py`–`scripts/05_*.py` plus `06`/`07` for LLM and executive reporting where used.
 
 ---
@@ -36,7 +36,7 @@ The overall system design that enforces separation of concerns between business 
 
 ### Branch Coverage
 
-Testing metric ensuring all conditional branches (if/else, switch cases) are executed during tests. Project `src/` gates require **≥90%** line coverage (see [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)).
+Testing metric ensuring all conditional branches (if/else, switch cases) are executed during tests. Project `src/` gates require **≥90%** line coverage (see [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)).
 
 **See**: [Test Coverage](#test-coverage)
 
@@ -372,7 +372,7 @@ Core business logic residing in `src/` directory. Must have test coverage.
 
 ### Statement Coverage
 
-Testing metric ensuring every line of code is executed during tests. Project `src/` gates require **≥90%** (see [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)).
+Testing metric ensuring every line of code is executed during tests. Project `src/` gates require **≥90%** (see [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)).
 
 **Check**: Look for lines marked `>>>>>` in coverage report
 
@@ -404,7 +404,7 @@ GitHub repository type that can be used to create new repositories with same str
 
 ### Test Coverage
 
-Percentage of code executed during test runs. This template requires 90% minimum coverage for project code and 60% minimum for infrastructure. Live measured percentages → [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md) (exemplars) and [`../development/coverage-gaps.md`](../development/coverage-gaps.md) (infrastructure).
+Percentage of code executed during test runs. This template requires 90% minimum coverage for project code and 60% minimum for infrastructure. Live measured percentages → [`../_generated/COUNTS.md`](../_generated/COUNTS.md) (exemplars) and [`../development/coverage-gaps.md`](../development/coverage-gaps.md) (infrastructure).
 
 **Types**:
 
@@ -431,8 +431,8 @@ Process of validating code correctness through automated test cases. **ABSOLUTE 
 
 **Requirements**:
 
-- 90% minimum for project code (live percentage per exemplar → [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md))
-- 60% minimum for infrastructure (live percentage → `canonical_facts.md`)
+- 90% minimum for project code (live percentage per exemplar → [`../_generated/COUNTS.md`](../_generated/COUNTS.md))
+- 60% minimum for infrastructure (live percentage → `COUNTS.md`)
 - data (no mocks)
 - Deterministic results
 - All tests must pass

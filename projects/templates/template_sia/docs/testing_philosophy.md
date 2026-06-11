@@ -5,7 +5,7 @@
 - **Real artifacts:** Tests read and write JSON, CSV, and markdown under `tmp_path` or the exemplar tree — no mocked filesystem or LLM responses.
 - **Fixture replay default:** `run_sia_loop_project(..., live=False)` is the primary integration path; it must stay deterministic and fast.
 - **Live mode is opt-in:** `@pytest.mark.requires_ollama` tests exercise `--live-sia` when Ollama and `requests` are available; CI skips them via marker expression.
-- **Coverage:** `src/` ≥ 90%. Measured counts live in [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
+- **Coverage:** `src/` ≥ 90%. Measured counts live in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 
 ## Fixture / live-mode separation (the public-exemplar boundary)
 

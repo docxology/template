@@ -24,7 +24,7 @@ rosters, or infrastructure file counts into local memory or durable prose unless
 the text points to the generated source of truth.
 
 - Public project names: [`docs/_generated/active_projects.md`](../_generated/active_projects.md)
-- Measured counts and gate snapshots: [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)
+- Measured counts and gate snapshots: [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)
 
 The helper `infrastructure.core.agent_memory.audit_memory_payload()` returns
 advisories for local memory bullets that hard-code those volatile facts.

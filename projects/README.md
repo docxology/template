@@ -36,7 +36,7 @@ They are **standalone** projects with the same core layout (`src/`, `tests/`, `s
 
 The measured test and coverage totals drift as the exemplars evolve; confirm
 current numbers in
-[`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md).
+[`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md).
 The permanent exemplars cover Active Inference, computational, prose-review,
 deterministic AutoResearch, and autopoietic meta-documentation paths. Use the
 archived search exemplar when the project needs
@@ -59,7 +59,7 @@ These are actively being developed under [`working/`](working/) but are not yet 
 
 ### Archived exemplars (under `projects/archive/`)
 
-Preserved under [`archive/`](archive/) until moved back; the pipeline does not discover them. The archive roster is checkout-specific, especially when lifecycle symlinks are synced from the private sidecar repo. Use `ls projects/archive/` for local inspection and [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) for the public policy — do not hard-code names here.
+Preserved under [`archive/`](archive/) until moved back; the pipeline does not discover them. The archive roster is checkout-specific, especially when lifecycle symlinks are synced from the private sidecar repo. Use `ls projects/archive/` for local inspection and [`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md) for the public policy — do not hard-code names here.
 
 ## Standalone Project Paradigm
 
@@ -880,11 +880,11 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 
 ### 🎯 **Permanent Exemplars**
 
-- **template_active_inference**: Active Inference multi-track exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
-- **template_autoresearch_project**: AutoResearch exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
-- **template_code_project**: Optimization research exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
-- **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
-- **template_template**: Meta-template exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
+- **template_active_inference**: Active Inference multi-track exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_autoresearch_project**: AutoResearch exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_code_project**: Optimization research exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_template**: Meta-template exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 
 Additional rotating projects are discovered from `docs/_generated/active_projects.md`.
 

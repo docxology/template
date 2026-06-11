@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This directory holds **generator output** (`active_projects.md`) plus **maintainer-written** index files (`README.md`, this `AGENTS.md`). Only `active_projects.md` is overwritten by that script; do not edit it by hand. **`canonical_facts.md`** is updated when maintainers refresh measured test counts and CI facts (see [`README.md`](README.md)).
+This directory holds **generator output** (`active_projects.md`) plus **maintainer-written** index files (`README.md`, this `AGENTS.md`). Only `active_projects.md` is overwritten by that script; do not edit it by hand. **`COUNTS.md`** is updated when maintainers refresh measured test counts and CI facts (see [`README.md`](README.md)).
 
 ## Files
 
@@ -11,7 +11,7 @@ This directory holds **generator output** (`active_projects.md`) plus **maintain
 | [`active_projects.md`](active_projects.md) | **Generated** — `uv run python scripts/generate_active_projects_doc.py` |
 | [`architecture_overview.svg`](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/generate_architecture_overview.py` |
 | [`coverage_history.md`](coverage_history.md) | **Generated** — `uv run python scripts/generate_coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
-| [`canonical_facts.md`](canonical_facts.md) | **Maintained** — ground-truthed test counts, gates, and roster notes (refresh with measured `pytest` + `generate_active_projects_doc.py`; see [`README.md`](README.md)) |
+| [`COUNTS.md`](COUNTS.md) | **Maintained** — ground-truthed test counts, gates, and roster notes (refresh with measured `pytest` + `generate_active_projects_doc.py`; see [`README.md`](README.md)) |
 | [`hermes_knowledge_audit.json`](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; do not use for current counts |
 | [`publication_records.md`](publication_records.md) | **Generated publication matrix** — public exemplar GitHub/Zenodo/config records; refresh with `uv run python scripts/generate_publication_records_doc.py --refresh-external` |
 | [`skills_index.md`](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |

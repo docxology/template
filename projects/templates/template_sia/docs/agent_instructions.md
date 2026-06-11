@@ -12,7 +12,7 @@ Read this file before modifying any file in this project.
 
 4. **No mocks.** Tests use real temp directories, real CSV fixtures, real subprocess calls to `evaluate.py`, and real JSON artifacts. Never import `unittest.mock`, `MagicMock`, or `@patch`.
 
-5. **Coverage gate.** `src/` must stay ≥ 90% line+branch. Live counts: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
+5. **Coverage gate.** `src/` must stay ≥ 90% line+branch. Live counts: [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 
 6. **Manuscript tokens.** Numeric results in prose use `{{SIA_*}}` placeholders hydrated by `scripts/z_generate_manuscript_variables.py` after analysis — never hard-code generation metrics in committed manuscript sources.
 

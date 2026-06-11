@@ -9,7 +9,7 @@ This document provides documentation for the Research Project Template system, e
 **Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
 **DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090) · **Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
 
-`template/` applies Infrastructure as Code to the research lifecycle: version-controlled manuscripts, tests, provenance, and a declared pipeline DAG. **Layer 1** (`infrastructure/`) is separated from **Layer 2** (self-contained projects under `projects/`). Current measured counts and stage facts live in [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md); re-derive them instead of copying literals into prose. Each directory carries `README.md` + `AGENTS.md`; infrastructure packages usually add `SKILL.md` for agent routing. Full paper, metrics, and claims: Zenodo record above and root [`README.md`](README.md).
+`template/` applies Infrastructure as Code to the research lifecycle: version-controlled manuscripts, tests, provenance, and a declared pipeline DAG. **Layer 1** (`infrastructure/`) is separated from **Layer 2** (self-contained projects under `projects/`). Current measured counts and stage facts live in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md); re-derive them instead of copying literals into prose. Each directory carries `README.md` + `AGENTS.md`; infrastructure packages usually add `SKILL.md` for agent routing. Full paper, metrics, and claims: Zenodo record above and root [`README.md`](README.md).
 
 ### Documentation map
 
@@ -21,7 +21,7 @@ This document provides documentation for the Research Project Template system, e
 | **This file (`AGENTS.md`)** | Full reference: stages, validation, modules, troubleshooting |
 | [`docs/documentation-index.md`](docs/documentation-index.md) | Flat index of long-lived docs |
 | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) | Authoritative public CI/documentation project names — never hard-code rotating private paths in docs |
-| [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) | Measured coverage and counts; refresh after changing gates or discovery |
+| [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) | Measured coverage and counts; refresh after changing gates or discovery |
 | [`.github/README.md`](.github/README.md) | GitHub: CI overview, templates, Dependabot |
 | [`.github/AGENTS.md`](.github/AGENTS.md) | Actions job names, coverage gates, local reproduction commands |
 
@@ -29,7 +29,7 @@ This document provides documentation for the Research Project Template system, e
 
 **Read order:** [`README.md`](README.md) → [`CLAUDE.md`](CLAUDE.md) → this file for anything not covered there.
 
-**Ground truth:** Public CI/documentation project names come from [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`infrastructure.project.public_scope`). Runtime `discover_projects()` remains broader for local private symlinked workspaces. Measured numbers for documentation claims belong in [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md); avoid inventing statistics.
+**Ground truth:** Public CI/documentation project names come from [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`infrastructure.project.public_scope`). Runtime `discover_projects()` remains broader for local private symlinked workspaces. Measured numbers for documentation claims belong in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md); avoid inventing statistics.
 
 **Definition of done (code):** Ruff + mypy clean on the public CI source paths from `uv run python -m infrastructure.project.public_scope source-paths`; tests exercise real behaviour (no mocks); coverage still meets 60% (infra) / 90% (project `src/`) unless CI documents a rotating-project exception ([`.github/AGENTS.md`](.github/AGENTS.md)).
 
@@ -224,7 +224,7 @@ flowchart TB
     INFRA --> I_DOCS[AGENTS.md · README.md · SKILL.md]
     INFRA --> I_CONFIG[/config<br/>Repo-wide configuration/]
     INFRA --> I_DOCKER[/docker<br/>Container specs/]
-    INFRA --> I_SUB[Layer 1 packages listed in<br/>`infrastructure/AGENTS.md` —<br/>counts from canonical_facts.md]
+    INFRA --> I_SUB[Layer 1 packages listed in<br/>`infrastructure/AGENTS.md` —<br/>counts from COUNTS.md]
 
     PROJECTS --> P_README[README.md · multi-project guide]
     PROJECTS --> P_STUB[/_test_project<br/>Stub · output/ only · not discovered/]
@@ -705,7 +705,7 @@ uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscri
 
 ### Test Coverage
 
-See `docs/_generated/canonical_facts.md` for current status from live test runs.
+See `docs/_generated/COUNTS.md` for current status from live test runs.
 
 ```bash
 # Run via orchestrator
@@ -904,7 +904,7 @@ flowchart TB
 
 The template includes reusable infrastructure modules for scientific development; see
 [`docs/modules/modules-guide.md`](docs/modules/modules-guide.md) and
-[`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) for the
+[`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) for the
 live module list and counts. Selected module examples:
 
 ### 🔒 Core Utilities (`infrastructure/core/`)
@@ -1451,7 +1451,7 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 
 **Audit Status:**
 
-- ✅ **High code coverage** across infrastructure and project gates (live % → [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md), [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
+- ✅ **High code coverage** across infrastructure and project gates (live % → [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
 - ✅ Zero mock methods - all tests use data and HTTP calls
 - ✅ All .cursorrules standards implemented
 - ✅ compliance with thin orchestrator pattern

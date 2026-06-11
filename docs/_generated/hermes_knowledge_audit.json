@@ -4,7 +4,7 @@
   "current_status": "historical_snapshot_not_current",
   "superseded_by": [
     "docs/_generated/active_projects.md",
-    "docs/_generated/canonical_facts.md",
+    "docs/_generated/COUNTS.md",
     "docs/_generated/skills_index.md"
   ],
   "hermes_version": "0.12.0",
@@ -46,5 +46,5 @@
   ],
   "memory_augmented": true,
   "all_systems_optimal": null,
-  "status_note": "Do not use this legacy Hermes audit as a current status source. Re-run the generators named in docs/_generated/README.md and use canonical_facts.md for current measured claims."
+  "status_note": "Do not use this legacy Hermes audit as a current status source. Re-run the generators named in docs/_generated/README.md and use COUNTS.md for current measured claims."
 }

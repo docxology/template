@@ -636,7 +636,7 @@ Project trees follow the template discipline described in the root **[`.cursorru
 
 ### Compliance Verification Results
 
-Current status, coverage, and project roster are documented in `docs/_generated/canonical_facts.md` (updated from discovery and test runs).
+Current status, coverage, and project roster are documented in `docs/_generated/COUNTS.md` (updated from discovery and test runs).
 
 All projects follow the standalone paradigm, thin orchestrator pattern, no-mocks policy, and coverage requirements (60% infrastructure, 90% projects).
 

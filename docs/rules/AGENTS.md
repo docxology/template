@@ -47,7 +47,7 @@ This directory contains development standards, coding guidelines, and best pract
 - Location: `projects/{name}/src/` (project-specific code)
 - Research-specific code
 - Uses generic infrastructure utilities
-- 90% minimum test coverage required (current % — see [canonical_facts.md](../_generated/canonical_facts.md))
+- 90% minimum test coverage required (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - Tests: `projects/{name}/tests/`
 - Scripts: `projects/{name}/scripts/` (thin orchestrators)
 
@@ -251,7 +251,7 @@ As shown in \eqref{eq:objective}, the objective function...
 ### Coverage Requirements
 
 - **Infrastructure**: 60% minimum (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
-- **Project code**: 90% minimum (current % — see [canonical_facts.md](../_generated/canonical_facts.md))
+- **Project code**: 90% minimum (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - **Integration tests**: All critical workflows covered
 
 ### Test Organization

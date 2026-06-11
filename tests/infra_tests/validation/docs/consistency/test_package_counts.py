@@ -99,7 +99,7 @@ def test_count_singularity_outside_canonical_is_flagged(tmp_path: Path) -> None:
 
 def test_count_singularity_canonical_facts_is_exempt(tmp_path: Path) -> None:
     repo = scaffold_repo(tmp_path, n_packages=15)
-    write_doc(repo / "docs" / "_generated" / "canonical_facts.md", "Measured: 345 .py files.\n")
+    write_doc(repo / "docs" / "_generated" / "COUNTS.md", "Measured: 345 .py files.\n")
     assert check_canonical_count_singularity(repo) == []
 
 
@@ -120,7 +120,8 @@ def test_canonical_exemplar_markdown_is_in_scope(tmp_path: Path) -> None:
     )
     issues = check_module_count_claims(repo)
     assert any(
-        "projects/templates/template_code_project/manuscript/01_intro.md" in str(i.file) and i.category == "module-count"
+        "projects/templates/template_code_project/manuscript/01_intro.md" in str(i.file)
+        and i.category == "module-count"
         for i in issues
     )
 

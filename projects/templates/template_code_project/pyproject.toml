@@ -47,7 +47,7 @@ omit = [
 
 [tool.coverage.report]
 # ≥90% on src/ is the enforced gate; live coverage % is tracked in
-# docs/_generated/canonical_facts.md (do not hardcode it here — it drifts).
+# docs/_generated/COUNTS.md (do not hardcode it here — it drifts).
 fail_under = 90
 show_missing = true
 precision = 2

@@ -10,9 +10,9 @@ This document provides detailed performance analysis extracted from the build sy
 
 ## Detailed Stage Breakdowns
 
-### Test Execution — wall-clock varies; live counts in `_generated/canonical_facts.md`
+### Test Execution — wall-clock varies; live counts in `_generated/COUNTS.md`
 
-**Indicative breakdown** (numbers drift with every commit; verify live counts in [`../../_generated/canonical_facts.md`](../../_generated/canonical_facts.md)):
+**Indicative breakdown** (numbers drift with every commit; verify live counts in [`../../_generated/COUNTS.md`](../../_generated/COUNTS.md)):
 
 - Pipeline infrastructure smoke: ~20 seconds, focused on DAG/control/evidence/profile/benchmark/doc guardrails
 - Full infrastructure gate: explicit coverage-bearing repo suite; runtime varies with the full `tests/infra_tests/` + integration matrix
@@ -24,7 +24,7 @@ This document provides detailed performance analysis extracted from the build sy
 
 | Module | Notes |
 |--------|-------|
-| `projects/{name}/src/` | Per-exemplar gates → [`../../_generated/canonical_facts.md`](../../_generated/canonical_facts.md) |
+| `projects/{name}/src/` | Per-exemplar gates → [`../../_generated/COUNTS.md`](../../_generated/COUNTS.md) |
 | `infrastructure/*` | Per-module % → [`../../development/coverage-gaps.md`](../../development/coverage-gaps.md) |
 
 ### Project Analysis — Script Execution (6 seconds)

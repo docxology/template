@@ -108,9 +108,9 @@ def audit_memory_payload(payload: dict[str, Any]) -> list[MemoryAdvisory]:
                         item=item,
                         detail=(
                             "Local memory hard-codes measured counts or percentages; "
-                            "re-derive or link docs/_generated/canonical_facts.md instead."
+                            "re-derive or link docs/_generated/COUNTS.md instead."
                         ),
-                        source="docs/_generated/canonical_facts.md",
+                        source="docs/_generated/COUNTS.md",
                     )
                 )
     return advisories

@@ -37,7 +37,7 @@ not to the contents of any specific workspace.
 
 - 📄 **DOCX output completion** — Pandoc DOCX rendering now embeds figures and
   resolves cross-references (`infrastructure/rendering/pipeline.py`).
-- 🔢 **Generated-count reconciliation** — `docs/_generated/canonical_facts.md`
+- 🔢 **Generated-count reconciliation** — `docs/_generated/COUNTS.md`
   project-scope collection count refreshed to 216 after test additions.
 
 ### Changed
@@ -168,7 +168,7 @@ not to the contents of any specific workspace.
   fixtures from stale `projects/template_*` paths to canonical
   `projects/templates/template_*` paths.
 - **Generated facts and skills** — Refreshed `docs/_generated/active_projects.md`,
-  `canonical_facts.md`, `publication_records.md`, the architecture overview,
+  `COUNTS.md`, `publication_records.md`, the architecture overview,
   API reference, skill manifest, and skill index from live repository state.
 - **Release metadata** — Bumped the repository package and citation metadata to
   `3.1.0`.

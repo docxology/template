@@ -568,7 +568,7 @@ def check_repo_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
     hardcoded "1796 infrastructure tests, 320 project tests" verbatim, and
     six docs hardcoded "83.33%" / "100% coverage" — both classes drift the
     moment the live numbers change. The rule is: counts and percentages
-    live in `docs/_generated/canonical_facts.md` and other docs link there.
+    live in `docs/_generated/COUNTS.md` and other docs link there.
 
     Skipped: `_generated/*` (the canonical source of truth itself),
     `audit/archived/*` (intentional point-in-time snapshots), fenced
@@ -594,7 +594,7 @@ def check_repo_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
                 "repo_docs_hardcoded_test_count",
                 (
                     f"{rel_md}: hardcoded '{m.group(0)}' near offset {m.start()} "
-                    "— link to docs/_generated/canonical_facts.md instead"
+                    "— link to docs/_generated/COUNTS.md instead"
                 ),
             )
         for m in coverage_pat.finditer(text):
@@ -609,7 +609,7 @@ def check_repo_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
                 "repo_docs_hardcoded_coverage_pct",
                 (
                     f"{rel_md}: hardcoded '{m.group(0)}' near offset {m.start()} "
-                    "— link to docs/_generated/canonical_facts.md instead"
+                    "— link to docs/_generated/COUNTS.md instead"
                 ),
             )
 

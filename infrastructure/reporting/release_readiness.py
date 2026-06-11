@@ -7,7 +7,7 @@ is a local JSON/Markdown file produced by the rest of the pipeline:
 * **Docs lint** — the JSON payload of ``scripts/lint_docs.py --json`` (the shape
   emitted by :func:`infrastructure.validation.docs.lint_runner.emit_json_report`),
   passed as a file path via ``docs_lint_json``.
-* **Coverage / test facts** — parsed from ``docs/_generated/canonical_facts.md``.
+* **Coverage / test facts** — parsed from ``docs/_generated/COUNTS.md``.
 * **Pipeline state** — the newest ``output/**/reports/pipeline_report.json``
   snapshot (the shape written by
   :func:`infrastructure.reporting.pipeline_io.save_pipeline_report`).
@@ -76,7 +76,7 @@ class ProjectCoverage:
 
 @dataclass(frozen=True)
 class CoverageFacts:
-    """Coverage/test facts parsed from canonical_facts.md."""
+    """Coverage/test facts parsed from COUNTS.md."""
 
     available: bool = False
     projects: list[ProjectCoverage] = field(default_factory=list)
@@ -235,7 +235,7 @@ def _latest_changelog_version(repo_root: Path) -> str | None:
     return None
 
 
-# Matches canonical_facts.md coverage rows: | `name` | 196 | 98.25 % |
+# Matches COUNTS.md coverage rows: | `name` | 196 | 98.25 % |
 _COVERAGE_ROW = re.compile(
     r"^\|\s*`(?P<name>[^`]+)`\s*\|\s*(?P<tests>[\d,]+)\s*\|\s*(?P<cov>[\d.]+)\s*%\s*\|",
     flags=re.MULTILINE,
@@ -243,8 +243,8 @@ _COVERAGE_ROW = re.compile(
 
 
 def collect_coverage_facts(repo_root: Path) -> CoverageFacts:
-    """Parse the per-project coverage table from canonical_facts.md."""
-    facts = repo_root / "docs" / "_generated" / "canonical_facts.md"
+    """Parse the per-project coverage table from COUNTS.md."""
+    facts = repo_root / "docs" / "_generated" / "COUNTS.md"
     if not facts.is_file():
         return CoverageFacts(available=False)
     try:
@@ -433,7 +433,7 @@ def render_markdown(report: ReleaseReadinessReport) -> str:
         lines.append("")
         lines.append(f"Source: `{cov.source}`")
     else:
-        lines.append(f"Coverage facts {_NOT_AVAILABLE} (no `docs/_generated/canonical_facts.md`).")
+        lines.append(f"Coverage facts {_NOT_AVAILABLE} (no `docs/_generated/COUNTS.md`).")
     lines.append("")
 
     # Evidence graph

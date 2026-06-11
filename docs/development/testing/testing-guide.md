@@ -181,7 +181,7 @@ def test_with_fixture(temp_data_file):
 
 ## Coverage Requirements
 
-- **90% minimum** for projects/{name}/src/ (see [canonical_facts.md](../../_generated/canonical_facts.md) for current %)
+- **90% minimum** for projects/{name}/src/ (see [COUNTS.md](../../_generated/COUNTS.md) for current %)
 - **60% minimum** for infrastructure/ (see [coverage-gaps.md](../coverage-gaps.md) for current %)
 - **ABSOLUTE PROHIBITION**: Never use mock methods - use data only
 - Test all error paths
