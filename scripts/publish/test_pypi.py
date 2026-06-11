@@ -4,8 +4,15 @@ from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
 
-from infrastructure.publishing.pypi_release import run_test_pypi_release
+# This repo sets [tool.uv] package=false, so it is never installed into the
+# venv; each script must put the repo root on sys.path before importing
+# `infrastructure`. This file lives two levels below the root (scripts/publish/).
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+
+from infrastructure.publishing.pypi_release import run_test_pypi_release  # noqa: E402
 
 
 def main() -> None:

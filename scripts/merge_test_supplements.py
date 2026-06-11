@@ -4,9 +4,15 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
-from infrastructure.validation.test_supplements import merge_supplements
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from scripts import ensure_repo_root_on_path  # noqa: E402
+
+ensure_repo_root_on_path()
+
+from infrastructure.validation.test_supplements import merge_supplements  # noqa: E402
 
 
 def _parse_args() -> argparse.Namespace:

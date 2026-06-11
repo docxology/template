@@ -588,6 +588,14 @@ jobs:
         # regenerate locally with `--write` and commit the result.
         run: uv run python scripts/generate_api_reference_doc.py --check
 
+      - name: Verify exemplar_roster.md is in sync with the live roster
+        # Auto-generated from the public exemplar roster by
+        # `scripts/generate_exemplar_roster_doc.py`. Adding a test file to an
+        # exemplar changes its row; without this gate the committed roster
+        # drifted silently and was only caught by the full infra pytest run.
+        # Drift fails the build; regenerate locally and commit the result.
+        run: uv run python scripts/generate_exemplar_roster_doc.py --check
+
       - name: Verify project imports
         env:
           PUBLIC_PROJECTS: ${{ steps.project-scope.outputs.names }}
