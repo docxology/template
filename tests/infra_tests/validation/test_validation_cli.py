@@ -6,6 +6,9 @@ and integrity validation commands.
 
 import argparse
 import logging
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -127,6 +130,84 @@ class TestValidateMarkdownCommand:
         # Should use default repo_root and pass
         assert exc_info.value.code == 0
 
+    def test_markdown_command_strict_exits_on_errors(self, tmp_path):
+        """Strict mode exits non-zero when ERROR-severity issues are found."""
+        md_dir = tmp_path / "manuscript"
+        md_dir.mkdir()
+        (md_dir / "99_references.bib").write_text("@article{known, title={Known}}\n")
+        (md_dir / "01_intro.md").write_text("See [@missing_citation_key] for background.\n")
+
+        args = argparse.Namespace(
+            markdown_dir=str(md_dir),
+            repo_root=str(tmp_path),
+            strict=True,
+        )
+
+        with pytest.raises(SystemExit) as exc_info:
+            cli.validate_markdown_command(args)
+        assert exc_info.value.code == 1
+
+    def test_markdown_command_strict_passes_clean_manuscript(self, tmp_path):
+        """Strict mode passes when no ERROR-severity issues are present."""
+        md_dir = tmp_path / "manuscript"
+        md_dir.mkdir()
+        (md_dir / "01_intro.md").write_text("# Introduction\n\nValid prose.\n")
+
+        args = argparse.Namespace(
+            markdown_dir=str(md_dir),
+            repo_root=str(tmp_path),
+            strict=True,
+        )
+
+        with pytest.raises(SystemExit) as exc_info:
+            cli.validate_markdown_command(args)
+        assert exc_info.value.code == 0
+
+    def test_markdown_command_subprocess_canonical_entrypoint(self, tmp_path):
+        """Canonical module entrypoint runs markdown validation via subprocess."""
+        md_dir = tmp_path / "manuscript"
+        md_dir.mkdir()
+        (md_dir / "01_intro.md").write_text("# Title\n\nValid content.\n")
+        repo_root = Path(__file__).resolve().parents[3]
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "infrastructure.validation.cli",
+                "markdown",
+                str(md_dir),
+                "--repo-root",
+                str(tmp_path),
+            ],
+            capture_output=True,
+            text=True,
+            cwd=repo_root,
+            timeout=30,
+        )
+        assert result.returncode == 0
+
+    def test_markdown_command_repo_root_override(self, tmp_path):
+        """Explicit --repo-root resolves relative image paths against the chosen root."""
+        repo_root = tmp_path / "repo"
+        figures = repo_root / "output" / "figures"
+        figures.mkdir(parents=True)
+        (figures / "plot.png").write_bytes(b"png")
+
+        md_dir = repo_root / "manuscript"
+        md_dir.mkdir()
+        (md_dir / "01_intro.md").write_text("![plot](../output/figures/plot.png)\n")
+
+        args = argparse.Namespace(
+            markdown_dir=str(md_dir),
+            repo_root=str(repo_root),
+            strict=False,
+        )
+
+        with pytest.raises(SystemExit) as exc_info:
+            cli.validate_markdown_command(args)
+        assert exc_info.value.code == 0
+
 
 class TestVerifyIntegrityCommand:
     """Test suite for verify_integrity_command."""
@@ -184,11 +265,8 @@ class TestMainCli:
         c.showPage()
         c.save()
 
-        # Run real CLI command via subprocess
-        import subprocess
-
         result = subprocess.run(
-            ["python", "-m", "infrastructure.validation.cli.main", "pdf", str(pdf_file)],
+            [sys.executable, "-m", "infrastructure.validation.cli", "pdf", str(pdf_file)],
             capture_output=True,
             text=True,
             timeout=30,
@@ -200,14 +278,11 @@ class TestMainCli:
         md_file = tmp_path / "test.md"
         md_file.write_text("# Test\n\nValid content.")
 
-        # Run real CLI command via subprocess
-        import subprocess
-
         result = subprocess.run(
             [
-                "python",
+                sys.executable,
                 "-m",
-                "infrastructure.validation.cli.main",
+                "infrastructure.validation.cli",
                 "markdown",
                 str(tmp_path),
             ],
@@ -222,14 +297,11 @@ class TestMainCli:
         # Create some files for integrity check
         (tmp_path / "test.txt").write_text("content")
 
-        # Run real CLI command via subprocess
-        import subprocess
-
         result = subprocess.run(
             [
-                "python",
+                sys.executable,
                 "-m",
-                "infrastructure.validation.cli.main",
+                "infrastructure.validation.cli",
                 "integrity",
                 str(tmp_path),
             ],
@@ -242,11 +314,8 @@ class TestMainCli:
 
     def test_main_without_command(self, capsys):
         """Test main without any subcommand."""
-        # Run CLI without arguments
-        import subprocess
-
         result = subprocess.run(
-            ["python", "-m", "infrastructure.validation.cli.main"],
+            [sys.executable, "-m", "infrastructure.validation.cli"],
             capture_output=True,
             text=True,
             timeout=30,
@@ -259,11 +328,8 @@ class TestMainCli:
         pdf_file = tmp_path / "invalid.pdf"
         pdf_file.write_bytes(b"not a real pdf")
 
-        # Run CLI with invalid PDF
-        import subprocess
-
         result = subprocess.run(
-            ["python", "-m", "infrastructure.validation.cli.main", "pdf", str(pdf_file)],
+            [sys.executable, "-m", "infrastructure.validation.cli", "pdf", str(pdf_file)],
             capture_output=True,
             text=True,
             timeout=30,
@@ -290,11 +356,8 @@ class TestCliArgumentParsing:
         c.showPage()
         c.save()
 
-        # Run CLI with real PDF
-        import subprocess
-
         result = subprocess.run(
-            ["python", "-m", "infrastructure.validation.cli.main", "pdf", str(pdf_file)],
+            [sys.executable, "-m", "infrastructure.validation.cli", "pdf", str(pdf_file)],
             capture_output=True,
             text=True,
             timeout=30,
@@ -315,14 +378,11 @@ class TestCliArgumentParsing:
         c.showPage()
         c.save()
 
-        # Run CLI with verbose flag
-        import subprocess
-
         result = subprocess.run(
             [
-                "python",
+                sys.executable,
                 "-m",
-                "infrastructure.validation.cli.main",
+                "infrastructure.validation.cli",
                 "pdf",
                 str(pdf_file),
                 "-v",
@@ -336,3 +396,24 @@ class TestCliArgumentParsing:
 
         # Verbose output should show validation info in subprocess output
         assert "Validating" in result.stdout or "issues" in result.stdout.lower()
+
+    def test_legacy_pdf_module_subprocess(self, tmp_path):
+        """Legacy pdf.py module entry remains backward-compatible."""
+        from reportlab.lib.pagesizes import letter
+        from reportlab.pdfgen import canvas
+
+        pdf_file = tmp_path / "test.pdf"
+        c = canvas.Canvas(str(pdf_file), pagesize=letter)
+        c.drawString(100, 750, "Legacy entry smoke test")
+        c.showPage()
+        c.save()
+
+        repo_root = Path(__file__).resolve().parents[3]
+        result = subprocess.run(
+            [sys.executable, "-m", "infrastructure.validation.cli.pdf", str(pdf_file)],
+            capture_output=True,
+            text=True,
+            cwd=repo_root,
+            timeout=30,
+        )
+        assert result.returncode == 0

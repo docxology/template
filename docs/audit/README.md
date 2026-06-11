@@ -33,6 +33,7 @@ hardening pass:
 - `documentation-review-summary-2026-05-15.md`
 - `filepath-audit-report-2026-05-16.md`
 - `literature-modules-audit-2026-05-01.md` (`infrastructure/search/` + `infrastructure/reference/`)
+- `thermo-nuclear-code-quality-2026-06-11-staged-closeout.md` (staged-deletion close-out — Phases 1–4)
 - `thermo-nuclear-code-quality-2026-06-11.md` (full-repo snapshot — Waves A–D approve-with-remediation)
 - `thermo-nuclear-code-quality-2026-06-08.md` (v3.3 infra/docs audit — Waves A–E approve)
 - `thermo-nuclear-code-quality-2026-06-02.md` (reserve-DOI + title-page split close-out)

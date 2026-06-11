@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """
-PDF output validation script - THIN ORCHESTRATOR
+PDF output validation script - THIN ORCHESTRATOR (legacy module entry).
+
+Canonical CLI: ``python -m infrastructure.validation.cli pdf <path>``.
+This module remains for backward-compatible
+``python -m infrastructure.validation.cli.pdf`` with optional ``--project``
+combined-PDF discovery.
 
 This script validates rendered PDFs for quality issues:
 - Unresolved references (??)

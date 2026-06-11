@@ -1,11 +1,11 @@
 ---
 name: infrastructure-rendering
-description: Skill for the rendering infrastructure module providing multi-format output generation including PDF manuscripts, HTML web pages, Beamer/Reveal.js slides, and posters. Use when rendering research outputs, converting markdown to PDF, generating slides, or configuring LaTeX rendering.
+description: Skill for the rendering infrastructure module providing multi-format output generation including PDF manuscripts, HTML web pages, and Beamer/Reveal.js slides. Use when rendering research outputs, converting markdown to PDF, generating slides, or configuring LaTeX rendering.
 ---
 
 # Rendering Module
 
-Multi-format output generation for research manuscripts. Converts markdown source into professional PDFs, HTML, slides, and posters.
+Multi-format output generation for research manuscripts. Converts markdown source into professional PDFs, HTML, and slides.
 
 ## RenderManager (`core.py`)
 
@@ -102,14 +102,6 @@ from infrastructure.rendering.web_renderer import WebRenderer
 renderer = WebRenderer(config)
 renderer.render(source_file)
 renderer.render_combined(source_files, manuscript_dir, project_name="my_project")
-```
-
-## Poster Rendering (`poster_renderer.py`)
-
-```python
-from infrastructure.rendering.poster_renderer import render_poster
-
-render_poster(source_file, config)
 ```
 
 ## LaTeX Utilities (`latex_utils.py`)

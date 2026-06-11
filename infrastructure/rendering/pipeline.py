@@ -576,7 +576,6 @@ def _render_pipeline_impl(project_name: str = "project", *, skip_manuscript_hydr
             pdf_dir=str(project_root / "output" / "pdf"),
             web_dir=str(project_root / "output" / "web"),
             slides_dir=str(project_root / "output" / "slides"),
-            poster_dir=str(project_root / "output" / "posters"),
             docx_dir=str(project_root / "output" / "docx"),
             epub_dir=str(project_root / "output" / "epub"),
             enable_pdf=env_config.enable_pdf,

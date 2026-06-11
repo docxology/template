@@ -15,7 +15,7 @@ flowchart TB
     T --> DOC[Doc scanner / discovery<br/>test_documentation_scanner · test_doc_discovery]
     T --> CONTENT[Content validators<br/>test_figure_validator · test_markdown_validator ·<br/>test_pdf_validator · test_output_validator]
     T --> INT[Integrity<br/>test_integrity · test_integrity_edge_cases]
-    T --> CLI[CLI<br/>test_validation_cli · test_validate_markdown_cli ·<br/>test_validate_pdf_cli]
+    T --> CLI[CLI<br/>test_validation_cli · test_validate_pdf_cli]
     T --> INTEG[Links / scope<br/>test_check_links · test_link_validator ·<br/>test_cross_link_lint · test_mermaid_lint]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff

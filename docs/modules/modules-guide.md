@@ -23,7 +23,7 @@ Reference for Layer-1 infrastructure modules.
 | **Scientific** | Research best practices | Numerical stability, benchmarking | [Details](guides/scientific-module.md) |
 | **LLM** | Local LLM & literature | Ollama integration, templates, literature search | [Details](guides/llm-module.md) |
 | **Methods** | Methods orchestration | DAG contracts, methods prose, artifacts, evidence | [Details](guides/methods-module.md) |
-| **Rendering** | Multi-format output | PDF, HTML, slides, poster, DOCX, EPUB (opt-in) | [Details](guides/rendering-module.md) |
+| **Rendering** | Multi-format output | PDF, HTML, slides, DOCX, EPUB (opt-in) | [Details](guides/rendering-module.md) |
 | **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
 | **Search** | Literature backends | Discovery, caches, full-text helpers, Exa web API | [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md) |
 | **Reference** | Bibliographic utilities | BibTeX models, parser/writer, verification | [`infrastructure/reference/AGENTS.md`](../../infrastructure/reference/AGENTS.md) |

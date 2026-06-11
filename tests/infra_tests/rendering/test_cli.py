@@ -38,13 +38,6 @@ class TestRenderingCLI:
         assert hasattr(cli, "render_slides_command")
         assert callable(cli.render_slides_command)
 
-    def test_poster_render_option(self):
-        """Test poster rendering option."""
-        # Poster rendering may be part of slides or separate
-        # Check that rendering commands exist
-        assert hasattr(cli, "render_slides_command")
-        assert callable(cli.render_slides_command)
-
     def test_cli_help_output(self):
         """Test CLI help output."""
         assert hasattr(cli, "main")

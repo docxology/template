@@ -23,7 +23,6 @@ class RenderingConfig:
     pdf_dir: str = "output/pdf"
     web_dir: str = "output/web"
     slides_dir: str = "output/slides"
-    poster_dir: str = "output/posters"
     docx_dir: str = "output/docx"
     epub_dir: str = "output/epub"
 
@@ -55,7 +54,7 @@ class RenderingConfig:
 
         Supported environment variables:
         - MANUSCRIPT_DIR / FIGURES_DIR / OUTPUT_DIR
-        - PDF_DIR / WEB_DIR / SLIDES_DIR / POSTER_DIR / DOCX_DIR / EPUB_DIR
+        - PDF_DIR / WEB_DIR / SLIDES_DIR / DOCX_DIR / EPUB_DIR
         - LATEX_COMPILER (default: xelatex)
         - PANDOC_PATH (path to pandoc)
         - TEMPLATE_DIR (templates directory)
@@ -83,7 +82,6 @@ class RenderingConfig:
             "PDF_DIR": "pdf_dir",
             "WEB_DIR": "web_dir",
             "SLIDES_DIR": "slides_dir",
-            "POSTER_DIR": "poster_dir",
             "DOCX_DIR": "docx_dir",
             "EPUB_DIR": "epub_dir",
             "LATEX_COMPILER": "latex_compiler",

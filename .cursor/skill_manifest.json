@@ -594,7 +594,7 @@
     },
     {
       "name": "infrastructure-rendering",
-      "description": "Skill for the rendering infrastructure module providing multi-format output generation including PDF manuscripts, HTML web pages, Beamer/Reveal.js slides, and posters. Use when rendering research outputs, converting markdown to PDF, generating slides, or configuring LaTeX rendering.",
+      "description": "Skill for the rendering infrastructure module providing multi-format output generation including PDF manuscripts, HTML web pages, and Beamer/Reveal.js slides. Use when rendering research outputs, converting markdown to PDF, generating slides, or configuring LaTeX rendering.",
       "path": "infrastructure/rendering/SKILL.md",
       "cursor_at": "infrastructure/rendering/SKILL.md"
     },

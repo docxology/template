@@ -614,7 +614,6 @@ Supports:
 - PDF generation (standard & IDE-friendly)
 - HTML presentation (reveal.js)
 - Slide decks (Beamer & reveal.js)
-- Scientific posters
 - Web output with MathJax
 
 **CLI:**

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `tests/infra_tests/rendering/` directory contains tests for the multi-format rendering infrastructure. These tests validate the PDF generation, HTML rendering, slide creation, and poster rendering capabilities of the Research Project Template.
+The `tests/infra_tests/rendering/` directory contains tests for the multi-format rendering infrastructure. These tests validate the PDF generation, HTML rendering, and slide creation capabilities of the Research Project Template.
 
 ## Directory Structure
 
@@ -14,7 +14,6 @@ flowchart TB
     T --> PDF[PDF renderer<br/>test_pdf_renderer_additional / _combined ·<br/>_coverage / _fixes / _full]
     T --> SLIDES[Slides renderer<br/>test_slides_renderer_comprehensive ·<br/>_coverage]
     T --> WEB[Web renderer<br/>test_web_renderer]
-    T --> POSTER[Poster<br/>test_poster_renderer]
     T --> LATEX[LaTeX<br/>test_latex_package_validator · test_latex_utils]
     T --> MAN[Manuscript<br/>test_manuscript_discovery]
     T --> CLI[CLI<br/>test_cli · test_render_all_cli ·<br/>test_rendering_cli · test_rendering_cli_full]
@@ -23,7 +22,7 @@ flowchart TB
     classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class CORE,PDF,SLIDES,WEB,POSTER,LATEX,MAN,CLI cat
+    class CORE,PDF,SLIDES,WEB,LATEX,MAN,CLI cat
     class META doc
 ```
 
@@ -84,12 +83,6 @@ def test_pdf_renderer_cross_references():
 - Reveal.js HTML slide creation
 - Slide structure and navigation
 - Content layout and formatting
-
-**Poster Renderer Tests (`test_poster_renderer.py`)**
-- Large-format poster generation
-- Layout optimization for print
-- Font scaling and readability
-- Content organization for poster format
 
 ### CLI and Configuration Tests
 

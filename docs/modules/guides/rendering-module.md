@@ -14,7 +14,6 @@
 - **Web Output**: Interactive HTML with MathJax
 - **DOCX Output**: Microsoft Word document via pandoc (opt-in)
 - **EPUB Output**: e-reader bundle via pandoc (opt-in)
-- **Scientific Posters**: Large-format poster generation
 - **Format-Agnostic**: Single source, multiple outputs — per-format on/off toggle via [`render.formats`](../../usage/output-formats.md)
 - **Quality Validation**: Automated output checking
 

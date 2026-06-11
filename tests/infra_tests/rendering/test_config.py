@@ -56,7 +56,6 @@ class TestRenderingConfig:
         assert hasattr(config, "pdf_dir")
         assert hasattr(config, "web_dir")
         assert hasattr(config, "slides_dir")
-        assert hasattr(config, "poster_dir")
 
 
 class TestRenderingConfigFromEnv:
@@ -106,12 +105,6 @@ class TestRenderingConfigFromEnv:
         config = RenderingConfig.from_env({"SLIDES_DIR": "/custom/slides"})
 
         assert config.slides_dir == "/custom/slides"
-
-    def test_from_env_reads_poster_dir(self):
-        """Test that from_env() reads POSTER_DIR."""
-        config = RenderingConfig.from_env({"POSTER_DIR": "/custom/posters"})
-
-        assert config.poster_dir == "/custom/posters"
 
     def test_from_env_reads_latex_compiler(self):
         """Test that from_env() reads LATEX_COMPILER."""
