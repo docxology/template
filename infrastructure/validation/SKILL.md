@@ -61,7 +61,7 @@ math_issues = validate_math(md_files, repo_root)
 
 ```bash
 uv run python -m infrastructure.validation.cli.main markdown projects/{name}/manuscript/
-uv run python -m infrastructure.validation.cli.markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 ```
 
 ## Output Integrity (`integrity/checks.py`)

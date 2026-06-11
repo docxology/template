@@ -5,7 +5,6 @@ CLI entry points for markdown, PDF, and repository validation.
 ## Files
 
 - `main.py`
-- `markdown.py`
 - `pdf.py`
 - `__main__.py`
 - `__init__.py`

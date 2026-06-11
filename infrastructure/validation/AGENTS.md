@@ -587,7 +587,7 @@ Entry points: `main()`, `print_validation_report()`, and helpers for default
 `output/{project}/pdf/{project}_combined.pdf` discovery (requires `--project` when
 not passing an explicit path).
 
-### cli/markdown.py
+### `markdown` subcommand (`cli/main.py` → `validate_markdown_command`)
 
 Markdown validation CLI invoked as `python -m infrastructure.validation.cli markdown …`.
 Wraps manuscript/content validators (`discover_markdown_files`, `collect_symbols`,

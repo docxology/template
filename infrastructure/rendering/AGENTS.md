@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Rendering module consolidates output generation logic, supporting multiple formats (PDF, Slides, Web, Posters) from a single source of truth (Manuscript).
+The Rendering module consolidates output generation logic, supporting multiple formats (PDF, Slides, Web) from a single source of truth (Manuscript).
 
 ## Architecture
 
@@ -82,9 +82,8 @@ Configuration is managed via `RenderingConfig` or environment variables.
    - `beamer`: PDF slides via LaTeX.
    - `revealjs`: HTML interactive slides.
 3. **Web**: HTML5 with MathJax support.
-4. **Posters**: Large format PDF posters.
-5. **DOCX**: Microsoft Word documents via pandoc (`render_docx`, package-level export).
-6. **EPUB**: E-reader EPUB via pandoc (`render_epub`, package-level export).
+4. **DOCX**: Microsoft Word documents via pandoc (`render_docx`, package-level export).
+5. **EPUB**: E-reader EPUB via pandoc (`render_epub`, package-level export).
 
 ## Title Page Generation
 
@@ -206,16 +205,6 @@ class RenderManager:
 
         Returns:
             Path to generated HTML
-        """
-
-    def render_poster(self, source_path: Path) -> Path:
-        """Render to poster format.
-
-        Args:
-            source_path: Path to source manuscript
-
-        Returns:
-            Path to generated poster
         """
 
     def render_combined_pdf(self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project") -> Path:
@@ -470,31 +459,6 @@ class SlidesRenderer:
 
         Raises:
             RenderingError: With error context and suggestions
-        """
-```
-
-### poster_renderer.py
-
-#### PosterRenderer (class)
-```python
-class PosterRenderer:
-    """Handles large-format poster rendering."""
-
-    def __init__(self, config: Optional[RenderingConfig] = None):
-        """Initialize poster renderer.
-
-        Args:
-            config: Rendering configuration
-        """
-
-    def render(self, source_path: Path) -> Path:
-        """Render manuscript to poster format.
-
-        Args:
-            source_path: Path to source manuscript
-
-        Returns:
-            Path to generated poster
         """
 ```
 
