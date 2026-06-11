@@ -32,3 +32,14 @@ def test_tests_stage_includes_infra_smoke_scope() -> None:
 def test_unknown_stage_exits() -> None:
     with pytest.raises(SystemExit, match="Unknown stage"):
         script_argv_for_stage("not_a_real_stage")
+
+
+def test_clean_is_not_a_dispatchable_stage() -> None:
+    """'clean' is an executor built-in, not a single-stage script.
+
+    Regression: a ``"clean"`` dispatch pointing at 00_setup_environment.py made
+    ``--stage clean`` silently run setup and clean nothing.
+    """
+    assert "clean" not in STAGE_DISPATCH
+    with pytest.raises(SystemExit, match="Unknown stage"):
+        script_argv_for_stage("clean")

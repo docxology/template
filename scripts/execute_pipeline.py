@@ -18,6 +18,7 @@ from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from infrastructure.core.pipeline.hitl_cli import PipelineArgs, handle_hitl_command
 from infrastructure.core.pipeline.incremental import IncrementalConfig
 from infrastructure.core.pipeline.single_stage import execute_single_stage
+from infrastructure.core.pipeline.stage_registry import known_stage_keys
 from infrastructure.core.runtime.environment import validate_interpreter
 
 # Re-export for tests importing from scripts.execute_pipeline
@@ -104,7 +105,8 @@ def main() -> int:
     parser.add_argument("--message", default="", help="Message for HITL approve/reject/guide/resume commands")
     parser.add_argument(
         "--stage",
-        help="Run a single stage and exit (setup, infra_tests, project_tests, analysis, render_pdf, validate, copy, llm_reviews, llm_translations, executive_report)",  # noqa: E501
+        # Derived from the registry so this help and the dispatch table cannot diverge.
+        help="Run a single stage and exit (%s)" % ", ".join(sorted(known_stage_keys())),
     )
 
     raw_args = parser.parse_args()

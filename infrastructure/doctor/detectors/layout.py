@@ -127,6 +127,11 @@ def detect_manuscript_config(repo_root: Path) -> list[Finding]:
             paper = data.get("paper")
             if isinstance(paper, dict):
                 title = str(paper.get("title", "")).strip()
+            # Book-length exemplars declare the title under ``book:`` instead.
+            if not title:
+                book = data.get("book")
+                if isinstance(book, dict):
+                    title = str(book.get("title", "")).strip()
         if not title:
             findings.append(
                 Finding(
@@ -135,7 +140,8 @@ def detect_manuscript_config(repo_root: Path) -> list[Finding]:
                     severity=Severity.WARN,
                     healthy=False,
                     description=(
-                        "manuscript/config.yaml must declare `paper.title` for rendering and metadata extraction."
+                        "manuscript/config.yaml must declare `paper.title` (or `book.title` for "
+                        "book-length projects) for rendering and metadata extraction."
                     ),
                     evidence={"path": str(cfg)},
                 )

@@ -140,11 +140,17 @@ def publication_metadata_from_config_dict(
     paper = config.get("paper") or {}
     if not isinstance(paper, dict):
         paper = {}
+    # Book-length exemplars (e.g. template_textbook) carry their title under
+    # ``book:`` rather than ``paper:``; fall back so they don't publish as
+    # "Untitled Research".
+    book = config.get("book") or {}
+    if not isinstance(book, dict):
+        book = {}
     publication = config.get("publication") or {}
     if not isinstance(publication, dict):
         publication = {}
 
-    title = str(paper.get("title") or "Untitled Research")
+    title = str(paper.get("title") or book.get("title") or "Untitled Research")
     authors, author_records = _author_records_from_config(config)
 
     keywords_raw = config.get("keywords") or []

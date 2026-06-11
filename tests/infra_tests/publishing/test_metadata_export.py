@@ -19,6 +19,19 @@ from infrastructure.publishing.metadata_export import (
 )
 
 
+def test_book_title_fallback_for_booklength_projects(tmp_path: Path) -> None:
+    """Book-length exemplars declare the title under ``book:`` not ``paper:``.
+
+    Regression for PUB-1: template_textbook published as 'Untitled Research'
+    because the metadata builder only read ``paper.title``.
+    """
+    from infrastructure.publishing.metadata_from_config import publication_metadata_from_config_dict
+
+    config = {"book": {"title": "The Template Textbook", "version": "1.0"}}
+    md = publication_metadata_from_config_dict(config, config_path=tmp_path / "config.yaml", allow_draft_abstract=True)
+    assert md.title == "The Template Textbook"
+
+
 def test_build_metadata_with_full_config() -> None:
     config = {
         "paper": {

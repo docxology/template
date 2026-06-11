@@ -261,10 +261,17 @@ def _default_project_name(names: list[str]) -> str:
 
     This mirrors the behaviour of the interactive menu in ``_interactive``,
     which always displays the exemplar project first (sorted list).
+
+    ``names`` are *qualified* (e.g. ``templates/template_code_project``) as
+    returned by ``discover_qualified_names``, so the canonical project is matched
+    on its bare leaf, not by bare-name membership — otherwise ``./run.sh
+    --pipeline`` silently defaulted to the alphabetically-first exemplar
+    (``templates/template_active_inference``) instead of the canonical one.
     """
     canon = "template_code_project"
-    if canon in names:
-        return canon
+    exact = [n for n in names if n == canon or n.rsplit("/", 1)[-1] == canon]
+    if exact:
+        return exact[0]
     return names[0]
 
 

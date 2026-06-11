@@ -12,10 +12,32 @@ import pytest
 from infrastructure.orchestration.cli import (
     _cmd_list_projects,
     _cmd_menu,
+    _default_project_name,
     _resolve_repo_root,
     build_parser,
     main,
 )
+
+
+def test_default_project_name_matches_canonical_qualified() -> None:
+    """Qualified names must still resolve the canonical exemplar (ARCH-01).
+
+    discover_qualified_names returns ``templates/<name>``; a bare-name membership
+    check silently defaulted ``./run.sh --pipeline`` to the alphabetically-first
+    exemplar instead of template_code_project.
+    """
+    qualified = [
+        "templates/template_active_inference",
+        "templates/template_code_project",
+        "templates/template_prose_project",
+    ]
+    assert _default_project_name(qualified) == "templates/template_code_project"
+    # Bare names still work (back-compat).
+    assert _default_project_name(["template_active_inference", "template_code_project"]) == "template_code_project"
+    # Falls back to the first name when the canonical project is absent.
+    assert _default_project_name(["templates/template_newspaper", "templates/template_sia"]) == (
+        "templates/template_newspaper"
+    )
 
 
 def test_build_parser_help_works() -> None:

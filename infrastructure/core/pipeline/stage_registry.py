@@ -27,8 +27,12 @@ class StageDispatch:
     args: tuple[str, ...] = ()
 
 
+# Note: there is no ``"clean"`` key. "Clean Output Directories" (stage 0 in the
+# vocabulary) is an executor built-in (``_run_clean_outputs``), not a standalone
+# script — a ``"clean"`` dispatch here previously pointed at 00_setup_environment.py
+# and so ``--stage clean`` silently ran *setup* and cleaned nothing. Single-stage
+# dispatch only covers stages backed by a runnable script.
 STAGE_DISPATCH: Final[dict[str, StageDispatch]] = {
-    "clean": StageDispatch("scripts/00_setup_environment.py"),
     "setup": StageDispatch("scripts/00_setup_environment.py"),
     "infra_tests": StageDispatch(
         "scripts/01_run_tests.py",

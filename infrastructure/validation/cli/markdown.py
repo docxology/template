@@ -15,7 +15,11 @@ from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
 
-repo_root = Path(__file__).parent.parent
+# cli/markdown.py is three directories below the repo root
+# (cli → validation → infrastructure → repo), so climb four parents. The earlier
+# two-parent value resolved to infrastructure/validation/, breaking the
+# auto-detect entry point when no explicit manuscript dir was passed.
+repo_root = Path(__file__).resolve().parent.parent.parent.parent
 
 logger = get_logger(__name__)
 
