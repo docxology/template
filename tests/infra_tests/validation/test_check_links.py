@@ -6,11 +6,6 @@ from infrastructure.validation.content.discovery import discover_markdown_files 
 from infrastructure.validation.integrity import check_links
 from infrastructure.validation.integrity import link_extract
 from infrastructure.validation.integrity.check_links import (
-    _get_actual_project_names,
-    _is_real_path_item,
-    _resolve_template_path,
-    _should_validate_path,
-    _validate_import_path,
     check_file_reference,
     discover_markdown_files,
     extract_code_blocks,
@@ -19,7 +14,6 @@ from infrastructure.validation.integrity.check_links import (
     generate_comprehensive_report,
     run_link_audit,
     validate_directory_structures,
-    validate_file_paths_in_code,
     validate_placeholder_consistency,
     validate_python_imports,
 )
@@ -29,120 +23,6 @@ def test_link_extract_module_import_smoke() -> None:
     """Library surface lives in link_extract; check_links re-exports discovery for CLI callers."""
     assert link_extract.extract_links is check_links.extract_links
     assert check_links.discover_markdown_files is canonical_discover
-
-
-class TestDiscoverMarkdownFilesLinkAuditExtended:
-    def test_finds_md_files(self, tmp_path):
-        (tmp_path / "README.md").write_text("# Hi")
-        sub = tmp_path / "docs"
-        sub.mkdir()
-        (sub / "guide.md").write_text("# Guide")
-        result = discover_markdown_files(tmp_path, scope="link_audit")
-        names = [f.name for f in result]
-        assert "README.md" in names
-        assert "guide.md" in names
-
-    def test_excludes_output(self, tmp_path):
-        (tmp_path / "readme.md").write_text("# README")
-        out = tmp_path / "output"
-        out.mkdir()
-        (out / "report.md").write_text("# Report")
-        result = discover_markdown_files(tmp_path, scope="link_audit")
-        assert len(result) == 1
-        assert not any(f.parent.name == "output" for f in result)
-
-    def test_excludes_git(self, tmp_path):
-        git = tmp_path / ".git"
-        git.mkdir()
-        (git / "notes.md").write_text("# Notes")
-        assert discover_markdown_files(tmp_path, scope="link_audit") == []
-
-    def test_excludes_htmlcov(self, tmp_path):
-        (tmp_path / "readme.md").write_text("# README")
-        htmlcov = tmp_path / "htmlcov"
-        htmlcov.mkdir()
-        (htmlcov / "coverage.md").write_text("# Coverage")
-        result = discover_markdown_files(tmp_path, scope="link_audit")
-        assert len(result) == 1
-        assert not any(f.parent.name == "htmlcov" for f in result)
-
-    def test_excludes_venv(self, tmp_path):
-        (tmp_path / ".venv").mkdir()
-        (tmp_path / ".venv" / "readme.md").write_text("venv")
-        assert discover_markdown_files(tmp_path, scope="link_audit") == []
-
-    def test_sorted(self, tmp_path):
-        (tmp_path / "z.md").write_text("# Z")
-        (tmp_path / "a.md").write_text("# A")
-        result = discover_markdown_files(tmp_path, scope="link_audit")
-        assert result[0].name == "a.md"
-
-    def test_nested_markdown_files(self, tmp_path):
-        (tmp_path / "a" / "b" / "c").mkdir(parents=True)
-        (tmp_path / "a" / "b" / "c" / "deep.md").write_text("# Deep")
-        result = discover_markdown_files(tmp_path, scope="link_audit")
-        assert len(result) == 1
-        assert "deep.md" in str(result[0])
-
-    def test_empty_dir(self, tmp_path):
-        assert discover_markdown_files(tmp_path, scope="link_audit") == []
-
-
-class TestExtractLinksExtended:
-    def test_internal_anchor_links(self, tmp_path):
-        f = tmp_path / "test.md"
-        internal, external, file_refs = extract_links("[Section](#introduction)", f)
-        assert len(internal) == 1
-        assert internal[0]["target"] == "#introduction"
-
-    def test_external_links(self, tmp_path):
-        f = tmp_path / "test.md"
-        content = "Check [Google](https://google.com) for more."
-        _, external, _ = extract_links(content, f)
-        assert len(external) == 1
-        assert "google.com" in external[0]["target"]
-
-    def test_file_reference_links(self, tmp_path):
-        f = tmp_path / "test.md"
-        _, _, file_refs = extract_links("[Guide](docs/guide.md)", f)
-        assert len(file_refs) == 1
-        assert file_refs[0]["target"] == "docs/guide.md"
-
-    def test_links_in_code_blocks_excluded(self, tmp_path):
-        f = tmp_path / "test.md"
-        content = "```\n[Link](url)\n```\nReal [Link](other.md)"
-        _, _, file_refs = extract_links(content, f)
-        assert len(file_refs) == 1
-        assert file_refs[0]["target"] == "other.md"
-
-    def test_mailto_classified_as_external(self, tmp_path):
-        f = tmp_path / "test.md"
-        _, external, _ = extract_links("[Email](mailto:test@example.com)", f)
-        assert len(external) == 1
-
-    def test_protocol_link(self, tmp_path):
-        f = tmp_path / "test.md"
-        _, external, _ = extract_links("[link](ftp://files.example.com/data)", f)
-        assert len(external) == 1
-
-    def test_line_numbers(self, tmp_path):
-        f = tmp_path / "test.md"
-        content = "Line 1\nLine 2\n[Link](file.md)\n"
-        _, _, file_refs = extract_links(content, f)
-        assert file_refs[0]["line"] == 3
-
-    def test_multiple_links(self, tmp_path):
-        f = tmp_path / "test.md"
-        content = "[a](#x) and [b](https://x.com) and [c](file.md)"
-        internal, external, refs = extract_links(content, f)
-        assert len(internal) == 1
-        assert len(external) == 1
-        assert len(refs) == 1
-
-    def test_extract_no_links(self, tmp_path):
-        f = tmp_path / "test.md"
-        internal, external, file_refs = extract_links("Just plain text.", f)
-        assert internal == external == file_refs == []
 
 
 class TestExtractCodeBlocks:
@@ -174,142 +54,6 @@ class TestExtractCodeBlocks:
         assert blocks[1]["language"] == "python"
 
 
-class TestShouldValidatePath:
-    def test_template_paths_skipped(self):
-        assert not _should_validate_path("projects/{name}/src/main.py")
-
-    def test_placeholder_paths_skipped(self):
-        assert not _should_validate_path("infrastructure/<module>/test.py")
-
-    def test_url_skipped(self):
-        assert not _should_validate_path("https://example.com/path")
-
-    def test_email_skipped(self):
-        assert not _should_validate_path("user@example.com")
-
-    def test_keyword_skipped(self):
-        assert not _should_validate_path("scripts/my_script.py")
-        assert not _should_validate_path("projects/my_project/src/main.py")
-
-    def test_real_path_validated(self):
-        assert _should_validate_path("infrastructure/core/security.py")
-
-    def test_malformed_path_skipped(self):
-        assert not _should_validate_path("infrastructure/AGENTS.md)")
-
-    def test_path_with_newline_skipped(self):
-        assert not _should_validate_path("infrastructure/core/\nsome text")
-
-
-class TestResolveTemplatePath:
-    def test_infrastructure_path(self, tmp_path):
-        result = _resolve_template_path("infrastructure/core/security.py", tmp_path)
-        assert result == tmp_path / "infrastructure/core/security.py"
-
-    def test_scripts_path(self, tmp_path):
-        result = _resolve_template_path("scripts/run.py", tmp_path)
-        assert result == tmp_path / "scripts/run.py"
-
-    def test_template_project_path(self, tmp_path):
-        assert _resolve_template_path("projects/{name}/src/main.py", tmp_path) is None
-
-    def test_project_path_no_projects_dir(self, tmp_path):
-        assert _resolve_template_path("projects/project/src/main.py", tmp_path) is None
-
-    def test_generic_path(self, tmp_path):
-        result = _resolve_template_path("docs/guide.md", tmp_path)
-        assert result == tmp_path / "docs/guide.md"
-
-
-class TestIsRealPathItem:
-    def test_normal_file(self):
-        assert _is_real_path_item("main.py")
-
-    def test_ellipsis_skipped(self):
-        assert not _is_real_path_item("...")
-
-    def test_etc_skipped(self):
-        assert not _is_real_path_item("etc")
-
-    def test_template_skipped(self):
-        assert not _is_real_path_item("{name}")
-
-
-class TestGetActualProjectNames:
-    def test_finds_projects(self, tmp_path):
-        proj = tmp_path / "projects"
-        proj.mkdir()
-        (proj / "alpha").mkdir()
-        (proj / "beta").mkdir()
-        result = _get_actual_project_names(tmp_path)
-        assert "alpha" in result
-        assert "beta" in result
-
-    def test_excludes_pycache(self, tmp_path):
-        proj = tmp_path / "projects"
-        proj.mkdir()
-        (proj / "__pycache__").mkdir()
-        assert "__pycache__" not in _get_actual_project_names(tmp_path)
-
-    def test_no_projects_dir(self, tmp_path):
-        assert _get_actual_project_names(tmp_path) == []
-
-
-class TestCheckFileReferenceExtended:
-    def test_existing_file(self, tmp_path):
-        target = tmp_path / "guide.md"
-        target.write_text("# Guide")
-        source = tmp_path / "README.md"
-        exists, _ = check_file_reference("guide.md", source, tmp_path)
-        assert exists is True
-
-    def test_missing_file(self, tmp_path):
-        source = tmp_path / "README.md"
-        exists, msg = check_file_reference("nonexistent.md", source, tmp_path)
-        assert exists is False
-        assert "does not exist" in msg
-
-    def test_relative_parent_path(self, tmp_path):
-        sub = tmp_path / "docs"
-        sub.mkdir()
-        (tmp_path / "root.md").write_text("# Root")
-        source = sub / "guide.md"
-        exists, _ = check_file_reference("../root.md", source, tmp_path)
-        assert exists is True
-
-    def test_dot_slash_path(self, tmp_path):
-        (tmp_path / "guide.md").write_text("# Guide")
-        source = tmp_path / "README.md"
-        exists, _ = check_file_reference("./guide.md", source, tmp_path)
-        assert exists is True
-
-    def test_directory_reference(self, tmp_path):
-        sub = tmp_path / "docs"
-        sub.mkdir()
-        source = tmp_path / "README.md"
-        exists, _ = check_file_reference("docs", source, tmp_path)
-        assert exists is True
-
-    def test_md_extension_fallback(self, tmp_path):
-        (tmp_path / "guide.md").write_text("# Guide")
-        source = tmp_path / "README.md"
-        exists, _ = check_file_reference("guide", source, tmp_path)
-        assert exists is True
-
-    def test_outside_repo(self, tmp_path):
-        source = tmp_path / "README.md"
-        exists, msg = check_file_reference("../../../../etc/passwd", source, tmp_path)
-        assert exists is False
-        assert "outside" in msg.lower() or "does not exist" in msg.lower()
-
-    def test_file_reference_with_anchor(self, tmp_path):
-        (tmp_path / "target.md").write_text("# Target\n\n## Section")
-        md_file = tmp_path / "test.md"
-        md_file.write_text("See [target section](./target.md#section) for details.")
-        _, _, file_refs = extract_links(md_file.read_text(), md_file)
-        assert len(file_refs) == 1
-        assert "#" in file_refs[0]["target"]
-
 
 class TestValidateDirectoryStructures:
     def test_valid_tree(self, tmp_path):
@@ -328,6 +72,7 @@ class TestValidateDirectoryStructures:
     def test_tree_diagram_with_existing_dir(self, tmp_path):
         (tmp_path / "src").mkdir()
         assert validate_directory_structures("```\n├── src/\n```", tmp_path / "test.md", tmp_path) == []
+
 
 
 class TestValidatePythonImports:
@@ -353,6 +98,7 @@ class TestValidatePythonImports:
         assert validate_python_imports(content, f, tmp_path) == []
 
 
+
 class TestValidatePlaceholderConsistency:
     def test_template_usage_ok(self, tmp_path):
         content = "Use projects/{name}/src for your project template."
@@ -369,6 +115,7 @@ class TestValidatePlaceholderConsistency:
         content = "Use {name} for the project."
         fp = tmp_path / "AGENTS.md"
         assert validate_placeholder_consistency(content, fp, tmp_path) == []
+
 
 
 class TestGenerateComprehensiveReport:
@@ -441,6 +188,7 @@ class TestGenerateComprehensiveReport:
         assert generate_comprehensive_report(issues, 15) == 1
 
 
+
 class TestRunLinkAudit:
     def test_clean_repo(self, tmp_path):
         (tmp_path / "README.md").write_text("# Hello World\n\nSimple text, no links.")
@@ -449,6 +197,7 @@ class TestRunLinkAudit:
     def test_with_broken_link(self, tmp_path):
         (tmp_path / "README.md").write_text("[Missing](nonexistent.md)")
         assert run_link_audit(tmp_path) == 1
+
 
 
 class TestBrokenAnchorLinks:
@@ -473,6 +222,7 @@ class TestBrokenAnchorLinks:
         assert "sub-section" in headings
 
 
+
 class TestCheckLinksIntegrationComprehensive:
     def test_full_link_checking_workflow(self, tmp_path):
         docs = tmp_path / "docs"
@@ -495,6 +245,7 @@ class TestCheckLinksIntegrationComprehensive:
         assert hasattr(check_links, "discover_markdown_files")
         assert hasattr(check_links, "extract_links")
         assert hasattr(check_links, "check_file_reference")
+
 
 
 class TestDiscoverMarkdownFilesLinkAudit:
@@ -543,6 +294,7 @@ class TestDiscoverMarkdownFilesLinkAudit:
         """Test empty directory."""
         files = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 0
+
 
 
 class TestExtractLinks:
@@ -621,6 +373,7 @@ class TestExtractLinks:
         assert file_refs[0]["line"] == 3
 
 
+
 class TestCheckFileReference:
     """Test check_file_reference function."""
 
@@ -679,6 +432,7 @@ class TestCheckFileReference:
         assert exists is True
 
 
+
 class TestExtractHeadings:
     """Test extract_headings function."""
 
@@ -711,6 +465,7 @@ class TestExtractHeadings:
         headings = extract_headings(content)
 
         assert len(headings) >= 1
+
 
 
 class TestExtractHeadingsEdgeCases:
@@ -748,6 +503,7 @@ class TestExtractHeadingsEdgeCases:
         assert "explicit-title" in headings
         assert "another-explicit" in headings
         assert "auto-section" in headings
+
 
 
 class TestCheckFileReferenceEdgeCases:
@@ -792,6 +548,7 @@ class TestCheckFileReferenceEdgeCases:
         assert "outside repository" in msg.lower() or "not exist" in msg.lower()
 
 
+
 class TestMainFunction:
     """Test main function with real data."""
 
@@ -807,216 +564,6 @@ class TestMainFunction:
         assert result in (0, 1)
 
 
-class TestLinkValidationWorkflows:
-    """Test complete link validation workflows with real data."""
-
-    def test_detect_broken_anchor_link(self, tmp_path):
-        """Test detection of broken anchor links."""
-        md_content = """# Title
-
-This links to [nonexistent section](#does-not-exist).
-"""
-        md_file = tmp_path / "doc.md"
-        md_file.write_text(md_content)
-
-        files = discover_markdown_files(tmp_path, scope="link_audit")
-        assert len(files) == 1
-
-        content = md_file.read_text()
-        all_headings = {str(md_file): extract_headings(content)}
-        internal, external, file_refs = extract_links(content, md_file)
-
-        # Check anchor validation logic
-        assert len(internal) == 1
-        target = internal[0]["target"].lstrip("#")
-        file_key = str(md_file)
-
-        # Verify anchor is not in headings
-        assert target not in all_headings[file_key]
-
-    def test_detect_broken_file_reference(self, tmp_path):
-        """Test detection of broken file references."""
-        md_content = "[Missing doc](nonexistent.md)"
-        md_file = tmp_path / "doc.md"
-        md_file.write_text(md_content)
-
-        content = md_file.read_text()
-        internal, external, file_refs = extract_links(content, md_file)
-
-        assert len(file_refs) == 1
-        exists, msg = check_file_reference(file_refs[0]["target"], md_file, tmp_path)
-
-        assert exists is False
-        assert "not exist" in msg.lower()
-
-    def test_file_reference_with_anchor(self, tmp_path):
-        """Test file reference with anchor gets anchor stripped."""
-        (tmp_path / "other.md").write_text("# Other Doc")
-        md_content = "[Section](other.md#section)"
-        md_file = tmp_path / "doc.md"
-        md_file.write_text(md_content)
-
-        content = md_file.read_text()
-        internal, external, file_refs = extract_links(content, md_file)
-
-        assert len(file_refs) == 1
-        target = file_refs[0]["target"]
-
-        # Strip anchor for file check
-        if "#" in target:
-            target = target.split("#")[0]
-
-        exists, msg = check_file_reference(target, md_file, tmp_path)
-        assert exists is True
-
-    def test_valid_internal_anchor(self, tmp_path):
-        """Test valid internal anchor link."""
-        md_content = """# Title
-
-## Section One
-
-Go to [section](#section-one).
-"""
-        md_file = tmp_path / "doc.md"
-        md_file.write_text(md_content)
-
-        content = md_file.read_text()
-        headings = extract_headings(content)
-        internal, external, file_refs = extract_links(content, md_file)
-
-        assert len(internal) == 1
-        target = internal[0]["target"].lstrip("#")
-
-        # Verify anchor IS in headings
-        assert target in headings
-
-    def test_many_broken_references_workflow(self, tmp_path):
-        """Test workflow with many broken references."""
-        # Create file with 15 broken file references
-        broken_refs = "\n".join([f"[File {i}](missing{i}.md)" for i in range(15)])
-        md_content = f"# Title\n\n{broken_refs}"
-        md_file = tmp_path / "doc.md"
-        md_file.write_text(md_content)
-
-        content = md_file.read_text()
-        internal, external, file_refs = extract_links(content, md_file)
-
-        # Should find all 15 broken refs
-        assert len(file_refs) == 15
-
-        broken = []
-        for ref in file_refs:
-            exists, msg = check_file_reference(ref["target"], md_file, tmp_path)
-            if not exists:
-                broken.append(ref)
-
-        assert len(broken) == 15
-
-    def test_many_broken_anchor_links(self, tmp_path):
-        """Test workflow with many broken anchor links."""
-        # Create file with 15 broken anchor links
-        broken_links = "\n".join([f"[Link {i}](#nonexistent-{i})" for i in range(15)])
-        md_content = f"# Title\n\n{broken_links}"
-        md_file = tmp_path / "doc.md"
-        md_file.write_text(md_content)
-
-        content = md_file.read_text()
-        headings = extract_headings(content)
-        internal, external, file_refs = extract_links(content, md_file)
-
-        # Should find all 15 broken anchors
-        assert len(internal) == 15
-
-        broken = []
-        for link in internal:
-            target = link["target"].lstrip("#")
-            if target not in headings:
-                broken.append(link)
-
-        assert len(broken) == 15
-
-
-class TestCompleteValidationPaths:
-    """Test all code paths through the validation workflow."""
-
-    def test_all_links_valid_workflow(self, tmp_path):
-        """Test workflow when all links are valid."""
-        # Create interconnected valid docs
-        (tmp_path / "README.md").write_text(
-            """# README
-
-## Introduction {#intro}
-
-See [Guide](docs/guide.md) for details.
-Go to [intro](#intro).
-"""
-        )
-        (tmp_path / "docs").mkdir()
-        (tmp_path / "docs" / "guide.md").write_text(
-            """# Guide
-
-See [README](../README.md) for overview.
-"""
-        )
-
-        files = discover_markdown_files(tmp_path, scope="link_audit")
-        assert len(files) == 2
-
-        # Validate all links
-        all_valid = True
-        for md_file in files:
-            content = md_file.read_text()
-            internal, external, file_refs = extract_links(content, md_file)
-
-            # Check file refs
-            for ref in file_refs:
-                exists, msg = check_file_reference(ref["target"], md_file, tmp_path)
-                if not exists:
-                    all_valid = False
-
-        assert all_valid
-
-    def test_external_links_extracted_correctly(self, tmp_path):
-        """Test that external links are correctly categorized."""
-        md_content = """# Links
-
-[Google](https://google.com)
-[HTTP Site](http://example.com)
-[Email](mailto:test@test.com)
-[FTP](ftp://files.example.com)
-"""
-        md_file = tmp_path / "doc.md"
-        md_file.write_text(md_content)
-
-        content = md_file.read_text()
-        internal, external, file_refs = extract_links(content, md_file)
-
-        # All should be classified as external
-        assert len(external) == 4
-        assert len(internal) == 0
-        assert len(file_refs) == 0
-
-
-class TestCheckLinksIntegrationRelativePaths:
-    """Integration tests for check_links module."""
-
-    def test_full_workflow(self, tmp_path):
-        """Test complete link checking workflow."""
-        # Create interconnected docs
-        (tmp_path / "README.md").write_text("[Guide](docs/guide.md)")
-        (tmp_path / "docs").mkdir()
-        (tmp_path / "docs" / "guide.md").write_text("[Back](../README.md)")
-
-        files = discover_markdown_files(tmp_path, scope="link_audit")
-        assert len(files) == 2
-
-        for f in files:
-            content = f.read_text()
-            internal, external, file_refs = extract_links(content, f)
-            for ref in file_refs:
-                exists, msg = check_file_reference(ref["target"], f, tmp_path)
-                assert exists, f"Link {ref['target']} in {f} should exist"
-
 
 class TestCheckLinksCore:
     """Test core link checking functionality."""
@@ -1031,6 +578,7 @@ class TestCheckLinksCore:
             a for a in dir(check_links) if not a.startswith("_") and callable(getattr(check_links, a, None))
         ]
         assert len(module_funcs) > 0
+
 
 
 class TestLinkValidation:
@@ -1058,6 +606,7 @@ class TestLinkValidation:
             test_url = http_test_server.url_for("/")
             result = check_links.check_external_link(test_url)
             assert result is not None
+
 
 
 class TestFileReferenceValidation:
@@ -1092,6 +641,7 @@ class TestFileReferenceValidation:
         if hasattr(check_links, "check_file_reference"):
             result = check_links.check_file_reference("img.png", source, tmp_path)
             assert result is not None
+
 
 
 class TestMarkdownLinkExtraction:
@@ -1146,31 +696,6 @@ class TestMarkdownLinkExtraction:
             assert file_refs[0]["target"] == "other.md"
 
 
-class TestBulkLinkChecking:
-    """Test bulk link checking functionality."""
-
-    def test_check_all_links(self, tmp_path):
-        """Test checking all links in a file."""
-        doc = tmp_path / "doc.md"
-        target = tmp_path / "target.md"
-        target.write_text("# Target")
-        doc.write_text("[Link](target.md)")
-
-        if hasattr(check_links, "check_all_links"):
-            results = check_links.check_all_links(doc, tmp_path)
-            assert results is not None
-
-    def test_check_directory_links(self, tmp_path):
-        """Test checking links in entire directory."""
-        docs = tmp_path / "docs"
-        docs.mkdir()
-        (docs / "a.md").write_text("[Link](b.md)")
-        (docs / "b.md").write_text("# B")
-
-        if hasattr(check_links, "check_directory_links"):
-            results = check_links.check_directory_links(docs)
-            assert results is not None
-
 
 class TestRelativePathResolution:
     """Test relative path resolution."""
@@ -1191,33 +716,6 @@ class TestRelativePathResolution:
             result = check_links.normalize_path("./docs/../README.md")
             assert result is not None
 
-
-class TestCheckLinksIntegration:
-    """Integration tests for check_links module."""
-
-    def test_full_link_check_workflow(self, tmp_path):
-        """Test complete link checking workflow."""
-        # Create documentation with various links
-        docs = tmp_path / "docs"
-        docs.mkdir()
-
-        main = docs / "main.md"
-        main.write_text(
-            """
-# Main Doc
-- [Sub](sub.md)
-- [README](../README.md)
-"""
-        )
-
-        sub = docs / "sub.md"
-        sub.write_text("# Sub")
-
-        readme = tmp_path / "README.md"
-        readme.write_text("# README")
-
-        # Module should work
-        assert check_links is not None
 
 
 class TestCheckFileReferenceEdgeCasesAdditional:
@@ -1300,6 +798,7 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         assert result is True or "does not exist" in msg.lower()
 
 
+
 class TestExtractHeadingsAdditional:
     """Test heading extraction functionality."""
 
@@ -1334,6 +833,7 @@ class TestExtractHeadingsAdditional:
         headings = check_links.extract_headings(content)
         # Should strip special chars
         assert len(headings) > 0
+
 
 
 class TestMainFunctionEdgeCases:
@@ -1382,6 +882,7 @@ class TestMainFunctionEdgeCases:
         assert result is False
 
 
+
 class TestExtractLinksEdgeCases:
     """Test link extraction edge cases."""
 
@@ -1414,6 +915,7 @@ class TestExtractLinksEdgeCases:
 
         assert len(external) == 1
         assert external[0]["target"] == "http://example.com"
+
 
 
 class TestDiscoverMarkdownFilesLinkAuditAdditional:
@@ -1454,152 +956,6 @@ class TestDiscoverMarkdownFilesLinkAuditAdditional:
         assert "readme.md" in file_names
         assert "coverage.md" not in file_names
 
-
-class TestMainFunctionReporting:
-    """Test main function reporting for broken links."""
-
-    def test_main_reports_broken_anchors(self, tmp_path, capsys):
-        """Test that main reports broken anchor links."""
-        # Create file with broken anchor link
-        md_file = tmp_path / "test.md"
-        md_file.write_text(
-            """# Real Heading
-
-[Broken](#nonexistent-section)
-"""
-        )
-
-        # Run main with custom repo root
-
-        def patched_main():
-            """Patched main to use tmp_path as repo root."""
-            repo_root = tmp_path
-            md_files = check_links.discover_markdown_files(repo_root, scope="link_audit")
-
-            print(f"Found {len(md_files)} markdown files")
-
-            all_headings = {}
-            broken_links = []
-            broken_file_refs = []
-
-            # First pass: collect headings
-            for md_file in md_files:
-                try:
-                    content = md_file.read_text(encoding="utf-8")
-                    all_headings[str(md_file.relative_to(repo_root))] = check_links.extract_headings(content)
-                except Exception as e:
-                    print(f"Error reading {md_file}: {e}")
-
-            # Second pass: check links
-            for md_file in md_files:
-                try:
-                    content = md_file.read_text(encoding="utf-8")
-                    internal_links, external_links, file_refs = check_links.extract_links(content, md_file)
-
-                    # Check internal links
-                    for link in internal_links:
-                        target = link["target"].lstrip("#")
-                        file_key = str(md_file.relative_to(repo_root))
-                        if file_key in all_headings and target not in all_headings[file_key]:
-                            broken_links.append(
-                                {
-                                    "file": file_key,
-                                    "line": link["line"],
-                                    "target": link["target"],
-                                    "text": link["text"],
-                                    "issue": "Anchor not found",
-                                }
-                            )
-
-                    # Check file references
-                    for ref in file_refs:
-                        target = ref["target"]
-                        if "#" in target:
-                            target = target.split("#")[0]
-                        if target:
-                            exists, msg = check_links.check_file_reference(target, md_file, repo_root)
-                            if not exists:
-                                broken_file_refs.append(
-                                    {
-                                        "file": str(md_file.relative_to(repo_root)),
-                                        "line": ref["line"],
-                                        "target": ref["target"],
-                                        "text": ref["text"],
-                                        "issue": msg,
-                                    }
-                                )
-                except Exception as e:
-                    print(f"Error processing {md_file}: {e}")
-
-            # Report results
-            if broken_links:
-                print(f"\nFound {len(broken_links)} broken anchor links:")
-                for link in broken_links[:10]:
-                    print(f"  {link['file']}:{link['line']} - {link['target']} ({link['issue']})")
-                if len(broken_links) > 10:
-                    print(f"  ... and {len(broken_links) - 10} more")
-
-            if broken_file_refs:
-                print(f"\nFound {len(broken_file_refs)} broken file references:")
-                for ref in broken_file_refs[:10]:
-                    print(f"  {ref['file']}:{ref['line']} - {ref['target']} ({ref['issue']})")
-                if len(broken_file_refs) > 10:
-                    print(f"  ... and {len(broken_file_refs) - 10} more")
-
-            if not broken_links and not broken_file_refs:
-                print("\nAll links verified successfully!")
-                return 0
-
-            return 1
-
-        exit_code = patched_main()
-        captured = capsys.readouterr()
-
-        # Should report the broken anchor
-        assert "broken anchor links" in captured.out.lower() or "nonexistent" in captured.out.lower()
-        assert exit_code == 1
-
-    def test_main_reports_broken_file_refs(self, tmp_path, capsys):
-        """Test that main reports broken file references."""
-        # Create file with broken file reference
-        md_file = tmp_path / "test.md"
-        md_file.write_text(
-            """# Document
-
-[Missing File](nonexistent.md)
-"""
-        )
-
-        # Extract and check the broken reference
-        content = md_file.read_text()
-        internal, external, file_refs = check_links.extract_links(content, md_file)
-
-        assert len(file_refs) == 1
-
-        exists, msg = check_links.check_file_reference(file_refs[0]["target"], md_file, tmp_path)
-        assert exists is False
-        assert "does not exist" in msg.lower()
-
-    def test_main_success_with_valid_links(self, tmp_path, capsys):
-        """Test main returns 0 when all links are valid."""
-        # Create valid file structure
-        (tmp_path / "target.md").write_text("# Target Heading")
-
-        md_file = tmp_path / "test.md"
-        md_file.write_text(
-            """# Test Document
-
-[Valid Link](target.md)
-"""
-        )
-
-        # Extract and verify
-        content = md_file.read_text()
-        internal, external, file_refs = check_links.extract_links(content, md_file)
-
-        for ref in file_refs:
-            exists, msg = check_links.check_file_reference(ref["target"], md_file, tmp_path)
-            assert exists is True
 
 
 class TestValidatePythonImportsAdditional:
@@ -1642,126 +998,3 @@ class TestValidatePythonImportsAdditional:
         assert issues == []  # Non-infrastructure imports not checked
 
 
-class TestValidateImportPath:
-    def test_infrastructure_direct_file(self, tmp_path):
-        (tmp_path / "infrastructure" / "core").mkdir(parents=True)
-        (tmp_path / "infrastructure" / "core" / "logging.py").write_text("")
-        block = {"line": 1, "content": ""}
-        fp = tmp_path / "test.md"
-        issues = _validate_import_path("infrastructure.core.logging", block, fp, tmp_path)
-        assert issues == []
-
-    def test_projects_project_src(self, tmp_path):
-        (tmp_path / "projects" / "myproj" / "src").mkdir(parents=True)
-        (tmp_path / "projects" / "myproj" / "src" / "analysis.py").write_text("")
-        block = {"line": 1, "content": ""}
-        fp = tmp_path / "test.md"
-        issues = _validate_import_path("projects.project.src.analysis", block, fp, tmp_path)
-        assert issues == []
-
-    def test_projects_project_src_not_found(self, tmp_path):
-        (tmp_path / "projects" / "myproj" / "src").mkdir(parents=True)
-        block = {"line": 1, "content": ""}
-        fp = tmp_path / "test.md"
-        issues = _validate_import_path("projects.project.src.nonexistent", block, fp, tmp_path)
-        assert len(issues) >= 1
-
-    def test_non_matching_prefix(self, tmp_path):
-        block = {"line": 1, "content": ""}
-        fp = tmp_path / "test.md"
-        issues = _validate_import_path("os.path", block, fp, tmp_path)
-        assert issues == []
-
-
-class TestValidateFilePathsInCode:
-    def test_no_paths(self, tmp_path):
-        content = "```python\nprint('hello')\n```"
-        issues = validate_file_paths_in_code(content, tmp_path / "test.md", tmp_path)
-        assert issues == []
-
-    def test_mermaid_skipped(self, tmp_path):
-        content = "```mermaid\ngraph TD\n  A-->B\n```"
-        issues = validate_file_paths_in_code(content, tmp_path / "test.md", tmp_path)
-        assert issues == []
-
-    def test_existing_path(self, tmp_path):
-        (tmp_path / "infrastructure" / "core").mkdir(parents=True)
-        (tmp_path / "infrastructure" / "core" / "exceptions.py").write_text("")
-        content = "```bash\ncat infrastructure/core/exceptions.py\n```"
-        issues = validate_file_paths_in_code(content, tmp_path / "test.md", tmp_path)
-        assert issues == []
-
-    def test_project_local_script_path_resolves_from_project_root(self, tmp_path):
-        project_root = tmp_path / "projects" / "templates" / "template_demo"
-        (project_root / "scripts").mkdir(parents=True)
-        (project_root / "scripts" / "compose_manuscript.py").write_text("")
-        md_file = project_root / "README.md"
-        content = "```bash\nuv run python scripts/compose_manuscript.py\n```"
-
-        issues = validate_file_paths_in_code(content, md_file, tmp_path)
-
-        assert issues == []
-
-    def test_project_local_missing_script_still_fails(self, tmp_path):
-        project_root = tmp_path / "projects" / "templates" / "template_demo"
-        project_root.mkdir(parents=True)
-        md_file = project_root / "README.md"
-        content = "```bash\nuv run python scripts/missing_project_script.py\n```"
-
-        issues = validate_file_paths_in_code(content, md_file, tmp_path)
-
-        assert len(issues) == 1
-        assert issues[0]["target"] == "scripts/missing_project_script.py"
-
-    def test_project_doc_script_path_falls_back_to_repo_root(self, tmp_path):
-        project_root = tmp_path / "projects" / "templates" / "template_demo"
-        project_root.mkdir(parents=True)
-        (tmp_path / "scripts").mkdir()
-        (tmp_path / "scripts" / "03_render_pdf.py").write_text("")
-        md_file = project_root / "README.md"
-        content = "```bash\nuv run python scripts/03_render_pdf.py --project template_demo\n```"
-
-        issues = validate_file_paths_in_code(content, md_file, tmp_path)
-
-        assert issues == []
-
-    def test_aggregate_projects_docs_use_repo_root_scripts(self, tmp_path):
-        (tmp_path / "projects").mkdir()
-        (tmp_path / "scripts").mkdir()
-        (tmp_path / "scripts" / "03_render_pdf.py").write_text("")
-        md_file = tmp_path / "projects" / "README.md"
-        content = "```bash\nuv run python scripts/03_render_pdf.py --project template_demo\n```"
-
-        issues = validate_file_paths_in_code(content, md_file, tmp_path)
-
-        assert issues == []
-
-    def test_embedded_docs_script_path_does_not_match_root_scripts_substring(self, tmp_path):
-        (tmp_path / "docs" / "operational" / "scripts").mkdir(parents=True)
-        (tmp_path / "docs" / "operational" / "scripts" / "rotate-logs.sh").write_text("")
-        content = "```bash\nbash docs/operational/scripts/rotate-logs.sh\n```"
-
-        issues = validate_file_paths_in_code(content, tmp_path / "docs" / "operational" / "README.md", tmp_path)
-
-        assert issues == []
-
-
-class TestGetActualProjectNamesAdditional:
-    def test_no_projects_dir(self, tmp_path):
-        names = _get_actual_project_names(tmp_path)
-        assert names == []
-
-    def test_with_projects(self, tmp_path):
-        (tmp_path / "projects" / "alpha").mkdir(parents=True)
-        (tmp_path / "projects" / "beta").mkdir(parents=True)
-        names = _get_actual_project_names(tmp_path)
-        assert "alpha" in names
-        assert "beta" in names
-
-    def test_pycache_excluded(self, tmp_path):
-        (tmp_path / "projects").mkdir()
-        (tmp_path / "projects" / "__pycache__").mkdir()
-        (tmp_path / "projects" / "real_project").mkdir()
-        names = _get_actual_project_names(tmp_path)
-        assert "__pycache__" not in names
-        assert "real_project" in names

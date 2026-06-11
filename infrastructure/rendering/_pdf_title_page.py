@@ -58,6 +58,32 @@ def _load_render_config(manuscript_dir: Path) -> tuple[dict[str, Any] | None, Pa
     return config, config_file
 
 
+def build_pandoc_metadata(config: dict[str, Any]) -> dict[str, Any]:
+    """Build pandoc YAML metadata from a manuscript config dict."""
+    paper = config.get("paper") or {}
+    meta: dict[str, Any] = {}
+    if paper.get("title"):
+        meta["title"] = str(paper["title"])
+    if paper.get("subtitle"):
+        meta["subtitle"] = str(paper["subtitle"])
+    authors: list[str] = []
+    for entry in config.get("authors") or []:
+        if isinstance(entry, dict) and entry.get("name"):
+            name = str(entry["name"])
+            affiliations = entry.get("affiliations") or []
+            if affiliations:
+                name += " (" + "; ".join(str(affiliation) for affiliation in affiliations) + ")"
+            authors.append(name)
+        elif isinstance(entry, str):
+            authors.append(entry)
+    if authors:
+        meta["author"] = authors
+    date = paper.get("date") or (config.get("publication") or {}).get("year")
+    if date:
+        meta["date"] = str(date)
+    return meta
+
+
 def _latex_text(value: object) -> str:
     """Escape a short text value for LaTeX text mode."""
     text = str(value)

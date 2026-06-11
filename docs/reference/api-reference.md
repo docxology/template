@@ -2236,7 +2236,7 @@ Populate :attr:`Paper.abstract` for records that lack one.
 *class — defined in `infrastructure.search.literature.arxiv_backend`*
 
 ```python
-class ArxivBackend(*, http_client: HttpClient | None=None, base_url: str | None=None, timeout: float=15.0)
+class ArxivBackend(*, http_client: HttpClient | None=None, base_url: str | None=None, timeout: float=15.0, max_retries: int=3, retry_base_delay: float=3.0, sleeper: Callable[[float], None]=time.sleep)
 ```
 
 arXiv export API. Returns Atom XML; we parse it locally.
@@ -2251,6 +2251,66 @@ class BackendError(RuntimeError)
 
 Raised by a backend when the request itself fails (network, parse).
 
+### `build_gemini_payload`
+
+*function — defined in `infrastructure.search.deep_research.gemini`*
+
+```python
+build_gemini_payload(request: DeepResearchRequest, *, agent: str | None=None) -> dict[str, Any]
+```
+
+Build the Interactions API payload without touching the SDK.
+
+### `build_gemini_tools`
+
+*function — defined in `infrastructure.search.deep_research.gemini`*
+
+```python
+build_gemini_tools(request: DeepResearchRequest) -> list[dict[str, Any]]
+```
+
+Translate provider-neutral source controls into Gemini deep research tools.
+
+### `build_openai_payload`
+
+*function — defined in `infrastructure.search.deep_research.openai`*
+
+```python
+build_openai_payload(request: DeepResearchRequest, *, model: str | None=None) -> dict[str, Any]
+```
+
+Build the Responses API payload without touching the SDK.
+
+### `build_openai_tools`
+
+*function — defined in `infrastructure.search.deep_research.openai`*
+
+```python
+build_openai_tools(request: DeepResearchRequest) -> list[dict[str, Any]]
+```
+
+Translate provider-neutral source controls into OpenAI deep research tools.
+
+### `build_project_deep_research_request`
+
+*function — defined in `infrastructure.search.deep_research.project_context`*
+
+```python
+build_project_deep_research_request(project_root: str | Path, query: str, *, request: DeepResearchRequest | None=None, max_files: int=64, max_chars_per_file: int=8000, max_total_chars: int=500000) -> DeepResearchRequest
+```
+
+Create a deep research request preloaded with project context.
+
+### `collect_project_context`
+
+*function — defined in `infrastructure.search.deep_research.project_context`*
+
+```python
+collect_project_context(project_root: str | Path, *, max_files: int=64, max_chars_per_file: int=8000, max_total_chars: int=500000) -> DeepResearchProjectContext
+```
+
+Collect a bounded context bundle from a project tree.
+
 ### `CrossrefBackend`
 
 *class — defined in `infrastructure.search.literature.crossref_backend`*
@@ -2260,6 +2320,132 @@ class CrossrefBackend(*, http_client: HttpClient | None=None, base_url: str | No
 ```
 
 Crossref REST API (no auth required).
+
+### `DeepResearchAnalysis`
+
+*class — defined in `infrastructure.search.deep_research.models`*
+
+```python
+class DeepResearchAnalysis
+```
+
+Tooling and execution controls.
+
+### `DeepResearchCitation`
+
+*class — defined in `infrastructure.search.deep_research.models`*
+
+```python
+class DeepResearchCitation
+```
+
+Normalized citation metadata.
+
+### `DeepResearchClient`
+
+*class — defined in `infrastructure.search.deep_research.client`*
+
+```python
+class DeepResearchClient
+```
+
+Dispatches deep research jobs to the best available provider.
+
+### `DeepResearchConfig`
+
+*class — defined in `infrastructure.search.deep_research.config`*
+
+```python
+class DeepResearchConfig
+```
+
+Environment-backed deep research settings.
+
+### `DeepResearchJobHandle`
+
+*class — defined in `infrastructure.search.deep_research.models`*
+
+```python
+class DeepResearchJobHandle
+```
+
+Opaque provider job handle returned after submission.
+
+### `DeepResearchMCPServer`
+
+*class — defined in `infrastructure.search.deep_research.models`*
+
+```python
+class DeepResearchMCPServer
+```
+
+Remote MCP server specification.
+
+### `DeepResearchProjectContext`
+
+*class — defined in `infrastructure.search.deep_research.project_context`*
+
+```python
+class DeepResearchProjectContext
+```
+
+Packed project context suitable for provider prompts.
+
+### `DeepResearchReportBundle`
+
+*class — defined in `infrastructure.search.deep_research.artifacts`*
+
+```python
+class DeepResearchReportBundle
+```
+
+Filesystem locations for a saved deep research result.
+
+### `DeepResearchRequest`
+
+*class — defined in `infrastructure.search.deep_research.models`*
+
+```python
+class DeepResearchRequest
+```
+
+Provider-neutral deep research request.
+
+### `DeepResearchResult`
+
+*class — defined in `infrastructure.search.deep_research.models`*
+
+```python
+class DeepResearchResult
+```
+
+Normalized terminal result returned after polling a job.
+
+### `DeepResearchSources`
+
+*class — defined in `infrastructure.search.deep_research.models`*
+
+```python
+class DeepResearchSources
+```
+
+Source controls for a deep research job.
+
+### `DEFAULT_GEMINI_AGENT`
+
+*constant — defined in `infrastructure.search.deep_research.config`*
+
+```python
+DEFAULT_GEMINI_AGENT = 'deep-research-preview-04-2026'
+```
+
+### `DEFAULT_OPENAI_MODEL`
+
+*constant — defined in `infrastructure.search.deep_research.config`*
+
+```python
+DEFAULT_OPENAI_MODEL = 'o3-deep-research'
+```
 
 ### `enrich_papers`
 
@@ -2321,6 +2507,26 @@ class FulltextFetcher(*, http_client: HttpClient | None=None, cache_dir: Path | 
 
 Populate :attr:`Paper.fulltext` from PDF / HTML sources.
 
+### `GeminiDeepResearchError`
+
+*class — defined in `infrastructure.search.deep_research.gemini`*
+
+```python
+class GeminiDeepResearchError(RuntimeError)
+```
+
+Raised when the Gemini deep research adapter cannot run.
+
+### `GeminiDeepResearchProvider`
+
+*class — defined in `infrastructure.search.deep_research.gemini`*
+
+```python
+class GeminiDeepResearchProvider(*, api_key: str | None, agent: str=DEFAULT_GEMINI_AGENT)
+```
+
+Lazy SDK wrapper around the Gemini Interactions API.
+
 ### `LiteratureClient`
 
 *class — defined in `infrastructure.search.literature.client`*
@@ -2351,6 +2557,26 @@ merge_papers(papers: Iterable[Paper]) -> list[Paper]
 
 Deduplicate *papers* by canonical key, keeping the highest-scored copy.
 
+### `OpenAIDeepResearchError`
+
+*class — defined in `infrastructure.search.deep_research.openai`*
+
+```python
+class OpenAIDeepResearchError(RuntimeError)
+```
+
+Raised when the OpenAI deep research adapter cannot run.
+
+### `OpenAIDeepResearchProvider`
+
+*class — defined in `infrastructure.search.deep_research.openai`*
+
+```python
+class OpenAIDeepResearchProvider(*, api_key: str | None, model: str=DEFAULT_OPENAI_MODEL)
+```
+
+Lazy SDK wrapper around the OpenAI Responses API.
+
 ### `Paper`
 
 *class — defined in `infrastructure.search.literature.models`*
@@ -2370,6 +2596,26 @@ class PaperclipBackend(*, api_key: str, http_client: HttpClient | None=None, bas
 ```
 
 Paperclip (paperclip.gxl.ai) HTTP backend.
+
+### `save_deep_research_result`
+
+*function — defined in `infrastructure.search.deep_research.artifacts`*
+
+```python
+save_deep_research_result(project_root: str | Path, result: DeepResearchResult, *, request: DeepResearchRequest | None=None, report_name: str | None=None) -> DeepResearchReportBundle
+```
+
+Write a single deep research result under ``output/reports/deep_research``.
+
+### `save_deep_research_results`
+
+*function — defined in `infrastructure.search.deep_research.artifacts`*
+
+```python
+save_deep_research_results(project_root: str | Path, results: Mapping[str, DeepResearchResult], *, request: DeepResearchRequest | None=None) -> dict[str, DeepResearchReportBundle]
+```
+
+Write all provider reports and a small index file.
 
 ### `SearchBackend`
 
@@ -2651,6 +2897,56 @@ embed_steganography(input_pdf: Path, output_pdf: Path | None=None, config: Stega
 
 Convenience function — create a processor and run it.
 
+### `KmythAvailability`
+
+*class — defined in `infrastructure.steganography.kmyth_adapter`*
+
+```python
+class KmythAvailability
+```
+
+Validation result for the optional Kmyth command-line tools.
+
+### `KmythCommandError`
+
+*class — defined in `infrastructure.steganography.kmyth_adapter`*
+
+```python
+class KmythCommandError(KmythError)
+```
+
+Raised when a Kmyth command exits unsuccessfully.
+
+### `KmythError`
+
+*class — defined in `infrastructure.steganography.kmyth_adapter`*
+
+```python
+class KmythError(RuntimeError)
+```
+
+Base class for Kmyth integration failures.
+
+### `KmythSealOptions`
+
+*class — defined in `infrastructure.steganography.kmyth_adapter`*
+
+```python
+class KmythSealOptions
+```
+
+Runtime options for invoking ``kmyth-seal``.
+
+### `KmythUnavailableError`
+
+*class — defined in `infrastructure.steganography.kmyth_adapter`*
+
+```python
+class KmythUnavailableError(KmythError)
+```
+
+Raised when Kmyth is requested but usable tools are unavailable.
+
 ### `process_pdf`
 
 *constant — defined in `infrastructure.steganography.core`*
@@ -2668,6 +2964,16 @@ resolve_build_timestamp(*, deterministic: bool | None=None, repo_root: Path | No
 ```
 
 Return an ISO-8601 build timestamp.
+
+### `seal_file_with_kmyth`
+
+*function — defined in `infrastructure.steganography.kmyth_adapter`*
+
+```python
+seal_file_with_kmyth(input_path: Path, output_path: Path | None=None, *, options: KmythSealOptions | None=None) -> Path
+```
+
+Seal *input_path* with ``kmyth-seal`` and return the ``.ski`` path.
 
 ### `SteganographyConfig`
 
@@ -2688,6 +2994,16 @@ class SteganographyProcessor(config: SteganographyConfig | None=None)
 ```
 
 Orchestrates steganographic PDF post-processing.
+
+### `validate_kmyth_installation`
+
+*function — defined in `infrastructure.steganography.kmyth_adapter`*
+
+```python
+validate_kmyth_installation(*, binary_dir: str | Path | None=None, source_dir: str | Path | None=None) -> KmythAvailability
+```
+
+Validate that Kmyth source and command-line tools are available.
 
 ## Package: `infrastructure.validation`
 

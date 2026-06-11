@@ -436,31 +436,11 @@ def _render_combined_docx(
     # LaTeX title-page injection; the shared combined markdown carries no
     # metadata block, so without this the DOCX would have no title or authors.
     import yaml as _yaml
-    from infrastructure.rendering._pdf_title_page import _load_render_config
+    from infrastructure.rendering._pdf_title_page import _load_render_config, build_pandoc_metadata
 
     config, _ = _load_render_config(manuscript_dir)
     if isinstance(config, dict):
-        paper = config.get("paper") or {}
-        meta: dict[str, Any] = {}
-        if paper.get("title"):
-            meta["title"] = str(paper["title"])
-        if paper.get("subtitle"):
-            meta["subtitle"] = str(paper["subtitle"])
-        authors: list[str] = []
-        for entry in config.get("authors") or []:
-            if isinstance(entry, dict) and entry.get("name"):
-                name = str(entry["name"])
-                affiliations = entry.get("affiliations") or []
-                if affiliations:
-                    name += " (" + "; ".join(str(a) for a in affiliations) + ")"
-                authors.append(name)
-            elif isinstance(entry, str):
-                authors.append(entry)
-        if authors:
-            meta["author"] = authors
-        date = paper.get("date") or (config.get("publication") or {}).get("year")
-        if date:
-            meta["date"] = str(date)
+        meta = build_pandoc_metadata(config)
         if meta:
             meta_path = docx_dir / "_docx_metadata.yaml"
             with meta_path.open("w", encoding="utf-8") as handle:

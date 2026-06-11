@@ -8,9 +8,9 @@ Technical guide for `tests/fixtures/` — shared test fixture data consumed by t
 
 ```mermaid
 flowchart LR
-    F[/tests/fixtures//]
-    F --> RC[/real_codebases/<br/>Shallow-cloned real GitHub repos<br/>for integration tests/]
-    F --> PP[/private_project/cogant/<br/>Committed COGANT tool stubs<br/>for private_project tests/]
+    F[tests/fixtures]
+    F --> RC[real_codebases]
+    F --> PP[private_project/cogant]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class F,RC,PP d

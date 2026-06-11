@@ -34,7 +34,7 @@ flowchart TB
     ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]
 
     WF --> WF_DOCS[AGENTS.md · README.md]
-    WF --> WF_CI[ci.yml<br/>12 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
+    WF --> WF_CI[ci.yml<br/>14 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
 
@@ -55,24 +55,26 @@ flowchart TB
 
 **Pipeline jobs** (job ids in `ci.yml`; display names differ — use `name:` for branch protection):
 
-**12 jobs total; 2 are conditional, gated by the `detect` job's outputs
+**14 jobs total; 2 are conditional, gated by the `detect` job's outputs
 (`needs.detect.outputs.*`) — NOT a job-level `hashFiles()` (that is invalid
 in a job `if:` and rejects the whole workflow at parse).**
 
 | # | Job id | Display name (representative) | Depends on | Python | Runner |
 | --- | --- | --- | --- | --- | --- |
 | 1 | `detect` | Detect optional projects | — | — | ubuntu (always) |
-| 2 | `lint` | Lint & Type Check | — | 3.12 | ubuntu |
-| 3 | `health` | Unified Health Report (informational) | lint | 3.12 | ubuntu |
-| 4 | `verify-no-mocks` | Verify No Mocks Policy | lint | 3.12 | ubuntu |
-| 5 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
-| 6 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu (×3.10/3.11/3.12) + macOS (3.12 only) — 4 cells |
-| 7 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks | 3.10 + 3.12 | ubuntu only — 9 exemplars × 2 Python = 18 cells |
-| 8 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
-| 9 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
-| 10 | `security` | Security Scan | lint | 3.12 | ubuntu |
-| 11 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
-| 12 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
+| 2 | `detect-projects` | Detect public exemplars | — | — | ubuntu (always) |
+| 3 | `actionlint` | Actionlint | — | — | ubuntu (always) |
+| 4 | `lint` | Lint & Type Check | — | 3.12 | ubuntu |
+| 5 | `health` | Unified Health Report (informational) | lint | 3.12 | ubuntu |
+| 6 | `verify-no-mocks` | Verify No Mocks Policy | lint | 3.12 | ubuntu |
+| 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
+| 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu (×3.10/3.11/3.12) + macOS (3.12 only) — 4 cells |
+| 9 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | 3.10 + 3.12 | ubuntu only — 9 exemplars × 2 Python = 18 cells |
+| 10 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
+| 11 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
+| 12 | `security` | Security Scan | lint | 3.12 | ubuntu |
+| 13 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
+| 14 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
 
 **Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/check_tracked_generated_artifacts.py` (rejects generated outputs and local `.codegraph/` indexes), and **`scripts/check_tracked_projects.py`** — the **confidentiality guard** that fails CI if any project outside `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES` is git-tracked (this is a public repo; confidential/rotating projects are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/generate_api_reference_doc.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (the non-rendered subfolders `projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/`, plus `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/active/`) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
 
@@ -104,7 +106,7 @@ Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Verifies the req
 | No-mocks policy | zero mock usage |
 | Infrastructure coverage | ≥ 60% |
 | Project coverage (per-project standalone) | ≥ 90% |
-| Combined-union public-project gate (`DEFAULT_FAIL_UNDER`) | ≥ 75% (public exemplars; per-project floors authoritative) |
+| Combined-union public-project gate (`DEFAULT_FAIL_UNDER`) | ≥ 75% via local `01_run_tests.py --project-only --all-projects --public-projects` (CI `test-project` enforces per-exemplar 90% only) |
 | pip-audit | zero known vulns not listed in `.github/pip-audit-ignore.txt` |
 | Bandit MEDIUM+ (`-c bandit.yaml`) | zero findings |
 | Mermaid diagrams render under `mmdc` | zero failures |
@@ -118,14 +120,16 @@ Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Verifies the req
 ## Local Pre-Push Parity (`.pre-commit-config.yaml`)
 
 The repo ships a [`.pre-commit-config.yaml`](../.pre-commit-config.yaml) with
-**three pre-push hooks** that mirror the corresponding CI gates so pushes that
-would fail CI fail locally first:
+**five pre-push hooks** that mirror (or partially mirror) CI gates so pushes
+that would fail CI fail locally first:
 
 | Hook id | Mirrors CI step | Typical runtime |
 | --- | --- | :-: |
-| `pre-push-quick` | `verify-no-mocks` + a fast subset of `test-infra` (`tests/infra_tests/git_hook_smoke/`) | ~3 s |
-| `bandit-quick` | `security` job Bandit step (`-c bandit.yaml -r -ll`, `infrastructure/` + `scripts/` + `projects/`, `exclude_dirs` in `bandit.yaml`) | ~5–30 s |
-| `skills-check` | `infrastructure.skills check` (catches stale `.cursor/skill_manifest.json`) | <1 s |
+| `pre-push-quick` | `verify-no-mocks` + tracked-project guards + `tests/infra_tests/git_hook_smoke/` | ~3 s |
+| `docs-contract-guard` | `check_template_drift.py --strict` + AGENTS personal-memory test | ~5 s |
+| `bandit-quick` | `security` job Bandit step (`-c bandit.yaml -r -ll`) | ~5–30 s |
+| `skills-check` | `infrastructure.skills check` (manifest freshness) | <1 s |
+| `all-exports-check` | `infrastructure.skills check-all-exports` (lint job MED5 gate) | <1 s |
 
 The lint hooks (`ruff-ci`, `mypy-ci`) run on the **pre-commit** stage, not
 pre-push, to keep `git commit` fast. A separate manual-stage `bandit-low`

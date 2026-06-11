@@ -42,6 +42,8 @@ logger = get_logger(__name__)
 
 _DEFAULT_TARGETS: tuple[str, ...] = (
     "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
     ".github/README.md",
     "scripts/AGENTS.md",
     "docs/RUN_GUIDE.md",

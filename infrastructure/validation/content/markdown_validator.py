@@ -585,23 +585,26 @@ def validate_markdown(
 
 
 def find_manuscript_directory(repo_root: str | Path, project_name: str = "project") -> Path:
-    """Find the manuscript directory at the standard location.
+    """Find the manuscript directory for a discovered or qualified project name.
 
     Args:
         repo_root: Root directory of the repository
-        project_name: Name of the project (default: "project")
+        project_name: Bare or qualified project name (default: "project")
 
     Returns:
-        Path to the manuscript directory at projects/{project_name}/manuscript/
+        Path to the project's manuscript directory
 
     Raises:
-        FileNotFoundError: If manuscript directory cannot be found at projects/{project_name}/manuscript/
+        FileNotFoundError: If manuscript directory cannot be found
     """
+    from infrastructure.project.discovery import discover_projects, resolve_project_root
+
     repo_root = Path(repo_root)
-
-    manuscript_dir = repo_root / "projects" / project_name / "manuscript"
-
+    project_root = resolve_project_root(repo_root, project_name)
+    manuscript_dir = project_root / "manuscript"
     if manuscript_dir.exists() and manuscript_dir.is_dir():
         return manuscript_dir
 
-    raise FileNotFoundError(f"Manuscript directory not found at expected location: {manuscript_dir}")
+    discovered = [p.qualified_name for p in discover_projects(repo_root)]
+    hint = f" Discovered projects: {', '.join(discovered)}" if discovered else ""
+    raise FileNotFoundError(f"Manuscript directory not found at expected location: {manuscript_dir}.{hint}")
