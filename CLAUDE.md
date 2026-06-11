@@ -21,6 +21,7 @@ This is a research project template with a test-driven development workflow, aut
 | Task | Command |
 | --- | --- |
 | Interactive menu | `./run.sh` |
+| Reproducible run matrix (project × stage; preferred over the menu for repeatable subset runs) | `uv run python scripts/run_matrix.py` (reads `run.config`; `--dry-run` to preview, `--fail-fast` to stop on first failure; see [`run.config.example.yaml`](run.config.example.yaml)) |
 | Secure workflow via main shell (`secure` subcommand) | `./run.sh --secure-run` |
 | Full pipeline | `./run.sh --pipeline` |
 | Core pipeline (no LLM) | `uv run python scripts/execute_pipeline.py --project {name} --core-only` |

@@ -19,6 +19,7 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `10_repro_bundle.py` - reproduction-bundle build/verify (`infrastructure.publishing.repro_bundle`)
 - `execute_pipeline.py` - single-project pipeline runner
 - `execute_multi_project.py` - multi-project pipeline runner (serial; `--parallel` for process-pool)
+- `run_matrix.py` - reproducible project × stage matrix runner (`infrastructure.core.pipeline.run_matrix`); reads `run.config`, resolves projects + orders stages canonically, runs each via `execute_single_stage`. Deterministic alternative to the interactive menu.
 
 **Derived-doc generators (write `docs/_generated/` and in-place doc blocks):**
 

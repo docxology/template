@@ -430,6 +430,41 @@ The table above lists pipeline-position indices (0-based, as the executor sees t
 | `./run.sh --secure-run` | Same as `./secure_run.sh` via argv shaping | Optional | Secure subcommand from the main thin shell |
 | `./secure_run.sh` | Full/core DAG + steganography | Optional | Dedicated secure entry; always `uv sync --group steganography` |
 | `uv run python scripts/execute_pipeline.py --project {name} --core-only` | Core DAG (**8** stages; LLM stages omitted) | None | Core pipeline, CI/CD automation |
+| `uv run python scripts/run_matrix.py` | Exactly the (project, stage) pairs declared in `run.config` | Per stage | **Reproducible subset runs** across several projects |
+
+## Entry Point 3: Reproducible Run Matrix (`scripts/run_matrix.py`)
+
+The deterministic, version-controllable alternative to the interactive menu.
+A top-level `run.config` (YAML) declares a matrix of **projects × stages** — the
+exact subset of the pipeline to run, for exactly which projects. Stages always
+execute in canonical pipeline order (analysis before render, etc.) regardless of
+how they are listed, so a given `run.config` reproduces the same run every time.
+
+```bash
+# Uses ./run.config (or run.config.yaml). See run.config.example.yaml.
+uv run python scripts/run_matrix.py
+uv run python scripts/run_matrix.py --dry-run     # print the resolved plan, run nothing
+uv run python scripts/run_matrix.py --fail-fast   # stop at the first failing stage
+uv run python scripts/run_matrix.py --config path/to/other.yaml
+```
+
+`run.config` schema (see [`run.config.example.yaml`](../run.config.example.yaml)):
+
+```yaml
+version: 1
+defaults:
+  stages: [setup, project_tests, analysis, render_pdf, validate, copy]
+runs:
+  - project: templates/template_code_project      # qualified, bare, or sidecar path
+  - project: working/my_paper
+    stages: [render_pdf, validate]                # overrides defaults
+```
+
+A project reference may be a qualified name (`templates/template_code_project`),
+a bare name (resolved to its canonical location), or a sidecar path stem
+(`working/my_paper`); path traversal is rejected. Valid stage keys match
+`execute_pipeline.py --stage`. The user's `run.config` is git-ignored (it may
+reference private `working/` projects); only `run.config.example.yaml` is tracked.
 
 ## Usage Examples
 

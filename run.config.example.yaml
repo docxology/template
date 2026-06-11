@@ -1,0 +1,35 @@
+# run.config — reproducible project × stage run matrix (example).
+#
+# Copy to `run.config` at the repo root and edit. Run with:
+#     uv run python scripts/run_matrix.py            # executes this matrix
+#     uv run python scripts/run_matrix.py --dry-run  # print the plan only
+#
+# This is the deterministic, version-controllable alternative to the interactive
+# menu: it pins exactly which stages run for exactly which projects, in canonical
+# pipeline order (analysis before render, etc.) regardless of how you list them.
+#
+# `project` accepts a qualified name (`templates/template_code_project`), a bare
+# name (`template_code_project`, resolved to its canonical location), or a
+# sidecar path stem (`working/my_paper`). Path traversal is rejected.
+#
+# Valid stages: setup, infra_tests, project_tests, tests, analysis, render_pdf,
+# validate, copy, llm_reviews, llm_translations, executive_report.
+
+version: 1
+
+# Stages used by any run that doesn't specify its own list.
+defaults:
+  stages: [setup, project_tests, analysis, render_pdf, validate, copy]
+
+runs:
+  # Full default pipeline for the canonical exemplar.
+  - project: templates/template_code_project
+
+  # A working paper: only re-render and validate (e.g. after a prose edit),
+  # skipping the (already-run) analysis.
+  - project: working/my_paper
+    stages: [render_pdf, validate]
+
+  # Render-only smoke check of another exemplar.
+  - project: templates/template_prose_project
+    stages: [render_pdf]
