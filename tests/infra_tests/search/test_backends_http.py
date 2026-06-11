@@ -237,9 +237,7 @@ def test_arxiv_fetch_by_id_retries_on_429_then_succeeds(httpserver: HTTPServer):
     """Throttled responses are retried with exponential backoff until arXiv answers."""
     httpserver.expect_ordered_request("/api/query").respond_with_data("slow down", status=429)
     httpserver.expect_ordered_request("/api/query").respond_with_data("slow down", status=429)
-    httpserver.expect_ordered_request("/api/query").respond_with_data(
-        ARXIV_ATOM, content_type="application/atom+xml"
-    )
+    httpserver.expect_ordered_request("/api/query").respond_with_data(ARXIV_ATOM, content_type="application/atom+xml")
     delays: list[float] = []
     backend = ArxivBackend(
         http_client=UrllibHttpClient(),
