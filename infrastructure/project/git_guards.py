@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import fnmatch
-import re
 import subprocess
 from pathlib import Path
 
@@ -14,8 +13,36 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 # 2026-06-10 these were hand-maintained literals and ALLOWED_TRACKED_OUTPUT_PREFIXES
 # had silently fallen two exemplars behind the roster.)
 ALLOWED_PROJECT_DIRS: tuple[str, ...] = tuple(f"projects/{name}/" for name in PUBLIC_PROJECT_NAMES)
-# Repo-level navigation docs may live directly under projects/ (projects/*.md).
-ALLOWED_PROJECTS_TOPLEVEL = re.compile(r"^projects/[^/]+\.md$")
+
+# Repo-level navigation docs that may live directly under projects/. This is an
+# EXPLICIT allowlist, not a wildcard: a name-blind `projects/[^/]+\.md` pattern
+# would let any future top-level markdown file (notes, a leaked private roster,
+# an accidental `git add -f projects/secret.md`) sail past the confidentiality
+# guard. Adding a new nav doc is a deliberate act that must be made here.
+ALLOWED_PROJECTS_TOPLEVEL_FILES: frozenset[str] = frozenset(
+    {
+        "projects/AGENTS.md",
+        "projects/PAI.md",
+        "projects/PROJECTS_PARADIGM.md",
+        "projects/README.md",
+    }
+)
+
+
+class _ExplicitToplevelAllowlist:
+    """`.match()`-compatible shim over the explicit nav-doc allowlist.
+
+    Preserves the historical ``ALLOWED_PROJECTS_TOPLEVEL.match(path)`` call site
+    in :mod:`infrastructure.project.codegraph` while swapping the permissive
+    wildcard regex for a closed set. Returns a truthy object on an exact match,
+    ``None`` otherwise — matching ``re.Pattern.match`` truthiness semantics.
+    """
+
+    def match(self, path: str) -> str | None:
+        return path if path in ALLOWED_PROJECTS_TOPLEVEL_FILES else None
+
+
+ALLOWED_PROJECTS_TOPLEVEL = _ExplicitToplevelAllowlist()
 
 GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
     ".codegraph/*",

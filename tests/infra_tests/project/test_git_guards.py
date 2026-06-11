@@ -40,6 +40,32 @@ def test_offending_tracked_projects_allows_exemplars(tmp_path: Path) -> None:
     assert offending_tracked_projects(tmp_path) == []
 
 
+def test_offending_tracked_projects_allows_known_nav_docs(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    for doc in ("README.md", "AGENTS.md", "PAI.md", "PROJECTS_PARADIGM.md"):
+        (tmp_path / "projects" / doc).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / "projects" / doc).write_text(f"# {doc}\n")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-m", "nav docs"], cwd=tmp_path, check=True)
+
+    assert offending_tracked_projects(tmp_path) == []
+
+
+def test_offending_tracked_projects_flags_unknown_toplevel_md(tmp_path: Path) -> None:
+    """A non-allowlisted top-level projects/*.md must NOT slip past the guard.
+
+    Regression for the wildcard ``projects/[^/]+\\.md`` rule that would have let
+    any markdown file (e.g. a leaked private roster) be tracked under projects/.
+    """
+    _init_git_repo(tmp_path)
+    (tmp_path / "projects").mkdir(parents=True)
+    (tmp_path / "projects" / "secret_roster.md").write_text("# confidential\n")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-m", "leak"], cwd=tmp_path, check=True)
+
+    assert "projects/secret_roster.md" in offending_tracked_projects(tmp_path)
+
+
 def test_tracked_generated_artifacts_detects_output_tree(tmp_path: Path) -> None:
     _init_git_repo(tmp_path)
     artifact = tmp_path / "projects" / "templates" / "template_code_project" / "output" / "data" / "x.csv"

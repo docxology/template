@@ -58,6 +58,56 @@ class TestValidateNoMocks:
         result = validate_no_mocks(tests_dir, tmp_path)
         assert isinstance(result, list)
 
+    def test_trailing_comment_does_not_hide_mock(self, tmp_path):
+        """A trailing comment must not let a real MagicMock() slip past.
+
+        Regression: the old skip list treated a bare ``#`` anywhere on the line
+        as a reason to skip the whole line.
+        """
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        ctor = "Magic" + "Mock"
+        (tests_dir / "test_bad.py").write_text(
+            f"from unittest.mock import {ctor}  # noqa\n\ndef test_x():\n    m = {ctor}()  # setup\n"
+        )
+        assert len(validate_no_mocks(tests_dir, tmp_path)) > 0
+
+    def test_mock_prefixed_variable_does_not_hide_mock(self, tmp_path):
+        """A ``mock_``-prefixed variable name must not skip the line."""
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        ctor = "Magic" + "Mock"
+        (tests_dir / "test_bad.py").write_text(f"def test_x():\n    mock_client = {ctor}()\n")
+        assert len(validate_no_mocks(tests_dir, tmp_path)) > 0
+
+    def test_from_unittest_import_mock_flagged(self, tmp_path):
+        """``from unittest import mock`` (then mock.patch) must be caught."""
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        (tests_dir / "test_bad.py").write_text(
+            "from unittest import mock\n\ndef test_x():\n    p = mock.patch('os.getcwd')\n"
+        )
+        assert len(validate_no_mocks(tests_dir, tmp_path)) > 0
+
+    def test_monkeypatch_is_allowed(self, tmp_path):
+        """pytest's monkeypatch fixture is policy-permitted, not a mock."""
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        (tests_dir / "test_ok.py").write_text(
+            "def test_x(monkeypatch):\n    monkeypatch.setenv('A', '1')\n    assert True\n"
+        )
+        assert validate_no_mocks(tests_dir, tmp_path) == []
+
+    def test_multiline_docstring_mentioning_forbidden_names_ok(self, tmp_path):
+        """A forbidden name across a multi-line docstring is not a usage."""
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        ctor = "Magic" + "Mock"
+        (tests_dir / "test_docs.py").write_text(
+            f'"""Policy note.\n\nWhy {ctor}( and patch( are banned in tests.\n"""\n\ndef test_real():\n    assert 2 == 2\n'
+        )
+        assert validate_no_mocks(tests_dir, tmp_path) == []
+
     def test_one_line_docstring_mentioning_forbidden_names_ok(self, tmp_path):
         """Docstrings may document the policy without counting as violations."""
         tests_dir = tmp_path / "tests"

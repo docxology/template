@@ -17,6 +17,7 @@ from infrastructure.project.drift.models import Report
 from infrastructure.project.drift.orchestrator import (
     check_repo_scripts,
 )
+from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
 
 
 def _read(path: Path) -> str:
@@ -265,22 +266,20 @@ def check_no_blanket_except_in_src(project_root: Path, report: Report, project: 
 
 
 def check_mocks_absent_from_tests(project_root: Path, report: Report, project: str) -> None:
-    """No `unittest.mock`/`MagicMock`/`@patch`/`create_autospec` anywhere under `tests/`.
+    """No mock frameworks anywhere under an exemplar's `tests/`.
 
-    Mirrors the repo-level no-mocks rule for the exemplars.
+    Delegates to :func:`infrastructure.validation.output.no_mock_enforcer.validate_no_mocks`
+    — the same AST + comment/string-stripped scanner the repo-level
+    ``verify_no_mocks`` gate uses — so the exemplar rule and the repo rule can
+    never diverge. (Previously this maintained its own weaker regex that both
+    missed ``from unittest import mock`` and false-positived on docstrings that
+    merely mention the policy.)
     """
     tests_dir = project_root / "tests"
     if not tests_dir.is_dir():
         return
-    pat = re.compile(r"unittest\.mock|MagicMock|@patch|create_autospec")
-    for py in tests_dir.rglob("*.py"):
-        for m in pat.finditer(_read(py)):
-            report.add(
-                "ERROR",
-                project,
-                "mock_in_tests",
-                f"{_rel(py, project_root)}: mock primitive `{m.group(0)}` found near offset {m.start()}",
-            )
+    for violation in validate_no_mocks(tests_dir, project_root):
+        report.add("ERROR", project, "mock_in_tests", violation)
 
 
 def _find_test_class_names(tests_dir: Path) -> set[str]:
