@@ -2,7 +2,7 @@
 
 ## Overview
 
-Self-referential publication describing `template/`; sources live under `projects/templates/template_template/` alongside the other public exemplars. Tokens such as `${module_count}` hydrate from `projects/templates/template_template/scripts/generate_manuscript_metrics.py` before PDF rendering (`output/manuscript/`). Long-form facts that rotate with repository layout belong in [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md); link instead of copying counts.
+Self-referential publication describing `template/`; sources live under `projects/templates/template_template/` alongside the other public exemplars. Tokens such as `${module_count}` hydrate from `projects/templates/template_template/scripts/generate_manuscript_metrics.py` before PDF rendering (`output/manuscript/`). Long-form facts that rotate with repository layout belong in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md); link instead of copying counts.
 
 ## Chapters (numbered segments + appendix set)
 

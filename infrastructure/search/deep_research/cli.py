@@ -13,6 +13,7 @@ Examples::
     python -m infrastructure.search.deep_research providers
     python -m infrastructure.search.deep_research submit "survey of X" --provider openai
     python -m infrastructure.search.deep_research poll openai resp_abc123
+    python -m infrastructure.search.deep_research cancel openai resp_abc123
     python -m infrastructure.search.deep_research run-project projects/templates/template_active_inference \
         "Review this manuscript; suggest fixes and new citations." --providers openai
 """
@@ -25,7 +26,7 @@ import sys
 from dataclasses import replace
 from typing import Any, Sequence
 
-from infrastructure.search.deep_research.client import DeepResearchClient
+from infrastructure.search.deep_research.client import DeepResearchClient, DeepResearchWaitTimeout
 from infrastructure.search.deep_research.models import DeepResearchJobHandle, DeepResearchRequest, DeepResearchResult
 
 
@@ -43,11 +44,21 @@ def build_parser() -> argparse.ArgumentParser:
     p_poll.add_argument("provider", choices=("openai", "gemini"))
     p_poll.add_argument("job_id")
 
+    p_cancel = sub.add_parser("cancel", help="cancel a running background job so it stops billing")
+    p_cancel.add_argument("provider", choices=("openai", "gemini"))
+    p_cancel.add_argument("job_id")
+
     p_run = sub.add_parser("run-project", help="package a project tree, run providers to completion, save reports")
     p_run.add_argument("project_root")
     p_run.add_argument("query")
     p_run.add_argument("--providers", default="openai,gemini", help="comma-separated provider list")
     p_run.add_argument("--poll-interval", type=float, default=15.0)
+    p_run.add_argument(
+        "--max-wait",
+        type=float,
+        default=None,
+        help="total poll budget in seconds; on expiry the still-running jobs are reported as pending",
+    )
 
     return parser
 
@@ -81,14 +92,27 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         request = DeepResearchRequest(query="", provider=args.provider)
         handle = DeepResearchJobHandle(provider=args.provider, job_id=args.job_id, status="unknown", request=request)
         return _result_dict(client.poll(handle))
+    if args.command == "cancel":
+        request = DeepResearchRequest(query="", provider=args.provider)
+        handle = DeepResearchJobHandle(provider=args.provider, job_id=args.job_id, status="unknown", request=request)
+        return _result_dict(client.cancel(handle))
     if args.command == "run-project":
         providers = tuple(p.strip() for p in args.providers.split(",") if p.strip())
-        bundles = client.submit_project_and_save_reports(
-            args.project_root,
-            args.query,
-            providers=providers,
-            poll_interval_seconds=args.poll_interval,
-        )
+        try:
+            bundles = client.submit_project_and_save_reports(
+                args.project_root,
+                args.query,
+                providers=providers,
+                poll_interval_seconds=args.poll_interval,
+                max_wait_seconds=args.max_wait,
+            )
+        except DeepResearchWaitTimeout as timeout:
+            return {
+                "status": "wait_timeout",
+                "waited_seconds": round(timeout.waited_seconds, 1),
+                "pending": {provider: _handle_dict(handle) for provider, handle in timeout.pending.items()},
+                "hint": "Re-poll with 'poll <provider> <job_id>' or stop billing with 'cancel <provider> <job_id>'.",
+            }
         return {
             provider: {"markdown": str(bundle.markdown_path), "json": str(bundle.json_path)}
             for provider, bundle in bundles.items()

@@ -130,6 +130,17 @@ class OpenAIDeepResearchProvider:
             raw={"id": getattr(resp, "id", None), "status": getattr(resp, "status", None)},
         )
 
+    def cancel(self, job_id: str) -> DeepResearchResult:
+        """Cancel a background Responses job (OpenAI ``responses.cancel``)."""
+        resp = self._client().responses.cancel(job_id)
+        return DeepResearchResult(
+            provider="openai",
+            job_id=job_id,
+            status=str(getattr(resp, "status", "cancelled")),
+            output_text=str(getattr(resp, "output_text", "")),
+            raw={"id": getattr(resp, "id", None), "status": getattr(resp, "status", None)},
+        )
+
 
 def _extract_citations(resp: Any) -> tuple[DeepResearchCitation, ...]:
     annotations = []

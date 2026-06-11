@@ -75,9 +75,15 @@ Rules of thumb:
 - `max_tool_calls` (OpenAI) is the main cost knob; `max_total_chars` on
   `collect_project_context()` bounds the input side.
 - **`background=True` jobs bill to completion even if never polled.** Cancel
-  diagnostic submissions; do not fire-and-forget probes.
-- Gemini deep-research jobs run **30–60+ minutes**; give `wait`/`wait_many`
-  poll budgets above 30 minutes or you will time out on a job that is fine.
+  diagnostic submissions; do not fire-and-forget probes. Cancel a job with
+  `DeepResearchClient.cancel(handle)` or the CLI `cancel <provider> <job_id>`
+  subcommand (wraps OpenAI `responses.cancel` / Gemini `interactions.cancel`).
+- Gemini deep-research jobs run **30–60+ minutes**. `wait`/`wait_many` poll
+  forever by default; pass `max_wait_seconds` (also `run-project --max-wait`)
+  to bound the budget — set it **well above 30 minutes** or you will time out a
+  job that is fine. On expiry these raise `DeepResearchWaitTimeout` carrying the
+  still-pending handles (`.pending`) so the paid jobs can be re-polled or
+  cancelled rather than lost.
 
 ### Looping over all projects (recipe — costs real money, run deliberately)
 

@@ -91,13 +91,13 @@ Measurements single-thread Apple Silicon; dominated by watermark overlay compl
 
 Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `${module_count}`). Architecture figures stem from [`template_template.architecture_viz`](../src/template_template/architecture_viz.py)—font sizes constrained by §QA.
 
-![Two-Layer Architecture Overview](../figures/architecture_overview.png)
+![Two-Layer Architecture Overview](../output/figures/architecture_overview.png)
 **Figure 1.** Live Two-Layer graph with documentation badges `[ARSP]` and per-module file counts derived from introspection snapshots.
 
-![Pipeline Stage Flow](../figures/pipeline_stages.png)
+![Pipeline Stage Flow](../output/figures/pipeline_stages.png)
 **Figure 2.** Pipeline DAG with ${pipeline_stages_declared} YAML-declared stages (core, LLM, bundle, archival tags).
 
-![Infrastructure Module Inventory](../figures/module_inventory.png)
+![Infrastructure Module Inventory](../output/figures/module_inventory.png)
 **Figure 3.** File-count histogram for each infrastructure subdirectory.
 
 ## Comparative Feature Analysis
@@ -105,7 +105,7 @@ Rendered via `projects/templates/template_template` (`generate_manuscript_metric
 Figure 4 summarizes the Appendix F capability matrix.
 
 
-![Comparative Feature Analysis Heatmap](../figures/comparative_feature_matrix.png)
+![Comparative Feature Analysis Heatmap](../output/figures/comparative_feature_matrix.png)
 **Figure 4.** 14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow **◐** partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.
 
 ¹ Nextflow 25.04.0: lineage records exist at workflow scope, not per rendered PDF citation graph.

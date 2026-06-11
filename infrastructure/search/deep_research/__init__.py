@@ -17,7 +17,7 @@ from infrastructure.search.deep_research.artifacts import (
     save_deep_research_result,
     save_deep_research_results,
 )
-from infrastructure.search.deep_research.client import DeepResearchClient
+from infrastructure.search.deep_research.client import DeepResearchClient, DeepResearchWaitTimeout
 from infrastructure.search.deep_research.config import (
     DEFAULT_GEMINI_AGENT,
     DEFAULT_OPENAI_MODEL,
@@ -64,6 +64,7 @@ __all__ = [
     "DeepResearchResult",
     "DeepResearchSources",
     "DeepResearchProjectContext",
+    "DeepResearchWaitTimeout",
     "GeminiDeepResearchError",
     "GeminiDeepResearchProvider",
     "OpenAIDeepResearchError",
