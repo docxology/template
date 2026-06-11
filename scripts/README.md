@@ -70,7 +70,7 @@ uv run python scripts/07_generate_executive_report.py
 | Module line count | `uv run python scripts/gates/module_line_count_check.py` |
 | Tracked projects guard | `uv run python scripts/check_tracked_projects.py` |
 | Tracked generated artifacts | `uv run python scripts/check_tracked_generated_artifacts.py` |
-| CodeGraph local scope | `codegraph files "$(pwd)" --json \| uv run python scripts/codegraph_local.py verify-scope` |
+| CodeGraph local scope | `codegraph files "$(pwd)" --json \| uv run python scripts/maintenance/codegraph_local.py verify-scope` |
 | Unified health | `uv run python -m infrastructure.core.health` |
 | Opt-in Stage 10 bundle | `uv run python scripts/08_executable_bundle.py --project {name}` |
 | Opt-in Stage 11 archival | `uv run python scripts/09_archive_publication.py --project {name}` |

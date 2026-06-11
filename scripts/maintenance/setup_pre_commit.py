@@ -35,7 +35,7 @@ def run(command: list[str], *, check: bool = True, capture: bool = False) -> sub
 
 
 def main() -> None:
-    repo_root = Path(__file__).resolve().parent.parent
+    repo_root = Path(__file__).resolve().parent.parent.parent
     config_path = repo_root / ".pre-commit-config.yaml"
 
     if not config_path.is_file():

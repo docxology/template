@@ -46,7 +46,7 @@ This is a research project template with a test-driven development workflow, aut
 | Repo-wide doc linter | `uv run python scripts/lint_docs.py` |
 | Exemplar drift checker | `uv run python scripts/check_template_drift.py` (add `--strict` for focused gates) |
 | Module line count gate | `uv run python scripts/gates/module_line_count_check.py` |
-| CodeGraph local commands | `uv run python scripts/codegraph_local.py commands .` (optional; see [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md)) |
+| CodeGraph local commands | `uv run python scripts/maintenance/codegraph_local.py commands .` (optional; see [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md)) |
 | Unified health CLI | `uv run python -m infrastructure.core.health` (optional `--gates=module-line-count`) |
 | Release-readiness dashboard (no network) | `uv run python -m infrastructure.reporting.release_readiness --out output/release_readiness.md` (add `--format html`; aggregates version/coverage/pipeline/docs-lint/evidence-graph from local artifacts only) |
 | Opt-in security scan | `uv run python scripts/gates/security_scan.py` (not default pipeline/CI; missing tools report `skipped`, not clean) |
@@ -124,8 +124,8 @@ uv run pytest tests/infra_tests/test_specific.py::test_function_name -v
 uv sync
 
 # Workspace management
-uv run python scripts/manage_workspace.py status
-uv run python scripts/manage_workspace.py add <package> --project <name>
+uv run python scripts/maintenance/manage_workspace.py status
+uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>
 
 # Linting and type checking (mirror CI `lint` job)
 uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
@@ -147,9 +147,9 @@ ollama pull gemma3:4b
 uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 
 # Optional local CodeGraph index (not a CI or publication dependency)
-uv run python scripts/codegraph_local.py commands .
+uv run python scripts/maintenance/codegraph_local.py commands .
 codegraph init "$(pwd)" --index
-codegraph files "$(pwd)" --json | uv run python scripts/codegraph_local.py verify-scope
+codegraph files "$(pwd)" --json | uv run python scripts/maintenance/codegraph_local.py verify-scope
 
 # Generate API documentation (positional SRC_DIR GLOSSARY_MD; no --project flag)
 uv run python -m infrastructure.documentation.generate_glossary_cli projects/{project_name}/src projects/{project_name}/manuscript/98_symbols_glossary.md

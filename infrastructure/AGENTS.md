@@ -79,14 +79,14 @@ Measured coverage and gate thresholds → [`docs/_generated/canonical_facts.md`]
 | `core/pipeline/single_stage.py` | Subprocess single-stage runner for `execute_pipeline.py --stage` and menu keys |
 | `core/pipeline/multi_project_cli.py` | Multi-project serial/parallel CLI (`scripts/execute_multi_project.py`) |
 | `core/runtime/setup_checks.py` | Stage 0: `sync_workspace_dependencies`, `validate_project_discovery`, `run_optional_setup_hook` |
-| `core/source_improve.py` | Mechanical Python hygiene (`scripts/batch_cogsec_improve.py`) |
+| `core/source_improve.py` | Mechanical Python hygiene (`scripts/maintenance/batch_cogsec_improve.py`) |
 | `core/cache_gate.py` | Hermes/cache opt-in gate (`scripts/gates/gate_cache.py`) |
 | `validation/line_count.py` | Module line-count scanner (Layer 1 + all `projects/*/scripts/`) |
 | `validation/security_gate.py` | Bandit-backed security report writer |
 | `validation/plugin_export.py` | Plugin export directory diff |
 | `validation/docs/lint_runner.py` | Markdown lint orchestration |
-| `project/workspace.py` | Workspace sync/status (`scripts/manage_workspace.py`) |
-| `project/info.py` | Project introspection (`scripts/show_project_info.py`) |
+| `project/workspace.py` | Workspace sync/status (`scripts/maintenance/manage_workspace.py`) |
+| `project/info.py` | Project introspection (`scripts/maintenance/show_project_info.py`) |
 | `project/git_guards.py` | Tracked-project and generated-artifact guards |
 | `publishing/executable_bundle.py` | Stage 10 bundle (`scripts/08_executable_bundle.py`) |
 | `rendering/preflight.py` | Manuscript preflight (exemplar `00_preflight.py` scripts) |

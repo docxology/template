@@ -42,7 +42,7 @@ for source-code questions and impact analysis. It is not a dependency, pipeline
 stage, CI requirement, or manuscript evidence source. `.codegraph/` is ignored
 and rejected by the generated-artifact guard if force-added. Use
 [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md) and
-`uv run python scripts/codegraph_local.py commands .`; initialize private
+`uv run python scripts/maintenance/codegraph_local.py commands .`; initialize private
 associated projects from their canonical private checkout, not through public
 `template/projects/<name>` symlinks.
 

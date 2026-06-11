@@ -167,17 +167,17 @@ All reporting modules use OutputOrganizer for consistent file organization:
 
 #### Reorganization Script
 
-The `scripts/organize_executive_outputs.py` script reorganizes existing outputs:
+The `scripts/maintenance/organize_executive_outputs.py` script reorganizes existing outputs:
 
 ```bash
 # Dry run to see what would be done
-uv run python scripts/organize_executive_outputs.py --dry-run
+uv run python scripts/maintenance/organize_executive_outputs.py --dry-run
 
 # Organize all outputs
-uv run python scripts/organize_executive_outputs.py
+uv run python scripts/maintenance/organize_executive_outputs.py
 
 # Organize only executive summary
-uv run python scripts/organize_executive_outputs.py --executive-only
+uv run python scripts/maintenance/organize_executive_outputs.py --executive-only
 ```
 
 ## Core Components

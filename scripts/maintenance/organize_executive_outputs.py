@@ -7,7 +7,7 @@ import argparse
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from scripts import ensure_repo_root_on_path  # noqa: E402
 
 ensure_repo_root_on_path()
@@ -33,7 +33,7 @@ def main() -> int:
     args = _parse_args()
     try:
         run_executive_output_organization(
-            Path(__file__).resolve().parent.parent,
+            Path(__file__).resolve().parent.parent.parent,
             ExecutiveOutputOptions(
                 dry_run=args.dry_run,
                 executive_only=args.executive_only,

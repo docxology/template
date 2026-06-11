@@ -420,13 +420,13 @@ This template uses uv workspaces for unified dependency management across projec
 uv sync
 
 # Add dependency to specific project
-uv run python scripts/manage_workspace.py add numpy --project project
+uv run python scripts/maintenance/manage_workspace.py add numpy --project project
 
 # Show workspace status
-uv run python scripts/manage_workspace.py status
+uv run python scripts/maintenance/manage_workspace.py status
 
 # Update all dependencies
-uv run python scripts/manage_workspace.py update
+uv run python scripts/maintenance/manage_workspace.py update
 ```
 
 ### Workspace Benefits

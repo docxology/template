@@ -1,6 +1,6 @@
 """Mechanical Python source improvements (AST-aware, idempotent).
 
-Used by ``scripts/batch_cogsec_improve.py`` and available to any project
+Used by ``scripts/maintenance/batch_cogsec_improve.py`` and available to any project
 that wants conservative hygiene fixes without domain-specific logic.
 """
 

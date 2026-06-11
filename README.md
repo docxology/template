@@ -344,7 +344,7 @@ MacTeX on macOS). Python deps install with `uv sync` (project interpreter is
 `.venv/bin/python`; the template targets Python 3.10+ (`requires-python` in
 [`pyproject.toml`](pyproject.toml)) and CI tests 3.10–3.12, with
 [`.python-version`](.python-version) pinning 3.12 as the local default). Add per-project deps with
-`uv run python scripts/manage_workspace.py add <package> --project <name>`. To
+`uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>`. To
 generate a manuscript, follow the [Quickstart](#quickstart) at the top.
 
 ## 🐳 Docker Support

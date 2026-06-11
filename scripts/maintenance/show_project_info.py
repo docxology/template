@@ -7,7 +7,7 @@ import argparse
 import sys
 from pathlib import Path
 
-repo_root = Path(__file__).parent.parent
+repo_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(repo_root))
 
 from infrastructure.core.logging.utils import get_logger  # noqa: E402

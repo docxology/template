@@ -151,7 +151,7 @@ All legacy supplement tiers under `tests/infra_tests/` are removed:
 - `*_full.py`, `*_comprehensive.py`, `*_edge_cases.py` companion files
 
 One canonical `test_<module>.py` per production module; use
-`scripts/merge_test_supplements.py` when consolidating future splits.
+`scripts/maintenance/merge_test_supplements.py` when consolidating future splits.
 
 | Area | Canonical test files (examples) |
 | --- | --- |

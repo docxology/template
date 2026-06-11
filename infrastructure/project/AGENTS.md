@@ -28,16 +28,16 @@ The `infrastructure/project/` module provides project discovery, validation, and
 - `run_project_pipeline(repo, name, *, skip_infra)` — core DAG via `PipelineExecutor`
 - `audit_project(repo, name, results, duration_sec)` — `ProjectAudit` record (structure, PDF paths, validation)
 - `classify_status(...)` / `write_audit_report(repo, audits)` — rubric status + JSON/Markdown under `output/`
-- Thin CLI: `scripts/render_working_projects.py` (not discovered by `./run.sh --all-projects`)
+- Thin CLI: `scripts/maintenance/render_working_projects.py` (not discovered by `./run.sh --all-projects`)
 
 ### Project Introspection (`info.py`)
 
 - `collect_project_info(project_name, repo_root)` - manuscript/source/output/tests counts
-- `display_project_info(info, logger=...)` - formatted logging for `scripts/show_project_info.py`
+- `display_project_info(info, logger=...)` - formatted logging for `scripts/maintenance/show_project_info.py`
 
 ### Workspace Management (`workspace.py`)
 
-- `sync_workspace()`, `update_workspace()`, `add_dependency()`, `show_workspace_tree()`, `show_workspace_status()` — used by `scripts/manage_workspace.py`
+- `sync_workspace()`, `update_workspace()`, `add_dependency()`, `show_workspace_tree()`, `show_workspace_status()` — used by `scripts/maintenance/manage_workspace.py`
 
 ### Git Guards (`git_guards.py`)
 
@@ -54,7 +54,7 @@ The `infrastructure/project/` module provides project discovery, validation, and
   for scope checks.
 - `verify_codegraph_scope_payload(payload)` — parse CodeGraph file JSON and
   report any indexed non-template path under `projects/`.
-- Used by `scripts/codegraph_local.py`; see
+- Used by `scripts/maintenance/codegraph_local.py`; see
   [`docs/guides/codegraph-local.md`](../../docs/guides/codegraph-local.md).
 
 CodeGraph indexes (`.codegraph/`) are generated local state and must never be

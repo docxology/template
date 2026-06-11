@@ -693,14 +693,14 @@ exclude = [
 uv sync
 
 # Or use the workspace management script
-uv run python scripts/manage_workspace.py sync
+uv run python scripts/maintenance/manage_workspace.py sync
 ```
 
 #### Add Dependencies to Projects
 
 ```bash
 # Add dependency to specific project
-uv run python scripts/manage_workspace.py add numpy --project project
+uv run python scripts/maintenance/manage_workspace.py add numpy --project project
 
 # Or manually change to project directory
 cd projects/project
@@ -711,17 +711,17 @@ uv add scipy
 
 ```bash
 # Update all workspace dependencies
-uv run python scripts/manage_workspace.py update
+uv run python scripts/maintenance/manage_workspace.py update
 ```
 
 #### Show Workspace Status
 
 ```bash
 # Show workspace configuration and status
-uv run python scripts/manage_workspace.py status
+uv run python scripts/maintenance/manage_workspace.py status
 
 # Show dependency tree
-uv run python scripts/manage_workspace.py tree
+uv run python scripts/maintenance/manage_workspace.py tree
 ```
 
 ### Workspace Benefits
@@ -755,7 +755,7 @@ For more information, see:
 - [uv Documentation](https://docs.astral.sh/uv/)
 - [Common Workflows](../../reference/common-workflows.md)
 - [Troubleshooting Guide](../../operational/troubleshooting/)
-- [Workspace Management Script](../../../scripts/manage_workspace.py)
+- [Workspace Management Script](../../../scripts/maintenance/manage_workspace.py)
 
 ---
 

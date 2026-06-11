@@ -26,7 +26,7 @@ Official project: [colbymchenry/codegraph](https://github.com/colbymchenry/codeg
 Print the recommended commands without requiring CodeGraph to be installed:
 
 ```bash
-uv run python scripts/codegraph_local.py commands .
+uv run python scripts/maintenance/codegraph_local.py commands .
 ```
 
 After installing CodeGraph, initialize and index the template root:
@@ -39,7 +39,7 @@ codegraph status "$(pwd)"
 Verify that private/local project paths were not indexed:
 
 ```bash
-codegraph files "$(pwd)" --json | uv run python scripts/codegraph_local.py verify-scope
+codegraph files "$(pwd)" --json | uv run python scripts/maintenance/codegraph_local.py verify-scope
 ```
 
 This check allows `infrastructure/`, root docs, `projects/*.md`, and the public
@@ -71,7 +71,7 @@ The modular implementation lives in `infrastructure.project.codegraph`.
 | `verify_codegraph_scope_payload(payload)` | Return private/local project paths found in CodeGraph file JSON |
 | `unexpected_indexed_project_paths(paths)` | Validate a plain path list against the public project allowlist |
 
-The script wrapper `scripts/codegraph_local.py` only prints commands or runs the
+The script wrapper `scripts/maintenance/codegraph_local.py` only prints commands or runs the
 scope verifier; it delegates all behavior to the package module.
 
 ## Guardrails

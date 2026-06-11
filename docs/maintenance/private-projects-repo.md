@@ -41,7 +41,7 @@ The normal sidecar workflow is explicit rendering of `working/<name>` projects:
 uv run python -m infrastructure.orchestration link-projects --dry-run
 uv run python -m infrastructure.orchestration link-projects
 uv run python scripts/03_render_pdf.py --project working/<name>
-uv run python scripts/rerender_working_pdfs.py --project <name>
+uv run python scripts/maintenance/rerender_working_pdfs.py --project <name>
 ```
 
 Default discovery still scans the public exemplars under `projects/templates/`

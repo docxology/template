@@ -28,7 +28,7 @@ Install hooks after `uv sync` so local runs mirror CI:
 ### Setup
 
 ```bash
-uv run python scripts/setup_pre_commit.py
+uv run python scripts/maintenance/setup_pre_commit.py
 ```
 
 This script installs commit and pre-push hooks, validates configuration, and can dry-run hooks.

@@ -18,7 +18,7 @@ from pathlib import Path
 
 # Ensure the repo root is on sys.path so ``infrastructure`` imports cleanly
 # when this file is run directly (``python scripts/batch_cogsec_improve.py``).
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from infrastructure.core.source_improve import improve_tree  # noqa: E402
 

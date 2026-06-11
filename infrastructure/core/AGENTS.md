@@ -3938,7 +3938,7 @@ Core module is imported by all other infrastructure modules for:
 | Module | Entry | Notes |
 | --- | --- | --- |
 | [`cache_gate.py`](cache_gate.py) | `scripts/gates/gate_cache.py` | Hermes cache validation; requires `HERMES_HOME` |
-| [`source_improve.py`](source_improve.py) | `scripts/batch_cogsec_improve.py` | AST-based mechanical Python hygiene fixes |
+| [`source_improve.py`](source_improve.py) | `scripts/maintenance/batch_cogsec_improve.py` | AST-based mechanical Python hygiene fixes |
 
 ## See Also
 

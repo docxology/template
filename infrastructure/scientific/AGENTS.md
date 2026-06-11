@@ -265,5 +265,5 @@ Scientific module is used by:
 
 - [README.md](README.md) - Quick reference guide
 - [`core/`](../core/) - Foundation utilities
-- [`core/source_improve.py`](../core/source_improve.py) - AST-based source improvement (orchestrated by [`scripts/batch_cogsec_improve.py`](../../scripts/batch_cogsec_improve.py))
+- [`core/source_improve.py`](../core/source_improve.py) - AST-based source improvement (orchestrated by [`scripts/maintenance/batch_cogsec_improve.py`](../../scripts/maintenance/batch_cogsec_improve.py))
 
