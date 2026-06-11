@@ -4,7 +4,6 @@ This module provides tools for generating research outputs:
 - PDFs (Manuscripts)
 - Slides (Beamer/Reveal.js)
 - Web (HTML5)
-- Posters
 - DOCX (Microsoft Word, via pandoc)
 - EPUB (e-reader, via pandoc)
 """

@@ -76,7 +76,7 @@ class RenderManager:
         try:
             # Determine what to render based on extension/type
             if source_file.suffix == ".tex":
-                # LaTeX usually means PDF or Poster
+                # LaTeX usually means PDF
                 logger.debug(f"Rendering LaTeX file: {source_file.name}")
                 if self.config.enable_pdf:
                     rendered_paths.append(self.pdf_renderer.render(source_file))

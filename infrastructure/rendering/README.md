@@ -31,7 +31,6 @@ graph TD
         PDF_OUT["PDF Document<br/>Professional typesetting<br/>output/{project_name}/pdf/*.pdf"]
         SLIDES_OUT["Slides<br/>PDF and HTML formats<br/>output/{project_name}/slides/"]
         WEB_OUT["Web HTML<br/>Interactive with MathJax<br/>output/{project_name}/web/*.html"]
-        POSTER_OUT["Posters<br/>Large format<br/>output/{project_name}/posters/"]
     end
 
     MANUSCRIPT --> MANAGER
@@ -56,7 +55,6 @@ graph TD
     BIB_PROC --> PDF_OUT
     COMBINE --> SLIDES_OUT
     COMBINE --> WEB_OUT
-    COMBINE --> POSTER_OUT
 
     class Input input
     class Rendering rendering
@@ -65,7 +63,7 @@ graph TD
 ```
 
 - **Consolidated Pipeline**: Single entry point for all formats.
-- **Multiple Outputs**: PDF, Slides (Beamer/HTML), Web, Posters.
+- **Multiple Outputs**: PDF, Slides (Beamer/HTML), Web.
 - **Title Page Generation**: Automatic title page from `config.yaml`.
 - **Figure Integration**: Automatic figure path resolution and verification.
 - **Quality Control**: Automated compilation checks and logging.
@@ -229,7 +227,6 @@ uv run python -m infrastructure.rendering.cli slides presentation.md --format re
 | Beamer Slides | `render_slides(..., format="beamer")` | PDF presentation slides |
 | Reveal.js | `render_slides(..., format="revealjs")` | HTML presentation slides |
 | HTML | `render_web()` | Web-ready HTML with MathJax |
-| Posters | `render_poster()` | Large-format PDF poster |
 | DOCX | `render_docx(combined_md, output_path)` | Microsoft Word document (via pandoc) |
 | EPUB | `render_epub(combined_md, output_path)` | E-reader EPUB (via pandoc) |
 
@@ -247,7 +244,7 @@ graph TD
 
     subgraph CoreEngine["Core Rendering Engine"]
         RENDER_MANAGER[RenderManager<br/>Orchestrates all renderers<br/>Unified configuration]
-        FORMAT_ROUTER[Format Router<br/>Routes to specialized renderers<br/>PDF, Slides, Web, Poster]
+        FORMAT_ROUTER[Format Router<br/>Routes to specialized renderers<br/>PDF, Slides, Web]
         CONFIG_SYSTEM[Configuration System<br/>RenderingConfig<br/>Environment + YAML support]
     end
 
@@ -255,7 +252,6 @@ graph TD
         PDF_RENDERER[PDFRenderer<br/>LaTeX compilation<br/>Professional document generation]
         SLIDES_RENDERER["SlidesRenderer<br/>Beamer and reveal.js<br/>Presentation slide creation"]
         WEB_RENDERER[WebRenderer<br/>HTML + MathJax<br/>Web-compatible output]
-        POSTER_RENDERER[PosterRenderer<br/>Large format<br/>Scientific poster generation]
     end
 
     subgraph SupportSystems["Support Systems"]
@@ -279,13 +275,11 @@ graph TD
     FORMAT_ROUTER --> PDF_RENDERER
     FORMAT_ROUTER --> SLIDES_RENDERER
     FORMAT_ROUTER --> WEB_RENDERER
-    FORMAT_ROUTER --> POSTER_RENDERER
 
     RENDER_MANAGER --> CONFIG_SYSTEM
 
     PDF_RENDERER --> LATEX_UTILS
     SLIDES_RENDERER --> LATEX_UTILS
-    POSTER_RENDERER --> LATEX_UTILS
 
     LATEX_UTILS --> PACKAGE_VALIDATOR
     RENDER_MANAGER --> MANUSCRIPT_DISCOVERY
@@ -310,7 +304,6 @@ graph TD
 | **pdf_renderer.py** | PDF document generation | `PDFRenderer.render_combined_pdf()` - LaTeX compilation | latex_utils, manuscript_discovery |
 | **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and reveal.js support; passes `--slide-level=2` and applies `_beamer_allowframebreaks.lua` so long sections split across slides instead of overflowing a single Beamer frame | latex_utils, pandoc Lua filter |
 | **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration | pandoc |
-| **poster_renderer.py** | Scientific posters | `PosterRenderer` - Large format PDF | latex_utils |
 | **latex_utils.py** | LaTeX compilation utilities | `compile_latex()` - Multi-pass compilation | LaTeX distribution |
 | **latex_package_validator.py** | Package dependency checking | `validate_packages()` - Pre-flight validation | kpsewhich |
 | **manuscript_discovery.py** | Content discovery | `discover_manuscript_files()` - File enumeration | pathlib |
