@@ -423,26 +423,26 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | Restriction | Value |
 | --- | --- |
 | Coverage missing | `0` |
-| Policy comparison rows | `4` |
-| Policy grid complete | `True` |
-| Policy posterior rows | `10` |
-| Policy posterior normalized | `True` |
+| Policy comparison rows | `0` |
+| Policy grid complete | `False` |
+| Policy posterior rows | `0` |
+| Policy posterior normalized | `False` |
 | Runtime unexpected warnings | `0` |
-| Graph-world trace agrees | `True` |
-| Animation frames | `4` |
+| Graph-world trace agrees | `False` |
+| Animation frames | `0` |
 | Lean all proved | `True` |
 | GNN ontology ok | `True` |
 | Configured producers ok | `True` |
 | Semantic certificate ok | `None` |
 | Dependency edges ok | `True` |
-| Track scope complete | `True` |
+| Track scope complete | `False` |
 | Empirical adapter blocked | `True` |
-| Provenance bundles complete | `True` |
-| Replay rows matched | `True` |
+| Provenance bundles complete | `False` |
+| Replay rows matched | `False` |
 | Sensitivity complete | `True` |
-| Uncertainty normalized | `True` |
-| Evidence fields mapped | `True` |
-| Release bundle sources present | `True` |
+| Uncertainty normalized | `False` |
+| Evidence fields mapped | `False` |
+| Release bundle sources present | `False` |
 | Theorem traceability linked | `True` |
 | Gate ergonomics indexed | `True` |
 | Interop lossless | `True` |
