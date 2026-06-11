@@ -19,6 +19,21 @@
 - **Progress**: Terminal progress bars (`ProgressBar`) for pipeline stage reporting
 - **Telemetry**: Stage-level resource metrics collection (`TelemetryCollector`)
 
+## Subpackages
+
+The core package has focused subpackages that each carry their own docs:
+
+| Subpackage | Focus |
+| --- | --- |
+| `core/config/` | YAML schema, loader, and config utilities |
+| `core/files/` | Filesystem cleanup, inventory, PDF location, and project locks |
+| `core/logging/` | Project logger, stage logging, progress helpers |
+| `core/pipeline/` | Pipeline executor, stage registry, multi-project orchestration |
+| `core/runtime/` | Checkpoints, environment validation, profiling, retry, setup checks |
+| `core/telemetry/` | `TelemetryCollector`, `TelemetryConfig`, per-stage diagnostics and reports |
+
+For the telemetry subsystem specifically, see [`infrastructure/core/telemetry/README.md`](../../../infrastructure/core/telemetry/README.md).
+
 ---
 
 ## Usage Examples

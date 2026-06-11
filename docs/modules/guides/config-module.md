@@ -43,6 +43,9 @@ cp infrastructure/config/.env.template .env
 # Override individual settings by editing infrastructure/config/secure_config.yaml,
 # then re-run (the secure subcommand has no --config flag)
 ./secure_run.sh --project template_code_project
+
+# Validate optional Kmyth/TPM sealing tools without rendering PDFs
+./secure_run.sh --validate-kmyth
 ```
 
 **From Python** (via steganography module):
@@ -71,6 +74,16 @@ embed_steganography(
 | `steganography.overlay_opacity` | `0.08` | Watermark transparency (0.0–1.0) |
 | `steganography.hashing_enabled` | `true` | Compute SHA-256/512 integrity manifests |
 | `steganography.encryption_enabled` | `false` | AES-256 PDF password protection |
+| `steganography.kmyth_enabled` | `false` | Seal configured artifacts through Kmyth/TPM |
+| `steganography.kmyth_required` | `false` | Fail secure-run when Kmyth validation or sealing fails |
+| `steganography.kmyth_binary_dir` | `null` | Optional directory containing `kmyth-seal` / `kmyth-unseal` |
+| `steganography.kmyth_source_dir` | `null` | Optional Kmyth checkout override; defaults to `infrastructure/steganography/kmyth` |
+| `steganography.kmyth_pcrs` | `[]` | PCR indexes passed to `kmyth-seal` |
+| `steganography.kmyth_cipher` | `null` | Optional cipher passed to `kmyth-seal` |
+| `steganography.kmyth_seal_artifacts` | `[hash_manifest]` | Artifacts to seal; supports `hash_manifest` and `pdf` |
+| `steganography.kmyth_output_suffix` | `".ski"` | Suffix for sealed sidecars |
+| `steganography.kmyth_overwrite` | `true` | Replace existing `.ski` outputs |
+| `steganography.kmyth_timeout_seconds` | `120` | Timeout for each `kmyth-seal` invocation |
 
 ---
 

@@ -120,7 +120,7 @@ dev = [
     "pip-audit>=2.0.0",
     "bandit>=1.7.0",
     "pytest-asyncio>=1.3.0",
-    "pytest-benchmark>=5.0.0",  # Opt-in performance benches under tests/infra_tests/bench/ (see MED6)
+    "pytest-benchmark>=5.0.0",  # Opt-in performance benches under tests/infra_tests/benchmark/ (see MED6)
     "iniconfig>=2.3.0",
     "types-requests>=2.32.4.20260107",
     "types-pyyaml>=6.0.12.20250915",
@@ -128,6 +128,10 @@ dev = [
     # Code-health scanner (Python 3.11+ only; template still supports 3.10 for projects)
     "desloppify @ git+https://github.com/peteromallet/desloppify.git; python_version >= '3.11'",
     "pytest-xdist>=3.5",
+]
+deep-research = [
+    "google-genai>=1.0",
+    "openai>=1.60",
 ]
 
 [tool.uv]
@@ -159,7 +163,7 @@ testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "--tb=short --strict-markers -W ignore::pytest.PytestDeprecationWarning --durations=10 -m 'not slow and not bench and not private_project and not external_fixture'"
+addopts = "--tb=short --strict-markers -W ignore::pytest.PytestDeprecationWarning --durations=10"
 timeout = 10  # Timeout individual tests after 10 seconds to prevent hanging
 timeout_method = "thread"  # Use thread-based timeout (safer for network operations)
 markers = [
@@ -167,9 +171,9 @@ markers = [
     "slow: mark test as slow running",
     "integration: mark test as integration test",
     "no_patch_llm_client: marks tests that need real default LLMClient behavior (opts out of autouse fixture)",
-    "bench: performance benchmark tests (skip by default; opt-in with -m bench)",
-    "private_project: tests for private sidecar project tooling (deselect by default; opt-in only when that project is checked out)",
-    "external_fixture: tests requiring downloaded external fixture trees (deselect by default; opt-in after fixture setup)",
+    "bench: performance benchmark tests",
+    "private_project: tests for private sidecar project tooling",
+    "external_fixture: tests requiring downloaded external fixture trees",
 ]
 # pytest-asyncio configuration
 asyncio_mode = "strict"
@@ -375,7 +379,15 @@ ignore_errors = true
 # Exclusions for paths (mirrors `exclude_dirs` in `bandit.yaml`). CI and
 # pre-commit use `-c bandit.yaml`; this block keeps ad-hoc `bandit -c pyproject.toml`
 # runs aligned.
-exclude_dirs = ["projects/working", "projects/published", "projects/archive", "projects/other", ".venv", "site-packages"]
+exclude_dirs = [
+    "projects/working",
+    "projects/published",
+    "projects/archive",
+    "projects/other",
+    ".venv",
+    "site-packages",
+    "infrastructure/steganography/kmyth",
+]
 # B101: assert_used — asserts are used as internal invariants in infrastructure code.
 # Suppressing B101 reduces noise without compromising security review of real issues.
 skips = ["B101"]

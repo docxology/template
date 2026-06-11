@@ -10,7 +10,7 @@ analysis pipeline imposes on top of interpreter startup.
 
 Run with::
 
-    uv run pytest tests/infra_tests/bench/test_analysis_pipeline_bench.py \
+    uv run pytest tests/infra_tests/benchmark/test_analysis_pipeline_bench.py \
         -m bench --benchmark-only --benchmark-min-rounds=3 --timeout=180
 """
 

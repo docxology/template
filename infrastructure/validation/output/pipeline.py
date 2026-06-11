@@ -14,26 +14,37 @@ from typing import Any
 
 from infrastructure.core.pipeline.artifacts import (
     ArtifactManifest,
-    ArtifactManifestEntry,
     aggregate_artifact_manifests,
     validate_artifact_manifest,
 )
-from infrastructure.core.files import find_combined_pdf
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
-from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
-from infrastructure.project.domain_profile import load_domain_profile
-from infrastructure.project.experiment_plan import load_experiment_plan, validate_experiment_plan
-from infrastructure.validation.content.ai_writing import analyze_prose
+from infrastructure.project.discovery import resolve_project_root
 from infrastructure.validation.content.figure_validator import validate_figure_registry
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
     validate_text_against_registry,
     write_evidence_registry_report,
 )
+from infrastructure.validation.output.artifacts import (
+    current_project_manifest_if_valid as _current_manifest_if_valid,
+    read_artifact_manifest as _read_manifest,
+)
+from infrastructure.validation.output.design import validate_project_design as _validate_project_design
+from infrastructure.validation.output.markdown_checks import (
+    validate_manuscript_output_markdown as _validate_markdown,
+)
+from infrastructure.validation.output.pdf_checks import (
+    validate_pdfs as _validate_pdfs,
+    validate_transmission_bookends as _validate_transmission_bookends,
+)
+from infrastructure.validation.output.prose_quality import (
+    load_project_config_yaml as _load_config_yaml,
+    prose_quality_enabled as _is_prose_quality_enabled,
+    validate_prose_quality as _validate_prose_quality,
+)
 from infrastructure.validation.output.validator import collect_detailed_validation_results
-from infrastructure.project.discovery import resolve_project_root
 
 logger = get_logger(__name__)
 
@@ -63,68 +74,18 @@ def _project_relative_path(project_name: str, child: str = "") -> str:
         return str(path)
 
 
-def validate_transmission_bookends(project_name: str = "project") -> bool:
-    """Validate transmission bookend single-page contract when enabled."""
-    from infrastructure.publishing.transmission_bookends import transmission_bookends_enabled
-    from infrastructure.publishing.transmission_page_check import validate_transmission_bookend_pages
-
-    project_root = _project_root(project_name)
-    config_path = project_root / "manuscript" / "config.yaml"
-    if not transmission_bookends_enabled(config_path):
-        return True
-
-    located_pdf = find_combined_pdf(project_root / "output", project_name)
-    if located_pdf is None:
-        project_basename = Path(project_name).name
-        expected_pdf = project_root / "output" / "pdf" / f"{project_basename}_combined.pdf"
-        logger.warning("Transmission bookends enabled but combined PDF missing: %s", expected_pdf)
-        return False
-
-    log_substep("Validating transmission bookend page span...", logger)
-    combined_pdf, _ = located_pdf
-    return validate_transmission_bookend_pages(combined_pdf)
-
-
 def validate_pdfs(project_name: str = "project") -> bool:
     """Validate generated PDF files.
 
     Args:
         project_name: Name of project in projects/ directory (default: "project")
     """
-    log_substep("Validating PDF files...", logger)
+    return _validate_pdfs(_project_root(project_name))
 
-    project_root = _project_root(project_name)
-    pdf_dir = project_root / "output" / "pdf"
-    slides_dir = project_root / "output" / "slides"
 
-    if not pdf_dir.exists():
-        logger.error("PDF directory not found")
-        return False
-
-    pdf_files = sorted(pdf_dir.glob("*.pdf"))
-    if slides_dir.exists():
-        pdf_files.extend(sorted(slides_dir.glob("*.pdf")))
-
-    if not pdf_files:
-        logger.error("No PDF files to validate")
-        return False
-
-    valid_count = 0
-    for pdf_file in pdf_files:
-        try:
-            file_size = pdf_file.stat().st_size
-
-            if file_size > 0 and validate_pdf_structure(pdf_file):
-                log_success(f"PDF valid: {pdf_file.name} ({file_size} bytes)", logger)
-                valid_count += 1
-            elif file_size <= 0:
-                logger.error(f"PDF empty: {pdf_file.name}")
-            else:
-                logger.error(f"PDF structurally invalid: {pdf_file.name}")
-        except OSError as e:
-            logger.error(f"Cannot validate {pdf_file.name}: {e}")
-
-    return valid_count == len(pdf_files)
+def validate_transmission_bookends(project_name: str = "project") -> bool:
+    """Validate transmission bookend single-page contract when enabled."""
+    return _validate_transmission_bookends(_project_root(project_name), project_name)
 
 
 def validate_manuscript_output_markdown(project_name: str = "project") -> bool:
@@ -133,62 +94,7 @@ def validate_manuscript_output_markdown(project_name: str = "project") -> bool:
     Args:
         project_name: Name of project in projects/ directory (default: "project")
     """
-    log_substep("Validating markdown files...", logger)
-
-    repo_root = _REPO_ROOT
-    project_root = _project_root(project_name)
-    manuscript_dir = project_root / "manuscript"
-
-    if not manuscript_dir.exists():
-        logger.warning(f"Manuscript directory not found at expected location: {manuscript_dir}")
-        return True
-
-    markdown_files = list(manuscript_dir.glob("*.md"))
-
-    if not markdown_files:
-        logger.warning("No markdown files found")
-        return True
-
-    log_success(f"Found {len(markdown_files)} markdown file(s)", logger)
-
-    try:
-        from infrastructure.validation.content.markdown_validator import validate_markdown as validate_md
-
-        logger.info("Running markdown validation...")
-        problems, exit_code = validate_md(manuscript_dir, repo_root, strict=False)
-
-        if not problems:
-            DiagnosticReporter(
-                project_name=project_name,
-                output_dir=project_root / "output",
-                load_existing=False,
-            ).clear_report()
-            log_success("Markdown validation passed (no issues found)", logger)
-            return True
-        else:
-            reporter = DiagnosticReporter(
-                project_name=project_name,
-                output_dir=project_root / "output",
-                load_existing=False,
-            )
-            logger.info(f"  Found {len(problems)} validation note(s):")
-            for p in problems:
-                reporter.record(p)
-            reporter.save_report()
-
-            for p in problems[:5]:
-                loc = f"[{p.file_path}] " if p.file_path else ""
-                logger.info(f"    • {loc}{p.message}")
-            if len(problems) > 5:
-                logger.info(f"    ... and {len(problems) - 5} more")
-            logger.info("  (Markdown validation notes are non-critical)")
-            return True
-    except ImportError as e:
-        logger.warning(f"Could not import markdown validator: {e}")
-        return True
-    except (OSError, RuntimeError, ValueError, AttributeError) as e:
-        logger.warning(f"Markdown validation error: {e}")
-        return True
+    return _validate_markdown(_project_root(project_name), _REPO_ROOT, project_name)
 
 
 def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict[str, Any]]:
@@ -265,99 +171,16 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
 
 def validate_project_design(project_root: Path) -> tuple[bool, list[str]]:
     """Validate advisory domain profile, experiment plan, and opt-in readiness overlays."""
-    log_substep("Validating project design overlays...", logger)
-    issues: list[str] = []
-    try:
-        load_domain_profile(project_root)
-    except ValueError as exc:
-        issues.append(str(exc))
-    try:
-        plan = load_experiment_plan(project_root)
-        result = validate_experiment_plan(plan)
-        issues.extend(result.issues)
-    except ValueError as exc:
-        issues.append(str(exc))
-    autoresearch_path = project_root / "autoresearch.yaml"
-    if autoresearch_path.exists():
-        try:
-            from infrastructure.autoresearch import (
-                build_autoresearch_plan,
-                validate_autoresearch_plan,
-                write_autoresearch_report,
-            )
-
-            project_name = _project_name_from_root(project_root)
-            plan = build_autoresearch_plan(_REPO_ROOT, project_name)
-            report = validate_autoresearch_plan(plan, project_root)
-            write_autoresearch_report(project_root, report)
-            issues.extend(f"{issue.code}: {issue.message}" for issue in report.issues if issue.severity == "error")
-            if plan.config.strict:
-                issues.extend(
-                    f"{issue.code}: {issue.message}" for issue in report.issues if issue.severity == "warning"
-                )
-        except (OSError, ValueError, RuntimeError, AttributeError) as exc:
-            issues.append(f"AutoResearch readiness validation failed: {exc}")
-    if issues:
-        for issue in issues:
-            logger.warning(issue)
-        return False, issues
-    log_success("Project design overlays passed", logger)
-    return True, []
-
-
-def _project_name_from_root(project_root: Path) -> str:
-    """Return a project discovery name for active or WIP project roots.
-
-    The returned name is qualified relative to ``projects/`` and therefore
-    carries any typed-subfolder prefix (e.g. ``templates/template_code_project``
-    or ``working/<name>``).
-    """
-    try:
-        return str(project_root.resolve().relative_to((_REPO_ROOT / "projects").resolve()))
-    except ValueError:
-        return project_root.name
+    return _validate_project_design(project_root, _REPO_ROOT)
 
 
 def _read_artifact_manifest(path: Path) -> ArtifactManifest:
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise ValueError("artifact manifest must contain a mapping")
-    raw_entries = payload.get("entries", [])
-    if not isinstance(raw_entries, list):
-        raise ValueError("artifact manifest entries must be a list")
-    entries: list[ArtifactManifestEntry] = []
-    for raw_entry in raw_entries:
-        if not isinstance(raw_entry, dict):
-            raise ValueError("artifact manifest entry must be a mapping")
-        entries.append(
-            ArtifactManifestEntry(
-                path=str(raw_entry.get("path", "")),
-                size_bytes=int(raw_entry.get("size_bytes", 0) or 0),
-                sha256=str(raw_entry.get("sha256", "")),
-                stage_num=int(raw_entry.get("stage_num", 0) or 0),
-                stage_name=str(raw_entry.get("stage_name", "")),
-                contract_match=bool(raw_entry.get("contract_match", False)),
-                timestamp=str(raw_entry.get("timestamp", "")),
-            )
-        )
-    raw_issues = payload.get("issues", [])
-    if not isinstance(raw_issues, list):
-        raise ValueError("artifact manifest issues must be a list")
-    return ArtifactManifest(entries=tuple(entries), issues=tuple(str(issue) for issue in raw_issues))
+    return _read_manifest(path)
 
 
 def _current_project_manifest_if_valid(output_dir: Path, project_root: Path) -> ArtifactManifest | None:
     """Return the project-authored manifest when it is current."""
-    manifest_path = output_dir / "reports" / "artifact_manifest.json"
-    if not manifest_path.exists():
-        return None
-    try:
-        manifest = _read_artifact_manifest(manifest_path)
-    except (OSError, json.JSONDecodeError, ValueError):
-        return None
-    if validate_artifact_manifest(manifest, project_dir=project_root).valid:
-        return manifest
-    return None
+    return _current_manifest_if_valid(output_dir, project_root)
 
 
 def generate_validation_report(
@@ -496,21 +319,7 @@ def _load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
     the opt-in pattern used for DOCX/EPUB rendering in
     :mod:`infrastructure.rendering.pipeline`.
     """
-    cfg = manuscript_dir / "config.yaml"
-    if not cfg.is_file():
-        return None
-    try:
-        import yaml
-    except ImportError:
-        logger.debug("PyYAML not available; cannot read validation toggles from config.yaml")
-        return None
-    try:
-        with cfg.open("r", encoding="utf-8") as fh:
-            data = yaml.safe_load(fh)
-        return data if isinstance(data, dict) else None
-    except (OSError, yaml.YAMLError) as exc:
-        logger.debug("Could not parse %s for validation toggles: %s", cfg.name, exc)
-        return None
+    return _load_config_yaml(manuscript_dir)
 
 
 def _prose_quality_enabled(project_name: str) -> bool:
@@ -520,12 +329,7 @@ def _prose_quality_enabled(project_name: str) -> bool:
     ``validation.prose_quality.enabled`` and defaults to ``False`` so existing
     runs are unaffected.
     """
-    config = _load_project_config_yaml(_project_root(project_name) / "manuscript")
-    if not config:
-        return False
-    validation = config.get("validation") or {}
-    prose = validation.get("prose_quality") or {}
-    return bool(prose.get("enabled"))
+    return _is_prose_quality_enabled(_project_root(project_name))
 
 
 def validate_prose_quality(project_name: str = "project") -> bool:
@@ -538,30 +342,7 @@ def validate_prose_quality(project_name: str = "project") -> bool:
     only invoked when ``validation.prose_quality.enabled`` is set in the project
     config, so disabled runs are byte-identical to the legacy behavior.
     """
-    log_substep("Analyzing prose quality (AI-writing fingerprints)...", logger)
-    manuscript_dir = _project_root(project_name) / "manuscript"
-    if not manuscript_dir.is_dir():
-        logger.warning("Prose quality: manuscript directory not found at %s", manuscript_dir)
-        return True
-
-    flagged = 0
-    for md_file in sorted(manuscript_dir.glob("*.md")):
-        try:
-            report = analyze_prose(md_file.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError) as exc:
-            logger.warning("Prose quality: could not read %s: %s", md_file.name, exc)
-            continue
-        if report.has_flags:
-            flagged += 1
-            logger.info("  %s (%d words):", md_file.name, report.word_count)
-            for flag in report.flags:
-                logger.info("    • %s", flag)
-
-    if flagged:
-        logger.info("Prose quality: %d manuscript file(s) flagged (informational only)", flagged)
-    else:
-        log_success("Prose quality: no AI-writing fingerprints flagged", logger)
-    return True
+    return _validate_prose_quality(_project_root(project_name))
 
 
 def execute_validation_pipeline(project_name: str = "project") -> int:

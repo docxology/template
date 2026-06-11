@@ -6,7 +6,7 @@ The PDF rendering pipeline uses **two cooperating tools**:
 
 | Tool | Role | Activated by |
 |------|------|--------------|
-| Pandoc with `--natbib` | Converts `[@key]` to `\cite{}`/`\citep{}`/`\citet{}` | [`infrastructure/rendering/_pdf_combined_renderer.py`](../../infrastructure/rendering/_pdf_combined_renderer.py) (line 225) |
+| Pandoc with `--natbib` | Converts `[@key]` to `\cite{}`/`\citep{}`/`\citet{}` | [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) (`build_pandoc_tex_command`, ~line 39) |
 | `pandoc-crossref` filter | Resolves `@fig:`, `@tbl:`, `@eq:`, `@sec:` cross-references | Same file (line 246) — auto-detected on `PATH` |
 
 Because these tools cooperate, **all citations must use Pandoc bracket-cite syntax** and **all cross-references must use Pandoc-crossref syntax**. Raw `\cite{}` and `\ref{}` work in PDF but break HTML / EPUB rendering and clutter the source.
@@ -206,4 +206,4 @@ Before committing a manuscript change:
 - [`projects/templates/template_code_project/manuscript/SYNTAX.md`](../../projects/templates/template_code_project/manuscript/SYNTAX.md) — code-exemplar-specific token table and figure registry.
 - [`projects/templates/template_prose_project/manuscript/SYNTAX.md`](../../projects/templates/template_prose_project/manuscript/SYNTAX.md) — prose-exemplar-specific syntax notes.
 - [`projects/archive/template_search_project/manuscript/SYNTAX.md`](../../projects/archive/template_search_project/manuscript/SYNTAX.md) — search-exemplar-specific BibTeX-automation notes.
-- [`infrastructure/rendering/_pdf_combined_renderer.py`](../../infrastructure/rendering/_pdf_combined_renderer.py) — Pandoc invocation source.
+- [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) — Pandoc `--natbib` invocation (`build_pandoc_tex_command`); [`_pdf_combined_renderer.py`](../../infrastructure/rendering/_pdf_combined_renderer.py) is the backward-compatible re-export facade.

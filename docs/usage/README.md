@@ -8,6 +8,8 @@
 
 The `usage/` directory contains practical examples, usage patterns, and guides for using specific features of the Research Project Template.
 
+**Boundary with [`../guides/`](../guides/):** `usage/` = format/style reference consulted while actively authoring ("look up the syntax"); `guides/` = task-driven walkthroughs organized by skill level ("teach me how").
+
 ## Contents
 
 | File | Purpose | Audience |

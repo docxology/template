@@ -47,7 +47,7 @@ Dependencies are defined in `pyproject.toml`:
 ```toml
 [project]
 name = "research-project-template"
-version = "3.2.0"
+version = "3.3.1"
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.22",

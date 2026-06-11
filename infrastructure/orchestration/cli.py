@@ -133,7 +133,10 @@ def build_parser() -> argparse.ArgumentParser:
             "\n"
             "  ./secure_run.sh --deterministic --project my_project\n"
             "      Pin embedded build timestamp to `git log -1 --format=%cI`\n"
-            "      so two consecutive runs produce byte-identical PDFs."
+            "      so two consecutive runs produce byte-identical PDFs.\n"
+            "\n"
+            "  ./secure_run.sh --validate-kmyth --project my_project\n"
+            "      Validate optional Kmyth/TPM tooling without running the pipeline."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -176,6 +179,14 @@ def build_parser() -> argparse.ArgumentParser:
             "Pin steganography build timestamp to the latest commit's "
             "author date (sets STEGANOGRAPHY_DETERMINISTIC=1) so two "
             "consecutive runs emit byte-identical PDFs."
+        ),
+    )
+    secure.add_argument(
+        "--validate-kmyth",
+        action="store_true",
+        help=(
+            "Validate optional Kmyth/TPM tooling from the effective secure-run "
+            "configuration and exit without rendering or sealing PDFs."
         ),
     )
 
@@ -318,6 +329,7 @@ def _cmd_secure(ns: argparse.Namespace) -> int:
             skip_infra=ns.skip_infra,
             core_only=ns.core_only,
             resume=ns.resume,
+            validate_kmyth=ns.validate_kmyth,
         ),
     )
 

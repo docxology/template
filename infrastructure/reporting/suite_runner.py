@@ -107,47 +107,52 @@ def run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) -
     fd = process.stdout.fileno()
     os.set_blocking(fd, False)
 
-    current_line = ""
-    while True:
-        reads, _, _ = select.select([fd], [], [], 0.1)
+    try:
+        current_line = ""
+        while True:
+            reads, _, _ = select.select([fd], [], [], 0.1)
 
-        if fd in reads:
-            raw_chunk = process.stdout.read(4096)
-            if not raw_chunk:
+            if fd in reads:
+                raw_chunk = process.stdout.read(4096)
+                if not raw_chunk:
+                    if process.poll() is not None:
+                        break
+                    continue
+
+                chunk = raw_chunk.decode("utf-8", errors="replace")
+
+                for char in chunk:
+                    current_line += char
+                    if char == "\n" or (char == "." and not quiet):
+                        if char == "\n" and not _is_internal_stack_line(current_line):
+                            stdout_buf.append(current_line)
+                            recent_lines.append(current_line)
+
+                        if _passes_quiet_filter(char, current_line, quiet):
+                            sys.stdout.write(char if char == "." else current_line)
+                            sys.stdout.flush()
+
+                        if char == "\n":
+                            current_line = ""
+            else:
                 if process.poll() is not None:
                     break
-                continue
 
-            chunk = raw_chunk.decode("utf-8", errors="replace")
+        if current_line:
+            stdout_buf.append(current_line)
+            if not quiet:
+                sys.stdout.write(current_line)
+                sys.stdout.flush()
 
-            for char in chunk:
-                current_line += char
-                if char == "\n" or (char == "." and not quiet):
-                    if char == "\n" and not _is_internal_stack_line(current_line):
-                        stdout_buf.append(current_line)
-                        recent_lines.append(current_line)
+        try:
+            process.wait(timeout=1800)  # 30-minute hard ceiling for any test suite
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait()
+    finally:
+        if process.stdout is not None:
+            process.stdout.close()
 
-                    if _passes_quiet_filter(char, current_line, quiet):
-                        sys.stdout.write(char if char == "." else current_line)
-                        sys.stdout.flush()
-
-                    if char == "\n":
-                        current_line = ""
-        else:
-            if process.poll() is not None:
-                break
-
-    if current_line:
-        stdout_buf.append(current_line)
-        if not quiet:
-            sys.stdout.write(current_line)
-            sys.stdout.flush()
-
-    try:
-        process.wait(timeout=1800)  # 30-minute hard ceiling for any test suite
-    except subprocess.TimeoutExpired:
-        process.kill()
-        process.wait()
     return process.returncode, "".join(stdout_buf), ""
 
 

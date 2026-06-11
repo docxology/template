@@ -6,6 +6,11 @@ Pipeline output validation helpers.
 
 - `validator.py`
 - `pipeline.py`
+- `pdf_checks.py`
+- `markdown_checks.py`
+- `design.py`
+- `artifacts.py`
+- `prose_quality.py`
 - `no_mock_enforcer.py`
 
 ## See Also

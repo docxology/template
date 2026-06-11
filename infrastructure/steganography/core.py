@@ -139,12 +139,18 @@ class SteganographyProcessor:
                 working_pdf = self._step_encryption(working_pdf)
 
             # 6. Write hash manifest sidecar
+            manifest_path: Path | None = None
             if self.config.hashing_enabled and self.config.manifest_enabled:
-                self._step_manifest(input_pdf)
+                manifest_path = self._step_manifest(input_pdf)
 
             # Copy working file to final destination
             shutil.copy2(str(working_pdf), str(output_pdf))
             logger.info(f"║  ✓ Steganography PDF written: {output_pdf.name}")
+
+            # 7. Optionally seal selected artifacts through Kmyth/TPM.
+            if self.config.kmyth_enabled:
+                self._step_kmyth(output_pdf, manifest_path)
+
             logger.info("╚═══════════════════════════════════════════════════════════╝")
             return output_pdf
 
@@ -208,6 +214,8 @@ class SteganographyProcessor:
         for page_idx, page in enumerate(reader.pages):
             page_width = float(page.mediabox.width)
             page_height = float(page.mediabox.height)
+            writer.add_page(page)
+            out_page = writer.pages[-1]
 
             # ── Full-page overlay (text, QR, or none) ────────────
             if self.config.overlays_enabled and self.config.overlay_mode != "none":
@@ -233,7 +241,7 @@ class SteganographyProcessor:
                         repeat_count=self.config.overlay_repeat_count,
                     )
                 wm_page = PdfReader(io.BytesIO(wm_bytes)).pages[0]
-                page.merge_page(wm_page)
+                out_page.merge_page(wm_page)
 
             # ── Footer overlay (always if overlays enabled) ──────
             if self.config.overlays_enabled:
@@ -255,14 +263,14 @@ class SteganographyProcessor:
                 )
                 footer_bytes = create_footer_overlay(page_width, page_height, footer_cfg)
                 footer_page = PdfReader(io.BytesIO(footer_bytes)).pages[0]
-                page.merge_page(footer_page)
+                out_page.merge_page(footer_page)
 
                 # Invisible text layer (first page only)
                 if page_idx == 0:
                     hidden_data = f"STEG_ID:{ctx.document_id}|TITLE:{ctx.title}|HASHES:{hash_short}"
                     inv_bytes = create_invisible_text_overlay(page_width, page_height, hidden_data)
                     inv_page = PdfReader(io.BytesIO(inv_bytes)).pages[0]
-                    page.merge_page(inv_page)
+                    out_page.merge_page(inv_page)
 
             # ── Barcode strip ────────────────────────────────────
             if self.config.barcodes_enabled:
@@ -285,9 +293,7 @@ class SteganographyProcessor:
                     source_file_size=ctx.source_file_size,
                 )
                 bc_page = PdfReader(io.BytesIO(bc_bytes)).pages[0]
-                page.merge_page(bc_page)
-
-            writer.add_page(page)
+                out_page.merge_page(bc_page)
 
         # Write merged PDF back to the working file
         out_path = working_pdf.with_suffix(".merged.pdf")
@@ -359,11 +365,11 @@ class SteganographyProcessor:
         logger.info("║  ✓ PDF password protection applied")
         return working_pdf
 
-    def _step_manifest(self, original_pdf: Path) -> None:
+    def _step_manifest(self, original_pdf: Path) -> Path:
         """Write the JSON hash manifest sidecar."""
         from infrastructure.steganography.hashing import write_hash_manifest
 
-        write_hash_manifest(
+        manifest_path = write_hash_manifest(
             original_pdf,
             self._hashes,
             extra={
@@ -375,6 +381,58 @@ class SteganographyProcessor:
             },
         )
         logger.info("║  ✓ Hash manifest written")
+        return manifest_path
+
+    def _step_kmyth(self, output_pdf: Path, manifest_path: Path | None) -> list[Path]:
+        """Seal configured artifacts with Kmyth when explicitly enabled."""
+        from infrastructure.steganography.kmyth_adapter import (
+            KmythCommandError,
+            KmythSealOptions,
+            KmythUnavailableError,
+            seal_file_with_kmyth,
+            validate_kmyth_installation,
+        )
+
+        targets: list[Path] = []
+        for artifact in self.config.kmyth_seal_artifacts:
+            if artifact == "pdf":
+                targets.append(output_pdf)
+            elif artifact == "hash_manifest":
+                if manifest_path is not None and manifest_path.exists():
+                    targets.append(manifest_path)
+                else:
+                    logger.warning(
+                        "Kmyth requested hash_manifest sealing, but no hash manifest exists. "
+                        "Enable hashing_enabled and manifest_enabled to seal it."
+                    )
+
+        if not targets:
+            message = "Kmyth enabled but no sealable artifacts were selected."
+            if self.config.kmyth_required:
+                raise KmythUnavailableError(message)
+            logger.warning(message)
+            return []
+
+        options = KmythSealOptions.from_config(self.config)
+        availability = validate_kmyth_installation(binary_dir=options.binary_dir, source_dir=options.source_dir)
+        if not availability.available:
+            if self.config.kmyth_required:
+                raise KmythUnavailableError(availability.summary())
+            logger.warning("Kmyth sealing skipped: %s", availability.summary())
+            return []
+
+        sealed: list[Path] = []
+        for target in targets:
+            try:
+                sealed.append(seal_file_with_kmyth(target, options=options))
+            except (KmythCommandError, KmythUnavailableError, FileExistsError, FileNotFoundError) as exc:
+                if self.config.kmyth_required:
+                    raise
+                logger.warning("Kmyth sealing skipped for %s: %s", target.name, exc)
+                return sealed
+
+        logger.info("║  ✓ Kmyth TPM sidecars written: %s", ", ".join(path.name for path in sealed))
+        return sealed
 
 
 # ── Convenience function ─────────────────────────────────────────────────

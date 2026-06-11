@@ -37,6 +37,15 @@ from infrastructure.steganography.core import (
     embed_steganography,
     process_pdf,
 )
+from infrastructure.steganography.kmyth_adapter import (
+    KmythAvailability,
+    KmythCommandError,
+    KmythError,
+    KmythSealOptions,
+    KmythUnavailableError,
+    seal_file_with_kmyth,
+    validate_kmyth_installation,
+)
 
 __all__ = [
     "SteganographyConfig",
@@ -44,4 +53,11 @@ __all__ = [
     "embed_steganography",
     "process_pdf",
     "resolve_build_timestamp",
+    "KmythAvailability",
+    "KmythCommandError",
+    "KmythError",
+    "KmythSealOptions",
+    "KmythUnavailableError",
+    "seal_file_with_kmyth",
+    "validate_kmyth_installation",
 ]

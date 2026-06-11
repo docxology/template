@@ -190,7 +190,8 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
         # if the stored all_complete bit was left true.
         issues.append("producer_completeness.json is incomplete")
     stale = _load_json(root / "output" / "reports" / "stale_artifact_report.json")
-    if stale.get("all_fresh") is not True:
+    stale_fresh = all_rows(stale, lambda row: bool(row.get("fresh")))
+    if stale.get("all_fresh") is not True or stale.get("all_fresh") != stale_fresh:
         issues.append("stale_artifact_report.json records stale artifacts")
     for row in stale.get("rows") or []:
         path = root / str(row.get("artifact", ""))
@@ -277,7 +278,8 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     staleness = _load_json(root / "output" / "reports" / "manuscript_staleness_report.json")
     if staleness.get("schema") != "template_active_inference.manuscript_staleness_report.v1":
         issues.append("manuscript_staleness_report.json schema mismatch")
-    if staleness.get("all_fresh") is not True:
+    staleness_fresh = all_rows(staleness, lambda row: bool(row.get("fresh")))
+    if staleness.get("all_fresh") is not True or staleness.get("all_fresh") != staleness_fresh:
         issues.append("manuscript_staleness_report.json records stale manuscript tokens")
     live_staleness = build_manuscript_staleness_report(root)
     saved_rows = [

@@ -65,7 +65,7 @@ def _validate_saved_semantic_certificate(root: Path, restrictions: dict[str, boo
         issues.append("sheaf_gluing_certificate.json is not ok")
     proof_obligations_ok = all_rows(
         semantic,
-        lambda row: row.get("class") and row.get("restriction") and row.get("ok") is True,
+        lambda row: bool(row.get("class")) and bool(row.get("restriction")) and row.get("ok") is True,
         key="proof_obligations",
     )
     _append_summary_issue(
@@ -115,11 +115,11 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     field_provenance_ok = all_rows(
         provenance,
         lambda row: (
-            row.get("source_commit")
-            and row.get("config_digest")
+            bool(row.get("source_commit"))
+            and bool(row.get("config_digest"))
             and isinstance(row.get("seed"), int)
-            and row.get("producer")
-            and row.get("jsonpath")
+            and bool(row.get("producer"))
+            and bool(row.get("jsonpath"))
             and row.get("complete") is True
         ),
         key="field_provenance_rows",
@@ -380,11 +380,11 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     gate_indexed = all_rows(
         gate_index,
         lambda row: (
-            row.get("indexed")
-            and row.get("command")
-            and row.get("required_inputs")
-            and row.get("declared_outputs")
-            and row.get("negative_control_id")
+            bool(row.get("indexed"))
+            and bool(row.get("command"))
+            and bool(row.get("required_inputs"))
+            and bool(row.get("declared_outputs"))
+            and bool(row.get("negative_control_id"))
         ),
     )
     if gate_index.get("all_indexed") is not True or gate_index.get("all_indexed") != gate_indexed:

@@ -36,6 +36,7 @@ class SecureRunOptions:
     skip_infra: bool = False
     core_only: bool = False
     resume: bool = False
+    validate_kmyth: bool = False
 
 
 def _load_steganography():  # pragma: no cover - import indirection
@@ -91,6 +92,36 @@ def _effective_steganography_config(repo_root: Path, project_config: dict[str, A
     elif project_steg:
         logger.warning("Ignoring non-mapping steganography config: %r", project_steg)
     return merged
+
+
+def validate_kmyth_for_secure_run(repo_root: Path, project_qualified_name: str | None = None) -> int:
+    """Validate optional Kmyth availability for the secure-run configuration."""
+    project_config: dict[str, Any] = {}
+    if project_qualified_name is not None:
+        validated = validate_project_slug(project_qualified_name, repo_root)
+        projects = discover_projects(repo_root)
+        project = next((p for p in projects if p.qualified_name == validated), None)
+        if project is None:
+            logger.error("Unknown project: %s", validated)
+            return 1
+        project_config = _load_project_config(project.path)
+
+    SteganographyConfig, _ = _load_steganography()
+    steg_mapping = _effective_steganography_config(repo_root, project_config)
+    steg_config = SteganographyConfig.from_dict(steg_mapping)
+
+    from infrastructure.steganography import validate_kmyth_installation
+
+    availability = validate_kmyth_installation(
+        binary_dir=steg_config.kmyth_binary_dir,
+        source_dir=steg_config.kmyth_source_dir,
+    )
+    if availability.available:
+        logger.info(availability.summary())
+        return 0
+
+    logger.error(availability.summary())
+    return 1
 
 
 def apply_steganography_to_project(
@@ -193,6 +224,9 @@ def run_secure_pipeline(
     Returns:
         Process exit code.
     """
+    if options.validate_kmyth:
+        return validate_kmyth_for_secure_run(repo_root, options.project)
+
     # Pipeline phase
     if not options.steganography_only:
         if options.project is None:

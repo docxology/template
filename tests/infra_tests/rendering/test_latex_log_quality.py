@@ -79,6 +79,23 @@ def test_latex_texttt_helpers_make_paths_and_labels_breakable():
     assert "height=0.68\\textheight" in tex
 
 
+def test_long_camelcase_identifier_is_breakable_short_is_not():
+    # Separator-less CamelCase rule names (no slash/underscore/dot) overflow
+    # narrow table columns because Pandoc's \texttt{} is unbreakable. They must
+    # now be made breakable; short identifiers must be left intact.
+    tex = (
+        "\\documentclass{article}\\begin{document}"
+        "\\texttt{SingletonAccessRule} and \\texttt{NodeKind}."
+        "\\end{document}"
+    )
+
+    tex, count = make_long_texttt_breakable(tex)
+
+    assert count == 1  # only the 19-char identifier, not the 8-char one
+    assert "\\breaktt{SingletonAccessRule}" in tex
+    assert "\\texttt{NodeKind}" in tex  # short span untouched
+
+
 def test_make_pandoc_reference_tokens_breakable():
     tex, count = make_pandoc_reference_tokens_breakable(
         r"See {[}@fig:matrix-heatmaps{]} and {[}@sec:mechanism-localization{]}."

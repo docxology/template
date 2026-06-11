@@ -15,7 +15,7 @@ Maintain small benchmark harnesses that validate canonical template outputs usin
 ## Validation
 
 ```bash
-uv run pytest tests/infra_tests/bench/test_template_benchmark_harness.py -v
+uv run pytest tests/infra_tests/benchmark/test_template_benchmark_harness.py -v
 uv run python -m infrastructure.benchmark.template_harness --repo-root .
 ```
 
@@ -23,4 +23,4 @@ uv run python -m infrastructure.benchmark.template_harness --repo-root .
 
 - [`README.md`](README.md)
 - [`../validation/AGENTS.md`](../validation/AGENTS.md)
-- [`../../tests/infra_tests/bench/AGENTS.md`](../../tests/infra_tests/bench/AGENTS.md)
+- [`../../tests/infra_tests/benchmark/AGENTS.md`](../../tests/infra_tests/benchmark/AGENTS.md)

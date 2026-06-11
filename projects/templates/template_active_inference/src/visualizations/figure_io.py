@@ -4,9 +4,19 @@ from __future__ import annotations
 
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from typing import Any
 
 import matplotlib.pyplot as plt
 from PIL import Image
+
+
+def _normalize_rgb_extrema(raw: Any) -> tuple[tuple[int, int], ...]:
+    if not raw:
+        return ()
+    if isinstance(raw[0], tuple):
+        return tuple((int(low), int(high)) for low, high in raw)
+    low, high = raw
+    return ((int(low), int(high)),)
 
 
 def image_render_metrics(path: Path) -> dict[str, object]:
@@ -21,15 +31,16 @@ def image_render_metrics(path: Path) -> dict[str, object]:
             "aspect_ratio": 0.0,
             "nonblank": False,
         }
+    channels: tuple[tuple[int, int], ...] = ()
     try:
         with Image.open(path) as image:
             width, height = image.size
             mode = image.mode
-            extrema = image.convert("RGB").getextrema()
+            channels = _normalize_rgb_extrema(image.convert("RGB").getextrema())
     except (OSError, ValueError, EOFError):
-        width, height, mode, extrema = 0, 0, "", ()
+        width, height, mode = 0, 0, ""
     aspect_ratio = float(width / height) if height else 0.0
-    nonblank = bool(extrema) and any(low != high for low, high in extrema)
+    nonblank = any(low != high for low, high in channels)
     return {
         "exists": path.is_file(),
         "width_px": int(width),

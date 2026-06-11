@@ -8,6 +8,7 @@
 | `test_backends_http.py` | HTTP client paths against local servers |
 | `test_backends_local.py` | Local/offline backends |
 | `test_client_and_cache.py` | Client orchestration + cache semantics |
+| `test_deep_research.py` | Provider-neutral deep research dispatch, project context packing, and dual-provider fan-out |
 | `test_fulltext.py` | Fulltext retrieval helpers |
 | `test_cli.py` / `test_cli_direct.py` | CLI |
 

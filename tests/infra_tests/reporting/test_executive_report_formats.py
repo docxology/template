@@ -11,7 +11,7 @@ from infrastructure.reporting._executive_models import (
     OutputMetrics,
     PipelineMetrics,
     ProjectMetrics,
-    TestMetrics,
+    TestMetrics as MetricsModel,
 )
 from infrastructure.reporting._executive_health import calculate_project_health_score
 
@@ -21,7 +21,7 @@ def _make_project(name="proj_a", words=5000, coverage=90.0, total_tests=100, fai
         name=name,
         manuscript=ManuscriptMetrics(sections=5, total_words=words, equations=10, figures=3, references=20),
         codebase=CodebaseMetrics(source_files=10, source_lines=500, scripts=3, script_lines=100, methods=20, classes=5),
-        tests=TestMetrics(
+        tests=MetricsModel(
             total_tests=total_tests,
             passed=total_tests - failed,
             failed=failed,

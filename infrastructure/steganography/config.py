@@ -209,6 +209,16 @@ class SteganographyConfig:
         pdf_password: Optional password for PDF-level encryption.
         output_suffix: Suffix appended to the output filename.
         manifest_enabled: Whether to write a JSON hash manifest sidecar.
+        kmyth_enabled: Optional TPM sealing via the bundled Kmyth submodule or a system Kmyth install.
+        kmyth_required: If True, missing Kmyth tools or seal failures are fatal.
+        kmyth_binary_dir: Optional directory containing kmyth-seal and kmyth-unseal.
+        kmyth_source_dir: Optional Kmyth source checkout path; defaults to infrastructure/steganography/kmyth.
+        kmyth_pcrs: Optional TPM PCR indexes passed to kmyth-seal.
+        kmyth_cipher: Optional cipher string passed to kmyth-seal.
+        kmyth_seal_artifacts: Which artifacts to seal: "hash_manifest" and/or "pdf".
+        kmyth_output_suffix: Suffix appended to sealed sidecars.
+        kmyth_overwrite: Whether to replace existing Kmyth sidecars.
+        kmyth_timeout_seconds: Timeout for each kmyth-seal invocation.
     """
 
     enabled: bool = False
@@ -241,6 +251,18 @@ class SteganographyConfig:
     output_suffix: str = "_steganography"
     manifest_enabled: bool = True
 
+    # ── Optional Kmyth TPM sealing ─────────────────────────────────────
+    kmyth_enabled: bool = False
+    kmyth_required: bool = False
+    kmyth_binary_dir: str | None = None
+    kmyth_source_dir: str | None = None
+    kmyth_pcrs: list[int] = field(default_factory=list)
+    kmyth_cipher: str | None = None
+    kmyth_seal_artifacts: list[str] = field(default_factory=lambda: ["hash_manifest"])
+    kmyth_output_suffix: str = ".ski"
+    kmyth_overwrite: bool = True
+    kmyth_timeout_seconds: int = 120
+
     # ── Factory ───────────────────────────────────────────────────────
 
     @classmethod
@@ -271,6 +293,16 @@ class SteganographyConfig:
         # Handle overlay_color as list → tuple
         if "overlay_color_rgb" in filtered and isinstance(filtered["overlay_color_rgb"], list):
             filtered["overlay_color_rgb"] = tuple(filtered["overlay_color_rgb"])
+
+        if "kmyth_pcrs" in filtered:
+            from infrastructure.steganography.kmyth_adapter import normalize_kmyth_pcrs
+
+            filtered["kmyth_pcrs"] = normalize_kmyth_pcrs(filtered["kmyth_pcrs"])
+
+        if "kmyth_seal_artifacts" in filtered:
+            from infrastructure.steganography.kmyth_adapter import normalize_kmyth_seal_artifacts
+
+            filtered["kmyth_seal_artifacts"] = normalize_kmyth_seal_artifacts(filtered["kmyth_seal_artifacts"])
 
         return cls(**filtered)
 

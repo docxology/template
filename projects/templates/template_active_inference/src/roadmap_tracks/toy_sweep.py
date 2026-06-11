@@ -626,28 +626,46 @@ def write_toy_sweep_artifacts(project_root: Path) -> dict[str, Path]:
 def validate_toy_sweep_artifacts(project_root: Path) -> list[str]:
     root = project_root.resolve()
     issues: list[str] = []
+    # PR#23 hardening class: every aggregate below is re-derived from its rows
+    # (matching the builder's own derivation) so a row-only forgery — rows
+    # contradicting a True stored flag — cannot pass.
     sensitivity = _load_json(root / "output" / "data" / "sensitivity_sweep.json")
     if sensitivity.get("schema") != "template_active_inference.sensitivity_sweep.v1":
         issues.append("sensitivity_sweep.json schema mismatch")
+    sensitivity_rows = sensitivity.get("rows") or []
+    sensitivity_complete = bool(sensitivity_rows) and len(sensitivity_rows) == sensitivity.get("expected_cells")
     if (
         sensitivity.get("row_count") != sensitivity.get("expected_cells")
         or sensitivity.get("complete_grid") is not True
+        or sensitivity.get("complete_grid") != sensitivity_complete
     ):
         issues.append("sensitivity_sweep.json grid is incomplete")
     uncertainty = _load_json(root / "output" / "data" / "uncertainty_summary.json")
     if uncertainty.get("schema") != "template_active_inference.uncertainty_summary.v1":
         issues.append("uncertainty_summary.json schema mismatch")
-    if uncertainty.get("all_normalized") is not True:
+    uncertainty_normalized = all_rows(uncertainty, lambda row: bool(row.get("normalized")))
+    if uncertainty.get("all_normalized") is not True or uncertainty.get("all_normalized") != uncertainty_normalized:
         issues.append("uncertainty_summary.json contains unnormalized rows")
     benchmark = _load_json(root / "output" / "data" / "toy_benchmark_matrix.json")
     if benchmark.get("schema") != "template_active_inference.toy_benchmark_matrix.v1":
         issues.append("toy_benchmark_matrix.json schema mismatch")
     if set(benchmark.get("models") or []) != {"bernoulli_ising", "si_tmaze", "graph_world"}:
         issues.append("toy_benchmark_matrix.json model set is incomplete")
-    if benchmark.get("all_models_complete") is not True:
+    benchmark_complete = all_rows(
+        benchmark, lambda row: bool(row.get("artifact")) and bool(row.get("metric")) and bool(row.get("gate_passed"))
+    )
+    if benchmark.get("all_models_complete") is not True or benchmark.get("all_models_complete") != benchmark_complete:
         issues.append("toy_benchmark_matrix.json has incomplete model rows")
     policy = _load_json(root / "output" / "data" / "si_policy_grid.json")
-    if policy.get("complete_grid") is not True:
+    policy_rows = policy.get("rows") or []
+    policy_summary = policy.get("summary") or {}
+    policy_expected = (
+        len(policy_summary.get("modes") or [])
+        * len(policy_summary.get("horizons") or [])
+        * len(policy_summary.get("seeds") or [])
+    )
+    policy_complete = bool(policy_rows) and len(policy_rows) == policy_expected
+    if policy.get("complete_grid") is not True or not policy_complete:
         issues.append("si_policy_grid.json grid is incomplete")
     efe = _load_json(root / "output" / "data" / "si_efe_terms.json")
     efe_rows = efe.get("rows") or []
@@ -663,10 +681,15 @@ def validate_toy_sweep_artifacts(project_root: Path) -> list[str]:
         # is caught even when the stored boolean still reads true.
         issues.append("si_efe_terms.json has unexplained EFE rows")
     topology = _load_json(root / "output" / "data" / "si_graph_world_topology_sweep.json")
-    if topology.get("all_summary_trace_agree") is not True:
+    topology_agree = all_rows(topology, lambda row: bool(row.get("summary_trace_agreement")))
+    if topology.get("all_summary_trace_agree") is not True or topology.get("all_summary_trace_agree") != topology_agree:
         issues.append("si_graph_world_topology_sweep.json summary/trace mismatch")
     topology_traces = _load_json(root / "output" / "data" / "si_graph_world_topology_traces.json")
-    if topology_traces.get("all_trace_summary_agree") is not True:
+    traces_agree = all_rows(topology_traces, lambda row: bool(row.get("trace_summary_agree")))
+    if (
+        topology_traces.get("all_trace_summary_agree") is not True
+        or topology_traces.get("all_trace_summary_agree") != traces_agree
+    ):
         issues.append("si_graph_world_topology_traces.json summary/trace mismatch")
     if topology_traces.get("topology_count") != topology.get("topology_count"):
         issues.append("si_graph_world_topology_traces.json topology count mismatch")
@@ -680,12 +703,29 @@ def validate_toy_sweep_artifacts(project_root: Path) -> list[str]:
     catalog = _load_json(root / "output" / "data" / "state_space_catalog.json")
     if catalog.get("schema") != "template_active_inference.state_space_catalog.v1":
         issues.append("state_space_catalog.json schema mismatch")
-    if catalog.get("all_finite") is not True or catalog.get("all_counts_positive") is not True:
+    catalog_finite = all_rows(catalog, lambda row: bool(row.get("finite")))
+    catalog_counts = all_rows(
+        catalog, lambda row: int(row.get("state_count", 0)) > 0 and int(row.get("policy_count", 0)) >= 1
+    )
+    if (
+        catalog.get("all_finite") is not True
+        or catalog.get("all_finite") != catalog_finite
+        or catalog.get("all_counts_positive") is not True
+        or catalog.get("all_counts_positive") != catalog_counts
+    ):
         issues.append("state_space_catalog.json has missing or non-finite state spaces")
     ablation = _load_json(root / "output" / "data" / "causal_ablation_matrix.json")
     if ablation.get("schema") != "template_active_inference.causal_ablation_matrix.v1":
         issues.append("causal_ablation_matrix.json schema mismatch")
-    if ablation.get("complete_grid") is not True or ablation.get("all_deterministic") is not True:
+    ablation_rows = ablation.get("rows") or []
+    ablation_complete = bool(ablation_rows) and len(ablation_rows) == ablation.get("expected_cells")
+    ablation_deterministic = all_rows(ablation, lambda row: bool(row.get("deterministic")))
+    if (
+        ablation.get("complete_grid") is not True
+        or ablation.get("complete_grid") != ablation_complete
+        or ablation.get("all_deterministic") is not True
+        or ablation.get("all_deterministic") != ablation_deterministic
+    ):
         issues.append("causal_ablation_matrix.json has incomplete or non-deterministic cells")
     observable = _load_json(root / "output" / "data" / "analytical_observable_sweep.json")
     observable_rows = observable.get("rows") or []
@@ -714,6 +754,15 @@ def validate_toy_sweep_artifacts(project_root: Path) -> list[str]:
         issues.append("analytical_assumption_index.json schema mismatch")
     if set(assumptions.get("equation_ids") or []) != EXPECTED_ASSUMPTION_EQUATIONS:
         issues.append("analytical_assumption_index.json equation set is incomplete")
-    if assumptions.get("all_equations_indexed") is not True:
+    assumptions_indexed = all_rows(
+        assumptions,
+        lambda row: (
+            bool(row.get("assumptions")) and row.get("status") == "indexed" and bool(row.get("evidence_artifact"))
+        ),
+    )
+    if (
+        assumptions.get("all_equations_indexed") is not True
+        or assumptions.get("all_equations_indexed") != assumptions_indexed
+    ):
         issues.append("analytical_assumption_index.json has unindexed equations")
     return issues

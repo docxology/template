@@ -8,6 +8,8 @@ This package hosts independent **search interfaces**, each in its own subpackage
 * :mod:`infrastructure.search.exa` — general web search, content extraction, and
   grounded answers via the Exa API (https://exa.ai), with one subpackage per
   endpoint (``search``, ``contents``, ``answer``, ``find_similar``).
+* :mod:`infrastructure.search.deep_research` — provider-neutral orchestration
+  over OpenAI and Gemini deep research surfaces with lazy SDK adapters.
 
 The literature side is the discovery half of the citation workflow; see
 :mod:`infrastructure.reference.citation` for the export side. Importing this
@@ -16,6 +18,33 @@ call :meth:`infrastructure.search.exa.ExaClient.from_env`.
 """
 
 from infrastructure.search.exa import ExaClient, ExaConfig, ExaError
+from infrastructure.search.deep_research import (
+    DEFAULT_GEMINI_AGENT,
+    DEFAULT_OPENAI_MODEL,
+    DeepResearchAnalysis,
+    DeepResearchCitation,
+    DeepResearchClient,
+    DeepResearchConfig,
+    DeepResearchJobHandle,
+    DeepResearchMCPServer,
+    DeepResearchReportBundle,
+    DeepResearchRequest,
+    DeepResearchResult,
+    DeepResearchSources,
+    DeepResearchProjectContext,
+    GeminiDeepResearchError,
+    GeminiDeepResearchProvider,
+    OpenAIDeepResearchError,
+    OpenAIDeepResearchProvider,
+    build_gemini_payload,
+    build_gemini_tools,
+    build_project_deep_research_request,
+    build_openai_payload,
+    build_openai_tools,
+    collect_project_context,
+    save_deep_research_result,
+    save_deep_research_results,
+)
 from infrastructure.search.literature import (
     AbstractFetcher,
     ArxivBackend,
@@ -58,4 +87,30 @@ __all__ = [
     "ExaClient",
     "ExaConfig",
     "ExaError",
+    # Deep research orchestration
+    "DEFAULT_GEMINI_AGENT",
+    "DEFAULT_OPENAI_MODEL",
+    "DeepResearchAnalysis",
+    "DeepResearchCitation",
+    "DeepResearchClient",
+    "DeepResearchConfig",
+    "DeepResearchJobHandle",
+    "DeepResearchMCPServer",
+    "DeepResearchReportBundle",
+    "DeepResearchRequest",
+    "DeepResearchResult",
+    "DeepResearchSources",
+    "DeepResearchProjectContext",
+    "GeminiDeepResearchError",
+    "GeminiDeepResearchProvider",
+    "OpenAIDeepResearchError",
+    "OpenAIDeepResearchProvider",
+    "build_gemini_payload",
+    "build_gemini_tools",
+    "build_project_deep_research_request",
+    "build_openai_payload",
+    "build_openai_tools",
+    "collect_project_context",
+    "save_deep_research_result",
+    "save_deep_research_results",
 ]

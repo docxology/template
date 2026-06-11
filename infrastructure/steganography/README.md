@@ -18,6 +18,8 @@ with layered security and steganographic techniques.
 | `metadata.py` | PDF Info dictionary + XMP metadata injection (pypdf) |
 | `hashing.py` | SHA-256/512 (any `hashlib.new` algorithm) computation, JSON manifest sidecar |
 | `encryption.py` | AES-256-GCM payload encryption, PDF password protection |
+| `kmyth_adapter.py` | Optional Kmyth/TPM validation and `.ski` sidecar sealing |
+| `kmyth/` | Git submodule: upstream NSA Kmyth C project |
 
 ## Dependencies
 
@@ -31,6 +33,15 @@ when they are absent:
 - `cryptography` — AES-GCM payload helpers and encrypted metadata payloads
 
 The root `uv sync` includes the `steganography` group by default for the maintained test gate. Minimal environments can still install it explicitly with `uv sync --group steganography`.
+
+Optional Kmyth support is not a Python dependency. Initialize and build the
+submodule only when TPM sealing is needed:
+
+```bash
+git submodule update --init --recursive infrastructure/steganography/kmyth
+make -C infrastructure/steganography/kmyth
+./secure_run.sh --validate-kmyth
+```
 
 ## Configuration
 
@@ -47,6 +58,12 @@ steganography:
   pdf_encryption_algorithm: "AES-256"
   overlay_text: "CONFIDENTIAL"
   overlay_opacity: 0.08
+
+  # Optional TPM sealing through the kmyth/ submodule or a system install.
+  kmyth_enabled: false
+  kmyth_required: false
+  kmyth_pcrs: []                 # Example: [0, 2, 7]
+  kmyth_seal_artifacts: [hash_manifest]  # Add "pdf" to seal the output PDF too.
 ```
 
 ## Usage
@@ -63,6 +80,9 @@ steganography:
 # Post-process existing PDFs only — all discovered projects if --project omitted
 ./secure_run.sh --steganography-only --project template_code_project
 ./secure_run.sh --steganography-only
+
+# Validate optional Kmyth/TPM tooling without rendering or sealing PDFs
+./secure_run.sh --validate-kmyth
 ```
 
 ### Python API
@@ -122,6 +142,21 @@ process_pdf(Path("paper.pdf"), config=config, title="My Paper")
 - AES-GCM encrypted metadata payloads
 - HMAC-SHA256 digital fingerprinting
 - PDF-level AES-256 password protection via pypdf
+
+### Kmyth / TPM Sealing (optional)
+
+- The upstream `NationalSecurityAgency/kmyth` repository is mounted as
+  `infrastructure/steganography/kmyth`.
+- `secure_run.sh --validate-kmyth` checks for `kmyth-seal` and
+  `kmyth-unseal` in either `kmyth_binary_dir`, the submodule's `bin/`
+  directory, or `PATH`.
+- When `kmyth_enabled: true`, the processor writes `.ski` sidecars for the
+  configured `kmyth_seal_artifacts` after the steganography PDF and hash
+  manifest exist. By default only the hash manifest is sealed.
+- Set `kmyth_required: true` to make missing Kmyth tools or TPM seal failures
+  fatal. With the default `false`, secure-run logs a warning and continues.
+- Kmyth `.ski` files are TPM-bound artifacts. Keep the upstream warning in
+  mind: unsealing requires the same TPM and compatible PCR state.
 
 ## Deterministic mode
 

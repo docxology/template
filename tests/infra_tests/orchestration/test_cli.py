@@ -40,6 +40,13 @@ def test_build_parser_recognizes_secure_subcommand() -> None:
     assert ns.steganography_only is True
 
 
+def test_build_parser_recognizes_secure_validate_kmyth() -> None:
+    parser = build_parser()
+    ns = parser.parse_args(["secure", "--validate-kmyth"])
+    assert ns.command == "secure"
+    assert ns.validate_kmyth is True
+
+
 def test_build_parser_unknown_subcommand_raises() -> None:
     parser = build_parser()
     with pytest.raises(SystemExit):
@@ -279,6 +286,20 @@ def test_cmd_secure_steg_only(fake_repo: Path, monkeypatch: pytest.MonkeyPatch) 
     assert captured["options"].steganography_only is True
 
 
+def test_cmd_secure_validate_kmyth(fake_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    captured: dict = {}
+
+    def _fake_run_secure(repo_root, options):
+        captured["repo_root"] = repo_root
+        captured["options"] = options
+        return 0
+
+    monkeypatch.setattr("infrastructure.orchestration.cli.run_secure_pipeline", _fake_run_secure)
+    rc = main(["--repo-root", str(fake_repo), "secure", "--validate-kmyth"])
+    assert rc == 0
+    assert captured["options"].validate_kmyth is True
+
+
 def test_cmd_secure_deterministic_flag_sets_env_var(
     fake_repo: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -341,6 +362,7 @@ def test_secure_help_advertises_both_modes() -> None:
     # New flag documented
     assert "--deterministic" in text
     assert "STEGANOGRAPHY_DETERMINISTIC" in text
+    assert "--validate-kmyth" in text
 
 
 def test_cmd_menu_default_project_no_canonical(tmp_path: Path, capsys) -> None:

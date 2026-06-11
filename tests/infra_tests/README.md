@@ -20,7 +20,7 @@ measured over `infrastructure/` only.
 | Directory | Focus |
 |-----------|-------|
 | `autoresearch/` | `infrastructure/autoresearch/` — deterministic readiness planning and reports |
-| `bench/` | Opt-in `pytest-benchmark` suites, skipped by default |
+| `benchmark/` | `infrastructure/benchmark/` plus `pytest-benchmark` suites |
 | `config/` | `infrastructure/config/` — secure_config schema expectations |
 | `core/` | `infrastructure/core/` — logging, files, runtime, pipeline, telemetry, security |
 | `core/config/` | Config schema extensions, strict loading, JSON schema |
@@ -35,6 +35,7 @@ measured over `infrastructure/` only.
 | `reference/` | `infrastructure/reference/` — BibTeX parse/write, models, CLI |
 | `search/` | `infrastructure/search/` — literature client, backends, cache, CLI |
 | `llm/` | `infrastructure/llm/` — Ollama client, prompts, streaming, reviews, translations |
+| `methods/` | `infrastructure/methods/` — methods orchestration plans |
 | `publishing/` | `infrastructure/publishing/` — metadata, citations, Zenodo, arXiv |
 | `rendering/` | `infrastructure/rendering/` — PDF, LaTeX, web, slides |
 | `reporting/` | `infrastructure/reporting/` — pipeline reports, dashboards, executive summaries |

@@ -7,6 +7,10 @@ generated" below.
 **Last verified:** 2026-06-03 (backlog rebase: dag/registry/SIA hardening + the
 sheaf-branch infrastructure wave)
 
+**Post-baseline note (2026-06-09):** `validation/output/pipeline.py` was split
+into smaller Stage 04 validation leaves. Re-run the command below before using
+the exact statement and coverage figures for that package.
+
 ## Current Coverage Status
 
 **Overall infrastructure coverage: 77.23 %** (gate: ≥ 60 %)

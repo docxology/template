@@ -38,6 +38,8 @@ DOC_PAIR_EXCLUDE_PARTS: frozenset[str] = frozenset(
 
 DOC_FILENAMES = {"AGENTS.md", "README.md"}
 
+_VENDORED_EXCLUDED_ROOTS: tuple[tuple[str, ...], ...] = (("infrastructure", "steganography", "kmyth"),)
+
 
 def _is_generated_tests_fixture_payload(path: Path) -> bool:
     """Return True for downloaded/generated fixture payloads under ``tests/fixtures``."""
@@ -60,6 +62,16 @@ def _is_generated_tests_fixture_payload(path: Path) -> bool:
 def _is_recorded_generation_fixture(path: Path) -> bool:
     """Return True for SIA replay trees under ``fixtures/recorded_generations``."""
     return "recorded_generations" in path.parts
+
+
+def _contains_path_parts(path: Path, needle: tuple[str, ...]) -> bool:
+    parts = path.parts
+    if len(needle) > len(parts):
+        return False
+    for start in range(len(parts) - len(needle) + 1):
+        if parts[start : start + len(needle)] == needle:
+            return True
+    return False
 
 
 @dataclass(frozen=True)
@@ -87,6 +99,8 @@ def is_doc_pair_excluded_path(
 ) -> bool:
     """Return True when *path* is outside permanent-template doc-pair scope."""
     excluded = set(exclude_parts)
+    if any(_contains_path_parts(path, root) for root in _VENDORED_EXCLUDED_ROOTS):
+        return True
     if _is_generated_tests_fixture_payload(path):
         return True
     if _is_recorded_generation_fixture(path):

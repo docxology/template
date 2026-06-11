@@ -26,8 +26,8 @@
 | **Doctor** | [doctor-module.md](doctor-module.md) | Repository health diagnostics |
 | **Orchestration** | [orchestration-module.md](orchestration-module.md) | `python -m infrastructure.orchestration` CLI |
 | **Prose** | [prose-module.md](prose-module.md) | Readability metrics, editorial heuristics |
-| **Search** | [search-module.md](search-module.md) | Literature discovery and indexing |
-| **Reference** | [reference-module.md](reference-module.md) | BibTeX / citation toolkit |
+| **Search** | [search-module.md](search-module.md) | Literature discovery, web search, and backends under `search/literature/` and `search/exa/` |
+| **Reference** | [reference-module.md](reference-module.md) | BibTeX / citation toolkit with `reference/citation/` and `reference/verification/` |
 | **SIA** | [sia-module.md](sia-module.md) | Meta → Target → Feedback self-improvement harness |
 
 ## See Also

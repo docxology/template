@@ -208,7 +208,8 @@ def check_no_oversize_src_files(project_root: Path, report: Report, project: str
     for py in src_dir.rglob("*.py"):
         if _rel(py, project_root) in _OVERSIZE_SRC_ALLOWLIST:
             continue
-        line_count = sum(1 for _ in py.open("r", encoding="utf-8"))
+        with py.open("r", encoding="utf-8") as handle:
+            line_count = sum(1 for _ in handle)
         if line_count > 1500:
             report.add(
                 "WARNING",

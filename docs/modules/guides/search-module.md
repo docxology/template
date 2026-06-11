@@ -17,6 +17,16 @@
 
 This is the **discovery side** of the literature workflow; the export side (BibTeX) lives in [`reference`](reference-module.md).
 
+## Subpackages
+
+| Subpackage | Focus |
+| --- | --- |
+| `search/literature/` | Academic discovery, deterministic caching, and full-text enrichment |
+| `search/literature/backends/` | Backend implementations behind the literature search protocol |
+| `search/exa/` | General web search, content extraction, answer synthesis, and similar-page lookup |
+
+`literature/` and `exa/` are intentionally separate interfaces: one is tuned for scholarly sources and reproducibility, the other is a general web client with the same no-mocks testing style.
+
 ---
 
 ## Exa Web Search (`exa/`)

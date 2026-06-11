@@ -14,7 +14,7 @@ from pathlib import Path
 from infrastructure.reporting.suite_runner import (
     _INTERNAL_STACK_PATTERNS,
     _SUMMARY_KEYWORDS,
-    TestSuiteConfig,
+    TestSuiteConfig as SuiteConfig,
     _is_internal_stack_line,
     _passes_quiet_filter,
     run_pytest_stream,
@@ -136,12 +136,12 @@ class TestRunPytestStream:
         assert "line1" in stdout
 
 
-class TestTestSuiteConfig:
+class TestSuiteConfigModel:
     """TestSuiteConfig defaults and overrides."""
 
     def test_construction_with_required_fields(self, tmp_path):
         """Test TestSuiteConfig can be constructed with required fields."""
-        config = TestSuiteConfig(
+        config = SuiteConfig(
             label="infra",
             cmd=["uv", "run", "pytest", "tests/"],
             env={"PYTHONPATH": str(tmp_path)},
@@ -156,7 +156,7 @@ class TestTestSuiteConfig:
         assert config.quiet is True
 
     def test_default_spinner_label(self):
-        config = TestSuiteConfig(
+        config = SuiteConfig(
             label="Infrastructure",
             cmd=["pytest", "tests/"],
             env={},
@@ -170,7 +170,7 @@ class TestTestSuiteConfig:
 
     def test_spinner_label_auto_populated(self, tmp_path):
         """Test that spinner_label is auto-populated when empty."""
-        config = TestSuiteConfig(
+        config = SuiteConfig(
             label="Project",
             cmd=["pytest"],
             env={},
@@ -183,7 +183,7 @@ class TestTestSuiteConfig:
         assert config.spinner_label == "Running project tests"
 
     def test_custom_spinner_label(self, tmp_path):
-        config = TestSuiteConfig(
+        config = SuiteConfig(
             label="Project",
             cmd=["pytest"],
             env={},
@@ -197,7 +197,7 @@ class TestTestSuiteConfig:
         assert config.spinner_label == "Custom label"
 
     def test_quiet_default(self):
-        config = TestSuiteConfig(
+        config = SuiteConfig(
             label="Test",
             cmd=[],
             env={},
@@ -211,7 +211,7 @@ class TestTestSuiteConfig:
 
     def test_repo_root_is_path(self, tmp_path):
         """Test that repo_root is stored as a Path."""
-        config = TestSuiteConfig(
+        config = SuiteConfig(
             label="test",
             cmd=["pytest"],
             env={},
@@ -227,9 +227,9 @@ class TestTestSuiteConfig:
 class TestRunTestSuite:
     """Test run_test_suite with real but harmless commands."""
 
-    def _make_config(self, tmp_path, cmd=None, quiet=True) -> TestSuiteConfig:
+    def _make_config(self, tmp_path, cmd=None, quiet=True) -> SuiteConfig:
         """Create a TestSuiteConfig with harmless defaults."""
-        return TestSuiteConfig(
+        return SuiteConfig(
             label="Test",
             cmd=cmd or ["echo", "5 passed, 0 failed"],
             env=os.environ.copy(),

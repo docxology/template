@@ -15,7 +15,7 @@ All benches are marked ``@pytest.mark.bench`` and use the
 
 Run with::
 
-    uv run pytest tests/infra_tests/bench/test_setup_hook_bench.py \
+    uv run pytest tests/infra_tests/benchmark/test_setup_hook_bench.py \
         -m bench --benchmark-only --benchmark-min-rounds=3 --timeout=180
 """
 

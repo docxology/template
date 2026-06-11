@@ -50,6 +50,8 @@ Chains: hashing → overlays → barcodes → metadata → encryption → manife
 | `metadata.py` | PDF Info + XMP injection (pypdf) |
 | `hashing.py` | SHA-256/512, manifest JSON |
 | `encryption.py` | AES-GCM payload helpers, HMAC, AES-256 PDF password protection |
+| `kmyth_adapter.py` | Optional Kmyth/TPM validation and `.ski` sidecar sealing |
+| `kmyth/` | Git submodule for upstream `NationalSecurityAgency/kmyth` C sources |
 
 ## Integration Points
 
@@ -58,10 +60,16 @@ Chains: hashing → overlays → barcodes → metadata → encryption → manife
 - **`secure_run.sh`** — shell entry; `uv sync --group steganography`, then `python -m infrastructure.orchestration secure` ([`run_secure_pipeline`](../orchestration/secure_run.py)); pipeline DAG matches `./run.sh` via Python, not a `./run.sh` subprocess
 - **`infrastructure/config/secure_config.yaml`** — repository secure-run defaults
 - **`config.yaml`** — project `manuscript/config.yaml` `steganography:` section with per-technique booleans and overrides
+- **Kmyth optional preflight** — `./secure_run.sh --validate-kmyth [--project <name>]` validates `kmyth-seal` / `kmyth-unseal` from `kmyth_binary_dir`, the submodule `bin/`, or `PATH` without running the pipeline
 
 ## Dependencies
 
-All lazily imported: `pypdf`, `reportlab`, `qrcode[pil]`, `python-barcode`, `cryptography`.
+All Python dependencies are lazily imported: `pypdf`, `reportlab`, `qrcode[pil]`, `python-barcode`, `cryptography`.
+
+Kmyth is not installed by `uv sync`. It is a git submodule at
+`infrastructure/steganography/kmyth`; build it with `make -C
+infrastructure/steganography/kmyth` or install Kmyth separately on `PATH`
+before enabling `kmyth_enabled: true`.
 
 ## Testing
 

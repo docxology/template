@@ -12,6 +12,7 @@ from textwrap import dedent
 import pytest
 
 from infrastructure.core.pytest_orchestration import (
+    PIPELINE_SMOKE_INFRA_TEST_PATHS,
     build_project_pytest_command,
     build_union_pytest_command,
     enforce_project_suite_guards,
@@ -93,9 +94,29 @@ def test_parse_discovery_count_variants() -> None:
 
 
 def test_resolve_infrastructure_test_paths_smoke_is_fast_subset(tmp_path: Path) -> None:
+    for relative in PIPELINE_SMOKE_INFRA_TEST_PATHS:
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.suffix == ".py":
+            target.write_text("", encoding="utf-8")
+        else:
+            target.mkdir(exist_ok=True)
     paths = resolve_infrastructure_test_paths(tmp_path, "pipeline-smoke")
     assert len(paths) == 9
     assert all(str(tmp_path) in p for p in paths)
+
+
+def test_resolve_infrastructure_test_paths_smoke_manifest_exists_at_repo_root() -> None:
+    """Every pinned smoke path must exist in THIS repo — catches renames like bench/ → benchmark/."""
+    repo_root = Path(__file__).resolve().parents[3]
+    paths = resolve_infrastructure_test_paths(repo_root, "pipeline-smoke")
+    assert all(Path(p).exists() for p in paths)
+
+
+def test_resolve_infrastructure_test_paths_smoke_fails_closed_on_missing_path(tmp_path: Path) -> None:
+    """A manifest entry pointing nowhere must raise, never silently collect 0 tests."""
+    with pytest.raises(FileNotFoundError, match="PIPELINE_SMOKE_INFRA_TEST_PATHS"):
+        resolve_infrastructure_test_paths(tmp_path, "pipeline-smoke")
 
 
 def test_enforce_project_suite_guards_does_not_recheck_coverage_threshold(
@@ -149,7 +170,7 @@ def test_build_project_pytest_command_uses_uv_for_pyproject_projects(tmp_path: P
     project = tmp_path / "projects" / "demo"
     project.mkdir(parents=True)
     (project / "pyproject.toml").write_text(
-        "[project]\nname = \"demo\"\n\n[project.optional-dependencies]\ndev = [\"pytest\"]\n",
+        '[project]\nname = "demo"\n\n[project.optional-dependencies]\ndev = ["pytest"]\n',
         encoding="utf-8",
     )
 
@@ -172,7 +193,7 @@ def test_build_project_pytest_command_injects_test_runner_deps(tmp_path: Path) -
     project = tmp_path / "projects" / "thin"
     project.mkdir(parents=True)
     (project / "pyproject.toml").write_text(
-        "[project]\nname = \"thin\"\ndependencies = [\"numpy>=1.26\"]\n",
+        '[project]\nname = "thin"\ndependencies = ["numpy>=1.26"]\n',
         encoding="utf-8",
     )
 

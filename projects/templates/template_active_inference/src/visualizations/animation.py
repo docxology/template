@@ -174,7 +174,10 @@ def validate_animation_frame_deltas(project_root: Path) -> list[str]:
         issues.append("animation_frame_deltas.json frame count is too small")
     if int(payload.get("delta_count", -1) or -1) != int(payload.get("frame_count", 0) or 0) - 1:
         issues.append("animation_frame_deltas.json delta count does not match frame count")
-    if payload.get("all_nonzero") is not True:
+    # Re-derived from rows (PR#23 class): a forged all_nonzero=true over a
+    # static-frame row fails closed, mirroring the two hash recomputes below.
+    deltas_nonzero = bool(payload.get("rows")) and all(row.get("nonzero") for row in payload.get("rows") or [])
+    if payload.get("all_nonzero") is not True or payload.get("all_nonzero") != deltas_nonzero:
         issues.append("animation_frame_deltas.json contains static adjacent frames")
     frames = payload.get("frames") or []
     if len(frames) != int(payload.get("frame_count", 0) or 0):

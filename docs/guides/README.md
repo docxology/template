@@ -8,6 +8,8 @@
 
 The `guides/` directory contains skill-level specific usage guides that progressively teach users how to use the Research Project Template, from basic document creation to expert-level customization.
 
+**Boundary with [`../usage/`](../usage/):** `guides/` = task-driven walkthroughs organized by skill level ("teach me how"); `usage/` = format/style reference consulted while actively authoring ("look up the syntax"). New docs that teach a workflow go here; new docs that catalog options or markup go in `usage/`.
+
 ## Contents
 
 | File | Purpose | Skill Level |

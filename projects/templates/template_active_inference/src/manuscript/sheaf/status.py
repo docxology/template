@@ -292,9 +292,26 @@ def validate_sheaf_status_outputs(project_root: Path) -> list[str]:
         status = json.loads(status_path.read_text(encoding="utf-8"))
         if status.get("schema") != STATUS_MATRIX_SCHEMA:
             issues.append("sheaf_section_status_matrix.json schema mismatch")
-        if status.get("all_bound_fragments_present") is not True:
+        # Aggregates re-derived from the saved rows exactly as the builder
+        # computes them (PR#23 class): row-only forgeries fail closed.
+        missing_cells = sum(1 for row in status.get("cells") or [] if row.get("coverage_status") == "missing")
+        bound_fragments_present = status.get("missing_required_count") == 0 and missing_cells == int(
+            status.get("missing_cell_count", -1)
+        )
+        if status.get("all_bound_fragments_present") is not True or not bound_fragments_present:
             issues.append("sheaf_section_status_matrix.json has missing bound fragments")
-        if status.get("all_sections_have_status") is not True or status.get("all_tracks_have_status") is not True:
+        sections_have_status = bool(status.get("sections")) and all(
+            bool(row.get("status")) for row in status.get("sections") or []
+        )
+        tracks_have_status = bool(status.get("tracks")) and all(
+            bool(row.get("status")) for row in status.get("tracks") or []
+        )
+        if (
+            status.get("all_sections_have_status") is not True
+            or status.get("all_sections_have_status") != sections_have_status
+            or status.get("all_tracks_have_status") is not True
+            or status.get("all_tracks_have_status") != tracks_have_status
+        ):
             issues.append("sheaf_section_status_matrix.json has incomplete status rows")
     if not render_log_path.is_file():
         issues.append("missing output/reports/sheaf_render_log.json")
@@ -302,7 +319,10 @@ def validate_sheaf_status_outputs(project_root: Path) -> list[str]:
         render_log = json.loads(render_log_path.read_text(encoding="utf-8"))
         if render_log.get("schema") != RENDER_LOG_SCHEMA:
             issues.append("sheaf_render_log.json schema mismatch")
-        if render_log.get("all_events_ok") is not True:
+        events_ok = bool(render_log.get("events")) and all(
+            event.get("status") == "ok" for event in render_log.get("events") or []
+        )
+        if render_log.get("all_events_ok") is not True or render_log.get("all_events_ok") != events_ok:
             issues.append("sheaf_render_log.json has failed render events")
     return issues
 

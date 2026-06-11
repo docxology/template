@@ -50,6 +50,8 @@ def test_find_doc_pair_issues_flags_missing_pairs(tmp_path: Path) -> None:
 
 def test_generated_and_local_paths_are_excluded() -> None:
     """The matcher excludes local/generated paths used by the template."""
+    assert is_doc_pair_excluded_path(Path("infrastructure/steganography/kmyth"))
+    assert is_doc_pair_excluded_path(Path("infrastructure/steganography/kmyth/src/main"))
     assert is_doc_pair_excluded_path(Path("projects/demo/src/demo.egg-info"))
     assert is_doc_pair_excluded_path(Path("projects/demo/output"))
     assert is_doc_pair_excluded_path(Path(".cursor/hooks/state"))

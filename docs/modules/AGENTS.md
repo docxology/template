@@ -8,14 +8,14 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 
 | File | Purpose |
 |------|---------|
-| `modules-guide.md` | Overview table for infrastructure packages plus Telemetry, Config, and Docker; links into `guides/` plus hub AGENTS for package-specific docs |
+| `modules-guide.md` | Overview table for infrastructure packages plus Telemetry, Config, Docker, and nested package docs (`core/telemetry/`, `reference/citation/`, `reference/verification/`, `search/literature/`, `search/exa/`); links into `guides/` plus hub AGENTS for package-specific docs |
 | `scientific-simulation-guide.md` | Scientific simulation and analysis system |
 | `pdf-validation.md` | PDF validation system documentation |
 | `literature-search-and-references.md` | Literature search and reference management module |
 | `guides/autoresearch-module.md` | Deterministic readiness planning module |
 | `guides/benchmark-module.md` | Public exemplar benchmark manifests module |
 | `guides/config-module.md` | Config schemas / templates module |
-| `guides/core-module.md` | Core utilities module |
+| `guides/core-module.md` | Core utilities module plus `core/telemetry/` |
 | `guides/docker-module.md` | Docker / compose module |
 | `guides/documentation-module.md` | Documentation / figure / glossary module |
 | `guides/integrity-module.md` | Integrity verification module |
@@ -32,9 +32,9 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 | `guides/doctor-module.md` | Repository health diagnostics module |
 | `guides/orchestration-module.md` | Pipeline CLI and menu delegation |
 | `guides/prose-module.md` | Prose-manuscript analysis module |
-| `guides/search-module.md` | Literature discovery module |
+| `guides/search-module.md` | Literature discovery and Exa web-search module (`search/literature/`, `search/exa/`) |
 | `guides/sia-module.md` | SIA self-improvement harness module |
-| `guides/reference-module.md` | Citation and reference management module |
+| `guides/reference-module.md` | Citation and reference management module (`reference/citation/`, `reference/verification/`) |
 
 Package-level `infrastructure/*/AGENTS.md` files remain the in-tree API reference when a guide defers to hub docs.
 

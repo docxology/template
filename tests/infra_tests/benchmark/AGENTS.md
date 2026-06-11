@@ -1,9 +1,10 @@
-# bench/ - Agent Guide
+# benchmark/ - Agent Guide
 
 ## Purpose
 
 Benchmark selected infrastructure paths using real files, subprocesses, and
-`pytest-benchmark`. These tests are intentionally opt-in.
+`pytest-benchmark`. They live in the main infra suite and can also be run in a
+benchmark-only pass when needed.
 
 ## Local Rules
 
@@ -16,7 +17,7 @@ Benchmark selected infrastructure paths using real files, subprocesses, and
 ## Validation
 
 ```bash
-uv run pytest tests/infra_tests/bench/ -m bench --benchmark-only --timeout=180
+uv run pytest tests/infra_tests/benchmark/ -m bench --benchmark-only --timeout=180
 ```
 
 ## See Also

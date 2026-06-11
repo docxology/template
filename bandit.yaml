@@ -18,6 +18,9 @@ exclude_dirs:
   # lean/MathlibProofs/.lake/packages/mathlib). Third-party, non-authored;
   # same policy as .venv/site-packages. Harmless no-op on clean checkouts.
   - ".lake"
+  # Optional upstream Kmyth git submodule. Third-party C sources and tooling;
+  # template-owned Python integration is in infrastructure/steganography/*.py.
+  - "infrastructure/steganography/kmyth"
   # Rotating research projects: research WIP intentionally NOT held to the
   # exemplar security floor (the same documented rotating-project exception
   # that applies to coverage and mypy). The security gate stays strict on

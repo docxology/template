@@ -26,7 +26,7 @@ from infrastructure.reporting.pipeline_test_reporting import (
 )
 from infrastructure.reporting.pipeline_test_runner import (
     INFRASTRUCTURE_TEST_SCOPES,
-    TestSuiteResults,
+    TestSuiteResults as SuiteResults,
 )
 
 
@@ -35,12 +35,12 @@ class TestTestSuiteResults:
 
     def test_empty_construction(self):
         """TestSuiteResults supports total=False (all keys optional)."""
-        result: TestSuiteResults = {}
+        result: SuiteResults = {}
         assert isinstance(result, dict)
 
     def test_full_construction(self):
         """TestSuiteResults can be constructed with all fields."""
-        result: TestSuiteResults = {
+        result: SuiteResults = {
             "passed": 100,
             "failed": 2,
             "skipped": 5,
@@ -60,7 +60,7 @@ class TestTestSuiteResults:
 
     def test_partial_construction(self):
         """TestSuiteResults can be partially filled."""
-        result: TestSuiteResults = {"passed": 50, "total": 50}
+        result: SuiteResults = {"passed": 50, "total": 50}
         assert result["passed"] == 50
         assert "failed" not in result
 
@@ -147,6 +147,15 @@ class TestInfrastructureTestScopes:
 
     def test_pipeline_smoke_scope_uses_curated_real_contract(self, tmp_path):
         """Pipeline smoke stays focused on core contracts instead of the whole repo suite."""
+        # The smoke scope fails closed on missing manifest paths, so the
+        # curated entries must exist under the fixture root.
+        for relative_path in PIPELINE_SMOKE_INFRA_TEST_PATHS:
+            target = tmp_path / relative_path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target.suffix == ".py":
+                target.write_text("", encoding="utf-8")
+            else:
+                target.mkdir(exist_ok=True)
         paths = resolve_infrastructure_test_paths(tmp_path, "pipeline-smoke")
 
         assert paths == [str(tmp_path / relative_path) for relative_path in PIPELINE_SMOKE_INFRA_TEST_PATHS]

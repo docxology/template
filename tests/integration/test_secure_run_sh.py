@@ -46,6 +46,7 @@ def test_secure_help_option(secure_script: Path) -> None:
     assert "usage:" in result.stdout.lower()
     assert "--steganography-only" in result.stdout
     assert "--project" in result.stdout
+    assert "--validate-kmyth" in result.stdout
 
 
 def test_secure_no_args_exits_with_quick_start(secure_script: Path) -> None:
@@ -54,6 +55,7 @@ def test_secure_no_args_exits_with_quick_start(secure_script: Path) -> None:
     combined = (result.stdout or "") + (result.stderr or "")
     assert "no arguments given" in combined.lower()
     assert "--steganography-only" in combined
+    assert "--validate-kmyth" in combined
 
 
 def test_run_sh_secure_run_help(run_script: Path) -> None:

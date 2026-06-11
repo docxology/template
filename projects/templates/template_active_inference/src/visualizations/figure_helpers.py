@@ -142,7 +142,11 @@ def draw_arrow(ax, start_x: float, end_x: float, y: float, style: FigureStyleCon
 
 def load_json_artifact(project_root: Path, relative_path: str) -> dict:
     """Load a JSON artifact by project-relative path."""
-    return json.loads((project_root.resolve() / relative_path).read_text(encoding="utf-8"))
+    payload = json.loads((project_root.resolve() / relative_path).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        msg = f"Expected dict JSON artifact at {relative_path}"
+        raise TypeError(msg)
+    return payload
 
 
 def add_value_labels(ax, bars, *, fmt: str = "{:.2f}", pad: float = 0.02, fontsize: float = 8.0) -> None:

@@ -15,7 +15,9 @@ from infrastructure.orchestration.secure_run import (
     SecureRunOptions,
     apply_steganography_to_project,
     run_secure_pipeline,
+    validate_kmyth_for_secure_run,
 )
+from tests.infra_tests.steganography.test_kmyth_adapter import _write_fake_kmyth_tools
 
 
 class _NoopProcessor:
@@ -369,3 +371,47 @@ def test_run_secure_pipeline_steg_only_all_projects(fake_repo: Path) -> None:
     # Two projects had PDFs; the other two had none (status 2, non-fatal)
     processed_count = sum(len(p.calls) for p in captured)
     assert processed_count == 2
+
+
+def test_validate_kmyth_for_secure_run_accepts_configured_binary_dir(fake_repo: Path, tmp_path: Path) -> None:
+    bin_dir = _write_fake_kmyth_tools(tmp_path / "bin")
+    repo_cfg = fake_repo / "infrastructure" / "config"
+    repo_cfg.mkdir(parents=True)
+    (repo_cfg / "secure_config.yaml").write_text(
+        f"steganography:\n  kmyth_binary_dir: {bin_dir}\n  kmyth_source_dir: {tmp_path / 'source'}\n",
+        encoding="utf-8",
+    )
+
+    assert validate_kmyth_for_secure_run(fake_repo) == 0
+
+
+def test_validate_kmyth_for_secure_run_returns_one_when_unavailable(fake_repo: Path, tmp_path: Path) -> None:
+    repo_cfg = fake_repo / "infrastructure" / "config"
+    repo_cfg.mkdir(parents=True)
+    (repo_cfg / "secure_config.yaml").write_text(
+        "steganography:\n"
+        f"  kmyth_binary_dir: {tmp_path / 'missing-bin'}\n"
+        f"  kmyth_source_dir: {tmp_path / 'missing-source'}\n",
+        encoding="utf-8",
+    )
+
+    assert validate_kmyth_for_secure_run(fake_repo) == 1
+
+
+def test_run_secure_pipeline_validate_kmyth_short_circuits(fake_repo: Path, tmp_path: Path) -> None:
+    bin_dir = _write_fake_kmyth_tools(tmp_path / "bin")
+    repo_cfg = fake_repo / "infrastructure" / "config"
+    repo_cfg.mkdir(parents=True)
+    (repo_cfg / "secure_config.yaml").write_text(
+        f"steganography:\n  kmyth_binary_dir: {bin_dir}\n  kmyth_source_dir: {tmp_path / 'source'}\n",
+        encoding="utf-8",
+    )
+
+    rc = run_secure_pipeline(
+        fake_repo,
+        SecureRunOptions(project=None, validate_kmyth=True),
+        runner_cls=_StubRunner,
+        processor_factory=lambda cfg: _NoopProcessor(cfg),
+    )
+
+    assert rc == 0

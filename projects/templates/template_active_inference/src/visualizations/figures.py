@@ -674,7 +674,7 @@ def figure_cue_tmaze_advantage(project_root: Path) -> Path:
         configure_axis(
             ax_flat,
             style,
-            title=(f"Flat EFE blind spot: {'identical' if adv.flat_efe_indistinguishable else 'differs'}",),
+            title=f"Flat EFE blind spot: {'identical' if adv.flat_efe_indistinguishable else 'differs'}",
             ylabel="Flat EFE $G(\\pi)$ (nats)",
             title_loc="left",
             title_size=9,

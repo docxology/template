@@ -50,6 +50,7 @@ This is a research project template with a test-driven development workflow, aut
 | Unified health CLI | `uv run python -m infrastructure.core.health` (optional `--gates=module-line-count`) |
 | Release-readiness dashboard (no network) | `uv run python -m infrastructure.reporting.release_readiness --out output/release_readiness.md` (add `--format html`; aggregates version/coverage/pipeline/docs-lint/evidence-graph from local artifacts only) |
 | Opt-in security scan | `uv run python scripts/gates/security_scan.py` (not default pipeline/CI; missing tools report `skipped`, not clean) |
+| Deep research dispatch (opt-in, **PAID** ≈$2/report OpenAI, ≈$25 Gemini) | `uv sync --group deep-research`, then `uv run python -m infrastructure.search.deep_research providers\|submit\|poll\|run-project` — cost model + multi-project loop recipe in [`infrastructure/search/deep_research/README.md`](infrastructure/search/deep_research/README.md); never default pipeline/CI |
 
 ### CI mirror (GitHub Actions)
 

@@ -5,7 +5,8 @@
 The Search module provides discovery utilities for academic literature
 (`literature/`) and Exa-backed general web search, content extraction, and
 grounded answers (`exa/` — see [`exa/README.md`](exa/README.md) and
-[`exa/AGENTS.md`](exa/AGENTS.md)). The literature side sits opposite
+[`exa/AGENTS.md`](exa/AGENTS.md)), plus provider-neutral deep research
+orchestration (`deep_research/`) over OpenAI and Gemini. The literature side sits opposite
 [`infrastructure/reference/`](../reference/) in the literature workflow:
 
 ```mermaid
@@ -54,6 +55,20 @@ treat results uniformly regardless of source.
 
 See [`exa/README.md`](exa/README.md), [`exa/AGENTS.md`](exa/AGENTS.md), and
 [`exa/CAPABILITIES.md`](exa/CAPABILITIES.md) for full detail.
+
+### `deep_research/` — Provider-neutral long-running research orchestration
+
+| File | Role |
+|---|---|
+| `config.py` | Environment-backed optional credentials and default provider settings. |
+| `models.py` | Provider-neutral request, job, citation, and result dataclasses. |
+| `prompting.py` | Shared prompt builder for OpenAI and Gemini research prompts. |
+| `openai.py` | OpenAI Responses API adapter for `o3-deep-research` / `o4-mini-deep-research`. |
+| `gemini.py` | Gemini Interactions API adapter for `deep-research-preview-04-2026` / `deep-research-max-preview-04-2026`. |
+| `client.py` | Capability-aware dispatcher that selects a provider from available API keys. |
+
+Importing `infrastructure.search.deep_research` is side-effect free. The vendor
+SDKs are imported only when a provider is actually used.
 
 ## Key Features
 
@@ -141,6 +156,13 @@ Environment variables:
 * `PAPERCLIP_API_KEY` — required only for `PaperclipBackend` / the
   `--source paperclip` CLI flag. The module never reads it implicitly;
   callers must pass it through.
+* `OPENAI_API_KEY` — optional; enables `DeepResearchClient`'s OpenAI path.
+* `OPENAI_DEEP_RESEARCH_MODEL` — optional OpenAI model override.
+* `GEMINI_API_KEY` — optional; enables `DeepResearchClient`'s Gemini path.
+* `GEMINI_DEEP_RESEARCH_AGENT` — optional Gemini agent override.
+* `DeepResearchClient.submit_project_and_save_reports()` — packs project
+  context, runs both providers, and saves full reports under
+  `output/reports/deep_research/`.
 
 ## Integration
 

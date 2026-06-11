@@ -1,0 +1,66 @@
+"""Manuscript markdown checks for the output validation pipeline."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from infrastructure.core.logging.diagnostic import DiagnosticReporter
+from infrastructure.core.logging.utils import get_logger, log_success, log_substep
+
+logger = get_logger(__name__)
+
+
+def validate_manuscript_output_markdown(project_root: Path, repo_root: Path, project_name: str) -> bool:
+    """Validate manuscript markdown for Stage 04 without failing on advisory notes."""
+    log_substep("Validating markdown files...", logger)
+
+    manuscript_dir = project_root / "manuscript"
+    if not manuscript_dir.exists():
+        logger.warning("Manuscript directory not found at expected location: %s", manuscript_dir)
+        return True
+
+    markdown_files = list(manuscript_dir.glob("*.md"))
+    if not markdown_files:
+        logger.warning("No markdown files found")
+        return True
+
+    log_success(f"Found {len(markdown_files)} markdown file(s)", logger)
+
+    try:
+        from infrastructure.validation.content.markdown_validator import validate_markdown as validate_md
+
+        logger.info("Running markdown validation...")
+        problems, _exit_code = validate_md(manuscript_dir, repo_root, strict=False)
+
+        if not problems:
+            DiagnosticReporter(
+                project_name=project_name,
+                output_dir=project_root / "output",
+                load_existing=False,
+            ).clear_report()
+            log_success("Markdown validation passed (no issues found)", logger)
+            return True
+
+        reporter = DiagnosticReporter(
+            project_name=project_name,
+            output_dir=project_root / "output",
+            load_existing=False,
+        )
+        logger.info("  Found %d validation note(s):", len(problems))
+        for problem in problems:
+            reporter.record(problem)
+        reporter.save_report()
+
+        for problem in problems[:5]:
+            loc = f"[{problem.file_path}] " if problem.file_path else ""
+            logger.info("    - %s%s", loc, problem.message)
+        if len(problems) > 5:
+            logger.info("    ... and %d more", len(problems) - 5)
+        logger.info("  (Markdown validation notes are non-critical)")
+        return True
+    except ImportError as exc:
+        logger.warning("Could not import markdown validator: %s", exc)
+        return True
+    except (OSError, RuntimeError, ValueError, AttributeError) as exc:
+        logger.warning("Markdown validation error: %s", exc)
+        return True

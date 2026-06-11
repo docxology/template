@@ -6,8 +6,13 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 
 ## Files
 
-- `validator.py` - output structure validation (`validate_copied_outputs`, `validate_output_structure`, …)
-- `pipeline.py` - Stage 4 orchestration (`validate_pdfs`, `validate_manuscript_output_markdown`, `execute_validation_pipeline`)
+- `validator.py` - output structure validation (`validate_copied_outputs`, `validate_output_structure`, ...)
+- `pipeline.py` - Stage 4 orchestration facade (`validate_pdfs`, `validate_manuscript_output_markdown`, `execute_validation_pipeline`)
+- `pdf_checks.py` - PDF structure and transmission bookend checks
+- `markdown_checks.py` - manuscript markdown wrapper and diagnostic report handling
+- `design.py` - domain profile, experiment plan, and AutoResearch overlay validation
+- `artifacts.py` - artifact manifest JSON parsing and current-manifest selection
+- `prose_quality.py` - opt-in, report-only AI-writing prose quality gate
 - `no_mock_enforcer.py` - mock-usage checks (line-based scan; one-line `"""..."""` / `'''...'''` docstrings are skipped so policy docs can name forbidden APIs)
 
 ## Key APIs

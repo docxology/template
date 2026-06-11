@@ -125,6 +125,12 @@ def _add_simulation_checks(root: Path, checks: dict[str, bool]) -> dict[str, Any
             and all("horizon" in row and "goal_reached" in row for row in runs)
             and (comparison.get("summary") or {}).get("complete_grid") is True
             and (comparison.get("summary") or {}).get("all_efe_rows_explained") is True
+            # Re-derived from runs (PR#23 class): every run must carry EFE values
+            # or an explicit fallback reason — a forged summary flag cannot pass.
+            and all(
+                bool(row.get("expected_free_energy_values")) or bool(row.get("expected_free_energy_fallback_reasons"))
+                for row in runs
+            )
         )
     posterior_path = root / "output" / "data" / "pymdp_policy_posterior_grid.json"
     if posterior_path.exists():

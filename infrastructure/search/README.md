@@ -10,6 +10,7 @@ independent subpackage; the literature side is modelled after
 |---|---|
 | [`literature`](literature/) | Multi-source paper search across arXiv, Crossref, local JSON corpora, and Paperclip; deterministic caching; aggregator client; CLI. |
 | [`exa`](exa/) | General web search, content extraction, and grounded answers via the [Exa API](https://exa.ai). One subpackage per endpoint: [`search`](exa/search/), [`contents`](exa/contents/), [`answer`](exa/answer/), [`find_similar`](exa/find_similar/). Pure-stdlib transport, no SDK, no import-time network. |
+| [`deep_research`](deep_research/) | Provider-neutral deep research orchestration over OpenAI and Gemini with lazy SDK adapters, provider selection, and normalized job/result models. |
 
 ## Exa quick start
 
@@ -24,6 +25,28 @@ for r in client.search("Next.js route handler auth example", num_results=10).res
 See [`exa/README.md`](exa/README.md) for the full interface, structured-output,
 and CLI reference. Canonical API docs:
 <https://docs.exa.ai/reference/search-api-guide-for-coding-agents>.
+
+## Deep research quick start
+
+```python
+from infrastructure.search.deep_research import DeepResearchClient, DeepResearchRequest
+
+client = DeepResearchClient.from_env()
+handle = client.submit(DeepResearchRequest(query="Summarize the latest deep research tooling."))
+result = client.poll(handle)
+print(result.output_text)
+```
+
+OpenAI and Gemini credentials are optional; the dispatcher uses whichever
+provider keys are present and selects a provider based on request shape. The
+provider adapters stay lazy so `infrastructure.search` remains importable when
+the vendor SDKs are absent.
+
+For project-scale runs, `build_project_deep_research_request()` packages text
+artifacts from a project tree into the prompt, and
+`DeepResearchClient.submit_and_wait_many()` can send one request to both
+providers and return both reports. `submit_project_and_save_reports()` persists
+those reports under `output/reports/deep_research/`.
 
 ## Quick Start
 

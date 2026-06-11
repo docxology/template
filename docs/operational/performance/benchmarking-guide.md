@@ -219,7 +219,7 @@ When performance characteristics change:
 
 ## 12. Project-setup-hook + analysis-pipeline benchmarks
 
-**Location:** [`tests/infra_tests/bench/`](../../../tests/infra_tests/bench/)
+**Location:** [`tests/infra_tests/benchmark/`](../../../tests/infra_tests/benchmark/)
 **Marker:** `@pytest.mark.bench` — skipped by default; opt-in only.
 **Driver:** `pytest-benchmark` ≥ 5 (declared in `pyproject.toml#[dependency-groups].dev`).
 **Policy:** Zero-mocks. Real `tmp_path` filesystems, real subprocesses, real `pytest-benchmark` fixtures.
@@ -227,7 +227,7 @@ When performance characteristics change:
 ### Invocation
 
 ```bash
-uv run pytest tests/infra_tests/bench/ -m bench --benchmark-only \
+uv run pytest tests/infra_tests/benchmark/ -m bench --benchmark-only \
     --benchmark-min-rounds=3 --benchmark-json=bench-results.json --timeout=180
 ```
 

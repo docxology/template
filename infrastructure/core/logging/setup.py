@@ -25,6 +25,15 @@ def _is_test_environment() -> bool:
     return bool(os.getenv("PYTEST_CURRENT_TEST") or "pytest" in sys.modules)
 
 
+def _close_handlers(handlers: list[logging.Handler]) -> None:
+    """Close handlers before detaching them so repeated reconfiguration does not leak files."""
+    for handler in handlers:
+        try:
+            handler.close()
+        finally:
+            pass
+
+
 # Map environment LOG_LEVEL (0-3) to Python logging levels
 LOG_LEVEL_MAP = {
     "0": logging.DEBUG,  # Most verbose
@@ -47,6 +56,7 @@ def setup_logger(name: str, level: int | None = None, log_file: Path | str | Non
     if level is None:
         level = get_log_level_from_env()
 
+    _close_handlers(list(logger.handlers))
     logger.handlers.clear()
 
     is_test_env = _is_test_environment()
@@ -90,6 +100,7 @@ def setup_logger(name: str, level: int | None = None, log_file: Path | str | Non
             if isinstance(h, logging.StreamHandler) and (h.stream is sys.stdout or h.stream is sys.stderr)
         ]
         for h in root_handlers_to_remove:
+            h.close()
             root_logger.removeHandler(h)
         if root_logger.level == logging.NOTSET:
             root_logger.setLevel(logging.WARNING)

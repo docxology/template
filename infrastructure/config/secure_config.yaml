@@ -64,6 +64,25 @@ steganography:
   # pdf_password: ""  # Uncomment and set with encryption_enabled: true
   # hmac_secret: ""   # Optional HMAC key for fingerprint verification
 
+  # ── Optional Kmyth / TPM Sealing ─────────────────────────────────────
+  #
+  # Kmyth is bundled as a git submodule at infrastructure/steganography/kmyth
+  # and can also be discovered from PATH after a system install. It requires
+  # TPM 2.0 runtime support and is disabled by default because sealed .ski
+  # files are bound to the sealing TPM and selected PCR state.
+
+  kmyth_enabled: false          # Set true to write .ski sidecars through kmyth-seal
+  kmyth_required: false         # Set true to fail secure_run.sh if Kmyth is unavailable
+  # kmyth_binary_dir: ""        # Optional directory containing kmyth-seal/kmyth-unseal
+  # kmyth_source_dir: ""        # Optional override for the Kmyth source checkout
+  kmyth_pcrs: []                # Example: [0, 2, 7] or "0, 2, 7"
+  # kmyth_cipher: ""            # Optional kmyth-seal --cipher value
+  kmyth_seal_artifacts:
+    - hash_manifest             # Supported: hash_manifest, pdf
+  kmyth_output_suffix: ".ski"
+  kmyth_overwrite: true
+  kmyth_timeout_seconds: 120
+
   # ── Output ───────────────────────────────────────────────────────────
   #
   # Steganography PDFs are saved alongside the originals with this suffix.

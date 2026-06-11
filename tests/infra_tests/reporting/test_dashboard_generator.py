@@ -25,7 +25,7 @@ from infrastructure.reporting.executive_reporter import (
     OutputMetrics,
     PipelineMetrics,
     ProjectMetrics,
-    TestMetrics,
+    TestMetrics as MetricsModel,
     calculate_project_health_score,
 )
 
@@ -37,7 +37,7 @@ def sample_projects():
         name="project1",
         manuscript=ManuscriptMetrics(total_words=1000, sections=4, equations=10, figures=5, references=20),
         codebase=CodebaseMetrics(source_lines=500, methods=25, classes=5, scripts=3),
-        tests=TestMetrics(
+        tests=MetricsModel(
             total_tests=100,
             passed=100,
             failed=0,
@@ -67,7 +67,7 @@ def sample_projects():
         name="project2",
         manuscript=ManuscriptMetrics(total_words=800, sections=3, equations=8, figures=4, references=15),
         codebase=CodebaseMetrics(source_lines=400, methods=20, classes=4, scripts=2),
-        tests=TestMetrics(
+        tests=MetricsModel(
             total_tests=80,
             passed=75,
             failed=5,
@@ -255,7 +255,7 @@ class TestMatplotlibDashboard:
             name="single_project",
             manuscript=ManuscriptMetrics(total_words=1000),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(total_tests=50, passed=50, coverage_percent=95.0),
+            tests=MetricsModel(total_tests=50, passed=50, coverage_percent=95.0),
             outputs=OutputMetrics(pdf_files=3),
             pipeline=PipelineMetrics(total_duration=60.0),
         )
@@ -363,7 +363,7 @@ class TestEdgeCases:
             name="zero_project",
             manuscript=ManuscriptMetrics(total_words=0),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(total_tests=0, passed=0, coverage_percent=0.0),
+            tests=MetricsModel(total_tests=0, passed=0, coverage_percent=0.0),
             outputs=OutputMetrics(),
             pipeline=PipelineMetrics(total_duration=0.0),
         )
@@ -382,7 +382,7 @@ class TestEdgeCases:
             name="large_project",
             manuscript=ManuscriptMetrics(total_words=1000000),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(total_tests=100000, passed=100000, coverage_percent=100.0),
+            tests=MetricsModel(total_tests=100000, passed=100000, coverage_percent=100.0),
             outputs=OutputMetrics(pdf_files=1000),
             pipeline=PipelineMetrics(total_duration=10000.0),
         )

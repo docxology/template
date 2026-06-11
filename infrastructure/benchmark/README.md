@@ -41,4 +41,4 @@ uv run python -m infrastructure.benchmark.template_harness \
 ## See also
 
 - [`../validation/evidence_registry.py`](../validation/evidence_registry.py) — evidence grounding registry used by the harness.
-- [`../../tests/infra_tests/bench/test_template_benchmark_harness.py`](../../tests/infra_tests/bench/test_template_benchmark_harness.py) — test coverage.
+- [`../../tests/infra_tests/benchmark/test_template_benchmark_harness.py`](../../tests/infra_tests/benchmark/test_template_benchmark_harness.py) — test coverage.

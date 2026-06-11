@@ -14,6 +14,7 @@
 - **SHA-256/SHA-512 Hashing**: Cryptographic hash computation with JSON manifest sidecar output
 - **PDF Metadata Injection**: XMP packets and PDF Info dictionary injection with embedded manifest attachments
 - **AES-256 PDF Encryption**: Optional PDF password protection when `pdf_password` is configured
+- **Kmyth/TPM Sidecars**: Optional `.ski` sidecars for selected artifacts through the bundled Kmyth git submodule or a system install
 - **Fully Optional**: The module does nothing unless explicitly enabled through secure-run defaults, project config, or API configuration
 
 ---
@@ -119,6 +120,16 @@ steganography:
   overlay_text: "CONFIDENTIAL"
   overlay_opacity: 0.08
   overlay_mode: "text"   # 'text' | 'qr' | 'none'
+  kmyth_enabled: false
+  kmyth_required: false
+  kmyth_binary_dir: null
+  kmyth_source_dir: null
+  kmyth_pcrs: [0, 2, 7]
+  kmyth_cipher: null
+  kmyth_seal_artifacts: [hash_manifest]
+  kmyth_output_suffix: ".ski"
+  kmyth_overwrite: true
+  kmyth_timeout_seconds: 120
 ```
 
 ### Via `SteganographyConfig`
@@ -137,6 +148,16 @@ steganography:
 | `pdf_encryption_algorithm` | `str` | `"AES-256"` | PDF encryption algorithm passed to `pypdf` |
 | `output_suffix` | `str` | `"_steganography"` | Suffix appended to output filename |
 | `manifest_enabled` | `bool` | `True` | Write JSON hash manifest sidecar |
+| `kmyth_enabled` | `bool` | `False` | Seal selected artifacts through Kmyth/TPM |
+| `kmyth_required` | `bool` | `False` | Fail when Kmyth is unavailable or sealing fails |
+| `kmyth_binary_dir` | `str \| None` | `None` | Optional directory containing `kmyth-seal` and `kmyth-unseal` |
+| `kmyth_source_dir` | `str \| None` | `None` | Optional Kmyth checkout path override |
+| `kmyth_pcrs` | `list[int]` | `[]` | Optional TPM PCR indexes passed to `kmyth-seal` |
+| `kmyth_cipher` | `str \| None` | `None` | Optional cipher string passed to `kmyth-seal` |
+| `kmyth_seal_artifacts` | `list[str]` | `["hash_manifest"]` | Supported values: `hash_manifest`, `pdf` |
+| `kmyth_output_suffix` | `str` | `".ski"` | Suffix for sealed sidecars |
+| `kmyth_overwrite` | `bool` | `True` | Replace existing Kmyth sidecars |
+| `kmyth_timeout_seconds` | `int` | `120` | Timeout for each `kmyth-seal` invocation |
 
 ### Factory Methods
 
@@ -159,6 +180,17 @@ config = SteganographyConfig.from_dict(yaml_data["steganography"])
 
 # Steganography only (skip pipeline)
 ./secure_run.sh --steganography-only --project template_code_project
+
+# Validate optional Kmyth tooling without rendering or sealing PDFs
+./secure_run.sh --validate-kmyth --project template_code_project
+```
+
+Kmyth is a git submodule, not a Python package. Initialize and build it before
+turning on `kmyth_enabled`:
+
+```bash
+git submodule update --init --recursive infrastructure/steganography/kmyth
+make -C infrastructure/steganography/kmyth
 ```
 
 ---
@@ -173,6 +205,7 @@ The `SteganographyProcessor.process()` method runs techniques in order:
 4. **Inject** PDF metadata, XMP packet, and manifest attachment
 5. **Encrypt** with PDF password (if enabled)
 6. **Write** JSON hash manifest sidecar
+7. **Seal** configured artifacts with Kmyth/TPM (if enabled)
 
 Output is written as `<input_stem>_steganography.pdf` alongside the original.
 

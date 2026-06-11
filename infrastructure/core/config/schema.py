@@ -97,6 +97,16 @@ class SteganographyConfigYAML(TypedDict, total=False):
     overlay_opacity: float
     pdf_password: str
     pdf_encryption_algorithm: str
+    kmyth_enabled: bool
+    kmyth_required: bool
+    kmyth_binary_dir: str
+    kmyth_source_dir: str
+    kmyth_pcrs: list[int] | str
+    kmyth_cipher: str
+    kmyth_seal_artifacts: list[str] | str
+    kmyth_output_suffix: str
+    kmyth_overwrite: bool
+    kmyth_timeout_seconds: int
 
 
 class RenderFormatsConfig(TypedDict, total=False):

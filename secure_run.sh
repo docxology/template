@@ -16,6 +16,9 @@
 #        ./secure_run.sh --steganography-only [--project <name>]
 #        (omit --project to sweep every discovered project)
 #
+#   3) Kmyth preflight only — validate optional TPM sealing tools
+#        ./secure_run.sh --validate-kmyth [--project <name>]
+#
 # Run `./secure_run.sh --help` for full flag reference and examples.
 ################################################################################
 
@@ -51,6 +54,7 @@ secure_run.sh: no arguments given.
 Quick start:
   ./secure_run.sh --project <name>             # full pipeline + steganography
   ./secure_run.sh --steganography-only         # re-watermark every project
+  ./secure_run.sh --validate-kmyth             # validate optional Kmyth/TPM tooling
   ./secure_run.sh --help                       # all flags and examples
 EOF
     exit 2
@@ -84,5 +88,5 @@ uv sync --group steganography || {
 
 # Forward remaining args to the Python secure subcommand. argparse owns
 # --project, --steganography-only, --skip-infra, --core-only, --resume,
-# and --deterministic; this script no longer parses them.
+# --deterministic, and --validate-kmyth; this script no longer parses them.
 exec uv run python -m infrastructure.orchestration secure ${FORWARD_ARGS[@]+"${FORWARD_ARGS[@]}"}

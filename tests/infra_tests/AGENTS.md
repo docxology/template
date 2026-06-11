@@ -21,12 +21,14 @@ module test on each project render.
 ## Covered Areas
 
 - `autoresearch/`
-- `bench/`
+- `benchmark/`
+- `config/`
 - `core/`
 - `doctor/`
 - `documentation/`
 - `git_hook_smoke/`
 - `llm/`
+- `methods/`
 - `orchestration/`
 - `project/`
 - `prose/`

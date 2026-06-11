@@ -439,14 +439,22 @@ def validate_artifact_provenance(project_root: Path) -> list[str]:
     issues: list[str] = []
     if saved.get("schema") != "template_active_inference.artifact_provenance.v1":
         issues.append("artifact_provenance.json schema mismatch")
-    if saved.get("all_hashed") is not True:
-        issues.append("artifact_provenance.json does not record all_hashed=true")
-    if saved.get("all_seeded") is not True:
-        issues.append("artifact_provenance.json does not record all_seeded=true")
-    if saved.get("all_config_digests") is not True:
-        issues.append("artifact_provenance.json does not record all_config_digests=true")
-    if saved.get("all_source_commits") is not True:
-        issues.append("artifact_provenance.json does not record all_source_commits=true")
+    # Re-derive each aggregate from the saved per-record ground truth exactly as
+    # build_artifact_provenance computes it, so a record-only forgery (records
+    # contradict a True stored flag) cannot pass. (PR#23 hardening class)
+    saved_records = [r for r in (saved.get("artifacts") or {}).values() if isinstance(r, dict)]
+    live_records = [r for r in (live.get("artifacts") or {}).values() if isinstance(r, dict)]
+    saved_config_digest = live_records[0].get("config_digest") if live_records else None
+    derived = {
+        "all_hashed": bool(saved_records) and all(r.get("exists") and bool(r.get("sha256")) for r in saved_records),
+        "all_seeded": bool(saved_records) and all(isinstance(r.get("deterministic_seed"), int) for r in saved_records),
+        "all_config_digests": bool(saved_records)
+        and all(r.get("config_digest") == saved_config_digest for r in saved_records),
+        "all_source_commits": bool(saved_records) and all(bool(r.get("source_commit")) for r in saved_records),
+    }
+    for flag, recomputed in derived.items():
+        if saved.get(flag) is not True or saved.get(flag) != recomputed:
+            issues.append(f"artifact_provenance.json does not record {flag}=true")
     for rel, live_record in (live.get("artifacts") or {}).items():
         saved_record = (saved.get("artifacts") or {}).get(rel)
         if not isinstance(saved_record, dict):

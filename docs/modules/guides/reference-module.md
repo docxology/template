@@ -16,6 +16,17 @@
 
 This module is the **export side** of the literature workflow; the discovery side lives in [`search`](search-module.md).
 
+## Subpackages
+
+| Subpackage | Focus |
+| --- | --- |
+| `reference/citation/` | BibTeX parse / render / convert utilities (`BibEntry`, `BibDatabase`, `paper_to_bibentry`) |
+| `reference/verification/` | Deterministic reference-existence checks against live or cached sources |
+
+The citation layer is the canonical BibTeX writer/parser for the repo. The
+verification layer is the anti-hallucination gate that checks whether entries
+actually resolve before manuscripts ship.
+
 ---
 
 ## Public API

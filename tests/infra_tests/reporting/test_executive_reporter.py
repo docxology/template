@@ -14,7 +14,7 @@ from infrastructure.reporting.executive_reporter import (
     OutputMetrics,
     PipelineMetrics,
     ProjectMetrics,
-    TestMetrics,
+    TestMetrics as MetricsModel,
     collect_codebase_metrics,
     collect_manuscript_metrics,
     collect_output_metrics,
@@ -323,7 +323,7 @@ class TestAggregateMetrics:
             name="project1",
             manuscript=ManuscriptMetrics(total_words=1000, sections=4, equations=10, figures=5, references=20),
             codebase=CodebaseMetrics(source_lines=500, methods=25, classes=5, scripts=3),
-            tests=TestMetrics(
+            tests=MetricsModel(
                 total_tests=100,
                 passed=100,
                 failed=0,
@@ -353,7 +353,7 @@ class TestAggregateMetrics:
             name="project2",
             manuscript=ManuscriptMetrics(total_words=800, sections=3, equations=8, figures=4, references=15),
             codebase=CodebaseMetrics(source_lines=400, methods=20, classes=4, scripts=2),
-            tests=TestMetrics(
+            tests=MetricsModel(
                 total_tests=80,
                 passed=80,
                 failed=0,
@@ -406,7 +406,7 @@ class TestComparativeTables:
             name="project1",
             manuscript=ManuscriptMetrics(total_words=1000, sections=4),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(total_tests=100, passed=100, coverage_percent=95.0, execution_time=10.0),
+            tests=MetricsModel(total_tests=100, passed=100, coverage_percent=95.0, execution_time=10.0),
             outputs=OutputMetrics(pdf_files=5, pdf_size_mb=2.0, figures=5, slides=10),
             pipeline=PipelineMetrics(total_duration=120.0, bottleneck_stage="tests", bottleneck_percent=37.5),
         )
@@ -415,7 +415,7 @@ class TestComparativeTables:
             name="project2",
             manuscript=ManuscriptMetrics(total_words=800, sections=3),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(total_tests=80, passed=80, coverage_percent=92.0, execution_time=8.0),
+            tests=MetricsModel(total_tests=80, passed=80, coverage_percent=92.0, execution_time=8.0),
             outputs=OutputMetrics(pdf_files=4, pdf_size_mb=1.5, figures=4, slides=8),
             pipeline=PipelineMetrics(total_duration=100.0, bottleneck_stage="render", bottleneck_percent=40.0),
         )
@@ -443,7 +443,7 @@ class TestRecommendations:
             name="good_project",
             manuscript=ManuscriptMetrics(total_words=2000),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(total_tests=100, passed=100, failed=0, coverage_percent=95.0),
+            tests=MetricsModel(total_tests=100, passed=100, failed=0, coverage_percent=95.0),
             outputs=OutputMetrics(),
             pipeline=PipelineMetrics(bottleneck_percent=30.0),
         )
@@ -460,7 +460,7 @@ class TestRecommendations:
             name="low_coverage_project",
             manuscript=ManuscriptMetrics(total_words=2000),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(total_tests=100, passed=100, failed=0, coverage_percent=75.0),
+            tests=MetricsModel(total_tests=100, passed=100, failed=0, coverage_percent=75.0),
             outputs=OutputMetrics(),
             pipeline=PipelineMetrics(),
         )
@@ -476,7 +476,7 @@ class TestRecommendations:
             name="failed_tests_project",
             manuscript=ManuscriptMetrics(total_words=2000),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(total_tests=100, passed=90, failed=10, coverage_percent=95.0),
+            tests=MetricsModel(total_tests=100, passed=90, failed=10, coverage_percent=95.0),
             outputs=OutputMetrics(),
             pipeline=PipelineMetrics(),
         )

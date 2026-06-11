@@ -83,3 +83,34 @@ class TestSteganographyConfig:
 
         assert config.encryption_enabled is True
         assert config.pdf_encryption_algorithm == "AES-256"
+
+    def test_from_dict_kmyth_config(self):
+        from infrastructure.steganography.config import SteganographyConfig
+
+        config = SteganographyConfig.from_dict(
+            {
+                "kmyth_enabled": True,
+                "kmyth_required": True,
+                "kmyth_binary_dir": "/opt/kmyth/bin",
+                "kmyth_pcrs": "0, 2, 7",
+                "kmyth_cipher": "AES/GCM/NoPadding/256",
+                "kmyth_seal_artifacts": ["hash_manifest", "pdf"],
+            }
+        )
+
+        assert config.kmyth_enabled is True
+        assert config.kmyth_required is True
+        assert config.kmyth_binary_dir == "/opt/kmyth/bin"
+        assert config.kmyth_pcrs == [0, 2, 7]
+        assert config.kmyth_cipher == "AES/GCM/NoPadding/256"
+        assert config.kmyth_seal_artifacts == ["hash_manifest", "pdf"]
+
+    def test_from_dict_kmyth_rejects_unknown_artifact(self):
+        from infrastructure.steganography.config import SteganographyConfig
+
+        try:
+            SteganographyConfig.from_dict({"kmyth_seal_artifacts": ["not_real"]})
+        except ValueError as exc:
+            assert "Unsupported kmyth_seal_artifacts" in str(exc)
+        else:  # pragma: no cover - assertion clarity
+            raise AssertionError("Expected ValueError for unsupported Kmyth artifact")

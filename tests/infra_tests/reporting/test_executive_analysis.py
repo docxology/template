@@ -21,7 +21,7 @@ from infrastructure.reporting._executive_models import (
     OutputMetrics,
     PipelineMetrics,
     ProjectMetrics,
-    TestMetrics,
+    TestMetrics as MetricsModel,
 )
 
 
@@ -72,7 +72,7 @@ def _make_project(
             classes=classes,
             scripts=scripts,
         ),
-        tests=TestMetrics(
+        tests=MetricsModel(
             total_tests=total_tests,
             passed=passed,
             failed=failed,

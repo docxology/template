@@ -25,6 +25,7 @@ flowchart TB
     REP --> LOG[log_analysis.py]
     REP --> STAT[output_statistics.py · page_grid.py · page_rendering.py]
     REP --> DASH[interactive_dashboard.py]
+    REP --> V33[evidence_graph.py · release_readiness.py]
     REP --> PRIV[_dashboard_*.py · _executive_*.py · _csv_*.py]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -50,6 +51,19 @@ flowchart TB
 
 - **`pipeline_test_runner.py`** — project test gate invoked from Stage 3; wraps execution in `project_output_lock()` so concurrent pipeline runs on the same project do not race on `output/` (subprocess test stages inherit an env marker for re-entrant lock release).
 - **`suite_runner.py`** — shared pytest orchestration helpers used by infra and project gates.
+
+### v3.3 evidence and release surfaces
+
+| Module | Role |
+| --- | --- |
+| [`evidence_graph.py`](evidence_graph.py) | Queryable DAG + artifacts + claims graph from `pipeline.yaml`, optional `claims.json`, and `output/reports/evidence_registry.json` (EVIDENCE-GRAPH-1). CLI: `python -m infrastructure.reporting.evidence_graph build <project>`. Cross-link: [`../core/pipeline/incremental.py`](../core/pipeline/incremental.py) opt-in skip contract. |
+| [`release_readiness.py`](release_readiness.py) | Local release dashboard aggregating pipeline snapshot, coverage facts, docs-lint counts, and optional `evidence_graph.json` — no network, no wall clock. CLI: `python -m infrastructure.reporting.release_readiness`. |
+
+```bash
+uv run python -m infrastructure.reporting.evidence_graph build template_code_project --json /tmp/graph.json
+uv run python -m infrastructure.reporting.release_readiness --repo-root .
+uv run pytest tests/infra_tests/reporting/test_evidence_graph.py -q
+```
 
 ## Output Organization System
 

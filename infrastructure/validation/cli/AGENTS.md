@@ -27,9 +27,10 @@ module: `python -m infrastructure.validation.cli <subcommand> ...`.
 ### `prerender`
 
 Mirrors the gate that `PDFRenderer.render_combined` runs before Pandoc/xelatex
-(`infrastructure/rendering/_pdf_combined_renderer.py::prevalidate_source_markdown`).
-Useful as a fast pre-commit / interactive check that fires in milliseconds and
-fails the same way the renderer would, on the same source files.
+(`infrastructure/rendering/_pdf_combined_pandoc.py` via the
+`_pdf_combined_renderer` facade re-export). Useful as a fast pre-commit /
+interactive check that fires in milliseconds and fails the same way the renderer
+would, on the same source files.
 
 ```bash
 # Canonical public exemplar:

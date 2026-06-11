@@ -97,18 +97,21 @@ Tracked after the P0 composability pass (stage registry, unified markdown discov
 
 | Module | Lines (approx.) | Planned split / move |
 | --- | ---: | --- |
-| `search/literature/backends.py` | 748 | One module per backend (`arxiv_backend.py`, `crossref_backend.py`, …) |
-| `doctor/detectors.py` | 739 | Package `doctor/detectors/` with one file per detector + registry |
-| `reporting/_dashboard_charts.py` | 735 | Split by chart family (health / pipeline / outputs) |
-| `validation/content/markdown_validator.py` | 713 | Extract image/ref/math validators + `markdown_strip.py` + pitfalls/citations leaves (discovery in `content/discovery.py`) |
-| `rendering/_pdf_combined_renderer.py` | 861 | Split combined-PDF orchestration (line-count WARN) |
-| `rendering/_pdf_title_page.py` | 542 | Title-page split **done** (2026-06-02 Wave D); `_pdf_latex_helpers.py` now preamble/math only (~236 LOC) |
+| `autoresearch/validation.py` | 125 | **Done** (2026-06-08) — orchestrator; checks in `autoresearch/validation_checks.py` (~660 LOC) |
+| `validation/evidence_registry.py` | 733 | P1 watch: models + builder leaves; keep public API stable for v3.3 tests |
+| `validation/output/pipeline.py` | 525 | **Done** (2026-06-09) — facade; PDF, markdown, design, artifact-manifest, and prose-quality leaves under `validation/output/` |
+| `validation/integrity/link_extract.py` | 694 | P2: extract URL/normalize helpers to `_link_normalize.py` |
+| `rendering/pipeline.py` | 685 | P2: `rendering/_manuscript_source.py` + `rendering/_combined_exports.py` |
+| `validation/content/markdown_validator.py` | 607 | Extract image/ref/math validators + pitfalls/citations leaves (discovery in `content/discovery.py`) |
+| `search/literature/backends.py` | — | **Done** (2026-05-29 Wave 5) — package `search/literature/backends/` |
+| `doctor/detectors.py` | — | **Done** (2026-05-29 Wave 6) — package `doctor/detectors/` |
+| `reporting/_dashboard_charts.py` | 43 | **Done** (2026-05-29 Wave 7) — facade; chart families in `_dashboard_charts_*.py` |
+| `rendering/_pdf_combined_renderer.py` | 49 | **Done** (2026-06-02+) — facade re-exporting `_pdf_combined_*.py` leaves |
+| `rendering/_pdf_title_page.py` | 542 | Title-page split **done** (2026-06-02 Wave D); `_pdf_latex_helpers.py` preamble/math only (~236 LOC) |
 | `publishing/release_workflow.py` | 559 | Zenodo reserve/publish in `release_workflow_zenodo.py` (259 LOC); monitor before next publishing feature |
 | `core/pipeline/multi_project.py` | — | Move `format_multi_project_detailed_report()` to `reporting/` |
 | `validation` ↔ `rendering` | — | Shared pre-render leaf (`validation/content/prerender.py`) so rendering does not import the full markdown validator |
-| `validation/integrity/link_extract.py` | 655 | P2: move skip/policy frozensets into `link_policies.py` or data file |
 | `validation/integrity/checks.py` | 651 | P2: split manifest (`integrity/manifest.py`) vs completeness (`integrity/completeness.py`) |
-| `rendering/pipeline.py` | 610 | P2: `rendering/_manuscript_source.py` + `rendering/_combined_exports.py` |
 | `rendering/render_all_cli.py` | — | Remove `sys.path.insert`; use `--project` / discovery like other CLIs |
 | Package barrels | — | Lazy `__getattr__` on wide `__init__.py` hubs (`validation`, `reporting`, `publishing`, `doctor`) |
 

@@ -832,7 +832,7 @@ jobs:
       # fail the build. Results are uploaded as a CI artifact for trend analysis.
       - name: Run setup_hook + analysis_pipeline microbenches (informational)
         run: |
-          uv run pytest tests/infra_tests/bench/ -m bench --benchmark-only \
+          uv run pytest tests/infra_tests/benchmark/ -m bench --benchmark-only \
             --benchmark-min-rounds=3 --benchmark-json=bench-results.json \
             --timeout=180 || true
 

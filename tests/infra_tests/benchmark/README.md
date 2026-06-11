@@ -1,15 +1,15 @@
-# bench/ - Quick Reference
+# benchmark/ - Quick Reference
 
-Opt-in performance benchmarks for infrastructure paths that are too expensive
-for ordinary CI.
+Performance benchmarks for infrastructure paths that are too expensive for a
+benchmark-only run, but still part of the full infra suite.
 
 ## Run
 
 ```bash
-uv run pytest tests/infra_tests/bench/ -m bench --benchmark-only --timeout=180
+uv run pytest tests/infra_tests/benchmark/ -m bench --benchmark-only --timeout=180
 ```
 
-Default test runs skip this directory through the `bench` marker.
+Use `-m bench --benchmark-only` when you want to isolate the benchmark pass.
 
 ## Contents
 

@@ -1,6 +1,6 @@
 ---
 name: infrastructure-search
-description: Discovery utilities. Hosts two subpackages — `literature` for Paperclip-style multi-source academic search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI; and `exa` for Exa-backed general web search, content extraction, grounded answers, and find-similar via `ExaClient` (search/contents/answer/find_similar) and a CLI. Use when the user wants to find papers, build reading lists, populate references.bib from a query, replay a prior search reproducibly, or run general web search / content extraction / grounded answers. Designed to host additional discovery workflows without breaking the public API.
+description: Discovery utilities. Hosts three subpackages — `literature` for Paperclip-style multi-source academic search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI; `exa` for Exa-backed general web search, content extraction, grounded answers, and find-similar via `ExaClient` (search/contents/answer/find_similar) and a CLI; and `deep_research` for provider-neutral long-running deep research over OpenAI (`o3-deep-research`) and Gemini, packaging a project's manuscript/outputs into the prompt and saving full reports with citations (PAID — ≈$2/report OpenAI, ≈$25 Gemini; see its README cost model). Use when the user wants to find papers, build reading lists, populate references.bib from a query, replay a prior search reproducibly, run general web search / content extraction / grounded answers, or dispatch a manuscript for a deep-research review with new citations and fix suggestions. Designed to host additional discovery workflows without breaking the public API.
 ---
 
 # Search Module
@@ -138,6 +138,33 @@ uv run python -m infrastructure.search.exa contents "https://example.com/post" -
 uv run python -m infrastructure.search.exa answer "What is RAG?"
 uv run python -m infrastructure.search.exa find-similar "https://example.com/post"
 ```
+
+## `deep_research` — Manuscript-scale research reports (PAID)
+
+Provider-neutral dispatch to OpenAI `o3-deep-research` and Gemini deep
+research. Packages a project's `manuscript/` sources (plus rendered outputs
+when present) into the prompt; returns full reports with citations and saves
+them under `output/reports/deep_research/`. Live-verified end-to-end
+2026-06-10 on the Active Inference exemplar (report with 4 new DOI-backed
+citations + section-by-section fixes).
+
+**Costs real money** — measured: ≈ $2/report (OpenAI, `max_tool_calls=12`),
+≈ $25/report (Gemini, ~9.3M-token agentic loop). Budget a 9-exemplar loop at
+≈ $20 OpenAI-only. Full cost model, budget knobs, and the multi-project loop
+recipe: [`deep_research/README.md`](deep_research/README.md); operating rules:
+[`deep_research/AGENTS.md`](deep_research/AGENTS.md).
+
+```bash
+uv sync --group deep-research                                      # installs openai + google-genai
+uv run python -m infrastructure.search.deep_research providers     # free availability check
+uv run python -m infrastructure.search.deep_research run-project \
+    projects/templates/template_active_inference \
+    "Review this manuscript; suggest fixes and new citations." --providers openai
+```
+
+Gotchas: `background=True` jobs bill to completion even if never polled;
+Gemini jobs run 30–60+ min (poll budgets > 30 min); submits retry transient
+connection errors with an OpenAI `Idempotency-Key`.
 
 ## End-to-End: search → BibTeX → PDF
 

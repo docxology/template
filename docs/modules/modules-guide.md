@@ -4,7 +4,7 @@ Reference for Layer-1 infrastructure modules.
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
-**Counting:** overview rows below include importable Python packages under `infrastructure/` plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). Use [canonical_facts.md](../_generated/canonical_facts.md) for measured counts instead of copying literals.
+**Counting:** overview rows below include importable Python packages under `infrastructure/` plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). Use [canonical_facts.md](../_generated/canonical_facts.md) for measured counts instead of copying literals. Nested package docs live alongside their parents: `core/telemetry/`, `reference/citation/`, `reference/verification/`, `search/literature/`, and `search/exa/`.
 
 ---
 
@@ -12,7 +12,7 @@ Reference for Layer-1 infrastructure modules.
 
 | Module | Purpose | Key Features | Guide |
 |--------|---------|--------------|-------|
-| **Core** | Shared utilities | Logging, config, exceptions | [Details](guides/core-module.md) |
+| **Core** | Shared utilities | Logging, config, exceptions, telemetry | [Details](guides/core-module.md) |
 | **AutoResearch** | Deterministic research loops | Plan/evidence/readiness reports, stage contracts | [`infrastructure/autoresearch/AGENTS.md`](../../infrastructure/autoresearch/AGENTS.md) |
 | **SIA** | Self-improvement harness | Task layout, fixture replay, evaluation runner | [Details](guides/sia-module.md) |
 | **Benchmark** | Benchmarking helpers | Timing, resource summaries, report payloads | [`infrastructure/benchmark/AGENTS.md`](../../infrastructure/benchmark/AGENTS.md) |
@@ -25,8 +25,8 @@ Reference for Layer-1 infrastructure modules.
 | **Methods** | Methods orchestration | DAG contracts, methods prose, artifacts, evidence | [Details](guides/methods-module.md) |
 | **Rendering** | Multi-format output | PDF, HTML, slides, poster, DOCX, EPUB (opt-in) | [Details](guides/rendering-module.md) |
 | **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
-| **Search** | Literature backends | Discovery, caches, full-text helpers | [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md) |
-| **Reference** | Bibliographic utilities | BibTeX models, parser/writer | [`infrastructure/reference/AGENTS.md`](../../infrastructure/reference/AGENTS.md) |
+| **Search** | Literature backends | Discovery, caches, full-text helpers, Exa web API | [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md) |
+| **Reference** | Bibliographic utilities | BibTeX models, parser/writer, verification | [`infrastructure/reference/AGENTS.md`](../../infrastructure/reference/AGENTS.md) |
 | **Project** | Project discovery | Multi-project orchestration | [Details](guides/project-module.md) |
 | **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | [Details](guides/steganography-module.md) |
 | **Config** | Configuration schemas | Secure config, environment templates | [Details](guides/config-module.md) |

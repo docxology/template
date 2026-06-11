@@ -1030,6 +1030,14 @@ def validate_semantic_gluing(project_root: Path) -> list[str]:
         saved_issues.append(f"saved sheaf_gluing_certificate.json schema is not {SEMANTIC_SCHEMA}")
     if saved.get("ok") is not True:
         saved_issues.append("saved sheaf_gluing_certificate.json is not ok")
+    # Cross-check the saved aggregate against the saved per-obligation rows
+    # (PR#23 class): a forged ok=true over a failing proof obligation fails closed.
+    saved_obligations = saved.get("proof_obligations") or []
+    obligations_ok = bool(saved_obligations) and all(
+        row.get("class") and row.get("restriction") and row.get("ok") is True for row in saved_obligations
+    )
+    if saved.get("ok") is True and not obligations_ok:
+        saved_issues.append("saved sheaf_gluing_certificate.json ok disagrees with proof obligations")
     if saved.get("restrictions", {}).get("coverage_missing") != 0:
         saved_issues.append("saved sheaf_gluing_certificate.json records missing coverage")
     issues = semantic_gluing_issues(root)

@@ -17,7 +17,8 @@ DEFAULT_PROJECT_SCRIPT_THRESHOLDS = LineCountThresholds(warn_at=150, fail_at=250
 
 
 def count_lines(path: Path) -> int:
-    return sum(1 for _ in path.open("r", encoding="utf-8"))
+    with path.open("r", encoding="utf-8") as handle:
+        return sum(1 for _ in handle)
 
 
 def scan_line_counts(

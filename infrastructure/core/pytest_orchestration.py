@@ -40,7 +40,7 @@ PIPELINE_SMOKE_INFRA_TEST_PATHS = (
     Path("tests/infra_tests/core/test_pytest_orchestration.py"),
     Path("tests/infra_tests/project/test_domain_profile.py"),
     Path("tests/infra_tests/validation/test_evidence_registry.py"),
-    Path("tests/infra_tests/bench/test_template_benchmark_harness.py"),
+    Path("tests/infra_tests/benchmark/test_template_benchmark_harness.py"),
     Path("tests/infra_tests/test_documentation_index_invariants.py"),
 )
 
@@ -95,6 +95,14 @@ def resolve_infrastructure_test_paths(repo_root: Path, scope: InfrastructureTest
             "--ignore=" + str(repo_root / "tests" / "integration" / "test_module_interoperability.py"),
         ]
     if scope == "pipeline-smoke":
+        # Fail closed: a manifest entry pointing at a moved/renamed path must
+        # error here, not silently collect 0 tests and pass a vacuous gate.
+        missing = [str(path) for path in PIPELINE_SMOKE_INFRA_TEST_PATHS if not (repo_root / path).exists()]
+        if missing:
+            raise FileNotFoundError(
+                "pipeline-smoke manifest references missing test paths "
+                f"(update PIPELINE_SMOKE_INFRA_TEST_PATHS): {missing}"
+            )
         return [str(repo_root / relative_path) for relative_path in PIPELINE_SMOKE_INFRA_TEST_PATHS]
     raise ValueError(f"Unknown infrastructure test scope: {scope}")
 

@@ -44,4 +44,3 @@ def _figure_sources_mapped(root: Path, figure_sources: list[str]) -> bool:
         if not _source_path_exists(root, rel):
             return False
     return True
-
