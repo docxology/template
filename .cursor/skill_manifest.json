@@ -606,7 +606,7 @@
     },
     {
       "name": "infrastructure-scientific",
-      "description": "Skill for the scientific infrastructure module providing numerical stability checks, performance benchmarking, scientific documentation generation, implementation validation, and module/workflow templates. Use when benchmarking functions, checking numerical stability, validating scientific implementations, or creating scientific module scaffolds.",
+      "description": "Skill for the scientific infrastructure module providing numerical stability checks, performance benchmarking, and independent improvement confirmation. Use when benchmarking functions, checking numerical stability, or confirming a candidate beats a baseline beyond the noise band.",
       "path": "infrastructure/scientific/SKILL.md",
       "cursor_at": "infrastructure/scientific/SKILL.md"
     },
