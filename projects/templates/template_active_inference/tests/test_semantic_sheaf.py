@@ -53,6 +53,11 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
     assert cert["restrictions"]["statistical_visualization_figures_referenced"] is True
     assert cert["restrictions"]["statistical_visualization_reference_sections_sheaf_bound"] is True
     assert cert["restrictions"]["statistical_visualization_reference_sections_visualization_bound"] is True
+    assert set(cert["restriction_lanes"]) == set(cert["restrictions"])
+    assert cert["restriction_lanes"]["policy_posterior_normalized"] == "pymdp"
+    assert cert["restriction_lanes"]["model_checking_all_passed"] == "formal"
+    assert cert["restriction_lanes"]["visualization_quality_ok"] == "visualization"
+    assert cert["lane_summaries"]["pymdp"]["all_ok"] is True
     tracks_by_id = {track["id"]: track for track in cert["tracks"]}
     assert tracks_by_id["prose"]["paper_role"] == "Narrative framing and argument flow"
     assert (
@@ -83,6 +88,9 @@ def test_semantic_certificate_key_surface_is_stable(project_root: Path) -> None:
         "ok",
         "issues",
         "restriction_classes",
+        "restriction_lanes",
+        "lane_summaries",
+        "all_lane_summaries_ok",
         "proof_obligations",
         "all_proof_obligations_ok",
         "tracks",

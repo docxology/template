@@ -8,7 +8,7 @@ registries rather than in this file.
 
 ## Current verification evidence
 
-In this 2026-06-09 audit, `uv run pytest tests/ --cov=src --cov-fail-under=90` passed 371 tests with 90.83% coverage. Replace this paragraph only after rerunning that exact command and updating the result from the fresh output.
+Current full-suite evidence: `uv run pytest tests/ --cov=src --cov-fail-under=90` passed 383 tests with 91.22% coverage in the 2026-06-12 audit. The same run used `COVERAGE_FILE=/tmp/template_ai.coverage` and `--durations=20 -q`, finishing in 1385.87 seconds. Replace this paragraph only after rerunning the full-suite command and updating the result from the fresh output.
 
 ## Promotion rule
 
@@ -40,6 +40,18 @@ remain `tracks.yaml`, `manuscript/sheaf/tracks.yaml`,
 `manuscript/sheaf/manifest.yaml`, `figures.yaml`, generated reports, and the
 validator code.
 
+## Lane glossary
+
+| Lane | Source-of-truth files |
+| --- | --- |
+| Analytical | `src/analytical/`, `output/data/parameter_sweep.csv`, `output/data/analytical_observable_sweep.json`, `output/data/analytical_assumption_index.json`, `output/data/sensitivity_sweep.json`, `output/data/uncertainty_summary.json`, `output/data/toy_benchmark_matrix.json`, `output/data/state_space_catalog.json`, `output/data/causal_ablation_matrix.json` |
+| pymdp | `pymdp.yaml`, `src/simulation/`, `output/data/si_tmaze_summary.json`, `output/data/si_tmaze_trace.json`, `output/data/si_policy_comparison.json`, `output/data/pymdp_policy_posterior_grid.json`, `output/reports/pymdp_runtime_diagnostics.json` |
+| Formal | `lean/`, `gnn/`, `output/reports/model_checking_witnesses.json`, `output/data/theorem_traceability_matrix.json`, `output/data/proof_extraction_index.json`, `output/data/proof_dependency_graph.json` |
+| Semantic | `manuscript/sheaf/tracks.yaml`, `manuscript/sheaf/manifest.yaml`, `output/data/sheaf_gluing_certificate.json`, `output/data/validation_dependency_graph.json`, `output/data/cross_track_symbol_table.json`, `output/data/manuscript_token_provenance.json`, `output/data/evidence_field_index.json` |
+| Visualization | `figures.yaml`, `src/visualizations/`, `output/data/figure_source_map.json`, `output/reports/visualization_quality_audit.json`, `output/reports/figure_hash_manifest.json`, `output/data/statistical_visualization_bridge.json` |
+| Release | `output/reports/release_bundle_manifest.json`, `output/reports/artifact_diffoscope.json`, `output/reports/artifact_license_audit.json`, `output/reports/release_notes_evidence.json`, `output/reports/release_attestation.json` |
+| Scope | `output/reports/scope_boundary_audit.json`, `output/reports/blocked_scope_manifest.json`, `output/data/track_improvement_scope.json`, `output/data/scholarship_source_matrix.json`, `data/claim_ledger.yaml` |
+
 ## Minor upcoming
 
 These rows are scoped maintenance work. They do not introduce live scientific
@@ -47,10 +59,6 @@ claims, new track IDs, artifact filenames, schema migrations, or figure IDs.
 
 | ID | Size | Track lane | Future improvement | Proving artifact | Gate/predicate | Negative control |
 | --- | --- | --- | --- | --- | --- | --- |
-| `MINOR-DOC-SCOPE-1` | Minor | Scope/documentation | Add a compact TODO lane glossary mapping analytical, pymdp, formal, semantic, visualization, release, and scope lanes to their source-of-truth files | `TODO.md` | documentation contract accepts the glossary without stale command or evidence wording | Glossary link or command typo fails documentation contract |
-| `MINOR-TEST-SPEED-1` | Minor | Test ergonomics | Document the slowest full-suite tests and identify which are required end-to-end gates versus fixture-level characterization candidates | `TODO.md` or `tests/README.md` | documentation contract plus focused test docs review | Slow-test note cites a stale count or omits the required full-suite gate |
-| `MINOR-METHOD-DOCS-1` | Minor | Methods/documentation | Reduce method-inventory fallback debt for public helpers touched by recent verifier/cache work | `docs/reference/method-inventory.md` | `uv run python scripts/generate_method_inventory.py --check` | Public helper touched by verifier/cache work still has fallback inventory text |
-| `MINOR-VIZ-AUDIT-1` | Minor | Visualization | Add a reader-facing note that visualization quality is checked through render metrics, source maps, hashes, and section bindings | `README.md`, `docs/README.md`, or visualization docs | documentation contract and visualization audit wording agree | Visualization note omits source-map, hash, render metric, or section-binding checks |
 
 ## Medium upcoming
 
@@ -63,9 +71,7 @@ green gates before it can be moved out of this file.
 | `MEDIUM-TRACK-MATRIX-1` | Medium | Cross-track/release | Add a track-lane matrix mapping every `tracks.yaml` pipeline track to its sheaf fragment, producer, primary artifact, validation gate, and manuscript consumer | `output/data/track_lane_matrix.json` | `set_equals` between matrix track IDs, `tracks.yaml`, and sheaf manifest consumers | Pipeline track lacks a sheaf fragment, producer, artifact, gate, or consumer and still passes |
 | `MEDIUM-TEST-PERF-1` | Medium | Test ergonomics | Split slow manuscript-gate mutation tests into cheaper source-only negative controls plus one end-to-end refresh characterization | parametrized source-contract tests and one end-to-end artifact-refresh test | focused gate tests preserve failures while `--durations=20` shows reduced redundant regeneration | Source-only mutation passes without exercising the matching contract |
 | `MEDIUM-PROVENANCE-UNIFY-1` | Medium | Provenance/validation spine | Remove remaining producer-order sensitivity between validation-spine and sheaf-track artifacts by making shared artifact contracts explicit | `output/data/artifact_contract_index.json` | validation-spine and sheaf validators agree on shared keys, hashes, and freshness fields | Reordered producer leaves stale shared provenance accepted |
-| `MEDIUM-SEMANTIC-LANES-1` | Medium | Semantic/sheaf | Group semantic certificate restrictions by track lane and report per-lane summary booleans without changing current restriction keys | `output/data/sheaf_gluing_certificate.json` | `all` lane summaries rederive from existing restriction rows | Mutated restriction row leaves its lane summary true |
-| `MEDIUM-VIZ-LANES-1` | Medium | Visualization/claims | Add per-figure lane coverage so figures state whether they support analytical, pymdp, formal, semantic, or release claims | `output/data/figure_source_map.json` or `output/reports/visualization_quality_audit.json` | `set_equals` figure IDs against `figures.yaml` and `all` figures have at least one valid lane | Figure has source data but no lane coverage and still passes |
-| `MEDIUM-SCOPE-AUDIT-1` | Medium | Scope/claim ledger | Extend scope-boundary rows to distinguish current toy claims, future-only claims, blocked empirical claims, and blocked network/private/LLM claims | `output/reports/scope_boundary_audit.json` | `all` current-result rows remain toy-only and blocked contexts stay non-live | Empirical or LLM evidence wording appears outside blocked/future context and passes |
+| `MEDIUM-SCOPE-MANIFEST-CONCORDANCE-1` | Medium | Scope/claim ledger | Derive scope-boundary blocked-context rows from `output/reports/blocked_scope_manifest.json` instead of duplicating the required blocked categories in the scope-audit builder | `output/reports/scope_boundary_audit.json` and `output/reports/blocked_scope_manifest.json` | blocked manifest IDs and scope-audit blocked categories agree exactly | Removing `llm_generated_evidence` from the blocked manifest leaves scope audit green |
 
 ## Blocked major scope
 
@@ -80,5 +86,5 @@ unblock artifact exists.
 | Empirical adapter | Current artifacts are deterministic toy models, not biological or real-world data | `output/data/empirical_adapter_manifest.json` | scope-boundary and claim-ledger gates | Empirical result prose without manifest fails |
 | Private or restricted data | This exemplar is public and self-contained | `output/reports/data_provenance_audit.json` | provenance and license validator | Private path or unlicensed source passes |
 | Network-dependent research | Pipeline must remain locally reproducible | `output/reports/offline_reproducibility_audit.json` | offline pipeline gate | Network call required for core pipeline |
-| LLM-generated evidence | Claims must come from generated local artifacts, not opaque model output | `output/reports/evidence_source_audit.json` | evidence registry and claim-ledger gates | LLM-only claim passes evidence audit |
+| LLM-generated evidence | Claims must come from generated local artifacts, not opaque model output | `output/data/llm_evidence_audit.json` | evidence registry and claim-ledger gates | LLM-only claim passes evidence audit |
 | Non-toy model claims | Current validation covers finite pedagogical examples only | `output/reports/model_scope_audit.json` | scope-boundary validator | Non-toy generalization appears in results |

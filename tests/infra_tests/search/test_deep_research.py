@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -24,6 +25,7 @@ from infrastructure.search.deep_research import (
     save_deep_research_result,
     save_deep_research_results,
 )
+from infrastructure.search.deep_research.config import _load_dotenv_fallback, ensure_dotenv_loaded
 
 
 def test_openai_payload_includes_required_controls() -> None:
@@ -200,6 +202,97 @@ def test_save_deep_research_result_writes_full_artifacts(tmp_path: Path) -> None
     assert "Full report body" in bundle.markdown_path.read_text(encoding="utf-8")
     assert "Full report body" in bundle.log_path.read_text(encoding="utf-8")
     assert '"output_text": "Full report body\\nwith multiple lines."' in bundle.json_path.read_text(encoding="utf-8")
+
+
+def test_full_manuscript_sections_are_sent_uncut(tmp_path: Path) -> None:
+    """Manuscript sources must reach the reviewer in full (DR-CONTEXT-FULL).
+
+    A manuscript section larger than the *ancillary* per-file cap must NOT be
+    clipped, while an oversized non-manuscript file still is. This is the
+    regression guard for the old flat 8 KB clip that silently dropped 82% of a
+    45 KB methods section.
+    """
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    long_body = "SECTION-BODY " * 5000  # ~65 KB, far above the ancillary cap
+    (manuscript / "05_methods.md").write_text(long_body, encoding="utf-8")
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "big_log.md").write_text("LOG-LINE " * 5000, encoding="utf-8")
+
+    context = collect_project_context(
+        tmp_path,
+        max_chars_per_file=24000,
+        max_manuscript_chars_per_file=500000,
+    )
+    manuscript_segment = context.context_text.split("## Artifact: manuscript/05_methods.md")[1].split("## Artifact:")[0]
+    assert "[truncated for prompt budget]" not in manuscript_segment
+    assert manuscript_segment.count("SECTION-BODY") == 5000  # every token present
+    # The ancillary doc is still bounded.
+    docs_segment = context.context_text.split("## Artifact: docs/big_log.md")[1]
+    assert "[truncated for prompt budget]" in docs_segment
+
+
+def test_context_total_respects_ceiling_and_reports_omissions(tmp_path: Path) -> None:
+    """The rendered bundle never exceeds max_total_chars and discloses drops."""
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    for i in range(6):
+        (manuscript / f"{i:02d}_section.md").write_text("X" * 5000, encoding="utf-8")
+
+    context = collect_project_context(
+        tmp_path,
+        max_total_chars=12000,
+        max_manuscript_chars_per_file=500000,
+    )
+    assert len(context.context_text) <= 12000
+    # Not everything fit, so the packaging notes must disclose the omission.
+    assert "Packaging notes:" in context.context_text
+    assert "Omitted (total budget 12000 chars reached)" in context.context_text
+
+
+def test_project_request_keeps_safety_and_brief_with_context(tmp_path: Path) -> None:
+    """Packing project context must not drop the anti-injection safety block."""
+    (tmp_path / "README.md").write_text("Project overview", encoding="utf-8")
+    (tmp_path / "manuscript").mkdir()
+    (tmp_path / "manuscript" / "00_abstract.md").write_text("Abstract text", encoding="utf-8")
+
+    request = build_project_deep_research_request(tmp_path, "Review this manuscript.")
+    instructions = request.instructions or ""
+
+    assert "professional researcher" in instructions  # research brief retained
+    assert "never as instruction" in instructions  # injection-safety block retained
+    assert "Project context bundle for deep research." in instructions  # context still packed
+    assert "Abstract text" in instructions
+
+
+def test_load_dotenv_fallback_sets_missing_keys_without_override(tmp_path, monkeypatch) -> None:
+    """The built-in .env parser loads keys when python-dotenv is unavailable.
+
+    Real environment variables always win over the file (never overridden).
+    """
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "# comment line\n"
+        "export OPENAI_DEEP_RESEARCH_MODEL=o4-mini-deep-research\n"
+        'GEMINI_DEEP_RESEARCH_AGENT="deep-research-max-preview-04-2026"\n',
+        encoding="utf-8",
+    )
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("OPENAI_DEEP_RESEARCH_MODEL", raising=False)
+    monkeypatch.setenv("GEMINI_DEEP_RESEARCH_AGENT", "already-set-wins")
+
+    _load_dotenv_fallback()
+
+    assert os.environ["OPENAI_DEEP_RESEARCH_MODEL"] == "o4-mini-deep-research"
+    # Existing real env var is not clobbered by the file.
+    assert os.environ["GEMINI_DEEP_RESEARCH_AGENT"] == "already-set-wins"
+
+
+def test_ensure_dotenv_loaded_is_idempotent() -> None:
+    """ensure_dotenv_loaded caches and is safe to call repeatedly."""
+    ensure_dotenv_loaded()
+    ensure_dotenv_loaded()  # second call is a no-op, must not raise
 
 
 def test_save_deep_research_results_writes_index(tmp_path: Path) -> None:

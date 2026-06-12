@@ -27,3 +27,24 @@ computations and fixed seeds rather than mocks.
   `def` and `class` under `src/` and `scripts/`.
 - `test_support_modules.py`, `gates/` — `validate_manuscript` /
   `validate_outputs` / `build_lean` gates and negatives.
+
+## Slow full-suite gates
+
+The 2026-06-12 full run
+`COVERAGE_FILE=/tmp/template_ai.coverage uv run pytest tests/ --cov=src --cov-fail-under=90 --durations=20 -q`
+passed 383 tests above the 90% gate (measured coverage tracked in
+[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md)) in
+1385.87 seconds. The slowest tests are
+expected to be the end-to-end generated-artifact gates: manuscript mutation
+negatives in `tests/gates/test_manuscript_gates.py`, claim-ledger negatives in
+`tests/gates/test_claim_ledger.py`, roadmap artifact promotion in
+`tests/test_roadmap_promotion.py`, validate-outputs orchestration in
+`tests/test_simulation_invariants.py`, canonical sheaf row-only forgeries in
+`tests/test_track_consolidation.py`, and the semantic fixed-point variable test
+in `tests/test_manuscript_variables.py`.
+
+Fixture-level performance candidates are the repeated marker variants in
+`test_validate_manuscript_methods_sheaf_layers_negative_markers` and redundant
+source mutations that currently force the same manuscript rebuild path. Keep at
+least one end-to-end refresh characterization for each gate family; split only
+the duplicate marker or row-only cases into cheaper source-contract checks.

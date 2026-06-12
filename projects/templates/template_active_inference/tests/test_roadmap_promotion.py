@@ -60,6 +60,14 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
     assert _relative_posix(audit["artifact_diffoscope"], project_root) == ("output/reports/artifact_diffoscope.json")
     assert _relative_posix(audit["artifact_license"], project_root) == ("output/reports/artifact_license_audit.json")
     assert _relative_posix(audit["release_notes"], project_root) == "output/reports/release_notes_evidence.json"
+    figure_source_map = _load(audit["figure_source_map"])
+    scope_boundary = _load(audit["scope_boundary"])
+    assert figure_source_map["all_figures_have_claim_lanes"] is True
+    assert figure_source_map["all_claim_lanes_valid"] is True
+    assert all(row["claim_lanes"] for row in figure_source_map["rows"])
+    assert scope_boundary["all_required_scope_categories_present"] is True
+    assert scope_boundary["all_future_rows_non_live"] is True
+    assert scope_boundary["all_blocked_contexts_non_live"] is True
     assert _relative_posix(sheaf["semantic"], project_root) == "output/data/sheaf_gluing_certificate.json"
     assert _relative_posix(sheaf["dependency"], project_root) == "output/data/validation_dependency_graph.json"
     assert _relative_posix(sheaf["evidence_fields"], project_root) == "output/data/evidence_field_index.json"
@@ -283,6 +291,7 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         "claim_audit": project_root / "output" / "reports" / "claim_evidence_audit.json",
         "gate_index": project_root / "output" / "data" / "validation_gate_index.json",
         "scope": project_root / "output" / "reports" / "scope_boundary_audit.json",
+        "visualization_quality": project_root / "output" / "reports" / "visualization_quality_audit.json",
         "adversarial": project_root / "output" / "reports" / "adversarial_audit.json",
         "staleness": project_root / "output" / "reports" / "manuscript_staleness_report.json",
         "diffoscope": project_root / "output" / "reports" / "artifact_diffoscope.json",
@@ -300,6 +309,12 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         data["rows"][0]["mapped"] = False
         data["all_figures_mapped"] = False
 
+    def break_figure_claim_lanes(data: dict) -> None:
+        data["rows"][0]["claim_lanes"] = []
+        data["rows"][0]["claim_lane_count"] = 0
+        data["all_figures_have_claim_lanes"] = True
+        data["all_claim_lanes_valid"] = True
+
     def break_claim_audit(data: dict) -> None:
         data["rows"][0]["substantive"] = True
         data["rows"][0]["predicate"] = ""
@@ -310,8 +325,17 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         data["all_indexed"] = True
 
     def break_scope(data: dict) -> None:
-        data["all_current_claims_toy"] = False
-        data["scope_boundary_status"] = "scope_leak"
+        data["rows"][0]["current_result_toy_only"] = False
+        data["rows"][0]["scope_category"] = "blocked_llm"
+        data["all_current_claims_toy"] = True
+        data["scope_boundary_status"] = "toy_only_pass"
+
+    def break_visualization_claim_lanes(data: dict) -> None:
+        data["rows"][0]["claim_lanes"] = []
+        data["rows"][0]["claim_lane_count"] = 0
+        data["rows"][0]["claim_lanes_valid"] = True
+        data["all_figures_have_claim_lanes"] = True
+        data["all_claim_lanes_valid"] = True
 
     def break_adversarial(data: dict) -> None:
         data["rows"][0]["expected_failure"] = False
@@ -336,9 +360,11 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         ("stale", break_stale, "hash mismatch"),
         ("tokens", break_tokens, "unmapped tokens"),
         ("figure_source", break_figure_source, "unmapped figures"),
+        ("figure_source", break_figure_claim_lanes, "incomplete claim lanes"),
         ("claim_audit", break_claim_audit, "untyped claims"),
         ("gate_index", break_gate_index, "unindexed gates"),
         ("scope", break_scope, "scope leakage"),
+        ("visualization_quality", break_visualization_claim_lanes, "incomplete claim-lane coverage"),
         ("adversarial", break_adversarial, "expected failures"),
         ("staleness", break_staleness, "manuscript_staleness_report.json is stale"),
         ("diffoscope", break_diffoscope, "artifact_diffoscope.json records artifact drift"),
@@ -462,6 +488,22 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
         data["rows"][0]["mapped"] = True
         data["all_figures_mapped"] = True
 
+    def break_figure_claim_lanes(data: dict) -> None:
+        # A figure with source data but no claim lane is invisible to the claim
+        # surface even if the aggregate flags remain forged true.
+        data["rows"][0]["claim_lanes"] = []
+        data["rows"][0]["claim_lane_count"] = 0
+        data["all_figures_have_claim_lanes"] = True
+        data["all_claim_lanes_valid"] = True
+
+    def break_scope_category(data: dict) -> None:
+        # Keep the summary green while making a blocked context look live.
+        row = next(row for row in data["rows"] if row.get("scope_category") == "blocked_llm")
+        row["blocked_context"] = False
+        row["non_live_context"] = False
+        data["all_blocked_contexts_non_live"] = True
+        data["scope_boundary_status"] = "toy_only_pass"
+
     cases = [
         (
             project_root / "output" / "reports" / "producer_completeness.json",
@@ -492,6 +534,18 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
             break_figure_source_map,
             validate_integration_audit_artifacts,
             "figure_source_map.json has unmapped figures",
+        ),
+        (
+            project_root / "output" / "data" / "figure_source_map.json",
+            break_figure_claim_lanes,
+            validate_integration_audit_artifacts,
+            "figure_source_map.json has incomplete claim lanes",
+        ),
+        (
+            project_root / "output" / "reports" / "scope_boundary_audit.json",
+            break_scope_category,
+            validate_integration_audit_artifacts,
+            "scope_boundary_audit.json records empirical scope leakage",
         ),
     ]
     for path, mutate, validator, expected_issue in cases:

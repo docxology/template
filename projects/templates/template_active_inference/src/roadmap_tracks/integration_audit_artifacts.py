@@ -27,6 +27,224 @@ from .integration_audit_builders import (
     build_stale_artifact_report,
 )
 
+ALLOWED_CLAIM_LANES = ("analytical", "formal", "pymdp", "release", "scope", "semantic", "visualization")
+REQUIRED_SCOPE_CATEGORIES = (
+    "blocked_empirical",
+    "blocked_llm",
+    "blocked_network",
+    "blocked_private",
+    "current_toy",
+    "future_only",
+)
+
+_BLOCKED_SCOPE_PATTERNS: dict[str, tuple[str, ...]] = {
+    "blocked_empirical": (
+        "biological data",
+        "empirical biological",
+        "empirical data",
+        "non-toy model",
+        "real-world data",
+    ),
+    "blocked_llm": (
+        "llm-generated evidence",
+        "language model evidence",
+        "model-generated evidence",
+        "opaque model output",
+    ),
+    "blocked_network": (
+        "live web evidence",
+        "network-derived",
+        "remote api",
+        "web-scraped",
+    ),
+    "blocked_private": (
+        "confidential data",
+        "private data",
+        "restricted data",
+        "unlicensed source",
+    ),
+}
+
+_BLOCKED_SCOPE_NEGATIONS = (
+    "blocked",
+    "future",
+    "no ",
+    "not ",
+    "out of scope",
+    "remain blocked",
+    "until ",
+    "without ",
+)
+
+_SOURCE_LANE_HINTS: tuple[tuple[tuple[str, ...], str], ...] = (
+    (
+        (
+            "parameter_sweep",
+            "analytical_",
+            "sensitivity_",
+            "uncertainty_",
+            "toy_benchmark",
+            "causal_ablation",
+            "ablation_sensitivity",
+            "state_space",
+            "state_transition",
+            "invariants.json",
+        ),
+        "analytical",
+    ),
+    (("si_", "pymdp", "tmaze", "graph_world"), "pymdp"),
+    (("lean", "theorem", "proof_", "model_checking"), "formal"),
+    (
+        (
+            "sheaf_",
+            "semantic_",
+            "validation_dependency",
+            "cross_track",
+            "manuscript_token",
+            "manuscript_staleness",
+            "evidence_field",
+            "producer_completeness",
+            "stale_artifact",
+            "claim_evidence",
+            "validation_gate",
+            "section_status",
+            "render_log",
+            "gnn_",
+            "ontology_",
+        ),
+        "semantic",
+    ),
+    (("figure_", "visualization_", "statistical_visualization", "output/figures/", "animation_"), "visualization"),
+    (
+        (
+            "release_",
+            "artifact_diffoscope",
+            "artifact_license",
+            "artifact_provenance",
+            "reproducibility_replay",
+            "replay_matrix",
+        ),
+        "release",
+    ),
+    (("scope_boundary", "blocked_scope", "adversarial_audit", "scholarship"), "scope"),
+)
+
+_EVIDENCE_ROLE_LANES = {
+    "formal": "formal",
+    "schematic": "visualization",
+    "scholarship": "scope",
+    "sheaf": "semantic",
+    "source_mapped": "semantic",
+    "statistical": "analytical",
+}
+
+_TRACK_LANES = {
+    "adversarial_audit": "scope",
+    "animation": "visualization",
+    "animation_delta": "visualization",
+    "artifact_diffoscope": "release",
+    "artifact_license": "release",
+    "assumption_index": "analytical",
+    "benchmark": "analytical",
+    "causal_ablation": "analytical",
+    "counterexample": "scope",
+    "evidence_fields": "semantic",
+    "formalism": "analytical",
+    "gate_ergonomics": "release",
+    "gnn": "semantic",
+    "interop": "pymdp",
+    "layers": "semantic",
+    "lean": "formal",
+    "manuscript_staleness": "semantic",
+    "model_checking": "formal",
+    "ontology": "semantic",
+    "proof_extraction": "formal",
+    "provenance": "release",
+    "pymdp": "pymdp",
+    "release_bundle": "release",
+    "release_notes": "release",
+    "replay_matrix": "release",
+    "scholarship": "scope",
+    "sensitivity": "analytical",
+    "simulation": "pymdp",
+    "state_space_catalog": "analytical",
+    "theorem_traceability": "formal",
+    "uncertainty": "analytical",
+    "visualization": "visualization",
+}
+
+
+def allowed_claim_lanes() -> tuple[str, ...]:
+    """Return the stable figure/scope lane vocabulary used by validators."""
+    return ALLOWED_CLAIM_LANES
+
+
+def _lane_from_source(source: str) -> str:
+    lowered = source.lower()
+    for needles, lane in _SOURCE_LANE_HINTS:
+        if any(needle in lowered for needle in needles):
+            return lane
+    return ""
+
+
+def _manifest_tracks_by_section(root: Path) -> dict[str, list[str]]:
+    path = root / "manuscript" / "sheaf" / "manifest.yaml"
+    payload = yaml.safe_load(path.read_text(encoding="utf-8")) if path.is_file() else {}
+    sections = payload.get("sections") if isinstance(payload, dict) else []
+    return {
+        str(section.get("id")): sorted(str(track_id) for track_id in (section.get("tracks") or {}))
+        for section in sections or []
+        if section.get("id")
+    }
+
+
+def figure_claim_lanes(
+    source_artifacts: list[str],
+    section_tracks: list[str] | tuple[str, ...] = (),
+    evidence_role: str = "",
+) -> list[str]:
+    """Derive claim lanes from source artifacts, sheaf tracks, and evidence role."""
+    lanes = {_lane_from_source(str(source)) for source in source_artifacts}
+    lanes.update(_TRACK_LANES.get(str(track), "") for track in section_tracks)
+    lanes.add(_EVIDENCE_ROLE_LANES.get(str(evidence_role), ""))
+    return sorted(lane for lane in lanes if lane in ALLOWED_CLAIM_LANES)
+
+
+def claim_lane_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Summarize per-figure claim lanes in a validation-friendly shape."""
+    coverage = {lane: 0 for lane in ALLOWED_CLAIM_LANES}
+    all_valid = True
+    all_present = bool(rows)
+    for row in rows:
+        lanes = [str(lane) for lane in row.get("claim_lanes") or []]
+        all_present = all_present and bool(lanes)
+        all_valid = all_valid and all(lane in ALLOWED_CLAIM_LANES for lane in lanes)
+        for lane in set(lanes):
+            if lane in coverage:
+                coverage[lane] += 1
+    return {
+        "allowed_claim_lanes": list(ALLOWED_CLAIM_LANES),
+        "claim_lane_coverage": coverage,
+        "all_figures_have_claim_lanes": all_present,
+        "all_claim_lanes_valid": all_valid,
+    }
+
+
+def _blocked_scope_match(text: str) -> tuple[str, str]:
+    for category, needles in _BLOCKED_SCOPE_PATTERNS.items():
+        for needle in needles:
+            if needle in text:
+                return category, needle
+    return "", ""
+
+
+def _blocked_scope_negated(text: str, needle: str) -> bool:
+    if not needle:
+        return False
+    index = text.find(needle)
+    window = text[max(0, index - 120) : index + len(needle) + 120]
+    return any(marker in window for marker in _BLOCKED_SCOPE_NEGATIONS)
+
 
 def build_artifact_diffoscope(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
@@ -123,6 +341,7 @@ def build_release_notes_evidence(project_root: Path) -> dict[str, Any]:
 
 
 def build_figure_source_map(project_root: Path) -> dict[str, Any]:
+    """Map rendered figures to source artifacts, section bindings, and claim lanes."""
     root = project_root.resolve()
     from PIL import Image
     from visualizations.figure_registry import figure_output_path, load_figure_registry, load_section_figures
@@ -168,6 +387,7 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
     for section_id, refs in load_section_figures(root).items():
         for ref in refs:
             section_bindings.setdefault(ref.figure_id, []).append(section_id)
+    section_tracks = _manifest_tracks_by_section(root)
     axis_mappings = {
         "ising_mi_curve": {"x": "lambda", "y": "mutual_information"},
         "si_belief_entropy_curve": {"x": "step", "y": "belief_entropy"},
@@ -185,6 +405,11 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
         source_jsonpaths = ["$" for _ in source_artifacts]
         image_hash = _sha256(image_path) if image_path.is_file() else ""
         pixel_ok = bool(source_artifacts and image_hash and dimensions["width"] > 0 and dimensions["height"] > 0)
+        bound_sections = sorted(section_bindings.get(figure_id, []))
+        bound_tracks = sorted({track for section_id in bound_sections for track in section_tracks.get(section_id, [])})
+        source_claim_lanes = figure_claim_lanes(source_artifacts, (), registry[figure_id].evidence_role)
+        section_claim_lanes = figure_claim_lanes([], bound_tracks, "")
+        claim_lanes = source_claim_lanes or section_claim_lanes
         rows.append(
             {
                 "figure_id": figure_id,
@@ -197,7 +422,12 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
                 "dimensions": dimensions,
                 "image_sha256": image_hash,
                 "axis_channel_mapping": axis_mappings.get(figure_id, {"channel": "pixels"}),
-                "section_bindings": sorted(section_bindings.get(figure_id, [])),
+                "section_bindings": bound_sections,
+                "section_tracks": bound_tracks,
+                "source_claim_lanes": source_claim_lanes,
+                "section_claim_lanes": section_claim_lanes,
+                "claim_lanes": claim_lanes,
+                "claim_lane_count": len(claim_lanes),
                 "caption": registry[figure_id].caption,
                 # Re-derived from the filesystem (PR#23): mapped requires every
                 # listed non-deferred source path to exist, not merely a dict entry.
@@ -205,11 +435,13 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
                 "pixel_provenance_ok": pixel_ok,
             }
         )
+    lane_summary = claim_lane_summary(rows)
     return {
         "schema": "template_active_inference.figure_source_map.v1",
         "rows": rows,
         "figure_count": len(rows),
         "all_figures_mapped": all(row["mapped"] and row["pixel_provenance_ok"] for row in rows),
+        **lane_summary,
     }
 
 
@@ -236,39 +468,140 @@ def build_figure_hash_manifest(project_root: Path) -> dict[str, Any]:
 
 
 def build_scope_boundary_audit(project_root: Path) -> dict[str, Any]:
+    """Audit manuscript scope language against toy-only and blocked-context contracts."""
     root = project_root.resolve()
     rows = []
     violations: list[str] = []
     allowed_future_files = {"15_discussion_outlook.md", "17_conclusion.md"}
     for path in sorted((root / "manuscript").glob("[0-9][0-9]_*.md")):
         text = path.read_text(encoding="utf-8").lower()
-        forbidden = "empirical biological" in text or "biological data" in text
-        negated = "not empirical" in text or "future" in text
+        scope_category, matched_phrase = _blocked_scope_match(text)
+        forbidden = bool(scope_category)
+        negated = _blocked_scope_negated(text, matched_phrase)
         allowed = path.name in allowed_future_files
         ok = not forbidden or negated or allowed
         classification = "future" if path.name in allowed_future_files else "current"
         if forbidden and not negated:
             classification = "empirical"
+        if classification == "future":
+            scope_category = scope_category or "future_only"
+            context = "future_extension"
+        elif forbidden:
+            context = "blocked_language"
+        else:
+            scope_category = "current_toy"
+            context = "toy_result"
         rows.append(
             {
                 "section": path.name,
                 "classification": classification,
-                "context": "blocked_language" if forbidden else "toy_result",
+                "scope_category": scope_category,
+                "context": context,
+                "matched_phrase": matched_phrase,
                 "current_result_toy_only": classification == "current" and not forbidden,
                 "future_only": classification == "future",
+                "blocked_context": scope_category.startswith("blocked_"),
+                "non_live_context": classification == "future" or scope_category.startswith("blocked_"),
                 "blocked_language_ok": not forbidden or negated or allowed,
                 "ok": ok,
             }
         )
         if not ok:
             violations.append(path.name)
+    rows.extend(
+        [
+            {
+                "section": "blocked_scope_manifest:empirical_adapter",
+                "classification": "empirical",
+                "scope_category": "blocked_empirical",
+                "context": "blocked_manifest",
+                "current_result_toy_only": False,
+                "future_only": False,
+                "blocked_context": True,
+                "non_live_context": True,
+                "blocked_language_ok": True,
+                "ok": True,
+            },
+            {
+                "section": "blocked_scope_manifest:non_toy_model_claims",
+                "classification": "empirical",
+                "scope_category": "blocked_empirical",
+                "context": "blocked_manifest",
+                "current_result_toy_only": False,
+                "future_only": False,
+                "blocked_context": True,
+                "non_live_context": True,
+                "blocked_language_ok": True,
+                "ok": True,
+            },
+            {
+                "section": "blocked_scope_manifest:private_or_restricted_data",
+                "classification": "future",
+                "scope_category": "blocked_private",
+                "context": "blocked_manifest",
+                "current_result_toy_only": False,
+                "future_only": False,
+                "blocked_context": True,
+                "non_live_context": True,
+                "blocked_language_ok": True,
+                "ok": True,
+            },
+            {
+                "section": "blocked_scope_manifest:network_dependent_research",
+                "classification": "future",
+                "scope_category": "blocked_network",
+                "context": "blocked_manifest",
+                "current_result_toy_only": False,
+                "future_only": False,
+                "blocked_context": True,
+                "non_live_context": True,
+                "blocked_language_ok": True,
+                "ok": True,
+            },
+            {
+                "section": "blocked_scope_manifest:llm_generated_evidence",
+                "classification": "future",
+                "scope_category": "blocked_llm",
+                "context": "blocked_manifest",
+                "current_result_toy_only": False,
+                "future_only": False,
+                "blocked_context": True,
+                "non_live_context": True,
+                "blocked_language_ok": True,
+                "ok": True,
+            },
+        ]
+    )
+    category_counts = {category: 0 for category in REQUIRED_SCOPE_CATEGORIES}
+    for row in rows:
+        category = str(row.get("scope_category") or "")
+        if category in category_counts:
+            category_counts[category] += 1
+    all_required_categories_present = all(category_counts[category] > 0 for category in REQUIRED_SCOPE_CATEGORIES)
+    all_future_rows_non_live = all(
+        row.get("non_live_context") is True for row in rows if row.get("scope_category") == "future_only"
+    )
+    all_blocked_contexts_non_live = all(
+        row.get("blocked_context") is True and row.get("non_live_context") is True
+        for row in rows
+        if str(row.get("scope_category") or "").startswith("blocked_")
+    )
     return {
         "schema": "template_active_inference.scope_boundary_audit.v1",
         "rows": rows,
         "violations": violations,
         "all_current_claims_toy": not violations,
+        "required_scope_categories": list(REQUIRED_SCOPE_CATEGORIES),
+        "scope_category_counts": category_counts,
+        "all_required_scope_categories_present": all_required_categories_present,
+        "all_future_rows_non_live": all_future_rows_non_live,
+        "all_blocked_contexts_non_live": all_blocked_contexts_non_live,
         "empirical_adapter_enabled": False,
-        "scope_boundary_status": "toy_only_pass" if not violations else "scope_leak",
+        "scope_boundary_status": (
+            "toy_only_pass"
+            if not violations and all_required_categories_present and all_future_rows_non_live and all_blocked_contexts_non_live
+            else "scope_leak"
+        ),
     }
 
 

@@ -59,7 +59,18 @@ def _scan_hardcoded_counts_in_text(
 
 def check_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
     """Catch hardcoded test counts / coverage percentages in long-lived docs."""
-    skip_dir_names = {"_generated", "archived", "node_modules", ".venv", "__pycache__"}
+    # `.claude` and `.git` are gitignored agent/VCS dirs that can hold nested
+    # worktree checkouts of this very repo; scanning them double-counts repo docs
+    # and surfaces drift for files that are not part of the tracked tree.
+    skip_dir_names = {
+        "_generated",
+        "archived",
+        "node_modules",
+        ".venv",
+        "__pycache__",
+        ".claude",
+        ".git",
+    }
     scanned: set[Path] = set()
 
     docs_dir = repo_root / "docs"

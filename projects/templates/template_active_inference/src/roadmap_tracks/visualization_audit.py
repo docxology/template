@@ -9,6 +9,8 @@ from typing import Any
 
 import yaml
 
+from .integration_audit_artifacts import ALLOWED_CLAIM_LANES
+
 VISUALIZATION_AUDIT_SCHEMA = "template_active_inference.visualization_quality_audit.v1"
 STATISTICAL_VISUALIZATION_BRIDGE_SCHEMA = "template_active_inference.statistical_visualization_bridge.v1"
 MIN_RENDER_WIDTH = 400
@@ -167,6 +169,7 @@ def _figure_evidence_rows(root: Path) -> list[dict[str, Any]]:
         source_row = sources_by_id.get(figure_id, {})
         hash_row = hashes_by_path.get(rel_path, {})
         sources = source_row.get("source_artifacts") or source_row.get("sources") or []
+        claim_lanes = [str(lane) for lane in source_row.get("claim_lanes") or []]
         statistical_sources, statistical_sources_present = _statistical_sources(
             root, [str(source) for source in sources]
         )
@@ -199,6 +202,9 @@ def _figure_evidence_rows(root: Path) -> list[dict[str, Any]]:
             "statistical_source_count": len(statistical_sources),
             "statistical_sources_present": statistical_sources_present,
             "statistically_backed": bool(statistical_sources) and statistical_sources_present,
+            "claim_lanes": claim_lanes,
+            "claim_lane_count": len(claim_lanes),
+            "claim_lanes_valid": bool(claim_lanes) and set(claim_lanes).issubset(ALLOWED_CLAIM_LANES),
             "section_bindings": section_bindings,
             "section_bound": section_bound,
             "visual_role": spec.visual_role,
@@ -225,6 +231,7 @@ def _figure_evidence_rows(root: Path) -> list[dict[str, Any]]:
             and row["evidence_role_ok"]
             and row["paper_claim_ok"]
             and row["section_bound"]
+            and row["claim_lanes_valid"]
         )
         rows.append(row)
     return rows
@@ -247,6 +254,10 @@ def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
         "statistically_backed_count": sum(1 for row in rows if row["statistically_backed"]),
         "statistical_source_count": sum(int(row["statistical_source_count"]) for row in rows),
         "statistical_figure_ids": [row["figure_id"] for row in rows if row["statistically_backed"]],
+        "claim_lane_coverage": {
+            lane: sum(1 for row in rows if lane in set(row.get("claim_lanes") or []))
+            for lane in ALLOWED_CLAIM_LANES
+        },
         "all_sources_mapped": bool(rows) and all(row["source_mapped"] for row in rows),
         "all_sources_backed": bool(rows) and all(row["source_backed"] for row in rows),
         "all_rendered": bool(rows) and all(row["rendered"] for row in rows),
@@ -256,6 +267,8 @@ def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
         "all_evidence_roles_present": bool(rows) and all(row["evidence_role_ok"] for row in rows),
         "all_paper_claims_present": bool(rows) and all(row["paper_claim_ok"] for row in rows),
         "all_figures_section_bound": bool(rows) and all(row["section_bound"] for row in rows),
+        "all_figures_have_claim_lanes": bool(rows) and all(row["claim_lanes"] for row in rows),
+        "all_claim_lanes_valid": bool(rows) and all(row["claim_lanes_valid"] for row in rows),
         "all_statistical_sources_present": any(row["statistically_backed"] for row in rows)
         and all(row["statistical_sources_present"] for row in rows if row["statistical_sources"]),
         "all_quality_ok": bool(rows) and all(row["quality_ok"] for row in rows),
@@ -434,6 +447,9 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
             "paper_claim_ok",
             "accessibility_text_ok",
             "quality_ok",
+            "claim_lanes",
+            "claim_lane_count",
+            "claim_lanes_valid",
         ):
             if expected_row and row.get(key) != expected_row.get(key):
                 issues.append(f"visualization_quality_audit.json stale figure evidence for {figure_id}")
@@ -493,6 +509,18 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
         or payload.get("all_figures_section_bound") != figures_section_bound
     ):
         issues.append("visualization_quality_audit.json has incomplete figure intent metadata")
+    claim_lanes_valid = bool(rows) and all(
+        row.get("claim_lanes_valid") is True
+        and bool(row.get("claim_lanes"))
+        and set(str(lane) for lane in row.get("claim_lanes") or []).issubset(ALLOWED_CLAIM_LANES)
+        for row in rows
+    )
+    if (
+        payload.get("all_figures_have_claim_lanes") is not True
+        or payload.get("all_claim_lanes_valid") is not True
+        or payload.get("all_claim_lanes_valid") != claim_lanes_valid
+    ):
+        issues.append("visualization_quality_audit.json has incomplete claim-lane coverage")
     statistically_backed = [row for row in rows if row.get("statistically_backed")]
     statistical_sources_present = bool(statistically_backed) and all(
         row.get("statistical_sources_present") for row in statistically_backed

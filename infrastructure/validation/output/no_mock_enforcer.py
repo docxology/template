@@ -135,6 +135,12 @@ def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:
         return violations
 
     for py_file in tests_dir.rglob("*.py"):
+        # ``fixtures/`` holds sample inputs and vendored real-codebase snapshots
+        # (e.g. ``tests/fixtures/real_codebases/<project>/``) — not the project's
+        # own test suite. Such third-party source legitimately contains tokens
+        # like ``.patch(`` (HTTP verbs), so it is out of scope for the policy.
+        if "fixtures" in py_file.relative_to(tests_dir).parts:
+            continue
         try:
             source = py_file.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as e:

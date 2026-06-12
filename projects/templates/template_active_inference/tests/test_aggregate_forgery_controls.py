@@ -139,6 +139,28 @@ def test_semantic_certificate_obligation_forgery_is_caught(project_root: Path) -
     )
 
 
+def test_semantic_certificate_lane_summary_forgery_is_caught(project_root: Path) -> None:
+    from manuscript.sheaf.semantic import validate_semantic_gluing
+
+    ensure_gate_artifacts(project_root)
+    path = project_root / "output" / "data" / "sheaf_gluing_certificate.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    assert payload.get("restriction_lanes"), "certificate must carry restriction lanes for this control"
+
+    def remove_lane_assignment(data: dict) -> None:
+        data["restriction_lanes"].pop("policy_posterior_normalized")
+        data["all_lane_summaries_ok"] = True
+        data["ok"] = True
+
+    _assert_forgery_caught(
+        path,
+        remove_lane_assignment,
+        validate_semantic_gluing,
+        "incomplete restriction lane assignments",
+        project_root,
+    )
+
+
 def test_staleness_row_forgeries_are_caught(project_root: Path) -> None:
     from roadmap_tracks import validate_integration_audit_artifacts, write_integration_audit_artifacts
 

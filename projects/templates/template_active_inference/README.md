@@ -144,6 +144,10 @@ The reproducible rendering contract is documented in
 authored fragments/configs generate deterministic data, figures, composed
 Markdown, hydrated Markdown, PDF/web outputs, and copied root outputs through one
 hydration boundary.
+Visualization quality is checked as generated evidence, not prose: the audit
+joins render metrics, source maps, figure hashes, section bindings, and
+per-figure claim lanes in `output/data/figure_source_map.json` and
+`output/reports/visualization_quality_audit.json`.
 
 ```bash
 uv run python scripts/compose_manuscript.py --list-tracks

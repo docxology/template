@@ -7,6 +7,14 @@ request shape, then builds provider-specific payloads lazily.
 For project-scale runs, `collect_project_context()` packages rendered project
 plaintext into a bounded prompt block, including manuscript markdown, `.bib`
 bibliography files, and extracted PDF text when a rendered PDF is present.
+**Manuscript sources (`manuscript/`, `output/manuscript/` markdown/LaTeX/`.bib`)
+are sent in full** — they get a large per-file budget so whole sections are
+never silently clipped — while ancillary files (logs, JSON, data) stay capped at
+`max_chars_per_file`. The combined bundle honours `max_total_chars` (default
+500 K chars ≈ the OpenAI ~200K-token window) as a true ceiling and appends a
+`Packaging notes:` block disclosing anything clipped or omitted. A manuscript
+larger than the whole budget cannot fit OpenAI's window — raise
+`max_total_chars` only for Gemini, whose window is larger.
 `DeepResearchClient.submit_and_wait_many()` can fan the same request out to
 OpenAI and Gemini and return both terminal reports.
 `DeepResearchClient.submit_project_and_save_reports()` wraps that flow and
@@ -53,27 +61,45 @@ uv run python -m infrastructure.search.deep_research run-project \
     "Review this manuscript; suggest fixes and new citations." --providers openai
 ```
 
-## Cost model (measured live, 2026-06-10)
+## Billing & subscriptions
 
-One full manuscript review (template_active_inference exemplar, ~277 KB packaged
-context, web search enabled) — exact `usage` objects retrieved from both APIs:
+**Neither provider is covered by a consumer subscription.** API access is
+metered pay-as-you-go and billed separately:
 
-| Provider | Input tokens | Output (+thought) | Tool-use tokens | Measured cost |
-| --- | --- | --- | --- | --- |
-| OpenAI `o3-deep-research` (`max_tool_calls=12`) | 96,479 | 19,215 (8,896 reasoning) | ≤12 searches | **≈ $2** |
-| Gemini `deep-research-preview-04-2026` | 6,520,393 (700k cached) | 75,514 + 229,057 thought | 2,474,446 | **≈ $20–35** |
+- **OpenAI** — billed on `platform.openai.com` per token. ChatGPT Plus/Pro grants
+  **no** API credit.
+- **Gemini** — the Deep Research *API* (Interactions API) is paid-tier only,
+  billed via the Gemini Developer API / AI Studio. This is a **different product**
+  from the Deep Research *feature* inside the Gemini app (Google AI Pro/Ultra);
+  the app subscription does **not** grant API access.
+
+Set `OPENAI_API_KEY` / `GEMINI_API_KEY` in the repo `.env` (auto-loaded by
+`config.ensure_dotenv_loaded()`), then `uv run python -m
+infrastructure.search.deep_research providers` should list both.
+
+## Cost model
+
+Current published vendor pricing (verify against the live pages — pricing moves):
+
+| Provider | Token pricing | Search grounding | Typical per-task |
+| --- | --- | --- | --- |
+| OpenAI [`o3-deep-research`](https://developers.openai.com/api/docs/models/o3-deep-research) | $10 / 1M input, $40 / 1M output | web search ~$10 / 1k calls (10–30 calls/query → $0.10–0.30) | **≈ $2** |
+| Gemini [`deep-research-preview-04-2026`](https://ai.google.dev/gemini-api/docs/interactions/deep-research) | Gemini 3.1 Pro rates $2 / 1M in, $12 / 1M out (50–70% cache) | Google Search $14 / 1k, 80 queries → ~$1.12 | **$1–3 + search ≈ $3–5** |
+| Gemini `deep-research-max-preview-04-2026` | same rates, deeper loop | 160 queries → ~$2.24 | **$3–7 + search** |
 
 Rules of thumb:
 
-- **Budget ≈ $2 per project per OpenAI report; ≈ $25 per Gemini report.**
-  A both-providers run on one project ≈ $25–40. Looping the 9 public
-  exemplars ≈ $20 (OpenAI-only) vs ≈ $250–350 (both providers).
-- Gemini's agentic loop re-reads context every step (9.3M total tokens for one
-  job) — it is ~10× OpenAI's cost for comparable output. Default to
-  `providers=("openai",)` for routine reviews; add Gemini when you want a
-  second independent report.
+- **Budget ≈ $2 per OpenAI report.** For Gemini, Google's headline is $1–3/task
+  ($3–7 Max) **plus** ~$1.12–2.24 search grounding, so **≈ $3–7 typical**. A
+  large packaged manuscript pushes the *upper* end higher because Gemini's
+  agentic loop re-reads the whole context every step — a heavy ~280 KB-context
+  review measured ~6.5M input tokens (≈ $13–17 worst case). Budget **$5–15** for
+  Gemini on a full manuscript; default to `providers=("openai",)` for routine
+  reviews and add Gemini for a second independent report.
 - `max_tool_calls` (OpenAI) is the main cost knob; `max_total_chars` on
-  `collect_project_context()` bounds the input side.
+  `collect_project_context()` bounds the input side (and is the main Gemini cost
+  lever, since context is re-read each step). The default 500 K-char ceiling is
+  sized to OpenAI's ~200K-token window.
 - **`background=True` jobs bill to completion even if never polled.** Cancel
   diagnostic submissions; do not fire-and-forget probes. Cancel a job with
   `DeepResearchClient.cancel(handle)` or the CLI `cancel <provider> <job_id>`

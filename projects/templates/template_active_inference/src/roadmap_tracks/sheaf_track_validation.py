@@ -27,6 +27,20 @@ def _append_summary_issue(issues: list[str], payload: dict, field: str, derived:
         issues.append(message)
 
 
+def _semantic_restriction_value_ok(restriction: str, value: object) -> bool:
+    if isinstance(value, bool):
+        return value
+    if restriction in {
+        "adversarial_known_bad_passed",
+        "coverage_missing",
+        "pymdp_runtime_unexpected_warning_count",
+    }:
+        return int(value or 0) == 0
+    if restriction.endswith("_count") or restriction in {"claim_count", "section_count", "track_count"}:
+        return int(value or 0) >= 0
+    return bool(value)
+
+
 def _validate_registry_contract(root: Path, issues: list[str]) -> None:
     registry = _tracks._registry_tracks(root)
     versioned = sorted(track_id for track_id in registry if _tracks.VERSIONED_TRACK_RE.search(track_id))
@@ -80,6 +94,27 @@ def _validate_saved_semantic_certificate(root: Path, restrictions: dict[str, boo
         if saved_restrictions.get(key) != expected:
             issues.append("sheaf_gluing_certificate.json is stale relative to canonical restrictions")
             break
+    restriction_lanes = semantic.get("restriction_lanes") or {}
+    lane_summaries = semantic.get("lane_summaries") or {}
+    if set(restriction_lanes) != set(saved_restrictions):
+        issues.append("sheaf_gluing_certificate.json has incomplete restriction lane assignments")
+    else:
+        expected_summaries: dict[str, dict] = {}
+        for lane in sorted(set(restriction_lanes.values())):
+            keys = sorted(key for key, assigned in restriction_lanes.items() if assigned == lane)
+            expected_summaries[lane] = {
+                "restrictions": keys,
+                "restriction_count": len(keys),
+                "ok_count": sum(
+                    1 for key in keys if _semantic_restriction_value_ok(key, saved_restrictions.get(key))
+                ),
+                "all_ok": bool(keys)
+                and all(_semantic_restriction_value_ok(key, saved_restrictions.get(key)) for key in keys),
+            }
+        for lane, summary in expected_summaries.items():
+            if lane_summaries.get(lane) != summary:
+                issues.append("sheaf_gluing_certificate.json lane summaries disagree with restrictions")
+                break
 
 
 def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certificate: bool = True) -> list[str]:
@@ -312,14 +347,32 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     blocked = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["blocked_scope_manifest"])
     if blocked.get("schema") != "template_active_inference.blocked_scope_manifest.v1":
         issues.append("blocked_scope_manifest.json schema mismatch")
+    required_blocked_ids = {
+        "empirical_adapter",
+        "llm_generated_evidence",
+        "network_dependent_research",
+        "non_toy_model_claims",
+        "private_or_restricted_data",
+    }
+    required_scope_categories = {"blocked_empirical", "blocked_llm", "blocked_network", "blocked_private"}
+    blocked_rows = blocked.get("rows") or []
+    blocked_ids = {str(row.get("id")) for row in blocked_rows}
+    blocked_categories = {str(row.get("scope_category")) for row in blocked_rows}
     blocked_rows_ok = bool(blocked.get("rows")) and all(
         row.get("status") == "blocked"
+        and row.get("id") in required_blocked_ids
+        and row.get("scope_category") in required_scope_categories
         and row.get("no_live_registry_entry")
         and row.get("no_configured_producer")
         and row.get("no_empirical_result_artifact")
-        for row in blocked.get("rows") or []
+        for row in blocked_rows
     )
-    if blocked.get("all_blocked") is not True or blocked.get("all_blocked") != blocked_rows_ok:
+    if (
+        blocked.get("all_blocked") is not True
+        or blocked.get("all_blocked") != blocked_rows_ok
+        or blocked_ids != required_blocked_ids
+        or not required_scope_categories.issubset(blocked_categories)
+    ):
         issues.append("blocked_scope_manifest.json does not keep empirical scope blocked")
 
     evidence = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["evidence_fields"])

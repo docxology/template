@@ -14,7 +14,9 @@ the optional vendor packages installed.
 - Put Gemini-specific request mapping in `gemini.py`.
 - Put project-context packing in `project_context.py`; include rendered
   manuscript plaintext, bibliography files, and PDF text extraction when
-  available.
+  available. **Manuscript sources are sent in full** (large per-file budget);
+  ancillary files stay capped. Keep `max_total_chars` ≈ the OpenAI 200K-token
+  window as a true ceiling and disclose clips/omissions in the bundle footer.
 - Prefer the dispatcher in `client.py` for new entry points.
 - Do not import the SDKs at module load time.
 
@@ -30,11 +32,15 @@ the optional vendor packages installed.
   request to be packed from a project tree, dispatched to both providers, and
   saved under `output/reports/deep_research/`.
 
-## Cost & budget rules (measured 2026-06-10 — see README "Cost model")
+## Cost & budget rules (see README "Billing & subscriptions" + "Cost model")
 
-- ≈ **$2 per project report on OpenAI** (`o3-deep-research`, `max_tool_calls=12`);
-  ≈ **$25 per Gemini report** (agentic loop ⇒ ~9.3M tokens/job). Default to
-  OpenAI-only for routine loops; both providers ≈ $25–40/project.
+- **API billing is separate from any consumer subscription** (ChatGPT Plus /
+  Google AI Pro/Ultra grant no API credit). Keys go in `.env`.
+- ≈ **$2 per OpenAI report** ($10/1M in, $40/1M out + web search). Gemini ≈
+  **$3–7 typical** (Google's $1–3/task + ~$1.12–2.24 search grounding); a full
+  manuscript pushes the upper end — budget **$5–15** because Gemini's agentic
+  loop re-reads the whole packaged context each step. Default to OpenAI-only for
+  routine loops.
 - `background=True` jobs **bill to completion even if never polled** — never
   fire-and-forget diagnostic submissions; cancel or budget them.
 - Gemini jobs take 30–60+ min; poll budgets must exceed 30 min.

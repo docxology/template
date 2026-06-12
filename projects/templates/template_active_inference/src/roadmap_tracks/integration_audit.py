@@ -20,6 +20,8 @@ from roadmap_tracks.row_aggregates import all_rows
 
 from .figure_provenance import _figure_sources_mapped
 from .integration_audit_artifacts import (
+    ALLOWED_CLAIM_LANES,
+    REQUIRED_SCOPE_CATEGORIES,
     build_adversarial_audit,
     build_artifact_diffoscope,
     build_artifact_license_audit,
@@ -224,11 +226,20 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
             and row.get("image_sha256")
             and row.get("axis_channel_mapping")
             and row.get("section_bindings")
+            and row.get("claim_lanes")
+            and set(str(lane) for lane in row.get("claim_lanes") or []).issubset(ALLOWED_CLAIM_LANES)
+            and int(row.get("claim_lane_count", 0) or 0) == len(row.get("claim_lanes") or [])
             and row.get("pixel_provenance_ok") is True
         ),
     )
     if figures.get("all_figures_mapped") is not True or figures.get("all_figures_mapped") != figures_derived:
         issues.append("figure_source_map.json has unmapped figures")
+    if (
+        figures.get("all_figures_have_claim_lanes") is not True
+        or figures.get("all_claim_lanes_valid") is not True
+        or not figures_derived
+    ):
+        issues.append("figure_source_map.json has incomplete claim lanes")
     claim_audit = _load_json(root / "output" / "reports" / "claim_evidence_audit.json")
     claims_derived = bool(claim_audit.get("rows")) and all(
         row.get("has_evidence")
@@ -246,14 +257,29 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
         lambda row: (
             row.get("ok") is True
             and row.get("classification") in {"current", "future", "empirical"}
-            and row.get("context") in {"toy_result", "blocked_language"}
+            and row.get("context") in {"toy_result", "future_extension", "blocked_language", "blocked_manifest"}
+            and row.get("scope_category") in set(REQUIRED_SCOPE_CATEGORIES)
             and (
-                (row.get("classification") == "current" and row.get("current_result_toy_only") is True)
-                or row.get("classification") in {"future", "empirical"}
+                (row.get("scope_category") == "current_toy" and row.get("current_result_toy_only") is True)
+                or (row.get("scope_category") == "future_only" and row.get("non_live_context") is True)
+                or (
+                    str(row.get("scope_category") or "").startswith("blocked_")
+                    and row.get("blocked_context") is True
+                    and row.get("non_live_context") is True
+                )
             )
         ),
     )
-    if scope.get("all_current_claims_toy") is not True or not scope_rows_ok:
+    required_categories = set(REQUIRED_SCOPE_CATEGORIES)
+    present_categories = {str(row.get("scope_category")) for row in scope.get("rows") or []}
+    if (
+        scope.get("all_current_claims_toy") is not True
+        or not scope_rows_ok
+        or scope.get("all_required_scope_categories_present") is not True
+        or not required_categories.issubset(present_categories)
+        or scope.get("all_future_rows_non_live") is not True
+        or scope.get("all_blocked_contexts_non_live") is not True
+    ):
         issues.append("scope_boundary_audit.json records empirical scope leakage")
     adversarial = _load_json(root / "output" / "reports" / "adversarial_audit.json")
     if adversarial.get("all_expected_failures_documented") is not True:

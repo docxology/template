@@ -343,6 +343,11 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         "statistical_bridge": project_root / "output" / "data" / "statistical_visualization_bridge.json",
         "semantic": project_root / "output" / "data" / "sheaf_gluing_certificate.json",
     }
+
+    def drop_llm_blocked_row(data: dict) -> None:
+        data["rows"] = [row for row in data["rows"] if row.get("id") != "llm_generated_evidence"]
+        data["blocked_count"] = len(data["rows"])
+        data["all_blocked"] = True
     cases: tuple[tuple[str, JsonMutation, str], ...] = (
         (
             "replay",
@@ -422,6 +427,7 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
             "promotion rows",
         ),
         ("blocked", _set_value(("all_blocked",), False), "empirical scope blocked"),
+        ("blocked", drop_llm_blocked_row, "empirical scope blocked"),
         (
             "evidence",
             _combine_mutations(

@@ -983,12 +983,14 @@ def build_adversarial_audit(project_root: Path) -> dict[str, Any]:
 
 
 def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
+    """Describe out-of-scope research capabilities and the artifacts needed to unblock them."""
     root = project_root.resolve()
     registry = _registry_tracks(root)
     scripts = _analysis_scripts(root)
     rows = [
         {
             "id": "empirical_adapter",
+            "scope_category": "blocked_empirical",
             "status": "blocked",
             "reason": "future-only until public data provenance, licensing/privacy, and typed claim gates exist",
             "required_unblock_artifact": "output/data/empirical_adapter_manifest.json",
@@ -999,6 +1001,7 @@ def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
         },
         {
             "id": "private_or_restricted_data",
+            "scope_category": "blocked_private",
             "status": "blocked",
             "reason": "blocked until licensing/privacy and public provenance gates exist",
             "required_unblock_artifact": "output/data/private_data_provenance_manifest.json",
@@ -1011,6 +1014,7 @@ def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
         },
         {
             "id": "network_dependent_research",
+            "scope_category": "blocked_network",
             "status": "blocked",
             "reason": "blocked until offline cache and deterministic replay gates exist",
             "required_unblock_artifact": "output/data/network_replay_manifest.json",
@@ -1021,6 +1025,7 @@ def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
         },
         {
             "id": "llm_generated_evidence",
+            "scope_category": "blocked_llm",
             "status": "blocked",
             "reason": "blocked because evidence must come from deterministic local artifacts",
             "required_unblock_artifact": "output/data/llm_evidence_audit.json",
@@ -1031,6 +1036,7 @@ def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
         },
         {
             "id": "non_toy_model_claims",
+            "scope_category": "blocked_empirical",
             "status": "blocked",
             "reason": "blocked until non-toy model provenance and claim predicates exist",
             "required_unblock_artifact": "output/data/non_toy_model_scope_manifest.json",
@@ -1047,6 +1053,8 @@ def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
         "schema_version": CANONICAL_SCHEMA,
         "rows": rows,
         "blocked_count": len(rows),
+        "required_blocked_ids": sorted(row["id"] for row in rows),
+        "scope_categories": sorted({row["scope_category"] for row in rows}),
         "all_blocked": all(
             row["status"] == "blocked"
             and row["no_live_registry_entry"]

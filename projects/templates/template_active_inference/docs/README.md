@@ -16,6 +16,10 @@ and adversarial audit) composed into a sheaf manuscript.
 - `reference/rendering-reproducibility.md` — authored contract for sheaf
   composition, hydration, figure rendering, artifact regeneration order, and
   root output parity.
+- Visualization quality is validated through render metrics, source maps,
+  hashes, section bindings, and per-figure claim lanes in
+  `output/data/figure_source_map.json` and
+  `output/reports/visualization_quality_audit.json`.
 - See the project root `README.md` for the overview and `AGENTS.md` for agent
   guidance; per-directory `README.md`/`AGENTS.md` pairs document each component.
 

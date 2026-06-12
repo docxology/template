@@ -132,6 +132,11 @@ dev = [
 deep-research = [
     "google-genai>=1.0",
     "openai>=1.60",
+    # Loads the repo .env (OPENAI_API_KEY / GEMINI_API_KEY) so `providers`,
+    # `submit`, and `run-project` see credentials without a manual `export`.
+    # config.ensure_dotenv_loaded() also has a built-in fallback parser, so the
+    # package still finds keys if this extra is somehow absent.
+    "python-dotenv>=1.0.0",
 ]
 
 [tool.uv]

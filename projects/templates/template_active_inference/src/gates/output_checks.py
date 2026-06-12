@@ -414,7 +414,13 @@ def _add_toy_formal_integration_checks(checks: dict[str, bool], artifacts: dict[
         and render_log.get("all_events_ok") is True
         and int(render_log.get("event_count", 0) or 0) > 0
     )
-    checks["scope_boundary_audit_schema"] = scope.get("scope_boundary_status") == "toy_only_pass"
+    checks["scope_boundary_audit_schema"] = (
+        scope.get("scope_boundary_status") == "toy_only_pass"
+        and scope.get("all_current_claims_toy") is True
+        and scope.get("all_required_scope_categories_present") is True
+        and scope.get("all_future_rows_non_live") is True
+        and scope.get("all_blocked_contexts_non_live") is True
+    )
     checks["adversarial_audit_schema"] = (
         adversarial.get("all_expected_failures_documented") is True
         and adversarial.get("all_expected_failures_observed") is True
@@ -428,7 +434,11 @@ def _add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict
     visualization_quality = artifacts["visualization_quality"]
     statistical_bridge = artifacts["statistical_bridge"]
 
-    checks["figure_source_map_schema"] = figure_source.get("all_figures_mapped") is True
+    checks["figure_source_map_schema"] = (
+        figure_source.get("all_figures_mapped") is True
+        and figure_source.get("all_figures_have_claim_lanes") is True
+        and figure_source.get("all_claim_lanes_valid") is True
+    )
     checks["figure_hash_manifest_schema"] = figure_hash.get("all_hashes_present") is True
     checks["visualization_quality_audit_schema"] = (
         visualization_quality.get("schema") == "template_active_inference.visualization_quality_audit.v1"
@@ -441,6 +451,8 @@ def _add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict
         and visualization_quality.get("all_evidence_roles_present") is True
         and visualization_quality.get("all_paper_claims_present") is True
         and visualization_quality.get("all_figures_section_bound") is True
+        and visualization_quality.get("all_figures_have_claim_lanes") is True
+        and visualization_quality.get("all_claim_lanes_valid") is True
         and int(visualization_quality.get("statistically_backed_count", 0) or 0) >= 6
         and visualization_quality.get("all_statistical_sources_present") is True
     )
