@@ -387,8 +387,8 @@ jobs:
     # also removes the old code_project/fep_lean conftest plugin-name collision
     # (every project is already isolated in its own job). py3.10 (floor) + py3.12
     # (ceiling) give cross-version coverage; macOS breadth is handled by test-infra.
-    # 45 min is a generous backstop — only active_inference approaches it.
-    timeout-minutes: 45
+    # 60 min backstop — active_inference on py3.10 has exceeded 45 min on loaded runners.
+    timeout-minutes: 60
     needs: [verify-no-mocks, detect-projects]
     permissions:
       contents: read

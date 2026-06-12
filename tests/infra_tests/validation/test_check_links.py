@@ -558,6 +558,7 @@ class TestMainFunction:
         """Test main function exists."""
         assert hasattr(check_links, "main")
 
+    @pytest.mark.slow
     @pytest.mark.timeout(120)
     def test_main_returns_exit_code(self):
         """Test main returns integer exit code."""
