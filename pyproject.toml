@@ -254,7 +254,6 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "infrastructure/core/logging/*.py" = ["E402"]  # Conditional imports after setup
 "infrastructure/publishing/publish_cli.py" = ["E402"]  # sys.path manipulation before imports
-"infrastructure/rendering/render_all_cli.py" = ["E402"]  # sys.path manipulation before imports
 "scripts/*" = ["E402", "E501"]  # sys.path before imports; docstring line length
 "projects/*/scripts/**/*.py" = ["E402", "E501"]  # Path bootstrap before imports; long CLI strings
 "tests/**/*.py" = ["E712", "E402", "E501"]  # Assertions, conditional imports, long fixture payloads

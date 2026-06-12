@@ -14,6 +14,7 @@ from infrastructure.validation.line_count import (  # noqa: E402
     scan_infrastructure_and_scripts,
     scan_project_scripts,
     scan_project_src,
+    scan_repository_tests,
 )
 
 # Documented, time-boxed exceptions to the module line-count gate. These are
@@ -38,6 +39,11 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=REPO_ROOT,
     )
+    parser.add_argument(
+        "--include-tests",
+        action="store_true",
+        help="Emit advisory WARN lines for test modules >=800 lines (never fails the gate)",
+    )
     args = parser.parse_args(argv)
 
     warnings: list[tuple[str, int]] = []
@@ -54,6 +60,11 @@ def main(argv: list[str] | None = None) -> int:
     src_warn, src_fail = scan_project_src(args.repo_root, allowlist=LINE_COUNT_ALLOWLIST)
     warnings.extend(src_warn)
     failures.extend(src_fail)
+
+    if args.include_tests:
+        test_warn, _ = scan_repository_tests(args.repo_root, allowlist=LINE_COUNT_ALLOWLIST)
+        for rel, count in sorted(test_warn):
+            print(f"WARN [test] {rel}: {count} lines")
 
     for rel, count in sorted(warnings):
         print(f"WARN {rel}: {count} lines")

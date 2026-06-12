@@ -103,8 +103,8 @@ Tracked after the P0 composability pass (stage registry, unified markdown discov
 | `validation/integrity/link_extract.py` | 446 | **Done** (2026-06-11 close-out) — path helpers in `_link_normalize.py` (96 LOC); skip policy in `link_skip_policy.py` (144 LOC) |
 | `validation/integrity/_link_normalize.py` | 96 | **Done** (2026-06-11 close-out) — project-root + template path resolution for link validation |
 | `validation/integrity/link_skip_policy.py` | 144 | **Done** (2026-06-11) — `PATH_SKIP_*` tables + `should_validate_path()` |
-| `rendering/pipeline.py` | 665 | **Partial** (2026-06-11) — DOCX metadata via `build_pandoc_metadata()`; P2: `_manuscript_source.py` + `_combined_exports.py` |
-| `validation/content/markdown_validator.py` | 607 | Extract image/ref/math validators + pitfalls/citations leaves (discovery in `content/discovery.py`) |
+| `rendering/pipeline.py` | ~180 | **Done** (2026-06-11) — orchestrator; leaves `_manuscript_source.py`, `_combined_exports.py` |
+| `validation/content/markdown_validator.py` | ~75 | **Done** (2026-06-11) — facade; leaves `validator_{images,refs,math,pitfalls,citations}.py` |
 | `search/literature/backends.py` | — | **Done** (2026-05-29 Wave 5) — package `search/literature/backends/` |
 | `doctor/detectors.py` | — | **Done** (2026-05-29 Wave 6) — package `doctor/detectors/` |
 | `reporting/_dashboard_charts.py` | 43 | **Done** (2026-05-29 Wave 7) — facade; chart families in `_dashboard_charts_*.py` |
@@ -123,7 +123,10 @@ Tracked after the P0 composability pass (stage registry, unified markdown discov
 | `project/drift/checks_boundary.py` | 95 | **Done** (2026-06-11 v2) — src/ ↔ infrastructure import boundary |
 | `publishing/archival.py` | 669 | P1 watch: split provider adapters before next archival feature |
 | `autoresearch/validation_checks.py` | 661 | P1 watch: monitor before next autoresearch feature wave |
-| `rendering/render_all_cli.py` | — | Remove `sys.path.insert`; use `--project` / discovery like other CLIs |
+| `rendering/render_all_cli.py` | — | **Done** (2026-06-11) — `--project` + `resolve_project_root`; legacy CWD `manuscript/` retained |
+| `documentation/generate_glossary_cli.py` | — | **Done** (2026-06-11) — top-level imports; no `sys.path.insert` |
+| Doc megas (>800 LOC) | — | Policy: [`docs/maintenance/doc-mega-decomposition.md`](../docs/maintenance/doc-mega-decomposition.md) |
+| Test module line count | — | Advisory: `scripts/gates/module_line_count_check.py --include-tests` (warn ≥800, no fail) |
 | Package barrels | — | Lazy `__getattr__` on wide `__init__.py` hubs (`validation`, `reporting`, `publishing`, `doctor`) |
 
 ## Function Signatures

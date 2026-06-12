@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
-
-from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import GenerationOptions
+from typing import TYPE_CHECKING
 
 from src.agents import _extract_json
 from src.state import Proposal, SharedState
+
+if TYPE_CHECKING:
+    from infrastructure.llm.core.client import LLMClient
 
 
 class HermesProposer:
@@ -22,6 +23,8 @@ class HermesProposer:
 
     def _ensure_client(self) -> LLMClient:  # pragma: no cover - requires live Ollama
         if self._client is None:
+            from infrastructure.llm.core.client import LLMClient
+
             self._client = LLMClient()
         return self._client
 
@@ -55,6 +58,8 @@ class HermesProposer:
     ) -> Proposal:
         if not axes:
             raise ValueError("axes must be non-empty")
+        from infrastructure.llm.core.config import GenerationOptions
+
         client = self._ensure_client()
         raw = client.query(
             self._prompt(state, axes, avoid),

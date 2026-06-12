@@ -96,11 +96,11 @@ def test_pipeline_skip_branches_present() -> None:
     """
     from pathlib import Path
 
-    source = Path("infrastructure/rendering/pipeline.py").read_text()
+    source = Path("infrastructure/rendering/_combined_exports.py").read_text()
     assert "[skip] PDF rendering disabled" in source
     assert "[skip] HTML rendering disabled" in source
-    assert "_render_combined_docx" in source
-    assert "_render_combined_epub" in source
+    assert "render_combined_docx" in source
+    assert "render_combined_epub" in source
 
 
 def test_combined_html_skips_missing_transmission_bookends(tmp_path) -> None:

@@ -9,6 +9,11 @@ import sys
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.documentation.glossary_gen import (
+    build_api_index,
+    generate_markdown_table,
+    inject_between_markers,
+)
 
 logger = get_logger(__name__)
 
@@ -66,17 +71,6 @@ def main() -> int:
         glossary_md = project_dir / "manuscript" / "98_symbols_glossary.md"
 
     _ensure_glossary_file(glossary_md)
-
-    sys.path.insert(0, str(repo))
-    try:
-        from infrastructure.documentation.glossary_gen import (
-            build_api_index,
-            generate_markdown_table,
-            inject_between_markers,
-        )
-    except Exception as exc:  # noqa: BLE001 — dynamic import; any import error is handled identically
-        logger.error(f"Failed to import glossary_gen from infrastructure/documentation/: {exc}")
-        return 1
 
     text = glossary_md.read_text(encoding="utf-8")
 

@@ -12,7 +12,6 @@ import urllib.request
 
 import pytest
 
-from hermes_proposer import HermesProposer
 from src.state import Champion, SharedState
 
 
@@ -35,6 +34,8 @@ def test_hermes_proposes_in_scope_axis() -> None:
     pytest.importorskip("infrastructure.llm.core.config")
     if not _ollama_reachable():
         pytest.skip("Ollama daemon not reachable; opt-in live test")
+    from hermes_proposer import HermesProposer
+
     state = SharedState(champion=Champion(params=(1.5, 1.5, 1.5, 1.5), metric=-9.0, experiment_index=-1))
     proposer = HermesProposer()
     proposal = proposer.propose(state, axes=[0, 1, 2, 3], proposer_id="hermes0")

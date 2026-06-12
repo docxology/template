@@ -14,6 +14,7 @@ class LineCountThresholds:
 
 DEFAULT_INFRA_THRESHOLDS = LineCountThresholds(warn_at=800, fail_at=950)
 DEFAULT_PROJECT_SCRIPT_THRESHOLDS = LineCountThresholds(warn_at=150, fail_at=250)
+DEFAULT_TEST_THRESHOLDS = LineCountThresholds(warn_at=800, fail_at=10_000)
 
 
 def count_lines(path: Path) -> int:
@@ -109,3 +110,35 @@ def scan_project_src(
         warnings.extend(part_warnings)
         failures.extend(part_failures)
     return warnings, failures
+
+
+def scan_repository_tests(
+    repo_root: Path,
+    *,
+    allowlist: frozenset[str] = frozenset(),
+) -> tuple[list[tuple[str, int]], list[tuple[str, int]]]:
+    """Advisory scan of infra and public project test modules (warn-only by default)."""
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+    warnings: list[tuple[str, int]] = []
+    infra_warnings, _ = scan_line_counts(
+        repo_root,
+        ("tests",),
+        thresholds=DEFAULT_TEST_THRESHOLDS,
+        allowlist=allowlist,
+    )
+    warnings.extend(infra_warnings)
+
+    for name in PUBLIC_PROJECT_NAMES:
+        tests_dir = repo_root / "projects" / name / "tests"
+        if not tests_dir.is_dir():
+            continue
+        rel_root = tests_dir.relative_to(repo_root).as_posix()
+        part_warnings, _ = scan_line_counts(
+            repo_root,
+            (rel_root,),
+            thresholds=DEFAULT_TEST_THRESHOLDS,
+            allowlist=allowlist,
+        )
+        warnings.extend(part_warnings)
+    return warnings, []
