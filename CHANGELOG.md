@@ -9,27 +9,67 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+## [3.4.0] — 2026-06-12
+
+Comprehensive multi-pass review-and-improvement of `infrastructure/`, `docs/`,
+`scripts/`, and the public exemplars (RedTeam + FirstPrinciples + SystemsThinking
+lenses), the thermo-nuclear v2 remediation, and the post-`v3.3.1` backlog
+closeout. All gates green; no mocks; tests added with each change.
+
 ### Added
 
+- 🧭 **Reproducible run matrix (`run.config`)** — `scripts/run_matrix.py` +
+  `infrastructure/core/pipeline/run_matrix.py`: a deterministic project × stage
+  matrix runner (resolves projects, orders stages canonically), the
+  version-controllable alternative to the interactive menu. `run.config.example.yaml`
+  shipped; the user's `run.config` is git-ignored.
+- ⏱️ **`SOURCE_DATE_EPOCH` determinism** — `infrastructure/core/determinism.py`
+  threads a reproducible build timestamp through xelatex `/CreationDate`,
+  manuscript `GENERATION_TIMESTAMP`, and data `generated_at` (opt-in via
+  `TEMPLATE_DETERMINISTIC`/`SOURCE_DATE_EPOCH`; no-op otherwise) for byte-stable outputs.
+- 🔢 **Generated `COUNTS.md` + CI `--check`** — `scripts/generate_counts.py` +
+  `infrastructure/documentation/counts_doc.py` derive the canonical counts from
+  the live tree, closing the long-standing doc-drift loop (`canonical_facts.md`
+  was the one `_generated/` file with no generator). Renamed `canonical_facts.md`→`COUNTS.md`.
+- 🚪 **Opt-in methods-plan gate** — `scripts/gates/methods_plan_check.py` enforces
+  the previously-unenforced methods publication contract.
 - 🔬 **Deep research dispatch** (`infrastructure/search/deep_research`) — opt-in,
-  paid multi-provider deep-research CLI (`providers`/`submit`/`poll`/`run-project`),
-  never part of the default pipeline or CI.
-- 🔐 **Kmyth TPM adapter + NSA `kmyth` submodule** — TPM-backed sealing adapter
-  added to the steganography surface, with the upstream `kmyth` repository
-  vendored as a git submodule.
+  paid multi-provider deep-research CLI; fail-fast provider validation + bounded
+  wait (`max_wait_seconds`/`DeepResearchWaitTimeout`) + `cancel`.
+- 🔐 **Kmyth TPM adapter + NSA `kmyth` submodule** on the steganography surface.
 
 ### Changed
 
-- 🧩 **Output-validation modularization** — refactored output-validation tooling
-  in `infrastructure/validation/` into smaller, focused modules.
-- 🧪 **Benchmark test rename** — renamed benchmark test module(s) for clarity.
+- 🏷️ **Exemplar-support tier** — `infrastructure/sia` and `infrastructure/scientific`
+  tagged as Layer-1-but-exemplar-only in their docs and the module roster.
+- 🔀 **Validation ↔ autoresearch decoupling** — the generic validation layer no
+  longer special-cases the domain-specific autoresearch module.
+- 🗂️ **`scripts/` reorg** — operator tooling grouped under `scripts/maintenance/`
+  (numbered pipeline stages + gates kept at root).
+- 🧩 **Output-validation + reporting modularization**; benchmark test rename.
+
+### Removed
+
+- 🧹 **Dead modules deleted** (zero production importers, re-verified): `core/menu.py`,
+  `validation/cli/markdown.py`, `rendering/poster_renderer.py`, and
+  `scientific/{templates,documentation,validation}.py`.
 
 ### Fixed
 
-- 📦 **Correction to [3.3.1] "Public-exemplar outputs tracked"** — the tracked
-  exemplar render outputs under `output/` were removed on 2026-06-08, so the
-  repository no longer ships committed `output/` artifacts (`git ls-files output/`
-  returns nothing). This supersedes the 3.3.1 "outputs tracked" claim below.
+- 🔒 **Confidentiality guard** — `projects/*.md` wildcard replaced with an explicit
+  nav-doc allowlist so a stray top-level markdown can't be tracked.
+- 🧪 **No-mocks enforcer** — rewritten as AST + comment/string-stripped scan,
+  closing trailing-comment / `mock_`-prefix / `from unittest import mock` bypasses.
+- 📦 **Repro bundle (REPRO-VERIFY-1)** — output paths rebased onto the project tree
+  so `verify` actually hashes artifacts and fails closed on declared-but-absent outputs.
+- 🧷 **Evidence-graph claims (EVIDENCE-CLAIM-1)** — `output/data/*claims*.json` glob
+  so the autoresearch exemplar's ledger is ingested as claim nodes + `supports` edges.
+- 🧰 Default-project selection (qualified names), `--stage clean` mismatch,
+  book-length `book.title` metadata, markdown-CLI repo-root, arXiv old-style IDs,
+  and Ollama tests using the discovered model instead of a hard-coded `gemma3:4b`.
+- 📦 **Correction to [3.3.1] "Public-exemplar outputs tracked"** — tracked
+  `output/` render proofs were removed on 2026-06-08; the repo ships no committed
+  `output/` artifacts. Supersedes the 3.3.1 "outputs tracked" claim below.
 
 ## [3.3.1] — 2026-06-07
 

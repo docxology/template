@@ -2900,7 +2900,7 @@ wheels = [
 
 [[package]]
 name = "research-project-template"
-version = "3.3.1"
+version = "3.4.0"
 source = { virtual = "." }
 dependencies = [
     { name = "jsonschema" },
