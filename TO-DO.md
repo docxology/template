@@ -4,10 +4,9 @@
 > documented. Real methods only; never mocks or fakes. Every release ships with
 > green tests and accurate docs.
 
-This file tracks live work after the `v3.3.1` version bump (latest published
-release: `v3.3.0`; the `v3.3.1` tag is pending — see RELEASE-TAG-1). Historical
-release detail belongs in [`CHANGELOG.md`](CHANGELOG.md); generated counts and
-project rosters belong in
+This file tracks live work after the `v3.4.0` release (latest published release:
+`v3.4.0`, tagged 2026-06-12). Historical release detail belongs in
+[`CHANGELOG.md`](CHANGELOG.md); generated counts and project rosters belong in
 [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) and
 [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
@@ -23,15 +22,15 @@ hard-coded here.
 
 | Gate or surface | Current value | Source |
 | --- | --- | --- |
-| Package version | `3.3.1` | `pyproject.toml#[project].version` |
-| Latest published release | `v3.3.0` (published 2026-06-07) — package is at `3.3.1` with a dated [`CHANGELOG.md`](CHANGELOG.md) `[3.3.1]` entry, but the `v3.3.1` git tag + GitHub release are **pending** (see RELEASE-TAG-1) | `/opt/homebrew/bin/gh-axi release list`, `git tag` |
+| Package version | `3.4.0` | `pyproject.toml#[project].version` |
+| Latest published release | `v3.4.0` (tagged + GitHub release published 2026-06-12; CHANGELOG `[3.4.0]` body) | `gh release list`, `git tag` |
 | Public source scope | `infrastructure` plus nine public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
 | Public exemplars | `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook` | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
 | Canonical generated facts | Importable infrastructure packages, infrastructure Python-module count, project-scope + publishing test collections, and per-exemplar coverage — all live-derived; do not hard-code here | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) (regenerate with `uv run python scripts/generate_counts.py --write`) |
 | Open GitHub PRs | 3 open: 1 Dependabot (`codecov-action` 6.0.1→7.0.0 #28) + 2 maintainer (#23 sheaf integrity gates, #14 infrastructure composability audit) | `/opt/homebrew/bin/gh-axi pr list` |
 | Docs lint status | links-only, consistency-only, and doc-pairs all clean (re-verified 2026-06-08) | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
 | Mermaid lint status | clean with chunked batch rendering under the default total budget | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
-| Release verification baseline | public project tests, Active Inference focused gate, docs invariant suite, Ruff, format, mypy, drift, skills, exports, SIA validation, tracked-project/generated-artifact guards, and pre-push hooks passed | `v3.3.0` release notes and local command history |
+| Release verification baseline | drift `--strict`, COUNTS/skills/exports gates, tracked-project/generated-artifact guards, docs-lint (links/consistency), reporting+evidence+repro suites (877), and the LLM suite (1244, live Ollama) all green at the v3.4.0 commit | `v3.4.0` release + local command history |
 
 ---
 
@@ -115,48 +114,22 @@ Keep this section short. Details live in release notes or archived audits.
 
 ---
 
-## Minor
+## Active backlog
 
-### RELEASE-TAG-1 - Decide the next version, then tag + publish
-
-- **Problem:** `pyproject.toml` is at `3.3.1` and [`CHANGELOG.md`](CHANGELOG.md)
-  carries a dated `[3.3.1]` entry, but no `v3.3.1` git tag / GitHub release exists
-  (latest is `v3.3.0`). Since the `3.3.1` bump, `main` has accumulated a large
-  body of additional work (multi-pass review: dead-code removal, `run.config`
-  matrix runner, `SOURCE_DATE_EPOCH` determinism, the `COUNTS.md` generator,
-  exemplar-support-tier tagging, methods-plan gate, validation↔autoresearch
-  decoupling, Ollama test-model fix, plus the thermo-nuclear v2 remediation) —
-  so `HEAD` now materially exceeds what the `[3.3.1]` changelog body describes.
-- **Why it matters:** tagging the current `HEAD` as `v3.3.1` would misrepresent
-  the release (the tag's content would far exceed its changelog). A dated
-  CHANGELOG entry with no tag also misleads "released" semantics and pins
-  downstream tooling (archival/DOI/repro-bundle) to `v3.3.0`.
-- **Decision needed (maintainer):** either (a) bump to a new minor (e.g. `3.4.0`)
-  with a fresh CHANGELOG section covering all post-`3.3.1` work and tag that, or
-  (b) tag the historical commit that actually matched the `[3.3.1]` body as
-  `v3.3.1` and start a new `[Unreleased]`/`3.4.0` section for the new work.
-- **Smallest next step:** pick (a) or (b); update `CHANGELOG.md` + `pyproject`
-  accordingly; run the release verification baseline on a clean tree; cut the tag
-  + GitHub release.
-- **Acceptance:** `git tag` shows the chosen version tag and the GitHub release
-  list shows the published release with a changelog body that matches the tag's
-  content.
-- **Out of scope:** re-tagging already-published releases.
+_No open items._ `RELEASE-TAG-1`, `REPRO-VERIFY-1`, and `EVIDENCE-CLAIM-1` were
+all closed in the 2026-06-12 sweep (see **Recently shipped**). Next genuine
+increments will be filed here as they arise.
 
 ---
 
 ## Known divergences from `CHANGELOG.md`
 
-The pre-`2026-06-08` snapshot drift (version pinned to `3.3.0`, a phantom 5-PR
-roster, and eight shipped items still listed as open backlog) was reconciled in
-this refresh, and [`docs/development/roadmap.md`](docs/development/roadmap.md) was
-synchronized to the same baseline. The docs-lint (links/consistency/doc-pairs),
-drift, and canonical-facts gates are all clean as of 2026-06-08. One real
-divergence remains tracked rather than silently hidden:
-
-- **`v3.3.1` is bumped but not released.** `pyproject.toml` and the
-  `CHANGELOG.md` `[3.3.1]` entry imply a 3.3.1 release, but no `v3.3.1` git tag /
-  GitHub release exists (latest is `v3.3.0`). Tracked as **RELEASE-TAG-1**.
+As of 2026-06-12 there are **no known divergences**: `pyproject.toml`,
+`CHANGELOG.md`, and the published tag all agree at **`3.4.0`** (the prior
+"`v3.3.1` bumped but not released" gap was resolved by cutting `v3.4.0`, which
+folds the dated `[3.3.1]` entry and all post-`3.3.1` work into one published
+release). The docs-lint (links/consistency/doc-pairs), drift, and canonical-facts
+gates are clean.
 
 If a new drift appears between [`CHANGELOG.md`](CHANGELOG.md), `TO-DO.md`,
 generated facts, or `.github/workflows/ci.yml`, fix forward and record the
