@@ -59,8 +59,13 @@ def validate_manuscript_output_markdown(project_root: Path, repo_root: Path, pro
         logger.info("  (Markdown validation notes are non-critical)")
         return True
     except ImportError as exc:
+        # Genuine breakage (the validator could not be loaded) must be visible
+        # in the Stage-4 summary, not silently reported as PASSED. Returning
+        # False surfaces it as a non-critical WARN via the pipeline summary
+        # logic and reaches the "Markdown validation" recommendation branch.
         logger.warning("Could not import markdown validator: %s", exc)
-        return True
+        return False
     except (OSError, RuntimeError, ValueError, AttributeError) as exc:
+        # A validator that raises mid-run is broken, not advisory: surface it.
         logger.warning("Markdown validation error: %s", exc)
-        return True
+        return False

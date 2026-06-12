@@ -42,9 +42,7 @@ def test_active_projects_doc_matches_discovery() -> None:
     # but are not yet registered in public_project_names().  If this assertion
     # fails, add the new project to public_scope.py (or remove it from disk).
     on_disk_templates = {
-        p.qualified_name
-        for p in discover_projects(root)
-        if p.path.is_relative_to(root / "projects" / "templates")
+        p.qualified_name for p in discover_projects(root) if p.path.is_relative_to(root / "projects" / "templates")
     }
     registered = set(public_project_names(root)) | set(LOCAL_ONLY_TEMPLATE_NAMES)
     unregistered = on_disk_templates - registered
@@ -130,8 +128,7 @@ def test_consistency_lint_roots_include_public_project_docs() -> None:
     expected = {f"projects/{name}" for name in public_project_names(root)}
     configured = set(DEFAULT_LONG_LIVED_DOC_ROOTS)
     assert expected.issubset(configured), (
-        "documentation consistency roots must track public_project_names(); "
-        f"missing={sorted(expected - configured)}"
+        f"documentation consistency roots must track public_project_names(); missing={sorted(expected - configured)}"
     )
 
 
@@ -225,7 +222,7 @@ def test_docs_markdown_no_broken_projects_paths() -> None:
     assert not failures, "Broken projects/ links in docs/:\n" + "\n".join(failures)
 
 
-def test_COUNTS_infrastructure_python_count_matches_tree() -> None:
+def test_canonical_facts_infrastructure_python_count_matches_tree() -> None:
     """The generated factsheet must not carry a stale infrastructure .py count."""
     root = _repo_root()
     doc_path = root / "docs" / "_generated" / "COUNTS.md"
@@ -248,12 +245,11 @@ def test_COUNTS_infrastructure_python_count_matches_tree() -> None:
     ).stdout.splitlines()
     actual = sum(1 for path in tracked if path.endswith(".py"))
     assert documented == actual, (
-        "COUNTS.md drifted from the tracked infrastructure Python-file count; "
-        f"documented={documented} actual={actual}"
+        f"COUNTS.md drifted from the tracked infrastructure Python-file count; documented={documented} actual={actual}"
     )
 
 
-def test_COUNTS_test_collections_match_current_counts() -> None:
+def test_canonical_facts_test_collections_match_current_counts() -> None:
     """The generated factsheet must not carry stale infra test collection counts."""
     root = _repo_root()
     doc_path = root / "docs" / "_generated" / "COUNTS.md"
@@ -289,7 +285,7 @@ def test_COUNTS_test_collections_match_current_counts() -> None:
     assert documented_publishing == actual_publishing
 
 
-def test_COUNTS_exemplar_table_matches_public_scope() -> None:
+def test_canonical_facts_exemplar_table_matches_public_scope() -> None:
     """The exemplar collection table must include every public template project."""
     root = _repo_root()
     text = (root / "docs" / "_generated" / "COUNTS.md").read_text(encoding="utf-8")
@@ -369,7 +365,7 @@ def test_publishing_cli_docs_do_not_advertise_apa_mla_formats() -> None:
     for doc_path in docs_to_check:
         text = doc_path.read_text(encoding="utf-8")
         assert not re.search(r"generate-citation[^\n`]*--format\s+(apa|mla)\b", text, re.IGNORECASE), doc_path
-        assert "`--format`,\n        choices=[\"bibtex\"]" not in text, doc_path
+        assert '`--format`,\n        choices=["bibtex"]' not in text, doc_path
 
 
 def test_api_reference_publish_to_zenodo_return_type() -> None:

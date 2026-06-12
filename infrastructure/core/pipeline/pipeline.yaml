@@ -128,7 +128,7 @@ stages:
     failure_mode: skipped if Ollama absent
     contract:
       input_artifacts: ["projects/{project}/manuscript/", "projects/{project}/output/pdf/"]
-      output_artifacts: ["projects/{project}/output/reports/"]
+      output_artifacts: ["projects/{project}/output/llm/", "projects/{project}/output/translations/"]
       definition_of_done: "Optional scientific review is written or gracefully skipped when unavailable."
       failure_code: "LLM_REVIEW_FAILED"
       retry_policy: 0
@@ -143,7 +143,7 @@ stages:
     failure_mode: skipped if Ollama absent
     contract:
       input_artifacts: ["projects/{project}/manuscript/"]
-      output_artifacts: ["projects/{project}/output/translations/"]
+      output_artifacts: ["projects/{project}/output/llm/", "projects/{project}/output/translations/"]
       definition_of_done: "Optional translations are written or gracefully skipped when unavailable."
       failure_code: "LLM_TRANSLATION_FAILED"
       retry_policy: 0

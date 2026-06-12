@@ -2,7 +2,9 @@
 
 ## Overview
 
-The `tests/infra_tests/scientific/` directory contains tests for the scientific computing infrastructure. These tests validate the scientific development tools, benchmarking capabilities, documentation generation, and validation features that support research workflows.
+The `tests/infra_tests/scientific/` directory contains tests for the scientific computing infrastructure. These tests validate the scientific development tools, benchmarking capabilities, numerical stability, and improvement confirmation that support research workflows.
+
+The scientific module is an **exemplar-support tier** Layer-1 module (see [`../../../infrastructure/scientific/AGENTS.md`](../../../infrastructure/scientific/AGENTS.md)).
 
 ## Directory Structure
 
@@ -11,17 +13,15 @@ flowchart LR
     T[/tests/infra_tests/scientific//]
     T --> META[AGENTS.md · __init__.py]
     T --> BEN[test_benchmarking.py<br/>Performance benchmarking]
-    T --> DOC[test_documentation.py<br/>API documentation]
+    T --> CONF[test_confirmation.py<br/>Improvement confirmation]
     T --> DEV[test_scientific_dev.py<br/>Scientific development]
     T --> STAB[test_stability.py<br/>Numerical stability]
-    T --> TPL[test_templates.py<br/>Research templates]
-    T --> VAL[test_validation.py<br/>Scientific validation]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef test fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class BEN,DOC,DEV,STAB,TPL,VAL test
+    class BEN,CONF,DEV,STAB test
     class META doc
 ```
 
@@ -40,17 +40,11 @@ flowchart LR
 def test_scientific_utilities():
     """Test scientific utility functions."""
     from infrastructure.scientific.stability import check_numerical_stability
-    from infrastructure.scientific.validation import validate_scientific_implementation
     from infrastructure.scientific.benchmarking import benchmark_function
 
     # Test numerical stability checking
     stable_result = check_numerical_stability(lambda x: x**2 + 2*x + 1, [1, 2, 3])
     assert stable_result.stability_score > 0.8
-
-    # Test implementation validation
-    test_cases = [(1, 2), (2, 4), (3, 6)]
-    valid_data = validate_scientific_implementation(lambda x: x * 2, test_cases)
-    assert valid_data['accuracy_score'] == 1.0
 
     # Test benchmarking
     result = benchmark_function(lambda x: x**2, [1.0, 2.0, 3.0], iterations=10)
@@ -91,33 +85,12 @@ def test_performance_benchmarking():
     assert 'Performance Analysis Report' in formatted
 ```
 
-### Documentation Tests
+### Confirmation Tests
 
-**Documentation Tests (`test_documentation.py`)**
-- API documentation generation validation
-- Documentation completeness checking
-- Format and structure validation
-- Cross-reference accuracy testing
-
-**Test Coverage:**
-```python
-def test_api_documentation_generation():
-    """Test API documentation generation."""
-    from infrastructure.scientific.documentation import (
-        generate_api_documentation,
-        generate_scientific_documentation,
-    )
-    import infrastructure.scientific.benchmarking as bench_module
-
-    # Generate API documentation for a module
-    docs = generate_api_documentation(bench_module)
-    assert 'benchmark_function' in docs
-
-    # Generate function-level scientific documentation
-    func_doc = generate_scientific_documentation(bench_module.benchmark_function)
-    assert 'benchmark_function' in func_doc
-    assert 'Parameters' in func_doc
-```
+**Confirmation Tests (`test_confirmation.py`)**
+- Candidate-vs-baseline comparison beyond the noise band
+- `Confirmation` dataclass field validation
+- Deterministic seed-based evaluation
 
 ### Stability Tests
 
@@ -148,76 +121,6 @@ def test_numerical_stability():
     unstable = lambda x: 1.0 / (x + 1e-15) if abs(x) < 1e-14 else x
     unstable_result = check_numerical_stability(unstable, [0.0, 1e-15, 1.0])
     assert isinstance(unstable_result, StabilityTest)
-```
-
-### Template Tests
-
-**Template Tests (`test_templates.py`)**
-- Research workflow template validation
-- Template variable substitution testing
-- Template rendering accuracy
-- Template customization verification
-
-**Test Scenarios:**
-```python
-def test_research_templates():
-    """Test research workflow templates."""
-    from infrastructure.scientific.templates import (
-        create_scientific_module_template,
-        create_scientific_test_suite,
-        create_scientific_workflow_template,
-    )
-
-    # Test module template generation
-    module_tmpl = create_scientific_module_template('my_analysis')
-    assert 'my_analysis' in module_tmpl
-    assert 'function1' in module_tmpl
-
-    # Test test-suite template generation
-    test_tmpl = create_scientific_test_suite('my_analysis')
-    assert 'my_analysis' in test_tmpl
-    assert 'TestNumericalStability' in test_tmpl
-
-    # Test workflow template generation
-    workflow_tmpl = create_scientific_workflow_template('experiment_v1')
-    assert 'experiment_v1' in workflow_tmpl
-    assert 'setup_workflow_environment' in workflow_tmpl
-```
-
-### Validation Tests
-
-**Validation Tests (`test_validation.py`)**
-- Scientific validation rule testing
-- Research data quality assessment
-- Methodology validation checking
-- Result reproducibility verification
-
-**Test Coverage:**
-```python
-def test_scientific_validation():
-    """Test scientific validation functionality."""
-    from infrastructure.scientific.validation import (
-        validate_scientific_implementation,
-        validate_scientific_best_practices,
-        check_research_compliance,
-    )
-    import infrastructure.scientific.benchmarking as bench_module
-
-    # Validate implementation against known test cases: (input, expected_output)
-    test_cases = [(1, 1), (2, 4), (3, 9)]
-    result = validate_scientific_implementation(lambda x: x**2, test_cases)
-    assert result['accuracy_score'] == 1.0
-    assert result['passed_tests'] == 3
-
-    # Validate best practices for a real module
-    bp = validate_scientific_best_practices(bench_module)
-    assert 'docstring_coverage' in bp
-    assert 'best_practices_score' in bp
-
-    # Check research compliance for a single function
-    compliance = check_research_compliance(bench_module.benchmark_function)
-    assert 'has_docstring' in compliance
-    assert 'compliance_score' in compliance
 ```
 
 ## Test Design Principles
@@ -408,10 +311,8 @@ uv run pytest tests/infra_tests/scientific/ -k "scalability"
 **Scientific Module Coverage:**
 - Scientific development tools: 95%+ coverage
 - Benchmarking functionality: 90%+ coverage
-- Documentation generation: 90%+ coverage
 - Stability analysis: 95%+ coverage
-- Template system: 85%+ coverage
-- Validation tools: 90%+ coverage
+- Improvement confirmation: 90%+ coverage
 
 ### Quality Metrics
 

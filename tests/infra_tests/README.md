@@ -15,6 +15,21 @@ Floor: **60%** for the full scope. `pipeline-smoke` is intentionally coverage-fr
 and is used inside project pipelines as a fast real contract check. Coverage is
 measured over `infrastructure/` only.
 
+## Optional dependencies (Ollama / LaTeX / pandoc)
+
+Some tests are gated behind optional external tools. `requires_ollama` tests
+**fail-loud** when Ollama is absent (by design — auto-started first, then a
+setup-guidance failure); `requires_latex`/pandoc rendering tests **skip** when no
+TeX engine or pandoc is found. Deselect either surface explicitly, e.g.
+
+```bash
+uv run pytest tests/infra_tests/ -m "not requires_ollama and not requires_latex"
+```
+
+The full opt-out + setup commands, which features become unavailable, and the
+per-marker behaviour live in the
+[optional-dependencies capability matrix](../../docs/development/optional-dependencies.md).
+
 ## Directory -> Module Mapping
 
 | Directory | Focus |

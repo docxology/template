@@ -126,7 +126,13 @@ def test_pdf_renderer_cross_references():
 - Unlike many infrastructure tests, rendering tests often require full LaTeX installation
 - Tests create actual PDF/HTML/Slide files for validation
 - File system operations are real (not mocked) for accuracy
-- External dependencies (LaTeX, Pandoc) are assumed available
+- External dependencies (LaTeX, Pandoc) are optional: LaTeX-gated tests are marked
+  `@pytest.mark.requires_latex` and **skip** (via the `skip_if_no_latex` fixture)
+  when neither `xelatex` nor `pdflatex` is on `PATH`; the rendering config sets
+  `pandoc_path=None` when pandoc is missing. Opt out explicitly with
+  `pytest -m "not requires_latex"`. Setup commands, the pandoc gate, and which
+  template features become unavailable are in the
+  [optional-dependencies capability matrix](../../../docs/development/optional-dependencies.md).
 
 **Validation:**
 ```python

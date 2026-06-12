@@ -23,12 +23,12 @@ def test_generated_artifact_path_matcher() -> None:
     assert not is_generated_artifact_path("projects/templates/template_code_project/src/optimizer.py")
     assert not is_generated_artifact_path("docs/_generated/COUNTS.md")
 
-    # Scoped exception: the exemplars' TOP-LEVEL output is tracked render-proof.
-    assert not is_generated_artifact_path(
-        "output/templates/template_code_project/pdf/template_code_project_combined.pdf"
-    )
-    assert not is_generated_artifact_path("output/templates/template_prose_project/figures/wordcount.png")
-    # But a confidential/active project's top-level output stays guarded.
+    # No output/ path is exempt: the former exemplar render-proof exemption was
+    # dead (zero such paths were ever tracked) and was removed, so all rendered
+    # output — exemplars included — is correctly guarded.
+    assert is_generated_artifact_path("output/templates/template_code_project/pdf/template_code_project_combined.pdf")
+    assert is_generated_artifact_path("output/templates/template_prose_project/figures/wordcount.png")
+    # A confidential/active project's top-level output stays guarded too.
     assert is_generated_artifact_path("output/actinf_policy_entanglement_lean/pdf/x.pdf")
 
 

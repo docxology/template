@@ -5,15 +5,17 @@
 **Location:** `infrastructure/scientific/` (modular package)
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
+> **Tier: exemplar-support.** Layer-1 by location, but imported only by its
+> scientific exemplar(s) — intentionally not generic-reach across
+> `infrastructure/`. Not dead code, not a general infra dependency.
+
 ---
 
 ## Key Features
 
 - **Numerical Stability**: Algorithm stability testing and validation
 - **Performance Benchmarking**: Execution time and memory analysis
-- **Scientific Documentation**: API documentation generation
-- **Best Practices Validation**: Code quality assessment
-- **Research Workflow Templates**: Reproducible experiment templates
+- **Improvement Confirmation**: Confirm a candidate beats a baseline beyond the noise band
 
 ---
 
@@ -70,7 +72,7 @@ The scientific module is used as a Python library — it ships no standalone CLI
 from infrastructure.scientific import (
     benchmark_function,
     check_numerical_stability,
-    validate_scientific_implementation,
+    confirm_improvement,
 )
 ```
 

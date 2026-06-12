@@ -60,6 +60,7 @@ math_issues = validate_math(md_files, repo_root)
 **CLI:**
 
 ```bash
+uv run python -m infrastructure.validation.cli.main markdown projects/{name}/manuscript/
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 ```
 

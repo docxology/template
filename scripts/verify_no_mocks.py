@@ -22,23 +22,46 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
+from infrastructure.project.public_scope import public_project_infos
 from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
 
 logger = get_logger(__name__)
 
 
+def _scan_roots(repo_root: Path) -> list[Path]:
+    """Return every tests/ directory the policy must cover.
+
+    Always includes the repository-level ``tests/`` tree and, in addition,
+    each public exemplar project's ``tests/`` directory (resolved via
+    :func:`public_project_infos` so the enforcement surface stays in lockstep
+    with the public CI scope). Project ``tests/`` dirs that do not exist in the
+    current checkout are skipped silently; the repo-level ``tests/`` dir is
+    required and its absence is treated as a failure by the caller.
+    """
+    roots = [repo_root / "tests"]
+    for project in public_project_infos(repo_root):
+        project_tests = (repo_root / project.path / "tests").resolve()
+        if project_tests.exists():
+            roots.append(project_tests)
+    return roots
+
+
 def main() -> int:
     """Main verification function."""
-    repo_root = Path(__file__).parent.parent
-    tests_dir = repo_root / "tests"
+    repo_root = Path(__file__).resolve().parent.parent
+    repo_tests_dir = repo_root / "tests"
 
     log_header("🔍 Verifying No Mocks Policy compliance...", logger)
 
-    if not tests_dir.exists():
-        logger.warning(f"Tests directory not found at {tests_dir}")
-        return 0
+    if not repo_tests_dir.exists():
+        # The repo-level tests/ tree is load-bearing; a missing directory means
+        # the check cannot run, so fail loudly rather than silently passing.
+        logger.error(f"❌ FAILURE: Tests directory not found at {repo_tests_dir}")
+        return 1
 
-    violations = validate_no_mocks(tests_dir, repo_root)
+    violations: list[str] = []
+    for tests_dir in _scan_roots(repo_root):
+        violations.extend(validate_no_mocks(tests_dir, repo_root))
 
     if violations:
         # Mock usage found

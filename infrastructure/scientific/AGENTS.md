@@ -2,13 +2,15 @@
 
 ## Purpose
 
-The Scientific module provides utilities and best practices for developing scientific computing software. It includes numerical stability checking, performance benchmarking, research workflow templates, and compliance validation for scientific implementations.
+The Scientific module provides utilities and best practices for developing scientific computing software. It includes numerical stability checking, performance benchmarking, and independent improvement confirmation for scientific implementations.
+
+> **Tier: exemplar-support.** This is a Layer-1 module by location, but it is imported only by its scientific exemplar(s) — it is intentionally **not** generic-reach across `infrastructure/`. Treat it as exemplar support, not as a candidate for dead-code removal nor as a general-purpose infra dependency.
 
 ## Architecture
 
 ### Modular Structure
 
-The scientific module has been refactored into focused submodules for better organization:
+The scientific module is organized into focused submodules:
 
 ```mermaid
 flowchart TB
@@ -17,14 +19,11 @@ flowchart TB
     SCI --> STAB[stability.py<br/>Numerical stability checking]
     SCI --> BEN[benchmarking.py<br/>Performance benchmarking]
     SCI --> CONF[confirmation.py<br/>Improvement confirmation]
-    SCI --> DOC[documentation.py<br/>Scientific documentation generation]
-    SCI --> VAL[validation.py<br/>Implementation validation]
-    SCI --> TPL[templates.py<br/>Module &amp; workflow templates]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#1e3a8a,stroke:#0f172a,color:#fff
     class SCI d
-    class INIT,STAB,BEN,CONF,DOC,VAL,TPL f
+    class INIT,STAB,BEN,CONF f
 ```
 
 **stability.py** (~100 lines)
@@ -39,20 +38,6 @@ flowchart TB
 **confirmation.py**
 - `confirm_improvement()` - Confirm a candidate beats a baseline metric beyond the noise band
 - `Confirmation` dataclass - Result with `candidate_mean`, `baseline_metric`, `delta`, `noise_band`, `confirmed`
-
-**documentation.py** (~120 lines)
-- `generate_scientific_documentation()` - Function documentation from signatures
-- `generate_api_documentation()` - Module-level API documentation
-
-**validation.py** (~300 lines)
-- `validate_scientific_implementation()` - Test case validation
-- `validate_scientific_best_practices()` - Module-level compliance checking
-- `check_research_compliance()` - Research software standards verification
-
-**templates.py** (~220 lines)
-- `create_scientific_module_template()` - Module boilerplate with best practices
-- `create_scientific_test_suite()` - test suite templates
-- `create_scientific_workflow_template()` - Reproducible workflow templates
 
 ## Key Features
 
@@ -105,43 +90,6 @@ result = confirm_improvement(
 print(result.delta, result.noise_band, result.confirmed)
 ```
 
-### Scientific Documentation
-```python
-# Import from main module (recommended)
-from infrastructure.scientific import generate_scientific_documentation, generate_api_documentation
-
-# Or import from specific module
-from infrastructure.scientific.documentation import generate_scientific_documentation
-
-docs = generate_scientific_documentation(your_function)
-```
-
-### Best Practices Validation
-```python
-# Import from main module (recommended)
-from infrastructure.scientific import validate_scientific_best_practices, check_research_compliance
-
-# Or import from specific module
-from infrastructure.scientific.validation import validate_scientific_best_practices
-
-report = validate_scientific_best_practices(your_module)
-```
-
-### Module Templates
-```python
-# Import from main module (recommended)
-from infrastructure.scientific import (
-    create_scientific_module_template,
-    create_scientific_test_suite,
-    create_scientific_workflow_template,
-)
-
-# Or import from specific module
-from infrastructure.scientific.templates import create_scientific_module_template
-
-template = create_scientific_module_template("my_algorithm")
-```
-
 ## Testing
 
 Run scientific tests with:
@@ -155,11 +103,10 @@ No specific configuration required. All scientific utilities operate with sensib
 
 ## Integration
 
-Scientific module is used by:
-- Research algorithm validation
-- Performance optimization workflows
-- Scientific package development
-- Best practices enforcement
+Exemplar-support tier (see Purpose): imported only by its scientific exemplar(s), used for:
+- Numerical stability checking during algorithm development
+- Performance benchmarking / optimization workflows
+- Independent improvement confirmation against a baseline
 
 ## Troubleshooting
 
@@ -185,38 +132,6 @@ Scientific module is used by:
 - Review iteration count (may be too high)
 - Check for side effects affecting measurements
 
-### Documentation Generation Fails
-
-**Issue**: `generate_scientific_documentation()` produces incomplete docs.
-
-**Solutions**:
-- Verify function has proper docstrings
-- Check function signature is parseable
-- Ensure type hints are present
-- Review AST parsing for complex signatures
-- Check for syntax errors in source code
-
-### Validation Reports Issues
-
-**Issue**: `validate_scientific_best_practices()` reports unexpected failures.
-
-**Solutions**:
-- Review validation criteria for your use case
-- Check that module follows expected structure
-- Verify test coverage meets requirements
-- Ensure documentation is - Review validation configuration
-
-### Template Generation Errors
-
-**Issue**: `create_scientific_module_template()` creates invalid code.
-
-**Solutions**:
-- Verify module name follows Python naming conventions
-- Check template parameters are valid
-- Review generated code for syntax errors
-- Ensure output directory is writable
-- Test generated templates before use
-
 ## Best Practices
 
 ### Numerical Stability
@@ -232,34 +147,6 @@ Scientific module is used by:
 - **Multiple Runs**: Run benchmarks multiple times for reliability
 - **Control Environment**: Minimize system load during benchmarking
 - **Track Trends**: Monitor performance over time
-
-### Scientific Documentation
-
-- **Docstrings**: Include purpose, parameters, returns, and examples
-- **Type Hints**: Use type hints for all function signatures
-- **Examples**: Provide working code examples
-- **Mathematical Notation**: Document mathematical formulations clearly
-
-### Best Practices Validation
-
-- **Follow Standards**: Adhere to scientific computing best practices
-- **Test Coverage**: Maintain high test coverage
-- **Documentation**: Keep documentation current with code
-- **Code Quality**: Follow PEP 8 and scientific computing conventions
-
-### Module Templates
-
-- **Use Templates**: Start modules from templates
-- **Customize Appropriately**: Adapt templates to specific needs
-- **Maintain Consistency**: Follow template structure across modules
-- **Update Templates**: Keep templates current with best practices
-
-### Research Compliance
-
-- **Reproducibility**: Ensure all code is reproducible
-- **Version Control**: Track all code changes
-- **Documentation**: Document algorithms and methods thoroughly
-- **Testing**: Test all scientific code comprehensively
 
 ## See Also
 

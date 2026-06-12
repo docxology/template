@@ -8,8 +8,8 @@ module: `python -m infrastructure.validation.cli <subcommand> ...`.
 
 ## Files
 
-- `main.py` — CLI dispatcher (argparse subparsers + handlers)
-- `pdf.py` — legacy PDF CLI with `--project` discovery (canonical: `python -m infrastructure.validation.cli pdf …`)
+- `main.py` — CLI dispatcher (argparse subparsers + handlers); the `markdown` subcommand (`python -m infrastructure.validation.cli markdown …`) is dispatched here
+- `pdf.py` — PDF validation CLI (`python -m infrastructure.validation.cli pdf …`)
 - `__main__.py` — module entry point (delegates to `main.main()`)
 - `__init__.py` — package marker
 

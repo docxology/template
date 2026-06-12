@@ -25,6 +25,7 @@ __all__ = [
     "build_autoresearch_plan",
     "load_autoresearch_config",
     "parse_string_sequence",
+    "validate_autoresearch_overlay",
     "validate_autoresearch_plan",
     "write_autoresearch_report",
 ]
@@ -56,6 +57,10 @@ _EXPORTS = {
     "ValidationPhase": ("infrastructure.autoresearch.validation", "ValidationPhase"),
     "load_autoresearch_config": ("infrastructure.autoresearch.config", "load_autoresearch_config"),
     "parse_string_sequence": ("infrastructure.autoresearch.config", "parse_string_sequence"),
+    "validate_autoresearch_overlay": (
+        "infrastructure.autoresearch.validation",
+        "validate_autoresearch_overlay",
+    ),
     "validate_autoresearch_plan": ("infrastructure.autoresearch.validation", "validate_autoresearch_plan"),
     "write_autoresearch_report": ("infrastructure.autoresearch.reports", "write_autoresearch_report"),
 }

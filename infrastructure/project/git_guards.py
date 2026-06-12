@@ -8,10 +8,9 @@ from pathlib import Path
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
-# Both allowlists derive from PUBLIC_PROJECT_NAMES — the single roster source of
-# truth — so they can never drift from the public exemplar roster. (Before
-# 2026-06-10 these were hand-maintained literals and ALLOWED_TRACKED_OUTPUT_PREFIXES
-# had silently fallen two exemplars behind the roster.)
+# Derived from PUBLIC_PROJECT_NAMES — the single roster source of truth — so it
+# can never drift from the public exemplar roster. (Before 2026-06-10 this was a
+# hand-maintained literal.)
 ALLOWED_PROJECT_DIRS: tuple[str, ...] = tuple(f"projects/{name}/" for name in PUBLIC_PROJECT_NAMES)
 
 # Repo-level navigation docs that may live directly under projects/. This is an
@@ -62,13 +61,6 @@ GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
     "projects/*/*/output/*",
 )
 
-# Public exemplar rendered output may be tracked as living render-proof (the
-# published papers). Scoped to PUBLIC_PROJECT_NAMES only — every other
-# project's output (confidential/rotating) stays ignored and is NEVER allowed
-# here. Only repo-level output/<name>/ is allowed; project-local
-# projects/<name>/output/ remains a disposable working tree.
-ALLOWED_TRACKED_OUTPUT_PREFIXES: tuple[str, ...] = tuple(f"output/{name}/" for name in PUBLIC_PROJECT_NAMES)
-
 
 def offending_tracked_projects(repo_root: Path) -> list[str]:
     proc = subprocess.run(
@@ -90,9 +82,12 @@ def offending_tracked_projects(repo_root: Path) -> list[str]:
 
 
 def is_generated_artifact_path(path: str) -> bool:
+    # No output/ path is exempt: all rendered output is disposable and must
+    # never be committed (see .gitignore — the former living render-proof
+    # exemption was dead and was removed). If render-proof outputs are ever
+    # reintroduced, restore an output/<name>/ allowlist here AND the matching
+    # .gitignore negation block together.
     normalized = path.replace("\\", "/")
-    if any(normalized.startswith(prefix) for prefix in ALLOWED_TRACKED_OUTPUT_PREFIXES):
-        return False
     return any(fnmatch.fnmatch(normalized, pattern) for pattern in GENERATED_ARTIFACT_PATTERNS)
 
 

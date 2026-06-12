@@ -30,8 +30,29 @@ __all__ = [
     "NON_RENDERED_SUBDIRS",
     "discover_projects",
     "get_default_project",
+    "project_name_from_root",
     "resolve_project_root",
 ]
+
+
+def project_name_from_root(project_root: Path, repo_root: Path) -> str:
+    """Return the project discovery name for active or WIP project roots.
+
+    The discovery name is the project path relative to ``<repo_root>/projects``
+    (e.g. ``active/demo``) when the project lives under that tree; otherwise the
+    bare directory name is returned.
+
+    Args:
+        project_root: Filesystem root of the project.
+        repo_root: Repository root directory.
+
+    Returns:
+        The project's discovery name.
+    """
+    try:
+        return str(project_root.resolve().relative_to((repo_root / "projects").resolve()))
+    except ValueError:
+        return project_root.name
 
 
 def discover_projects(

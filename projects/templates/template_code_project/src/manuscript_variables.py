@@ -20,12 +20,22 @@ import csv
 import hashlib
 import json
 import platform
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 import yaml
+
+try:
+    from infrastructure.core.determinism import resolve_build_timestamp
+except ImportError:  # standalone use without infrastructure on the path
+    from datetime import datetime as _dt
+    from datetime import timezone as _tz
+
+    def resolve_build_timestamp(*, repo_root: Path | None = None) -> str:  # type: ignore[misc]
+        """Wall-clock fallback when infrastructure.core.determinism is unavailable."""
+        return _dt.now(_tz.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
 
 try:
     from .experiment_config import load_experiment_config
@@ -288,7 +298,9 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
 
     # ---- Provenance ----
     variables["CONFIG_HASH"] = _compute_config_hash(project_root)
-    variables["GENERATION_TIMESTAMP"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    # Deterministic in TEMPLATE_DETERMINISTIC / SOURCE_DATE_EPOCH mode (HEAD commit
+    # time) so the rendered manuscript is byte-stable; wall-clock otherwise.
+    variables["GENERATION_TIMESTAMP"] = resolve_build_timestamp(repo_root=project_root)
     variables["PYTHON_VERSION"] = platform.python_version()
     variables["NUMPY_VERSION"] = np.__version__
     variables["PLATFORM"] = f"{platform.system()} {platform.machine()}"

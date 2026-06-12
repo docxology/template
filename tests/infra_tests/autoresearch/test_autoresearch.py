@@ -747,3 +747,44 @@ benchmark_tasks:
     assert (project / "output" / "reports" / "autoresearch_summary.md").exists()
     scores = json.loads((project / "output" / "data" / "benchmark_scores.json").read_text(encoding="utf-8"))
     assert scores["tasks"][0]["id"] == "smoke"
+
+
+def test_validate_autoresearch_overlay_returns_empty_without_marker(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import validate_autoresearch_overlay
+
+    project = tmp_path / "projects" / "demo"
+    project.mkdir(parents=True)
+
+    issues = validate_autoresearch_overlay(project, tmp_path)
+
+    assert issues == []
+    assert not (project / "output" / "reports" / "autoresearch_readiness.json").exists()
+
+
+def test_validate_autoresearch_overlay_surfaces_errors_and_writes_report(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import validate_autoresearch_overlay
+
+    repo_root = _write_repo_scaffold(tmp_path)
+    project = repo_root / "projects" / "demo"
+    (project / "autoresearch.yaml").write_text(
+        "strict: true\nquality_checks: [unknown_check]\n",
+        encoding="utf-8",
+    )
+
+    issues = validate_autoresearch_overlay(project, repo_root)
+
+    assert any("AUTORESEARCH.QUALITY_CHECK_UNKNOWN" in issue for issue in issues)
+    assert (project / "output" / "reports" / "autoresearch_readiness.json").exists()
+
+
+def test_validate_autoresearch_overlay_reports_failures_gracefully(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import validate_autoresearch_overlay
+
+    # Marker present but no pipeline.yaml scaffold -> build raises, surfaced as a string.
+    project = tmp_path / "projects" / "demo"
+    project.mkdir(parents=True)
+    (project / "autoresearch.yaml").write_text("strict: true\n", encoding="utf-8")
+
+    issues = validate_autoresearch_overlay(project, tmp_path)
+
+    assert any("AutoResearch readiness validation failed" in issue for issue in issues)

@@ -103,6 +103,11 @@ uv run python scripts/generate_method_inventory.py
 uv run pytest tests/ --cov=src --cov-fail-under=90
 ```
 
+> Runtime: the full suite is slow (~15-25 min serial) — real pandoc/xelatex
+> rendering and artifact-generation/gate tests dominate, so a quiet console for
+> several minutes is expected, not a hang. For a fast inner loop, scope with
+> `-k` (e.g. `uv run pytest tests/ -k "not gate and not figure" --no-cov`).
+
 From repo root:
 
 ```bash

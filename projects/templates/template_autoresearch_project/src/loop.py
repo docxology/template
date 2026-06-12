@@ -12,6 +12,7 @@ from infrastructure.autoresearch import (
     write_autoresearch_report,
 )
 from infrastructure.autoresearch.models import AutoResearchIssue
+from infrastructure.core.determinism import resolve_source_date_epoch
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
     write_evidence_registry_report,
@@ -68,7 +69,12 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
     config = build_loop_config(plan, settings, human_review=human_review)
     readiness_pre = validate_autoresearch_plan(plan, project_root, phase="intrinsic")
     stage_results = build_stage_results(config, plan_stage_count=len(plan.stages))
-    generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    # Deterministic (HEAD commit time) in TEMPLATE_DETERMINISTIC / SOURCE_DATE_EPOCH
+    # mode so the emitted artifacts are byte-stable across runs; wall-clock otherwise.
+    # Keep the historical +00:00 isoformat (timespec=seconds) shape the writers expect.
+    _epoch = resolve_source_date_epoch(repo_root=project_root)
+    _moment = datetime.fromtimestamp(_epoch, tz=timezone.utc) if _epoch is not None else datetime.now(timezone.utc)
+    generated_at = _moment.isoformat(timespec="seconds")
 
     output_paths: list[Path] = []
     output_paths.extend(

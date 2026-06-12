@@ -10,6 +10,7 @@ import pytest
 from infrastructure.rendering.dockerfile_gen import (
     DEFAULT_BASE_IMAGE,
     DEFAULT_LATEX_PACKAGES,
+    DEFAULT_UV_VERSION,
     DockerfileConfig,
     build_compose_yaml,
     build_dockerfile,
@@ -52,7 +53,29 @@ def test_build_dockerfile_uses_custom_latex_packages() -> None:
 
 def test_build_dockerfile_installs_uv() -> None:
     text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12"))
-    assert "astral.sh/uv/install.sh" in text
+    assert "astral.sh/uv/" in text
+    assert "install.sh" in text
+
+
+def test_build_dockerfile_pins_uv_version_by_default() -> None:
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12"))
+    # Default config pins uv: the installer URL is versioned, not the floating endpoint.
+    assert f"https://astral.sh/uv/{DEFAULT_UV_VERSION}/install.sh" in text
+    assert "https://astral.sh/uv/install.sh" not in text
+
+
+def test_build_dockerfile_latest_uses_unversioned_installer() -> None:
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12", uv_version="latest"))
+    assert "https://astral.sh/uv/install.sh" in text
+
+
+def test_build_dockerfile_is_deterministic_no_timestamp() -> None:
+    cfg = DockerfileConfig(project_name="x", python_version="3.12")
+    first = build_dockerfile(cfg)
+    second = build_dockerfile(cfg)
+    assert first == second
+    # No wall-clock timestamp comment leaks into the output.
+    assert "Generated at" not in first
 
 
 def test_build_dockerfile_runs_uv_sync_frozen() -> None:

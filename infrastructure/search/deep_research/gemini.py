@@ -121,6 +121,17 @@ class GeminiDeepResearchProvider:
             raw={"id": getattr(resp, "id", None), "status": getattr(resp, "status", None)},
         )
 
+    def cancel(self, job_id: str) -> DeepResearchResult:
+        """Cancel a running interaction (Gemini ``interactions.cancel``)."""
+        resp = self._client().interactions.cancel(job_id)
+        return DeepResearchResult(
+            provider="gemini",
+            job_id=job_id,
+            status=str(getattr(resp, "status", "cancelled")),
+            output_text=str(getattr(resp, "output_text", "")),
+            raw={"id": getattr(resp, "id", None), "status": getattr(resp, "status", None)},
+        )
+
 
 def _extract_citations(resp: Any) -> tuple[DeepResearchCitation, ...]:
     citations: list[DeepResearchCitation] = []

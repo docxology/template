@@ -5,6 +5,7 @@ import subprocess
 import time
 from pathlib import Path
 
+from infrastructure.core.determinism import deterministic_subprocess_env
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.progress import log_progress_bar
 from infrastructure.core.logging.utils import get_logger
@@ -47,6 +48,10 @@ def _run_latex_pass(
     aux_file = output_dir / f"{tex_stem}.aux"
     xelatex_stdout_log = output_dir / "_xelatex_stdout.log"
 
+    # Pin SOURCE_DATE_EPOCH in deterministic mode so xelatex stamps a stable
+    # /CreationDate (byte-stable PDFs). No-op in wall-clock mode — a faithful
+    # copy of os.environ. repo_root is the output_dir's owning checkout; the
+    # resolver walks git from there.
     with open(xelatex_stdout_log, "w") as stdout_sink:
         result = subprocess.run(
             cmd,
@@ -55,6 +60,7 @@ def _run_latex_pass(
             stderr=subprocess.STDOUT,
             cwd=str(output_dir),
             timeout=timeout,
+            env=deterministic_subprocess_env(repo_root=output_dir),
         )
 
     repair_truncated_aux(aux_file)

@@ -4,8 +4,8 @@ CLI entry points for markdown, PDF, and repository validation.
 
 ## Files
 
-- `main.py` — subcommand dispatcher (`markdown`, `pdf`, `prerender`, `integrity`, `links`, …)
-- `pdf.py` — legacy standalone PDF entry with `--project` discovery
+- `main.py`
+- `pdf.py`
 - `__main__.py`
 - `__init__.py`
 

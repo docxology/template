@@ -5,6 +5,10 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+from infrastructure.core.logging.utils import get_logger
+
+logger = get_logger(__name__)
+
 
 def merge_supplements(canonical: Path, supplements: list[Path], dry_run: bool = False) -> int:
     """Merge supplement test blocks into a canonical test module."""
@@ -16,19 +20,19 @@ def merge_supplements(canonical: Path, supplements: list[Path], dry_run: bool = 
 
     for supplement in supplements:
         if not supplement.exists():
-            print(f"skip missing {supplement}")
+            logger.warning("skip missing %s", supplement)
             continue
         added = _append_unique_blocks(supplement, keys, class_names, append_chunks)
-        print(f"{supplement.name}: appended {added} blocks")
+        logger.info("%s: appended %d blocks", supplement.name, added)
 
     if not append_chunks:
         return 0
     if dry_run:
-        print(f"would append {len(append_chunks)} blocks to {canonical}")
+        logger.info("would append %d blocks to %s", len(append_chunks), canonical)
         return len(append_chunks)
 
     canonical.write_text(canonical_source.rstrip() + "\n" + "".join(append_chunks), encoding="utf-8")
-    print(f"merged {len(append_chunks)} total blocks into {canonical.name}")
+    logger.info("merged %d total blocks into %s", len(append_chunks), canonical.name)
     return len(append_chunks)
 
 

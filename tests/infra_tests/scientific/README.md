@@ -4,7 +4,7 @@ tests for scientific computing utilities.
 
 ## Overview
 
-Tests for scientific module including numerical stability checking, performance benchmarking, documentation generation, and best practices validation.
+Tests for scientific module including numerical stability checking, performance benchmarking, and independent improvement confirmation.
 
 ## Quick Start
 
@@ -21,12 +21,9 @@ uv run pytest tests/infra_tests/scientific/test_scientific_dev.py -v
 | File | Purpose |
 | --- | --- |
 | `test_benchmarking.py` | Performance benchmarking |
-| `test_documentation.py` | API documentation generation |
-| `test_scientific_dev.py` | Scientific development utilities |
-| `test_scientific_dev.py` | Scientific dev utilities (includes former edge-case paths) |
+| `test_confirmation.py` | Improvement confirmation |
+| `test_scientific_dev.py` | Scientific development utilities (stability + benchmarking) |
 | `test_stability.py` | Numerical stability checking |
-| `test_templates.py` | Research templates |
-| `test_validation.py` | Scientific validation rules |
 
 ### Scientific Development Tests (`test_scientific_dev.py`)
 
@@ -39,8 +36,7 @@ uv run pytest tests/infra_tests/scientific/test_scientific_dev.py -v
 **Test Coverage:**
 - Numerical stability checking
 - Performance benchmarking
-- API documentation generation
-- Best practices validation
+- Performance report generation
 
 ## Test Categories
 
@@ -104,8 +100,7 @@ uv run pytest tests/infra_tests/scientific/ \
 graph TD
     A[Scientific Tests] --> B[Stability Tests]
     A --> C[Benchmarking Tests]
-    A --> D[Documentation Tests]
-    A --> E[Validation Tests]
+    A --> D[Confirmation Tests]
 
     B --> F[Numerical Stability]
     B --> G[Error Analysis]
@@ -113,11 +108,8 @@ graph TD
     C --> H[Performance Measurement]
     C --> I[Resource Usage]
 
-    D --> J[API Documentation]
-    D --> K[Symbol Extraction]
-
-    E --> L[Best Practices]
-    E --> M[Code Quality]
+    D --> J[Baseline Comparison]
+    D --> K[Noise Band]
 ```
 
 ## See Also

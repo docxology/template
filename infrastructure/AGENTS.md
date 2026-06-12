@@ -315,6 +315,8 @@ Tracked after the P0 composability pass (stage registry, unified markdown discov
 
 ### SIA Module (`sia/`)
 
+_Exemplar-support tier: Layer-1 by location, imported only by its `template_sia` exemplar, not generic-reach across `infrastructure/`._
+
 #### task_layout.py
 
 - `def validate_task_dir(path: Path | str) -> TaskLayout:`
@@ -577,13 +579,11 @@ uv run python infrastructure/documentation/generate_glossary_cli.py src/ manuscr
 
 ### Scientific Module (`scientific/`)
 
-**Scientific computing utilities.**
+**Scientific computing utilities.** _Exemplar-support tier: Layer-1 by location, imported only by its scientific exemplar(s), not generic-reach across `infrastructure/`._
 
 - `benchmarking.py` - Performance benchmarking utilities
 - `stability.py` - Numerical stability checking
-- `validation.py` - Scientific best practices validation
-- `documentation.py` - Scientific documentation generation
-- `templates.py` - Module/workflow scaffolding templates
+- `confirmation.py` - Independent improvement confirmation
 
 ### LLM Module (`llm/`)
 

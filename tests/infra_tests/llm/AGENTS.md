@@ -68,7 +68,19 @@ Model names `primary-model` / `fallback1` still yield HTTP 500 for fallback test
 ### 2. Real daemon (`@pytest.mark.requires_ollama`)
 
 Smoke checks against a local Ollama install (`ollama serve`, at least one model).
-Not expected in environments without the daemon.
+
+**These tests FAIL (not skip) when Ollama is unavailable — by design.** The
+session fixture auto-starts Ollama first and, if it cannot, fails with concrete
+setup steps (install → `ollama serve` → `ollama pull <model>`). A silent skip
+would let LLM regressions slip through on a machine that is meant to run the LLM
+path. To run **without** the LLM surface, deselect it explicitly:
+
+```bash
+uv run pytest tests/infra_tests/llm/ -m "not requires_ollama"
+```
+
+Full opt-out commands, setup steps, env vars, and the LaTeX/pandoc gate are in
+the [optional-dependencies capability matrix](../../../docs/development/optional-dependencies.md).
 
 ## Running Tests
 
@@ -273,6 +285,7 @@ This is a model quality issue, not a code bug:
 
 ## See Also
 
+- [`../../../docs/development/optional-dependencies.md`](../../../docs/development/optional-dependencies.md) - Optional-dependency capability matrix (Ollama / LaTeX / pandoc gating + opt-out)
 - [`../../../infrastructure/llm/AGENTS.md`](../../../infrastructure/llm/AGENTS.md) - Module documentation
 - [`../../../infrastructure/llm/README.md`](../../../infrastructure/llm/README.md) - Quick reference
 - [`conftest.py`](conftest.py) - Fixture definitions

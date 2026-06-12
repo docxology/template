@@ -120,7 +120,8 @@ def test_canonical_exemplar_markdown_is_in_scope(tmp_path: Path) -> None:
     )
     issues = check_module_count_claims(repo)
     assert any(
-        "projects/templates/template_code_project/manuscript/01_intro.md" in str(i.file) and i.category == "module-count"
+        "projects/templates/template_code_project/manuscript/01_intro.md" in str(i.file)
+        and i.category == "module-count"
         for i in issues
     )
 

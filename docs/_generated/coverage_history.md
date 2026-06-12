@@ -3,6 +3,14 @@
 This file is **generated** by
 `scripts/generate_coverage_history.py`. Do not edit by hand.
 
+> **Status: empty locally — populated in CI from `gh` artefacts.** The table
+> below contains **no coverage values**: this snapshot was produced without any
+> `coverage-*.xml` inputs (no `--from-dir` artefacts and no authenticated
+> `gh run download`). The dated rows are the rolling-window calendar only, not
+> measured coverage — do **not** read them as real zero-coverage data. CI
+> regenerates this file with actual percentages from downloaded run artefacts;
+> reproduce locally with the commands under [Regenerate](#regenerate).
+
 Last verified: 2026-05-27
 Rolling window: 30 day(s) — 2026-04-28 → 2026-05-27
 Suites observed: (none)
