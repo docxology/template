@@ -6,8 +6,12 @@ import json
 import logging
 from pathlib import Path
 
-from .experiment_config import ExperimentConfig, load_experiment_config
-from .project_paths import resolve_project_root
+try:
+    from .experiment_config import ExperimentConfig, load_experiment_config
+    from .project_paths import resolve_project_root
+except ImportError:  # standalone load (no package context) — mirror the src/ import pattern
+    from experiment_config import ExperimentConfig, load_experiment_config  # type: ignore[no-redef]
+    from project_paths import resolve_project_root  # type: ignore[no-redef]
 
 
 def project_root(caller: str = "src") -> Path:
