@@ -1,5 +1,6 @@
 """Tests for infrastructure.validation.integrity.check_links."""
 
+import time
 from pathlib import Path
 
 import pytest
@@ -56,7 +57,6 @@ class TestExtractCodeBlocks:
         assert blocks[1]["language"] == "python"
 
 
-
 class TestValidateDirectoryStructures:
     def test_valid_tree(self, tmp_path):
         (tmp_path / "src").mkdir()
@@ -74,7 +74,6 @@ class TestValidateDirectoryStructures:
     def test_tree_diagram_with_existing_dir(self, tmp_path):
         (tmp_path / "src").mkdir()
         assert validate_directory_structures("```\n├── src/\n```", tmp_path / "test.md", tmp_path) == []
-
 
 
 class TestValidatePythonImports:
@@ -100,7 +99,6 @@ class TestValidatePythonImports:
         assert validate_python_imports(content, f, tmp_path) == []
 
 
-
 class TestValidatePlaceholderConsistency:
     def test_template_usage_ok(self, tmp_path):
         content = "Use projects/{name}/src for your project template."
@@ -117,7 +115,6 @@ class TestValidatePlaceholderConsistency:
         content = "Use {name} for the project."
         fp = tmp_path / "AGENTS.md"
         assert validate_placeholder_consistency(content, fp, tmp_path) == []
-
 
 
 class TestGenerateComprehensiveReport:
@@ -190,7 +187,6 @@ class TestGenerateComprehensiveReport:
         assert generate_comprehensive_report(issues, 15) == 1
 
 
-
 class TestRunLinkAudit:
     def test_clean_repo(self, tmp_path):
         (tmp_path / "README.md").write_text("# Hello World\n\nSimple text, no links.")
@@ -200,6 +196,87 @@ class TestRunLinkAudit:
         (tmp_path / "README.md").write_text("[Missing](nonexistent.md)")
         assert run_link_audit(tmp_path) == 1
 
+
+class TestLinkAuditPerformance:
+    """Pin the link-audit walk fast on large trees and equivalent in behavior."""
+
+    @staticmethod
+    def _scaffold_large_tree(root: Path, *, n_docs: int = 400) -> Path:
+        """Build a wide+deep markdown tree with one known broken link.
+
+        Includes excluded/gitignored sibling trees (``.git``, ``.venv``,
+        ``node_modules``, ``output``, ``__pycache__``) packed with markdown the
+        audit must never descend into — the pruning walk should ignore them
+        without paying for the descent.
+        """
+        # Valid cross-linked docs spread across a deep directory fan-out.
+        for i in range(n_docs):
+            sub = root / "docs" / f"section_{i % 20}" / f"sub_{i % 5}"
+            sub.mkdir(parents=True, exist_ok=True)
+            target = sub / f"page_{i}.md"
+            target.write_text(f"# Page {i}\n\nContent for page {i}.\n")
+        # Each doc links to its neighbor (all valid) plus a hub index.
+        index = root / "docs" / "index.md"
+        index.write_text(
+            "# Index\n\n" + "\n".join(f"- [p{i}](section_{i % 20}/sub_{i % 5}/page_{i}.md)" for i in range(n_docs))
+        )
+        # Exactly one broken file reference — the known needle.
+        (root / "README.md").write_text("# Root\n\nSee [the missing doc](docs/this_does_not_exist.md).\n")
+        # Excluded trees the walk must prune before descending.
+        for excluded in (".git", ".venv", "node_modules", "output", "__pycache__"):
+            big = root / excluded / "deep" / "nested"
+            big.mkdir(parents=True, exist_ok=True)
+            for j in range(200):
+                # These reference nonexistent files; if the walk descended into
+                # them the audit would report extra broken links.
+                (big / f"junk_{j}.md").write_text(f"[broken]({excluded}_missing_{j}.md)\n")
+        return root
+
+    def test_discovery_matches_canonical_and_prunes(self, tmp_path):
+        """The pruning walk yields exactly the canonical link-audit file set."""
+        from infrastructure.validation.integrity.link_audit_core import discover_link_audit_files
+
+        root = self._scaffold_large_tree(tmp_path, n_docs=120)
+        canonical = canonical_discover(root, scope="link_audit")
+        pruned = discover_link_audit_files(root)
+        assert pruned == canonical
+        # No file from an excluded tree leaked through.
+        assert not any(
+            part in {".git", ".venv", "node_modules", "output", "__pycache__"} for f in pruned for part in f.parts
+        )
+
+    @pytest.mark.timeout(120)
+    def test_audit_finds_only_known_broken_link_under_budget(self, tmp_path):
+        """Audit detects exactly the planted broken link and finishes fast."""
+        root = self._scaffold_large_tree(tmp_path, n_docs=400)
+
+        start = time.perf_counter()
+        exit_code = run_link_audit(root)
+        elapsed = time.perf_counter() - start
+
+        # One broken link present -> non-zero exit.
+        assert exit_code == 1
+
+        # Cross-check the exact finding via the library surface so the count is
+        # pinned, not just the exit code.
+        from infrastructure.validation.integrity.link_audit_core import discover_link_audit_files
+
+        broken: list[str] = []
+        files = discover_link_audit_files(root)
+        for md in files:
+            _internal, _external, file_refs = extract_links(md.read_text(), md)
+            for ref in file_refs:
+                target = ref["target"].split("#", 1)[0]
+                if not target:
+                    continue
+                exists, _msg = check_file_reference(target, md, root)
+                if not exists:
+                    broken.append(f"{md.relative_to(root)} -> {ref['target']}")
+        assert broken == ["README.md -> docs/this_does_not_exist.md"], broken
+
+        # Generous budget: the pruning walk + single-pass read keeps this well
+        # under a few seconds even with thousands of excluded-tree files present.
+        assert elapsed < 10.0, f"link audit too slow on large tree: {elapsed:.2f}s"
 
 
 class TestBrokenAnchorLinks:
@@ -224,7 +301,6 @@ class TestBrokenAnchorLinks:
         assert "sub-section" in headings
 
 
-
 class TestCheckLinksIntegrationComprehensive:
     def test_full_link_checking_workflow(self, tmp_path):
         docs = tmp_path / "docs"
@@ -247,7 +323,6 @@ class TestCheckLinksIntegrationComprehensive:
         assert hasattr(check_links, "discover_markdown_files")
         assert hasattr(check_links, "extract_links")
         assert hasattr(check_links, "check_file_reference")
-
 
 
 class TestDiscoverMarkdownFilesLinkAudit:
@@ -296,7 +371,6 @@ class TestDiscoverMarkdownFilesLinkAudit:
         """Test empty directory."""
         files = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 0
-
 
 
 class TestExtractLinks:
@@ -375,7 +449,6 @@ class TestExtractLinks:
         assert file_refs[0]["line"] == 3
 
 
-
 class TestCheckFileReference:
     """Test check_file_reference function."""
 
@@ -434,7 +507,6 @@ class TestCheckFileReference:
         assert exists is True
 
 
-
 class TestExtractHeadings:
     """Test extract_headings function."""
 
@@ -467,7 +539,6 @@ class TestExtractHeadings:
         headings = extract_headings(content)
 
         assert len(headings) >= 1
-
 
 
 class TestExtractHeadingsEdgeCases:
@@ -505,7 +576,6 @@ class TestExtractHeadingsEdgeCases:
         assert "explicit-title" in headings
         assert "another-explicit" in headings
         assert "auto-section" in headings
-
 
 
 class TestCheckFileReferenceEdgeCases:
@@ -550,7 +620,6 @@ class TestCheckFileReferenceEdgeCases:
         assert "outside repository" in msg.lower() or "not exist" in msg.lower()
 
 
-
 class TestMainFunction:
     """Test main function with real data."""
 
@@ -566,5 +635,3 @@ class TestMainFunction:
         result = check_links.main()
         assert isinstance(result, int)
         assert result in (0, 1)
-
-

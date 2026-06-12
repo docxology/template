@@ -73,3 +73,22 @@ def test_get_base_html_template_structure() -> None:
     assert "{header}" in template
     assert "{content}" in template
     assert "{footer}" in template
+
+
+def test_shared_css_is_token_source() -> None:
+    """shared_css() is the single token + dark-mode source."""
+    css = html_templates.shared_css()
+    assert css.startswith(":root")
+    assert "--brand-1" in css
+    assert "prefers-color-scheme" in css
+
+
+def test_base_template_consumes_shared_tokens() -> None:
+    """Base template carries the shared --brand-1 token + dark block."""
+    template = html_templates.get_base_html_template()
+    assert "--brand-1" in template
+    assert "prefers-color-scheme" in template
+    # Template still formats cleanly (CSS braces escaped correctly).
+    rendered = template.format(title="T", header="<h></h>", content="<c></c>", footer="<f></f>")
+    assert "--brand-1" in rendered
+    assert "prefers-color-scheme" in rendered

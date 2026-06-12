@@ -12,6 +12,29 @@ from infrastructure.rendering.config import RenderingConfig
 
 logger = get_logger(__name__)
 
+# Shared design-token + dark-mode block embedded ahead of the rendered CSS so
+# the web surface participates in the same design system (one --brand-1 source
+# and a prefers-color-scheme block) as the reporting HTML surfaces. Maps a few
+# of those tokens onto this renderer's existing serif/blue palette without
+# touching ide_style.css class names. Static string → deterministic output.
+_SHARED_DESIGN_TOKENS_CSS = """:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+  body { background-color: var(--web-bg); color: var(--web-text); }
+}"""
+
 
 class WebRenderer:
     """Handles HTML generation."""
@@ -428,7 +451,10 @@ class WebRenderer:
                 logger.warning(f"CSS file not found: {css_file}, skipping CSS embedding")
                 return
 
-            css_content = css_file.read_text(encoding="utf-8")
+            # Prepend the shared design-token + dark-mode block so the web
+            # surface shares one --brand-1 source and a prefers-color-scheme
+            # block with the reporting HTML surfaces.
+            css_content = _SHARED_DESIGN_TOKENS_CSS + "\n" + css_file.read_text(encoding="utf-8")
 
             # Read HTML file
             html_content = html_file.read_text(encoding="utf-8")

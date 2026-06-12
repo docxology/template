@@ -458,6 +458,14 @@ class TestWriteRoundTrip:
         assert set(out) == {"html"}
         assert out["html"].exists()
 
+    def test_html_shares_design_tokens(self, tmp_path):
+        """Interactive dashboard HTML carries --brand-1 + a prefers-color-scheme block."""
+        d = InteractiveDashboard(title="Tokens")
+        out = d.write(html_path=tmp_path / "d.html")
+        html = out["html"].read_text()
+        assert "--brand-1" in html
+        assert "prefers-color-scheme" in html
+
     def test_creates_parent_dirs(self, tmp_path):
         nested = tmp_path / "a" / "b" / "c" / "d.html"
         d = InteractiveDashboard(title="X")

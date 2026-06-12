@@ -25,6 +25,39 @@ _STALE_AUX_EXTENSIONS = (
 
 _SIGPIPE_RETURNCODES = {-13, 141}
 
+# TeX Live 2026's beamer redefines \reserved@a in a way that trips the LaTeX
+# kernel parameter-number guard, emitting
+#   ! Illegal parameter number in definition of \reserved@a.
+# on every run. xelatex exits non-zero, yet still writes a fully valid PDF.
+# This is the *only* error signature we tolerate on a non-zero exit, and only
+# when the produced PDF exists and passes structural validation. Any other
+# error signature, a missing PDF, or a structurally invalid PDF still fails.
+_BEAMER_RESERVED_A_SIGNATURE = r"Illegal parameter number in definition of \reserved@a"
+
+
+def _is_tolerable_beamer_reserved_a(
+    returncode: int,
+    pdf_exists: bool,
+    pdf_valid: bool,
+    log_content: str,
+) -> bool:
+    """Return whether a non-zero exit is the benign TeX Live 2026 beamer warning.
+
+    Tolerate the failure only when ALL hold:
+
+    * the compiler exited non-zero (otherwise there is nothing to tolerate),
+    * a PDF was actually produced and is structurally valid, and
+    * the log contains the exact ``\\reserved@a`` parameter-number signature.
+
+    A missing/invalid PDF or any other error signature returns ``False`` so the
+    normal :class:`CompilationError` path runs.
+    """
+    if returncode == 0:
+        return False
+    if not (pdf_exists and pdf_valid):
+        return False
+    return _BEAMER_RESERVED_A_SIGNATURE in log_content
+
 
 def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
     """Remove stale LaTeX sidecar files before a fresh compile."""
@@ -160,6 +193,19 @@ def compile_latex(
                         continue
 
                     result = recovery_result
+
+                # TeX Live 2026 beamer emits the \reserved@a parameter-number
+                # error and exits non-zero while still producing a valid PDF.
+                # Downgrade that one signature to a warning and accept the PDF;
+                # everything else falls through to the failure path below.
+                if _is_tolerable_beamer_reserved_a(result.returncode, pdf_exists, pdf_valid, log_content):
+                    logger.warning(
+                        "Tolerating TeX Live 2026 beamer \\reserved@a warning "
+                        "(exit code %d) — a valid PDF was produced on pass %d",
+                        result.returncode,
+                        i + 1,
+                    )
+                    continue
 
                 if not log_content:
                     log_content = "No log file"

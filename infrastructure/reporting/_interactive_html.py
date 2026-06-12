@@ -14,6 +14,17 @@ DASHBOARD_CSS = """
 :root{
   --bg:#0f172a; --panel:#111827; --fg:#e5e7eb; --muted:#94a3b8;
   --accent:#38bdf8; --pass:#22c55e; --fail:#ef4444; --border:#1f2937;
+  /* Shared design-token alias: keeps this surface tied to the report design
+     system (see infrastructure.reporting.html_templates.shared_css). */
+  --brand-1:#5b6ee0;
+}
+/* Dashboard is dark-by-default; honor an explicit light preference so every
+   HTML surface carries a prefers-color-scheme block from one token source. */
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#eef1f6; --panel:#ffffff; --fg:#1f2733; --muted:#5a6573;
+    --accent:#5b6ee0; --border:#e3e8ef;
+  }
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--fg);

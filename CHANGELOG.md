@@ -11,12 +11,29 @@ not to the contents of any specific workspace.
 
 ### Changed
 
-- 🎨 **Generated-report web design** — modernized the base HTML report/dashboard
-  template (`infrastructure/reporting/html_templates.py`): CSS custom-property
-  design tokens, `prefers-color-scheme` dark mode, WCAG-AA status-badge contrast,
-  fluid header type (`clamp`), tabular-numeric tables with sticky headers, and a
-  mobile breakpoint. Class names + `{title}`/`{header}`/`{content}`/`{footer}`
-  placeholders unchanged (template contract preserved); output stays deterministic.
+- 🎨 **Generated-report web design + unified design system (WEBDESIGN-EXTEND-1)** —
+  modernized the base HTML report/dashboard template and extracted the design
+  tokens into a shared `html_templates.shared_css()` (single source of truth: CSS
+  custom properties + `prefers-color-scheme` dark mode, WCAG-AA status contrast,
+  fluid `clamp` type, tabular-numeric sticky tables, mobile breakpoint). All four
+  generated HTML surfaces — base report, pipeline report (`pipeline_html.py`),
+  interactive dashboard (`_interactive_html.py`), and the web renderer
+  (`web_renderer.py`) — now anchor to the shared `--brand-1` token + a
+  `prefers-color-scheme` block. Template contracts + deterministic output preserved.
+- ⚡ **Fast doc link-audit (LINKCHECK-PERF-1)** — `link_audit_core.py` now prunes
+  excluded/gitignored directories with `os.walk` *before* descending (no longer
+  materializes `.git/`/`.venv/`/`node_modules/`) and reads each markdown file once
+  instead of twice: ~15–28× faster discovery on the live checkout, same broken-link
+  set. Adds a timed regression test.
+
+### Fixed
+
+- 📐 **TeX Live 2026 beamer compatibility (TEXLIVE-2026-BEAMER-1)** —
+  `latex_utils.compile_latex` now downgrades the benign `! Illegal parameter number
+  in definition of \reserved@a` kernel warning to a logged warning **when a valid
+  PDF is produced**, instead of raising `CompilationError` on the non-zero exit.
+  Genuine failures (missing/invalid PDF, any other error) still raise. Fixes beamer
+  rendering under TeX Live 2026 while preserving fail-hard semantics.
 
 ## [3.4.0] — 2026-06-12
 

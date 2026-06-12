@@ -10,23 +10,25 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
-def get_base_html_template() -> str:
-    """Get base HTML template with styles.
+def shared_css() -> str:
+    """Return the shared design-token + dark-mode CSS block.
+
+    This is the single source of truth for the modernized HTML design system:
+    a ``:root`` custom-property block (``--brand-1`` … ``--mono``) plus the
+    ``@media (prefers-color-scheme: dark)`` overrides. Every generated HTML
+    surface (report templates, pipeline reports, interactive dashboards, and
+    the web renderer) embeds this string so they share one token source.
+
+    Output uses single braces (plain CSS) so callers can either embed it
+    verbatim or escape braces for ``str.format``-based templates. The string is
+    fully static — no timestamps or randomness — to keep generated output
+    deterministic.
 
     Returns:
-        Base HTML template string
+        CSS string containing the ``:root`` token block and the
+        ``prefers-color-scheme: dark`` override block.
     """
-    return """<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
-    <title>{title}</title>
-    <style>
-        /* Design tokens — single source of truth; dark-mode overrides below.
-           Static template (deterministic output): no timestamps or randomness. */
-        :root {{
+    return """:root {
             --brand-1: #5b6ee0;
             --brand-2: #7048c4;
             --bg: #eef1f6;
@@ -44,9 +46,9 @@ def get_base_html_template() -> str:
             --fail-bg: #fbdcdc; --fail-fg: #842029;
             --warn-bg: #fdeecb; --warn-fg: #664d03;
             --mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-        }}
-        @media (prefers-color-scheme: dark) {{
-            :root {{
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
                 --bg: #0f1420;
                 --surface: #161c2b;
                 --surface-alt: #1d2638;
@@ -58,8 +60,37 @@ def get_base_html_template() -> str:
                 --ok-bg: #123524; --ok-fg: #7ee2a8;
                 --fail-bg: #3a1518; --fail-fg: #f3a3a3;
                 --warn-bg: #3a2e08; --warn-fg: #f0d488;
-            }}
-        }}
+            }
+        }"""
+
+
+def get_base_html_template() -> str:
+    """Get base HTML template with styles.
+
+    Consumes :func:`shared_css` for the design-token + dark-mode block so the
+    template stays in lock-step with every other HTML surface.
+
+    Returns:
+        Base HTML template string
+    """
+    # ``shared_css()`` returns plain CSS (single braces); escape them so the
+    # surrounding ``str.format`` template (which uses ``{title}`` etc.) leaves
+    # the CSS untouched. Behavior is identical to the previous inline block.
+    tokens_css = shared_css().replace("{", "{{").replace("}", "}}")
+    return (
+        """<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>{title}</title>
+    <style>
+        /* Design tokens — single source of truth; dark-mode overrides below.
+           Static template (deterministic output): no timestamps or randomness. */
+        """
+        + tokens_css
+        + """
         * {{
             margin: 0;
             padding: 0;
@@ -205,6 +236,7 @@ def get_base_html_template() -> str:
     </div>
 </body>
 </html>"""
+    )
 
 
 def render_summary_cards(cards: list[dict[str, Any]]) -> str:

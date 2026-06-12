@@ -342,3 +342,18 @@ class TestEmbedCss:
         html_file = tmp_path / "nohead.html"
         html_file.write_text("<html><body>Content</body></html>")
         renderer._embed_css(html_file)
+
+    def test_embed_includes_shared_design_tokens(self, tmp_path):
+        """Embedded CSS carries the shared --brand-1 token + a prefers-color-scheme block."""
+        renderer = _make_renderer(tmp_path)
+        css_file = (
+            Path(__file__).resolve().parent.parent.parent.parent / "infrastructure" / "rendering" / "ide_style.css"
+        )
+        if not css_file.exists():
+            pytest.skip("ide_style.css not present")
+        html_file = tmp_path / "doc.html"
+        html_file.write_text("<html><head><title>T</title></head><body>Hi</body></html>")
+        renderer._embed_css(html_file)
+        content = html_file.read_text()
+        assert "--brand-1" in content
+        assert "prefers-color-scheme" in content

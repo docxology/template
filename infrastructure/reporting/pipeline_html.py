@@ -22,21 +22,48 @@ def generate_html_report(report: "PipelineReport") -> str:
     html = f"""<!DOCTYPE html>
 <html>
 <head>
+    <meta name="color-scheme" content="light dark">
     <title>Pipeline Execution Report</title>
     <style>
+        /* Shared design tokens (see html_templates.shared_css) so this report
+           uses the same --brand-1 source + prefers-color-scheme dark block as
+           every other generated HTML surface. Static / deterministic output. */
+        :root {{
+            --brand-1: #5b6ee0;
+            --bg: #f5f5f5;
+            --surface: #ffffff;
+            --surface-alt: #f8f9fa;
+            --text: #333333;
+            --text-muted: #666666;
+            --border: #dddddd;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }}
+        @media (prefers-color-scheme: dark) {{
+            :root {{
+                --bg: #0f1420;
+                --surface: #161c2b;
+                --surface-alt: #1d2638;
+                --text: #e6eaf2;
+                --text-muted: #9aa6b8;
+                --border: #2a3447;
+                --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+            }}
+        }}
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background: #f5f5f5;
+            background: var(--bg);
+            color: var(--text);
         }}
         .header {{
-            background: white;
+            background: var(--surface);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
+            border-top: 3px solid var(--brand-1);
         }}
         .summary {{
             display: grid;

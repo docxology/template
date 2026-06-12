@@ -89,3 +89,10 @@ class TestGenerateHtmlReport:
         report = _make_report(stages=stages)
         html = generate_html_report(report)
         assert "100.0%" in html
+
+    def test_shares_design_tokens(self):
+        """Pipeline HTML carries the shared --brand-1 token + dark block."""
+        report = _make_report()
+        html = generate_html_report(report)
+        assert "--brand-1" in html
+        assert "prefers-color-scheme" in html
