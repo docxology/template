@@ -65,7 +65,7 @@ registry feature wave.
 | --- | --- | --- | --- | --- |
 | TN-2026-14 | **High** | `template_active_inference/.../validation_spine/AGENTS.md` | docs-lint FAIL: link to disposable `output/templates/...` missing pre-pipeline | **Wave A** — project-local `../../output/` + RUN_GUIDE pointer |
 | TN-2026-15 | **High** | `infrastructure/AGENTS.md` P1 table | Stale rows: combined renderer 861 LOC, unsplit backends/detectors/dashboard | **Wave A** — mark Done; add watch-list P1 candidates |
-| TN-2026-16 | **Medium** | `docs/_generated/canonical_facts.md` | Still claims 861-line WARN on combined renderer | **Wave A** — refresh top-module sentence |
+| TN-2026-16 | **Medium** | `docs/_generated/COUNTS.md` | Still claims 861-line WARN on combined renderer | **Wave A** — refresh top-module sentence |
 | TN-2026-17 | **Medium** | `manuscript-semantics.md`, citation SKILL, validation/cli AGENTS | Pandoc `--natbib` cited at facade line 225 | **Wave A** — retarget `_pdf_combined_pandoc.py` |
 | TN-2026-18 | **Medium** | `infrastructure/publishing/archival/` | Missing folder-level AGENTS | **Wave A** — add `archival/AGENTS.md` |
 | TN-2026-19 | **Medium** | `validation/evidence_registry.py` (733 LOC) | Approaching 800 gate; mixed parse/build/I/O | **Deferred** — next registry feature wave |
@@ -123,4 +123,4 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 - [`thermo-nuclear-code-quality-2026-06-02.md`](thermo-nuclear-code-quality-2026-06-02.md) — prior branch delta
 - [`thermo-nuclear-code-quality-2026-05-29.md`](thermo-nuclear-code-quality-2026-05-29.md) — repo-wide baseline
 - [`infrastructure/AGENTS.md`](../../../infrastructure/AGENTS.md) — P1 quality backlog
-- [`docs/_generated/canonical_facts.md`](../../_generated/canonical_facts.md) — live counts
+- [`docs/_generated/COUNTS.md`](../../_generated/COUNTS.md) — live counts

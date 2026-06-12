@@ -68,7 +68,7 @@ exemplars under `projects/templates/`. **Excluded:** disposable `output/` trees
 | TN-2026-37 | **Medium** | `link_extract.py` (694 LOC) | Inline path-skip policy table | **Wave E** — `link_skip_policy.py` (144 LOC); `link_extract` 543 LOC |
 | TN-2026-38 | **Medium** | `rendering/pipeline.py` (685 LOC) | Duplicated DOCX metadata vs `_pdf_title_page` | **Wave E** — `build_pandoc_metadata()` shared helper |
 | TN-2026-39 | **Medium** | `markdown_validator.find_manuscript_directory` | Flat `projects/{name}` only | **Wave B** — `resolve_project_root` |
-| TN-2026-40 | **Medium** | `canonical_facts.md` | Stale 533 count, wrong largest-module claim | **Wave A** — refreshed measured block |
+| TN-2026-40 | **Medium** | `COUNTS.md` | Stale 533 count, wrong largest-module claim | **Wave A** — refreshed measured block |
 | TN-2026-41 | **Medium** | `infrastructure/AGENTS.md` P1 table | Stale LOC rows; missing watch entries | **Wave D** — refreshed table |
 | TN-2026-42 | **Medium** | api-reference health gate | Stale vs exports | **Wave A** — `--write` |
 | TN-2026-43 | **Medium** | `.github/AGENTS.md` | 12 jobs documented; CI has 14 | **Wave D** — job table updated |
@@ -120,4 +120,4 @@ uv run python -m infrastructure.core.health
 
 - [`thermo-nuclear-code-quality-2026-06-08.md`](thermo-nuclear-code-quality-2026-06-08.md) — prior close-out
 - [`infrastructure/AGENTS.md`](../../../infrastructure/AGENTS.md) — P1 quality backlog
-- [`docs/_generated/canonical_facts.md`](../../_generated/canonical_facts.md) — live counts
+- [`docs/_generated/COUNTS.md`](../../_generated/COUNTS.md) — live counts
