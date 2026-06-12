@@ -38,6 +38,13 @@ hard-coded here.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **Generated-report web design (2026-06-12, `[Unreleased]`):** modernized the
+  base HTML report/dashboard template (`infrastructure/reporting/html_templates.py`)
+  with CSS design tokens, dark mode (`prefers-color-scheme`), WCAG-AA status
+  contrast, fluid type, and a mobile breakpoint — template contract + deterministic
+  output preserved (7 template + 875 reporting tests green). Follow-up to unify the
+  remaining HTML surfaces is tracked as `WEBDESIGN-EXTEND-1`.
+
 - **Backlog closeout + comprehensive review (2026-06-12):** closed `REPRO-VERIFY-1`
   (the repro bundle now fails closed on declared-but-absent outputs — a
   declared output absent at build rebases onto the project tree and `verify`
@@ -116,9 +123,73 @@ Keep this section short. Details live in release notes or archived audits.
 
 ## Active backlog
 
-_No open items._ `RELEASE-TAG-1`, `REPRO-VERIFY-1`, and `EVIDENCE-CLAIM-1` were
-all closed in the 2026-06-12 sweep (see **Recently shipped**). Next genuine
-increments will be filed here as they arise.
+`RELEASE-TAG-1`, `REPRO-VERIFY-1`, and `EVIDENCE-CLAIM-1` were closed in the
+2026-06-12 sweep (see **Recently shipped**). The following next-increments were
+scoped from this session's review and the two environment-dependent local test
+failures observed against TeX Live 2026.
+
+### Minor
+
+#### WEBDESIGN-EXTEND-1 - Unify the design system across all generated HTML surfaces
+
+- **Problem:** the modernized design tokens + dark mode now live only in
+  `infrastructure/reporting/html_templates.py` (the base report/dashboard
+  template). The other HTML emitters — `infrastructure/reporting/_interactive_html.py`,
+  `pipeline_html.py`, and `infrastructure/rendering/web_renderer.py` (manuscript
+  HTML) — still carry their own ad-hoc inline styles, so the surfaces look
+  inconsistent and only one supports `prefers-color-scheme`.
+- **Why it matters:** a research template's web deliverables should read as one
+  product; duplicated CSS also drifts (a token change must be made in N places).
+- **Smallest next step:** extract the `:root` token block + dark-mode overrides
+  into a single shared helper (e.g. `html_templates.shared_css()`), have the
+  interactive-dashboard and web-renderer emitters consume it, and assert in a
+  test that each rendered surface contains the `--brand-1` token and a
+  `prefers-color-scheme` block.
+- **Acceptance:** the interactive dashboard and web-rendered manuscript both
+  reference the shared token block (one source of truth), verified by a test;
+  rendered output stays deterministic.
+- **Out of scope:** introducing a CSS build step, web fonts, or JS frameworks.
+
+### Medium
+
+#### LINKCHECK-PERF-1 - Make the doc link-audit fast on large checkouts
+
+- **Problem:** `infrastructure/validation/integrity/link_audit_core.py` (driven by
+  `scripts/audit_filepaths.py` and `tests/infra_tests/validation/test_check_links.py::TestMainFunction::test_main_returns_exit_code`)
+  walks the whole repo resolving every link target with `Path.resolve()`. On this
+  tree it exceeds the 10s per-test timeout (and the 120s mermaid-batch budget),
+  so the test times out locally even though it passes in CI.
+- **Why it matters:** a gate that times out locally erodes trust and hides real
+  regressions behind "it's just slow"; contributors skip it.
+- **Smallest next step:** prune the walk (skip `.git/`, `.venv/`, `node_modules/`,
+  `output/`, `__pycache__/` before descending), memoize `realpath` per directory,
+  and cap the per-call work; add a timed test asserting a full audit of a
+  scaffolded large tree completes well under the budget.
+- **Acceptance:** `test_main_returns_exit_code` completes under its timeout on a
+  full checkout; the audit still finds the same broken links it does today
+  (pinned by an unchanged correctness test).
+- **Out of scope:** changing what counts as a broken link.
+
+#### TEXLIVE-2026-BEAMER-1 - Tolerate the TeX Live 2026 beamer `\reserved@a` kernel warning
+
+- **Problem:** under TeX Live 2026, `infrastructure/rendering/slides_renderer._render_beamer_with_paths`
+  raises `CompilationError` because xelatex exits 1 on `! Illegal parameter number
+  in definition of \reserved@a` (a LaTeX-kernel vs system-beamer incompatibility,
+  not repo code) — even though a **valid PDF is produced** (`pdf_exists=True,
+  pdf_structure_valid=True`). `test_render_beamer_with_resource_paths` fails
+  locally on TeX Live 2026; CI's pinned TeX passes.
+- **Why it matters:** the renderer treats a valid-PDF-with-nonzero-exit as a hard
+  failure, so newer TeX distributions break beamer rendering for contributors
+  despite a correct artifact.
+- **Smallest next step:** when xelatex exits non-zero but the PDF exists and is
+  structurally valid, downgrade the *known* `\reserved@a` "Illegal parameter
+  number" signature to a logged warning (not a `CompilationError`); keep failing
+  hard on a missing/corrupt PDF. Add a regression test feeding a captured TeX log
+  with that signature + a valid PDF and asserting it does not raise.
+- **Acceptance:** beamer rendering succeeds (warns, returns the PDF) on TeX Live
+  2026 when the only error is the `\reserved@a` signature and the PDF is valid;
+  genuine compile failures (no PDF / invalid structure) still raise.
+- **Out of scope:** pinning a TeX distribution; suppressing arbitrary LaTeX errors.
 
 ---
 

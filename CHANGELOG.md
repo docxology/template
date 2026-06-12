@@ -9,6 +9,15 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Changed
+
+- 🎨 **Generated-report web design** — modernized the base HTML report/dashboard
+  template (`infrastructure/reporting/html_templates.py`): CSS custom-property
+  design tokens, `prefers-color-scheme` dark mode, WCAG-AA status-badge contrast,
+  fluid header type (`clamp`), tabular-numeric tables with sticky headers, and a
+  mobile breakpoint. Class names + `{title}`/`{header}`/`{content}`/`{footer}`
+  placeholders unchanged (template contract preserved); output stays deterministic.
+
 ## [3.4.0] — 2026-06-12
 
 Comprehensive multi-pass review-and-improvement of `infrastructure/`, `docs/`,

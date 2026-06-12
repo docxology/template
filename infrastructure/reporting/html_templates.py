@@ -21,8 +21,45 @@ def get_base_html_template() -> str:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>{title}</title>
     <style>
+        /* Design tokens — single source of truth; dark-mode overrides below.
+           Static template (deterministic output): no timestamps or randomness. */
+        :root {{
+            --brand-1: #5b6ee0;
+            --brand-2: #7048c4;
+            --bg: #eef1f6;
+            --surface: #ffffff;
+            --surface-alt: #f6f8fb;
+            --text: #1f2733;
+            --text-muted: #5a6573;
+            --border: #e3e8ef;
+            --border-strong: #cdd5e0;
+            --radius: 10px;
+            --radius-pill: 999px;
+            --shadow: 0 1px 3px rgba(16,24,40,0.08), 0 8px 24px rgba(16,24,40,0.06);
+            --space: 1.5rem;
+            --ok-bg: #d6f3e0; --ok-fg: #0f5132;
+            --fail-bg: #fbdcdc; --fail-fg: #842029;
+            --warn-bg: #fdeecb; --warn-fg: #664d03;
+            --mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+        }}
+        @media (prefers-color-scheme: dark) {{
+            :root {{
+                --bg: #0f1420;
+                --surface: #161c2b;
+                --surface-alt: #1d2638;
+                --text: #e6eaf2;
+                --text-muted: #9aa6b8;
+                --border: #2a3447;
+                --border-strong: #3a465c;
+                --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+                --ok-bg: #123524; --ok-fg: #7ee2a8;
+                --fail-bg: #3a1518; --fail-fg: #f3a3a3;
+                --warn-bg: #3a2e08; --warn-fg: #f0d488;
+            }}
+        }}
         * {{
             margin: 0;
             padding: 0;
@@ -31,112 +68,130 @@ def get_base_html_template() -> str:
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: #f5f5f5;
-            padding: 20px;
+            color: var(--text);
+            background: var(--bg);
+            padding: var(--space);
+            -webkit-font-smoothing: antialiased;
         }}
         .container {{
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             overflow: hidden;
         }}
         .header {{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
+            background: linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
+            color: #fff;
+            padding: calc(var(--space) * 1.3);
         }}
         .header h1 {{
-            margin: 0 0 10px 0;
-            font-size: 28px;
+            margin: 0 0 0.5rem 0;
+            font-size: clamp(1.5rem, 1rem + 2vw, 1.9rem);
+            letter-spacing: -0.01em;
         }}
         .header p {{
-            margin: 5px 0;
-            opacity: 0.9;
+            margin: 0.25rem 0;
+            opacity: 0.92;
         }}
         .content {{
-            padding: 30px;
+            padding: calc(var(--space) * 1.3);
         }}
         .summary-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
+            gap: var(--space);
+            margin: var(--space) 0;
         }}
         .summary-card {{
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 6px;
-            border-left: 4px solid #667eea;
+            background: var(--surface-alt);
+            padding: var(--space);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--brand-1);
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }}
+        .summary-card:hover {{
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
         }}
         .summary-card h3 {{
-            font-size: 12px;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            color: #666;
-            margin: 0 0 10px 0;
-            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin: 0 0 0.6rem 0;
+            letter-spacing: 0.06em;
         }}
         .summary-card .value {{
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
         }}
         .section {{
-            margin: 30px 0;
+            margin: calc(var(--space) * 1.5) 0;
         }}
         .section h2 {{
-            color: #333;
-            margin: 0 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e9ecef;
+            color: var(--text);
+            margin: 0 0 var(--space) 0;
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid var(--border);
         }}
         table {{
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: var(--space) 0;
         }}
         th {{
-            background: #f8f9fa;
-            padding: 12px;
+            background: var(--surface-alt);
+            padding: 0.75rem;
             text-align: left;
             font-weight: 600;
-            color: #495057;
-            border-bottom: 2px solid #dee2e6;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border-strong);
+            position: sticky;
+            top: 0;
         }}
         td {{
-            padding: 12px;
-            border-bottom: 1px solid #e9ecef;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
         }}
         tr:hover {{
-            background: #f8f9fa;
+            background: var(--surface-alt);
         }}
+        code, pre {{ font-family: var(--mono); }}
         .status-badge {{
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.72rem;
             font-weight: 600;
+            letter-spacing: 0.02em;
         }}
         .status-passed {{
-            background: #d4edda;
-            color: #155724;
+            background: var(--ok-bg);
+            color: var(--ok-fg);
         }}
         .status-failed {{
-            background: #f8d7da;
-            color: #721c24;
+            background: var(--fail-bg);
+            color: var(--fail-fg);
         }}
         .status-warning {{
-            background: #fff3cd;
-            color: #856404;
+            background: var(--warn-bg);
+            color: var(--warn-fg);
         }}
         .footer {{
-            background: #f8f9fa;
-            padding: 20px;
+            background: var(--surface-alt);
+            padding: var(--space);
             text-align: center;
-            color: #666;
-            font-size: 14px;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+        }}
+        @media (max-width: 640px) {{
+            body {{ padding: 0.75rem; }}
+            .header, .content {{ padding: var(--space); }}
         }}
     </style>
 </head>
