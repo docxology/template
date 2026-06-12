@@ -15,9 +15,11 @@ project rosters belong in
 
 ## Live state snapshot
 
-Refreshed on **2026-06-08** from the post-`v3.3.1`-version-bump state and local
-inspection. Re-run the commands in the **Source** column before copying any
-number into prose.
+Refreshed on **2026-06-12** after the comprehensive review + merge (Phase A–G,
+Q1–Q5, and the thermo-nuclear v2 remediation are now on `main`). Re-run the
+commands in the **Source** column before copying any number into prose; live
+counts belong in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), not
+hard-coded here.
 
 | Gate or surface | Current value | Source |
 | --- | --- | --- |
@@ -25,7 +27,7 @@ number into prose.
 | Latest published release | `v3.3.0` (published 2026-06-07) — package is at `3.3.1` with a dated [`CHANGELOG.md`](CHANGELOG.md) `[3.3.1]` entry, but the `v3.3.1` git tag + GitHub release are **pending** (see RELEASE-TAG-1) | `/opt/homebrew/bin/gh-axi release list`, `git tag` |
 | Public source scope | `infrastructure` plus nine public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
 | Public exemplars | `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook` | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
-| Canonical generated facts | 20 importable infrastructure packages; 532 infrastructure Python modules; 216 project-scope infrastructure tests collected; nine exemplar coverage gates at or above 90 % | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) |
+| Canonical generated facts | Importable infrastructure packages, infrastructure Python-module count, project-scope + publishing test collections, and per-exemplar coverage — all live-derived; do not hard-code here | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) (regenerate with `uv run python scripts/generate_counts.py --write`) |
 | Open GitHub PRs | 3 open: 1 Dependabot (`codecov-action` 6.0.1→7.0.0 #28) + 2 maintainer (#23 sheaf integrity gates, #14 infrastructure composability audit) | `/opt/homebrew/bin/gh-axi pr list` |
 | Docs lint status | links-only, consistency-only, and doc-pairs all clean (re-verified 2026-06-08) | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
 | Mermaid lint status | clean with chunked batch rendering under the default total budget | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
@@ -37,6 +39,20 @@ number into prose.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **Backlog closeout + comprehensive review (2026-06-12):** closed `REPRO-VERIFY-1`
+  (the repro bundle now fails closed on declared-but-absent outputs — a
+  declared output absent at build rebases onto the project tree and `verify`
+  returns `ok=False`; pinned by `tests/infra_tests/publishing/test_repro_bundle_absent_output.py`)
+  and `EVIDENCE-CLAIM-1` (the claim-ledger candidate list gained an
+  `output/data/*claims*.json` glob so the `template_autoresearch_project`
+  exemplar's `autoresearch_claims.json` is ingested as claim nodes + `supports`
+  edges; pinned by `test_ingest_claims_autoresearch_ledger_yields_nodes_and_supports`
+  and `test_build_evidence_graph_ingests_real_autoresearch_ledger`). Shipped
+  alongside a large multi-pass review (dead-code removal, `run.config` matrix
+  runner, `SOURCE_DATE_EPOCH` determinism, the `canonical_facts.md`→`COUNTS.md`
+  generator, exemplar-support-tier tagging, methods-plan gate, validation↔
+  autoresearch decoupling, and an Ollama test-model fix). Full detail in
+  [`CHANGELOG.md`](CHANGELOG.md).
 - **Backlog sweep + RedTeam hardening (2026-06-08):** closed 6 backlog items —
   `PIPELINE-INCR-FLAG-1` (`--incremental` CLI flag on both entrypoints),
   `DASHBOARD-CLI-1` (release-readiness dashboard discoverable + subprocess test),
@@ -101,86 +117,31 @@ Keep this section short. Details live in release notes or archived audits.
 
 ## Minor
 
-### RELEASE-TAG-1 - Tag and publish v3.3.1
+### RELEASE-TAG-1 - Decide the next version, then tag + publish
 
 - **Problem:** `pyproject.toml` is at `3.3.1` and [`CHANGELOG.md`](CHANGELOG.md)
-  carries a dated `[3.3.1]` entry, but no `v3.3.1` git tag or GitHub release
-  exists — `git tag` and `/opt/homebrew/bin/gh-axi release list` both show
-  `v3.3.0` as the latest. The release is half-completed: metadata bumped, tag and
-  GitHub release not cut.
-- **Why it matters:** a dated CHANGELOG entry with no tag misleads anyone who
-  trusts "released" semantics; downstream tooling that resolves the latest tag
-  (archival, DOI, repro-bundle) will pin `v3.3.0` while docs imply `v3.3.1`.
-- **Smallest next step:** run the release verification baseline once more on a
-  clean tree, then create the `v3.3.1` annotated tag and the matching GitHub
-  release with the CHANGELOG `[3.3.1]` body.
-- **Acceptance:** `git tag | rg -x 'v3\.3\.1'` returns the tag and
-  `/opt/homebrew/bin/gh-axi release list | rg v3\.3\.1` shows the published
-  release.
-- **Out of scope:** bumping to a new version; re-tagging already-published
-  releases.
-
----
-
-## Medium
-
-### REPRO-VERIFY-1 - Fail closed on declared-but-absent reproduction outputs
-
-- **Problem:** `build_repro_bundle`/`collect_entries`
-  (`infrastructure/publishing/repro_bundle.py`) hash each declared output
-  artifact, but when a declared output is **absent at build time** it is baked
-  into the manifest as `present: false`, and `verify_repro_bundle` then treats a
-  still-absent entry as a match. On a fresh checkout (outputs are gitignored and
-  not yet built) a bundle for an exemplar can therefore record most of its
-  scientific outputs as `present: false` and still `verify` green — a bundle that
-  "reproduces nothing" certifies as reproducible. Surfaced by the RedTeam pass on
-  REPRO-MULTI-1 (the synthetic-exemplar tests always wrote their declared outputs,
-  so the absent-output path was never exercised).
-- **Why it matters:** the repro bundle's contract is "any missing file is a
-  mismatch, never a silent pass." A declared output that is absent at both build
-  and verify time is a silent pass that contradicts that contract and overstates
-  reproducibility of the public deliverable.
-- **Smallest next step:** distinguish build-time-absent **infra inputs** from
-  build-time-absent **declared outputs**. A declared output the manifest claims
-  should exist must either make `build` fail loudly (run the pipeline first) or be
-  recorded so `verify` fails closed when it is still absent. Add a test that
-  builds a bundle whose `artifact_manifest` declares a path absent on disk and
-  asserts `build` refuses or `verify` returns `ok=False`.
-- **Acceptance:** a bundle built for an exemplar with declared-but-absent outputs
-  either refuses at build time or fails `verify`; a regression test pins it.
-- **Out of scope:** changing the hash algorithm or the infra-input (`uv.lock`,
-  `pyproject.toml`, `COUNTS.md`) handling; archival deposit.
-
----
-
-## Major
-
-### EVIDENCE-CLAIM-1 - Make the evidence-graph claim layer reachable for exemplars
-
-- **Problem:** EVIDENCE-GRAPH-1 shipped a typed producer/consumer/validator/claim
-  graph whose claim-ingest works **only** for a file literally named
-  `claims.json` (`infrastructure/reporting/evidence_graph.py` searches
-  `output/data/claims.json`, `manuscript/claims.json`, `claims.json`; the
-  `test_ingest_claims_reads_real_ledger` test confirms ingest fires when that
-  file exists). But no public exemplar writes `claims.json` to those paths — the
-  `template_autoresearch_project` exemplar produces real claim data
-  (`AutoResearchClaim` via `src/reports.py` / `src/writers/payloads.py`) under a
-  different name — so every exemplar lands the "No claim ledger found" note with
-  zero claim nodes and zero `supports` edges.
-- **Why it matters:** the central value of the evidence graph — claims backed by
-  artifacts — is unreachable for every project in the repo; the `supports`-edge
-  layer is dead in practice on the one exemplar capable of populating it.
-- **Smallest next step:** reconcile the claim-ledger contract end-to-end —
-  either extend the candidate-path/format list so the autoresearch exemplar's
-  emitted claim ledger is ingested, or have that exemplar emit a canonical
-  `claims.json`; emit claim nodes + `supports` edges; add a test asserting the
-  autoresearch exemplar yields non-empty claim nodes after analysis, keeping the
-  existing empty-ledger note path for a project with no ledger.
-- **Acceptance:** building the evidence graph for `template_autoresearch_project`
-  yields a non-zero count of `claim` nodes (currently `0`), and the "No claim
-  ledger found" note no longer appears for that project, verified by a test.
-- **Out of scope:** generating claim ledgers for projects that do not produce
-  one; changing the byte-stable JSON serialization contract.
+  carries a dated `[3.3.1]` entry, but no `v3.3.1` git tag / GitHub release exists
+  (latest is `v3.3.0`). Since the `3.3.1` bump, `main` has accumulated a large
+  body of additional work (multi-pass review: dead-code removal, `run.config`
+  matrix runner, `SOURCE_DATE_EPOCH` determinism, the `COUNTS.md` generator,
+  exemplar-support-tier tagging, methods-plan gate, validation↔autoresearch
+  decoupling, Ollama test-model fix, plus the thermo-nuclear v2 remediation) —
+  so `HEAD` now materially exceeds what the `[3.3.1]` changelog body describes.
+- **Why it matters:** tagging the current `HEAD` as `v3.3.1` would misrepresent
+  the release (the tag's content would far exceed its changelog). A dated
+  CHANGELOG entry with no tag also misleads "released" semantics and pins
+  downstream tooling (archival/DOI/repro-bundle) to `v3.3.0`.
+- **Decision needed (maintainer):** either (a) bump to a new minor (e.g. `3.4.0`)
+  with a fresh CHANGELOG section covering all post-`3.3.1` work and tag that, or
+  (b) tag the historical commit that actually matched the `[3.3.1]` body as
+  `v3.3.1` and start a new `[Unreleased]`/`3.4.0` section for the new work.
+- **Smallest next step:** pick (a) or (b); update `CHANGELOG.md` + `pyproject`
+  accordingly; run the release verification baseline on a clean tree; cut the tag
+  + GitHub release.
+- **Acceptance:** `git tag` shows the chosen version tag and the GitHub release
+  list shows the published release with a changelog body that matches the tag's
+  content.
+- **Out of scope:** re-tagging already-published releases.
 
 ---
 
