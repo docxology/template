@@ -70,7 +70,9 @@ NEXT STEPS
 
 This block is the canonical end-of-run summary. It is rendered by
 `format_multi_project_detailed_report` in
-[`infrastructure/core/pipeline/multi_project.py`](../../../infrastructure/core/pipeline/multi_project.py),
+[`infrastructure/reporting/multi_project_report.py`](../../../infrastructure/reporting/multi_project_report.py)
+(re-exported from
+[`infrastructure/core/pipeline/multi_project.py`](../../../infrastructure/core/pipeline/multi_project.py)),
 emitted by the orchestrator in
 [`infrastructure/orchestration/pipeline_runner.py`](../../../infrastructure/orchestration/pipeline_runner.py),
 and persisted verbatim to `docs/_generated/last-run-summary.md` after every

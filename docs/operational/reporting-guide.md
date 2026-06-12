@@ -298,8 +298,9 @@ fi
 ## Pipeline Summary Format
 
 The end-of-run terminal summary block is rendered by **`format_multi_project_detailed_report`**
-in [`infrastructure/core/pipeline/multi_project.py`](../../infrastructure/core/pipeline/multi_project.py).
-This is the **canonical pipeline-completion reporting surface** — every full-run option
+in [`infrastructure/reporting/multi_project_report.py`](../../infrastructure/reporting/multi_project_report.py)
+(re-exported from [`infrastructure/core/pipeline/multi_project.py`](../../infrastructure/core/pipeline/multi_project.py)
+for backward compatibility). This is the **canonical pipeline-completion reporting surface** — every full-run option
 (interactive menu, `./run.sh --pipeline`, and direct `infrastructure.orchestration` invocations)
 prints this block via the orchestrator in
 [`infrastructure/orchestration/pipeline_runner.py`](../../infrastructure/orchestration/pipeline_runner.py).

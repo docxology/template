@@ -23,6 +23,7 @@ from .search import SearchConfig, SearchResult, run_search
 from .stagnation import StagnationDetector, reorganize_axes
 from .state import Champion, ExperimentOutcome, Proposal, SharedState
 
+
 def __getattr__(name: str):  # pragma: no cover - lazy script-layer export
     if name == "HermesProposer":
         from hermes_proposer import HermesProposer

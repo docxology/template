@@ -15,7 +15,6 @@ needed to turn the deterministic reference run into a live agentic one.
 
 from __future__ import annotations
 
-import json
 from collections.abc import Sequence
 from typing import Protocol
 
