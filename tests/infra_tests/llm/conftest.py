@@ -56,7 +56,20 @@ def test_client(test_config):
 
 @pytest.fixture
 def default_config():
-    """Create a default OllamaClientConfig for testing with auto_inject disabled."""
+    """Create a default OllamaClientConfig for testing with auto_inject disabled.
+
+    Pins ``default_model`` to the discovered small/fast model when an Ollama
+    daemon is reachable, so ``requires_ollama`` integration tests query a model
+    that is actually pulled (the bare ``OllamaClientConfig`` default is
+    ``gemma3:4b``, which a contributor may not have installed). Falls back to the
+    config default for unit tests with no daemon — those never issue a real
+    query, so the model name is immaterial there.
+    """
+    from infrastructure.llm.utils.models import select_small_fast_model
+
+    model = select_small_fast_model()
+    if model:
+        return OllamaClientConfig(auto_inject_system_prompt=False, default_model=model)
     return OllamaClientConfig(auto_inject_system_prompt=False)
 
 

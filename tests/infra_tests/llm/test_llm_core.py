@@ -319,8 +319,9 @@ class TestLLMClientQueryIntegration:
 
     def test_query_adds_to_context(self):
         """Test that query adds messages to context."""
-        config = OllamaClientConfig(auto_inject_system_prompt=False)
-        client = LLMClient(config=config)
+        # Use the discovered small/fast model (real daemon) — a bare
+        # OllamaClientConfig() defaults to gemma3:4b, which may not be pulled.
+        client = build_real_small_llm_client()
 
         client.query("Say 'test'")
 
