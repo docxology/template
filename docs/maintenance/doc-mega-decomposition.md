@@ -1,7 +1,7 @@
 # Documentation mega-file decomposition policy
 
 Human-authored guides above **800 lines** are tracked as **P1 watch** items in
-[`infrastructure/AGENTS.md`](../infrastructure/AGENTS.md). They are not CI
+[`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md). They are not CI
 failures; decomposition is done when a guide's edit churn or navigation cost
 justifies the split.
 

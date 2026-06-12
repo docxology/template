@@ -3073,7 +3073,7 @@ Scan extracted text for common rendering issues.
 
 ### `validate_citations`
 
-*function — defined in `infrastructure.validation.content.markdown_validator`*
+*function — defined in `infrastructure.validation.content.validator_citations`*
 
 ```python
 validate_citations(md_paths: list[str], repo_root: str | Path, bib_file: str | Path | list[str | Path] | None=None) -> list[DiagnosticEvent]
@@ -3103,7 +3103,7 @@ Validate figure registry against manuscript references.
 
 ### `validate_images`
 
-*function — defined in `infrastructure.validation.content.markdown_validator`*
+*function — defined in `infrastructure.validation.content.validator_images`*
 
 ```python
 validate_images(md_paths: list[str], repo_root: str | Path, extra_search_dirs: list[str | Path] | None=None) -> list[DiagnosticEvent]
@@ -3123,7 +3123,7 @@ Validate all markdown files in a directory.
 
 ### `validate_math`
 
-*function — defined in `infrastructure.validation.content.markdown_validator`*
+*function — defined in `infrastructure.validation.content.validator_math`*
 
 ```python
 validate_math(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]
@@ -3143,7 +3143,7 @@ Validate complete output directory structure.
 
 ### `validate_pandoc_pitfalls`
 
-*function — defined in `infrastructure.validation.content.markdown_validator`*
+*function — defined in `infrastructure.validation.content.validator_pitfalls`*
 
 ```python
 validate_pandoc_pitfalls(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]
@@ -3163,7 +3163,7 @@ Perform comprehensive validation of PDF rendering.
 
 ### `validate_refs`
 
-*function — defined in `infrastructure.validation.content.markdown_validator`*
+*function — defined in `infrastructure.validation.content.validator_refs`*
 
 ```python
 validate_refs(md_paths: list[str], repo_root: str | Path, labels: set[str], anchors: set[str]) -> list[DiagnosticEvent]
