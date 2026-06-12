@@ -168,9 +168,7 @@ def render_combined_outputs(
         logger.debug("\n" + "=" * BANNER_WIDTH)
         logger.info("Generating combined PDF manuscript...")
         try:
-            combined_pdf = manager.render_combined_pdf(
-                combined_source_files(md_files), manuscript_dir, project_name
-            )
+            combined_pdf = manager.render_combined_pdf(combined_source_files(md_files), manuscript_dir, project_name)
             logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
         except RenderingError as re:
             logger.error(f"❌ Rendering error generating combined PDF: {re.message}")
