@@ -113,6 +113,46 @@ def validate_autoresearch_plan(
     return AutoResearchReport(project_name=plan.project_name, valid=valid, issues=tuple(issues), plan=plan)
 
 
+def validate_autoresearch_overlay(project_root: Path, repo_root: Path) -> list[str]:
+    """Validate the opt-in AutoResearch readiness overlay for a project.
+
+    This is the AutoResearch module's own overlay-validator: the generic Stage 04
+    design-validation layer invokes it as a domain hook rather than importing or
+    special-casing AutoResearch internals. The overlay is detected by the presence
+    of an ``autoresearch.yaml`` marker at the project root; absent that marker, no
+    work is performed and an empty issue list is returned.
+
+    Args:
+        project_root: Filesystem root of the project being validated.
+        repo_root: Repository root used to resolve the project discovery name.
+
+    Returns:
+        A list of human-readable issue strings (empty when the overlay is absent
+        or passes). Errors are always surfaced; warnings are surfaced only when the
+        plan is configured ``strict``.
+    """
+    marker_path = project_root / "autoresearch.yaml"
+    if not marker_path.exists():
+        return []
+
+    from infrastructure.autoresearch.planner import build_autoresearch_plan
+    from infrastructure.autoresearch.reports import write_autoresearch_report
+    from infrastructure.project.discovery import project_name_from_root
+
+    issues: list[str] = []
+    try:
+        project_name = project_name_from_root(project_root, repo_root)
+        plan = build_autoresearch_plan(repo_root, project_name)
+        report = validate_autoresearch_plan(plan, project_root)
+        write_autoresearch_report(project_root, report)
+        issues.extend(f"{issue.code}: {issue.message}" for issue in report.issues if issue.severity == "error")
+        if plan.config.strict:
+            issues.extend(f"{issue.code}: {issue.message}" for issue in report.issues if issue.severity == "warning")
+    except (OSError, ValueError, RuntimeError, AttributeError) as exc:
+        issues.append(f"AutoResearch readiness validation failed: {exc}")
+    return issues
+
+
 def _checks_for_phase(
     quality_checks: tuple[str, ...],
     phase: ValidationPhase,

@@ -6,6 +6,8 @@ Reference for Layer-1 infrastructure modules.
 
 **Counting:** overview rows below include importable Python packages under `infrastructure/` plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). Use [COUNTS.md](../_generated/COUNTS.md) for measured counts instead of copying literals. Nested package docs live alongside their parents: `core/telemetry/`, `reference/citation/`, `reference/verification/`, `search/literature/`, and `search/exa/`.
 
+**Exemplar-support tier:** modules tagged _(exemplar-support tier)_ live in `infrastructure/` (Layer-1 location) but are imported only by their own exemplar project — they are intentionally not generic-reach across the infrastructure and are not dead code.
+
 ---
 
 ## Module Overview
@@ -14,13 +16,13 @@ Reference for Layer-1 infrastructure modules.
 |--------|---------|--------------|-------|
 | **Core** | Shared utilities | Logging, config, exceptions, telemetry | [Details](guides/core-module.md) |
 | **AutoResearch** | Deterministic research loops | Plan/evidence/readiness reports, stage contracts | [`infrastructure/autoresearch/AGENTS.md`](../../infrastructure/autoresearch/AGENTS.md) |
-| **SIA** | Self-improvement harness | Task layout, fixture replay, evaluation runner | [Details](guides/sia-module.md) |
+| **SIA** _(exemplar-support tier)_ | Self-improvement harness | Task layout, fixture replay, evaluation runner | [Details](guides/sia-module.md) |
 | **Benchmark** | Deterministic manifest scoring of public exemplar outputs | Rubric scoring (`rubrics.py`), manifest-based template harness (`template_harness.py`) | [`infrastructure/benchmark/AGENTS.md`](../../infrastructure/benchmark/AGENTS.md) |
 | **Documentation** | Doc generation | Figure management, API glossary | [Details](guides/documentation-module.md) |
 | **Doctor** | Repository health diagnostics | Environment and repository checks | [Details](guides/doctor-module.md) |
 | **Validation** | Output verification | File integrity, cross-reference validation | [Details](guides/validation-module.md) |
 | **Publishing** | Academic workflows | DOI validation, citation generation | [Details](guides/publishing-module.md) |
-| **Scientific** | Research best practices | Numerical stability, benchmarking | [Details](guides/scientific-module.md) |
+| **Scientific** _(exemplar-support tier)_ | Research best practices | Numerical stability, benchmarking | [Details](guides/scientific-module.md) |
 | **LLM** | Local LLM & literature | Ollama integration, templates, literature search | [Details](guides/llm-module.md) |
 | **Methods** | Methods orchestration | DAG contracts, methods prose, artifacts, evidence | [Details](guides/methods-module.md) |
 | **Rendering** | Multi-format output | PDF, HTML, slides, poster, DOCX, EPUB (opt-in) | [Details](guides/rendering-module.md) |

@@ -95,6 +95,10 @@ The per-package symbol listings below the
 
 *symbol — defined in `infrastructure.autoresearch`*
 
+### `validate_autoresearch_overlay`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
 ### `validate_autoresearch_plan`
 
 *symbol — defined in `infrastructure.autoresearch`*
@@ -2089,16 +2093,6 @@ check_numerical_stability(func: Callable[..., Any], test_inputs: list[Any], tole
 
 Check numerical stability of a function across a range of inputs.
 
-### `check_research_compliance`
-
-*function — defined in `infrastructure.scientific.validation`*
-
-```python
-check_research_compliance(func: Callable[..., Any]) -> dict[str, Any]
-```
-
-Check function compliance with research software standards.
-
 ### `confirm_improvement`
 
 *function — defined in `infrastructure.scientific.confirmation`*
@@ -2119,36 +2113,6 @@ class Confirmation
 
 Outcome of a multi-seed confirmation check.
 
-### `create_scientific_module_template`
-
-*function — defined in `infrastructure.scientific.templates`*
-
-```python
-create_scientific_module_template(module_name: str) -> str
-```
-
-Create a template for a new scientific module.
-
-### `create_scientific_test_suite`
-
-*function — defined in `infrastructure.scientific.templates`*
-
-```python
-create_scientific_test_suite(module_name: str) -> str
-```
-
-Create a comprehensive test suite for a scientific module.
-
-### `create_scientific_workflow_template`
-
-*function — defined in `infrastructure.scientific.templates`*
-
-```python
-create_scientific_workflow_template(workflow_name: str) -> str
-```
-
-Create a template for scientific research workflows.
-
 ### `format_benchmark_report`
 
 *function — defined in `infrastructure.scientific.benchmarking`*
@@ -2158,16 +2122,6 @@ format_benchmark_report(benchmark_results: list[BenchmarkResult]) -> str
 ```
 
 Format a Markdown performance analysis report from benchmark results.
-
-### `generate_api_documentation`
-
-*function — defined in `infrastructure.scientific.documentation`*
-
-```python
-generate_api_documentation(module: Any) -> str
-```
-
-Generate comprehensive API documentation for a scientific module.
 
 ### `generate_performance_report`
 
@@ -2179,16 +2133,6 @@ generate_performance_report(benchmark_results: list[BenchmarkResult]) -> str
 
 Generate a performance analysis report.
 
-### `generate_scientific_documentation`
-
-*function — defined in `infrastructure.scientific.documentation`*
-
-```python
-generate_scientific_documentation(func: Callable[..., Any]) -> str
-```
-
-Generate scientific documentation for a function.
-
 ### `StabilityTest`
 
 *class — defined in `infrastructure.scientific.stability`*
@@ -2198,26 +2142,6 @@ class StabilityTest
 ```
 
 Container for numerical stability test results.
-
-### `validate_scientific_best_practices`
-
-*function — defined in `infrastructure.scientific.validation`*
-
-```python
-validate_scientific_best_practices(module: Any) -> dict[str, Any]
-```
-
-Validate that a module follows scientific computing best practices.
-
-### `validate_scientific_implementation`
-
-*function — defined in `infrastructure.scientific.validation`*
-
-```python
-validate_scientific_implementation(func: Callable[..., Any], test_cases: list[tuple[Any, Any]]) -> _ValidationResults
-```
-
-Validate scientific implementation against known test cases.
 
 ## Package: `infrastructure.search`
 

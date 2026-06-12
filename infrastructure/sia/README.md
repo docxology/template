@@ -1,6 +1,10 @@
 # SIA harness
 
-Generic Self-Improving AI loop utilities: task layout validation, execution
+> **Tier: exemplar-support.** Layer-1 by location, but imported only by its
+> `template_sia` exemplar — intentionally not generic-reach across
+> `infrastructure/`. See [AGENTS.md](AGENTS.md).
+
+Self-Improving AI loop utilities: task layout validation, execution
 log parsing, evaluation runner, and fixture-backed generation replay.
 
 ```bash

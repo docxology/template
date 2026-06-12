@@ -5,6 +5,11 @@
 Deterministic SIA (Self-Improving AI) harness utilities. Implements the Meta →
 Target → Feedback artifact contract without vendoring upstream LLM orchestration.
 
+> **Tier: exemplar-support.** Layer-1 by location, but imported only by its
+> `template_sia` exemplar — intentionally not generic-reach across
+> `infrastructure/`. Treat as exemplar support, not as dead code nor a
+> general-purpose infra dependency.
+
 ## Public API
 
 - `validate_task_dir(path)` — task layout gate

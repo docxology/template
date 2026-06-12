@@ -171,7 +171,13 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
 
 def validate_project_design(project_root: Path) -> tuple[bool, list[str]]:
     """Validate advisory domain profile, experiment plan, and opt-in readiness overlays."""
-    return _validate_project_design(project_root, _REPO_ROOT)
+    from infrastructure.autoresearch import validate_autoresearch_overlay
+
+    return _validate_project_design(
+        project_root,
+        _REPO_ROOT,
+        overlay_validators=(validate_autoresearch_overlay,),
+    )
 
 
 def _read_artifact_manifest(path: Path) -> ArtifactManifest:
