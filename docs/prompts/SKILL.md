@@ -73,7 +73,7 @@ When intent is clear, open the matching child `SKILL.md` directly. When ambiguou
 - Project names: [`docs/_generated/active_projects.md`](../_generated/active_projects.md) — never hard-code rotating paths.
 - Business logic: `infrastructure/` or `projects/<name>/src/` only; scripts orchestrate.
 - Tests: no mocks; infra ≥60%, project ≥90% unless CI documents an exception.
-- Metrics: measure with pytest or cite [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md).
+- Metrics: measure with pytest or cite [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md).
 
 ## Discovery
 

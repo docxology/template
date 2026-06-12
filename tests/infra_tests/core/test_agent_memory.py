@@ -114,7 +114,7 @@ def test_audit_memory_payload_flags_measured_counts_and_metrics() -> None:
 
     assert len(advisories) == 1
     assert advisories[0].category == "measured-count"
-    assert "docs/_generated/canonical_facts.md" in advisories[0].detail
+    assert "docs/_generated/COUNTS.md" in advisories[0].detail
 
 
 def test_audit_memory_payload_allows_generated_source_pointers() -> None:
@@ -124,7 +124,7 @@ def test_audit_memory_payload_allows_generated_source_pointers() -> None:
             "Default exemplar path: projects/templates/template_code_project; "
             "public project names live in docs/_generated/active_projects.md."
         ),
-        "Coverage and test counts should be re-derived from docs/_generated/canonical_facts.md.",
+        "Coverage and test counts should be re-derived from docs/_generated/COUNTS.md.",
     ]
 
     assert audit_memory_payload(payload) == []

@@ -1,0 +1,12 @@
+# Harness exemplar: infrastructure imports confined to loop/config/writers until
+# full src/scripts split lands. Standalone domain modules must stay infra-free.
+allow_infrastructure_imports:
+  - src/loop.py
+  - src/config.py
+  - src/loop_phases.py
+  - src/writers/manifests.py
+  - src/writers/loop_artifacts.py
+  - src/writers/benchmark.py
+  - src/security/payloads.py
+  - src/research_object.py
+  - src/ml/selection.py

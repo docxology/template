@@ -19,4 +19,4 @@
 Each exemplar's README carries the full `## When to use this template`
 section; this table shows the first sentence only. Counts here are
 static (test *files*); authoritative measured coverage lives in
-[`canonical_facts.md`](canonical_facts.md).
+[`COUNTS.md`](COUNTS.md).

@@ -9,7 +9,7 @@ infrastructure. Architecture details:
 `v3.3.0` — the `v3.3.1` tag is pending, see `RELEASE-TAG-1` in
 [`TO-DO.md`](../../TO-DO.md)). Measured metrics defer to
 [`TO-DO.md`](../../TO-DO.md) and
-[`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)
+[`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)
 unless this file is re-measured.
 
 ## Completed Releases
@@ -21,7 +21,7 @@ unless this file is re-measured.
 - ran a deep per-exemplar quality pass across the eight tracked public templates
   and completed + cross-linked sidecar publication metadata for all nine
 - reconciled the generated project-scope collection count in
-  [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md) to 216
+  [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md) to 216
 - committed refreshed rendered `output/` artifacts for the public exemplars
   alongside source so the repo ships reproducible, inspectable deliverables
 - see [`CHANGELOG.md`](../../CHANGELOG.md) for the full entry
@@ -75,7 +75,7 @@ unless this file is re-measured.
 > bringing the current public exemplar roster to **nine**. The authoritative,
 > always-current count and names live in
 > [`docs/_generated/active_projects.md`](../_generated/active_projects.md) and
-> [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md) —
+> [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md) —
 > consult those rather than this historical release log.
 
 ### v3.0.0 — Production / Stable (2026-02-22)

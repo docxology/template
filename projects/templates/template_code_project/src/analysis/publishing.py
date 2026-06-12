@@ -10,12 +10,15 @@ try:
 except ImportError:  # pragma: no cover
     from optimizer import OptimizationResult  # type: ignore[no-redef]
 
-from ._infra import INFRASTRUCTURE_AVAILABLE, get_logger
+from ._infra import (
+    INFRASTRUCTURE_AVAILABLE,
+    PublicationMetadata,
+    generate_citation_apa,
+    generate_citation_bibtex,
+    generate_citation_mla,
+    get_logger,
+)
 from .experiments import _project_root
-
-if INFRASTRUCTURE_AVAILABLE:
-    from infrastructure.publishing import generate_citation_apa, generate_citation_bibtex, generate_citation_mla
-    from infrastructure.publishing.models import PublicationMetadata
 
 
 def extract_optimization_metadata(results: dict[float, OptimizationResult]) -> dict[str, Any] | None:

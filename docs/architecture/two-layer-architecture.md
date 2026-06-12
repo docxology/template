@@ -61,7 +61,7 @@ flowchart TB
 
 - Generic and reusable across projects
 - Handles template infrastructure concerns
-- 60% minimum test coverage for infrastructure (see [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md) for measured status)
+- 60% minimum test coverage for infrastructure (see [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md) for measured status)
 - No domain-specific logic
 - Interfaces with project files (manuscript/, output/)
 
@@ -138,7 +138,7 @@ classes keep working without changes.
 - Domain-specific and research-focused
 - Implements algorithms and computations
 - Calls infrastructure when needed
-- 90% minimum test coverage for project `src/` (measure locally or see [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md))
+- 90% minimum test coverage for project `src/` (measure locally or see [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md))
 - Follows thin orchestrator pattern
 
 **Usage Pattern:**
@@ -261,7 +261,7 @@ from projects.name.src.simulation import SimpleSimulation  # ❌ WRONG
 
 ```mermaid
 flowchart TB
-    INFRA[/infrastructure<br/>Layer 1 · importable packages<br/>see canonical_facts.md/]
+    INFRA[/infrastructure<br/>Layer 1 · importable packages<br/>see COUNTS.md/]
     INFRA --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
     INFRA --> CORE[/core<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry/]
     INFRA --> DOC[/documentation<br/>figure manager · glossary gen/]

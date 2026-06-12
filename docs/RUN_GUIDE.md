@@ -48,6 +48,25 @@ flowchart TB
 
 **Layer 3: Business Logic (Actual Implementation)**
 
+### Pipeline stage → infrastructure → project script map
+
+Live test and coverage totals: [`docs/_generated/COUNTS.md`](_generated/COUNTS.md).
+
+| Stage (default full run) | Root orchestrator | Primary infrastructure modules | Typical project script |
+| --- | --- | --- | --- |
+| 0 Clean outputs | built-in (`PipelineExecutor`) | `infrastructure.core.files` | — |
+| 1 Environment setup | `scripts/00_setup_environment.py` | `infrastructure.project.discovery` | — |
+| 2 Infrastructure tests | `scripts/01_run_tests.py --infra-only` | `infrastructure.core.test_runner` | — |
+| 3 Project tests | `scripts/01_run_tests.py --project-only` | `infrastructure.core.test_runner` | — |
+| 4 Project analysis | `scripts/02_run_analysis.py` | `infrastructure.core.pipeline` | `projects/templates/<name>/scripts/*.py` |
+| 5 PDF rendering | `scripts/03_render_pdf.py` | `infrastructure.rendering` | optional `render_*.py` in project |
+| 6 Output validation | `scripts/04_validate_output.py` | `infrastructure.validation` | — |
+| 7–8 LLM stages | `scripts/06_llm_review.py` | `infrastructure.llm` | — |
+| 9 Copy outputs | `scripts/05_copy_outputs.py` | `infrastructure.core.files` | — |
+
+Qualified discovery names (`templates/<name>`, `active/<name>`) resolve under
+`projects/` via `infrastructure.project.discovery`.
+
 - **`infrastructure/`**: Generic, reusable algorithms and utilities
 - **`projects/{name}/src/`**: Project-specific scientific code and analysis
 - **Purpose**: All computational logic and algorithms

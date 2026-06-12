@@ -17,7 +17,7 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
 
 from infrastructure.core.logging.utils import get_logger
 
-from src.loop import run_sia_loop_project
+from sia_loop_impl import run_sia_loop_project
 
 logger = get_logger(__name__)
 

@@ -156,7 +156,7 @@ def render_roster_markdown(entries: list[ExemplarEntry]) -> str:
         "Each exemplar's README carries the full `## When to use this template`\n"
         "section; this table shows the first sentence only. Counts here are\n"
         "static (test *files*); authoritative measured coverage lives in\n"
-        "[`canonical_facts.md`](canonical_facts.md).\n"
+        "[`COUNTS.md`](COUNTS.md).\n"
     )
 
 

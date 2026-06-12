@@ -97,9 +97,9 @@ def test_count_singularity_outside_canonical_is_flagged(tmp_path: Path) -> None:
     assert issues[0].category == "count-singularity"
 
 
-def test_count_singularity_canonical_facts_is_exempt(tmp_path: Path) -> None:
+def test_count_singularity_COUNTS_is_exempt(tmp_path: Path) -> None:
     repo = scaffold_repo(tmp_path, n_packages=15)
-    write_doc(repo / "docs" / "_generated" / "canonical_facts.md", "Measured: 345 .py files.\n")
+    write_doc(repo / "docs" / "_generated" / "COUNTS.md", "Measured: 345 .py files.\n")
     assert check_canonical_count_singularity(repo) == []
 
 

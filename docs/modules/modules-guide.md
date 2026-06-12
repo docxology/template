@@ -4,7 +4,7 @@ Reference for Layer-1 infrastructure modules.
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
-**Counting:** overview rows below include importable Python packages under `infrastructure/` plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). Use [canonical_facts.md](../_generated/canonical_facts.md) for measured counts instead of copying literals. Nested package docs live alongside their parents: `core/telemetry/`, `reference/citation/`, `reference/verification/`, `search/literature/`, and `search/exa/`.
+**Counting:** overview rows below include importable Python packages under `infrastructure/` plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). Use [COUNTS.md](../_generated/COUNTS.md) for measured counts instead of copying literals. Nested package docs live alongside their parents: `core/telemetry/`, `reference/citation/`, `reference/verification/`, `search/literature/`, and `search/exa/`.
 
 ---
 

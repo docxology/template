@@ -12,7 +12,7 @@ import urllib.request
 
 import pytest
 
-from src.agents import HermesProposer
+from hermes_proposer import HermesProposer
 from src.state import Champion, SharedState
 
 

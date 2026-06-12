@@ -12,6 +12,7 @@ from ._infra import (
     TemplateError,
     benchmark_function,
     check_numerical_stability,
+    log_success,
     verify_output_integrity,
 )
 from ._logging import _setup_fallback_logging, get_logger as _get_logger
@@ -31,9 +32,7 @@ from .pipeline import (
 from .scientific_reports import _benchmark_timings, _stability_score_from_runs
 from .workflow import main, run_analysis_pipeline
 
-if INFRASTRUCTURE_AVAILABLE:
-    from infrastructure.core import log_success
-else:
+if not INFRASTRUCTURE_AVAILABLE:
 
     def log_success(message: str, logger: logging.Logger | None = None) -> None:
         return None

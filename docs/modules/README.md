@@ -60,7 +60,7 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 ## Available Modules
 
-Importable package names and counts are tracked in [canonical_facts.md](../_generated/canonical_facts.md). Per-module deep dives live in [guides/](guides/); `config/` and `docker/` are configuration directories rather than Python packages.
+Importable package names and counts are tracked in [COUNTS.md](../_generated/COUNTS.md). Per-module deep dives live in [guides/](guides/); `config/` and `docker/` are configuration directories rather than Python packages.
 
 ## Related Documentation
 

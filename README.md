@@ -148,7 +148,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | [`projects/templates/template_template/`](projects/templates/template_template/) | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
 | [`projects/templates/template_textbook/`](projects/templates/template_textbook/) | Book-length manuscript scaffold (data-driven parts → chapters → labs/question banks, fillable stubs) | see canonical facts | see canonical facts |
 
-*Test and coverage figures are representative; confirm against [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) after substantive changes.*
+*Test and coverage figures are representative; confirm against [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) after substantive changes.*
 
 **Choosing an exemplar:** every exemplar README opens with a `## When to use this template` section, and the generated differentiation map in [`docs/_generated/exemplar_roster.md`](docs/_generated/exemplar_roster.md) collects them into one "copy THIS when…" table (regenerate with `uv run python scripts/generate_exemplar_roster_doc.py`; sync is test-enforced).
 
@@ -196,7 +196,7 @@ Other entries rotate between `projects/working/` and `projects/archive/` as work
 progresses. Never hard-code their paths in long-lived docs — consult
 [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)
 (authoritative public scope, regenerated from `infrastructure.project.public_scope`) and
-[`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md)
+[`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md)
 instead.
 
 **Common commands:**
@@ -228,7 +228,7 @@ Twelve-level usage guide: [`docs/core/how-to-use.md`](docs/core/how-to-use.md).
 
 ## System Status
 
-Current state is captured in `docs/_generated/canonical_facts.md` (updated from discovery, test runs, and CI configuration).
+Current state is captured in `docs/_generated/COUNTS.md` (updated from discovery, test runs, and CI configuration).
 
 Key elements:
 - Active projects listed via `discover_projects()`
@@ -237,7 +237,7 @@ Key elements:
 - Commands standardized to `uv run`
 - Outputs organized per project under `output/{name}/`
 
-See `docs/_generated/canonical_facts.md` and `docs/development/testing/testing-guide.md` for details.
+See `docs/_generated/COUNTS.md` and `docs/development/testing/testing-guide.md` for details.
 
 ## 🎓 Skill-Based Learning Paths
 
@@ -278,9 +278,9 @@ maintained in [`AGENTS.md`](AGENTS.md#core-architecture) and
 - **Orchestration:** the pipeline runs Setup → Tests → Analysis → Render →
   Validate → Copy, with optional LLM Review and LLM Translations stages.
 - **Core systems:** importable `infrastructure/` packages (Layer 1; live list
-  in [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md))
+  in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md))
   plus per-project `projects/{name}/src/` algorithms (Layer 2); see
-  [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) for
+  [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) for
   the live module list.
 - **Data flow:** project source + manuscript markdown + `config.yaml` flow
   through the pipeline into `output/<name>/{pdf,figures,data,reports}/`.
@@ -403,7 +403,7 @@ run a project suite with `uv run python scripts/01_run_tests.py --project-only
 [`tests/AGENTS.md`](tests/AGENTS.md) and
 [`docs/development/testing/testing-guide.md`](docs/development/testing/testing-guide.md);
 live coverage / test counts live in
-[`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md).
+[`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md).
 
 ## Output
 
@@ -465,7 +465,7 @@ counts drift, so it is not duplicated here). Top-level entry points:
 - **Agent code navigation:** [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md)
   (optional local CodeGraph index; never a committed artifact)
 - **Best practices:** [`docs/best-practices/best-practices.md`](docs/best-practices/best-practices.md)
-- **Live facts (auto-derived):** [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md),
+- **Live facts (auto-derived):** [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md),
   [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)
 - **Per-directory `AGENTS.md`** files in `infrastructure/`, `scripts/`, `tests/`, `docs/`, and every `projects/{name}/{src,scripts,tests,manuscript}/`.
 

@@ -16,11 +16,11 @@ FIXED_TS = "2026-06-06T00:00:00Z"
 NOT_AVAILABLE_LOWER = "not available"
 
 
-def _write_canonical_facts(repo_root: Path) -> None:
-    """Write a minimal canonical_facts.md with a coverage table."""
+def _write_COUNTS(repo_root: Path) -> None:
+    """Write a minimal COUNTS.md with a coverage table."""
     gen = repo_root / "docs" / "_generated"
     gen.mkdir(parents=True, exist_ok=True)
-    (gen / "canonical_facts.md").write_text(
+    (gen / "COUNTS.md").write_text(
         "# Canonical Factsheet\n"
         "\n"
         "## Test Status\n"
@@ -83,7 +83,7 @@ def _write_evidence_graph(repo_root: Path) -> None:
 
 
 def test_collect_full_report_populates_all_sections(tmp_path: Path) -> None:
-    _write_canonical_facts(tmp_path)
+    _write_COUNTS(tmp_path)
     _write_pyproject(tmp_path, "1.2.3")
     _write_changelog(tmp_path)
     _write_pipeline_report(tmp_path)
@@ -95,7 +95,7 @@ def test_collect_full_report_populates_all_sections(tmp_path: Path) -> None:
     assert report.generated_at == FIXED_TS
     assert report.release.version == "1.2.3"
     assert report.release.latest_tag == "v1.2.0"
-    # coverage facts parsed from canonical_facts
+    # coverage facts parsed from COUNTS
     assert any(p.name == "template_code_project" and p.tests == 196 for p in report.coverage.projects)
     # pipeline state present
     assert report.pipeline.available is True
@@ -150,7 +150,7 @@ def test_docs_lint_consumed_from_json_payload(tmp_path: Path) -> None:
 
 
 def test_markdown_render_is_deterministic(tmp_path: Path) -> None:
-    _write_canonical_facts(tmp_path)
+    _write_COUNTS(tmp_path)
     _write_pyproject(tmp_path, "1.2.3")
     _write_pipeline_report(tmp_path)
     _write_evidence_graph(tmp_path)
@@ -181,7 +181,7 @@ def test_markdown_absent_inputs_say_not_available(tmp_path: Path) -> None:
 
 
 def test_html_render_is_deterministic_and_well_formed(tmp_path: Path) -> None:
-    _write_canonical_facts(tmp_path)
+    _write_COUNTS(tmp_path)
     _write_pyproject(tmp_path, "1.2.3")
     _write_pipeline_report(tmp_path)
 
@@ -210,7 +210,7 @@ def test_report_to_dict_is_byte_stable_json(tmp_path: Path) -> None:
 
 
 def test_overall_ready_when_all_green(tmp_path: Path) -> None:
-    _write_canonical_facts(tmp_path)
+    _write_COUNTS(tmp_path)
     _write_pyproject(tmp_path, "1.2.3")
     _write_pipeline_report(tmp_path)
     _write_evidence_graph(tmp_path)

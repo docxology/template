@@ -34,14 +34,9 @@ except ImportError:  # pragma: no cover
     from experiment_config import load_experiment_config  # type: ignore[no-redef]
     from optimizer import quadratic_optimum  # type: ignore[no-redef]
 
-try:
-    from infrastructure.core.logging.utils import get_logger
+from ._runtime import get_logger
 
-    logger = get_logger(__name__)
-except ImportError:
-    import logging as _logging
-
-    logger = _logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 # ---------------------------------------------------------------------------

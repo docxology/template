@@ -38,10 +38,10 @@ def skill_response(skill_path: Path, prompt: str, eval_name: str, *, include_hea
             sections.append(f"\n## Included reference: {ref_file.name}\n")
             sections.append(ref_file.read_text(encoding="utf-8"))
     joined = "\n".join(sections).lower()
-    if "canonical_facts" not in joined and "do not invent coverage" not in joined:
+    if "COUNTS" not in joined and "do not invent coverage" not in joined:
         sections.append(
             "\nMetrics policy: do not invent coverage percentages; cite pytest output or "
-            "`docs/_generated/canonical_facts.md`.\n"
+            "`docs/_generated/COUNTS.md`.\n"
         )
     if "active_projects" not in joined:
         sections.append(

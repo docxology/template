@@ -6,9 +6,8 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from infrastructure.prose import ManuscriptReport, analyze_manuscript, write_report
-
 from ..config import ProjectConfig
+from ..prose_facade import ManuscriptReportLike
 from .checks import (
     CHECK_REGISTRY,
     CheckResult,
@@ -28,7 +27,7 @@ __all__ = [
 class ProseRunArtifacts:
     """Outputs of a single :func:`run_prose_pipeline` call."""
 
-    manuscript_report: ManuscriptReport
+    manuscript_report: ManuscriptReportLike
     report_path: Path | None = None
     checks: list[CheckResult] = field(default_factory=list)
     all_passed: bool = True
@@ -51,23 +50,22 @@ def run_prose_pipeline(
     config: ProjectConfig,
     *,
     project_root: Path | str,
+    manuscript_report: ManuscriptReportLike,
     write_outputs: bool = True,
 ) -> ProseRunArtifacts:
-    """Run the configured prose review pipeline."""
+    """Run configured checks over a pre-analyzed manuscript report."""
     root = Path(project_root)
-    manuscript_dir = (root / config.manuscript_dir).resolve()
-    report = analyze_manuscript(
-        manuscript_dir,
-        long_sentence_threshold=config.prose.long_sentence_threshold,
-    )
-
     bib_path = (root / config.bibliography.references_path).resolve()
-    checks = run_configured_checks(report, config, bib_path=bib_path)
+    checks = run_configured_checks(manuscript_report, config, bib_path=bib_path)
     all_passed = all(c.passed for c in checks)
     report_path: Path | None = None
     if write_outputs:
         report_path = (root / "output" / "manuscript_report.json").resolve()
-        write_report(report, report_path)
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(
+            json.dumps(manuscript_report.to_dict(), indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
 
         checks_path = (root / "output" / "checks.json").resolve()
         checks_path.parent.mkdir(parents=True, exist_ok=True)
@@ -77,7 +75,7 @@ def run_prose_pipeline(
         )
 
     return ProseRunArtifacts(
-        manuscript_report=report,
+        manuscript_report=manuscript_report,
         report_path=report_path,
         checks=checks,
         all_passed=all_passed,

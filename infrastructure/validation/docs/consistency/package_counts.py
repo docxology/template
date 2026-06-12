@@ -70,10 +70,10 @@ def check_module_count_claims(repo_root: Path, expected_count: int | None = None
 
 
 def check_canonical_count_singularity(repo_root: Path) -> list[Inconsistency]:
-    """Flag a bare ``NNN .py files`` literal outside canonical_facts.md."""
+    """Flag a bare ``NNN .py files`` literal outside COUNTS.md."""
     from infrastructure.validation.docs.consistency._shared import SHELL_NOQA_RE
 
-    canonical = repo_root / "docs" / "_generated" / "canonical_facts.md"
+    canonical = repo_root / "docs" / "_generated" / "COUNTS.md"
     issues: list[Inconsistency] = []
     for md in iter_long_lived_docs(repo_root):
         if md.resolve() == canonical.resolve():
@@ -90,7 +90,7 @@ def check_canonical_count_singularity(repo_root: Path) -> list[Inconsistency]:
                         category="count-singularity",
                         detail=(
                             "hard-codes a volatile infrastructure .py-file count — link to "
-                            "docs/_generated/canonical_facts.md instead (it drifts as the tree "
+                            "docs/_generated/COUNTS.md instead (it drifts as the tree "
                             "changes); add `# noqa: docs-lint` only for a measured, dated note"
                         ),
                     )

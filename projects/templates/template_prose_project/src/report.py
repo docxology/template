@@ -5,16 +5,15 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Iterable
 
-from infrastructure.prose import ManuscriptReport, render_outline
-
 from .pipeline import CheckResult
+from .prose_facade import ManuscriptReportLike, render_outline
 
 
 def write_review_report(
     output_path: Path | str,
     *,
     title: str,
-    manuscript_report: ManuscriptReport,
+    manuscript_report: ManuscriptReportLike,
     checks: Iterable[CheckResult],
     include_per_file_table: bool = True,
     include_outline: bool = True,

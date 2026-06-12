@@ -228,8 +228,10 @@ def register_figure() -> None:
     """Register generated figures for manuscript reference."""
     logger = get_logger()
     try:
-        from infrastructure.documentation.figure_manager import FigureManager
+        from ._infra import FigureManager
 
+        if FigureManager is None:
+            raise ImportError("FigureManager unavailable")
         registry_file = _root() / "output" / "figures" / "figure_registry.json"
         fm = FigureManager(registry_file=str(registry_file))
         figures = [

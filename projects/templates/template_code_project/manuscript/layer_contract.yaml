@@ -1,0 +1,4 @@
+# Code-centric exemplar: optional monorepo adapters only.
+allow_infrastructure_imports:
+  - src/analysis/_infra.py
+  - src/_runtime.py

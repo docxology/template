@@ -55,15 +55,18 @@ def test_run_api_doc_generation_continues_when_glossary_index_fails(
         if path not in sys.path:
             sys.path.insert(0, path)
 
-    import documentation as documentation_mod
+    scripts_dir = str(PROJECT_ROOT / "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+    import generate_api_docs as api_docs_mod
 
     def _fail(_src: str) -> list:
         raise ValueError("glossary index unavailable")
 
-    monkeypatch.setattr(documentation_mod, "build_api_index", _fail)
+    monkeypatch.setattr(api_docs_mod, "build_api_index", _fail)
     project_root = tmp_path
     (project_root / "src").mkdir()
-    result = documentation_mod.run_api_doc_generation(project_root)
+    result = api_docs_mod.run_api_doc_generation(project_root)
     assert result is not None
     api_ref = project_root / "output" / "docs" / "api_reference.md"
     assert api_ref.is_file()

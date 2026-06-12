@@ -8,8 +8,8 @@ It demonstrates the complete research pipeline from algorithm implementation thr
 
 This project is explicitly designed to showcase the repository's three foundational pillars:
 
-1. **`infrastructure/` Layer**: The code delegates tracking, performance benchmarking, stability validation, and PDF rendering to the shared infrastructure packages at the repository root. Current package counts live in [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
-2. **`tests/` Integrity**: A zero-mock suite ([`projects/templates/template_code_project/tests/`](../tests/)) with **≥90%** coverage on `projects/templates/template_code_project/src/`. Live test count and measured coverage: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
+1. **`infrastructure/` Layer**: The code delegates tracking, performance benchmarking, stability validation, and PDF rendering to the shared infrastructure packages at the repository root. Current package counts live in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
+2. **`tests/` Integrity**: A zero-mock suite ([`projects/templates/template_code_project/tests/`](../tests/)) with **≥90%** coverage on `projects/templates/template_code_project/src/`. Live test count and measured coverage: [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 3. **`docs/` Orchestration**: Project documentation under `projects/templates/template_code_project/docs/` records the operational patterns and is checked by the repository documentation lint gates.
 
 ## Manuscript Structure

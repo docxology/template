@@ -28,7 +28,7 @@ Configuration: `projects/templates/template_code_project/pyproject.toml` (`fail_
 
 Conftest: `projects/templates/template_code_project/tests/conftest.py` (sets `MPLBACKEND=Agg`, adds `src/` to `sys.path`)
 
-Live test count and coverage percentage: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md) (or `uv run pytest tests/ --collect-only -q` from the project directory).
+Live test count and coverage percentage: [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) (or `uv run pytest tests/ --collect-only -q` from the project directory).
 
 ## Test Class Inventory (core math — `test_optimizer.py`)
 

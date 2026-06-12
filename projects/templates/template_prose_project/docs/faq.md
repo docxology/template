@@ -60,7 +60,7 @@ zero-mock checklist.
 
 The 90% gate is the floor enforced by the root pipeline. Live measured
 coverage for this exemplar is in
-[`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
+[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 The buffer protects against incidental coverage drops during refactoring; do
 not consume it on purpose.
 

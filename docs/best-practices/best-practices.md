@@ -89,7 +89,7 @@ from example import add_numbers, calculate_average
 
 **Maintain coverage:**
 
-- **Project code**: 90% minimum (current measured % — see [canonical_facts.md](../_generated/canonical_facts.md))
+- **Project code**: 90% minimum (current measured % — see [COUNTS.md](../_generated/COUNTS.md))
 - **Infrastructure**: 60% minimum (current measured % — see [coverage-gaps.md](../development/coverage-gaps.md))
 - Test all critical code paths
 - Include edge cases

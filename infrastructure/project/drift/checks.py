@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import json
 import re
 
@@ -561,57 +562,153 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
             )
 
 
-def check_repo_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
-    """Catch hardcoded test counts / coverage percentages in repo-level `docs/`.
-
-    Catches the round-4 finding class: `docs/operational/build/build-system.md`
-    hardcoded "1796 infrastructure tests, 320 project tests" verbatim, and
-    six docs hardcoded "83.33%" / "100% coverage" — both classes drift the
-    moment the live numbers change. The rule is: counts and percentages
-    live in `docs/_generated/canonical_facts.md` and other docs link there.
-
-    Skipped: `_generated/*` (the canonical source of truth itself),
-    `audit/archived/*` (intentional point-in-time snapshots), fenced
-    code blocks (illustrative literal output is fine).
-    """
-    docs_dir = repo_root / "docs"
-    if not docs_dir.is_dir():
-        return
-    # Patterns we care about — broad enough to catch real drift, narrow
-    # enough not to flag every "1234" in unrelated prose.
+def _scan_hardcoded_counts_in_text(
+    text: str,
+    rel_md: str,
+    report: Report,
+    *,
+    rule_prefix: str,
+) -> None:
     test_count_pat = re.compile(r"\b(\d{3,5})\s+(?:infrastructure|project|infra)\s+tests?\b", re.IGNORECASE)
     coverage_pat = re.compile(r"\b(\d{1,3}(?:\.\d+)?)\s*%\s*coverage\b", re.IGNORECASE)
-    skip_dirs = {"_generated", "archived"}
-    for md in docs_dir.rglob("*.md"):
-        if any(part in skip_dirs for part in md.parts):
+    for m in test_count_pat.finditer(text):
+        report.add(
+            "WARNING",
+            "repo",
+            f"{rule_prefix}_hardcoded_test_count",
+            (
+                f"{rel_md}: hardcoded '{m.group(0)}' near offset {m.start()} "
+                "— link to docs/_generated/COUNTS.md instead"
+            ),
+        )
+    for m in coverage_pat.finditer(text):
+        value = float(m.group(1))
+        if value in {60.0, 90.0}:
             continue
-        text = _strip_code_fences(_read(md))
-        for m in test_count_pat.finditer(text):
-            rel_md = _rel(md, repo_root)
-            report.add(
-                "WARNING",
-                "repo",
-                "repo_docs_hardcoded_test_count",
-                (
-                    f"{rel_md}: hardcoded '{m.group(0)}' near offset {m.start()} "
-                    "— link to docs/_generated/canonical_facts.md instead"
-                ),
-            )
-        for m in coverage_pat.finditer(text):
-            # Exempt the 90% / 60% gate floors (those ARE policy, not live numbers).
-            value = float(m.group(1))
-            if value in {60.0, 90.0}:
+        report.add(
+            "WARNING",
+            "repo",
+            f"{rule_prefix}_hardcoded_coverage_pct",
+            (
+                f"{rel_md}: hardcoded '{m.group(0)}' near offset {m.start()} "
+                "— link to docs/_generated/COUNTS.md instead"
+            ),
+        )
+
+
+def check_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
+    """Catch hardcoded test counts / coverage percentages in long-lived docs.
+
+    Live counts live in ``docs/_generated/COUNTS.md``; README and AGENTS link
+    there instead of embedding measured totals or coverage percentages.
+
+    Scanned: ``docs/**/*.md`` (excluding ``_generated/`` and ``audit/archived/``),
+    every ``README.md`` and ``AGENTS.md`` under the repo (excluding ``node_modules/``
+    and ``.venv/``). Fenced code blocks are skipped; policy floors 60%/90% are exempt.
+    """
+    skip_dir_names = {"_generated", "archived", "node_modules", ".venv", "__pycache__"}
+    scanned: set[Path] = set()
+
+    docs_dir = repo_root / "docs"
+    if docs_dir.is_dir():
+        for md in docs_dir.rglob("*.md"):
+            if any(part in skip_dir_names for part in md.parts):
                 continue
-            rel_md = _rel(md, repo_root)
-            report.add(
-                "WARNING",
-                "repo",
-                "repo_docs_hardcoded_coverage_pct",
-                (
-                    f"{rel_md}: hardcoded '{m.group(0)}' near offset {m.start()} "
-                    "— link to docs/_generated/canonical_facts.md instead"
-                ),
-            )
+            scanned.add(md.resolve())
+
+    for name in ("README.md", "AGENTS.md"):
+        for md in repo_root.rglob(name):
+            if any(part in skip_dir_names for part in md.parts):
+                continue
+            scanned.add(md.resolve())
+
+    for md in sorted(scanned):
+        text = _strip_code_fences(_read(md))
+        _scan_hardcoded_counts_in_text(text, _rel(md, repo_root), report, rule_prefix="repo_docs")
+
+
+def check_repo_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
+    """Backward-compatible alias for :func:`check_docs_hardcoded_counts`."""
+    check_docs_hardcoded_counts(repo_root, report)
+
+
+_STANDALONE_SRC_PROJECTS = frozenset(
+    {
+        "templates/template_active_inference",
+        "templates/template_newspaper",
+        "templates/template_textbook",
+    }
+)
+
+_CODE_ADAPTER_ALLOWLIST = frozenset(
+    {
+        "src/analysis/_infra.py",
+        "src/_runtime.py",
+    }
+)
+
+
+def _load_layer_contract_allowlist(project_root: Path) -> set[str]:
+    contract_path = project_root / "manuscript" / "layer_contract.yaml"
+    if not contract_path.is_file():
+        return set()
+    loaded = yaml.safe_load(contract_path.read_text(encoding="utf-8"))
+    if not isinstance(loaded, dict):
+        return set()
+    raw = loaded.get("allow_infrastructure_imports", [])
+    if not isinstance(raw, list):
+        return set()
+    return {str(entry).strip() for entry in raw if str(entry).strip()}
+
+
+def _infra_imports_in_file(py_path: Path) -> list[str]:
+    try:
+        tree = ast.parse(py_path.read_text(encoding="utf-8"), filename=str(py_path))
+    except SyntaxError:
+        return []
+    hits: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.name == "infrastructure" or alias.name.startswith("infrastructure."):
+                    hits.append(f"import {alias.name}")
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            if node.module == "infrastructure" or node.module.startswith("infrastructure."):
+                hits.append(f"from {node.module}")
+    return hits
+
+
+def check_project_src_infrastructure_boundary(
+    project_root: Path,
+    report: Report,
+    project: str,
+) -> None:
+    """AST-scan ``src/**/*.py`` for ``infrastructure`` imports against layer contracts."""
+    src_dir = project_root / "src"
+    if not src_dir.is_dir():
+        return
+    allowlist = _load_layer_contract_allowlist(project_root)
+    if project == "templates/template_code_project":
+        allowlist |= _CODE_ADAPTER_ALLOWLIST
+    strict = project in _STANDALONE_SRC_PROJECTS
+    for py_path in sorted(src_dir.rglob("*.py")):
+        rel_py = _rel(py_path, project_root)
+        imports = _infra_imports_in_file(py_path)
+        if not imports:
+            continue
+        if rel_py in allowlist:
+            continue
+        severity = "ERROR" if strict else "WARNING"
+        joined = ", ".join(sorted(set(imports)))
+        report.add(
+            severity,
+            project,
+            "src_infrastructure_import",
+            (
+                f"{rel_py} imports infrastructure ({joined}) — "
+                "domain src/ must stay standalone; use scripts/ or manuscript/layer_contract.yaml"
+            ),
+        )
 
 
 def check_project(repo_root: Path, project: str, report: Report) -> None:

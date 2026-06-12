@@ -86,36 +86,8 @@ def write_variables(variables: ManuscriptVariables, output_path: Path | str) -> 
 
 
 def substitute_in_text(text: str, variables: ManuscriptVariables) -> str:
-    """Replace ``{{KEY}}`` markers in *text* with the variable values.
-
-    Delegates to :func:`infrastructure.rendering.manuscript_injection.substitute_manuscript_text`
-    so the substitution regex and unresolved-token semantics are identical
-    across all projects.
-    """
-    from infrastructure.rendering.manuscript_injection import substitute_manuscript_text
-
-    plain = {k.upper(): str(v) for k, v in asdict(variables).items()}
-    resolved, _ = substitute_manuscript_text(text, plain)
-    return resolved
-
-
-def write_resolved_manuscript_tree(
-    project_root: Path | str,
-    variables: ManuscriptVariables,
-) -> Path:
-    """Write ``manuscript/*.md`` with substitutions plus aux files into ``output/manuscript``.
-
-    PDF rendering prefers ``output/manuscript`` when it contains markdown
-    (see :func:`infrastructure.rendering.pipeline._resolve_manuscript_dir`).
-
-    Delegates to
-    :func:`infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree`
-    so documentation-only files (``AGENTS.md``, ``README.md``, ``SYNTAX.md``)
-    are excluded from the output tree and unresolved tokens are logged.
-    """
-    from infrastructure.rendering.manuscript_injection import (
-        write_resolved_manuscript_tree as _write,
-    )
-
-    plain = {k.upper(): str(v) for k, v in asdict(variables).items()}
-    return _write(project_root, plain)
+    """Replace ``{{KEY}}`` markers in *text* with variable values."""
+    out = text
+    for marker, value in variables.as_uppercase_keys().items():
+        out = out.replace(marker, value)
+    return out

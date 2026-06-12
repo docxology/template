@@ -35,7 +35,7 @@ alone is not proof — confirm tests collected > 0 and coverage ≥ 90%:
 ```bash
 uv run pytest projects/templates/template_code_project/tests/ \
   --cov=projects/templates/template_code_project/src --cov-fail-under=90
-# live baseline: docs/_generated/canonical_facts.md
+# live baseline: docs/_generated/COUNTS.md
 ```
 
 **Combined-PDF rendering & Mermaid.** This project's convention is
@@ -159,7 +159,7 @@ graph TD
 
 ✅ **Fully compliant** with template development standards:
 
-- **Testing**: `src/` coverage is gated at 90%; live test count + achieved coverage tracked in [`../../docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md)
+- **Testing**: `src/` coverage is gated at 90%; live test count + achieved coverage tracked in [`../../docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md)
 - **Documentation**: AGENTS.md + README.md in each directory
 - **Type Safety**: Full type hints on all public APIs
 - **Code Quality**: Ruff format/check (CI parity), descriptive naming, proper imports

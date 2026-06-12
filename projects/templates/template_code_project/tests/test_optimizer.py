@@ -4,7 +4,7 @@ Comprehensive tests covering functionality, edge cases, and numerical accuracy.
 
 > **Template Exemplar Note**: This module enforces the Zero-Mock policy and targets
 > high coverage on `src/` (≥90% gate in `pyproject.toml`; live percentage in
-> `docs/_generated/canonical_facts.md`).
+> `docs/_generated/COUNTS.md`).
 """
 
 import functools

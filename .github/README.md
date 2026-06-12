@@ -58,7 +58,7 @@ This file lives under [`.github/`](.) but serves as the **primary GitHub-rendere
 | [`../CLAUDE.md`](../CLAUDE.md) | Copy-paste command cheat sheet |
 | [`.cursorrules`](../.cursorrules) | Cursor agent constraints (architecture, CI scope) |
 
-**Ground truth (do not hard-code rotating names or counts):** [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) · [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) · [`STATUS.md`](../STATUS.md) · [`docs/documentation-index.md`](../docs/documentation-index.md)
+**Ground truth (do not hard-code rotating names or counts):** [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) · [`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md) · [`STATUS.md`](../STATUS.md) · [`docs/documentation-index.md`](../docs/documentation-index.md)
 
 **Skills manifest:** [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — regenerate after editing any `**/SKILL.md` with `uv run python -m infrastructure.skills write` (human index: [`docs/_generated/skills_index.md`](../docs/_generated/skills_index.md)).
 
@@ -121,7 +121,7 @@ Natural-language tasks map to one child skill under [`docs/prompts/`](../docs/pr
 
 - **Thin orchestrator:** business logic only in `infrastructure/` or `projects/{name}/src/` — never in `scripts/`.
 - **No mocks:** no `unittest.mock`, `MagicMock`, or `mocker.patch` — use real data, temp files, `pytest-httpserver`, subprocess.
-- **Coverage:** infrastructure ≥ 60%, project `src/` ≥ 90% per project ([`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md)).
+- **Coverage:** infrastructure ≥ 60%, project `src/` ≥ 90% per project ([`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md)).
 - **Public repo confidentiality:** only the public exemplar set in [`infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES`](../infrastructure/project/public_scope.py) may be git-tracked under `projects/` — [`scripts/check_tracked_projects.py`](../scripts/check_tracked_projects.py) enforces in CI and pre-push.
 - **Rotating paths:** never hard-code private or rotating project names — link [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md).
 
@@ -216,7 +216,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 | Path | Persistence | Purpose |
 | --- | :---: | --- |
-| `infrastructure/` | Permanent | Top-level Python packages under `infrastructure/` (plus config/documentation-only directories); live count in [docs/_generated/canonical_facts.md](../docs/_generated/canonical_facts.md), documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md), and package details in [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
+| `infrastructure/` | Permanent | Top-level Python packages under `infrastructure/` (plus config/documentation-only directories); live count in [docs/_generated/COUNTS.md](../docs/_generated/COUNTS.md), documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md), and package details in [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects/working/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects/archive/` | Permanent | Completed/retired work — preserved, not executed |
@@ -287,7 +287,7 @@ repo-wide rule also stated in the root [`README.md`](../README.md) and
 [`../AGENTS.md`](../AGENTS.md), the single authoritative roster is
 [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)
 (regenerated from `infrastructure.project.public_scope`), with measured facts in
-[`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md).
+[`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md).
 This keeps the docs-lint "zero ghost references" gate green without per-line
 `noqa` suppressions.
 
@@ -534,7 +534,7 @@ Full specification: [docs/security/steganography.md](../docs/security/steganogra
 | **Zero-Mock policy** | No `MagicMock`, `mocker.patch`, or `unittest.mock` anywhere |
 | **Real operations** | Tests use real filesystem, subprocess, and HTTP calls |
 | **Infrastructure coverage** | ≥ 60% (live % → [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md)) |
-| **Project coverage** | ≥ 90% for public exemplar `src/` trees; confirm live figures in [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) |
+| **Project coverage** | ≥ 90% for public exemplar `src/` trees; confirm live figures in [`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md) |
 | **Optional service skipping** | `@pytest.mark.requires_ollama` for graceful degradation |
 
 ```bash

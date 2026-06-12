@@ -42,7 +42,7 @@ Files (`projects/templates/template_prose_project/tests/`):
   `subprocess.run` (approximately 3 tests).
 
 **Live test count + achieved coverage:** see
-[`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md)
+[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md)
 (or run `uv run pytest projects/templates/template_prose_project/tests/ --collect-only -q | tail -1`).
 
 Conftest: `projects/templates/template_prose_project/tests/conftest.py` (sets
@@ -53,7 +53,7 @@ Configuration: `projects/templates/template_prose_project/pyproject.toml`
 ## Coverage
 
 Measured line and branch coverage for `projects/templates/template_prose_project/src/` lives in
-[`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md)
+[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md)
 (exemplar table). Re-measure locally:
 
 ```bash

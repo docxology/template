@@ -3,7 +3,7 @@
 A *repro bundle* captures everything a third party needs to confirm that a
 public exemplar reproduces byte-for-byte: the lockfile, the project's artifact
 manifest, content hashes of declared output artifacts, a hash pointer to
-``docs/_generated/canonical_facts.md``, and the exact pipeline command used to
+``docs/_generated/COUNTS.md``, and the exact pipeline command used to
 regenerate the outputs.
 
 Two entry points:
@@ -35,7 +35,8 @@ logger = get_logger(__name__)
 
 SCHEMA_VERSION = "1.0"
 BUNDLE_MANIFEST_NAME = "repro_manifest.json"
-CANONICAL_FACTS_RELPATH = "docs/_generated/canonical_facts.md"
+COUNTS_RELPATH = "docs/_generated/COUNTS.md"
+CANONICAL_FACTS_RELPATH = COUNTS_RELPATH  # backward-compatible alias
 
 # Reproduction-input file kinds, in the order they are collected.
 _KIND_LOCKFILE = "lockfile"
@@ -172,7 +173,7 @@ def collect_entries(repo_root: Path, project_name: str) -> list[BundleEntry]:
     entries: list[BundleEntry] = [
         _make_entry(repo_root, _KIND_LOCKFILE, "uv.lock"),
         _make_entry(repo_root, _KIND_PYPROJECT, "pyproject.toml"),
-        _make_entry(repo_root, _KIND_CANONICAL_FACTS, CANONICAL_FACTS_RELPATH),
+        _make_entry(repo_root, _KIND_CANONICAL_FACTS, COUNTS_RELPATH),
     ]
 
     artifact_manifest_rel = _artifact_manifest_relpath(repo_root, project_dir)
@@ -441,6 +442,7 @@ def main(argv: list[str] | None = None) -> int:
 __all__ = [
     "BUNDLE_MANIFEST_NAME",
     "CANONICAL_FACTS_RELPATH",
+    "COUNTS_RELPATH",
     "SCHEMA_VERSION",
     "BundleEntry",
     "VerifyReport",

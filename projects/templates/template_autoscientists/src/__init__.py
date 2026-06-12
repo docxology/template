@@ -14,7 +14,7 @@ for the opt-in agentic demo.
 
 from __future__ import annotations
 
-from .agents import DeterministicProposer, HermesProposer, Proposer
+from .agents import DeterministicProposer, Proposer
 from .confirmation import Confirmation, confirm_improvement
 from .dead_ends import DeadEnd, DeadEndRegistry
 from .objective import SyntheticObjective
@@ -22,6 +22,14 @@ from .ranking import axis_effect_sizes, rank_axes
 from .search import SearchConfig, SearchResult, run_search
 from .stagnation import StagnationDetector, reorganize_axes
 from .state import Champion, ExperimentOutcome, Proposal, SharedState
+
+def __getattr__(name: str):  # pragma: no cover - lazy script-layer export
+    if name == "HermesProposer":
+        from hermes_proposer import HermesProposer
+
+        return HermesProposer
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
 
 __all__ = [
     "Champion",

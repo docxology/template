@@ -22,6 +22,7 @@ sys.path.insert(0, str(_project_root / "src"))
 sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.prose import analyze_manuscript
 
 from src.config import load_project_config
 from src.pipeline import run_prose_pipeline
@@ -53,7 +54,16 @@ def main(argv: list[str] | None = None) -> int:
     config = load_project_config(args.config)
 
     logger.info("Running prose pipeline for: %s", config.title)
-    artifacts = run_prose_pipeline(config, project_root=project_root)
+    manuscript_dir = (project_root / config.manuscript_dir).resolve()
+    manuscript_report = analyze_manuscript(
+        manuscript_dir,
+        long_sentence_threshold=config.prose.long_sentence_threshold,
+    )
+    artifacts = run_prose_pipeline(
+        config,
+        project_root=project_root,
+        manuscript_report=manuscript_report,
+    )
 
     logger.info(
         "Prose run complete: %d files, %d words, all_passed=%s",

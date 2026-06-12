@@ -64,12 +64,12 @@ When re-enabling DA assistant capabilities, apply the staged rollout documented 
 
 ## Architecture
 
-**Counting note:** live Python package names and counts under `infrastructure/` are recorded in [`docs/_generated/canonical_facts.md`](_generated/canonical_facts.md). The `config/`, `docker/`, and `logrotate.d/` directories ship configuration/docs rather than `__init__.py`, so they are not Python packages. See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
+**Counting note:** live Python package names and counts under `infrastructure/` are recorded in [`docs/_generated/COUNTS.md`](_generated/COUNTS.md). The `config/`, `docker/`, and `logrotate.d/` directories ship configuration/docs rather than `__init__.py`, so they are not Python packages. See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
 
 ```mermaid
 flowchart TB
     ROOT[/template/]
-    ROOT --> INFRA[/infrastructure<br/>Layer 1 · importable Python packages<br/>see canonical_facts.md/]
+    ROOT --> INFRA[/infrastructure<br/>Layer 1 · importable Python packages<br/>see COUNTS.md/]
     ROOT --> RUN[run.sh<br/>Thin shell dispatcher → infrastructure.orchestration]
     ROOT --> SCR[/scripts<br/>Entry-point orchestrators · thin wrappers/]
     ROOT --> PROJ[/projects<br/>Active research projects · Layer 2/]

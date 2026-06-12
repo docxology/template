@@ -24,7 +24,7 @@ _ROSTER_HINT_RE = re.compile(
     re.IGNORECASE,
 )
 _GENERATED_POINTER_RE = re.compile(
-    r"docs/_generated/(?:active_projects|canonical_facts)\.md|active_projects\.md|canonical_facts\.md"
+    r"docs/_generated/(?:active_projects|COUNTS)\.md|active_projects\.md|COUNTS\.md"
 )
 
 
@@ -108,9 +108,9 @@ def audit_memory_payload(payload: dict[str, Any]) -> list[MemoryAdvisory]:
                         item=item,
                         detail=(
                             "Local memory hard-codes measured counts or percentages; "
-                            "re-derive or link docs/_generated/canonical_facts.md instead."
+                            "re-derive or link docs/_generated/COUNTS.md instead."
                         ),
-                        source="docs/_generated/canonical_facts.md",
+                        source="docs/_generated/COUNTS.md",
                     )
                 )
     return advisories

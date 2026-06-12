@@ -90,7 +90,7 @@ feat(reporting): add executive summary generation
 - Implement Semantic Scholar source adapter
 - Add rate limiting for API calls
 - Include citation count extraction
-- Tests: coverage gates met (live counts → [`docs/_generated/canonical_facts.md`](../../docs/_generated/canonical_facts.md))
+- Tests: coverage gates met (live counts → [`docs/_generated/COUNTS.md`](../../docs/_generated/COUNTS.md))
 
 fix(rendering): resolve LaTeX compilation timeout
 

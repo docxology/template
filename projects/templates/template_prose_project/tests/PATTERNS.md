@@ -181,7 +181,7 @@ uv run pytest projects/templates/template_prose_project/tests/ \
 ```
 
 Live count + achieved coverage are tracked in
-[`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
+[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 Do not delete tests to make a coverage number work — fix the gap.
 
 ## Determinism

@@ -1,13 +1,6 @@
-"""API documentation generation for template_code_project."""
+"""Static API reference markdown for template_code_project."""
 
 from __future__ import annotations
-
-from pathlib import Path
-
-from infrastructure.core.logging.utils import get_logger
-from infrastructure.documentation.glossary_gen import build_api_index, generate_markdown_table
-
-logger = get_logger(__name__)
 
 API_REFERENCE_TEMPLATE = """# Code Project API Reference
 
@@ -48,24 +41,4 @@ def build_api_reference_markdown() -> str:
     return API_REFERENCE_TEMPLATE
 
 
-def run_api_doc_generation(project_root: Path) -> dict[str, str | None] | None:
-    """Generate glossary-style API index and static API reference markdown."""
-    output_dir = project_root / "output" / "docs"
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    glossary_path = None
-    try:
-        src_dir = project_root / "src"
-        entries = build_api_index(str(src_dir))
-        glossary_path = output_dir / "api_glossary.md"
-        glossary_path.write_text(generate_markdown_table(entries), encoding="utf-8")
-    except (OSError, ImportError, ValueError, SyntaxError) as exc:
-        logger.warning("API index generation failed: %s", exc)
-
-    api_ref_path = output_dir / "api_reference.md"
-    api_ref_path.write_text(build_api_reference_markdown(), encoding="utf-8")
-
-    return {
-        "api_reference": str(api_ref_path),
-        "glossary": str(glossary_path) if glossary_path and glossary_path.exists() else None,
-    }
+__all__ = ["API_REFERENCE_TEMPLATE", "build_api_reference_markdown"]

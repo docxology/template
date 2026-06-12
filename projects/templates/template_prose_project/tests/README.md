@@ -5,7 +5,7 @@ Real-data test suite for the prose-review pipeline. **No mocks.**
 ## Run
 
 ```bash
-# Full suite; see docs/_generated/canonical_facts.md for the current count
+# Full suite; see docs/_generated/COUNTS.md for the current count
 uv run pytest projects/templates/template_prose_project/tests/ -v
 
 # Coverage gate

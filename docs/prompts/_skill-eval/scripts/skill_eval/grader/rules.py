@@ -209,7 +209,7 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     ),
     _rule(
         ("does not invent coverage",),
-        lambda lower, _el: "canonical_facts" in lower or "do not invent coverage" in lower,
+        lambda lower, _el: "COUNTS" in lower or "do not invent coverage" in lower,
     ),
     _rule(
         ("names a pipeline stage",),

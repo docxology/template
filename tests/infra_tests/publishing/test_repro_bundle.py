@@ -29,7 +29,7 @@ def _scaffold_repro_project(root: Path, name: str) -> Path:
     # Repo-level reproduction inputs.
     write_doc(root / "uv.lock", "# lock contents\n")
     write_doc(root / "pyproject.toml", "[project]\nname = 'demo'\n")
-    write_doc(root / "docs" / "_generated" / "canonical_facts.md", "# Canonical Facts\n\n- 214\n")
+    write_doc(root / "docs" / "_generated" / "COUNTS.md", "# Canonical Facts\n\n- 214\n")
 
     # Declared output artifacts live UNDER the project dir, and the artifact
     # manifest stores their paths relative to the project dir — matching the
@@ -76,7 +76,7 @@ def test_build_resolves_artifacts_from_real_manifest_writer(tmp_path: Path) -> N
     project = make_project(tmp_path, name, with_manuscript=True, with_scripts=True)
     write_doc(tmp_path / "uv.lock", "# lock\n")
     write_doc(tmp_path / "pyproject.toml", "[project]\nname = 'demo'\n")
-    write_doc(tmp_path / "docs" / "_generated" / "canonical_facts.md", "# Canonical Facts\n")
+    write_doc(tmp_path / "docs" / "_generated" / "COUNTS.md", "# Canonical Facts\n")
 
     # A genuine output artifact under the project dir.
     artifact = project / "output" / "data" / "result.json"
@@ -122,7 +122,7 @@ def test_build_writes_deterministic_sorted_manifest(tmp_path: Path) -> None:
     paths = [entry["path"] for entry in manifest["entries"]]
     assert paths == sorted(paths)  # deterministic, sorted entries
     assert "uv.lock" in paths
-    assert "docs/_generated/canonical_facts.md" in paths
+    assert "docs/_generated/COUNTS.md" in paths
     # Project-relative manifest path rebased onto the repo root.
     assert f"projects/{name}/output/figures/result.png" in paths
     for entry in manifest["entries"]:
@@ -246,7 +246,7 @@ def _scaffold_two_public_exemplars(root: Path) -> tuple[str, str]:
     _scaffold_public_exemplar(root, b)
     write_doc(root / "uv.lock", "# lock contents\n")
     write_doc(root / "pyproject.toml", "[project]\nname = 'demo'\n")
-    write_doc(root / "docs" / "_generated" / "canonical_facts.md", "# Canonical Facts\n\n- 214\n")
+    write_doc(root / "docs" / "_generated" / "COUNTS.md", "# Canonical Facts\n\n- 214\n")
     return f"templates/{a}", f"templates/{b}"
 
 

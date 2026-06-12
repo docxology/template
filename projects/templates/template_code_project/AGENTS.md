@@ -4,6 +4,17 @@
 
 Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
+## Layer contract
+
+| Surface | Rule |
+| --- | --- |
+| `src/` (domain) | Pure optimization, figures, dashboard payload — **no** direct `infrastructure` imports |
+| `src/analysis/_infra.py`, `src/_runtime.py` | Optional monorepo adapters only (logging, publishing, figure registry, dashboard shell) |
+| `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/` |
+| Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); do not hardcode measured test totals or coverage % |
+
+Enforced by `check_project_src_infrastructure_boundary` via `scripts/check_template_drift.py --strict` and `manuscript/layer_contract.yaml`.
+
 ## Overview
 
 A research project exemplifying mathematical optimization algorithms with rigorous implementation, extensive testing, and publication-quality analysis. This project demonstrates the template's full capabilities for computational research, including automated figure generation, reproducible results, and professional manuscript production.
@@ -19,7 +30,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **Test suite**: covers edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; `projects/templates/template_code_project/src/` measures well above the 90% minimum gate enforced by both the project `pyproject.toml` and the root pipeline. Live test count + achieved coverage: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
+- **Test suite**: covers edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; `projects/templates/template_code_project/src/` measures well above the 90% minimum gate enforced by both the project `pyproject.toml` and the root pipeline. Live test count + achieved coverage: [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md).
 - **Deterministic algorithms**: Reproducible results; tests avoid nondeterministic RNG unless documented (see `docs/agent_instructions.md`)
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -321,7 +332,7 @@ This project complies with the template development standards in **[`docs/rules/
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: live test count and achieved coverage tracked in [`canonical_facts.md`](../../../docs/_generated/canonical_facts.md); the current suite runs well above the 90% gate
+- **90%+ coverage**: live test count and achieved coverage tracked in [`COUNTS.md`](../../../docs/_generated/COUNTS.md); the current suite runs well above the 90% gate
 - **Real data only**: All tests use computations, no mocks
 - **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Tests use fixed inputs; any use of random draws should be justified or seeded (see `docs/agent_instructions.md`)

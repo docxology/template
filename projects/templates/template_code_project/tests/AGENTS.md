@@ -39,7 +39,7 @@ flowchart LR
     class DOCS doc
 ```
 
-Live test count: [`docs/_generated/canonical_facts.md`](../../../../docs/_generated/canonical_facts.md).
+Live test count: [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 
 ## Installation/Setup
 

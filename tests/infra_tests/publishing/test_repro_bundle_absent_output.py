@@ -26,7 +26,7 @@ def _scaffold_with_absent_declared_output(root: Path, name: str) -> tuple[Path, 
     project = make_project(root, name, with_manuscript=True, with_scripts=True)
     write_doc(root / "uv.lock", "# lock contents\n")
     write_doc(root / "pyproject.toml", "[project]\nname = 'demo'\n")
-    write_doc(root / "docs" / "_generated" / "canonical_facts.md", "# Canonical Facts\n\n- 214\n")
+    write_doc(root / "docs" / "_generated" / "COUNTS.md", "# Canonical Facts\n\n- 214\n")
 
     artifact_manifest = project / "output" / "reports" / "artifact_manifest.json"
     write_doc(
@@ -65,7 +65,7 @@ def test_infra_input_absent_remains_allowed(tmp_path: Path) -> None:
         json.dumps({"entries": [{"path": "output/figures/result.png"}]}),
     )
     # Declared output present under the project tree; infra inputs (uv.lock,
-    # pyproject, canonical_facts) are intentionally absent and must not fail verify.
+    # pyproject, COUNTS) are intentionally absent and must not fail verify.
     write_doc(project / "output" / "figures" / "result.png", "PNG-BYTES")
 
     out_dir = build_repro_bundle(tmp_path, name, generated_at="2026-06-08T00:00:00+00:00")

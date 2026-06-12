@@ -9,9 +9,9 @@
 
 | Your work shape | Fork this exemplar | Detailed walkthrough |
 |---|---|---|
-| Deterministic plan/evidence/claim/artifact readiness loops | [`projects/templates/template_autoresearch_project/`](../../projects/templates/template_autoresearch_project/) — AutoResearchClaw-inspired readiness checks without autonomous research execution; live test count + coverage in [`canonical_facts.md`](../_generated/canonical_facts.md) | [`README.md`](../../projects/templates/template_autoresearch_project/README.md) |
-| Numerical / algorithmic research with figures, dashboards, manuscript | [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/) — has its own gradient-descent algorithm in `src/optimizer.py`, six figure generators in `src/figures/`; live test count + coverage in [`canonical_facts.md`](../_generated/canonical_facts.md) | [`forking_guide.md`](../../projects/templates/template_code_project/docs/forking_guide.md) |
-| Editorial / prose review pipeline — readability, structure, BibTeX validation | [`projects/templates/template_prose_project/`](../../projects/templates/template_prose_project/) — no algorithm of its own; `src/pipeline/` delegates to `infrastructure/prose/` + `infrastructure/reference/citation/`; live test count + coverage in [`canonical_facts.md`](../_generated/canonical_facts.md) | [`forking_guide.md`](../../projects/templates/template_prose_project/docs/forking_guide.md) |
+| Deterministic plan/evidence/claim/artifact readiness loops | [`projects/templates/template_autoresearch_project/`](../../projects/templates/template_autoresearch_project/) — AutoResearchClaw-inspired readiness checks without autonomous research execution; live test count + coverage in [`COUNTS.md`](../_generated/COUNTS.md) | [`README.md`](../../projects/templates/template_autoresearch_project/README.md) |
+| Numerical / algorithmic research with figures, dashboards, manuscript | [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/) — has its own gradient-descent algorithm in `src/optimizer.py`, six figure generators in `src/figures/`; live test count + coverage in [`COUNTS.md`](../_generated/COUNTS.md) | [`forking_guide.md`](../../projects/templates/template_code_project/docs/forking_guide.md) |
+| Editorial / prose review pipeline — readability, structure, BibTeX validation | [`projects/templates/template_prose_project/`](../../projects/templates/template_prose_project/) — no algorithm of its own; `src/pipeline/` delegates to `infrastructure/prose/` + `infrastructure/reference/citation/`; live test count + coverage in [`COUNTS.md`](../_generated/COUNTS.md) | [`forking_guide.md`](../../projects/templates/template_prose_project/docs/forking_guide.md) |
 
 The walkthroughs follow the same shape: 4-line copy-paste TL;DR (`cp -r`
 + `sed` rename + `uv run pytest`), an explicit statement of the
@@ -101,5 +101,5 @@ benefits from but might not discover from the older docs:
   usage guide
 - [`../RUN_GUIDE.md`](../RUN_GUIDE.md) — pipeline orchestration
   reference (menu mapping, stage list, environment variables)
-- [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md)
+- [`../_generated/COUNTS.md`](../_generated/COUNTS.md)
   — live test counts, coverage percentages, active project roster

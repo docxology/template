@@ -6,6 +6,38 @@ This document summarizes the implementation of the **thin orchestrator pattern**
 
 ## Architecture
 
+### Three-ring orchestration (template exemplars)
+
+Public template projects model three rings. Live counts and coverage figures
+belong in [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md) — link there
+from README/AGENTS instead of embedding measured numbers.
+
+```mermaid
+flowchart TB
+  subgraph ring1 [Layer1_repo]
+    INFRA[infrastructure/]
+    PIPE[scripts/ + pipeline DAG]
+  end
+  subgraph ring2 [Layer2_project_scripts]
+    PSC["projects/templates/*/scripts/"]
+  end
+  subgraph ring3 [Layer2_project_src]
+    SRC["projects/templates/*/src/ domain-only"]
+    TST["projects/templates/*/tests/"]
+  end
+  PIPE --> INFRA
+  PIPE --> PSC
+  PSC --> INFRA
+  PSC --> SRC
+  TST --> SRC
+```
+
+| Ring | Location | Imports infrastructure? |
+| --- | --- | --- |
+| Pipeline | `scripts/00_*.py` … `infrastructure.orchestration` | Yes — generic orchestration |
+| Project scripts | `projects/templates/<name>/scripts/` | Yes — thin coordinators |
+| Project `src/` | `projects/templates/<name>/src/` | No (standalone exemplars); harness adapters documented in `manuscript/layer_contract.yaml` |
+
 ### Two-Layer Architecture
 
 **Layer 1: Infrastructure (Generic - Reusable)**

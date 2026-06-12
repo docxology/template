@@ -48,6 +48,8 @@ def drift_module():
         check_mocks_absent_from_tests=checks.check_mocks_absent_from_tests,
         check_required_files_exist=checks.check_required_files_exist,
         check_publication_metadata_consistency=checks.check_publication_metadata_consistency,
+        check_docs_hardcoded_counts=checks.check_docs_hardcoded_counts,
+        check_project_src_infrastructure_boundary=checks.check_project_src_infrastructure_boundary,
         check_project=lambda project, report: checks.check_project(REPO_ROOT, project, report),
     )
 
@@ -440,6 +442,37 @@ def test_publication_metadata_flags_cff_zenodo_version_drift_without_paper_versi
     rep = drift_module.Report()
     drift_module.check_publication_metadata_consistency(root, rep, "fake_project")
     assert any(f.rule == "publication_cff_zenodo_version_drift" for f in rep.findings)
+
+
+def test_docs_hardcoded_counts_flags_readme_literal(drift_module, tmp_path):
+    (tmp_path / "README.md").write_text("We run 1234 infrastructure tests today.\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+    assert any(f.rule == "repo_docs_hardcoded_test_count" for f in rep.findings)
+
+
+def test_project_src_boundary_errors_on_standalone_infra_import(drift_module, tmp_path):
+    root = tmp_path / "projects" / "templates" / "template_textbook"
+    (root / "src").mkdir(parents=True)
+    (root / "src" / "bad.py").write_text("from infrastructure.core import x\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_project_src_infrastructure_boundary(root, rep, "templates/template_textbook")
+    assert any(f.rule == "src_infrastructure_import" and f.severity == "ERROR" for f in rep.findings)
+
+
+def test_project_src_boundary_respects_layer_contract(drift_module, tmp_path):
+    root = tmp_path / "projects" / "templates" / "template_code_project"
+    (root / "manuscript").mkdir(parents=True)
+    (root / "manuscript" / "layer_contract.yaml").write_text(
+        "allow_infrastructure_imports:\n  - src/analysis/_infra.py\n",
+        encoding="utf-8",
+    )
+    (root / "src" / "analysis").mkdir(parents=True)
+    (root / "src" / "analysis" / "_infra.py").write_text("from infrastructure.core import x\n", encoding="utf-8")
+    (root / "src" / "other.py").write_text("x = 1\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_project_src_infrastructure_boundary(root, rep, "templates/template_code_project")
+    assert not any(f.rule == "src_infrastructure_import" for f in rep.findings)
 
 
 def test_end_to_end_run_on_live_exemplars_is_clean(drift_module):

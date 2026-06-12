@@ -9,11 +9,12 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
+
 from src.manuscript_variables import (
     compute_variables,
     load_report_payload,
     substitute_in_text,
-    write_resolved_manuscript_tree,
     write_variables,
 )
 
@@ -142,7 +143,8 @@ def test_write_resolved_manuscript_tree(tmp_path: Path):
         config_title="My Paper",
         manuscript_report=_payload(files=[_file("a.md", 7)]),
     )
-    out_dir = write_resolved_manuscript_tree(project_root, vars_)
+    plain = {k.upper(): str(v) for k, v in asdict(vars_).items()}
+    out_dir = write_resolved_manuscript_tree(project_root, plain)
 
     assert out_dir == project_root / "output" / "manuscript"
     abstract = (out_dir / "00_abstract.md").read_text(encoding="utf-8")
@@ -162,7 +164,8 @@ def test_write_resolved_manuscript_tree_no_aux(tmp_path: Path):
     manuscript.mkdir(parents=True)
     (manuscript / "00_abstract.md").write_text("# A\n\nplain text.\n", encoding="utf-8")
     vars_ = compute_variables(config_title="X", manuscript_report=_payload())
-    out_dir = write_resolved_manuscript_tree(project_root, vars_)
+    plain = {k.upper(): str(v) for k, v in asdict(vars_).items()}
+    out_dir = write_resolved_manuscript_tree(project_root, plain)
     assert (out_dir / "00_abstract.md").exists()
     assert not (out_dir / "config.yaml").exists()
 

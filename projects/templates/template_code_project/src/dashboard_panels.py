@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from infrastructure.reporting.interactive_dashboard import InteractiveDashboard, Invariant, Panel
+from .analysis._infra import InteractiveDashboard, Invariant, Panel
 
 from .dashboard_payload import to_diagonal_A
 from .invariants import OptimizerSweepConfig, all_invariants

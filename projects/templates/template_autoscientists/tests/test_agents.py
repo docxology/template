@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import pytest
 
-from src.agents import DeterministicProposer, HermesProposer, _extract_json
+from hermes_proposer import HermesProposer
+
+from src.agents import DeterministicProposer, _extract_json
 from src.state import Champion, ExperimentOutcome, Proposal, SharedState
 
 

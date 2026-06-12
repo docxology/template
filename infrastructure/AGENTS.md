@@ -65,7 +65,7 @@ flowchart TB
 
 ## Thin-orchestrator modules (refactor inventory)
 
-Measured coverage and gate thresholds → [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) and [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md).
+Measured coverage and gate thresholds → [`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md) and [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md).
 
 | Module | Role |
 | --- | --- |

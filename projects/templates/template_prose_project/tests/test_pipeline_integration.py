@@ -7,7 +7,7 @@ import shutil
 from pathlib import Path
 
 from src.config import load_project_config
-from src.pipeline import run_prose_pipeline
+from pipeline_helpers import run_prose_pipeline_with_analysis
 from src.report import write_review_report
 
 
@@ -21,7 +21,7 @@ def test_bundled_manuscript_runs(tmp_path: Path):
     shutil.copytree(PROJECT_ROOT / "manuscript", isolated / "manuscript")
 
     config = load_project_config(isolated / "manuscript" / "config.yaml")
-    artifacts = run_prose_pipeline(config, project_root=isolated)
+    artifacts = run_prose_pipeline_with_analysis(config, project_root=isolated)
 
     assert artifacts.manuscript_report.total_words > 100
     assert (isolated / "output" / "manuscript_report.json").exists()

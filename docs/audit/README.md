@@ -45,7 +45,7 @@ would imply currency.
 ## See Also
 
 - [`archived/`](archived/) — historical snapshots
-- [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md) — live counts + coverage (canonical source of truth)
+- [`../_generated/COUNTS.md`](../_generated/COUNTS.md) — live counts + coverage (canonical source of truth)
 - [`../_generated/active_projects.md`](../_generated/active_projects.md) — current `projects/` roster
 - [`../guides/fork-an-exemplar.md`](../guides/fork-an-exemplar.md) — fork-readiness entry
 - [`../../scripts/lint_docs.py`](../../scripts/lint_docs.py) — the live linter; replaces stale audit reports

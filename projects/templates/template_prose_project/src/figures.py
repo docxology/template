@@ -14,7 +14,7 @@ matplotlib.use("Agg")  # noqa: E402
 import matplotlib.pyplot as plt
 import numpy as np
 
-from infrastructure.prose import ManuscriptReport
+from .prose_facade import ManuscriptReportLike
 
 _PALETTE = [
     "#0072B2",
@@ -34,7 +34,7 @@ def _ensure_outdir(path: Path | str) -> Path:
     return out
 
 
-def plot_section_word_counts(report: ManuscriptReport, output_dir: Path | str) -> Path:
+def plot_section_word_counts(report: ManuscriptReportLike, output_dir: Path | str) -> Path:
     """Bar chart of word counts per file."""
     out_dir = _ensure_outdir(output_dir)
     names = [f.name for f in report.files]
@@ -62,7 +62,7 @@ def plot_section_word_counts(report: ManuscriptReport, output_dir: Path | str) -
     return out_path
 
 
-def plot_readability_metrics(report: ManuscriptReport, output_dir: Path | str) -> Path:
+def plot_readability_metrics(report: ManuscriptReportLike, output_dir: Path | str) -> Path:
     """Grouped bar chart comparing the three readability scores per file.
 
     A grouped bar chart (rather than a radar) is used deliberately: with mixed
@@ -99,7 +99,7 @@ def plot_readability_metrics(report: ManuscriptReport, output_dir: Path | str) -
     return out_path
 
 
-def plot_citation_density(report: ManuscriptReport, output_dir: Path | str) -> Path:
+def plot_citation_density(report: ManuscriptReportLike, output_dir: Path | str) -> Path:
     """Bar chart of citation density per file (citations per 1000 words)."""
     out_dir = _ensure_outdir(output_dir)
     names = [f.name for f in report.files]
@@ -127,7 +127,7 @@ def plot_citation_density(report: ManuscriptReport, output_dir: Path | str) -> P
     return out_path
 
 
-def generate_all_figures(report: ManuscriptReport, output_dir: Path | str) -> list[Path]:
+def generate_all_figures(report: ManuscriptReportLike, output_dir: Path | str) -> list[Path]:
     """Render every figure in stable order."""
     return [
         plot_section_word_counts(report, output_dir),

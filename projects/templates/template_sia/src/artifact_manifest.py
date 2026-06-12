@@ -2,10 +2,42 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
+from dataclasses import asdict, dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 
-from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
+
+@dataclass(frozen=True)
+class ArtifactManifestEntry:
+    path: str
+    size_bytes: int
+    sha256: str
+    stage_num: int
+    stage_name: str
+    contract_match: bool
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat(timespec="seconds"))
+
+
+@dataclass(frozen=True)
+class ArtifactManifest:
+    entries: tuple[ArtifactManifestEntry, ...]
+    issues: tuple[str, ...] = ()
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "entries": [asdict(entry) for entry in self.entries],
+            "issues": list(self.issues),
+        }
+
+
+def compute_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _relative_path(project_root: Path, path: Path) -> str:
@@ -69,4 +101,4 @@ def collect_run_artifact_paths(project_root: Path, *, run_id: int) -> list[Path]
     return paths
 
 
-__all__ = ["collect_run_artifact_paths", "write_artifact_manifest"]
+__all__ = ["ArtifactManifest", "ArtifactManifestEntry", "collect_run_artifact_paths", "write_artifact_manifest"]

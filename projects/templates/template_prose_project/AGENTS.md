@@ -35,14 +35,22 @@ flowchart TB
     class SRC_F,SC_F,M_F,META,OVERLAY f
 ```
 
+## Layer contract
+
+| Surface | Rule |
+| --- | --- |
+| `src/` | Domain-only: `prose_facade.py` protocols, checks, figures, reports — **zero** `infrastructure` imports |
+| `scripts/run_prose_pipeline.py` | Calls `infrastructure.prose.analyze_manuscript`, then `src.pipeline.run_prose_pipeline` |
+| `scripts/z_generate_manuscript_variables.py` | Calls `infrastructure.rendering.manuscript_injection` for resolved trees |
+| Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md) |
+
 ## Key contracts
 
 * `src/config.py::ProjectConfig` — every knob is here. Add a new check
   by adding a field to `ProseAnalysisConfig`, parsing it in
   `from_dict`, and wiring it into `pipeline.run_prose_pipeline`.
-* `src/pipeline/__init__.py::run_prose_pipeline` — the only function that
-  touches `infrastructure.prose.*` or
-  `infrastructure.reference.citation.*`. Returns a
+* `scripts/run_prose_pipeline.py` — calls `infrastructure.prose.analyze_manuscript`,
+  then `src/pipeline.run_prose_pipeline` with the typed report. Returns a
   :class:`ProseRunArtifacts` so the script knows where every artefact
   landed.
 * `src/figures.py` — pure matplotlib; takes a `ManuscriptReport` and a

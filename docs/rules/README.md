@@ -40,7 +40,7 @@ Development standards and coding guidelines for the Research Project Template.
 - **Layer 2: Project** (`projects/`): Research-specific code
   - Domain-specific algorithms and analysis
   - Uses Layer 1 tools
-  - 90% minimum test coverage required (current % — see [canonical_facts.md](../_generated/canonical_facts.md))
+  - 90% minimum test coverage required (current % — see [COUNTS.md](../_generated/COUNTS.md))
 
 ### Thin Orchestrator Pattern
 

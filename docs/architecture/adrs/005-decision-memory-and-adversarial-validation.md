@@ -7,7 +7,7 @@ Accepted
 ## Context
 
 The template repository already has strong generated truth surfaces:
-[`docs/_generated/canonical_facts.md`](../../_generated/canonical_facts.md)
+[`docs/_generated/COUNTS.md`](../../_generated/COUNTS.md)
 for measured counts and [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)
 for public project scope. It also has ADRs for constitutional architecture and
 no-mock testing rules. What was missing was a clear decision about where
@@ -73,7 +73,7 @@ Adopt a tiered decision-memory discipline:
 ## References
 
 - [`docs/rules/memory_and_decision_records.md`](../../rules/memory_and_decision_records.md)
-- [`docs/_generated/canonical_facts.md`](../../_generated/canonical_facts.md)
+- [`docs/_generated/COUNTS.md`](../../_generated/COUNTS.md)
 - [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)
 - [`infrastructure/core/agent_memory.py`](../../../infrastructure/core/agent_memory.py)
 - [ADR 001: Thin Orchestrator Pattern](001-thin-orchestrator-pattern.md)

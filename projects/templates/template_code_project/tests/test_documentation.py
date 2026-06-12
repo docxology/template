@@ -10,7 +10,12 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from documentation import build_api_reference_markdown, run_api_doc_generation  # noqa: E402
+from documentation import build_api_reference_markdown  # noqa: E402
+
+SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+from generate_api_docs import run_api_doc_generation  # noqa: E402
 
 
 def test_build_api_reference_markdown_contains_core_symbols() -> None:

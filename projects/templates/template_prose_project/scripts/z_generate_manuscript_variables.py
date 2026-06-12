@@ -30,10 +30,13 @@ sys.path.insert(0, str(_REPO_ROOT))
 from infrastructure.core.logging.utils import get_logger  # noqa: E402
 
 from src.config import load_project_config  # noqa: E402
+from infrastructure.rendering.manuscript_injection import (  # noqa: E402
+    write_resolved_manuscript_tree,
+)
+
 from src.manuscript_variables import (  # noqa: E402
     compute_variables,
     load_report_payload,
-    write_resolved_manuscript_tree,
     write_variables,
 )
 
@@ -76,7 +79,8 @@ def main(argv: list[str] | None = None) -> int:
 
     out_path = project_root / "output" / "data" / "manuscript_variables.json"
     write_variables(variables, out_path)
-    resolved_dir = write_resolved_manuscript_tree(project_root, variables)
+    plain = {k.upper(): str(v) for k, v in variables.as_dict().items()}
+    resolved_dir = write_resolved_manuscript_tree(project_root, plain)
     logger.info(
         "Wrote %d manuscript variables → %s; resolved manuscript → %s",
         len(variables.as_dict()),

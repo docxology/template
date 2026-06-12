@@ -28,7 +28,7 @@ from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, ite
 # project names that should be sourced from the generated roster instead).
 _TEMPLATE_SLUG_RE = re.compile(r"\btemplate_[A-Za-z0-9_]+\b")
 # Prose count claims about the exemplar roster, in either order ("nine public
-# exemplars" / "exemplars ... 9"); flags literals that drift from canonical_facts.
+# exemplars" / "exemplars ... 9"); flags literals that drift from COUNTS.
 _PROJECT_COUNT_RE = re.compile(
     r"\b(?:\d+|nine|ten)\s+"
     r"(?:current|active|rendered|public|permanent|canonical|template)\s+"
@@ -41,7 +41,7 @@ _PROJECT_COUNT_RE = re.compile(
 # A reference to a generated-facts source (a count claim near one of these is
 # considered sourced, not a hard-coded literal).
 _GENERATED_FACT_LINK_RE = re.compile(
-    r"docs/_generated/(?:active_projects|canonical_facts|publication_records)\.md|"
+    r"docs/_generated/(?:active_projects|COUNTS|publication_records)\.md|"
     r"_generated/|PUBLIC_PROJECT_NAMES|generate_publication_records_doc\.py|"
     r"\$\{public_exemplar_list\}|\$\{project_count\}",
     re.I,
@@ -211,7 +211,7 @@ def find_volatile_fact_claims(repo_root: Path) -> list[AuditFinding]:
                     severity="warning",
                     detail=(
                         "appears to hard-code a project roster or count without linking "
-                        "to docs/_generated/active_projects.md or canonical_facts.md"
+                        "to docs/_generated/active_projects.md or COUNTS.md"
                     ),
                 )
             )

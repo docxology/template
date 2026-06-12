@@ -7,7 +7,7 @@ This directory mixes **one script-generated file** with **maintainer-written** h
 | [active_projects.md](active_projects.md) | **Generated** — `uv run python scripts/generate_active_projects_doc.py` |
 | [architecture_overview.svg](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/generate_architecture_overview.py` |
 | [coverage_history.md](coverage_history.md) | **Generated** — `uv run python scripts/generate_coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
-| [canonical_facts.md](canonical_facts.md) | **Maintained** — ground-truthed test counts, gates, and roster notes (refresh with measured `pytest` + `generate_active_projects_doc.py`; see file footer) |
+| [COUNTS.md](COUNTS.md) | **Maintained** — ground-truthed test counts, gates, and roster notes (refresh with measured `pytest` + `generate_active_projects_doc.py`; see file footer) |
 | [hermes_knowledge_audit.json](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; superseded by current generated facts |
 | [publication_records.md](publication_records.md) | **Generated publication matrix** — public exemplar GitHub/Zenodo/config records; refresh with `scripts/generate_publication_records_doc.py --refresh-external` |
 | [skills_index.md](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |
@@ -39,7 +39,7 @@ uv run python scripts/generate_coverage_history.py --from-dir=./_artefacts --day
 uv run python scripts/generate_coverage_history.py --from-gh --days=30
 ```
 
-**Canonical factsheet** — when CI gates, project counts, publishing tests, or public exemplar coverage changes, re-run the measurements cited in [`canonical_facts.md`](canonical_facts.md) and edit that file so numbers stay ground-truthed.
+**Canonical factsheet** — when CI gates, project counts, publishing tests, or public exemplar coverage changes, re-run the measurements cited in [`COUNTS.md`](COUNTS.md) and edit that file so numbers stay ground-truthed.
 
 **Publication records matrix** — when citing repository/DOI publication status, re-run `uv run python scripts/generate_publication_records_doc.py --refresh-external`; do not hand-edit [`publication_records.md`](publication_records.md).
 

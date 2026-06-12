@@ -6,11 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-
-from infrastructure.core.config.loader import load_config
-from infrastructure.core.config.schema import register_project_schema_extension
-
-register_project_schema_extension("template_sia", {"sia": dict})
+import yaml
 
 
 @dataclass(frozen=True)
@@ -29,10 +25,17 @@ class SiaLoopSettings:
         return f"tasks/{self.task_name}"
 
 
+def _load_yaml_mapping(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {}
+    loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
+    return loaded if isinstance(loaded, dict) else {}
+
+
 def load_sia_settings(project_root: Path) -> SiaLoopSettings:
     """Read sia block from manuscript/config.yaml."""
     config_path = project_root / "manuscript" / "config.yaml"
-    raw = load_config(config_path) or {}
+    raw = _load_yaml_mapping(config_path)
     sia_raw = raw.get("sia")
     sia_block: dict[str, Any] = sia_raw if isinstance(sia_raw, dict) else {}
     return SiaLoopSettings(
@@ -48,7 +51,7 @@ def load_sia_settings(project_root: Path) -> SiaLoopSettings:
 def load_paper_title(project_root: Path) -> str:
     """Return paper title from config."""
     config_path = project_root / "manuscript" / "config.yaml"
-    raw = load_config(config_path) or {}
+    raw = _load_yaml_mapping(config_path)
     paper = raw.get("paper") or {}
     return str(paper.get("title", "template_sia"))
 

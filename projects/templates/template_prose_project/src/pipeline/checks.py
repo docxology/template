@@ -7,10 +7,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Protocol
 
-from infrastructure.prose import ManuscriptReport
-from infrastructure.reference.citation import parse_bibfile
-
 from ..config import ProjectConfig
+from ..prose_facade import ManuscriptReportLike, parse_bib_keys
 
 
 @dataclass
@@ -29,14 +27,14 @@ class CheckResult:
 class CheckRunner(Protocol):
     def __call__(
         self,
-        report: ManuscriptReport,
+        report: ManuscriptReportLike,
         config: ProjectConfig,
         *,
         bib_path: Path,
     ) -> CheckResult: ...
 
 
-def _check_grade_level(report: ManuscriptReport, config: ProjectConfig, **_: object) -> CheckResult:
+def _check_grade_level(report: ManuscriptReportLike, config: ProjectConfig, **_: object) -> CheckResult:
     lo = config.prose.target_grade_level_min
     hi = config.prose.target_grade_level_max
     g = report.avg_flesch_kincaid_grade
@@ -49,7 +47,7 @@ def _check_grade_level(report: ManuscriptReport, config: ProjectConfig, **_: obj
     )
 
 
-def _check_citation_density(report: ManuscriptReport, config: ProjectConfig, **_: object) -> CheckResult:
+def _check_citation_density(report: ManuscriptReportLike, config: ProjectConfig, **_: object) -> CheckResult:
     threshold = config.prose.citation_density_min_per_1000
     n = max(1, report.total_words)
     citation_count = sum(f.quality.citation_count for f in report.files)
@@ -69,7 +67,7 @@ def _check_citation_density(report: ManuscriptReport, config: ProjectConfig, **_
     )
 
 
-def _check_no_skipped_levels(report: ManuscriptReport, config: ProjectConfig, **_: object) -> CheckResult:
+def _check_no_skipped_levels(report: ManuscriptReportLike, config: ProjectConfig, **_: object) -> CheckResult:
     # `config` is unused on purpose: it is retained so every check shares the
     # uniform CheckRunner signature (report, config, *, bib_path). This branch
     # depends only on report.files.
@@ -82,7 +80,7 @@ def _check_no_skipped_levels(report: ManuscriptReport, config: ProjectConfig, **
     )
 
 
-def _check_h1_per_file(report: ManuscriptReport, config: ProjectConfig, **_: object) -> CheckResult:
+def _check_h1_per_file(report: ManuscriptReportLike, config: ProjectConfig, **_: object) -> CheckResult:
     # `config` is unused on purpose (see _check_no_skipped_levels): kept for the
     # uniform CheckRunner signature; this branch depends only on report.files.
     bad = [f.name for f in report.files if not f.structure.has_h1]
@@ -95,7 +93,7 @@ def _check_h1_per_file(report: ManuscriptReport, config: ProjectConfig, **_: obj
 
 
 def _check_bibliography(
-    report: ManuscriptReport,
+    report: ManuscriptReportLike,
     config: ProjectConfig,
     *,
     bib_path: Path,
@@ -107,8 +105,7 @@ def _check_bibliography(
             message=f"bibliography not found at {bib_path}",
             details={"bib_path": str(bib_path)},
         )
-    db = parse_bibfile(bib_path)
-    bib_keys = set(db.keys())
+    bib_keys = parse_bib_keys(bib_path)
     cited_keys = set(report.citation_keys)
     missing = sorted(cited_keys - bib_keys)
     unused = sorted(bib_keys - cited_keys)
@@ -164,7 +161,7 @@ CHECK_REGISTRY: tuple[CheckSpec, ...] = (
 
 
 def run_configured_checks(
-    report: ManuscriptReport,
+    report: ManuscriptReportLike,
     config: ProjectConfig,
     *,
     bib_path: Path,

@@ -12,10 +12,9 @@ from src.config import (
     ProseAnalysisConfig,
     ReportConfig,
 )
-from src.pipeline import (
-    CheckResult,
-    run_prose_pipeline,
-)
+from pipeline_helpers import run_prose_pipeline_with_analysis
+
+from src.pipeline import CheckResult
 from src.pipeline.checks import (
     _check_bibliography,
     _check_citation_density,
@@ -63,7 +62,7 @@ class TestRunProsePipeline:
             prose={"target_grade_level_min": -10.0, "target_grade_level_max": 30.0,
                    "citation_density_min_per_1000": 0.0},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         assert artifacts.all_passed is True
         assert artifacts.total_words > 0
         assert (root / "output" / "manuscript_report.json").exists()
@@ -78,7 +77,7 @@ class TestRunProsePipeline:
                    "citation_density_min_per_1000": 0.0},
             bibliography={"fail_on_missing": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         assert artifacts.all_passed is False
         names = [c.name for c in artifacts.checks if not c.passed]
         assert "grade_level_in_band" in names
@@ -92,7 +91,7 @@ class TestRunProsePipeline:
                    "citation_density_min_per_1000": 5.0},
             bibliography={"fail_on_missing": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         names = [c.name for c in artifacts.checks if not c.passed]
         assert "citation_density_above_floor" in names
 
@@ -108,7 +107,7 @@ class TestRunProsePipeline:
                    "forbid_skipped_levels": True},
             bibliography={"fail_on_missing": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         names = [c.name for c in artifacts.checks if not c.passed]
         assert "no_skipped_heading_levels" in names
 
@@ -122,7 +121,7 @@ class TestRunProsePipeline:
                    "forbid_skipped_levels": False},
             bibliography={"fail_on_missing": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         names = [c.name for c in artifacts.checks if not c.passed]
         assert "every_file_has_h1" in names
 
@@ -137,7 +136,7 @@ class TestRunProsePipeline:
                    "citation_density_min_per_1000": 0.0},
             bibliography={"fail_on_missing": True},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         bib_check = next(c for c in artifacts.checks if c.name == "bibliography_consistency")
         assert bib_check.passed is False
         assert "notinbib" in bib_check.details["missing"]
@@ -151,7 +150,7 @@ class TestRunProsePipeline:
                    "citation_density_min_per_1000": 0.0},
             bibliography={"fail_on_missing": True, "fail_on_unused": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         bib_check = next(c for c in artifacts.checks if c.name == "bibliography_consistency")
         # Unused entries don't fail when fail_on_unused=False.
         assert bib_check.passed is True
@@ -169,7 +168,7 @@ class TestRunProsePipeline:
                    "citation_density_min_per_1000": 0.0},
             bibliography={"fail_on_missing": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         bib_check = next(c for c in artifacts.checks if c.name == "bibliography_consistency")
         # fail_on_missing=False → check passes even when bib is absent
         assert bib_check.passed is True
@@ -181,7 +180,7 @@ class TestRunProsePipeline:
                    "citation_density_min_per_1000": 0.0},
             bibliography={"fail_on_missing": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root, write_outputs=False)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root, write_outputs=False)
         assert artifacts.report_path is None
         assert not (root / "output").exists()
 
@@ -198,7 +197,7 @@ class TestRunProsePipeline:
                    "citation_density_min_per_1000": 0.0},
             bibliography={"fail_on_missing": False, "fail_on_unused": True},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         bib_check = next(c for c in artifacts.checks if c.name == "bibliography_consistency")
         assert bib_check.passed is False
         assert "ghost1" in bib_check.details["unused"]
@@ -218,7 +217,7 @@ class TestRunProsePipeline:
                    "citation_density_min_per_1000": 0.0},
             bibliography={"fail_on_missing": True},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         bib_check = next(c for c in artifacts.checks if c.name == "bibliography_consistency")
         assert bib_check.passed is False
         assert "not found" in bib_check.message
@@ -237,7 +236,7 @@ class TestOptionalChecks:
                    "forbid_skipped_levels": False},
             bibliography={"fail_on_missing": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root, write_outputs=False)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root, write_outputs=False)
         names = [c.name for c in artifacts.checks]
         assert "every_file_has_h1" not in names
         assert "no_skipped_heading_levels" not in names
@@ -252,7 +251,7 @@ class TestOptionalChecks:
                    "forbid_skipped_levels": False},
             bibliography={"fail_on_missing": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root, write_outputs=False)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root, write_outputs=False)
         names = [c.name for c in artifacts.checks]
         assert "no_skipped_heading_levels" not in names
         assert "every_file_has_h1" in names
@@ -382,7 +381,7 @@ class TestCitationExtractionViaPipeline:
                    "citation_density_min_per_1000": 0.0},
             bibliography={"fail_on_missing": True, "fail_on_unused": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         return next(c for c in artifacts.checks if c.name == "bibliography_consistency")
 
     def test_bracketed_citation(self, tmp_path: Path):
@@ -436,7 +435,7 @@ class TestProseRunArtifacts:
                    "citation_density_min_per_1000": 0.0},
             bibliography={"fail_on_missing": False},
         )
-        artifacts = run_prose_pipeline(config, project_root=root)
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root)
         payload = artifacts.to_dict()
         assert isinstance(payload, dict)
         assert payload["all_passed"] is True
@@ -474,7 +473,7 @@ class TestLongSentenceThresholdWired:
                    "long_sentence_threshold": 5},
             bibliography={"fail_on_missing": False},
         )
-        artifacts_low = run_prose_pipeline(cfg_low, project_root=root, write_outputs=False)
+        artifacts_low = run_prose_pipeline_with_analysis(cfg_low, project_root=root, write_outputs=False)
         flagged_low = artifacts_low.manuscript_report.files[0].quality.long_sentence_count
 
         # Threshold well above the sentence's word count → not flagged.
@@ -484,7 +483,7 @@ class TestLongSentenceThresholdWired:
                    "long_sentence_threshold": 200},
             bibliography={"fail_on_missing": False},
         )
-        artifacts_high = run_prose_pipeline(cfg_high, project_root=root, write_outputs=False)
+        artifacts_high = run_prose_pipeline_with_analysis(cfg_high, project_root=root, write_outputs=False)
         flagged_high = artifacts_high.manuscript_report.files[0].quality.long_sentence_count
 
         assert flagged_low > flagged_high

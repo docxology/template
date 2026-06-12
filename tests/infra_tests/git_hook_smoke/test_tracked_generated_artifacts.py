@@ -21,7 +21,7 @@ def test_generated_artifact_path_matcher() -> None:
     assert is_generated_artifact_path("coverage_project.json")
 
     assert not is_generated_artifact_path("projects/templates/template_code_project/src/optimizer.py")
-    assert not is_generated_artifact_path("docs/_generated/canonical_facts.md")
+    assert not is_generated_artifact_path("docs/_generated/COUNTS.md")
 
     # Scoped exception: the exemplars' TOP-LEVEL output is tracked render-proof.
     assert not is_generated_artifact_path(
