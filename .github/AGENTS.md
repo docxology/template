@@ -23,12 +23,12 @@ uv run python scripts/generate_publication_records_doc.py --refresh-external
 
 ```mermaid
 flowchart TB
-    GH[/.github//]
+    GH[.github/]
     GH --> META[AGENTS.md · README.md]
     GH --> DEP[dependabot.yml<br/>Automated dependency updates]
     GH --> PRT[PULL_REQUEST_TEMPLATE.md]
-    GH --> ITPL[/ISSUE_TEMPLATE/]
-    GH --> WF[/workflows/]
+    GH --> ITPL[ISSUE_TEMPLATE]
+    GH --> WF[workflows]
 
     ITPL --> ITPL_DOCS[AGENTS.md · README.md]
     ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]

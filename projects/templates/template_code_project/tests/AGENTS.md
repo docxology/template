@@ -15,7 +15,7 @@ The `tests/` directory contains tests for the optimization algorithms in `src/`.
 
 ```mermaid
 flowchart LR
-    T[/tests//]
+    T[tests/]
     T --> INIT[__init__.py]
     T --> CFG[conftest.py<br/>PYTHONPATH · MPLBACKEND]
     T --> TEST[test_optimizer.py]

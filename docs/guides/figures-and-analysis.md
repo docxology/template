@@ -525,11 +525,11 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 ```mermaid
 flowchart TB
-    OUT[/output//]
-    OUT --> FIG[/figures<br/>PNG files from scripts/]
-    OUT --> DATA[/data<br/>CSV · NPZ data files/]
-    OUT --> PDF[/pdf<br/>Individual + combined PDFs/]
-    OUT --> TEX[/tex<br/>LaTeX source files/]
+    OUT[output/]
+    OUT --> FIG[figures<br/>PNG files from scripts]
+    OUT --> DATA[data<br/>CSV · NPZ data files]
+    OUT --> PDF[pdf<br/>Individual + combined PDFs]
+    OUT --> TEX[tex<br/>LaTeX source files]
 
     FIG --> FIG_F[example_figure.png ·<br/>correlation_analysis.png ·<br/>statistics_figure.png]
     DATA --> DATA_F[analysis_data.csv · analysis_data.npz]

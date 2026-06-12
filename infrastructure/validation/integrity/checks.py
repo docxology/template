@@ -12,17 +12,29 @@ All functions follow the thin orchestrator pattern and maintain
 """
 
 import json
-import os
 import pickle  # noqa: S403 — used for pickle file validation
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, TypedDict
 
 from infrastructure.core._optional_deps import np
 from infrastructure.core.files.operations import calculate_file_hash
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.integrity.completeness import (  # noqa: F401
+    BuildArtifactValidation,
+    OutputCompleteness,
+    PermissionCheck,
+    check_file_permissions,
+    validate_build_artifacts,
+    verify_output_completeness,
+)
+from infrastructure.validation.integrity.manifest import (  # noqa: F401
+    create_integrity_manifest,
+    load_integrity_manifest,
+    save_integrity_manifest,
+    verify_integrity_against_manifest,
+)
 
 logger = get_logger(__name__)
 
@@ -284,306 +296,22 @@ def generate_integrity_report(report: IntegrityReport) -> str:
     return "\n".join(lines)
 
 
-class BuildArtifactValidation(TypedDict):
-    """Typed result from validate_build_artifacts."""
-
-    expected_files: list[str]
-    missing_files: list[str]
-    unexpected_files: list[str]
-    validation_passed: bool
-
-
-class PermissionCheck(TypedDict):
-    """Typed result from check_file_permissions."""
-
-    readable: bool
-    writable: bool
-    executable: bool
-    issues: list[str]
-
-
-class OutputCompleteness(TypedDict):
-    """Typed result from verify_output_completeness."""
-
-    pdf_complete: bool
-    figures_complete: bool
-    data_complete: bool
-    latex_complete: bool
-    html_complete: bool
-    missing_outputs: list[str]
-    incomplete_outputs: list[str]
-
-
-def validate_build_artifacts(
-    output_dir: Path, expected_files: dict[str, list[str]] | None = None
-) -> BuildArtifactValidation:
-    """Validate that all expected build artifacts are present and correct."""
-    validation: BuildArtifactValidation = {
-        "expected_files": [],
-        "missing_files": [],
-        "unexpected_files": [],
-        "validation_passed": True,
-    }
-
-    # Expected output structure (callers must supply expected_files for project-specific content)
-    expected_structure: dict[str, list[str]] = expected_files if expected_files is not None else {}
-
-    # Check for missing expected files and directories
-    for category, files in expected_structure.items():
-        category_dir = output_dir / category
-        if not category_dir.exists():
-            # Missing entire directory
-            for expected_file in files:
-                validation["missing_files"].append(expected_file)
-                validation["validation_passed"] = False
-        else:
-            # Directory exists, check for missing files
-            for expected_file in files:
-                expected_path = category_dir / expected_file
-                if not expected_path.exists():
-                    validation["missing_files"].append(expected_file)
-                    validation["validation_passed"] = False
-                else:
-                    validation["expected_files"].append(expected_file)
-
-    # Check for unexpected files (basic check)
-    for item in output_dir.rglob("*"):
-        if item.is_file():
-            rel_path = item.relative_to(output_dir)
-            is_expected = any(
-                str(rel_path).startswith(cat) and any(f in str(rel_path) for f in files)
-                for cat, files in expected_structure.items()
-            )
-            if not is_expected:
-                validation["unexpected_files"].append(str(rel_path))
-
-    return validation
-
-
-def check_file_permissions(output_dir: Path) -> PermissionCheck:
-    """Check directory permissions by probing with a temporary write-read-delete cycle."""
-    permissions: PermissionCheck = {
-        "readable": True,
-        "writable": True,
-        "executable": os.access(output_dir, os.X_OK) if output_dir.exists() else False,
-        "issues": [],
-    }
-
-    if not output_dir.exists():
-        permissions["readable"] = False
-        permissions["issues"].append(f"Output directory does not exist: {output_dir}")
-        return permissions
-
-    try:
-        # Test read access
-        test_file = output_dir / ".permission_test"
-        test_file.write_text("test")
-        test_file_content = test_file.read_text()
-        test_file.unlink()
-
-        if test_file_content != "test":
-            permissions["readable"] = False
-            permissions["writable"] = False
-            permissions["issues"].append("File read/write test failed")
-
-    except OSError as e:
-        permissions["writable"] = False
-        permissions["issues"].append(f"Permission test failed: {e}")
-
-    return permissions
-
-
-def verify_output_completeness(output_dir: Path) -> OutputCompleteness:
-    """Verify that all expected outputs are present and complete."""
-    completeness: OutputCompleteness = {
-        "pdf_complete": True,
-        "figures_complete": True,
-        "data_complete": True,
-        "latex_complete": True,
-        "html_complete": True,
-        "missing_outputs": [],
-        "incomplete_outputs": [],
-    }
-
-    # Check PDF completeness
-    pdf_dir = output_dir / "pdf"
-    if not pdf_dir.exists():
-        completeness["pdf_complete"] = False
-        completeness["missing_outputs"].append("PDF directory")
-    else:
-        for pdf_path in pdf_dir.glob("*.pdf"):
-            if pdf_path.stat().st_size == 0:
-                completeness["pdf_complete"] = False
-                completeness["incomplete_outputs"].append(f"Empty PDF: {pdf_path.name}")
-
-    # Check figures completeness
-    figures_dir = output_dir / "figures"
-    if not figures_dir.exists():
-        completeness["figures_complete"] = False
-        completeness["missing_outputs"].append("Figures directory")
-    else:
-        figures = list(figures_dir.glob("*.png")) + list(figures_dir.glob("*.pdf"))
-        for fig_path in figures:
-            if fig_path.stat().st_size < 1000:
-                completeness["incomplete_outputs"].append(f"Small figure: {fig_path.name}")
-
-    # Check data completeness
-    data_dir = output_dir / "data"
-    if not data_dir.exists():
-        completeness["data_complete"] = False
-        completeness["missing_outputs"].append("Data directory")
-    else:
-        data_files_found = list(data_dir.iterdir())
-        for data_path in data_files_found:
-            if data_path.is_file() and data_path.stat().st_size == 0:
-                completeness["data_complete"] = False
-                completeness["incomplete_outputs"].append(f"Empty data: {data_path.name}")
-
-    # Check LaTeX completeness
-    tex_dir = output_dir / "tex"
-    if not tex_dir.exists():
-        completeness["latex_complete"] = False
-        completeness["missing_outputs"].append("LaTeX directory")
-    else:
-        for tex_path in tex_dir.glob("*.tex"):
-            if tex_path.stat().st_size == 0:
-                completeness["latex_complete"] = False
-                completeness["incomplete_outputs"].append(f"Empty LaTeX: {tex_path.name}")
-
-    # Check HTML completeness (any HTML file in output root)
-    html_files = list(output_dir.glob("*.html"))
-    if not html_files:
-        completeness["html_complete"] = False
-        completeness["missing_outputs"].append("HTML output")
-    else:
-        for html_file in html_files:
-            if html_file.stat().st_size == 0:
-                completeness["html_complete"] = False
-                completeness["incomplete_outputs"].append(f"Empty HTML: {html_file.name}")
-
-    return completeness
-
-
-def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
-    """Create an integrity manifest for all output files."""
-    manifest: dict[str, Any] = {
-        "timestamp": output_dir.stat().st_ctime if output_dir.exists() else None,
-        "file_count": 0,
-        "total_size": 0,
-        "file_hashes": {},
-        "directory_structure": {},
-    }
-
-    if not output_dir.exists():
-        return manifest
-
-    file_count = 0
-    total_size = 0
-
-    # Calculate file hashes and collect metadata
-    for item in output_dir.rglob("*"):
-        if item.is_file():
-            rel_path = str(item.relative_to(output_dir))
-            file_hash = calculate_file_hash(item)
-            file_size = item.stat().st_size
-
-            manifest["file_hashes"][rel_path] = {
-                "hash": file_hash,
-                "size": file_size,
-                "modified": item.stat().st_mtime,
-            }
-
-            file_count += 1
-            total_size += file_size
-
-    manifest["file_count"] = file_count
-    manifest["total_size"] = total_size
-
-    # Create directory structure
-    for dir_path in output_dir.rglob("*"):
-        if dir_path.is_dir():
-            rel_path = str(dir_path.relative_to(output_dir))
-            manifest["directory_structure"][rel_path] = {
-                "file_count": len(list(dir_path.glob("*"))),
-                "total_size": sum(f.stat().st_size for f in dir_path.glob("*") if f.is_file()),
-            }
-
-    return manifest
-
-
-def save_integrity_manifest(manifest: dict[str, Any], output_path: Path) -> None:
-    """Save integrity manifest to JSON file.
-
-    Raises:
-        OSError: If the file cannot be written (intentionally not caught — callers
-            must handle write failures, unlike ``load_integrity_manifest`` which
-            returns None on failure because a missing manifest is a normal state).
-    """
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    _tmp = output_path.with_suffix(output_path.suffix + ".tmp")
-    try:
-        with open(_tmp, "w") as f:
-            json.dump(manifest, f, indent=2)
-        _tmp.replace(output_path)
-    except OSError as e:
-        logger.debug("Failed to write integrity manifest to %s: %s", _tmp, e)
-        _tmp.unlink(missing_ok=True)
-        raise
-
-
-def load_integrity_manifest(manifest_path: Path) -> dict[str, Any] | None:
-    """Load integrity manifest from JSON file, or None on failure.
-
-    Returns None (rather than raising) because a missing or corrupt manifest is
-    a normal state during first runs and after output directory cleanup. This is
-    intentionally asymmetric with ``save_integrity_manifest`` which raises on
-    write failure.
-    """
-    if not manifest_path.exists():
-        return None
-
-    try:
-        with open(manifest_path, "r") as f:
-            result: dict[str, Any] = json.load(f)
-            return result
-    except (OSError, json.JSONDecodeError) as e:
-        logger.debug(f"Could not load manifest from {manifest_path}: {e}")
-        return None
-
-
-def verify_integrity_against_manifest(
-    current_manifest: dict[str, Any], saved_manifest: dict[str, Any]
-) -> dict[str, Any]:
-    """Verify current integrity against a saved manifest."""
-    verification = {
-        "file_count_changed": current_manifest["file_count"] != saved_manifest["file_count"],
-        "total_size_changed": current_manifest["total_size"] != saved_manifest["total_size"],
-        "files_changed": 0,
-        "files_added": 0,
-        "files_removed": 0,
-        "details": {},
-    }
-
-    current_files = set(current_manifest["file_hashes"].keys())
-    saved_files = set(saved_manifest["file_hashes"].keys())
-
-    # Check for changed files
-    for file_path in current_files & saved_files:
-        current_hash = current_manifest["file_hashes"][file_path]["hash"]
-        saved_hash = saved_manifest["file_hashes"][file_path]["hash"]
-
-        if current_hash != saved_hash:
-            verification["files_changed"] += 1
-            verification["details"][file_path] = "modified"
-
-    # Check for added files
-    for file_path in current_files - saved_files:
-        verification["files_added"] += 1
-        verification["details"][file_path] = "added"
-
-    # Check for removed files
-    for file_path in saved_files - current_files:
-        verification["files_removed"] += 1
-        verification["details"][file_path] = "removed"
-
-    return verification
+__all__ = [
+    "BuildArtifactValidation",
+    "IntegrityReport",
+    "OutputCompleteness",
+    "PermissionCheck",
+    "check_file_permissions",
+    "create_integrity_manifest",
+    "generate_integrity_report",
+    "load_integrity_manifest",
+    "save_integrity_manifest",
+    "validate_build_artifacts",
+    "verify_academic_standards",
+    "verify_cross_references",
+    "verify_data_consistency",
+    "verify_file_integrity",
+    "verify_integrity_against_manifest",
+    "verify_output_completeness",
+    "verify_output_integrity",
+]

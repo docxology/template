@@ -45,8 +45,8 @@ _MERMAID_FENCE = re.compile(
 # Heuristic: first non-empty, non-comment line tells us the diagram kind.
 _KIND_RE = re.compile(r"^\s*(?P<kind>[A-Za-z][A-Za-z0-9_-]*)")
 _MMDC_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TIMEOUT", "30"))
-_MMDC_TOTAL_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT", "120"))
-_MMDC_BATCH_SIZE = max(1, int(os.environ.get("TEMPLATE_MERMAID_LINT_BATCH_SIZE", "20")))
+_MMDC_TOTAL_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT", "135"))
+_MMDC_BATCH_SIZE = max(1, int(os.environ.get("TEMPLATE_MERMAID_LINT_BATCH_SIZE", "10")))
 
 
 @dataclass(frozen=True)

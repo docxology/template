@@ -10,7 +10,7 @@ The scientific module is an **exemplar-support tier** Layer-1 module (see [`../.
 
 ```mermaid
 flowchart LR
-    T[/tests/infra_tests/scientific//]
+    T[tests/infra_tests/scientific/]
     T --> META[AGENTS.md · __init__.py]
     T --> BEN[test_benchmarking.py<br/>Performance benchmarking]
     T --> CONF[test_confirmation.py<br/>Improvement confirmation]

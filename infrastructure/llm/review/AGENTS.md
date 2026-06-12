@@ -8,7 +8,7 @@ The `infrastructure/llm/review/` directory generates manuscript reviews using lo
 
 ```mermaid
 flowchart LR
-    R[/infrastructure/llm/review//]
+    R[infrastructure/llm/review/]
     R --> META[AGENTS.md · __init__.py]
     R --> GEN[generator.py<br/>Public API façade + _REVIEW_REGISTRY]
     R --> GENR[generation.py<br/>Core streaming, retry, text extraction]

@@ -22,7 +22,7 @@ uv run pytest tests/infra_tests/llm/ -m "not requires_ollama" \
 
 ```mermaid
 flowchart LR
-    T[/tests/infra_tests/llm//]
+    T[tests/infra_tests/llm/]
     T --> INIT[__init__.py]
     T --> CFG[conftest.py<br/>ollama_test_server ·<br/>patch_llm_client_for_tests<br/>OLLAMA_HOST → stub]
     T --> STUB[ollama_stub_server.py<br/>POST /api/chat handler rules<br/>models · prompts · stream shapes]

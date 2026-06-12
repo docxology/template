@@ -159,11 +159,11 @@ Recommended for full functionality:
 
 ```mermaid
 flowchart TB
-    P[/projects/my_research/]
-    P --> SRC[/src<br/>Required · source code/]
-    P --> T[/tests<br/>Required · test suite/]
-    P --> SC[/scripts<br/>Optional · analysis workflows/]
-    P --> M[/manuscript<br/>Optional · research content/]
+    P[projects/my_research]
+    P --> SRC[src<br/>Required · source code]
+    P --> T[tests<br/>Required · test suite]
+    P --> SC[scripts<br/>Optional · analysis workflows]
+    P --> M[manuscript<br/>Optional · research content]
     P --> PY[pyproject.toml<br/>Project metadata]
 
     SRC --> SRC_F[__init__.py · analysis.py]

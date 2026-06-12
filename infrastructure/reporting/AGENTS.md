@@ -10,7 +10,7 @@ The reporting module provides reporting capabilities for pipeline execution, tes
 
 ```mermaid
 flowchart TB
-    REP[/infrastructure/reporting//]
+    REP[infrastructure/reporting/]
     REP --> META[__init__.py · SKILL.md · README.md · AGENTS.md]
     REP --> ERR[error_aggregator.py]
     REP --> EXEC[executive_reporter.py]
@@ -139,18 +139,18 @@ print(f"Copied {copied} combined PDFs")
 
 ```mermaid
 flowchart TB
-    EX[/output/executive_summary//]
-    EX --> PNG[/png/]
-    EX --> PDF[/pdf/]
-    EX --> CSV[/csv/]
-    EX --> HTML[/html/]
-    EX --> JSON[/json/]
-    EX --> MD[/md/]
-    EX --> CB[/combined_pdfs<br/>project1_combined.pdf · project2_combined.pdf/]
+    EX[output/executive_summary/]
+    EX --> PNG[png]
+    EX --> PDF[pdf]
+    EX --> CSV[csv]
+    EX --> HTML[html]
+    EX --> JSON[json]
+    EX --> MD[md]
+    EX --> CB[combined_pdfs<br/>project1_combined.pdf · project2_combined.pdf]
 
-    MS[/output/multi_project_summary//]
-    MS --> MS_JSON[/json<br/>multi_project_summary.json/]
-    MS --> MS_MD[/md<br/>multi_project_summary.md/]
+    MS[output/multi_project_summary/]
+    MS --> MS_JSON[json<br/>multi_project_summary.json]
+    MS --> MS_MD[md<br/>multi_project_summary.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class EX,PNG,PDF,CSV,HTML,JSON,MD,CB,MS,MS_JSON,MS_MD d
@@ -1084,7 +1084,7 @@ def generate_multi_project_report(
 
 ```mermaid
 flowchart TB
-    EX[/output/executive_summary//]
+    EX[output/executive_summary/]
     EX --> CR[consolidated_report.json/.html/.md<br/>metrics · health scores · recommendations]
     EX --> DB[dashboard.png/.pdf/.html<br/>matplotlib · vector · interactive Plotly · 9 charts]
     EX --> PM[project_metrics.csv<br/>Detailed project metrics table]

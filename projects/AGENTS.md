@@ -159,9 +159,9 @@ Every valid project **must** have these directories:
 
 ```mermaid
 flowchart TB
-    P[/projects/&lt;name&gt;//]
-    P --> SRC[/src/<br/>Python source code/]
-    P --> T[/tests/<br/>90%+ coverage required/]
+    P[projects/&lt;name&gt;/]
+    P --> SRC[src/<br/>Python source code]
+    P --> T[tests/<br/>90%+ coverage required]
     P --> PY[pyproject.toml<br/>Project metadata · dependencies]
 
     SRC --> SRC_F[__init__.py · *.py<br/>algorithms · data processing]
@@ -179,11 +179,11 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    P[/projects/&lt;name&gt;//]
-    P --> SC[/scripts/<br/>Analysis workflows · thin orchestrators/]
-    P --> M[/manuscript/<br/>Research manuscript · markdown/]
-    P --> DOCS[/docs/<br/>Modular documentation hub/]
-    P --> OUT[/output/<br/>Generated · disposable/]
+    P[projects/&lt;name&gt;/]
+    P --> SC[scripts/<br/>Analysis workflows · thin orchestrators]
+    P --> M[manuscript/<br/>Research manuscript · markdown]
+    P --> DOCS[docs/<br/>Modular documentation hub]
+    P --> OUT[output/<br/>Generated · disposable]
 
     SC --> SC_F[analysis_pipeline.py · generate_*.py]
     M --> M_F[config.yaml · references.bib · preamble.md ·<br/>00_abstract.md · *.md · SYNTAX.md ·<br/>AGENTS.md · README.md]
@@ -331,9 +331,9 @@ uv run python scripts/05_copy_outputs.py --project {name}
 
 ```mermaid
 flowchart TB
-    OUT[/output//]
-    OUT --> CP[/template_code_project/<br/>Final deliverables/]
-    OUT --> YP[/&lt;your_project&gt;/<br/>Other projects/]
+    OUT[output/]
+    OUT --> CP[template_code_project/<br/>Final deliverables]
+    OUT --> YP[&lt;your_project&gt;/<br/>Other projects]
 
     CP --> CP_FILES[pdf/ · figures/ · data/ · reports/]
 
@@ -462,7 +462,7 @@ def test_llm_integration_real_http(ollama_test_server):
 
 ```mermaid
 flowchart TB
-    T[/projects/&lt;name&gt;/tests//]
+    T[projects/&lt;name&gt;/tests/]
     T --> INIT[__init__.py<br/>Test package]
     T --> CFG[conftest.py<br/>Shared fixtures · configuration]
     T --> DA[test_domain_analysis.py<br/>Unit tests · domain analysis]
@@ -546,16 +546,16 @@ for script in scripts:
 
 ```mermaid
 flowchart LR
-    OUT[/projects/&lt;name&gt;/output//]
-    OUT --> FIG[/figures/<br/>PNG/PDF figures for manuscript/]
-    OUT --> DATA[/data/<br/>CSV/NPZ datasets from analysis/]
-    OUT --> PDF[/pdf/<br/>Generated PDF manuscripts/]
-    OUT --> TEX[/tex/<br/>LaTeX source files/]
-    OUT --> SLIDES[/slides/<br/>Presentation slides · PDF/HTML/]
-    OUT --> WEB[/web/<br/>HTML versions for web viewing/]
-    OUT --> LLM[/llm/<br/>LLM reviews · translations/]
-    OUT --> LOG[/logs/<br/>Pipeline execution logs/]
-    OUT --> REP[/reports/<br/>Analysis reports · summaries/]
+    OUT[projects/&lt;name&gt;/output/]
+    OUT --> FIG[figures/<br/>PNG/PDF figures for manuscript]
+    OUT --> DATA[data/<br/>CSV/NPZ datasets from analysis]
+    OUT --> PDF[pdf/<br/>Generated PDF manuscripts]
+    OUT --> TEX[tex/<br/>LaTeX source files]
+    OUT --> SLIDES[slides/<br/>Presentation slides · PDF/HTML]
+    OUT --> WEB[web/<br/>HTML versions for web viewing]
+    OUT --> LLM[llm/<br/>LLM reviews · translations]
+    OUT --> LOG[logs/<br/>Pipeline execution logs]
+    OUT --> REP[reports/<br/>Analysis reports · summaries]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class OUT,FIG,DATA,PDF,TEX,SLIDES,WEB,LLM,LOG,REP d
@@ -574,12 +574,12 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    OUT[/output/&lt;name&gt;//]
-    OUT --> PDF[/pdf/<br/>Final manuscript PDFs/]
-    OUT --> FIG[/figures/<br/>Publication-quality figures/]
-    OUT --> DATA[/data/<br/>Analysis datasets for sharing/]
-    OUT --> SLIDES[/slides/<br/>Presentation materials/]
-    OUT --> REP[/reports/<br/>Pipeline + analysis reports/]
+    OUT[output/&lt;name&gt;/]
+    OUT --> PDF[pdf/<br/>Final manuscript PDFs]
+    OUT --> FIG[figures/<br/>Publication-quality figures]
+    OUT --> DATA[data/<br/>Analysis datasets for sharing]
+    OUT --> SLIDES[slides/<br/>Presentation materials]
+    OUT --> REP[reports/<br/>Pipeline + analysis reports]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class OUT,PDF,FIG,DATA,SLIDES,REP d

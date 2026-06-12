@@ -17,7 +17,7 @@ The `scripts/` directory contains **Thin Orchestrators**. In the context of the 
 
 ```mermaid
 flowchart LR
-    SC[/scripts//]
+    SC[scripts/]
     SC --> OA[optimization_analysis.py<br/>Main analysis pipeline]
     SC --> BD[build_dashboard.py<br/>Interactive HTML dashboard +<br/>numerical-invariants report]
     SC --> PF[00_preflight.py<br/>Manuscript preflight · AESTHETIC]

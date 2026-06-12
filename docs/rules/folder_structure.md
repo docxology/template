@@ -38,7 +38,7 @@ specialization files are AESTHETIC and enforced by audit only.
 
 ```mermaid
 flowchart LR
-    DIR[/directory//]
+    DIR[directory/]
     DIR --> AG[AGENTS.md<br/>REQUIRED · technical documentation]
     DIR --> RD[README.md<br/>REQUIRED · quick reference + Mermaid diagrams]
     DIR --> OPT[OPTIONAL.md<br/>specialized documentation]
@@ -119,7 +119,7 @@ All `infrastructure/` subdirectories follow the pattern:
 
 ```mermaid
 flowchart LR
-    M[/infrastructure/module//]
+    M[infrastructure/module/]
     M --> INIT[__init__.py<br/>Public API exports]
     M --> AG[AGENTS.md<br/>REQUIRED · technical documentation]
     M --> RD[README.md<br/>REQUIRED · quick reference]
@@ -142,7 +142,7 @@ All `projects/` subdirectories follow the pattern:
 
 ```mermaid
 flowchart LR
-    P[/projects/&lt;name&gt;//]
+    P[projects/&lt;name&gt;/]
     P --> AG[AGENTS.md<br/>REQUIRED · directory documentation]
     P --> RD[README.md<br/>REQUIRED · quick reference]
     P --> CODE[code files]
@@ -162,7 +162,7 @@ All `docs/` subdirectories follow the pattern:
 
 ```mermaid
 flowchart LR
-    D[/docs/section//]
+    D[docs/section/]
     D --> AG[AGENTS.md<br/>REQUIRED · section documentation]
     D --> RD[README.md<br/>REQUIRED · quick reference]
     D --> TOPICS[topic files]
@@ -256,10 +256,10 @@ graph TD
 
 ```mermaid
 flowchart TB
-    LLM[/infrastructure/llm//]
+    LLM[infrastructure/llm/]
     LLM --> META[__init__.py · AGENTS.md · README.md]
-    LLM --> CORE[/core/]
-    LLM --> TPL[/templates/]
+    LLM --> CORE[core]
+    LLM --> TPL[templates]
     LLM --> OTHER[other subdirs]
 
     CORE --> CORE_F[__init__.py · AGENTS.md ·<br/>README.md · python files]
@@ -277,7 +277,7 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    SRC[/projects/&lt;name&gt;/src//]
+    SRC[projects/&lt;name&gt;/src/]
     SRC --> META[__init__.py · AGENTS.md · README.md<br/>research code documentation]
     SRC --> DP[data_processing.py]
     SRC --> SIM[simulation.py]

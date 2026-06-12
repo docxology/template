@@ -25,13 +25,13 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
 ```mermaid
 flowchart TB
-    T[/tests//]
+    T[tests/]
     T --> T_AG[AGENTS.md]
-    T --> INFRA_T[/infra_tests/]
-    T --> INTEG[/integration/]
+    T --> INFRA_T[infra_tests]
+    T --> INTEG[integration]
 
     INFRA_T --> INFRA_DOCS[AGENTS.md · README.md]
-    INFRA_T --> INFRA_SUB[/benchmark · config · core · doctor · documentation ·<br/>git_hook_smoke · llm · methods · orchestration · project ·<br/>prose · publishing · reference · rendering ·<br/>reporting · scientific · search · skills ·<br/>steganography · validation/]
+    INFRA_T --> INFRA_SUB[benchmark · config · core · doctor · documentation ·<br/>git_hook_smoke · llm · methods · orchestration · project ·<br/>prose · publishing · reference · rendering ·<br/>reporting · scientific · search · skills ·<br/>steganography · validation]
 
     INTEG --> INT_DOCS[AGENTS.md · README.md · conftest.py]
     INTEG --> INT_FILES[test_bash_utils.sh · test_codebase_real.py ·<br/>test_edge_cases_and_error_paths.py ·<br/>test_environment_setup.py · test_execute_pipeline_cli.py ·<br/>test_executive_report_generation.py ·<br/>test_figure_equation_citation.py · test_full_pipeline.py ·<br/>test_logging.py · test_module_interoperability.py ·<br/>test_output_copying.py · test_run_sh.py ·<br/>test_timeseries_benchmarks.py]

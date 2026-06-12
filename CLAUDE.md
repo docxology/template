@@ -312,12 +312,12 @@ To retire one: move it from sidecar `working/` to sidecar `archive/`.
 
 ```mermaid
 flowchart TB
-    P[/projects/&lt;project_name&gt;//]
-    P --> SRC[/src<br/>Project-specific code · 100% target/]
-    P --> T[/tests<br/>Project tests · 90% min/]
-    P --> SC[/scripts<br/>Analysis · thin orchestrators/]
-    P --> M[/manuscript<br/>Markdown sections/]
-    P --> O[/output<br/>Working outputs · disposable/]
+    P[projects/&lt;project_name&gt;/]
+    P --> SRC[src<br/>Project-specific code · 100% target]
+    P --> T[tests<br/>Project tests · 90% min]
+    P --> SC[scripts<br/>Analysis · thin orchestrators]
+    P --> M[manuscript<br/>Markdown sections]
+    P --> O[output<br/>Working outputs · disposable]
     P --> PY[pyproject.toml<br/>Project configuration]
 
     SRC --> SRC_F[__init__.py · *.py<br/>domain algorithms / logic]
@@ -337,15 +337,15 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    OUT[/output/]
-    OUT --> P[/&lt;project_name&gt;<br/>Project-specific outputs/]
-    OUT --> EX[/executive_summary<br/>Cross-project reports · multi-project mode/]
+    OUT[output]
+    OUT --> P[&lt;project_name&gt;<br/>Project-specific outputs]
+    OUT --> EX[executive_summary<br/>Cross-project reports · multi-project mode]
 
-    P --> PDF[/pdf<br/>Individual + combined PDFs/]
-    P --> FIG[/figures<br/>Generated figures/]
-    P --> DATA[/data<br/>Analysis data files/]
-    P --> LLM[/llm<br/>LLM reviews · translations/]
-    P --> REP[/reports<br/>Validation reports/]
+    P --> PDF[pdf<br/>Individual + combined PDFs]
+    P --> FIG[figures<br/>Generated figures]
+    P --> DATA[data<br/>Analysis data files]
+    P --> LLM[llm<br/>LLM reviews · translations]
+    P --> REP[reports<br/>Validation reports]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff

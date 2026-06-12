@@ -20,10 +20,12 @@ class ProseMetricsLike(Protocol):
 @runtime_checkable
 class QualityReportLike(Protocol):
     citation_count: int
+    citation_density_per_1000: float
     hedge_count: int
+    hedge_words: list[str]
+    long_sentence_count: int
     passive_count: int
     word_count: int
-    hedge_words: list[str]
 
 
 @runtime_checkable

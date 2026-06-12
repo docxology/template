@@ -8,9 +8,9 @@ The `tests/infra_tests/validation/` directory contains tests for the validation 
 
 ```mermaid
 flowchart TB
-    T[/tests/infra_tests/validation//]
+    T[tests/infra_tests/validation/]
     T --> META[AGENTS.md · __init__.py · conftest.py]
-    T --> DOCS_DIR[/docs<br/>documentation linter tests/]
+    T --> DOCS_DIR[docs<br/>documentation linter tests]
     T --> CFG[Accuracy / Completeness / Security<br/>test_accuracy · test_completeness · test_docs_completeness · test_security_gate]
     T --> DOC[Doc scanner / discovery<br/>test_documentation_scanner · test_doc_discovery]
     T --> CONTENT[Content validators<br/>test_figure_validator · test_markdown_validator ·<br/>test_pdf_validator · test_output_validator]

@@ -14,7 +14,7 @@ Thin orchestrators. **No business logic.** Each script imports from
 
 ```mermaid
 flowchart LR
-    SC[/template_prose_project/scripts//]
+    SC[template_prose_project/scripts/]
     SC --> S0[00_preflight.py<br/>Manuscript preflight · AESTHETIC]
     SC --> S1[run_prose_pipeline.py<br/>Main orchestrator]
     SC --> S2[y_generate_prose_figures.py<br/>PNG figures]

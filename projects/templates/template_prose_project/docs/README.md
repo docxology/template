@@ -4,7 +4,7 @@ Documentation hub for the prose-review exemplar.
 
 ```mermaid
 flowchart LR
-    HUB[/template_prose_project/docs//]
+    HUB[template_prose_project/docs/]
     HUB --> AI[agent_instructions.md<br/>7 hard rules · read-first]
     HUB --> ARCH[architecture.md<br/>two-layer compliance + sequence]
     HUB --> TP[testing_philosophy.md<br/>zero-mock · see canonical facts]

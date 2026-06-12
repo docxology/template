@@ -14,7 +14,7 @@ The scientific module is organized into focused submodules:
 
 ```mermaid
 flowchart TB
-    SCI[/infrastructure/scientific//]
+    SCI[infrastructure/scientific/]
     SCI --> INIT[__init__.py<br/>Public API exports]
     SCI --> STAB[stability.py<br/>Numerical stability checking]
     SCI --> BEN[benchmarking.py<br/>Performance benchmarking]

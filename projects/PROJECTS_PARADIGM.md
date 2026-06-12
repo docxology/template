@@ -363,7 +363,7 @@ Every project maintains **manuscript independence**:
 
 ```mermaid
 flowchart LR
-    M[/projects/&lt;name&gt;/manuscript//]
+    M[projects/&lt;name&gt;/manuscript/]
     M --> S00[00_abstract.md]
     M --> S01[01_introduction.md]
     M --> S02[02_methodology.md]
@@ -588,7 +588,7 @@ graph TD
     end
 
     subgraph "Infrastructure Operations"
-        DISCOVER[discover_projects()<br/>Scans templates/ + active/ only]
+        DISCOVER["discover_projects()<br/>Scans templates/ + active/ only"]
         EXECUTE[Pipeline Execution<br/>Tests, Analysis, Rendering]
         LIST[List in run.sh menu<br/>Interactive selection]
     end

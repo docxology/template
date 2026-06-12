@@ -8,7 +8,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 
 ```mermaid
 flowchart LR
-    W[/.github/workflows//]
+    W[.github/workflows/]
     W --> META[AGENTS.md · README.md]
     W --> CI[ci.yml<br/>12 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]

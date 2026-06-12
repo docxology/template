@@ -8,7 +8,7 @@ Unified pipeline telemetry: bridges per-stage resource tracking (CPU, memory, I/
 
 ```mermaid
 flowchart LR
-    TEL[/telemetry//]
+    TEL[telemetry/]
     TEL --> INIT[__init__.py<br/>Re-exports TelemetryCollector,<br/>TelemetryConfig, models, rotate]
     TEL --> COL[collector.py<br/>TelemetryCollector · lifecycle + persistence]
     TEL --> CFG[config.py<br/>TelemetryConfig dataclass · YAML-loadable]

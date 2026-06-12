@@ -299,12 +299,12 @@ Retired or sample projects are kept under [`projects/archive/`](../projects/arch
 
 ```mermaid
 flowchart LR
-    P[/projects/&lt;name&gt;/]
-    P --> SRC[/src/&lt;name&gt;<br/>All domain logic · algorithms · analysis/]
-    P --> T[/tests<br/>Real tests · no mocks · ≥ 90% coverage/]
-    P --> SC[/scripts<br/>Thin orchestrators calling src/]
-    P --> M[/manuscript<br/>Markdown chapters · config.yaml/]
-    P --> O[/output<br/>Pipeline artifacts · generated/]
+    P[projects/&lt;name&gt;]
+    P --> SRC[src/&lt;name&gt;<br/>All domain logic · algorithms · analysis]
+    P --> T[tests<br/>Real tests · no mocks · ≥ 90% coverage]
+    P --> SC[scripts<br/>Thin orchestrators calling src]
+    P --> M[manuscript<br/>Markdown chapters · config.yaml]
+    P --> O[output<br/>Pipeline artifacts · generated]
     P --> AG[AGENTS.md<br/>AI-agent context for this project]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff

@@ -241,11 +241,11 @@ With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (un
 
 ```mermaid
 flowchart LR
-    OUT[/output/]
-    OUT --> FIG[/figures<br/>PNG · MP4 · SVG/]
-    OUT --> DATA[/data<br/>CSV · NPZ · manifests/]
-    OUT --> PDF[/pdf<br/>Individual + combined PDFs/]
-    OUT --> TEX[/tex<br/>Exported LaTeX files/]
+    OUT[output]
+    OUT --> FIG[figures<br/>PNG · MP4 · SVG]
+    OUT --> DATA[data<br/>CSV · NPZ · manifests]
+    OUT --> PDF[pdf<br/>Individual + combined PDFs]
+    OUT --> TEX[tex<br/>Exported LaTeX files]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class OUT,FIG,DATA,PDF,TEX d

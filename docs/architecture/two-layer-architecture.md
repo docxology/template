@@ -38,18 +38,18 @@ This research template implements a clear two-layer architecture separating gene
 
 ```mermaid
 flowchart TB
-    INFRA[/infrastructure/]
-    INFRA --> CORE[/core<br/>exceptions · logging · config_loader/]
-    INFRA --> VAL[/validation<br/>pdf · markdown · integrity/]
-    INFRA --> DOC[/documentation<br/>figure · image · markdown integration · glossary/]
-    INFRA --> PUB[/publishing<br/>academic publishing tools/]
-    INFRA --> LLM[/llm<br/>LLM integration · literature workflows/]
-    INFRA --> REND[/rendering<br/>multi-format · PDF · HTML · slides · DOCX · EPUB/]
-    INFRA --> SCI[/scientific<br/>scientific dev tools/]
-    INFRA --> SEARCH[/search<br/>multi-source literature search/]
-    INFRA --> REF[/reference<br/>citation BibTeX I/O · verification reference-existence gate/]
-    INFRA --> REP[/reporting<br/>pipeline reports/]
-    INFRA --> STEG[/steganography<br/>secure PDF post-processing/]
+    INFRA[infrastructure]
+    INFRA --> CORE[core<br/>exceptions · logging · config_loader]
+    INFRA --> VAL[validation<br/>pdf · markdown · integrity]
+    INFRA --> DOC[documentation<br/>figure · image · markdown integration · glossary]
+    INFRA --> PUB[publishing<br/>academic publishing tools]
+    INFRA --> LLM[llm<br/>LLM integration · literature workflows]
+    INFRA --> REND[rendering<br/>multi-format · PDF · HTML · slides · DOCX · EPUB]
+    INFRA --> SCI[scientific<br/>scientific dev tools]
+    INFRA --> SEARCH[search<br/>multi-source literature search]
+    INFRA --> REF[reference<br/>citation BibTeX I/O · verification reference-existence gate]
+    INFRA --> REP[reporting<br/>pipeline reports]
+    INFRA --> STEG[steganography<br/>secure PDF post-processing]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -93,7 +93,7 @@ fm.register_figure(
 
 ```mermaid
 flowchart LR
-    SRC[/projects/&lt;name&gt;/src/]
+    SRC[projects/&lt;name&gt;/src]
     SRC --> EX[example.py<br/>basic operations]
     SRC --> OTHER[*.py<br/>project-specific modules]
 
@@ -113,7 +113,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    SC[/projects/templates/template_code_project/scripts//]
+    SC[projects/templates/template_code_project/scripts/]
     SC --> PF[00_preflight.py<br/>chrome-headless-shell preflight]
     SC --> OA[optimization_analysis.py<br/>main analysis pipeline · thin wrapper around src/analysis/]
     SC --> BD[build_dashboard.py<br/>numerical-invariants HTML dashboard]
@@ -261,24 +261,24 @@ from projects.name.src.simulation import SimpleSimulation  # ❌ WRONG
 
 ```mermaid
 flowchart TB
-    INFRA[/infrastructure<br/>Layer 1 · importable packages<br/>see COUNTS.md/]
+    INFRA[infrastructure<br/>Layer 1 · importable packages<br/>see COUNTS.md]
     INFRA --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
-    INFRA --> CORE[/core<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry/]
-    INFRA --> DOC[/documentation<br/>figure manager · glossary gen/]
-    INFRA --> DOCTOR[/doctor<br/>repo health checks/]
-    INFRA --> LLM[/llm<br/>Ollama integration · prompts/]
-    INFRA --> ORCH[/orchestration<br/>pipeline runner · menu/]
-    INFRA --> PROJ[/project<br/>multi-project discovery/]
-    INFRA --> PROSE[/prose<br/>markdown analysis/]
-    INFRA --> PUB[/publishing<br/>Zenodo · arXiv · GitHub/]
-    INFRA --> REND[/rendering<br/>PDF · HTML · slides · DOCX · EPUB/]
-    INFRA --> REP[/reporting<br/>pipeline · executive reports/]
-    INFRA --> SCI[/scientific<br/>numerical stability · benchmarking/]
-    INFRA --> SK[/skills<br/>SKILL.md discovery/]
-    INFRA --> STEG[/steganography<br/>PDF hardening/]
-    INFRA --> VAL[/validation<br/>PDF · markdown · integrity · audit/]
-    INFRA --> SEARCH[/search<br/>literature search/]
-    INFRA --> REF[/reference<br/>citation BibTeX I/O · verification reference-existence gate/]
+    INFRA --> CORE[core<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry]
+    INFRA --> DOC[documentation<br/>figure manager · glossary gen]
+    INFRA --> DOCTOR[doctor<br/>repo health checks]
+    INFRA --> LLM[llm<br/>Ollama integration · prompts]
+    INFRA --> ORCH[orchestration<br/>pipeline runner · menu]
+    INFRA --> PROJ[project<br/>multi-project discovery]
+    INFRA --> PROSE[prose<br/>markdown analysis]
+    INFRA --> PUB[publishing<br/>Zenodo · arXiv · GitHub]
+    INFRA --> REND[rendering<br/>PDF · HTML · slides · DOCX · EPUB]
+    INFRA --> REP[reporting<br/>pipeline · executive reports]
+    INFRA --> SCI[scientific<br/>numerical stability · benchmarking]
+    INFRA --> SK[skills<br/>SKILL.md discovery]
+    INFRA --> STEG[steganography<br/>PDF hardening]
+    INFRA --> VAL[validation<br/>PDF · markdown · integrity · audit]
+    INFRA --> SEARCH[search<br/>literature search]
+    INFRA --> REF[reference<br/>citation BibTeX I/O · verification reference-existence gate]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -294,10 +294,10 @@ File-level layout inside each package: see [`infrastructure/AGENTS.md`](../../in
 
 ```mermaid
 flowchart TB
-    PROJ[/project<br/>Project-specific code/]
-    PROJ --> SRC[/src<br/>Project scientific code/]
-    PROJ --> SC[/scripts<br/>Project orchestrators/]
-    PROJ --> T[/tests<br/>Project tests/]
+    PROJ[project<br/>Project-specific code]
+    PROJ --> SRC[src<br/>Project scientific code]
+    PROJ --> SC[scripts<br/>Project orchestrators]
+    PROJ --> T[tests<br/>Project tests]
 
     SRC --> SRC_FILES[__init__.py · AGENTS.md · README.md ·<br/>example.py · ...]
     SC --> SC_FILES[optimization_analysis.py · build_dashboard.py ·<br/>z_generate_manuscript_variables.py · run_prose_pipeline.py ·<br/>y_generate_prose_figures.py]
@@ -315,15 +315,15 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    ROOT_TESTS[/tests<br/>Root level · infrastructure tests/]
-    ROOT_TESTS --> INFRA_T[/infra_tests<br/>Layer 1 tests/]
-    ROOT_TESTS --> INTEG[/integration<br/>Cross-layer tests/]
-    ROOT_TESTS --> HELPERS[/helpers<br/>Test utilities/]
+    ROOT_TESTS[tests<br/>Root level · infrastructure tests]
+    ROOT_TESTS --> INFRA_T[infra_tests<br/>Layer 1 tests]
+    ROOT_TESTS --> INTEG[integration<br/>Cross-layer tests]
+    ROOT_TESTS --> HELPERS[helpers<br/>Test utilities]
 
     INFRA_T --> INFRA_F[__init__.py · test_build/ ·<br/>test_validation/ · test_documentation/ · ...]
     INTEG --> INTEG_F[__init__.py · test_integration_pipeline.py · ...]
 
-    PROJ_TESTS[/projects/&lt;name&gt;/tests<br/>Layer 2 · project tests/]
+    PROJ_TESTS[projects/&lt;name&gt;/tests<br/>Layer 2 · project tests]
     PROJ_TESTS --> PROJ_F[__init__.py · test_example.py ·<br/>test_simulation.py · test_statistics.py · ...]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff

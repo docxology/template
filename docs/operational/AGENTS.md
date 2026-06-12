@@ -11,19 +11,19 @@ previously split between `docs/operations/` and `docs/operational/`.
 
 ```mermaid
 flowchart TB
-    OP[/docs/operational//]
+    OP[docs/operational/]
     OP --> META[AGENTS.md · README.md]
     OP --> OV[overview.md · diagrams.md]
     OP --> RB[runbook.md · maintenance.md]
     OP --> CW[config-wizard.md · template-usage.md]
     OP --> DOCK[docker.md]
     OP --> REP[reporting-guide.md · error-handling-guide.md]
-    OP --> BUILD[/build<br/>Build system · deps · CI/CD/]
-    OP --> CFG[/config<br/>Configuration & checkpoints/]
-    OP --> LOG[/logging<br/>Logging system guides/]
-    OP --> PERF[/performance<br/>Benchmarking guide/]
-    OP --> SCR[/scripts<br/>rotate-logs.sh/]
-    OP --> TS[/troubleshooting<br/>Systematic troubleshooting/]
+    OP --> BUILD[build<br/>Build system · deps · CI/CD]
+    OP --> CFG[config<br/>Configuration & checkpoints]
+    OP --> LOG[logging<br/>Logging system guides]
+    OP --> PERF[performance<br/>Benchmarking guide]
+    OP --> SCR[scripts<br/>rotate-logs.sh]
+    OP --> TS[troubleshooting<br/>Systematic troubleshooting]
 
     BUILD --> BUILD_F[README · build-system ·<br/>dependency-management · ci-cd-integration ·<br/>build-performance · build-history]
     CFG --> CFG_F[README · configuration ·<br/>checkpoint-resume · performance-optimization]

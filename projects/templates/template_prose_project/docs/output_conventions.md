@@ -7,9 +7,9 @@ consumer. This file is the single source of truth for that mapping.
 
 ```mermaid
 flowchart TB
-    P[/projects/templates/template_prose_project//]
-    P --> M[/manuscript/<br/>committed source/]
-    P --> OUT[/output/<br/>regeneratable · gitignored/]
+    P[projects/templates/template_prose_project/]
+    P --> M[manuscript/<br/>committed source]
+    P --> OUT[output/<br/>regeneratable · gitignored]
 
     M --> M_CFG[config.yaml<br/>single source of truth]
     M --> M_PRE[preamble.md<br/>LaTeX preamble]
@@ -20,8 +20,8 @@ flowchart TB
     OUT --> O_CK[checks.json<br/>list of CheckResult]
     OUT --> O_RR[review_report.md<br/>human-readable review]
     OUT --> O_RS[run_summary.json<br/>one-line metadata]
-    OUT --> O_DATA[/data/manuscript_variables.json/]
-    OUT --> O_FIG[/figures//]
+    OUT --> O_DATA[data/manuscript_variables.json]
+    OUT --> O_FIG[figures/]
 
     O_FIG --> F1[section_word_counts.png]
     O_FIG --> F2[readability_metrics.png]

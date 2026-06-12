@@ -8,7 +8,7 @@ The `infrastructure/llm/core/` directory contains the fundamental components of 
 
 ```mermaid
 flowchart TB
-    CORE[/infrastructure/llm/core//]
+    CORE[infrastructure/llm/core/]
     CORE --> META[AGENTS.md · __init__.py]
     CORE --> CLIENT[client.py<br/>LLMClient · composition root]
     CORE --> MIXINS[_connection.py · _structured_queries.py ·<br/>_stream_impl.py · _stream_helpers.py<br/>HTTP · retries · streaming · metrics]

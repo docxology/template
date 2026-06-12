@@ -386,7 +386,7 @@ uv run pytest tests/infra_tests/core/ -v
 
 ```mermaid
 flowchart TB
-    NM[/infrastructure/new_module/]
+    NM[infrastructure/new_module]
     NM --> INIT[__init__.py<br/>Public API exports]
     NM --> CORE[core.py<br/>Main functionality]
     NM --> UTILS[utils.py<br/>Helper functions]

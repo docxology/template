@@ -12,7 +12,7 @@ Public symbols are importable directly from `infrastructure.llm.validation`.
 
 ```mermaid
 flowchart LR
-    V[/infrastructure/llm/validation//]
+    V[infrastructure/llm/validation/]
     V --> META[AGENTS.md · README.md · __init__.py]
     V --> CORE[core.py<br/>JSON · length · structure · repetition · formatting]
     V --> DET[detection.py<br/>Repetition detection algorithms]

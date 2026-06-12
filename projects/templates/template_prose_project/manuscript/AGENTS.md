@@ -7,7 +7,7 @@ prose itself.
 
 ```mermaid
 flowchart TB
-    M[/template_prose_project/manuscript//]
+    M[template_prose_project/manuscript/]
     M --> CFG[config.yaml<br/>single source of truth · all knobs]
     M --> PRE[preamble.md<br/>LaTeX preamble for Pandoc]
     M --> S00[00_abstract.md<br/>Run-snapshot variables]

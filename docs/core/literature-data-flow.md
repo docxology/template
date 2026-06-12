@@ -52,24 +52,24 @@ A typical run lands the following artefacts:
 
 ```mermaid
 flowchart TB
-    PROJ[/projects/archive/template_search_project/<br/>local copy under projects/ only/]
-    PROJ --> OUTPUT[/output/]
-    PROJ --> MANUSCRIPT[/manuscript/]
+    PROJ[projects/archive/template_search_project/<br/>local copy under projects/ only]
+    PROJ --> OUTPUT[output]
+    PROJ --> MANUSCRIPT[manuscript]
 
-    OUTPUT --> SEARCH[/search/]
-    OUTPUT --> CACHE[/cache/]
-    OUTPUT --> LLM_DIR[/llm/]
-    OUTPUT --> PDF_DIR[/pdf/]
+    OUTPUT --> SEARCH[search]
+    OUTPUT --> CACHE[cache]
+    OUTPUT --> LLM_DIR[llm]
+    OUTPUT --> PDF_DIR[pdf]
     OUTPUT --> CORPUS_F[corpus.json<br/>LocalBackend-compatible]
 
     SEARCH --> RES_F[results.json<br/>SearchResult]
-    SEARCH --> SC[/cache/search_HASH.json<br/>deterministic SearchCache/]
+    SEARCH --> SC[cache/search_HASH.json<br/>deterministic SearchCache]
 
-    CACHE --> ABS_DIR[/abs/SAFE_ID.txt<br/>cached abstracts/]
-    CACHE --> PDF_CACHE[/pdf/SAFE_ID.pdf and .txt<br/>cached fulltext/]
+    CACHE --> ABS_DIR[abs/SAFE_ID.txt<br/>cached abstracts]
+    CACHE --> PDF_CACHE[pdf/SAFE_ID.pdf and .txt<br/>cached fulltext]
 
     LLM_DIR --> SYNTH[synthesis.md<br/>cross-corpus narrative]
-    LLM_DIR --> PER_PAPER[/per_paper/SAFE_ID.md/]
+    LLM_DIR --> PER_PAPER[per_paper/SAFE_ID.md]
 
     PDF_DIR --> FINAL[template_search_project.pdf]
 

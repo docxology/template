@@ -6,6 +6,11 @@ from pathlib import Path
 from typing import Any, TypedDict
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.integrity._link_normalize import (
+    _get_actual_project_names,
+    _is_real_path_item,
+    _resolve_template_path,
+)
 from infrastructure.validation.integrity.link_skip_policy import should_validate_path as _should_validate_path
 
 logger = get_logger(__name__)
@@ -201,82 +206,6 @@ def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) 
     return issues
 
 
-_PROJECT_BUCKETS: frozenset[str] = frozenset({"templates", "active", "working", "published", "archive", "other"})
-
-
-def _nearest_project_root(source_file: Path | None, repo_root: Path) -> Path | None:
-    """Return the containing project root for docs under ``projects/``."""
-    if source_file is None:
-        return None
-
-    try:
-        relative = source_file.resolve().relative_to(repo_root.resolve())
-    except ValueError:
-        return None
-
-    parts = relative.parts
-    if len(parts) < 2 or parts[0] != "projects":
-        return None
-
-    if parts[1] in _PROJECT_BUCKETS:
-        if len(parts) < 4:
-            return None
-        return repo_root / "projects" / parts[1] / parts[2]
-
-    if len(parts) < 3 or not (repo_root / "projects" / parts[1]).is_dir():
-        return None
-
-    return repo_root / "projects" / parts[1]
-
-
-def _resolve_template_path(path_ref: str, repo_root: Path, source_file: Path | None = None) -> Path | None:
-    """Resolve template paths like projects/{name}/ to actual paths."""
-    try:
-        project_root = _nearest_project_root(source_file, repo_root)
-        if project_root is not None and path_ref.startswith(("scripts/", "output/")):
-            project_relative = project_root / path_ref
-            if project_relative.exists():
-                return project_relative
-            repo_relative = repo_root / path_ref
-            if repo_relative.exists():
-                return repo_relative
-            if path_ref.startswith("scripts/"):
-                return project_relative
-
-        # Handle common template patterns
-        if path_ref.startswith("projects/project/"):
-            # Try actual project names first (discovered dynamically)
-            project_names = _get_actual_project_names(repo_root)
-            for project_name in project_names:
-                actual_path = path_ref.replace("projects/project/", f"projects/{project_name}/")
-                full_path = repo_root / actual_path
-                if full_path.exists():
-                    return full_path
-            # If no actual project found, return None (path doesn't exist)
-            return None
-        elif path_ref.startswith("projects/{name}/"):
-            # Can't resolve template, skip
-            return None
-        elif path_ref.startswith("infrastructure/"):
-            return repo_root / path_ref
-        elif path_ref.startswith("scripts/"):
-            return repo_root / path_ref
-        elif path_ref.startswith("output/project/"):
-            # Try actual project names (discovered dynamically)
-            project_names = _get_actual_project_names(repo_root)
-            for project_name in project_names:
-                actual_path = path_ref.replace("output/project/", f"output/{project_name}/")
-                full_path = repo_root / actual_path
-                if full_path.exists():
-                    return full_path
-            # If no actual project found, return None
-            return None
-        else:
-            return repo_root / path_ref
-    except OSError:
-        return None
-
-
 def validate_directory_structures(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
     """Validate directory structure examples in markdown against actual filesystem.
 
@@ -318,19 +247,6 @@ def validate_directory_structures(content: str, file_path: Path, repo_root: Path
                     )
 
     return issues
-
-
-def _is_real_path_item(item_name: str) -> bool:
-    """Check if a directory tree item looks like a real file/directory."""
-    # Skip obvious placeholders or comments
-    if any(skip in item_name.lower() for skip in ["...", "etc", "files", "more"]):
-        return False
-
-    # Skip if it contains template variables
-    if "{" in item_name and "}" in item_name:
-        return False
-
-    return True
 
 
 def validate_python_imports(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
@@ -513,20 +429,6 @@ def validate_placeholder_consistency(content: str, file_path: Path, repo_root: P
                 )
 
     return issues
-
-
-def _get_actual_project_names(repo_root: Path) -> list[str]:
-    """Return discoverable project path segments for template substitution."""
-    from infrastructure.project.discovery import discover_projects
-
-    names: list[str] = []
-    seen: set[str] = set()
-    for project in discover_projects(repo_root):
-        for candidate in (project.qualified_name, project.name):
-            if candidate and candidate not in seen:
-                names.append(candidate)
-                seen.add(candidate)
-    return names
 
 
 def check_file_reference(target: str, source_file: Path, repo_root: Path) -> tuple[bool, str]:

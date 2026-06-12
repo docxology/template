@@ -21,10 +21,10 @@ Required layout (must exist):
 
 ```mermaid
 flowchart LR
-    P[/projects/&lt;PROJECT_SLUG&gt;//]
+    P[projects/&lt;PROJECT_SLUG&gt;/]
     P --> PY[pyproject.toml<br/>name · python version · deps ·<br/>pytest + coverage for src]
-    P --> SRC[/src<br/>__init__.py + real modules<br/>implementing domain logic/]
-    P --> T[/tests<br/>__init__.py · test_*.py<br/>≥ 90% coverage · no mocks/]
+    P --> SRC[src<br/>__init__.py + real modules<br/>implementing domain logic]
+    P --> T[tests<br/>__init__.py · test_*.py<br/>≥ 90% coverage · no mocks]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff

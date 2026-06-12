@@ -8,7 +8,7 @@ The `tests/infra_tests/reporting/` directory contains tests for the pipeline rep
 
 ```mermaid
 flowchart TB
-    T[/tests/infra_tests/reporting//]
+    T[tests/infra_tests/reporting/]
     T --> META[AGENTS.md · __init__.py · conftest.py]
     T --> CORE[Report builders<br/>test_report_builder · test_report_generator ·<br/>test_summary_generator]
     T --> ERR[Errors<br/>test_error_aggregator]

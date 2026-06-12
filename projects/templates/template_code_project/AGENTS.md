@@ -70,13 +70,13 @@ Workflow reference: [`docs/guides/publishing-guide.md`](../../../docs/guides/pub
 
 ```mermaid
 flowchart TB
-    P[/projects/templates/template_code_project/]
-    P --> SRC[/src<br/>Core algorithms · pure logic · no infrastructure imports/]
-    P --> SC[/scripts<br/>Thin orchestrators/]
-    P --> T[/tests/]
-    P --> DOCS[/docs<br/>Agent-facing documentation hub/]
-    P --> M[/manuscript/]
-    P --> OUT[/output<br/>Working outputs · regenerated · gitignored/]
+    P[projects/templates/template_code_project]
+    P --> SRC[src<br/>Core algorithms · pure logic · no infrastructure imports]
+    P --> SC[scripts<br/>Thin orchestrators]
+    P --> T[tests]
+    P --> DOCS[docs<br/>Agent-facing documentation hub]
+    P --> M[manuscript]
+    P --> OUT[output<br/>Working outputs · regenerated · gitignored]
     P --> PY[pyproject.toml<br/>Pytest/coverage config · project metadata]
     P --> DP[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 

@@ -356,37 +356,28 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 
 ```mermaid
 flowchart TB
-    DOCS[/docs//]
-    DOCS --> ENTRY[Entry points<br/>README.md · AGENTS.md ·<br/>documentation-index.md ·<br/>CLOUD_DEPLOY.md · PAI.md · RUN_GUIDE.md]
-    DOCS --> CORE[/core<br/>how-to-use · architecture · workflow ·<br/>literature-data-flow/]
-    DOCS --> GUIDES[/guides<br/>skill-level + specialized guides<br/>levels 1-12 · LLM · publishing · security · literature/]
-    DOCS --> ARCH[/architecture<br/>two-layer · thin-orchestrator ·<br/>decision-tree · adrs · discovery-export · migration · testing-strategy/]
-    DOCS --> USAGE[/usage<br/>examples · markdown-template-guide ·<br/>numbering · output-formats · image-management · visualization/]
-    DOCS --> OP[/operational/]
-    DOCS --> REF[/reference<br/>api-reference · glossary · faq ·<br/>cheatsheets · common-workflows · copypasta/]
-    DOCS --> MOD[/modules<br/>modules-guide · literature-search ·<br/>pdf-validation · per-module guides/]
-    DOCS --> DEV[/development<br/>contributing · code-of-conduct ·<br/>security · roadmap · coverage-gaps · testing//]
-    DOCS --> MAINT[/maintenance<br/>private-projects · ci-local ·<br/>regression · archival · bundle/]
-    DOCS --> BP[/best-practices<br/>best-practices · version-control ·<br/>multi-project · migration · backup-recovery/]
-    DOCS --> PROMPTS[/prompts<br/>AI prompt templates · manuscript ·<br/>registry cross-refs · literature synthesis ·<br/>code · test · feature · refactor · doc ·<br/>infra · validation · assessment/]
-    DOCS --> SEC[/security<br/>steganography · hashing &amp; manifests ·<br/>secure_execution/]
-    DOCS --> STREAMS[/streams<br/>livestream &amp; talk notes/]
-    DOCS --> AUDIT[/audit<br/>review reports · filepath audits/]
-    DOCS --> RULES[/rules<br/>development standards/]
-    DOCS --> GEN[/_generated<br/>active_projects.md/]
-
-    OP --> OP_CFG[/config<br/>configuration · checkpoint-resume ·<br/>performance-optimization/]
-    OP --> OP_LOG[/logging<br/>python · bash · patterns/]
-    OP --> OP_TS[/troubleshooting<br/>common-errors · build-tools ·<br/>test-failures · environment-setup ·<br/>recovery · llm-review/]
-    OP --> OP_BUILD[/build<br/>build-system · performance ·<br/>history · ci-cd · dependency-management/]
-    OP --> OP_F[reporting-guide · error-handling-guide]
-
-    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
-    classDef sub fill:#0f766e,stroke:#0f172a,color:#fff
-    class DOCS root
-    class CORE,GUIDES,ARCH,USAGE,OP,REF,MOD,DEV,MAINT,BP,PROMPTS,SEC,STREAMS,AUDIT,RULES,GEN pkg
-    class ENTRY,OP_CFG,OP_LOG,OP_TS,OP_BUILD,OP_F sub
+    DOCS[docs hub]
+    DOCS --> ENTRY[entry README AGENTS index]
+    DOCS --> CORE[core guides]
+    DOCS --> GUIDES[guides skill levels]
+    DOCS --> ARCH[architecture]
+    DOCS --> USAGE[usage]
+    DOCS --> OP[operational]
+    DOCS --> REF[reference]
+    DOCS --> MOD[modules]
+    DOCS --> DEV[development]
+    DOCS --> MAINT[maintenance]
+    DOCS --> BP[best-practices]
+    DOCS --> PROMPTS[prompts]
+    DOCS --> SEC[security]
+    DOCS --> STREAMS[streams]
+    DOCS --> AUDIT[audit]
+    DOCS --> RULES[rules]
+    DOCS --> GEN[_generated]
+    OP --> OP_CFG[operational config]
+    OP --> OP_LOG[operational logging]
+    OP --> OP_TS[operational troubleshooting]
+    OP --> OP_BUILD[operational build]
 ```
 
 ---

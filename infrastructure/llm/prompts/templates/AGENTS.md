@@ -8,7 +8,7 @@ The `infrastructure/llm/prompts/templates/` directory contains, pre-built prompt
 
 ```mermaid
 flowchart LR
-    T[/infrastructure/llm/prompts/templates//]
+    T[infrastructure/llm/prompts/templates/]
     T --> AG[AGENTS.md]
     T --> MR[manuscript_reviews.json<br/>Manuscript review template]
     T --> PS[paper_summarization.json<br/>Research paper summarization]

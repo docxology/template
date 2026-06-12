@@ -8,7 +8,7 @@ Enumerate `SKILL.md` agent descriptors under configurable repository roots, pars
 
 ```mermaid
 flowchart TB
-    SK[/infrastructure/skills//]
+    SK[infrastructure/skills/]
     SK --> INIT[__init__.py<br/>Public re-exports]
     SK --> MAIN[__main__.py<br/>python -m infrastructure.skills]
     SK --> CLI[cli.py<br/>write · check · check-contracts · list-json]

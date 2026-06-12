@@ -14,13 +14,13 @@ This document consolidates best practices from across all documentation, providi
 
 ```mermaid
 flowchart LR
-    P[/project//]
-    P --> SRC[/src<br/>Business logic · comprehensively tested/]
-    P --> T[/tests<br/>Test suite · 90% project · 60% infra minimum/]
-    P --> SC[/scripts<br/>Thin orchestrators/]
-    P --> M[/manuscript<br/>Research sections/]
-    P --> DOC[/docs<br/>Documentation/]
-    P --> OUT[/output<br/>Generated files · disposable/]
+    P[project/]
+    P --> SRC[src<br/>Business logic · comprehensively tested]
+    P --> T[tests<br/>Test suite · 90% project · 60% infra minimum]
+    P --> SC[scripts<br/>Thin orchestrators]
+    P --> M[manuscript<br/>Research sections]
+    P --> DOC[docs<br/>Documentation]
+    P --> OUT[output<br/>Generated files · disposable]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -111,7 +111,7 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 
 ```mermaid
 flowchart LR
-    T[/tests//]
+    T[tests/]
     T --> EX[test_example.py]
     T --> INT[test_integrity.py]
     T --> PDF[test_pdf_validator.py]

@@ -21,7 +21,6 @@ from infrastructure.project.drift.checks import (  # noqa: E402 — registry agg
     check_project_src_infrastructure_boundary,
     check_publication_metadata_consistency,
     check_referenced_files_exist,
-    check_repo_docs_hardcoded_counts,
     check_required_files_exist,
     check_test_class_drift,
 )

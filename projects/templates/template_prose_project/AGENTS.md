@@ -13,13 +13,13 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 ```mermaid
 flowchart TB
-    P[/projects/templates/template_prose_project/]
-    P --> SRC[/src<br/>domain orchestration/]
-    P --> T[/tests<br/>real-data tests · no mocks/]
-    P --> SC[/scripts<br/>thin orchestrators/]
-    P --> M[/manuscript/]
-    P --> DOCS[/docs/]
-    P --> OUT[/output<br/>regeneratable/]
+    P[projects/templates/template_prose_project]
+    P --> SRC[src<br/>domain orchestration]
+    P --> T[tests<br/>real-data tests · no mocks]
+    P --> SC[scripts<br/>thin orchestrators]
+    P --> M[manuscript]
+    P --> DOCS[docs]
+    P --> OUT[output<br/>regeneratable]
     P --> META[pyproject.toml · README.md ·<br/>AGENTS.md · .gitignore]
     P --> OVERLAY[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 

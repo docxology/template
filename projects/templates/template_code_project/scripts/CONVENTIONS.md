@@ -67,13 +67,13 @@ Scripts must write to the standard output layout:
 
 ```mermaid
 flowchart LR
-    OUT[/output//]
-    OUT --> FIG[/figures/<br/>Generated plots · PNG · 300 DPI/]
-    OUT --> DAT[/data/<br/>Numerical results · CSV · NPZ/]
-    OUT --> REP[/reports/<br/>Analysis reports · JSON · HTML/]
-    OUT --> CIT[/citations/<br/>Generated citations · BibTeX · APA · MLA/]
-    OUT --> LOG[/logs/<br/>Pipeline logs/]
-    OUT --> DOC[/docs/<br/>Generated API documentation/]
+    OUT[output/]
+    OUT --> FIG[figures/<br/>Generated plots · PNG · 300 DPI]
+    OUT --> DAT[data/<br/>Numerical results · CSV · NPZ]
+    OUT --> REP[reports/<br/>Analysis reports · JSON · HTML]
+    OUT --> CIT[citations/<br/>Generated citations · BibTeX · APA · MLA]
+    OUT --> LOG[logs/<br/>Pipeline logs]
+    OUT --> DOC[docs/<br/>Generated API documentation]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class OUT,FIG,DAT,REP,CIT,LOG,DOC d

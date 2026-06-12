@@ -213,28 +213,28 @@ The template separates **generic infrastructure** from **project-specific code**
 
 ```mermaid
 flowchart TB
-    ROOT[/template<br/>Generic template repository/]
+    ROOT[template<br/>Generic template repository]
 
-    ROOT --> INFRA[/infrastructure<br/>Layer 1 · generic build · validation tools/]
-    ROOT --> SCRIPTS[/scripts<br/>Pipeline stage orchestrators 00–07/]
-    ROOT --> TESTS[/tests<br/>Infrastructure test suite/]
-    ROOT --> PROJECTS[/projects<br/>Typed subfolders · templates+active rendered/]
-    ROOT --> OUT[/output<br/>Final deliverables · organized by project/]
+    ROOT --> INFRA[infrastructure<br/>Layer 1 · generic build · validation tools]
+    ROOT --> SCRIPTS[scripts<br/>Pipeline stage orchestrators 00–07]
+    ROOT --> TESTS[tests<br/>Infrastructure test suite]
+    ROOT --> PROJECTS[projects<br/>Typed subfolders · templates+active rendered]
+    ROOT --> OUT[output<br/>Final deliverables · organized by project]
 
     INFRA --> I_DOCS[AGENTS.md · README.md · SKILL.md]
-    INFRA --> I_CONFIG[/config<br/>Repo-wide configuration/]
-    INFRA --> I_DOCKER[/docker<br/>Container specs/]
+    INFRA --> I_CONFIG[config<br/>Repo-wide configuration]
+    INFRA --> I_DOCKER[docker<br/>Container specs]
     INFRA --> I_SUB[Layer 1 packages listed in<br/>`infrastructure/AGENTS.md` —<br/>counts from COUNTS.md]
 
     PROJECTS --> P_README[README.md · multi-project guide]
-    PROJECTS --> P_STUB[/_test_project<br/>Stub · output/ only · not discovered/]
-    PROJECTS --> P_CODE[/template_code_project<br/>Guaranteed control-positive exemplar/]
-    PROJECTS --> P_OTHER[/&lt;name&gt;<br/>Additional discovered projects/]
+    PROJECTS --> P_STUB[_test_project<br/>Stub · output/ only · not discovered]
+    PROJECTS --> P_CODE[template_code_project<br/>Guaranteed control-positive exemplar]
+    PROJECTS --> P_OTHER[&lt;name&gt;<br/>Additional discovered projects]
 
-    P_CODE --> P_C_SRC[/src · tests · scripts · manuscript · output<br/>+ pyproject.toml/]
+    P_CODE --> P_C_SRC[src · tests · scripts · manuscript · output<br/>+ pyproject.toml]
 
-    OUT --> O_CODE[/template_code_project<br/>Project outputs/]
-    OUT --> O_DOTS[/&lt;other projects&gt;/]
+    OUT --> O_CODE[template_code_project<br/>Project outputs]
+    OUT --> O_DOTS[&lt;other projects&gt;]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -305,19 +305,19 @@ Each directory contains documentation for easy navigation:
 
 ```mermaid
 flowchart TB
-    ROOT[/template<br/>Generic Template/]
+    ROOT[template<br/>Generic Template]
 
-    ROOT --> INFRA[/infrastructure<br/>Layer 1 · generic build/validation tools/]
-    ROOT --> DOCS[/docs<br/>Documentation hub/]
-    ROOT --> CUR[/.cursor<br/>Editor configuration/]
-    ROOT --> SCR[/scripts<br/>Pipeline stage entry points/]
-    ROOT --> TS[/tests<br/>Infrastructure tests/]
-    ROOT --> PR[/projects<br/>Typed subfolders · templates+active rendered/]
+    ROOT --> INFRA[infrastructure<br/>Layer 1 · generic build/validation tools]
+    ROOT --> DOCS[docs<br/>Documentation hub]
+    ROOT --> CUR[.cursor<br/>Editor configuration]
+    ROOT --> SCR[scripts<br/>Pipeline stage entry points]
+    ROOT --> TS[tests<br/>Infrastructure tests]
+    ROOT --> PR[projects<br/>Typed subfolders · templates+active rendered]
     ROOT --> PYPROJ[pyproject.toml<br/>Root configuration]
 
     INFRA --> I_DOCS[AGENTS.md · README.md · SKILL.md]
-    INFRA --> I_CFG[/config<br/>.env.template · secure_config.yaml/]
-    INFRA --> I_DOCKER[/docker<br/>Dockerfile · docker-compose.yml/]
+    INFRA --> I_CFG[config<br/>.env.template · secure_config.yaml]
+    INFRA --> I_DOCKER[docker<br/>Dockerfile · docker-compose.yml]
     INFRA --> I_MODULES[build_verifier.py · figure_manager.py · ...]
 
     DOCS --> D_FILES[AGENTS.md · README.md ·<br/>CLOUD_DEPLOY.md · PAI.md · RUN_GUIDE.md]
@@ -329,9 +329,9 @@ flowchart TB
 
     TS --> T_FILES[AGENTS.md · README.md · test_*.py]
 
-    PR --> PR_CODE[/template_code_project<br/>Optimization exemplar · active/]
-    PR --> PR_OTHER[/&lt;name&gt;<br/>additional discovered projects/]
-    PR_CODE --> PRC_LAYOUT[/src · tests · scripts ·<br/>manuscript · output<br/>+ pyproject.toml/]
+    PR --> PR_CODE[template_code_project<br/>Optimization exemplar · active]
+    PR --> PR_OTHER[&lt;name&gt;<br/>additional discovered projects]
+    PR_CODE --> PRC_LAYOUT[src · tests · scripts ·<br/>manuscript · output<br/>+ pyproject.toml]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -545,7 +545,7 @@ For argv shaping into the `secure` subcommand from the same thin shell as `./run
 
 ```mermaid
 flowchart LR
-    PDF[/projects/&lt;name&gt;/output/pdf/]
+    PDF[projects/&lt;name&gt;/output/pdf]
     PDF --> A[&lt;name&gt;_combined.pdf<br/>Standard output · untouched]
     PDF --> B[&lt;name&gt;_combined_steganography.pdf<br/>Steganographically hardened copy]
     PDF --> C[&lt;name&gt;_combined.hashes.json<br/>SHA-256/SHA-512 integrity manifest]
@@ -860,12 +860,12 @@ uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 
 ```mermaid
 flowchart TB
-    OUT[/output/]
-    OUT --> P[/project<br/>Project-specific outputs/]
-    P --> PDF[/pdf<br/>PDF documents/]
-    P --> TEX[/tex<br/>LaTeX source files/]
-    P --> FIG[/figures<br/>Generated figures/]
-    P --> DATA[/data<br/>Generated datasets/]
+    OUT[output]
+    OUT --> P[project<br/>Project-specific outputs]
+    P --> PDF[pdf<br/>PDF documents]
+    P --> TEX[tex<br/>LaTeX source files]
+    P --> FIG[figures<br/>Generated figures]
+    P --> DATA[data<br/>Generated datasets]
     P --> HTML[project_combined.html<br/>HTML version for IDE]
 
     PDF --> PDF_SECT[01_abstract.pdf · 02_introduction.pdf · ...]

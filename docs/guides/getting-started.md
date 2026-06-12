@@ -105,7 +105,7 @@ The template provides pre-structured manuscript files in the `manuscript/` direc
 
 ```mermaid
 flowchart TB
-    M[/projects/templates/template_code_project/manuscript//]
+    M[projects/templates/template_code_project/manuscript/]
     M --> PRE[preamble.md<br/>LaTeX styling]
     M --> ABS[00_abstract.md<br/>Research overview]
     M --> INTRO[01_introduction.md]

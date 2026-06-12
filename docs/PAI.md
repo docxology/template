@@ -68,14 +68,14 @@ When re-enabling DA assistant capabilities, apply the staged rollout documented 
 
 ```mermaid
 flowchart TB
-    ROOT[/template/]
-    ROOT --> INFRA[/infrastructure<br/>Layer 1 · importable Python packages<br/>see COUNTS.md/]
+    ROOT[template]
+    ROOT --> INFRA[infrastructure<br/>Layer 1 · importable Python packages<br/>see COUNTS.md]
     ROOT --> RUN[run.sh<br/>Thin shell dispatcher → infrastructure.orchestration]
-    ROOT --> SCR[/scripts<br/>Entry-point orchestrators · thin wrappers/]
-    ROOT --> PROJ[/projects<br/>Active research projects · Layer 2/]
-    ROOT --> ARCH[/projects/archive<br/>Archived · not executed/]
-    ROOT --> WIP[/projects/working<br/>WIP · not discovered/]
-    ROOT --> T[/tests<br/>Infrastructure tests/]
+    ROOT --> SCR[scripts<br/>Entry-point orchestrators · thin wrappers]
+    ROOT --> PROJ[projects<br/>Active research projects · Layer 2]
+    ROOT --> ARCH[projects/archive<br/>Archived · not executed]
+    ROOT --> WIP[projects/working<br/>WIP · not discovered]
+    ROOT --> T[tests<br/>Infrastructure tests]
     ROOT --> DOCS[docs/CLOUD_DEPLOY.md<br/>Headless cloud server guide]
     ROOT --> DOCKER[infrastructure/docker<br/>Dockerfile · docker-compose.yml]
 

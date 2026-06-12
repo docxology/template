@@ -8,7 +8,7 @@ The `infrastructure/llm/prompts/fragments/` directory contains reusable prompt c
 
 ```mermaid
 flowchart TB
-    F[/infrastructure/llm/prompts/fragments//]
+    F[infrastructure/llm/prompts/fragments/]
     F --> AG[AGENTS.md]
     F --> CR[content_requirements.json<br/>Quality &amp; completeness standards]
     F --> FR[format_requirements.json<br/>Output formatting specifications]

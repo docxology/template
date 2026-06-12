@@ -4,9 +4,9 @@ This section documents the artefacts produced by the prose-review run.
 
 ```mermaid
 flowchart TB
-    P[/projects/templates/template_prose_project//]
-    P --> M[/manuscript//]
-    P --> OUT[/output/<br/>regenerable · gitignored/]
+    P[projects/templates/template_prose_project/]
+    P --> M[manuscript/]
+    P --> OUT[output/<br/>regenerable · gitignored]
 
     M --> M_CFG[config.yaml<br/>single source of truth]
     M --> M_PRE[preamble.md<br/>LaTeX preamble]
@@ -16,8 +16,8 @@ flowchart TB
     OUT --> O_REP[manuscript_report.json<br/>ManuscriptReport JSON]
     OUT --> O_CK[checks.json<br/>list of CheckResult]
     OUT --> O_RR[review_report.md<br/>final markdown report]
-    OUT --> O_DATA[/data/manuscript_variables.json/]
-    OUT --> O_FIG[/figures/<br/>section_word_counts.png ·<br/>readability_metrics.png ·<br/>citation_density.png/]
+    OUT --> O_DATA[data/manuscript_variables.json]
+    OUT --> O_FIG[figures/<br/>section_word_counts.png ·<br/>readability_metrics.png ·<br/>citation_density.png]
     OUT --> O_RS[run_summary.json]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff

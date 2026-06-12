@@ -13,7 +13,7 @@ public utility API from `server.py`, `models.py`, and `heartbeat.py`.
 
 ```mermaid
 flowchart LR
-    U[/infrastructure/llm/utils//]
+    U[infrastructure/llm/utils/]
     U --> META[AGENTS.md · __init__.py]
     U --> HB[heartbeat.py]
     U --> MOD[models.py]

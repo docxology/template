@@ -11,14 +11,14 @@ Local Large Language Model integration for research assistance via Ollama.
 
 ```mermaid
 flowchart LR
-    LLM[/llm//]
-    LLM --> CORE[/core<br/>client · config · context/]
-    LLM --> TPL[/templates<br/>prompt templates for research/]
-    LLM --> VAL[/validation<br/>output quality validation/]
-    LLM --> RV[/review<br/>manuscript review generation/]
-    LLM --> PR[/prompts<br/>fragment composition system/]
-    LLM --> UT[/utils<br/>Ollama server management/]
-    LLM --> CLI[/cli<br/>command-line interface/]
+    LLM[llm/]
+    LLM --> CORE[core<br/>client · config · context]
+    LLM --> TPL[templates<br/>prompt templates for research]
+    LLM --> VAL[validation<br/>output quality validation]
+    LLM --> RV[review<br/>manuscript review generation]
+    LLM --> PR[prompts<br/>fragment composition system]
+    LLM --> UT[utils<br/>Ollama server management]
+    LLM --> CLI[cli<br/>command-line interface]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff

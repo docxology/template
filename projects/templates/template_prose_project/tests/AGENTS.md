@@ -6,7 +6,7 @@ Test-suite agent guide.
 
 ```mermaid
 flowchart TB
-    T[/template_prose_project/tests//]
+    T[template_prose_project/tests/]
     T --> META[__init__.py · conftest.py]
     T --> CFG[test_config.py<br/>typed YAML loader]
     T --> PIPE[test_pipeline.py<br/>run_prose_pipeline · checks]

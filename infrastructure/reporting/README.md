@@ -103,14 +103,14 @@ All executive reports are organized by file type:
 
 ```mermaid
 flowchart LR
-    EX[/output/executive_summary//]
-    EX --> PNG[/png<br/>visualisations/]
-    EX --> PDF[/pdf<br/>charts &amp; reports/]
-    EX --> CSV[/csv<br/>data exports/]
-    EX --> HTML[/html<br/>interactive dashboards/]
-    EX --> JSON[/json<br/>machine-readable reports/]
-    EX --> MD[/md<br/>human-readable reports/]
-    EX --> CB[/combined_pdfs<br/>all project manuscripts/]
+    EX[output/executive_summary/]
+    EX --> PNG[png<br/>visualisations]
+    EX --> PDF[pdf<br/>charts &amp; reports]
+    EX --> CSV[csv<br/>data exports]
+    EX --> HTML[html<br/>interactive dashboards]
+    EX --> JSON[json<br/>machine-readable reports]
+    EX --> MD[md<br/>human-readable reports]
+    EX --> CB[combined_pdfs<br/>all project manuscripts]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class EX,PNG,PDF,CSV,HTML,JSON,MD,CB d
@@ -354,7 +354,7 @@ Executive reports are saved to `output/executive_summary/`:
 
 ```mermaid
 flowchart TB
-    EX[/output/executive_summary//]
+    EX[output/executive_summary/]
     EX --> CR[consolidated_report<br/>.json · .html · .md]
     EX --> DB[dashboard<br/>.png · .pdf · .html<br/>9-chart dashboard]
     EX --> MO[manuscript_overview_&lt;project&gt;<br/>.png · .pdf<br/>page grid]

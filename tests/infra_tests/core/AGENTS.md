@@ -8,12 +8,12 @@ The `tests/infra_tests/core/` directory contains test suites for the core infras
 
 ```mermaid
 flowchart TB
-    T[/tests/infra_tests/core//]
+    T[tests/infra_tests/core/]
     T --> META[AGENTS.md · __init__.py]
-    T --> CFG_DIR[/config<br/>schema extensions/]
-    T --> PIPE_DIR[/pipeline<br/>parallel helpers/]
-    T --> TEL_DIR[/telemetry<br/>retention/]
-    T --> RT_DIR[/runtime<br/>setup checks/]
+    T --> CFG_DIR[config<br/>schema extensions]
+    T --> PIPE_DIR[pipeline<br/>parallel helpers]
+    T --> TEL_DIR[telemetry<br/>retention]
+    T --> RT_DIR[runtime<br/>setup checks]
 
     T --> CFG[Configuration / Environment<br/>test_config_cli_coverage · test_config_loader ·<br/>test_credentials · test_credentials_module ·<br/>test_environment]
     T --> EXC[Exceptions<br/>test_exceptions]

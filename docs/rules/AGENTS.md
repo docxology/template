@@ -193,19 +193,12 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 
 ```mermaid
 flowchart LR
-    M[/infrastructure/&lt;module&gt;//]
-    M --> INIT[__init__.py<br/>Public API]
-    M --> CORE[core.py<br/>Core logic]
-    M --> CLI[cli.py<br/>CLI · optional]
-    M --> CFG[config.py<br/>Configuration · optional]
-    M --> DOCS[AGENTS.md · README.md ·<br/>SKILL.md]
-
-    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
-    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
-    class M d
-    class INIT,CORE,CLI,CFG code
-    class DOCS doc
+    M[infrastructure module]
+    M --> INIT[__init__.py public API]
+    M --> CORE[core.py core logic]
+    M --> CLI[cli.py optional]
+    M --> CFG[config.py optional]
+    M --> DOCS[AGENTS README SKILL]
 ```
 
 **Related Documentation:**
@@ -258,17 +251,11 @@ As shown in \eqref{eq:objective}, the objective function...
 
 ```mermaid
 flowchart TB
-    T[/tests//]
-    T --> INFRA[/infra_tests<br/>Layer 1 · infrastructure tests/]
-    T --> INTEG[/integration<br/>Cross-layer tests/]
-    T --> HELP[/helpers<br/>Test utilities/]
-
-    INFRA --> SUB[/test_&lt;module&gt;<br/>__init__.py · conftest.py · test_*.py/]
-
-    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
-    class T d
-    class INFRA,INTEG,HELP,SUB pkg
+    T[tests]
+    T --> INFRA[infra_tests Layer 1]
+    T --> INTEG[integration cross-layer]
+    T --> HELP[helpers utilities]
+    INFRA --> SUB[test_module per package]
 ```
 
 ### Test Principles
@@ -396,27 +383,16 @@ except SpecificError as e:
 
 ```mermaid
 flowchart TB
-    ROOT[/template//]
-    ROOT --> INFRA[/infrastructure<br/>Layer 1 · generic tools/]
-    ROOT --> PROJ[/projects<br/>Layer 2 · research projects/]
-    ROOT --> SCR[/scripts<br/>Layer 1 · generic entry points/]
-    ROOT --> T[/tests<br/>Layer 1 · infrastructure tests/]
-    ROOT --> DOC[/docs<br/>Documentation/]
-    ROOT --> RULES[/docs/rules<br/>Development standards · this dir/]
-
-    INFRA --> INFRA_SUB[autoresearch · benchmark · core · doctor · documentation · llm ·<br/>methods · orchestration · project · prose · publishing · reference ·<br/>rendering · reporting · scientific · search · sia · skills ·<br/>steganography · validation]
-
-    PROJ --> P_NAME[/&lt;name&gt;/]
-    P_NAME --> P_SUB[src/ · tests/ · scripts/ · manuscript/]
-
-    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff
-    classDef l2 fill:#0f766e,stroke:#0f172a,color:#fff
-    classDef doc fill:#7c2d12,stroke:#0f172a,color:#fff
-    class ROOT root
-    class INFRA,SCR,T,INFRA_SUB l1
-    class PROJ,P_NAME,P_SUB l2
-    class DOC,RULES doc
+    ROOT[template repo]
+    ROOT --> INFRA[infrastructure Layer 1]
+    ROOT --> PROJ[projects Layer 2]
+    ROOT --> SCR[scripts Layer 1]
+    ROOT --> T[tests Layer 1]
+    ROOT --> DOC[docs]
+    ROOT --> RULES[docs rules]
+    INFRA --> INFRA_SUB[infra packages]
+    PROJ --> P_NAME[project name]
+    P_NAME --> P_SUB[src tests scripts manuscript]
 ```
 
 ## Checklist for New Code

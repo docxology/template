@@ -45,7 +45,7 @@ infrastructure code (project scripts: warn 150, fail 250).
 
 ```mermaid
 flowchart LR
-    OLD[old_module.py<br/>835 lines] --> NEW[/new_structure//]
+    OLD[old_module.py<br/>835 lines] --> NEW[new_structure/]
     NEW --> INIT[__init__.py<br/>exports all public API]
     NEW --> BASE[base.py<br/>base classes · ~100 lines]
     NEW --> CA[component_a.py<br/>~250 lines]

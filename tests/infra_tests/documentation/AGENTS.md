@@ -8,7 +8,7 @@ The `tests/infra_tests/documentation/` directory contains tests for the document
 
 ```mermaid
 flowchart LR
-    T[/tests/infra_tests/documentation//]
+    T[tests/infra_tests/documentation/]
     T --> META[AGENTS.md · __init__.py]
     T --> FIG[test_figure_manager.py<br/>Figure management]
     T --> GCLI[test_generate_glossary_cli.py<br/>Glossary CLI]

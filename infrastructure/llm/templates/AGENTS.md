@@ -8,7 +8,7 @@ The `infrastructure/llm/templates/` directory contains prompt template classes f
 
 ```mermaid
 flowchart LR
-    T[/infrastructure/llm/templates//]
+    T[infrastructure/llm/templates/]
     T --> META[AGENTS.md · __init__.py]
     T --> BASE[base.py<br/>ResearchTemplate base class]
     T --> HELP[helpers.py<br/>Prompt-building helper functions]

@@ -8,7 +8,7 @@ The `tests/infra_tests/rendering/` directory contains tests for the multi-format
 
 ```mermaid
 flowchart TB
-    T[/tests/infra_tests/rendering//]
+    T[tests/infra_tests/rendering/]
     T --> META[AGENTS.md · __init__.py · conftest.py]
     T --> CORE[Core<br/>test_core · test_config · test_renderers]
     T --> PDF[PDF renderer<br/>test_pdf_renderer_additional / _combined ·<br/>_coverage / _fixes / _full]

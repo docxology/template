@@ -10,13 +10,13 @@ Standards and patterns for integrating with the LLM infrastructure module (`infr
 
 ```mermaid
 flowchart LR
-    LLM[/infrastructure/llm//]
+    LLM[infrastructure/llm/]
     LLM --> INIT[__init__.py<br/>Public API exports]
-    LLM --> CORE[/core<br/>LLMClient · configuration · context/]
-    LLM --> TPL[/templates<br/>ResearchTemplate system/]
-    LLM --> VAL[/validation<br/>validate_complete · is_off_topic · checks/]
-    LLM --> UT[/utils/ollama.py<br/>Model discovery &amp; Ollama helpers/]
-    LLM --> CLI[/cli/main.py<br/>Command-line interface/]
+    LLM --> CORE[core<br/>LLMClient · configuration · context]
+    LLM --> TPL[templates<br/>ResearchTemplate system]
+    LLM --> VAL[validation<br/>validate_complete · is_off_topic · checks]
+    LLM --> UT[utils/ollama.py<br/>Model discovery &amp; Ollama helpers]
+    LLM --> CLI[cli/main.py<br/>Command-line interface]
     LLM --> DOCS[AGENTS.md · README.md · SKILL.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff

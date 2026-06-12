@@ -82,14 +82,14 @@ graph TD
 
 ```mermaid
 flowchart LR
-    LLM[/infrastructure/llm//]
-    LLM --> CORE[/core<br/>Core LLM client + configuration/]
-    LLM --> TPL[/templates<br/>High-level operation templates/]
-    LLM --> PR[/prompts<br/>Prompt engineering system/]
-    LLM --> RV[/review<br/>Manuscript review/]
-    LLM --> UT[/utils<br/>Ollama server utilities/]
-    LLM --> VAL[/validation<br/>Response validation · quality checks/]
-    LLM --> CLI[/cli<br/>Command-line interface/]
+    LLM[infrastructure/llm/]
+    LLM --> CORE[core<br/>Core LLM client + configuration]
+    LLM --> TPL[templates<br/>High-level operation templates]
+    LLM --> PR[prompts<br/>Prompt engineering system]
+    LLM --> RV[review<br/>Manuscript review]
+    LLM --> UT[utils<br/>Ollama server utilities]
+    LLM --> VAL[validation<br/>Response validation · quality checks]
+    LLM --> CLI[cli<br/>Command-line interface]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff

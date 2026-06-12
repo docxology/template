@@ -10,7 +10,7 @@ The `infrastructure/` directory contains **reusable, generic build and validatio
 
 ```mermaid
 flowchart LR
-    M[/infrastructure/&lt;module&gt;//]
+    M[infrastructure/&lt;module&gt;/]
     M --> INIT[__init__.py<br/>Public API exports]
     M --> AG[AGENTS.md · README.md ·<br/>SKILL.md]
     M --> CORE[core.py<br/>Core functionality]
@@ -40,7 +40,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    T[/tests/infra_tests/test_&lt;module&gt;//]
+    T[tests/infra_tests/test_&lt;module&gt;/]
     T --> INIT[__init__.py]
     T --> CFG[conftest.py<br/>Shared fixtures]
     T --> CORE[test_core.py<br/>Core functionality tests]
@@ -301,7 +301,7 @@ Before committing:
 
 ```mermaid
 flowchart LR
-    M[/infrastructure/example_module//]
+    M[infrastructure/example_module/]
     M --> INIT[__init__.py<br/>Public API exports]
     M --> CORE[core.py<br/>Core functionality]
     M --> CLI[cli.py<br/>CLI · optional]

@@ -4,7 +4,7 @@ Documentation hub for the SIA harness exemplar.
 
 ```mermaid
 flowchart LR
-    HUB[/template_sia/docs/]
+    HUB[template_sia/docs]
     HUB --> AI[agent_instructions.md<br/>7 hard rules · read-first]
     HUB --> ARCH[architecture.md<br/>Meta → Target → Feedback]
     HUB --> TP[testing_philosophy.md<br/>fixture replay · zero-mock]

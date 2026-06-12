@@ -11,8 +11,8 @@ to the public exemplars listed in [`docs/_generated/active_projects.md`](../../d
 
 ```mermaid
 flowchart LR
-    S[/tests/_support//]
-    S --> P[/projects.py<br/>make_project · make_repo · write_doc<br/>synthetic project scaffolds/]
+    S[tests/_support/]
+    S --> P[projects.py<br/>make_project · make_repo · write_doc<br/>synthetic project scaffolds]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class S,P d

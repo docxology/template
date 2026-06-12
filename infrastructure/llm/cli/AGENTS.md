@@ -8,7 +8,7 @@
 
 ```mermaid
 flowchart LR
-    CLI[/infrastructure/llm/cli//]
+    CLI[infrastructure/llm/cli/]
     CLI --> META[AGENTS.md · README.md]
     CLI --> INIT[__init__.py]
     CLI --> MAIN[main.py]

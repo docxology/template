@@ -33,25 +33,13 @@ uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=
 
 ```mermaid
 flowchart TB
-    T[/tests//]
-    T --> META[__init__.py · conftest.py<br/>shared fixtures]
-    T --> INFRA[/infra_tests<br/>Infrastructure module tests/]
-    T --> INTEG[/integration<br/>End-to-end tests/]
-    T --> REG[/regression<br/>Claim-binding regression tests/]
-
-    INFRA --> CORE[/core<br/>core functionality/]
-    INFRA --> VAL[/validation<br/>example module/]
-    CORE --> CORE_F[__init__.py · conftest.py ·<br/>test_*.py]
-    VAL --> VAL_F[__init__.py · test_*.py]
-    INTEG --> INTEG_F[test_*.py]
-    REG --> REG_F[test_*.py]
-
-    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
-    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
-    class T d
-    class INFRA,INTEG,REG,CORE,VAL pkg
-    class META,CORE_F,VAL_F,INTEG_F,REG_F f
+    T[tests]
+    T --> META[conftest shared fixtures]
+    T --> INFRA[infra_tests]
+    T --> INTEG[integration]
+    T --> REG[regression]
+    INFRA --> CORE[core tests]
+    INFRA --> VAL[validation tests]
 ```
 
 ### Module Test Organization
@@ -60,18 +48,13 @@ For each infrastructure module:
 
 ```mermaid
 flowchart LR
-    T[/tests/infra_tests/&lt;module&gt;//]
+    T[tests infra_tests module]
     T --> INIT[__init__.py]
-    T --> CFG[conftest.py<br/>Fixtures · sample data · temp files]
-    T --> CORE[test_core.py<br/>Core functionality]
-    T --> CLI[test_cli.py<br/>CLI interface · if applicable]
-    T --> ERR[test_errors.py<br/>Error conditions]
-    T --> INTEG[test_integration.py<br/>End-to-end workflows]
-
-    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
-    class T d
-    class INIT,CFG,CORE,CLI,ERR,INTEG code
+    T --> CFG[conftest.py fixtures]
+    T --> CORE[test_core.py]
+    T --> CLI[test_cli.py optional]
+    T --> ERR[test_errors.py]
+    T --> INTEG[test_integration.py]
 ```
 
 ## Testing Principles

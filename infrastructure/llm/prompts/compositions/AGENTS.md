@@ -12,7 +12,7 @@ response fails a quality or relevance check.
 
 ```mermaid
 flowchart LR
-    C[/infrastructure/llm/prompts/compositions//]
+    C[infrastructure/llm/prompts/compositions/]
     C --> AG[AGENTS.md]
     C --> RP[retry_prompts.json<br/>Error recovery &amp; format enforcement]
 

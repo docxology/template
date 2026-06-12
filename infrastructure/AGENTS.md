@@ -11,29 +11,29 @@ Each subpackage has a `SKILL.md` file (YAML frontmatter) for agent skill discove
 
 ```mermaid
 flowchart TB
-    INFRA[/infrastructure<br/>SKILL.md · top-level infrastructure skill/]
+    INFRA[infrastructure<br/>SKILL.md · top-level infrastructure skill]
 
-    INFRA --> AUTO[/autoresearch<br/>Deterministic readiness plans<br/>stage gates · artifacts · evidence/]
-    INFRA --> BENCH[/benchmark<br/>Deterministic exemplar scoring/]
-    INFRA --> CORE[/core<br/>Foundation utilities/]
-    INFRA --> CFG[/config<br/>Repository configuration templates/]
-    INFRA --> DOCK[/docker<br/>Containerization/]
-    INFRA --> SK[/skills<br/>SKILL.md discovery · skill_manifest.json/]
-    INFRA --> VAL[/validation<br/>Quality &amp; validation tools/]
-    INFRA --> DOC[/documentation<br/>Figure &amp; markdown management/]
-    INFRA --> PROJ[/project<br/>Multi-project management/]
-    INFRA --> SCI[/scientific<br/>Scientific development/]
-    INFRA --> LLM[/llm<br/>LLM integration/]
-    INFRA --> METH[/methods<br/>Methods orchestration<br/>DAG · prose · artifacts · evidence/]
-    INFRA --> REND[/rendering<br/>Multi-format rendering/]
-    INFRA --> PUB[/publishing<br/>Academic publishing/]
-    INFRA --> REP[/reporting<br/>Pipeline reports · error aggregation/]
-    INFRA --> STEG[/steganography<br/>Secure PDF post-processing/]
-    INFRA --> SEARCH[/search<br/>Multi-source literature search/]
-    INFRA --> SIA[/sia<br/>Self-improvement harness<br/>fixture replay · evaluation/]
-    INFRA --> REF[/reference<br/>BibTeX read · write · convert/]
-    INFRA --> ORCH[/orchestration<br/>run.sh-equivalent CLI · menu · PipelineRunner<br/>stage logs · secure_run wrapper/]
-    INFRA --> PRS[/prose<br/>Readability metrics · outline · editorial flags · CLI/]
+    INFRA --> AUTO[autoresearch<br/>Deterministic readiness plans<br/>stage gates · artifacts · evidence]
+    INFRA --> BENCH[benchmark<br/>Deterministic exemplar scoring]
+    INFRA --> CORE[core<br/>Foundation utilities]
+    INFRA --> CFG[config<br/>Repository configuration templates]
+    INFRA --> DOCK[docker<br/>Containerization]
+    INFRA --> SK[skills<br/>SKILL.md discovery · skill_manifest.json]
+    INFRA --> VAL[validation<br/>Quality &amp; validation tools]
+    INFRA --> DOC[documentation<br/>Figure &amp; markdown management]
+    INFRA --> PROJ[project<br/>Multi-project management]
+    INFRA --> SCI[scientific<br/>Scientific development]
+    INFRA --> LLM[llm<br/>LLM integration]
+    INFRA --> METH[methods<br/>Methods orchestration<br/>DAG · prose · artifacts · evidence]
+    INFRA --> REND[rendering<br/>Multi-format rendering]
+    INFRA --> PUB[publishing<br/>Academic publishing]
+    INFRA --> REP[reporting<br/>Pipeline reports · error aggregation]
+    INFRA --> STEG[steganography<br/>Secure PDF post-processing]
+    INFRA --> SEARCH[search<br/>Multi-source literature search]
+    INFRA --> SIA[sia<br/>Self-improvement harness<br/>fixture replay · evaluation]
+    INFRA --> REF[reference<br/>BibTeX read · write · convert]
+    INFRA --> ORCH[orchestration<br/>run.sh-equivalent CLI · menu · PipelineRunner<br/>stage logs · secure_run wrapper]
+    INFRA --> PRS[prose<br/>Readability metrics · outline · editorial flags · CLI]
 
     AUTO --> AUTO_F[config · models · planner · validation · reports · cli]
     CORE --> CORE_F[exceptions · logging · config/loader ·<br/>pipeline · stage_registry · post_run_reporting · hitl_cli · single_stage ·<br/>runtime/checkpoint · setup_checks · source_improve · cache_gate ·<br/>runtime/retry · runtime/function_profiler · security ·<br/>runtime/environment · files/operations · telemetry/]
@@ -100,19 +100,27 @@ Tracked after the P0 composability pass (stage registry, unified markdown discov
 | `autoresearch/validation.py` | 125 | **Done** (2026-06-08) — orchestrator; checks in `autoresearch/validation_checks.py` (~660 LOC) |
 | `validation/evidence_registry.py` | 453 | **Done** (2026-06-11) — orchestrator; collectors in `evidence_registry_collectors.py` (307 LOC) |
 | `validation/output/pipeline.py` | 525 | **Done** (2026-06-09) — facade; PDF, markdown, design, artifact-manifest, and prose-quality leaves under `validation/output/` |
-| `validation/integrity/link_extract.py` | 543 | **Partial** (2026-06-11) — path-skip policy in `link_skip_policy.py` (144 LOC); P2: URL/normalize helpers to `_link_normalize.py` |
+| `validation/integrity/link_extract.py` | 446 | **Done** (2026-06-11 close-out) — path helpers in `_link_normalize.py` (96 LOC); skip policy in `link_skip_policy.py` (144 LOC) |
+| `validation/integrity/_link_normalize.py` | 96 | **Done** (2026-06-11 close-out) — project-root + template path resolution for link validation |
 | `validation/integrity/link_skip_policy.py` | 144 | **Done** (2026-06-11) — `PATH_SKIP_*` tables + `should_validate_path()` |
 | `rendering/pipeline.py` | 665 | **Partial** (2026-06-11) — DOCX metadata via `build_pandoc_metadata()`; P2: `_manuscript_source.py` + `_combined_exports.py` |
 | `validation/content/markdown_validator.py` | 607 | Extract image/ref/math validators + pitfalls/citations leaves (discovery in `content/discovery.py`) |
 | `search/literature/backends.py` | — | **Done** (2026-05-29 Wave 5) — package `search/literature/backends/` |
 | `doctor/detectors.py` | — | **Done** (2026-05-29 Wave 6) — package `doctor/detectors/` |
 | `reporting/_dashboard_charts.py` | 43 | **Done** (2026-05-29 Wave 7) — facade; chart families in `_dashboard_charts_*.py` |
+| `reporting/multi_project_report.py` | 261 | **Done** (2026-06-11 close-out) — multi-project terminal summary + last-run artifact writer |
 | `rendering/_pdf_combined_renderer.py` | 49 | **Done** (2026-06-02+) — facade re-exporting `_pdf_combined_*.py` leaves |
 | `rendering/_pdf_title_page.py` | 542 | Title-page split **done** (2026-06-02 Wave D); `_pdf_latex_helpers.py` preamble/math only (~236 LOC) |
 | `publishing/release_workflow.py` | 534 | Zenodo reserve/publish in `release_workflow_zenodo.py` (249 LOC); monitor before next publishing feature |
-| `core/pipeline/multi_project.py` | — | Move `format_multi_project_detailed_report()` to `reporting/` |
+| `core/pipeline/multi_project.py` | 330 | **Done** (2026-06-11 close-out) — orchestration only; report formatting in `reporting/multi_project_report.py` |
 | `validation` ↔ `rendering` | — | Shared pre-render leaf (`validation/content/prerender.py`) so rendering does not import the full markdown validator |
-| `validation/integrity/checks.py` | 589 | P2: split manifest (`integrity/manifest.py`) vs completeness (`integrity/completeness.py`) |
+| `validation/integrity/checks.py` | 298 | **Done** (2026-06-11 close-out) — facade; manifest in `integrity/manifest.py` (132 LOC); completeness in `integrity/completeness.py` (179 LOC) |
+| `validation/integrity/manifest.py` | 132 | **Done** (2026-06-11 close-out) — create/save/load/verify integrity manifests |
+| `validation/integrity/completeness.py` | 179 | **Done** (2026-06-11 close-out) — build-artifact, permission, output-completeness checks |
+| `project/drift/checks.py` | 57 | **Done** (2026-06-11 close-out) — thin barrel; exemplar detectors in `checks_exemplar.py` (558 LOC) |
+| `project/drift/checks_exemplar.py` | 558 | **Done** (2026-06-11 close-out) — project-level drift detectors + shared doc helpers |
+| `project/drift/checks_docs_counts.py` | 80 | **Done** (2026-06-11 v2) — hardcoded count scan for long-lived docs |
+| `project/drift/checks_boundary.py` | 95 | **Done** (2026-06-11 v2) — src/ ↔ infrastructure import boundary |
 | `publishing/archival.py` | 669 | P1 watch: split provider adapters before next archival feature |
 | `autoresearch/validation_checks.py` | 661 | P1 watch: monitor before next autoresearch feature wave |
 | `rendering/render_all_cli.py` | — | Remove `sys.path.insert`; use `--project` / discovery like other CLIs |

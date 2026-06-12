@@ -342,10 +342,10 @@ Each project follows this structure:
 
 ```mermaid
 flowchart TB
-    PR[/projects//]
-    PR --> CP[/template_code_project/<br/>Stable code exemplar/]
-    PR --> MY[/myresearch/<br/>Custom project 1/]
-    PR --> EX[/experiment2/<br/>Custom project 2/]
+    PR[projects/]
+    PR --> CP[template_code_project/<br/>Stable code exemplar]
+    PR --> MY[myresearch/<br/>Custom project 1]
+    PR --> EX[experiment2/<br/>Custom project 2]
 
     CP --> CP_F[src · tests · scripts ·<br/>manuscript · docs · output ·<br/>pyproject.toml]
 
@@ -524,9 +524,9 @@ Example:
 
 ```mermaid
 flowchart LR
-    OUT[/output//]
-    OUT --> CP[/template_code_project/<br/>optimization exemplar/]
-    OUT --> YP[/your_project/<br/>your custom research project/]
+    OUT[output/]
+    OUT --> CP[template_code_project/<br/>optimization exemplar]
+    OUT --> YP[your_project/<br/>your custom research project]
     CP --> CP_F[pdf/ · figures/ · ...]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff

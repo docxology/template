@@ -78,10 +78,10 @@ Infrastructure modules (`discovery.py`, `script_discovery.py`, `config/loader.py
 
 ```mermaid
 flowchart TB
-    R[/research//]
-    R --> P1[/project1//]
-    R --> P2[/project2//]
-    R --> SH[/shared//]
+    R[research/]
+    R --> P1[project1/]
+    R --> P2[project2/]
+    R --> SH[shared/]
 
     P1 --> P1_F[src/ · tests/ · scripts/ · ...]
     P2 --> P2_F[src/ · tests/ · scripts/ · ...]

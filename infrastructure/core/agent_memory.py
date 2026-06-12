@@ -23,9 +23,7 @@ _ROSTER_HINT_RE = re.compile(
     r"\b(public|git-tracked|exemplars?|template projects?|project roster|PUBLIC_PROJECT_NAMES)\b",
     re.IGNORECASE,
 )
-_GENERATED_POINTER_RE = re.compile(
-    r"docs/_generated/(?:active_projects|COUNTS)\.md|active_projects\.md|COUNTS\.md"
-)
+_GENERATED_POINTER_RE = re.compile(r"docs/_generated/(?:active_projects|COUNTS)\.md|active_projects\.md|COUNTS\.md")
 
 
 @dataclass(frozen=True)
