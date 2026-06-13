@@ -188,6 +188,33 @@ def render_track_improvement_scope_table(project_root: Path) -> str:
     return "\n".join(lines)
 
 
+def render_track_lane_matrix_table(project_root: Path) -> str:
+    import json
+
+    path = project_root / "output" / "data" / "track_lane_matrix.json"
+    payload = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+    lines = [
+        "<!-- sheaf-layers:track-lane-matrix -->",
+        "## Track-lane matrix",
+        "",
+        "| Pipeline track | Sheaf fragments | Producer | Primary artifact | Claims | Semantic | Gates | Negative |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in payload.get("rows") or []:
+        sheaf_tracks = ", ".join(f"`{track}`" for track in row.get("sheaf_tracks") or [])
+        claims = ", ".join(f"`{claim}`" for claim in row.get("claim_ids") or [])
+        semantic = ", ".join(f"`{restriction}`" for restriction in row.get("semantic_restrictions") or [])
+        gates = ", ".join(f"`{gate}`" for gate in row.get("validation_gates") or [])
+        lines.append(
+            "| "
+            f"`{row.get('track_id')}` | {sheaf_tracks} | `{row.get('producer')}` | "
+            f"`{row.get('primary_artifact')}` | {claims} | {semantic} | {gates} | "
+            f"`{row.get('negative_control')}` |"
+        )
+    lines.extend(["", f"**Pipeline rows:** {payload.get('row_count', 0)}.", ""])
+    return "\n".join(lines)
+
+
 def render_section_status_table(project_root: Path) -> str:
     from manuscript.sheaf.status import build_sheaf_section_status_matrix
 
@@ -276,6 +303,7 @@ def render_sheaf_layers_markdown(project_root: Path) -> str:
         render_evidence_crosswalk_table(project_root),
         render_artifact_producer_table(project_root),
         render_semantic_restrictions_table(project_root),
+        render_track_lane_matrix_table(project_root),
         render_track_improvement_scope_table(project_root),
     ]
     return "\n".join(parts)

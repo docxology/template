@@ -17,7 +17,7 @@ Use the headless Agg backend and pin `savefig` metadata so figures are byte-repr
 
 `generate_all_figures()` writes `output/figures/figure_registry.json` (keys
 `fig:{id}`) for output validation. Source metadata remains in root
-`figures.yaml`; the current registry contains 20 publication PNG outputs.
+`figures.yaml`; the current registry contains 21 publication PNG outputs.
 
 `figures.yaml` `section_figures.coverage_page` binds the front-matter heatmap without a figure number; `appendix_full_sheaf` binds repeat embeddings with `labeled: false` to avoid duplicate pandoc-crossref labels.
 

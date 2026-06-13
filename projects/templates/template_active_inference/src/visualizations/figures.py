@@ -33,6 +33,7 @@ from .figures_diagrams import (
     figure_invariant_dashboard,
     figure_lean_boundary_status,
     figure_multi_track_architecture,
+    figure_track_lane_promotion_map,
     figure_tmaze_schematic,
 )
 from .figures_sheaf import figure_sheaf_coverage_heatmap, figure_sheaf_layers_overview
@@ -455,33 +456,36 @@ def figure_scholarship_source_map(project_root: Path) -> Path:
     out = figure_output_path(root, "scholarship_source_map")
     with apply_style(style):
         fig_h = max(6.2, 0.42 * len(rows) + 1.6)
-        fig, ax = plt.subplots(figsize=(11.2, fig_h))
+        fig, ax = plt.subplots(figsize=(12.4, fig_h))
         ax.axis("off")
-        columns = [0.025, 0.27, 0.51, 0.76]
-        headers = ["Citation", "Source family", "Method role", "Evidence artifact"]
+        columns = [0.025, 0.225, 0.405, 0.59, 0.785]
+        headers = ["Citation", "Locator", "Scope boundary", "Method role", "Evidence artifact"]
         draw_column_headers(ax, columns, headers, style, y=0.95)
         y_positions = np.linspace(0.86, 0.12, max(1, len(rows)))
         for y, row in zip(y_positions, rows, strict=False):
             connected = row.get("connected") is True
             artifact = str(row.get("artifact", "")).replace("output/", "")
+            boundary_status = "guarded" if row.get("claim_boundary_scope_guarded") else "unguarded"
+            citation_status = "cited in manuscript" if row.get("cited_in_manuscript") else "citation missing"
             labels = [
                 wrap_text(f"@{row.get('citation_key', '')}", 22),
-                wrap_text(str(row.get("source_family", "")).replace("_", " "), 22),
+                wrap_text(f"{row.get('source_locator_kind', '')}\n{citation_status}", 20),
+                wrap_text(f"{boundary_status}\n{str(row.get('source_family', '')).replace('_', ' ')}", 22),
                 wrap_text(str(row.get("method_role", "")).replace("_", " "), 23),
                 wrap_text(artifact, 30),
             ]
             for x, label in zip(columns, labels, strict=True):
                 text_box(ax, x, y, label, style, width=30, edge_role="pass" if connected else "fail", fontsize=7)
-            draw_arrow(ax, columns[0] + 0.17, columns[1] - 0.025, y, style)
-            draw_arrow(ax, columns[1] + 0.18, columns[2] - 0.025, y, style)
-            draw_arrow(ax, columns[2] + 0.18, columns[3] - 0.025, y, style)
+            for left, right in zip(columns, columns[1:], strict=False):
+                draw_arrow(ax, left + 0.145, right - 0.025, y, style)
         summary = (
             f"{matrix.get('source_count', 0)} sources, "
             f"{matrix.get('method_role_count', 0)} method roles, "
-            f"connected={matrix.get('all_sources_connected')}"
+            f"connected={matrix.get('all_sources_connected')}; "
+            f"rederived={matrix.get('all_rows_rederived')}"
         )
         ax.text(0.03, 0.04, summary, fontsize=8.5, color=style.color("muted"))
-        ax.set_title("Scholarship source map", loc="left", pad=16)
+        ax.set_title("Scholarship source map with citation and scope guards", loc="left", pad=16)
         save_styled_figure(fig, out, style)
     return out
 
@@ -755,6 +759,7 @@ FIGURE_GENERATORS: dict[str, Callable[[Path], Path | None]] = {
     "lean_boundary_status": figure_lean_boundary_status,
     "gnn_ontology_concordance": figure_gnn_ontology_concordance,
     "semantic_gluing_graph": figure_semantic_gluing_graph,
+    "track_lane_promotion_map": figure_track_lane_promotion_map,
     "theorem_traceability_graph": figure_theorem_traceability_graph,
     "causal_ablation_heatmap": figure_causal_ablation_heatmap,
     "scholarship_source_map": figure_scholarship_source_map,

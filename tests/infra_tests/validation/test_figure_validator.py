@@ -225,6 +225,25 @@ class TestValidateFigureRegistry:
         assert success is True
         assert issues == []
 
+    def test_validate_ignores_code_span_reference_examples(self, tmp_path):
+        """Inline and fenced code examples are not rendered figure references."""
+        registry_path = tmp_path / "registry.json"
+        registry_path.write_text(json.dumps({"fig:real": {"path": "figures/real.png"}}))
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "SYNTAX.md").write_text(
+            "Use `[@fig:part-...-module-map]` for examples.\n\n"
+            "```markdown\nSee [@fig:example-only]\n```\n",
+            encoding="utf-8",
+        )
+        (manuscript_dir / "01_intro.md").write_text("See [@fig:real].\n")
+
+        success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is True
+        assert issues == []
+
     def test_validate_handles_file_read_errors(self, tmp_path):
         """Test that file read errors are handled gracefully."""
         import os
@@ -376,3 +395,45 @@ class TestListShapeRegistry:
         assert len(issues) == 1
         assert "unexpected top-level JSON type" in issues[0]
         assert "int" in issues[0]
+
+
+class TestEnvelopeShapeRegistry:
+    """Test project registry envelopes that carry summary metadata plus figures."""
+
+    def test_validate_envelope_shape_registry_all_registered(self, tmp_path):
+        """Envelope registries use their figures list, not top-level metadata keys."""
+        registry_path = tmp_path / "registry.json"
+        registry_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "1.3",
+                    "figure_count": 3,
+                    "kind_counts": {"python": 1, "mermaid": 2},
+                    "figures": [
+                        {"filename": "ageint-curriculum-map.png", "label": "fig:ageint-curriculum-map"},
+                        {
+                            "filename": "ageint-scholarship-triangulation-map.png",
+                            "label": "fig:ageint-scholarship-triangulation-map",
+                        },
+                        {
+                            "filename": "part-technical-intelligence-and-cyber-operations-module-map.png",
+                            "label": "fig:part-technical-intelligence-and-cyber-operations-module-map",
+                        },
+                    ],
+                }
+            )
+        )
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "orientation.md").write_text(
+            "See [@fig:ageint-curriculum-map], "
+            "[@fig:ageint-scholarship-triangulation-map], and "
+            "[@fig:part-technical-intelligence-and-cyber-operations-module-map].\n"
+            "![Curriculum](../figures/ageint-curriculum-map.png){#fig:ageint-curriculum-map}\n"
+        )
+
+        success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is True
+        assert issues == []

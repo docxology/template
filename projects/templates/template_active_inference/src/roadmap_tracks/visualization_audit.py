@@ -255,8 +255,7 @@ def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
         "statistical_source_count": sum(int(row["statistical_source_count"]) for row in rows),
         "statistical_figure_ids": [row["figure_id"] for row in rows if row["statistically_backed"]],
         "claim_lane_coverage": {
-            lane: sum(1 for row in rows if lane in set(row.get("claim_lanes") or []))
-            for lane in ALLOWED_CLAIM_LANES
+            lane: sum(1 for row in rows if lane in set(row.get("claim_lanes") or [])) for lane in ALLOWED_CLAIM_LANES
         },
         "all_sources_mapped": bool(rows) and all(row["source_mapped"] for row in rows),
         "all_sources_backed": bool(rows) and all(row["source_backed"] for row in rows),

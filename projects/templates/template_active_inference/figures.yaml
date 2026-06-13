@@ -325,6 +325,23 @@ figures:
       Semantic gluing graph: configured producers, generated evidence artifacts, and
       validation consumers for the multi-track sheaf certificate.
     width: 0.95
+  track_lane_promotion_map:
+    filename: track_lane_promotion_map.png
+    visual_role: matrix
+    evidence_role: sheaf
+    paper_claim: >-
+      The track-lane promotion map makes the seven promotion-rule obligations and
+      sheaf-lane bindings inspectable for every public pipeline track.
+    alt: >-
+      Two-panel matrix generated from track_lane_matrix.json. The left panel lists
+      pipeline tracks against producer, artifact, manuscript consumer, typed claim,
+      semantic restriction, validation gate, and negative control obligations. The
+      right panel shows the sheaf fragment lanes bound to each pipeline track.
+    caption: >-
+      Track-lane promotion map: {{track_lane_matrix_row_count}} pipeline-to-sheaf
+      rows with complete promotion status {{track_lane_matrix_complete}}. Left:
+      seven promotion-rule obligations; right: sheaf fragment bindings.
+    width: 0.98
   theorem_traceability_graph:
     filename: theorem_traceability_graph.png
     visual_role: flow
@@ -363,17 +380,19 @@ figures:
     evidence_role: scholarship
     paper_claim: >-
       The scholarship source map separates bibliography lineage from generated
-      evidence artifacts and method roles.
+      evidence artifacts, citation-section evidence, and scoped claim boundaries.
     alt: >-
-      Four-column source map generated from the scholarship source matrix. Each row
-      links a bibliography key to a source family, method role, and generated evidence
-      artifact; green borders mark rows with bibliography entries, manuscript citations,
+      Five-column source map generated from the scholarship source matrix. Each row
+      links a bibliography key to a DOI or URL locator, manuscript citation
+      status, guarded scope boundary, method role, and generated evidence artifact;
+      green borders mark rows rederived from bibliography entries, manuscript citations,
       registered tracks, bound manuscript sections, and existing artifacts.
     caption: >-
       Scholarship source map: {{scholarship_source_count}} source rows across
       {{scholarship_method_role_count}} method roles and
       {{scholarship_source_family_count}} source families. Connected status:
-      {{scholarship_sources_connected}}.
+      {{scholarship_sources_connected}}; row evidence rederived:
+      {{scholarship_rows_rederived}}.
     width: 0.95
 
 section_figures:
@@ -406,6 +425,7 @@ section_figures:
   methods_sheaf:
     - id: sheaf_layers_overview
     - id: semantic_gluing_graph
+    - id: track_lane_promotion_map
     - id: scholarship_source_map
   appendix_full_sheaf:
     - id: ising_mi_curve
@@ -415,6 +435,8 @@ section_figures:
     - id: theorem_traceability_graph
     - id: causal_ablation_heatmap
     - id: scholarship_source_map
+      labeled: false
+    - id: track_lane_promotion_map
       labeled: false
     - id: sheaf_coverage_heatmap
       labeled: false

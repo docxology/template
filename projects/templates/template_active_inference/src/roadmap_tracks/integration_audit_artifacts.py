@@ -372,6 +372,10 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
             "output/data/sheaf_gluing_certificate.json",
             "output/data/evidence_field_index.json",
         ],
+        "track_lane_promotion_map": [
+            "output/data/track_lane_matrix.json",
+            "lean/TemplateActiveInference/PromotionProof.lean",
+        ],
         "theorem_traceability_graph": [
             "output/data/theorem_traceability_matrix.json",
             "output/data/proof_dependency_graph.json",
@@ -393,6 +397,7 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
         "si_belief_entropy_curve": {"x": "step", "y": "belief_entropy"},
         "causal_ablation_heatmap": {"x": "lambda", "y": "perturbation", "channel": "effect"},
         "sheaf_coverage_heatmap": {"x": "section", "y": "track", "channel": "coverage_status"},
+        "track_lane_promotion_map": {"x": "promotion_requirement", "y": "pipeline_track", "channel": "status"},
     }
     registry = load_figure_registry(root)
     for figure_id in sorted(registry):
@@ -599,7 +604,10 @@ def build_scope_boundary_audit(project_root: Path) -> dict[str, Any]:
         "empirical_adapter_enabled": False,
         "scope_boundary_status": (
             "toy_only_pass"
-            if not violations and all_required_categories_present and all_future_rows_non_live and all_blocked_contexts_non_live
+            if not violations
+            and all_required_categories_present
+            and all_future_rows_non_live
+            and all_blocked_contexts_non_live
             else "scope_leak"
         ),
     }

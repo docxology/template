@@ -18,8 +18,8 @@ metadata, replay provenance, and release-facing provenance drift checks.
   on it.
 - Project-local scratch output lives under
   [`../../output/`](../../output/) during pipeline runs. Root
-  `output/templates/template_active_inference/` is populated only after stage 9
-  copy — see [`../../../../../docs/RUN_GUIDE.md`](../../../../../docs/RUN_GUIDE.md).
+  `output/templates/template_active_inference/` is populated only after the
+  stage 05 copy step — see [`../../../../../docs/RUN_GUIDE.md`](../../../../../docs/RUN_GUIDE.md).
 
 ## Verification
 

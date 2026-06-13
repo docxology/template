@@ -118,6 +118,25 @@ class TestVerifySourceStructure:
 
         assert verify_source_structure(repo_root, "wipproj") is True
 
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+    def test_qualified_wip_symlink_outside_repo(self, tmp_path):
+        """Lifecycle-qualified WIP names keep the repo-visible working path."""
+        repo_root = tmp_path / "repo"
+        (repo_root / "infrastructure").mkdir(parents=True)
+
+        external = tmp_path / "private" / "working" / "wipproj"
+        (external / "src").mkdir(parents=True)
+        (external / "tests").mkdir()
+
+        wip_link = repo_root / "projects" / "working" / "wipproj"
+        wip_link.parent.mkdir(parents=True)
+        wip_link.symlink_to(external, target_is_directory=True)
+
+        dirs = _project_output_dirs(repo_root, "working/wipproj")
+        assert "projects/working/wipproj/output" in dirs
+        assert "projects/active/working/wipproj/output" not in dirs
+        assert verify_source_structure(repo_root, "working/wipproj") is True
+
 
 class TestValidateDirectoryStructure:
     def test_all_missing(self, tmp_path):

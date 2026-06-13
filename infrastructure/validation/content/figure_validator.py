@@ -15,8 +15,10 @@ logger = get_logger(__name__)
 
 
 _LATEX_FIGURE_REF_PATTERN = re.compile(r"\\(?:ref|label)\{(fig:[^}]+)\}")
-_PANDOC_FIGURE_REF_PATTERN = re.compile(r"(?<![\w:-])@((?:fig):[-A-Za-z0-9_.:]+)")
+_PANDOC_FIGURE_REF_PATTERN = re.compile(r"(?<![\w:-])@(fig:[-A-Za-z0-9_.:]+)")
 _PANDOC_IMAGE_LABEL_PATTERN = re.compile(r"\{#(fig:[-A-Za-z0-9_.:]+)(?:\s[^}]*)?\}")
+_FENCED_CODE_BLOCK_PATTERN = re.compile(r"```.*?```|~~~.*?~~~", re.DOTALL)
+_INLINE_CODE_PATTERN = re.compile(r"`[^`\n]*`")
 _SKIP_DOCS = frozenset(["AGENTS.md", "README.md"])
 
 
@@ -29,13 +31,21 @@ def _scan_manuscript_references(manuscript_dir: Path) -> set[str]:
         if md_file.name in _SKIP_DOCS:
             continue
         try:
-            text = "\n".join(line for line in md_file.read_text().splitlines() if not line.lstrip().startswith("%"))
+            text = _strip_reference_examples(
+                "\n".join(line for line in md_file.read_text().splitlines() if not line.lstrip().startswith("%"))
+            )
             referenced.update(_normalise_figure_label(label) for label in _LATEX_FIGURE_REF_PATTERN.findall(text))
             referenced.update(_normalise_figure_label(label) for label in _PANDOC_FIGURE_REF_PATTERN.findall(text))
             referenced.update(_normalise_figure_label(label) for label in _PANDOC_IMAGE_LABEL_PATTERN.findall(text))
         except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Could not read {md_file.name}: {e}")
     return referenced
+
+
+def _strip_reference_examples(text: str) -> str:
+    """Remove code examples before scanning real manuscript references."""
+    text = _FENCED_CODE_BLOCK_PATTERN.sub("", text)
+    return _INLINE_CODE_PATTERN.sub("", text)
 
 
 def _normalise_figure_label(label: str) -> str:
@@ -51,6 +61,9 @@ def _load_registry(registry_path: Path) -> tuple[dict[str, dict[str, object]] | 
     * **Dict shape** — keys are labels, values are figure metadata records
       (e.g. ``{"fig:convergence": {"caption": ..., "path": ...}, ...}``).
       Used by :class:`infrastructure.documentation.figure_manager.FigureManager`.
+    * **Envelope shape** — a dict with a ``"figures"`` list whose items carry
+      ``"label"`` fields (e.g. ``{"schema_version": ..., "figures": [...]}``).
+      Used by project figure registries that also publish summary metadata.
     * **List shape** — each item is a record carrying a ``"label"`` field
       (e.g. ``[{"filename": ..., "label": "fig:foo"}, ...]``). Used by
       project scripts that emit a flat figure manifest.
@@ -64,18 +77,12 @@ def _load_registry(registry_path: Path) -> tuple[dict[str, dict[str, object]] | 
     try:
         with open(registry_path) as f:
             registry = json.load(f)
-        if isinstance(registry, dict):
+        if isinstance(registry, dict) and isinstance(registry.get("figures"), list):
+            registered = _registry_from_list_shape(registry["figures"])
+        elif isinstance(registry, dict):
             registered = {str(label): item if isinstance(item, dict) else {} for label, item in registry.items()}
         elif isinstance(registry, list):
-            registered = {}
-            unlabeled = 0
-            for item in registry:
-                if isinstance(item, dict) and "label" in item:
-                    registered[str(item["label"])] = item
-                else:
-                    unlabeled += 1
-            if unlabeled:
-                logger.warning(f"Figure registry has {unlabeled} item(s) without a 'label' field; skipped")
+            registered = _registry_from_list_shape(registry)
         else:
             return None, (
                 f"Failed to load figure registry: unexpected top-level JSON type "
@@ -85,6 +92,20 @@ def _load_registry(registry_path: Path) -> tuple[dict[str, dict[str, object]] | 
         return registered, None
     except (OSError, json.JSONDecodeError, ValueError, AttributeError, TypeError, KeyError) as e:
         return None, f"Failed to load figure registry: {e}"
+
+
+def _registry_from_list_shape(items: list[object]) -> dict[str, dict[str, object]]:
+    """Return label-keyed registry entries from list-like figure records."""
+    registered: dict[str, dict[str, object]] = {}
+    unlabeled = 0
+    for item in items:
+        if isinstance(item, dict) and "label" in item:
+            registered[str(item["label"])] = item
+        else:
+            unlabeled += 1
+    if unlabeled:
+        logger.warning(f"Figure registry has {unlabeled} item(s) without a 'label' field; skipped")
+    return registered
 
 
 def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:

@@ -65,6 +65,10 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
     assert figure_source_map["all_figures_have_claim_lanes"] is True
     assert figure_source_map["all_claim_lanes_valid"] is True
     assert all(row["claim_lanes"] for row in figure_source_map["rows"])
+    track_lane_figure = next(row for row in figure_source_map["rows"] if row["figure_id"] == "track_lane_promotion_map")
+    assert "output/data/track_lane_matrix.json" in track_lane_figure["source_artifacts"]
+    assert "lean/TemplateActiveInference/PromotionProof.lean" in track_lane_figure["source_artifacts"]
+    assert {"formal", "semantic"}.issubset(set(track_lane_figure["claim_lanes"]))
     assert scope_boundary["all_required_scope_categories_present"] is True
     assert scope_boundary["all_future_rows_non_live"] is True
     assert scope_boundary["all_blocked_contexts_non_live"] is True
@@ -81,6 +85,7 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
         "output/reports/ablation_sensitivity_report.json"
     )
     assert _relative_posix(sheaf["release_attestation"], project_root) == "output/reports/release_attestation.json"
+    assert _relative_posix(sheaf["track_lane_matrix"], project_root) == "output/data/track_lane_matrix.json"
     topology = _load(project_root / "output" / "data" / "si_graph_world_topology_sweep.json")
     lean_graph = _load(project_root / "output" / "reports" / "lean_graph_world_inventory.json")
     topology_ids = {row["topology"] for row in topology["rows"]}
@@ -450,6 +455,52 @@ def test_scholarship_matrix_has_row_level_negative_control(project_root: Path) -
 
     with temporary_json_mutation(path, break_scholarship_row):
         assert any("disconnected source rows" in issue for issue in validate_scholarship_source_matrix(project_root))
+
+
+def test_scholarship_matrix_rederives_live_row_evidence(project_root: Path) -> None:
+    from roadmap_tracks import validate_scholarship_source_matrix, write_sheaf_track_artifacts
+
+    ensure_gate_artifacts(project_root)
+    write_sheaf_track_artifacts(project_root)
+    path = project_root / "output" / "data" / "scholarship_source_matrix.json"
+
+    def forge_live_evidence(data: dict) -> None:
+        assert validate_scholarship_source_matrix(project_root) == []
+        row = data["rows"][0]
+        row["citation_sections"] = []
+        row["cited_declared_sections"] = []
+        row["cited_in_manuscript"] = True
+        row["cited_in_declared_sections"] = True
+        row["connected"] = True
+        data["all_citations_present"] = True
+        data["all_rows_rederived"] = True
+        data["all_sources_connected"] = True
+
+    with temporary_json_mutation(path, forge_live_evidence):
+        issues = validate_scholarship_source_matrix(project_root)
+        assert any("stale or forged row evidence" in issue for issue in issues)
+
+
+def test_scholarship_matrix_scope_boundary_negative_control(project_root: Path) -> None:
+    from roadmap_tracks import validate_scholarship_source_matrix, write_sheaf_track_artifacts
+
+    ensure_gate_artifacts(project_root)
+    write_sheaf_track_artifacts(project_root)
+    path = project_root / "output" / "data" / "scholarship_source_matrix.json"
+
+    def remove_scope_guard(data: dict) -> None:
+        assert validate_scholarship_source_matrix(project_root) == []
+        row = data["rows"][0]
+        row["claim_boundary"] = "supports active inference"
+        row["claim_boundary_scope_guarded"] = True
+        row["connected"] = True
+        data["all_claim_boundaries_scope_guarded"] = True
+        data["all_rows_rederived"] = True
+        data["all_sources_connected"] = True
+
+    with temporary_json_mutation(path, remove_scope_guard):
+        issues = validate_scholarship_source_matrix(project_root)
+        assert any("stale or forged row evidence" in issue for issue in issues)
 
 
 def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) -> None:

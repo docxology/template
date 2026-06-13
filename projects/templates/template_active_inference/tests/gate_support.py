@@ -55,6 +55,7 @@ _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
     "output/reports/model_checking_witnesses.json",
     "output/reports/adversarial_audit.json",
     "output/reports/replay_matrix.json",
+    "output/data/track_lane_matrix.json",
     "output/data/track_improvement_scope.json",
     "output/reports/blocked_scope_manifest.json",
     "output/data/evidence_field_index.json",
@@ -77,6 +78,7 @@ _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
     "output/reports/visualization_quality_audit.json",
     "output/data/statistical_visualization_bridge.json",
     "output/figures/semantic_gluing_graph.png",
+    "output/figures/track_lane_promotion_map.png",
     "output/figures/si_belief_trajectory.gif",
     "output/data/animation_frame_deltas.json",
     "output/reports/manuscript_staleness_report.json",
@@ -153,6 +155,8 @@ def refresh_generated_gate_artifacts(project_root: Path, *, force: bool = True) 
     out = root / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     write_sheaf_track_artifacts(root)
+    generate_all_figures(root)
+    write_integration_audit_artifacts(root)
     compose_all_sections(root)
     _hydrate_fixed_point(root, out)
     write_semantic_gluing_outputs(root)
@@ -201,6 +205,8 @@ def ensure_gate_artifacts(project_root: Path) -> None:
     write_validation_spine_artifacts(project_root)
     write_integration_audit_artifacts(project_root)
     write_sheaf_track_artifacts(project_root)
+    generate_all_figures(project_root)
+    write_integration_audit_artifacts(project_root)
     out = project_root / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     compose_all_sections(project_root)

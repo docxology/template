@@ -181,12 +181,35 @@ def load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
         return None
 
 
+def _clean_stale_web_artifacts(manager: RenderManager) -> None:
+    """Remove generated web artifacts before a fresh per-file HTML render."""
+    if not getattr(manager.config, "enable_html", False):
+        return
+    web_dir = Path(manager.config.web_dir)
+    if not web_dir.exists():
+        return
+    stale_files = sorted(web_dir.glob("*.html"))
+    combined_markdown = web_dir / "_combined_manuscript.md"
+    if combined_markdown.exists():
+        stale_files.append(combined_markdown)
+    removed = 0
+    for stale in stale_files:
+        try:
+            stale.unlink()
+            removed += 1
+        except OSError as exc:
+            logger.debug("Could not remove stale web artifact %s: %s", stale, exc)
+    if removed:
+        logger.info("Removed %d stale web artifact(s) from %s", removed, web_dir)
+
+
 def render_individual_files(
     manager: RenderManager,
     source_files: list[Path],
     reporter: DiagnosticReporter,
 ) -> tuple[int, list[str]]:
     """Render each source file; return (rendered_count, failed_file_names)."""
+    _clean_stale_web_artifacts(manager)
     rendered_count = 0
     failed_files: list[str] = []
     progress = SubStageProgress(total=len(source_files), stage_name="Rendering Files")

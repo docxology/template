@@ -109,7 +109,7 @@ Project-local outputs are authoritative during generation. After a root pipeline
 run, verify copied root output parity as well:
 
 ```bash
-./run.sh --project template_active_inference --pipeline --core-only
+./run.sh --project templates/template_active_inference --pipeline --core-only
 uv run python scripts/validate_outputs.py
 ```
 

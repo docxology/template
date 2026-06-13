@@ -85,7 +85,7 @@ incomplete in the track-improvement scope.
 
 <!-- sheaf-track:gate_ergonomics -->
 
-`validation_gate_index.json` provides the appendix proof for gate ergonomics: {{validation_gate_index_count}} indexed gates.
+`validation_gate_index.json` provides the appendix proof for gate ergonomics: {{validation_gate_index_count}} indexed gates. `track_lane_matrix.json` adds {{track_lane_matrix_row_count}} pipeline-to-sheaf rows with completion flag `{{track_lane_matrix_complete}}`.
 
 <!-- sheaf-track:artifact_diffoscope -->
 
@@ -130,9 +130,9 @@ gates are implemented in the same artifact path.
 `sheaf-track:scholarship` binds `output/data/scholarship_source_matrix.json` into
 the appendix proof row. The appendix claim is exactly
 {{scholarship_source_count}} connected source rows with connected status
-`{{scholarship_sources_connected}}`; each row names a bibliography key, method
-role, manuscript section, registered track set, evidence artifact, and
-claim-boundary statement. The row set includes
+`{{scholarship_sources_connected}}`; each row names a bibliography key, locator,
+manuscript citation status, declared consumer sections, method role, registered
+track set, evidence artifact, and claim-boundary statement. The row set includes
 {{scholarship_quantitative_method_role_count}} quantitative/statistical or
 visualization-quality method roles, including {{visualization_statistics_backed_count}}
 statistically backed figures with bridge status
@@ -146,7 +146,13 @@ reference section is manifest-bound to sheaf tracks
 visualization track present
 (`{{statistical_visualization_bridge_references_visualization_bound}}`). This
 binds statistics and figure-quality claims to generated artifacts rather than
-bibliography authority.
+bibliography authority. The scholarship matrix itself also records manuscript
+citation presence (`{{scholarship_citations_present}}`), declared-section
+citation overlap count
+({{scholarship_declared_section_citation_overlap_count}}), scope-guarded
+boundaries (`{{scholarship_claim_boundaries_scope_guarded}}`), and live row
+re-derivation (`{{scholarship_rows_rederived}}`), which makes forged aggregate
+source-connectivity flags fail at the validation boundary.
 
 The visualization registry is also now a paper-integration object: role metadata
 complete `{{visualization_intent_metadata_complete}}`, paper claims complete
@@ -195,7 +201,11 @@ counts are caught after composition, not only during source-file linting.
 
 ![](../output/figures/scholarship_source_map.png){width=95%}
 
-*Reproduced from [@fig:scholarship_source_map]. Scholarship source map: {{scholarship_source_count}} source rows across {{scholarship_method_role_count}} method roles and {{scholarship_source_family_count}} source families. Connected status: {{scholarship_sources_connected}}.*
+*Reproduced from [@fig:scholarship_source_map]. Scholarship source map: {{scholarship_source_count}} source rows across {{scholarship_method_role_count}} method roles and {{scholarship_source_family_count}} source families. Connected status: {{scholarship_sources_connected}}; row evidence rederived: {{scholarship_rows_rederived}}.*
+
+![](../output/figures/track_lane_promotion_map.png){width=98%}
+
+*Reproduced from [@fig:track_lane_promotion_map]. Track-lane promotion map: {{track_lane_matrix_row_count}} pipeline-to-sheaf rows with complete promotion status {{track_lane_matrix_complete}}. Left: seven promotion-rule obligations; right: sheaf fragment bindings.*
 
 ![](../output/figures/sheaf_coverage_heatmap.png){width=95%}
 

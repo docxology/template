@@ -112,10 +112,13 @@ def test_figure_registry_includes_si_and_layers_figures() -> None:
     assert "si_belief_entropy_curve" in registry
     assert "si_obs_action_trace" in registry
     assert "sheaf_layers_overview" in registry
+    assert "track_lane_promotion_map" in registry
     section_refs = load_section_figures(root)["results_si_tmaze"]
     assert any(ref.figure_id == "si_belief_entropy_curve" for ref in section_refs)
     sheaf_refs = load_section_figures(root)["methods_sheaf"]
     assert any(ref.figure_id == "sheaf_layers_overview" for ref in sheaf_refs)
+    assert any(ref.figure_id == "track_lane_promotion_map" for ref in sheaf_refs)
     appendix_refs = load_section_figures(root)["appendix_full_sheaf"]
     assert any(ref.figure_id == "theorem_traceability_graph" for ref in appendix_refs)
     assert any(ref.figure_id == "causal_ablation_heatmap" for ref in appendix_refs)
+    assert any(ref.figure_id == "track_lane_promotion_map" and ref.labeled is False for ref in appendix_refs)

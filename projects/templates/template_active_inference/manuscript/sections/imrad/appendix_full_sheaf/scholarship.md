@@ -1,9 +1,9 @@
 `sheaf-track:scholarship` binds `output/data/scholarship_source_matrix.json` into
 the appendix proof row. The appendix claim is exactly
 {{scholarship_source_count}} connected source rows with connected status
-`{{scholarship_sources_connected}}`; each row names a bibliography key, method
-role, manuscript section, registered track set, evidence artifact, and
-claim-boundary statement. The row set includes
+`{{scholarship_sources_connected}}`; each row names a bibliography key, locator,
+manuscript citation status, declared consumer sections, method role, registered
+track set, evidence artifact, and claim-boundary statement. The row set includes
 {{scholarship_quantitative_method_role_count}} quantitative/statistical or
 visualization-quality method roles, including {{visualization_statistics_backed_count}}
 statistically backed figures with bridge status
@@ -17,7 +17,13 @@ reference section is manifest-bound to sheaf tracks
 visualization track present
 (`{{statistical_visualization_bridge_references_visualization_bound}}`). This
 binds statistics and figure-quality claims to generated artifacts rather than
-bibliography authority.
+bibliography authority. The scholarship matrix itself also records manuscript
+citation presence (`{{scholarship_citations_present}}`), declared-section
+citation overlap count
+({{scholarship_declared_section_citation_overlap_count}}), scope-guarded
+boundaries (`{{scholarship_claim_boundaries_scope_guarded}}`), and live row
+re-derivation (`{{scholarship_rows_rederived}}`), which makes forged aggregate
+source-connectivity flags fail at the validation boundary.
 
 The visualization registry is also now a paper-integration object: role metadata
 complete `{{visualization_intent_metadata_complete}}`, paper claims complete

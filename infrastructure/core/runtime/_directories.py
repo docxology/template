@@ -7,7 +7,7 @@ the source code directory structure.
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_success
-from infrastructure.core.project_paths import resolve_project_root
+from infrastructure.core.project_paths import NON_RENDERED_SUBDIRS, resolve_project_root
 
 logger = get_logger(__name__)
 
@@ -21,6 +21,10 @@ def _repo_visible_project_path(repo_root: Path | str, project_name: str) -> Path
     this repository.
     """
     repo_root = Path(repo_root)
+    project_parts = tuple(part for part in project_name.replace("\\", "/").split("/") if part)
+    if project_parts and project_parts[0] in (NON_RENDERED_SUBDIRS | {"active", "templates"}):
+        return Path("projects", *project_parts)
+
     project_root = resolve_project_root(repo_root, project_name)
     if not project_root.is_absolute():
         return project_root

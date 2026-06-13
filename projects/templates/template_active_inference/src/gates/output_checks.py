@@ -279,6 +279,7 @@ PROMOTED_ARTIFACTS: dict[str, str] = {
     "assumptions": "output/data/analytical_assumption_index.json",
     "animation_deltas": "output/data/animation_frame_deltas.json",
     "replay_matrix": "output/reports/replay_matrix.json",
+    "track_lane_matrix": "output/data/track_lane_matrix.json",
     "track_scope": "output/data/track_improvement_scope.json",
     "blocked_scope": "output/reports/blocked_scope_manifest.json",
     "evidence_fields": "output/data/evidence_field_index.json",
@@ -471,6 +472,7 @@ def _add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict
 
 def _add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, dict]) -> None:
     replay_matrix = artifacts["replay_matrix"]
+    track_lane_matrix = artifacts["track_lane_matrix"]
     track_scope = artifacts["track_scope"]
     blocked_scope = artifacts["blocked_scope"]
     evidence_fields = artifacts["evidence_fields"]
@@ -492,6 +494,15 @@ def _add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, di
         replay_matrix.get("schema") == "template_active_inference.replay_matrix.v1"
         and replay_matrix.get("all_replay_rows_matched") is True
         and replay_matrix.get("all_configured_producers_represented") is True
+    )
+    checks["track_lane_matrix_schema"] = (
+        track_lane_matrix.get("schema") == "template_active_inference.track_lane_matrix.v1"
+        and track_lane_matrix.get("matrix_track_ids_match_tracks_yaml") is True
+        and track_lane_matrix.get("all_typed_claim_evidence_present") is True
+        and track_lane_matrix.get("all_semantic_restrictions_declared") is True
+        and track_lane_matrix.get("all_negative_controls_declared") is True
+        and track_lane_matrix.get("all_pipeline_tracks_complete") is True
+        and track_lane_matrix.get("all_required_pipeline_tracks_complete") is True
     )
     checks["track_improvement_scope_schema"] = (
         track_scope.get("schema") == "template_active_inference.track_improvement_scope.v1"
@@ -545,6 +556,9 @@ def _add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, di
         scholarship.get("schema") == "template_active_inference.scholarship_source_matrix.v1"
         and scholarship.get("all_sources_connected") is True
         and scholarship.get("all_expected_sources_present") is True
+        and scholarship.get("all_citations_present") is True
+        and scholarship.get("all_claim_boundaries_scope_guarded") is True
+        and scholarship.get("all_rows_rederived") is True
     )
     checks["proof_dependency_graph_schema"] = (
         proof_dependency.get("schema") == "template_active_inference.proof_dependency_graph.v1"

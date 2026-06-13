@@ -8,7 +8,7 @@ registries rather than in this file.
 
 ## Current verification evidence
 
-Current full-suite evidence: `uv run pytest tests/ --cov=src --cov-fail-under=90` passed 383 tests with 91.22% coverage in the 2026-06-12 audit. The same run used `COVERAGE_FILE=/tmp/template_ai.coverage` and `--durations=20 -q`, finishing in 1385.87 seconds. Replace this paragraph only after rerunning the full-suite command and updating the result from the fresh output.
+Current full-suite evidence: `uv run pytest tests/ --cov=src --cov-fail-under=90` passed 385 tests with 91.13% coverage in the 2026-06-12 PDT audit. The same run used `COVERAGE_FILE=/tmp/template_ai_scholarship_redteam.coverage` and `--durations=20 -q`, finishing in 1231.67 seconds. Replace this paragraph only after rerunning the full-suite command and updating the result from the fresh output.
 
 ## Promotion rule
 
@@ -56,6 +56,8 @@ validator code.
 
 These rows are scoped maintenance work. They do not introduce live scientific
 claims, new track IDs, artifact filenames, schema migrations, or figure IDs.
+No active minor rows are currently scoped; keep this table empty until a narrow
+future-only maintenance item has a proving artifact, gate, and negative control.
 
 | ID | Size | Track lane | Future improvement | Proving artifact | Gate/predicate | Negative control |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -68,7 +70,6 @@ green gates before it can be moved out of this file.
 
 | ID | Size | Track lane | Future improvement | Proving artifact | Gate/predicate | Negative control |
 | --- | --- | --- | --- | --- | --- | --- |
-| `MEDIUM-TRACK-MATRIX-1` | Medium | Cross-track/release | Add a track-lane matrix mapping every `tracks.yaml` pipeline track to its sheaf fragment, producer, primary artifact, validation gate, and manuscript consumer | `output/data/track_lane_matrix.json` | `set_equals` between matrix track IDs, `tracks.yaml`, and sheaf manifest consumers | Pipeline track lacks a sheaf fragment, producer, artifact, gate, or consumer and still passes |
 | `MEDIUM-TEST-PERF-1` | Medium | Test ergonomics | Split slow manuscript-gate mutation tests into cheaper source-only negative controls plus one end-to-end refresh characterization | parametrized source-contract tests and one end-to-end artifact-refresh test | focused gate tests preserve failures while `--durations=20` shows reduced redundant regeneration | Source-only mutation passes without exercising the matching contract |
 | `MEDIUM-PROVENANCE-UNIFY-1` | Medium | Provenance/validation spine | Remove remaining producer-order sensitivity between validation-spine and sheaf-track artifacts by making shared artifact contracts explicit | `output/data/artifact_contract_index.json` | validation-spine and sheaf validators agree on shared keys, hashes, and freshness fields | Reordered producer leaves stale shared provenance accepted |
 | `MEDIUM-SCOPE-MANIFEST-CONCORDANCE-1` | Medium | Scope/claim ledger | Derive scope-boundary blocked-context rows from `output/reports/blocked_scope_manifest.json` instead of duplicating the required blocked categories in the scope-audit builder | `output/reports/scope_boundary_audit.json` and `output/reports/blocked_scope_manifest.json` | blocked manifest IDs and scope-audit blocked categories agree exactly | Removing `llm_generated_evidence` from the blocked manifest leaves scope audit green |

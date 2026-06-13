@@ -62,6 +62,7 @@ CANONICAL_ARTIFACTS: dict[str, str] = {
     "dependency": "output/data/validation_dependency_graph.json",
     "section_status": "output/data/sheaf_section_status_matrix.json",
     "render_log": "output/reports/sheaf_render_log.json",
+    "track_lane_matrix": "output/data/track_lane_matrix.json",
     "track_improvement_scope": "output/data/track_improvement_scope.json",
     "blocked_scope_manifest": "output/reports/blocked_scope_manifest.json",
     "evidence_fields": "output/data/evidence_field_index.json",
@@ -134,6 +135,12 @@ OPTIONAL_CLAIM_EXEMPT_TRACKS: set[str] = {
     "animation",
     "animation_delta",
     "manuscript_staleness",
+}
+
+PIPELINE_TRACK_SHEAF_ALIASES: dict[str, tuple[str, ...]] = {
+    "analytical": ("formalism", "simulation", "assumption_index"),
+    "visualizations": ("visualization",),
+    "manuscript": ("prose", "formalism", "layers"),
 }
 
 
@@ -228,6 +235,12 @@ def _bound_tracks(root: Path) -> dict[str, list[str]]:
         for track_id in tracks:
             bound.setdefault(str(track_id), []).append(section_id)
     return bound
+
+
+def _pipeline_tracks(root: Path) -> list[dict[str, Any]]:
+    tracks_yaml = _load_yaml(root / "tracks.yaml")
+    tracks = tracks_yaml.get("tracks") or []
+    return [track for track in tracks if isinstance(track, dict) and track.get("id")]
 
 
 def _claim_records(root: Path) -> list[dict[str, Any]]:
@@ -527,6 +540,7 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
             CANONICAL_ARTIFACTS["dependency"],
             CANONICAL_ARTIFACTS["section_status"],
             CANONICAL_ARTIFACTS["render_log"],
+            CANONICAL_ARTIFACTS["track_lane_matrix"],
             CANONICAL_ARTIFACTS["evidence_fields"],
             CANONICAL_ARTIFACTS["theorem_traceability"],
             CANONICAL_ARTIFACTS["release_bundle"],
@@ -555,6 +569,7 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
         ),
         "rendered_outputs": (
             "output/figures/semantic_gluing_graph.png",
+            "output/figures/track_lane_promotion_map.png",
             "output/figures/theorem_traceability_graph.png",
             "output/figures/causal_ablation_heatmap.png",
             "output/figures/scholarship_source_map.png",
@@ -1144,8 +1159,10 @@ def build_release_bundle_manifest(project_root: Path) -> dict[str, Any]:
         CANONICAL_ARTIFACTS["theorem_traceability"],
         CANONICAL_ARTIFACTS["gate_ergonomics"],
         CANONICAL_ARTIFACTS["scholarship"],
+        CANONICAL_ARTIFACTS["track_lane_matrix"],
         "output/figures/si_belief_trajectory.gif",
         "output/figures/semantic_gluing_graph.png",
+        "output/figures/track_lane_promotion_map.png",
         "output/figures/theorem_traceability_graph.png",
         "output/figures/causal_ablation_heatmap.png",
         "output/figures/scholarship_source_map.png",
@@ -1256,6 +1273,7 @@ def _track_artifact(track_id: str) -> str:
         "pymdp": "output/data/si_policy_comparison.json",
         "simulation": "output/data/analytical_observable_sweep.json",
         "visualization": "output/reports/visualization_quality_audit.json",
+        "visualizations": "output/reports/visualization_quality_audit.json",
         "animation": "output/figures/si_belief_trajectory.gif",
         "animation_delta": "output/data/animation_frame_deltas.json",
         "artifact_diffoscope": CANONICAL_ARTIFACTS["artifact_diffoscope"],
@@ -1269,6 +1287,107 @@ def _track_artifact(track_id: str) -> str:
         "formalism": "manuscript/sheaf/manifest.yaml",
         "layers": "output/data/sheaf_coverage_matrix.json",
     }.get(track_id, "manuscript/sheaf/manifest.yaml")
+
+
+def _pipeline_sheaf_tracks(track: dict[str, Any], registry: dict[str, dict[str, Any]]) -> list[str]:
+    explicit = track.get("sheaf_track")
+    if explicit:
+        return [str(explicit)]
+    track_id = str(track.get("id") or "")
+    if track_id in registry:
+        return [track_id]
+    return list(PIPELINE_TRACK_SHEAF_ALIASES.get(track_id, ()))
+
+
+def build_track_lane_matrix(project_root: Path) -> dict[str, Any]:
+    """Map every pipeline track to sheaf fragments, producers, artifacts, gates, and consumers."""
+    root = project_root.resolve()
+    registry = _registry_tracks(root)
+    bound = _bound_tracks(root)
+    producers, _, artifact_gates = _artifact_maps()
+    configured = set(_analysis_scripts(root))
+    claims_by_path = _claim_ids_by_path(root)
+    claims_by_track = _claim_ids_by_track(root)
+    negative_rows = build_counterexample_matrix(root).get("rows") or []
+    negative_by_track = {str(row["promoted_track"]): str(row["id"]) for row in negative_rows}
+    semantic_restrictions = ("track_lane_matrix_complete", "track_lane_matrix_row_count")
+    rows: list[dict[str, Any]] = []
+    for track in _pipeline_tracks(root):
+        track_id = str(track.get("id") or "")
+        sheaf_tracks = _pipeline_sheaf_tracks(track, registry)
+        artifact = _track_artifact(track_id)
+        producer = producers.get(
+            artifact,
+            SHEAF_TRACK_PRODUCER if artifact.startswith("output/") else "compose_manuscript.py",
+        )
+        validation_gates = sorted(set([str(track.get("gate") or "")] + list(artifact_gates.get(artifact, ()))))
+        validation_gates = [gate for gate in validation_gates if gate]
+        consumers = sorted({section for sheaf_track in sheaf_tracks for section in bound.get(sheaf_track, [])})
+        claim_ids = sorted(set(claims_by_path.get(artifact, []) + claims_by_track.get(track_id, [])))
+        negative_control = negative_by_track.get(track_id, "track_lane_matrix_row_only_forgery")
+        source_paths = [str(path) for path in track.get("paths") or []]
+        promotion_requirements = {
+            "producer": producer in configured or producer == "compose_manuscript.py",
+            "artifact": (root / artifact).exists(),
+            "manuscript_consumer": bool(consumers),
+            "typed_claim_evidence": bool(claim_ids),
+            "semantic_restriction": bool(semantic_restrictions),
+            "validation_gate": bool(validation_gates),
+            "negative_control": bool(negative_control),
+        }
+        row = {
+            "track_id": track_id,
+            "label": str(track.get("label") or track_id),
+            "required": bool(track.get("required", False)),
+            "sheaf_tracks": sheaf_tracks,
+            "sheaf_tracks_registered": bool(sheaf_tracks)
+            and all(sheaf_track in registry for sheaf_track in sheaf_tracks),
+            "manuscript_consumers": consumers,
+            "manuscript_consumer_count": len(consumers),
+            "claim_ids": claim_ids,
+            "claim_id_count": len(claim_ids),
+            "has_typed_claim_evidence": promotion_requirements["typed_claim_evidence"],
+            "producer": producer,
+            "producer_configured": promotion_requirements["producer"],
+            "primary_artifact": artifact,
+            "primary_artifact_exists": promotion_requirements["artifact"],
+            "semantic_restrictions": list(semantic_restrictions),
+            "has_semantic_restriction": promotion_requirements["semantic_restriction"],
+            "validation_gates": validation_gates,
+            "has_validation_gate": promotion_requirements["validation_gate"],
+            "negative_control": negative_control,
+            "has_negative_control": promotion_requirements["negative_control"],
+            "promotion_requirements": promotion_requirements,
+            "source_paths": source_paths,
+            "source_paths_present": all((root / rel).exists() for rel in source_paths),
+        }
+        row["matrix_complete"] = row["sheaf_tracks_registered"] and all(promotion_requirements.values())
+        rows.append(row)
+    track_ids = [row["track_id"] for row in rows]
+    tracks_yaml_ids = [str(track.get("id")) for track in _pipeline_tracks(root)]
+    required_rows = [row for row in rows if row["required"]]
+    missing_required = sorted(row["track_id"] for row in required_rows if not row["matrix_complete"])
+    return {
+        "schema": "template_active_inference.track_lane_matrix.v1",
+        "schema_version": CANONICAL_SCHEMA,
+        "rows": rows,
+        "row_count": len(rows),
+        "required_track_count": len(required_rows),
+        "pipeline_track_ids": sorted(track_ids),
+        "tracks_yaml_track_ids": sorted(tracks_yaml_ids),
+        "matrix_track_ids_match_tracks_yaml": sorted(track_ids) == sorted(tracks_yaml_ids),
+        "all_sheaf_tracks_registered": bool(rows) and all(row["sheaf_tracks_registered"] for row in rows),
+        "all_manuscript_consumers_bound": bool(rows) and all(row["manuscript_consumers"] for row in rows),
+        "all_producers_configured": bool(rows) and all(row["producer_configured"] for row in rows),
+        "all_primary_artifacts_present": bool(rows) and all(row["primary_artifact_exists"] for row in rows),
+        "all_typed_claim_evidence_present": bool(rows) and all(row["has_typed_claim_evidence"] for row in rows),
+        "all_semantic_restrictions_declared": bool(rows) and all(row["has_semantic_restriction"] for row in rows),
+        "all_validation_gates_declared": bool(rows) and all(row["has_validation_gate"] for row in rows),
+        "all_negative_controls_declared": bool(rows) and all(row["has_negative_control"] for row in rows),
+        "all_pipeline_tracks_complete": bool(rows) and all(row["matrix_complete"] for row in rows),
+        "all_required_pipeline_tracks_complete": bool(required_rows) and not missing_required,
+        "missing_required_tracks": missing_required,
+    }
 
 
 def build_track_improvement_scope(project_root: Path) -> dict[str, Any]:
@@ -1488,6 +1607,7 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
     interop = _load_json(root / CANONICAL_ARTIFACTS["interop"])
     adversarial = _load_json(root / CANONICAL_ARTIFACTS["adversarial_audit"])
     dependency = _load_json(root / CANONICAL_ARTIFACTS["dependency"])
+    track_lane = _load_json(root / CANONICAL_ARTIFACTS["track_lane_matrix"])
     scope = _load_json(root / CANONICAL_ARTIFACTS["track_improvement_scope"])
     section_status = _load_json(root / CANONICAL_ARTIFACTS["section_status"])
     render_log = _load_json(root / CANONICAL_ARTIFACTS["render_log"])
@@ -1611,6 +1731,8 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
         and int(adversarial.get("known_bad_rows_passed", 1) or 0) == 0,
         "dependency_edge_types_complete": dependency.get("all_required_edge_types_present") is True,
         "dependency_field_edges_mapped": dependency.get("all_field_edges_mapped") is True,
+        "track_lane_matrix_complete": track_lane.get("all_pipeline_tracks_complete") is True
+        and track_lane.get("matrix_track_ids_match_tracks_yaml") is True,
         "section_status_all_bound_present": section_status.get("all_bound_fragments_present") is True,
         "section_status_all_rows_indexed": section_status.get("all_sections_have_status") is True
         and section_status.get("all_tracks_have_status") is True,
@@ -1762,6 +1884,10 @@ def _write_post_audit_canonical_artifacts(root: Path, paths: dict[str, Path], co
         build_release_bundle_manifest(root),
     )
     paths["scholarship"] = write_scholarship_source_matrix(root)
+    paths["track_lane_matrix"] = _write_json(
+        root / CANONICAL_ARTIFACTS["track_lane_matrix"],
+        build_track_lane_matrix(root),
+    )
     paths["track_improvement_scope"] = _write_json(
         root / CANONICAL_ARTIFACTS["track_improvement_scope"],
         build_track_improvement_scope(root),
@@ -1801,6 +1927,10 @@ def _write_final_canonical_pass(root: Path, paths: dict[str, Path], context: _Pr
     paths.update(write_sheaf_status_outputs(root))
     _write_semantic_artifacts(root, paths)
     _write_supplemental_phase(root, paths)
+    paths["track_lane_matrix"] = _write_json(
+        root / CANONICAL_ARTIFACTS["track_lane_matrix"],
+        build_track_lane_matrix(root),
+    )
     paths["release_bundle"] = _write_json(
         root / CANONICAL_ARTIFACTS["release_bundle"],
         build_release_bundle_manifest(root),

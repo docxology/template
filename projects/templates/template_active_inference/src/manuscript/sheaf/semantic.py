@@ -86,6 +86,7 @@ ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/reports/adversarial_audit.json": "generate_sheaf_tracks.py",
     "output/reports/manuscript_staleness_report.json": "z_generate_manuscript_variables.py",
     "output/reports/replay_matrix.json": "generate_sheaf_tracks.py",
+    "output/data/track_lane_matrix.json": "generate_sheaf_tracks.py",
     "output/data/track_improvement_scope.json": "generate_sheaf_tracks.py",
     "output/reports/blocked_scope_manifest.json": "generate_sheaf_tracks.py",
     "output/data/evidence_field_index.json": "generate_sheaf_tracks.py",
@@ -158,6 +159,7 @@ ARTIFACT_CONSUMERS: dict[str, tuple[str, ...]] = {
     "output/reports/adversarial_audit.json": ("methods_sheaf", "appendix_full_sheaf"),
     "output/reports/manuscript_staleness_report.json": ("methods_sheaf", "appendix_full_sheaf"),
     "output/data/track_improvement_scope.json": ("methods_sheaf", "appendix_full_sheaf"),
+    "output/data/track_lane_matrix.json": ("methods_sheaf", "appendix_full_sheaf"),
     "output/reports/blocked_scope_manifest.json": ("methods_sheaf", "discussion_outlook", "appendix_full_sheaf"),
     "output/data/evidence_field_index.json": ("methods_sheaf", "appendix_full_sheaf"),
     "output/reports/release_bundle_manifest.json": ("methods_sheaf", "appendix_full_sheaf"),
@@ -246,6 +248,7 @@ ARTIFACT_GATES: dict[str, tuple[str, ...]] = {
     "output/reports/adversarial_audit.json": ("validate_outputs", "validate_manuscript"),
     "output/reports/manuscript_staleness_report.json": ("validate_outputs", "validate_manuscript"),
     "output/data/animation_frame_deltas.json": ("validate_outputs", "validate_manuscript"),
+    "output/data/track_lane_matrix.json": ("validate_outputs", "validate_manuscript"),
     "output/figures/sheaf_layers_overview.png": ("validate_outputs", "figure_registry"),
     "output/figures/sheaf_coverage_heatmap.png": ("validate_outputs", "figure_registry"),
     "output/figures/figure_registry.json": ("validate_outputs",),
@@ -743,6 +746,7 @@ SEMANTIC_ARTIFACT_SOURCE_PATHS: dict[str, str] = {
     "analytical_assumption_index": "output/data/analytical_assumption_index.json",
     "animation_frame_deltas": "output/data/animation_frame_deltas.json",
     "manuscript_staleness": "output/reports/manuscript_staleness_report.json",
+    "track_lane_matrix": "output/data/track_lane_matrix.json",
     "track_improvement_scope": "output/data/track_improvement_scope.json",
     "evidence_field_index": "output/data/evidence_field_index.json",
     "release_bundle": "output/reports/release_bundle_manifest.json",
@@ -776,6 +780,7 @@ SEMANTIC_PAYLOAD_PATHS: dict[str, str] = {
     "gate_index": "output/data/validation_gate_index.json",
     "section_status": "output/data/sheaf_section_status_matrix.json",
     "render_log": "output/reports/sheaf_render_log.json",
+    "track_lane": "output/data/track_lane_matrix.json",
     "track_scope": "output/data/track_improvement_scope.json",
     "blocked_scope": "output/reports/blocked_scope_manifest.json",
     "replay_matrix": "output/reports/replay_matrix.json",
@@ -860,6 +865,7 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
     gate_index = payloads["gate_index"]
     section_status = payloads["section_status"]
     render_log = payloads["render_log"]
+    track_lane = payloads["track_lane"]
     track_scope = payloads["track_scope"]
     blocked_scope = payloads["blocked_scope"]
     replay_matrix = payloads["replay_matrix"]
@@ -947,6 +953,8 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
         "section_status_fully_sheafed_count": int(section_status.get("fully_sheafed_section_count", 0) or 0),
         "sheaf_render_log_all_events_ok": render_log.get("all_events_ok") is True,
         "sheaf_render_log_event_count": int(render_log.get("event_count", 0) or 0),
+        "track_lane_matrix_complete": track_lane.get("all_pipeline_tracks_complete") is True,
+        "track_lane_matrix_row_count": int(track_lane.get("row_count", 0) or 0),
         "proof_dependency_graph_resolved": proof_dependency.get("all_theorems_have_dependencies") is True
         and proof_dependency.get("all_edges_resolved") is True,
         "proof_dependency_edge_count": int(proof_dependency.get("edge_count", 0) or 0),
@@ -957,9 +965,7 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
         "ablation_sensitivity_row_count": int(ablation_sensitivity.get("row_count", 0) or 0),
         "release_attestation_complete": release_attestation.get("all_attested") is True,
         "release_attestation_row_count": int(release_attestation.get("row_count", 0) or 0),
-        "no_versioned_live_tracks": not any(
-            tid.endswith(("_v2", "_v3", "_v4", "_v5")) for tid in ctx.registry.tracks
-        ),
+        "no_versioned_live_tracks": not any(tid.endswith(("_v2", "_v3", "_v4", "_v5")) for tid in ctx.registry.tracks),
         **canonical_restrictions,
     }
     restriction_lanes = _restriction_lane_assignments(restrictions)

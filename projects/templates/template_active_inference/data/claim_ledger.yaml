@@ -82,6 +82,18 @@ claims:
   - sheaf
   evidence:
     predicate: file_exists
+- id: track_lane_promotion_map_figure
+  statement: Track-lane promotion map figure is generated from the canonical promotion
+    matrix and Lean promotion-proof boundary.
+  path: output/figures/track_lane_promotion_map.png
+  section: methods_sheaf
+  tracks:
+  - visualization
+  - manuscript
+  - sheaf
+  - lean
+  evidence:
+    predicate: file_exists
 - id: artifact_provenance_spine
   statement: Artifact provenance spine records hashes and configured producers for
     core outputs.
@@ -811,6 +823,20 @@ claims:
   evidence:
     field: all_live_tracks_valid
     equals: true
+- id: track_lane_matrix_complete
+  statement: Track-lane matrix maps every pipeline track to sheaf fragments, producers,
+    artifacts, manuscript consumers, typed claims, semantic restrictions, validation
+    gates, and negative controls.
+  path: output/data/track_lane_matrix.json
+  section: methods_sheaf
+  tracks:
+  - manuscript
+  - sheaf
+  - provenance
+  - gate_ergonomics
+  evidence:
+    field: all_pipeline_tracks_complete
+    equals: true
 - id: empirical_adapter_blocked
   statement: Empirical adapter remains blocked and absent from the live sheaf registry.
   path: output/reports/blocked_scope_manifest.json
@@ -962,8 +988,9 @@ claims:
     field: all_effects_source_backed
     equals: true
 - id: scholarship_source_matrix_connected
-  statement: Scholarship source matrix connects every cited source to a method role,
-    manuscript section, registered track, and evidence artifact.
+  statement: Scholarship source matrix rederives every cited source row from live
+    bibliography, declared manuscript citation sections, registered tracks, bound
+    manifest sections, scope-guarded boundaries, and evidence artifacts.
   path: output/data/scholarship_source_matrix.json
   section: methods_sheaf
   tracks:
@@ -971,7 +998,7 @@ claims:
   - manuscript
   - sheaf
   evidence:
-    field: all_sources_connected
+    field: all_rows_rederived
     equals: true
 - id: scholarship_source_map_figure
   statement: Scholarship source-map figure is generated from the source matrix.

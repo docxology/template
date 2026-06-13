@@ -223,13 +223,32 @@ def _bib_entries(root: Path) -> dict[str, str]:
 
 
 def _citation_present(root: Path, key: str) -> bool:
+    return bool(_citation_sections(root, key))
+
+
+def _section_id_from_path(root: Path, path: Path) -> str:
+    rel_parts = path.relative_to(root).parts
+    if "imrad" in rel_parts:
+        index = rel_parts.index("imrad")
+        if len(rel_parts) > index + 1:
+            return rel_parts[index + 1]
+    return re.sub(r"^\d+_(?:\d+_)?", "", path.stem)
+
+
+def _citation_sections(root: Path, key: str) -> list[str]:
     paths = sorted((root / "manuscript" / "sections").glob("**/*.md")) + sorted(
         path
         for path in (root / "manuscript").glob("*.md")
         if path.name not in {"99_references.md", "SYNTAX.md", "README.md", "AGENTS.md"}
     )
     needle = f"@{key}"
-    return any(needle in path.read_text(encoding="utf-8") for path in paths if path.is_file())
+    return sorted(
+        {
+            _section_id_from_path(root, path)
+            for path in paths
+            if path.is_file() and needle in path.read_text(encoding="utf-8")
+        }
+    )
 
 
 def _registry_tracks(root: Path) -> set[str]:
@@ -247,6 +266,29 @@ def _has_locator(entry: str) -> bool:
     return "doi" in lower or "url" in lower or "https://" in lower or "http://" in lower
 
 
+def _locator_kind(entry: str) -> str:
+    lower = entry.lower()
+    has_doi = "doi" in lower
+    has_url = "url" in lower or "https://" in lower or "http://" in lower
+    if has_doi and has_url:
+        return "doi+url"
+    if has_doi:
+        return "doi"
+    if has_url:
+        return "url"
+    return ""
+
+
+def _scope_guarded(boundary: str) -> bool:
+    lower = boundary.lower()
+    markers = ("only", "not ", "out of scope", "separate", "without", "rather than")
+    return bool(boundary.strip()) and any(marker in lower for marker in markers)
+
+
+def _row_key(row: dict[str, Any]) -> tuple[str, str, str]:
+    return (str(row.get("citation_key", "")), str(row.get("method_role", "")), str(row.get("artifact", "")))
+
+
 def build_scholarship_source_matrix(project_root: Path) -> dict[str, Any]:
     """Build the literature-to-method traceability matrix."""
     root = project_root.resolve()
@@ -260,14 +302,21 @@ def build_scholarship_source_matrix(project_root: Path) -> dict[str, Any]:
         artifact = str(source["artifact"])
         track_ids = [str(track) for track in source["tracks"]]
         section_ids = [str(section) for section in source["manuscript_sections"]]
+        citation_sections = _citation_sections(root, key)
+        cited_declared_sections = sorted(set(section_ids) & set(citation_sections))
         row = {
             **source,
             "bib_has_entry": bool(entry),
             "bib_has_locator": bool(entry and _has_locator(entry)),
-            "cited_in_manuscript": _citation_present(root, key),
+            "source_locator_kind": _locator_kind(entry),
+            "citation_sections": citation_sections,
+            "cited_in_manuscript": bool(citation_sections),
+            "cited_declared_sections": cited_declared_sections,
+            "cited_in_declared_sections": bool(cited_declared_sections),
             "artifact_exists": artifact == "output/data/scholarship_source_matrix.json" or (root / artifact).is_file(),
             "tracks_registered": set(track_ids).issubset(registry),
             "sections_bound": set(section_ids).issubset(sections),
+            "claim_boundary_scope_guarded": _scope_guarded(str(source["claim_boundary"])),
         }
         row["connected"] = all(
             bool(row[field])
@@ -278,11 +327,26 @@ def build_scholarship_source_matrix(project_root: Path) -> dict[str, Any]:
                 "artifact_exists",
                 "tracks_registered",
                 "sections_bound",
+                "claim_boundary_scope_guarded",
             )
-        ) and bool(row["claim_boundary"])
+        )
         rows.append(row)
     expected = set(EXPECTED_SCHOLARSHIP_KEYS)
     observed = {str(row["citation_key"]) for row in rows}
+    rows_rederived = bool(rows) and all(
+        row.get("connected")
+        == (
+            row.get("bib_has_entry") is True
+            and row.get("bib_has_locator") is True
+            and bool(row.get("source_locator_kind"))
+            and row.get("cited_in_manuscript") is True
+            and row.get("artifact_exists") is True
+            and row.get("tracks_registered") is True
+            and row.get("sections_bound") is True
+            and row.get("claim_boundary_scope_guarded") is True
+        )
+        for row in rows
+    )
     return {
         "schema": SCHOLARSHIP_SCHEMA,
         "rows": rows,
@@ -291,6 +355,9 @@ def build_scholarship_source_matrix(project_root: Path) -> dict[str, Any]:
         "observed_sources": sorted(observed),
         "method_role_count": len({str(row["method_role"]) for row in rows}),
         "source_family_count": len({str(row["source_family"]) for row in rows}),
+        "source_locator_kind_count": len(
+            {str(row["source_locator_kind"]) for row in rows if row["source_locator_kind"]}
+        ),
         "primary_source_count": sum(
             1 for row in rows if row["source_kind"] in {"primary_article", "primary_repository", "primary_preprint"}
         ),
@@ -301,6 +368,10 @@ def build_scholarship_source_matrix(project_root: Path) -> dict[str, Any]:
             or str(row["method_role"]) == "statistical_visualization_bridge"
         ),
         "all_expected_sources_present": observed == expected,
+        "all_citations_present": bool(rows) and all(row["cited_in_manuscript"] for row in rows),
+        "declared_section_citation_overlap_count": sum(1 for row in rows if row["cited_in_declared_sections"]),
+        "all_claim_boundaries_scope_guarded": bool(rows) and all(row["claim_boundary_scope_guarded"] for row in rows),
+        "all_rows_rederived": rows_rederived,
         "all_sources_connected": bool(rows) and all(row["connected"] for row in rows),
     }
 
@@ -331,19 +402,74 @@ def validate_scholarship_source_matrix(project_root: Path) -> list[str]:
         issues.append("scholarship_source_matrix.json schema mismatch")
     if observed != expected or payload.get("all_expected_sources_present") is not True:
         issues.append("scholarship_source_matrix.json source set is incomplete")
+    expected_payload = build_scholarship_source_matrix(root)
+    expected_rows = {_row_key(row): row for row in expected_payload.get("rows") or []}
+    saved_rows = {_row_key(row): row for row in rows}
+    if set(saved_rows) != set(expected_rows):
+        issues.append("scholarship_source_matrix.json row identities disagree with configured scholarship sources")
+    rederived_fields = (
+        "source_kind",
+        "source_family",
+        "tracks",
+        "manuscript_sections",
+        "claim_boundary",
+        "bib_has_entry",
+        "bib_has_locator",
+        "source_locator_kind",
+        "citation_sections",
+        "cited_in_manuscript",
+        "cited_declared_sections",
+        "cited_in_declared_sections",
+        "artifact_exists",
+        "tracks_registered",
+        "sections_bound",
+        "claim_boundary_scope_guarded",
+        "connected",
+    )
+    for key, row in saved_rows.items():
+        expected_row = expected_rows.get(key)
+        if expected_row is None:
+            continue
+        if any(row.get(field) != expected_row.get(field) for field in rederived_fields):
+            issues.append(f"scholarship_source_matrix.json stale or forged row evidence for {key[0]}:{key[1]}")
+            break
     connected = bool(rows) and all(
         row.get("bib_has_entry")
         and row.get("bib_has_locator")
+        and row.get("source_locator_kind")
         and row.get("cited_in_manuscript")
         and row.get("artifact_exists")
         and row.get("tracks_registered")
         and row.get("sections_bound")
-        and row.get("claim_boundary")
+        and row.get("claim_boundary_scope_guarded")
         and row.get("connected")
         for row in rows
     )
     if payload.get("all_sources_connected") is not True or payload.get("all_sources_connected") != connected:
         issues.append("scholarship_source_matrix.json has disconnected source rows")
+    if payload.get("all_citations_present") is not True or payload.get("all_citations_present") != (
+        bool(rows) and all(row.get("cited_in_manuscript") for row in rows)
+    ):
+        issues.append("scholarship_source_matrix.json has missing manuscript citations")
+    if payload.get("all_claim_boundaries_scope_guarded") is not True or payload.get(
+        "all_claim_boundaries_scope_guarded"
+    ) != (bool(rows) and all(row.get("claim_boundary_scope_guarded") for row in rows)):
+        issues.append("scholarship_source_matrix.json has unguarded claim boundaries")
+    if payload.get("all_rows_rederived") is not True or payload.get("all_rows_rederived") != expected_payload.get(
+        "all_rows_rederived"
+    ):
+        issues.append("scholarship_source_matrix.json row evidence was not rederived")
+    for field in (
+        "source_count",
+        "method_role_count",
+        "source_family_count",
+        "source_locator_kind_count",
+        "declared_section_citation_overlap_count",
+        "primary_source_count",
+        "quantitative_method_role_count",
+    ):
+        if payload.get(field) != expected_payload.get(field):
+            issues.append(f"scholarship_source_matrix.json {field} disagrees with live evidence")
     if int(payload.get("method_role_count", 0) or 0) < 6:
         issues.append("scholarship_source_matrix.json has too few method roles")
     if int(payload.get("quantitative_method_role_count", 0) or 0) < 3:

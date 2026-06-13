@@ -214,6 +214,7 @@ VARIABLE_ARTIFACTS: dict[str, str] = {
     "assumption": "output/data/analytical_assumption_index.json",
     "animation_delta": "output/data/animation_frame_deltas.json",
     "replay_matrix": "output/reports/replay_matrix.json",
+    "track_lane": "output/data/track_lane_matrix.json",
     "track_scope": "output/data/track_improvement_scope.json",
     "blocked_scope": "output/reports/blocked_scope_manifest.json",
     "evidence_fields": "output/data/evidence_field_index.json",
@@ -464,6 +465,7 @@ def _canonical_sheaf_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
     provenance_data = ctx["provenance_data"]
     replay_matrix_data = ctx["replay_matrix_data"]
     uncertainty_data = ctx["uncertainty_data"]
+    track_lane_data = ctx["track_lane_data"]
     track_scope_data = ctx["track_scope_data"]
     blocked_scope_data = ctx["blocked_scope_data"]
     evidence_fields_data = ctx["evidence_fields_data"]
@@ -488,6 +490,8 @@ def _canonical_sheaf_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
         "replay_matrix_all_replayed": bool(replay_matrix_data.get("all_replayed", False)),
         "replay_matrix_all_matched": bool(replay_matrix_data.get("all_replay_rows_matched", False)),
         "uncertainty_bin_count": uncertainty_data.get("bin_count", 0),
+        "track_lane_matrix_row_count": track_lane_data.get("row_count", 0),
+        "track_lane_matrix_complete": bool(track_lane_data.get("all_pipeline_tracks_complete", False)),
         "track_improvement_row_count": track_scope_data.get("improvement_row_count", 0),
         "track_improvement_all_live_valid": bool(track_scope_data.get("all_live_tracks_valid", False)),
         "blocked_scope_status": "blocked" if blocked_scope_data.get("all_blocked") else "scope_leak",
@@ -512,9 +516,18 @@ def _canonical_sheaf_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
         "scholarship_source_count": scholarship_data.get("source_count", 0),
         "scholarship_method_role_count": scholarship_data.get("method_role_count", 0),
         "scholarship_source_family_count": scholarship_data.get("source_family_count", 0),
+        "scholarship_source_locator_kind_count": scholarship_data.get("source_locator_kind_count", 0),
+        "scholarship_declared_section_citation_overlap_count": scholarship_data.get(
+            "declared_section_citation_overlap_count", 0
+        ),
         "scholarship_primary_source_count": scholarship_data.get("primary_source_count", 0),
         "scholarship_quantitative_method_role_count": scholarship_data.get("quantitative_method_role_count", 0),
         "scholarship_sources_connected": bool(scholarship_data.get("all_sources_connected", False)),
+        "scholarship_citations_present": bool(scholarship_data.get("all_citations_present", False)),
+        "scholarship_claim_boundaries_scope_guarded": bool(
+            scholarship_data.get("all_claim_boundaries_scope_guarded", False)
+        ),
+        "scholarship_rows_rederived": bool(scholarship_data.get("all_rows_rederived", False)),
         "proof_dependency_edge_count": proof_dependency_data.get("edge_count", 0),
         "proof_dependency_all_resolved": bool(proof_dependency_data.get("all_edges_resolved", False)),
         "state_transition_row_count": state_transition_data.get("row_count", 0),
@@ -585,6 +598,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
     assumption_data = artifacts["assumption"]
     animation_delta_data = artifacts["animation_delta"]
     replay_matrix_data = artifacts["replay_matrix"]
+    track_lane_data = artifacts["track_lane"]
     track_scope_data = artifacts["track_scope"]
     blocked_scope_data = artifacts["blocked_scope"]
     evidence_fields_data = artifacts["evidence_fields"]

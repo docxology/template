@@ -26,9 +26,14 @@ def test_generate_variables_with_outputs() -> None:
     assert vars_["lean_graph_world_topology_witness_count"] >= 3
     assert vars_["lean_graph_world_all_topologies_witnessed"] is True
     assert vars_["scholarship_source_count"] >= 8
+    assert vars_["scholarship_source_locator_kind_count"] >= 1
+    assert vars_["scholarship_declared_section_citation_overlap_count"] >= 1
     assert vars_["scholarship_quantitative_method_role_count"] >= 3
     assert vars_["scholarship_sources_connected"] is True
-    assert vars_["visualization_quality_figure_count"] >= 20
+    assert vars_["scholarship_citations_present"] is True
+    assert vars_["scholarship_claim_boundaries_scope_guarded"] is True
+    assert vars_["scholarship_rows_rederived"] is True
+    assert vars_["visualization_quality_figure_count"] >= 21
     assert vars_["visualization_quality_all_ok"] is True
     assert vars_["visualization_intent_metadata_complete"] is True
     assert vars_["visualization_paper_claims_complete"] is True

@@ -10,6 +10,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import yaml
+from matplotlib.colors import ListedColormap
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
 from gnn.concordance import BERNOULLI_SYMBOL_MAP
@@ -229,6 +230,99 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
             color=style.color("muted"),
         )
         ax.set_title("Multi-track architecture: science to gates to sheaf fragments")
+        save_styled_figure(fig, out, style)
+    return out
+
+
+def figure_track_lane_promotion_map(project_root: Path) -> Path:
+    """Render the pipeline-track promotion obligations and sheaf-lane bindings."""
+    root = project_root.resolve()
+    try:
+        matrix = load_json_artifact(root, "output/data/track_lane_matrix.json")
+    except FileNotFoundError:
+        from roadmap_tracks.sheaf_tracks import build_track_lane_matrix
+
+        matrix = build_track_lane_matrix(root)
+    rows = matrix.get("rows") or []
+    if not rows:
+        raise FileNotFoundError("missing rows in output/data/track_lane_matrix.json")
+    requirement_columns = [
+        ("producer", "Producer"),
+        ("artifact", "Artifact"),
+        ("manuscript_consumer", "Manuscript"),
+        ("typed_claim_evidence", "Claim"),
+        ("semantic_restriction", "Semantic"),
+        ("validation_gate", "Gate"),
+        ("negative_control", "Negative"),
+    ]
+    sheaf_tracks = sorted({str(track) for row in rows for track in row.get("sheaf_tracks") or []})
+    requirement_values = np.array(
+        [
+            [1 if (row.get("promotion_requirements") or {}).get(key) else 0 for key, _ in requirement_columns]
+            for row in rows
+        ],
+        dtype=int,
+    )
+    sheaf_values = np.array(
+        [[1 if track in set(row.get("sheaf_tracks") or []) else 0 for track in sheaf_tracks] for row in rows],
+        dtype=int,
+    )
+    row_labels = [wrap_text(row.get("track_id", ""), 18) for row in rows]
+    with styled_figure(root, "track_lane_promotion_map") as (style, out):
+        fig_h = max(7.2, 0.31 * len(rows) + 2.1)
+        fig, axes = plt.subplots(
+            1,
+            2,
+            figsize=(15.4, fig_h),
+            gridspec_kw={"width_ratios": [1.05, 2.3], "wspace": 0.05},
+        )
+        req_ax, lane_ax = axes
+        req_ax.imshow(
+            requirement_values,
+            cmap=ListedColormap([style.color("fail"), style.color("pass")]),
+            vmin=0,
+            vmax=1,
+            aspect="auto",
+        )
+        req_ax.set_xticks(np.arange(len(requirement_columns)))
+        req_ax.set_xticklabels([label for _, label in requirement_columns], rotation=45, ha="right", fontsize=7.2)
+        req_ax.set_yticks(np.arange(len(row_labels)))
+        req_ax.set_yticklabels(row_labels, fontsize=6.5)
+        req_ax.set_title("Promotion obligations", fontsize=9)
+
+        lane_ax.imshow(
+            sheaf_values,
+            cmap=ListedColormap(["#ffffff", style.color("secondary")]),
+            vmin=0,
+            vmax=1,
+            aspect="auto",
+        )
+        lane_ax.set_xticks(np.arange(len(sheaf_tracks)))
+        lane_ax.set_xticklabels([wrap_text(track, 10) for track in sheaf_tracks], rotation=90, ha="center", fontsize=6)
+        lane_ax.set_yticks(np.arange(len(row_labels)))
+        lane_ax.set_yticklabels([])
+        lane_ax.set_title("Sheaf lane bindings", fontsize=9)
+        for ax in (req_ax, lane_ax):
+            ax.set_xticks(np.arange(-0.5, ax.images[0].get_array().shape[1], 1), minor=True)
+            ax.set_yticks(np.arange(-0.5, len(rows), 1), minor=True)
+            ax.grid(which="minor", color=style.color("grid"), linestyle="-", linewidth=0.35)
+            ax.tick_params(which="minor", bottom=False, left=False)
+        fig.suptitle(
+            (
+                f"Track-lane promotion map: {matrix.get('row_count', len(rows))} pipeline rows; "
+                f"complete={matrix.get('all_pipeline_tracks_complete')}"
+            ),
+            fontsize=11,
+            y=0.99,
+        )
+        fig.text(
+            0.5,
+            0.012,
+            "Generated from output/data/track_lane_matrix.json and the Lean promotion-proof boundary.",
+            ha="center",
+            fontsize=8,
+            color=style.color("muted"),
+        )
         save_styled_figure(fig, out, style)
     return out
 

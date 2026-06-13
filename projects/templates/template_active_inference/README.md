@@ -131,6 +131,7 @@ replay, counterexamples, toy sweeps, uncertainty summaries, benchmark rows,
 finite model-checking witnesses, interop reports, semantic gluing, dependency
 graphs, evidence-field indexing, release-bundle parity, theorem traceability,
 gate ergonomics, scholarship source mapping, visualization-quality and statistical-bridge auditing,
+track-lane promotion mapping,
 artifact diffing, Lean proof extraction, finite state-space
 catalogs, causal ablations, artifact license checks, release-note evidence,
 track-improvement scope, and adversarial/scope audits. Live track IDs are stable
@@ -148,6 +149,10 @@ Visualization quality is checked as generated evidence, not prose: the audit
 joins render metrics, source maps, figure hashes, section bindings, and
 per-figure claim lanes in `output/data/figure_source_map.json` and
 `output/reports/visualization_quality_audit.json`.
+Scholarship quality is checked the same way: `output/data/scholarship_source_matrix.json`
+is rederived from bibliography entries, manuscript citation sections, sheaf
+tracks, manifest sections, scope-boundary text, and evidence artifacts before a
+source row can count as connected.
 
 ```bash
 uv run python scripts/compose_manuscript.py --list-tracks

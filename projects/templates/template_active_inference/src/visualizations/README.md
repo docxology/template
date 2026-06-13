@@ -13,7 +13,7 @@ Registry-driven figures for analytical, simulation, and sheaf tracks.
 | [`figures_diagrams.py`](figures_diagrams.py) | Dashboard, schematic, graph, and concordance figures |
 | [`figures_sheaf*.py`](figures_sheaf.py) | Coverage heatmap payload, draw helpers, layers overview |
 
-The root registry currently defines 20 publication PNG outputs. All rendered
+The root registry currently defines 21 publication PNG outputs. All rendered
 PNGs route through `figure_io.save_figure_png`; `image_render_metrics()` gives
 the visualization audit a live check for RGB mode, nonblank pixels, dimensions,
 and aspect-ratio bounds. Free-energy plots use `lambda_grid()` from

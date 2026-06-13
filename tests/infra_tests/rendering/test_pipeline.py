@@ -440,6 +440,36 @@ def test_render_individual_files_success(tmp_path: Path) -> None:
     assert (out_dir / "03_results.out").is_file()
 
 
+def test_render_individual_files_cleans_stale_web_artifacts(tmp_path: Path) -> None:
+    """Render-only reruns remove obsolete generated HTML before writing current pages."""
+    reporter = DiagnosticReporter(project_name="t", output_dir=tmp_path / "reports", load_existing=False)
+    md = tmp_path / "04_discussion.md"
+    md.write_text("# Discussion", encoding="utf-8")
+    web_dir = tmp_path / "output" / "web"
+    web_dir.mkdir(parents=True)
+    stale_html = web_dir / "old-section-name.html"
+    stale_index = web_dir / "index.html"
+    stale_combined = web_dir / "_combined_manuscript.md"
+    preserved_asset = web_dir / "style.css"
+    stale_html.write_text("<html>stale</html>", encoding="utf-8")
+    stale_index.write_text("<html>stale index</html>", encoding="utf-8")
+    stale_combined.write_text("# stale combined", encoding="utf-8")
+    preserved_asset.write_text("body { color: black; }", encoding="utf-8")
+    manager = _SuccessRenderManager(
+        RenderingConfig(output_dir=str(tmp_path / "output"), web_dir=str(web_dir), enable_html=True),
+        tmp_path / "outputs",
+    )
+
+    rendered_count, failed_files = _render_individual_files(manager, [md], reporter)
+
+    assert rendered_count == 1
+    assert failed_files == []
+    assert not stale_html.exists()
+    assert not stale_index.exists()
+    assert not stale_combined.exists()
+    assert preserved_asset.is_file()
+
+
 # ---------------------------------------------------------------------------
 # execute_render_pipeline override short-circuit
 # ---------------------------------------------------------------------------

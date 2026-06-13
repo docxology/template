@@ -35,6 +35,9 @@ private data, or nondeterministic research behavior.
   rendered image dimensions, RGB mode, hashes, source mappings, statistical
   figure-source bridges, explicit scholarship/sheaf crosswalk rows, and
   alt/caption metadata.
+- `scholarship.py` - source matrix builder and validator that rederives saved
+  bibliography rows from live references, manuscript citation sections, sheaf
+  tracks, manifest sections, scope-boundary text, and evidence artifact paths.
 - `sheaf_tracks.py` - canonical provenance, replay matrix, sensitivity,
   uncertainty, counterexample, model-checking, interop, adversarial-audit,
   evidence-field, release-bundle, theorem-traceability, gate-index, artifact

@@ -44,6 +44,8 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
     assert cert["restrictions"]["section_status_all_sections_have_status"] is True
     assert cert["restrictions"]["section_status_cell_count"] > 0
     assert cert["restrictions"]["sheaf_render_log_all_events_ok"] is True
+    assert cert["restrictions"]["track_lane_matrix_complete"] is True
+    assert cert["restrictions"]["track_lane_matrix_row_count"] > 0
     assert cert["restrictions"]["visualization_quality_ok"] is True
     assert cert["restrictions"]["visualization_intent_metadata_complete"] is True
     assert cert["restrictions"]["visualization_paper_claims_complete"] is True
@@ -110,6 +112,7 @@ def test_semantic_certificate_key_surface_is_stable(project_root: Path) -> None:
         "claim_ledger",
         "evidence_crosswalk",
         "dependency_graph",
+        "track_lane_matrix",
         "track_improvement_scope",
         "evidence_field_index",
         "release_bundle",
@@ -126,6 +129,7 @@ def test_semantic_certificate_key_surface_is_stable(project_root: Path) -> None:
         "visualization_quality_ok",
         "statistical_visualization_crosswalk_ok",
         "release_attestation_complete",
+        "track_lane_matrix_complete",
         "no_versioned_live_tracks",
     }
     assert validate_semantic_gluing(project_root) == []

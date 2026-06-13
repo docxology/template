@@ -88,7 +88,7 @@ def test_figure_registry_and_markdown() -> None:
 def test_figure_registry_declares_intent_metadata() -> None:
     root = Path(__file__).resolve().parents[1]
     registry = load_figure_registry(root)
-    assert len(registry) == 20
+    assert len(registry) == 21
     for figure_id, spec in registry.items():
         assert spec.visual_role in ALLOWED_VISUAL_ROLES, figure_id
         assert spec.evidence_role in ALLOWED_EVIDENCE_ROLES, figure_id

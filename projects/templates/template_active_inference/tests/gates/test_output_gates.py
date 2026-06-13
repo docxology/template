@@ -82,6 +82,7 @@ EXPECTED_DERIVED_OUTPUT_CHECK_KEYS = {
     "theorem_traceability_matrix_schema",
     "toy_benchmark_matrix_schema",
     "toy_sweep_track_schemas",
+    "track_lane_matrix_schema",
     "track_improvement_scope_schema",
     "uncertainty_summary_schema",
     "validation_dependency_graph_schema",

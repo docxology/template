@@ -27,6 +27,18 @@ def _append_summary_issue(issues: list[str], payload: dict, field: str, derived:
         issues.append(message)
 
 
+def _coerce_int(value: object) -> int:
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value)
+    if isinstance(value, str):
+        return int(value)
+    return 0
+
+
 def _semantic_restriction_value_ok(restriction: str, value: object) -> bool:
     if isinstance(value, bool):
         return value
@@ -35,9 +47,9 @@ def _semantic_restriction_value_ok(restriction: str, value: object) -> bool:
         "coverage_missing",
         "pymdp_runtime_unexpected_warning_count",
     }:
-        return int(value or 0) == 0
+        return _coerce_int(value) == 0
     if restriction.endswith("_count") or restriction in {"claim_count", "section_count", "track_count"}:
-        return int(value or 0) >= 0
+        return _coerce_int(value) >= 0
     return bool(value)
 
 
@@ -63,12 +75,20 @@ def validate_sheaf_track_source_contract(project_root: Path) -> list[str]:
     root = project_root.resolve()
     issues: list[str] = []
     _validate_registry_contract(root, issues)
+    registry = _tracks._registry_tracks(root)
     if _tracks.SHEAF_TRACK_PRODUCER not in _tracks._analysis_scripts(root):
         issues.append("producer_coverage_complete: generate_sheaf_tracks.py missing from analysis scripts")
     claim_paths = _tracks._claim_ids_by_path(root)
     missing_claims = sorted(rel for rel in _tracks.CANONICAL_ARTIFACTS.values() if not claim_paths.get(rel))
     if missing_claims:
         issues.append(f"all_canonical_artifacts_have_claims: {', '.join(missing_claims)}")
+    missing_sheaf_fragments = sorted(
+        str(track.get("id"))
+        for track in _tracks._pipeline_tracks(root)
+        if not _tracks._pipeline_sheaf_tracks(track, registry)
+    )
+    if missing_sheaf_fragments:
+        issues.append(f"pipeline tracks missing sheaf fragments: {', '.join(missing_sheaf_fragments)}")
     return issues
 
 
@@ -105,9 +125,7 @@ def _validate_saved_semantic_certificate(root: Path, restrictions: dict[str, boo
             expected_summaries[lane] = {
                 "restrictions": keys,
                 "restriction_count": len(keys),
-                "ok_count": sum(
-                    1 for key in keys if _semantic_restriction_value_ok(key, saved_restrictions.get(key))
-                ),
+                "ok_count": sum(1 for key in keys if _semantic_restriction_value_ok(key, saved_restrictions.get(key))),
                 "all_ok": bool(keys)
                 and all(_semantic_restriction_value_ok(key, saved_restrictions.get(key)) for key in keys),
             }
@@ -343,6 +361,47 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     scope_live_tracks_valid = bool(promotion_matrix) and all(row.get("promotion_complete") for row in promotion_matrix)
     if scope.get("all_live_tracks_valid") is not True or scope.get("all_live_tracks_valid") != scope_live_tracks_valid:
         issues.append("track_improvement_scope.json has incomplete live-track promotion rows")
+
+    track_lane = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["track_lane_matrix"])
+    if track_lane.get("schema") != "template_active_inference.track_lane_matrix.v1":
+        issues.append("track_lane_matrix.json schema mismatch")
+    matrix_rows = track_lane.get("rows") or []
+    tracks_yaml_ids = sorted(str(track.get("id")) for track in _tracks._pipeline_tracks(root))
+    row_ids = sorted(str(row.get("track_id")) for row in matrix_rows if row.get("track_id"))
+    row_complete = bool(matrix_rows) and all(
+        row.get("matrix_complete") is True
+        and bool(row.get("sheaf_tracks"))
+        and row.get("sheaf_tracks_registered") is True
+        and bool(row.get("manuscript_consumers"))
+        and bool(row.get("claim_ids"))
+        and row.get("has_typed_claim_evidence") is True
+        and row.get("producer_configured") is True
+        and row.get("primary_artifact_exists") is True
+        and bool(row.get("semantic_restrictions"))
+        and row.get("has_semantic_restriction") is True
+        and row.get("has_validation_gate") is True
+        and bool(row.get("negative_control"))
+        and row.get("has_negative_control") is True
+        and all((row.get("promotion_requirements") or {}).values())
+        for row in matrix_rows
+    )
+    required_complete = bool(matrix_rows) and all(
+        (not row.get("required")) or row.get("matrix_complete") is True for row in matrix_rows
+    )
+    if (
+        row_ids != tracks_yaml_ids
+        or track_lane.get("pipeline_track_ids") != tracks_yaml_ids
+        or track_lane.get("tracks_yaml_track_ids") != tracks_yaml_ids
+        or track_lane.get("matrix_track_ids_match_tracks_yaml") is not True
+        or track_lane.get("all_typed_claim_evidence_present") is not True
+        or track_lane.get("all_semantic_restrictions_declared") is not True
+        or track_lane.get("all_negative_controls_declared") is not True
+        or track_lane.get("all_pipeline_tracks_complete") is not True
+        or track_lane.get("all_pipeline_tracks_complete") != row_complete
+        or track_lane.get("all_required_pipeline_tracks_complete") is not True
+        or track_lane.get("all_required_pipeline_tracks_complete") != required_complete
+    ):
+        issues.append("track_lane_matrix.json has incomplete pipeline-to-sheaf rows")
 
     blocked = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["blocked_scope_manifest"])
     if blocked.get("schema") != "template_active_inference.blocked_scope_manifest.v1":

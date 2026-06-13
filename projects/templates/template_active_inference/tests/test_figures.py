@@ -120,6 +120,7 @@ def test_layout_sensitive_figures_have_publication_dimensions(project_root: Path
         "sheaf_coverage_heatmap": (2400, 900),
         "sheaf_layers_overview": (1800, 1400),
         "theorem_traceability_graph": (1450, 760),
+        "track_lane_promotion_map": (1800, 1100),
         "lean_boundary_status": (1300, 900),
     }
     for figure_id, (min_width, min_height) in expected_minima.items():
@@ -247,7 +248,7 @@ def test_visualization_quality_audit_row_surface_and_hash_negative_control(proje
     payload = json.loads(audit_path.read_text(encoding="utf-8"))
     registry = load_figure_registry(project_root)
 
-    assert payload["figure_count"] == len(registry) == 20
+    assert payload["figure_count"] == len(registry) == 21
     assert set(payload["rows"][0]) >= {
         "figure_id",
         "path",

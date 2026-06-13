@@ -77,7 +77,9 @@ Semantic gluing then checks agreement of the glued content: coverage counts, man
 
 ![Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate.](../output/figures/semantic_gluing_graph.png){#fig:semantic_gluing_graph width=95% fig-alt="Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate."}
 
-![Scholarship source map: {{scholarship_source_count}} source rows across {{scholarship_method_role_count}} method roles and {{scholarship_source_family_count}} source families. Connected status: {{scholarship_sources_connected}}.](../output/figures/scholarship_source_map.png){#fig:scholarship_source_map width=95% fig-alt="Four-column source map generated from the scholarship source matrix. Each row links a bibliography key to a source family, method role, and generated evidence artifact; green borders mark rows with bibliography entries, manuscript citations, registered tracks, bound manuscript sections, and existing artifacts."}
+![Track-lane promotion map: {{track_lane_matrix_row_count}} pipeline-to-sheaf rows with complete promotion status {{track_lane_matrix_complete}}. Left: seven promotion-rule obligations; right: sheaf fragment bindings.](../output/figures/track_lane_promotion_map.png){#fig:track_lane_promotion_map width=98% fig-alt="Two-panel matrix generated from track_lane_matrix.json. The left panel lists pipeline tracks against producer, artifact, manuscript consumer, typed claim, semantic restriction, validation gate, and negative control obligations. The right panel shows the sheaf fragment lanes bound to each pipeline track."}
+
+![Scholarship source map: {{scholarship_source_count}} source rows across {{scholarship_method_role_count}} method roles and {{scholarship_source_family_count}} source families. Connected status: {{scholarship_sources_connected}}; row evidence rederived: {{scholarship_rows_rederived}}.](../output/figures/scholarship_source_map.png){#fig:scholarship_source_map width=95% fig-alt="Five-column source map generated from the scholarship source matrix. Each row links a bibliography key to a DOI or URL locator, manuscript citation status, guarded scope boundary, method role, and generated evidence artifact; green borders mark rows rederived from bibliography entries, manuscript citations, registered tracks, bound manuscript sections, and existing artifacts."}
 
 <!-- sheaf-track:provenance -->
 
@@ -109,6 +111,8 @@ The `release_bundle` fragment records whether the canonical deliverables exist b
 
 The `gate_ergonomics` fragment turns validation commands into evidence rows. `output/data/validation_gate_index.json` records {{validation_gate_index_count}} gate rows, each naming required inputs and the negative-control surface that should fail closed.
 
+`output/data/track_lane_matrix.json` is the cross-track audit table for the same gate surface: {{track_lane_matrix_row_count}} pipeline rows map to sheaf fragments, producer scripts, primary artifacts, validation gates, and manuscript consumers, with completion flag `{{track_lane_matrix_complete}}`.
+
 <!-- sheaf-track:artifact_diffoscope -->
 
 ### Artifact diffoscope track
@@ -138,7 +142,8 @@ records {{scholarship_source_count}} source rows across
 {{scholarship_source_family_count}} source families, including
 {{scholarship_quantitative_method_role_count}} quantitative/statistical or
 visualization-quality method roles; [@fig:scholarship_source_map] renders the
-resulting source-to-artifact map. The row set connects foundational
+resulting source-to-artifact map with {{scholarship_source_locator_kind_count}}
+locator kinds. The row set connects foundational
 free-energy and active-inference references [@friston2010fep; @buckley2017mathreview;
 @dacosta2020discrete; @parr2022active; @smith2022tutorial], implementation and
 notation anchors [@pymdp2024; @gnn2023], and applied sheaf sources
@@ -146,15 +151,21 @@ notation anchors [@pymdp2024; @gnn2023], and applied sheaf sources
 role they support.
 
 The validation claim is deliberately narrow: every row must have a bibliography
-entry with a DOI or URL, a manuscript citation, a registered sheaf track, a bound
-manifest section, an existing evidence artifact, and a claim-boundary statement.
-The added statistics and visualization rows point to `analysis_statistics.json`
-and `visualization_quality_audit.json`, including a statistical-visualization
-bridge row, so the scholarship track now distinguishes method lineage from the
-generated numerical, figure-quality, and figure-provenance evidence. The
-hydrated flag `{{scholarship_sources_connected}}` is therefore a source-traceability
-claim, not a claim that the toy results inherit empirical support from the cited
-literature.
+entry with a DOI or URL, a manuscript citation, registered sheaf tracks, bound
+manifest consumer sections, an existing evidence artifact, and a scope-guarded
+claim-boundary statement. The saved matrix is then
+rederived from live bibliography, manuscript, registry, manifest, and artifact
+evidence before validation accepts it (`{{scholarship_rows_rederived}}`), so a
+forged row-level boolean cannot launder a disconnected source. The added
+statistics and visualization rows point to `analysis_statistics.json` and
+`visualization_quality_audit.json`, including a statistical-visualization bridge
+row, so the scholarship track now distinguishes method lineage from the generated
+numerical, figure-quality, and figure-provenance evidence. The hydrated flags
+`{{scholarship_sources_connected}}`,
+`{{scholarship_citations_present}}`, and
+`{{scholarship_claim_boundaries_scope_guarded}}` are therefore
+source-traceability and scope-control claims, not claims that the toy results
+inherit empirical support from the cited literature.
 
 <!-- sheaf-track:manuscript_staleness -->
 
@@ -275,13 +286,13 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `layers` | `layers_report` | 1 | 1 | 0 | 1 | `complete` |
 | `pymdp` | `markdown` | 3 | 3 | 0 | 15 | `complete` |
 | `interop` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
-| `provenance` | `markdown` | 2 | 2 | 0 | 12 | `complete` |
+| `provenance` | `markdown` | 2 | 2 | 0 | 13 | `complete` |
 | `replay_matrix` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
 | `counterexample` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
 | `adversarial_audit` | `markdown` | 2 | 2 | 0 | 9 | `complete` |
 | `evidence_fields` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
 | `release_bundle` | `markdown` | 2 | 2 | 0 | 5 | `complete` |
-| `gate_ergonomics` | `markdown` | 2 | 2 | 0 | 5 | `complete` |
+| `gate_ergonomics` | `markdown` | 2 | 2 | 0 | 6 | `complete` |
 | `artifact_diffoscope` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
 | `artifact_license` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
 | `scholarship` | `markdown` | 3 | 3 | 0 | 4 | `complete` |
@@ -289,8 +300,8 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `uncertainty` | `markdown` | 2 | 2 | 0 | 4 | `complete` |
 | `benchmark` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
 | `manuscript_staleness` | `markdown` | 2 | 2 | 0 | 1 | `complete` |
-| `visualization` | `section_figures` | 10 | 10 | 0 | 14 | `complete` |
-| `lean` | `markdown` | 2 | 2 | 0 | 8 | `complete` |
+| `visualization` | `section_figures` | 10 | 10 | 0 | 15 | `complete` |
+| `lean` | `markdown` | 2 | 2 | 0 | 9 | `complete` |
 | `model_checking` | `markdown` | 2 | 2 | 0 | 7 | `complete` |
 | `theorem_traceability` | `markdown` | 2 | 2 | 0 | 3 | `complete` |
 | `proof_extraction` | `markdown` | 2 | 2 | 0 | 2 | `complete` |
@@ -314,7 +325,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `coverage_matrix_built` | `sheaf.coverage` | `output/data/sheaf_coverage_matrix.json` | `ok` | 93 present cells |
 | `section_status_matrix_built` | `sheaf.status` | `output/data/sheaf_section_status_matrix.json` | `ok` | 561 section-track cells |
 | `layers_renderer_bound` | `sheaf.layers_report` | `manuscript/08_methods_sheaf.md` | `ok` | methods sheaf layer tables |
-| `semantic_artifacts_indexed` | `sheaf.semantic` | `output/data/validation_dependency_graph.json` | `ok` | 80 artifact producer rows |
+| `semantic_artifacts_indexed` | `sheaf.semantic` | `output/data/validation_dependency_graph.json` | `ok` | 81 artifact producer rows |
 | `validation_gates_indexed` | `gates` | `output/data/validation_gate_index.json` | `ok` | 3 gate groups |
 | `manuscript_sections_composed` | `sheaf.compose` | `manuscript/*.md` | `ok` | 16 composed markdown files |
 
@@ -334,7 +345,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `validation_dependency_graph` | `output/data/validation_dependency_graph.json` | `generate_sheaf_tracks.py` | validate_manuscript, validate_outputs |
 | `semantic_gluing_graph_figure` | `output/figures/semantic_gluing_graph.png` | `generate_figures.py` | validate_outputs, figure_registry |
 
-**Claim rows:** 90 typed evidence claims.
+**Claim rows:** 92 typed evidence claims.
 
 <!-- sheaf-layers:artifact-producers -->
 ## Artifact producer graph
@@ -382,6 +393,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/data/theorem_traceability_matrix.json` | `generate_sheaf_tracks.py` | Yes | methods_lean, appendix_full_sheaf |
 | `output/data/toy_benchmark_matrix.json` | `generate_toy_sweep_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/data/track_improvement_scope.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
+| `output/data/track_lane_matrix.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/data/uncertainty_summary.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/data/validation_dependency_graph.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf |
 | `output/data/validation_gate_index.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
@@ -447,6 +459,45 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | Gate ergonomics indexed | `True` |
 | Interop lossless | `True` |
 | Scope toy-only | `True` |
+
+<!-- sheaf-layers:track-lane-matrix -->
+## Track-lane matrix
+
+| Pipeline track | Sheaf fragments | Producer | Primary artifact | Claims | Semantic | Gates | Negative |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `lean` | `lean` | `generate_formal_interop_tracks.py` | `output/reports/lean_theorem_inventory.json` | `lean_graph_world_policy_boundary`, `lean_graph_world_topologies_witnessed`, `lean_theorem_inventory_proved`, `model_checking_exhaustive`, `model_checking_witnesses_pass`, `proof_dependency_graph_resolved`, `proof_extraction_constructive`, `theorem_traceability_linked`, `track_lane_promotion_map_figure` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `build_lean`, `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `analytical` | `formalism`, `simulation`, `assumption_index` | `run_analytical_sweep.py` | `output/data/parameter_sweep.csv` | `analytical_assumption_index`, `composed_methods_analytical`, `composed_results_mi` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `pymdp` | `pymdp` | `simulate_si_tmaze.py` | `output/data/si_policy_comparison.json` | `graph_world_invariants_pass`, `graph_world_topology_traces_consistent`, `pymdp_policy_posterior_grid_normalized`, `pymdp_runtime_diagnostics_ok`, `sheaf_gluing_certificate`, `si_belief_entropy_figure`, `si_efe_rows_explained`, `si_graph_world_summary`, `si_graph_world_trace`, `si_graph_world_trace_consistency`, `si_policy_comparison`, `si_policy_comparison_modes`, `si_policy_grid_complete`, `si_tmaze_summary`, `si_tmaze_trace` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `gnn` | `gnn` | `generate_formal_interop_tracks.py` | `output/reports/gnn_lint_report.json` | `cross_track_symbols_consistent`, `interop_lossless`, `interop_roundtrip_lossless`, `sheaf_gluing_certificate` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `ontology` | `ontology` | `generate_formal_interop_tracks.py` | `output/data/ontology_profile_matrix.json` | `composed_discussion`, `cross_track_symbols_consistent`, `interop_lossless`, `interop_roundtrip_lossless`, `sheaf_gluing_certificate` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `visualizations` | `visualization` | `generate_integration_audit.py` | `output/reports/visualization_quality_audit.json` | `visualization_quality_audit_complete`, `visualization_statistics_bridge_complete` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `provenance` | `provenance` | `generate_sheaf_tracks.py` | `output/data/artifact_provenance.json` | `artifact_diffoscope_equal`, `artifact_license_safe`, `artifact_provenance_seed_config`, `artifact_provenance_spine`, `dependency_graph_edges`, `figure_hash_manifest_complete`, `figure_source_map_complete`, `producer_completeness`, `pymdp_runtime_diagnostics_ok`, `release_bundle_sources_present`, `stale_artifact_report_fresh`, `track_improvement_scope_complete`, `track_lane_matrix_complete` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `missing_sheaf_track_producer` |
+| `replay_matrix` | `replay_matrix` | `generate_sheaf_tracks.py` | `output/reports/replay_matrix.json` | `replay_matrix_all_replayed`, `replay_matrix_spine`, `stale_artifact_report_fresh` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `replay_mismatch` |
+| `counterexample` | `counterexample` | `generate_sheaf_tracks.py` | `output/reports/counterexample_matrix.json` | `counterexample_expected_failures`, `counterexample_matrix_spine` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `known_bad_counterexample_passed` |
+| `sensitivity` | `sensitivity` | `generate_sheaf_tracks.py` | `output/data/sensitivity_sweep.json` | `ablation_sensitivity_source_backed`, `causal_ablation_complete`, `graph_world_invariants_pass`, `graph_world_topology_traces_consistent`, `lean_graph_world_topologies_witnessed`, `sensitivity_complete_grid`, `si_efe_rows_explained`, `si_policy_grid_complete`, `state_transition_table_complete` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_outputs` | `missing_sensitivity_cell` |
+| `assumption_index` | `assumption_index` | `generate_toy_sweep_tracks.py` | `output/data/analytical_assumption_index.json` | `analytical_assumption_index` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `uncertainty` | `uncertainty` | `generate_sheaf_tracks.py` | `output/data/uncertainty_summary.json` | `ablation_sensitivity_source_backed`, `pymdp_policy_posterior_grid_normalized`, `uncertainty_normalized`, `uncertainty_rows_normalized` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_outputs` | `unnormalized_uncertainty_row` |
+| `benchmark` | `benchmark` | `generate_toy_sweep_tracks.py` | `output/data/toy_benchmark_matrix.json` | `benchmark_rows_complete`, `causal_ablation_complete`, `state_space_catalog_finite` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `model_checking` | `model_checking` | `generate_sheaf_tracks.py` | `output/reports/model_checking_witnesses.json` | `lean_graph_world_topologies_witnessed`, `lean_theorem_inventory_proved`, `model_checking_exhaustive`, `model_checking_witnesses_pass`, `state_space_catalog_finite`, `state_transition_table_complete`, `theorem_traceability_linked` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_outputs` | `missed_model_checking_counterexample` |
+| `interop` | `interop` | `generate_sheaf_tracks.py` | `output/data/interop_roundtrip_report.json` | `interop_lossless`, `interop_roundtrip_lossless`, `pymdp_policy_posterior_grid_normalized` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_outputs` | `interop_shape_loss` |
+| `adversarial_audit` | `adversarial_audit` | `generate_sheaf_tracks.py` | `output/reports/adversarial_audit.json` | `adversarial_audit_expected_failures`, `adversarial_audit_known_bad_blocked`, `claim_evidence_audit_typed`, `counterexample_expected_failures`, `empirical_adapter_blocked`, `producer_completeness`, `pymdp_runtime_diagnostics_ok`, `scope_boundary_toy_only`, `semantic_gluing_ok` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `adversarial_known_bad_passes` |
+| `evidence_fields` | `evidence_fields` | `generate_sheaf_tracks.py` | `output/data/evidence_field_index.json` | `evidence_fields_mapped` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `missing_typed_claim` |
+| `release_bundle` | `release_bundle` | `generate_sheaf_tracks.py` | `output/reports/release_bundle_manifest.json` | `artifact_diffoscope_equal`, `artifact_license_safe`, `release_attestation_complete`, `release_bundle_sources_present`, `release_notes_source_backed` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `release_bundle_parity_failure` |
+| `theorem_traceability` | `theorem_traceability` | `generate_sheaf_tracks.py` | `output/data/theorem_traceability_matrix.json` | `proof_dependency_graph_resolved`, `proof_extraction_constructive`, `theorem_traceability_linked` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `theorem_traceability_unlinked` |
+| `gate_ergonomics` | `gate_ergonomics` | `generate_integration_audit.py` | `output/data/validation_gate_index.json` | `gate_ergonomics_indexed`, `release_attestation_complete`, `release_notes_source_backed`, `sheaf_render_log_events_ok`, `track_lane_matrix_complete`, `validation_gate_index_complete` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `gate_ergonomics_unindexed` |
+| `artifact_diffoscope` | `artifact_diffoscope` | `generate_integration_audit.py` | `output/reports/artifact_diffoscope.json` | `artifact_diffoscope_equal` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `artifact_diffoscope_missed_hash_drift` |
+| `proof_extraction` | `proof_extraction` | `generate_formal_interop_tracks.py` | `output/data/proof_extraction_index.json` | `proof_dependency_graph_resolved`, `proof_extraction_constructive` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `proof_extraction_missing_statement` |
+| `state_space_catalog` | `state_space_catalog` | `generate_toy_sweep_tracks.py` | `output/data/state_space_catalog.json` | `state_space_catalog_finite`, `state_transition_table_complete` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `state_space_catalog_missing_finite_space` |
+| `causal_ablation` | `causal_ablation` | `generate_toy_sweep_tracks.py` | `output/data/causal_ablation_matrix.json` | `ablation_sensitivity_source_backed`, `causal_ablation_complete` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `causal_ablation_missing_cell` |
+| `artifact_license` | `artifact_license` | `generate_integration_audit.py` | `output/reports/artifact_license_audit.json` | `artifact_license_safe` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `artifact_license_unsafe_artifact` |
+| `scholarship` | `scholarship` | `generate_sheaf_tracks.py` | `output/data/scholarship_source_matrix.json` | `scholarship_source_map_figure`, `scholarship_source_matrix_connected`, `statistical_visualization_crosswalk_complete`, `visualization_statistics_bridge_complete` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `missing_scholarship_source_binding` |
+| `release_notes` | `release_notes` | `generate_integration_audit.py` | `output/reports/release_notes_evidence.json` | `release_attestation_complete`, `release_notes_source_backed` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `release_notes_claim_failed_gate_passed` |
+| `animation_delta` | `animation_delta` | `render_animation.py` | `output/data/animation_frame_deltas.json` | `animation_frame_deltas_nonzero` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `manuscript_staleness` | `manuscript_staleness` | `z_generate_manuscript_variables.py` | `output/reports/manuscript_staleness_report.json` | `manuscript_staleness_fresh` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `visualization` | `visualization` | `generate_integration_audit.py` | `output/reports/visualization_quality_audit.json` | `animation_frame_deltas_nonzero`, `figure_hash_manifest_complete`, `figure_source_map_complete`, `scholarship_source_map_figure`, `semantic_gluing_graph_figure`, `sheaf_coverage_config`, `sheaf_coverage_heatmap`, `sheaf_gluing_certificate`, `sheaf_layers_overview`, `si_belief_entropy_figure`, `si_belief_trajectory_gif`, `statistical_visualization_crosswalk_complete`, `track_lane_promotion_map_figure`, `visualization_quality_audit_complete`, `visualization_statistics_bridge_complete` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript`, `validate_outputs` | `track_lane_matrix_row_only_forgery` |
+| `manuscript` | `prose`, `formalism`, `layers` | `compose_manuscript.py` | `manuscript/sheaf/manifest.yaml` | `adversarial_audit_expected_failures`, `analytical_assumption_index`, `artifact_provenance_seed_config`, `artifact_provenance_spine`, `benchmark_rows_complete`, `claim_evidence_audit_typed`, `composed_appendix_full_sheaf`, `composed_discussion`, `composed_intro_motivation`, `composed_methods_analytical`, `composed_methods_sheaf`, `composed_results_mi`, `counterexample_matrix_spine`, `coverage_no_gray`, `dependency_graph_edges`, `empirical_adapter_blocked`, `gate_ergonomics_indexed`, `lean_graph_world_policy_boundary`, `manuscript_evidence_tables_source_backed`, `manuscript_staleness_fresh`, `manuscript_token_provenance_mapped`, `replay_matrix_spine`, `scholarship_source_matrix_connected`, `scope_boundary_toy_only`, `semantic_gluing_graph_figure`, `semantic_gluing_ok`, `sensitivity_complete_grid`, `sheaf_coverage_config`, `sheaf_coverage_heatmap`, `sheaf_coverage_matrix`, `sheaf_evidence_crosswalk`, `sheaf_gluing_certificate`, `sheaf_manifest`, `sheaf_registry`, `sheaf_render_log_events_ok`, `sheaf_section_status_matrix_complete`, `si_graph_world_trace_consistency`, `track_improvement_scope_complete`, `track_lane_matrix_complete`, `track_lane_promotion_map_figure`, `uncertainty_rows_normalized`, `validation_dependency_graph`, `validation_gate_index_complete`, `visualization_quality_audit_complete` | `track_lane_matrix_complete`, `track_lane_matrix_row_count` | `validate_manuscript` | `track_lane_matrix_row_only_forgery` |
+
+**Pipeline rows:** 31.
 
 <!-- sheaf-layers:track-improvement-scope -->
 ## Track improvement scope

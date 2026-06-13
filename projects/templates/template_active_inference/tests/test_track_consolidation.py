@@ -11,7 +11,12 @@ from pathlib import Path
 import pytest
 import yaml
 
-from gate_support import ensure_gate_artifacts, temporary_json_mutation, temporary_text_mutation, temporary_yaml_mutation
+from gate_support import (
+    ensure_gate_artifacts,
+    temporary_json_mutation,
+    temporary_text_mutation,
+    temporary_yaml_mutation,
+)
 
 VERSIONED_TRACK_RE = re.compile(r"(?:^|_)v[2-9]$")
 # The end-to-end sheaf gates exercise figure, formal, semantic, and roadmap
@@ -189,6 +194,7 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
         "output/reports/ablation_sensitivity_report.json"
     )
     assert _relative_posix(paths["release_attestation"], project_root) == "output/reports/release_attestation.json"
+    assert _relative_posix(paths["track_lane_matrix"], project_root) == "output/data/track_lane_matrix.json"
     assert _relative_posix(paths["section_status"], project_root) == "output/data/sheaf_section_status_matrix.json"
     assert _relative_posix(paths["render_log"], project_root) == "output/reports/sheaf_render_log.json"
     assert validate_sheaf_track_artifacts(project_root) == []
@@ -209,6 +215,7 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     transition_table = _load(project_root / "output" / "data" / "state_transition_table.json")
     ablation_sensitivity = _load(project_root / "output" / "reports" / "ablation_sensitivity_report.json")
     release_attestation = _load(project_root / "output" / "reports" / "release_attestation.json")
+    track_lane = _load(project_root / "output" / "data" / "track_lane_matrix.json")
     section_status = _load(project_root / "output" / "data" / "sheaf_section_status_matrix.json")
     render_log = _load(project_root / "output" / "reports" / "sheaf_render_log.json")
     visualization_quality = _load(project_root / "output" / "reports" / "visualization_quality_audit.json")
@@ -240,11 +247,38 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert license_audit["all_license_safe"] is True
     assert release_notes["all_notes_source_backed"] is True
     assert scholarship["all_sources_connected"] is True
+    assert scholarship["all_citations_present"] is True
+    assert scholarship["all_claim_boundaries_scope_guarded"] is True
+    assert scholarship["all_rows_rederived"] is True
+    assert scholarship["source_locator_kind_count"] >= 1
+    assert scholarship["declared_section_citation_overlap_count"] >= 1
     assert scholarship["quantitative_method_role_count"] >= 3
+    assert all(
+        row["source_locator_kind"]
+        and row["citation_sections"]
+        and row["claim_boundary_scope_guarded"]
+        for row in scholarship["rows"]
+    )
     assert proof_dependency["all_theorems_have_dependencies"] is True
     assert transition_table["all_reachable_states_covered"] is True
     assert ablation_sensitivity["all_effects_source_backed"] is True
     assert release_attestation["all_attested"] is True
+    assert track_lane["schema"] == "template_active_inference.track_lane_matrix.v1"
+    assert track_lane["matrix_track_ids_match_tracks_yaml"] is True
+    assert track_lane["all_typed_claim_evidence_present"] is True
+    assert track_lane["all_semantic_restrictions_declared"] is True
+    assert track_lane["all_negative_controls_declared"] is True
+    assert track_lane["all_pipeline_tracks_complete"] is True
+    assert track_lane["all_required_pipeline_tracks_complete"] is True
+    assert all(
+        row["sheaf_tracks"]
+        and row["manuscript_consumers"]
+        and row["claim_ids"]
+        and row["semantic_restrictions"]
+        and row["negative_control"]
+        and all(row["promotion_requirements"].values())
+        for row in track_lane["rows"]
+    )
     assert section_status["all_bound_fragments_present"] is True
     assert section_status["all_sections_have_status"] is True
     assert section_status["cell_count"] == section_status["section_count"] * section_status["track_count"]
@@ -252,7 +286,7 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert render_log["event_count"] >= 6
     assert visualization_quality["all_quality_ok"] is True
     assert visualization_quality["all_rendered"] is True
-    assert visualization_quality["figure_count"] >= 20
+    assert visualization_quality["figure_count"] >= 21
     assert visualization_quality["statistically_backed_count"] >= 6
     assert visualization_quality["all_statistical_sources_present"] is True
     assert visualization_quality["all_visual_roles_present"] is True
@@ -337,6 +371,7 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         "transition_table": project_root / "output" / "data" / "state_transition_table.json",
         "ablation_sensitivity": project_root / "output" / "reports" / "ablation_sensitivity_report.json",
         "release_attestation": project_root / "output" / "reports" / "release_attestation.json",
+        "track_lane": project_root / "output" / "data" / "track_lane_matrix.json",
         "section_status": project_root / "output" / "data" / "sheaf_section_status_matrix.json",
         "render_log": project_root / "output" / "reports" / "sheaf_render_log.json",
         "visualization_quality": project_root / "output" / "reports" / "visualization_quality_audit.json",
@@ -527,6 +562,14 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
             "failed gate passed",
         ),
         (
+            "track_lane",
+            _combine_mutations(
+                _set_value(("rows", 0, "producer_configured"), False),
+                _set_value(("all_pipeline_tracks_complete",), True),
+            ),
+            "pipeline-to-sheaf rows",
+        ),
+        (
             "section_status",
             _combine_mutations(
                 _set_value(("missing_required_count",), 1), _set_value(("all_bound_fragments_present",), False)
@@ -607,6 +650,7 @@ def test_canonical_sheaf_row_only_forgeries_are_caught(project_root: Path) -> No
         "render_log": project_root / "output" / "reports" / "sheaf_render_log.json",
         "scope": project_root / "output" / "data" / "track_improvement_scope.json",
         "release": project_root / "output" / "reports" / "release_bundle_manifest.json",
+        "track_lane": project_root / "output" / "data" / "track_lane_matrix.json",
     }
     originals = {path: path.read_text(encoding="utf-8") for path in paths.values()}
     try:
@@ -687,6 +731,25 @@ def test_canonical_sheaf_row_only_forgeries_are_caught(project_root: Path) -> No
         _write(paths["release"], data)
         assert any("missing required deliverables" in issue for issue in validate_sheaf_track_artifacts(project_root))
         paths["release"].write_text(originals[paths["release"]], encoding="utf-8")
+
+        # track_lane_matrix: a row loses its sheaf fragment while aggregate flags stay True.
+        data = _load(paths["track_lane"])
+        data["rows"][0]["sheaf_tracks"] = []
+        data["rows"][0]["sheaf_tracks_registered"] = True
+        assert data["all_pipeline_tracks_complete"] is True
+        _write(paths["track_lane"], data)
+        assert any("pipeline-to-sheaf rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["track_lane"].write_text(originals[paths["track_lane"]], encoding="utf-8")
+
+        # track_lane_matrix: a row loses typed claim evidence while aggregate flags stay True.
+        data = _load(paths["track_lane"])
+        data["rows"][0]["claim_ids"] = []
+        data["rows"][0]["has_typed_claim_evidence"] = True
+        data["all_typed_claim_evidence_present"] = True
+        assert data["all_pipeline_tracks_complete"] is True
+        _write(paths["track_lane"], data)
+        assert any("pipeline-to-sheaf rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["track_lane"].write_text(originals[paths["track_lane"]], encoding="utf-8")
     finally:
         for path, text in originals.items():
             path.write_text(text, encoding="utf-8")
@@ -717,10 +780,25 @@ def test_canonical_track_contract_negative_controls(project_root: Path) -> None:
             claim for claim in ledger_payload["claims"] if claim.get("path") != "output/data/evidence_field_index.json"
         ]
 
+    def add_pipeline_track_without_sheaf_fragment(tracks_payload: dict) -> None:
+        tracks_payload["tracks"].append(
+            {
+                "id": "orphan_pipeline",
+                "label": "Orphan pipeline track",
+                "paths": ["src/analytical"],
+                "gate": "validate_outputs",
+                "required": True,
+            }
+        )
+
     cases = (
         ("producer_coverage_complete", lambda: temporary_text_mutation(config_path, remove_sheaf_producer)),
         ("missing manuscript bindings", lambda: temporary_yaml_mutation(manifest_path, unbind_evidence_fields)),
         ("empirical_adapter blocked", lambda: temporary_yaml_mutation(registry_path, promote_empirical_adapter)),
+        (
+            "pipeline tracks missing sheaf fragments",
+            lambda: temporary_yaml_mutation(project_root / "tracks.yaml", add_pipeline_track_without_sheaf_fragment),
+        ),
         (
             "all_canonical_artifacts_have_claims",
             lambda: temporary_yaml_mutation(ledger_path, remove_evidence_field_claim),

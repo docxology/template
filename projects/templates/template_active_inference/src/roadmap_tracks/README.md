@@ -7,7 +7,8 @@ satisfy the project promotion rule in [`../../TODO.md`](../../TODO.md). The
 modules write machine-readable artifacts for finite sweeps, formal interop,
 integration audits, canonical semantic gluing, dependency graphs, track-improvement
 scope, artifact diffing, proof extraction, finite state-space catalogs, causal
-ablation matrices, visualization-quality/statistical-bridge audits and crosswalks, artifact license audits,
+ablation matrices, visualization-quality/statistical-bridge audits and crosswalks,
+row-rederived scholarship source matrices, artifact license audits,
 release-note evidence, and
 consolidated sheaf-track evidence.
 
