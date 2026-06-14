@@ -13,7 +13,6 @@ from infrastructure.project.drift.checks_docs_counts import (  # noqa: F401
 from infrastructure.project.drift.checks_exemplar import (  # noqa: F401
     check_all_export_drift,
     check_coverage_floor_consistency,
-    check_forkability_contract,
     check_function_name_drift,
     check_mocks_absent_from_tests,
     check_no_blanket_except_in_src,
@@ -23,6 +22,7 @@ from infrastructure.project.drift.checks_exemplar import (  # noqa: F401
     check_required_files_exist,
     check_test_class_drift,
 )
+from infrastructure.project.drift.checks_forkability import check_forkability_contract  # noqa: F401
 from infrastructure.project.drift.models import Report
 from infrastructure.project.drift.orchestrator import check_repo_scripts
 

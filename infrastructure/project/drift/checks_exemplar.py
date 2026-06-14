@@ -14,8 +14,6 @@ from pathlib import Path
 import yaml
 
 from infrastructure.project.drift.models import Report
-from infrastructure.project.domain_profile import load_domain_profile
-from infrastructure.project.experiment_plan import load_experiment_plan, validate_experiment_plan
 from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
 
 
@@ -182,32 +180,16 @@ def check_referenced_files_exist(project_root: Path, report: Report, project: st
                 )
 
 
-# Dense active-inference sheaf-domain modules carry a documented split-TODO and
-# are exempt from the oversize warning, mirroring ``LINE_COUNT_ALLOWLIST`` in
-# ``scripts/gates/module_line_count_check.py``. Keep the two allowlists in sync;
-# remove an entry once the sheaf builders are extracted into sibling modules.
-_OVERSIZE_SRC_ALLOWLIST: frozenset[str] = frozenset(
-    {
-        "src/roadmap_tracks/sheaf_tracks.py",
-        "src/manuscript/sheaf/semantic.py",
-    }
-)
-
-
 def check_no_oversize_src_files(project_root: Path, report: Report, project: str) -> None:
     """``src/**/*.py`` files should not exceed 1500 lines (modularity smell).
 
     Catches the analysis.py-was-1719-lines smell; the template should not
-    ship single source files that exceed thinkable refactor budget. Dense
-    sheaf-domain modules in ``_OVERSIZE_SRC_ALLOWLIST`` are exempt (documented
-    split-TODO; kept in sync with the module-line-count gate's allowlist).
+    ship single source files that exceed thinkable refactor budget.
     """
     src_dir = project_root / "src"
     if not src_dir.is_dir():
         return
     for py in src_dir.rglob("*.py"):
-        if _rel(py, project_root) in _OVERSIZE_SRC_ALLOWLIST:
-            continue
         with py.open("r", encoding="utf-8") as handle:
             line_count = sum(1 for _ in handle)
         if line_count > 1500:
@@ -544,6 +526,7 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
         "README.md",
         "AGENTS.md",
         "pyproject.toml",
+        ".gitignore",
         "scripts",
         "src/__init__.py",
         "tests",
@@ -562,91 +545,15 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
             )
 
 
-_UNSAFE_RAW_COPY_RE = re.compile(
-    r"\bcp\s+-[A-Za-z]*[rR][A-Za-z]*\s+[^`\n]*projects/templates/",
-)
-
-
-def check_forkability_contract(project_root: Path, report: Report, project: str) -> None:
-    """Public exemplars must be clean-copy forkable and carry valid overlays."""
-    standalone = project_root / "STANDALONE.md"
-    if not standalone.is_file():
-        report.add(
-            "ERROR",
-            project,
-            "missing_standalone_doc",
-            f"{project}/STANDALONE.md is missing — exemplar lacks a standalone fork guide",
-        )
-
-    profile_path = project_root / "domain_profile.yaml"
-    if not profile_path.is_file():
-        report.add(
-            "ERROR",
-            project,
-            "missing_domain_profile",
-            f"{project}/domain_profile.yaml is missing — exemplar lacks a project metadata overlay",
-        )
-    else:
-        try:
-            profile = load_domain_profile(project_root)
-        except ValueError as exc:
-            report.add("ERROR", project, "invalid_domain_profile", f"{project}/domain_profile.yaml: {exc}")
-        else:
-            if profile.domain == "generic":
-                report.add(
-                    "ERROR",
-                    project,
-                    "generic_domain_profile",
-                    f"{project}/domain_profile.yaml still declares the generic profile",
-                )
-
-    plan_path = project_root / "experiment_plan.yaml"
-    if not plan_path.is_file():
-        report.add(
-            "ERROR",
-            project,
-            "missing_experiment_plan",
-            f"{project}/experiment_plan.yaml is missing — exemplar lacks a design plan overlay",
-        )
-    else:
-        try:
-            plan = load_experiment_plan(project_root)
-            validation = validate_experiment_plan(plan)
-        except ValueError as exc:
-            report.add("ERROR", project, "invalid_experiment_plan", f"{project}/experiment_plan.yaml: {exc}")
-        else:
-            if plan is None:
-                report.add(
-                    "ERROR",
-                    project,
-                    "missing_experiment_plan",
-                    f"{project}/experiment_plan.yaml is missing — exemplar lacks a design plan overlay",
-                )
-            elif not validation.valid:
-                report.add(
-                    "ERROR",
-                    project,
-                    "invalid_experiment_plan",
-                    f"{project}/experiment_plan.yaml is invalid: {list(validation.issues)}",
-                )
-
-    for md in _fork_doc_candidates(project_root):
-        text = _read(md)
-        for match in _UNSAFE_RAW_COPY_RE.finditer(text):
-            report.add(
-                "ERROR",
-                project,
-                "unsafe_fork_copy",
-                (
-                    f"{_rel(md, project_root)} recommends raw recursive copy near "
-                    f"{match.group(0)!r}; use scripts/copy_exemplar.py or rsync exclusions"
-                ),
-            )
-
-
-def _fork_doc_candidates(project_root: Path) -> list[Path]:
-    candidates = sorted(project_root.glob("*.md"))
-    docs = project_root / "docs"
-    if docs.is_dir():
-        candidates.extend(sorted(docs.rglob("*.md")))
-    return candidates
+__all__ = [
+    "check_all_export_drift",
+    "check_coverage_floor_consistency",
+    "check_function_name_drift",
+    "check_mocks_absent_from_tests",
+    "check_no_blanket_except_in_src",
+    "check_no_oversize_src_files",
+    "check_publication_metadata_consistency",
+    "check_referenced_files_exist",
+    "check_required_files_exist",
+    "check_test_class_drift",
+]

@@ -236,13 +236,51 @@ def _rename_text(
     old_project_path: str | None = None,
     new_project_path: str | None = None,
 ) -> str:
-    """Replace underscore and normalized package-name spellings."""
+    """Replace project slug spellings without touching unrelated tokens."""
     old_hyphen = old_name.replace("_", "-")
     new_hyphen = new_name.replace("_", "-")
-    text = text.replace(old_name, new_name).replace(old_hyphen, new_hyphen)
     if old_project_path and new_project_path:
+        text = text.replace(old_project_path, new_project_path)
         renamed_old_path = old_project_path.replace(old_name, new_name)
-        text = text.replace(renamed_old_path, new_project_path)
+        if renamed_old_path != old_project_path:
+            text = text.replace(renamed_old_path, new_project_path)
+    for old_token, new_token in (
+        (f"projects/templates/{old_name}", f"projects/templates/{new_name}"),
+        (f"projects/working/{old_name}", f"projects/working/{new_name}"),
+        (f"projects/active/{old_name}", f"projects/active/{new_name}"),
+        (f"templates/{old_name}", f"templates/{new_name}"),
+        (f"working/{old_name}", f"working/{new_name}"),
+        (f"active/{old_name}", f"active/{new_name}"),
+    ):
+        text = text.replace(old_token, new_token)
+    text = _replace_keyed_slug(text, old_name, new_name)
+    text = _replace_keyed_slug(text, old_hyphen, new_hyphen)
+    text = re.sub(rf"\b{re.escape(old_name)}\b", new_name, text)
+    text = re.sub(rf"\b{re.escape(old_hyphen)}\b", new_hyphen, text)
+    return text
+
+
+def _replace_keyed_slug(text: str, old_slug: str, new_slug: str) -> str:
+    """Replace slug spellings only on known configuration keys and import paths."""
+    if old_slug == new_slug:
+        return text
+    patterns = (
+        rf"(?P<prefix>name\s*=\s*['\"]){re.escape(old_slug)}(?P<suffix>['\"])",
+        rf"(?P<prefix>project\s*=\s*['\"]){re.escape(old_slug)}(?P<suffix>['\"])",
+        rf"(?P<prefix>--project\s+){re.escape(old_slug)}(?P<suffix>\b)",
+        rf"(?P<prefix>from\s+projects\.templates\.{re.escape(old_slug)}\.)",
+        rf"(?P<prefix>import\s+projects\.templates\.{re.escape(old_slug)}\.)",
+        rf"(?P<prefix>projects/templates/{re.escape(old_slug)}/)",
+        rf"(?P<prefix>projects/working/{re.escape(old_slug)}/)",
+        rf"(?P<prefix>projects/active/{re.escape(old_slug)}/)",
+    )
+    for pattern in patterns:
+        if pattern.endswith("/)"):
+            text = re.sub(pattern, lambda m: m.group("prefix").replace(old_slug, new_slug), text)
+        elif "from" in pattern or "import" in pattern:
+            text = re.sub(pattern, lambda m: m.group("prefix").replace(old_slug, new_slug), text)
+        else:
+            text = re.sub(pattern, rf"\g<prefix>{new_slug}\g<suffix>", text)
     return text
 
 

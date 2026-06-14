@@ -45,6 +45,28 @@ def _scaffold_git_repo(tmp_path: Path) -> Path:
     return root
 
 
+def test_rename_text_preserves_unrelated_tokens() -> None:
+    from infrastructure.project.copy_exemplar import _rename_text
+
+    source = (
+        "doi:10.5281/zenodo.12345678\n"
+        "Discuss template_code_project_extra without renaming the suffix token.\n"
+        "Run projects/templates/template_code_project/tests/\n"
+        "name = 'template-code-project'\n"
+    )
+    renamed = _rename_text(
+        source,
+        "template_code_project",
+        "my_project",
+        old_project_path="projects/templates/template_code_project",
+        new_project_path="projects/working/my_project",
+    )
+    assert "10.5281/zenodo.12345678" in renamed
+    assert "template_code_project_extra" in renamed
+    assert "name = 'my-project'" in renamed
+    assert "projects/working/my_project" in renamed
+
+
 def test_dry_run_reports_copy_plan_without_writing_destination(tmp_path: Path) -> None:
     repo_root = _scaffold_git_repo(tmp_path)
     dest = tmp_path / "fork"

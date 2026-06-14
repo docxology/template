@@ -17,19 +17,8 @@ from infrastructure.validation.line_count import (  # noqa: E402
     scan_repository_tests,
 )
 
-# Documented, time-boxed exceptions to the module line-count gate. These are
-# dense active-inference sheaf domain modules introduced by the sheaf-hardening
-# work; they exceed the 950-line fail threshold but are cohesive function
-# collections, not god-classes. Allowlisted to unblock the v3.1.0 release.
-# TODO(sheaf): split these into sibling modules (e.g. extract the artifact-
-# provenance / replay-matrix builders from sheaf_tracks.py and the
-# *_restrictions helpers from semantic.py) and remove these entries.
-LINE_COUNT_ALLOWLIST: frozenset[str] = frozenset(
-    {
-        "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks.py",
-        "projects/templates/template_active_inference/src/manuscript/sheaf/semantic.py",
-    }
-)
+# Split complete — allowlist removed after sheaf_tracks/semantic decomposition.
+LINE_COUNT_ALLOWLIST: frozenset[str] = frozenset()
 
 
 def main(argv: list[str] | None = None) -> int:
