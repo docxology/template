@@ -17,4 +17,4 @@ message: If you use this software, please cite it using the metadata from this f
 repository-code: https://github.com/docxology/template_active_inference
 title: Active Inference Multi-Track Exemplar
 type: software
-version: '0.3.0'
+version: '0.3.1'

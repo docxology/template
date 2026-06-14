@@ -1,7 +1,7 @@
 paper:
   title: "Active Inference Multi-Track Exemplar"
   subtitle: "Sheaf-Composed Manuscript with pymdp Sophisticated Inference"
-  version: "0.3.0"
+  version: "0.3.1"
   date: ""
 
 authors:
@@ -13,8 +13,8 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.20417021" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20420352" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20420352"
+  version_doi: "10.5281/zenodo.20693424" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20693424"
   github_repository: "docxology/template_active_inference"
   transmission_bookends:
     enabled: true
