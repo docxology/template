@@ -1,5 +1,9 @@
 # template_active_inference
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20417021.svg)](https://doi.org/10.5281/zenodo.20417021)
+
+📦 **Archived on Zenodo.** Concept DOI [10.5281/zenodo.20417021](https://doi.org/10.5281/zenodo.20417021) always resolves to the latest version; the current release **v0.3.1** is [10.5281/zenodo.20693424](https://doi.org/10.5281/zenodo.20693424). Each Zenodo deposit links back to its matching [GitHub release](https://github.com/docxology/template_active_inference/releases). Cite via the concept DOI or [`CITATION.cff`](CITATION.cff).
+
 Public exemplar: **sheaf-composed** Active Inference manuscript with configurable
 multi-track sections. The live surface is declared in [`tracks.yaml`](tracks.yaml),
 [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml), and
