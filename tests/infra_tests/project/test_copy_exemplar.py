@@ -144,7 +144,9 @@ def test_live_exemplar_copy_keeps_required_forkability_files(tmp_path: Path) -> 
     for rel in ("pyproject.toml", "uv.lock"):
         path = dest / rel
         if path.is_file():
-            source_text = (REPO_ROOT / "projects" / "templates" / "template_code_project" / rel).read_text(encoding="utf-8")
+            source_text = (REPO_ROOT / "projects" / "templates" / "template_code_project" / rel).read_text(
+                encoding="utf-8"
+            )
             text = path.read_text(encoding="utf-8")
             if "template-code-project" in source_text:
                 assert "copied-code-project" in text
@@ -192,7 +194,9 @@ def test_rejects_non_template_source(tmp_path: Path) -> None:
         plan_copy(REPO_ROOT, "working/private_project", tmp_path / "fork")
 
 
-@pytest.mark.parametrize("bad_name", ["../outside", "../../outside", "/tmp/outside", "Uppercase", "has/slash", ".hidden"])
+@pytest.mark.parametrize(
+    "bad_name", ["../outside", "../../outside", "/tmp/outside", "Uppercase", "has/slash", ".hidden"]
+)
 def test_rejects_unsafe_new_name_values(tmp_path: Path, bad_name: str) -> None:
     with pytest.raises(ValueError, match="--new-name must be a lowercase project slug"):
         plan_copy(REPO_ROOT, "templates/template_template", tmp_path / "fork", new_name=bad_name, dry_run=True)
