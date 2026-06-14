@@ -25,6 +25,75 @@ _ZENODO_SANDBOX_URL = "https://sandbox.zenodo.org/api"
 _ZENODO_PROD_URL = "https://zenodo.org/api"
 _GITHUB_API_URL = "https://api.github.com"
 
+_DOTENV_LOADED = False
+
+
+def _repo_root() -> Path:
+    """Repository root (``infrastructure/core/credentials.py`` -> parents[2])."""
+    return Path(__file__).resolve().parents[2]
+
+
+def _load_dotenv_fallback(env_file: Path | None = None) -> None:
+    """Minimal ``.env`` parser used when ``python-dotenv`` is not installed.
+
+    Loads every ``KEY=VALUE`` pair into ``os.environ`` without overwriting
+    existing entries. Honors a leading ``export`` and strips surrounding quotes.
+    A real environment variable always wins, so an explicit ``export`` still
+    takes precedence over the file.
+    """
+    candidates: tuple[Path, ...] = (env_file,) if env_file is not None else (Path.cwd() / ".env", _repo_root() / ".env")
+    seen: set[Path] = set()
+    for path in candidates:
+        path = path.resolve()
+        if path in seen or not path.is_file():
+            continue
+        seen.add(path)
+        for raw in path.read_text(encoding="utf-8", errors="replace").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            if line.startswith("export "):
+                line = line[len("export ") :]
+            key, _, value = line.partition("=")
+            key = key.strip()
+            if not key or os.getenv(key):
+                continue
+            os.environ[key] = value.strip().strip('"').strip("'")
+
+
+def ensure_dotenv_loaded(env_file: Path | None = None) -> None:
+    """Load the repository ``.env`` into ``os.environ`` once, best-effort.
+
+    CLI entrypoints such as ``scripts/publish_project_release.py`` read tokens
+    via ``os.getenv``, but nothing loads ``.env`` for them — so a token that
+    lives only in ``.env`` (e.g. ``ZENODO_PROD_TOKEN``) is invisible until the
+    user manually ``export``s it. This helper closes that gap: it prefers
+    ``python-dotenv`` when the optional extra is installed and otherwise falls
+    back to a minimal parser. Neither path overwrites an existing ``os.environ``
+    entry, so an explicit ``export`` always wins.
+
+    Args:
+        env_file: Explicit ``.env`` path. Defaults to ``.env`` in both the
+            current working directory and the repository root. When given, the
+            call is not memoized (so tests can target temp files repeatedly).
+    """
+    global _DOTENV_LOADED
+    if _DOTENV_LOADED and env_file is None:
+        return
+    if DOTENV_AVAILABLE and _load_dotenv is not None:
+        if env_file is not None:
+            if env_file.exists():
+                _load_dotenv(env_file)
+        else:
+            _load_dotenv()  # searches upward from the cwd
+            root_env = _repo_root() / ".env"
+            if root_env.is_file():
+                _load_dotenv(root_env)  # python-dotenv never overrides existing env
+    else:
+        _load_dotenv_fallback(env_file)
+    if env_file is None:
+        _DOTENV_LOADED = True
+
 
 class CredentialManager:
     """Manage credentials from .env and YAML config files.

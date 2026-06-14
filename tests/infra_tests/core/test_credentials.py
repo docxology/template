@@ -12,7 +12,11 @@ an empty ``env_file`` so they never autoload the repository's real ``.env``.
 
 import os
 
-from infrastructure.core.credentials import CredentialManager
+from infrastructure.core.credentials import (
+    CredentialManager,
+    _load_dotenv_fallback,
+    ensure_dotenv_loaded,
+)
 
 
 class TestCredentialManagerInit:
@@ -453,3 +457,67 @@ settings:
         manager = CredentialManager(env_file=env_file)
 
         assert manager.config == {}
+
+
+class TestEnsureDotenvLoaded:
+    """ensure_dotenv_loaded() / fallback parser used by CLI entrypoints.
+
+    The fallback parser is exercised directly so the behaviour is verified
+    regardless of whether the optional python-dotenv extra is installed.
+    """
+
+    def test_fallback_loads_token_into_environ(self, tmp_path, monkeypatch):
+        """A KEY=VALUE token in .env becomes available via os.getenv."""
+        env_file = tmp_path / ".env"
+        env_file.write_text("ZENODO_PROD_TOKEN=tok_from_dotenv\n")
+        monkeypatch.delenv("ZENODO_PROD_TOKEN", raising=False)
+
+        _load_dotenv_fallback(env_file)
+
+        assert os.getenv("ZENODO_PROD_TOKEN") == "tok_from_dotenv"
+
+    def test_fallback_does_not_override_existing_env(self, tmp_path, monkeypatch):
+        """An explicit export always wins over the .env value."""
+        env_file = tmp_path / ".env"
+        env_file.write_text("ZENODO_PROD_TOKEN=from_file\n")
+        monkeypatch.setenv("ZENODO_PROD_TOKEN", "from_export")
+
+        _load_dotenv_fallback(env_file)
+
+        assert os.getenv("ZENODO_PROD_TOKEN") == "from_export"
+
+    def test_fallback_handles_export_prefix_and_quotes(self, tmp_path, monkeypatch):
+        """`export KEY="value"` lines parse to the unquoted value."""
+        env_file = tmp_path / ".env"
+        env_file.write_text('export GITHUB_TOKEN="ghp_quoted"\n# comment\nGITHUB_REPO=owner/repo\n')
+        monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+        monkeypatch.delenv("GITHUB_REPO", raising=False)
+
+        _load_dotenv_fallback(env_file)
+
+        assert os.getenv("GITHUB_TOKEN") == "ghp_quoted"
+        assert os.getenv("GITHUB_REPO") == "owner/repo"
+
+    def test_fallback_ignores_blank_and_comment_lines(self, tmp_path, monkeypatch):
+        """Blank lines, comments, and keyless lines are skipped without error."""
+        env_file = tmp_path / ".env"
+        env_file.write_text("\n# just a comment\nnot_a_pair_line\nOK_KEY=ok\n")
+        monkeypatch.delenv("OK_KEY", raising=False)
+
+        _load_dotenv_fallback(env_file)
+
+        assert os.getenv("OK_KEY") == "ok"
+
+    def test_ensure_dotenv_loaded_with_explicit_file(self, tmp_path, monkeypatch):
+        """ensure_dotenv_loaded(env_file=...) loads the targeted file."""
+        env_file = tmp_path / ".env"
+        env_file.write_text("ENSURE_DOTENV_KEY=present\n")
+        monkeypatch.delenv("ENSURE_DOTENV_KEY", raising=False)
+
+        ensure_dotenv_loaded(env_file)
+
+        assert os.getenv("ENSURE_DOTENV_KEY") == "present"
+
+    def test_ensure_dotenv_loaded_missing_file_is_safe(self, tmp_path):
+        """A non-existent explicit .env path is a graceful no-op."""
+        ensure_dotenv_loaded(tmp_path / "does-not-exist.env")  # must not raise

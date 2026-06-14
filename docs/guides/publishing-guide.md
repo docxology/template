@@ -195,6 +195,22 @@ uv run python -m infrastructure.publishing.publish_cli \
 
 Opt-in orchestrator (not in the default pipeline DAG). Requires a rendered combined PDF and credentials.
 
+**Credentials from `.env` (automatic).** `publish_project_release.py` calls
+`ensure_dotenv_loaded()` on startup, so a token kept only in the repo-root
+`.env` is picked up without a manual `export`. Put the tokens there once:
+
+```dotenv
+# .env (never commit — already gitignored)
+ZENODO_PROD_TOKEN=...      # production Zenodo (used with --production)
+ZENODO_SANDBOX_TOKEN=...   # sandbox Zenodo (default)
+GITHUB_TOKEN=...           # or rely on `gh auth token` below
+GITHUB_REPO=owner/repo     # optional default for --repo
+```
+
+An explicit `export` or a `--zenodo-token` / `--github-token` flag always wins
+over the `.env` value. GitHub tokens are commonly supplied live instead:
+`export GITHUB_TOKEN="$(gh auth token)"`.
+
 ```bash
 # Dry-run: bundle + receipt only
 uv run python scripts/publish_project_release.py \
@@ -549,8 +565,9 @@ is_valid = validate_doi("10.5281/zenodo.12345678")
 ## Troubleshooting
 
 **Missing ZENODO_TOKEN:**
-- Set via environment: `export ZENODO_TOKEN=your_token`
-- Or pass directly: `ZenodoConfig(access_token="...")`
+- For `publish_project_release.py`: add `ZENODO_PROD_TOKEN` (or `ZENODO_SANDBOX_TOKEN`) to the repo-root `.env` — it is auto-loaded via `ensure_dotenv_loaded()`.
+- Set via environment: `export ZENODO_TOKEN=your_token` (always overrides `.env`)
+- Or pass directly: `ZenodoConfig(access_token="...")` / `--zenodo-token`
 
 **Sandbox vs Production:**
 - Always test with `sandbox=True` first

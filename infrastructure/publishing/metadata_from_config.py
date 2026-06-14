@@ -179,7 +179,18 @@ def publication_metadata_from_config_dict(
 
     paper_date = str(paper["date"]).strip() if paper.get("date") else None
     pub_year = str(publication["year"]).strip() if publication.get("year") else None
+    if pub_year is None and book.get("year"):
+        pub_year = str(book["year"]).strip()
     publication_date = paper_date or pub_year
+
+    # Book-length exemplars carry their deposit version under ``book.version``;
+    # fall back so the Zenodo ``version`` field is the clean "0.1.1" rather than
+    # the "v0.1.1" tag string (mirrors the ``book.title`` fallback above).
+    paper_version = None
+    if paper.get("version"):
+        paper_version = str(paper["version"]).strip()
+    elif book.get("version"):
+        paper_version = str(book["version"]).strip()
 
     zenodo_override = publication.get("zenodo_description")
     zenodo_description_override = (
@@ -197,7 +208,7 @@ def publication_metadata_from_config_dict(
         license=_license_from_config(config),
         repository_url=str(publication["repository_url"]) if publication.get("repository_url") else None,
         author_records=author_records,
-        paper_version=str(paper["version"]).strip() if paper.get("version") else None,
+        paper_version=paper_version,
         zenodo_description_override=zenodo_description_override,
     )
 

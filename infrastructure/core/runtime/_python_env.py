@@ -179,6 +179,12 @@ def build_analysis_script_cmd_and_env(
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     env["PYTHONPATH"] = os.pathsep.join(
         [
+            # Project root first so scripts can ``from src.<pkg> import ...``
+            # (``src`` resolved as a package); ``project_root/src`` keeps the
+            # bare ``from <pkg> import`` form working too. Without the root,
+            # scripts that do not self-bootstrap sys.path fail with
+            # ``No module named 'src'``.
+            str(project_root),
             str(project_root / "src"),
             str(repo_root),
             str(repo_root / "infrastructure"),

@@ -172,6 +172,10 @@ class PipelineStageMixin(ABC):
         pythonpath_parts = [
             str(self.config.repo_root),
             str(self.config.repo_root / "infrastructure"),
+            # Project root so analysis scripts can ``from src.<pkg> import ...``
+            # (``src`` resolved as a package). Without this, scripts that do not
+            # self-bootstrap sys.path fail with ``No module named 'src'``.
+            str(self.config.project_dir),
         ]
         if project_src.exists():
             pythonpath_parts.append(str(project_src))

@@ -22,6 +22,7 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 
 ensure_repo_root_on_path()
 
+from infrastructure.core.credentials import ensure_dotenv_loaded  # noqa: E402
 from infrastructure.core.exceptions import MetadataError, PublishingError  # noqa: E402
 from infrastructure.core.logging.utils import (
     get_logger,
@@ -110,6 +111,11 @@ def _build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
+
+    # Pick up GITHUB_TOKEN / ZENODO_PROD_TOKEN / ZENODO_SANDBOX_TOKEN from .env
+    # so a token that lives only in .env works without a manual `export`.
+    # An explicit `export` (or --*-token flag) still wins.
+    ensure_dotenv_loaded()
 
     repo_root = Path(__file__).resolve().parent.parent
     sandbox = not args.production

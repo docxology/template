@@ -32,6 +32,39 @@ def test_book_title_fallback_for_booklength_projects(tmp_path: Path) -> None:
     assert md.title == "The Template Textbook"
 
 
+def test_book_version_and_year_fallback_for_booklength_projects(tmp_path: Path) -> None:
+    """Deposit version/date fall back to ``book:`` when ``paper:`` is absent.
+
+    Without this, a book-schema project's Zenodo ``version`` field defaults to
+    the ``vX.Y.Z`` git tag string instead of the clean deposit version, and the
+    publication date is dropped.
+    """
+    from infrastructure.publishing.metadata_from_config import publication_metadata_from_config_dict
+
+    config = {"book": {"title": "The Template Textbook", "version": "0.1.1", "year": 2026}}
+    md = publication_metadata_from_config_dict(
+        config, config_path=tmp_path / "config.yaml", allow_draft_abstract=True
+    )
+    assert md.paper_version == "0.1.1"
+    assert md.publication_date == "2026"
+
+
+def test_paper_version_takes_precedence_over_book_version(tmp_path: Path) -> None:
+    """When both schemas are present, ``paper:`` wins (book is the fallback)."""
+    from infrastructure.publishing.metadata_from_config import publication_metadata_from_config_dict
+
+    config = {
+        "paper": {"title": "Paper Title", "version": "2.0.0", "date": "2026-01-01"},
+        "book": {"title": "Book Title", "version": "0.1.1", "year": 2026},
+    }
+    md = publication_metadata_from_config_dict(
+        config, config_path=tmp_path / "config.yaml", allow_draft_abstract=True
+    )
+    assert md.title == "Paper Title"
+    assert md.paper_version == "2.0.0"
+    assert md.publication_date == "2026-01-01"
+
+
 def test_build_metadata_with_full_config() -> None:
     config = {
         "paper": {

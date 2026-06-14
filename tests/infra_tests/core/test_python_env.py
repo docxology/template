@@ -103,6 +103,25 @@ class TestBuildAnalysisScriptCmdAndEnv:
         assert str(project_root / "src") in paths
         assert str(repo_root) in paths
 
+    def test_pythonpath_includes_project_root_for_src_package_imports(self, tmp_path):
+        """Project root must be on PYTHONPATH so ``from src.<pkg> import ...``
+
+        resolves ``src`` as a package. Regression: analysis scripts that do not
+        self-bootstrap sys.path failed with ``No module named 'src'`` because
+        only ``project_root/src`` (not ``project_root``) was on the path.
+        """
+        script = tmp_path / "script.py"
+        script.write_text("")
+        project_root = tmp_path / "project"
+        project_root.mkdir()
+        repo_root = tmp_path
+
+        _, env = build_analysis_script_cmd_and_env(script, project_root, repo_root)
+        paths = env["PYTHONPATH"].split(os.pathsep)
+        assert str(project_root) in paths
+        # Root must precede project_root/src so ``src`` resolves as a package.
+        assert paths.index(str(project_root)) < paths.index(str(project_root / "src"))
+
 
 @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
 class TestResolveTestPython:
