@@ -15,12 +15,12 @@ A reproducibility template that claims to make science *reproducible* needs to b
 
 ## The contract this directory creates
 
-> **Current state:** this tier is a **scaffold/contract awaiting population**. `tests/regression/`
-> currently ships only package `__init__.py` files and a single non-collected scaffold
-> (`tests/regression/projects/template_code_project/figures/test_figure_TEMPLATE.py`), so
-> `uv run pytest tests/regression/ -v` collects 0 tests today. The two `pinned_values/*.json`
-> files exist but are not yet bound to collected tests. The contract below describes the
-> **target** each project should reach; the layout block further down is the target shape.
+> **Current state:** this tier has its first populated slice. As of 2026-06-13,
+> `tests/regression/projects/template_code_project/tables/test_optimization_results_claims.py`
+> collects three real tests against deterministic optimizer manuscript claims, and
+> `tests/regression/pinned_values/template_code_project.json` carries source-backed pins
+> plus provenance. The broader per-figure/per-table contract below remains the target for
+> the rest of the public exemplars.
 
 Every quantitative claim in a manuscript figure or table — a coefficient, a p-value, an effect size, a count, a percentage, a ratio — **should** have a corresponding **pinned regression test** in `tests/regression/` that:
 
@@ -41,9 +41,9 @@ If a value changes, the failure must be **investigated** — is the change corre
 
 ## Directory layout
 
-The tree below is the **target shape** once the tier is populated; the
-`test_figure_*`/`test_table_*` files are illustrative names, not files that exist today
-(the only Python file currently present is the non-collected `test_figure_TEMPLATE.py` scaffold).
+The tree below is the live shape plus target naming convention. The
+`template_code_project/tables/test_optimization_results_claims.py` file is populated;
+other illustrative `test_figure_*` and `test_table_*` names show the intended expansion.
 
 ```
 tests/regression/
@@ -54,10 +54,9 @@ tests/regression/
 │   ├── template_code_project/
 │   │   ├── __init__.py
 │   │   ├── figures/                   (one test file per manuscript figure)
-│   │   │   ├── test_figure_01_*.py
-│   │   │   └── test_figure_02_*.py
+│   │   │   └── test_figure_TEMPLATE.py (non-collected scaffold)
 │   │   └── tables/                    (one test file per manuscript table)
-│   │       └── test_table_01_*.py
+│   │       └── test_optimization_results_claims.py
 │   └── template_prose_project/
 │       └── (same shape)
 └── pinned_values/                     (committed ground-truth values, JSON)
@@ -82,54 +81,51 @@ For each quantitative claim in a manuscript:
 ## Example test (canonical pattern)
 
 ```python
-"""Regression test for Figure 3 panel (b) — convergence rate coefficient.
+"""Regression pins for deterministic optimization result claims.
 
-Manuscript: projects/templates/template_code_project/manuscript/03_results.md, Figure 3 panel (b).
-Claim: "the convergence rate constant k = 0.4271 ± 0.0003 (n=1000 trials, seed=42)"
+Manuscript: projects/templates/template_code_project/manuscript/03_results.md.
+Claim: "Target solution: x = {{RESULT_OPTIMUM_X}} ..."
 """
 
-import json
 from pathlib import Path
+import sys
+from typing import Any
 
 import pytest
 
-from projects.template_code_project.src.analysis import compute_convergence_rate
+PROJECT_ROOT = Path(__file__).resolve().parents[5] / "projects" / "templates" / "template_code_project"
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.experiment_config import load_experiment_config  # noqa: E402
+from src.optimizer import quadratic_optimum  # noqa: E402
 
 
-PINNED = json.loads(
-    (Path(__file__).parents[3] / "pinned_values" / "template_code_project.json").read_text()
-)
+def test_solution_accuracy_claims_rederive_from_quadratic(load_pinned_values: Any) -> None:
+    """Re-derive the configured quadratic optimum; compare to committed pins."""
+    pinned = load_pinned_values("template_code_project")
+    config = load_experiment_config(PROJECT_ROOT)
+    optimum_x, optimum_f = quadratic_optimum(config.A_array(), config.b_array())
+    solution_pin = pinned["solution_accuracy_target_solution"]
+    objective_pin = pinned["solution_accuracy_target_objective"]
 
-
-def test_figure_03_panel_b_convergence_rate():
-    """Re-derive Fig 3(b) convergence rate; compare to pinned value."""
-    pinned = PINNED["figure_03_panel_b"]
-    result = compute_convergence_rate(n_trials=pinned["n_trials"], seed=pinned["seed"])
-    assert result == pytest.approx(
-        pinned["value"],
-        abs=pinned["abs_tolerance"],
-    ), (
-        f"Convergence rate drifted: pinned={pinned['value']}, "
-        f"observed={result}, tolerance={pinned['abs_tolerance']}. "
-        f"If this change is intentional, update both the manuscript text "
-        f"AND pinned_values/template_code_project.json in the same commit."
-    )
+    assert float(optimum_x[0]) == pytest.approx(solution_pin["value"], abs=solution_pin["abs_tolerance"])
+    assert optimum_f == pytest.approx(objective_pin["value"], abs=objective_pin["abs_tolerance"])
 ```
 
 ## Example pinned-values JSON
 
 ```json
 {
-  "figure_03_panel_b": {
-    "manuscript_section": "03_results.md / Figure 3 panel (b)",
-    "claim_text": "the convergence rate constant k = 0.4271 ± 0.0003 (n=1000 trials, seed=42)",
-    "value": 0.4271,
-    "abs_tolerance": 0.0003,
-    "n_trials": 1000,
-    "seed": 42,
-    "pinned_on": "2026-05-20",
-    "pinned_by": "Daniel Ari Friedman",
-    "pinned_at_commit": "TBD"
+  "solution_accuracy_target_solution": {
+    "manuscript_section": "manuscript/03_results.md / Solution Accuracy",
+    "claim_text": "Target solution: x = {{RESULT_OPTIMUM_X}} ...",
+    "value": 1.0,
+    "abs_tolerance": 1e-12,
+    "verifier_function": "src.optimizer.quadratic_optimum",
+    "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
+    "pinned_on": "2026-06-13",
+    "pinned_by": "Codex",
+    "pinned_at_commit": "b85f2753"
   }
 }
 ```
@@ -175,9 +171,9 @@ When a new figure or table is added:
 
 ## Status
 
-This directory is **scaffolded but not populated** as of 2026-05-20. See [`STATUS.md`](../../STATUS.md) — row `Regression tests`: 🔴 scaffold only; no pinned cases yet.
+This directory is **partially populated** as of 2026-06-13. See [`STATUS.md`](../../STATUS.md) — row `Regression tests`: 🟡 first pins live; expand beyond canonical optimizer claims.
 
-Next step: pin the quantitative claims in `template_code_project` and `template_prose_project` exemplar manuscripts. This is the highest-leverage single piece of work to move the template from "reproducibility theater" to "reproducibility reality."
+Next step: expand from the canonical optimizer claims into the remaining `template_code_project` figure/table claims and then the other public exemplar manuscripts.
 
 ## Related
 

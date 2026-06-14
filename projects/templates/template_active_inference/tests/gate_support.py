@@ -14,7 +14,6 @@ from analysis import run_analysis, write_analysis_statistics
 from manuscript.variables import generate_variables
 from manuscript.hydrate import write_resolved_manuscript
 from manuscript.sheaf import compose_all_sections
-from manuscript.sheaf.semantic import write_semantic_gluing_outputs
 from orchestration.coverage_pipeline import ensure_coverage_artifacts
 from roadmap_tracks import (
     write_formal_interop_artifacts,
@@ -56,6 +55,7 @@ _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
     "output/reports/adversarial_audit.json",
     "output/reports/replay_matrix.json",
     "output/data/track_lane_matrix.json",
+    "output/data/artifact_contract_index.json",
     "output/data/track_improvement_scope.json",
     "output/reports/blocked_scope_manifest.json",
     "output/data/evidence_field_index.json",
@@ -67,6 +67,7 @@ _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
     "output/data/causal_ablation_matrix.json",
     "output/reports/artifact_license_audit.json",
     "output/reports/release_notes_evidence.json",
+    "output/reports/security_posture_audit.json",
     "output/data/proof_dependency_graph.json",
     "output/data/state_transition_table.json",
     "output/reports/ablation_sensitivity_report.json",
@@ -79,6 +80,7 @@ _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
     "output/data/statistical_visualization_bridge.json",
     "output/figures/semantic_gluing_graph.png",
     "output/figures/track_lane_promotion_map.png",
+    "output/figures/artifact_contract_map.png",
     "output/figures/si_belief_trajectory.gif",
     "output/data/animation_frame_deltas.json",
     "output/reports/manuscript_staleness_report.json",
@@ -86,6 +88,7 @@ _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
     "output/reports/counterexample_matrix.json",
     "output/figures/theorem_traceability_graph.png",
     "output/figures/causal_ablation_heatmap.png",
+    "output/figures/security_posture_map.png",
 )
 
 
@@ -141,6 +144,21 @@ def _hydrate_fixed_point(project_root: Path, out: Path) -> None:
         write_manuscript_staleness_report(project_root)
 
 
+def _settle_generated_contracts(project_root: Path, out: Path, *, passes: int = 1) -> None:
+    """Converge visual, integration, sheaf, and hydrated-manuscript artifacts."""
+    from roadmap_tracks.fixed_point import run_semantic_fixed_point
+
+    for _ in range(passes):
+        generate_all_figures(project_root)
+        write_belief_trajectory_gif(project_root)
+        write_animation_frame_deltas(project_root)
+        compose_all_sections(project_root)
+        _hydrate_fixed_point(project_root, out)
+        write_integration_audit_artifacts(project_root)
+        write_sheaf_track_artifacts(project_root, finalize=False)
+        run_semantic_fixed_point(project_root, require_analysis_outputs=False)
+
+
 def refresh_generated_gate_artifacts(project_root: Path, *, force: bool = True) -> None:
     """Refresh generated manuscript/semantic artifacts after mutation tests.
 
@@ -154,13 +172,25 @@ def refresh_generated_gate_artifacts(project_root: Path, *, force: bool = True) 
         return
     out = root / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    write_sheaf_track_artifacts(root)
-    generate_all_figures(root)
-    write_integration_audit_artifacts(root)
-    compose_all_sections(root)
-    _hydrate_fixed_point(root, out)
-    write_semantic_gluing_outputs(root)
+    _settle_generated_contracts(root, out)
     _BOOTSTRAPPED_ROOTS.add(root)
+
+
+def refresh_composed_gate_artifacts(project_root: Path) -> None:
+    """Refresh derived manuscript files after byte-for-byte output mutations.
+
+    Negative tests that edit composed manuscript pages or hydrated output files do
+    not need to rebuild the full semantic fixed point. Re-compose the manuscript,
+    refresh the coverage page/heatmap, and rehydrate variables so subsequent
+    gates do not see stale derived Markdown from the mutation.
+    """
+
+    root = project_root.resolve()
+    out = root / "output" / "data" / "manuscript_variables.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    compose_all_sections(root)
+    ensure_coverage_artifacts(root, write_page=True, render_heatmap=True, force=True)
+    _hydrate_fixed_point(root, out)
 
 
 def _gate_artifacts_present(project_root: Path) -> bool:
@@ -168,21 +198,41 @@ def _gate_artifacts_present(project_root: Path) -> bool:
         return False
     try:
         from manuscript.sheaf.semantic import validate_semantic_gluing
-        from roadmap_tracks import validate_sheaf_track_artifacts
+        from roadmap_tracks import validate_integration_audit_artifacts, validate_sheaf_track_artifacts
 
-        return not validate_semantic_gluing(project_root) and not validate_sheaf_track_artifacts(project_root)
+        return (
+            not validate_semantic_gluing(project_root)
+            and not validate_integration_audit_artifacts(project_root)
+            and not validate_sheaf_track_artifacts(project_root)
+        )
     except Exception:
         return False
 
 
 def _required_gate_artifacts_exist(project_root: Path) -> bool:
-    return all((project_root / rel).is_file() for rel in _REQUIRED_GATE_ARTIFACTS)
+    for rel in _REQUIRED_GATE_ARTIFACTS:
+        path = project_root / rel
+        if not path.is_file():
+            return False
+        if rel.startswith("output/figures/") and path.suffix.lower() in {".png", ".gif"}:
+            from visualizations.figure_io import image_render_metrics
+
+            metrics = image_render_metrics(path)
+            if not metrics["width_px"] or not metrics["height_px"] or not metrics["nonblank"]:
+                return False
+    return True
 
 
 def ensure_gate_artifacts(project_root: Path) -> None:
     """Rebuild analysis, simulation, sheaf, and figure outputs for gate checks."""
     root = project_root.resolve()
+    if _gate_artifacts_present(root):
+        _BOOTSTRAPPED_ROOTS.add(root)
+        return
+    if root in _BOOTSTRAPPED_ROOTS and _gate_artifacts_present(root):
+        return
     if root in _BOOTSTRAPPED_ROOTS and _required_gate_artifacts_exist(root):
+        refresh_generated_gate_artifacts(root)
         return
 
     run_analysis(project_root)
@@ -203,17 +253,11 @@ def ensure_gate_artifacts(project_root: Path) -> None:
     write_toy_sweep_artifacts(project_root)
     write_formal_interop_artifacts(project_root)
     write_validation_spine_artifacts(project_root)
-    write_integration_audit_artifacts(project_root)
-    write_sheaf_track_artifacts(project_root)
-    generate_all_figures(project_root)
-    write_integration_audit_artifacts(project_root)
+    write_sheaf_track_artifacts(project_root, finalize=False)
     out = project_root / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    compose_all_sections(project_root)
-    _hydrate_fixed_point(project_root, out)
-    write_semantic_gluing_outputs(project_root)
-    # NOTE: a second convergence pass here was verified to produce a byte-identical
-    # digest (pass 1 already reaches semantic_issues=0), so it was pure ~22s waste and
-    # has been removed. If the convergence ever stops settling in one pass, restore a
-    # bounded fixpoint loop rather than an unconditional second pass.
+    _settle_generated_contracts(project_root, out)
+    # NOTE: the final convergence pass is intentionally narrower than the full
+    # bootstrap. It settles cross-artifact contract rows after figures, integration
+    # reports, sheaf consolidation, and hydrated manuscript variables have all moved.
     _BOOTSTRAPPED_ROOTS.add(root)

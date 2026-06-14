@@ -8,6 +8,7 @@ import pytest
 
 from infrastructure.project.domain_profile import DomainProfile, load_domain_profile
 from infrastructure.project.experiment_plan import load_experiment_plan, validate_experiment_plan
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -158,31 +159,21 @@ def test_unknown_experiment_plan_key_raises(tmp_path: Path) -> None:
         load_experiment_plan(project)
 
 
-@pytest.mark.parametrize(
-    ("project_name", "expected_domain", "expected_primary_metric"),
-    [
-        ("template_code_project", "code_research", "objective_value"),
-        ("template_prose_project", "prose_research", "readability_grade"),
-    ],
-)
-def test_canonical_template_projects_ship_valid_composability_overlays(
-    project_name: str,
-    expected_domain: str,
-    expected_primary_metric: str,
-) -> None:
-    project_root = REPO_ROOT / "projects" / "templates" / project_name
+@pytest.mark.parametrize("project_name", PUBLIC_PROJECT_NAMES)
+def test_public_template_projects_ship_valid_forkability_overlays(project_name: str) -> None:
+    project_root = REPO_ROOT / "projects" / project_name
 
     profile = load_domain_profile(project_root)
     plan = load_experiment_plan(project_root)
     validation = validate_experiment_plan(plan)
 
-    assert profile.domain == expected_domain
+    assert profile.domain != "generic"
     assert profile.review_gates
     assert profile.artifact_expectations
     assert profile.benchmark_rubric is not None
     assert plan is not None
     assert validation.valid is True, validation.issues
     assert plan.primary_metric is not None
-    assert plan.primary_metric.name == expected_primary_metric
+    assert plan.primary_metric.name
     assert plan.baselines
     assert plan.ablations

@@ -69,6 +69,15 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
     assert "output/data/track_lane_matrix.json" in track_lane_figure["source_artifacts"]
     assert "lean/TemplateActiveInference/PromotionProof.lean" in track_lane_figure["source_artifacts"]
     assert {"formal", "semantic"}.issubset(set(track_lane_figure["claim_lanes"]))
+    artifact_contract_figure = next(
+        row for row in figure_source_map["rows"] if row["figure_id"] == "artifact_contract_map"
+    )
+    assert "output/data/artifact_contract_index.json" in artifact_contract_figure["source_artifacts"]
+    assert "output/reports/release_bundle_manifest.json" in artifact_contract_figure["source_artifacts"]
+    assert {"release", "semantic"}.issubset(set(artifact_contract_figure["claim_lanes"]))
+    security_figure = next(row for row in figure_source_map["rows"] if row["figure_id"] == "security_posture_map")
+    assert "output/reports/security_posture_audit.json" in security_figure["source_artifacts"]
+    assert "release" in set(security_figure["claim_lanes"])
     assert scope_boundary["all_required_scope_categories_present"] is True
     assert scope_boundary["all_future_rows_non_live"] is True
     assert scope_boundary["all_blocked_contexts_non_live"] is True
@@ -86,6 +95,7 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
     )
     assert _relative_posix(sheaf["release_attestation"], project_root) == "output/reports/release_attestation.json"
     assert _relative_posix(sheaf["track_lane_matrix"], project_root) == "output/data/track_lane_matrix.json"
+    assert _relative_posix(sheaf["security_posture"], project_root) == "output/reports/security_posture_audit.json"
     topology = _load(project_root / "output" / "data" / "si_graph_world_topology_sweep.json")
     lean_graph = _load(project_root / "output" / "reports" / "lean_graph_world_inventory.json")
     topology_ids = {row["topology"] for row in topology["rows"]}
@@ -296,6 +306,7 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         "claim_audit": project_root / "output" / "reports" / "claim_evidence_audit.json",
         "gate_index": project_root / "output" / "data" / "validation_gate_index.json",
         "scope": project_root / "output" / "reports" / "scope_boundary_audit.json",
+        "blocked": project_root / "output" / "reports" / "blocked_scope_manifest.json",
         "visualization_quality": project_root / "output" / "reports" / "visualization_quality_audit.json",
         "adversarial": project_root / "output" / "reports" / "adversarial_audit.json",
         "staleness": project_root / "output" / "reports" / "manuscript_staleness_report.json",
@@ -335,6 +346,11 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         data["all_current_claims_toy"] = True
         data["scope_boundary_status"] = "toy_only_pass"
 
+    def break_blocked_manifest(data: dict) -> None:
+        data["rows"] = [row for row in data["rows"] if row.get("id") != "llm_generated_evidence"]
+        data["blocked_count"] = len(data["rows"])
+        data["all_blocked"] = True
+
     def break_visualization_claim_lanes(data: dict) -> None:
         data["rows"][0]["claim_lanes"] = []
         data["rows"][0]["claim_lane_count"] = 0
@@ -348,6 +364,8 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
 
     def break_staleness(data: dict) -> None:
         data["rows"][0]["expected"] = "definitely stale"
+        data["rows"][0]["fresh"] = False
+        data["all_fresh"] = True
 
     def break_diffoscope(data: dict) -> None:
         data["rows"][0]["equal"] = False
@@ -369,9 +387,10 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         ("claim_audit", break_claim_audit, "untyped claims"),
         ("gate_index", break_gate_index, "unindexed gates"),
         ("scope", break_scope, "scope leakage"),
+        ("blocked", break_blocked_manifest, "scope leakage"),
         ("visualization_quality", break_visualization_claim_lanes, "incomplete claim-lane coverage"),
         ("adversarial", break_adversarial, "expected failures"),
-        ("staleness", break_staleness, "manuscript_staleness_report.json is stale"),
+        ("staleness", break_staleness, "manuscript_staleness_report.json"),
         ("diffoscope", break_diffoscope, "artifact_diffoscope.json records artifact drift"),
         ("license_audit", break_license_audit, "artifact_license_audit.json records unsafe artifacts"),
         ("release_notes", break_release_notes, "release_notes_evidence.json has unsupported notes"),
@@ -501,6 +520,45 @@ def test_scholarship_matrix_scope_boundary_negative_control(project_root: Path) 
     with temporary_json_mutation(path, remove_scope_guard):
         issues = validate_scholarship_source_matrix(project_root)
         assert any("stale or forged row evidence" in issue for issue in issues)
+
+
+def test_security_posture_audit_rederives_live_row_evidence(project_root: Path) -> None:
+    from roadmap_tracks import validate_security_posture_audit, write_sheaf_track_artifacts
+
+    ensure_gate_artifacts(project_root)
+    write_sheaf_track_artifacts(project_root)
+    path = project_root / "output" / "reports" / "security_posture_audit.json"
+    assert validate_security_posture_audit(project_root) == []
+
+    def forge_control_row(data: dict) -> None:
+        row = data["rows"][0]
+        row["evidence_present"] = False
+        row["control_ok"] = True
+        data["all_controls_ok"] = True
+        data["all_evidence_present"] = True
+        data["high_risk_gap_count"] = 0
+
+    with temporary_json_mutation(path, forge_control_row):
+        issues = validate_security_posture_audit(project_root)
+        assert any("stale or forged row evidence" in issue for issue in issues)
+
+
+def test_security_posture_secret_pattern_negative_control(project_root: Path) -> None:
+    from roadmap_tracks.security import build_security_posture_audit
+
+    ensure_gate_artifacts(project_root)
+    path = project_root / "src" / "roadmap_tracks" / "__init__.py"
+
+    def append_constructed_secret_pattern(text: str) -> str:
+        secret_line = "# " + "api" + "_key = " + '"' + ("a" * 24) + '"'
+        return f"{text.rstrip()}\n{secret_line}\n"
+
+    with temporary_text_mutation(path, append_constructed_secret_pattern):
+        audit = build_security_posture_audit(project_root)
+        secret_row = next(row for row in audit["rows"] if row["control_id"] == "secret_pattern_absence")
+        assert audit["secret_finding_count"] >= 1
+        assert audit["all_secret_patterns_absent"] is False
+        assert secret_row["control_ok"] is False
 
 
 def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) -> None:

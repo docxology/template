@@ -50,6 +50,7 @@ def drift_module():
         check_publication_metadata_consistency=checks.check_publication_metadata_consistency,
         check_docs_hardcoded_counts=checks.check_docs_hardcoded_counts,
         check_project_src_infrastructure_boundary=checks.check_project_src_infrastructure_boundary,
+        check_forkability_contract=checks.check_forkability_contract,
         check_project=lambda project, report: checks.check_project(REPO_ROOT, project, report),
     )
 
@@ -58,6 +59,7 @@ def _scaffold_minimal_project(tmp_path: Path, name: str = "fake_project") -> Pat
     """Write the minimum file set every detector expects to find."""
     root = make_project(tmp_path, name, with_manuscript=True)
     (root / "docs").mkdir()
+    (root / "scripts").mkdir()
     write_doc(root / "README.md", "# Fake\n")
     write_doc(root / "AGENTS.md", "# Fake AGENTS\n")
     write_doc(root / "pyproject.toml", "[tool.coverage.report]\nfail_under = 90\n")
@@ -68,6 +70,40 @@ def _scaffold_minimal_project(tmp_path: Path, name: str = "fake_project") -> Pat
     write_doc(root / "manuscript" / "references.bib", "")
     write_doc(root / "manuscript" / "preamble.md", "")
     write_doc(root / "docs" / "AGENTS.md", "# Docs\n")
+    write_doc(root / "STANDALONE.md", "# Standalone\n")
+    write_doc(
+        root / "domain_profile.yaml",
+        """
+domain: fake_research
+display_name: Fake Research
+review_gates: [source_quality]
+artifact_expectations: [output/report.json]
+benchmark_rubric:
+  name: fake
+  dimensions:
+    - name: reproducibility
+      weight: 1.0
+""",
+    )
+    write_doc(
+        root / "experiment_plan.yaml",
+        """
+conditions:
+  - name: reference_fixture
+    role: reference
+  - name: proposed_fixture
+    role: proposed
+  - name: sensitivity_fixture
+    role: variant
+metrics:
+  primary:
+    name: accuracy
+    direction: maximize
+protocol: "Run all fixtures with the same seed."
+baselines: [reference_fixture]
+ablations: [sensitivity_fixture]
+""",
+    )
     return root
 
 
@@ -355,6 +391,55 @@ def test_required_files_exist_flags_missing_pyproject(drift_module, tmp_path):
     rep = drift_module.Report()
     drift_module.check_required_files_exist(root, rep, "fake_project")
     assert any(f.severity == "ERROR" and f.rule == "missing_canonical_file" for f in rep.findings)
+
+
+def test_required_files_exist_allows_fit_for_purpose_docs(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "docs" / "AGENTS.md").unlink()
+    rep = drift_module.Report()
+    drift_module.check_required_files_exist(root, rep, "fake_project")
+    assert rep.findings == []
+
+
+def test_forkability_contract_flags_missing_standalone_doc(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "STANDALONE.md").unlink()
+    rep = drift_module.Report()
+    drift_module.check_forkability_contract(root, rep, "fake_project")
+    assert any(f.severity == "ERROR" and f.rule == "missing_standalone_doc" for f in rep.findings)
+
+
+def test_forkability_contract_flags_invalid_overlay(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "experiment_plan.yaml").write_text(
+        "conditions:\n  - name: broken\n    role: ablation\nmetrics: {}\nprotocol: ''\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_forkability_contract(root, rep, "fake_project")
+    assert any(f.severity == "ERROR" and f.rule == "invalid_experiment_plan" for f in rep.findings)
+
+
+def test_forkability_contract_flags_unsafe_raw_recursive_copy_docs(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "docs" / "fork.md").write_text(
+        "Fork it with `cp -r projects/templates/template_code_project projects/working/new_project`.\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_forkability_contract(root, rep, "fake_project")
+    assert any(f.severity == "ERROR" and f.rule == "unsafe_fork_copy" for f in rep.findings)
+
+
+def test_forkability_contract_flags_unsafe_raw_recursive_copy_fenced_docs(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "docs" / "fork.md").write_text(
+        "```bash\ncp -r projects/templates/template_code_project projects/working/new_project\n```\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_forkability_contract(root, rep, "fake_project")
+    assert any(f.severity == "ERROR" and f.rule == "unsafe_fork_copy" for f in rep.findings)
 
 
 def test_publication_metadata_flags_doi_collision(drift_module, tmp_path):

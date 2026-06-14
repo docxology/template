@@ -12,35 +12,30 @@
 # 0. From the repo root, install deps once
 uv sync
 
-# 1. Copy the exemplar to your new project name
-cp -r projects/templates/template_prose_project projects/my_review_project
-rm -rf projects/my_review_project/src/*.egg-info
-rm -rf projects/my_review_project/output
+# 1. Clean-copy the exemplar to your new project name
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_prose_project \
+  --dest projects/working/my_review_project \
+  --new-name my_review_project
 
-# 2. Rename the package in pyproject.toml + manuscript/config.yaml
-sed -i.bak 's/template_prose_project/my_review_project/g' \
-  projects/my_review_project/pyproject.toml \
-  projects/my_review_project/manuscript/config.yaml
-rm projects/my_review_project/pyproject.toml.bak projects/my_review_project/manuscript/config.yaml.bak
+# 2. Drop in your own manuscript
+rm projects/working/my_review_project/manuscript/0*_*.md projects/working/my_review_project/manuscript/99_*.md
+rsync -a /path/to/your/manuscript_sections/ projects/working/my_review_project/manuscript/
+cp /path/to/your/references.bib projects/working/my_review_project/manuscript/
 
-# 3. Drop in your own manuscript
-rm projects/my_review_project/manuscript/0*_*.md projects/my_review_project/manuscript/99_*.md
-cp -r /path/to/your/manuscript_sections/*.md projects/my_review_project/manuscript/
-cp /path/to/your/references.bib projects/my_review_project/manuscript/
-
-# 4. Run the tests against your fork
-uv run pytest projects/my_review_project/tests/ \
-    --cov=projects/my_review_project/src \
+# 3. Run the tests against your fork
+uv run pytest projects/working/my_review_project/tests/ \
+    --cov=projects/working/my_review_project/src \
     --cov-fail-under=90 -q
 
-# 5. Run the prose pipeline against your fork
-uv run python projects/my_review_project/scripts/run_prose_pipeline.py
+# 4. Run the prose pipeline against your fork
+uv run python projects/working/my_review_project/scripts/run_prose_pipeline.py
 ```
 
 **⚠️ Confidentiality invariant.** The repo `.gitignore` is configured so
 that **only** the public canonical exemplars listed in
 [`../../../docs/_generated/active_projects.md`](../../../../docs/_generated/active_projects.md)
-under `projects/` are ever git-tracked. Your fork (`projects/my_review_project/`)
+under `projects/` are ever git-tracked. Your fork (`projects/working/my_review_project/`)
 is local-only and won't be pushed to the public repo even if you `git
 add -f` it. Read [`../../../CLAUDE.md`](../../../../CLAUDE.md)
 "CONFIDENTIALITY INVARIANT" for the full fence.

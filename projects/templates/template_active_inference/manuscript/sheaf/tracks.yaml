@@ -110,6 +110,12 @@ tracks:
     label: Source-backed scholarship matrix
     paper_role: Scholarship and method-source lineage
     paper_use: Connects cited sources to method roles, sections, and generated evidence.
+  security_posture:
+    order: 58
+    renderer: markdown
+    label: Security posture audit
+    paper_role: Public release security boundary evidence
+    paper_use: Separates enforced local controls from deferred production-security obligations.
   sensitivity:
     order: 60
     renderer: markdown

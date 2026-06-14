@@ -1,20 +1,130 @@
 {
   "_meta": {
-    "schema_version": "1.0",
+    "schema_version": "1.1",
     "project_name": "template_code_project",
-    "scaffolded_on": "2026-05-20",
-    "scaffolded_by": "Daniel Ari Friedman",
-    "note": "Scaffold only — no real pinned values yet. See docs/maintenance/regression-testing.md to populate."
+    "populated_on": "2026-06-13",
+    "populated_by": "Codex",
+    "note": "First real regression pins for deterministic optimization claims in manuscript/03_results.md."
   },
-  "_example_do_not_use": {
-    "manuscript_section": "manuscript/03_results.md / Figure 3 panel (b)",
-    "claim_text": "the convergence rate constant k = 0.4271 ± 0.0003 (n=1000 trials, seed=42)",
-    "value": 0.4271,
-    "abs_tolerance": 0.0003,
-    "verifier_function": "analysis.pipeline.run_analysis",
-    "verifier_args": {"n_trials": 1000, "seed": 42},
-    "pinned_on": "EXAMPLE",
-    "pinned_by": "EXAMPLE",
-    "pinned_at_commit": "EXAMPLE"
+  "_provenance": {
+    "solution_accuracy_target_solution": {
+      "commit": "b85f2753",
+      "date": "2026-06-13",
+      "reason": "Analytic optimum for the configured one-dimensional quadratic objective.",
+      "script": "PYTHONPATH=projects/templates/template_code_project uv run python - <<'PY' ... quadratic_optimum(...)"
+    },
+    "solution_accuracy_target_objective": {
+      "commit": "b85f2753",
+      "date": "2026-06-13",
+      "reason": "Analytic optimum objective for the configured one-dimensional quadratic objective.",
+      "script": "PYTHONPATH=projects/templates/template_code_project uv run python - <<'PY' ... quadratic_optimum(...)"
+    },
+    "opt_results_best_step_size": {
+      "commit": "b85f2753",
+      "date": "2026-06-13",
+      "reason": "Fastest configured gradient-descent row from the deterministic experiment grid.",
+      "script": "PYTHONPATH=projects/templates/template_code_project uv run python - <<'PY' ... run_convergence_experiment(...)"
+    },
+    "opt_results_min_iterations": {
+      "commit": "b85f2753",
+      "date": "2026-06-13",
+      "reason": "Minimum iteration count in the configured optimization result table.",
+      "script": "PYTHONPATH=projects/templates/template_code_project uv run python - <<'PY' ... run_convergence_experiment(...)"
+    },
+    "opt_results_max_iterations": {
+      "commit": "b85f2753",
+      "date": "2026-06-13",
+      "reason": "Maximum iteration count in the configured optimization result table.",
+      "script": "PYTHONPATH=projects/templates/template_code_project uv run python - <<'PY' ... run_convergence_experiment(...)"
+    },
+    "opt_results_mean_iterations_rounded": {
+      "commit": "b85f2753",
+      "date": "2026-06-13",
+      "reason": "Rounded mean iteration count reported in the computational performance paragraph.",
+      "script": "PYTHONPATH=projects/templates/template_code_project uv run python - <<'PY' ... run_convergence_experiment(...)"
+    },
+    "opt_results_num_converged": {
+      "commit": "b85f2753",
+      "date": "2026-06-13",
+      "reason": "Count of configured step sizes whose gradient norm met the convergence tolerance.",
+      "script": "PYTHONPATH=projects/templates/template_code_project uv run python - <<'PY' ... run_convergence_experiment(...)"
+    }
+  },
+  "solution_accuracy_target_solution": {
+    "manuscript_section": "manuscript/03_results.md / Solution Accuracy",
+    "claim_text": "Target solution: x = {{RESULT_OPTIMUM_X}} (relative error < 10^-4 for converged settings)",
+    "value": 1.0,
+    "abs_tolerance": 1e-12,
+    "verifier_function": "src.optimizer.quadratic_optimum",
+    "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
+    "pinned_on": "2026-06-13",
+    "pinned_by": "Codex",
+    "pinned_at_commit": "b85f2753"
+  },
+  "solution_accuracy_target_objective": {
+    "manuscript_section": "manuscript/03_results.md / Solution Accuracy",
+    "claim_text": "Target objective: f(x) = {{RESULT_OPTIMUM_F}} (absolute error < {{CONFIG_CONVERGENCE_TOL}} for converged settings)",
+    "value": -0.5,
+    "abs_tolerance": 1e-12,
+    "verifier_function": "src.optimizer.quadratic_optimum",
+    "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
+    "pinned_on": "2026-06-13",
+    "pinned_by": "Codex",
+    "pinned_at_commit": "b85f2753"
+  },
+  "opt_results_best_step_size": {
+    "manuscript_section": "manuscript/03_results.md / Convergence Analysis",
+    "claim_text": "Fastest configuration in this experiment: alpha={{RESULT_BEST_STEP_SIZE}} converges in {{RESULT_MIN_ITERATIONS}} iteration(s).",
+    "value": 1.0,
+    "abs_tolerance": 1e-12,
+    "verifier_function": "src.analysis.experiments.run_convergence_experiment",
+    "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
+    "pinned_on": "2026-06-13",
+    "pinned_by": "Codex",
+    "pinned_at_commit": "b85f2753"
+  },
+  "opt_results_min_iterations": {
+    "manuscript_section": "manuscript/03_results.md / Performance Metrics Summary",
+    "claim_text": "Smallest iteration count recorded: {{RESULT_MIN_ITERATIONS}}",
+    "value": 1,
+    "abs_tolerance": 0,
+    "verifier_function": "src.analysis.experiments.run_convergence_experiment",
+    "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
+    "pinned_on": "2026-06-13",
+    "pinned_by": "Codex",
+    "pinned_at_commit": "b85f2753"
+  },
+  "opt_results_max_iterations": {
+    "manuscript_section": "manuscript/03_results.md / Performance Metrics Summary",
+    "claim_text": "Largest iteration count recorded: {{RESULT_MAX_ITERATIONS}}",
+    "value": 1000,
+    "abs_tolerance": 0,
+    "verifier_function": "src.analysis.experiments.run_convergence_experiment",
+    "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
+    "pinned_on": "2026-06-13",
+    "pinned_by": "Codex",
+    "pinned_at_commit": "b85f2753"
+  },
+  "opt_results_mean_iterations_rounded": {
+    "manuscript_section": "manuscript/03_results.md / Computational Performance",
+    "claim_text": "Convergence: Fastest at alpha = {{RESULT_BEST_STEP_SIZE}} ({{RESULT_MIN_ITERATIONS}} iteration), average {{RESULT_AVG_ITERATIONS}} iterations",
+    "value": 372,
+    "abs_tolerance": 0,
+    "verifier_function": "src.analysis.experiments.run_convergence_experiment",
+    "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
+    "pinned_on": "2026-06-13",
+    "pinned_by": "Codex",
+    "pinned_at_commit": "b85f2753"
+  },
+  "opt_results_num_converged": {
+    "manuscript_section": "manuscript/03_results.md / Solution Accuracy",
+    "claim_text": "{{RESULT_NUM_CONVERGED}} of {{CONFIG_NUM_STEP_SIZES}} tested step sizes achieved the analytical optimum within numerical precision.",
+    "value": 4,
+    "abs_tolerance": 0,
+    "verifier_function": "src.analysis.experiments.run_convergence_experiment",
+    "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
+    "pinned_on": "2026-06-13",
+    "pinned_by": "Codex",
+    "pinned_at_commit": "b85f2753"
   }
 }

@@ -44,7 +44,7 @@ CORE_ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/data/si_graph_world_topology_traces.json": "generate_toy_sweep_tracks.py",
     "output/reports/graph_world_invariants.json": "generate_toy_sweep_tracks.py",
     "output/reports/model_checking_witnesses.json": "generate_sheaf_tracks.py",
-    "output/data/interop_roundtrip_report.json": "generate_sheaf_tracks.py",
+    "output/data/interop_roundtrip_report.json": "generate_formal_interop_tracks.py",
     "output/data/gnn_roundtrip_report.json": "generate_formal_interop_tracks.py",
     "output/reports/gnn_lint_report.json": "generate_formal_interop_tracks.py",
     "output/data/ontology_alias_index.json": "generate_formal_interop_tracks.py",

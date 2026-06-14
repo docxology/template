@@ -185,3 +185,27 @@ def test_staleness_row_forgeries_are_caught(project_root: Path) -> None:
         "records stale manuscript tokens",
         project_root,
     )
+
+
+def test_artifact_contract_interop_hash_forgery_is_caught(project_root: Path) -> None:
+    from roadmap_tracks import validate_sheaf_track_artifacts, write_sheaf_track_artifacts
+
+    ensure_gate_artifacts(project_root)
+    write_sheaf_track_artifacts(project_root)
+    path = project_root / "output" / "data" / "artifact_contract_index.json"
+
+    def forge_interop_hash(data: dict) -> None:
+        row = next(row for row in data["rows"] if row["artifact"] == "output/data/interop_roundtrip_report.json")
+        row["source_sha256"] = "0" * 64
+        row["source_hash_fresh"] = True
+        row["contract_complete"] = True
+        data["all_freshness_hashes_current"] = True
+        data["all_rows_complete"] = True
+
+    _assert_forgery_caught(
+        path,
+        forge_interop_hash,
+        validate_sheaf_track_artifacts,
+        "artifact_contract_index.json has incomplete or stale artifact contract rows",
+        project_root,
+    )

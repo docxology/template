@@ -75,14 +75,17 @@ they are what the repo's gates enforce:
 
 ```bash
 NEW=my_review_project
-cp -r projects/templates/template_prose_project projects/$NEW
-cd projects/$NEW
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_prose_project \
+  --dest "projects/working/$NEW" \
+  --new-name "$NEW"
+cd "projects/working/$NEW"
 # 1. Edit manuscript/config.yaml (title, thresholds, bibliography policy) — the only knob
 # 2. Replace manuscript/*.md with your prose; keep H1-per-section + {{TOKEN}} conventions
 # 3. Curate manuscript/references.bib (validated, never auto-written)
 # 4. Adjust src/ only if you need new checks — keep pipeline/ as the sole infra seam
-uv run pytest projects/$NEW/tests/ --cov=projects/$NEW/src --cov-fail-under=90
-uv run python scripts/execute_pipeline.py --project $NEW --core-only
+uv run pytest "projects/working/$NEW/tests/" --cov="projects/working/$NEW/src" --cov-fail-under=90
+uv run python scripts/execute_pipeline.py --project "working/$NEW" --core-only
 ```
 
 Because the copied tree already has `src/` Python files and `tests/`, the

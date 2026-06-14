@@ -13,7 +13,6 @@ from typing import Any
 
 import yaml
 
-from .figure_provenance import _figure_sources_mapped
 from .integration_audit_builders import (
     LATE_HYDRATION_PRODUCER,
     SELF_PRODUCER,
@@ -26,8 +25,33 @@ from .integration_audit_builders import (
     build_manuscript_token_provenance,
     build_stale_artifact_report,
 )
+from .integration_audit_figures import build_figure_hash_manifest, build_figure_source_map
+from .integration_audit_lanes import (
+    ALLOWED_CLAIM_LANES,
+    allowed_claim_lanes,
+    claim_lane_summary,
+    figure_claim_lanes,
+    manifest_tracks_by_section as _manifest_tracks_by_section,
+)
 
-ALLOWED_CLAIM_LANES = ("analytical", "formal", "pymdp", "release", "scope", "semantic", "visualization")
+__all__ = [
+    "ALLOWED_CLAIM_LANES",
+    "REQUIRED_SCOPE_CATEGORIES",
+    "_manifest_tracks_by_section",
+    "allowed_claim_lanes",
+    "build_adversarial_audit",
+    "build_artifact_diffoscope",
+    "build_artifact_license_audit",
+    "build_figure_hash_manifest",
+    "build_figure_source_map",
+    "build_integration_semantic_snapshot",
+    "build_manuscript_evidence_tables",
+    "build_release_notes_evidence",
+    "build_scope_boundary_audit",
+    "claim_lane_summary",
+    "figure_claim_lanes",
+]
+
 REQUIRED_SCOPE_CATEGORIES = (
     "blocked_empirical",
     "blocked_llm",
@@ -75,160 +99,6 @@ _BLOCKED_SCOPE_NEGATIONS = (
     "until ",
     "without ",
 )
-
-_SOURCE_LANE_HINTS: tuple[tuple[tuple[str, ...], str], ...] = (
-    (
-        (
-            "parameter_sweep",
-            "analytical_",
-            "sensitivity_",
-            "uncertainty_",
-            "toy_benchmark",
-            "causal_ablation",
-            "ablation_sensitivity",
-            "state_space",
-            "state_transition",
-            "invariants.json",
-        ),
-        "analytical",
-    ),
-    (("si_", "pymdp", "tmaze", "graph_world"), "pymdp"),
-    (("lean", "theorem", "proof_", "model_checking"), "formal"),
-    (
-        (
-            "sheaf_",
-            "semantic_",
-            "validation_dependency",
-            "cross_track",
-            "manuscript_token",
-            "manuscript_staleness",
-            "evidence_field",
-            "producer_completeness",
-            "stale_artifact",
-            "claim_evidence",
-            "validation_gate",
-            "section_status",
-            "render_log",
-            "gnn_",
-            "ontology_",
-        ),
-        "semantic",
-    ),
-    (("figure_", "visualization_", "statistical_visualization", "output/figures/", "animation_"), "visualization"),
-    (
-        (
-            "release_",
-            "artifact_diffoscope",
-            "artifact_license",
-            "artifact_provenance",
-            "reproducibility_replay",
-            "replay_matrix",
-        ),
-        "release",
-    ),
-    (("scope_boundary", "blocked_scope", "adversarial_audit", "scholarship"), "scope"),
-)
-
-_EVIDENCE_ROLE_LANES = {
-    "formal": "formal",
-    "schematic": "visualization",
-    "scholarship": "scope",
-    "sheaf": "semantic",
-    "source_mapped": "semantic",
-    "statistical": "analytical",
-}
-
-_TRACK_LANES = {
-    "adversarial_audit": "scope",
-    "animation": "visualization",
-    "animation_delta": "visualization",
-    "artifact_diffoscope": "release",
-    "artifact_license": "release",
-    "assumption_index": "analytical",
-    "benchmark": "analytical",
-    "causal_ablation": "analytical",
-    "counterexample": "scope",
-    "evidence_fields": "semantic",
-    "formalism": "analytical",
-    "gate_ergonomics": "release",
-    "gnn": "semantic",
-    "interop": "pymdp",
-    "layers": "semantic",
-    "lean": "formal",
-    "manuscript_staleness": "semantic",
-    "model_checking": "formal",
-    "ontology": "semantic",
-    "proof_extraction": "formal",
-    "provenance": "release",
-    "pymdp": "pymdp",
-    "release_bundle": "release",
-    "release_notes": "release",
-    "replay_matrix": "release",
-    "scholarship": "scope",
-    "sensitivity": "analytical",
-    "simulation": "pymdp",
-    "state_space_catalog": "analytical",
-    "theorem_traceability": "formal",
-    "uncertainty": "analytical",
-    "visualization": "visualization",
-}
-
-
-def allowed_claim_lanes() -> tuple[str, ...]:
-    """Return the stable figure/scope lane vocabulary used by validators."""
-    return ALLOWED_CLAIM_LANES
-
-
-def _lane_from_source(source: str) -> str:
-    lowered = source.lower()
-    for needles, lane in _SOURCE_LANE_HINTS:
-        if any(needle in lowered for needle in needles):
-            return lane
-    return ""
-
-
-def _manifest_tracks_by_section(root: Path) -> dict[str, list[str]]:
-    path = root / "manuscript" / "sheaf" / "manifest.yaml"
-    payload = yaml.safe_load(path.read_text(encoding="utf-8")) if path.is_file() else {}
-    sections = payload.get("sections") if isinstance(payload, dict) else []
-    return {
-        str(section.get("id")): sorted(str(track_id) for track_id in (section.get("tracks") or {}))
-        for section in sections or []
-        if section.get("id")
-    }
-
-
-def figure_claim_lanes(
-    source_artifacts: list[str],
-    section_tracks: list[str] | tuple[str, ...] = (),
-    evidence_role: str = "",
-) -> list[str]:
-    """Derive claim lanes from source artifacts, sheaf tracks, and evidence role."""
-    lanes = {_lane_from_source(str(source)) for source in source_artifacts}
-    lanes.update(_TRACK_LANES.get(str(track), "") for track in section_tracks)
-    lanes.add(_EVIDENCE_ROLE_LANES.get(str(evidence_role), ""))
-    return sorted(lane for lane in lanes if lane in ALLOWED_CLAIM_LANES)
-
-
-def claim_lane_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    """Summarize per-figure claim lanes in a validation-friendly shape."""
-    coverage = {lane: 0 for lane in ALLOWED_CLAIM_LANES}
-    all_valid = True
-    all_present = bool(rows)
-    for row in rows:
-        lanes = [str(lane) for lane in row.get("claim_lanes") or []]
-        all_present = all_present and bool(lanes)
-        all_valid = all_valid and all(lane in ALLOWED_CLAIM_LANES for lane in lanes)
-        for lane in set(lanes):
-            if lane in coverage:
-                coverage[lane] += 1
-    return {
-        "allowed_claim_lanes": list(ALLOWED_CLAIM_LANES),
-        "claim_lane_coverage": coverage,
-        "all_figures_have_claim_lanes": all_present,
-        "all_claim_lanes_valid": all_valid,
-    }
-
 
 def _blocked_scope_match(text: str) -> tuple[str, str]:
     for category, needles in _BLOCKED_SCOPE_PATTERNS.items():
@@ -340,138 +210,6 @@ def build_release_notes_evidence(project_root: Path) -> dict[str, Any]:
     }
 
 
-def build_figure_source_map(project_root: Path) -> dict[str, Any]:
-    """Map rendered figures to source artifacts, section bindings, and claim lanes."""
-    root = project_root.resolve()
-    from PIL import Image
-    from visualizations.figure_registry import figure_output_path, load_figure_registry, load_section_figures
-
-    sources = {
-        "efe_decomposition": ["src/simulation/efe_decomposition.py", "src/simulation/tmaze_model.py"],
-        "precision_sweep": ["src/simulation/precision_sweep.py", "src/simulation/efe_decomposition.py"],
-        "cue_tmaze_advantage": ["src/simulation/cue_tmaze_model.py", "src/simulation/efe_decomposition.py"],
-        "dirichlet_convergence": ["src/simulation/dirichlet_learning.py", "src/simulation/tmaze_model.py"],
-        "ising_mi_curve": ["output/data/parameter_sweep.csv"],
-        "free_energy_curve": ["src/analytical/decomposition.py"],
-        "si_belief_entropy_curve": ["output/data/si_tmaze_trace.json"],
-        "si_obs_action_trace": ["output/data/si_tmaze_summary.json"],
-        "si_tmaze_actions": ["output/data/si_tmaze_summary.json"],
-        "sheaf_layers_overview": ["output/data/sheaf_coverage_matrix.json"],
-        "sheaf_coverage_heatmap": ["output/data/sheaf_coverage_matrix.json"],
-        "invariant_dashboard": ["output/reports/invariants.json"],
-        "tmaze_schematic": [
-            "pymdp.yaml",
-            "output/reports/pymdp_runtime_diagnostics.json",
-            "output/data/pymdp_policy_posterior_grid.json",
-        ],
-        "multi_track_architecture": ["tracks.yaml", "manuscript/sheaf/tracks.yaml"],
-        "lean_boundary_status": ["lean/TemplateActiveInference"],
-        "gnn_ontology_concordance": ["gnn", "manuscript/sections/imrad"],
-        "semantic_gluing_graph": [
-            "output/data/validation_dependency_graph.json",
-            "output/data/sheaf_gluing_certificate.json",
-            "output/data/evidence_field_index.json",
-        ],
-        "track_lane_promotion_map": [
-            "output/data/track_lane_matrix.json",
-            "lean/TemplateActiveInference/PromotionProof.lean",
-        ],
-        "theorem_traceability_graph": [
-            "output/data/theorem_traceability_matrix.json",
-            "output/data/proof_dependency_graph.json",
-        ],
-        "causal_ablation_heatmap": [
-            "output/data/causal_ablation_matrix.json",
-            "output/reports/ablation_sensitivity_report.json",
-        ],
-        "scholarship_source_map": ["output/data/scholarship_source_matrix.json", "manuscript/references.bib"],
-    }
-    rows = []
-    section_bindings: dict[str, list[str]] = {}
-    for section_id, refs in load_section_figures(root).items():
-        for ref in refs:
-            section_bindings.setdefault(ref.figure_id, []).append(section_id)
-    section_tracks = _manifest_tracks_by_section(root)
-    axis_mappings = {
-        "ising_mi_curve": {"x": "lambda", "y": "mutual_information"},
-        "si_belief_entropy_curve": {"x": "step", "y": "belief_entropy"},
-        "causal_ablation_heatmap": {"x": "lambda", "y": "perturbation", "channel": "effect"},
-        "sheaf_coverage_heatmap": {"x": "section", "y": "track", "channel": "coverage_status"},
-        "track_lane_promotion_map": {"x": "promotion_requirement", "y": "pipeline_track", "channel": "status"},
-    }
-    registry = load_figure_registry(root)
-    for figure_id in sorted(registry):
-        image_path = figure_output_path(root, figure_id)
-        dimensions = {"width": 0, "height": 0}
-        if image_path.is_file():
-            with Image.open(image_path) as image:
-                dimensions = {"width": int(image.width), "height": int(image.height)}
-        source_artifacts = sources.get(figure_id, [])
-        source_jsonpaths = ["$" for _ in source_artifacts]
-        image_hash = _sha256(image_path) if image_path.is_file() else ""
-        pixel_ok = bool(source_artifacts and image_hash and dimensions["width"] > 0 and dimensions["height"] > 0)
-        bound_sections = sorted(section_bindings.get(figure_id, []))
-        bound_tracks = sorted({track for section_id in bound_sections for track in section_tracks.get(section_id, [])})
-        source_claim_lanes = figure_claim_lanes(source_artifacts, (), registry[figure_id].evidence_role)
-        section_claim_lanes = figure_claim_lanes([], bound_tracks, "")
-        claim_lanes = source_claim_lanes or section_claim_lanes
-        rows.append(
-            {
-                "figure_id": figure_id,
-                "source_artifact": source_artifacts[0] if source_artifacts else "",
-                "sources": source_artifacts,
-                "source_artifacts": source_artifacts,
-                "source_jsonpath": source_jsonpaths[0] if source_jsonpaths else "",
-                "source_jsonpaths": source_jsonpaths,
-                "renderer": "visualizations.figures.generate_all_figures",
-                "dimensions": dimensions,
-                "image_sha256": image_hash,
-                "axis_channel_mapping": axis_mappings.get(figure_id, {"channel": "pixels"}),
-                "section_bindings": bound_sections,
-                "section_tracks": bound_tracks,
-                "source_claim_lanes": source_claim_lanes,
-                "section_claim_lanes": section_claim_lanes,
-                "claim_lanes": claim_lanes,
-                "claim_lane_count": len(claim_lanes),
-                "caption": registry[figure_id].caption,
-                # Re-derived from the filesystem (PR#23): mapped requires every
-                # listed non-deferred source path to exist, not merely a dict entry.
-                "mapped": _figure_sources_mapped(root, source_artifacts),
-                "pixel_provenance_ok": pixel_ok,
-            }
-        )
-    lane_summary = claim_lane_summary(rows)
-    return {
-        "schema": "template_active_inference.figure_source_map.v1",
-        "rows": rows,
-        "figure_count": len(rows),
-        "all_figures_mapped": all(row["mapped"] and row["pixel_provenance_ok"] for row in rows),
-        **lane_summary,
-    }
-
-
-def build_figure_hash_manifest(project_root: Path) -> dict[str, Any]:
-    root = project_root.resolve()
-    rows = []
-    for path in sorted((root / "output" / "figures").glob("*")):
-        if path.suffix.lower() not in {".png", ".gif"}:
-            continue
-        rows.append(
-            {
-                "path": path.relative_to(root).as_posix(),
-                "sha256": _sha256(path),
-                "size_bytes": path.stat().st_size,
-                "fresh": True,
-            }
-        )
-    return {
-        "schema": "template_active_inference.figure_hash_manifest.v1",
-        "rows": rows,
-        "figure_count": len(rows),
-        "all_hashes_present": bool(rows) and all(row["sha256"] for row in rows),
-    }
-
-
 def build_scope_boundary_audit(project_root: Path) -> dict[str, Any]:
     """Audit manuscript scope language against toy-only and blocked-context contracts."""
     root = project_root.resolve()
@@ -513,75 +251,40 @@ def build_scope_boundary_audit(project_root: Path) -> dict[str, Any]:
         )
         if not ok:
             violations.append(path.name)
-    rows.extend(
-        [
+    blocked_manifest = _load_json(root / "output" / "reports" / "blocked_scope_manifest.json")
+    for blocked_row in blocked_manifest.get("rows") or []:
+        scope_category = str(blocked_row.get("scope_category") or "")
+        rows.append(
             {
-                "section": "blocked_scope_manifest:empirical_adapter",
-                "classification": "empirical",
-                "scope_category": "blocked_empirical",
+                "section": f"blocked_scope_manifest:{blocked_row.get('id', '')}",
+                "classification": "empirical" if scope_category == "blocked_empirical" else "future",
+                "scope_category": scope_category,
                 "context": "blocked_manifest",
+                "blocked_manifest_id": str(blocked_row.get("id") or ""),
                 "current_result_toy_only": False,
                 "future_only": False,
-                "blocked_context": True,
+                "blocked_context": scope_category.startswith("blocked_"),
                 "non_live_context": True,
-                "blocked_language_ok": True,
-                "ok": True,
-            },
-            {
-                "section": "blocked_scope_manifest:non_toy_model_claims",
-                "classification": "empirical",
-                "scope_category": "blocked_empirical",
-                "context": "blocked_manifest",
-                "current_result_toy_only": False,
-                "future_only": False,
-                "blocked_context": True,
-                "non_live_context": True,
-                "blocked_language_ok": True,
-                "ok": True,
-            },
-            {
-                "section": "blocked_scope_manifest:private_or_restricted_data",
-                "classification": "future",
-                "scope_category": "blocked_private",
-                "context": "blocked_manifest",
-                "current_result_toy_only": False,
-                "future_only": False,
-                "blocked_context": True,
-                "non_live_context": True,
-                "blocked_language_ok": True,
-                "ok": True,
-            },
-            {
-                "section": "blocked_scope_manifest:network_dependent_research",
-                "classification": "future",
-                "scope_category": "blocked_network",
-                "context": "blocked_manifest",
-                "current_result_toy_only": False,
-                "future_only": False,
-                "blocked_context": True,
-                "non_live_context": True,
-                "blocked_language_ok": True,
-                "ok": True,
-            },
-            {
-                "section": "blocked_scope_manifest:llm_generated_evidence",
-                "classification": "future",
-                "scope_category": "blocked_llm",
-                "context": "blocked_manifest",
-                "current_result_toy_only": False,
-                "future_only": False,
-                "blocked_context": True,
-                "non_live_context": True,
-                "blocked_language_ok": True,
-                "ok": True,
-            },
-        ]
-    )
+                "blocked_language_ok": blocked_row.get("status") == "blocked",
+                "ok": blocked_row.get("status") == "blocked",
+            }
+        )
     category_counts = {category: 0 for category in REQUIRED_SCOPE_CATEGORIES}
     for row in rows:
         category = str(row.get("scope_category") or "")
         if category in category_counts:
             category_counts[category] += 1
+    blocked_rows = [row for row in rows if row.get("context") == "blocked_manifest"]
+    blocked_manifest_ids = sorted(str(row.get("id") or "") for row in blocked_manifest.get("rows") or [])
+    scope_blocked_manifest_ids = sorted(str(row.get("blocked_manifest_id") or "") for row in blocked_rows)
+    blocked_manifest_categories = sorted({str(row.get("scope_category") or "") for row in blocked_manifest.get("rows") or []})
+    scope_blocked_categories = sorted({str(row.get("scope_category") or "") for row in blocked_rows})
+    blocked_manifest_concordant = (
+        bool(blocked_manifest_ids)
+        and scope_blocked_manifest_ids == blocked_manifest_ids
+        and scope_blocked_categories == blocked_manifest_categories
+        and "llm_generated_evidence" in set(scope_blocked_manifest_ids)
+    )
     all_required_categories_present = all(category_counts[category] > 0 for category in REQUIRED_SCOPE_CATEGORIES)
     all_future_rows_non_live = all(
         row.get("non_live_context") is True for row in rows if row.get("scope_category") == "future_only"
@@ -598,6 +301,11 @@ def build_scope_boundary_audit(project_root: Path) -> dict[str, Any]:
         "all_current_claims_toy": not violations,
         "required_scope_categories": list(REQUIRED_SCOPE_CATEGORIES),
         "scope_category_counts": category_counts,
+        "blocked_manifest_ids": blocked_manifest_ids,
+        "scope_blocked_manifest_ids": scope_blocked_manifest_ids,
+        "blocked_manifest_categories": blocked_manifest_categories,
+        "scope_blocked_categories": scope_blocked_categories,
+        "blocked_manifest_concordant": blocked_manifest_concordant,
         "all_required_scope_categories_present": all_required_categories_present,
         "all_future_rows_non_live": all_future_rows_non_live,
         "all_blocked_contexts_non_live": all_blocked_contexts_non_live,
@@ -606,6 +314,7 @@ def build_scope_boundary_audit(project_root: Path) -> dict[str, Any]:
             "toy_only_pass"
             if not violations
             and all_required_categories_present
+            and blocked_manifest_concordant
             and all_future_rows_non_live
             and all_blocked_contexts_non_live
             else "scope_leak"
@@ -631,6 +340,7 @@ def build_manuscript_evidence_tables(project_root: Path) -> dict[str, Any]:
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     release_notes = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
     scholarship = _load_json(root / "output" / "data" / "scholarship_source_matrix.json")
+    security_posture = _load_json(root / "output" / "reports" / "security_posture_audit.json")
     visualization_quality = _load_json(root / "output" / "reports" / "visualization_quality_audit.json")
     statistical_bridge = _load_json(root / "output" / "data" / "statistical_visualization_bridge.json")
     proof_dependency = _load_json(root / "output" / "data" / "proof_dependency_graph.json")
@@ -719,6 +429,11 @@ def build_manuscript_evidence_tables(project_root: Path) -> dict[str, Any]:
             "source": "output/data/scholarship_source_matrix.json",
         },
         {
+            "id": "security_posture",
+            "row_count": int(security_posture.get("control_count", 0)),
+            "source": "output/reports/security_posture_audit.json",
+        },
+        {
             "id": "visualization_quality",
             "row_count": int(visualization_quality.get("figure_count", 0)),
             "source": "output/reports/visualization_quality_audit.json",
@@ -793,6 +508,7 @@ def build_integration_semantic_snapshot(project_root: Path) -> dict[str, Any]:
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     release_notes = _load_json(root / "output" / "reports" / "release_notes_evidence.json")
     scholarship = _load_json(root / "output" / "data" / "scholarship_source_matrix.json")
+    security_posture = _load_json(root / "output" / "reports" / "security_posture_audit.json")
     restrictions = {
         "analytical_assumptions_indexed": assumptions.get("all_equations_indexed") is True,
         "pymdp_runtime_diagnostics_ok": runtime.get("ok") is True
@@ -828,6 +544,7 @@ def build_integration_semantic_snapshot(project_root: Path) -> dict[str, Any]:
         "artifact_license_safe": license_audit.get("all_license_safe") is True,
         "release_notes_source_backed": release_notes.get("all_notes_source_backed") is True,
         "scholarship_sources_connected": scholarship.get("all_sources_connected") is True,
+        "security_posture_controls_ok": security_posture.get("all_controls_ok") is True,
     }
     return {
         "schema": "template_active_inference.integration_semantic_snapshot.v1",

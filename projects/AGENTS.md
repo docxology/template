@@ -2,7 +2,12 @@
 
 ## Overview
 
-The `projects/` directory implements a **standalone project paradigm** where each research project is completely self-contained with independent source code, tests, analysis scripts, and manuscripts, while leveraging shared infrastructure for common operations like testing, rendering, and validation.
+The `projects/` directory implements a **forkable project paradigm** where each
+research project has independent source code, tests, analysis scripts, and
+manuscripts, while shared template infrastructure remains available for common
+testing, rendering, and validation. Some exemplars are fully project-local;
+others intentionally depend on `infrastructure/` and are standalone only inside
+a full template-style checkout.
 
 ## Standalone Project Paradigm
 
@@ -49,15 +54,27 @@ Nine projects under `projects/templates/` are **permanent canonical exemplars**:
 | [`templates/template_textbook/`](templates/template_textbook/) | Modular fillable textbook scaffold (parts → chapters → labs → question banks) | yes (`src/textbook/*`) | curated read-only | deterministic figure + diagram generators | see canonical facts | see canonical facts |
 | [`archive/template_search_project/`](archive/template_search_project/) **(local-only — NOT git-tracked)** | Optional search-centric add-on (literature discovery + LLM synthesis) | no (orchestration over `infrastructure/search`, `infrastructure/reference`, `infrastructure/llm`) | auto-populated `references.bib` + `references_deep.bib` | 3 figures | see project docs when restored | see project docs when restored |
 
-The permanent exemplars, and the optional search add-on when restored, share the **same** structural conventions:
+The permanent exemplars, and the optional search add-on when restored, share a
+smaller tested contract rather than identical documentation inventories:
 
-- `src/`, `tests/`, `scripts/`, `manuscript/`, `docs/`, `output/`, `pyproject.toml`, root `README.md` + `AGENTS.md`.
-- `domain_profile.yaml` + `experiment_plan.yaml` overlays for advisory review gates, artifact expectations, benchmark rubrics, declared conditions, primary metrics, baselines, and ablations.
-- The same 12-file `docs/` hub: `AGENTS.md`, `README.md`, `agent_instructions.md`, `architecture.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `style_guide.md`, `syntax_guide.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`.
-- Per-directory `AGENTS.md` + `README.md` (and, for `tests/`, a `PATTERNS.md`).
-- Manuscript files `00_abstract.md` … `99_references.md` plus `config.yaml`, `preamble.md`, `references.bib`, `SYNTAX.md`, and a manuscript-level `AGENTS.md`/`README.md`.
-- The same verification checklist: `pytest --cov`, no-mocks grep, layer-purity grep.
-- The same decision-memory contract: [`docs/rules/memory_and_decision_records.md`](../docs/rules/memory_and_decision_records.md) governs `WHY:` comments, ADR escalation, project TODO/ISA notes, local memory, failure autopsies, selective ignorance, and RedTeam-style negative controls.
+- Core project boundaries: `src/`, `tests/`, `scripts/`, `manuscript/`,
+  `pyproject.toml`, root `README.md` + `AGENTS.md`; `output/` is disposable and
+  regenerated.
+- A top-level `STANDALONE.md` describing purpose, clean-copy command,
+  post-fork edits, validation commands, intentional dependencies, and claim
+  boundaries.
+- `domain_profile.yaml` + `experiment_plan.yaml` overlays for review gates,
+  artifact expectations, benchmark rubrics, declared conditions, primary
+  metrics, baselines, and ablations.
+- Fit-for-purpose documentation: every directory carries local `AGENTS.md` and
+  `README.md` where the repo expects them, but specialized exemplars are not
+  required to imitate the older 12-file docs hub.
+- Project-local verification with `pytest --cov`; no-mocks and layer-boundary
+  checks run through repo gates where applicable.
+- The decision-memory contract in
+  [`docs/rules/memory_and_decision_records.md`](../docs/rules/memory_and_decision_records.md)
+  governs `WHY:` comments, ADR escalation, project TODO/ISA notes, local memory,
+  failure autopsies, selective ignorance, and RedTeam-style negative controls.
 
 When a new project is bootstrapped, copy whichever exemplar is closest in shape and adjust from there. Examples in repo-wide docs default to `projects/templates/template_code_project/` unless the doc explicitly compares project shapes. For one-glance differentiation ("copy THIS template when…"), see the generated [`docs/_generated/exemplar_roster.md`](../docs/_generated/exemplar_roster.md) — built from each README's `## When to use this template` section by `scripts/generate_exemplar_roster_doc.py` and kept in sync by `tests/infra_tests/project/test_exemplar_roster.py`.
 
@@ -187,7 +204,7 @@ flowchart TB
 
     SC --> SC_F[analysis_pipeline.py · generate_*.py]
     M --> M_F[config.yaml · references.bib · preamble.md ·<br/>00_abstract.md · *.md · SYNTAX.md ·<br/>AGENTS.md · README.md]
-    DOCS --> DOCS_F[12-file hub: AGENTS.md · README.md ·<br/>agent_instructions.md · architecture.md ·<br/>testing_philosophy.md · rendering_pipeline.md ·<br/>style_guide.md · syntax_guide.md · faq.md ·<br/>quickstart.md · output_conventions.md ·<br/>troubleshooting.md]
+    DOCS --> DOCS_F[Fit-for-purpose docs<br/>AGENTS.md · README.md ·<br/>STANDALONE.md · guides as needed]
     OUT --> OUT_F[figures/ · data/ · pdf/ · reports/ ·<br/>web/ · slides/ · manuscript/ · logs/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -638,7 +655,10 @@ Project trees follow the template discipline described in the root **[`.cursorru
 
 Current status, coverage, and project roster are documented in `docs/_generated/COUNTS.md` (updated from discovery and test runs).
 
-All projects follow the standalone paradigm, thin orchestrator pattern, no-mocks policy, and coverage requirements (60% infrastructure, 90% projects).
+All public exemplars follow the forkable project paradigm, thin orchestrator
+pattern, no-mocks policy, and coverage requirements (60% infrastructure, 90%
+project `src/`). Check each `STANDALONE.md` before claiming a fork is
+infrastructure-free.
 
 Authoritative project names: `docs/_generated/active_projects.md` (regenerate with `uv run python scripts/generate_active_projects_doc.py`).
 
@@ -998,9 +1018,10 @@ uv run python scripts/03_render_pdf.py --project area_handbook
 
 ## Summary
 
-The `projects/` directory implements **standalone project paradigm** with infrastructure compliance:
+The `projects/` directory implements a **forkable project paradigm** with
+infrastructure compliance:
 
-### 🔒 **Standalone Guarantees**
+### 🔒 **Forkability Guarantees**
 
 - **Tests**: Independent 90%+ coverage test suites with data only
 - **Methods**: Isolated business logic with no cross-project dependencies

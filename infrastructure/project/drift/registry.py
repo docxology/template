@@ -14,6 +14,7 @@ from infrastructure.project.drift.checks import (  # noqa: E402 — registry agg
     check_all_export_drift,
     check_coverage_floor_consistency,
     check_docs_hardcoded_counts,
+    check_forkability_contract,
     check_function_name_drift,
     check_mocks_absent_from_tests,
     check_no_blanket_except_in_src,
@@ -31,6 +32,7 @@ from infrastructure.project.drift.orchestrator import (  # noqa: E402
 
 PROJECT_CHECKS: tuple[ProjectCheckFn, ...] = (
     check_required_files_exist,
+    check_forkability_contract,
     check_function_name_drift,
     check_test_class_drift,
     check_all_export_drift,

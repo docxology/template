@@ -1,0 +1,30 @@
+conditions:
+  - name: single_thread_baseline
+    role: reference
+    description: "Matched-budget single-thread search baseline."
+  - name: coordinated_three_team
+    role: proposed
+    description: "Default coordinated search using shared state, ranking, confirmation, dead-end registry, and reorganization."
+  - name: no_dead_end_registry
+    role: variant
+    description: "Ablation that disables retired-direction consultation."
+  - name: no_noise_band_confirmation
+    role: variant
+    description: "Ablation that disables confirmation against noisy observations."
+metrics:
+  primary:
+    name: clean_metric_gap
+    direction: minimize
+protocol: >-
+  Run the deterministic search comparison and per-mechanism ablation scripts
+  under the same experiment budget, then compare final clean metric, redundant
+  re-probes, experiments used, and reported-vs-clean noise gap.
+expected_figures:
+  - fig:comparison
+  - fig:ablation
+  - fig:ablation_efficiency
+baselines:
+  - single_thread_baseline
+ablations:
+  - no_dead_end_registry
+  - no_noise_band_confirmation

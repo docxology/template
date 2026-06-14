@@ -111,12 +111,14 @@ def test_figure_registry_json_matches_yaml(project_root: Path) -> None:
 
 def test_layout_sensitive_figures_have_publication_dimensions(project_root: Path) -> None:
     expected_minima = {
+        "artifact_contract_map": (1800, 1400),
         "causal_ablation_heatmap": (1200, 700),
         "gnn_ontology_concordance": (1400, 650),
         "invariant_dashboard": (1300, 800),
         "multi_track_architecture": (1500, 1050),
         "scholarship_source_map": (1700, 950),
         "semantic_gluing_graph": (1450, 850),
+        "security_posture_map": (1600, 850),
         "sheaf_coverage_heatmap": (2400, 900),
         "sheaf_layers_overview": (1800, 1400),
         "theorem_traceability_graph": (1450, 760),
@@ -248,7 +250,7 @@ def test_visualization_quality_audit_row_surface_and_hash_negative_control(proje
     payload = json.loads(audit_path.read_text(encoding="utf-8"))
     registry = load_figure_registry(project_root)
 
-    assert payload["figure_count"] == len(registry) == 21
+    assert payload["figure_count"] == len(registry) == 23
     assert set(payload["rows"][0]) >= {
         "figure_id",
         "path",
@@ -270,14 +272,74 @@ def test_visualization_quality_audit_row_surface_and_hash_negative_control(proje
         "height_px",
         "mode",
         "nonblank",
+        "complete",
         "quality_ok",
+        "style_contract_ok",
     }
+    assert payload["all_style_tokens_ok"] is True
+    assert payload["all_figures_complete"] is True
+    assert payload["style_contract"]["ok"] is True
+    assert payload["style_contract"]["literal_issue_count"] == 0
+    assert payload["all_auxiliary_outputs_classified"] is True
+    assert payload["all_auxiliary_outputs_rendered"] is True
 
     def break_hash(payload: dict) -> None:
         payload["rows"][0]["hash_present"] = False
+        payload["rows"][0]["complete"] = True
         payload["all_hashes_present"] = True
+        payload["all_figures_complete"] = True
 
     with temporary_json_mutation(audit_path, break_hash):
         issues = validate_visualization_quality_audit(project_root)
 
     assert any("hash" in issue for issue in issues)
+
+    def break_complete(payload: dict) -> None:
+        payload["rows"][0]["complete"] = False
+        payload["all_figures_complete"] = True
+
+    with temporary_json_mutation(audit_path, break_complete):
+        issues = validate_visualization_quality_audit(project_root)
+
+    assert any("incomplete figure rows" in issue for issue in issues)
+
+
+def test_visualization_quality_audit_rejects_style_and_auxiliary_forgery(project_root: Path) -> None:
+    from roadmap_tracks.visualization_audit import (
+        validate_visualization_quality_audit,
+        write_visualization_quality_audit,
+    )
+
+    write_visualization_quality_audit(project_root)
+    audit_path = project_root / "output" / "reports" / "visualization_quality_audit.json"
+
+    def break_style_contract(payload: dict) -> None:
+        payload["style_contract"]["rows"][0]["points"] = 1.0
+        payload["style_contract"]["ok"] = True
+        payload["all_style_tokens_ok"] = True
+        payload["rows"][0]["style_contract_ok"] = True
+
+    with temporary_json_mutation(audit_path, break_style_contract):
+        issues = validate_visualization_quality_audit(project_root)
+
+    assert any("style-token" in issue for issue in issues)
+
+    def break_auxiliary_inventory(payload: dict) -> None:
+        payload["auxiliary_visualizations"].append(
+            {
+                "path": "output/figures/untracked_visual.png",
+                "filename": "untracked_visual.png",
+                "classified": True,
+                "classification": "forged",
+                "producer": "none",
+                "reason": "forged aggregate row",
+                "rendered": True,
+            }
+        )
+        payload["all_auxiliary_outputs_classified"] = True
+        payload["all_auxiliary_outputs_rendered"] = True
+
+    with temporary_json_mutation(audit_path, break_auxiliary_inventory):
+        issues = validate_visualization_quality_audit(project_root)
+
+    assert any("auxiliary visualizations" in issue for issue in issues)

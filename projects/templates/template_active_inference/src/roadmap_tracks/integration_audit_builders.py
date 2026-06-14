@@ -282,10 +282,17 @@ def build_manuscript_token_provenance(project_root: Path) -> dict[str, Any]:
     rows = []
     paths = sorted((root / "manuscript").glob("*.md")) + sorted((root / "manuscript" / "sections").glob("**/*.md"))
     excluded = {"AGENTS.md", "README.md", "SYNTAX.md", "preamble.md"}
+    resolved_dir = root / "output" / "manuscript"
+    resolved_outputs = sorted(resolved_dir.glob("*.md")) if resolved_dir.is_dir() else []
     for path in paths:
         if path.name in excluded:
             continue
         text = path.read_text(encoding="utf-8")
+        if root / "manuscript" / "sections" in path.parents:
+            candidate_outputs = resolved_outputs
+        else:
+            preferred = resolved_dir / path.name
+            candidate_outputs = [preferred] if preferred.is_file() else []
         seen: set[tuple[str, str | None]] = set()
         for match in TOKEN_MATCH_RE.finditer(text):
             token = match.group(1)
@@ -295,7 +302,19 @@ def build_manuscript_token_provenance(project_root: Path) -> dict[str, Any]:
                 continue
             seen.add(key)
             expected_value = _expected_token_value(token, precision, variables)
-            hydrated_path = root / "output" / "manuscript" / path.name
+            hydrated_path: Path | None = None
+            generated_path: Path | None = None
+            for candidate in candidate_outputs:
+                if not candidate.is_file():
+                    continue
+                generated_path = generated_path or candidate
+                try:
+                    hydrated_text = candidate.read_text(encoding="utf-8")
+                except FileNotFoundError:
+                    continue
+                if expected_value in hydrated_text:
+                    hydrated_path = candidate
+                    break
             rows.append(
                 {
                     "section": path.relative_to(root).as_posix(),
@@ -306,11 +325,9 @@ def build_manuscript_token_provenance(project_root: Path) -> dict[str, Any]:
                     "expected_value": expected_value,
                     "consumer_kind": "appendix_fragment" if "appendix" in path.as_posix() else "manuscript_section",
                     "generated_output_path": (
-                        hydrated_path.relative_to(root).as_posix() if hydrated_path.is_file() else ""
+                        generated_path.relative_to(root).as_posix() if generated_path is not None else ""
                     ),
-                    "hydrated_value_present": True
-                    if not hydrated_path.is_file()
-                    else expected_value in hydrated_path.read_text(encoding="utf-8"),
+                    "hydrated_value_present": hydrated_path is not None,
                     "mapped": token in variables,
                 }
             )
@@ -402,43 +419,27 @@ def build_manuscript_staleness_report(project_root: Path) -> dict[str, Any]:
 
 def build_claim_evidence_audit(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
-    ledger = yaml.safe_load((root / "data" / "claim_ledger.yaml").read_text(encoding="utf-8")) or {}
-    rows = []
-    for claim in ledger.get("claims") or []:
-        evidence = claim.get("evidence") or {}
-        predicate = str(
-            evidence.get("predicate")
-            or ("equals" if "equals" in evidence else "")
-            or ("min" if "min" in evidence else "")
-            or ("len_equals" if "len_equals" in evidence else "")
-            or ("set_equals" if "set_equals" in evidence else "")
-            or ("file_exists" if evidence.get("predicate") == "file_exists" else "")
-        )
-        waiver = str(evidence.get("waiver") or "")
-        substantive = bool(evidence and (predicate or waiver))
-        failure_reason = "" if substantive and claim.get("tracks") else "missing predicate/waiver or tracks"
-        rows.append(
-            {
-                "id": claim.get("id"),
-                "path": claim.get("path"),
-                "jsonpath": f"$.{evidence.get('field')}" if evidence.get("field") else "$",
-                "predicate": predicate,
-                "waiver": waiver,
-                "substantive": substantive,
-                "failure_reason": failure_reason,
-                "has_evidence": bool(claim.get("evidence")),
-                "has_tracks": bool(claim.get("tracks")),
-            }
-        )
+    from gates.claim_ledger import claim_evidence_status_rows
+
+    rows = claim_evidence_status_rows(root, allow_missing_certificate=True)
+    predicate_counts = {
+        predicate: sum(1 for row in rows if row.get("predicate") == predicate)
+        for predicate in sorted({str(row.get("predicate") or "") for row in rows if row.get("predicate")})
+    }
+    all_complete = bool(rows) and all(row["complete"] for row in rows)
     return {
         "schema": "template_active_inference.claim_evidence_audit.v1",
         "rows": rows,
         "claim_count": len(rows),
-        "all_claims_typed": bool(rows)
-        and all(
-            row["has_evidence"] and row["has_tracks"] and row["substantive"] and not row["failure_reason"]
-            for row in rows
-        ),
+        "complete_claim_count": sum(1 for row in rows if row["complete"]),
+        "incomplete_claim_count": sum(1 for row in rows if not row["complete"]),
+        "fixed_point_deferred_count": sum(1 for row in rows if row.get("fixed_point_deferred")),
+        "predicate_counts": predicate_counts,
+        "all_artifacts_resolved": bool(rows) and all(row["artifact_exists"] for row in rows),
+        "all_evidence_resolved": bool(rows) and all(row["evidence_resolved"] for row in rows),
+        "all_evidence_predicates_hold": bool(rows) and all(row["evidence_holds"] for row in rows),
+        "all_complete": all_complete,
+        "all_claims_typed": all_complete,
     }
 
 

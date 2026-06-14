@@ -6,6 +6,26 @@ transparent: false
 font_scale: 1.12
 grid: true
 
+typography:
+  title: 13.2
+  subtitle: 11.4
+  header: 10.8
+  axis_label: 10.4
+  tick: 9.6
+  legend: 9.2
+  annotation: 9.0
+  source_note: 8.8
+  table_cell: 8.6
+  matrix_label: 7.8
+  matrix_label_dense: 6.8
+
+layout:
+  grid_line_width: 0.8
+  matrix_grid_width: 0.35
+  line_width: 2.0
+  marker_size: 4.5
+  card_line_width: 1.0
+
 palette:
   primary: "#111827"
   secondary: "#2563eb"
@@ -342,6 +362,25 @@ figures:
       rows with complete promotion status {{track_lane_matrix_complete}}. Left:
       seven promotion-rule obligations; right: sheaf fragment bindings.
     width: 0.98
+  artifact_contract_map:
+    filename: artifact_contract_map.png
+    visual_role: matrix
+    evidence_role: sheaf
+    paper_claim: >-
+      The artifact contract map makes producer, validator, claim, freshness, and
+      copied-output parity obligations inspectable for every generated artifact
+      in the semantic contract.
+    alt: >-
+      Matrix generated from artifact_contract_index.json. Rows are generated
+      artifacts; columns show producer configured, source present, claim bound
+      or exempt, validation gate, negative control, freshness hash, copied-output
+      parity, and complete contract status.
+    caption: >-
+      Artifact contract map: {{artifact_contract_row_count}} generated artifact
+      rows with complete contract status {{artifact_contract_complete}} and
+      copied-output parity complete {{artifact_contract_copied_parity_complete}}.
+      Cycle rows are explicit in `output/data/artifact_contract_index.json`.
+    width: 0.98
   theorem_traceability_graph:
     filename: theorem_traceability_graph.png
     visual_role: flow
@@ -394,6 +433,26 @@ figures:
       {{scholarship_sources_connected}}; row evidence rederived:
       {{scholarship_rows_rederived}}.
     width: 0.95
+  security_posture_map:
+    filename: security_posture_map.png
+    visual_role: matrix
+    evidence_role: source_mapped
+    paper_claim: >-
+      The security posture map separates enforced local controls from deferred
+      production-security obligations and links each row to generated evidence.
+    alt: >-
+      Matrix generated from security_posture_audit.json. Rows are defensive
+      controls such as public data boundary, offline reproducibility, hash
+      integrity, release parity, claim traceability, formal boundary, secret scan,
+      signed attestation, and zero-trust runtime boundary; columns show evidence,
+      validator, negative-control, scoping, and overall status.
+    caption: >-
+      Security posture map: {{security_posture_control_count}} controls,
+      {{security_posture_enforced_count}} enforced and
+      {{security_posture_deferred_count}} scoped as deferred; secret findings:
+      {{security_posture_secret_finding_count}}; high-risk gaps:
+      {{security_posture_high_risk_gap_count}}.
+    width: 0.96
 
 section_figures:
   coverage_page:
@@ -426,7 +485,9 @@ section_figures:
     - id: sheaf_layers_overview
     - id: semantic_gluing_graph
     - id: track_lane_promotion_map
+    - id: artifact_contract_map
     - id: scholarship_source_map
+    - id: security_posture_map
   appendix_full_sheaf:
     - id: ising_mi_curve
       labeled: false
@@ -437,6 +498,10 @@ section_figures:
     - id: scholarship_source_map
       labeled: false
     - id: track_lane_promotion_map
+      labeled: false
+    - id: artifact_contract_map
+      labeled: false
+    - id: security_posture_map
       labeled: false
     - id: sheaf_coverage_heatmap
       labeled: false

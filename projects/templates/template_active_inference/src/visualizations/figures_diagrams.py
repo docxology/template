@@ -58,7 +58,7 @@ def figure_invariant_dashboard(project_root: Path) -> Path:
         y_pos = np.arange(len(rows))
         ax.barh(y_pos, values, color=colors, height=0.65)
         ax.set_yticks(y_pos)
-        ax.set_yticklabels(labels, fontsize=8)
+        ax.set_yticklabels(labels, fontsize=style.text_size("tick"))
         ax.set_xlim(0, 1.15)
         ax.set_xticks([0, 1])
         ax.set_xticklabels(["fail", "pass"])
@@ -74,7 +74,7 @@ def figure_invariant_dashboard(project_root: Path) -> Path:
                 idx,
                 "PASS" if passed else "FAIL",
                 va="center",
-                fontsize=7,
+                fontsize=style.text_size("annotation"),
                 color=style.color("primary"),
             )
         ax.grid(axis="x", alpha=0.25)
@@ -83,7 +83,7 @@ def figure_invariant_dashboard(project_root: Path) -> Path:
             -0.16,
             "Merged from output/reports/invariants.json; row labels preserve source domain.",
             transform=ax.transAxes,
-            fontsize=8,
+            fontsize=style.text_size("source_note"),
             color=style.color("muted"),
         )
         save_styled_figure(fig, out, style)
@@ -114,7 +114,7 @@ def figure_tmaze_schematic(project_root: Path) -> Path:
                 facecolor="white",
             )
             ax.add_patch(box)
-            ax.text(center[0], center[1], label, ha="center", va="center", fontsize=8)
+            ax.text(center[0], center[1], label, ha="center", va="center", fontsize=style.text_size("annotation"))
         arrow = FancyArrowPatch(
             start,
             goal,
@@ -129,7 +129,7 @@ def figure_tmaze_schematic(project_root: Path) -> Path:
             0.85,
             f"policy_len={spec.policy_len}, actions={spec.num_actions}, obs={spec.num_obs}",
             ha="center",
-            fontsize=8,
+            fontsize=style.text_size("annotation"),
             color=style.color("muted"),
         )
         obs_box = FancyBboxPatch(
@@ -148,7 +148,7 @@ def figure_tmaze_schematic(project_root: Path) -> Path:
             "finite toy: observations equal latent state; no stochastic sampling",
             ha="center",
             va="center",
-            fontsize=7.2,
+            fontsize=style.text_size("source_note"),
             color=style.color("primary"),
         )
         ax.set_title("Minimal T-maze POMDP schematic")
@@ -177,7 +177,7 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
     pipeline_labels = _load_pipeline_track_labels(root)
     sheaf_labels = _load_sheaf_track_labels(root)
     with styled_figure(root, "multi_track_architecture") as (style, out):
-        fig, ax = plt.subplots(figsize=(10.6, 7.0))
+        fig, ax = plt.subplots(figsize=(11.8, 7.4))
         ax.set_xlim(0, 10)
         ax.set_ylim(0, 7)
         ax.axis("off")
@@ -186,7 +186,15 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
             return [items[index : index + size] for index in range(0, len(items), size)]
 
         def draw_group_column(x: float, title: str, groups: list[tuple[str, list[str]]], width: float = 2.55) -> None:
-            ax.text(x + width / 2, 6.45, title, ha="center", va="bottom", fontsize=10, fontweight="bold")
+            ax.text(
+                x + width / 2,
+                6.45,
+                title,
+                ha="center",
+                va="bottom",
+                fontsize=style.text_size("header"),
+                fontweight="bold",
+            )
             for idx, (group_title, items) in enumerate(groups):
                 y = 5.88 - idx * 0.86
                 body = "\n".join(wrap_text(item, 24) for item in items[:2])
@@ -203,7 +211,7 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
                     facecolor=style.color("panel_bg"),
                 )
                 ax.add_patch(patch)
-                ax.text(x + 0.08, y, label, va="center", fontsize=6.8, linespacing=1.05)
+                ax.text(x + 0.08, y, label, va="center", fontsize=style.text_size("matrix_label"), linespacing=1.05)
 
         scientific = [
             "Analytical oracle (Bernoulli–Ising)",
@@ -226,7 +234,7 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
                 f"{counts['coverage_present']} present / {counts['coverage_bound']} bound"
             ),
             ha="center",
-            fontsize=8,
+            fontsize=style.text_size("source_note"),
             color=style.color("muted"),
         )
         ax.set_title("Multi-track architecture: science to gates to sheaf fragments")
@@ -269,7 +277,7 @@ def figure_track_lane_promotion_map(project_root: Path) -> Path:
     )
     row_labels = [wrap_text(row.get("track_id", ""), 18) for row in rows]
     with styled_figure(root, "track_lane_promotion_map") as (style, out):
-        fig_h = max(7.2, 0.31 * len(rows) + 2.1)
+        fig_h = max(7.8, 0.36 * len(rows) + 2.4)
         fig, axes = plt.subplots(
             1,
             2,
@@ -285,10 +293,15 @@ def figure_track_lane_promotion_map(project_root: Path) -> Path:
             aspect="auto",
         )
         req_ax.set_xticks(np.arange(len(requirement_columns)))
-        req_ax.set_xticklabels([label for _, label in requirement_columns], rotation=45, ha="right", fontsize=7.2)
+        req_ax.set_xticklabels(
+            [label for _, label in requirement_columns],
+            rotation=45,
+            ha="right",
+            fontsize=style.text_size("matrix_label"),
+        )
         req_ax.set_yticks(np.arange(len(row_labels)))
-        req_ax.set_yticklabels(row_labels, fontsize=6.5)
-        req_ax.set_title("Promotion obligations", fontsize=9)
+        req_ax.set_yticklabels(row_labels, fontsize=style.text_size("matrix_label_dense"))
+        req_ax.set_title("Promotion obligations", fontsize=style.text_size("subtitle"))
 
         lane_ax.imshow(
             sheaf_values,
@@ -298,21 +311,26 @@ def figure_track_lane_promotion_map(project_root: Path) -> Path:
             aspect="auto",
         )
         lane_ax.set_xticks(np.arange(len(sheaf_tracks)))
-        lane_ax.set_xticklabels([wrap_text(track, 10) for track in sheaf_tracks], rotation=90, ha="center", fontsize=6)
+        lane_ax.set_xticklabels(
+            [wrap_text(track, 10) for track in sheaf_tracks],
+            rotation=90,
+            ha="center",
+            fontsize=style.text_size("matrix_label_dense"),
+        )
         lane_ax.set_yticks(np.arange(len(row_labels)))
         lane_ax.set_yticklabels([])
-        lane_ax.set_title("Sheaf lane bindings", fontsize=9)
+        lane_ax.set_title("Sheaf lane bindings", fontsize=style.text_size("subtitle"))
         for ax in (req_ax, lane_ax):
             ax.set_xticks(np.arange(-0.5, ax.images[0].get_array().shape[1], 1), minor=True)
             ax.set_yticks(np.arange(-0.5, len(rows), 1), minor=True)
-            ax.grid(which="minor", color=style.color("grid"), linestyle="-", linewidth=0.35)
+            ax.grid(which="minor", color=style.color("grid"), linestyle="-", linewidth=style.layout_value("matrix_grid_width", 0.35))
             ax.tick_params(which="minor", bottom=False, left=False)
         fig.suptitle(
             (
                 f"Track-lane promotion map: {matrix.get('row_count', len(rows))} pipeline rows; "
                 f"complete={matrix.get('all_pipeline_tracks_complete')}"
             ),
-            fontsize=11,
+            fontsize=style.text_size("title"),
             y=0.99,
         )
         fig.text(
@@ -320,7 +338,101 @@ def figure_track_lane_promotion_map(project_root: Path) -> Path:
             0.012,
             "Generated from output/data/track_lane_matrix.json and the Lean promotion-proof boundary.",
             ha="center",
-            fontsize=8,
+            fontsize=style.text_size("source_note"),
+            color=style.color("muted"),
+        )
+        save_styled_figure(fig, out, style)
+    return out
+
+
+def figure_artifact_contract_map(project_root: Path) -> Path:
+    """Render artifact-level producer, validator, freshness, and copy-parity obligations."""
+    root = project_root.resolve()
+    try:
+        index = load_json_artifact(root, "output/data/artifact_contract_index.json")
+    except FileNotFoundError:
+        from roadmap_tracks.sheaf_tracks import build_artifact_contract_index
+
+        index = build_artifact_contract_index(root)
+    rows = index.get("rows") or []
+    if not rows:
+        raise FileNotFoundError("missing rows in output/data/artifact_contract_index.json")
+    columns = [
+        ("producer_configured", "Producer"),
+        ("source_exists", "Source"),
+        ("claim_bound_or_exempt", "Claim"),
+        ("validation_bound", "Gate"),
+        ("negative_bound", "Negative"),
+        ("source_hash_fresh", "Fresh"),
+        ("copied_parity_ok", "Copy"),
+        ("contract_complete", "Complete"),
+    ]
+    matrix = np.array(
+        [
+            [
+                1
+                if (
+                    ((not row.get("claim_required")) or bool(row.get("claim_ids")))
+                    if key == "claim_bound_or_exempt"
+                    else bool(row.get("validation_gates"))
+                    if key == "validation_bound"
+                    else bool(row.get("negative_control"))
+                    if key == "negative_bound"
+                    else row.get(key)
+                )
+                else 0
+                for key, _ in columns
+            ]
+            for row in rows
+        ],
+        dtype=int,
+    )
+    labels = []
+    for row in rows:
+        label = str(row.get("artifact", "")).replace("output/", "")
+        labels.append(label if len(label) <= 46 else f"...{label[-43:]}")
+    with styled_figure(root, "artifact_contract_map") as (style, out):
+        fig_h = max(10.0, 0.24 * len(rows) + 2.6)
+        fig, matrix_ax = plt.subplots(figsize=(14.4, fig_h))
+        matrix_ax.imshow(
+            matrix,
+            cmap=ListedColormap([style.color("fail"), style.color("pass")]),
+            vmin=0,
+            vmax=1,
+            aspect="auto",
+        )
+        matrix_ax.set_xticks(np.arange(len(columns)))
+        matrix_ax.set_xticklabels(
+            [label for _, label in columns],
+            rotation=45,
+            ha="right",
+            fontsize=style.text_size("matrix_label"),
+        )
+        matrix_ax.set_yticks(np.arange(len(rows)))
+        matrix_ax.set_yticklabels(labels, fontsize=style.text_size("matrix_label_dense"))
+        matrix_ax.tick_params(axis="y", pad=2, length=0)
+        for tick, row in zip(matrix_ax.get_yticklabels(), rows, strict=True):
+            tick.set_color(style.color("pass") if row.get("contract_complete") else style.color("fail"))
+        matrix_ax.set_title("Artifacts x contract obligations", fontsize=style.text_size("subtitle"))
+        matrix_ax.set_xticks(np.arange(-0.5, len(columns), 1), minor=True)
+        matrix_ax.set_yticks(np.arange(-0.5, len(rows), 1), minor=True)
+        matrix_ax.grid(which="minor", color=style.color("grid"), linestyle="-", linewidth=style.layout_value("matrix_grid_width", 0.35))
+        matrix_ax.tick_params(which="minor", bottom=False, left=False)
+        fig.suptitle(
+            (
+                f"Artifact contract map: {index.get('row_count', len(rows))} artifact rows; "
+                f"complete={index.get('all_rows_complete')}; "
+                f"copy parity={index.get('all_copied_parity_complete')}"
+            ),
+            fontsize=style.text_size("title"),
+            y=0.995,
+        )
+        fig.text(
+            0.5,
+            0.01,
+            "Generated from output/data/artifact_contract_index.json; cycle rows are marked in JSON rather than hidden.",
+            ha="center",
+            fontsize=style.text_size("source_note"),
             color=style.color("muted"),
         )
         save_styled_figure(fig, out, style)
@@ -344,7 +456,7 @@ def figure_lean_boundary_status(project_root: Path) -> Path:
             cellLoc="left",
         )
         table.auto_set_font_size(False)
-        table.set_fontsize(7.6)
+        table.set_fontsize(style.text_size("table_cell"))
         table.scale(1, 1.42)
         for (row_idx, col_idx), cell in table.get_celld().items():
             if row_idx == 0:
@@ -387,9 +499,9 @@ def figure_gnn_ontology_concordance(project_root: Path) -> Path:
         )
         for idx, (symbol, var, onto) in enumerate(pairs):
             y = len(pairs) - idx - 1
-            text_box(ax, 1.2, y, symbol, style, width=16, edge_role="grid", fontsize=8)
-            text_box(ax, 4.0, y, var, style, width=20, edge_role="secondary", fontsize=8)
-            text_box(ax, 7.0, y, onto, style, width=22, edge_role="accent", fontsize=8)
+            text_box(ax, 1.2, y, symbol, style, width=16, edge_role="grid")
+            text_box(ax, 4.0, y, var, style, width=20, edge_role="secondary")
+            text_box(ax, 7.0, y, onto, style, width=22, edge_role="accent")
             draw_arrow(ax, 2.0, 3.6, y, style)
             draw_arrow(ax, 4.8, 6.6, y, style)
         ax.set_title(f"GNN ↔ ontology concordance ({model.version})")

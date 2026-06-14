@@ -64,15 +64,18 @@ project, mirror these invariants — they are what the repo's gates enforce:
 
 ```bash
 NEW=my_project
-cp -r projects/templates/template_code_project projects/$NEW
-cd projects/$NEW
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_code_project \
+  --dest "projects/working/$NEW" \
+  --new-name "$NEW"
+cd "projects/working/$NEW"
 # 1. Rewrite src/ with your domain logic (keep the pure-function, infra-free shape)
 # 2. Replace tests/ — real-data tests, no mocks, drive src/ coverage ≥90%
 # 3. Edit manuscript/config.yaml (title, authors, thresholds) — the only policy knob
 # 4. Replace manuscript/*.md with your narrative; keep {{TOKEN}} + figure-label conventions
 # 5. Point scripts/ at your src/ functions (thin orchestrators only)
-uv run pytest projects/$NEW/tests/ --cov=projects/$NEW/src --cov-fail-under=90
-uv run python scripts/execute_pipeline.py --project $NEW --core-only
+uv run pytest "projects/working/$NEW/tests/" --cov="projects/working/$NEW/src" --cov-fail-under=90
+uv run python scripts/execute_pipeline.py --project "working/$NEW" --core-only
 ```
 
 Then the project is discovered automatically (`discover_projects()`); the

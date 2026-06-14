@@ -12,30 +12,25 @@
 # 0. From the repo root, install deps once
 uv sync
 
-# 1. Copy the exemplar to your new project name
-cp -r projects/templates/template_code_project projects/my_project
-rm -rf projects/my_project/src/*.egg-info     # stale package metadata
-rm -rf projects/my_project/output              # disposable
+# 1. Clean-copy the exemplar to your new project name
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_code_project \
+  --dest projects/working/my_project \
+  --new-name my_project
 
-# 2. Rename the package in pyproject.toml + manuscript/config.yaml
-sed -i.bak 's/template_code_project/my_project/g' \
-  projects/my_project/pyproject.toml \
-  projects/my_project/manuscript/config.yaml
-rm projects/my_project/pyproject.toml.bak projects/my_project/manuscript/config.yaml.bak
-
-# 3. Run the tests against your fork
-uv run pytest projects/my_project/tests/ \
-    --cov=projects/my_project/src \
+# 2. Run the tests against your fork
+uv run pytest projects/working/my_project/tests/ \
+    --cov=projects/working/my_project/src \
     --cov-fail-under=90 -q
 
-# 4. Run the analysis pipeline against your fork
-uv run python projects/my_project/scripts/optimization_analysis.py
+# 3. Run the analysis pipeline against your fork
+uv run python projects/working/my_project/scripts/optimization_analysis.py
 ```
 
 **⚠️ Confidentiality invariant.** The repo `.gitignore` is configured so
 that **only** the public canonical exemplars listed in
 [`../../../docs/_generated/active_projects.md`](../../../../docs/_generated/active_projects.md)
-under `projects/` are ever git-tracked. Your fork (`projects/my_project/`)
+under `projects/` are ever git-tracked. Your fork (`projects/working/my_project/`)
 is local-only and won't be pushed to the public repo even if you `git
 add -f` it — `scripts/check_tracked_projects.py` blocks the push in
 `pre-push-quick`. Read [`../../../../CLAUDE.md`](../../../../CLAUDE.md)
@@ -106,7 +101,7 @@ your changes introduced into the shipped templates.
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `ModuleNotFoundError: optimizer` | Running a script from inside `src/` instead of the repo root | `cd` to the repo root; `uv run python projects/my_project/scripts/optimization_analysis.py` |
+| `ModuleNotFoundError: optimizer` | Running a script from inside `src/` instead of the repo root | `cd` to the repo root; `uv run python projects/working/my_project/scripts/optimization_analysis.py` |
 | `PDF Rendering` stage fails with `mmdc could not find Chrome` | Manuscript embeds `mermaid` blocks; `mmdc` needs a pinned `chrome-headless-shell` not in your Puppeteer cache | One-time: `npx --yes puppeteer browsers install chrome-headless-shell`; the included `scripts/00_preflight.py` emits an actionable warning before the PDF stage if this is missing |
 | Test count drift / coverage drift | Docs in `docs/` hardcoded an old number | The drift checker now warns; replace literal numbers with a link to `docs/_generated/COUNTS.md` |
 | `{{TOKEN}}` appears literally in rendered PDF | `scripts/z_generate_manuscript_variables.py` was not re-run, or the token is not in `generate_variables()` | Re-run `z_generate_manuscript_variables.py`; if still literal, add the token to `generate_variables()` |

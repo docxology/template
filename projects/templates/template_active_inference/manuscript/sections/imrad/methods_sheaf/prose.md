@@ -10,6 +10,8 @@ The operational claim is auditable binding. Analytical, simulation, pymdp, visua
 
 The visualization gate is deliberately row-level. It requires declared visual/evidence roles (`{{visualization_intent_metadata_complete}}`), artifact-backed paper claims (`{{visualization_paper_claims_complete}}`), section bindings (`{{visualization_figures_section_bound}}`), RGB nonblank image renders, hashes, and source-map agreement. The statistical bridge then expands {{visualization_statistics_backed_count}} statistically backed figures into {{statistical_visualization_bridge_row_count}} figure-source-scholarship rows with connected status `{{statistical_visualization_bridge_all_connected}}`, manuscript-reference status `{{statistical_visualization_bridge_all_referenced}}`, and visualization-bound reference status `{{statistical_visualization_bridge_references_visualization_bound}}`.
 
+The claim ledger is also checked at row level rather than as prose metadata. `claim_evidence_audit.json` resolves {{claim_evidence_audit_count}} claim rows to live artifacts (`{{claim_evidence_audit_all_artifacts_resolved}}`) and replays their typed predicates (`{{claim_evidence_audit_all_predicates_hold}}`), yielding the promoted completeness flag `{{claim_evidence_audit_all_complete}}`.
+
 ## Compose commands
 
 ```bash

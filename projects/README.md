@@ -1,6 +1,11 @@
 # Projects Directory
 
-This directory contains multiple **standalone research projects**, each with independent source code, tests, analysis scripts, and manuscripts. Each project operates completely independently while being executed, tested, and rendered by the overarching **[docxology/template](https://github.com/docxology/template/)** infrastructure.
+This directory contains multiple **forkable research projects**, each with
+independent source code, tests, analysis scripts, and manuscripts. Projects are
+executed, tested, and rendered by the overarching
+**[docxology/template](https://github.com/docxology/template/)** infrastructure;
+some exemplars are fully project-local, while others intentionally depend on
+shared `infrastructure/` modules.
 
 ## Active Projects
 
@@ -16,7 +21,20 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_template/`](templates/template_template/) — meta-template (introspects `infrastructure/` and the public exemplar roster)
 - [`templates/template_textbook/`](templates/template_textbook/) — modular fillable textbook scaffold
 
-They are **standalone** projects with the same core layout (`src/`, `tests/`, `scripts/`, `manuscript/`, `output/`) and the same verification commands. The optional `template_search_project` literature-search exemplar is **local-only** — it lives at [`archive/template_search_project/`](archive/template_search_project/) and is **not git-tracked**. This is a public repo: only the public canonical exemplars under `templates/` are tracked; copy `template_search_project` under `projects/active/` *locally* to exercise literature-search workflows, but never commit it (`scripts/check_tracked_projects.py` blocks any non-template project in pre-push + CI). Examples in this documentation default to `projects/templates/template_code_project/` unless a doc explicitly compares projects.
+They share the same core layout (`src/`, `tests/`, `scripts/`, `manuscript/`,
+root `README.md`/`AGENTS.md`) plus a tested forkability contract:
+`STANDALONE.md`, `domain_profile.yaml`, and `experiment_plan.yaml`. Exact
+validation commands and infrastructure dependencies are exemplar-specific; read
+the chosen exemplar's `STANDALONE.md`. The optional `template_search_project`
+literature-search exemplar is **local-only** — it lives at
+[`archive/template_search_project/`](archive/template_search_project/) and is
+**not git-tracked**. This is a public repo: only the public canonical exemplars
+under `templates/` are tracked; copy `template_search_project` under
+`projects/active/` *locally* to exercise literature-search workflows, but never
+commit it (`scripts/check_tracked_projects.py` blocks any non-template project in
+pre-push + CI). Examples in this documentation default to
+`projects/templates/template_code_project/` unless a doc explicitly compares
+projects.
 
 **Current** names from `discover_projects()` are listed in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerate after layout changes).
 
@@ -37,9 +55,10 @@ They are **standalone** projects with the same core layout (`src/`, `tests/`, `s
 The measured test and coverage totals drift as the exemplars evolve; confirm
 current numbers in
 [`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md).
-The permanent exemplars cover Active Inference, computational, prose-review,
-deterministic AutoResearch, and autopoietic meta-documentation paths. Use the
-archived search exemplar when the project needs
+The permanent exemplars cover Active Inference, computational research,
+prose-review, deterministic AutoResearch, AutoScientists coordination tests,
+newspaper layout, SIA harnesses, meta-template introspection, and modular
+fillable textbooks. Use the archived search exemplar when the project needs
 literature discovery, auto-populated BibTeX, or optional LLM synthesis.
 **Important:** run each
 project's `tests/` in **its own** `pytest` invocation — pointing pytest at
@@ -63,7 +82,8 @@ Preserved under [`archive/`](archive/) until moved back; the pipeline does not d
 
 ## Standalone Project Paradigm
 
-Each project in `projects/` is **completely self-contained** with three critical guarantees:
+Each project in `projects/` carries three critical guarantees while remaining
+clear about any intentional shared-infrastructure dependencies:
 
 ### 🔒 **Tests**: Independent Test Suites
 
@@ -137,7 +157,11 @@ between lifecycle folders instead of committing it here.
 | `templates/template_autoresearch_project/` | AutoResearch exemplar (deterministic readiness loop) | see canonical facts | see canonical facts |
 | `templates/template_template/` | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
 
-The permanent exemplars share the same per-directory `AGENTS.md` + `README.md` convention and the same `src/`, `tests/`, `scripts/`, `manuscript/`, and `output/` boundaries.
+The permanent exemplars share the same core `src/`, `tests/`, `scripts/`, and
+`manuscript/` boundaries plus root `README.md`, `AGENTS.md`, `STANDALONE.md`,
+`domain_profile.yaml`, and `experiment_plan.yaml`. Their `docs/` folders are
+fit-for-purpose; do not assume every specialized exemplar implements the older
+12-file docs hub.
 
 **Private lifecycle projects** live outside this public repo and are linked into
 the corresponding local lifecycle mirrors automatically by `run.sh`/orchestration.
@@ -359,24 +383,27 @@ flowchart TB
 
 ## Creating a New Project
 
-### Option 1: Copy the Template
+### Option 1: Clean-Copy an Exemplar
 
 ```bash
-# Copy an existing project as a starting point
-cp -r projects/templates/template_code_project projects/active/myresearch
+# Copy an existing project as a starting point without caches or outputs
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_code_project \
+  --dest projects/working/myresearch \
+  --new-name myresearch
 
 # Customize pyproject.toml
-vim projects/myresearch/pyproject.toml
+vim projects/working/myresearch/pyproject.toml
 
 # Update project name and metadata
 # name = "myresearch"
 # description = "My research project"
 
 # Add your code
-vim projects/myresearch/src/mymodule.py
+vim projects/working/myresearch/src/mymodule.py
 
 # Write your manuscript
-vim projects/myresearch/manuscript/01_introduction.md
+vim projects/working/myresearch/manuscript/01_introduction.md
 ```
 
 ### Option 2: Manual Creation
@@ -648,12 +675,15 @@ uv run python scripts/execute_pipeline.py --project template_code_project --core
 
 ## Creating New Projects
 
-### Method 1: Copy Existing Project (Recommended)
+### Method 1: Clean-Copy Existing Project (Recommended)
 
 ```bash
 # Copy an existing project as template
-cp -r projects/templates/template_code_project projects/active/my_research
-cd projects/my_research
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_code_project \
+  --dest projects/working/my_research \
+  --new-name my_research
+cd projects/working/my_research
 
 # Update project metadata
 vim pyproject.toml  # Change name, description, authors
@@ -669,8 +699,8 @@ vim src/my_algorithm.py
 vim tests/test_my_algorithm.py
 
 # Run infrastructure validation
-cd ../..
-uv run python -c "from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/my_research')))"
+cd ../../..
+uv run python -c "from pathlib import Path; from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/working/my_research')))"
 ```
 
 ### Method 2: Start from Scratch
@@ -857,9 +887,10 @@ LOG_LEVEL=0 uv run python scripts/03_render_pdf.py --project myproject
 
 ## Summary
 
-The `projects/` directory implements a **standalone project paradigm** with infrastructure compliance:
+The `projects/` directory implements a **forkable project paradigm** with
+infrastructure compliance:
 
-### 🔒 **Standalone Guarantees**
+### 🔒 **Forkability Guarantees**
 
 - **Tests**: Independent test suites (90%+ coverage, data only)
 - **Methods**: Isolated business logic with no cross-project imports

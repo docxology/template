@@ -9,6 +9,7 @@ validation_gates:
   - artifact_manifest
   - evidence_grounding
   - render_validation
+  - publication_readiness
 figure_types:
   - ising_mi_curve
   - free_energy_curve
@@ -55,3 +56,29 @@ artifact_expectations:
   - output/reports/si_tmaze_run_report.json
   - output/reports/si_invariants.json
   - pymdp.yaml
+review_gates:
+  - artifact_manifest
+  - invariant_validation
+  - render_validation
+  - publication_readiness
+source_policy: >-
+  Treat generated analytical, SI rollout, sheaf, and figure-registry artifacts
+  as the source of truth. Do not promote manuscript claims unless they resolve
+  to tracked code, declared tracks, or regenerated output JSON/figures.
+benchmark_rubric:
+  name: active-inference-readiness
+  dimensions:
+    - name: invariant_pass_status
+      weight: 2.0
+    - name: sheaf_coverage
+      weight: 2.0
+    - name: artifact_traceability
+      weight: 1.5
+    - name: figure_registry_completeness
+      weight: 1.0
+    - name: render_success
+      weight: 1.0
+llm_prompt_guidance: >-
+  Ground all summaries in the generated output/data and output/reports artifacts;
+  separate analytical closed-form facts, pymdp rollout evidence, and sheaf
+  integration checks rather than blending them into one undifferentiated claim.

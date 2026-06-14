@@ -153,7 +153,8 @@ The experiment writes `{{ML_RESULTS_PATH}}`, `{{ML_CANDIDATE_LEDGER_PATH}}`,
 `{{ML_PROBABILITY_DIAGNOSTICS_PATH}}`, `{{ML_BOOTSTRAP_INTERVALS_PATH}}`,
 `{{ML_PAIRED_COMPARISON_PATH}}`, `{{ML_CANDIDATE_RANK_STABILITY_PATH}}`,
 `{{ML_STATISTICAL_SUMMARY_PATH}}`, `{{ML_TRAINING_DIAGNOSTICS_PATH}}`,
-`{{ML_BENCHMARK_SCORE_PATH}}`, `{{FIGURE_QUALITY_REPORT_PATH}}`, and
+`{{ML_BENCHMARK_SCORE_PATH}}`, `{{BENCHMARK_BOUNDARY_PATH}}`,
+`{{FIGURE_QUALITY_REPORT_PATH}}`, and
 registered figures through
 `{{FIGURE_REGISTRY_PATH}}`. The diagnostic payloads preserve probabilities,
 confidence and margin summaries, class metrics, calibration bins,
@@ -165,11 +166,18 @@ probability-quality comparisons, learning-rate traces, best-epoch markers,
 final learning rates, and train-test gap summaries without serializing model
 weights. The benchmark score combines metric
 improvement, budget compliance, offline execution, transformer-candidate
-coverage, and candidate-selection status. Manuscript variables are hydrated from
-these artifacts, and readiness validation checks `{{EVIDENCE_REGISTRY_PATH}}`,
+coverage, and candidate-selection status. The benchmark-boundary artifact
+records fixture scope, metric direction, candidate families, budget,
+statistical-method artifacts, and explicit non-claims, so benchmark-adjacent
+statistics remain local readiness diagnostics rather than broad empirical or
+publication claims. Manuscript variables are hydrated from these artifacts, and
+readiness validation checks `{{EVIDENCE_REGISTRY_PATH}}`,
 `{{ARTIFACT_MANIFEST_PATH}}`, method ledgers, review gates, benchmark outputs,
 the phase ledger, figure-quality report, and AI-assisted disclosure before
-rendering is treated as ready for review.
+rendering is treated as ready for review. The reviewer-facing
+`{{AUTORESEARCH_EVIDENCE_OVERVIEW_PATH}}` then summarizes readiness versus
+publication approval, claim-evidence rows, source-ledger status, benchmark
+boundary issues, and security/integrity status without granting approval.
 The generated tables and figure blocks used in @sec:results are sourced through
 `{{VARIABLE_PROVENANCE_PATH}}` and `{{FIGURE_BLOCKS_PATH}}`, so captions,
 artifact tables, and run-derived result statements share the same validated

@@ -4,6 +4,7 @@ from .formal_interop import (
     validate_formal_interop_artifacts,
     write_formal_interop_artifacts,
 )
+from .fixed_point import run_semantic_fixed_point
 from .integration_audit import (
     validate_integration_audit_artifacts,
     write_integration_audit_artifacts,
@@ -17,6 +18,10 @@ from .sheaf_tracks import (
 from .scholarship import (
     validate_scholarship_source_matrix,
     write_scholarship_source_matrix,
+)
+from .security import (
+    validate_security_posture_audit,
+    write_security_posture_audit,
 )
 from .supplemental import (
     validate_supplemental_artifacts,
@@ -39,15 +44,18 @@ __all__ = [
     "validate_sheaf_track_artifacts",
     "validate_sheaf_track_source_contract",
     "validate_scholarship_source_matrix",
+    "validate_security_posture_audit",
     "validate_supplemental_artifacts",
     "validate_statistical_visualization_bridge",
     "validate_toy_sweep_artifacts",
     "validate_visualization_quality_audit",
+    "run_semantic_fixed_point",
     "write_formal_interop_artifacts",
     "write_integration_audit_artifacts",
     "write_manuscript_staleness_report",
     "write_sheaf_track_artifacts",
     "write_scholarship_source_matrix",
+    "write_security_posture_audit",
     "write_supplemental_artifacts",
     "write_statistical_visualization_bridge",
     "write_toy_sweep_artifacts",

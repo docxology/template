@@ -1,105 +1,97 @@
 # Forking an Exemplar
 
-> The 5-minute "I just `git clone`d, where do I start?" path. Picks
-> whichever canonical exemplar matches your work — numerical research,
-> editorial review, or deterministic AutoResearch — and gets you to
-> first-test-passing.
+Use this guide when you want a clean project seed from one of the public
+`projects/templates/` exemplars without copying local caches, virtual
+environments, rendered outputs, or stale package metadata.
 
 ## Pick the right exemplar
 
-| Your work shape | Fork this exemplar | Detailed walkthrough |
+| Your work shape | Fork this exemplar | Standalone notes |
 |---|---|---|
-| Deterministic plan/evidence/claim/artifact readiness loops | [`projects/templates/template_autoresearch_project/`](../../projects/templates/template_autoresearch_project/) — AutoResearchClaw-inspired readiness checks without autonomous research execution; live test count + coverage in [`COUNTS.md`](../_generated/COUNTS.md) | [`README.md`](../../projects/templates/template_autoresearch_project/README.md) |
-| Numerical / algorithmic research with figures, dashboards, manuscript | [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/) — has its own gradient-descent algorithm in `src/optimizer.py`, six figure generators in `src/figures/`; live test count + coverage in [`COUNTS.md`](../_generated/COUNTS.md) | [`forking_guide.md`](../../projects/templates/template_code_project/docs/forking_guide.md) |
-| Editorial / prose review pipeline — readability, structure, BibTeX validation | [`projects/templates/template_prose_project/`](../../projects/templates/template_prose_project/) — no algorithm of its own; `src/pipeline/` delegates to `infrastructure/prose/` + `infrastructure/reference/citation/`; live test count + coverage in [`COUNTS.md`](../_generated/COUNTS.md) | [`forking_guide.md`](../../projects/templates/template_prose_project/docs/forking_guide.md) |
+| Multi-track active-inference research with sheaf composition | [`template_active_inference`](../../projects/templates/template_active_inference/) | [`STANDALONE.md`](../../projects/templates/template_active_inference/STANDALONE.md) |
+| Bounded AutoResearch loop with evidence/artifact gates | [`template_autoresearch_project`](../../projects/templates/template_autoresearch_project/) | [`STANDALONE.md`](../../projects/templates/template_autoresearch_project/STANDALONE.md) |
+| Coordination-mechanism ablations for agent teams | [`template_autoscientists`](../../projects/templates/template_autoscientists/) | [`STANDALONE.md`](../../projects/templates/template_autoscientists/STANDALONE.md) |
+| Code-driven computational research | [`template_code_project`](../../projects/templates/template_code_project/) | [`STANDALONE.md`](../../projects/templates/template_code_project/STANDALONE.md) |
+| Data-driven newspaper or print-layout engine | [`template_newspaper`](../../projects/templates/template_newspaper/) | [`STANDALONE.md`](../../projects/templates/template_newspaper/STANDALONE.md) |
+| Manuscript-focused prose review | [`template_prose_project`](../../projects/templates/template_prose_project/) | [`STANDALONE.md`](../../projects/templates/template_prose_project/STANDALONE.md) |
+| Self-improvement-agent fixture/live harness | [`template_sia`](../../projects/templates/template_sia/) | [`STANDALONE.md`](../../projects/templates/template_sia/STANDALONE.md) |
+| Meta-research over a template-like checkout | [`template_template`](../../projects/templates/template_template/) | [`STANDALONE.md`](../../projects/templates/template_template/STANDALONE.md) |
+| Book-length fillable scaffold | [`template_textbook`](../../projects/templates/template_textbook/) | [`STANDALONE.md`](../../projects/templates/template_textbook/STANDALONE.md) |
 
-The walkthroughs follow the same shape: 4-line copy-paste TL;DR (`cp -r`
-+ `sed` rename + `uv run pytest`), an explicit statement of the
-confidentiality invariant, a REQUIRED-vs-AESTHETIC inventory, four
-post-fork steps, and a friction-point table. Each guide ~150 lines.
+For one-glance differentiation, see the generated
+[`docs/_generated/exemplar_roster.md`](../_generated/exemplar_roster.md).
+Measured test counts and coverage live in
+[`docs/_generated/COUNTS.md`](../_generated/COUNTS.md).
 
-## The contract a forker is signing onto
+## Clean copy
 
-Forks of the public exemplars inherit four invariants the template gates
-mechanically (the rest is convention). The project docs state these explicitly;
-cross-referenced here for the impatient:
+From the repository root:
 
-1. **Coverage gate** — `projects/{name}/src/` ≥ 90 % line+branch. Enforced by
-   the matrix CI job and by the per-project `pyproject.toml`.
-2. **Zero-mock policy** — no `unittest.mock` / `MagicMock` / `@patch` /
-   `create_autospec` anywhere in `tests/`. Enforced by the drift
-   checker (`mock_in_tests` detector) and a repo-level pre-commit grep.
-3. **Confidentiality invariant** — only the public canonical exemplars from
-   `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES` under
-   `projects/` are ever git-tracked.
-   Any other fork is local-only, blocked from `git push` by
-   [`scripts/check_tracked_projects.py`](../../scripts/check_tracked_projects.py)
-   wired into `pre-push-quick`.
-4. **Thin-orchestrator rule** — `scripts/` must call into `src/` and
-   `infrastructure/`, never inline math/regex/parsing. Detected by
-   audit (and the per-subdir `CONVENTIONS.md` documents the rule).
+```bash
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_code_project \
+  --dest projects/working/my_project \
+  --new-name my_project
+```
 
-## Verify your fork is honest — the drift checker
+Change `--source` to any `templates/<name>` from the table above. The helper
+copies tracked source files plus non-ignored new source files, excludes local
+artifacts (`.venv/`, caches, `htmlcov/`, `output/`, egg-info, `.DS_Store`, Lean
+build products), and substitutes the exemplar slug in UTF-8 text files only.
+Binaries are copied byte-for-byte.
 
-The template ships a drift checker at
-[`scripts/check_template_drift.py`](../../scripts/check_template_drift.py):
-**9 detectors per exemplar** plus **2 repo-level checks** (hard-coded doc
-counts and thin-orchestrator script enforcement). Unit tests at
-[`tests/infra_tests/test_check_template_drift.py`](../../tests/infra_tests/test_check_template_drift.py).
-While the checker today runs against the public canonical exemplars (not
-arbitrary forks), it is the right model for the kind of self-check your
-fork should grow into. Detectors:
+Fallback when the helper is unavailable:
 
-| Rule | Catches |
-|---|---|
-| `function_name_drift` | docs reference a `_check_<name>` that no longer exists in `src/pipeline/checks.py` or `src/pipeline.py` |
-| `test_class_drift` | docs reference a `TestXxx` that no longer exists in `tests/` |
-| `__all___doc_drift` | `src/STYLE.md` or `docs/AGENTS.md` ships an `__all__` block that disagrees with `src/__init__.py` |
-| `coverage_floor_drift` | docs claim a `fail_under = N` value that disagrees with `pyproject.toml` |
-| `dead_link` | local markdown link target file doesn't exist (skips fenced-code examples and `new_*`/`my_*`/`your_*` example filenames) |
-| `oversize_src_file` | any `src/*.py` over 1,500 lines (a refactor smell) |
-| `blanket_except` | `except Exception` in `src/*.py` without a `noqa: BLE001` justification |
-| `mock_in_tests` | mock primitives in `tests/` |
-| `missing_canonical_file` | the eleven files every exemplar must ship |
+```bash
+rsync -a \
+  --exclude '.venv/' --exclude '.pytest_cache/' --exclude '.ruff_cache/' \
+  --exclude 'htmlcov/' --exclude 'output/' --exclude 'rendered/' --exclude '*.egg-info/' \
+  --exclude '.DS_Store' --exclude '.lake/' --exclude 'lake-packages/' \
+  projects/templates/template_code_project/ projects/working/my_project/
+```
 
-A WARNING-rated `except Exception` block whose surrounding comment
-contains `TOP-LEVEL MAIN SAFETY NET` / `safety net` / `final handler` /
-`top-level main` is exempted — narrowing such handlers replaces honest
-breadth with silent gaps.
+## Forkability contract
 
-## What changed recently (May 2026 hardening)
+Every public exemplar now ships:
 
-Five things landed during the May 2026 audit pass that a forker
-benefits from but might not discover from the older docs:
+- A top-level `STANDALONE.md` with purpose, clean-copy command, required edits,
+  validation commands, intentional dependencies, and claim boundaries.
+- `domain_profile.yaml` and `experiment_plan.yaml` overlays that validate with
+  the shared loaders.
+- Project-local `README.md` and `AGENTS.md`, plus fit-for-purpose docs where the
+  exemplar needs them. The old 12-file docs hub is not a universal requirement.
+- Independent project tests. Run one project test directory per pytest process;
+  do not point pytest at all `projects/*/tests/` in one invocation.
 
-1. `template_code_project/src/analysis.py` was split into
-   `src/analysis/` (orchestration) and `src/figures/` (the six
-   `generate_*` plot functions). `src/analysis/__init__.py`
-   re-exports the public analysis names via a try/except
-   shim — your `from src.analysis import generate_convergence_plot`
-   keeps working.
-2. `template_prose_project/src/config.py` now **strictly** rejects
-   unknown YAML keys at top-level + under `prose`/`bibliography`/`report`,
-   and enforces invariants (`target_grade_level_min <
-   target_grade_level_max`, `long_sentence_threshold > 0`,
-   `citation_density_min_per_1000 ≥ 0`).
-3. Sibling-parity files (`src/STYLE.md`, `tests/PATTERNS.md`,
-   `scripts/CONVENTIONS.md`) now ship in the code and prose exemplars. They are
-   recommended, not mandatory; the drift checker only gates `AGENTS.md`
-   + `README.md`.
-4. `scripts/check_template_drift.py` was added with 9 detectors and
-   20 self-tests.
-5. `scripts/00_preflight.py` was added to the code and prose exemplars — emits an
-   actionable warning before the PDF stage if `chrome-headless-shell`
-   is missing from the Puppeteer cache.
+The copied path under `projects/working/` is local-only. Only public exemplars
+under `projects/templates/` are tracked in this public repository; the guard in
+[`scripts/check_tracked_projects.py`](../../scripts/check_tracked_projects.py)
+blocks accidental commits of non-template project trees.
+
+## Validate the fork
+
+Use the `STANDALONE.md` file in the chosen exemplar for exact commands. The
+common starting point for a copied project under `projects/working/<name>/` is:
+
+```bash
+uv run pytest projects/working/<name>/tests/ \
+  --cov=projects/working/<name>/src --cov-fail-under=90
+```
+
+`uv run python scripts/check_template_drift.py --strict` validates the canonical
+public exemplars under `projects/templates/`; run it before changing upstream
+exemplars, not as proof that an arbitrary `projects/working/<name>/` fork is
+schema-complete.
+
+Some exemplars intentionally depend on shared `infrastructure/` modules; those
+are forkable inside a full template checkout unless the fork vendors or replaces
+the adapters. `template_template` is standalone only when it can inspect a
+template-like checkout. `template_textbook` intentionally keeps stub markers
+until an author fills the book.
 
 ## See also
 
-- [`new-project-setup.md`](new-project-setup.md) — older walkthrough; the
-  per-project docs supersede it for the public canonical exemplars
-- [`../core/how-to-use.md`](../core/how-to-use.md) — 12-skill-level
-  usage guide
-- [`../RUN_GUIDE.md`](../RUN_GUIDE.md) — pipeline orchestration
-  reference (menu mapping, stage list, environment variables)
+- [`new-project-setup.md`](new-project-setup.md)
+- [`../core/how-to-use.md`](../core/how-to-use.md)
+- [`../RUN_GUIDE.md`](../RUN_GUIDE.md)
 - [`../_generated/COUNTS.md`](../_generated/COUNTS.md)
-  — live test counts, coverage percentages, active project roster

@@ -10,6 +10,7 @@ from typing import Any
 import yaml
 
 from .integration_audit_artifacts import ALLOWED_CLAIM_LANES
+from .visualization_contract import build_auxiliary_visualization_inventory, build_style_contract
 
 VISUALIZATION_AUDIT_SCHEMA = "template_active_inference.visualization_quality_audit.v1"
 STATISTICAL_VISUALIZATION_BRIDGE_SCHEMA = "template_active_inference.statistical_visualization_bridge.v1"
@@ -157,6 +158,7 @@ def _figure_evidence_rows(root: Path) -> list[dict[str, Any]]:
     """Derive live figure evidence rows from registry, source maps, hashes, and renders."""
     from visualizations.figure_registry import load_figure_registry
 
+    style_contract = build_style_contract(root)
     source_map = _load_json(root / "output" / "data" / "figure_source_map.json")
     hash_manifest = _load_json(root / "output" / "reports" / "figure_hash_manifest.json")
     sources_by_id = {str(row.get("figure_id")): row for row in source_map.get("rows") or []}
@@ -215,6 +217,7 @@ def _figure_evidence_rows(root: Path) -> list[dict[str, Any]]:
             "paper_claim_word_count": paper_claim_word_count,
             "paper_claim_ok": paper_claim_ok,
             "hash_present": bool(hash_row.get("sha256")),
+            "style_contract_ok": style_contract["ok"],
             "accessibility_text_ok": accessibility_ok,
             "alt_word_count": alt_word_count,
             "caption_word_count": caption_word_count,
@@ -232,7 +235,9 @@ def _figure_evidence_rows(root: Path) -> list[dict[str, Any]]:
             and row["paper_claim_ok"]
             and row["section_bound"]
             and row["claim_lanes_valid"]
+            and row["style_contract_ok"]
         )
+        row["complete"] = row["quality_ok"]
         rows.append(row)
     return rows
 
@@ -241,10 +246,15 @@ def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
     """Build figure accessibility, source, hash, and render-readiness rows."""
     root = project_root.resolve()
     rows = _figure_evidence_rows(root)
+    style_contract = build_style_contract(root)
+    auxiliary_inventory = build_auxiliary_visualization_inventory(root)
     return {
         "schema": VISUALIZATION_AUDIT_SCHEMA,
         "rows": rows,
+        "style_contract": style_contract,
+        "auxiliary_visualizations": auxiliary_inventory["rows"],
         "figure_count": len(rows),
+        "auxiliary_visualization_count": auxiliary_inventory["auxiliary_visualization_count"],
         "source_mapped_count": sum(1 for row in rows if row["source_mapped"]),
         "rendered_count": sum(1 for row in rows if row["rendered"]),
         "accessibility_text_count": sum(1 for row in rows if row["accessibility_text_ok"]),
@@ -268,8 +278,12 @@ def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
         "all_figures_section_bound": bool(rows) and all(row["section_bound"] for row in rows),
         "all_figures_have_claim_lanes": bool(rows) and all(row["claim_lanes"] for row in rows),
         "all_claim_lanes_valid": bool(rows) and all(row["claim_lanes_valid"] for row in rows),
+        "all_style_tokens_ok": style_contract["ok"],
+        "all_auxiliary_outputs_classified": auxiliary_inventory["all_auxiliary_outputs_classified"],
+        "all_auxiliary_outputs_rendered": auxiliary_inventory["all_auxiliary_outputs_rendered"],
         "all_statistical_sources_present": any(row["statistically_backed"] for row in rows)
         and all(row["statistical_sources_present"] for row in rows if row["statistical_sources"]),
+        "all_figures_complete": bool(rows) and all(row["complete"] for row in rows),
         "all_quality_ok": bool(rows) and all(row["quality_ok"] for row in rows),
     }
 
@@ -358,6 +372,7 @@ def build_statistical_visualization_bridge(project_root: Path) -> dict[str, Any]
                 "reference_sections_visualization_bound": reference_sections_visualization_bound,
                 "referenced_in_manuscript": referenced_in_manuscript,
                 "connected": connected,
+                "complete": connected,
             }
         )
     return {
@@ -369,6 +384,8 @@ def build_statistical_visualization_bridge(project_root: Path) -> dict[str, Any]
         "sheaf_tracks": scholarship_tracks,
         "manuscript_sections": manuscript_sections,
         "all_rows_connected": bool(rows) and all(row["connected"] for row in rows),
+        "all_rows_complete": bool(rows) and all(row["complete"] for row in rows),
+        "all_complete": bool(rows) and all(row["complete"] for row in rows),
         "all_figures_referenced": bool(rows) and all(row["referenced_in_manuscript"] for row in rows),
         "all_reference_sections_sheaf_bound": bool(rows) and all(row["reference_sections_sheaf_bound"] for row in rows),
         "all_reference_sections_visualization_bound": bool(rows)
@@ -402,6 +419,8 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
     rows_by_id = {str(row.get("figure_id")): row for row in rows}
     registry = load_figure_registry(root)
     expected_rows_by_id = {str(row["figure_id"]): row for row in _figure_evidence_rows(root)}
+    expected_style_contract = build_style_contract(root)
+    expected_auxiliary_inventory = build_auxiliary_visualization_inventory(root)
     source_map = _load_json(root / "output" / "data" / "figure_source_map.json")
     source_rows = {str(row.get("figure_id")): row for row in source_map.get("rows") or []}
     hash_manifest = _load_json(root / "output" / "reports" / "figure_hash_manifest.json")
@@ -446,6 +465,8 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
             "paper_claim_ok",
             "accessibility_text_ok",
             "quality_ok",
+            "complete",
+            "style_contract_ok",
             "claim_lanes",
             "claim_lane_count",
             "claim_lanes_valid",
@@ -477,7 +498,16 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
             live_statistically_backed.append({"figure_id": figure_id, "statistical_sources_present": True})
     if payload.get("schema") != VISUALIZATION_AUDIT_SCHEMA:
         issues.append("visualization_quality_audit.json schema mismatch")
-    if payload.get("all_quality_ok") is not True or not (bool(rows) and all(row.get("quality_ok") for row in rows)):
+    figures_complete = bool(rows) and all(row.get("complete") is True and row.get("quality_ok") is True for row in rows)
+    if (
+        payload.get("all_figures_complete") is not True
+        or payload.get("all_figures_complete") != figures_complete
+    ):
+        issues.append("visualization_quality_audit.json has incomplete figure rows")
+    if (
+        payload.get("all_quality_ok") is not True
+        or payload.get("all_quality_ok") != (bool(rows) and all(row.get("quality_ok") for row in rows))
+    ):
         issues.append("visualization_quality_audit.json records low-quality figure rows")
     if payload.get("all_sources_mapped") is not True:
         issues.append("visualization_quality_audit.json has unmapped figure sources")
@@ -531,6 +561,25 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
         or payload.get("all_statistical_sources_present") != statistical_sources_present
     ):
         issues.append("visualization_quality_audit.json has unsupported statistical figure sources")
+    if (
+        payload.get("style_contract") != expected_style_contract
+        or payload.get("all_style_tokens_ok") is not True
+        or payload.get("all_style_tokens_ok") != expected_style_contract["ok"]
+    ):
+        issues.append("visualization_quality_audit.json has stale or weak style-token evidence")
+    auxiliary_rows = payload.get("auxiliary_visualizations") or []
+    if (
+        auxiliary_rows != expected_auxiliary_inventory["rows"]
+        or payload.get("auxiliary_visualization_count")
+        != expected_auxiliary_inventory["auxiliary_visualization_count"]
+        or payload.get("all_auxiliary_outputs_classified")
+        != expected_auxiliary_inventory["all_auxiliary_outputs_classified"]
+        or payload.get("all_auxiliary_outputs_rendered")
+        != expected_auxiliary_inventory["all_auxiliary_outputs_rendered"]
+        or payload.get("all_auxiliary_outputs_classified") is not True
+        or payload.get("all_auxiliary_outputs_rendered") is not True
+    ):
+        issues.append("visualization_quality_audit.json has stale or unclassified auxiliary visualizations")
     return issues
 
 
@@ -544,6 +593,7 @@ def validate_statistical_visualization_bridge(project_root: Path) -> list[str]:
     issues: list[str] = []
     rows = payload.get("rows") or []
     rows_connected = bool(rows) and all(row.get("connected") for row in rows)
+    rows_complete = bool(rows) and all(row.get("complete") is True and row.get("connected") is True for row in rows)
     sources_present = bool(rows) and all(row.get("statistical_sources_present") for row in rows)
     figures_referenced = bool(rows) and all(row.get("referenced_in_manuscript") for row in rows)
     reference_section_status = [_reference_section_status(row) for row in rows]
@@ -562,6 +612,13 @@ def validate_statistical_visualization_bridge(project_root: Path) -> list[str]:
         issues.append("statistical_visualization_bridge.json row_count mismatch")
     if payload.get("all_rows_connected") is not True or payload.get("all_rows_connected") != rows_connected:
         issues.append("statistical_visualization_bridge.json has disconnected rows")
+    if (
+        payload.get("all_rows_complete") is not True
+        or payload.get("all_complete") is not True
+        or payload.get("all_rows_complete") != rows_complete
+        or payload.get("all_complete") != rows_complete
+    ):
+        issues.append("statistical_visualization_bridge.json has incomplete rows")
     if payload.get("all_figures_referenced") is not True or payload.get("all_figures_referenced") != figures_referenced:
         issues.append("statistical_visualization_bridge.json has unreferenced figure rows")
     if (

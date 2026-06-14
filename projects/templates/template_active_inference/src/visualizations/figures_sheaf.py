@@ -56,9 +56,9 @@ def figure_sheaf_layers_overview(project_root: Path) -> Path | None:
             root,
             title="IMRAD binding matrix",
             boundary_width=1.0,
-            label_fontsize=7,
+            label_fontsize=style.text_size("matrix_label"),
         )
-        fig.suptitle("Sheaf fragment layers and IMRAD bindings", fontsize=11, y=0.98)
+        fig.suptitle("Sheaf fragment layers and IMRAD bindings", fontsize=style.text_size("title"), y=0.98)
         fig.subplots_adjust(left=0.06, right=0.98, top=0.92, wspace=0.26)
         save_figure_png(fig, out, dpi=dpi)
     return out

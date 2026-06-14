@@ -195,12 +195,15 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     )
     assert _relative_posix(paths["release_attestation"], project_root) == "output/reports/release_attestation.json"
     assert _relative_posix(paths["track_lane_matrix"], project_root) == "output/data/track_lane_matrix.json"
+    assert _relative_posix(paths["artifact_contract_index"], project_root) == "output/data/artifact_contract_index.json"
+    assert _relative_posix(paths["security_posture"], project_root) == "output/reports/security_posture_audit.json"
     assert _relative_posix(paths["section_status"], project_root) == "output/data/sheaf_section_status_matrix.json"
     assert _relative_posix(paths["render_log"], project_root) == "output/reports/sheaf_render_log.json"
     assert validate_sheaf_track_artifacts(project_root) == []
 
     semantic = _load(project_root / "output" / "data" / "sheaf_gluing_certificate.json")
     evidence = _load(project_root / "output" / "data" / "evidence_field_index.json")
+    claim_audit = _load(project_root / "output" / "reports" / "claim_evidence_audit.json")
     release = _load(project_root / "output" / "reports" / "release_bundle_manifest.json")
     theorem = _load(project_root / "output" / "data" / "theorem_traceability_matrix.json")
     gate_index = _load(project_root / "output" / "data" / "validation_gate_index.json")
@@ -216,6 +219,8 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     ablation_sensitivity = _load(project_root / "output" / "reports" / "ablation_sensitivity_report.json")
     release_attestation = _load(project_root / "output" / "reports" / "release_attestation.json")
     track_lane = _load(project_root / "output" / "data" / "track_lane_matrix.json")
+    artifact_contract = _load(project_root / "output" / "data" / "artifact_contract_index.json")
+    security_posture = _load(project_root / "output" / "reports" / "security_posture_audit.json")
     section_status = _load(project_root / "output" / "data" / "sheaf_section_status_matrix.json")
     render_log = _load(project_root / "output" / "reports" / "sheaf_render_log.json")
     visualization_quality = _load(project_root / "output" / "reports" / "visualization_quality_audit.json")
@@ -231,6 +236,12 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert dependency["field_edges"]
     assert evidence["all_fields_mapped"] is True
     assert all(row["jsonpath"] and row["validator"] and row["semantic_restriction"] for row in evidence["rows"])
+    assert claim_audit["all_complete"] is True
+    assert claim_audit["all_artifacts_resolved"] is True
+    assert claim_audit["all_evidence_resolved"] is True
+    assert claim_audit["all_evidence_predicates_hold"] is True
+    assert claim_audit["incomplete_claim_count"] == 0
+    assert all(row["complete"] and row["artifact_exists"] and row["evidence_holds"] for row in claim_audit["rows"])
     assert release["all_required_sources_present"] is True
     assert release["all_copied_outputs_match_or_deferred"] is True
     assert theorem["all_theorems_linked"] is True
@@ -279,14 +290,30 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
         and all(row["promotion_requirements"].values())
         for row in track_lane["rows"]
     )
+    assert artifact_contract["schema"] == "template_active_inference.artifact_contract_index.v1"
+    assert artifact_contract["all_artifact_rows_match_semantic_map"] is True
+    assert artifact_contract["all_rows_complete"] is True
+    assert artifact_contract["all_claim_required_rows_bound"] is True
+    assert artifact_contract["all_validators_bound"] is True
+    assert artifact_contract["all_negative_controls_bound"] is True
+    assert artifact_contract["all_freshness_hashes_current"] is True
+    assert artifact_contract["all_copied_parity_complete"] is True
+    assert any(row["artifact"] == "output/data/artifact_contract_index.json" for row in artifact_contract["rows"])
+    assert security_posture["schema"] == "template_active_inference.security_posture_audit.v1"
+    assert security_posture["all_controls_ok"] is True
+    assert security_posture["all_secret_patterns_absent"] is True
+    assert security_posture["high_risk_gap_count"] == 0
+    assert security_posture["secret_finding_count"] == 0
+    assert security_posture["deferred_count"] >= 1
     assert section_status["all_bound_fragments_present"] is True
     assert section_status["all_sections_have_status"] is True
     assert section_status["cell_count"] == section_status["section_count"] * section_status["track_count"]
     assert render_log["all_events_ok"] is True
     assert render_log["event_count"] >= 6
     assert visualization_quality["all_quality_ok"] is True
+    assert visualization_quality["all_figures_complete"] is True
     assert visualization_quality["all_rendered"] is True
-    assert visualization_quality["figure_count"] >= 21
+    assert visualization_quality["figure_count"] >= 23
     assert visualization_quality["statistically_backed_count"] >= 6
     assert visualization_quality["all_statistical_sources_present"] is True
     assert visualization_quality["all_visual_roles_present"] is True
@@ -303,6 +330,8 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert statistical_bridge["schema"] == "template_active_inference.statistical_visualization_bridge.v1"
     assert statistical_bridge["row_count"] == visualization_quality["statistically_backed_count"]
     assert statistical_bridge["all_rows_connected"] is True
+    assert statistical_bridge["all_rows_complete"] is True
+    assert statistical_bridge["all_complete"] is True
     assert statistical_bridge["all_sheaf_tracks_registered"] is True
     assert statistical_bridge["all_figures_referenced"] is True
     assert statistical_bridge["all_reference_sections_sheaf_bound"] is True
@@ -372,6 +401,8 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         "ablation_sensitivity": project_root / "output" / "reports" / "ablation_sensitivity_report.json",
         "release_attestation": project_root / "output" / "reports" / "release_attestation.json",
         "track_lane": project_root / "output" / "data" / "track_lane_matrix.json",
+        "artifact_contract": project_root / "output" / "data" / "artifact_contract_index.json",
+        "security_posture": project_root / "output" / "reports" / "security_posture_audit.json",
         "section_status": project_root / "output" / "data" / "sheaf_section_status_matrix.json",
         "render_log": project_root / "output" / "reports" / "sheaf_render_log.json",
         "visualization_quality": project_root / "output" / "reports" / "visualization_quality_audit.json",
@@ -570,6 +601,24 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
             "pipeline-to-sheaf rows",
         ),
         (
+            "artifact_contract",
+            _combine_mutations(
+                _set_value(("rows", 0, "validation_gates"), []),
+                _set_value(("all_validators_bound",), True),
+            ),
+            "artifact contract rows",
+        ),
+        (
+            "security_posture",
+            _combine_mutations(
+                _set_value(("rows", 0, "evidence_present"), False),
+                _set_value(("rows", 0, "control_ok"), True),
+                _set_value(("all_evidence_present",), True),
+                _set_value(("all_controls_ok",), True),
+            ),
+            "stale or forged row evidence",
+        ),
+        (
             "section_status",
             _combine_mutations(
                 _set_value(("missing_required_count",), 1), _set_value(("all_bound_fragments_present",), False)
@@ -651,6 +700,8 @@ def test_canonical_sheaf_row_only_forgeries_are_caught(project_root: Path) -> No
         "scope": project_root / "output" / "data" / "track_improvement_scope.json",
         "release": project_root / "output" / "reports" / "release_bundle_manifest.json",
         "track_lane": project_root / "output" / "data" / "track_lane_matrix.json",
+        "artifact_contract": project_root / "output" / "data" / "artifact_contract_index.json",
+        "security_posture": project_root / "output" / "reports" / "security_posture_audit.json",
     }
     originals = {path: path.read_text(encoding="utf-8") for path in paths.values()}
     try:
@@ -750,6 +801,39 @@ def test_canonical_sheaf_row_only_forgeries_are_caught(project_root: Path) -> No
         _write(paths["track_lane"], data)
         assert any("pipeline-to-sheaf rows" in issue for issue in validate_sheaf_track_artifacts(project_root))
         paths["track_lane"].write_text(originals[paths["track_lane"]], encoding="utf-8")
+
+        # artifact_contract_index: a row loses validator binding while aggregate flags stay True.
+        data = _load(paths["artifact_contract"])
+        data["rows"][0]["validation_gates"] = []
+        data["rows"][0]["contract_complete"] = True
+        data["all_validators_bound"] = True
+        data["all_rows_complete"] = True
+        assert data["all_rows_complete"] is True
+        _write(paths["artifact_contract"], data)
+        assert any("artifact_contract_index.json" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["artifact_contract"].write_text(originals[paths["artifact_contract"]], encoding="utf-8")
+
+        # artifact_contract_index: an orphan row cannot be hidden by True aggregates.
+        data = _load(paths["artifact_contract"])
+        orphan = dict(data["rows"][0])
+        orphan["artifact"] = "output/data/orphan_artifact_contract.json"
+        data["rows"].append(orphan)
+        data["row_count"] = len(data["rows"])
+        data["all_artifact_rows_match_semantic_map"] = True
+        _write(paths["artifact_contract"], data)
+        assert any("artifact_contract_index.json" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["artifact_contract"].write_text(originals[paths["artifact_contract"]], encoding="utf-8")
+
+        # security_posture: a row loses live evidence while summary booleans stay True.
+        data = _load(paths["security_posture"])
+        data["rows"][0]["evidence_present"] = False
+        data["rows"][0]["control_ok"] = True
+        data["all_evidence_present"] = True
+        data["all_controls_ok"] = True
+        assert data["all_controls_ok"] is True
+        _write(paths["security_posture"], data)
+        assert any("security_posture_audit.json" in issue for issue in validate_sheaf_track_artifacts(project_root))
+        paths["security_posture"].write_text(originals[paths["security_posture"]], encoding="utf-8")
     finally:
         for path, text in originals.items():
             path.write_text(text, encoding="utf-8")

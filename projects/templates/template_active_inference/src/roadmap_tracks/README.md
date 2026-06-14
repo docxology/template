@@ -8,9 +8,10 @@ modules write machine-readable artifacts for finite sweeps, formal interop,
 integration audits, canonical semantic gluing, dependency graphs, track-improvement
 scope, artifact diffing, proof extraction, finite state-space catalogs, causal
 ablation matrices, visualization-quality/statistical-bridge audits and crosswalks,
-row-rederived scholarship source matrices, artifact license audits,
-release-note evidence, and
-consolidated sheaf-track evidence.
+style-token and auxiliary-visualization contracts, row-rederived scholarship
+source matrices, local security-posture audits, artifact license audits,
+release-note evidence, artifact-contract indexing, and consolidated sheaf-track
+evidence.
 
 Use these modules from thin project scripts only. Keep all outputs
 deterministic, local, and backed by negative-control tests.

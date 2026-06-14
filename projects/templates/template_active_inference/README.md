@@ -131,7 +131,7 @@ replay, counterexamples, toy sweeps, uncertainty summaries, benchmark rows,
 finite model-checking witnesses, interop reports, semantic gluing, dependency
 graphs, evidence-field indexing, release-bundle parity, theorem traceability,
 gate ergonomics, scholarship source mapping, visualization-quality and statistical-bridge auditing,
-track-lane promotion mapping,
+track-lane promotion mapping, artifact-contract indexing, local security-posture auditing,
 artifact diffing, Lean proof extraction, finite state-space
 catalogs, causal ablations, artifact license checks, release-note evidence,
 track-improvement scope, and adversarial/scope audits. Live track IDs are stable
@@ -148,11 +148,25 @@ hydration boundary.
 Visualization quality is checked as generated evidence, not prose: the audit
 joins render metrics, source maps, figure hashes, section bindings, and
 per-figure claim lanes in `output/data/figure_source_map.json` and
-`output/reports/visualization_quality_audit.json`.
+`output/reports/visualization_quality_audit.json`. The same audit now enforces
+the shared typography/layout tokens from `figures.yaml`, rejects raw
+font-size literals in figure generators, and classifies auxiliary visual outputs
+that are intentionally outside the numbered manuscript registry.
 Scholarship quality is checked the same way: `output/data/scholarship_source_matrix.json`
 is rederived from bibliography entries, manuscript citation sections, sheaf
 tracks, manifest sections, scope-boundary text, and evidence artifacts before a
 source row can count as connected.
+Security posture is also a generated contract:
+`output/reports/security_posture_audit.json` separates enforced local controls
+from deferred production-only obligations, scans tracked project source/config
+surfaces for high-risk secret patterns, and drives
+`output/figures/security_posture_map.png`.
+The cross-artifact contract is centralized in
+`output/data/artifact_contract_index.json`: each row binds producer, configured
+script, pipeline/sheaf lanes, manuscript consumers, claim predicates,
+validators, negative controls, freshness status, and copied-root parity. Its
+publication figure, `output/figures/artifact_contract_map.png`, makes that
+contract inspectable in the methods and appendix sheaf.
 
 ```bash
 uv run python scripts/compose_manuscript.py --list-tracks

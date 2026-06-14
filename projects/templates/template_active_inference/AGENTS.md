@@ -54,9 +54,10 @@ Full compose calls `emit_coverage_artifacts()` → JSON only. `generate_figures.
 | `sensitivity_cell_count`, `uncertainty_row_count`, `benchmark_model_count`, `analytical_assumption_count`, `si_graph_world_topology_trace_count` | promoted toy sweep artifacts |
 | `model_checking_witness_count`, `interop_check_count`, `adversarial_audit_count` | formal interop and audit artifacts |
 | `semantic_restriction_count`, `dependency_edge_type_count`, `stale_artifact_fresh_count`, `manuscript_staleness_row_count`, `figure_source_coverage_count`, `visualization_quality_figure_count`, `visualization_statistics_backed_count`, `statistical_visualization_bridge_row_count`, `scope_boundary_status` | semantic and integration audit artifacts |
-| `provenance_bundle_count`, `evidence_field_count`, `release_bundle_artifact_count`, `theorem_traceability_row_count`, `validation_gate_index_count`, `track_lane_matrix_row_count`, `track_improvement_row_count` | canonical sheaf-track artifacts |
+| `provenance_bundle_count`, `evidence_field_count`, `release_bundle_artifact_count`, `theorem_traceability_row_count`, `validation_gate_index_count`, `track_lane_matrix_row_count`, `artifact_contract_row_count`, `artifact_contract_complete`, `artifact_contract_copied_parity_complete`, `track_improvement_row_count` | canonical sheaf-track artifacts |
 | `artifact_diffoscope_row_count`, `proof_extraction_theorem_count`, `state_space_catalog_row_count`, `causal_ablation_row_count`, `artifact_license_row_count`, `release_notes_row_count` | promoted canonical proof, finite-scope, license, and release-note artifacts |
 | `scholarship_source_count`, `scholarship_method_role_count`, `scholarship_source_locator_kind_count`, `scholarship_sources_connected`, `scholarship_rows_rederived` | source-backed scholarship matrix |
+| `security_posture_control_count`, `security_posture_enforced_count`, `security_posture_deferred_count`, `security_posture_all_controls_ok`, `security_posture_secret_finding_count`, `security_posture_high_risk_gap_count` | local security-posture audit |
 
 `z_generate_manuscript_variables.py` writes `output/data/manuscript_variables.json` and resolves `output/manuscript/` for PDF rendering. Compose emits `{{token}}` placeholders; hydration is the single substitution boundary (fail-closed on unknown or single-brace `{token}` typos).
 
@@ -73,8 +74,8 @@ figure-source, figure-hash, visualization-quality, statistical-visualization
 bridge, claim-audit, scope-boundary, manuscript-staleness, and adversarial audit
 reports. `generate_sheaf_tracks.py` is the canonical promotion producer for the
 semantic certificate, dependency graph, evidence-field index, release bundle,
-theorem traceability, track-improvement, blocked-scope, and consolidated
-promoted track artifacts. `validate_outputs` and `validate_manuscript` require
+theorem traceability, track-improvement, blocked-scope, artifact-contract index,
+and consolidated promoted track artifacts, including the local security-posture audit. `validate_outputs` and `validate_manuscript` require
 the canonical saved artifacts after regeneration; versioned live track IDs and
 versioned public output paths are intentionally not part of the live contract.
 
@@ -96,7 +97,7 @@ uv run python scripts/compute_statistics.py
 
 JSONL logging: `output/logs/pymdp_runs.jsonl` (`si_tmaze_run_header` + `si_tmaze_step` events). Run report: `output/reports/si_tmaze_run_report.json`.
 
-**SI figures** (`figures.yaml`): `si_belief_entropy_curve`, `si_obs_action_trace`, `si_tmaze_actions` bound under `results_si_tmaze` with numbering declared in `section_figures`. **Sheaf figures:** `sheaf_layers_overview` (registry stack + heatmap) and `track_lane_promotion_map` (promotion obligations + sheaf-lane bindings) are bound under `methods_sheaf`. **Appendix:** MI/actions, track-lane promotion, and coverage heatmap captions are also source-backed from `figures.yaml`. **Front matter:** coverage page uses “Coverage overview.” caption without a figure number.
+**SI figures** (`figures.yaml`): `si_belief_entropy_curve`, `si_obs_action_trace`, `si_tmaze_actions` bound under `results_si_tmaze` with numbering declared in `section_figures`. **Sheaf figures:** `sheaf_layers_overview` (registry stack + heatmap), `track_lane_promotion_map` (promotion obligations + sheaf-lane bindings), `artifact_contract_map` (artifact × verifier-obligation bindings), and `security_posture_map` (local controls + deferred production obligations) are bound under `methods_sheaf`. **Appendix:** MI/actions, track-lane promotion, artifact-contract, security posture, and coverage heatmap captions are also source-backed from `figures.yaml`. **Front matter:** coverage page uses “Coverage overview.” caption without a figure number.
 
 **Discussion sheaf tracks:** `discussion_outlook` binds `prose`, `simulation`, and `ontology` fragments with measured tokens.
 
@@ -113,9 +114,9 @@ artifacts.
 **Validation-spine tracks:** `generate_validation_spine.py` writes initial
 provenance, replay, and counterexample support artifacts. `generate_sheaf_tracks.py`
 then folds the strongest deterministic evidence into the canonical `provenance`,
-`replay_matrix`, and `counterexample` sheaf tracks, plus the validation-spine
+`replay_matrix`, `counterexample`, and `artifact_contract_index` sheaf tracks, plus the validation-spine
 tracks added for `evidence_fields`, `release_bundle`, `theorem_traceability`,
-`gate_ergonomics`, and the generated track-lane matrix.
+`gate_ergonomics`, `security_posture`, and the generated track-lane matrix.
 
 **Promoted roadmap tracks:** `generate_toy_sweep_tracks.py` writes sensitivity,
 uncertainty, benchmark, measured policy-grid, EFE-availability, analytical-observable,
@@ -146,7 +147,7 @@ outputs are added and validated.
 | `counts.py` | `structural_counts()` for registry-backed manuscript tokens |
 | `renderers.py` | `RENDERERS`, `resolve_track_body`, generated renderer dispatch |
 
-**Visualizations** (`src/visualizations/`): `figure_registry.py` (YAML SSOT + `write_figure_registry_json`), `figure_helpers.py` (`styled_figure`), `figures_diagrams.py`, `lean_boundary.py`, `figures.py` (`FIGURE_GENERATORS` registry), `figures_sheaf_{payload,draw}.py`. `generate_all_figures()` emits `output/figures/figure_registry.json` for validation.
+**Visualizations** (`src/visualizations/`): `figure_registry.py` (YAML SSOT + `write_figure_registry_json`), `figure_style.py` (palette + typography/layout tokens), `figure_helpers.py` (`styled_figure`), `figures_diagrams.py`, `lean_boundary.py`, `figures.py` (`FIGURE_GENERATORS` registry), `figures_sheaf_{payload,draw}.py`. `generate_all_figures()` emits `output/figures/figure_registry.json`; `roadmap_tracks.visualization_contract` supplies style-token and auxiliary-output checks for validation.
 
 **Appendix proof:** `appendix_full_sheaf` binds the registry tracks required for the full proof row (all except optional `layers`) → `16_appendix_full_sheaf.md`. Registry size is injected from live counts rather than hand-authored here.
 

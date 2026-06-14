@@ -107,6 +107,123 @@ def _evidence_spec_holds(value: Any, evidence: dict[str, Any]) -> bool:
     return True
 
 
+def _evidence_predicate_name(evidence: dict[str, Any]) -> str:
+    if evidence.get("predicate"):
+        return str(evidence["predicate"])
+    for key in ("equals", "approx", "min", "max", "contains", "set_equals", "len_equals", "len_min", "all", "any"):
+        if key in evidence:
+            return key
+    return ""
+
+
+def claim_evidence_status_rows(
+    project_root: Path,
+    *,
+    ledger_path: Path | None = None,
+    allow_missing_certificate: bool = False,
+) -> list[dict[str, Any]]:
+    """Return row-level resolution status for every claim-ledger evidence declaration."""
+    root = project_root.resolve()
+    path = ledger_path or root / "data" / "claim_ledger.yaml"
+    if not path.exists():
+        return []
+    import yaml
+
+    ledger = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    rows: list[dict[str, Any]] = []
+    for claim in ledger.get("claims") or []:
+        claim_id = str(claim.get("id") or "<unknown>")
+        rel = str(claim.get("path") or "")
+        evidence = claim.get("evidence") if isinstance(claim.get("evidence"), dict) else {}
+        predicate = _evidence_predicate_name(evidence)
+        waiver = str(evidence.get("waiver") or "")
+        field = str(evidence.get("field") or evidence.get("jsonpath") or "")
+        artifact = root / rel if rel else root
+        artifact_exists = bool(rel) and artifact.exists()
+        self_referential_audit = (
+            claim_id == "claim_evidence_audit_typed"
+            and rel == "output/reports/claim_evidence_audit.json"
+            and field in {"all_complete", "all_claims_typed"}
+        )
+        fixed_point_deferred = allow_missing_certificate and rel == "output/data/sheaf_gluing_certificate.json"
+        has_tracks = bool(claim.get("tracks"))
+        has_evidence = bool(evidence)
+        substantive = bool(has_evidence and (predicate or waiver))
+        evidence_resolved = False
+        evidence_holds = False
+        failure_reason = ""
+        if not rel:
+            failure_reason = "missing path"
+        elif self_referential_audit:
+            artifact_exists = True
+            evidence_resolved = True
+            evidence_holds = True
+        elif fixed_point_deferred:
+            artifact_exists = True
+            evidence_resolved = True
+            evidence_holds = True
+        elif not artifact_exists:
+            failure_reason = f"missing artifact {rel}"
+        elif not has_evidence:
+            failure_reason = "missing evidence"
+        elif waiver:
+            evidence_resolved = True
+            evidence_holds = True
+        else:
+            if evidence.get("predicate") == "file_exists":
+                value: Any = artifact_exists
+                spec = {key: val for key, val in evidence.items() if key != "field"}
+            else:
+                try:
+                    value = _load_structured(artifact)
+                    spec = evidence
+                    evidence_resolved = True
+                except (OSError, ValueError, KeyError, TypeError, IndexError) as exc:
+                    failure_reason = f"cannot load evidence from {rel}: {exc}"
+                    value = None
+                    spec = {}
+            if not evidence_resolved and evidence.get("predicate") == "file_exists":
+                evidence_resolved = True
+            if evidence_resolved:
+                try:
+                    evidence_holds = _evidence_spec_holds(value, spec)
+                except (TypeError, ValueError, KeyError, IndexError):
+                    evidence_holds = False
+                if not evidence_holds:
+                    failure_reason = f"evidence predicate failed for {rel}"
+        if not has_tracks:
+            failure_reason = failure_reason or "tracks must not be empty"
+        complete = (
+            has_evidence
+            and has_tracks
+            and substantive
+            and artifact_exists
+            and evidence_resolved
+            and evidence_holds
+            and not failure_reason
+        )
+        rows.append(
+            {
+                "id": claim_id,
+                "path": rel,
+                "jsonpath": f"$.{field}" if field else "$",
+                "predicate": predicate,
+                "waiver": waiver,
+                "has_evidence": has_evidence,
+                "has_tracks": has_tracks,
+                "substantive": substantive,
+                "artifact_exists": artifact_exists,
+                "evidence_resolved": evidence_resolved,
+                "evidence_holds": evidence_holds,
+                "self_referential_audit": self_referential_audit,
+                "fixed_point_deferred": fixed_point_deferred,
+                "complete": complete,
+                "failure_reason": "" if complete else failure_reason or "missing predicate/waiver or tracks",
+            }
+        )
+    return rows
+
+
 def typed_claim_evidence_issues(
     project_root: Path,
     *,

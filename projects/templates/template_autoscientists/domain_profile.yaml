@@ -1,0 +1,52 @@
+domain: autoscientists_coordination
+display_name: AutoScientists Coordination Testbed
+required_packages:
+  - numpy
+  - matplotlib
+  - pytest
+preferred_outputs:
+  - pdf
+  - html
+  - reports
+validation_gates:
+  - experiment_method_design
+  - ablation_integrity
+  - render_validation
+  - publication_readiness
+figure_types:
+  - search_comparison
+  - ablation_metric
+  - ablation_efficiency
+citation_policy: official_or_scholarly
+source_policy: >-
+  Use deterministic search outputs, ablation JSON, and cited AutoScientists
+  source material. Treat Hermes/Ollama runs as opt-in demonstrations unless
+  their live artifacts are explicitly regenerated and named.
+review_gates:
+  - matched_budget_design
+  - ablation_integrity
+  - noise_robustness_claims
+  - publication_readiness
+artifact_expectations:
+  - output/data/search_comparison.json
+  - output/data/ablation.json
+  - output/figures/search_comparison.png
+  - output/figures/ablation.png
+  - output/figures/ablation_efficiency.png
+benchmark_rubric:
+  name: autoscientists-coordination-readiness
+  dimensions:
+    - name: matched_budget_validity
+      weight: 2.0
+    - name: ablation_traceability
+      weight: 2.0
+    - name: noise_gap_reporting
+      weight: 1.5
+    - name: null_result_honesty
+      weight: 1.5
+    - name: render_success
+      weight: 1.0
+llm_prompt_guidance: >-
+  Preserve the distinction between coordination-mechanism measurement and
+  performance claims. Report null effects plainly and ground every numeric
+  statement in generated JSON artifacts.

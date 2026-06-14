@@ -21,8 +21,8 @@ def test_generate_variables_with_outputs() -> None:
     assert vars_["lambda_grid_points"] >= 2
     assert vars_["bernoulli_state_count"] == 2
     assert vars_["gnn_spec_version"] == "GNN v1.1"
-    assert vars_["pipeline_track_count"] == 30
-    assert vars_["sheaf_track_count"] == 33
+    assert vars_["pipeline_track_count"] == 31
+    assert vars_["sheaf_track_count"] == 34
     assert vars_["lean_graph_world_topology_witness_count"] >= 3
     assert vars_["lean_graph_world_all_topologies_witnessed"] is True
     assert vars_["scholarship_source_count"] >= 8
@@ -33,7 +33,7 @@ def test_generate_variables_with_outputs() -> None:
     assert vars_["scholarship_citations_present"] is True
     assert vars_["scholarship_claim_boundaries_scope_guarded"] is True
     assert vars_["scholarship_rows_rederived"] is True
-    assert vars_["visualization_quality_figure_count"] >= 21
+    assert vars_["visualization_quality_figure_count"] >= 23
     assert vars_["visualization_quality_all_ok"] is True
     assert vars_["visualization_intent_metadata_complete"] is True
     assert vars_["visualization_paper_claims_complete"] is True
@@ -45,6 +45,13 @@ def test_generate_variables_with_outputs() -> None:
     assert vars_["statistical_visualization_bridge_all_referenced"] is True
     assert vars_["statistical_visualization_bridge_references_sheaf_bound"] is True
     assert vars_["statistical_visualization_bridge_references_visualization_bound"] is True
+    assert vars_["claim_evidence_audit_count"] >= 1
+    assert vars_["claim_evidence_audit_all_complete"] is True
+    assert vars_["claim_evidence_audit_all_artifacts_resolved"] is True
+    assert vars_["claim_evidence_audit_all_predicates_hold"] is True
+    assert vars_["artifact_contract_row_count"] >= 1
+    assert vars_["artifact_contract_complete"] is True
+    assert vars_["artifact_contract_copied_parity_complete"] is True
     assert vars_["si_trace_steps_match"] is True
     assert vars_["si_trace_finite"] is True
 

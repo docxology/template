@@ -8,7 +8,20 @@ registries rather than in this file.
 
 ## Current verification evidence
 
-Current full-suite evidence: `uv run pytest tests/ --cov=src --cov-fail-under=90` passed 385 tests with 91.13% coverage in the 2026-06-12 PDT audit. The same run used `COVERAGE_FILE=/tmp/template_ai_scholarship_redteam.coverage` and `--durations=20 -q`, finishing in 1231.67 seconds. Replace this paragraph only after rerunning the full-suite command and updating the result from the fresh output.
+Current evidence on 2026-06-13:
+
+```bash
+COVERAGE_FILE=/tmp/template_ai_track_lane.coverage uv run pytest tests/ --cov=src --cov-fail-under=90 --durations=20 -q
+```
+
+`uv run pytest tests/ --cov=src --cov-fail-under=90` passed 392 tests with
+90.81% coverage in 1320.85s (0:22:00), run with
+`COVERAGE_FILE=/tmp/template_ai_track_lane.coverage`, `--durations=20`, and
+`-q`. Focused visualization/style/gate evidence also passed:
+`uv run pytest tests/test_figures.py tests/test_figure_style.py tests/gates/ -q`
+returned 58 passed in 240.82s (0:04:00). Manuscript mutation gates now restore
+byte-for-byte edits directly and reserve recomposition for the source-fragment
+duplicate-marker case.
 
 ## Promotion rule
 
@@ -48,8 +61,8 @@ validator code.
 | pymdp | `pymdp.yaml`, `src/simulation/`, `output/data/si_tmaze_summary.json`, `output/data/si_tmaze_trace.json`, `output/data/si_policy_comparison.json`, `output/data/pymdp_policy_posterior_grid.json`, `output/reports/pymdp_runtime_diagnostics.json` |
 | Formal | `lean/`, `gnn/`, `output/reports/model_checking_witnesses.json`, `output/data/theorem_traceability_matrix.json`, `output/data/proof_extraction_index.json`, `output/data/proof_dependency_graph.json` |
 | Semantic | `manuscript/sheaf/tracks.yaml`, `manuscript/sheaf/manifest.yaml`, `output/data/sheaf_gluing_certificate.json`, `output/data/validation_dependency_graph.json`, `output/data/cross_track_symbol_table.json`, `output/data/manuscript_token_provenance.json`, `output/data/evidence_field_index.json` |
-| Visualization | `figures.yaml`, `src/visualizations/`, `output/data/figure_source_map.json`, `output/reports/visualization_quality_audit.json`, `output/reports/figure_hash_manifest.json`, `output/data/statistical_visualization_bridge.json` |
-| Release | `output/reports/release_bundle_manifest.json`, `output/reports/artifact_diffoscope.json`, `output/reports/artifact_license_audit.json`, `output/reports/release_notes_evidence.json`, `output/reports/release_attestation.json` |
+| Visualization | `figures.yaml`, `src/visualizations/`, `src/roadmap_tracks/visualization_contract.py`, `output/data/figure_source_map.json`, `output/reports/visualization_quality_audit.json`, `output/reports/figure_hash_manifest.json`, `output/data/statistical_visualization_bridge.json` |
+| Release | `output/reports/release_bundle_manifest.json`, `output/reports/artifact_diffoscope.json`, `output/reports/artifact_license_audit.json`, `output/reports/release_notes_evidence.json`, `output/reports/release_attestation.json`, `output/reports/security_posture_audit.json` |
 | Scope | `output/reports/scope_boundary_audit.json`, `output/reports/blocked_scope_manifest.json`, `output/data/track_improvement_scope.json`, `output/data/scholarship_source_matrix.json`, `data/claim_ledger.yaml` |
 
 ## Minor upcoming
@@ -68,11 +81,16 @@ These rows are real future verifier or cross-track improvements. Each one needs
 additive artifacts or rows, a failing negative control, regenerated docs, and
 green gates before it can be moved out of this file.
 
+The visualization style, auxiliary-output, accessibility, and dense-matrix
+readability rows scoped on 2026-06-13 are implemented in the generated
+visualization-quality audit rather than retained as open TODO rows: the audit
+now recomputes typography-token minima, rejects raw font-size literals in figure
+generators, classifies non-registry visual outputs, and binds those checks into
+`validate_outputs` and the semantic restrictions.
+
 | ID | Size | Track lane | Future improvement | Proving artifact | Gate/predicate | Negative control |
 | --- | --- | --- | --- | --- | --- | --- |
-| `MEDIUM-TEST-PERF-1` | Medium | Test ergonomics | Split slow manuscript-gate mutation tests into cheaper source-only negative controls plus one end-to-end refresh characterization | parametrized source-contract tests and one end-to-end artifact-refresh test | focused gate tests preserve failures while `--durations=20` shows reduced redundant regeneration | Source-only mutation passes without exercising the matching contract |
-| `MEDIUM-PROVENANCE-UNIFY-1` | Medium | Provenance/validation spine | Remove remaining producer-order sensitivity between validation-spine and sheaf-track artifacts by making shared artifact contracts explicit | `output/data/artifact_contract_index.json` | validation-spine and sheaf validators agree on shared keys, hashes, and freshness fields | Reordered producer leaves stale shared provenance accepted |
-| `MEDIUM-SCOPE-MANIFEST-CONCORDANCE-1` | Medium | Scope/claim ledger | Derive scope-boundary blocked-context rows from `output/reports/blocked_scope_manifest.json` instead of duplicating the required blocked categories in the scope-audit builder | `output/reports/scope_boundary_audit.json` and `output/reports/blocked_scope_manifest.json` | blocked manifest IDs and scope-audit blocked categories agree exactly | Removing `llm_generated_evidence` from the blocked manifest leaves scope audit green |
+| `MEDIUM-TEST-PERF-1` | Medium | Test ergonomics | Continue splitting repeated full-refresh mutation tests in roadmap-promotion and claim-ledger paths while retaining one fixed-point refresh characterization | cheaper source/row-contract negative controls plus one end-to-end artifact-refresh test | focused gate tests preserve failures while `--durations=20` shows reduced redundant regeneration; current slowest rows are roadmap-promotion and claim-ledger refreshes | Source-only mutation passes without exercising the matching contract |
 
 ## Blocked major scope
 
@@ -89,3 +107,17 @@ unblock artifact exists.
 | Network-dependent research | Pipeline must remain locally reproducible | `output/reports/offline_reproducibility_audit.json` | offline pipeline gate | Network call required for core pipeline |
 | LLM-generated evidence | Claims must come from generated local artifacts, not opaque model output | `output/data/llm_evidence_audit.json` | evidence registry and claim-ledger gates | LLM-only claim passes evidence audit |
 | Non-toy model claims | Current validation covers finite pedagogical examples only | `output/reports/model_scope_audit.json` | scope-boundary validator | Non-toy generalization appears in results |
+
+## Major unblock ladder
+
+Do not start these as feature work until the previous rung is green. Each rung
+must preserve the public, deterministic default path and leave current toy claims
+unchanged.
+
+| Rung | New capability class | Minimum unblock before promotion |
+| --- | --- | --- |
+| 1 | Empirical adapters | Public fixture manifest, license/privacy audit, deterministic replay cache, and claim-ledger predicates that distinguish toy from empirical evidence |
+| 2 | Network research | Offline cache manifest, fetch provenance, dependency pinning, no-network validation mode, and stale-cache negative controls |
+| 3 | LLM evidence | Prompt/model/version manifest, deterministic transcript artifact, human-review provenance, and explicit non-authoritative evidence labeling |
+| 4 | Private data | External private-data sidecar, redaction manifest, access-boundary audit, license/privacy approval artifact, and zero private path leakage in public outputs |
+| 5 | Non-toy model claims | Scope-specific model card, expanded state-space/proof obligations, empirical/benchmark provenance, uncertainty calibration, and claim predicates that fail on toy-only evidence |

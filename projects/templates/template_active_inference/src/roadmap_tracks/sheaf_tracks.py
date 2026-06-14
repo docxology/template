@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from itertools import product
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 
@@ -41,6 +41,7 @@ CANONICAL_TRACKS: tuple[str, ...] = (
     "theorem_traceability",
     "gate_ergonomics",
     "scholarship",
+    "security_posture",
     "artifact_diffoscope",
     "proof_extraction",
     "state_space_catalog",
@@ -63,6 +64,7 @@ CANONICAL_ARTIFACTS: dict[str, str] = {
     "section_status": "output/data/sheaf_section_status_matrix.json",
     "render_log": "output/reports/sheaf_render_log.json",
     "track_lane_matrix": "output/data/track_lane_matrix.json",
+    "artifact_contract_index": "output/data/artifact_contract_index.json",
     "track_improvement_scope": "output/data/track_improvement_scope.json",
     "blocked_scope_manifest": "output/reports/blocked_scope_manifest.json",
     "evidence_fields": "output/data/evidence_field_index.json",
@@ -70,6 +72,7 @@ CANONICAL_ARTIFACTS: dict[str, str] = {
     "theorem_traceability": "output/data/theorem_traceability_matrix.json",
     "gate_ergonomics": "output/data/validation_gate_index.json",
     "scholarship": "output/data/scholarship_source_matrix.json",
+    "security_posture": "output/reports/security_posture_audit.json",
     "artifact_diffoscope": "output/reports/artifact_diffoscope.json",
     "proof_extraction": "output/data/proof_extraction_index.json",
     "state_space_catalog": "output/data/state_space_catalog.json",
@@ -436,6 +439,9 @@ def _canonical_artifact_rows(root: Path, context: _ProvenanceContext | None = No
             CANONICAL_ARTIFACTS["track_improvement_scope"],
             CANONICAL_ARTIFACTS["replay_matrix"],
             CANONICAL_ARTIFACTS["artifact_diffoscope"],
+            CANONICAL_ARTIFACTS["artifact_contract_index"],
+            "output/figures/si_belief_trajectory.gif",
+            "output/data/animation_frame_deltas.json",
         }
         rows.append(
             {
@@ -548,6 +554,7 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
             CANONICAL_ARTIFACTS["artifact_license"],
             CANONICAL_ARTIFACTS["release_notes"],
             CANONICAL_ARTIFACTS["scholarship"],
+            CANONICAL_ARTIFACTS["security_posture"],
             CANONICAL_ARTIFACTS["proof_dependency_graph"],
             CANONICAL_ARTIFACTS["release_attestation"],
         ),
@@ -573,6 +580,7 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
             "output/figures/theorem_traceability_graph.png",
             "output/figures/causal_ablation_heatmap.png",
             "output/figures/scholarship_source_map.png",
+            "output/figures/security_posture_map.png",
             "output/reports/visualization_quality_audit.json",
             CANONICAL_ARTIFACTS["statistical_visualization_bridge"],
             "output/figures/si_belief_trajectory.gif",
@@ -664,11 +672,9 @@ def build_replay_matrix(project_root: Path) -> dict[str, Any]:
 
 def build_sensitivity_sweep(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
-    base = _load_json(root / CANONICAL_ARTIFACTS["sensitivity"])
-    if not base or base.get("schema") != "template_active_inference.sensitivity_sweep.v1":
-        from roadmap_tracks.toy_sweep import build_sensitivity_sweep as build_base_sensitivity
+    from roadmap_tracks.toy_sweep import build_sensitivity_sweep as build_base_sensitivity
 
-        base = build_base_sensitivity(root)
+    base = build_base_sensitivity(root)
     policy = _load_json(root / "output" / "data" / "si_policy_grid.json")
     topology_traces = _load_json(root / "output" / "data" / "si_graph_world_topology_traces.json")
     modes = sorted({str(row.get("mode")) for row in policy.get("rows") or [] if row.get("mode")}) or [
@@ -738,11 +744,9 @@ def build_sensitivity_sweep(project_root: Path) -> dict[str, Any]:
 
 def build_uncertainty_summary(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
-    base = _load_json(root / CANONICAL_ARTIFACTS["uncertainty"])
-    if not base or base.get("schema") != "template_active_inference.uncertainty_summary.v1":
-        from roadmap_tracks.toy_sweep import build_uncertainty_summary as build_base_uncertainty
+    from roadmap_tracks.toy_sweep import build_uncertainty_summary as build_base_uncertainty
 
-        base = build_base_uncertainty(root)
+    base = build_base_uncertainty(root)
     posterior = _load_json(root / "output" / "data" / "pymdp_policy_posterior_grid.json")
     rows: list[dict[str, Any]] = []
     bins: dict[str, dict[str, Any]] = {
@@ -828,6 +832,11 @@ def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
         ),
         ("gate_ergonomics_unindexed", "gate_ergonomics", "validate_outputs.validation_gate_index_schema"),
         ("artifact_diffoscope_missed_hash_drift", "artifact_diffoscope", "validate_outputs.artifact_diffoscope_schema"),
+        (
+            "artifact_contract_index_row_only_forgery",
+            "artifact_contract_index",
+            "validate_outputs.artifact_contract_index_schema",
+        ),
         ("missing_scholarship_source_binding", "scholarship", "validate_outputs.scholarship_source_matrix_schema"),
         ("proof_extraction_missing_statement", "proof_extraction", "validate_outputs.proof_extraction_index_schema"),
         (
@@ -839,6 +848,7 @@ def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
         ("artifact_license_unsafe_artifact", "artifact_license", "validate_outputs.artifact_license_audit_schema"),
         ("release_notes_claim_failed_gate_passed", "release_notes", "validate_outputs.release_notes_evidence_schema"),
         ("empirical_adapter_live", "empirical_adapter", "validate_manuscript.blocked_empirical_adapter"),
+        ("security_posture_aggregate_forgery", "security_posture", "validate_outputs.security_posture_audit_schema"),
     ]
     payload_rows = [
         {
@@ -874,11 +884,9 @@ def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
 
 def build_model_checking_witnesses(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
-    base = _load_json(root / CANONICAL_ARTIFACTS["model_checking"])
-    if not base or base.get("schema") != "template_active_inference.model_checking_witnesses.v1":
-        from roadmap_tracks.formal_interop import build_model_checking_witnesses as build_base_model
+    from roadmap_tracks.formal_interop import build_model_checking_witnesses as build_base_model
 
-        base = build_base_model(root)
+    base = build_base_model(root)
     topology_traces = _load_json(root / "output" / "data" / "si_graph_world_topology_traces.json")
     posterior = _load_json(root / "output" / "data" / "pymdp_policy_posterior_grid.json")
     rows = [
@@ -1159,10 +1167,13 @@ def build_release_bundle_manifest(project_root: Path) -> dict[str, Any]:
         CANONICAL_ARTIFACTS["theorem_traceability"],
         CANONICAL_ARTIFACTS["gate_ergonomics"],
         CANONICAL_ARTIFACTS["scholarship"],
+        CANONICAL_ARTIFACTS["security_posture"],
         CANONICAL_ARTIFACTS["track_lane_matrix"],
+        CANONICAL_ARTIFACTS["artifact_contract_index"],
         "output/figures/si_belief_trajectory.gif",
         "output/figures/semantic_gluing_graph.png",
         "output/figures/track_lane_promotion_map.png",
+        "output/figures/artifact_contract_map.png",
         "output/figures/theorem_traceability_graph.png",
         "output/figures/causal_ablation_heatmap.png",
         "output/figures/scholarship_source_map.png",
@@ -1283,6 +1294,7 @@ def _track_artifact(track_id: str) -> str:
         "artifact_license": CANONICAL_ARTIFACTS["artifact_license"],
         "release_notes": CANONICAL_ARTIFACTS["release_notes"],
         "scholarship": CANONICAL_ARTIFACTS["scholarship"],
+        "security_posture": CANONICAL_ARTIFACTS["security_posture"],
         "prose": "manuscript/sheaf/manifest.yaml",
         "formalism": "manuscript/sheaf/manifest.yaml",
         "layers": "output/data/sheaf_coverage_matrix.json",
@@ -1387,6 +1399,139 @@ def build_track_lane_matrix(project_root: Path) -> dict[str, Any]:
         "all_pipeline_tracks_complete": bool(rows) and all(row["matrix_complete"] for row in rows),
         "all_required_pipeline_tracks_complete": bool(required_rows) and not missing_required,
         "missing_required_tracks": missing_required,
+    }
+
+
+def _artifact_contract_cycle_excluded(rel: str) -> bool:
+    return rel in {
+        CANONICAL_ARTIFACTS["provenance"],
+        CANONICAL_ARTIFACTS["semantic"],
+        CANONICAL_ARTIFACTS["dependency"],
+        CANONICAL_ARTIFACTS["track_improvement_scope"],
+        CANONICAL_ARTIFACTS["replay_matrix"],
+        CANONICAL_ARTIFACTS["artifact_diffoscope"],
+        CANONICAL_ARTIFACTS["release_bundle"],
+        CANONICAL_ARTIFACTS["release_attestation"],
+        CANONICAL_ARTIFACTS["artifact_contract_index"],
+        "output/figures/si_belief_trajectory.gif",
+        "output/data/animation_frame_deltas.json",
+        "output/data/manuscript_variables.json",
+        "output/reports/manuscript_staleness_report.json",
+    }
+
+
+def _artifact_contract_track_maps(root: Path) -> tuple[dict[str, list[str]], dict[str, list[str]], dict[str, list[str]]]:
+    registry = _registry_tracks(root)
+    artifacts_to_pipeline: dict[str, list[str]] = {}
+    artifacts_to_sheaf: dict[str, list[str]] = {}
+    artifacts_to_source_paths: dict[str, list[str]] = {}
+    for track in _pipeline_tracks(root):
+        track_id = str(track.get("id") or "")
+        artifact = _track_artifact(track_id)
+        artifacts_to_pipeline.setdefault(artifact, []).append(track_id)
+        artifacts_to_source_paths.setdefault(artifact, []).extend(str(path) for path in track.get("paths") or [])
+        artifacts_to_sheaf.setdefault(artifact, []).extend(_pipeline_sheaf_tracks(track, registry))
+    return (
+        {artifact: sorted(set(values)) for artifact, values in artifacts_to_pipeline.items()},
+        {artifact: sorted(set(values)) for artifact, values in artifacts_to_sheaf.items()},
+        {artifact: sorted(set(values)) for artifact, values in artifacts_to_source_paths.items()},
+    )
+
+
+def build_artifact_contract_index(project_root: Path) -> dict[str, Any]:
+    """Index artifact producers, consumers, validators, freshness, and copy parity."""
+    root = project_root.resolve()
+    producers, consumers, gates = _artifact_maps()
+    configured = set(_analysis_scripts(root))
+    claim_ids_by_path = _claim_ids_by_path(root)
+    pipeline_by_artifact, sheaf_by_artifact, source_paths_by_artifact = _artifact_contract_track_maps(root)
+    negative_rows = build_counterexample_matrix(root).get("rows") or []
+    negative_by_track = {str(row["promoted_track"]): str(row["id"]) for row in negative_rows}
+    release = _load_json(root / CANONICAL_ARTIFACTS["release_bundle"])
+    copied_rows = {
+        str(row.get("artifact") or ""): row
+        for row in ((release.get("copied_output_parity") or {}).get("rows") or [])
+        if row.get("artifact")
+    }
+    canonical_artifacts = set(CANONICAL_ARTIFACTS.values())
+    rows: list[dict[str, Any]] = []
+    for rel, producer in sorted(producers.items()):
+        path = root / rel
+        pipeline_tracks = pipeline_by_artifact.get(rel, [])
+        sheaf_tracks = sheaf_by_artifact.get(rel, [])
+        claim_ids = sorted(claim_ids_by_path.get(rel, []))
+        source_sha = _sha256(path)
+        freshness_cycle_excluded = _artifact_contract_cycle_excluded(rel)
+        copied = copied_rows.get(rel) or {}
+        copied_required = bool(copied)
+        copied_status = str(copied.get("status") or "not_required")
+        copied_parity_ok = (not copied_required) or (
+            copied_status in {"matched", "deferred"} and copied.get("matches_when_copied") is True
+        )
+        negative_control = (
+            next((negative_by_track[track_id] for track_id in pipeline_tracks if track_id in negative_by_track), "")
+            or negative_by_track.get(rel, "")
+            or "artifact_contract_index_row_only_forgery"
+        )
+        validation_gates = sorted(set(str(gate) for gate in gates.get(rel, ()) if gate))
+        manuscript_consumers = sorted(set(str(consumer) for consumer in consumers.get(rel, ()) if consumer))
+        producer_configured = producer in configured
+        source_exists = path.is_file()
+        claim_required = rel in canonical_artifacts or bool(claim_ids)
+        source_hash_fresh = freshness_cycle_excluded or source_sha == _sha256(path)
+        row_complete = (
+            source_exists
+            and producer_configured
+            and bool(manuscript_consumers)
+            and bool(validation_gates)
+            and (not claim_required or bool(claim_ids))
+            and bool(negative_control)
+            and source_hash_fresh
+            and copied_parity_ok
+        )
+        rows.append(
+            {
+                "artifact": rel,
+                "producer": producer,
+                "producer_configured": producer_configured,
+                "pipeline_tracks": pipeline_tracks,
+                "sheaf_tracks": sheaf_tracks,
+                "manuscript_consumers": manuscript_consumers,
+                "claim_ids": claim_ids,
+                "claim_required": claim_required,
+                "validation_gates": validation_gates,
+                "negative_control": negative_control,
+                "freshness_inputs": sorted(set([rel, *source_paths_by_artifact.get(rel, [])])),
+                "source_exists": source_exists,
+                "source_sha256": source_sha,
+                "freshness_cycle_excluded": freshness_cycle_excluded,
+                "source_hash_fresh": source_hash_fresh,
+                "copied_required": copied_required,
+                "copied_path": str(copied.get("copied_path") or rel.removeprefix("output/")),
+                "copied_status": copied_status,
+                "copied_exists": bool(copied.get("copied_exists", False)),
+                "copied_sha256": str(copied.get("copied_sha256") or ""),
+                "copied_parity_ok": copied_parity_ok,
+                "contract_complete": row_complete,
+            }
+        )
+    artifact_ids = sorted(row["artifact"] for row in rows)
+    expected_artifact_ids = sorted(producers)
+    return {
+        "schema": "template_active_inference.artifact_contract_index.v1",
+        "schema_version": CANONICAL_SCHEMA,
+        "rows": rows,
+        "row_count": len(rows),
+        "artifact_ids": artifact_ids,
+        "semantic_artifact_ids": expected_artifact_ids,
+        "all_artifact_rows_match_semantic_map": artifact_ids == expected_artifact_ids,
+        "all_rows_complete": bool(rows) and all(row["contract_complete"] for row in rows),
+        "all_claim_required_rows_bound": bool(rows)
+        and all((not row["claim_required"]) or bool(row["claim_ids"]) for row in rows),
+        "all_validators_bound": bool(rows) and all(bool(row["validation_gates"]) for row in rows),
+        "all_negative_controls_bound": bool(rows) and all(bool(row["negative_control"]) for row in rows),
+        "all_freshness_hashes_current": bool(rows) and all(bool(row["source_hash_fresh"]) for row in rows),
+        "all_copied_parity_complete": bool(rows) and all(bool(row["copied_parity_ok"]) for row in rows),
     }
 
 
@@ -1608,6 +1753,7 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
     adversarial = _load_json(root / CANONICAL_ARTIFACTS["adversarial_audit"])
     dependency = _load_json(root / CANONICAL_ARTIFACTS["dependency"])
     track_lane = _load_json(root / CANONICAL_ARTIFACTS["track_lane_matrix"])
+    artifact_contract = _load_json(root / CANONICAL_ARTIFACTS["artifact_contract_index"])
     scope = _load_json(root / CANONICAL_ARTIFACTS["track_improvement_scope"])
     section_status = _load_json(root / CANONICAL_ARTIFACTS["section_status"])
     render_log = _load_json(root / CANONICAL_ARTIFACTS["render_log"])
@@ -1623,6 +1769,7 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
     license_audit = _load_json(root / CANONICAL_ARTIFACTS["artifact_license"])
     release_notes = _load_json(root / CANONICAL_ARTIFACTS["release_notes"])
     scholarship = _load_json(root / CANONICAL_ARTIFACTS["scholarship"])
+    security_posture = _load_json(root / CANONICAL_ARTIFACTS["security_posture"])
     visualization_quality = _load_json(root / "output" / "reports" / "visualization_quality_audit.json")
     statistical_bridge = _load_json(root / CANONICAL_ARTIFACTS["statistical_visualization_bridge"])
     proof_dependency = _load_json(root / CANONICAL_ARTIFACTS["proof_dependency_graph"])
@@ -1733,6 +1880,13 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
         "dependency_field_edges_mapped": dependency.get("all_field_edges_mapped") is True,
         "track_lane_matrix_complete": track_lane.get("all_pipeline_tracks_complete") is True
         and track_lane.get("matrix_track_ids_match_tracks_yaml") is True,
+        "artifact_contract_index_complete": artifact_contract.get("all_rows_complete") is True
+        and artifact_contract.get("all_artifact_rows_match_semantic_map") is True
+        and artifact_contract.get("all_claim_required_rows_bound") is True
+        and artifact_contract.get("all_validators_bound") is True
+        and artifact_contract.get("all_negative_controls_bound") is True
+        and artifact_contract.get("all_freshness_hashes_current") is True,
+        "artifact_contract_copied_parity_complete": artifact_contract.get("all_copied_parity_complete") is True,
         "section_status_all_bound_present": section_status.get("all_bound_fragments_present") is True,
         "section_status_all_rows_indexed": section_status.get("all_sections_have_status") is True
         and section_status.get("all_tracks_have_status") is True,
@@ -1752,10 +1906,17 @@ def _canonical_restrictions(root: Path) -> dict[str, bool]:
         "release_notes_source_backed": release_notes.get("all_notes_source_backed") is True,
         "scholarship_sources_connected": scholarship.get("all_sources_connected") is True
         and scholarship.get("all_expected_sources_present") is True,
+        "security_posture_controls_ok": security_posture.get("all_controls_ok") is True
+        and security_posture.get("all_evidence_present") is True,
+        "security_posture_secret_patterns_absent": security_posture.get("all_secret_patterns_absent") is True,
+        "security_posture_no_high_risk_gaps": int(security_posture.get("high_risk_gap_count", 1) or 0) == 0,
         "visualization_quality_ok": visualization_quality.get("all_quality_ok") is True
         and visualization_rows_ok
         and visualization_quality.get("all_sources_mapped") is True
         and visualization_quality.get("all_rendered") is True
+        and visualization_quality.get("all_style_tokens_ok") is True
+        and visualization_quality.get("all_auxiliary_outputs_classified") is True
+        and visualization_quality.get("all_auxiliary_outputs_rendered") is True
         and visualization_intent_ok
         and visualization_claims_ok
         and visualization_sections_ok,
@@ -1809,6 +1970,7 @@ def _record_external_artifact_paths(root: Path, paths: dict[str, Path]) -> None:
 
 def _write_primary_canonical_artifacts(root: Path, paths: dict[str, Path], context: _ProvenanceContext) -> None:
     from roadmap_tracks.scholarship import write_scholarship_source_matrix
+    from roadmap_tracks.security import write_security_posture_audit
 
     paths["sensitivity"] = _write_json(root / CANONICAL_ARTIFACTS["sensitivity"], build_sensitivity_sweep(root))
     paths["uncertainty"] = _write_json(root / CANONICAL_ARTIFACTS["uncertainty"], build_uncertainty_summary(root))
@@ -1828,7 +1990,7 @@ def _write_primary_canonical_artifacts(root: Path, paths: dict[str, Path], conte
     from manuscript.sheaf.status import write_sheaf_status_outputs
 
     paths.update(write_sheaf_status_outputs(root))
-    paths["interop"] = _write_json(root / CANONICAL_ARTIFACTS["interop"], build_interop_roundtrip_report(root))
+    paths["interop"] = root / CANONICAL_ARTIFACTS["interop"]
     paths["adversarial"] = _write_json(root / CANONICAL_ARTIFACTS["adversarial_audit"], build_adversarial_audit(root))
     paths["blocked_scope"] = _write_json(
         root / CANONICAL_ARTIFACTS["blocked_scope_manifest"],
@@ -1845,6 +2007,11 @@ def _write_primary_canonical_artifacts(root: Path, paths: dict[str, Path], conte
     paths["release_bundle"] = _write_json(
         root / CANONICAL_ARTIFACTS["release_bundle"],
         build_release_bundle_manifest(root),
+    )
+    paths["security_posture"] = write_security_posture_audit(root)
+    paths["artifact_contract_index"] = _write_json(
+        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
+        build_artifact_contract_index(root),
     )
     _record_external_artifact_paths(root, paths)
     paths["track_improvement_scope"] = _write_json(
@@ -1867,6 +2034,7 @@ def _write_integration_audit_phase(root: Path, paths: dict[str, Path]) -> None:
 def _write_post_audit_canonical_artifacts(root: Path, paths: dict[str, Path], context: _ProvenanceContext) -> None:
     from manuscript.sheaf.status import write_sheaf_status_outputs
     from roadmap_tracks.scholarship import write_scholarship_source_matrix
+    from roadmap_tracks.security import write_security_posture_audit
 
     paths["counterexample"] = _write_json(
         root / CANONICAL_ARTIFACTS["counterexample"], build_counterexample_matrix(root)
@@ -1882,6 +2050,11 @@ def _write_post_audit_canonical_artifacts(root: Path, paths: dict[str, Path], co
     paths["release_bundle"] = _write_json(
         root / CANONICAL_ARTIFACTS["release_bundle"],
         build_release_bundle_manifest(root),
+    )
+    paths["security_posture"] = write_security_posture_audit(root)
+    paths["artifact_contract_index"] = _write_json(
+        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
+        build_artifact_contract_index(root),
     )
     paths["scholarship"] = write_scholarship_source_matrix(root)
     paths["track_lane_matrix"] = _write_json(
@@ -1922,11 +2095,30 @@ def _write_supplemental_phase(root: Path, paths: dict[str, Path]) -> None:
 
 def _write_final_canonical_pass(root: Path, paths: dict[str, Path], context: _ProvenanceContext) -> None:
     from manuscript.sheaf.status import write_sheaf_status_outputs
+    from roadmap_tracks.security import write_security_posture_audit
 
     _refresh_hydrated_manuscript(root)
     paths.update(write_sheaf_status_outputs(root))
     _write_semantic_artifacts(root, paths)
     _write_supplemental_phase(root, paths)
+    paths["artifact_contract_index"] = _write_json(
+        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
+        build_artifact_contract_index(root),
+    )
+    for _ in range(2):
+        _write_integration_audit_phase(root, paths)
+        paths["release_bundle"] = _write_json(
+            root / CANONICAL_ARTIFACTS["release_bundle"],
+            build_release_bundle_manifest(root),
+        )
+        paths["artifact_contract_index"] = _write_json(
+            root / CANONICAL_ARTIFACTS["artifact_contract_index"],
+            build_artifact_contract_index(root),
+        )
+        _write_semantic_artifacts(root, paths)
+        _write_supplemental_phase(root, paths)
+    _write_semantic_artifacts(root, paths)
+    paths["security_posture"] = write_security_posture_audit(root)
     paths["track_lane_matrix"] = _write_json(
         root / CANONICAL_ARTIFACTS["track_lane_matrix"],
         build_track_lane_matrix(root),
@@ -1934,6 +2126,10 @@ def _write_final_canonical_pass(root: Path, paths: dict[str, Path], context: _Pr
     paths["release_bundle"] = _write_json(
         root / CANONICAL_ARTIFACTS["release_bundle"],
         build_release_bundle_manifest(root),
+    )
+    paths["artifact_contract_index"] = _write_json(
+        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
+        build_artifact_contract_index(root),
     )
     provenance = build_artifact_provenance(root, context=context)
     paths["dependency"] = _write_json(
@@ -1943,16 +2139,44 @@ def _write_final_canonical_pass(root: Path, paths: dict[str, Path], context: _Pr
     paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], provenance)
     _write_integration_audit_phase(root, paths)
     _write_supplemental_phase(root, paths)
+    paths["security_posture"] = write_security_posture_audit(root)
+    paths["release_bundle"] = _write_json(
+        root / CANONICAL_ARTIFACTS["release_bundle"],
+        build_release_bundle_manifest(root),
+    )
+    paths["artifact_contract_index"] = _write_json(
+        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
+        build_artifact_contract_index(root),
+    )
+    provenance = build_artifact_provenance(root, context=context)
+    paths["dependency"] = _write_json(
+        root / CANONICAL_ARTIFACTS["dependency"],
+        build_validation_dependency_graph(root, provenance=provenance, provenance_context=context),
+    )
+    paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], provenance)
     _refresh_hydrated_manuscript(root)
     paths.update(write_sheaf_status_outputs(root))
+    paths["artifact_contract_index"] = _write_json(
+        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
+        build_artifact_contract_index(root),
+    )
     _write_semantic_artifacts(root, paths)
     _write_supplemental_phase(root, paths)
+    paths["artifact_contract_index"] = _write_json(
+        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
+        build_artifact_contract_index(root),
+    )
 
 
-def write_sheaf_track_artifacts(project_root: Path) -> dict[str, Path]:
+def write_sheaf_track_artifacts(project_root: Path, *, finalize: bool = True) -> dict[str, Path]:
     """Write the canonical promoted sheaf artifacts in deterministic phases."""
-    global _ACTIVE_PROVENANCE_CONTEXT
     root = project_root.resolve()
+    if finalize:
+        from roadmap_tracks.fixed_point import run_semantic_fixed_point
+
+        return cast(dict[str, Path], run_semantic_fixed_point(root, require_analysis_outputs=False))
+
+    global _ACTIVE_PROVENANCE_CONTEXT
     context = _ProvenanceContext(
         config_digest=_config_digest(root),
         deterministic_seed=_deterministic_seed(root),

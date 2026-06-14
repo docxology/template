@@ -35,15 +35,21 @@ private data, or nondeterministic research behavior.
   rendered image dimensions, RGB mode, hashes, source mappings, statistical
   figure-source bridges, explicit scholarship/sheaf crosswalk rows, and
   alt/caption metadata.
+- `visualization_contract.py` - typography-token minima, raw font-size literal
+  scanning, and auxiliary visual-output classification used by the visualization
+  quality audit.
 - `scholarship.py` - source matrix builder and validator that rederives saved
   bibliography rows from live references, manuscript citation sections, sheaf
   tracks, manifest sections, scope-boundary text, and evidence artifact paths.
+- `security.py` - source/config secret scanner and security posture validator
+  that separates enforced local release controls from scoped production-only
+  security obligations.
 - `sheaf_tracks.py` - canonical provenance, replay matrix, sensitivity,
   uncertainty, counterexample, model-checking, interop, adversarial-audit,
   evidence-field, release-bundle, theorem-traceability, gate-index, artifact
   diffoscope, proof-extraction, state-space, causal-ablation, artifact-license,
-  release-note, semantic, dependency, track-improvement, and blocked-scope
-  artifacts.
+  release-note, security-posture, artifact-contract, semantic, dependency,
+  track-improvement, and blocked-scope artifacts.
 - `supplemental.py` - promoted supplemental proof-dependency, state-transition,
   ablation-sensitivity, and release-attestation artifacts plus their validators.
 

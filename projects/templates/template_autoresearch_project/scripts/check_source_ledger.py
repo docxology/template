@@ -13,7 +13,12 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
     if path_text not in sys.path:
         sys.path.insert(0, path_text)
 
-from src.source_ledger import load_source_ledger, source_tier_counts  # noqa: E402
+from src.source_ledger import (  # noqa: E402
+    load_source_ledger,
+    source_age_summary,
+    source_tier_counts,
+    validate_source_ledger_contract,
+)
 
 
 def main() -> int:
@@ -22,7 +27,12 @@ def main() -> int:
     print(f"source ledger entries: {len(entries)}")
     for tier, count in sorted(source_tier_counts(entries).items()):
         print(f"{tier}: {count}")
-    return 0
+    for bucket, count in sorted(source_age_summary(entries).items()):
+        print(f"checked_age_{bucket}: {count}")
+    issues = validate_source_ledger_contract(PROJECT_ROOT)
+    for issue in issues:
+        print(f"source ledger issue: {issue}", file=sys.stderr)
+    return 1 if issues else 0
 
 
 if __name__ == "__main__":

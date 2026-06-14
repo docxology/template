@@ -13,6 +13,7 @@ from infrastructure.project.drift.checks_docs_counts import (  # noqa: F401
 from infrastructure.project.drift.checks_exemplar import (  # noqa: F401
     check_all_export_drift,
     check_coverage_floor_consistency,
+    check_forkability_contract,
     check_function_name_drift,
     check_mocks_absent_from_tests,
     check_no_blanket_except_in_src,
@@ -29,6 +30,7 @@ __all__ = [
     "check_all_export_drift",
     "check_coverage_floor_consistency",
     "check_docs_hardcoded_counts",
+    "check_forkability_contract",
     "check_function_name_drift",
     "check_mocks_absent_from_tests",
     "check_no_blanket_except_in_src",

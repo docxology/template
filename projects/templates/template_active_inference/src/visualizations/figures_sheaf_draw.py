@@ -25,7 +25,7 @@ def _draw_imrad_group_labels(
     payload: HeatmapPayload,
     *,
     style,
-    label_fontsize: int,
+    label_fontsize: float,
 ) -> None:
     """Annotate IMRAD block names on the left margin of the heatmap."""
     if not payload.sections or not payload.cfg.heatmap.group_separator:
@@ -66,11 +66,12 @@ def draw_coverage_heatmap(
     show_legend: bool = False,
     show_row_pct: bool = False,
     boundary_width: float = 1.0,
-    label_fontsize: int = 8,
+    label_fontsize: float | None = None,
 ) -> None:
     from matplotlib.colors import ListedColormap
 
     style = load_figure_style(project_root)
+    label_size = label_fontsize if label_fontsize is not None else style.text_size("matrix_label")
     cfg = payload.cfg
     data = np.asarray(payload.grid, dtype=float)
     n_rows, n_cols = data.shape
@@ -94,13 +95,13 @@ def draw_coverage_heatmap(
         ax.axhline(boundary + 0.5, color=style.color("muted"), linewidth=boundary_width, zorder=3)
     ax.set_xticks(np.arange(len(payload.track_ids)) + 0.5)
     ax.set_xticklabels(
-        [_wrap_label(track_id, 18) for track_id in payload.track_ids], rotation=45, ha="right", fontsize=label_fontsize
+        [_wrap_label(track_id, 18) for track_id in payload.track_ids], rotation=45, ha="right", fontsize=label_size
     )
     ax.set_yticks(np.arange(len(payload.y_labels)) + 0.5)
-    ax.set_yticklabels([_wrap_label(label, 44) for label in payload.y_labels], fontsize=label_fontsize)
-    ax.set_xlabel("Fragment tracks", fontsize=label_fontsize)
-    _draw_imrad_group_labels(ax, payload, style=style, label_fontsize=label_fontsize)
-    ax.set_title(title or cfg.report.title, fontsize=label_fontsize + 1, pad=8)
+    ax.set_yticklabels([_wrap_label(label, 44) for label in payload.y_labels], fontsize=label_size)
+    ax.set_xlabel("Fragment tracks", fontsize=style.text_size("axis_label"))
+    _draw_imrad_group_labels(ax, payload, style=style, label_fontsize=label_size)
+    ax.set_title(title or cfg.report.title, fontsize=style.text_size("subtitle"), pad=8)
     if show_row_pct and cfg.heatmap.show_row_coverage_pct:
         n_cols = len(payload.track_ids)
         for row_idx, section in enumerate(payload.sections):
@@ -115,7 +116,7 @@ def draw_coverage_heatmap(
                     f"{pct:.0f}%",
                     va="center",
                     ha="right",
-                    fontsize=7,
+                    fontsize=style.text_size("matrix_label_dense"),
                     color=style.color("muted"),
                 )
     if show_legend:
@@ -130,7 +131,7 @@ def draw_coverage_heatmap(
             loc="upper center",
             bbox_to_anchor=(0.5, -0.18),
             ncol=1,
-            fontsize=7,
+            fontsize=style.text_size("source_note"),
             frameon=False,
         )
 
@@ -165,7 +166,7 @@ def draw_track_layers_panel(ax, project_root: Path) -> bool:
             _wrap_label(f"{spec.order:02d}  {spec.id}  —  {spec.label}{optional}", 50),
             va="center",
             ha="left",
-            fontsize=7,
+            fontsize=style.text_size("matrix_label"),
             linespacing=1.05,
             color=style.color("primary"),
             fontweight="bold",
@@ -176,22 +177,22 @@ def draw_track_layers_panel(ax, project_root: Path) -> bool:
             spec.renderer,
             va="center",
             ha="right",
-            fontsize=6,
+            fontsize=style.text_size("matrix_label_dense"),
             color=style.color("muted"),
             family="monospace",
         )
     ax.set_yticks(y_pos)
-    ax.set_yticklabels([spec.id for spec in specs], fontsize=8)
+    ax.set_yticklabels([spec.id for spec in specs], fontsize=style.text_size("matrix_label"))
     ax.set_xlim(0.0, 1.0)
     ax.set_xticks([])
     ax.invert_yaxis()
-    ax.set_title("Fragment track registry (compose order)", fontsize=9, pad=8)
+    ax.set_title("Fragment track registry (compose order)", fontsize=style.text_size("subtitle"), pad=8)
     ax.text(
         0.02,
         -0.55,
         "Blue = required track · Gray = optional · Paper role/use columns appear in the generated registry table",
         transform=ax.transAxes,
-        fontsize=7,
+        fontsize=style.text_size("source_note"),
         color=style.color("muted"),
     )
     return True

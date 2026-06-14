@@ -1,0 +1,50 @@
+domain: template_meta_research
+display_name: Template Meta-Research Exemplar
+required_packages:
+  - matplotlib
+  - pyyaml
+  - pytest
+preferred_outputs:
+  - pdf
+  - html
+validation_gates:
+  - repository_introspection
+  - metric_injection
+  - render_validation
+  - publication_readiness
+figure_types:
+  - architecture_overview
+  - pipeline_stages
+  - module_inventory
+  - comparative_matrix
+citation_policy: official_or_scholarly
+source_policy: >-
+  Use the current template-like checkout, generated metrics JSON, and
+  introspection figures as evidence. Do not claim portability to arbitrary
+  repositories unless the fork can inspect the same pipeline and project layout.
+review_gates:
+  - repository_introspection
+  - metric_injection
+  - documentation_truth
+  - publication_readiness
+artifact_expectations:
+  - output/data/metrics.json
+  - output/figures/architecture_overview.png
+  - output/figures/pipeline_stages.png
+  - output/figures/module_inventory.png
+  - output/figures/comparative_matrix.png
+benchmark_rubric:
+  name: template-meta-readiness
+  dimensions:
+    - name: introspection_completeness
+      weight: 2.0
+    - name: metric_token_grounding
+      weight: 2.0
+    - name: repository_contract_truthfulness
+      weight: 1.5
+    - name: render_success
+      weight: 1.0
+llm_prompt_guidance: >-
+  Keep self-referential claims tied to the inspected checkout. Distinguish
+  template-repository facts from facts about a copied project outside the
+  template monorepo.

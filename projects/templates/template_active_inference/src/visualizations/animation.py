@@ -75,7 +75,8 @@ def _perceptual_hash(frame: Any) -> str:
     from PIL import Image
 
     grayscale = frame.convert("L").resize((8, 8), Image.Resampling.LANCZOS)
-    pixels = list(grayscale.getdata())
+    flatten = getattr(grayscale, "get_flattened_data", None)
+    pixels = list(flatten() if callable(flatten) else grayscale.getdata())
     mean = sum(pixels) / len(pixels)
     bits = "".join("1" if value >= mean else "0" for value in pixels)
     return f"{int(bits, 2):016x}"

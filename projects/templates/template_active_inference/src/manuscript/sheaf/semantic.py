@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from gnn.parser import parse_gnn_file
 from manuscript.variables import generate_variables
@@ -64,7 +64,7 @@ ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/data/si_graph_world_topology_traces.json": "generate_toy_sweep_tracks.py",
     "output/reports/graph_world_invariants.json": "generate_toy_sweep_tracks.py",
     "output/reports/model_checking_witnesses.json": "generate_sheaf_tracks.py",
-    "output/data/interop_roundtrip_report.json": "generate_sheaf_tracks.py",
+    "output/data/interop_roundtrip_report.json": "generate_formal_interop_tracks.py",
     "output/data/gnn_roundtrip_report.json": "generate_formal_interop_tracks.py",
     "output/reports/gnn_lint_report.json": "generate_formal_interop_tracks.py",
     "output/data/ontology_alias_index.json": "generate_formal_interop_tracks.py",
@@ -87,6 +87,7 @@ ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/reports/manuscript_staleness_report.json": "z_generate_manuscript_variables.py",
     "output/reports/replay_matrix.json": "generate_sheaf_tracks.py",
     "output/data/track_lane_matrix.json": "generate_sheaf_tracks.py",
+    "output/data/artifact_contract_index.json": "generate_sheaf_tracks.py",
     "output/data/track_improvement_scope.json": "generate_sheaf_tracks.py",
     "output/reports/blocked_scope_manifest.json": "generate_sheaf_tracks.py",
     "output/data/evidence_field_index.json": "generate_sheaf_tracks.py",
@@ -100,6 +101,9 @@ ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/reports/release_notes_evidence.json": "generate_integration_audit.py",
     "output/data/scholarship_source_matrix.json": "generate_sheaf_tracks.py",
     "output/figures/scholarship_source_map.png": "generate_figures.py",
+    "output/reports/security_posture_audit.json": "generate_sheaf_tracks.py",
+    "output/figures/security_posture_map.png": "generate_figures.py",
+    "output/figures/artifact_contract_map.png": "generate_figures.py",
     "output/data/proof_dependency_graph.json": "generate_sheaf_tracks.py",
     "output/data/state_transition_table.json": "generate_sheaf_tracks.py",
     "output/reports/ablation_sensitivity_report.json": "generate_sheaf_tracks.py",
@@ -160,6 +164,7 @@ ARTIFACT_CONSUMERS: dict[str, tuple[str, ...]] = {
     "output/reports/manuscript_staleness_report.json": ("methods_sheaf", "appendix_full_sheaf"),
     "output/data/track_improvement_scope.json": ("methods_sheaf", "appendix_full_sheaf"),
     "output/data/track_lane_matrix.json": ("methods_sheaf", "appendix_full_sheaf"),
+    "output/data/artifact_contract_index.json": ("methods_sheaf", "appendix_full_sheaf"),
     "output/reports/blocked_scope_manifest.json": ("methods_sheaf", "discussion_outlook", "appendix_full_sheaf"),
     "output/data/evidence_field_index.json": ("methods_sheaf", "appendix_full_sheaf"),
     "output/reports/release_bundle_manifest.json": ("methods_sheaf", "appendix_full_sheaf"),
@@ -172,6 +177,9 @@ ARTIFACT_CONSUMERS: dict[str, tuple[str, ...]] = {
     "output/reports/release_notes_evidence.json": ("discussion_outlook", "appendix_full_sheaf"),
     "output/data/scholarship_source_matrix.json": ("methods_sheaf", "appendix_full_sheaf"),
     "output/figures/scholarship_source_map.png": ("methods_sheaf", "appendix_full_sheaf"),
+    "output/reports/security_posture_audit.json": ("methods_sheaf", "appendix_full_sheaf"),
+    "output/figures/security_posture_map.png": ("methods_sheaf", "appendix_full_sheaf"),
+    "output/figures/artifact_contract_map.png": ("methods_sheaf", "appendix_full_sheaf"),
     "output/data/proof_dependency_graph.json": ("methods_lean", "appendix_full_sheaf"),
     "output/data/state_transition_table.json": ("results_invariants", "appendix_full_sheaf"),
     "output/reports/ablation_sensitivity_report.json": ("results_invariants", "appendix_full_sheaf"),
@@ -249,6 +257,7 @@ ARTIFACT_GATES: dict[str, tuple[str, ...]] = {
     "output/reports/manuscript_staleness_report.json": ("validate_outputs", "validate_manuscript"),
     "output/data/animation_frame_deltas.json": ("validate_outputs", "validate_manuscript"),
     "output/data/track_lane_matrix.json": ("validate_outputs", "validate_manuscript"),
+    "output/data/artifact_contract_index.json": ("validate_outputs", "validate_manuscript"),
     "output/figures/sheaf_layers_overview.png": ("validate_outputs", "figure_registry"),
     "output/figures/sheaf_coverage_heatmap.png": ("validate_outputs", "figure_registry"),
     "output/figures/figure_registry.json": ("validate_outputs",),
@@ -268,6 +277,9 @@ ARTIFACT_GATES: dict[str, tuple[str, ...]] = {
     "output/reports/release_notes_evidence.json": ("validate_outputs", "validate_manuscript"),
     "output/data/scholarship_source_matrix.json": ("validate_outputs", "validate_manuscript"),
     "output/figures/scholarship_source_map.png": ("validate_outputs", "figure_registry"),
+    "output/reports/security_posture_audit.json": ("validate_outputs", "validate_manuscript"),
+    "output/figures/security_posture_map.png": ("validate_outputs", "figure_registry"),
+    "output/figures/artifact_contract_map.png": ("validate_outputs", "figure_registry"),
     "output/data/proof_dependency_graph.json": ("validate_outputs", "validate_manuscript"),
     "output/data/state_transition_table.json": ("validate_outputs", "validate_manuscript"),
     "output/reports/ablation_sensitivity_report.json": ("validate_outputs", "validate_manuscript"),
@@ -282,7 +294,10 @@ def _rel(root: Path, path: Path) -> str:
 def _load_json(path: Path) -> dict[str, Any]:
     if not path.is_file():
         return {}
-    data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"malformed JSON artifact: {path}") from exc
     return data
 
 
@@ -372,6 +387,8 @@ def _runtime_diagnostics_restrictions(root: Path) -> dict[str, Any]:
 
 
 def _restriction_class(restriction: str) -> str:
+    if "security" in restriction or "secret" in restriction:
+        return "artifact_contract"
     if restriction.startswith(("blocked_", "scope_")) or "empirical" in restriction:
         return "scope_boundary"
     if any(token in restriction for token in ("proof", "theorem", "lean", "model_checking", "interop")):
@@ -384,6 +401,8 @@ def _restriction_class(restriction: str) -> str:
 
 
 def _restriction_lane(restriction: str) -> str:
+    if "security" in restriction or "secret" in restriction:
+        return "release"
     if any(token in restriction for token in ("pymdp", "policy", "posterior", "graph_world", "efe")):
         return "pymdp"
     if any(token in restriction for token in ("proof", "theorem", "lean", "model_checking", "interop")):
@@ -425,6 +444,8 @@ def _restriction_value_ok(restriction: str, value: Any) -> bool:
         "adversarial_known_bad_passed",
         "coverage_missing",
         "pymdp_runtime_unexpected_warning_count",
+        "security_posture_high_risk_gap_count",
+        "security_posture_secret_finding_count",
     }:
         return int(value or 0) == 0
     if restriction.endswith("_count") or restriction in {"claim_count", "section_count", "track_count"}:
@@ -757,6 +778,7 @@ SEMANTIC_ARTIFACT_SOURCE_PATHS: dict[str, str] = {
     "state_transition_table": "output/data/state_transition_table.json",
     "ablation_sensitivity_report": "output/reports/ablation_sensitivity_report.json",
     "release_attestation": "output/reports/release_attestation.json",
+    "security_posture": "output/reports/security_posture_audit.json",
 }
 
 SEMANTIC_PAYLOAD_PATHS: dict[str, str] = {
@@ -781,6 +803,7 @@ SEMANTIC_PAYLOAD_PATHS: dict[str, str] = {
     "section_status": "output/data/sheaf_section_status_matrix.json",
     "render_log": "output/reports/sheaf_render_log.json",
     "track_lane": "output/data/track_lane_matrix.json",
+    "artifact_contract": "output/data/artifact_contract_index.json",
     "track_scope": "output/data/track_improvement_scope.json",
     "blocked_scope": "output/reports/blocked_scope_manifest.json",
     "replay_matrix": "output/reports/replay_matrix.json",
@@ -788,6 +811,7 @@ SEMANTIC_PAYLOAD_PATHS: dict[str, str] = {
     "transition_table": "output/data/state_transition_table.json",
     "ablation_sensitivity": "output/reports/ablation_sensitivity_report.json",
     "release_attestation": "output/reports/release_attestation.json",
+    "security_posture": "output/reports/security_posture_audit.json",
 }
 
 
@@ -873,6 +897,7 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
     transition_table = payloads["transition_table"]
     ablation_sensitivity = payloads["ablation_sensitivity"]
     release_attestation = payloads["release_attestation"]
+    security_posture = payloads["security_posture"]
     canonical_restrictions = _canonical_restriction_snapshot(root)
     from validation_spine import validate_validation_spine
 
@@ -965,6 +990,11 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
         "ablation_sensitivity_row_count": int(ablation_sensitivity.get("row_count", 0) or 0),
         "release_attestation_complete": release_attestation.get("all_attested") is True,
         "release_attestation_row_count": int(release_attestation.get("row_count", 0) or 0),
+        "security_posture_controls_ok": security_posture.get("all_controls_ok") is True,
+        "security_posture_control_count": int(security_posture.get("control_count", 0) or 0),
+        "security_posture_high_risk_gap_count": int(security_posture.get("high_risk_gap_count", 0) or 0),
+        "security_posture_secret_finding_count": int(security_posture.get("secret_finding_count", 0) or 0),
+        "security_posture_secret_patterns_absent": security_posture.get("all_secret_patterns_absent") is True,
         "no_versioned_live_tracks": not any(tid.endswith(("_v2", "_v3", "_v4", "_v5")) for tid in ctx.registry.tracks),
         **canonical_restrictions,
     }
@@ -1034,15 +1064,54 @@ def _refresh_hydrated_manuscript(root: Path) -> None:
     write_manuscript_staleness_report(root)
 
 
-def write_semantic_gluing_outputs(project_root: Path) -> dict[str, Path]:
+def _refresh_artifact_contract_outputs(root: Path) -> None:
+    """Refresh contract artifacts that hash semantic outputs after final writes."""
+    from roadmap_tracks.integration_audit import write_integration_audit_artifacts
+    from roadmap_tracks.sheaf_tracks import CANONICAL_ARTIFACTS, build_artifact_contract_index, build_replay_matrix
+
+    write_integration_audit_artifacts(root)
+    replay_path = root / CANONICAL_ARTIFACTS["replay_matrix"]
+    replay_path.parent.mkdir(parents=True, exist_ok=True)
+    replay_path.write_text(
+        json.dumps(build_replay_matrix(root), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    contract_path = root / CANONICAL_ARTIFACTS["artifact_contract_index"]
+    contract_path.parent.mkdir(parents=True, exist_ok=True)
+    contract_path.write_text(
+        json.dumps(build_artifact_contract_index(root), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _refresh_animation_outputs(root: Path) -> None:
+    """Refresh deterministic animation artifacts before semantic validation."""
+    from visualizations.animation import write_animation_frame_deltas, write_belief_trajectory_gif
+
+    try:
+        write_belief_trajectory_gif(root)
+        write_animation_frame_deltas(root)
+    except FileNotFoundError:
+        return
+
+
+def write_semantic_gluing_outputs(project_root: Path, *, settle: bool = True) -> dict[str, Path]:
     """Write semantic certificate, evidence crosswalk, and dependency graph outputs."""
     root = project_root.resolve()
+    if settle:
+        from roadmap_tracks.fixed_point import run_semantic_fixed_point
+
+        paths = cast(dict[str, Path], run_semantic_fixed_point(root, require_analysis_outputs=False))
+        if "dependency_graph" not in paths and "dependency" in paths:
+            paths["dependency_graph"] = paths["dependency"]
+        return paths
     data_dir = root / "output" / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
     crosswalk_path = data_dir / "sheaf_evidence_crosswalk.json"
     dependency_path = data_dir / "validation_dependency_graph.json"
     certificate_path = data_dir / "sheaf_gluing_certificate.json"
 
+    _refresh_animation_outputs(root)
     _refresh_hydrated_manuscript(root)
     from manuscript.sheaf.status import write_sheaf_status_outputs
 
@@ -1059,8 +1128,20 @@ def write_semantic_gluing_outputs(project_root: Path) -> dict[str, Path]:
         json.dumps(build_semantic_gluing_certificate(root), indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+    _refresh_animation_outputs(root)
     _refresh_hydrated_manuscript(root)
     status_paths = write_sheaf_status_outputs(root)
+    certificate_path.write_text(
+        json.dumps(build_semantic_gluing_certificate(root), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    _refresh_animation_outputs(root)
+    _refresh_artifact_contract_outputs(root)
+    certificate_path.write_text(
+        json.dumps(build_semantic_gluing_certificate(root), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    _refresh_artifact_contract_outputs(root)
     certificate_path.write_text(
         json.dumps(build_semantic_gluing_certificate(root), indent=2, sort_keys=True) + "\n",
         encoding="utf-8",

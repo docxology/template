@@ -19,8 +19,9 @@ Thin orchestrators that import from `../src/` and handle I/O only.
   dependency graph, evidence-field index, release-bundle manifest, theorem
   traceability matrix, gate index, artifact diffoscope, proof extraction index,
   state-space catalog, causal-ablation matrix, artifact license audit,
-  release-note evidence, track-improvement scope, blocked-scope manifest, and
-  consolidated promoted track artifacts.
+  release-note evidence, security-posture audit, artifact-contract index,
+  track-improvement scope, blocked-scope manifest, and consolidated promoted
+  track artifacts.
 - `generate_method_inventory.py` — regenerate `docs/reference/method-inventory.md`
   from the live `src/` and `scripts/` AST so every `def` and `class` has a
   documented reference entry.

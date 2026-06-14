@@ -16,6 +16,10 @@ def test_load_figure_style_defaults() -> None:
     style = load_figure_style(root)
     assert style.dpi == 160
     assert style.color("primary") == "#111827"
+    assert style.text_size("title") >= 12.0
+    assert style.text_size("axis_label") >= 10.0
+    assert style.text_size("matrix_label_dense") >= 6.0
+    assert style.layout_value("matrix_grid_width", 0.0) > 0.0
 
 
 def test_apply_style_restores_active() -> None:
@@ -88,7 +92,7 @@ def test_figure_registry_and_markdown() -> None:
 def test_figure_registry_declares_intent_metadata() -> None:
     root = Path(__file__).resolve().parents[1]
     registry = load_figure_registry(root)
-    assert len(registry) == 21
+    assert len(registry) == 23
     for figure_id, spec in registry.items():
         assert spec.visual_role in ALLOWED_VISUAL_ROLES, figure_id
         assert spec.evidence_role in ALLOWED_EVIDENCE_ROLES, figure_id

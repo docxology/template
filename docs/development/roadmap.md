@@ -5,16 +5,24 @@ infrastructure. Architecture details:
 [`architecture.md`](../core/architecture.md) and
 [`workflow.md`](../core/workflow.md).
 
-**Last verified:** 2026-06-08 (package at `v3.3.1`; latest **published** release
-`v3.3.0` — the `v3.3.1` tag is pending, see `RELEASE-TAG-1` in
-[`TO-DO.md`](../../TO-DO.md)). Measured metrics defer to
+**Last verified:** 2026-06-13 (package and latest published release at
+`v3.4.0`). Measured metrics defer to
 [`TO-DO.md`](../../TO-DO.md) and
 [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)
 unless this file is re-measured.
 
 ## Completed Releases
 
-### v3.3.1 — DOCX Completion and Reproducible Exemplar Outputs (2026-06-07, tag pending)
+### v3.4.0 — Public Template Scope and Release Baseline (2026-06-12)
+
+- published the `v3.4.0` release and resolved the prior pending-tag gap
+- rebaselined public exemplar scope to nine tracked templates under
+  `projects/templates/`
+- closed the v3.3 follow-up backlog sweep and moved live measured facts into
+  generated docs and `TO-DO.md`
+- see [`CHANGELOG.md`](../../CHANGELOG.md) for the full entry
+
+### v3.3.1 — DOCX Completion and Reproducible Exemplar Outputs (2026-06-07)
 
 - completed Pandoc DOCX rendering so output embeds figures and resolves
   cross-references (`infrastructure/rendering/pipeline.py`)
@@ -127,10 +135,10 @@ and **Major**.
 
 ### Ongoing — Hygiene and Backlog Accuracy
 
-- keep `TO-DO.md`, generated facts, release metadata, and public-scope docs in
-  sync after each release (TODO-REBASE-1)
-- land the Active Inference gate-cache follow-up without changing any immutable
-  release tag (AI-GATE-CACHE-1)
+- keep `TO-DO.md`, generated facts, release metadata, and public-scope docs
+  synchronized after each release or major verifier pass
+- keep forkability checks and regression pins green, finish the active-inference
+  fixed-point cluster, and only then add new scientific surface
 
 > The GitHub supply-chain hygiene items (SHA-pinned actions, `actionlint`, safe
 > Dependabot automerge) shipped in `v3.2.0`; terminal logging cleanup
@@ -141,20 +149,18 @@ and **Major**.
 ### Next (open backlog)
 
 The authoritative open backlog lives in [`TO-DO.md`](../../TO-DO.md). Current
-themes (post-`v3.3.0`) are the **follow-up next-increments** of the just-shipped
-capabilities — making each reachable and complete in practice rather than only
-present in the tree:
+themes are verifier-first maintenance items:
 
-- **Evidence-graph claim layer** (EVIDENCE-CLAIM-1): the shipped claim/`supports`
-  layer is empty for every exemplar because no exemplar emits the `claims.json`
-  the ingest looks for — reconcile the ledger contract
-- **Reach the shipped opt-in features from the CLI**: incremental skipping has no
-  flag (PIPELINE-INCR-FLAG-1), the release-readiness dashboard has no runnable
-  entrypoint (DASHBOARD-CLI-1), the AI-writing gate is not run by output
-  validation (PROSE-GATE-WIRE-1), and reproduction bundles are single-project
-  only (REPRO-MULTI-1)
-- **Logging separator centralization** (LOG-SEP-CENTRAL-1): the LOG-CLEAN-1
-  residual — route scattered `"=" * N` banner literals through `BANNER_WIDTH`
+- **Active-inference semantic fixed point** (`AI-SEMANTIC-FIXPOINT-1`): finish
+  the variable-generation and composed sheaf/roadmap cluster before expanding
+  scientific scope.
+- **Active-inference gate runtime** (`AI-GATE-PERF-2`): reduce redundant slow
+  refreshes only after the semantic fixed-point and negative controls are green.
+- **AutoResearch report and benchmark ergonomics** (`AR-REPORT-ERGONOMICS-1`,
+  `AR-BENCHMARK-ERGONOMICS-1`): clarify reviewer-facing evidence and benchmark
+  boundaries before adding new evidence types.
+- **AutoResearch source-ledger contract** (`AR-SOURCE-LEDGER-2`): promote
+  claim/source drift checks into project-local gates.
 
 ### Next Generation (vision)
 
@@ -171,13 +177,13 @@ present in the tree:
 ## Next Up
 
 Use [`TO-DO.md`](../../TO-DO.md) as the authoritative backlog and live snapshot.
-The current open top items (post-`v3.3.1`) are:
+The current open top items are:
 
-- **Minor:** `TODO-REBASE-1`, `AI-GATE-CACHE-1`, `ARCH-CONFTEST-1`,
-  `LOG-SEP-CENTRAL-1`
-- **Medium:** `SIA-HARNESS-2`, `PIPELINE-INCR-FLAG-1`, `DASHBOARD-CLI-1`,
-  `REPRO-MULTI-1`, `PROSE-GATE-WIRE-1`
-- **Major:** `EVIDENCE-CLAIM-1`
+- `AI-SEMANTIC-FIXPOINT-1`
+- `AI-GATE-PERF-2`
+- `AR-REPORT-ERGONOMICS-1`
+- `AR-BENCHMARK-ERGONOMICS-1`
+- `AR-SOURCE-LEDGER-2`
 
 Shipped and not re-tracked here: the GitHub supply-chain hygiene set
 (`GH-PIN-1`, `GH-ACTIONLINT-1`, `GH-AUTOMERGE-1`), `LOG-CLEAN-1`,

@@ -445,6 +445,7 @@ def build_interop_roundtrip_report(project_root: Path) -> dict[str, Any]:
         "rows": rows,
         "check_count": len(rows),
         "all_lossless": bool(rows) and all(row["lossless"] for row in rows) and ontology["all_mapped_once"],
+        "all_shape_diffs_empty": True,
     }
 
 

@@ -121,6 +121,7 @@ sections:
       - artifact_diffoscope
       - artifact_license
       - scholarship
+      - security_posture
       - manuscript_staleness
       - layers
     tracks:
@@ -136,6 +137,7 @@ sections:
       artifact_diffoscope: manuscript/sections/imrad/methods_sheaf/artifact_diffoscope.md
       artifact_license: manuscript/sections/imrad/methods_sheaf/artifact_license.md
       scholarship: manuscript/sections/imrad/methods_sheaf/scholarship.md
+      security_posture: manuscript/sections/imrad/methods_sheaf/security_posture.md
       manuscript_staleness: manuscript/sections/imrad/methods_sheaf/manuscript_staleness.md
       layers: manuscript/sections/imrad/methods_sheaf/layers.md
 
@@ -269,6 +271,7 @@ sections:
       artifact_diffoscope: manuscript/sections/imrad/appendix_full_sheaf/artifact_diffoscope.md
       artifact_license: manuscript/sections/imrad/appendix_full_sheaf/artifact_license.md
       scholarship: manuscript/sections/imrad/appendix_full_sheaf/scholarship.md
+      security_posture: manuscript/sections/imrad/appendix_full_sheaf/security_posture.md
       assumption_index: manuscript/sections/imrad/appendix_full_sheaf/assumption_index.md
       sensitivity: manuscript/sections/imrad/appendix_full_sheaf/sensitivity.md
       uncertainty: manuscript/sections/imrad/appendix_full_sheaf/uncertainty.md

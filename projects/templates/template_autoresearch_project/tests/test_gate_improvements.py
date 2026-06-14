@@ -80,6 +80,27 @@ def test_schema_manifest_flags_tag_only_payload(tmp_path: Path) -> None:
     assert any(row["path"] == "output/data/fq.json" for row in manifest["nonconforming_schema_artifacts"])
 
 
+@pytest.mark.parametrize(
+    "rel_path",
+    [
+        "output/data/autoresearch_evidence_overview.json",
+        "output/data/benchmark_boundary.json",
+    ],
+)
+def test_governance_contract_artifacts_cannot_fall_back_to_generic_exemptions(
+    tmp_path: Path,
+    rel_path: str,
+) -> None:
+    artifact = tmp_path / rel_path
+    artifact.parent.mkdir(parents=True)
+    artifact.write_text("{}", encoding="utf-8")
+
+    manifest = schema_manifest_payload(tmp_path, [artifact], generated_at="t")
+
+    assert any(row["path"] == rel_path for row in manifest["missing_schema_artifacts"])
+    assert not any(row["path"] == rel_path for row in manifest["generic_table_exemptions"])
+
+
 def test_write_schema_manifest_hard_gate_raises_on_nonconforming(tmp_path: Path) -> None:
     # V-C is a HARD production gate: a nonconforming governance payload aborts the
     # loop loudly rather than being written as a green manifest.

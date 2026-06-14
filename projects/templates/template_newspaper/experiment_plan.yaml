@@ -6,7 +6,7 @@ conditions:
     role: variant
     description: "The same content rendered at broadsheet trim to test geometry independence."
   - name: missing_assets
-    role: ablation
+    role: variant
     description: "Render with figures absent to confirm graceful placeholder fallback."
 metrics:
   primary:

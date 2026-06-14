@@ -11,12 +11,15 @@ from src.config import AutoResearchLoopConfig, HumanReviewState
 from src.ml.task import run_bounded_ml_task
 from src.models import AutoResearchLoopResult, LoopStageResult
 from src.reports import (
+    build_evidence_overview,
     build_review_packet,
+    render_evidence_overview_markdown,
     render_loop_markdown,
     render_ml_experiment_report,
     render_review_packet_markdown,
     render_stage_matrix_csv,
 )
+from src.writers.benchmark import build_benchmark_boundary
 from src.writers import write_json, write_text
 
 
@@ -172,3 +175,89 @@ def test_render_ml_experiment_report_includes_candidate_ledger(project_root: Pat
     assert result.accepted_candidate_id in markdown
     assert "tiny_patch_transformer" in markdown
     assert "LLM calls used: 0" in markdown
+
+
+def test_benchmark_boundary_declares_scope_and_non_claims(project_root: Path) -> None:
+    config = AutoResearchLoopConfig(
+        topic="Demo",
+        review_policy="human_review_required",
+        research_questions=(),
+        loop_stages=("experiment",),
+        required_artifacts=(),
+        quality_checks=(),
+        budget_policy=BudgetPolicy(max_iterations=2),
+    )
+
+    boundary = build_benchmark_boundary(project_root, config)
+
+    assert boundary["schema"] == "template-autoresearch-benchmark-boundary-v1"
+    assert boundary["fixture_scope"]["offline_only"] is True
+    assert boundary["metric"]["direction"] == "maximize"
+    assert boundary["statistical_methods"]
+    assert "not publication approval" in boundary["non_claims"]
+    assert "deterministic bundled fixture" in boundary["claim_boundary"]
+
+
+def test_evidence_overview_flags_generated_self_approval(project_root: Path) -> None:
+    config = AutoResearchLoopConfig(
+        topic="Demo",
+        review_policy="human_review_required",
+        research_questions=(),
+        loop_stages=("readiness",),
+        required_artifacts=(),
+        quality_checks=(),
+        human_review=HumanReviewState(
+            publication_approved=True,
+            reviewer="Generated",
+            reviewed_at="2026-05-26",
+            source_exists=False,
+        ),
+    )
+    result = AutoResearchLoopResult(
+        project_name="demo",
+        generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        config=config,
+        stage_results=(),
+        claims=(),
+        readiness_valid=True,
+        output_paths=(),
+    )
+
+    overview = build_evidence_overview(project_root, result)
+    markdown = render_evidence_overview_markdown(project_root, result)
+
+    security = overview["security_integrity"]
+    benchmark = overview["benchmark_boundary"]
+    assert isinstance(security, dict)
+    assert isinstance(benchmark, dict)
+    assert security["generated_self_approval"] is True
+    assert "issues" in benchmark
+    assert "Generated self-approval: `true`" in markdown
+
+
+def test_evidence_overview_flags_missing_benchmark_boundary(tmp_path: Path) -> None:
+    config = AutoResearchLoopConfig(
+        topic="Demo",
+        review_policy="human_review_required",
+        research_questions=(),
+        loop_stages=("readiness",),
+        required_artifacts=(),
+        quality_checks=(),
+    )
+    result = AutoResearchLoopResult(
+        project_name="demo",
+        generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        config=config,
+        stage_results=(),
+        claims=(),
+        readiness_valid=True,
+        output_paths=(),
+    )
+
+    overview = build_evidence_overview(tmp_path, result)
+    markdown = render_evidence_overview_markdown(tmp_path, result)
+
+    benchmark = overview["benchmark_boundary"]
+    assert isinstance(benchmark, dict)
+    assert any("missing output/data/benchmark_boundary.json" in issue for issue in benchmark["issues"])
+    assert "Issues: `5`" in markdown

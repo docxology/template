@@ -1,6 +1,24 @@
-experiment:
-  name: mini_classify_fixture_replay
-  primary_metric: accuracy
-  baseline: 0.5
-  max_generations: 3
-  live_default: false
+conditions:
+  - name: fixture_baseline
+    role: reference
+    description: "Static fixture replay baseline for the mini-classify task."
+  - name: mini_classify_fixture_replay
+    role: proposed
+    description: "Default deterministic SIA loop replay that writes run summaries and manuscript variables."
+  - name: live_sia_plumbing
+    role: variant
+    description: "Opt-in live plumbing path; not part of default evidence unless live artifacts are present."
+metrics:
+  primary:
+    name: accuracy
+    direction: maximize
+protocol: >-
+  Run the deterministic fixture replay with the project scripts, verify the run
+  summary and manuscript variables exist, and keep live self-improvement claims
+  out of the manuscript unless separate live artifacts are generated.
+expected_tables:
+  - tbl:sia_fixture_replay
+baselines:
+  - fixture_baseline
+ablations:
+  - live_sia_plumbing

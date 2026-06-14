@@ -24,7 +24,7 @@ REFERENCE_USAGE_RE = re.compile(r"(?<!!)\[([^\]\n]+)\]\[([^\]\n]*)\]")
 HEADING_RE = re.compile(r"(?m)^(#{1,6})\s+(.+?)\s*$")
 EXPLICIT_ANCHOR_RE = re.compile(r"\{#([A-Za-z0-9_.:-]+)\}")
 CURRENT_EVIDENCE_RE = re.compile(
-    r"uv run pytest tests/ --cov=src --cov-fail-under=90` passed \d+ tests with\s+\d+(?:\.\d+)?% coverage",
+    r"uv run pytest tests/ --cov=src --cov-fail-under=90`\s+passed \d+ tests with\s+\d+(?:\.\d+)?% coverage",
     re.MULTILINE,
 )
 LEGACY_EVIDENCE_RE = re.compile(r"(153-test|92\.03%|348 tests|364 tests|90\.70%)")
@@ -101,6 +101,14 @@ def _iter_files(project_root: Path, *, extensions: set[str], skip_parts: set[str
     )
 
 
+def _read_text_if_present(path: Path) -> str | None:
+    """Read text while tolerating concurrent generated-output refreshes."""
+    try:
+        return path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return None
+
+
 def _line_number(text: str, offset: int) -> int:
     return text.count("\n", 0, offset) + 1
 
@@ -135,7 +143,9 @@ def _heading_anchor(heading: str) -> str:
 def _markdown_anchors(path: Path) -> set[str]:
     if path.suffix.lower() not in {".md", ".markdown"} or not path.is_file():
         return set()
-    text = path.read_text(encoding="utf-8")
+    text = _read_text_if_present(path)
+    if text is None:
+        return set()
     anchors = set(EXPLICIT_ANCHOR_RE.findall(text))
     for match in HEADING_RE.finditer(text):
         heading = match.group(2).strip()
@@ -167,7 +177,9 @@ def check_markdown_links(project_root: Path) -> list[DocumentationIssue]:
     root = Path(project_root).resolve()
     issues: list[DocumentationIssue] = []
     for path in _iter_files(root, extensions={".md"}, skip_parts=SKIP_PARTS):
-        text = path.read_text(encoding="utf-8")
+        text = _read_text_if_present(path)
+        if text is None:
+            continue
         definitions = _reference_definitions(text)
         for match in REFERENCE_USAGE_RE.finditer(text):
             label = match.group(2) or match.group(1)
@@ -227,7 +239,9 @@ def check_hydrated_output_links(project_root: Path) -> list[DocumentationIssue]:
     if not resolved_dir.is_dir():
         return issues
     for path in sorted(resolved_dir.glob("*.md")):
-        text = path.read_text(encoding="utf-8")
+        text = _read_text_if_present(path)
+        if text is None:
+            continue
         for pattern in ("](../output/", "](<../output/"):
             index = text.find(pattern)
             if index >= 0:
@@ -267,7 +281,9 @@ def check_project_local_commands(project_root: Path) -> list[DocumentationIssue]
     root = Path(project_root).resolve()
     issues: list[DocumentationIssue] = []
     for path in _iter_files(root, extensions=DOC_EXTENSIONS, skip_parts={*SKIP_PARTS, "output"}):
-        text = path.read_text(encoding="utf-8")
+        text = _read_text_if_present(path)
+        if text is None:
+            continue
         for code, pattern in FORBIDDEN_COMMAND_PATTERNS:
             for match in pattern.finditer(text):
                 issues.append(
@@ -290,12 +306,37 @@ def check_historical_test_evidence(project_root: Path) -> list[DocumentationIssu
     root = Path(project_root).resolve()
     issues: list[DocumentationIssue] = []
     current_evidence: list[str] = []
+    stale_full_suite_evidence: list[str] = []
+    unlabeled_full_suite_evidence = False
     for path in _iter_files(root, extensions={".md"}, skip_parts={*SKIP_PARTS, "output"}):
-        text = path.read_text(encoding="utf-8")
+        text = _read_text_if_present(path)
+        if text is None:
+            continue
         rel = path.relative_to(root).as_posix()
-        current_evidence.extend(
-            f"{rel}:{_line_number(text, match.start())}" for match in CURRENT_EVIDENCE_RE.finditer(text)
-        )
+        for match in CURRENT_EVIDENCE_RE.finditer(text):
+            paragraph = next(
+                (
+                    paragraph
+                    for paragraph in _paragraphs(text)
+                    if match.group(0) in paragraph or match.group(0).replace("\n", " ") in paragraph.replace("\n", " ")
+                ),
+                "",
+            )
+            lower = paragraph.lower()
+            location = f"{rel}:{_line_number(text, match.start())}"
+            if "historical" in lower and "stale" in lower:
+                stale_full_suite_evidence.append(location)
+            elif "historical" in lower or "before later" in lower or "stale" in lower:
+                unlabeled_full_suite_evidence = True
+                issues.append(
+                    DocumentationIssue(
+                        code="historical-evidence-unlabeled",
+                        path=location,
+                        message="non-current full-suite evidence must be explicitly historical and stale",
+                    )
+                )
+            else:
+                current_evidence.append(location)
         for paragraph in _paragraphs(text):
             if not LEGACY_EVIDENCE_RE.search(paragraph):
                 continue
@@ -310,13 +351,21 @@ def check_historical_test_evidence(project_root: Path) -> list[DocumentationIssu
                         message="legacy test-count evidence must be explicitly historical and stale",
                     )
                 )
-    if len(current_evidence) != 1:
+    if (
+        not unlabeled_full_suite_evidence
+        and len(current_evidence) != 1
+        and not (len(current_evidence) == 0 and len(stale_full_suite_evidence) == 1)
+    ):
         issues.append(
             DocumentationIssue(
                 code="current-evidence-count",
                 path=".",
-                message=f"expected exactly one explicit current full-suite evidence line, found {len(current_evidence)}",
-                target=", ".join(current_evidence),
+                message=(
+                    "expected exactly one explicit current full-suite evidence line, or one explicitly "
+                    f"historical stale full-suite evidence line while recertification is open; found "
+                    f"{len(current_evidence)} current and {len(stale_full_suite_evidence)} stale"
+                ),
+                target=", ".join([*current_evidence, *stale_full_suite_evidence]),
             )
         )
     return issues
@@ -336,7 +385,7 @@ def check_reference_signposts(project_root: Path) -> list[DocumentationIssue]:
             )
         )
     else:
-        text = reference.read_text(encoding="utf-8")
+        text = _read_text_if_present(reference) or ""
         for phrase in REQUIRED_REFERENCE_PHRASES:
             if phrase not in text:
                 issues.append(
@@ -356,9 +405,11 @@ def check_reference_signposts(project_root: Path) -> list[DocumentationIssue]:
                 )
             )
             continue
-        text = path.read_text(encoding="utf-8")
+        signpost_text = _read_text_if_present(path)
+        if signpost_text is None:
+            continue
         for phrase in phrases:
-            if phrase not in text:
+            if phrase not in signpost_text:
                 issues.append(
                     DocumentationIssue(
                         code="signpost-missing",

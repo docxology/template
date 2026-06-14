@@ -240,6 +240,7 @@ def _put_artifact_path_variables(put: Any) -> None:
     path_tokens = {
         "ARTIFACT_MANIFEST_PATH": "output/reports/artifact_manifest.json",
         "AUTORESEARCH_CLAIMS_PATH": "output/data/autoresearch_claims.json",
+        "AUTORESEARCH_EVIDENCE_OVERVIEW_PATH": "output/data/autoresearch_evidence_overview.json",
         "AUTORESEARCH_LOOP_PATH": "output/data/autoresearch_loop.json",
         "AUTORESEARCH_SECURITY_PROFILE_PATH": "output/data/autoresearch_security_profile.json",
         "AUTORESEARCH_THREAT_MODEL_PATH": "output/data/autoresearch_threat_model.json",
@@ -251,6 +252,7 @@ def _put_artifact_path_variables(put: Any) -> None:
         "RESEARCH_OBJECT_MANIFEST_PATH": "output/data/research_object_manifest.json",
         "AUTORESEARCH_SECURITY_REVIEW_PATH": "output/reports/autoresearch_security_review.md",
         "BENCHMARK_SCORES_PATH": "output/data/benchmark_scores.json",
+        "BENCHMARK_BOUNDARY_PATH": "output/data/benchmark_boundary.json",
         "EVIDENCE_REGISTRY_PATH": "output/reports/evidence_registry.json",
         "FIGURE_BLOCKS_PATH": "output/data/manuscript_figure_blocks.json",
         "FIGURE_REGISTRY_PATH": "output/figures/figure_registry.json",

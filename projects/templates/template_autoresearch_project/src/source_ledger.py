@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
+import re
 from typing import Any
 
 import yaml
@@ -75,6 +76,56 @@ def source_tier_counts(entries: tuple[SourceLedgerEntry, ...]) -> dict[str, int]
     for entry in entries:
         counts[entry.source_tier] = counts.get(entry.source_tier, 0) + 1
     return {tier: count for tier, count in counts.items() if count}
+
+
+def source_age_summary(entries: tuple[SourceLedgerEntry, ...], *, today: date | None = None) -> dict[str, int]:
+    """Return coarse checked-age buckets for reviewer-facing reports."""
+    resolved_today = today or date.today()
+    buckets = {"0-180d": 0, "181-365d": 0, "366d+": 0}
+    for entry in entries:
+        age_days = max((resolved_today - entry.checked_as_of).days, 0)
+        if age_days <= 180:
+            buckets["0-180d"] += 1
+        elif age_days <= 365:
+            buckets["181-365d"] += 1
+        else:
+            buckets["366d+"] += 1
+    return {bucket: count for bucket, count in buckets.items() if count}
+
+
+def validate_source_ledger_contract(project_root: Path, *, today: date | None = None) -> list[str]:
+    """Validate the project-local source ledger against offline manuscript evidence."""
+    root = project_root.resolve()
+    ledger_path = root / "manuscript" / "source_ledger.yaml"
+    try:
+        entries = load_source_ledger(ledger_path, today=today)
+    except ValueError as exc:
+        return [str(exc)]
+    ledger_keys = {entry.citekey for entry in entries}
+    bib_keys = _bibtex_citekeys(root / "manuscript" / "references.bib")
+    manuscript_keys = _manuscript_citekeys(root / "manuscript")
+    issues: list[str] = []
+    missing_bib = sorted(ledger_keys - bib_keys)
+    if missing_bib:
+        issues.append(f"source ledger citekeys missing from references.bib: {', '.join(missing_bib)}")
+    uncited = sorted(ledger_keys - manuscript_keys)
+    if uncited:
+        issues.append(f"source ledger citekeys not cited in manuscript: {', '.join(uncited)}")
+    return issues
+
+
+def _bibtex_citekeys(path: Path) -> set[str]:
+    if not path.is_file():
+        return set()
+    return set(re.findall(r"@\w+\{([^,\s]+)", path.read_text(encoding="utf-8")))
+
+
+def _manuscript_citekeys(manuscript_dir: Path) -> set[str]:
+    keys: set[str] = set()
+    for path in manuscript_dir.glob("*.md"):
+        text = path.read_text(encoding="utf-8")
+        keys.update(match for match in re.findall(r"(?<![A-Za-z0-9_:-])@([A-Za-z0-9_:-]+)", text))
+    return {key for key in keys if not key.startswith("sec:")}
 
 
 def _entry_from_row(row: dict[str, Any], *, index: int, today: date) -> SourceLedgerEntry:

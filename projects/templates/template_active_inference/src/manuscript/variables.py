@@ -215,6 +215,7 @@ VARIABLE_ARTIFACTS: dict[str, str] = {
     "animation_delta": "output/data/animation_frame_deltas.json",
     "replay_matrix": "output/reports/replay_matrix.json",
     "track_lane": "output/data/track_lane_matrix.json",
+    "artifact_contract": "output/data/artifact_contract_index.json",
     "track_scope": "output/data/track_improvement_scope.json",
     "blocked_scope": "output/reports/blocked_scope_manifest.json",
     "evidence_fields": "output/data/evidence_field_index.json",
@@ -227,6 +228,7 @@ VARIABLE_ARTIFACTS: dict[str, str] = {
     "artifact_license": "output/reports/artifact_license_audit.json",
     "release_notes": "output/reports/release_notes_evidence.json",
     "scholarship": "output/data/scholarship_source_matrix.json",
+    "security_posture": "output/reports/security_posture_audit.json",
     "proof_dependency": "output/data/proof_dependency_graph.json",
     "state_transition": "output/data/state_transition_table.json",
     "ablation_sensitivity": "output/reports/ablation_sensitivity_report.json",
@@ -454,6 +456,13 @@ def _semantic_visualization_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
         "sheaf_render_log_event_count": render_log_data.get("event_count", 0),
         "sheaf_render_log_all_events_ok": bool(render_log_data.get("all_events_ok", False)),
         "claim_evidence_audit_count": claim_audit_data.get("claim_count", 0),
+        "claim_evidence_audit_all_complete": bool(claim_audit_data.get("all_complete", False)),
+        "claim_evidence_audit_all_artifacts_resolved": bool(
+            claim_audit_data.get("all_artifacts_resolved", False)
+        ),
+        "claim_evidence_audit_all_predicates_hold": bool(
+            claim_audit_data.get("all_evidence_predicates_hold", False)
+        ),
         "token_provenance_count": token_provenance_data.get("token_count", 0),
         "cross_track_symbol_count": cross_symbol_data.get("symbol_count", 0),
         "cross_track_symbols_consistent": int(bool(cross_symbol_data.get("all_consistent", False))),
@@ -466,6 +475,7 @@ def _canonical_sheaf_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
     replay_matrix_data = ctx["replay_matrix_data"]
     uncertainty_data = ctx["uncertainty_data"]
     track_lane_data = ctx["track_lane_data"]
+    artifact_contract_data = ctx["artifact_contract_data"]
     track_scope_data = ctx["track_scope_data"]
     blocked_scope_data = ctx["blocked_scope_data"]
     evidence_fields_data = ctx["evidence_fields_data"]
@@ -478,6 +488,7 @@ def _canonical_sheaf_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
     artifact_license_data = ctx["artifact_license_data"]
     release_notes_data = ctx["release_notes_data"]
     scholarship_data = ctx["scholarship_data"]
+    security_posture_data = ctx["security_posture_data"]
     proof_dependency_data = ctx["proof_dependency_data"]
     state_transition_data = ctx["state_transition_data"]
     ablation_sensitivity_data = ctx["ablation_sensitivity_data"]
@@ -492,6 +503,11 @@ def _canonical_sheaf_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
         "uncertainty_bin_count": uncertainty_data.get("bin_count", 0),
         "track_lane_matrix_row_count": track_lane_data.get("row_count", 0),
         "track_lane_matrix_complete": bool(track_lane_data.get("all_pipeline_tracks_complete", False)),
+        "artifact_contract_row_count": artifact_contract_data.get("row_count", 0),
+        "artifact_contract_complete": bool(artifact_contract_data.get("all_rows_complete", False)),
+        "artifact_contract_copied_parity_complete": bool(
+            artifact_contract_data.get("all_copied_parity_complete", False)
+        ),
         "track_improvement_row_count": track_scope_data.get("improvement_row_count", 0),
         "track_improvement_all_live_valid": bool(track_scope_data.get("all_live_tracks_valid", False)),
         "blocked_scope_status": "blocked" if blocked_scope_data.get("all_blocked") else "scope_leak",
@@ -528,6 +544,13 @@ def _canonical_sheaf_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
             scholarship_data.get("all_claim_boundaries_scope_guarded", False)
         ),
         "scholarship_rows_rederived": bool(scholarship_data.get("all_rows_rederived", False)),
+        "security_posture_control_count": security_posture_data.get("control_count", 0),
+        "security_posture_enforced_count": security_posture_data.get("enforced_count", 0),
+        "security_posture_deferred_count": security_posture_data.get("deferred_count", 0),
+        "security_posture_all_controls_ok": bool(security_posture_data.get("all_controls_ok", False)),
+        "security_posture_all_evidence_present": bool(security_posture_data.get("all_evidence_present", False)),
+        "security_posture_secret_finding_count": security_posture_data.get("secret_finding_count", 0),
+        "security_posture_high_risk_gap_count": security_posture_data.get("high_risk_gap_count", 0),
         "proof_dependency_edge_count": proof_dependency_data.get("edge_count", 0),
         "proof_dependency_all_resolved": bool(proof_dependency_data.get("all_edges_resolved", False)),
         "state_transition_row_count": state_transition_data.get("row_count", 0),
@@ -599,6 +622,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
     animation_delta_data = artifacts["animation_delta"]
     replay_matrix_data = artifacts["replay_matrix"]
     track_lane_data = artifacts["track_lane"]
+    artifact_contract_data = artifacts["artifact_contract"]
     track_scope_data = artifacts["track_scope"]
     blocked_scope_data = artifacts["blocked_scope"]
     evidence_fields_data = artifacts["evidence_fields"]
@@ -611,6 +635,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
     artifact_license_data = artifacts["artifact_license"]
     release_notes_data = artifacts["release_notes"]
     scholarship_data = artifacts["scholarship"]
+    security_posture_data = artifacts["security_posture"]
     proof_dependency_data = artifacts["proof_dependency"]
     state_transition_data = artifacts["state_transition"]
     ablation_sensitivity_data = artifacts["ablation_sensitivity"]

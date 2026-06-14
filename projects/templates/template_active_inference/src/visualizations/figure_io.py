@@ -37,7 +37,7 @@ def image_render_metrics(path: Path) -> dict[str, object]:
             width, height = image.size
             mode = image.mode
             channels = _normalize_rgb_extrema(image.convert("RGB").getextrema())
-    except (OSError, ValueError, EOFError):
+    except (OSError, ValueError, EOFError, SyntaxError):
         width, height, mode = 0, 0, ""
     aspect_ratio = float(width / height) if height else 0.0
     nonblank = any(low != high for low, high in channels)

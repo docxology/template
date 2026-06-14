@@ -16,7 +16,7 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
 
     assert cert["schema"] == "template_active_inference.semantic_gluing.v2"
     assert cert["ok"] is True
-    assert cert["manuscript_variables"]["sheaf_track_count"] == 33
+    assert cert["manuscript_variables"]["sheaf_track_count"] == 34
     assert cert["shared_symbols"]["bernoulli"]["J"] == "CrossStreamCouplingPotential"
     assert cert["shared_symbols"]["si_tmaze"]["pi"] == "PolicyPosterior"
     assert cert["artifact_sources"]["si_summary"]["path"] == "output/data/si_tmaze_summary.json"
@@ -34,10 +34,19 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
         cert["artifact_graph"]["output/data/statistical_visualization_bridge.json"]["producer"]
         == "generate_integration_audit.py"
     )
+    assert (
+        cert["artifact_graph"]["output/reports/security_posture_audit.json"]["producer"]
+        == "generate_sheaf_tracks.py"
+    )
+    assert (
+        cert["artifact_graph"]["output/data/artifact_contract_index.json"]["producer"]
+        == "generate_sheaf_tracks.py"
+    )
     assert "results_si_tmaze" in cert["artifact_graph"]["output/data/si_policy_comparison.json"]["consumers"]
     assert cert["artifact_graph"]["output/data/pymdp_policy_posterior_grid.json"]["producer"] == "simulate_si_tmaze.py"
     assert cert["restrictions"]["animation_frame_count"] >= 3
     assert cert["restrictions"]["pymdp_runtime_unexpected_warning_count"] == 0
+    assert cert["restrictions"]["security_posture_no_high_risk_gaps"] is True
     assert cert["restrictions"]["policy_posterior_normalized"] is True
     assert cert["restrictions"]["policy_comparison_complete_grid"] is True
     assert cert["restrictions"]["section_status_all_bound_present"] is True
@@ -46,6 +55,8 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
     assert cert["restrictions"]["sheaf_render_log_all_events_ok"] is True
     assert cert["restrictions"]["track_lane_matrix_complete"] is True
     assert cert["restrictions"]["track_lane_matrix_row_count"] > 0
+    assert cert["restrictions"]["artifact_contract_index_complete"] is True
+    assert cert["restrictions"]["artifact_contract_copied_parity_complete"] is True
     assert cert["restrictions"]["visualization_quality_ok"] is True
     assert cert["restrictions"]["visualization_intent_metadata_complete"] is True
     assert cert["restrictions"]["visualization_paper_claims_complete"] is True
@@ -166,6 +177,63 @@ def test_semantic_certificate_is_written_as_generated_artifact(project_root: Pat
     assert payload["ok"] is True
     assert payload["restrictions"]["coverage_missing"] == 0
     assert "si_graph_world_trace" in json.dumps(paths["crosswalk"].read_text(encoding="utf-8"))
+
+
+def test_semantic_outputs_settle_contract_and_staleness_artifacts(project_root: Path) -> None:
+    from manuscript.sheaf.semantic import build_semantic_gluing_certificate, write_semantic_gluing_outputs
+    from roadmap_tracks.integration_audit_builders import build_manuscript_staleness_report
+    from roadmap_tracks.sheaf_tracks import build_artifact_contract_index
+
+    ensure_gate_artifacts(project_root)
+    write_semantic_gluing_outputs(project_root)
+
+    staleness_path = project_root / "output" / "reports" / "manuscript_staleness_report.json"
+    saved_staleness = json.loads(staleness_path.read_text(encoding="utf-8"))
+    live_staleness = build_manuscript_staleness_report(project_root)
+    staleness_keys = ("section", "token", "expected", "fresh")
+    assert saved_staleness["all_fresh"] is True
+    assert [
+        {key: row.get(key) for key in staleness_keys}
+        for row in saved_staleness.get("rows", [])
+    ] == [
+        {key: row.get(key) for key in staleness_keys}
+        for row in live_staleness.get("rows", [])
+    ]
+
+    contract_path = project_root / "output" / "data" / "artifact_contract_index.json"
+    saved_contract = json.loads(contract_path.read_text(encoding="utf-8"))
+    live_contract = build_artifact_contract_index(project_root)
+    contract_keys = (
+        "artifact",
+        "source_exists",
+        "source_sha256",
+        "freshness_cycle_excluded",
+        "source_hash_fresh",
+        "contract_complete",
+        "validation_gates",
+        "claim_ids",
+    )
+    def contract_projection(row: dict) -> dict:
+        projected = {key: row.get(key) for key in contract_keys}
+        if row.get("freshness_cycle_excluded"):
+            projected["source_sha256"] = "<cycle-excluded>"
+        return projected
+
+    assert saved_contract["all_rows_complete"] is True
+    assert [contract_projection(row) for row in saved_contract.get("rows", [])] == [
+        contract_projection(row) for row in live_contract.get("rows", [])
+    ]
+
+    saved_certificate = json.loads((project_root / "output" / "data" / "sheaf_gluing_certificate.json").read_text())
+    live_certificate = build_semantic_gluing_certificate(project_root)
+    for key in (
+        "artifact_contract_index_complete",
+        "artifact_contract_copied_parity_complete",
+        "interop_all_lossless",
+        "manuscript_staleness_all_fresh",
+        "manuscript_staleness_row_count",
+    ):
+        assert saved_certificate["restrictions"][key] == live_certificate["restrictions"][key]
 
 
 def test_semantic_gluing_rejects_stale_saved_certificate(project_root: Path) -> None:

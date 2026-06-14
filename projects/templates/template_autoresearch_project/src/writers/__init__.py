@@ -6,10 +6,12 @@ from .benchmark import (
     _BENCHMARK_CORE_ARTIFACTS,
     _GradingSettings,
     _benchmark_score,
+    build_benchmark_boundary,
     _grade_absent_benchmark,
     _load_grading_settings,
     _ml_accuracy_improved,
     _write_benchmark_grading_reports,
+    write_benchmark_boundary,
 )
 from .figure_artifacts import (
     build_figure_render_context,
@@ -47,6 +49,7 @@ __all__ = [
     "_BENCHMARK_CORE_ARTIFACTS",
     "_GradingSettings",
     "_benchmark_score",
+    "build_benchmark_boundary",
     "_grade_absent_benchmark",
     "_load_grading_settings",
     "_ml_accuracy_improved",
@@ -61,6 +64,7 @@ __all__ = [
     "update_result_payloads",
     "write_artifact_manifest",
     "write_autoresearch_phase_ledger",
+    "write_benchmark_boundary",
     "write_core_loop_artifacts",
     "write_final_visual_artifacts",
     "write_json",

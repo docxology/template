@@ -23,6 +23,10 @@ claim pass; regenerate the producer that owns the artifact.
 
 - `output/data/*.json` and `output/reports/*.json` are produced by project
   scripts and validation-spine modules.
+- `output/data/artifact_contract_index.json` is the canonical cross-artifact
+  contract index. It binds generated artifacts to producers, configured scripts,
+  pipeline/sheaf lanes, manuscript consumers, claim predicates, validators,
+  negative controls, freshness fields, and copied-root parity.
 - `manuscript/0*.md`, except hand-authored front/back matter, are composed from
   sheaf fragments by `scripts/compose_manuscript.py`.
 - `output/manuscript/*.md` is hydrated from composed manuscript sections plus
@@ -67,8 +71,8 @@ semantic certificate, dependency graph, provenance, replay, counterexample,
 evidence-field, release-bundle, theorem-traceability, gate-index, diffoscope,
 proof-extraction, state-space, causal-ablation, license, release-note,
 proof-dependency, transition-table, ablation-sensitivity, release-attestation,
-track-improvement, blocked-scope, section-status, render-log, and visualization
-quality artifacts.
+artifact-contract, track-improvement, blocked-scope, section-status, render-log,
+and visualization quality artifacts.
 
 ## Figure rendering contract
 
@@ -77,19 +81,24 @@ Every figure id must exist in `figures.yaml`, have a generator in
 appear in `output/figures/figure_registry.json`. Figure captions and alt text may
 use hydration tokens, but figure numbering belongs to pandoc-crossref. Reused
 figures must use unlabeled references rather than duplicate labels.
-The appendix theorem-traceability graph and causal-ablation heatmap are generated
-from JSON rows and validated by the same figure registry contract as the main
-figures.
+The appendix theorem-traceability graph, causal-ablation heatmap, and
+artifact-contract map are generated from JSON rows and validated by the same
+figure registry contract as the main figures.
 `output/reports/visualization_quality_audit.json` joins registry metadata,
 figure-source mappings, figure hashes, image dimensions, color mode, and
-alt/caption lengths into one fail-closed report. It also marks figures backed by
-generated statistical data or report artifacts and fails when those bridge
-sources are missing. `output/data/statistical_visualization_bridge.json` expands
-those marked rows into a sheaf/scholarship crosswalk with manuscript sections,
-registered tracks, statistical source links, and the manuscript sections that
-actually reference each statistically backed figure. Each referenced section is
-resolved back through `manuscript/sheaf/manifest.yaml`, and validation requires
-the section to carry a `visualization` track binding.
+alt/caption lengths into one fail-closed report. It also recomputes the
+typography-token contract from `figures.yaml`, rejects raw numeric font-size
+literals in the figure source modules, and inventories visual files that are
+intentionally outside the numbered registry. Auxiliary outputs such as the
+deterministic GIF must be classified and nonblank; unknown visual files fail the
+audit instead of silently sharing the output directory. The report marks figures
+backed by generated statistical data or report artifacts and fails when those
+bridge sources are missing. `output/data/statistical_visualization_bridge.json`
+expands those marked rows into a sheaf/scholarship crosswalk with manuscript
+sections, registered tracks, statistical source links, and the manuscript
+sections that actually reference each statistically backed figure. Each
+referenced section is resolved back through `manuscript/sheaf/manifest.yaml`,
+and validation requires the section to carry a `visualization` track binding.
 
 ## Sheaf reproducibility
 
@@ -102,6 +111,8 @@ The sheaf claim is finite and falsifiable:
   producers, consumers, validation gates, and manuscript variables;
 - every promoted artifact must have a producer, a bound manuscript track, a
   typed claim, a validation restriction, and a negative-control test.
+- the artifact-contract index must rederive row completeness and copied-output
+  parity from rows, not aggregate booleans alone.
 
 ## Root output parity
 

@@ -151,3 +151,18 @@ def test_documentation_contract_requires_labeled_historical_counts(tmp_path: Pat
         encoding="utf-8",
     )
     assert check_historical_test_evidence(tmp_path) == []
+
+    (tmp_path / "README.md").write_text(
+        "Historical full-suite evidence: `uv run pytest tests/ --cov=src --cov-fail-under=90`\n"
+        "passed 389 tests with 91.09% coverage. Treat that as stale until recertified.\n",
+        encoding="utf-8",
+    )
+    assert check_historical_test_evidence(tmp_path) == []
+
+    (tmp_path / "README.md").write_text(
+        "`uv run pytest tests/ --cov=src --cov-fail-under=90`\n"
+        "passed 389 tests with 91.09% coverage before later changes.\n",
+        encoding="utf-8",
+    )
+    issues = check_historical_test_evidence(tmp_path)
+    assert [issue.code for issue in issues] == ["historical-evidence-unlabeled"]

@@ -1,0 +1,51 @@
+domain: modular_textbook
+display_name: Modular Fillable Textbook Exemplar
+required_packages:
+  - matplotlib
+  - pyyaml
+  - pytest
+preferred_outputs:
+  - pdf
+  - html
+  - epub
+  - docx
+validation_gates:
+  - manuscript_structure
+  - scaffold_integrity
+  - render_validation
+  - publication_readiness
+figure_types:
+  - chapter_placeholder
+  - gallery_figure
+  - mermaid_diagram
+citation_policy: official_or_scholarly
+source_policy: >-
+  Treat manuscript/config.yaml as the structure source of truth. Stub markers
+  are intentional fillable surfaces and must not be rewritten into evidence
+  claims until an author supplies domain content.
+review_gates:
+  - manuscript_structure
+  - scaffold_integrity
+  - stub_honesty
+  - publication_readiness
+artifact_expectations:
+  - output/data/manuscript_variables.json
+  - output/figures/part_0_orientation.png
+  - output/figures/gallery/gallery_line.png
+  - output/pdf/template_textbook_combined.pdf
+benchmark_rubric:
+  name: modular-textbook-readiness
+  dimensions:
+    - name: config_schema_validity
+      weight: 2.0
+    - name: chapter_stub_completeness
+      weight: 2.0
+    - name: figure_generation
+      weight: 1.0
+    - name: stub_claim_honesty
+      weight: 1.5
+    - name: render_success
+      weight: 1.0
+llm_prompt_guidance: >-
+  Preserve explicit stub markers and fillable-language honesty. Do not convert
+  scaffold placeholders into claims of completed textbook content.

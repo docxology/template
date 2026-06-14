@@ -14,8 +14,8 @@ This file tracks live work after the `v3.4.0` release (latest published release:
 
 ## Live state snapshot
 
-Refreshed on **2026-06-12** after the comprehensive review + merge (Phase A–G,
-Q1–Q5, and the thermo-nuclear v2 remediation are now on `main`). Re-run the
+Refreshed on **2026-06-13** on branch `codex/template-exemplar-forkability`
+after the forkability and verifier-first roadmap pass. Re-run the
 commands in the **Source** column before copying any number into prose; live
 counts belong in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), not
 hard-coded here.
@@ -27,8 +27,8 @@ hard-coded here.
 | Public source scope | `infrastructure` plus nine public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
 | Public exemplars | `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook` | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
 | Canonical generated facts | Importable infrastructure packages, infrastructure Python-module count, project-scope + publishing test collections, and per-exemplar coverage — all live-derived; do not hard-code here | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) (regenerate with `uv run python scripts/generate_counts.py --write`) |
-| Open GitHub PRs | 3 open: 1 Dependabot (`codecov-action` 6.0.1→7.0.0 #28) + 2 maintainer (#23 sheaf integrity gates, #14 infrastructure composability audit) | `/opt/homebrew/bin/gh-axi pr list` |
-| Docs lint status | links-only, consistency-only, and doc-pairs all clean (re-verified 2026-06-08) | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
+| Open GitHub PRs | 0 open | `/opt/homebrew/bin/gh-axi pr list` |
+| Docs lint status | links-only, consistency-only, and doc-pairs all clean (re-verified 2026-06-13) | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
 | Mermaid lint status | clean with chunked batch rendering under the default total budget | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
 | Release verification baseline | drift `--strict`, COUNTS/skills/exports gates, tracked-project/generated-artifact guards, docs-lint (links/consistency), reporting+evidence+repro suites (877), and the LLM suite (1244, live Ollama) all green at the v3.4.0 commit | `v3.4.0` release + local command history |
 
@@ -38,6 +38,25 @@ hard-coded here.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **AutoResearch reviewer-boundary closeout (2026-06-13, `[Unreleased]`):**
+  closed `AR-REPORT-ERGONOMICS-1`, `AR-BENCHMARK-ERGONOMICS-1`, and
+  `AR-SOURCE-LEDGER-2`. The loop now emits
+  `output/data/autoresearch_evidence_overview.json`,
+  `output/reports/autoresearch_evidence_overview.md`, and
+  `output/data/benchmark_boundary.json`; the source-ledger contract validates
+  ledger citekeys against BibTeX and manuscript citations, rejects invalid
+  tiers/future dates, and prints offline age/tier summaries. Verified with
+  `uv run pytest projects/templates/template_autoresearch_project/tests/ -q`
+  (224 passed).
+- **Template forkability + verifier roadmap pass (2026-06-13, `[Unreleased]`):**
+  closed `TODO-REBASE-2` (live PR count is 0; active backlog restored instead of
+  `_No open items_`), `REGRESSION-PIN-1` (the first real
+  `template_code_project` regression pins now collect and pass with a mutation
+  negative control), and `AI-VIZ-SPLIT-1` (`src/visualizations/figures.py`
+  split into focused semantic and simulation modules while preserving the figure
+  facade). `AI-SEMANTIC-FIXPOINT-1` is now closed: the shared fixed-point
+  orchestrator drives manuscript variables, sheaf semantic outputs, and contract
+  settlement; the selected fixed-point cluster passed 21 tests on 2026-06-13.
 - **Generated-report web design (2026-06-12, `[Unreleased]`):** modernized the
   base HTML report/dashboard template (`infrastructure/reporting/html_templates.py`)
   with CSS design tokens, dark mode (`prefers-color-scheme`), WCAG-AA status
@@ -131,11 +150,22 @@ Keep this section short. Details live in release notes or archived audits.
 
 ## Active backlog
 
-_No open items._ The 2026-06-12 sweep closed `RELEASE-TAG-1`, `REPRO-VERIFY-1`,
-and `EVIDENCE-CLAIM-1`, then scoped and immediately shipped `WEBDESIGN-EXTEND-1`,
-`LINKCHECK-PERF-1`, and `TEXLIVE-2026-BEAMER-1` (all in **Recently shipped**).
-File the next genuine increments here as they arise — each with a problem, why it
-matters, smallest next step, acceptance check, and out-of-scope boundary.
+### AI-GATE-PERF-2 — Reduce active-inference gate runtime after correctness
+
+- **Problem:** `template_active_inference` gate tests still have one heavy
+  explicit roadmap/sheaf write path; clean-state fixed-point and gate setup now
+  avoid redundant regeneration, but the full project suite still needs a
+  durations-driven pass.
+- **Why it matters:** slow gates discourage local verification and make future
+  semantic changes harder to review.
+- **Smallest next step:** complete the remaining project-local
+  `MEDIUM-TEST-PERF-1` split with cheap source-only negative controls plus one
+  end-to-end refresh characterization.
+- **Acceptance check:** focused mutation tests still catch the known failure
+  classes, `--durations=20` shows fewer redundant artifact refreshes, and the
+  manuscript gate still passes.
+- **Out of scope:** weakening coverage, skipping pymdp-backed evidence, or
+  dropping the end-to-end refresh characterization.
 
 ---
 

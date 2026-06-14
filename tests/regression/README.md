@@ -82,9 +82,17 @@ See [`tests/regression/projects/template_code_project/figures/test_figure_TEMPLA
 
 ## Status
 
-**Scaffold only as of 2026-05-20.** No pinned cases yet. See [`STATUS.md`](../../STATUS.md) row "Regression tests" — health 🔴.
+**First populated slice as of 2026-06-13.** `template_code_project` now has
+source-derived pins for deterministic optimization claims plus three collected
+tests, including a mutation negative control:
 
-Next step: pin the quantitative claims in both canonical exemplar manuscripts.
+```bash
+uv run pytest tests/regression/ --collect-only -q --no-cov
+uv run pytest tests/regression/ -q --no-cov
+```
+
+Next step: expand the same pattern across the remaining `template_code_project`
+figures/tables and then the other public exemplar manuscripts.
 
 ## Related
 

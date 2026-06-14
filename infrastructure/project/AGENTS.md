@@ -393,17 +393,20 @@ A project is invalid if:
 
 ## Creating New Projects
 
-### Option 1: Copy Template
+### Option 1: Clean-Copy Template
 
 ```bash
-# Copy the default template project
-cp -r projects/templates/template_code_project projects/active/myresearch
+# Clean-copy the default template project
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_code_project \
+  --dest projects/working/myresearch \
+  --new-name myresearch
 
 # Customize pyproject.toml
-vim projects/myresearch/pyproject.toml
+vim projects/working/myresearch/pyproject.toml
 
 # Add your code
-vim projects/myresearch/src/mymodule.py
+vim projects/working/myresearch/src/mymodule.py
 ```
 
 ### Option 2: Manual Creation

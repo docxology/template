@@ -108,6 +108,7 @@ def test_methods_sheaf_binds_layers_tracks() -> None:
         "artifact_diffoscope",
         "artifact_license",
         "scholarship",
+        "security_posture",
         "manuscript_staleness",
         "layers",
     )

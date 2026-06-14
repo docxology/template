@@ -8,18 +8,16 @@ import pytest
 
 from gates.validation import validate_manuscript
 
-from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
+from gate_support import ensure_gate_artifacts
 
 pytestmark = pytest.mark.timeout(300)
 
 
 @pytest.mark.timeout(300)
 def test_validate_manuscript_contract(project_root: Path) -> None:
-    from manuscript.hydrate import write_resolved_manuscript
-    from manuscript.variables import generate_variables
+    from gates.claim_ledger import typed_claim_evidence_issues
 
     ensure_gate_artifacts(project_root)
-    write_resolved_manuscript(project_root, generate_variables(project_root, require_analysis_outputs=False))
     checks = validate_manuscript(project_root)
     assert checks["sheaf_manifest"]
     assert checks["sheaf_registry"]
@@ -27,7 +25,7 @@ def test_validate_manuscript_contract(project_root: Path) -> None:
     assert checks["coverage_matrix_valid"]
     assert checks["full_sheaf_appendix_tracks"]
     assert checks["imrad_groups_present"]
-    assert checks["claim_ledger_valid"]
+    assert checks["claim_ledger_valid"], typed_claim_evidence_issues(project_root)
     assert checks["gnn_concordance"]
     assert checks["sheaf_coverage_page"]
     assert checks["sheaf_coverage_json"]
@@ -49,7 +47,6 @@ def test_validate_manuscript_methods_sheaf_layers_negative(project_root: Path) -
         assert checks["methods_sheaf_layers"] is False
     finally:
         path.write_text(original, encoding="utf-8")
-        refresh_generated_gate_artifacts(project_root)
 
 
 @pytest.mark.parametrize(
@@ -77,7 +74,6 @@ def test_validate_manuscript_methods_sheaf_layers_negative_markers(
         assert checks["methods_sheaf_layers"] is False
     finally:
         path.write_text(original, encoding="utf-8")
-        refresh_generated_gate_artifacts(project_root)
 
 
 def test_validate_manuscript_full_sheaf_appendix_tracks_negative(project_root: Path) -> None:
@@ -89,7 +85,6 @@ def test_validate_manuscript_full_sheaf_appendix_tracks_negative(project_root: P
         assert checks["full_sheaf_appendix_tracks"] is False
     finally:
         path.write_text(original, encoding="utf-8")
-        refresh_generated_gate_artifacts(project_root)
 
 
 def test_validate_manuscript_resolved_hydrated_negative(project_root: Path) -> None:
@@ -106,7 +101,6 @@ def test_validate_manuscript_resolved_hydrated_negative(project_root: Path) -> N
         assert checks["resolved_manuscript_hydrated"] is False
     finally:
         resolved.write_text(original, encoding="utf-8")
-        refresh_generated_gate_artifacts(project_root)
 
 
 def test_validate_manuscript_resolved_hydrated_allows_generated_latex_bookends(project_root: Path) -> None:
@@ -130,7 +124,6 @@ def test_validate_manuscript_resolved_hydrated_allows_generated_latex_bookends(p
             begin.unlink(missing_ok=True)
         else:
             begin.write_text(original, encoding="utf-8")
-        refresh_generated_gate_artifacts(project_root)
 
 
 def test_validate_manuscript_gnn_concordance_negative(project_root: Path) -> None:
@@ -142,7 +135,6 @@ def test_validate_manuscript_gnn_concordance_negative(project_root: Path) -> Non
         assert checks["gnn_concordance"] is False
     finally:
         gnn.write_text(original, encoding="utf-8")
-        refresh_generated_gate_artifacts(project_root)
 
 
 def test_validate_manuscript_tokens_registered_negative(project_root: Path) -> None:
@@ -154,23 +146,21 @@ def test_validate_manuscript_tokens_registered_negative(project_root: Path) -> N
         assert checks["manuscript_tokens_registered"] is False
     finally:
         path.write_text(original, encoding="utf-8")
-        refresh_generated_gate_artifacts(project_root)
 
 
 def test_validate_manuscript_duplicate_track_marker_negative(project_root: Path) -> None:
     """A composed section with a doubled sheaf-track marker must fail the gate."""
     from manuscript.sheaf import compose_all_sections
 
-    compose_all_sections(project_root)
-    path = project_root / "manuscript" / "07_methods_lean.md"
+    path = project_root / "manuscript" / "sections" / "imrad" / "methods_lean" / "lean.md"
     original = path.read_text(encoding="utf-8")
     marker = "<!-- sheaf-track:lean -->"
-    assert marker in original
     try:
-        # Plant a second standalone copy of an already-present marker (the stutter bug).
-        path.write_text(original.replace(marker, marker + "\n\n" + marker, 1), encoding="utf-8")
+        # Plant a source-fragment marker that composes next to the renderer's marker.
+        path.write_text(marker + "\n\n" + original, encoding="utf-8")
+        compose_all_sections(project_root)
         checks = validate_manuscript(project_root)
         assert checks["no_duplicate_sheaf_track_markers"] is False
     finally:
         path.write_text(original, encoding="utf-8")
-        refresh_generated_gate_artifacts(project_root)
+        compose_all_sections(project_root)

@@ -280,6 +280,7 @@ PROMOTED_ARTIFACTS: dict[str, str] = {
     "animation_deltas": "output/data/animation_frame_deltas.json",
     "replay_matrix": "output/reports/replay_matrix.json",
     "track_lane_matrix": "output/data/track_lane_matrix.json",
+    "artifact_contract_index": "output/data/artifact_contract_index.json",
     "track_scope": "output/data/track_improvement_scope.json",
     "blocked_scope": "output/reports/blocked_scope_manifest.json",
     "evidence_fields": "output/data/evidence_field_index.json",
@@ -292,6 +293,7 @@ PROMOTED_ARTIFACTS: dict[str, str] = {
     "artifact_license": "output/reports/artifact_license_audit.json",
     "release_notes": "output/reports/release_notes_evidence.json",
     "scholarship": "output/data/scholarship_source_matrix.json",
+    "security_posture": "output/reports/security_posture_audit.json",
     "proof_dependency": "output/data/proof_dependency_graph.json",
     "transition_table": "output/data/state_transition_table.json",
     "ablation_sensitivity": "output/reports/ablation_sensitivity_report.json",
@@ -401,7 +403,14 @@ def _add_toy_formal_integration_checks(checks: dict[str, bool], artifacts: dict[
     )
     checks["manuscript_evidence_tables_schema"] = evidence_tables.get("all_source_backed") is True
     checks["manuscript_token_provenance_schema"] = token_provenance.get("all_tokens_mapped") is True
-    checks["claim_evidence_audit_schema"] = claim_audit.get("all_claims_typed") is True
+    checks["claim_evidence_audit_schema"] = (
+        claim_audit.get("all_claims_typed") is True
+        and claim_audit.get("all_complete") is True
+        and claim_audit.get("all_artifacts_resolved") is True
+        and claim_audit.get("all_evidence_resolved") is True
+        and claim_audit.get("all_evidence_predicates_hold") is True
+        and int(claim_audit.get("incomplete_claim_count", -1)) == 0
+    )
     checks["validation_gate_index_schema"] = gate_index.get("all_indexed") is True
     checks["sheaf_section_status_matrix_schema"] = (
         section_status.get("schema") == "template_active_inference.sheaf_section_status_matrix.v1"
@@ -419,6 +428,7 @@ def _add_toy_formal_integration_checks(checks: dict[str, bool], artifacts: dict[
         scope.get("scope_boundary_status") == "toy_only_pass"
         and scope.get("all_current_claims_toy") is True
         and scope.get("all_required_scope_categories_present") is True
+        and scope.get("blocked_manifest_concordant") is True
         and scope.get("all_future_rows_non_live") is True
         and scope.get("all_blocked_contexts_non_live") is True
     )
@@ -443,6 +453,7 @@ def _add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict
     checks["figure_hash_manifest_schema"] = figure_hash.get("all_hashes_present") is True
     checks["visualization_quality_audit_schema"] = (
         visualization_quality.get("schema") == "template_active_inference.visualization_quality_audit.v1"
+        and visualization_quality.get("all_figures_complete") is True
         and visualization_quality.get("all_quality_ok") is True
         and visualization_quality.get("all_sources_mapped") is True
         and visualization_quality.get("all_rendered") is True
@@ -454,6 +465,9 @@ def _add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict
         and visualization_quality.get("all_figures_section_bound") is True
         and visualization_quality.get("all_figures_have_claim_lanes") is True
         and visualization_quality.get("all_claim_lanes_valid") is True
+        and visualization_quality.get("all_style_tokens_ok") is True
+        and visualization_quality.get("all_auxiliary_outputs_classified") is True
+        and visualization_quality.get("all_auxiliary_outputs_rendered") is True
         and int(visualization_quality.get("statistically_backed_count", 0) or 0) >= 6
         and visualization_quality.get("all_statistical_sources_present") is True
     )
@@ -461,6 +475,8 @@ def _add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict
         statistical_bridge.get("schema") == "template_active_inference.statistical_visualization_bridge.v1"
         and int(statistical_bridge.get("row_count", 0) or 0) >= 6
         and statistical_bridge.get("all_rows_connected") is True
+        and statistical_bridge.get("all_rows_complete") is True
+        and statistical_bridge.get("all_complete") is True
         and statistical_bridge.get("all_statistical_sources_present") is True
         and statistical_bridge.get("all_figures_referenced") is True
         and statistical_bridge.get("all_reference_sections_sheaf_bound") is True
@@ -473,6 +489,7 @@ def _add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict
 def _add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, dict]) -> None:
     replay_matrix = artifacts["replay_matrix"]
     track_lane_matrix = artifacts["track_lane_matrix"]
+    artifact_contract_index = artifacts["artifact_contract_index"]
     track_scope = artifacts["track_scope"]
     blocked_scope = artifacts["blocked_scope"]
     evidence_fields = artifacts["evidence_fields"]
@@ -485,6 +502,7 @@ def _add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, di
     artifact_license = artifacts["artifact_license"]
     release_notes = artifacts["release_notes"]
     scholarship = artifacts["scholarship"]
+    security_posture = artifacts["security_posture"]
     proof_dependency = artifacts["proof_dependency"]
     transition_table = artifacts["transition_table"]
     ablation_sensitivity = artifacts["ablation_sensitivity"]
@@ -503,6 +521,16 @@ def _add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, di
         and track_lane_matrix.get("all_negative_controls_declared") is True
         and track_lane_matrix.get("all_pipeline_tracks_complete") is True
         and track_lane_matrix.get("all_required_pipeline_tracks_complete") is True
+    )
+    checks["artifact_contract_index_schema"] = (
+        artifact_contract_index.get("schema") == "template_active_inference.artifact_contract_index.v1"
+        and artifact_contract_index.get("all_artifact_rows_match_semantic_map") is True
+        and artifact_contract_index.get("all_rows_complete") is True
+        and artifact_contract_index.get("all_claim_required_rows_bound") is True
+        and artifact_contract_index.get("all_validators_bound") is True
+        and artifact_contract_index.get("all_negative_controls_bound") is True
+        and artifact_contract_index.get("all_freshness_hashes_current") is True
+        and artifact_contract_index.get("all_copied_parity_complete") is True
     )
     checks["track_improvement_scope_schema"] = (
         track_scope.get("schema") == "template_active_inference.track_improvement_scope.v1"
@@ -559,6 +587,17 @@ def _add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, di
         and scholarship.get("all_citations_present") is True
         and scholarship.get("all_claim_boundaries_scope_guarded") is True
         and scholarship.get("all_rows_rederived") is True
+    )
+    checks["security_posture_audit_schema"] = (
+        security_posture.get("schema") == "template_active_inference.security_posture_audit.v1"
+        and security_posture.get("all_controls_ok") is True
+        and security_posture.get("all_evidence_present") is True
+        and security_posture.get("all_validators_bound") is True
+        and security_posture.get("all_negative_controls_declared") is True
+        and security_posture.get("all_deferred_controls_scoped") is True
+        and security_posture.get("all_secret_patterns_absent") is True
+        and int(security_posture.get("secret_finding_count", 1) or 0) == 0
+        and int(security_posture.get("high_risk_gap_count", 1) or 0) == 0
     )
     checks["proof_dependency_graph_schema"] = (
         proof_dependency.get("schema") == "template_active_inference.proof_dependency_graph.v1"
@@ -672,6 +711,7 @@ def _set_experiment_plan_metrics(
             "pymdp_runtime_diagnostics_schema",
             "si_graph_world_topology_traces_schema",
             "canonical_sheaf_track_schemas",
+            "artifact_contract_index_schema",
             "visualization_quality_audit_schema",
             "statistical_visualization_bridge_schema",
             "sheaf_section_status_matrix_schema",
@@ -683,6 +723,7 @@ def _set_experiment_plan_metrics(
             "artifact_license_audit_schema",
             "release_notes_evidence_schema",
             "scholarship_source_matrix_schema",
+            "security_posture_audit_schema",
             "proof_dependency_graph_schema",
             "state_transition_table_schema",
             "ablation_sensitivity_report_schema",

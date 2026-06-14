@@ -7,7 +7,10 @@
 
 ```bash
 NEW=my_sia_task
-cp -r projects/templates/template_sia "projects/working/$NEW"
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_sia \
+  --dest "projects/working/$NEW" \
+  --new-name "$NEW"
 # Edit manuscript/config.yaml (title, sia.task_name)
 # Replace tasks/mini_classify/ with your task tree
 # Record fixtures under src/fixtures/recorded_generations/ for CI replay
@@ -27,7 +30,7 @@ Private work stays under `projects/working/` (local-only). Promote to `projects/
 | `tests/` | REQUIRED (90% gate) |
 | `manuscript/config.yaml`, `manuscript/*.md`, `references.bib` | REQUIRED |
 | `docs/*.md` | AESTHETIC (load-bearing for agents) |
-| `domain_profile.yaml`, `experiment_plan.yaml` | AESTHETIC advisory overlays |
+| `domain_profile.yaml`, `experiment_plan.yaml` | REQUIRED forkability overlays |
 
 ## Post-fork steps
 

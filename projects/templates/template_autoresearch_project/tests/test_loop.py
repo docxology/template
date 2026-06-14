@@ -85,6 +85,8 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(
     assert "output/data/run_ledger.json" in payload["output_paths"]
     assert "output/data/review_decisions.json" in payload["output_paths"]
     assert "output/data/benchmark_scores.json" in payload["output_paths"]
+    assert "output/data/benchmark_boundary.json" in payload["output_paths"]
+    assert "output/data/autoresearch_evidence_overview.json" in payload["output_paths"]
     assert "output/data/mnist_task_config.json" in payload["output_paths"]
     assert "output/data/ml_task_results.json" in payload["output_paths"]
     assert "output/data/ml_candidate_ledger.json" in payload["output_paths"]
@@ -116,6 +118,7 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(
     assert "output/data/research_object_manifest.json" in payload["output_paths"]
     assert "output/data/manuscript_variable_provenance.json" in payload["output_paths"]
     assert "output/data/manuscript_figure_blocks.json" in payload["output_paths"]
+    assert "output/reports/autoresearch_evidence_overview.md" in payload["output_paths"]
     assert "output/figures/ml_confusion_matrix.png" in payload["output_paths"]
     assert "output/figures/ml_per_class_accuracy.png" in payload["output_paths"]
     assert "output/figures/ml_learning_curves.png" in payload["output_paths"]
@@ -184,6 +187,8 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         "output/data/run_ledger.json",
         "output/data/review_decisions.json",
         "output/data/benchmark_scores.json",
+        "output/data/benchmark_boundary.json",
+        "output/data/autoresearch_evidence_overview.json",
         "output/data/mnist_task_config.json",
         "output/data/ml_task_results.json",
         "output/data/ml_candidate_ledger.json",
@@ -216,6 +221,7 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         "output/data/manuscript_variable_provenance.json",
         "output/data/manuscript_figure_blocks.json",
         "output/reports/autoresearch_review_packet.md",
+        "output/reports/autoresearch_evidence_overview.md",
         "output/reports/autoresearch_summary.md",
         "output/reports/ml_experiment_report.md",
         "output/reports/ml_benchmark_score.json",

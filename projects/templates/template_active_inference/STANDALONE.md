@@ -1,50 +1,73 @@
-# Standalone repository guide
+# Standalone Fork Guide
 
-This template is designed to live on its own — copy `projects/templates/template_active_inference/`
-out of the monorepo and it is a complete, runnable GitHub repository. **No code under
-`src/`, `scripts/`, or `tests/` imports the monorepo's `infrastructure/` layer or any
-sibling project** — enforced by `tests/test_self_contained.py` (a static AST scan plus a
-clean-room import with `infrastructure` blocked).
+## Purpose
 
-## What runs standalone
+`template_active_inference` is the multi-track active-inference exemplar: analytical
+checks, pymdp rollout artifacts, sheaf composition, figure registry validation,
+and manuscript hydration all live in the project tree.
 
-| Step | Command | Depends on |
-| --- | --- | --- |
-| Tests + coverage | `uv run pytest tests/ --cov=src --cov-fail-under=90` | project `src/` only |
-| Analytical sweep | `uv run python scripts/run_analytical_sweep.py` | numpy/scipy |
-| pymdp T-maze rollout | `uv run python scripts/simulate_si_tmaze.py` | inferactively-pymdp |
-| Statistics + figures | `uv run python scripts/compute_statistics.py && uv run python scripts/generate_figures.py` | matplotlib |
-| Compose manuscript | `uv run python scripts/compose_manuscript.py` | project sheaf engine |
-| Strict compose | `uv run python scripts/compose_manuscript.py --validate-only --strict` | project sheaf gates |
-| Validate gates | `uv run python scripts/check_documentation_contract.py --check && uv run python scripts/generate_method_inventory.py --check && uv run python scripts/validate_outputs.py` | project docs + `src/gates/` |
-| **Render PDF** | `uv run python scripts/render_pdf.py` | `pandoc`, `xelatex` (external CLIs) |
+## Copy This When
 
-## Self-contained rendering
+Use it when a fork needs several independent research tracks to compose into one
+evidence-backed manuscript, or when you want a portable sheaf-style manuscript
+registry with local validation.
 
-`scripts/render_pdf.py` composes, hydrates, and renders the manuscript to
-`output/pdf/template_active_inference_standalone.pdf` using only this project's code plus
-the external `pandoc` and `xelatex` tools. Typography is read from project-owned sources:
+## Clean Copy Command
 
-- **Margins** — `manuscript/config.yaml` → `metadata.geometry`.
-- **Dense 9 pt body** — `manuscript/preamble.md` (the `fontsize` package).
-- **Red hyperlinks** — pandoc `colorlinks` variables set by the renderer.
+From the template repository root:
 
-The monorepo pipeline (`scripts/03_render_pdf.py` in the template repo, which *does* use
-`infrastructure/`) adds transmission bookends, QR strips, and LaTeX post-processing — that
-is the full-polish path and is **not** required to build the PDF standalone. The portable
-renderer here is the subset a standalone checkout needs.
+```bash
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_active_inference \
+  --dest projects/working/my_active_inference \
+  --new-name my_active_inference
+```
 
-## The generic-engine / bespoke-registry split
+Fallback when the helper is unavailable:
 
-The sheaf composition engine (`src/manuscript/sheaf/`) is the reusable core; the bespoke
-binding lives in data, not code:
+```bash
+rsync -a \
+  --exclude '.venv/' --exclude '.pytest_cache/' --exclude '.ruff_cache/' \
+  --exclude 'htmlcov/' --exclude 'output/' --exclude 'rendered/' --exclude '*.egg-info/' \
+  projects/templates/template_active_inference/ projects/working/my_active_inference/
+```
 
-- **Engine (code)** — `laws.py` (sheaf-axiom oracle), `compose.py`, `coverage.py`,
-  `manifest.py`, `registry.py`, `renderers.py`, `models.py`.
-- **Bespoke registry (data)** — `manuscript/sheaf/manifest.yaml` (IMRAD rows → fragments),
-  `manuscript/sheaf/tracks.yaml` (track registry), `figures.yaml`, `pymdp.yaml`.
+## Required Post-Fork Edits
 
-To reuse the engine in another project, copy `src/manuscript/sheaf/` and supply your own
-manifest/registry/figures YAML — the engine reads them; it hard-codes none of this project's
-content. Keeping the engine *in the project* (rather than in shared infrastructure) is a
-deliberate choice: it is what makes this template copy-out-and-run standalone.
+- Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
+  `CITATION.cff`, `.zenodo.json`, and `codemeta.json` for the new research object.
+- Replace or regenerate `pymdp.yaml`, `figures.yaml`, `tracks.yaml`, and the
+  sheaf manifests when changing the domain.
+- Keep generated files under `output/` out of the fork baseline; regenerate them
+  after the copy.
+
+## Validation Commands
+
+From the copied project root:
+
+```bash
+uv run pytest tests/ --cov=src --cov-fail-under=90
+uv run python scripts/compose_manuscript.py --validate-only --strict
+uv run python scripts/check_documentation_contract.py --check
+uv run python scripts/validate_outputs.py
+```
+
+Template-root only, the public exemplar gate remains:
+
+```bash
+uv run python scripts/01_run_tests.py --project templates/template_active_inference
+```
+
+## Intentional Non-Standalone Dependencies
+
+The project ships a standalone renderer and does not need the monorepo
+`infrastructure/` layer for its project-local tests, scripts, or PDF renderer.
+The monorepo pipeline can still render it with additional publication bookends,
+but that is the polished template-repo path, not the minimum standalone path.
+
+## What Not To Claim
+
+Do not claim a copied fork proves new active-inference results until the fork has
+regenerated its analytical, rollout, sheaf, and figure-registry artifacts. Do not
+claim the generic sheaf engine validates a new domain without updating the local
+manifests and rerunning the strict checks above.

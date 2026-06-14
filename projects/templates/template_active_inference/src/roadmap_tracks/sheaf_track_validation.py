@@ -6,6 +6,7 @@ from pathlib import Path
 
 from . import sheaf_tracks as _tracks
 from .row_aggregates import all_rows
+from .security import validate_security_posture_audit
 from .supplemental import validate_supplemental_artifacts
 
 
@@ -403,6 +404,54 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     ):
         issues.append("track_lane_matrix.json has incomplete pipeline-to-sheaf rows")
 
+    artifact_contract = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["artifact_contract_index"])
+    if artifact_contract.get("schema") != "template_active_inference.artifact_contract_index.v1":
+        issues.append("artifact_contract_index.json schema mismatch")
+    artifact_rows = artifact_contract.get("rows") or []
+    producers, _, _ = _tracks._artifact_maps()
+    expected_artifacts = sorted(producers)
+    artifact_ids = sorted(str(row.get("artifact") or "") for row in artifact_rows)
+    contract_rows_complete = bool(artifact_rows) and all(bool(row.get("contract_complete")) for row in artifact_rows)
+    claim_rows_bound = bool(artifact_rows) and all(
+        (not row.get("claim_required")) or bool(row.get("claim_ids")) for row in artifact_rows
+    )
+    validators_bound = bool(artifact_rows) and all(bool(row.get("validation_gates")) for row in artifact_rows)
+    negatives_bound = bool(artifact_rows) and all(bool(row.get("negative_control")) for row in artifact_rows)
+    copied_complete = bool(artifact_rows) and all(bool(row.get("copied_parity_ok")) for row in artifact_rows)
+    freshness_current = True
+    for row in artifact_rows:
+        rel = str(row.get("artifact") or "")
+        expected_producer = producers.get(rel)
+        path = root / rel
+        if not expected_producer:
+            freshness_current = False
+            break
+        if row.get("producer") != expected_producer or row.get("source_exists") != path.is_file():
+            freshness_current = False
+            break
+        if not row.get("freshness_cycle_excluded") and row.get("source_sha256") != _tracks._sha256(path):
+            freshness_current = False
+            break
+    if (
+        artifact_ids != expected_artifacts
+        or artifact_contract.get("artifact_ids") != expected_artifacts
+        or artifact_contract.get("semantic_artifact_ids") != expected_artifacts
+        or artifact_contract.get("all_artifact_rows_match_semantic_map") is not True
+        or artifact_contract.get("all_rows_complete") is not True
+        or artifact_contract.get("all_rows_complete") != contract_rows_complete
+        or artifact_contract.get("all_claim_required_rows_bound") is not True
+        or artifact_contract.get("all_claim_required_rows_bound") != claim_rows_bound
+        or artifact_contract.get("all_validators_bound") is not True
+        or artifact_contract.get("all_validators_bound") != validators_bound
+        or artifact_contract.get("all_negative_controls_bound") is not True
+        or artifact_contract.get("all_negative_controls_bound") != negatives_bound
+        or artifact_contract.get("all_freshness_hashes_current") is not True
+        or artifact_contract.get("all_freshness_hashes_current") != freshness_current
+        or artifact_contract.get("all_copied_parity_complete") is not True
+        or artifact_contract.get("all_copied_parity_complete") != copied_complete
+    ):
+        issues.append("artifact_contract_index.json has incomplete or stale artifact contract rows")
+
     blocked = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["blocked_scope_manifest"])
     if blocked.get("schema") != "template_active_inference.blocked_scope_manifest.v1":
         issues.append("blocked_scope_manifest.json schema mismatch")
@@ -577,6 +626,7 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     from .scholarship import validate_scholarship_source_matrix
 
     issues.extend(validate_scholarship_source_matrix(root))
+    issues.extend(validate_security_posture_audit(root))
 
     issues.extend(validate_supplemental_artifacts(root))
 

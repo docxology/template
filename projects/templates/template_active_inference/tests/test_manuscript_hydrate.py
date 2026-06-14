@@ -11,9 +11,9 @@ _TOKEN_RE = re.compile(r"\{\{[a-z][a-z0-9_]*(?::\.[0-9]+f)?\}\}")
 def test_generate_variables_includes_structural_counts() -> None:
     root = Path(__file__).resolve().parents[1]
     vars_ = generate_variables(root, require_analysis_outputs=False)
-    assert vars_["pipeline_track_count"] == 30
-    assert vars_["sheaf_track_count"] == 33
-    assert vars_["appendix_sheaf_track_count"] == 32
+    assert vars_["pipeline_track_count"] == 31
+    assert vars_["sheaf_track_count"] == 34
+    assert vars_["appendix_sheaf_track_count"] == 33
     assert vars_["imrad_manifest_rows"] == 17
     assert vars_["composed_section_count"] == 12
     assert vars_["imrad_group_count"] == 5
@@ -98,7 +98,7 @@ def test_write_resolved_manuscript_removes_tokens(tmp_path: Path) -> None:
     out_dir = write_resolved_manuscript(tmp_path, variables)
     resolved = (out_dir / "00_abstract.md").read_text(encoding="utf-8")
     assert _TOKEN_RE.search(resolved) is None
-    assert "Tracks: 30" in resolved
+    assert "Tracks: 31" in resolved
 
 
 def test_write_resolved_manuscript_retargets_output_links(tmp_path: Path) -> None:

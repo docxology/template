@@ -83,6 +83,8 @@ incomplete in the track-improvement scope.
 
 `release_bundle_manifest.json` provides the appendix proof for required deliverables: {{release_bundle_artifact_count}} artifacts with source-present status `{{release_bundle_sources_present}}`.
 
+`artifact_contract_index.json` is the appendix-level cross-artifact concordance proof. It rederives {{artifact_contract_row_count}} rows from the live semantic producer map and release-bundle parity rows, with row-complete flag `{{artifact_contract_complete}}` and copied-parity flag `{{artifact_contract_copied_parity_complete}}`.
+
 <!-- sheaf-track:gate_ergonomics -->
 
 `validation_gate_index.json` provides the appendix proof for gate ergonomics: {{validation_gate_index_count}} indexed gates. `track_lane_matrix.json` adds {{track_lane_matrix_row_count}} pipeline-to-sheaf rows with completion flag `{{track_lane_matrix_complete}}`.
@@ -161,6 +163,22 @@ complete `{{visualization_intent_metadata_complete}}`, paper claims complete
 visualization-quality audit and then rechecked through the semantic sheaf
 restrictions.
 
+<!-- sheaf-track:security_posture -->
+
+The appendix includes the security posture as a release-boundary proof object.
+Each row in `output/reports/security_posture_audit.json` has evidence artifacts,
+validators, a scoped boundary statement, and a negative-control identifier. The
+negative controls target the verifier failure modes a well-resourced adversary
+would prefer: aggregate forgery, untracked credentials, network-derived evidence,
+private-data leakage, unsigned production-release claims, and production
+zero-trust claims without a runtime identity plane.
+
+The posture is therefore defensive and local: it hardens this public template
+against evidence laundering, artifact drift, secret exposure, and false release
+claims while keeping production-only controls deferred until a real deployment
+adds signed provenance, SBOMs, identity-aware access, telemetry, and incident
+response evidence.
+
 <!-- sheaf-track:sensitivity -->
 
 `sheaf-track:sensitivity` binds `output/data/sensitivity_sweep.json`, measured `output/data/si_policy_grid.json`, compatibility-named EFE values artifact `output/data/si_efe_terms.json`, `output/data/analytical_observable_sweep.json`, and graph-world topology artifacts including `output/data/si_graph_world_topology_traces.json`. The appendix claim is exactly {{sensitivity_cell_count}} complete canonical grid cells.
@@ -206,6 +224,14 @@ counts are caught after composition, not only during source-file linting.
 ![](../output/figures/track_lane_promotion_map.png){width=98%}
 
 *Reproduced from [@fig:track_lane_promotion_map]. Track-lane promotion map: {{track_lane_matrix_row_count}} pipeline-to-sheaf rows with complete promotion status {{track_lane_matrix_complete}}. Left: seven promotion-rule obligations; right: sheaf fragment bindings.*
+
+![](../output/figures/artifact_contract_map.png){width=98%}
+
+*Reproduced from [@fig:artifact_contract_map]. Artifact contract map: {{artifact_contract_row_count}} generated artifact rows with complete contract status {{artifact_contract_complete}} and copied-output parity complete {{artifact_contract_copied_parity_complete}}. Cycle rows are explicit in `output/data/artifact_contract_index.json`.*
+
+![](../output/figures/security_posture_map.png){width=96%}
+
+*Reproduced from [@fig:security_posture_map]. Security posture map: {{security_posture_control_count}} controls, {{security_posture_enforced_count}} enforced and {{security_posture_deferred_count}} scoped as deferred; secret findings: {{security_posture_secret_finding_count}}; high-risk gaps: {{security_posture_high_risk_gap_count}}.*
 
 ![](../output/figures/sheaf_coverage_heatmap.png){width=95%}
 

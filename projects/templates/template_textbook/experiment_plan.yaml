@@ -1,0 +1,27 @@
+conditions:
+  - name: config_declared_structure
+    role: reference
+    description: "The book structure declared in manuscript/config.yaml."
+  - name: generated_scaffold_contract
+    role: proposed
+    description: "Chapter, lab, question-bank, figure, and diagram surfaces materialized from the config."
+  - name: author_filled_content
+    role: variant
+    description: "Future fork state where an author replaces scaffold stubs with domain prose."
+metrics:
+  primary:
+    name: structural_contract_pass_rate
+    direction: maximize
+protocol: >-
+  Validate manuscript/config.yaml, generate deterministic figures and diagrams,
+  run manuscript-integrity tests, and audit that stubs remain explicit until
+  real domain content is supplied by a fork.
+expected_figures:
+  - fig:part_0_orientation
+  - fig:gallery_line
+expected_tables:
+  - tbl:part_0_orientation_parameters
+baselines:
+  - config_declared_structure
+ablations:
+  - author_filled_content

@@ -142,6 +142,98 @@ def _benchmark_readiness_checks(project_root: Path, settings: _GradingSettings) 
     return checks
 
 
+def build_benchmark_boundary(
+    project_root: Path,
+    config: AutoResearchLoopConfig,
+    *,
+    ml_result: Any | None = None,
+) -> dict[str, object]:
+    """Build the benchmark-scope boundary contract for reviewer inspection."""
+    settings = _load_grading_settings(project_root)
+    task = ml_result.task_config if ml_result is not None else None
+    candidate_families = (
+        sorted({str(candidate.model_type) for candidate in ml_result.candidates})
+        if ml_result is not None
+        else []
+    )
+    return {
+        "schema": "template-autoresearch-benchmark-boundary-v1",
+        "fixture_scope": {
+            "dataset": getattr(task, "dataset", "local fixture") if task is not None else "local fixture",
+            "task_name": getattr(task, "name", "bounded local readiness benchmark") if task is not None else "bounded local readiness benchmark",
+            "offline_only": True,
+            "network_access": False,
+        },
+        "metric": {
+            "name": "accuracy_delta_vs_baseline",
+            "direction": settings.metric_direction,
+            "minimum_meaningful_delta": settings.min_accuracy_delta,
+        },
+        "baseline": {
+            "family": getattr(getattr(ml_result, "baseline", None), "model_type", "baseline")
+            if ml_result is not None
+            else "baseline",
+            "accuracy": getattr(getattr(ml_result, "baseline", None), "test_accuracy", None)
+            if ml_result is not None
+            else None,
+        },
+        "candidate_families": candidate_families,
+        "budget": {
+            "max_iterations": config.budget_policy.max_iterations,
+            "max_llm_calls": config.budget_policy.max_llm_calls,
+            "max_cost_usd": config.budget_policy.max_cost_usd,
+        },
+        "benchmark_tasks": [task.to_dict() for task in config.benchmark_tasks],
+        "statistical_methods": [
+            {
+                "name": "Wilson score accuracy intervals",
+                "artifact": "output/data/ml_candidate_intervals.json",
+                "scope": "baseline and evaluated candidates on the bundled offline fixture",
+            },
+            {
+                "name": "deterministic bootstrap intervals",
+                "artifact": "output/data/ml_bootstrap_intervals.json",
+                "scope": "accepted-candidate accuracy and macro-F1 uncertainty on the bundled offline fixture",
+            },
+            {
+                "name": "exact McNemar paired comparison",
+                "artifact": "output/data/ml_paired_comparison.json",
+                "scope": "matched baseline-vs-accepted correctness on the local test split",
+            },
+            {
+                "name": "bootstrap rank-stability frequencies",
+                "artifact": "output/data/ml_candidate_rank_stability.json",
+                "scope": "candidate ordering stability within the configured candidate budget",
+            },
+        ],
+        "non_claims": [
+            "not a general benchmark leaderboard",
+            "not evidence of empirical superiority outside the bundled fixture",
+            "not publication approval",
+            "not a network or LLM-evidence claim",
+        ],
+        "claim_boundary": (
+            "Benchmark-adjacent statistics describe the deterministic bundled fixture only; "
+            "they are readiness diagnostics, not broad empirical or publication claims."
+        ),
+    }
+
+
+def write_benchmark_boundary(
+    project_root: Path,
+    config: AutoResearchLoopConfig,
+    *,
+    ml_result: Any | None = None,
+) -> Path:
+    """Write the benchmark-boundary artifact."""
+    from .io import write_json
+
+    return write_json(
+        project_root / "output" / "data" / "benchmark_boundary.json",
+        build_benchmark_boundary(project_root, config, ml_result=ml_result),
+    )
+
+
 def _grade_absent_benchmark(
     project_root: Path, task: BenchmarkTask, settings: _GradingSettings | None = None
 ) -> dict[str, object]:

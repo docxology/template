@@ -1,0 +1,27 @@
+conditions:
+  - name: static_repository_docs
+    role: reference
+    description: "Human-authored repository documentation and declared pipeline files."
+  - name: live_template_introspection
+    role: proposed
+    description: "Generated metrics and figures from inspecting the template checkout."
+  - name: security_provenance_inventory
+    role: variant
+    description: "Focused inventory of provenance and security-layer claims."
+metrics:
+  primary:
+    name: introspected_metric_count
+    direction: maximize
+protocol: >-
+  Generate architecture figures and manuscript metrics from the current
+  template-like checkout, inject variables into the manuscript, and compare
+  claims against the generated metrics JSON rather than static prose alone.
+expected_figures:
+  - fig:architecture_overview
+  - fig:pipeline_stages
+  - fig:module_inventory
+  - fig:comparative_matrix
+baselines:
+  - static_repository_docs
+ablations:
+  - security_provenance_inventory

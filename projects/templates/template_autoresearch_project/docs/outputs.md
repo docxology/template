@@ -19,11 +19,13 @@ Core data:
 | `output/data/autoresearch_claims.json` | Evidence-grounded generated claims |
 | `output/data/autoresearch_stage_matrix.csv` | Tabular stage status for spreadsheet review (`status` is `declared`, not execution proof) |
 | `output/data/autoresearch_review_packet.json` | Machine-readable human review packet |
+| `output/data/autoresearch_evidence_overview.json` | Reviewer-facing overview of readiness vs. approval, claim evidence, source-ledger freshness, benchmark boundary, and security/integrity status |
 | `output/data/research_program.json` | Human-authored research program, autonomy level, budget, and edit allowlist |
 | `output/data/idea_ledger.json` | Proposed, accepted, rejected, and deferred research ideas plus candidates |
 | `output/data/run_ledger.json` | Replay ledger with budget use and stop condition |
 | `output/data/review_decisions.json` | Required human review gate decisions |
 | `output/data/benchmark_scores.json` | Benchmark-style grading status for configured tasks |
+| `output/data/benchmark_boundary.json` | Fixture, metric-direction, candidate-budget, statistical-method, and non-claim boundary for benchmark-adjacent diagnostics |
 | `output/data/mnist_task_config.json` | Resolved local MNIST dataset, baseline, training, and candidate-search configuration |
 | `output/data/ml_task_results.json` | MNIST subset summary, baseline, candidates, accepted candidate, and metric delta |
 | `output/data/ml_candidate_ledger.json` | Candidate lifecycle ledger with proposed, evaluated, accepted, rejected, and deferred states |
@@ -97,6 +99,7 @@ Reports:
 | `output/reports/autoresearch_loop.json` | Report copy of the loop payload |
 | `output/reports/autoresearch_loop.md` | Human-readable loop report |
 | `output/reports/autoresearch_review_packet.md` | Human review packet with required actions |
+| `output/reports/autoresearch_evidence_overview.md` | Reviewer-facing markdown summary that preserves the readiness/approval boundary and surfaces source-ledger or benchmark-boundary issues |
 | `output/reports/autoresearch_summary.md` | Short project summary |
 | `output/reports/autoresearch_security_review.md` | Adversarial local security review packet for human assessment |
 | `output/reports/ml_experiment_report.md` | Human-readable deterministic ML-loop report |

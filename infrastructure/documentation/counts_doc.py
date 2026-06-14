@@ -41,7 +41,7 @@ from infrastructure.project.public_scope import public_project_names
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-06-11"
+GENERATED_DATE = "2026-06-13"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
 EXEMPLAR_SNAPSHOT_DATE = "2026-06-11"

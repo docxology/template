@@ -15,7 +15,7 @@ from src.ml.task import MLTaskResult
 from src.models import AutoResearchLoopResult, LoopStageResult
 from src.reports import render_loop_markdown, render_stage_matrix_csv
 
-from .benchmark import _benchmark_score, _write_benchmark_grading_reports
+from .benchmark import _benchmark_score, _write_benchmark_grading_reports, write_benchmark_boundary
 from .io import write_json, write_text
 
 
@@ -139,6 +139,7 @@ def write_method_contract_artifacts(
         write_json(data_dir / "run_ledger.json", run_ledger.to_dict()),
         write_json(data_dir / "review_decisions.json", review_decisions),
         write_json(data_dir / "benchmark_scores.json", benchmark_scores),
+        write_benchmark_boundary(project_root, config, ml_result=ml_result),
     ]
     paths.extend(benchmark_report_paths)
     return paths

@@ -8,7 +8,9 @@ from src.manuscript import compute_variables_from_payload, save_variables
 from src.config import AutoResearchLoopConfig
 from src.models import AutoResearchLoopResult, LoopStageResult
 from src.reports import (
+    build_evidence_overview,
     build_review_packet,
+    render_evidence_overview_markdown,
     render_loop_markdown,
     render_review_packet_markdown,
     render_summary_markdown,
@@ -28,8 +30,10 @@ def refresh_loop_payloads(project_root: Path, result: AutoResearchLoopResult) ->
         write_json(data_dir / "autoresearch_loop.json", loop_payload),
         write_json(data_dir / "autoresearch_claims.json", [claim.to_dict() for claim in result.claims]),
         write_json(data_dir / "autoresearch_review_packet.json", build_review_packet(result)),
+        write_json(data_dir / "autoresearch_evidence_overview.json", build_evidence_overview(project_root, result)),
         write_json(reports_dir / "autoresearch_loop.json", loop_payload),
         write_text(reports_dir / "autoresearch_loop.md", render_loop_markdown(result)),
+        write_text(reports_dir / "autoresearch_evidence_overview.md", render_evidence_overview_markdown(project_root, result)),
         write_text(reports_dir / "autoresearch_review_packet.md", render_review_packet_markdown(result)),
         write_text(reports_dir / "autoresearch_summary.md", render_summary_markdown(result)),
         save_variables(compute_variables_from_payload(loop_payload), data_dir / "manuscript_variables.json"),

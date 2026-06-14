@@ -11,7 +11,26 @@ validation_gates:
   - Project Tests
   - Project Analysis
 source_policy: local_artifacts_only
+review_gates:
+  - fixture_replay
+  - artifact_integrity
+  - publication_readiness
 artifact_expectations:
   - output/runs/run_1/run_summary.json
   - output/reports/sia_loop_report.md
   - output/data/manuscript_variables.json
+benchmark_rubric:
+  name: sia-harness-readiness
+  dimensions:
+    - name: fixture_replay_accuracy
+      weight: 2.0
+    - name: run_artifact_integrity
+      weight: 1.5
+    - name: manuscript_variable_grounding
+      weight: 1.0
+    - name: local_only_claims
+      weight: 1.0
+llm_prompt_guidance: >-
+  Treat fixture replay outputs and run summaries as the only evidence source.
+  Do not describe live self-improvement performance unless an explicit live run
+  artifact is present and named.

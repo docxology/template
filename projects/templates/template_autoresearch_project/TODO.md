@@ -26,6 +26,8 @@ that remains live.
 | Source ledger | `manuscript/source_ledger.yaml` is parsed through reusable project helpers and checked offline | citekeys stay present in ledger, BibTeX, and numbered manuscript prose |
 | ML loop | bounded deterministic ML execution records baseline, candidate selection, metric improvement, and budget evidence | no runtime downloads, no generated-code execution, no network calls |
 | Evidence reports | compact evidence registry, phase ledger, figure-quality report, rank stability, and calibration diagnostics are generated from shared data | report-size guard remains in place unless explicitly enabled |
+| Evidence overview | `autoresearch_evidence_overview.json` and `.md` summarize readiness versus approval, claim evidence rows, source-ledger tier/age status, benchmark boundaries, and security/integrity status | overview must keep generated readiness separate from human publication approval |
+| Benchmark boundary | `benchmark_boundary.json` records fixture scope, metric direction, baseline, candidate families, budget, and explicit non-claims | benchmark-adjacent prose must not imply broad empirical or leaderboard claims |
 | Module shape | ML, figure, diagnostics, manuscript table, and source-ledger responsibilities have been split below drift thresholds | future additions go into the right leaf modules, not back into large hubs |
 
 ## Non-negotiable invariants
@@ -58,15 +60,10 @@ that remains live.
 
 ### AR-SOURCE-FRESHNESS-1 - Keep the source ledger fresh offline
 
-- **Problem:** `checked_as_of` dates and source-tier counts can drift without a
-  lightweight maintenance signal.
-- **Why it matters:** the manuscript cites current-trends sources while the
-  tests intentionally avoid live URL validation.
-- **Smallest next step:** make the offline ledger check print age buckets and
-  source-tier counts, with failures only for malformed or future-dated entries.
-- **Acceptance:** the source-ledger script runs without network calls and exits
-  nonzero for future dates or invalid tiers.
-- **Out of scope:** crawling live sources or asserting URL availability.
+- **Status:** shipped in this pass. `scripts/check_source_ledger.py` prints
+  source-tier counts and checked-age buckets offline, and source-ledger tests
+  fail on future dates, invalid tiers, non-HTTPS URLs, and missing ledger
+  BibTeX/manuscript coverage.
 
 ### AR-MODULE-WATCH-1 - Keep split modules below drift thresholds
 
@@ -82,40 +79,11 @@ that remains live.
 
 ## Medium
 
-### AR-REPORT-ERGONOMICS-1 - Make evidence reports easier to scan
-
-- **Problem:** the evidence surface is correct but still dense for humans
-  checking release readiness.
-- **Why it matters:** reviewers should see readiness, approval, metric, source,
-  and security status without reading every JSON file.
-- **Smallest next step:** add a compact Markdown summary generated from existing
-  JSON artifacts, with links back to the machine-readable files.
-- **Acceptance:** the report summary is generated offline and contains review
-  status, source-ledger counts, ML comparison, and security evidence status.
-- **Out of scope:** replacing the JSON artifacts.
-
-### AR-BENCHMARK-ERGONOMICS-1 - Clarify benchmark boundaries
-
-- **Problem:** the bounded ML loop can be misread as a general benchmark claim.
-- **Why it matters:** the exemplar should show a reproducible pattern, not claim
-  state-of-the-art AutoResearch.
-- **Smallest next step:** generate a small benchmark-boundary artifact that
-  states fixture scope, baseline, candidate families, budget, and non-claims.
-- **Acceptance:** manuscript variables or report prose can cite the artifact, and
-  tests fail if a benchmark claim lacks boundary metadata.
-- **Out of scope:** adding new datasets or external leaderboards.
-
-### AR-SOURCE-LEDGER-2 - Promote ledger checks into the project contract
-
-- **Problem:** ledger correctness is spread across helper tests and manuscript
-  integration checks.
-- **Why it matters:** source governance should be a visible project contract,
-  not only a manuscript-variable side effect.
-- **Smallest next step:** make the source-ledger checker part of the standard
-  project gate and document its offline-only semantics.
-- **Acceptance:** project tests fail for missing ledger citekeys, invalid tiers,
-  future dates, or manuscript citekeys absent from the ledger.
-- **Out of scope:** live freshness validation.
+No active medium rows remain from this pass. `AR-REPORT-ERGONOMICS-1`,
+`AR-BENCHMARK-ERGONOMICS-1`, and `AR-SOURCE-LEDGER-2` are implemented in the
+generated evidence overview, benchmark boundary artifact, and source-ledger
+contract tests. Keep this section empty until a new medium verifier improvement
+has a proving artifact, gate, and negative control.
 
 ## Major
 
@@ -148,8 +116,9 @@ that remains live.
 
 1. Keep `AR-REVIEW-BOUNDARY-1` and `AR-SOURCE-FRESHNESS-1` green whenever the
    manuscript, reports, or source ledger changes.
-2. Land `AR-REPORT-ERGONOMICS-1` before adding new evidence types, so reviewers
-   have one human-readable status surface.
-3. Land `AR-BENCHMARK-ERGONOMICS-1` before any new benchmark-adjacent claim.
+2. Do not add new evidence types until the evidence overview remains stable
+   through another full project test run.
+3. Do not add benchmark-adjacent claims unless they cite
+   `output/data/benchmark_boundary.json` or a successor boundary artifact.
 4. Attempt `AR-METHOD-ADAPTER-1` only after the current module-size and review
    boundaries stay clean through another release.

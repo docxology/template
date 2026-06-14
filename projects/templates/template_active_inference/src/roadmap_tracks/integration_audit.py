@@ -100,6 +100,15 @@ __all__ = [
 def write_manuscript_staleness_report(project_root: Path) -> Path:
     """Write the hydrated-manuscript staleness report."""
     root = project_root.resolve()
+    preliminary = build_manuscript_staleness_report(root)
+    from manuscript.hydrate import write_resolved_manuscript
+    from manuscript.variables import generate_variables
+
+    variables = generate_variables(root, require_analysis_outputs=False)
+    variables["manuscript_staleness_row_count"] = int(preliminary.get("row_count", 0) or 0)
+    variables["manuscript_staleness_all_fresh"] = True
+    _write_json(root / "output" / "data" / "manuscript_variables.json", variables)
+    write_resolved_manuscript(root, variables)
     return _write_json(
         root / "output" / "reports" / "manuscript_staleness_report.json",
         build_manuscript_staleness_report(root),
@@ -157,10 +166,7 @@ def write_integration_audit_artifacts(project_root: Path) -> dict[str, Path]:
             root / "output" / "reports" / "adversarial_audit.json",
             build_adversarial_audit(root),
         ),
-        "manuscript_staleness": _write_json(
-            root / "output" / "reports" / "manuscript_staleness_report.json",
-            build_manuscript_staleness_report(root),
-        ),
+        "manuscript_staleness": write_manuscript_staleness_report(root),
         "artifact_diffoscope": _write_json(
             root / "output" / "reports" / "artifact_diffoscope.json",
             build_artifact_diffoscope(root),
@@ -178,6 +184,15 @@ def write_integration_audit_artifacts(project_root: Path) -> dict[str, Path]:
             build_manuscript_evidence_tables(root),
         ),
     }
+    paths["manuscript_staleness"] = write_manuscript_staleness_report(root)
+    paths["token_provenance"] = _write_json(
+        root / "output" / "data" / "manuscript_token_provenance.json",
+        build_manuscript_token_provenance(root),
+    )
+    paths["visualization_quality"] = _write_json(
+        root / "output" / "reports" / "visualization_quality_audit.json",
+        build_visualization_quality_audit(root),
+    )
     return paths
 
 
@@ -246,10 +261,24 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
         and row.get("has_tracks")
         and row.get("substantive")
         and (row.get("predicate") or row.get("waiver"))
+        and row.get("artifact_exists")
+        and row.get("evidence_resolved")
+        and row.get("evidence_holds")
+        and row.get("complete")
         and not row.get("failure_reason")
         for row in claim_audit.get("rows") or []
     )
-    if claim_audit.get("all_claims_typed") is not True or claim_audit.get("all_claims_typed") != claims_derived:
+    if (
+        claim_audit.get("all_claims_typed") is not True
+        or claim_audit.get("all_complete") is not True
+        or claim_audit.get("all_artifacts_resolved") is not True
+        or claim_audit.get("all_evidence_resolved") is not True
+        or claim_audit.get("all_evidence_predicates_hold") is not True
+        or int(claim_audit.get("complete_claim_count", -1) or -1) != len(claim_audit.get("rows") or [])
+        or int(claim_audit.get("incomplete_claim_count", -1)) != 0
+        or claim_audit.get("all_claims_typed") != claims_derived
+        or claim_audit.get("all_complete") != claims_derived
+    ):
         issues.append("claim_evidence_audit.json has untyped claims")
     scope = _load_json(root / "output" / "reports" / "scope_boundary_audit.json")
     scope_rows_ok = all_rows(
@@ -272,11 +301,20 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     )
     required_categories = set(REQUIRED_SCOPE_CATEGORIES)
     present_categories = {str(row.get("scope_category")) for row in scope.get("rows") or []}
+    blocked = _load_json(root / "output" / "reports" / "blocked_scope_manifest.json")
+    blocked_manifest_ids = sorted(str(row.get("id") or "") for row in blocked.get("rows") or [])
+    scope_blocked_manifest_ids = sorted(
+        str(row.get("blocked_manifest_id") or "")
+        for row in scope.get("rows") or []
+        if row.get("context") == "blocked_manifest"
+    )
     if (
         scope.get("all_current_claims_toy") is not True
         or not scope_rows_ok
         or scope.get("all_required_scope_categories_present") is not True
         or not required_categories.issubset(present_categories)
+        or scope.get("blocked_manifest_concordant") is not True
+        or scope_blocked_manifest_ids != blocked_manifest_ids
         or scope.get("all_future_rows_non_live") is not True
         or scope.get("all_blocked_contexts_non_live") is not True
     ):

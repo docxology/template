@@ -138,6 +138,11 @@ tracks:
     paths: [src/roadmap_tracks, output/data/scholarship_source_matrix.json]
     gate: validate_outputs
     required: true
+  - id: security_posture
+    label: Local security posture and deferred production controls
+    paths: [src/roadmap_tracks, output/reports/security_posture_audit.json]
+    gate: validate_outputs
+    required: true
   - id: release_notes
     label: Source-backed release notes evidence
     paths: [src/roadmap_tracks, output/reports/release_notes_evidence.json]

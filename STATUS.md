@@ -4,7 +4,7 @@
 >
 > Refresh target: every 6 months. Anything older than **365 days** should be treated as potentially dormant.
 
-**Last updated:** 2026-05-21
+**Last updated:** 2026-06-13
 **Maintained by:** Daniel Ari Friedman (see [MAINTAINERS.md](MAINTAINERS.md))
 
 ## Verification ledger
@@ -24,7 +24,8 @@
 | CI matrix (`.github/workflows/ci.yml`) | 2026-05-20 | Daniel | Ubuntu/macOS × Python 3.10–3.12, Dependabot wired; local reproduction documented in `docs/maintenance/ci-local.md` | 🟢 healthy; Python 3.10 EOL Oct 2026 → drop next refresh |
 | Documentation index (`docs/documentation-index.md`) | 2026-05-20 | Daniel | Authoritative per-file index; `docs/_generated/active_projects.md` is the rotating-project source-of-truth | 🟢 healthy |
 | Skills manifest (`infrastructure/skills/`) | 2026-05-21 | Daniel | `uv run python -m infrastructure.skills write` and `write-index` refreshed `.cursor/skill_manifest.json` and `docs/_generated/skills_index.md` after steganography skill edits | 🟢 healthy |
-| Regression tests (`tests/regression/`) | 2026-05-20 | Daniel | **NEW** — scaffold added 2026-05-20. Per-figure / per-table pinned numerical outputs. See `docs/maintenance/regression-testing.md` | 🔴 scaffold only; no pinned cases yet |
+| Regression tests (`tests/regression/`) | 2026-06-13 | Codex | First populated slice: `uv run pytest tests/regression/ --collect-only -q --no-cov` collects 3 `template_code_project` claim tests; `uv run pytest tests/regression/ -q --no-cov` passes, including a pinned-value mutation negative control. See `docs/maintenance/regression-testing.md` | 🟡 first pins live; expand beyond canonical optimizer claims |
+| AutoResearch exemplar (`projects/templates/template_autoresearch_project/`) | 2026-06-13 | Codex | `uv run pytest projects/templates/template_autoresearch_project/tests/ -q` passed 224 tests after adding evidence overview, benchmark-boundary, and source-ledger contract checks | 🟢 healthy |
 
 ## Health legend
 

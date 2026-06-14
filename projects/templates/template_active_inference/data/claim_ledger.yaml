@@ -560,15 +560,15 @@ claims:
     field: all_tokens_mapped
     equals: true
 - id: claim_evidence_audit_typed
-  statement: Claim-evidence audit reports every ledger claim has typed evidence and
-    track coverage.
+  statement: Claim-evidence audit reports every ledger claim has typed evidence,
+    live artifact resolution, and track coverage.
   path: output/reports/claim_evidence_audit.json
   section: methods_sheaf
   tracks:
   - adversarial_audit
   - manuscript
   evidence:
-    field: all_claims_typed
+    field: all_complete
     equals: true
 - id: validation_gate_index_complete
   statement: Validation gate index records every promoted local gate used by the release.
@@ -762,6 +762,7 @@ claims:
     - theorem_traceability
     - gate_ergonomics
     - scholarship
+    - security_posture
     - artifact_diffoscope
     - proof_extraction
     - state_space_catalog
@@ -1006,6 +1007,64 @@ claims:
   section: methods_sheaf
   tracks:
   - scholarship
+  - visualization
+  evidence:
+    predicate: file_exists
+- id: security_posture_controls_ok
+  statement: Security posture audit records enforced local controls, scoped deferred
+    production controls, zero high-risk local gaps, and zero high-risk secret-pattern
+    findings.
+  path: output/reports/security_posture_audit.json
+  section: methods_sheaf
+  tracks:
+  - security_posture
+  - release_bundle
+  - gate_ergonomics
+  evidence:
+    field: all_controls_ok
+    equals: true
+- id: security_posture_map_figure
+  statement: Security posture map is generated from the source-backed security
+    posture audit.
+  path: output/figures/security_posture_map.png
+  section: methods_sheaf
+  tracks:
+  - security_posture
+  - visualization
+  evidence:
+    predicate: file_exists
+- id: artifact_contract_index_complete
+  statement: Artifact contract index binds generated artifacts to producers, consumers,
+    validators, claims, freshness hashes, negative controls, and copied-output
+    parity status.
+  path: output/data/artifact_contract_index.json
+  section: methods_sheaf
+  tracks:
+  - provenance
+  - release_bundle
+  - gate_ergonomics
+  evidence:
+    field: all_rows_complete
+    equals: true
+- id: artifact_contract_copied_parity_complete
+  statement: Artifact contract index records complete copied-output parity status
+    for artifacts that participate in the release bundle.
+  path: output/data/artifact_contract_index.json
+  section: methods_sheaf
+  tracks:
+  - release_bundle
+  - artifact_diffoscope
+  evidence:
+    field: all_copied_parity_complete
+    equals: true
+- id: artifact_contract_map_figure
+  statement: Artifact contract map is generated from the contract index and release
+    evidence reports.
+  path: output/figures/artifact_contract_map.png
+  section: methods_sheaf
+  tracks:
+  - release_bundle
+  - provenance
   - visualization
   evidence:
     predicate: file_exists
