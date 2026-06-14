@@ -9,7 +9,7 @@ authors:
     orcid: "https://orcid.org/0000-0001-6232-9096"
     affiliation: "Active Inference Institute"
     email: "daniel@activeinference.institute"
-version: "0.1.0"
+version: '0.1.1'
 date-released: "2026-06-03"
 license: "Apache-2.0"
 doi: "10.5281/zenodo.20533125"

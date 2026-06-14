@@ -18,4 +18,4 @@ message: If you use this software, please cite it using the metadata from this f
 repository-code: https://github.com/docxology/template_autoresearch_project
 title: Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task
 type: software
-version: '0.3.0'
+version: '0.3.1'

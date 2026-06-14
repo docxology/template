@@ -18,4 +18,4 @@ message: If you use this software, please cite it using the metadata from this f
 repository-code: https://github.com/docxology/template_autoscientists
 title: A Deterministic Testbed for Self-Organizing Agent-Team Coordination
 type: software
-version: 1.0.0
+version: '1.0.1'

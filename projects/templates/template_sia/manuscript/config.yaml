@@ -1,7 +1,7 @@
 paper:
   title: "Self-Improvement Agent Harness: A Deterministic SIA Exemplar"
   subtitle: "Meta → Target → Feedback loops with public/private task splits"
-  version: "0.1.0"
+  version: "0.1.1"
 
 authors:
   - name: "Daniel Ari Friedman"
@@ -12,10 +12,10 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.20453879" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20453880" # Latest Zenodo deposit (v0.1.0)
-  version_record: "https://zenodo.org/records/20453880"
+  version_doi: "10.5281/zenodo.20693012" # Latest Zenodo deposit (v0.1.0)
+  version_record: "https://zenodo.org/records/20693012"
   year: "2026"
-  github_repository: "docxology/template"
+  github_repository: "docxology/template_sia"
 
 keywords:
   - "self-improvement agents"
