@@ -100,6 +100,7 @@ _BLOCKED_SCOPE_NEGATIONS = (
     "without ",
 )
 
+
 def _blocked_scope_match(text: str) -> tuple[str, str]:
     for category, needles in _BLOCKED_SCOPE_PATTERNS.items():
         for needle in needles:
@@ -277,7 +278,9 @@ def build_scope_boundary_audit(project_root: Path) -> dict[str, Any]:
     blocked_rows = [row for row in rows if row.get("context") == "blocked_manifest"]
     blocked_manifest_ids = sorted(str(row.get("id") or "") for row in blocked_manifest.get("rows") or [])
     scope_blocked_manifest_ids = sorted(str(row.get("blocked_manifest_id") or "") for row in blocked_rows)
-    blocked_manifest_categories = sorted({str(row.get("scope_category") or "") for row in blocked_manifest.get("rows") or []})
+    blocked_manifest_categories = sorted(
+        {str(row.get("scope_category") or "") for row in blocked_manifest.get("rows") or []}
+    )
     scope_blocked_categories = sorted({str(row.get("scope_category") or "") for row in blocked_rows})
     blocked_manifest_concordant = (
         bool(blocked_manifest_ids)

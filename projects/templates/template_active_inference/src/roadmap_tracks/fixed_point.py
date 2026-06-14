@@ -145,7 +145,9 @@ def _write_sheaf_owned_artifacts(root: Path) -> dict[str, Path]:
     return {
         "sensitivity": _write_json(root / CANONICAL_ARTIFACTS["sensitivity"], build_sensitivity_sweep(root)),
         "uncertainty": _write_json(root / CANONICAL_ARTIFACTS["uncertainty"], build_uncertainty_summary(root)),
-        "model_checking": _write_json(root / CANONICAL_ARTIFACTS["model_checking"], build_model_checking_witnesses(root)),
+        "model_checking": _write_json(
+            root / CANONICAL_ARTIFACTS["model_checking"], build_model_checking_witnesses(root)
+        ),
     }
 
 

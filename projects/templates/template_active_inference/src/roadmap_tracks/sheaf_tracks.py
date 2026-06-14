@@ -1420,7 +1420,9 @@ def _artifact_contract_cycle_excluded(rel: str) -> bool:
     }
 
 
-def _artifact_contract_track_maps(root: Path) -> tuple[dict[str, list[str]], dict[str, list[str]], dict[str, list[str]]]:
+def _artifact_contract_track_maps(
+    root: Path,
+) -> tuple[dict[str, list[str]], dict[str, list[str]], dict[str, list[str]]]:
     registry = _registry_tracks(root)
     artifacts_to_pipeline: dict[str, list[str]] = {}
     artifacts_to_sheaf: dict[str, list[str]] = {}

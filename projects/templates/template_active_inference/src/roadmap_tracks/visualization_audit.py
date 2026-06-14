@@ -499,14 +499,10 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
     if payload.get("schema") != VISUALIZATION_AUDIT_SCHEMA:
         issues.append("visualization_quality_audit.json schema mismatch")
     figures_complete = bool(rows) and all(row.get("complete") is True and row.get("quality_ok") is True for row in rows)
-    if (
-        payload.get("all_figures_complete") is not True
-        or payload.get("all_figures_complete") != figures_complete
-    ):
+    if payload.get("all_figures_complete") is not True or payload.get("all_figures_complete") != figures_complete:
         issues.append("visualization_quality_audit.json has incomplete figure rows")
-    if (
-        payload.get("all_quality_ok") is not True
-        or payload.get("all_quality_ok") != (bool(rows) and all(row.get("quality_ok") for row in rows))
+    if payload.get("all_quality_ok") is not True or payload.get("all_quality_ok") != (
+        bool(rows) and all(row.get("quality_ok") for row in rows)
     ):
         issues.append("visualization_quality_audit.json records low-quality figure rows")
     if payload.get("all_sources_mapped") is not True:
@@ -570,8 +566,7 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
     auxiliary_rows = payload.get("auxiliary_visualizations") or []
     if (
         auxiliary_rows != expected_auxiliary_inventory["rows"]
-        or payload.get("auxiliary_visualization_count")
-        != expected_auxiliary_inventory["auxiliary_visualization_count"]
+        or payload.get("auxiliary_visualization_count") != expected_auxiliary_inventory["auxiliary_visualization_count"]
         or payload.get("all_auxiliary_outputs_classified")
         != expected_auxiliary_inventory["all_auxiliary_outputs_classified"]
         or payload.get("all_auxiliary_outputs_rendered")

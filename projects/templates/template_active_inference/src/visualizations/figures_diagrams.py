@@ -323,7 +323,12 @@ def figure_track_lane_promotion_map(project_root: Path) -> Path:
         for ax in (req_ax, lane_ax):
             ax.set_xticks(np.arange(-0.5, ax.images[0].get_array().shape[1], 1), minor=True)
             ax.set_yticks(np.arange(-0.5, len(rows), 1), minor=True)
-            ax.grid(which="minor", color=style.color("grid"), linestyle="-", linewidth=style.layout_value("matrix_grid_width", 0.35))
+            ax.grid(
+                which="minor",
+                color=style.color("grid"),
+                linestyle="-",
+                linewidth=style.layout_value("matrix_grid_width", 0.35),
+            )
             ax.tick_params(which="minor", bottom=False, left=False)
         fig.suptitle(
             (
@@ -416,7 +421,12 @@ def figure_artifact_contract_map(project_root: Path) -> Path:
         matrix_ax.set_title("Artifacts x contract obligations", fontsize=style.text_size("subtitle"))
         matrix_ax.set_xticks(np.arange(-0.5, len(columns), 1), minor=True)
         matrix_ax.set_yticks(np.arange(-0.5, len(rows), 1), minor=True)
-        matrix_ax.grid(which="minor", color=style.color("grid"), linestyle="-", linewidth=style.layout_value("matrix_grid_width", 0.35))
+        matrix_ax.grid(
+            which="minor",
+            color=style.color("grid"),
+            linestyle="-",
+            linewidth=style.layout_value("matrix_grid_width", 0.35),
+        )
         matrix_ax.tick_params(which="minor", bottom=False, left=False)
         fig.suptitle(
             (

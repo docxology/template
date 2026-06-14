@@ -152,15 +152,15 @@ def build_benchmark_boundary(
     settings = _load_grading_settings(project_root)
     task = ml_result.task_config if ml_result is not None else None
     candidate_families = (
-        sorted({str(candidate.model_type) for candidate in ml_result.candidates})
-        if ml_result is not None
-        else []
+        sorted({str(candidate.model_type) for candidate in ml_result.candidates}) if ml_result is not None else []
     )
     return {
         "schema": "template-autoresearch-benchmark-boundary-v1",
         "fixture_scope": {
             "dataset": getattr(task, "dataset", "local fixture") if task is not None else "local fixture",
-            "task_name": getattr(task, "name", "bounded local readiness benchmark") if task is not None else "bounded local readiness benchmark",
+            "task_name": getattr(task, "name", "bounded local readiness benchmark")
+            if task is not None
+            else "bounded local readiness benchmark",
             "offline_only": True,
             "network_access": False,
         },

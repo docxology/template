@@ -277,5 +277,3 @@ def figure_dirichlet_convergence(project_root: Path) -> Path:
         add_note(ax, f"final KL={kls[-1]:.2e}; deterministic expected-count stream", style, x=0.48, y=0.95, width=36)
         save_styled_figure(fig, out, style)
     return out
-
-

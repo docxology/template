@@ -144,7 +144,11 @@ def draw_arrow(ax, start_x: float, end_x: float, y: float, style: FigureStyleCon
         "",
         xy=(end_x, y),
         xytext=(start_x, y),
-        arrowprops={"arrowstyle": "->", "color": style.color("muted"), "linewidth": style.layout_value("card_line_width", 1.0)},
+        arrowprops={
+            "arrowstyle": "->",
+            "color": style.color("muted"),
+            "linewidth": style.layout_value("card_line_width", 1.0),
+        },
     )
 
 

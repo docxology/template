@@ -78,7 +78,16 @@ def figure_semantic_gluing_graph(project_root: Path) -> Path:
                 facecolor="#f8fafc",
                 fontsize=style.text_size("matrix_label"),
             )
-            text_box(ax, artifact_x, y, rel.replace("output/", ""), style, width=30, edge_role="secondary", fontsize=style.text_size("matrix_label"))
+            text_box(
+                ax,
+                artifact_x,
+                y,
+                rel.replace("output/", ""),
+                style,
+                width=30,
+                edge_role="secondary",
+                fontsize=style.text_size("matrix_label"),
+            )
             text_box(
                 ax,
                 consumer_x,
@@ -147,9 +156,7 @@ def figure_theorem_traceability_graph(project_root: Path) -> Path:
                 facecolor="#f8fafc",
             )
             text_box(ax, columns[1], y, proof_label, style, width=24, edge_role="secondary")
-            text_box(
-                ax, columns[2], y, witness_label, style, width=24, edge_role="accent", facecolor="#f8fafc"
-            )
+            text_box(ax, columns[2], y, witness_label, style, width=24, edge_role="accent", facecolor="#f8fafc")
             draw_arrow(ax, columns[0] + 0.24, columns[1] - 0.03, y, style)
             draw_arrow(ax, columns[1] + 0.24, columns[2] - 0.03, y, style)
         linked_count = sum(1 for row in rows if row.get("linked") is True)
@@ -402,5 +409,3 @@ def figure_security_posture_map(project_root: Path) -> Path:
         )
         save_styled_figure(fig, out, style)
     return out
-
-

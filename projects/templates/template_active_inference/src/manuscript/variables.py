@@ -457,12 +457,8 @@ def _semantic_visualization_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
         "sheaf_render_log_all_events_ok": bool(render_log_data.get("all_events_ok", False)),
         "claim_evidence_audit_count": claim_audit_data.get("claim_count", 0),
         "claim_evidence_audit_all_complete": bool(claim_audit_data.get("all_complete", False)),
-        "claim_evidence_audit_all_artifacts_resolved": bool(
-            claim_audit_data.get("all_artifacts_resolved", False)
-        ),
-        "claim_evidence_audit_all_predicates_hold": bool(
-            claim_audit_data.get("all_evidence_predicates_hold", False)
-        ),
+        "claim_evidence_audit_all_artifacts_resolved": bool(claim_audit_data.get("all_artifacts_resolved", False)),
+        "claim_evidence_audit_all_predicates_hold": bool(claim_audit_data.get("all_evidence_predicates_hold", False)),
         "token_provenance_count": token_provenance_data.get("token_count", 0),
         "cross_track_symbol_count": cross_symbol_data.get("symbol_count", 0),
         "cross_track_symbols_consistent": int(bool(cross_symbol_data.get("all_consistent", False))),
