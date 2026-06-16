@@ -5,10 +5,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from infrastructure.benchmark.template_harness import (
     BenchmarkManifest,
     write_default_manifest,
     load_benchmark_manifest,
+    main,
     score_project_against_manifest,
     scores_to_markdown,
 )
@@ -114,6 +117,38 @@ def test_score_project_flags_missing_required_output(tmp_path: Path) -> None:
     assert any("missing required output" in issue for issue in score.issues)
 
 
+def test_score_project_flags_failed_validation_report(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "template_code_project"
+    _write_project_outputs(project)
+    (project / "output" / "reports" / "validation_report.json").write_text(
+        '{"overall_status": "failed"}',
+        encoding="utf-8",
+    )
+    manifest = BenchmarkManifest(
+        name="template-smoke",
+        projects=("template_code_project",),
+        required_outputs=("output/pdf", "output/reports/validation_report.json"),
+        checks=("output_validity",),
+    )
+
+    score = score_project_against_manifest(project, manifest)
+
+    assert score.passed is False
+    assert score.score == 0
+    assert "validation report did not pass: failed" in score.issues
+
+
+def test_load_benchmark_manifest_rejects_non_string_sequences(tmp_path: Path) -> None:
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(
+        json.dumps({"name": "bad", "projects": ["template_code_project"], "checks": [42]}),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="sequence values must be strings"):
+        load_benchmark_manifest(manifest_path)
+
+
 def test_rubric_weighted_scoring_and_markdown_output(tmp_path: Path) -> None:
     rubric = RubricSet.from_dict(
         {
@@ -188,9 +223,7 @@ def test_checked_in_smoke_manifest_projects_resolve_on_disk() -> None:
     while the unit tests (which construct their own manifests) stay green.
     """
     repo_root = Path(__file__).resolve().parents[3]
-    manifest_path = (
-        repo_root / "infrastructure" / "benchmark" / "template_smoke_manifest.json"
-    )
+    manifest_path = repo_root / "infrastructure" / "benchmark" / "template_smoke_manifest.json"
     manifest = load_benchmark_manifest(manifest_path)
     assert manifest.projects, "smoke manifest lists no projects"
     for name in manifest.projects:
@@ -198,3 +231,40 @@ def test_checked_in_smoke_manifest_projects_resolve_on_disk() -> None:
             f"manifest project {name!r} does not resolve to a directory under "
             "projects/ — qualify it (e.g. templates/<name>) or update the move"
         )
+
+
+def test_main_writes_json_and_markdown_for_failing_manifest(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    project = repo_root / "projects" / "templates" / "template_code_project"
+    project.mkdir(parents=True)
+    manifest_path = tmp_path / "manifest.json"
+    json_out = tmp_path / "scores" / "scores.json"
+    md_out = tmp_path / "scores" / "scores.md"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "name": "template-smoke",
+                "projects": ["templates/template_code_project"],
+                "required_outputs": ["output/pdf"],
+                "checks": ["output_validity"],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = main(
+        [
+            str(manifest_path),
+            "--repo-root",
+            str(repo_root),
+            "--output-json",
+            str(json_out),
+            "--output-markdown",
+            str(md_out),
+        ]
+    )
+
+    assert exit_code == 1
+    payload = json.loads(json_out.read_text(encoding="utf-8"))
+    assert payload["passed"] is False
+    assert "missing required output" in md_out.read_text(encoding="utf-8")

@@ -4,13 +4,11 @@ Edge-case coverage, integration paths, and renderer dispatch using real files
 and subprocess execution (no mocking framework).
 """
 
-import shutil
-import subprocess
 from pathlib import Path
 
 import pytest
 
-from infrastructure.core.exceptions import CompilationError, RenderingError
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import pdf_renderer
 from infrastructure.rendering._pdf_latex_helpers import (
     check_latex_log_for_graphics_errors,
@@ -566,6 +564,7 @@ authors:
     def test_render_combined_removes_existing_output(self, full_project_setup, tmp_path):
         """Test that existing output file is removed before rendering."""
         config, manuscript_dir, source_files = full_project_setup
+        config.pandoc_path = str(tmp_path / "definitely-missing-pandoc")
         renderer = PDFRenderer(config)
 
         # Create existing output file
@@ -579,6 +578,7 @@ authors:
             renderer.render_combined(source_files, manuscript_dir, "test")
         except (RenderingError, Exception):
             pass  # Expected if pandoc/LaTeX not available
+        assert not existing_pdf.exists()
 
     def test_render_combined_finds_alternate_bib(self, full_project_setup, tmp_path):
         """Test finding alternate bibliography file (99_references.bib)."""
@@ -601,7 +601,6 @@ class TestModuleLevel:
 
     def test_module_has_pdf_renderer_class(self):
         """Test that module exports PDFRenderer class."""
-        from infrastructure.rendering import pdf_renderer
 
         assert hasattr(pdf_renderer, "PDFRenderer")
         assert callable(pdf_renderer.PDFRenderer)
@@ -702,4 +701,3 @@ class TestCombineMarkdownFilesEdgeCases:
 
         assert "Only Section" in result
         assert "\\newpage" not in result
-

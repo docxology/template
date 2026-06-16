@@ -587,6 +587,65 @@ def test_write_report_outputs_json_and_markdown(tmp_path: Path) -> None:
     assert "AUTORESEARCH.TEST" in md_path.read_text(encoding="utf-8")
 
 
+def test_review_packet_summary_and_benchmark_scores_write_branch_outputs(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import (
+        AutoResearchConfig,
+        AutoResearchIssue,
+        AutoResearchPlan,
+        AutoResearchReport,
+        BenchmarkTask,
+    )
+    from infrastructure.autoresearch.reports import (
+        write_autoresearch_review_packet,
+        write_autoresearch_summary,
+        write_benchmark_scores,
+    )
+
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "output" / "reports").mkdir(parents=True)
+    (project / "output" / "reports" / "graded.json").write_text('{"score": 1}\n', encoding="utf-8")
+    report = AutoResearchReport(
+        project_name="demo",
+        valid=False,
+        issues=(
+            AutoResearchIssue(
+                severity="warning",
+                code="AUTORESEARCH.REVIEW",
+                message="Human review required",
+                source_path="human_review.yaml",
+                suggested_action="Record a reviewer decision.",
+            ),
+        ),
+    )
+    plan = AutoResearchPlan(
+        repo_root=tmp_path,
+        project_root=project,
+        project_name="demo",
+        config=AutoResearchConfig(
+            benchmark_tasks=(
+                BenchmarkTask(identifier="graded", description="Present", grading_output="output/reports/graded.json"),
+                BenchmarkTask(
+                    identifier="missing",
+                    description="Absent",
+                    grading_output="output/reports/missing.json",
+                ),
+            )
+        ),
+    )
+
+    packet_json, packet_md = write_autoresearch_review_packet(project, report)
+    summary_md = write_autoresearch_summary(project, report)
+    scores_path = write_benchmark_scores(project, plan)
+
+    packet = json.loads(packet_json.read_text(encoding="utf-8"))
+    scores = json.loads(scores_path.read_text(encoding="utf-8"))
+    assert packet["ready_for_review"] is False
+    assert "`AUTORESEARCH.REVIEW`" in packet_md.read_text(encoding="utf-8")
+    assert "Warnings: 1" in summary_md.read_text(encoding="utf-8")
+    assert [task["status"] for task in scores["tasks"]] == ["graded", "missing"]
+
+
 def test_validation_intrinsic_passes_without_loop_outputs(tmp_path: Path) -> None:
     from infrastructure.autoresearch import build_autoresearch_plan, validate_autoresearch_plan
 

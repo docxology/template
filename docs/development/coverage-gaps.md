@@ -1,203 +1,141 @@
 # Test Coverage Gap Analysis
 
-This document tracks infrastructure test coverage gaps. Numbers are
-re-baselined from the live `pytest --cov` run; see "How this file is
-generated" below.
+This document tracks infrastructure test coverage gaps by Layer-1 module. The
+global infrastructure gate remains 60%; the rows below are targets and notes,
+not new CI gates.
 
-**Last verified:** 2026-06-03 (backlog rebase: dag/registry/SIA hardening + the
-sheaf-branch infrastructure wave)
+**Last verified:** 2026-06-16
 
-**Post-baseline note (2026-06-09):** `validation/output/pipeline.py` was split
-into smaller Stage 04 validation leaves. Re-run the command below before using
-the exact statement and coverage figures for that package.
-
-## Current Coverage Status
-
-**Overall infrastructure coverage: 77.23 %** (gate: ≥ 60 %)
-**Tests:** 5969 passing (non-LLM suite; LLM suite exercised separately)
-**Total statements measured:** 37 296
-
-The numbers below come from:
+**Coverage oracle:** full infrastructure gate:
 
 ```bash
-uv run pytest tests/infra_tests/ \
-  --cov=infrastructure --cov-report=term --cov-fail-under=0 \
-  -q --ignore=tests/infra_tests/llm --timeout=120
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 ```
 
-The `--ignore=tests/infra_tests/llm` flag is what the local fast suite uses;
-the LLM suite is exercised separately and gates Ollama-bound paths. The
-numbers in this file therefore describe the *non-LLM* surface — that's the
-stable surface that ships in every CI matrix run.
+**Overall infrastructure coverage:** 83.54% (gate: >= 60%)
+**Tests:** 7385 passed; 1 existing NumPy overflow warning in the scientific
+stability edge-case test.
+**Total statements measured:** 41,264
 
-## Lowest-Coverage Modules (non-LLM)
+The sorted module rows were taken from:
 
-CLI `__main__` shims and `prose/cli.py` register at 0 % because they're
-exercised by subprocess in integration tests rather than the in-process
-suite. They are intentionally thin (≤ 60 stmts) and excluded from the
-priority list below.
+```bash
+uv run coverage report --sort=cover -m
+```
 
-| Module | Coverage | Statements | Notes |
-| ------ | -------- | ---------- | ----- |
-| `project/drift/runner.py` | 18.64 % | 39 | Drift-check CLI runner; exercised via `check_template_drift` subprocess |
-| `validation/security_gate.py` | 22.02 % | 148 | Opt-in security scan (not in default pipeline/CI); external-tool gated |
-| `validation/plugin_export.py` | 27.12 % | 90 | Plugin-stage export surface; partial in-process coverage |
-| `core/cli_handlers.py` | 33.50 % | 145 | Top-level CLI dispatch; subprocess-tested |
-| `doctor/detectors/layout.py` | 34.85 % | 48 | Repo-layout detector; integration-tested |
-| `sia/live_llm.py` | 35.48 % | 25 | Optional Ollama feedback; gated, offline-stubbed |
-| `autoresearch/reports.py` | 36.67 % | 74 | Multi-project report builder; integration path |
-| `project/workspace.py` | 38.89 % | 72 | Workspace management CLI; subprocess-tested |
-| `rendering/_pdf_section_titles.py` | 38.89 % | 28 | LaTeX section-title helper; real-LaTeX gated |
-| `project/working_render.py` | 42.07 % | 191 | Working-project render (non-default lifecycle path) |
-| `core/runtime/env_deps.py` | 46.22 % | 89 | Environment-dep checks; mostly platform branches |
-| `core/runtime/setup_checks.py` | 46.67 % | 79 | Setup checks; platform branches |
-| `rendering/pipeline.py` | 47.48 % | 351 | Orchestration spine (↑ from 32.40 %); full render LaTeX-gated |
-| `project/info.py` | 47.92 % | 64 | Project metadata resolution; branch-heavy |
-| `benchmark/template_harness.py` | 51.88 % | 236 | Benchmark harness; partial integration coverage |
-| `validation/docs/lint_runner.py` | 56.72 % | 139 | Docs-lint orchestration; subprocess/mmdc gated |
-| `validation/output/pipeline.py` | 68.81 % | 397 | Output-validation spine; strict-zone + report paths partly gated |
-| `validation/docs/mermaid_lint.py` | 71.92 % | 237 | Real-`mmdc`/chrome gated render paths |
+## Module Documentation Inventory
 
-### Real Improvement Targets
+All top-level code packages under `infrastructure/` have the expected
+`README.md`, `AGENTS.md`, and `SKILL.md` files. The only top-level
+documentation exception is `infrastructure/logrotate.d/`, which is a config
+directory and carries `README.md` plus `AGENTS.md` but no skill-routing surface.
+Ignored/generated directories such as `infrastructure/.benchmarks/` and
+`infrastructure/__pycache__/` are not module packages.
 
-After excluding CLI subprocess shims (`*/cli.py`, `*/__main__.py`, the 0 %
-`*_cli.py` entrypoints), optional-dep/tool-gated modules, and LLM-suite modules
-(measured separately), the genuine gaps are:
+No `SKILL.md` files changed in this pass, so no skill-manifest regeneration was
+required.
 
-1. **`infrastructure/rendering/pipeline.py` (47.48 %, 351 stmts)** — the PDF
-   orchestration entry point, up from 32.40 % at the last baseline. Pure-logic
-   helpers and the missing-project fast path are covered in
-   `tests/infra_tests/rendering/test_pipeline.py`; full render paths remain
-   LaTeX-gated.
+## Target Categories
 
-2. **`infrastructure/validation/output/pipeline.py` (68.81 %, 397 stmts)** — the
-   output-validation spine. The strict-zone fail-closed paths (incl. the new
-   stale-fact handling) and the report-assembly branches are partially covered;
-   full-render integration paths are LaTeX/pandoc gated.
+| Category | Coverage expectation | Action |
+| --- | --- | --- |
+| First-party logic below 60% | Add meaningful branch coverage when the branch can be driven with real files, real subprocesses, or deterministic fixtures. | Document the next concrete branch gap until tested. |
+| CLI/subprocess shims | Require smoke or subprocess tests for command behavior. | Do not treat in-process 0% as a defect by itself for thin `__main__.py` or dispatch shims. |
+| Optional-tool or LLM-gated modules | Exercise missing-tool, offline, and fallback behavior in the default suite. | Keep live-tool paths behind their explicit gates unless CI installs the tool. |
+| Publish/security/release paths | Prefer dry-run, fake executable, or local fixture coverage. | Do not require credentials, network publication, or destructive release actions in default tests. |
 
-3. **`infrastructure/project/working_render.py` (42.07 %, 191 stmts)** — the
-   non-default working-project render path; lower priority as it is not on the
-   shipped pipeline, but it is genuine first-party logic rather than a shim.
+## Current Low Rows
 
-## Modules Previously Listed (Now Resolved)
+### CLI And Subprocess Shim Rows
 
-The earlier baseline of this file flagged three modules at < 50 %; all
-three are now well above the gate. Listed for historical context:
+These rows are low because coverage is collected in-process while the behavior
+is intentionally command-oriented. The target is subprocess smoke coverage for
+user-visible command behavior, not line-chasing through dispatch glue.
 
-| Module | Old % | Current % | Change |
-| ------ | ----- | --------- | ------ |
-| `core/runtime/retry.py` | 22.22 % | 97.56 % | +75 pp |
-| `core/runtime/checkpoint.py` | 39.24 % | 83.59 % | +44 pp |
-| `core/progress.py` | 18.09 % | 93.37 % | +75 pp |
-| `steganography/barcodes.py` | 11.39 % | 92.31 % | +81 pp |
-| `steganography/barcode_generators.py` | 20.00 % | 86.36 % | +66 pp |
+| Module | Coverage | Reason / next target |
+| --- | ---: | --- |
+| `autoresearch/cli.py` | 0.00% | CLI dispatch shim; add subprocess smoke when flags change. |
+| `core/pipeline/multi_project_cli.py` | 0.00% | Multi-project command wrapper; keep behavior covered through orchestration and subprocess command tests. |
+| `doctor/__main__.py` and other `__main__.py` files | 0.00% | Entry-point wrappers; no separate unit tests needed unless import behavior changes. |
+| `documentation/active_projects_doc.py` | 0.00% | Generated-doc command shim; validate through the active-projects doc generator and docs consistency gates. |
+| `methods/cli.py` | 0.00% | Methods CLI shim; add subprocess smoke for changed commands. |
+| `prose/cli.py` | 0.00% | Prose CLI behavior is subprocess-tested; 0% in-process is not itself a defect. |
+| `publishing/pypi_release.py` | 0.00% | Release helper; default tests should stay on dry-run/local-fixture paths. |
+| `sia/cli.py` | 0.00% | SIA command shim; command behavior belongs in subprocess CLI tests. |
+
+### First-Party Logic Below 60%
+
+| Module | Coverage | Target note |
+| --- | ---: | --- |
+| `rendering/_combined_exports.py` | 15.70% | Add fixture-driven branches for existing/missing PDF, HTML, DOCX, EPUB, and no-output export decisions without invoking real renderers. |
+| `project/drift/runner.py` | 18.64% | Add subprocess smoke for `check_template_drift` plus branch coverage for `--strict`, `--project`, and missing-project paths. |
+| `doctor/detectors/layout.py` | 31.08% | Add positive and negative repository-layout fixtures, including misplaced generated files and missing expected docs. |
+| `core/install_commands.py` | 38.89% | Cover supported-tool, unsupported-tool, and platform-specific command recommendations. |
+| `rendering/pipeline.py` | 39.37% | Cover missing project, missing manuscript, invalid config, and summary branches; keep full render paths LaTeX/Pandoc gated. |
+| `core/runtime/env_deps.py` | 46.22% | Cover present/missing dependency branches with temporary PATH fixtures. |
+| `core/runtime/setup_checks.py` | 46.67% | Cover setup-check success, missing-tool, and remediation-message branches. |
+| `project/working_render.py` | 46.67% | Cover working/archive lifecycle paths, no-project handling, failed stage propagation, and output-copy decisions. |
+| `project/workspace.py` | 51.11% | Added malformed pyproject, no-table, and missing-`uv` tests; next target is subprocess coverage for init/repair flows. |
+| `publishing/transmission_page_check.py` | 58.04% | Add negative fixtures for incomplete transmission pages and malformed publication metadata. |
+| `rendering/docx_renderer.py` | 58.43% | Cover missing Pandoc, missing manuscript, and output-path branches without requiring DOCX generation. |
+| `rendering/epub_renderer.py` | 58.43% | Cover missing Pandoc, missing manuscript, and output-path branches without requiring EPUB generation. |
+| `rendering/_pipeline_summary.py` | 59.36% | Add branch coverage for warning aggregation, skipped outputs, and empty-stage summaries. |
+| `documentation/publication_records.py` | 59.87% | Add fixtures for incomplete records, DOI/repository label variants, and malformed YAML. |
+
+### Optional-Tool And Gated Rows
+
+| Module | Coverage | Gate / fallback target |
+| --- | ---: | --- |
+| `llm/review/pipeline_runner.py` | 12.88% | LLM review orchestration; default suite should cover offline/fallback summaries, live LLM remains gated. |
+| `sia/live_llm.py` | 35.48% | Optional Ollama feedback path; keep offline stub/failure handling in default tests. |
+| `llm/review/ollama_setup.py` | 50.94% | Ollama setup path; cover missing binary/server and actionable install-message branches. |
+| `search/deep_research/gemini.py` | 51.02% | External API backend; default target is config validation and missing-credential behavior. |
+| `validation/security_gate.py` | 53.85% | Added missing-tool and severity aggregation tests; next target is parser coverage for each configured scanner output. |
+| `llm/utils/server.py` | 55.69% | Server lifecycle path; default target is unavailable-server diagnostics and timeout handling. |
+| `validation/docs/lint_runner.py` | 56.93% | Subprocess/tool-gated docs runner; cover missing `mmdc`/Chrome fallbacks and failed-tool aggregation. |
+| `search/deep_research/openai.py` | 56.99% | External API backend; default target is missing-key, timeout, and malformed-response handling. |
+
+## Recently Added Module Tests (2026-06-16)
+
+Canonical tests were added or extended in the existing module test locations;
+no `*_coverage.py`, `*_full.py`, or duplicate supplement files were introduced.
+
+| Module | Current coverage | Test file |
+| --- | ---: | --- |
+| `project/info.py` | 87.25% | `tests/infra_tests/project/test_info.py` |
+| `project/workspace.py` | 51.11% | `tests/infra_tests/project/test_workspace.py` |
+| `rendering/_pdf_section_titles.py` | 94.44% | `tests/infra_tests/rendering/test_pdf_section_titles.py` |
+| `rendering/pdf_renderer.py` | 68.70% | `tests/infra_tests/rendering/test_pdf_renderer.py` |
+| `validation/security_gate.py` | 53.85% | `tests/infra_tests/validation/test_security_gate.py` |
+| `validation/plugin_export.py` | 68.64% | `tests/infra_tests/validation/test_plugin_export.py` |
+| `autoresearch/reports.py` | 86.67% | `tests/infra_tests/autoresearch/test_autoresearch.py` |
+| `benchmark/template_harness.py` | 61.25% | `tests/infra_tests/benchmark/test_template_benchmark_harness.py` |
+| `reporting/executive_outputs.py` | 80.36% | `tests/infra_tests/reporting/test_executive_outputs.py` |
 
 ## Coverage Gates
 
-- **Infrastructure**: ≥ 60 % (current **77.23 %**)
-- **Projects**: ≥ 90 % per project (rotating-project exception possible per
-  the `.github/workflows/ci.yml` matrix; see CLAUDE.md)
-- **Per-project gates** are enforced separately in CI; they do not aggregate
-  with the infrastructure number above.
-
-## How This File Is Generated
-
-These numbers should be re-baselined whenever `infrastructure/` gains a new
-module or whenever a low-coverage module is closed out:
-
-```bash
-uv run pytest tests/infra_tests/ \
-  --cov=infrastructure --cov-report=term --cov-fail-under=0 \
-  -q --ignore=tests/infra_tests/llm --timeout=120 \
-  2>&1 | tail -80
-```
-
-Then sort the per-module rows by coverage percentage and update the
-"Lowest-Coverage Modules" table above. Do not copy historical numbers
-forward — re-measure each time.
-
-## Recently added module tests (2026-06-03)
-
-| Module | Test file |
-| --- | --- |
-| `validation/xml_parser_policy.py` | `tests/infra_tests/validation/test_xml_parser_policy.py` |
-| `publishing/release_workflow_zenodo.py` | `tests/infra_tests/publishing/test_release_workflow_zenodo.py` |
-| `rendering/_pdf_title_page.py` | `tests/infra_tests/rendering/test_pdf_title_page.py` |
-| `core/files/project_lock.py` | `tests/infra_tests/core/test_project_lock.py` |
-| `core/pipeline/dag.py` (dropped-edge diagnostics) | `tests/infra_tests/core/test_dag.py` |
-| `validation/evidence_registry.py` (stale-fail-closed) | `tests/infra_tests/validation/test_evidence_registry.py` |
-| `validation/docs/mermaid_lint.py` (no-output fail-closed) | `tests/infra_tests/validation/docs/test_mermaid_lint.py` |
-| `sia/cli.py` + loop fixture/live separation | `tests/infra_tests/sia/test_cli.py`, `test_loop_runner.py` |
-
-## Recently added module tests (2026-05-24)
-
-| Module | Test file |
-| --- | --- |
-| `reporting/pipeline_test_reporting.py` | `tests/infra_tests/reporting/test_pipeline_test_runner.py` |
-| `reporting/pipeline_test_runner.py` (subprocess) | `tests/infra_tests/reporting/test_pipeline_test_runner_integration.py` |
-| `validation/docs/consistency/*` | `tests/infra_tests/validation/docs/consistency/test_*.py` |
-| `rendering/pipeline.py` (error paths) | `tests/infra_tests/rendering/test_pipeline.py` |
-| `rendering/pdf_renderer.py` | `tests/infra_tests/rendering/test_pdf_renderer.py` |
-
-## Supplement consolidation (2026-05-24, wave 3)
-
-All legacy supplement tiers under `tests/infra_tests/` are removed:
-
-- `*_expanded_coverage*`, `*_full_coverage*`, `*_coverage.py` (except modules
-  whose subject is coverage reporting: `test_coverage_parser.py`,
-  `test_coverage_history.py`, `test_coverage_analysis.py`,
-  `test_coverage_json_parser.py`, `test_coverage_cleanup.py`,
-  `test_cogant_coverage_table_check.py`)
-- `*_full.py`, `*_comprehensive.py`, `*_edge_cases.py` companion files
-
-One canonical `test_<module>.py` per production module; use
-`scripts/maintenance/merge_test_supplements.py` when consolidating future splits.
-
-| Area | Canonical test files (examples) |
-| --- | --- |
-| validation integrity | `test_check_links.py`, `test_repo_scanner.py`, `test_validate_*_cli.py` |
-| core progress / logging | `test_progress.py`, `test_logging_progress.py`, `test_pipeline_summary.py` |
-| reporting stage-01 | `test_pipeline_test_runner.py`, `test_pipeline_test_runner_integration.py` |
-| rendering | `test_web_renderer.py`, `test_pdf_combined_renderer.py`, `test_slides_renderer_core.py` |
-| llm | `test_core.py`, `test_models.py`, `test_review_*.py` (no `*_coverage` suffix) |
-| steganography | `test_encryption.py`, `test_metadata.py`, `test_overlays.py` |
-
-## Supplement consolidation (2026-05-24, wave 2)
-
-Wave 2 removed `*_expanded_coverage*` / `*_full_coverage*` tiers (see git history
-at `f2471541`). Wave 3 completed the remaining `*_coverage.py` and `*_full.py`
-merges listed above.
-
-## Recently added module tests (2026-05-23)
-
-| Module | Test file |
-| --- | --- |
-| `core/runtime/setup_checks.py` | `tests/infra_tests/core/runtime/test_setup_checks.py` |
-| `core/pipeline/single_stage.py` | `tests/infra_tests/core/pipeline/test_single_stage.py` |
-| `core/pipeline/multi_project_cli.py` | `tests/infra_tests/core/test_multi_project.py` (existing) |
-| `core/cache_gate.py` | `tests/infra_tests/core/test_cache_gate.py` |
-| `project/git_guards.py` | `tests/infra_tests/project/test_git_guards.py` |
-| `publishing/executable_bundle.py` | `tests/infra_tests/publishing/test_executable_bundle.py` |
-| `validation/plugin_export.py` | `tests/infra_tests/validation/test_plugin_export.py` |
-| `validation/security_gate.write_security_report` | `tests/infra_tests/validation/test_security_gate.py` |
-| `core/pipeline/post_run_reporting.py` | `tests/infra_tests/core/pipeline/test_post_run_reporting.py` |
+- **Infrastructure:** >= 60% (current 83.54%).
+- **Projects:** >= 90% per project, with rotating-project exceptions documented
+  in CI and project-local `AGENTS.md` files.
+- **Per-module targets:** documented here only; they are not CI gates.
 
 ## Testing Standards
 
-- **No mocks** — every test uses real data, real files, real subprocess
-  calls. See `infrastructure/validation/output/no_mock_enforcer.py` for
-  the CI gate.
-- **Deterministic** — fixed RNG seeds, `MPLBACKEND=Agg`, hermetic env via
-  `get_subprocess_env()`.
-- **Real I/O** — `tmp_path` fixture for files, `pytest-httpserver` for
-  HTTP, real subprocess invocations for CLIs.
+- **No mocks:** every test uses real data, real files, real subprocess calls, or
+  deterministic local fixtures. See
+  `infrastructure/validation/output/no_mock_enforcer.py`.
+- **Deterministic:** fixed RNG seeds, `MPLBACKEND=Agg`, and hermetic subprocess
+  environments through repository helpers.
+- **Canonical test files:** keep module tests under `tests/infra_tests/<module>/`
+  and avoid new supplement tiers such as `*_coverage.py`, `*_full.py`, or
+  `*_comprehensive.py` unless the production subject is coverage reporting
+  itself.
 
 ## See Also
 
-- [`testing-guide.md`](testing/testing-guide.md) — testing patterns and
-  fixtures
-- [`../core/architecture.md`](../core/architecture.md) — two-layer
-  architecture and testing standards
-- [`../../TO-DO.md`](../../TO-DO.md) — active backlog (MED3 covers the
-  per-project pytest runner factor that would help close the
-  `pipeline_test_runner.py` gap)
+- [`testing/testing-guide.md`](testing/testing-guide.md) - testing patterns and
+  fixtures.
+- [`../core/architecture.md`](../core/architecture.md) - two-layer architecture
+  and testing standards.
+- [`../../TO-DO.md`](../../TO-DO.md) - active backlog and longer-range coverage
+  follow-ups.

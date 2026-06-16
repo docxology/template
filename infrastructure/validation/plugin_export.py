@@ -75,6 +75,47 @@ def run_plugin_export_check(
             export_tmp = Path(tmpdir) / "exported_plugin"
             export_cmd = [template_cmd, "plugin", "export", "--output", str(export_tmp)]
             subprocess.run(export_cmd, check=True, capture_output=True, text=True, timeout=60)
+
+            if not output.exists():
+                print(f"ERROR: Expected plugin directory '{output}' does not exist.", file=sys.stderr)
+                return 1
+
+            try:
+                only_export, only_expected, diff_files = compare_directories(export_tmp, output)
+            except OSError as exc:
+                print(f"ERROR: Directory comparison failed: {exc}", file=sys.stderr)
+                return 1
+
+            if only_export:
+                print(f"\n  New files in export (not in committed): {sorted(str(p) for p in only_export)}")
+            if only_expected:
+                print(f"\n  Files missing from export (deleted in source): {sorted(str(p) for p in only_expected)}")
+            if diff_files:
+                print("\n  Modified files (content differs):")
+                for rel in sorted(diff_files):
+                    print(f"    - {rel}")
+                    left = export_tmp / rel
+                    right = output / rel
+                    try:
+                        left_lines = left.read_text(encoding="utf-8", errors="replace").splitlines(keepends=True)
+                        right_lines = right.read_text(encoding="utf-8", errors="replace").splitlines(keepends=True)
+                        for line in unified_diff(
+                            left_lines,
+                            right_lines,
+                            fromfile=f"a/{rel}",
+                            tofile=f"b/{rel}",
+                            lineterm="",
+                        ):
+                            print(f"      {line}")
+                    except OSError as exc:
+                        print(f"      Could not generate diff for {rel}: {exc}")
+
+            if not (only_export or only_expected or diff_files):
+                print(
+                    "WARNING: template reported drift but no file differences were found.",
+                    file=sys.stderr,
+                )
+            return 1
     except subprocess.CalledProcessError as exc:
         print(f"ERROR: Plugin export failed (exit {exc.returncode}).", file=sys.stderr)
         print(exc.stdout, file=sys.stderr)
@@ -83,44 +124,3 @@ def run_plugin_export_check(
     except OSError as exc:
         print(f"ERROR: Could not generate export for diff: {exc}", file=sys.stderr)
         return 1
-
-    if not output.exists():
-        print(f"ERROR: Expected plugin directory '{output}' does not exist.", file=sys.stderr)
-        return 1
-
-    try:
-        only_export, only_expected, diff_files = compare_directories(export_tmp, output)
-    except OSError as exc:
-        print(f"ERROR: Directory comparison failed: {exc}", file=sys.stderr)
-        return 1
-
-    if only_export:
-        print(f"\n  New files in export (not in committed): {sorted(str(p) for p in only_export)}")
-    if only_expected:
-        print(f"\n  Files missing from export (deleted in source): {sorted(str(p) for p in only_expected)}")
-    if diff_files:
-        print("\n  Modified files (content differs):")
-        for rel in sorted(diff_files):
-            print(f"    - {rel}")
-            left = export_tmp / rel
-            right = output / rel
-            try:
-                left_lines = left.read_text(encoding="utf-8", errors="replace").splitlines(keepends=True)
-                right_lines = right.read_text(encoding="utf-8", errors="replace").splitlines(keepends=True)
-                for line in unified_diff(
-                    left_lines,
-                    right_lines,
-                    fromfile=f"a/{rel}",
-                    tofile=f"b/{rel}",
-                    lineterm="",
-                ):
-                    print(f"      {line}")
-            except OSError as exc:
-                print(f"      Could not generate diff for {rel}: {exc}")
-
-    if not (only_export or only_expected or diff_files):
-        print(
-            "WARNING: template reported drift but no file differences were found.",
-            file=sys.stderr,
-        )
-    return 1

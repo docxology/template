@@ -34,9 +34,13 @@ def collect_project_info(project_name: str, repo_root: Path) -> dict[str, Any]:
         config_file = manuscript_dir / "config.yaml"
         info["manuscript"]["has_config"] = config_file.exists()
         if config_file.exists():
-            config = yaml.safe_load(config_file.read_text(encoding="utf-8"))
-            info["manuscript"]["title"] = config.get("paper", {}).get("title", "")
-            info["manuscript"]["authors"] = config.get("authors", [])
+            config = yaml.safe_load(config_file.read_text(encoding="utf-8")) or {}
+            if not isinstance(config, dict):
+                config = {}
+            paper = config.get("paper", {})
+            info["manuscript"]["title"] = paper.get("title", "") if isinstance(paper, dict) else ""
+            authors = config.get("authors", [])
+            info["manuscript"]["authors"] = authors if isinstance(authors, list) else []
 
     src_dir = project_dir / "src"
     if src_dir.exists():

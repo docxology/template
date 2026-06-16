@@ -52,7 +52,13 @@ _PLAIN_REWRITES: Final[list[tuple[re.Pattern[str], str]]] = [
     (re.compile(r"\\textasciicircum\s*\{?\s*\}?"), "^"),
     # Strip remaining LaTeX text-mode commands like ``\text{...}`` →
     # ``...`` (drop the macro, keep the brace contents).
-    (re.compile(r"\\(?:text|mathrm|mathbf|mathit|mathcal|mathbb|operatorname)\s*\{([^{}]*)\}"), r"\1"),
+    (
+        re.compile(
+            r"\\(?:text|textit|textbf|textsf|texttt|emph|mathrm|mathbf|mathit|mathcal|mathbb|operatorname)"
+            r"\s*\{([^{}]*)\}"
+        ),
+        r"\1",
+    ),
     # Drop any other surviving LaTeX control word with optional brace arg.
     # ``\lambda``, ``\alpha``, ``\sum``, ``\langle``, etc. become a
     # space-padded version of the macro name (without the leading slash).

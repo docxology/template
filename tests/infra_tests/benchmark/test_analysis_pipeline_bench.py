@@ -53,6 +53,7 @@ def _make_synthetic_project(repo_root: Path, project_name: str, n_scripts: int) 
 
 
 @pytest.mark.bench
+@pytest.mark.timeout(60)
 @pytest.mark.parametrize("n_scripts", [1, 5, 25])
 def test_bench_run_analysis_pipeline(benchmark: object, tmp_path: Path, n_scripts: int) -> None:
     """Bench ``run_analysis_pipeline`` for N = 1, 5, 25 trivial scripts.

@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.git_guards import ALLOWED_PROJECT_DIRS
 from infrastructure.project.public_scope import public_project_names
@@ -99,6 +101,7 @@ def test_full_sheaf_appendix_binds_registry_tracks() -> None:
     assert required <= found, f"missing required track markers in appendix: {required - found!r}"
 
 
+@pytest.mark.timeout(60)
 def test_coverage_json_schema_on_clean_tree() -> None:
     root = _project_root()
     json_path = root / "output" / "data" / "sheaf_coverage_matrix.json"
@@ -154,8 +157,6 @@ def test_build_lean_when_present_must_succeed() -> None:
     don't install elan/lake; only the fep-lean CI job carries the toolchain).
     """
     if shutil.which("lake") is None:
-        import pytest
-
         pytest.skip("lake toolchain not installed — skipping Lean build contract")
     root = _project_root()
     assert (root / "lean" / "lakefile.lean").is_file()
@@ -166,6 +167,7 @@ def test_build_lean_when_present_must_succeed() -> None:
     assert code == 0, msg
 
 
+@pytest.mark.timeout(60)
 def test_z_generate_writes_resolved_manuscript_without_tokens() -> None:
     root = _project_root()
     result = subprocess.run(
