@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 from typing import Any
@@ -277,26 +278,217 @@ def _author_blocks(config: dict[str, Any]) -> list[dict[str, str]]:
 
 
 def _cover_image_path(config: dict[str, Any], config_file: Path) -> Path | None:
-    """Resolve the configured cover image path, if any."""
-    book = config.get("book", {}) or {}
-    if not isinstance(book, dict):
+    """Resolve the configured book or paper cover image path, if any."""
+    for section_name in ("book", "paper"):
+        image_path = _section_cover_image_path(config, config_file, section_name)
+        if image_path is not None:
+            return image_path
+    return None
+
+
+def _section_cover_image_path(config: dict[str, Any], config_file: Path, section_name: str) -> Path | None:
+    """Resolve a cover image from one metadata section only."""
+    cover: dict[str, Any] | None = None
+    section = config.get(section_name, {}) or {}
+    if not isinstance(section, dict):
         return None
-    cover = book.get("cover", {}) or {}
-    if not isinstance(cover, dict):
+    candidate = section.get("cover", {}) or {}
+    if isinstance(candidate, dict) and candidate.get("image"):
+        cover = candidate
+    if cover is None:
         return None
     raw_image = cover.get("image")
     if not raw_image:
         return None
+    return _configured_image_path(raw_image, config_file)
+
+
+def _configured_image_path(raw_image: object, config_file: Path) -> Path | None:
+    """Resolve a config-declared image path near the manuscript/output tree."""
     image_path = Path(str(raw_image))
+    if not str(image_path):
+        return None
     if image_path.is_absolute():
         return image_path
     candidates = [config_file.parent / image_path]
+    project_roots = [config_file.parent.parent]
+    if config_file.parent.name == "manuscript" and config_file.parent.parent.name == "output":
+        project_roots.append(config_file.parent.parent.parent)
+    for root in project_roots:
+        candidates.extend(
+            [
+                root / image_path,
+                root / "manuscript" / image_path,
+                root / "output" / image_path,
+            ]
+        )
     for parent in config_file.parents:
         candidates.append(parent / "manuscript" / image_path)
+    unique_candidates: list[Path] = []
+    seen: set[Path] = set()
     for candidate in candidates:
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        unique_candidates.append(candidate)
+    for candidate in unique_candidates:
         if candidate.is_file():
             return candidate
-    return candidates[0]
+    return unique_candidates[0]
+
+
+def _image_latex_path(image_path: Path, config_file: Path) -> str:
+    """Return a LaTeX-safe image path without embedding local absolute paths."""
+    manuscript_dir = config_file.parent
+    output_root = manuscript_dir.parent
+    latex_dir = output_root / "pdf" if manuscript_dir.name == "manuscript" else manuscript_dir
+    try:
+        return Path(os.path.relpath(image_path.resolve(), latex_dir.resolve())).as_posix()
+    except OSError:
+        return image_path.as_posix() if not image_path.is_absolute() else image_path.name
+
+
+def _image_block(
+    image_path: Path | None,
+    config_file: Path,
+    *,
+    height: str,
+    width: str = r"0.98\textwidth",
+) -> str:
+    """Return a LaTeX includegraphics block for a configured image."""
+    if image_path is None:
+        return ""
+    if not image_path.is_file():
+        logger.warning("Configured image does not exist: %s", image_path)
+        return ""
+    latex_image = _image_latex_path(image_path, config_file)
+    return (
+        r"\includegraphics[width="
+        + width
+        + r",height="
+        + height
+        + r",keepaspectratio]{"
+        + r"\detokenize{"
+        + latex_image
+        + r"}}"
+    )
+
+
+def _cover_image_block(
+    config: dict[str, Any],
+    config_file: Path,
+    *,
+    height: str,
+    section_name: str | None = None,
+) -> str:
+    """Return a LaTeX includegraphics block for the configured cover image."""
+    image_path = (
+        _section_cover_image_path(config, config_file, section_name)
+        if section_name is not None
+        else _cover_image_path(config, config_file)
+    )
+    return _image_block(image_path, config_file, height=height)
+
+
+def _publishing_page_visual_block(config: dict[str, Any], config_file: Path) -> list[str]:
+    """Return optional page-two visual image block lines."""
+    visual = _front_matter_options(config).get("page_two_visual", {}) or {}
+    if not isinstance(visual, dict):
+        return []
+    image = visual.get("image", "")
+    if not image:
+        return []
+    image_block = _image_block(
+        _configured_image_path(image, config_file),
+        config_file,
+        width=r"0.94\textwidth",
+        height=r"0.50\textheight",
+    )
+    if not image_block:
+        return []
+    title = _latex_text(visual.get("title", ""))
+    caption = _latex_paragraphs(visual.get("caption", ""))
+    lines = [
+        r"\vspace{0.8em}",
+        r"\begin{center}",
+    ]
+    if title:
+        lines.extend(
+            [
+                r"{\sffamily\bfseries " + title + r"\par}",
+                r"\vspace{0.35em}",
+            ]
+        )
+    lines.append(image_block)
+    if caption:
+        lines.extend(
+            [
+                r"\par\vspace{0.35em}",
+                r"\begin{minipage}{0.92\textwidth}",
+                r"{\scriptsize " + caption + r"}",
+                r"\end{minipage}",
+            ]
+        )
+    lines.append(r"\end{center}")
+    return lines
+
+
+def _has_available_paper_cover(config: dict[str, Any], config_file: Path | None) -> bool:
+    """Return true when a paper cover image is configured and present."""
+    if config_file is None:
+        return False
+    paper = config.get("paper", {}) or {}
+    if not isinstance(paper, dict):
+        return False
+    cover = paper.get("cover", {}) or {}
+    if not isinstance(cover, dict) or not cover.get("image"):
+        return False
+    cover_image = _section_cover_image_path(config, config_file, "paper")
+    return cover_image is not None and cover_image.is_file()
+
+
+def _publication_doi_line(config: dict[str, Any]) -> str:
+    """Return DOI cover text, including an explicit forthcoming status."""
+    publication = config.get("publication", {}) or {}
+    if not isinstance(publication, dict):
+        return ""
+    doi = str(publication.get("doi", "")).strip()
+    if doi:
+        doi_target = _latex_href_url(f"https://doi.org/{doi}")
+        return r"DOI: \href{" + doi_target + r"}{" + _latex_text(doi) + r"}"
+    doi_status = str(publication.get("doi_status", "")).strip()
+    if doi_status:
+        return r"DOI: " + _latex_text(doi_status)
+    return ""
+
+
+def _paper_cover_author_lines(config: dict[str, Any]) -> list[str]:
+    """Return visible author/ORCID/DOI lines for the custom paper cover."""
+    authors = _author_blocks(config)
+    lines: list[str] = []
+    for author in authors:
+        lines.append(r"{\Large\sffamily\bfseries " + _latex_text(author["name"]) + r"\par}")
+        if author["affiliation"]:
+            lines.append(r"{\normalsize\sffamily " + _latex_text(author["affiliation"]) + r"\par}")
+        if author["email"]:
+            lines.append(r"{\normalsize\sffamily\texttt{" + _latex_text(author["email"]) + r"}\par}")
+        if author["orcid"]:
+            orcid = _latex_text(author["orcid"])
+            lines.append(
+                r"{\normalsize\sffamily\href{https://orcid.org/"
+                + _latex_href_url(author["orcid"])
+                + r"}{ORCID: "
+                + orcid
+                + r"}\par}"
+            )
+        lines.append(r"\vspace{0.18em}")
+    if not lines:
+        lines.append(r"{\Large\sffamily\bfseries Project Author\par}")
+
+    doi_line = _publication_doi_line(config)
+    if doi_line:
+        lines.append(r"{\normalsize\sffamily " + doi_line + r"\par}")
+    return lines
 
 
 def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
@@ -307,8 +499,6 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
     if not isinstance(publication, dict):
         publication = {}
     doi = str(publication.get("doi", ""))
-    cover_image = _cover_image_path(config, config_file)
-
     title = _latex_text(metadata["title"])
     subtitle = _latex_text(metadata["subtitle"])
     edition = _latex_text(metadata["edition"])
@@ -336,16 +526,7 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
     if not author_lines:
         author_lines.append(r"{\Large\bfseries Project Author}\\[0.5em]")
 
-    image_block = ""
-    if cover_image is not None and cover_image.is_file():
-        image_block = (
-            r"\includegraphics[width=0.98\textwidth,height=0.62\textheight,keepaspectratio]{"
-            + r"\detokenize{"
-            + cover_image.as_posix()
-            + r"}}"
-        )
-    elif cover_image is not None:
-        logger.warning("Configured cover image does not exist: %s", cover_image)
+    image_block = _cover_image_block(config, config_file, height=r"0.62\textheight", section_name="book")
 
     edition_line = ""
     if edition or year:
@@ -389,6 +570,7 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
         )
     publishing_lines.extend(_publishing_quote_box(config))
     publishing_lines.extend(_publishing_acknowledgement_block(config))
+    publishing_lines.extend(_publishing_page_visual_block(config, config_file))
     suggested_citation_parts: list[str] = []
     if repo_url:
         suggested_citation_parts.append(r"\href{" + _latex_href_url(repo_url) + r"}{" + _latex_text(repo_url) + r"}")
@@ -445,18 +627,18 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
 
 def generate_title_page_preamble(manuscript_dir: Path) -> str:
     """Generate LaTeX title page preamble commands from config.yaml metadata."""
-    config, _config_file = _load_render_config(manuscript_dir)
+    config, config_file = _load_render_config(manuscript_dir)
     if not config:
         return ""
 
     try:
         metadata = _metadata_from_config(config)
         authors = config.get("authors", [])
+        custom_paper_cover = _has_available_paper_cover(config, config_file)
 
         title = _latex_text(metadata["title"])
         date = metadata["date"]
-        publication = config.get("publication", {}) or {}
-        doi = publication.get("doi", "") if isinstance(publication, dict) else ""
+        doi_line = _publication_doi_line(config)
 
         preamble_lines = [
             f"\\title{{{title}}}",
@@ -471,23 +653,24 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
                 name = _latex_text(author["name"])
                 parts = [name]
 
-                affils: list[str] = []
-                if "affiliations" in author:
-                    raw = author["affiliations"]
-                    affils = [raw] if isinstance(raw, str) else list(raw)
-                elif "affiliation" in author:
-                    affils = [author["affiliation"]]
-                for affil in affils:
-                    parts.append(f"\\\\\\footnotesize{{{_latex_text(affil)}}}")
+                if not custom_paper_cover:
+                    affils: list[str] = []
+                    if "affiliations" in author:
+                        raw = author["affiliations"]
+                        affils = [raw] if isinstance(raw, str) else list(raw)
+                    elif "affiliation" in author:
+                        affils = [author["affiliation"]]
+                    for affil in affils:
+                        parts.append(f"\\\\\\footnotesize{{{_latex_text(affil)}}}")
 
-                if "email" in author:
-                    parts.append(f"\\\\\\footnotesize{{\\texttt{{{_latex_text(author['email'])}}}}}")
+                    if "email" in author:
+                        parts.append(f"\\\\\\footnotesize{{\\texttt{{{_latex_text(author['email'])}}}}}")
 
-                if "orcid" in author:
-                    orcid = author["orcid"]
-                    parts.append(
-                        f"\\\\\\footnotesize{{\\href{{https://orcid.org/{orcid}}}{{ORCID: {orcid}}}}}"  # noqa: E501
-                    )
+                    if "orcid" in author:
+                        orcid = str(author["orcid"])
+                        parts.append(
+                            f"\\\\\\footnotesize{{\\href{{https://orcid.org/{_latex_href_url(orcid)}}}{{ORCID: {_latex_text(orcid)}}}}}"  # noqa: E501
+                        )
 
                 author_block = "".join(parts)
                 author_blocks.append(author_block)
@@ -496,11 +679,8 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
                 author_str = " \\\\and ".join(author_blocks)
 
                 extras = []
-                if doi:
-                    extras.append(f"\\href{{https://doi.org/{doi}}}{{DOI: {doi}}}")
-
-                if date:
-                    extras.append(date)
+                if doi_line and not custom_paper_cover:
+                    extras.append(doi_line)
 
                 if extras:
                     author_str += " \\\\ " + " \\\\ ".join([f"\\footnotesize{{{e}}}" for e in extras])
@@ -535,8 +715,30 @@ def generate_title_page_body(manuscript_dir: Path) -> str:
         metadata = _metadata_from_config(config)
         title = _latex_text(metadata["title"])
         subtitle = _latex_text(metadata["subtitle"])
+        image_block = _cover_image_block(config, config_file, height=r"0.60\textheight", section_name="paper")
 
-        if subtitle:
+        if image_block:
+            author_lines = _paper_cover_author_lines(config)
+            body_lines = [
+                r"\begin{titlepage}",
+                r"\centering",
+                r"\vspace*{0.55cm}",
+                r"{\Huge\sffamily\bfseries " + title + r"\par}",
+                r"\vspace{0.4em}",
+                r"{\Large\sffamily " + subtitle + r"\par}" if subtitle else "",
+                r"\vspace{0.75em}",
+                *author_lines,
+                r"\vspace{0.35em}",
+                r"\makeatletter",
+                r"{\@date\par}",
+                r"\makeatother",
+                r"\vfill",
+                image_block,
+                r"\vfill",
+                r"\end{titlepage}",
+                r"\thispagestyle{empty}",
+            ]
+        elif subtitle:
             body_lines = [
                 r"\begin{titlepage}",
                 r"\centering",

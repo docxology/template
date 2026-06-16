@@ -2220,7 +2220,7 @@ Translate provider-neutral source controls into OpenAI deep research tools.
 *function — defined in `infrastructure.search.deep_research.project_context`*
 
 ```python
-build_project_deep_research_request(project_root: str | Path, query: str, *, request: DeepResearchRequest | None=None, max_files: int=64, max_chars_per_file: int=8000, max_total_chars: int=500000) -> DeepResearchRequest
+build_project_deep_research_request(project_root: str | Path, query: str, *, request: DeepResearchRequest | None=None, max_files: int=DEFAULT_MAX_FILES, max_chars_per_file: int=DEFAULT_MAX_CHARS_PER_FILE, max_total_chars: int=DEFAULT_MAX_TOTAL_CHARS, max_manuscript_chars_per_file: int=DEFAULT_MAX_MANUSCRIPT_CHARS_PER_FILE) -> DeepResearchRequest
 ```
 
 Create a deep research request preloaded with project context.
@@ -2230,7 +2230,7 @@ Create a deep research request preloaded with project context.
 *function — defined in `infrastructure.search.deep_research.project_context`*
 
 ```python
-collect_project_context(project_root: str | Path, *, max_files: int=64, max_chars_per_file: int=8000, max_total_chars: int=500000) -> DeepResearchProjectContext
+collect_project_context(project_root: str | Path, *, max_files: int=DEFAULT_MAX_FILES, max_chars_per_file: int=DEFAULT_MAX_CHARS_PER_FILE, max_total_chars: int=DEFAULT_MAX_TOTAL_CHARS, max_manuscript_chars_per_file: int=DEFAULT_MAX_MANUSCRIPT_CHARS_PER_FILE) -> DeepResearchProjectContext
 ```
 
 Collect a bounded context bundle from a project tree.

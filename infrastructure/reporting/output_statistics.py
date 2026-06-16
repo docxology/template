@@ -212,7 +212,7 @@ def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> 
         "OUTPUT STATISTICS REPORT",
         "=" * BANNER_WIDTH,
         "",
-        f"Output Directory: {output_dir}",
+        f"Output Directory: {_release_safe_output_dir(output_dir)}",
         "",
         f"Total Files: {stats['total_files']}",
         f"Total Size: {stats['total_size_mb']:.2f} MB",
@@ -245,6 +245,18 @@ def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> 
     lines.append("")
 
     return "\n".join(lines)
+
+
+def _release_safe_output_dir(output_dir: Path) -> str:
+    """Return a path label suitable for copied release-facing reports."""
+    parts = output_dir.parts
+    if "output" in parts:
+        index = parts.index("output")
+        return str(Path(*parts[index:]))
+    if "projects" in parts:
+        index = parts.index("projects")
+        return str(Path(*parts[index:]))
+    return output_dir.name
 
 
 def write_output_statistics_reports(project_output_dir: Path, stats: dict[str, Any]) -> tuple[Path, Path]:

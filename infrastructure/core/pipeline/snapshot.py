@@ -28,7 +28,7 @@ class PipelineSnapshot:
     def to_dict(self) -> dict[str, Any]:
         """Serialize snapshot metadata."""
         payload = asdict(self)
-        payload["path"] = str(self.path)
+        payload["path"] = _release_safe_path(self.path)
         return payload
 
 
@@ -95,8 +95,8 @@ def compare_snapshots(left: Path, right: Path) -> SnapshotComparison:
         left_payload.get("validation_summary", {}), right_payload.get("validation_summary", {})
     )
     return SnapshotComparison(
-        left=str(left),
-        right=str(right),
+        left=_release_safe_path(left),
+        right=_release_safe_path(right),
         artifact_deltas=tuple(artifact_deltas),
         metric_deltas=tuple(metric_deltas),
         evidence_delta=evidence_delta,
@@ -164,6 +164,18 @@ def _snapshot_path(output_dir: Path, stage_num: int, stage_name: str) -> Path:
     while "--" in slug:
         slug = slug.replace("--", "-")
     return output_dir / "reports" / "snapshots" / f"stage-{stage_num:02d}-{slug}.json"
+
+
+def _release_safe_path(path: Path) -> str:
+    """Serialize snapshot paths without machine-local checkout prefixes."""
+    parts = path.parts
+    if "output" in parts:
+        index = parts.index("output")
+        return str(Path(*parts[index:]))
+    if "reports" in parts:
+        index = parts.index("reports")
+        return str(Path(*parts[index:]))
+    return path.name
 
 
 def _artifact_hashes(manifest_path: Path) -> dict[str, str]:

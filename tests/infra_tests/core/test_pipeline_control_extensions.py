@@ -503,6 +503,9 @@ def test_snapshot_creation_and_comparison_reports_artifact_and_evidence_deltas(t
     markdown = snapshot_compare_to_markdown(comparison)
 
     assert snap_a.path.exists()
+    assert str(tmp_path) not in snap_a.to_dict()["path"]
+    assert str(tmp_path) not in comparison.to_dict()["left"]
+    assert str(tmp_path) not in comparison.to_dict()["right"]
     assert comparison.artifact_deltas
     assert comparison.evidence_delta == 1
     assert "output/pdf/paper.pdf" in markdown
@@ -542,6 +545,7 @@ def test_run_lessons_capture_failures_and_hitl_decisions(tmp_path: Path) -> None
     assert "artifact_drift" in [lesson.category for lesson in lessons]
     assert "validation_defect" in [lesson.category for lesson in lessons]
     assert "pause_recommendation" in [lesson.category for lesson in lessons]
+    assert all(str(tmp_path) not in lesson.source for lesson in lessons)
     assert written.jsonl_path.exists()
     assert written.markdown_path.exists()
     assert written.next_run_context_path.exists()
@@ -676,6 +680,38 @@ def test_stage_artifact_manifest_accepts_symlinked_private_project_contracts(tmp
     )
     validation = validate_artifact_manifest(manifest, project_dir=project_dir)
 
+    assert [entry.contract_match for entry in manifest.entries] == [True]
+    assert validation.issues == ()
+
+
+def test_stage_artifact_manifest_preserves_lifecycle_slug_for_symlinked_working_project(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    private_project = tmp_path / "private" / "working" / "AGEINT"
+    linked_project = repo_root / "projects" / "working" / "AGEINT"
+    output_file = private_project / "output" / "reports" / "result.json"
+    copied_output = repo_root / "output" / "working" / "AGEINT" / "manifest.json"
+    output_file.parent.mkdir(parents=True)
+    copied_output.parent.mkdir(parents=True)
+    linked_project.parent.mkdir(parents=True)
+    linked_project.symlink_to(private_project, target_is_directory=True)
+    output_file.write_text('{"ok": true}\n', encoding="utf-8")
+    copied_output.write_text('{"ok": true}\n', encoding="utf-8")
+
+    manifest = write_stage_artifact_manifest(
+        repo_root=repo_root,
+        project_dir=private_project,
+        stage_num=9,
+        stage_name="Copy Outputs",
+        contract=StageContract(
+            output_artifacts=(
+                "projects/{project}/output/reports/",
+                "output/{project}/",
+            )
+        ),
+    )
+    validation = validate_artifact_manifest(manifest, project_dir=private_project)
+
+    assert manifest.issues == ()
     assert [entry.contract_match for entry in manifest.entries] == [True]
     assert validation.issues == ()
 

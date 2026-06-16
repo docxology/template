@@ -15,6 +15,19 @@ logger = get_logger(__name__)
 
 CITE_KEY_PATTERN = re.compile(r"(?<![A-Za-z0-9_])@([A-Za-z][\w:.\-]*)")
 BIBTEX_KEY_PATTERN = re.compile(r"^@\w+\{\s*([^,\s}]+)\s*[,}]", re.MULTILINE)
+CROSSREF_PREFIXES = (
+    "sec:",
+    "fig:",
+    "tbl:",
+    "eq:",
+    "lst:",
+    "def:",
+    "prop:",
+    "inv:",
+    "conj:",
+    "alg:",
+    "thm:",
+)
 
 
 def validate_citations(
@@ -72,7 +85,7 @@ def validate_citations(
             key = m.group(1)
             if key in known_keys or key in seen_in_file:
                 continue
-            if any(key.startswith(prefix) for prefix in ("sec:", "fig:", "tbl:", "eq:", "lst:")):
+            if any(key.startswith(prefix) for prefix in CROSSREF_PREFIXES):
                 continue
             seen_in_file.add(key)
             problems.append(

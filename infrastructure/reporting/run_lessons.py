@@ -68,11 +68,25 @@ def collect_run_lessons(
 
     decisions_path = project_output_dir / "hitl" / "decisions.jsonl"
     if decisions_path.exists():
-        lessons.extend(_lessons_from_decisions(decisions_path))
+        lessons.extend(_lessons_from_decisions(decisions_path, project_output_dir=project_output_dir))
     lessons.extend(_lessons_from_artifact_manifest(project_output_dir / "reports" / "artifact_manifest.json"))
-    lessons.extend(_lessons_from_pause_recommendations(project_output_dir / "reports" / "pause_recommendations.json"))
-    lessons.extend(_lessons_from_validation_report(project_output_dir / "reports" / "validation_report.json"))
-    lessons.extend(_lessons_from_telemetry(project_output_dir / "reports" / "telemetry.json"))
+    lessons.extend(
+        _lessons_from_pause_recommendations(
+            project_output_dir / "reports" / "pause_recommendations.json",
+            project_output_dir=project_output_dir,
+        )
+    )
+    lessons.extend(
+        _lessons_from_validation_report(
+            project_output_dir / "reports" / "validation_report.json",
+            project_output_dir=project_output_dir,
+        )
+    )
+    lessons.extend(
+        _lessons_from_telemetry(
+            project_output_dir / "reports" / "telemetry.json", project_output_dir=project_output_dir
+        )
+    )
     return lessons
 
 
@@ -101,7 +115,7 @@ def write_run_lessons(
     )
 
 
-def _lessons_from_decisions(decisions_path: Path) -> list[RunLesson]:
+def _lessons_from_decisions(decisions_path: Path, *, project_output_dir: Path) -> list[RunLesson]:
     lessons: list[RunLesson] = []
     for line in decisions_path.read_text(encoding="utf-8").splitlines():
         if not line.strip():
@@ -123,7 +137,7 @@ def _lessons_from_decisions(decisions_path: Path) -> list[RunLesson]:
                 stage_num=stage_num,
                 severity="info" if action in {"approve", "guide", "resume"} else "warning",
                 message=f"{action}: {message}",
-                source=str(decisions_path),
+                source=_release_safe_source(decisions_path, project_output_dir),
             )
         )
     return lessons
@@ -142,13 +156,13 @@ def _lessons_from_artifact_manifest(path: Path) -> list[RunLesson]:
                 stage_num=0,
                 severity="warning",
                 message=str(issue),
-                source=str(path),
+                source=_release_safe_source(path, path.parents[1]),
             )
         )
     return lessons
 
 
-def _lessons_from_pause_recommendations(path: Path) -> list[RunLesson]:
+def _lessons_from_pause_recommendations(path: Path, *, project_output_dir: Path) -> list[RunLesson]:
     payload = _read_json_object(path)
     if not payload:
         return []
@@ -167,13 +181,13 @@ def _lessons_from_pause_recommendations(path: Path) -> list[RunLesson]:
                 stage_num=stage_num,
                 severity="info",
                 message=str(row.get("reason", "") or row.get("message", "") or "pause recommended"),
-                source=str(path),
+                source=_release_safe_source(path, project_output_dir),
             )
         )
     return lessons
 
 
-def _lessons_from_validation_report(path: Path) -> list[RunLesson]:
+def _lessons_from_validation_report(path: Path, *, project_output_dir: Path) -> list[RunLesson]:
     payload = _read_json_object(path)
     if not payload:
         return []
@@ -189,7 +203,7 @@ def _lessons_from_validation_report(path: Path) -> list[RunLesson]:
                         stage_num=0,
                         severity="warning",
                         message=f"{name} did not pass",
-                        source=str(path),
+                        source=_release_safe_source(path, project_output_dir),
                     )
                 )
     stats = payload.get("output_statistics", {})
@@ -205,13 +219,13 @@ def _lessons_from_validation_report(path: Path) -> list[RunLesson]:
                             stage_num=0,
                             severity="warning",
                             message=str(value),
-                            source=str(path),
+                            source=_release_safe_source(path, project_output_dir),
                         )
                     )
     return lessons
 
 
-def _lessons_from_telemetry(path: Path) -> list[RunLesson]:
+def _lessons_from_telemetry(path: Path, *, project_output_dir: Path) -> list[RunLesson]:
     payload = _read_json_object(path)
     if not payload:
         return []
@@ -229,7 +243,7 @@ def _lessons_from_telemetry(path: Path) -> list[RunLesson]:
                 stage_num=0,
                 severity="warning",
                 message=str(row.get("message", "") or row.get("warning_type", "") or "telemetry warning"),
-                source=str(path),
+                source=_release_safe_source(path, project_output_dir),
             )
         )
     return lessons
@@ -243,6 +257,14 @@ def _read_json_object(path: Path) -> dict[str, object]:
     except (OSError, json.JSONDecodeError):
         return {}
     return payload if isinstance(payload, dict) else {}
+
+
+def _release_safe_source(path: Path, project_output_dir: Path) -> str:
+    """Serialize report source paths relative to project output when possible."""
+    try:
+        return str(path.relative_to(project_output_dir))
+    except ValueError:
+        return path.name
 
 
 def _render_markdown(lessons: list[RunLesson]) -> str:

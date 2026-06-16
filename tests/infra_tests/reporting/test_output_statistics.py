@@ -152,10 +152,28 @@ class TestGenerateDetailedOutputReport:
         }
         report = generate_detailed_output_report(tmp_path, stats)
         assert "OUTPUT STATISTICS REPORT" in report
+        assert str(tmp_path) not in report
         assert "Total Files: 5" in report
         assert "pdf: 3 files" in report
         assert "big.pdf" in report
         assert "web/ directory" in report
+
+    def test_project_output_dir_does_not_expose_lifecycle_checkout(self, tmp_path: Path):
+        """Release-facing stats should not embed projects/working path prefixes."""
+        output_dir = tmp_path / "projects" / "working" / "AGEINT" / "output"
+        stats = {
+            "total_files": 0,
+            "total_size_mb": 0.0,
+            "directories": {},
+            "largest_files": [],
+            "missing_expected_files": [],
+            "file_counts_by_type": {},
+        }
+
+        report = generate_detailed_output_report(output_dir, stats)
+
+        assert "Output Directory: output" in report
+        assert "projects/working" not in report
 
     def test_empty_stats(self, tmp_path: Path):
         """Should handle empty statistics gracefully."""

@@ -208,10 +208,40 @@ def _declared_output_paths(repo_root: Path, project_dir: Path, contract: StageCo
 
 
 def _project_slug(repo_root: Path, project_dir: Path) -> str:
+    projects_root = repo_root / "projects"
+    for candidate in (project_dir, project_dir.absolute()):
+        try:
+            return candidate.relative_to(projects_root).as_posix()
+        except ValueError:
+            continue
     try:
-        return project_dir.resolve().relative_to((repo_root / "projects").resolve()).as_posix()
+        return project_dir.resolve().relative_to(projects_root.resolve()).as_posix()
     except ValueError:
-        return project_dir.name
+        pass
+    resolved_project = project_dir.resolve()
+    for candidate in _project_slug_candidates(projects_root):
+        try:
+            if candidate.resolve() == resolved_project:
+                return candidate.relative_to(projects_root).as_posix()
+        except OSError:
+            continue
+    return project_dir.name
+
+
+def _project_slug_candidates(projects_root: Path) -> tuple[Path, ...]:
+    if not projects_root.exists():
+        return ()
+    candidates: list[Path] = []
+    for child in projects_root.iterdir():
+        if child.name.startswith("."):
+            continue
+        candidates.append(child)
+        if child.is_dir() or child.is_symlink():
+            try:
+                candidates.extend(grandchild for grandchild in child.iterdir() if not grandchild.name.startswith("."))
+            except OSError:
+                continue
+    return tuple(sorted(candidates, key=lambda path: path.as_posix()))
 
 
 def _stage_manifest_path(output_dir: Path, stage_num: int, stage_name: str) -> Path:

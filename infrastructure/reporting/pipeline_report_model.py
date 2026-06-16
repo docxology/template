@@ -99,7 +99,7 @@ def generate_pipeline_report(
             "log_file": {
                 "exists": log_file.exists(),
                 "size": log_file.stat().st_size if log_file.exists() else 0,
-                "path": str(log_file),
+                "path": _release_safe_log_path(log_file, _log_base),
             },
         }
 
@@ -113,3 +113,11 @@ def generate_pipeline_report(
         error_summary=error_summary,
         output_statistics=output_statistics,
     )
+
+
+def _release_safe_log_path(log_file: Path, project_dir: Path) -> str:
+    """Serialize project log paths without leaking the local checkout root."""
+    try:
+        return str(log_file.relative_to(project_dir))
+    except ValueError:
+        return log_file.name

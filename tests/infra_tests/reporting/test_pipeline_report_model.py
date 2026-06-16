@@ -83,6 +83,7 @@ class TestGeneratePipelineReport:
         assert report.output_statistics["pdfs"] == 2
         assert report.output_statistics["log_file"]["exists"] is True
         assert report.output_statistics["log_file"]["size"] > 0
+        assert report.output_statistics["log_file"]["path"] == "output/logs/pipeline.log"
 
     def test_with_project_dir_override(self, tmp_path):
         custom_dir = tmp_path / "custom_project"
@@ -100,6 +101,7 @@ class TestGeneratePipelineReport:
             output_statistics={"pdfs": 1},
         )
         assert report.output_statistics["log_file"]["exists"] is True
+        assert report.output_statistics["log_file"]["path"] == "output/logs/pipeline.log"
 
     def test_project_name_without_output_stats(self, tmp_path):
         # output_statistics is None, so log_file enrichment is skipped

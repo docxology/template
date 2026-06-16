@@ -824,5 +824,6 @@ def test_generate_pipeline_report_enriches_output_statistics_with_log_file(
     assert "exists" in log_info
     assert "size" in log_info
     assert "path" in log_info
+    assert str(tmp_path) not in log_info["path"]
     # Original stats should still be present
     assert report.output_statistics["pdf_files"] == 2

@@ -156,9 +156,7 @@ class TestExtractPreamble:
         """
         preamble_file = tmp_path / "preamble.md"
         preamble_file.write_text(
-            "\\usepackage{amsmath,amssymb}\n"
-            "\\geometry{margin=0.25in}\n"
-            "\\changefontsize{9pt}{11pt}\n"
+            "\\usepackage{amsmath,amssymb}\n\\geometry{margin=0.25in}\n\\changefontsize{9pt}{11pt}\n"
         )
         result = extract_preamble(preamble_file)
         assert "\\geometry{margin=0.25in}" in result
@@ -190,12 +188,7 @@ class TestExtractPreamble:
         Only the balanced single-line directive survives.
         """
         preamble_file = tmp_path / "preamble.md"
-        preamble_file.write_text(
-            "\\newcommand{\\foo}{%\n"
-            "  multi-line body\n"
-            "}\n"
-            "\\usepackage{xcolor}\n"
-        )
+        preamble_file.write_text("\\newcommand{\\foo}{%\n  multi-line body\n}\n\\usepackage{xcolor}\n")
         result = extract_preamble(preamble_file)
         assert "\\newcommand" not in result, "unbalanced multi-line opener must be dropped"
         assert "\\usepackage{xcolor}" in result
@@ -333,12 +326,14 @@ class TestGenerateTitlePagePreamble:
         self._write_config(tmp_path, {"paper": {"title": "Test"}})
         result = generate_title_page_preamble(tmp_path)
         assert "\\date{\\today}" in result
+        assert result.count("\\today") == 1
 
     def test_includes_provided_date(self, tmp_path):
         """Explicit date used when config has date field."""
         self._write_config(tmp_path, {"paper": {"title": "T", "date": "March 2026"}})
         result = generate_title_page_preamble(tmp_path)
         assert "\\date{March 2026}" in result
+        assert result.count("March 2026") == 1
 
     def test_returns_string(self, tmp_path):
         """Always returns a string."""
