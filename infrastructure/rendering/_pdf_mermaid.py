@@ -19,6 +19,7 @@ from typing import Final
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering.chrome import resolve_chrome_executable as _resolve_chrome_executable
 
 logger = get_logger(__name__)
 
@@ -38,17 +39,6 @@ _BRACE_LABEL_RE: Final[re.Pattern[str]] = re.compile(
 _STATE_DESCRIPTION_RE: Final[re.Pattern[str]] = re.compile(r"^\s*[A-Za-z_][\w.-]*\s*:")
 _PUPPETEER_RUNTIME_CONFIG_NAME: Final[str] = "inline_mermaid.puppeteer.json"
 _VERBATIM_END_MARKER: Final[str] = r"\end{verbatim}"
-_CACHE_CHROME_FILENAMES: Final[tuple[str, ...]] = (
-    "chrome",
-    "chrome-headless-shell",
-    "Google Chrome for Testing",
-)
-_SYSTEM_CHROME_NAMES: Final[tuple[str, ...]] = (
-    "google-chrome",
-    "google-chrome-stable",
-    "chromium",
-    "chromium-browser",
-)
 
 
 @dataclass(frozen=True)
@@ -175,64 +165,6 @@ def _find_puppeteer_config(start: Path) -> Path | None:
         config = candidate / ".puppeteer.json"
         if config.is_file():
             return config
-    return None
-
-
-def _is_executable_file(path: Path) -> bool:
-    return path.is_file() and os.access(path, os.X_OK)
-
-
-def _cache_version_key(dirname: str) -> tuple[int, tuple[int, ...], str]:
-    _, _, version = dirname.partition("-")
-    if version:
-        parts = version.split(".")
-        if all(part.isdigit() for part in parts):
-            return (1, tuple(int(part) for part in parts), version)
-    return (0, tuple(), dirname)
-
-
-def _iter_cache_chrome_candidates(cache_root: Path) -> list[tuple[tuple[int, tuple[int, ...], str], Path]]:
-    candidates: list[tuple[tuple[int, tuple[int, ...], str], Path]] = []
-    for subtree in ("chrome", "chrome-headless-shell"):
-        subtree_root = cache_root / subtree
-        if not subtree_root.is_dir():
-            continue
-        for version_dir in subtree_root.iterdir():
-            if not version_dir.is_dir():
-                continue
-            for candidate in sorted(version_dir.rglob("*")):
-                if candidate.name in _CACHE_CHROME_FILENAMES and _is_executable_file(candidate):
-                    candidates.append((_cache_version_key(version_dir.name), candidate))
-                    break
-    return candidates
-
-
-def _resolve_chrome_executable() -> Path | None:
-    for env_var in ("PUPPETEER_EXECUTABLE_PATH", "CHROME_EXECUTABLE_PATH"):
-        env_path = os.environ.get(env_var)
-        if env_path:
-            candidate = Path(env_path)
-            if _is_executable_file(candidate):
-                return candidate
-
-    cache_dir = Path(os.environ.get("PUPPETEER_CACHE_DIR", Path.home() / ".cache" / "puppeteer"))
-    cache_candidates = _iter_cache_chrome_candidates(cache_dir)
-    if cache_candidates:
-        return max(cache_candidates, key=lambda item: item[0])[1]
-
-    for executable_name in _SYSTEM_CHROME_NAMES:
-        resolved = shutil.which(executable_name)
-        if resolved is None:
-            continue
-        candidate = Path(resolved)
-        if _is_executable_file(candidate):
-            return candidate
-
-    for executable_name in _SYSTEM_CHROME_NAMES:
-        candidate = Path.home() / executable_name
-        if _is_executable_file(candidate):
-            return candidate
-
     return None
 
 

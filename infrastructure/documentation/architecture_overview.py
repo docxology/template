@@ -29,14 +29,25 @@ from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.public_scope import public_project_names
+from infrastructure.rendering.chrome import resolve_chrome_executable
 
 logger = get_logger(__name__)
 
 
-# Default Chrome path used by the local mermaid-cli setup. mmdc launches
-# Puppeteer which needs a Chromium-compatible browser; on macOS dev machines
-# the system Chrome works and avoids a separate Chromium download.
-_DEFAULT_CHROME_PATH = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+def _resolve_chrome_executable() -> str | None:
+    """Resolve the browser executable mmdc's Puppeteer should launch.
+
+    Thin wrapper over the repo's canonical resolver
+    (:func:`infrastructure.rendering.chrome.resolve_chrome_executable`) so the
+    env-var order (``PUPPETEER_EXECUTABLE_PATH`` then ``CHROME_EXECUTABLE_PATH``
+    — the vars CI exports after installing ``chrome-headless-shell``) and the
+    puppeteer-cache/system search stay consistent with the PDF and docs-lint
+    mermaid paths. ``include_macos_app`` keeps the macOS system Chrome fallback
+    for local dev; ``None`` lets Puppeteer fall back to its bundled Chromium
+    (the Linux/CI path), matching the ``executablePath`` call site below.
+    """
+    resolved = resolve_chrome_executable(include_macos_app=True)
+    return str(resolved) if resolved is not None else None
 
 
 def _discover_infrastructure_packages(repo_root: Path) -> list[str]:
@@ -234,13 +245,14 @@ def render_architecture_svg(repo_root: Path, output_path: Path) -> Path:
     # from CI containers and from macOS shells that lack a TTY.
     with tempfile.TemporaryDirectory() as tmp:
         puppeteer_cfg = Path(tmp) / "puppeteer.json"
+        # Only pin executablePath when we can resolve a real browser; otherwise
+        # let Puppeteer locate its bundled Chromium (the Linux/CI path).
+        puppeteer_config: dict[str, object] = {"args": ["--no-sandbox"]}
+        chrome_executable = _resolve_chrome_executable()
+        if chrome_executable is not None:
+            puppeteer_config["executablePath"] = chrome_executable
         puppeteer_cfg.write_text(
-            json.dumps(
-                {
-                    "executablePath": _DEFAULT_CHROME_PATH,
-                    "args": ["--no-sandbox"],
-                }
-            ),
+            json.dumps(puppeteer_config),
             encoding="utf-8",
         )
 

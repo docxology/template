@@ -131,6 +131,7 @@ def test_render_architecture_svg_raises_when_mmdc_missing(tmp_path: Path, monkey
         render_architecture_svg(tmp_path, tmp_path / "out" / "arch.svg")
 
 
+@pytest.mark.timeout(60)  # real mmdc+Chromium render: ~4-8s, exceeds the 10s default under CI/dev load
 @pytest.mark.skipif(shutil.which("mmdc") is None, reason="mmdc (mermaid-cli) not installed")
 def test_render_architecture_svg_produces_valid_svg(tmp_path: Path) -> None:
     """End-to-end: mmdc renders our Mermaid source into a non-trivial SVG."""
@@ -151,6 +152,7 @@ def test_render_architecture_svg_produces_valid_svg(tmp_path: Path) -> None:
     assert "flowchart TB" in mmd_path.read_text(encoding="utf-8")
 
 
+@pytest.mark.timeout(60)  # real mmdc+Chromium render: ~4-8s, exceeds the 10s default under CI/dev load
 @pytest.mark.skipif(shutil.which("mmdc") is None, reason="mmdc (mermaid-cli) not installed")
 def test_generated_mermaid_parses_via_mmdc(tmp_path: Path) -> None:
     """Sanity check: mmdc itself is willing to parse the generated source."""

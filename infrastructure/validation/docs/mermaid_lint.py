@@ -31,6 +31,7 @@ from pathlib import Path
 
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering.chrome import resolve_chrome_executable
 from infrastructure.validation.docs._io import read_markdown
 from infrastructure.validation.docs.scan_scope import iter_markdown_files
 
@@ -143,31 +144,17 @@ def _resolve_chrome(chrome_path: str | None) -> str | None:
     """Resolve the Chrome/Chromium binary path used by puppeteer.
 
     Priority:
-      1. Explicit *chrome_path* argument.
-      2. ``CHROME_EXECUTABLE_PATH`` env var.
-      3. Detected ``chrome-headless-shell`` from ``puppeteer browsers install``.
-      4. macOS system Chrome at ``/Applications/Google Chrome.app``.
+      1. Explicit *chrome_path* argument (returned as given).
+      2. The repo's canonical resolver
+         (:func:`infrastructure.rendering.chrome.resolve_chrome_executable`):
+         ``PUPPETEER_EXECUTABLE_PATH`` / ``CHROME_EXECUTABLE_PATH`` env vars
+         (the vars CI exports), the version-sorted puppeteer cache, a system
+         browser on ``PATH``, then the macOS system Chrome app for local dev.
     """
     if chrome_path:
         return chrome_path
-    env = os.environ.get("CHROME_EXECUTABLE_PATH")
-    if env:
-        return env
-    home = Path.home()
-    candidates: list[Path] = []
-    cache = home / ".cache" / "puppeteer" / "chrome-headless-shell"
-    if cache.is_dir():
-        for sub in sorted(cache.iterdir()):
-            for name in ("chrome-headless-shell", "chrome-headless-shell.exe"):
-                hits = list(sub.rglob(name))
-                candidates.extend(hits)
-    macos_chrome = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
-    if macos_chrome.exists():
-        candidates.append(macos_chrome)
-    for c in candidates:
-        if c.exists():
-            return str(c)
-    return None
+    resolved = resolve_chrome_executable(include_macos_app=True)
+    return str(resolved) if resolved is not None else None
 
 
 def _puppeteer_config(chrome_path: str | None, user_data_dir: Path) -> dict[str, object]:

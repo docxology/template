@@ -20,31 +20,51 @@ from infrastructure.core.logging.pipeline_logging import (
 
 
 class TestLogOperation:
-    def test_basic(self):
+    def test_basic(self, caplog: pytest.LogCaptureFixture):
+        """Entering the context emits a 'Starting:' line; a sub-threshold duration emits no 'Completed:'."""
         log = logging.getLogger("test_log_op")
-        with log_operation("test operation", logger=log):
-            pass
+        with caplog.at_level(logging.INFO, logger="test_log_op"):
+            with log_operation("test operation", logger=log):
+                pass
+        assert "Starting: test operation" in caplog.text
+        assert "Completed: test operation" not in caplog.text
 
-    def test_logs_slow_operation(self):
+    def test_logs_slow_operation(self, caplog: pytest.LogCaptureFixture):
+        """min_duration_to_log=0 forces the 'Completed:' line to be emitted."""
         log = logging.getLogger("test_log_op_slow")
-        with log_operation("slow op", logger=log, min_duration_to_log=0.0):
-            pass
+        with caplog.at_level(logging.INFO, logger="test_log_op_slow"):
+            with log_operation("slow op", logger=log, min_duration_to_log=0.0):
+                pass
+        assert "Starting: slow op" in caplog.text
+        assert "Completed: slow op" in caplog.text
 
-    def test_does_not_log_fast_operation(self):
+    def test_does_not_log_fast_operation(self, caplog: pytest.LogCaptureFixture):
+        """A high min_duration threshold suppresses the completion line."""
         log = logging.getLogger("test_log_op_fast")
-        with log_operation("fast op", logger=log, min_duration_to_log=999.0):
-            pass
+        with caplog.at_level(logging.INFO, logger="test_log_op_fast"):
+            with log_operation("fast op", logger=log, min_duration_to_log=999.0):
+                pass
+        assert "Starting: fast op" in caplog.text
+        assert "Completed: fast op" not in caplog.text
 
-    def test_log_completion_false(self):
+    def test_log_completion_false(self, caplog: pytest.LogCaptureFixture):
+        """log_completion=False suppresses the completion line even past the threshold."""
         log = logging.getLogger("test_no_completion")
-        with log_operation("op", logger=log, log_completion=False, min_duration_to_log=0.0):
-            pass
+        with caplog.at_level(logging.INFO, logger="test_no_completion"):
+            with log_operation("op", logger=log, log_completion=False, min_duration_to_log=0.0):
+                pass
+        assert "Starting: op" in caplog.text
+        assert "Completed: op" not in caplog.text
 
-    def test_exception_logged(self):
+    def test_exception_logged(self, caplog: pytest.LogCaptureFixture):
+        """A raised exception is logged as 'Failed:' at ERROR and then re-raised."""
         log = logging.getLogger("test_log_op_err")
-        with pytest.raises(ValueError, match="boom"):
-            with log_operation("failing op", logger=log):
-                raise ValueError("boom")
+        with caplog.at_level(logging.ERROR, logger="test_log_op_err"):
+            with pytest.raises(ValueError, match="boom"):
+                with log_operation("failing op", logger=log):
+                    raise ValueError("boom")
+        assert "Failed: failing op" in caplog.text
+        assert "boom" in caplog.text
 
     def test_default_logger(self):
         with log_operation("default logger op"):

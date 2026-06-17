@@ -10,7 +10,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 flowchart LR
     W[.github/workflows/]
     W --> META[AGENTS.md · README.md]
-    W --> CI[ci.yml<br/>12 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
+    W --> CI[ci.yml<br/>14 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
 
@@ -44,6 +44,8 @@ flowchart LR
 ```mermaid
 flowchart TB
     DET[detect<br/>optional-project outputs]
+    DETP[detect-projects<br/>public-exemplar matrix outputs]
+    ACTLINT[actionlint<br/>lints workflow YAML · standalone]
     LINT[lint] --> HEALTH[health<br/>unified JSON artefact]
     LINT --> VNM[verify-no-mocks]
     LINT --> VAL[validate]
@@ -55,6 +57,7 @@ flowchart TB
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
     DET --> SHW
     DET --> FL
+    DETP --> TP
     TI --> PERF[performance]
     TP --> PERF
 
@@ -62,11 +65,33 @@ flowchart TB
     classDef matrix fill:#0f766e,stroke:#0f172a,color:#fff
     classDef terminal fill:#7c2d12,stroke:#0f172a,color:#fff
     classDef info fill:#334155,stroke:#0f172a,color:#fff
-    class DET,LINT,VNM gate
+    class DET,DETP,LINT,VNM gate
     class TI,TP,FL,SHW matrix
-    class VAL,SEC,DL,PERF terminal
+    class VAL,SEC,DL,PERF,ACTLINT terminal
     class HEALTH info
 ```
+
+### Shared setup — `setup-python-env` composite action
+
+The 12 jobs that need Python all share one local composite action,
+[`.github/actions/setup-python-env`](../actions/setup-python-env/action.yml),
+which runs `astral-sh/setup-uv` (with `uv.lock` cache) + `actions/setup-python`.
+The pinned action SHAs and cache config live there once instead of being
+copy-pasted per job. Usage (checkout **must** come first — a local action's
+files only exist after checkout):
+
+```yaml
+steps:
+  - uses: actions/checkout@<sha>
+  - uses: ./.github/actions/setup-python-env       # defaults to Python 3.12
+    # with: { python-version: ${{ matrix.python-version }} }  # matrix jobs only
+  - run: uv sync                                    # per-job groups stay explicit
+```
+
+`detect` and `actionlint` are checkout-only and do not use it. Each job keeps
+its own `uv sync …` line so optional groups (`rendering`/`monitoring`/`discopy`)
+remain visible per job. When bumping a setup action's SHA, edit the composite
+action — not each job.
 
 ### Job Details
 
