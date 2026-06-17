@@ -25,6 +25,14 @@ not to the contents of any specific workspace.
   materializes `.git/`/`.venv/`/`node_modules/`) and reads each markdown file once
   instead of twice: ~15–28× faster discovery on the live checkout, same broken-link
   set. Adds a timed regression test.
+- 🧩 **Unified Chrome resolver + CI setup composite action (QUALITY-AUDIT-1)** —
+  extracted the triplicated Chrome/Chromium resolution (`_pdf_mermaid`,
+  `mermaid_lint`, `architecture_overview`) into one shared
+  `infrastructure/rendering/chrome.py` (`resolve_chrome_executable`), and
+  factored the repeated `checkout + setup-uv + setup-python` CI block into a
+  local composite action `.github/actions/setup-python-env` (12 jobs adopt it,
+  `ci.yml` −80 lines). Behavior preserved per call site; all suites + actionlint
+  green.
 
 ### Fixed
 
@@ -34,6 +42,23 @@ not to the contents of any specific workspace.
   PDF is produced**, instead of raising `CompilationError` on the non-zero exit.
   Genuine failures (missing/invalid PDF, any other error) still raise. Fixes beamer
   rendering under TeX Live 2026 while preserving fail-hard semantics.
+- 🔧 **CI / test / doc correctness sweep (QUALITY-AUDIT-1)** — corrected the CI
+  job count + job-graph in `.github/workflows/AGENTS.md` (12 → 14, added the
+  `detect-projects`/`actionlint` nodes); made the `architecture_overview`
+  puppeteer path env-overridable (`PUPPETEER_EXECUTABLE_PATH` /
+  `CHROME_EXECUTABLE_PATH`) instead of macOS-hardcoded; added
+  `@pytest.mark.timeout(60)` to the real-`mmdc` render tests (load-flaky against
+  the 10s default); set a repo-local git identity in the `test_copy_exemplar`
+  fixture so it passes on CI runners without a global git user; regenerated
+  `docs/_generated/COUNTS.md`; strengthened `TestLogOperation` with `caplog`
+  assertions; surfaced each prompt `references/` doc from its parent README.
+
+### Security
+
+- 🔒 **Dependency CVE remediation (QUALITY-AUDIT-1)** — bumped `pypdf` to
+  `>=6.12.0` (clears CVE-2026-48155 / CVE-2026-48156) and `cryptography` to
+  `>=48.0.1` (clears GHSA-537c-gmf6-5ccf). `pip-audit` reports no known
+  vulnerabilities; pip `PYSEC-2026-196` remains the single documented ignore.
 
 ## [3.4.0] — 2026-06-12
 

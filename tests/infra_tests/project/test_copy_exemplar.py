@@ -36,6 +36,11 @@ def _scaffold_git_repo(tmp_path: Path) -> Path:
     (source / "output" / "artifact.txt").write_text("ignored\n", encoding="utf-8")
     (source / ".DS_Store").write_text("ignored\n", encoding="utf-8")
     _git("init", cwd=root)
+    # Set a repo-local identity so the fixture commit works on CI runners that
+    # have no global git user configured (e.g. ubuntu-latest). macOS dev hosts
+    # usually have a global identity, which is why this only bit in CI.
+    _git("config", "user.email", "fixture@example.com", cwd=root)
+    _git("config", "user.name", "Fixture", cwd=root)
     _git("add", "projects/templates/template_code_project/README.md", cwd=root)
     _git("add", "projects/templates/template_code_project/STANDALONE.md", cwd=root)
     _git("add", "projects/templates/template_code_project/pyproject.toml", cwd=root)

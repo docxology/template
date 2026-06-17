@@ -76,7 +76,7 @@ llm = [
 # Optional rendering enhancements (lazily imported in manuscript_overview.py and pdf_validator.py)
 rendering = [
   "reportlab>=4.0.0",
-  "pypdf>=5.0",
+  "pypdf>=6.12.0",  # >=6.12.0 fixes CVE-2026-48155 / CVE-2026-48156 (pip-audit gate)
   "pdfplumber>=0.11.0",
 ]
 # Optional dashboard generation (lazily imported in dashboard_generator.py)
@@ -89,7 +89,7 @@ dotenv = [
 ]
 # Optional barcode generation for steganography module (gracefully absent)
 steganography = [
-  "cryptography>=48.0.0",
+  "cryptography>=48.0.1",  # >=48.0.1 fixes GHSA-537c-gmf6-5ccf (pip-audit gate)
   "qrcode[pil]>=8.2",
   "python-barcode>=0.15",
 ]
