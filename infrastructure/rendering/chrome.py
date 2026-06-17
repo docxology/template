@@ -39,9 +39,7 @@ _SYSTEM_CHROME_NAMES: Final[tuple[str, ...]] = (
     "chromium",
     "chromium-browser",
 )
-_MACOS_APP_CHROME: Final[Path] = Path(
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-)
+_MACOS_APP_CHROME: Final[Path] = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
 __all__ = ["resolve_chrome_executable"]
 
