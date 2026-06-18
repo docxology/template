@@ -44,6 +44,19 @@ class TestNormaliseForDeposit:
         assert "**" not in out
         assert "[@smith2020]" not in out
 
+    def test_excerpt_does_not_begin_with_abstract_label(self) -> None:
+        out = normalise_for_deposit(_ABSTRACT_EXCERPT)
+        assert not out.lower().startswith("abstract")
+        assert out.startswith("This paper documents")
+
+    def test_rendered_abstract_drops_leading_label(self, tmp_path: Path) -> None:
+        """The deposit description must start with the real abstract, not 'Abstract'."""
+        abstract_path = tmp_path / "00_abstract.md"
+        abstract_path.write_text(_ABSTRACT_EXCERPT, encoding="utf-8")
+        out = render_abstract_plaintext(abstract_path)
+        assert not out.lower().startswith("abstract")
+        assert out.startswith("This paper documents")
+
     def test_deposit_description_without_duplicate_hrules(self, tmp_path: Path) -> None:
         abstract_path = tmp_path / "00_abstract.md"
         abstract_path.write_text(
@@ -153,9 +166,7 @@ class TestDepositCrossLinks:
         assert "DOI: https://doi.org/10.5281/zenodo.12345" in description
 
     def test_zenodo_record_url_from_doi(self) -> None:
-        assert zenodo_record_url_from_doi("10.5281/zenodo.20415839") == (
-            "https://zenodo.org/records/20415839"
-        )
+        assert zenodo_record_url_from_doi("10.5281/zenodo.20415839") == ("https://zenodo.org/records/20415839")
 
     def test_github_release_body_includes_publication_block(self) -> None:
         body = build_github_release_body(

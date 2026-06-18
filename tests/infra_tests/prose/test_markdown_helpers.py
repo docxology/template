@@ -12,6 +12,7 @@ from infrastructure.prose.markdown import (
     strip_fences,
     strip_front_matter,
     strip_inline_code,
+    strip_leading_abstract_heading,
     strip_links_to_text,
 )
 
@@ -59,10 +60,7 @@ class TestStripping:
         assert "Pandoc" in out
 
     def test_normalise_for_deposit(self):
-        text = (
-            "# Abstract {#sec:abstract}\n\n"
-            "See **bold** and `inline` in [Docs](https://example.com/doc).\n"
-        )
+        text = "# Abstract {#sec:abstract}\n\nSee **bold** and `inline` in [Docs](https://example.com/doc).\n"
         out = normalise_for_deposit(text)
         assert "{#sec:abstract}" not in out
         assert "**" not in out
@@ -71,16 +69,47 @@ class TestStripping:
         assert "Docs (https://example.com/doc)" in out
         assert links_to_label_paren_url("[A](https://a.test)") == "A (https://a.test)"
 
+    def test_normalise_for_deposit_drops_leading_abstract_label(self):
+        """A leading ``# Abstract`` heading must not survive as the first word."""
+        text = "# Abstract {#sec:abstract}\n\nThis paper presents the result.\n"
+        out = normalise_for_deposit(text)
+        assert out.startswith("This paper presents the result.")
+        assert not out.lower().startswith("abstract")
+
     def test_strips_raw_latex_and_hyperref_visible_text(self) -> None:
-        text = (
-            "See notation glossary "
-            "(`\\hyperref[sec:notation]{§S6}`{=latex}) in the supplement.\n\n---\n"
-        )
+        text = "See notation glossary (`\\hyperref[sec:notation]{§S6}`{=latex}) in the supplement.\n\n---\n"
         out = normalise_for_deposit(text)
         assert "{=latex}" not in out
         assert "\\hyperref" not in out
         assert "§S6" in out
         assert out.endswith("in the supplement.")
+
+
+class TestStripLeadingAbstractHeading:
+    def test_removes_plain_heading(self):
+        out = strip_leading_abstract_heading("# Abstract\n\nBody text.")
+        assert out == "Body text."
+
+    def test_removes_heading_with_pandoc_attr(self):
+        out = strip_leading_abstract_heading("## Abstract {#sec:abstract}\n\nBody.")
+        assert out == "Body."
+
+    def test_is_case_insensitive_and_tolerates_blank_lines(self):
+        out = strip_leading_abstract_heading("\n#   ABSTRACT  \n\n\nBody.")
+        assert out == "Body."
+
+    def test_keeps_heading_that_only_starts_with_abstract(self):
+        text = "# Abstract and Outlook\n\nBody."
+        assert strip_leading_abstract_heading(text) == text
+
+    def test_keeps_body_that_begins_with_the_word_abstract(self):
+        text = "Abstract reasoning is the focus here.\n\nBody."
+        assert strip_leading_abstract_heading(text) == text
+
+    def test_only_removes_the_first_heading(self):
+        text = "# Abstract\n\nBody.\n\n# Abstract\n\nMore."
+        out = strip_leading_abstract_heading(text)
+        assert out == "Body.\n\n# Abstract\n\nMore."
 
 
 class TestReadManuscriptDir:

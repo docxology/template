@@ -327,8 +327,10 @@ Zenodo and GitHub release metadata no longer reuse raw manuscript markdown. The 
 
 1. Prefer hydrated `projects/{name}/output/manuscript/00_abstract.md` when present (post variable injection).
 2. Else read `manuscript/00_abstract.md` and substitute `{{TOKEN}}` values from `output/data/manuscript_variables.json`.
-3. Normalize markdown noise: strip Pandoc `{#id}` attributes, unwrap `` `inline code` ``, convert Markdown links into `label (url)`, remove `*emphasis*` and `[@citations]`.
+3. Normalize markdown noise: drop a redundant leading `# Abstract` heading (the platform already labels the field — otherwise the literal word "Abstract" leaks in as the first word of the description), strip Pandoc `{#id}` attributes, unwrap `` `inline code` ``, convert Markdown links into `label (url)`, remove `*emphasis*` and `[@citations]`.
 4. Append a fixed **Associated artifacts** footer with GitHub release URL, DOI, Zenodo record URL, and PDF SHA-256.
+
+> The leading-`# Abstract` strip is `infrastructure.prose.markdown.strip_leading_abstract_heading`, applied inside `normalise_for_deposit`. It only removes a standalone heading whose sole text is "Abstract" (any level, with or without a `{#id}` attribute); `# Abstract and Outlook` or prose that genuinely begins with the word are left untouched. Covered by `tests/infra_tests/prose/test_markdown_helpers.py::TestStripLeadingAbstractHeading` and the deposit-render assertions in `tests/infra_tests/publishing/test_abstract_plaintext.py`.
 
 **Workflow order:** prepare bundle → **Zenodo publish** → enrich metadata with minted DOI → **patch live Zenodo description** (best-effort; deposit API accepts only draft depositions — published records return HTTP 404) → **GitHub release** (body includes fresh DOI) → write `publication.doi` → optional local re-render.
 

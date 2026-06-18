@@ -14,6 +14,13 @@ _INLINE_CODE_RE = re.compile(r"`([^`\n]+)`")
 _LINK_RE = re.compile(r"\[([^\]]+)\]\(([^\)]+)\)")
 _IMAGE_RE = re.compile(r"!\[([^\]]*)\]\([^\)]+\)")
 _MARKDOWN_HEADER_RE = re.compile(r"^#+\s*", re.MULTILINE)
+# A leading ``# Abstract`` heading (optionally with a Pandoc ``{#id}`` attribute)
+# whose only text is "Abstract". Matched before header markers are stripped so the
+# redundant label can be dropped whole rather than surviving as bare body text.
+_LEADING_ABSTRACT_HEADING_RE = re.compile(
+    r"\A\s*#{1,6}[ \t]+abstract[ \t]*(?:\{[^}]*\})?[ \t]*(?:\n+|\Z)",
+    re.IGNORECASE,
+)
 _PANDOC_ATTR_RE = re.compile(r"\s*\{#[^}]+\}")
 _PANDOC_CARET_ATTR_RE = re.compile(r"\s*\{\^[^}]+\}")
 _CITATION_RE = re.compile(r"\[@([^\]]+)\]")
@@ -74,6 +81,20 @@ def strip_markdown_headers(text: str) -> str:
     return _MARKDOWN_HEADER_RE.sub("", text)
 
 
+def strip_leading_abstract_heading(text: str) -> str:
+    """Drop a redundant leading ``# Abstract`` heading from deposit text.
+
+    Manuscript abstracts open with a ``# Abstract`` heading. Deposit targets
+    (Zenodo, GitHub releases) already label the field "Abstract", so the heading
+    is redundant — and because :func:`strip_markdown_headers` keeps the header
+    *text*, it would otherwise survive as the literal first word of the
+    description (``"Abstract\\n\\nThis paper..."``). Only a standalone heading
+    whose sole text is "Abstract" is removed; ``# Abstract and Outlook`` or an
+    abstract that genuinely begins with the word are left untouched.
+    """
+    return _LEADING_ABSTRACT_HEADING_RE.sub("", text, count=1)
+
+
 def strip_emphasis_asterisk(text: str) -> str:
     """Remove ``*`` / ``**`` emphasis markers, keeping inner text."""
 
@@ -112,6 +133,7 @@ def normalise_for_deposit(text: str) -> str:
     """Convert manuscript markdown to plaintext suitable for Zenodo/GitHub deposits."""
     out = strip_front_matter(text)
     out = strip_fences(out)
+    out = strip_leading_abstract_heading(out)
     out = strip_markdown_headers(out)
     out = strip_pandoc_attributes(out)
     out = unwrap_inline_code(out)
