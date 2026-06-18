@@ -7,6 +7,7 @@ from pathlib import Path
 
 from infrastructure.core.logging import DiagnosticEvent, DiagnosticSeverity
 from infrastructure.validation.content.diagnostic_codes import MarkdownCode
+from infrastructure.validation.content.markdown_strip import strip_fences
 
 IMG_PATTERN = re.compile(r"!\[[^\]]*\]\(([^\)]+)\)")
 
@@ -36,7 +37,7 @@ def validate_images(
 
     for path in md_paths:
         path_obj = Path(path)
-        text = path_obj.read_text(encoding="utf-8")
+        text = strip_fences(path_obj.read_text(encoding="utf-8"))
         for img in IMG_PATTERN.findall(text):
             img_clean = img.split()[0]
             abs_path = (path_obj.parent / img_clean).resolve()

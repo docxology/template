@@ -131,6 +131,19 @@ class TestValidateImages:
 
         assert len(problems) == 0
 
+    def test_ignores_image_syntax_inside_fenced_code(self, tmp_path):
+        """Example figure markdown in fenced blocks must not trigger IMG_MISSING."""
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "test.md").write_text(
+            "```markdown\n![Caption](../output/figures/example.png)\n```\n",
+            encoding="utf-8",
+        )
+
+        problems = validate_images([str(manuscript / "test.md")], tmp_path)
+
+        assert problems == []
+
     def test_absolute_path(self, tmp_path):
         """Test validate_images with absolute image paths."""
         # Create test markdown file with absolute path
