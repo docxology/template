@@ -231,6 +231,15 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 ## 📁 Active Projects
 
+> **Canonical run surface:** The nine public exemplars under
+> `projects/templates/` are discovered, tested, analyzed, and PDF-rendered
+> **only** through this repository's pipeline (`discover_projects()` +
+> [`./run.sh`](../run.sh) or [`scripts/execute_pipeline.py`](../scripts/execute_pipeline.py)).
+> Clone [docxology/template](https://github.com/docxology/template), run
+> `uv sync` at the repo root, then `./run.sh --project templates/<name>`.
+> Standalone GitHub repos in the publication table below are citation/release
+> mirrors produced **by** this monorepo — not separate primary run checkouts.
+
 ### `template_code_project` — Code Exemplar
 
 > **`projects/templates/template_code_project/`** is the canonical example of a complete, working project. Use it as the reference when building your own.

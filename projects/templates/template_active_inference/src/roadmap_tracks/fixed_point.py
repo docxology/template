@@ -220,7 +220,6 @@ def _write_fixed_point_pass(root: Path, *, require_analysis_outputs: bool) -> di
     paths.update(write_toy_sweep_artifacts(root))
     paths.update(write_formal_interop_artifacts(root))
     paths.update(write_sheaf_track_artifacts(root, finalize=False))
-    paths.update(write_formal_interop_artifacts(root))
     paths.update(_write_sheaf_owned_artifacts(root))
     paths.update(_refresh_hydrated_manuscript(root, require_analysis_outputs=require_analysis_outputs))
     paths.update(_write_semantic_core(root))
@@ -228,7 +227,6 @@ def _write_fixed_point_pass(root: Path, *, require_analysis_outputs: bool) -> di
     from roadmap_tracks.supplemental import write_supplemental_artifacts
 
     paths.update(write_supplemental_artifacts(root))
-    paths.update(_write_semantic_core(root))
     return paths
 
 
@@ -245,7 +243,6 @@ def _write_final_validation_pass(root: Path, *, require_analysis_outputs: bool) 
     paths.update(_write_contract_artifacts(root))
     paths.update(_write_semantic_core(root))
     paths.update(write_supplemental_artifacts(root))
-    paths.update(_refresh_animation_outputs(root))
     paths.update(_write_contract_artifacts(root))
     paths.update(_write_semantic_core(root))
     return paths
@@ -264,16 +261,15 @@ def run_semantic_fixed_point(
 
     paths: dict[str, Path] = {}
     previous = ""
-    final_issues: list[str] = []
     for _ in range(max_passes):
         paths.update(_write_fixed_point_pass(root, require_analysis_outputs=require_analysis_outputs))
         paths.update(_write_final_validation_pass(root, require_analysis_outputs=require_analysis_outputs))
         current = _fingerprint(root)
         final_issues = _validate_fixed_point(root)
-        if current == previous and not final_issues:
-            return paths
         if not final_issues:
             return paths
+        if current == previous:
+            break
         previous = current
     if final_issues:
         joined = "; ".join(dict.fromkeys(final_issues))

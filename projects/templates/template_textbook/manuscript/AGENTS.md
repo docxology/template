@@ -30,8 +30,12 @@ Violating any of them fails `scripts/audit_textbook_quality.py` or
 A chapter file (`part_<label>/<stem>.md`) MUST contain, in roughly this order:
 
 - **A labelled H1 heading:** `# Title {#sec:<part>_<stem>}`
-- **One figure** with descriptive caption and an `<!-- alt: ... -->` comment:
-  `![caption](../output/figures/<part>_<stem>.png){#fig:<part>_<stem> width=90%}`
+- **One figure** with descriptive caption and an `<!-- alt: ... -->` comment.
+  Use this form (replace `<part>_<stem>` with a real generated filename):
+  ```text
+  ! [caption](../output/figures/<part>_<stem>.png){#fig:<part>_<stem> width=90%}
+  ```
+  (In manuscript prose, remove the intentional space between `!` and `[` to produce the live link.)
 - **A metadata badge:** the `<!-- chapter-metadata-badge -->` marker followed by a
   blockquote (level, read time, lecture time, prerequisites).
 - **A Study Blueprint** wrapped in

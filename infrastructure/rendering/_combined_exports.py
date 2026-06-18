@@ -73,9 +73,14 @@ def render_combined_docx(
 
     import shutil
 
+    # Image refs in the combined markdown are written as ``figures/<name>``, so
+    # the resource path must be the *parent* of the figures dir (e.g. ``output/``),
+    # not the figures dir itself — otherwise pandoc silently drops every image.
+    figures_dir = Path(manager.config.figures_dir)
     extra_args = [
         "--resource-path=" + str(manuscript_dir),
-        "--resource-path=" + str(manager.config.figures_dir),
+        "--resource-path=" + str(figures_dir),
+        "--resource-path=" + str(figures_dir.parent),
     ]
     crossref = shutil.which("pandoc-crossref")
     if crossref:
@@ -136,6 +141,15 @@ def render_combined_epub(
     out_path = epub_dir / f"{project_name}_combined.epub"
     bibliography = resolve_bibliography(manuscript_dir)
 
+    # Same resolution contract as DOCX: image refs are ``figures/<name>``, so the
+    # figures dir's parent must be on the resource path or pandoc silently drops them.
+    figures_dir = Path(manager.config.figures_dir)
+    extra_args = [
+        "--resource-path=" + str(manuscript_dir),
+        "--resource-path=" + str(figures_dir),
+        "--resource-path=" + str(figures_dir.parent),
+    ]
+
     logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined EPUB manuscript...")
     try:
@@ -144,6 +158,7 @@ def render_combined_epub(
             out_path,
             bibliography=bibliography,
             pandoc_path=manager.config.pandoc_path,
+            extra_args=extra_args,
         )
         logger.info(f"✅ Generated combined EPUB: {result.output_path.name} ({result.size_bytes / 1024:.1f} KB)")
     except RenderingError as re:

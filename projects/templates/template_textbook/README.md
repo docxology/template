@@ -1,6 +1,6 @@
 # The Template Textbook — Modular, Fillable Book Scaffold
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20533125.svg)](https://zenodo.org/record/20533126)
+Archived on Zenodo: [Template Textbook Zenodo record 20533126](https://zenodo.org/record/20533126).
 
 A domain-neutral exemplar that demonstrates the **book-length manuscript** shape
 for this research-template monorepo: a data-driven manuscript (parts → chapters →
@@ -14,6 +14,22 @@ generation, lab/question wiring, and the manuscript-integrity tests — reads a
 single source of truth: [`manuscript/config.yaml`](manuscript/config.yaml). To
 grow the book you edit that file, then run a thin orchestrator that materialises
 the missing stub files in the correct shape.
+
+## Run via the template monorepo
+
+This exemplar lives at `projects/templates/template_textbook/` in the public
+[docxology/template](https://github.com/docxology/template) repository.
+**Tests, analysis, PDF rendering, and CI all run through that monorepo** —
+clone it, run `uv sync` at the repository root, then:
+
+```bash
+./run.sh --project templates/template_textbook --pipeline --core-only
+# or: uv run python scripts/execute_pipeline.py --project templates/template_textbook --core-only
+```
+
+Several exemplars also publish standalone GitHub/Zenodo releases for citation;
+those mirrors are outputs of this pipeline. The monorepo remains the canonical
+build and render surface.
 
 ## When to use this template
 

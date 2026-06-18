@@ -10,6 +10,22 @@ It is a **microscope on the coordination primitives**, not a reproduction of the
 full agentic system. The deterministic core is fully tested; a live
 `HermesProposer` (Ollama) drops into the same loop for an opt-in agentic demo.
 
+## Run via the template monorepo
+
+This exemplar lives at `projects/templates/template_autoscientists/` in the public
+[docxology/template](https://github.com/docxology/template) repository.
+**Tests, analysis, PDF rendering, and CI all run through that monorepo** —
+clone it, run `uv sync` at the repository root, then:
+
+```bash
+./run.sh --project templates/template_autoscientists --pipeline --core-only
+# or: uv run python scripts/execute_pipeline.py --project templates/template_autoscientists --core-only
+```
+
+Several exemplars also publish standalone GitHub/Zenodo releases for citation;
+those mirrors are outputs of this pipeline. The monorepo remains the canonical
+build and render surface.
+
 ## When to use this template
 
 Use this template when you need to **isolate and measure agent-coordination

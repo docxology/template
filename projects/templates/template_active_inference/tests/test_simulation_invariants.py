@@ -45,9 +45,8 @@ def test_simulation_invariants_after_run(project_root: Path) -> None:
 @pytest.mark.requires_pymdp
 def test_validate_outputs_gate_checks(project_root: Path) -> None:
     from gates.validation import validate_outputs
-    from gate_support import _BOOTSTRAPPED_ROOTS, ensure_gate_artifacts
+    from gate_support import ensure_gate_artifacts
 
-    _BOOTSTRAPPED_ROOTS.discard(project_root.resolve())
     ensure_gate_artifacts(project_root)
     checks = validate_outputs(project_root)
     assert checks.get("si_trace_present")

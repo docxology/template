@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from manuscript.sheaf import (
     SheafSection,
     build_coverage_matrix,
@@ -9,6 +11,8 @@ from manuscript.sheaf import (
     track_order_for_section,
 )
 
+
+pytestmark = [pytest.mark.long_running, pytest.mark.timeout(120)]
 
 def test_registry_defines_track_order() -> None:
     root = Path(__file__).resolve().parents[1]

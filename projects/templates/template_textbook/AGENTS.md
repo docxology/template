@@ -36,8 +36,8 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
    in `manuscript/references.bib` (`smith2020foundations`, `doe2019methods`,
    `lee2021systems`, `garcia2022dynamics`, `patel2018models`,
    `nguyen2023synthesis`, `kim2020data`, `brown2017principles`,
-   `wilson2021analysis`, `taylor2019theory`). Glossary links are
-   `[**term**](#gl:<anchor>)` with anchors: `system`, `model`, `parameter`,
+   `wilson2021analysis`, `taylor2019theory`). Glossary links use the form
+   `**term** -> #gl:<anchor>` with anchors: `system`, `model`, `parameter`,
    `variable`, `equilibrium`, `feedback`, `gradient`, `threshold`, `network`,
    `dynamics`, `emergence`, `regulation`, `boundary`, `state`, `observable`.
 
@@ -62,8 +62,8 @@ Before claiming a change is done:
       files by hand.
 - [ ] Do all `[@fig:]`/`[@tbl:]`/`[@eq:]`/`[@sec:]` references have matching
       definitions in the manuscript?
-- [ ] Does every `[@key]` resolve in `references.bib`, and every
-      `[**term**](#gl:anchor)` use a known anchor?
+- [ ] Does every `[@key]` resolve in `references.bib`, and every glossary
+      reference of the form `**term** -> #gl:anchor` use a known anchor?
 - [ ] Is the chapter still contract-complete (badge, blueprint, objectives,
       formalism, diagram, summary/terms/reading/practice)?
 - [ ] New figure or diagram? Regenerate with `scripts/generate_figures.py` /

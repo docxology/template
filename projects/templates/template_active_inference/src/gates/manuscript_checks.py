@@ -113,6 +113,16 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
     from manuscript.hydrate import EXCLUDED_DOC_FILENAMES, collect_malformed_token_names, validate_manuscript_tokens
     from manuscript.variables import generate_variables
     from manuscript.sheaf.semantic import validate_semantic_gluing
+
+    resolved_dir = root / "output" / "manuscript"
+    resolved_manuscript_hydrated = False
+    if resolved_dir.is_dir() and any(resolved_dir.glob("*.md")):
+        resolved_manuscript_hydrated = all(
+            "{{" not in md.read_text(encoding="utf-8")
+            for md in resolved_dir.glob("*.md")
+            if md.name not in EXCLUDED_DOC_FILENAMES
+        )
+
     from roadmap_tracks import (
         validate_integration_audit_artifacts,
         validate_sheaf_track_artifacts,
@@ -130,17 +140,6 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
             continue
         malformed_tokens.extend(collect_malformed_token_names(md_file.read_text(encoding="utf-8")))
     manuscript_tokens_registered = not unknown_tokens and not malformed_tokens
-
-    resolved_dir = root / "output" / "manuscript"
-    resolved_manuscript_hydrated = False
-    if resolved_dir.is_dir() and any(resolved_dir.glob("*.md")):
-        from manuscript.hydrate import EXCLUDED_DOC_FILENAMES
-
-        resolved_manuscript_hydrated = all(
-            "{{" not in md.read_text(encoding="utf-8")
-            for md in resolved_dir.glob("*.md")
-            if md.name not in EXCLUDED_DOC_FILENAMES
-        )
 
     return {
         "sheaf_manifest": manifest_path.exists(),

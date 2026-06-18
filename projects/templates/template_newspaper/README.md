@@ -9,12 +9,27 @@
 
 ![12-page contact sheet](docs/contact-sheet.png)
 
-This is a canonical exemplar project in the research-template monorepo. It is a
-sibling of [`template_code_project`](../template_code_project/) and
-[`template_prose_project`](../template_prose_project/): same directory contract
+This is a canonical exemplar sibling of [`template_code_project`](../template_code_project/)
+and [`template_prose_project`](../template_prose_project/): same directory contract
 (`src/` + `tests/` + optional `scripts/`/`manuscript/`), same orchestration
 hooks, same documentation conventions — but where those render a *manuscript*,
 this renders a *newspaper*.
+
+## Run via the template monorepo
+
+This exemplar lives at `projects/templates/template_newspaper/` in the public
+[docxology/template](https://github.com/docxology/template) repository.
+**Tests, analysis, PDF rendering, and CI all run through that monorepo** —
+clone it, run `uv sync` at the repository root, then:
+
+```bash
+./run.sh --project templates/template_newspaper --pipeline --core-only
+# or: uv run python scripts/execute_pipeline.py --project templates/template_newspaper --core-only
+```
+
+Several exemplars also publish standalone GitHub/Zenodo releases for citation;
+those mirrors are outputs of this pipeline. The monorepo remains the canonical
+build and render surface.
 
 ## When to use this template
 

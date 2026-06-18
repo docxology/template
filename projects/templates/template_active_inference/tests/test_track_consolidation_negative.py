@@ -8,7 +8,7 @@ import pytest
 import yaml
 
 from gate_support import ensure_gate_artifacts, temporary_json_mutation, temporary_text_mutation, temporary_yaml_mutation
-from test_track_consolidation_support import (
+from track_consolidation_support import (
     JsonMutation,
     _break_statistical_bridge_visualization_binding,
     _break_visualization_statistical_row,
@@ -20,7 +20,7 @@ from test_track_consolidation_support import (
     _write,
 )
 
-pytestmark = pytest.mark.timeout(600)
+pytestmark = [pytest.mark.long_running, pytest.mark.timeout(600)]
 
 def test_sheaf_track_writer_looks_up_source_commit_once(
     project_root: Path,
@@ -89,6 +89,12 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         data["rows"] = [row for row in data["rows"] if row.get("id") != "llm_generated_evidence"]
         data["blocked_count"] = len(data["rows"])
         data["all_blocked"] = True
+
+    def break_release_attestation(data: dict) -> None:
+        row = next(row for row in data["rows"] if not row.get("deferred_until_validation"))
+        row["passed"] = False
+        data["all_attested"] = True
+
     cases: tuple[tuple[str, JsonMutation, str], ...] = (
         (
             "replay",
@@ -264,7 +270,7 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
         ),
         (
             "release_attestation",
-            _combine_mutations(_set_value(("rows", 1, "passed"), False), _set_value(("all_attested",), True)),
+            break_release_attestation,
             "failed gate passed",
         ),
         (

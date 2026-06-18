@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 import json
 import re
 from collections.abc import Callable
@@ -18,6 +19,41 @@ def _load(path: Path) -> dict:
 
 def _write(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+@contextmanager
+def temporary_json_mutation(path: Path, mutate: Callable[[dict], None]):
+    original = _load(path)
+    payload = json.loads(json.dumps(original, sort_keys=True))
+    try:
+        mutate(payload)
+        _write(path, payload)
+        yield payload
+    finally:
+        _write(path, original)
+
+
+@contextmanager
+def temporary_text_mutation(path: Path, mutate: Callable[[str], str]):
+    original = path.read_text(encoding="utf-8")
+    try:
+        path.write_text(mutate(original), encoding="utf-8")
+        yield path.read_text(encoding="utf-8")
+    finally:
+        path.write_text(original, encoding="utf-8")
+
+
+@contextmanager
+def temporary_yaml_mutation(path: Path, mutate: Callable[[dict], None]):
+    original = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    payload = json.loads(json.dumps(original))
+    assert isinstance(payload, dict)
+    try:
+        mutate(payload)
+        path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
+        yield payload
+    finally:
+        path.write_text(yaml.safe_dump(original, sort_keys=False), encoding="utf-8")
 
 
 def _relative_posix(path: Path, root: Path) -> str:

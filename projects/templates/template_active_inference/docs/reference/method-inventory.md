@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 789
+Total documented definitions: 797
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -174,20 +174,20 @@ Total documented definitions: 789
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
 | 17 | `function` | `_figures_nonblank` | docstring | Return True only if every required figure PNG is non-trivially sized and decodable. |
-| 40 | `function` | `_read_json` | inventory fallback | Inventory fallback for function `_read_json` defined at `src/gates/output_checks.py:40`. |
-| 50 | `function` | `_pymdp_logging_expected` | inventory fallback | Inventory fallback for function `_pymdp_logging_expected` defined at `src/gates/output_checks.py:50`. |
-| 60 | `function` | `_efe_values_explained` | inventory fallback | Inventory fallback for function `_efe_values_explained` defined at `src/gates/output_checks.py:60`. |
-| 69 | `function` | `_required_output_checks` | inventory fallback | Inventory fallback for function `_required_output_checks` defined at `src/gates/output_checks.py:69`. |
-| 74 | `function` | `_add_simulation_checks` | inventory fallback | Inventory fallback for function `_add_simulation_checks` defined at `src/gates/output_checks.py:74`. |
-| 181 | `function` | `_add_validation_spine_checks` | inventory fallback | Inventory fallback for function `_add_validation_spine_checks` defined at `src/gates/output_checks.py:181`. |
-| 304 | `function` | `_load_promoted_artifacts` | inventory fallback | Inventory fallback for function `_load_promoted_artifacts` defined at `src/gates/output_checks.py:304`. |
-| 308 | `function` | `_add_toy_formal_integration_checks` | inventory fallback | Inventory fallback for function `_add_toy_formal_integration_checks` defined at `src/gates/output_checks.py:308`. |
-| 442 | `function` | `_add_visualization_checks` | inventory fallback | Inventory fallback for function `_add_visualization_checks` defined at `src/gates/output_checks.py:442`. |
-| 489 | `function` | `_add_canonical_sheaf_checks` | inventory fallback | Inventory fallback for function `_add_canonical_sheaf_checks` defined at `src/gates/output_checks.py:489`. |
-| 622 | `function` | `_add_track_validator_checks` | inventory fallback | Inventory fallback for function `_add_track_validator_checks` defined at `src/gates/output_checks.py:622`. |
-| 642 | `function` | `_add_log_check` | inventory fallback | Inventory fallback for function `_add_log_check` defined at `src/gates/output_checks.py:642`. |
-| 650 | `function` | `_set_experiment_plan_metrics` | inventory fallback | Inventory fallback for function `_set_experiment_plan_metrics` defined at `src/gates/output_checks.py:650`. |
-| 735 | `function` | `validate_outputs` | docstring | Validate every registered output artifact and return gate booleans by name. |
+| 36 | `function` | `_read_json` | inventory fallback | Inventory fallback for function `_read_json` defined at `src/gates/output_checks.py:36`. |
+| 46 | `function` | `_pymdp_logging_expected` | inventory fallback | Inventory fallback for function `_pymdp_logging_expected` defined at `src/gates/output_checks.py:46`. |
+| 56 | `function` | `_efe_values_explained` | inventory fallback | Inventory fallback for function `_efe_values_explained` defined at `src/gates/output_checks.py:56`. |
+| 65 | `function` | `_required_output_checks` | inventory fallback | Inventory fallback for function `_required_output_checks` defined at `src/gates/output_checks.py:65`. |
+| 70 | `function` | `_add_simulation_checks` | inventory fallback | Inventory fallback for function `_add_simulation_checks` defined at `src/gates/output_checks.py:70`. |
+| 177 | `function` | `_add_validation_spine_checks` | inventory fallback | Inventory fallback for function `_add_validation_spine_checks` defined at `src/gates/output_checks.py:177`. |
+| 300 | `function` | `_load_promoted_artifacts` | inventory fallback | Inventory fallback for function `_load_promoted_artifacts` defined at `src/gates/output_checks.py:300`. |
+| 304 | `function` | `_add_toy_formal_integration_checks` | inventory fallback | Inventory fallback for function `_add_toy_formal_integration_checks` defined at `src/gates/output_checks.py:304`. |
+| 438 | `function` | `_add_visualization_checks` | inventory fallback | Inventory fallback for function `_add_visualization_checks` defined at `src/gates/output_checks.py:438`. |
+| 485 | `function` | `_add_canonical_sheaf_checks` | inventory fallback | Inventory fallback for function `_add_canonical_sheaf_checks` defined at `src/gates/output_checks.py:485`. |
+| 618 | `function` | `_add_track_validator_checks` | inventory fallback | Inventory fallback for function `_add_track_validator_checks` defined at `src/gates/output_checks.py:618`. |
+| 638 | `function` | `_add_log_check` | inventory fallback | Inventory fallback for function `_add_log_check` defined at `src/gates/output_checks.py:638`. |
+| 646 | `function` | `_set_experiment_plan_metrics` | inventory fallback | Inventory fallback for function `_set_experiment_plan_metrics` defined at `src/gates/output_checks.py:646`. |
+| 731 | `function` | `validate_outputs` | docstring | Validate every registered output artifact and return gate booleans by name. |
 
 ## `src/gnn/concordance.py`
 
@@ -547,8 +547,8 @@ Total documented definitions: 789
 | 183 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:183`. |
 | 197 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:197`. |
 | 213 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:213`. |
-| 235 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
-| 254 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
+| 233 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
+| 251 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
 
 ## `src/roadmap_tracks/formal_interop.py`
 
@@ -582,7 +582,7 @@ Total documented definitions: 789
 | ---: | --- | --- | --- | --- |
 | 93 | `function` | `write_manuscript_staleness_report` | docstring | Write the hydrated-manuscript staleness report. |
 | 111 | `function` | `write_integration_audit_artifacts` | inventory fallback | Inventory fallback for function `write_integration_audit_artifacts` defined at `src/roadmap_tracks/integration_audit.py:111`. |
-| 192 | `function` | `validate_integration_audit_artifacts` | inventory fallback | Inventory fallback for function `validate_integration_audit_artifacts` defined at `src/roadmap_tracks/integration_audit.py:192`. |
+| 198 | `function` | `validate_integration_audit_artifacts` | inventory fallback | Inventory fallback for function `validate_integration_audit_artifacts` defined at `src/roadmap_tracks/integration_audit.py:198`. |
 
 ## `src/roadmap_tracks/integration_audit_artifacts.py`
 
@@ -1145,14 +1145,16 @@ Total documented definitions: 789
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 52 | `class` | `FigureStyleConfig` | inventory fallback | Inventory fallback for class `FigureStyleConfig` defined at `src/visualizations/figure_style.py:52`. |
-| 61 | `function` | `FigureStyleConfig.color` | inventory fallback | Inventory fallback for function `FigureStyleConfig.color` defined at `src/visualizations/figure_style.py:61`. |
-| 64 | `function` | `FigureStyleConfig.text_size` | inventory fallback | Inventory fallback for function `FigureStyleConfig.text_size` defined at `src/visualizations/figure_style.py:64`. |
-| 68 | `function` | `FigureStyleConfig.layout_value` | inventory fallback | Inventory fallback for function `FigureStyleConfig.layout_value` defined at `src/visualizations/figure_style.py:68`. |
-| 71 | `function` | `FigureStyleConfig.rc_params` | inventory fallback | Inventory fallback for function `FigureStyleConfig.rc_params` defined at `src/visualizations/figure_style.py:71`. |
-| 91 | `function` | `active_style` | inventory fallback | Inventory fallback for function `active_style` defined at `src/visualizations/figure_style.py:91`. |
-| 95 | `function` | `load_figure_style` | inventory fallback | Inventory fallback for function `load_figure_style` defined at `src/visualizations/figure_style.py:95`. |
-| 118 | `function` | `apply_style` | inventory fallback | Inventory fallback for function `apply_style` defined at `src/visualizations/figure_style.py:118`. |
+| 14 | `function` | `_safe_float` | inventory fallback | Inventory fallback for function `_safe_float` defined at `src/visualizations/figure_style.py:14`. |
+| 21 | `function` | `_safe_int` | inventory fallback | Inventory fallback for function `_safe_int` defined at `src/visualizations/figure_style.py:21`. |
+| 67 | `class` | `FigureStyleConfig` | inventory fallback | Inventory fallback for class `FigureStyleConfig` defined at `src/visualizations/figure_style.py:67`. |
+| 76 | `function` | `FigureStyleConfig.color` | inventory fallback | Inventory fallback for function `FigureStyleConfig.color` defined at `src/visualizations/figure_style.py:76`. |
+| 79 | `function` | `FigureStyleConfig.text_size` | inventory fallback | Inventory fallback for function `FigureStyleConfig.text_size` defined at `src/visualizations/figure_style.py:79`. |
+| 83 | `function` | `FigureStyleConfig.layout_value` | inventory fallback | Inventory fallback for function `FigureStyleConfig.layout_value` defined at `src/visualizations/figure_style.py:83`. |
+| 86 | `function` | `FigureStyleConfig.rc_params` | inventory fallback | Inventory fallback for function `FigureStyleConfig.rc_params` defined at `src/visualizations/figure_style.py:86`. |
+| 106 | `function` | `active_style` | inventory fallback | Inventory fallback for function `active_style` defined at `src/visualizations/figure_style.py:106`. |
+| 110 | `function` | `load_figure_style` | inventory fallback | Inventory fallback for function `load_figure_style` defined at `src/visualizations/figure_style.py:110`. |
+| 158 | `function` | `apply_style` | inventory fallback | Inventory fallback for function `apply_style` defined at `src/visualizations/figure_style.py:158`. |
 
 ## `src/visualizations/figures.py`
 
@@ -1201,8 +1203,11 @@ Total documented definitions: 789
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 32 | `function` | `figure_sheaf_layers_overview` | inventory fallback | Inventory fallback for function `figure_sheaf_layers_overview` defined at `src/visualizations/figures_sheaf.py:32`. |
-| 67 | `function` | `figure_sheaf_coverage_heatmap` | docstring | Render B/W/G sheaf coverage matrix with IMRAD row grouping. |
+| 32 | `function` | `_figure_inputs` | inventory fallback | Inventory fallback for function `_figure_inputs` defined at `src/visualizations/figures_sheaf.py:32`. |
+| 41 | `function` | `_has_explicit_panel_tracks` | inventory fallback | Inventory fallback for function `_has_explicit_panel_tracks` defined at `src/visualizations/figures_sheaf.py:41`. |
+| 53 | `function` | `_layers_output_is_fresh` | inventory fallback | Inventory fallback for function `_layers_output_is_fresh` defined at `src/visualizations/figures_sheaf.py:53`. |
+| 74 | `function` | `figure_sheaf_layers_overview` | inventory fallback | Inventory fallback for function `figure_sheaf_layers_overview` defined at `src/visualizations/figures_sheaf.py:74`. |
+| 117 | `function` | `figure_sheaf_coverage_heatmap` | docstring | Render B/W/G sheaf coverage matrix with IMRAD row grouping. |
 
 ## `src/visualizations/figures_sheaf_draw.py`
 
@@ -1327,6 +1332,14 @@ Total documented definitions: 789
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
 | 15 | `function` | `main` | inventory fallback | Inventory fallback for function `main` defined at `scripts/run_analytical_sweep.py:15`. |
+
+## `scripts/run_full_verification.py`
+
+| line | kind | name | documentation source | summary |
+| ---: | --- | --- | --- | --- |
+| 16 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `scripts/run_full_verification.py:16`. |
+| 39 | `function` | `run_verification` | inventory fallback | Inventory fallback for function `run_verification` defined at `scripts/run_full_verification.py:39`. |
+| 133 | `function` | `main` | inventory fallback | Inventory fallback for function `main` defined at `scripts/run_full_verification.py:133`. |
 
 ## `scripts/simulate_si_graph_world.py`
 

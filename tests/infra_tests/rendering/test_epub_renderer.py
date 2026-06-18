@@ -68,3 +68,30 @@ def test_render_epub_missing_source_raises(tmp_path: Path) -> None:
     out = tmp_path / "out.epub"
     with pytest.raises(FileNotFoundError):
         render_epub(tmp_path / "missing.md", out)
+
+
+# 1x1 PNG — smallest real image, used to assert media embedding.
+_PNG_1x1 = (
+    b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
+    b"\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\nIDATx\x9cc\x00\x01"
+    b"\x00\x00\x05\x00\x01\r\n-\xb4\x00\x00\x00\x00IEND\xaeB`\x82"
+)
+
+
+def test_render_epub_embeds_figures_via_resource_path(tmp_path: Path) -> None:
+    """Relative ``figures/<name>`` refs must embed when resource-path is the parent.
+
+    Regression: pandoc silently drops images (no error) when the resource-path
+    does not make ``figures/x.png`` resolvable. See _combined_exports.py.
+    """
+    (tmp_path / "figures").mkdir()
+    (tmp_path / "figures" / "x.png").write_bytes(_PNG_1x1)
+    src = tmp_path / "combined.md"
+    src.write_text("# Title\n\n![cap](figures/x.png)\n", encoding="utf-8")
+    out = tmp_path / "out.epub"
+
+    render_epub(src, out, extra_args=["--resource-path=" + str(tmp_path)])
+
+    with zipfile.ZipFile(out) as zip_file:
+        media = [n for n in zip_file.namelist() if n.lower().endswith(".png")]
+    assert media, "expected the figure to be embedded in the EPUB"

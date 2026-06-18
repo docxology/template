@@ -22,6 +22,30 @@ def test_load_figure_style_defaults() -> None:
     assert style.layout_value("matrix_grid_width", 0.0) > 0.0
 
 
+def test_load_figure_style_defaults_when_file_missing(tmp_path: Path) -> None:
+    from visualizations.figure_style import DEFAULT_FIGURE_STYLE
+
+    assert load_figure_style(tmp_path) == DEFAULT_FIGURE_STYLE
+
+
+def test_load_figure_style_fallbacks_to_default_when_yaml_invalid(tmp_path: Path) -> None:
+    from visualizations.figure_style import DEFAULT_FIGURE_STYLE
+
+    figures_yaml = tmp_path / "figures.yaml"
+    figures_yaml.write_text("{", encoding="utf-8")
+    assert load_figure_style(tmp_path) == DEFAULT_FIGURE_STYLE
+
+
+def test_load_figure_style_fallbacks_to_default_when_typography_is_malformed(tmp_path: Path) -> None:
+    from visualizations.figure_style import DEFAULT_FIGURE_STYLE
+
+    tmp_path.joinpath("figures.yaml").write_text(
+        "typography:\n  title: not-a-number\n",
+        encoding="utf-8",
+    )
+    assert load_figure_style(tmp_path) == DEFAULT_FIGURE_STYLE
+
+
 def test_apply_style_restores_active() -> None:
     root = Path(__file__).resolve().parents[1]
     style = load_figure_style(root)

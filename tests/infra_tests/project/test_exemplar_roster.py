@@ -1,8 +1,9 @@
 """Exemplar roster differentiation-map contract (no mocks, real repo).
 
-Binds three surfaces together so they cannot drift silently:
+Binds four surfaces together so they cannot drift silently:
 - ``PUBLIC_PROJECT_NAMES`` (roster source of truth)
 - each exemplar README's ``## When to use this template`` section
+- each exemplar README's ``## Run via the template monorepo`` section
 - the generated ``docs/_generated/exemplar_roster.md``
 """
 
@@ -14,6 +15,7 @@ from infrastructure.project.exemplar_roster import (
     DOC_RELATIVE_PATH,
     KNOWN_MISSING_USE_WHEN,
     collect_entries,
+    missing_run_via_monorepo,
     missing_use_when,
     render_roster_markdown,
     unexpected_missing_use_when,
@@ -44,6 +46,10 @@ def test_use_when_sections_present_beyond_known_exceptions() -> None:
     assert actually_missing == set(KNOWN_MISSING_USE_WHEN), (
         f"KNOWN_MISSING_USE_WHEN is stale: pinned={sorted(KNOWN_MISSING_USE_WHEN)} actual={sorted(actually_missing)}"
     )
+
+
+def test_run_via_monorepo_sections_present() -> None:
+    assert missing_run_via_monorepo(REPO_ROOT) == []
 
 
 def test_rendered_doc_has_one_row_per_exemplar(tmp_path: Path) -> None:

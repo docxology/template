@@ -30,6 +30,7 @@ python_files = ["test_*.py"]
 addopts = "-v --tb=short --strict-markers"
 markers = [
     "requires_pymdp: tests that import inferactively-pymdp",
+    "long_running: end-to-end or heavy test families that take minutes",
     "timeout(seconds): per-test timeout for artifact write/validate isolation checks",
 ]
 

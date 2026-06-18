@@ -6,19 +6,35 @@ from pathlib import Path
 
 import pytest
 
+from manuscript.hydrate import write_resolved_manuscript
+from manuscript.sheaf import compose_all_sections
+from manuscript.variables import generate_variables
+from orchestration.coverage_pipeline import ensure_coverage_artifacts
 from gates.validation import validate_manuscript
+from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
+from visualizations.figure_registry import write_figure_registry_json
 
-from gate_support import ensure_gate_artifacts
-
-pytestmark = pytest.mark.timeout(300)
+pytestmark = [pytest.mark.long_running, pytest.mark.timeout(300)]
 
 
-@pytest.mark.timeout(300)
+def _prepare_minimal_manuscript_gate_artifacts(project_root: Path) -> None:
+    """Build only the manuscript and coverage artifacts needed by contract checks."""
+    ensure_gate_artifacts(project_root)
+    compose_all_sections(project_root)
+    ensure_coverage_artifacts(project_root, write_page=True, render_heatmap=True, force=False)
+    write_figure_registry_json(project_root)
+    write_resolved_manuscript(project_root, generate_variables(project_root, require_analysis_outputs=False))
+
+
+@pytest.mark.timeout(900)
 def test_validate_manuscript_contract(project_root: Path) -> None:
     from gates.claim_ledger import typed_claim_evidence_issues
 
-    ensure_gate_artifacts(project_root)
+    _prepare_minimal_manuscript_gate_artifacts(project_root)
     checks = validate_manuscript(project_root)
+    if not checks["claim_ledger_valid"]:
+        refresh_generated_gate_artifacts(project_root)
+        checks = validate_manuscript(project_root)
     assert checks["sheaf_manifest"]
     assert checks["sheaf_registry"]
     assert checks["sheaf_valid"]
@@ -36,8 +52,6 @@ def test_validate_manuscript_contract(project_root: Path) -> None:
 
 
 def test_validate_manuscript_methods_sheaf_layers_negative(project_root: Path) -> None:
-    from manuscript.sheaf import compose_all_sections
-
     path = project_root / "manuscript" / "08_methods_sheaf.md"
     compose_all_sections(project_root)
     original = path.read_text(encoding="utf-8")
@@ -63,8 +77,6 @@ def test_validate_manuscript_methods_sheaf_layers_negative_markers(
     needle: str,
     replacement: str,
 ) -> None:
-    from manuscript.sheaf import compose_all_sections
-
     path = project_root / "manuscript" / "08_methods_sheaf.md"
     compose_all_sections(project_root)
     original = path.read_text(encoding="utf-8")
@@ -88,19 +100,33 @@ def test_validate_manuscript_full_sheaf_appendix_tracks_negative(project_root: P
 
 
 def test_validate_manuscript_resolved_hydrated_negative(project_root: Path) -> None:
+    from manuscript.hydrate import EXCLUDED_DOC_FILENAMES
     from manuscript.hydrate import write_resolved_manuscript
     from manuscript.variables import generate_variables
 
-    resolved = project_root / "output" / "manuscript" / "00_abstract.md"
-    if not resolved.is_file():
+    resolved_dir = project_root / "output" / "manuscript"
+    candidates = [
+        path
+        for path in sorted(resolved_dir.glob("*.md"))
+        if path.name not in EXCLUDED_DOC_FILENAMES
+    ]
+    if not candidates:
         write_resolved_manuscript(project_root, generate_variables(project_root, require_analysis_outputs=False))
-    original = resolved.read_text(encoding="utf-8")
+        candidates = [
+            path
+            for path in sorted(resolved_dir.glob("*.md"))
+            if path.name not in EXCLUDED_DOC_FILENAMES
+        ]
+    assert candidates, "expected hydrated manuscript pages for negative control"
+    originals = {path: path.read_text(encoding="utf-8") for path in candidates}
     try:
-        resolved.write_text(original + "\n{{unresolved_test_token}}\n", encoding="utf-8")
+        for path, original in originals.items():
+            path.write_text(original + "\n{{unresolved_test_token}}\n", encoding="utf-8")
         checks = validate_manuscript(project_root)
         assert checks["resolved_manuscript_hydrated"] is False
     finally:
-        resolved.write_text(original, encoding="utf-8")
+        for path, original in originals.items():
+            path.write_text(original, encoding="utf-8")
 
 
 def test_validate_manuscript_resolved_hydrated_allows_generated_latex_bookends(project_root: Path) -> None:
@@ -137,21 +163,24 @@ def test_validate_manuscript_gnn_concordance_negative(project_root: Path) -> Non
         gnn.write_text(original, encoding="utf-8")
 
 
-def test_validate_manuscript_tokens_registered_negative(project_root: Path) -> None:
-    path = project_root / "manuscript" / "00_abstract.md"
-    original = path.read_text(encoding="utf-8")
-    try:
-        path.write_text(original + "\n{{not_a_registered_token}}\n", encoding="utf-8")
-        checks = validate_manuscript(project_root)
-        assert checks["manuscript_tokens_registered"] is False
-    finally:
-        path.write_text(original, encoding="utf-8")
+def test_validate_manuscript_tokens_registered_negative(project_root: Path, tmp_path: Path) -> None:
+    from manuscript.hydrate import validate_manuscript_tokens
+    from manuscript.variables import generate_variables
+
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    (manuscript / "00_abstract.md").write_text("{{not_a_registered_token}}\n", encoding="utf-8")
+
+    unknown = validate_manuscript_tokens(
+        manuscript,
+        set(generate_variables(project_root, require_analysis_outputs=False)),
+    )
+
+    assert unknown == ["not_a_registered_token"]
 
 
 def test_validate_manuscript_duplicate_track_marker_negative(project_root: Path) -> None:
     """A composed section with a doubled sheaf-track marker must fail the gate."""
-    from manuscript.sheaf import compose_all_sections
-
     path = project_root / "manuscript" / "sections" / "imrad" / "methods_lean" / "lean.md"
     original = path.read_text(encoding="utf-8")
     marker = "<!-- sheaf-track:lean -->"

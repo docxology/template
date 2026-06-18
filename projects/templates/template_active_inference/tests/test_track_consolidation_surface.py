@@ -14,7 +14,7 @@ from gate_support import (
     temporary_text_mutation,
     temporary_yaml_mutation,
 )
-from test_track_consolidation_support import (
+from track_consolidation_support import (
     VERSIONED_TRACK_RE,
     _load,
     _relative_posix,
@@ -22,7 +22,7 @@ from test_track_consolidation_support import (
     _write,
 )
 
-pytestmark = pytest.mark.timeout(600)
+pytestmark = [pytest.mark.long_running, pytest.mark.timeout(600)]
 
 def test_sheaf_track_source_commit_times_out_to_unknown(project_root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from roadmap_tracks import sheaf_tracks
@@ -282,5 +282,3 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert entropy_bridge["reference_sections_sheaf_bound"] is True
     assert entropy_bridge["reference_sections_visualization_bound"] is True
     assert entropy_bridge["referenced_in_manuscript"] is True
-
-

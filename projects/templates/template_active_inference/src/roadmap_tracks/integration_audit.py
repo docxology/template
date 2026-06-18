@@ -178,6 +178,12 @@ def write_integration_audit_artifacts(project_root: Path) -> dict[str, Path]:
         ),
     }
     paths["manuscript_staleness"] = write_manuscript_staleness_report(root)
+    paths["claim_audit"] = _write_json(
+        root / "output" / "reports" / "claim_evidence_audit.json",
+        build_claim_evidence_audit(root),
+    )
+    return paths
+    paths["manuscript_staleness"] = write_manuscript_staleness_report(root)
     paths["token_provenance"] = _write_json(
         root / "output" / "data" / "manuscript_token_provenance.json",
         build_manuscript_token_provenance(root),

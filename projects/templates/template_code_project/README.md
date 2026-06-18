@@ -2,6 +2,22 @@
 
 Research project demonstrating optimization algorithms with automated figure generation and publication-quality output. Exemplar roster: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
 
+## Run via the template monorepo
+
+This exemplar lives at `projects/templates/template_code_project/` in the public
+[docxology/template](https://github.com/docxology/template) repository.
+**Tests, analysis, PDF rendering, and CI all run through that monorepo** —
+clone it, run `uv sync` at the repository root, then:
+
+```bash
+./run.sh --project templates/template_code_project --pipeline --core-only
+# or: uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only
+```
+
+Several exemplars also publish standalone GitHub/Zenodo releases for citation;
+those mirrors are outputs of this pipeline. The monorepo remains the canonical
+build and render surface.
+
 ## When to use this template
 
 Use this template for **code-driven computational research**: algorithms in

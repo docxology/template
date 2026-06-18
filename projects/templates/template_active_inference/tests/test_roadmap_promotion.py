@@ -8,14 +8,19 @@ from pathlib import Path
 import pytest
 import yaml
 
-from gate_support import ensure_gate_artifacts, temporary_json_mutation, temporary_text_mutation
+from gate_support import (
+    ensure_gate_artifacts,
+    refresh_composed_gate_artifacts,
+    temporary_json_mutation,
+    temporary_text_mutation,
+)
 
 # These tests regenerate heavy sheaf gluing + roadmap-promotion artifacts (the negative
 # controls mutate generated output/ artifacts, defeating the bootstrap cache). They run
 # ~33-75s locally but ubuntu CI runners have been observed ~3.5x slower, so give the whole
 # module a wide per-test ceiling (a marker overrides the CLI --timeout value). 600s covers
 # the heaviest negative control on the slowest leg without masking a real hang.
-pytestmark = pytest.mark.timeout(600)
+pytestmark = [pytest.mark.long_running, pytest.mark.timeout(600)]
 
 
 def _load(path: Path) -> dict:
@@ -41,8 +46,10 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
         write_sheaf_track_artifacts,
         write_toy_sweep_artifacts,
     )
+    from visualizations.figures import run_figure
 
     ensure_gate_artifacts(project_root)
+    refresh_composed_gate_artifacts(project_root)
     toy = write_toy_sweep_artifacts(project_root)
     formal = write_formal_interop_artifacts(project_root)
     audit = write_integration_audit_artifacts(project_root)
@@ -105,6 +112,8 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
     assert lean_graph["all_topologies_witnessed"] is True
     assert validate_toy_sweep_artifacts(project_root) == []
     assert validate_formal_interop_artifacts(project_root) == []
+    for figure_id in ("track_lane_promotion_map", "artifact_contract_map", "security_posture_map"):
+        run_figure(figure_id, project_root)
     write_integration_audit_artifacts(project_root)
     assert validate_integration_audit_artifacts(project_root) == []
     write_sheaf_track_artifacts(project_root)
@@ -337,7 +346,8 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         data["all_claims_typed"] = True
 
     def break_gate_index(data: dict) -> None:
-        data["rows"][0]["declared_outputs"] = []
+        for row in data["rows"]:
+            row["declared_outputs"] = []
         data["all_indexed"] = True
 
     def break_scope(data: dict) -> None:
@@ -396,8 +406,13 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         ("release_notes", break_release_notes, "release_notes_evidence.json has unsupported notes"),
     )
     for artifact_key, mutate, expected in cases:
+        if artifact_key in {"diffoscope", "license_audit", "release_notes"}:
+            write_sheaf_track_artifacts(project_root)
+        else:
+            write_integration_audit_artifacts(project_root)
         with temporary_json_mutation(paths[artifact_key], mutate):
-            assert any(expected in issue for issue in validate_integration_audit_artifacts(project_root)), artifact_key
+            issues = validate_integration_audit_artifacts(project_root)
+            assert any(expected in issue for issue in issues), (artifact_key, issues)
 
 
 def test_cross_track_symbol_table_binds_type_shape_and_section_ontology(project_root: Path) -> None:
@@ -568,7 +583,16 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
     hide under a stale `true` summary. Mutating the row (not the bit) proves the gate tests
     artifact truth, not mere sensitivity to summary tampering.
     """
-    from roadmap_tracks import validate_integration_audit_artifacts, validate_toy_sweep_artifacts
+    from roadmap_tracks import (
+        validate_integration_audit_artifacts,
+        validate_toy_sweep_artifacts,
+        write_integration_audit_artifacts,
+        write_sheaf_track_artifacts,
+        write_toy_sweep_artifacts,
+    )
+    from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS
+
+    ensure_gate_artifacts(project_root)
 
     def break_producer(data: dict) -> None:
         data["rows"][0]["configured"] = False  # contradicts all_complete, which we leave True
@@ -658,6 +682,16 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
         ),
     ]
     for path, mutate, validator, expected_issue in cases:
+        rel = path.relative_to(project_root).as_posix()
+        if rel in {
+            "output/data/si_efe_terms.json",
+            "output/reports/graph_world_invariants.json",
+        }:
+            write_toy_sweep_artifacts(project_root)
+        elif rel == CANONICAL_ARTIFACTS["artifact_diffoscope"]:
+            write_sheaf_track_artifacts(project_root)
+        else:
+            write_integration_audit_artifacts(project_root)
         assert path.is_file(), f"missing artifact {path}"
         assert all(expected_issue not in issue for issue in validator(project_root)), (
             f"{path.name}: expected a clean baseline before mutation"

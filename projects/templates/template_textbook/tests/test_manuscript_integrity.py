@@ -11,6 +11,8 @@ import re
 from pathlib import Path
 
 import pytest
+from infrastructure.validation.content import validate_images
+from infrastructure.validation.content.diagnostic_codes import MarkdownCode
 
 from textbook import content
 from textbook.config import iter_chapters, load_config, validate_config
@@ -162,3 +164,13 @@ def test_every_chapter_figure_resolves_and_is_producible(tmp_path):
             if resolved.name not in produced:
                 problems.append(f"{chapter.file}: '{resolved.name}' is not produced by any generator")
     assert not problems, problems
+
+
+def test_documentation_placeholders_do_not_trigger_image_missing_diagnostics() -> None:
+    """Validate textbook docs placeholders stay non-failing for image checks."""
+    problems = validate_images(
+        [str(MANUSCRIPT / "AGENTS.md"), str(MANUSCRIPT / "SYNTAX.md")],
+        MANUSCRIPT.parent,
+    )
+    missing = [problem for problem in problems if problem.code == MarkdownCode.IMG_MISSING]
+    assert not missing, f"unexpected Markdown image diagnostics: {missing}"

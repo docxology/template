@@ -16,7 +16,7 @@ _MIN_FIGURE_BYTES = 5_000
 
 def _figures_nonblank(root: Path) -> bool:
     """Return True only if every required figure PNG is non-trivially sized and decodable."""
-    from PIL import Image
+    from visualizations.figure_io import image_render_metrics
 
     png_rels = [rel for rel in REQUIRED_OUTPUTS if rel.startswith("output/figures/") and rel.endswith(".png")]
     if not png_rels:
@@ -27,12 +27,8 @@ def _figures_nonblank(root: Path) -> bool:
             return False
         if path.stat().st_size < _MIN_FIGURE_BYTES:
             return False
-        try:
-            with Image.open(path) as img:
-                width, height = img.size
-        except (OSError, ValueError):
-            return False
-        if width <= 0 or height <= 0:
+        metrics = image_render_metrics(path)
+        if not metrics["width_px"] or not metrics["height_px"] or not metrics["nonblank"]:
             return False
     return True
 

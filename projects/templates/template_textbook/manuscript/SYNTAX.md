@@ -54,7 +54,7 @@ Inline diagrams use a fenced `mermaid` block:
 graph TD
   A[Inputs / assumptions] --> B[Model]
   B --> C[Predictions]
-  C -->|revise| A
+  C -->|"revise"| A
 ```
 ````
 

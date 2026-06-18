@@ -9,9 +9,10 @@ from gate_support import ensure_gate_artifacts, temporary_json_mutation, tempora
 
 
 def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: Path) -> None:
-    from manuscript.sheaf.semantic import build_semantic_gluing_certificate
+    from manuscript.sheaf.semantic import build_semantic_gluing_certificate, write_semantic_gluing_outputs
 
     ensure_gate_artifacts(project_root)
+    write_semantic_gluing_outputs(project_root)
     cert = build_semantic_gluing_certificate(project_root)
 
     assert cert["schema"] == "template_active_inference.semantic_gluing.v2"
@@ -91,9 +92,14 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
 
 
 def test_semantic_certificate_key_surface_is_stable(project_root: Path) -> None:
-    from manuscript.sheaf.semantic import build_semantic_gluing_certificate, validate_semantic_gluing
+    from manuscript.sheaf.semantic import (
+        build_semantic_gluing_certificate,
+        validate_semantic_gluing,
+        write_semantic_gluing_outputs,
+    )
 
     ensure_gate_artifacts(project_root)
+    write_semantic_gluing_outputs(project_root)
     cert = build_semantic_gluing_certificate(project_root)
 
     assert set(cert) == {
@@ -328,9 +334,13 @@ def test_semantic_gluing_rejects_mutated_policy_posterior(project_root: Path) ->
 
 
 def test_semantic_certificate_records_lean_graph_world_topology_witnesses(project_root: Path) -> None:
-    from manuscript.sheaf.semantic import build_semantic_gluing_certificate
+    from manuscript.sheaf.semantic import build_semantic_gluing_certificate, write_semantic_gluing_outputs
+    from simulation.si_artifacts import write_policy_comparison, write_policy_posterior_grid
 
     ensure_gate_artifacts(project_root)
+    write_policy_comparison(project_root)
+    write_policy_posterior_grid(project_root)
+    write_semantic_gluing_outputs(project_root)
     cert = build_semantic_gluing_certificate(project_root)
 
     assert cert["ok"] is True
@@ -428,10 +438,10 @@ def test_typed_claim_evidence_supports_structured_predicates(tmp_path: Path) -> 
 
 def test_validate_manuscript_checks_semantic_certificate(project_root: Path) -> None:
     from gates.validation import validate_manuscript
-    from manuscript.sheaf.semantic import write_semantic_gluing_certificate
+    from manuscript.sheaf.semantic import write_semantic_gluing_outputs
 
     ensure_gate_artifacts(project_root)
-    write_semantic_gluing_certificate(project_root)
+    write_semantic_gluing_outputs(project_root)
     checks = validate_manuscript(project_root)
 
     assert checks["semantic_sheaf_gluing"] is True

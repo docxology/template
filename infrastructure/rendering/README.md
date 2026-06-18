@@ -888,6 +888,27 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
    file output/{project_name}/figures/your_figure.png
    ```
 
+### Figures not appearing in DOCX / EPUB
+
+Pandoc-based formats (DOCX, EPUB) resolve images **differently from the PDF/LaTeX path**, and this is the single biggest cross-format gotcha:
+
+- **PDF (LaTeX):** figure paths are rewritten to `\includegraphics{../output/figures/name.png}` and resolved by LaTeX against the `.tex` working directory. A missing figure produces a loud `File not found` in the LaTeX log.
+- **DOCX / EPUB (pandoc):** the combined markdown keeps relative refs of the form `![cap](figures/name.png)`. Pandoc resolves these against its `--resource-path` list **and silently drops any image it cannot find** — exit code stays `0`, no warning, just a small file with no media.
+
+Because the failure is silent, **verify by inspecting embedded media, not by checking the exit code**:
+
+```bash
+# A real manuscript DOCX/EPUB with N figures should contain N media entries.
+unzip -l output/{project_name}/docx/{project_name}_combined.docx | grep -c word/media
+unzip -l output/{project_name}/epub/{project_name}_combined.epub | grep -ci '\.png'
+# Compare against the number of figure refs in the manuscript:
+grep -rc '!\[' projects/{project_name}/manuscript/*.md | awk -F: '{s+=$2} END{print s}'
+```
+
+**The resource-path rule:** refs are written `figures/<name>`, so a resource path must be the **parent** of the figures directory (e.g. `output/`), *not* the figures directory itself. `--resource-path=output/figures` makes pandoc look for `output/figures/figures/<name>` and find nothing. `infrastructure/rendering/_combined_exports.py` passes `figures_dir`, its parent, and the manuscript dir for both DOCX and EPUB; the parent is the one that actually resolves. Regression tests: `test_render_docx_embeds_figures_via_resource_path`, `test_render_epub_embeds_figures_via_resource_path`.
+
+A size sanity check also catches it fast: a figure-bearing manuscript DOCX is on the order of MB (matching the PDF), not tens of KB. A ~50 KB DOCX for an illustrated manuscript means the images were dropped.
+
 ### LaTeX Compilation Errors
 
 **Cause**: Missing LaTeX packages or invalid markup.

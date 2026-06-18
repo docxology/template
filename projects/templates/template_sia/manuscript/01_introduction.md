@@ -1,6 +1,6 @@
 # Introduction {#sec:introduction}
 
-This exemplar ships **template_sia**, a deterministic research harness for Self-Improvement Agent (SIA) loops [@sia2026]. It documents how the template repository separates generic orchestration (`infrastructure/sia/`) from a reproducible project surface (`projects/templates/template_sia/`) without vendoring the upstream [hexo-ai/sia](https://github.com/hexo-ai/sia) orchestrator.
+This exemplar ships **template_sia**, a deterministic research harness for Self-Improvement Agent (SIA) loops [@sia2026]. It documents how the template repository separates generic orchestration (`infrastructure/sia/`) from a reproducible project surface (`projects/templates/template_sia/`) without vendoring the upstream [upstream SIA orchestrator repository](https://github.com/hexo-ai/sia).
 
 Compared with the AutoResearch exemplar, SIA focuses on **meta → target → feedback** generations with public/private task splits rather than candidate-model search and readiness gates. Default CI replays fixture-backed generations; live mode remains opt-in.
 

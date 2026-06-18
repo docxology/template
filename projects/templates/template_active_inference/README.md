@@ -1,14 +1,28 @@
 # template_active_inference
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20417021.svg)](https://doi.org/10.5281/zenodo.20417021)
-
-📦 **Archived on Zenodo.** Concept DOI [10.5281/zenodo.20417021](https://doi.org/10.5281/zenodo.20417021) always resolves to the latest version; the current release **v0.3.1** is [10.5281/zenodo.20693424](https://doi.org/10.5281/zenodo.20693424). Each Zenodo deposit links back to its matching [GitHub release](https://github.com/docxology/template_active_inference/releases). Cite via the concept DOI or [`CITATION.cff`](CITATION.cff).
+📦 **Archived on Zenodo.** The [Zenodo concept DOI for template_active_inference](https://doi.org/10.5281/zenodo.20417021) always resolves to the latest version; the current release **v0.3.1** is the [Zenodo version DOI for v0.3.1](https://doi.org/10.5281/zenodo.20693424). Each Zenodo deposit links back to its matching [GitHub release](https://github.com/docxology/template_active_inference/releases). Cite via the concept DOI or [`CITATION.cff`](CITATION.cff).
 
 Public exemplar: **sheaf-composed** Active Inference manuscript with configurable
 multi-track sections. The live surface is declared in [`tracks.yaml`](tracks.yaml),
 [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml), and
 [`figures.yaml`](figures.yaml); generated artifacts and gates, not prose lists,
 define the current contract.
+
+## Run via the template monorepo
+
+This exemplar lives at `projects/templates/template_active_inference/` in the public
+[docxology/template](https://github.com/docxology/template) repository.
+**Tests, analysis, PDF rendering, and CI all run through that monorepo** —
+clone it, run `uv sync` at the repository root, then:
+
+```bash
+./run.sh --project templates/template_active_inference --pipeline --core-only
+# or: uv run python scripts/execute_pipeline.py --project templates/template_active_inference --core-only
+```
+
+Several exemplars also publish standalone GitHub/Zenodo releases for citation;
+those mirrors are outputs of this pipeline. The monorepo remains the canonical
+build and render surface.
 
 ## When to use this template
 
@@ -104,7 +118,7 @@ uv run python scripts/generate_integration_audit.py
 uv run python scripts/generate_sheaf_tracks.py
 uv run python scripts/z_generate_manuscript_variables.py
 uv run python scripts/generate_method_inventory.py
-uv run pytest tests/ --cov=src --cov-fail-under=90
+uv run python scripts/run_full_verification.py
 ```
 
 > Runtime: the full suite is slow (~15-25 min serial) — real pandoc/xelatex
@@ -201,7 +215,12 @@ Non-blocking future work is tracked in [`TODO.md`](TODO.md); current publication
 
 Every Python `def` and `class` under `src/` and `scripts/` is documented in the
 generated reference [`docs/reference/method-inventory.md`](docs/reference/method-inventory.md).
-Regenerate it after method, script, or module changes.
+Regenerate it after method, script, or module changes, then check it before
+reporting verification status:
+
+```bash
+uv run python scripts/generate_method_inventory.py --check
+```
 
 ## Documentation verification
 
@@ -209,10 +228,17 @@ Run the documentation and artifact contract checks from this project root:
 
 ```bash
 uv run python scripts/check_documentation_contract.py --check
-uv run python scripts/generate_method_inventory.py --check
-uv run python scripts/compose_manuscript.py --validate-only --strict
-uv run python scripts/validate_outputs.py
+uv run python scripts/run_full_verification.py
 ```
+
+`run_full_verification.py` runs:
+
+- preflight contract seeding:
+  `compose_manuscript.py --validate-only --strict`, `z_generate_manuscript_variables.py`,
+  `generate_figures.py`, `validate_outputs.py`, `check_documentation_contract.py --check`
+- chunked verification batches for gate-heavy modules
+- full `pytest` pass with coverage gate (`--cov=src --cov-fail-under=90`)
+- postflight contract checks immediately after the full pass
 
 The inventory distinguishes inline docstrings from inventory fallbacks, so missing
 docstrings remain visible without bloating internal helper code.

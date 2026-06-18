@@ -16,6 +16,9 @@ pytestmark = pytest.mark.timeout(300)
 
 def test_generate_variables_with_outputs() -> None:
     root = Path(__file__).resolve().parents[1]
+    from gate_support import ensure_gate_artifacts
+
+    ensure_gate_artifacts(root)
     vars_ = generate_variables(root, require_analysis_outputs=False)
     assert vars_["project_name"] == "template_active_inference"
     assert vars_["lambda_grid_points"] >= 2

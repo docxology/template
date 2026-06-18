@@ -29,13 +29,63 @@ __all__ = [
 ]
 
 
+def _figure_inputs() -> list[str]:
+    return [
+        "manuscript/sheaf/manifest.yaml",
+        "manuscript/sheaf/tracks.yaml",
+        "output/data/sheaf_coverage_matrix.json",
+        "figures.yaml",
+    ]
+
+
+def _has_explicit_panel_tracks(root: Path) -> bool:
+    from manuscript.sheaf.manifest import load_manifest
+    from manuscript.sheaf.registry import load_track_registry
+
+    try:
+        manifest = load_manifest(root / "manuscript" / "sheaf" / "manifest.yaml", project_root=root)
+        registry = load_track_registry(root / manifest.registry_path)
+        return bool(registry.tracks)
+    except (FileNotFoundError, ValueError, KeyError):
+        return False
+
+
+def _layers_output_is_fresh(root: Path, out: Path) -> bool:
+    if not out.is_file():
+        return False
+    output_mtime = out.stat().st_mtime
+    for rel in _figure_inputs():
+        path = root / rel
+        if not path.is_file():
+            return False
+        if path.stat().st_mtime > output_mtime:
+            return False
+    try:
+        from visualizations.figure_io import image_render_metrics
+
+        metrics = image_render_metrics(out)
+        if not metrics["width_px"] or not metrics["height_px"] or not metrics["nonblank"]:
+            return False
+    except (OSError, ValueError, KeyError):
+        return False
+    return True
+
+
 def figure_sheaf_layers_overview(project_root: Path) -> Path | None:
     root = project_root.resolve()
+    out = root / "output" / "figures" / "sheaf_layers_overview.png"
+    if _layers_output_is_fresh(root, out):
+        return out
+    if not _has_explicit_panel_tracks(root):
+        return None
+
     payload = coverage_heatmap_payload(root)
     if payload is None:
         return None
+    if not payload.track_ids or not payload.sections or not payload.y_labels:
+        return None
+
     style = load_figure_style(root)
-    out = root / "output" / "figures" / "sheaf_layers_overview.png"
     n_rows = len(payload.y_labels)
     heatmap_height = layers_overview_figure_height(n_rows, payload.cfg.heatmap.row_height)
     dpi = max(style.dpi, payload.cfg.heatmap.dpi)

@@ -12,10 +12,11 @@ computations and fixed seeds rather than mocks.
 - `test_gnn.py`, `test_semantic_sheaf.py`, `test_semantic_extensions.py` — GNN,
   ontology, semantic gluing, and promoted artifact concordance.
 - `test_invariants.py`, `test_validation_spine.py`, `test_roadmap_promotion.py`,
-  `test_track_consolidation.py` — cross-track invariants, replay, provenance,
-  counterexamples, and canonical roadmap artifacts. Generated-artifact mutation
-  tests use `gate_support.temporary_json_mutation()` so negative controls restore
-  touched JSON even when the assertion path fails.
+  `test_track_consolidation_surface.py`, `test_track_consolidation_negative.py` —
+  cross-track invariants, replay, provenance, canonical roadmap artifacts, and
+  row/contract negative controls. Generated-artifact mutation tests use
+  `gate_support.temporary_json_mutation()` so negative controls restore touched JSON
+  even when the assertion path fails.
 - `test_figures.py`, `test_figure_style.py` — figure registry parity, PNG dimensions, sheaf heatmaps.
 - `test_sheaf_compose.py`, `test_sheaf_manifest.py`, `test_sheaf_registry.py`,
   `test_sheaf_coverage.py`, `test_sheaf_laws.py`, `test_layers_report.py` —
@@ -40,8 +41,17 @@ negatives in `tests/gates/test_manuscript_gates.py`, claim-ledger negatives in
 `tests/gates/test_claim_ledger.py`, roadmap artifact promotion in
 `tests/test_roadmap_promotion.py`, validate-outputs orchestration in
 `tests/test_simulation_invariants.py`, canonical sheaf row-only forgeries in
-`tests/test_track_consolidation.py`, and the semantic fixed-point variable test
+`tests/test_track_consolidation_negative.py`, `tests/test_track_consolidation_surface.py`, and the semantic fixed-point variable test
 in `tests/test_manuscript_variables.py`.
+
+For a reproducible complete run, prefer:
+
+```bash
+uv run python scripts/run_full_verification.py
+```
+
+Runtime remains ~15-25 minutes serial on a fresh run; long sections of quiet output
+are expected while heavy fixtures and preflight artifact rebuilds settle.
 
 Fixture-level performance candidates are the repeated marker variants in
 `test_validate_manuscript_methods_sheaf_layers_negative_markers` and redundant

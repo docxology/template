@@ -11,6 +11,8 @@ Contract enforced here (and by ``tests/infra_tests/project/test_exemplar_roster.
 - every public exemplar has a README with an H1 title;
 - every public exemplar README carries a ``## When to use this template``
   section (temporary exceptions are pinned in :data:`KNOWN_MISSING_USE_WHEN`);
+- every public exemplar README carries a ``## Run via the template monorepo``
+  section linking to ``https://github.com/docxology/template``;
 - the generated doc contains exactly one row per public exemplar.
 """
 
@@ -23,6 +25,8 @@ from pathlib import Path
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 USE_WHEN_HEADING = "## When to use this template"
+RUN_VIA_MONOREPO_HEADING = "## Run via the template monorepo"
+MONOREPO_CANONICAL_URL = "https://github.com/docxology/template"
 
 # Exemplars temporarily allowed to lack the use-when section. Keep this empty
 # unless a concurrent workstream owns the README (then pin it here with a date
@@ -126,6 +130,19 @@ def missing_use_when(entries: list[ExemplarEntry]) -> list[str]:
 def unexpected_missing_use_when(entries: list[ExemplarEntry]) -> list[str]:
     """Missing use-when sections that are NOT pinned as known exceptions."""
     return [name for name in missing_use_when(entries) if name not in KNOWN_MISSING_USE_WHEN]
+
+
+def missing_run_via_monorepo(repo_root: Path) -> list[str]:
+    """Names of exemplars whose README lacks the monorepo run callout."""
+    missing: list[str] = []
+    for name in PUBLIC_PROJECT_NAMES:
+        readme_text = _read_text(repo_root / "projects" / name / "README.md")
+        if RUN_VIA_MONOREPO_HEADING not in readme_text:
+            missing.append(name)
+            continue
+        if MONOREPO_CANONICAL_URL not in readme_text:
+            missing.append(name)
+    return missing
 
 
 def render_roster_markdown(entries: list[ExemplarEntry]) -> str:

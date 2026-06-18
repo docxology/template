@@ -29,6 +29,8 @@ from manuscript.sheaf import (
 
 ROOT = Path(__file__).resolve().parents[1]
 
+pytestmark = [pytest.mark.long_running, pytest.mark.timeout(180)]
+
 
 def _live() -> tuple[SheafManifest, TrackRegistry]:
     manifest = load_manifest(ROOT / "manuscript" / "sheaf" / "manifest.yaml", project_root=ROOT)

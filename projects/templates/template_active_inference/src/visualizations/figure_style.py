@@ -10,6 +10,21 @@ from typing import Any
 
 import yaml
 
+
+def _safe_float(value: Any) -> float | None:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _safe_int(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
 _DEFAULT_PALETTE: dict[str, str] = {
     "primary": "#111827",
     "secondary": "#2563eb",
@@ -96,22 +111,47 @@ def load_figure_style(project_root: Path) -> FigureStyleConfig:
     path = project_root.resolve() / "figures.yaml"
     if not path.is_file():
         return DEFAULT_FIGURE_STYLE
-    raw: dict[str, Any] = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    palette = dict(_DEFAULT_PALETTE)
-    palette.update(dict(raw.get("palette") or {}))
-    typography = dict(_DEFAULT_TYPOGRAPHY)
-    typography.update({str(key): float(value) for key, value in dict(raw.get("typography") or {}).items()})
-    layout = dict(_DEFAULT_LAYOUT)
-    layout.update({str(key): float(value) for key, value in dict(raw.get("layout") or {}).items()})
-    return FigureStyleConfig(
-        dpi=int(raw.get("dpi", 160)),
-        transparent=bool(raw.get("transparent", False)),
-        font_scale=float(raw.get("font_scale", 1.0)),
-        grid=bool(raw.get("grid", True)),
-        palette=palette,
-        typography=typography,
-        layout=layout,
-    )
+    try:
+        raw: dict[str, Any] = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        if not isinstance(raw, dict):
+            return DEFAULT_FIGURE_STYLE
+
+        palette = dict(_DEFAULT_PALETTE)
+        if "palette" in raw and isinstance(raw["palette"], dict):
+            palette.update({str(key): str(value) for key, value in raw["palette"].items()})
+
+        typography = dict(_DEFAULT_TYPOGRAPHY)
+        if "typography" in raw and isinstance(raw["typography"], dict):
+            for key, value in raw["typography"].items():
+                parsed = _safe_float(value)
+                if parsed is None:
+                    return DEFAULT_FIGURE_STYLE
+                typography[str(key)] = parsed
+
+        layout = dict(_DEFAULT_LAYOUT)
+        if "layout" in raw and isinstance(raw["layout"], dict):
+            for key, value in raw["layout"].items():
+                parsed = _safe_float(value)
+                if parsed is None:
+                    return DEFAULT_FIGURE_STYLE
+                layout[str(key)] = parsed
+
+        dpi = _safe_int(raw.get("dpi", 160))
+        font_scale = _safe_float(raw.get("font_scale", 1.0))
+        if dpi is None or font_scale is None:
+            return DEFAULT_FIGURE_STYLE
+
+        return FigureStyleConfig(
+            dpi=dpi,
+            transparent=bool(raw.get("transparent", False)),
+            font_scale=font_scale,
+            grid=bool(raw.get("grid", True)),
+            palette=palette,
+            typography=typography,
+            layout=layout,
+        )
+    except (OSError, yaml.YAMLError, ValueError, TypeError):
+        return DEFAULT_FIGURE_STYLE
 
 
 @contextlib.contextmanager

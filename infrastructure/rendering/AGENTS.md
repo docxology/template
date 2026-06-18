@@ -966,6 +966,14 @@ Found: 13/14 figures
 - Graceful handling of missing figures
 - Detailed logging of path transformations
 
+### Pandoc Formats (DOCX / EPUB) — different, silent resolution
+
+The path normalization above applies to the **LaTeX/PDF** path only. DOCX and EPUB are produced by pandoc from the combined markdown, where image refs stay relative (`![cap](figures/name.png)`). Pandoc resolves these against `--resource-path` and **silently drops** any image it cannot find (exit code `0`, no warning).
+
+- **Resource-path rule:** refs are `figures/<name>`, so the resource path must be the **parent** of the figures dir (e.g. `output/`), not the figures dir itself. `_combined_exports.py` (`render_combined_docx` / `render_combined_epub`) passes `figures_dir`, `figures_dir.parent`, and the manuscript dir; the parent is the one that resolves `figures/<name>`.
+- **Verify by media, not exit code:** `unzip -l <file>.docx | grep -c word/media` (or `grep -ci '\.png'` for EPUB) must equal the manuscript figure-ref count. A ~50 KB DOCX for an illustrated manuscript = images dropped.
+- Regression tests pin the contract: `test_render_docx_embeds_figures_via_resource_path`, `test_render_epub_embeds_figures_via_resource_path`.
+
 ### Troubleshooting
 
 #### Figures Not Appearing

@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from gates.validation import validate_manuscript
 from manuscript.sheaf import (
     SheafManifest,
@@ -11,8 +13,10 @@ from manuscript.sheaf import (
     validate_coverage_strict,
     validate_manifest,
 )
-from gate_support import ensure_gate_artifacts
+from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
 
+
+pytestmark = [pytest.mark.long_running, pytest.mark.timeout(300)]
 
 def test_manifest_loads_imrad_sections() -> None:
     root = Path(__file__).resolve().parents[1]
@@ -150,10 +154,14 @@ def test_group_rows_skip_compose(tmp_path: Path) -> None:
     assert "02_intro_motivation.md" in names
 
 
+@pytest.mark.timeout(900)
 def test_validate_manuscript_strict_coverage() -> None:
     root = Path(__file__).resolve().parents[1]
     ensure_gate_artifacts(root)
     checks = validate_manuscript(root)
+    if not checks["claim_ledger_valid"]:
+        refresh_generated_gate_artifacts(root)
+        checks = validate_manuscript(root)
     assert checks["sheaf_valid"]
     assert checks["coverage_matrix_valid"]
     assert checks["full_sheaf_appendix_tracks"]

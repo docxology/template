@@ -3,14 +3,35 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
 
+from PIL import Image
 import pytest
 
 from gates.artifact_manifest import REQUIRED_OUTPUT_CHECK_KEYS, REQUIRED_OUTPUTS
 from gates.validation import validate_outputs
 
-from gate_support import ensure_gate_artifacts
+from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
+
+pytestmark = [pytest.mark.long_running, pytest.mark.timeout(300)]
+
+
+@pytest.fixture
+def prepared_output_gate_artifacts(project_root: Path) -> Path:
+    ensure_gate_artifacts(project_root)
+    return project_root
+
+
+def _write_png(path: Path, *, blank: bool = False) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    image = Image.new("RGB", (120, 80), (255, 255, 255))
+    if not blank:
+        image.putpixel((20, 20), (0, 0, 0))
+    image.save(path, format="PNG")
+
+# Regenerates heavy sheaf/roadmap gate artifacts; ~57-59s locally and can exceed the
+# CI-wide --timeout=120 on slower runners. The per-module marker overrides the CLI value.
 
 EXPECTED_DERIVED_OUTPUT_CHECK_KEYS = {
     "ablation_sensitivity_report_schema",
@@ -92,6 +113,10 @@ EXPECTED_DERIVED_OUTPUT_CHECK_KEYS = {
     "visualization_quality_audit_schema",
 }
 
+SELF_REFERENTIAL_STABILITY_EXEMPT_OUTPUTS = {
+    "output/data/artifact_contract_index.json",
+}
+
 
 def test_validate_outputs_after_analysis() -> None:
     root = Path(__file__).resolve().parents[2]
@@ -102,11 +127,10 @@ def test_validate_outputs_after_analysis() -> None:
     assert checks.get("output/data/parameter_sweep.csv")
 
 
-# Regenerates heavy sheaf/roadmap gate artifacts; ~57-59s locally and can exceed the
-# CI-wide --timeout=120 on slower runners. The per-test marker overrides the CLI value.
-@pytest.mark.timeout(300)
-def test_validate_outputs_required_artifacts(project_root: Path) -> None:
-    ensure_gate_artifacts(project_root)
+def test_validate_outputs_required_artifacts(
+    project_root: Path,
+    prepared_output_gate_artifacts: Path,
+) -> None:
     checks = validate_outputs(project_root)
     for key in REQUIRED_OUTPUT_CHECK_KEYS:
         assert checks.get(key), f"missing validate_outputs key: {key}"
@@ -114,12 +138,32 @@ def test_validate_outputs_required_artifacts(project_root: Path) -> None:
     assert checks.get("invariants_all_pass") is True
 
 
-@pytest.mark.timeout(300)
-def test_validate_outputs_key_surface_is_stable(project_root: Path) -> None:
-    ensure_gate_artifacts(project_root)
+def test_validate_outputs_key_surface_is_stable(
+    project_root: Path,
+    prepared_output_gate_artifacts: Path,
+) -> None:
     checks = validate_outputs(project_root)
 
     assert set(checks) == set(REQUIRED_OUTPUTS) | EXPECTED_DERIVED_OUTPUT_CHECK_KEYS
+
+
+def test_validate_outputs_no_regression_on_stable_artifact_tree(prepared_output_gate_artifacts: Path) -> None:
+    refresh_generated_gate_artifacts(prepared_output_gate_artifacts)
+    first_checks = validate_outputs(prepared_output_gate_artifacts)
+    assert first_checks["figures_nonblank"] is True
+
+    tracked = [
+        prepared_output_gate_artifacts / rel
+        for rel in REQUIRED_OUTPUTS
+        if rel.startswith("output/") and rel not in SELF_REFERENTIAL_STABILITY_EXEMPT_OUTPUTS
+    ]
+    pre_hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in tracked if path.is_file()}
+
+    checks = validate_outputs(prepared_output_gate_artifacts)
+
+    assert checks["figures_nonblank"] is True
+    for path, previous in pre_hashes.items():
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == previous, path.relative_to(prepared_output_gate_artifacts)
 
 
 def test_validate_outputs_negative_si_invariants_fail(project_root: Path, tmp_path: Path) -> None:
@@ -229,18 +273,21 @@ def test_validate_outputs_negative_missing_sweep(project_root: Path, tmp_path: P
             sweep.write_bytes(backup.read_bytes())
 
 
-@pytest.mark.timeout(300)
-def test_figures_nonblank_passes_on_real_tree(project_root: Path) -> None:
+def test_figures_nonblank_passes_on_real_tree(
+    project_root: Path,
+    prepared_output_gate_artifacts: Path,
+) -> None:
     """Positive control: bootstrapped figures satisfy the integrity gate."""
-    ensure_gate_artifacts(project_root)
     checks = validate_outputs(project_root)
     assert checks.get("figures_nonblank") is True
 
 
-@pytest.mark.timeout(300)
-def test_figures_nonblank_negative_blank_png(project_root: Path, tmp_path: Path) -> None:
+def test_figures_nonblank_negative_blank_png(
+    project_root: Path,
+    prepared_output_gate_artifacts: Path,
+    tmp_path: Path,
+) -> None:
     """A 0-byte PNG (empty-file sha is truthy under exists()) must fail the gate."""
-    ensure_gate_artifacts(project_root)
     target = project_root / "output" / "figures" / "ising_mi_curve.png"
     assert target.is_file(), "expected bootstrapped figure to exist"
     backup = tmp_path / "ising_mi_curve.png.bak"
@@ -256,21 +303,46 @@ def test_figures_nonblank_negative_blank_png(project_root: Path, tmp_path: Path)
         target.write_bytes(backup.read_bytes())
 
 
-@pytest.mark.timeout(300)
-def test_reproducibility_replay_rebuild_passes_on_real_tree(project_root: Path) -> None:
+def test_figures_nonblank_validates_small_fixtures(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Known tiny fixtures must pass/fail nonblank detection independently of full outputs."""
+    from gates import output_checks
+
+    fixture_root = tmp_path / "mini_project"
+    nonblank = fixture_root / "output" / "figures" / "tiny_ok.png"
+    blank = fixture_root / "output" / "figures" / "tiny_blank.png"
+
+    _write_png(nonblank, blank=False)
+    _write_png(blank, blank=True)
+
+    with monkeypatch.context() as m:
+        m.setattr(output_checks, "REQUIRED_OUTPUTS", ("output/figures/tiny_ok.png",))
+        m.setattr(output_checks, "_MIN_FIGURE_BYTES", 1)
+        assert output_checks._figures_nonblank(fixture_root) is True
+
+    with monkeypatch.context() as m:
+        m.setattr(output_checks, "REQUIRED_OUTPUTS", ("output/figures/tiny_blank.png",))
+        m.setattr(output_checks, "_MIN_FIGURE_BYTES", 1)
+        assert output_checks._figures_nonblank(fixture_root) is False
+
+
+def test_reproducibility_replay_rebuild_passes_on_real_tree(
+    project_root: Path,
+    prepared_output_gate_artifacts: Path,
+) -> None:
     """Positive control: the real rebuild=True replay reproduces every producer."""
     from validation_spine import validate_reproducibility_replay
 
-    ensure_gate_artifacts(project_root)
     assert validate_reproducibility_replay(project_root, rebuild=True) == []
 
 
-@pytest.mark.timeout(300)
-def test_reproducibility_replay_rebuild_catches_forged_sweep(project_root: Path, tmp_path: Path) -> None:
+def test_reproducibility_replay_rebuild_catches_forged_sweep(
+    project_root: Path,
+    prepared_output_gate_artifacts: Path,
+    tmp_path: Path,
+) -> None:
     """A forged parameter_sweep.csv must make rebuild=True replay report a mismatch."""
     from validation_spine import validate_reproducibility_replay
 
-    ensure_gate_artifacts(project_root)
     sweep = project_root / "output" / "data" / "parameter_sweep.csv"
     assert sweep.is_file(), "expected bootstrapped parameter sweep"
     backup = tmp_path / "parameter_sweep.csv.bak"
@@ -284,7 +356,9 @@ def test_reproducibility_replay_rebuild_catches_forged_sweep(project_root: Path,
 
 
 def test_reproducibility_replay_recompute_catches_rows_vs_aggregate_forgery(
-    project_root: Path, tmp_path: Path
+    project_root: Path,
+    prepared_output_gate_artifacts: Path,
+    tmp_path: Path,
 ) -> None:
     """Flipping a row to passed=false while leaving all_passed=true must be caught (cheap path)."""
     from validation_spine import validate_reproducibility_replay

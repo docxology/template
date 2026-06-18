@@ -4,7 +4,9 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/) and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
-## [0.1.0] — 2026-06-03
+## 0.1.0 — 2026-06-03
+
+Release: [template_textbook v0.1.0 GitHub release](https://github.com/docxology/template_textbook/releases/tag/v0.1.0).
 
 Initial public release of **The Template Textbook** — a modular, fillable
 scaffold for book-length technical works.
@@ -32,5 +34,3 @@ scaffold for book-length technical works.
 - **Multi-format rendering** — combined PDF, HTML, EPUB, and DOCX.
 - **Test suite** — no-mocks, ≥90% coverage; structural-integrity tests bind the
   manuscript to the engine contract.
-
-[0.1.0]: https://github.com/docxology/template_textbook/releases/tag/v0.1.0

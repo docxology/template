@@ -7,6 +7,17 @@ executed, tested, and rendered by the overarching
 some exemplars are fully project-local, while others intentionally depend on
 shared `infrastructure/` modules.
 
+## Run surface
+
+All nine permanent exemplars under `projects/templates/` are **tested, analyzed,
+PDF-rendered, and CI-gated only through the public
+[docxology/template](https://github.com/docxology/template) monorepo**. Clone
+that repository, run `uv sync` at the repository root, then drive any exemplar
+with `./run.sh --project templates/<name>` (see [`docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md)).
+Several exemplars also publish standalone GitHub/Zenodo release mirrors for
+citation; those are pipeline outputs — the monorepo remains the canonical build
+and render checkout.
+
 ## Active Projects
 
 Paths under `projects/` are organized as **typed subfolders** (`templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) and **change over time** as projects rotate between lifecycle folders. The set guaranteed to remain as **permanent canonical exemplars** — git-tracked under `projects/templates/` — is:
