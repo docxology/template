@@ -517,6 +517,13 @@ Total documented definitions: 797
 | 48 | `function` | `ensure_coverage_artifacts` | docstring | Ensure coverage JSON exists; optionally render heatmap and coverage page. |
 | 90 | `function` | `run_coverage_pipeline` | docstring | Write coverage JSON, heatmap PNG, and coverage manuscript page. |
 
+## `src/orchestration/full_verification.py`
+
+| line | kind | name | documentation source | summary |
+| ---: | --- | --- | --- | --- |
+| 12 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:12`. |
+| 35 | `function` | `run_verification` | inventory fallback | Inventory fallback for function `run_verification` defined at `src/orchestration/full_verification.py:35`. |
+
 ## `src/orchestration/pipeline_manifest.py`
 
 | line | kind | name | documentation source | summary |
@@ -1337,9 +1344,7 @@ Total documented definitions: 797
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 16 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `scripts/run_full_verification.py:16`. |
-| 39 | `function` | `run_verification` | inventory fallback | Inventory fallback for function `run_verification` defined at `scripts/run_full_verification.py:39`. |
-| 133 | `function` | `main` | inventory fallback | Inventory fallback for function `main` defined at `scripts/run_full_verification.py:133`. |
+| 15 | `function` | `main` | inventory fallback | Inventory fallback for function `main` defined at `scripts/run_full_verification.py:15`. |
 
 ## `scripts/simulate_si_graph_world.py`
 

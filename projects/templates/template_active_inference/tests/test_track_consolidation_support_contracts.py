@@ -22,8 +22,9 @@ from track_consolidation_support import (
 )
 
 
-def test_relative_posix_is_stable_for_nested_files() -> None:
-    root = Path("/tmp/project")
+def test_relative_posix_is_stable_for_nested_files(tmp_path: Path) -> None:
+    root = tmp_path / "project"
+    root.mkdir()
     assert _relative_posix(root / "output" / "data" / "a.json", root) == "output/data/a.json"
 
 
