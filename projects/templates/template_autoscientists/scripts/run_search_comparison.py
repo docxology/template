@@ -30,7 +30,7 @@ from src import (  # noqa: E402
     SyntheticObjective,
     run_search,
 )
-from src.figures import write_comparison_figure  # noqa: E402
+from src.figures import write_comparison_figure, write_figure_registry  # noqa: E402
 
 BUDGET = 60
 
@@ -86,9 +86,11 @@ def main() -> int:
     figure_path = figures_dir / "search_comparison.png"
     data_path = data_dir / "search_comparison.json"
     write_comparison_figure(coordinated, baseline, figure_path)
+    registry_path = write_figure_registry(figures_dir)
     data_path.write_text(json.dumps(_summary(objective, coordinated, baseline), indent=2, sort_keys=True) + "\n")
 
     print(figure_path)
+    print(registry_path)
     print(data_path)
     return 0
 

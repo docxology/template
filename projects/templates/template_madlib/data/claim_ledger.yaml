@@ -1,0 +1,155 @@
+claims:
+  - claim_id: committed-seed
+    kind: number
+    value: 431
+    source: projects/templates/template_madlib/manuscript/config.yaml madlib.seed
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: required-lexicon-categories
+    kind: number
+    value: 3
+    source: projects/templates/template_madlib/src/config.py REQUIRED_LEXICON_CATEGORIES
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/config.py
+  - claim_id: method-protocol-owned-by-config
+    kind: artifact
+    value: manuscript/config.yaml madlib.method_protocol
+    source: projects/templates/template_madlib/manuscript/config.yaml
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: expanded-method-protocol
+    kind: artifact
+    value: manuscript/config.yaml madlib.method_protocol, madlib.pipeline_phases, madlib.quality_probes, madlib.failure_modes, madlib.audit_rules, madlib.contribution_claims
+    source: projects/templates/template_madlib/manuscript/config.yaml
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: digest-invariant-contract
+    kind: boundary
+    value: "Token choices depend only on seed, slot name, category, ordinal, and ordered category inventory"
+    source: projects/templates/template_madlib/src/tokens.py _choose_value
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/tokens.py
+  - claim_id: section-titles-owned-by-config
+    kind: artifact
+    value: manuscript/config.yaml madlib.section_titles
+    source: projects/templates/template_madlib/manuscript/config.yaml
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: evaluation-criteria-owned-by-config
+    kind: artifact
+    value: manuscript/config.yaml madlib.evaluation_criteria
+    source: projects/templates/template_madlib/manuscript/config.yaml
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: design-principles-owned-by-config
+    kind: artifact
+    value: manuscript/config.yaml madlib.design_principles
+    source: projects/templates/template_madlib/manuscript/config.yaml
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: pipeline-phases-owned-by-config
+    kind: artifact
+    value: manuscript/config.yaml madlib.pipeline_phases
+    source: projects/templates/template_madlib/manuscript/config.yaml
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: quality-probes-owned-by-config
+    kind: artifact
+    value: manuscript/config.yaml madlib.quality_probes
+    source: projects/templates/template_madlib/manuscript/config.yaml
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: failure-modes-owned-by-config
+    kind: artifact
+    value: manuscript/config.yaml madlib.failure_modes
+    source: projects/templates/template_madlib/manuscript/config.yaml
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: authoring-obligations-owned-by-config
+    kind: artifact
+    value: manuscript/config.yaml madlib.authoring_obligations
+    source: projects/templates/template_madlib/manuscript/config.yaml
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: visualization-controls-owned-by-config
+    kind: artifact
+    value: manuscript/config.yaml madlib.visualizations
+    source: projects/templates/template_madlib/manuscript/config.yaml
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: configured-field-inventory
+    kind: artifact
+    value: output/data/configured_field_inventory.json
+    source: projects/templates/template_madlib/src/analysis.py configured_field_inventory
+    source_tier: generated_metric
+    freshness: active
+    artifact_path: output/data/configured_field_inventory.json
+  - claim_id: token-density-figure
+    kind: artifact
+    value: output/figures/token_density.png
+    source: projects/templates/template_madlib/src/analysis.py write_token_density_figure
+    source_tier: generated_metric
+    freshness: active
+    artifact_path: output/figures/token_density.png
+  - claim_id: cover-overview-figure
+    kind: artifact
+    value: output/figures/madlib_cover_overview.png
+    source: projects/templates/template_madlib/src/analysis.py write_cover_overview_figure
+    source_tier: generated_metric
+    freshness: active
+    artifact_path: output/figures/madlib_cover_overview.png
+  - claim_id: pipeline-audit-figures
+    kind: artifact
+    value: output/figures/token_injection_flow.png; output/figures/section_token_allocation.png; output/figures/provenance_trace_map.png; output/figures/quality_gate_matrix.png
+    source: projects/templates/template_madlib/src/analysis.py pipeline audit figure writers
+    source_tier: generated_metric
+    freshness: active
+    artifact_path: output/figures/
+  - claim_id: configured-field-figures
+    kind: artifact
+    value: output/figures/configured_field_matrix.png; output/figures/section_configuration_heatmap.png; output/figures/field_origin_summary.png
+    source: projects/templates/template_madlib/src/analysis.py configured-field figure writers
+    source_tier: generated_metric
+    freshness: active
+    artifact_path: output/figures/
+  - claim_id: review-packet-method-artifact
+    kind: artifact
+    value: output/manuscript; output/pdf; output/web; output/slides; output/figures; output/data; output/reports; output/reports/output_statistics.json
+    source: projects/templates/template_madlib/manuscript/config.yaml madlib.method_protocol reviewer packet rows
+    source_tier: generated_metric
+    freshness: active
+    artifact_path: output/
+  - claim_id: no-live-standalone-doi
+    kind: boundary
+    value: "publication.doi and publication.version_doi are blank for this exemplar"
+    source: projects/templates/template_madlib/manuscript/config.yaml publication
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: fork-validator-boundary
+    kind: boundary
+    value: "Forks must add domain validators and claim-ledger evidence before making domain-specific claims"
+    source: projects/templates/template_madlib/manuscript/config.yaml madlib.audit_rules
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: fork-migration-documentation
+    kind: artifact
+    value: "README.md, STANDALONE.md, manuscript/README.md, and generated Authoring Contract document fork migration obligations"
+    source: projects/templates/template_madlib/README.md
+    source_tier: project_source
+    freshness: active
+    artifact_path: README.md

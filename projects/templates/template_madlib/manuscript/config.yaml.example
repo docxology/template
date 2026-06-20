@@ -1,0 +1,297 @@
+paper:
+  title: "Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts"
+  version: "0.1.0"
+  cover:
+    image: "figures/madlib_cover_overview.png"
+
+authors:
+  - name: "Author Name"
+    corresponding: true
+
+publication:
+  doi: ""
+  version_doi: ""
+  repository_url: "https://github.com/docxology/template/tree/main/projects/templates/template_madlib"
+  repository_label: "docxology/template"
+
+keywords:
+  - "madlib generation"
+  - "token injection"
+  - "conditional manuscripts"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: false
+    epub: false
+
+analysis:
+  scripts:
+    - 01_generate_madlib_artifacts.py
+    - z_generate_manuscript_variables.py
+
+madlib:
+  seed: 1
+  composition_depth: "standard"
+  hypothesis: "Deterministic token injection can generate a conditional manuscript."
+  visualizations:
+    enabled: true
+    configured_field_matrix: true
+    section_configuration_heatmap: true
+    field_origin_summary: true
+    token_injection_flow: true
+    section_token_allocation: true
+    provenance_trace_map: true
+    quality_gate_matrix: true
+  section_conditions:
+    abstract: true
+    introduction: true
+    methods: true
+    results: true
+    discussion: true
+    configuration: true
+    evaluation: true
+    reproducibility: true
+    limitations: true
+    scope: true
+    authoring_contract: true
+  section_titles:
+    abstract: "Abstract"
+    introduction: "Introduction: Lexicon as Data and Manuscript as Build Artifact"
+    methods: "Methods: Source-Owned Token Injection and Conditional IMRAD Assembly"
+    results: "Results: Provenance, Density, and Resolved Manuscript Surface"
+    discussion: "Discussion: Accountability Boundaries for Generated Prose"
+    configuration: "Configuration: Schema-Controlled Lexicon, Slots, and Narrative Moves"
+    evaluation: "Evaluation: Gate Criteria, QA Probes, and Failure Discovery"
+    reproducibility: "Reproducibility: Seeded Regeneration and Artifact Trace"
+    limitations: "Limitations: Non-Claims, Misuse Modes, and Human Review"
+    scope: "Scope: Related Generators and Responsible Forking"
+    authoring_contract: "Authoring Contract: Human Review and Forking Obligations"
+  narrative_moves:
+    abstract:
+      - "state the problem"
+      - "summarize the intervention"
+    introduction:
+      - "identify drift between prose and source data"
+      - "frame configuration as an inspectable dataset"
+    methods:
+      - "validate config before composition"
+      - "declare review scenario and method invariants"
+      - "track explicit and defaulted fields"
+      - "expand slots through seeded digest selection"
+      - "emit evidence artifacts before rendering"
+      - "assemble a reviewer packet"
+      - "preserve human review before publication claims"
+    results:
+      - "report token density"
+      - "bind every manuscript token to provenance"
+    discussion:
+      - "bound the scholarly claim"
+      - "name misuse modes"
+    configuration:
+      - "document schema ownership"
+      - "record generated counts from code"
+    evaluation:
+      - "name readiness criteria"
+      - "connect criteria to artifacts"
+    reproducibility:
+      - "fix seed and config hash"
+      - "verify no unresolved placeholders remain"
+    limitations:
+      - "state non-claims"
+      - "identify misuse modes"
+    scope:
+      - "distinguish generation from truth"
+      - "limit publication claims"
+    authoring_contract:
+      - "state human responsibilities"
+      - "name fork obligations"
+      - "connect review to generated evidence"
+      - "document fork migration notes"
+  method_protocol:
+    - name: "Ingest declared manuscript schema"
+      action: "Parse manuscript/config.yaml and validate madlib blocks before composition."
+      evidence: "Config validation tests."
+      output: "MadlibConfig"
+    - name: "Declare review scenario"
+      action: "Name scope, local claim boundary, enabled sections, and review handoff expectations."
+      evidence: "section_plan.json and authoring contract rows."
+      output: "review scenario"
+    - name: "Track configured field origins"
+      action: "Separate explicit YAML paths from loader defaults."
+      evidence: "configured_field_inventory.json."
+      output: "field-origin inventory"
+    - name: "Expand token slots"
+      action: "Hash the seed, slot name, category, ordinal, and category inventory, then assign choices to sections."
+      evidence: "Token determinism tests."
+      output: "TokenPlan"
+    - name: "Review selection invariants"
+      action: "Confirm only seed, slot, category, ordinal, and category inventory can change token choices."
+      evidence: "Token tests and Methods digest prose."
+      output: "selection invariant set"
+    - name: "Generate evidence tables and figures"
+      action: "Build method tables, provenance tables, configured-field tables, and registered figures from generated data."
+      evidence: "Artifact writing tests and figure registry validation."
+      output: "output/data, output/reports, and output/figures"
+    - name: "Align claims with evidence ledger"
+      action: "Tie generated method and publication-boundary claims to config, source, artifacts, or explicit non-claim boundaries."
+      evidence: "data/claim_ledger.yaml."
+      output: "claim-aligned evidence surface"
+    - name: "Hydrate manuscript shell"
+      action: "Write variables and resolve source Markdown into output/manuscript."
+      evidence: "Unresolved-token scan."
+      output: "output/manuscript"
+    - name: "Render and hand off review bundle"
+      action: "Render, validate, copy outputs, and leave human review obligations explicit."
+      evidence: "Stage 03, Stage 04, and Stage 05 logs."
+      output: "output/templates/template_madlib"
+    - name: "Document fork migration"
+      action: "State what domain forks must change before adding domain claims."
+      evidence: "README, STANDALONE, manuscript README, and claim ledger."
+      output: "fork migration notes"
+  evaluation_criteria:
+    - name: "Placeholder resolution"
+      target: "No unresolved uppercase manuscript placeholders remain."
+      evidence: "tests/test_manuscript_variables.py"
+      gate: "pytest"
+    - name: "Figure registry integrity"
+      target: "Every referenced figure is registered."
+      evidence: "scripts/04_validate_output.py"
+      gate: "validation"
+  failure_modes:
+    - name: "Unresolved placeholder"
+      risk: "A source token is added without a generated variable."
+      detection: "Hydrated manuscript scan."
+      mitigation: "Add variable generation and tests before rendering."
+    - name: "Overclaimed generated prose"
+      risk: "Generated text implies external publication evidence."
+      detection: "Claim ledger and metadata review."
+      mitigation: "Keep publication fields blank until evidence exists."
+    - name: "Fork without validators"
+      risk: "A downstream fork adds domain claims but keeps only generic template gates."
+      detection: "Authoring contract and claim ledger review."
+      mitigation: "Add domain validators and evidence artifacts before asserting findings."
+    - name: "Review packet incompleteness"
+      risk: "A reviewer receives PDF or HTML without data, reports, figures, validation results, or copy statistics."
+      detection: "Stage 05 output statistics."
+      mitigation: "Regenerate and hand off the full copied output surface."
+  design_principles:
+    - name: "Configuration owns prose choices"
+      rationale: "Reviewers can inspect declared language before generation."
+      manuscript_effect: "Large-grain manuscript variables are generated from YAML and source."
+    - name: "Generated output is disposable"
+      rationale: "The durable artifact is the regeneration contract."
+      manuscript_effect: "Output Markdown, PDF, HTML, and slides are rebuilt from source inputs."
+    - name: "Forks must add validators"
+      rationale: "Domain claims need domain evidence beyond the generic regeneration gate."
+      manuscript_effect: "Authoring obligations require validators before domain claims."
+    - name: "Review packet is a method artifact"
+      rationale: "A PDF alone is insufficient evidence for a generated-method exemplar."
+      manuscript_effect: "Data, reports, figures, validation, and copy statistics travel with the manuscript."
+  pipeline_phases:
+    - name: "Schema parse"
+      input_artifact: "manuscript/config.yaml"
+      transformation: "Load and validate the madlib schema."
+      output_artifact: "MadlibConfig"
+      guard: "config parser tests"
+    - name: "Token planning"
+      input_artifact: "MadlibConfig"
+      transformation: "Hash seed, slot, category, ordinal, and category inventory."
+      output_artifact: "TokenPlan"
+      guard: "seed-stability tests"
+    - name: "Invariant and claim review"
+      input_artifact: "TokenPlan and claim ledger"
+      transformation: "Confirm token-choice invariants and local claim boundaries."
+      output_artifact: "selection invariant set and claim-aligned evidence surface"
+      guard: "token tests and claim-ledger review"
+    - name: "Evidence and visualization emission"
+      input_artifact: "MadlibConfig and TokenPlan"
+      transformation: "Write audit tables, reports, figures, and figure registry."
+      output_artifact: "output/data, output/reports, and output/figures"
+      guard: "artifact and figure tests"
+    - name: "Render and validate"
+      input_artifact: "output/manuscript"
+      transformation: "Render files and validate registries, evidence, and overlays."
+      output_artifact: "output/templates/template_madlib"
+      guard: "render and validation commands"
+    - name: "Review packet assembly"
+      input_artifact: "validated output and copy statistics"
+      transformation: "Group manuscript, web, slides, figures, data, reports, validation, and copied-output stats."
+      output_artifact: "review packet"
+      guard: "copied-output validation"
+  quality_probes:
+    - name: "Placeholder survival"
+      question: "Did any source token survive hydration?"
+      passing_signal: "No uppercase placeholders are found in generated manuscript or web files."
+      artifact: "output/manuscript and output/web"
+    - name: "Method completeness"
+      question: "Do method protocol rows cover schema intake, token planning, artifacts, rendering, and review?"
+      passing_signal: "Protocol and phase tables contain the expected method responsibilities."
+      artifact: "manuscript/config.yaml"
+    - name: "Provenance completeness"
+      question: "Can every selected token be traced to config?"
+      passing_signal: "The injection trace and token inventory contain one row for each generated token."
+      artifact: "output/reports/injection_trace.json"
+    - name: "Digest invariant review"
+      question: "Are token-selection inputs documented and protected by tests?"
+      passing_signal: "Methods prose names the digest inputs and token tests prove seed/category sensitivity."
+      artifact: "src/tokens.py and output/manuscript/02_methodology.md"
+    - name: "Review packet completeness"
+      question: "Can a reviewer inspect all method evidence surfaces?"
+      passing_signal: "Copied outputs include manuscript, web, slides, figures, data, reports, validation, and copy statistics."
+      artifact: "output/templates/template_madlib"
+  authoring_obligations:
+    - name: "Review generated claims"
+      obligation: "Inspect hydrated manuscript bodies before copied outputs are reader-ready."
+      review_surface: "output/manuscript and output/web"
+    - name: "Add domain validators"
+      obligation: "Add tests and validation artifacts before using the template for domain claims."
+      review_surface: "tests and output/reports"
+    - name: "Assemble reviewer packet"
+      obligation: "Provide manuscript, web, slides, figures, data, reports, validation, and output statistics together."
+      review_surface: "output/templates/template_madlib"
+    - name: "Write fork migration notes"
+      obligation: "Document config, source, test, validator, and claim-ledger changes required by a domain fork."
+      review_surface: "README.md and data/claim_ledger.yaml"
+  audit_rules:
+    - "Every manuscript placeholder must be generated by source code."
+    - "Every generated token choice must carry category and config-key provenance."
+    - "Every method protocol row must identify action, evidence, and output."
+    - "Every domain fork must add validators before making domain claims."
+    - "Every review handoff must include generated data, reports, figures, validation results, and copy statistics."
+  contribution_claims:
+    - "A Mad Lib manuscript can remain reproducible when the lexicon is treated as data."
+    - "A generated Methods section can remain auditable when protocol rows, figures, and validation gates share one config source."
+    - "A review packet can make generated-method handoff auditable when it includes artifacts beyond PDF or HTML."
+  lexicon:
+    adjectives: ["auditable", "conditional"]
+    nouns: ["manuscript", "token"]
+    verbs: ["compose", "trace"]
+    methods: ["seeded digest selection"]
+    measures: ["token choice count"]
+    constraints: ["all lexicon entries live in config"]
+    artifacts: ["token inventory", "section plan"]
+    qualities: ["determinism", "traceability"]
+    audiences: ["template authors", "manuscript reviewers"]
+    failures: ["unresolved placeholder", "overclaimed generated prose"]
+  slots:
+    - name: example_adjective
+      category: adjectives
+      section: abstract
+    - name: example_noun
+      category: nouns
+      section: introduction
+    - name: example_verb
+      category: verbs
+      section: methods
+    - name: example_artifact
+      category: artifacts
+      section: results
+    - name: example_failure
+      category: failures
+      section: limitations
+    - name: example_authoring_audience
+      category: audiences
+      section: authoring_contract

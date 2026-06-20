@@ -123,3 +123,10 @@ genuine objects exercising real code paths.
 
 See [AGENTS.md](AGENTS.md) for module-level technical documentation and the
 manuscript under [`manuscript/`](manuscript/) for the full write-up.
+
+## Template integrity
+
+- Forward backlog: [`TODO.md`](TODO.md).
+- Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
+- Project validation: `uv run pytest projects/templates/template_autoscientists/tests/ --cov=projects/templates/template_autoscientists/src --cov-fail-under=90`.
+- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.

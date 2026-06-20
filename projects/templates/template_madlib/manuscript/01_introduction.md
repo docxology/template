@@ -1,0 +1,7 @@
+# {{TITLE_INTRODUCTION}}
+
+{{INTRODUCTION_BODY}}
+
+## Contribution Ledger
+
+{{CONTRIBUTION_TABLE}}

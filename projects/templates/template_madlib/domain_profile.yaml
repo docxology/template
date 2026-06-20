@@ -1,0 +1,91 @@
+domain: conditional_manuscript_generation
+display_name: Template Madlib
+required_packages:
+  - matplotlib
+  - pyyaml
+preferred_outputs:
+  - pdf
+  - html
+  - slides
+validation_gates:
+  - config_schema
+  - deterministic_token_plan
+  - section_title_generation
+  - method_protocol_generation
+  - method_protocol_depth
+  - method_fork_contract
+  - digest_invariant_review
+  - claim_ledger_alignment
+  - review_packet_completeness
+  - fork_migration_documentation
+  - design_principle_generation
+  - pipeline_phase_trace
+  - quality_probe_generation
+  - authoring_obligation_generation
+  - cover_visualization
+  - configured_field_origin_inventory
+  - configured_field_visualizations
+  - pipeline_audit_visualizations
+  - token_inventory
+  - section_plan
+  - injection_trace
+  - figure_registry
+  - render_validation
+figure_types:
+  - madlib_cover_overview
+  - token_density
+  - token_injection_flow
+  - section_token_allocation
+  - provenance_trace_map
+  - quality_gate_matrix
+  - configured_field_matrix
+  - section_configuration_heatmap
+  - field_origin_summary
+citation_policy: local_source_or_scholarly
+source_policy: "Claims about generated content must cite project config, source code, or generated artifacts."
+artifact_expectations:
+  - output/data/token_inventory.json
+  - output/data/configured_field_inventory.json
+  - output/data/section_plan.json
+  - output/data/manuscript_variables.json
+  - output/reports/injection_trace.json
+  - output/reports/madlib_summary.md
+  - output/reports/configured_field_summary.md
+  - output/reports/output_statistics.json
+  - output/figures/madlib_cover_overview.png
+  - output/figures/token_density.png
+  - output/figures/token_injection_flow.png
+  - output/figures/section_token_allocation.png
+  - output/figures/provenance_trace_map.png
+  - output/figures/quality_gate_matrix.png
+  - output/figures/configured_field_matrix.png
+  - output/figures/section_configuration_heatmap.png
+  - output/figures/field_origin_summary.png
+  - output/figures/figure_registry.json
+  - output/pdf/template_madlib_combined.pdf
+benchmark_rubric:
+  name: conditional-manuscript-readiness
+  dimensions:
+    - name: token_provenance
+      weight: 2.0
+    - name: deterministic_regeneration
+      weight: 2.0
+    - name: method_surface_clarity
+      weight: 1.5
+    - name: method_protocol_completeness
+      weight: 1.5
+    - name: review_packet_completeness
+      weight: 1.5
+    - name: authoring_contract_clarity
+      weight: 1.5
+    - name: fork_migration_clarity
+      weight: 1.25
+    - name: qa_probe_coverage
+      weight: 1.25
+    - name: configured_field_visibility
+      weight: 1.25
+    - name: claim_ledger_alignment
+      weight: 1.25
+    - name: render_success
+      weight: 1.0
+llm_prompt_guidance: "Use only the configured lexicon, narrative moves, method protocol, design principles, pipeline phases, QA probes, authoring obligations, visualization controls, audit rules, configured-field inventory, digest invariants, review packet, fork migration docs, cover overview, pipeline audit figures, and generated artifacts; do not invent unconfigured token categories or publication claims."

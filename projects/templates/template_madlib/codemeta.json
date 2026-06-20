@@ -1,0 +1,42 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "author": [
+    {
+      "@id": "https://orcid.org/0000-0001-6232-9096",
+      "@type": "Person",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Active Inference Institute"
+      },
+      "familyName": "Friedman",
+      "givenName": "Daniel Ari"
+    }
+  ],
+  "codeRepository": "https://github.com/docxology/template/tree/main/projects/templates/template_madlib",
+  "dateModified": "2026-06-20",
+  "keywords": [
+    "madlib generation",
+    "token injection",
+    "conditional manuscripts",
+    "configuration driven writing",
+    "configured-field visualization",
+    "cover visualization",
+    "pipeline audit visualization",
+    "configuration provenance",
+    "manuscript provenance",
+    "method protocol",
+    "method documentation",
+    "digest invariants",
+    "review packet",
+    "fork validation contract",
+    "fork migration",
+    "QA probes",
+    "authoring obligations",
+    "reproducible research",
+    "IMRAD"
+  ],
+  "license": "https://spdx.org/licenses/MIT",
+  "name": "Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts",
+  "version": "0.1.0"
+}

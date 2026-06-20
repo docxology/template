@@ -387,6 +387,19 @@ def test_hidden_dir_in_active_skipped(tmp_path: Path) -> None:
     assert not (repo / "projects" / "active" / ".hidden").exists()
 
 
+def test_lifecycle_output_dir_is_not_linked_as_project(tmp_path: Path) -> None:
+    """Generated lifecycle-level output/ spillover is not a project."""
+    repo = _make_repo(tmp_path)
+    private = _make_private(tmp_path, name="priv")
+    _make_project(private / WORKING_SUBDIR / "alpha")
+    (private / WORKING_SUBDIR / "output" / "reports").mkdir(parents=True)
+
+    result = sync_private_project_links(repo, private, dry_run=True)
+
+    assert result.created == ["projects/working/alpha"]
+    assert "projects/working/output" not in result.created
+
+
 # --- no-op + dry-run --------------------------------------------------------
 
 

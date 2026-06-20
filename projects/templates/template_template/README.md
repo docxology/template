@@ -74,3 +74,10 @@ uv run python projects/templates/template_template/scripts/generate_manuscript_m
 | Figures | `output/figures/*.png` |
 
 See [`docs/VERIFICATION.md`](docs/VERIFICATION.md) for the full gate checklist.
+
+## Template integrity
+
+- Forward backlog: [`TODO.md`](TODO.md).
+- Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
+- Project validation: `uv run pytest projects/templates/template_template/tests/ --cov=projects/templates/template_template/src --cov-fail-under=90`.
+- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.

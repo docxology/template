@@ -95,6 +95,8 @@ CONFIG_FILENAME = ".private_projects_root"
 ENV_VAR = "TEMPLATE_PRIVATE_PROJECTS_ROOT"
 #: When set (any non-empty value), the orchestration CLI skips auto link-sync.
 SKIP_ENV_VAR = "TEMPLATE_SKIP_LINK_SYNC"
+#: Generated lifecycle-level directories that are never private projects.
+IGNORED_LIFECYCLE_ENTRY_NAMES: frozenset[str] = frozenset({"output"})
 
 
 @dataclass
@@ -176,13 +178,15 @@ def private_projects_root(repo_root: Path) -> Path | None:
 
 
 def _source_dirs(private_root: Path, lifecycle_subdir: str) -> list[Path]:
-    """Return directories under a private lifecycle folder (sorted, no hidden)."""
+    """Return project directories under a private lifecycle folder."""
     active_dir = private_root / lifecycle_subdir
     if not active_dir.is_dir():
         return []
     sources: list[Path] = []
     for child in sorted(active_dir.iterdir()):
         if child.name.startswith("."):
+            continue
+        if child.name in IGNORED_LIFECYCLE_ENTRY_NAMES:
             continue
         if not child.is_dir():
             continue

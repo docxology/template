@@ -58,6 +58,7 @@ _PANDOC_FRONTMATTER_KEYS = frozenset(
         "fail_on_missing",
     }
 )
+_PUBLIC_EXEMPLAR_CONFIG_KEYS = frozenset({"madlib"})
 
 try:
     import yaml
@@ -101,6 +102,7 @@ def validate_config_keys(
     canonical_keys.update(get_project_schema_extensions("").keys())
     # Standard Pandoc-flat frontmatter keys (csl, link-citations, chapters, …).
     canonical_keys.update(_PANDOC_FRONTMATTER_KEYS)
+    canonical_keys.update(_PUBLIC_EXEMPLAR_CONFIG_KEYS)
     known_keys = frozenset(canonical_keys)
     warnings: list[str] = []
 

@@ -83,7 +83,7 @@ flowchart TB
 
     SCR --> SCR_FILES[shell_bootstrap.sh · bash_utils.sh ops only ·<br/>00_setup_environment → 06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
 
-    PROJ --> PROJ_F["template_active_inference · template_autoresearch_project · template_autoscientists · template_code_project · template_newspaper · template_prose_project · template_sia · template_template · template_textbook<br/>local template_search_project add-on<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
+    PROJ --> PROJ_F["template_active_inference · template_autoresearch_project · template_autoscientists · template_code_project · template_madlib · template_newspaper · template_prose_project · template_sia · template_template · template_textbook<br/>local template_search_project add-on<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff

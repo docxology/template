@@ -1,0 +1,13 @@
+# {{TITLE_EVALUATION}}
+
+{{EVALUATION_BODY}}
+
+{{EVALUATION_FIGURES}}
+
+## Evaluation Criteria
+
+{{EVALUATION_CRITERIA_TABLE}}
+
+## Quality Probes
+
+{{QUALITY_PROBE_TABLE}}

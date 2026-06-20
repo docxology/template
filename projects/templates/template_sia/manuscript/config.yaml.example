@@ -1,0 +1,51 @@
+# template_sia - configuration template
+#
+# Copy this file to config.yaml in a fork and keep live execution disabled
+# until your sandbox, approval, and rollback contracts are implemented.
+
+paper:
+  title: "Your Self-Improvement Agent Harness"
+  subtitle: "Meta, target, and feedback loops with public/private task splits"
+  version: "0.1.0"
+  date: ""
+
+authors:
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"
+    email: "you@example.edu"
+    affiliation: "Your Institution"
+    corresponding: true
+
+publication:
+  doi: ""
+  version_doi: ""
+  version_record: ""
+  year: "2026"
+  github_repository: ""
+
+keywords:
+  - "self-improvement agents"
+  - "benchmark harness"
+  - "agent evaluation"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+manuscript_dir: "manuscript"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false
+    docx: false
+    epub: false
+
+sia:
+  task_name: mini_classify
+  run_id: 1
+  max_generations: 3
+  live: false
+  target_timeout_sec: 60
+  llm_model: ""

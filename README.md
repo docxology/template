@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/<project>/pdf/`. Logs in `output/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook`. The search exemplar is an optional add-on under `projects/archive/template_search_project/`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_madlib`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook`. The search exemplar is an optional add-on under `projects/archive/template_search_project/`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -142,6 +142,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) | AutoResearch-centric (deterministic plan/evidence/claim/artifact/readiness loop) | see canonical facts | see canonical facts |
 | [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) | Coordination-mechanism testbed (deterministic ablatable agent-team primitives, honest no-speedup framing) | see canonical facts | see canonical facts |
 | [`projects/templates/template_code_project/`](projects/templates/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
+| [`projects/templates/template_madlib/`](projects/templates/template_madlib/) | Conditional token-injection manuscript generator (config-owned lexicon, QA probes, authoring contract, and IMRAD hydration) | see canonical facts | see canonical facts |
 | [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) | Newspaper layout engine (data-driven 12-page broadsheet from YAML via ReportLab) | see canonical facts | see canonical facts |
 | [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | see canonical facts | see canonical facts |
 | [`projects/templates/template_sia/`](projects/templates/template_sia/) | SIA harness (meta → target → feedback loop, fixture replay) | see canonical facts | see canonical facts |

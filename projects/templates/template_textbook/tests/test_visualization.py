@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
+from infrastructure.validation.content.figure_validator import validate_figure_registry
 
 from textbook.config import iter_chapters, load_config
 from visualization import _scaffold, plots
+from visualization.registry import collect_figure_registry_entries, write_figure_registry
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def _png_is_nonempty(path):
@@ -52,6 +58,29 @@ def test_generate_all_figures(tmp_path):
     names = {p.name for p in paths}
     assert "logistic_growth.png" in names  # a worked figure
     assert "part_0_orientation.png" in names  # a chapter placeholder that is displayed
+
+
+def test_figure_registry_entries_match_manuscript_labels(tmp_path):
+    plots.generate_all_figures(tmp_path)
+    entries = collect_figure_registry_entries(PROJECT_ROOT / "manuscript", tmp_path)
+    labels = {entry.label for entry in entries}
+    assert "fig:part_0_orientation" in labels
+    assert "fig:gallery_line" in labels
+    assert "fig:part_III_case_studies" in labels
+
+
+def test_figure_registry_validates_manuscript_references(tmp_path):
+    paths = plots.generate_all_figures(tmp_path)
+    from visualization.gallery import generate_gallery_figures
+
+    paths.extend(generate_gallery_figures(tmp_path / "gallery"))
+    registry = write_figure_registry(PROJECT_ROOT / "manuscript", tmp_path)
+
+    ok, issues = validate_figure_registry(registry, PROJECT_ROOT / "manuscript")
+
+    assert registry.exists()
+    assert paths
+    assert ok, issues
 
 
 def test_scaffold_new_figure_and_save(tmp_path):

@@ -12,6 +12,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import matplotlib
+from infrastructure.validation.content.figure_validator import validate_figure_registry
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
@@ -25,6 +26,7 @@ from src.figures import (  # noqa: E402
     write_ablation_figure,
     write_comparison_figure,
     write_efficiency_figure,
+    write_figure_registry,
 )
 from src.objective import SyntheticObjective  # noqa: E402
 from src.search import SearchConfig, run_search  # noqa: E402
@@ -135,3 +137,19 @@ def test_comparison_figure_linestyle_matches_caption() -> None:
         assert by_label["Single-thread baseline"].get_linestyle() == "--"  # dashed
     finally:
         plt.close(fig)
+
+
+def test_figure_registry_validates_manuscript_references(tmp_path: Path) -> None:
+    objective = SyntheticObjective(dimensions=4, noise_scale=0.02)
+    proposer = DeterministicProposer()
+    coordinated = run_search(objective, proposer, SearchConfig(budget=30))
+    baseline = run_search(objective, proposer, SearchConfig.single_thread_baseline(budget=30))
+
+    write_ablation_figure(_rows(), tmp_path / "ablation.png")
+    write_efficiency_figure(_rows(), tmp_path / "ablation_efficiency.png")
+    write_comparison_figure(coordinated, baseline, tmp_path / "search_comparison.png")
+    registry = write_figure_registry(tmp_path)
+
+    ok, issues = validate_figure_registry(registry, Path(__file__).resolve().parent.parent / "manuscript")
+
+    assert ok, issues

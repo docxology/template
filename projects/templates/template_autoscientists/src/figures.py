@@ -7,6 +7,8 @@ render and save the paper's figures. No mocks; deterministic; ``MPLBACKEND=Agg``
 
 from __future__ import annotations
 
+import json
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict
 
@@ -30,6 +32,47 @@ class AblationRow(TypedDict):
     experiments_used: int
     experiments_to_target: int | None
     redundant_experiments: int
+
+
+@dataclass(frozen=True)
+class FigureSpec:
+    label: str
+    filename: str
+    caption: str
+    generated_by: str
+
+
+FIGURE_SPECS: tuple[FigureSpec, ...] = (
+    FigureSpec(
+        label="fig:comparison",
+        filename="search_comparison.png",
+        caption="Champion metric trajectory under a matched experiment budget.",
+        generated_by="scripts/run_search_comparison.py",
+    ),
+    FigureSpec(
+        label="fig:ablation",
+        filename="ablation.png",
+        caption="Reported versus clean champion metric by coordination mechanism ablation.",
+        generated_by="scripts/run_ablation.py",
+    ),
+    FigureSpec(
+        label="fig:ablation_efficiency",
+        filename="ablation_efficiency.png",
+        caption="Experiment use and redundant re-probes by coordination mechanism ablation.",
+        generated_by="scripts/run_ablation.py",
+    ),
+)
+
+
+def write_figure_registry(figures_dir: Path) -> Path:
+    figures_dir.mkdir(parents=True, exist_ok=True)
+    path = figures_dir / "figure_registry.json"
+    payload = {
+        "schema_version": "template-autoscientists-figure-registry-v1",
+        "figures": [asdict(spec) for spec in FIGURE_SPECS],
+    }
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
 
 
 def _save(fig: "plt.Figure", path: Path) -> None:
@@ -139,3 +182,17 @@ def write_comparison_figure(coordinated: SearchResult, baseline: SearchResult, p
     """Champion trajectories: coordinated teams vs single-thread baseline (matched budget)."""
     fig, _ = build_comparison_figure(coordinated, baseline)
     _save(fig, path)
+
+
+__all__ = [
+    "AblationRow",
+    "FIGURE_SPECS",
+    "FigureSpec",
+    "build_ablation_figure",
+    "build_comparison_figure",
+    "build_efficiency_figure",
+    "write_ablation_figure",
+    "write_comparison_figure",
+    "write_efficiency_figure",
+    "write_figure_registry",
+]

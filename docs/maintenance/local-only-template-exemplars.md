@@ -15,7 +15,7 @@ plug-in remains skipped without local model weights).
 ## Promoting an exemplar to the public set
 
 1. Add its qualified name to `PUBLIC_PROJECT_NAMES` in `public_scope.py`.
-2. Add a `.gitignore` negation for `projects/templates/<name>` (mirror the nine tracked exemplars).
+2. Add a `.gitignore` negation for `projects/templates/<name>` (mirror the tracked public exemplars).
 3. Update the exemplar roster in `CLAUDE.md`, regenerate [`docs/_generated/active_projects.md`](../_generated/active_projects.md), and refresh publication records.
 
 Remove the name from `LOCAL_ONLY_TEMPLATE_NAMES` when promotion is complete.

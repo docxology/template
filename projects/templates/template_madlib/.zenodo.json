@@ -1,0 +1,35 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts with configured-field, cover, and pipeline audit visualizations.",
+  "keywords": [
+    "madlib generation",
+    "token injection",
+    "conditional manuscripts",
+    "configuration driven writing",
+    "configured-field visualization",
+    "cover visualization",
+    "pipeline audit visualization",
+    "configuration provenance",
+    "manuscript provenance",
+    "method protocol",
+    "method documentation",
+    "digest invariants",
+    "review packet",
+    "fork validation contract",
+    "fork migration",
+    "QA probes",
+    "authoring obligations",
+    "reproducible research",
+    "IMRAD"
+  ],
+  "license": "MIT",
+  "title": "Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts",
+  "upload_type": "software",
+  "version": "0.1.0"
+}

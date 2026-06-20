@@ -1,0 +1,111 @@
+# template_textbook - configuration template
+#
+# Copy this file to config.yaml in a fork. Keep `units:` as the source of truth
+# for parts and chapters, then run scripts/scaffold_chapter.py to materialize
+# missing manuscript files.
+
+book:
+  title: "Your Template Textbook"
+  subtitle: "A modular, fillable scaffold for book-length technical works"
+  author: "Your Name"
+  orcid: "0000-0000-0000-0000"
+  edition: "1.0"
+  version: "1.0.0"
+  year: 2026
+  language: "en"
+  license: "CC BY 4.0"
+  code_license: "Apache-2.0"
+  cover:
+    image: "assets/cover/template_textbook_cover.png"
+    alt: "Abstract modular textbook cover art."
+
+authors:
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"
+    email: "you@example.edu"
+    affiliation: "Your Institution"
+    corresponding: true
+
+publication:
+  doi: ""
+  version_doi: ""
+  version_record: ""
+  repository_url: ""
+  repository_label: "Source repository"
+  github_repository: ""
+  zenodo_description: ""
+  keywords:
+    - "open textbook"
+    - "modular manuscript"
+    - "reproducible publishing"
+
+analysis:
+  scripts:
+    - generate_figures.py
+    - generate_diagrams.py
+    - analysis.py
+
+layout:
+  page_size: "letter"
+  margin_top_mm: 18
+  margin_bottom_mm: 18
+  margin_left_mm: 18
+  margin_right_mm: 18
+  margin_inner_extra_mm: 0
+  line_height: 1.3
+  text_width_fraction: 0.92
+
+typography:
+  body_font: "Linux Libertine O"
+  heading_font: "Linux Biolinum O"
+  mono_font: "DejaVu Sans Mono"
+  base_font_size_pt: 10
+  link_color: "#1A5276"
+  link_color_internal: "#1A5276"
+  link_color_external: "#1A5276"
+  link_underline: true
+
+front_matter:
+  files:
+    - file: front_matter.md
+      title: "Front Matter"
+    - file: preface.md
+      title: "Preface"
+  include_front_matter: true
+  include_preface: true
+
+rendering:
+  number_chapters: true
+  number_figures: true
+  number_equations: true
+  number_tables: true
+  toc_depth: 2
+
+render:
+  formats:
+    pdf: true
+    html: true
+    epub: true
+    docx: true
+    slides: false
+
+units:
+  - id: part_I
+    title: "Foundations"
+    label: "I"
+    directory: part_I
+    chapters:
+      - file: first_principles.md
+        title: "First Principles"
+      - file: building_blocks.md
+        title: "Building Blocks"
+
+appendices:
+  include_labs: true
+  include_questions: true
+  include_reference: true
+  reference:
+    - file: appendix_authoring_guide.md
+      title: "Appendix A - Authoring Guide"
+    - file: glossary.md
+      title: "Appendix B - Glossary"

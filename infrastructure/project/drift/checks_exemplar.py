@@ -525,6 +525,7 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
     must_exist = [
         "README.md",
         "AGENTS.md",
+        "TODO.md",
         "pyproject.toml",
         ".gitignore",
         "scripts",
@@ -532,6 +533,7 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
         "tests",
         "tests/__init__.py",
         "manuscript/config.yaml",
+        "manuscript/config.yaml.example",
         "manuscript/references.bib",
         "manuscript/preamble.md",
     ]

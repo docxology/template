@@ -57,3 +57,10 @@ Default runs replay fixtures under `src/fixtures/recorded_generations/`. Pass
 - [`AGENTS.md`](AGENTS.md) — module map and contracts
 - [`docs/quickstart.md`](docs/quickstart.md) — fork and extend
 - [`../../../infrastructure/sia/README.md`](../../../infrastructure/sia/README.md) — Layer 1 API
+
+## Template integrity
+
+- Forward backlog: [`TODO.md`](TODO.md).
+- Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
+- Project validation: `uv run pytest projects/templates/template_sia/tests/ --cov=projects/templates/template_sia/src --cov-fail-under=90`.
+- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.

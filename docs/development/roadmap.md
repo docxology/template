@@ -79,9 +79,8 @@ unless this file is re-measured.
 > **Roster note (post-`v3.1.0`):** the git-tracked public exemplar set under
 > `projects/templates/` has since grown beyond the six referenced above —
 > `template_autoscientists`, `template_newspaper`, and `template_textbook`
-> were added (each double-published as a standalone GitHub repo + Zenodo DOI),
-> bringing the current public exemplar roster to **nine**. The authoritative,
-> always-current count and names live in
+> were added (each double-published as a standalone GitHub repo + Zenodo DOI).
+> The authoritative, always-current count and names live in
 > [`docs/_generated/active_projects.md`](../_generated/active_projects.md) and
 > [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md) —
 > consult those rather than this historical release log.

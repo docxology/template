@@ -164,3 +164,10 @@ uv run mypy src/newspaper              # clean
 > named for the three copies of its first press run). This is a **template
 > edition**: the masthead is homage, but every story, byline, name and event in
 > the content files is illustrative and fictional.
+
+## Template integrity
+
+- Forward backlog: [`TODO.md`](TODO.md).
+- Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
+- Project validation: `uv run pytest projects/templates/template_newspaper/tests/ --cov=projects/templates/template_newspaper/src --cov-fail-under=90`.
+- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -40,4 +41,24 @@ def figure_path(project_root: Path, spec: FigureSpec) -> Path:
     return project_root / "output" / "figures" / spec.filename
 
 
-__all__ = ["FIGURE_SPECS", "FigureSpec", "figure_path"]
+def write_figure_registry(project_root: Path) -> Path:
+    output_dir = project_root / "output" / "figures"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    path = output_dir / "figure_registry.json"
+    payload = {
+        "schema_version": "template-sia-figure-registry-v1",
+        "figures": [
+            {
+                "label": spec.figure_id,
+                "filename": spec.filename,
+                "caption": spec.caption,
+                "generated_by": "src.figures",
+            }
+            for spec in FIGURE_SPECS
+        ],
+    }
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
+__all__ = ["FIGURE_SPECS", "FigureSpec", "figure_path", "write_figure_registry"]

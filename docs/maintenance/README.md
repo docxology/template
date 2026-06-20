@@ -14,7 +14,7 @@
 | [`ci-local.md`](ci-local.md) | Local reproduction of the GitHub Actions matrix via `act` — defense against CI free-tier compression | 2026-05-20 |
 | [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) | Design for a Stage 10 output (container + lockfile + agent-runnable manifest) alongside Stage 5 PDF — for the 2029+ executable-artifact world | 2026-05-20 |
 | [`private-projects-repo.md`](private-projects-repo.md) | Sibling private repo lifecycle (`active/`, `working/`, `published/`, `archive/`, `other/`) and symlink-sync contract for confidential projects | 2026-05-21; expanded 2026-05-24 |
-| [`local-only-template-exemplars.md`](local-only-template-exemplars.md) | `LOCAL_ONLY_TEMPLATE_NAMES` roster (currently empty — all nine exemplars public) and how to promote an exemplar to the public set | 2026-06-03 |
+| [`local-only-template-exemplars.md`](local-only-template-exemplars.md) | `LOCAL_ONLY_TEMPLATE_NAMES` roster (currently empty — all template exemplars public) and how to promote an exemplar to the public set | 2026-06-03 |
 
 ## The thesis these guides share
 

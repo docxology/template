@@ -1,0 +1,13 @@
+# {{TITLE_RESULTS}}
+
+{{RESULTS_BODY}}
+
+{{RESULTS_FIGURES}}
+
+## Token Inventory
+
+{{TOKEN_INVENTORY_TABLE}}
+
+## Provenance Matrix
+
+{{PROVENANCE_MATRIX_TABLE}}

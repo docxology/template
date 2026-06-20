@@ -114,6 +114,20 @@ class TestBody:
         assert r"\detokenize{../figures/cover/cover.png}" in body
         assert tmp_path.as_posix() not in body
 
+    def test_source_manuscript_cover_uses_output_pdf_relative_path(self, tmp_path: Path) -> None:
+        manuscript_dir = tmp_path / "manuscript"
+        cover_dir = manuscript_dir / "assets" / "cover"
+        manuscript_dir.mkdir(parents=True)
+        cover_dir.mkdir(parents=True)
+        (cover_dir / "cover.png").write_bytes(b"png")
+        config = PAPER_CONFIG + 'book:\n  title: "A Complete Book"\n  cover:\n    image: "assets/cover/cover.png"\n'
+        (manuscript_dir / "config.yaml").write_text(config, encoding="utf-8")
+
+        body = generate_title_page_body(manuscript_dir)
+
+        assert r"\detokenize{../../manuscript/assets/cover/cover.png}" in body
+        assert tmp_path.as_posix() not in body
+
     def test_book_publishing_page_visual_uses_release_safe_relative_image_path(self, tmp_path: Path) -> None:
         output_dir = tmp_path / "output"
         manuscript_dir = output_dir / "manuscript"

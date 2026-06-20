@@ -340,8 +340,12 @@ def _configured_image_path(raw_image: object, config_file: Path) -> Path | None:
 def _image_latex_path(image_path: Path, config_file: Path) -> str:
     """Return a LaTeX-safe image path without embedding local absolute paths."""
     manuscript_dir = config_file.parent
-    output_root = manuscript_dir.parent
-    latex_dir = output_root / "pdf" if manuscript_dir.name == "manuscript" else manuscript_dir
+    parent = manuscript_dir.parent
+    if manuscript_dir.name == "manuscript":
+        output_root = parent if parent.name == "output" else parent / "output"
+        latex_dir = output_root / "pdf"
+    else:
+        latex_dir = manuscript_dir
     try:
         return Path(os.path.relpath(image_path.resolve(), latex_dir.resolve())).as_posix()
     except OSError:

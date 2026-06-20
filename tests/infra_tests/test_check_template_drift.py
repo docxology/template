@@ -62,11 +62,13 @@ def _scaffold_minimal_project(tmp_path: Path, name: str = "fake_project") -> Pat
     (root / "scripts").mkdir()
     write_doc(root / "README.md", "# Fake\n")
     write_doc(root / "AGENTS.md", "# Fake AGENTS\n")
+    write_doc(root / "TODO.md", "# Fake TODO\n")
     write_doc(root / "pyproject.toml", "[tool.coverage.report]\nfail_under = 90\n")
     write_doc(root / ".gitignore", "output/\n")
     write_doc(root / "src" / "__init__.py", '"""Pkg."""\n\n__all__ = ["a", "b"]\n')
     write_doc(root / "tests" / "conftest.py", "")
     write_doc(root / "manuscript" / "config.yaml", "{}\n")
+    write_doc(root / "manuscript" / "config.yaml.example", "{}\n")
     write_doc(root / "manuscript" / "references.bib", "")
     write_doc(root / "manuscript" / "preamble.md", "")
     write_doc(root / "docs" / "AGENTS.md", "# Docs\n")
@@ -391,6 +393,30 @@ def test_required_files_exist_flags_missing_pyproject(drift_module, tmp_path):
     rep = drift_module.Report()
     drift_module.check_required_files_exist(root, rep, "fake_project")
     assert any(f.severity == "ERROR" and f.rule == "missing_canonical_file" for f in rep.findings)
+
+
+def test_required_files_exist_flags_missing_todo(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "TODO.md").unlink()
+    rep = drift_module.Report()
+    drift_module.check_required_files_exist(root, rep, "fake_project")
+    assert any(
+        f.severity == "ERROR" and f.rule == "missing_canonical_file" and "TODO.md" in f.message
+        for f in rep.findings
+    )
+
+
+def test_required_files_exist_flags_missing_config_example(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml.example").unlink()
+    rep = drift_module.Report()
+    drift_module.check_required_files_exist(root, rep, "fake_project")
+    assert any(
+        f.severity == "ERROR"
+        and f.rule == "missing_canonical_file"
+        and "manuscript/config.yaml.example" in f.message
+        for f in rep.findings
+    )
 
 
 def test_required_files_exist_allows_fit_for_purpose_docs(drift_module, tmp_path):

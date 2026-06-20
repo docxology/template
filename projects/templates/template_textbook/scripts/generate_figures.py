@@ -19,6 +19,7 @@ def main() -> int:
     from textbook_logging import get_logger
     from visualization.gallery import generate_gallery_figures
     from visualization.plots import generate_all_figures
+    from visualization.registry import write_figure_registry
 
     logger = get_logger(__name__)
     parser = argparse.ArgumentParser(description="Generate all template_textbook figures")
@@ -38,6 +39,9 @@ def main() -> int:
         for path in gallery_paths:
             print(f"  ✓ {path}")
         paths += gallery_paths
+    registry_path = write_figure_registry(PROJECT_DIR / "manuscript", args.output_dir)
+    print(f"  ✓ {registry_path}")
+    paths.append(registry_path)
     logger.info("Generated %d figures → %s", len(paths), args.output_dir)
     print(f"[generate_figures] {len(paths)} figures → {args.output_dir}")
     return 0

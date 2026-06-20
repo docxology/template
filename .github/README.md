@@ -231,7 +231,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 ## 📁 Active Projects
 
-> **Canonical run surface:** The nine public exemplars under
+> **Canonical run surface:** The public exemplars under
 > `projects/templates/` are discovered, tested, analyzed, and PDF-rendered
 > **only** through this repository's pipeline (`discover_projects()` +
 > [`./run.sh`](../run.sh) or [`scripts/execute_pipeline.py`](../scripts/execute_pipeline.py)).
@@ -257,7 +257,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 ### Published exemplars — pipeline productivity, advanced provenance, and autopoiesis
 
-The repository ships **nine** public template projects. Seven are independently published as **their own GitHub repository + Zenodo deposit** (versioned, authored by Daniel Ari Friedman); `template_sia` is deposited from the shared `docxology/template` repository, and `template_textbook` is published to Zenodo. Each demonstrates the pipeline end-to-end on real, citable artifacts.
+The repository ships public template projects under `projects/templates/`. Most are independently published as their own GitHub repository + Zenodo deposit; `template_sia` and `template_madlib` use the shared `docxology/template` repository metadata until they receive standalone releases. Each demonstrates the pipeline end-to-end on real, citable artifacts.
 
 The table below is auto-injected from public project config files plus optional GitHub/Zenodo API refreshes. Do not hand-edit it.
 
@@ -266,15 +266,16 @@ The table below is auto-injected from public project config files plus optional 
 
 | Exemplar | Config version | GitHub | Latest release | Zenodo concept DOI | Latest version DOI |
 | --- | --- | --- | --- | --- | --- |
-| [`templates/template_active_inference`](../projects/templates/template_active_inference/) | 0.3.0 | [docxology/template_active_inference](https://github.com/docxology/template_active_inference) | not checked | [10.5281/zenodo.20417021](https://doi.org/10.5281/zenodo.20417021) | [10.5281/zenodo.20420352](https://doi.org/10.5281/zenodo.20420352) |
-| [`templates/template_autoresearch_project`](../projects/templates/template_autoresearch_project/) | 0.3.0 | [docxology/template_autoresearch_project](https://github.com/docxology/template_autoresearch_project) | not checked | [10.5281/zenodo.20417016](https://doi.org/10.5281/zenodo.20417016) | [10.5281/zenodo.20420357](https://doi.org/10.5281/zenodo.20420357) |
-| [`templates/template_autoscientists`](../projects/templates/template_autoscientists/) | 1.0.0 | [docxology/template_autoscientists](https://github.com/docxology/template_autoscientists) | not checked | [10.5281/zenodo.20533669](https://doi.org/10.5281/zenodo.20533669) | [10.5281/zenodo.20533670](https://doi.org/10.5281/zenodo.20533670) |
-| [`templates/template_code_project`](../projects/templates/template_code_project/) | 2.5.0 | [docxology/template_code_project](https://github.com/docxology/template_code_project) | not checked | [10.5281/zenodo.20417136](https://doi.org/10.5281/zenodo.20417136) | [10.5281/zenodo.20420368](https://doi.org/10.5281/zenodo.20420368) |
-| [`templates/template_newspaper`](../projects/templates/template_newspaper/) | 1.0.0 | [docxology/template_newspaper](https://github.com/docxology/template_newspaper) | not checked | [10.5281/zenodo.20533675](https://doi.org/10.5281/zenodo.20533675) | [10.5281/zenodo.20533676](https://doi.org/10.5281/zenodo.20533676) |
-| [`templates/template_prose_project`](../projects/templates/template_prose_project/) | 0.4.0 | [docxology/template_prose_project](https://github.com/docxology/template_prose_project) | not checked | [10.5281/zenodo.20417104](https://doi.org/10.5281/zenodo.20417104) | [10.5281/zenodo.20420342](https://doi.org/10.5281/zenodo.20420342) |
-| [`templates/template_sia`](../projects/templates/template_sia/) | 0.1.0 | [docxology/template](https://github.com/docxology/template) | not checked | [10.5281/zenodo.20453879](https://doi.org/10.5281/zenodo.20453879) | [10.5281/zenodo.20453880](https://doi.org/10.5281/zenodo.20453880) |
-| [`templates/template_template`](../projects/templates/template_template/) | 1.0.6 | [docxology/template_template](https://github.com/docxology/template_template) | not checked | [10.5281/zenodo.20419007](https://doi.org/10.5281/zenodo.20419007) | [10.5281/zenodo.20420387](https://doi.org/10.5281/zenodo.20420387) |
-| [`templates/template_textbook`](../projects/templates/template_textbook/) | 0.1.0 | [docxology/template_textbook](https://github.com/docxology/template_textbook) | not checked | [10.5281/zenodo.20533125](https://doi.org/10.5281/zenodo.20533125) | [10.5281/zenodo.20533126](https://doi.org/10.5281/zenodo.20533126) |
+| [`templates/template_active_inference`](../projects/templates/template_active_inference/) | 0.3.1 | [docxology/template_active_inference](https://github.com/docxology/template_active_inference) | not checked | [10.5281/zenodo.20417021](https://doi.org/10.5281/zenodo.20417021) | [10.5281/zenodo.20693424](https://doi.org/10.5281/zenodo.20693424) |
+| [`templates/template_autoresearch_project`](../projects/templates/template_autoresearch_project/) | 0.3.1 | [docxology/template_autoresearch_project](https://github.com/docxology/template_autoresearch_project) | not checked | [10.5281/zenodo.20417016](https://doi.org/10.5281/zenodo.20417016) | [10.5281/zenodo.20692993](https://doi.org/10.5281/zenodo.20692993) |
+| [`templates/template_autoscientists`](../projects/templates/template_autoscientists/) | 1.0.1 | [docxology/template_autoscientists](https://github.com/docxology/template_autoscientists) | not checked | [10.5281/zenodo.20533669](https://doi.org/10.5281/zenodo.20533669) | [10.5281/zenodo.20693001](https://doi.org/10.5281/zenodo.20693001) |
+| [`templates/template_code_project`](../projects/templates/template_code_project/) | 2.5.1 | [docxology/template_code_project](https://github.com/docxology/template_code_project) | not checked | [10.5281/zenodo.20417136](https://doi.org/10.5281/zenodo.20417136) | [10.5281/zenodo.20692963](https://doi.org/10.5281/zenodo.20692963) |
+| [`templates/template_madlib`](../projects/templates/template_madlib/) | 0.1.0 | [docxology/template/tree/main/projects/templates/template_madlib](https://github.com/docxology/template/tree/main/projects/templates/template_madlib) | not checked | n/a | n/a |
+| [`templates/template_newspaper`](../projects/templates/template_newspaper/) | 1.0.1 | [docxology/template_newspaper](https://github.com/docxology/template_newspaper) | not checked | [10.5281/zenodo.20533675](https://doi.org/10.5281/zenodo.20533675) | [10.5281/zenodo.20693002](https://doi.org/10.5281/zenodo.20693002) |
+| [`templates/template_prose_project`](../projects/templates/template_prose_project/) | 0.4.1 | [docxology/template_prose_project](https://github.com/docxology/template_prose_project) | not checked | [10.5281/zenodo.20417104](https://doi.org/10.5281/zenodo.20417104) | [10.5281/zenodo.20693007](https://doi.org/10.5281/zenodo.20693007) |
+| [`templates/template_sia`](../projects/templates/template_sia/) | 0.1.1 | [docxology/template_sia](https://github.com/docxology/template_sia) | not checked | [10.5281/zenodo.20453879](https://doi.org/10.5281/zenodo.20453879) | [10.5281/zenodo.20693012](https://doi.org/10.5281/zenodo.20693012) |
+| [`templates/template_template`](../projects/templates/template_template/) | 1.0.7 | [docxology/template_template](https://github.com/docxology/template_template) | not checked | [10.5281/zenodo.20419007](https://doi.org/10.5281/zenodo.20419007) | [10.5281/zenodo.20693013](https://doi.org/10.5281/zenodo.20693013) |
+| [`templates/template_textbook`](../projects/templates/template_textbook/) | 0.1.1 | [docxology/template_textbook](https://github.com/docxology/template_textbook) | not checked | [10.5281/zenodo.20533125](https://doi.org/10.5281/zenodo.20533125) | [10.5281/zenodo.20693022](https://doi.org/10.5281/zenodo.20693022) |
 
 Full generated matrix: [`docs/_generated/publication_records.md`](../docs/_generated/publication_records.md).
 

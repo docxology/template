@@ -51,6 +51,28 @@ def test_offending_tracked_projects_allows_known_nav_docs(tmp_path: Path) -> Non
     assert offending_tracked_projects(tmp_path) == []
 
 
+def test_offending_tracked_projects_allows_templates_agents_doc(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    doc = tmp_path / "projects" / "templates" / "AGENTS.md"
+    doc.parent.mkdir(parents=True)
+    doc.write_text("# template agents\n")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-m", "templates agents"], cwd=tmp_path, check=True)
+
+    assert offending_tracked_projects(tmp_path) == []
+
+
+def test_offending_tracked_projects_flags_unknown_templates_toplevel_doc(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    doc = tmp_path / "projects" / "templates" / "NOTES.md"
+    doc.parent.mkdir(parents=True)
+    doc.write_text("# notes\n")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-m", "unknown templates doc"], cwd=tmp_path, check=True)
+
+    assert "projects/templates/NOTES.md" in offending_tracked_projects(tmp_path)
+
+
 def test_offending_tracked_projects_flags_unknown_toplevel_md(tmp_path: Path) -> None:
     """A non-allowlisted top-level projects/*.md must NOT slip past the guard.
 

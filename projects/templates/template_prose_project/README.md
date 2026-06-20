@@ -185,3 +185,10 @@ of the orchestrator scripts.
 * [`docs/quickstart.md`](docs/quickstart.md) — getting started guide.
 * [`infrastructure/prose/SKILL.md`](../../../infrastructure/prose/SKILL.md) —
   underlying prose-analysis API.
+
+## Template integrity
+
+- Forward backlog: [`TODO.md`](TODO.md).
+- Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
+- Project validation: `uv run pytest projects/templates/template_prose_project/tests/ --cov=projects/templates/template_prose_project/src --cov-fail-under=90`.
+- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.

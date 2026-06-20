@@ -115,7 +115,7 @@ invalid/
 projects/*
 # CONFIDENTIALITY INVARIANT: this is a PUBLIC repo into which confidential
 # projects are routinely rotated under projects/'s typed subfolders. Repo-level
-# Markdown files in projects/ are navigation docs; only the nine canonical
+# Markdown files in projects/ are navigation docs; only the canonical
 # template exemplar directories under projects/templates/ may ever be
 # tracked/pushed. Do NOT add a negation for any other project directory — if a
 # non-confidential extra exemplar must be published, update this allowlist and
@@ -127,6 +127,7 @@ projects/*
 # dropped into projects/templates/ stays ignored (fail-closed).
 !projects/templates/
 projects/templates/*
+!projects/templates/AGENTS.md
 !projects/templates/template_code_project/
 !projects/templates/template_code_project/**
 !projects/templates/template_prose_project/
@@ -135,6 +136,8 @@ projects/templates/*
 !projects/templates/template_active_inference/**
 !projects/templates/template_autoresearch_project/
 !projects/templates/template_autoresearch_project/**
+!projects/templates/template_madlib/
+!projects/templates/template_madlib/**
 !projects/templates/template_sia/
 !projects/templates/template_sia/**
 !projects/templates/template_template/

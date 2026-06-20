@@ -29,7 +29,7 @@ def _backend_flags() -> dict[str, Any]:
 
         return {
             "jax_default_backend": jax.default_backend(),
-            "jax_enable_x64": bool(jax.config.jax_enable_x64),
+            "jax_enable_x64": bool(jax.config.read("jax_enable_x64")),
             "jax_platforms": ",".join(str(device.platform) for device in jax.devices()),
         }
     except (AttributeError, ImportError, RuntimeError, ValueError) as exc:

@@ -13,17 +13,19 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 # hand-maintained literal.)
 ALLOWED_PROJECT_DIRS: tuple[str, ...] = tuple(f"projects/{name}/" for name in PUBLIC_PROJECT_NAMES)
 
-# Repo-level navigation docs that may live directly under projects/. This is an
-# EXPLICIT allowlist, not a wildcard: a name-blind `projects/[^/]+\.md` pattern
-# would let any future top-level markdown file (notes, a leaked private roster,
-# an accidental `git add -f projects/secret.md`) sail past the confidentiality
-# guard. Adding a new nav doc is a deliberate act that must be made here.
+# Navigation docs that may live directly under projects/ or the public
+# projects/templates/ directory. This is an EXPLICIT allowlist, not a wildcard:
+# a name-blind `projects/[^/]+\.md` pattern would let any future top-level
+# markdown file (notes, a leaked private roster, an accidental
+# `git add -f projects/secret.md`) sail past the confidentiality guard. Adding
+# a new nav doc is a deliberate act that must be made here.
 ALLOWED_PROJECTS_TOPLEVEL_FILES: frozenset[str] = frozenset(
     {
         "projects/AGENTS.md",
         "projects/PAI.md",
         "projects/PROJECTS_PARADIGM.md",
         "projects/README.md",
+        "projects/templates/AGENTS.md",
     }
 )
 

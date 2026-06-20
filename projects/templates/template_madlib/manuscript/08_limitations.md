@@ -1,0 +1,7 @@
+# {{TITLE_LIMITATIONS}}
+
+{{LIMITATIONS_BODY}}
+
+## Failure Modes
+
+{{FAILURE_MODE_TABLE}}

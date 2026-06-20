@@ -23,7 +23,7 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
         sys.path.insert(0, text)
 
 from src import DeterministicProposer, SearchConfig, SyntheticObjective, run_search  # noqa: E402
-from src.figures import AblationRow, write_ablation_figure, write_efficiency_figure  # noqa: E402
+from src.figures import AblationRow, write_ablation_figure, write_efficiency_figure, write_figure_registry  # noqa: E402
 
 BUDGET = 60
 
@@ -77,10 +77,12 @@ def main() -> int:
     data_path = data_dir / "ablation.json"
     write_ablation_figure(rows, figure_path)
     write_efficiency_figure(rows, efficiency_path)
+    registry_path = write_figure_registry(figures_dir)
     data_path.write_text(json.dumps({"budget": BUDGET, "rows": rows}, indent=2, sort_keys=True) + "\n")
 
     print(figure_path)
     print(efficiency_path)
+    print(registry_path)
     print(data_path)
     return 0
 

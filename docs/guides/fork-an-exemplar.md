@@ -12,6 +12,7 @@ environments, rendered outputs, or stale package metadata.
 | Bounded AutoResearch loop with evidence/artifact gates | [`template_autoresearch_project`](../../projects/templates/template_autoresearch_project/) | [`STANDALONE.md`](../../projects/templates/template_autoresearch_project/STANDALONE.md) |
 | Coordination-mechanism ablations for agent teams | [`template_autoscientists`](../../projects/templates/template_autoscientists/) | [`STANDALONE.md`](../../projects/templates/template_autoscientists/STANDALONE.md) |
 | Code-driven computational research | [`template_code_project`](../../projects/templates/template_code_project/) | [`STANDALONE.md`](../../projects/templates/template_code_project/STANDALONE.md) |
+| Conditional token-injection manuscripts | [`template_madlib`](../../projects/templates/template_madlib/) | [`STANDALONE.md`](../../projects/templates/template_madlib/STANDALONE.md) |
 | Data-driven newspaper or print-layout engine | [`template_newspaper`](../../projects/templates/template_newspaper/) | [`STANDALONE.md`](../../projects/templates/template_newspaper/STANDALONE.md) |
 | Manuscript-focused prose review | [`template_prose_project`](../../projects/templates/template_prose_project/) | [`STANDALONE.md`](../../projects/templates/template_prose_project/STANDALONE.md) |
 | Self-improvement-agent fixture/live harness | [`template_sia`](../../projects/templates/template_sia/) | [`STANDALONE.md`](../../projects/templates/template_sia/STANDALONE.md) |

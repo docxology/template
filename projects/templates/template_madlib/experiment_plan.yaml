@@ -1,0 +1,75 @@
+conditions:
+  - name: fixed_seed_generation
+    role: reference
+    description: "Generate the token plan, method protocol, section titles, and manuscript bodies from the committed seed and lexicon."
+  - name: changed_seed_generation
+    role: variant
+    description: "Change the seed and verify selected tokens change while schema validity remains."
+  - name: disabled_section_generation
+    role: variant
+    description: "Disable one section and verify the generated body records the config switch."
+  - name: title_protocol_generation
+    role: variant
+    description: "Change section titles or method protocol rows and verify the hydrated manuscript and summary report update."
+  - name: expanded_method_protocol_generation
+    role: variant
+    description: "Change method protocol rows, pipeline phases, QA probes, failure modes, audit rules, and contribution claims together and verify generated Methods prose, tables, and claim ledger references update."
+  - name: digest_invariant_review
+    role: variant
+    description: "Change token-selection inputs and verify Methods prose, token tests, and provenance artifacts explain which digest inputs may affect token choices."
+  - name: review_packet_handoff
+    role: variant
+    description: "Regenerate, validate, copy, and verify that the handoff surface includes manuscript, web, slides, figures, data, reports, validation results, and copy statistics."
+  - name: fork_migration_contract
+    role: variant
+    description: "Change fork guidance and verify README, STANDALONE notes, manuscript docs, Authoring Contract, and claim ledger describe required config, source, test, validator, and evidence changes."
+  - name: authoring_contract_generation
+    role: variant
+    description: "Change design principles, QA probes, or authoring obligations and verify generated tables and section bodies update."
+  - name: configured_field_visibility
+    role: variant
+    description: "Omit optional fields or toggle visualization flags and verify explicit/default inventories, figures, and tables update."
+  - name: cover_and_pipeline_visualization
+    role: variant
+    description: "Toggle pipeline audit figures and verify the cover image, methods flow, allocation chart, provenance map, and gate matrix update from generated data."
+metrics:
+  primary:
+    name: provenance_coverage
+    direction: maximize
+protocol: "Run deterministic token planning from manuscript/config.yaml, write artifacts, hydrate manuscript variables, verify method protocol, pipeline phase, design-principle, QA-probe, failure-mode, audit-rule, contribution-claim, authoring-obligation, configured-field, digest-invariant, review-packet, fork-migration, cover, pipeline-visualization, and title variables, render, copy, and confirm no unresolved tokens remain."
+expected_figures:
+  - fig:madlib-cover-overview
+  - fig:token-density
+  - fig:token-injection-flow
+  - fig:section-token-allocation
+  - fig:provenance-trace-map
+  - fig:quality-gate-matrix
+  - fig:configured-field-matrix
+  - fig:section-configuration-heatmap
+  - fig:field-origin-summary
+expected_tables:
+  - tbl:method-protocol
+  - tbl:section-plan
+  - tbl:token-inventory
+  - tbl:configured-field-summary
+  - tbl:configured-field-inventory
+  - tbl:design-principles
+  - tbl:pipeline-phases
+  - tbl:audit-rules
+  - tbl:evaluation-criteria
+  - tbl:quality-probes
+  - tbl:failure-modes
+  - tbl:authoring-obligations
+baselines:
+  - fixed_seed_generation
+ablations:
+  - changed_seed_generation
+  - disabled_section_generation
+  - title_protocol_generation
+  - expanded_method_protocol_generation
+  - digest_invariant_review
+  - review_packet_handoff
+  - fork_migration_contract
+  - authoring_contract_generation
+  - configured_field_visibility
+  - cover_and_pipeline_visualization

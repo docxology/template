@@ -51,7 +51,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 Key discoveries from multi-project development are documented in:
 
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** — Comprehensive setup checklist with all pitfalls
-- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** — Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by all nine public template exemplars; project-specific overlays live in `projects/templates/template_*/manuscript/SYNTAX.md`
+- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** — Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by public template exemplars; project-specific overlays live in `projects/templates/template_*/manuscript/SYNTAX.md`
 - **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md)** — Pipeline-specific error patterns
 
 ### ⚠️ Critical Rule: Root Venv Must Include All Project Dependencies
@@ -100,7 +100,7 @@ Project lifecycle state is expressed as **typed subfolders under `projects/`**. 
 
 | Subfolder | Purpose | Discovered + rendered? |
 | ---------- | ------- | ------------------------ |
-| `projects/templates/` | The nine git-tracked public exemplars (this repo) | ✅ Yes |
+| `projects/templates/` | The git-tracked public exemplars (this repo) | ✅ Yes |
 | `projects/active/` | Optional hot-seat render set — symlinks to deliberately reintroduced private `active/` | ✅ Yes when present |
 | `projects/working/` | Simplified sidecar working set — symlinks, explicit targeted renders only | ❌ No |
 | `projects/archive/` | Simplified sidecar archive — symlinks, historical/reference | ❌ No |

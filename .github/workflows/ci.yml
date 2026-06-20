@@ -342,7 +342,7 @@ jobs:
     runs-on: ubuntu-latest
     # Each public exemplar runs in its OWN parallel job, so wall-clock is the
     # slowest single project (~active_inference) instead of the ~45 min sequential
-    # sum of all nine. Each job enforces that project's own 90% floor via
+    # sum of all public exemplars. Each job enforces that project's own 90% floor via
     # ``scripts/01_run_tests.py --project`` (authoritative per CLAUDE.md), which
     # also removes the old code_project/fep_lean conftest plugin-name collision
     # (every project is already isolated in its own job). py3.10 (floor) + py3.12

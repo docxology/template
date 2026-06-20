@@ -1,0 +1,66 @@
+# AutoScientists Coordination Testbed - configuration template
+#
+# Copy this file to config.yaml in a fork and replace placeholder metadata.
+# The `experiment:` block mirrors the deterministic code defaults used by the
+# exemplar; keep it synchronized with SearchConfig and SyntheticObjective if
+# you change those defaults.
+
+paper:
+  title: "Your Coordination-Mechanism Testbed Title"
+  subtitle: "Ablatable mechanisms and measured robustness under matched budgets"
+  version: "1.0.0"
+  date: ""
+
+authors:
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"
+    email: "you@example.edu"
+    affiliation: "Your Institution"
+    corresponding: true
+
+publication:
+  doi: ""
+  version_doi: ""
+  version_record: ""
+  github_repository: ""
+  year: "2026"
+
+keywords:
+  - "agent coordination"
+  - "ablation study"
+  - "reproducible research"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false
+    docx: false
+    epub: false
+
+llm:
+  reviews:
+    enabled: false
+  translations:
+    enabled: false
+
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0
+
+experiment:
+  budget: 60
+  num_teams: 3
+  dimensions: 4
+  noise_scale: 0.02
+  ripple: 0.15
+  confirm_seeds: [101, 202, 303]
+  base_seed: 7
+  stagnation_window: 10
+  dead_end_threshold: 3
+  sigma: 2.0
