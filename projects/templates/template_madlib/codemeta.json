@@ -13,8 +13,8 @@
       "givenName": "Daniel Ari"
     }
   ],
-  "codeRepository": "https://github.com/docxology/template/tree/main/projects/templates/template_madlib",
-  "dateModified": "2026-06-20",
+  "codeRepository": "https://github.com/docxology/template_madlib",
+  "dateModified": "2026-06-21",
   "keywords": [
     "madlib generation",
     "token injection",

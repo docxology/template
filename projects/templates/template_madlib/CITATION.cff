@@ -3,9 +3,10 @@ message: If you use this software, please cite it using the metadata from this f
 type: software
 title: "Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts"
 version: "0.1.0"
-date-released: "2026-06-20"
+date-released: "2026-06-21"
 license: MIT
-repository-code: https://github.com/docxology/template/tree/main/projects/templates/template_madlib
+repository-code: https://github.com/docxology/template_madlib
+doi: 10.5281/zenodo.20786638
 authors:
   - given-names: Daniel Ari
     family-names: Friedman

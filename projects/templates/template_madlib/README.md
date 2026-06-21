@@ -81,7 +81,7 @@ Stage 03 renders PDF, HTML, and slides from the hydrated manuscript. Stage 04 ve
 
 ## Boundaries
 
-Publication metadata is intentionally conservative. The local `CITATION.cff`, `.zenodo.json`, and `codemeta.json` identify this exemplar inside the shared `docxology/template` repository. They do not claim a live standalone DOI, external release, empirical validation, or natural-language quality result.
+Publication metadata now identifies the standalone public repository and Zenodo deposit for this exemplar: repository [`docxology/template_madlib`](https://github.com/docxology/template_madlib), concept DOI [`10.5281/zenodo.20786638`](https://doi.org/10.5281/zenodo.20786638), and latest version DOI [`10.5281/zenodo.20786639`](https://doi.org/10.5281/zenodo.20786639). The publication claim is still narrow: it covers the source-owned token-injection exemplar, local evidence artifacts, and reproducible render outputs. It does not claim empirical validation, natural-language quality benchmarking, or domain truth.
 
 ## Template integrity
 

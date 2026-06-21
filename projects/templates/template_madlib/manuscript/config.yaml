@@ -2,7 +2,7 @@ paper:
   title: "Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts"
   subtitle: "A public exemplar for source-owned lexical composition"
   version: "0.1.0"
-  date: ""
+  date: "2026-06-21"
   cover:
     image: "figures/madlib_cover_overview.png"
     title: "Configuration-to-manuscript audit overview"
@@ -16,11 +16,12 @@ authors:
     corresponding: true
 
 publication:
-  doi: ""
-  version_doi: ""
-  version_record: ""
-  repository_url: "https://github.com/docxology/template/tree/main/projects/templates/template_madlib"
-  repository_label: "docxology/template"
+  doi: "10.5281/zenodo.20786638"
+  version_doi: "10.5281/zenodo.20786639"
+  version_record: "https://zenodo.org/records/20786639"
+  github_repository: "docxology/template_madlib"
+  repository_url: "https://github.com/docxology/template_madlib"
+  repository_label: "docxology/template_madlib"
   journal: ""
   volume: ""
   pages: ""

@@ -332,11 +332,12 @@ For a first standalone exemplar release, use `--reserve-doi-first` instead of
 `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, generated publication
 records, and any release-note docs.
 
-`template_madlib` is currently a canonical public template path inside the root
-`docxology/template` repository, not a standalone publication repository. Its
-publication matrix row should read as covered by the root release and "not
-published separately" on Zenodo until a deliberate standalone
-`docxology/template_madlib` repository and Zenodo DOI are minted.
+`template_madlib` is now a standalone publication repository at
+`docxology/template_madlib`, with concept DOI `10.5281/zenodo.20786638` and
+version DOI `10.5281/zenodo.20786639`. Future first-release work for a new
+canonical exemplar should follow the same pattern: mint the Zenodo record,
+publish the dedicated GitHub repository and release, then regenerate the
+publication matrix so the external checks report live GitHub and Zenodo status.
 
 ### Historical integration proof (2026-05-27)
 
