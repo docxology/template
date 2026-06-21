@@ -34,6 +34,7 @@ projects/templates/
 | Public roster | `../../infrastructure/project/public_scope.py` | Update generated docs after roster changes. |
 | Exemplar selection | `../../docs/_generated/exemplar_roster.md` | Generated from README `## When to use this template`. |
 | Shared project rules | `../AGENTS.md` | Confidentiality and lifecycle rules live there. |
+| Shared design/browser QA | `DESIGN.md` | Applies to generated manuscript, web, and PDF outputs across all public templates. |
 | Template-specific rules | `<template>/AGENTS.md` | Read this before editing that exemplar. |
 | Manuscript rules | `<template>/manuscript/AGENTS.md` | Token, figure, bibliography, and config rules. |
 | Script ordering | `<template>/scripts/AGENTS.md` | Project scripts stay thin and may be order-sensitive. |
@@ -57,6 +58,9 @@ projects/templates/
 
 - Run commands from the repository root (`../..` from here) unless a child
   `AGENTS.md` explicitly gives a project-local form.
+- Generated manuscript, web, and PDF surfaces inherit the shared visual and
+  browser-QA contract in `DESIGN.md` unless a child `AGENTS.md` states a
+  narrower project-specific rule.
 - All public templates must carry the canonical forkable surface:
   `README.md`, `AGENTS.md`, `TODO.md`, `pyproject.toml`, `.gitignore`,
   `scripts/`, `src/`, `tests/`, `manuscript/config.yaml`,

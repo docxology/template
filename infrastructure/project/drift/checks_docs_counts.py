@@ -7,6 +7,18 @@ from pathlib import Path
 
 from infrastructure.project.drift.models import Report
 
+SHARED_TEMPLATE_DESIGN_REQUIRED_SECTIONS: tuple[str, ...] = (
+    "## 1. Atmosphere & Identity",
+    "## 2. Color",
+    "## 3. Typography",
+    "## 4. Spacing & Layout",
+    "## 5. Components",
+    "## 6. Motion & Interaction",
+    "## 7. Depth & Surface",
+    "## Browser QA Expectations",
+    "## Template-Specific Boundaries",
+)
+
 
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -89,3 +101,45 @@ def check_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
     for md in sorted(scanned):
         text = _strip_code_fences(_read(md))
         _scan_hardcoded_counts_in_text(text, _rel(md, repo_root), report, rule_prefix="repo_docs")
+
+
+def check_shared_template_design_contract(repo_root: Path, report: Report) -> None:
+    design_path = repo_root / "projects" / "templates" / "DESIGN.md"
+    agents_path = repo_root / "projects" / "templates" / "AGENTS.md"
+
+    if not design_path.is_file():
+        report.add(
+            "ERROR",
+            "repo",
+            "shared_template_design_missing",
+            "projects/templates/DESIGN.md is missing - public templates need a shared design/browser-QA contract",
+        )
+        return
+
+    design_text = _read(design_path)
+    for section in SHARED_TEMPLATE_DESIGN_REQUIRED_SECTIONS:
+        if section not in design_text:
+            report.add(
+                "ERROR",
+                "repo",
+                "shared_template_design_section_missing",
+                f"{_rel(design_path, repo_root)} lacks required section {section!r}",
+            )
+
+    if not agents_path.is_file():
+        report.add(
+            "ERROR",
+            "repo",
+            "shared_template_design_signpost_missing",
+            "projects/templates/AGENTS.md is missing, so the shared design contract is not discoverable",
+        )
+        return
+
+    agents_text = _read(agents_path)
+    if "DESIGN.md" not in agents_text or "browser-QA" not in agents_text:
+        report.add(
+            "ERROR",
+            "repo",
+            "shared_template_design_signpost_missing",
+            "projects/templates/AGENTS.md must signpost DESIGN.md and browser-QA expectations",
+        )

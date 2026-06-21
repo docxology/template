@@ -26,6 +26,7 @@ ALLOWED_PROJECTS_TOPLEVEL_FILES: frozenset[str] = frozenset(
         "projects/PROJECTS_PARADIGM.md",
         "projects/README.md",
         "projects/templates/AGENTS.md",
+        "projects/templates/DESIGN.md",
     }
 )
 
@@ -46,11 +47,17 @@ class _ExplicitToplevelAllowlist:
 ALLOWED_PROJECTS_TOPLEVEL = _ExplicitToplevelAllowlist()
 
 GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
+    ".codegraph",
     ".codegraph/*",
+    ".omo",
+    ".omo/*",
     ".coverage",
     ".coverage.*",
     ".DS_Store",
+    "*/.codegraph",
     "*/.codegraph/*",
+    "*/.omo",
+    "*/.omo/*",
     "*/.DS_Store",
     "*.egg-info/*",
     "*/.egg-info/*",

@@ -6,7 +6,11 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from infrastructure.project.git_guards import offending_tracked_projects, tracked_generated_artifacts
+from infrastructure.project.git_guards import (
+    is_generated_artifact_path,
+    offending_tracked_projects,
+    tracked_generated_artifacts,
+)
 
 
 def _init_git_repo(root: Path) -> None:
@@ -62,6 +66,17 @@ def test_offending_tracked_projects_allows_templates_agents_doc(tmp_path: Path) 
     assert offending_tracked_projects(tmp_path) == []
 
 
+def test_offending_tracked_projects_allows_templates_design_doc(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    doc = tmp_path / "projects" / "templates" / "DESIGN.md"
+    doc.parent.mkdir(parents=True)
+    doc.write_text("# template design\n")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-m", "templates design"], cwd=tmp_path, check=True)
+
+    assert offending_tracked_projects(tmp_path) == []
+
+
 def test_offending_tracked_projects_flags_unknown_templates_toplevel_doc(tmp_path: Path) -> None:
     _init_git_repo(tmp_path)
     doc = tmp_path / "projects" / "templates" / "NOTES.md"
@@ -105,6 +120,9 @@ def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> 
     artifact = tmp_path / ".codegraph" / "codegraph.db"
     artifact.parent.mkdir(parents=True)
     artifact.write_text("local index\n")
+    local_agent_state = tmp_path / ".omo" / "ulw-loop" / "ledger.jsonl"
+    local_agent_state.parent.mkdir(parents=True)
+    local_agent_state.write_text("{}\n")
     project_artifact = tmp_path / "projects" / "templates" / "template_code_project" / ".codegraph" / "codegraph.db"
     project_artifact.parent.mkdir(parents=True)
     project_artifact.write_text("project index\n")
@@ -113,4 +131,12 @@ def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> 
 
     tracked = tracked_generated_artifacts(tmp_path)
     assert ".codegraph/codegraph.db" in tracked
+    assert ".omo/ulw-loop/ledger.jsonl" in tracked
     assert "projects/templates/template_code_project/.codegraph/codegraph.db" in tracked
+
+
+def test_generated_artifact_matcher_detects_agent_state_roots() -> None:
+    assert is_generated_artifact_path(".codegraph")
+    assert is_generated_artifact_path("projects/templates/template_code_project/.codegraph")
+    assert is_generated_artifact_path(".omo")
+    assert is_generated_artifact_path(".omo/ulw-loop/ledger.jsonl")

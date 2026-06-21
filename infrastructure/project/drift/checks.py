@@ -9,6 +9,7 @@ from infrastructure.project.drift.checks_boundary import (  # noqa: F401
 )
 from infrastructure.project.drift.checks_docs_counts import (  # noqa: F401
     check_docs_hardcoded_counts,
+    check_shared_template_design_contract,
 )
 from infrastructure.project.drift.checks_exemplar import (  # noqa: F401
     check_all_export_drift,
@@ -41,6 +42,7 @@ __all__ = [
     "check_referenced_files_exist",
     "check_repo_thin_orchestrator_scripts",
     "check_required_files_exist",
+    "check_shared_template_design_contract",
     "check_test_class_drift",
 ]
 

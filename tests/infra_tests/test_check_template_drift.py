@@ -51,6 +51,7 @@ def drift_module():
         check_docs_hardcoded_counts=checks.check_docs_hardcoded_counts,
         check_project_src_infrastructure_boundary=checks.check_project_src_infrastructure_boundary,
         check_forkability_contract=checks.check_forkability_contract,
+        check_shared_template_design_contract=checks.check_shared_template_design_contract,
         check_project=lambda project, report: checks.check_project(REPO_ROOT, project, report),
     )
 
@@ -186,6 +187,76 @@ def test_coverage_floor_drift_clean_when_matching(drift_module, tmp_path):
     (root / "docs" / "philosophy.md").write_text("The local floor is `fail_under = 90`.", encoding="utf-8")
     rep = drift_module.Report()
     drift_module.check_coverage_floor_consistency(root, rep, "fake_project")
+    assert rep.findings == []
+
+
+def test_shared_template_design_contract_requires_sections(drift_module, tmp_path):
+    design = tmp_path / "projects" / "templates" / "DESIGN.md"
+    design.parent.mkdir(parents=True)
+    design.write_text("# Design\n\n## 1. Atmosphere & Identity\n", encoding="utf-8")
+    (design.parent / "AGENTS.md").write_text("See `DESIGN.md` for browser-QA expectations.\n", encoding="utf-8")
+
+    rep = drift_module.Report()
+    drift_module.check_shared_template_design_contract(tmp_path, rep)
+
+    errors = rep.errors()
+    assert any(e.rule == "shared_template_design_section_missing" for e in errors)
+    assert any("## 2. Color" in e.message for e in errors)
+
+
+def test_shared_template_design_contract_requires_agents_signpost(drift_module, tmp_path):
+    design = tmp_path / "projects" / "templates" / "DESIGN.md"
+    design.parent.mkdir(parents=True)
+    design.write_text(
+        "\n".join(
+            [
+                "# Design",
+                "## 1. Atmosphere & Identity",
+                "## 2. Color",
+                "## 3. Typography",
+                "## 4. Spacing & Layout",
+                "## 5. Components",
+                "## 6. Motion & Interaction",
+                "## 7. Depth & Surface",
+                "## Browser QA Expectations",
+                "## Template-Specific Boundaries",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (design.parent / "AGENTS.md").write_text("No design link here.\n", encoding="utf-8")
+
+    rep = drift_module.Report()
+    drift_module.check_shared_template_design_contract(tmp_path, rep)
+
+    assert any(e.rule == "shared_template_design_signpost_missing" for e in rep.errors())
+
+
+def test_shared_template_design_contract_accepts_complete_shared_doc(drift_module, tmp_path):
+    design = tmp_path / "projects" / "templates" / "DESIGN.md"
+    design.parent.mkdir(parents=True)
+    design.write_text(
+        "\n".join(
+            [
+                "# Design",
+                "## 1. Atmosphere & Identity",
+                "## 2. Color",
+                "## 3. Typography",
+                "## 4. Spacing & Layout",
+                "## 5. Components",
+                "## 6. Motion & Interaction",
+                "## 7. Depth & Surface",
+                "## Browser QA Expectations",
+                "## Template-Specific Boundaries",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (design.parent / "AGENTS.md").write_text("See `DESIGN.md` for browser-QA expectations.\n", encoding="utf-8")
+
+    rep = drift_module.Report()
+    drift_module.check_shared_template_design_contract(tmp_path, rep)
+
     assert rep.findings == []
 
 

@@ -128,6 +128,7 @@ projects/*
 !projects/templates/
 projects/templates/*
 !projects/templates/AGENTS.md
+!projects/templates/DESIGN.md
 !projects/templates/template_code_project/
 !projects/templates/template_code_project/**
 !projects/templates/template_prose_project/
@@ -150,6 +151,18 @@ projects/templates/*
 !projects/templates/template_autoscientists/**
 projects/*/.DS_Store
 projects/templates/*/.DS_Store
+# Local code-intelligence indexes and agent scratch state stay ignored even
+# under the public template allowlists above.
+.codegraph/
+.codegraph
+**/.codegraph
+**/.codegraph/
+**/.codegraph/**
+.omo
+.omo/
+**/.omo
+**/.omo/
+**/.omo/**
 # Exemplar project-local output is a disposable working tree (tracked render-
 # proof lives at output/templates/<name>/, not here).
 projects/templates/*/output/
@@ -178,10 +191,6 @@ tests/fixtures/timeseries/
 # the projects/ guard does not scan.
 projects_archive/
 projects_in_progress/
-
-# CodeGraph local code-intelligence indexes
-.codegraph/
-**/.codegraph/
 
 # Doctor state (infrastructure.doctor) — local backups and audit log
 .doctor/
