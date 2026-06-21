@@ -109,3 +109,10 @@ appendices:
       title: "Appendix A - Authoring Guide"
     - file: glossary.md
       title: "Appendix B - Glossary"
+
+llm:
+  review:
+    enabled: false
+  translations:
+    enabled: false
+    languages: []

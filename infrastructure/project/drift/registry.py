@@ -12,6 +12,7 @@ RepoCheckFn = Callable[[Path, Report], None]
 
 from infrastructure.project.drift.checks import (  # noqa: E402 — registry aggregates checks module
     check_all_export_drift,
+    check_config_example_parity,
     check_coverage_floor_consistency,
     check_docs_hardcoded_counts,
     check_function_name_drift,
@@ -23,6 +24,7 @@ from infrastructure.project.drift.checks import (  # noqa: E402 — registry agg
     check_referenced_files_exist,
     check_required_files_exist,
     check_shared_template_design_contract,
+    check_template_signpost_contract,
     check_test_class_drift,
 )
 from infrastructure.project.drift.checks_forkability import check_forkability_contract  # noqa: E402
@@ -33,6 +35,8 @@ from infrastructure.project.drift.orchestrator import (  # noqa: E402
 
 PROJECT_CHECKS: tuple[ProjectCheckFn, ...] = (
     check_required_files_exist,
+    check_template_signpost_contract,
+    check_config_example_parity,
     check_forkability_contract,
     check_function_name_drift,
     check_test_class_drift,

@@ -75,6 +75,17 @@ engine's module map.
 5. For a *validated* track (producer + artifact + gate + negative control),
    follow the seven-step promotion checklist in [`TODO.md`](TODO.md).
 
+## Configuration
+
+Use [`manuscript/config.yaml`](manuscript/config.yaml) as the live paper,
+render, sheaf, analysis, testing, and publication metadata surface. Keep
+[`manuscript/config.yaml.example`](manuscript/config.yaml.example) in parity
+with the same top-level sections and replace project-specific values with
+placeholder-safe starter values before forking or publishing a standalone copy.
+Track and figure registries remain in `tracks.yaml`,
+`manuscript/sheaf/tracks.yaml`, `manuscript/sheaf/manifest.yaml`, and
+`figures.yaml`.
+
 ## Repository orientation
 
 - [`docs/conceptual-foundations.md`](docs/conceptual-foundations.md) — the

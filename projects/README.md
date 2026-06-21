@@ -27,6 +27,7 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
 - [`templates/template_autoscientists/`](templates/template_autoscientists/) — AutoScientists coordination-mechanism testbed
 - [`templates/template_active_inference/`](templates/template_active_inference/) — Active Inference multi-track exemplar (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
+- [`templates/template_madlib/`](templates/template_madlib/) — conditional token-injection manuscript generator with QA probes and authoring contract
 - [`templates/template_newspaper/`](templates/template_newspaper/) — newspaper layout/typography exemplar
 - [`templates/template_sia/`](templates/template_sia/) — SIA self-improvement harness exemplar
 - [`templates/template_template/`](templates/template_template/) — meta-template (introspects `infrastructure/` and the public exemplar roster)
@@ -58,6 +59,7 @@ projects.
 | [`template_autoresearch_project`](templates/template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
 | [`template_autoscientists`](templates/template_autoscientists/) | Coordination-mechanism testbed | yes (`src/coordination/*`) | no (curated) | no | see canonical facts | see canonical facts |
 | [`template_active_inference`](templates/template_active_inference/) | Active Inference multi-track research | yes (multiple tracks) | no (curated) | yes | see canonical facts | see canonical facts |
+| [`template_madlib`](templates/template_madlib/) | Conditional token-injection manuscript generator | yes (`src/tokens.py`, `src/composition.py`) | no (curated) | token-density figure | see canonical facts | see canonical facts |
 | [`template_newspaper`](templates/template_newspaper/) | Newspaper layout engine | no (layout orchestration) | n/a | yes (page-layout output) | see canonical facts | see canonical facts |
 | [`template_sia`](templates/template_sia/) | Self-Improvement Agent harness | yes (`src/loop.py`) | no (curated) | registry-backed | see canonical facts | see canonical facts |
 | [`template_template`](templates/template_template/) | Meta-template (infrastructure introspection) | yes (`src/template_template/introspection.py`) | no (curated) | yes (architecture figures) | see canonical facts | see canonical facts |
@@ -68,9 +70,10 @@ current numbers in
 [`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md).
 The permanent exemplars cover Active Inference, computational research,
 prose-review, deterministic AutoResearch, AutoScientists coordination tests,
-newspaper layout, SIA harnesses, meta-template introspection, and modular
-fillable textbooks. Use the archived search exemplar when the project needs
-literature discovery, auto-populated BibTeX, or optional LLM synthesis.
+conditional token injection, newspaper layout, SIA harnesses, meta-template
+introspection, and modular fillable textbooks. Use the archived search exemplar
+when the project needs literature discovery, auto-populated BibTeX, or optional
+LLM synthesis.
 **Important:** run each
 project's `tests/` in **its own** `pytest` invocation — pointing pytest at
 `projects/*/tests/` simultaneously triggers `ImportPathMismatchError` because
@@ -166,7 +169,12 @@ between lifecycle folders instead of committing it here.
 | `templates/template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
 | `templates/template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | see canonical facts | see canonical facts |
 | `templates/template_autoresearch_project/` | AutoResearch exemplar (deterministic readiness loop) | see canonical facts | see canonical facts |
+| `templates/template_autoscientists/` | AutoScientists coordination-mechanism testbed | see canonical facts | see canonical facts |
+| `templates/template_madlib/` | Conditional token-injection manuscript exemplar | see canonical facts | see canonical facts |
+| `templates/template_newspaper/` | Newspaper layout/typography exemplar | see canonical facts | see canonical facts |
+| `templates/template_sia/` | SIA self-improvement harness exemplar | see canonical facts | see canonical facts |
 | `templates/template_template/` | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
+| `templates/template_textbook/` | Modular fillable textbook scaffold | see canonical facts | see canonical facts |
 
 The permanent exemplars share the same core `src/`, `tests/`, `scripts/`, and
 `manuscript/` boundaries plus root `README.md`, `AGENTS.md`, `STANDALONE.md`,
@@ -924,9 +932,14 @@ infrastructure compliance:
 
 - **template_active_inference**: Active Inference multi-track exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_autoresearch_project**: AutoResearch exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_autoscientists**: AutoScientists coordination exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_code_project**: Optimization research exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_madlib**: Conditional token-injection manuscript exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_newspaper**: Newspaper layout exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_sia**: SIA harness exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_template**: Meta-template exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_textbook**: Textbook scaffold exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 
 Additional rotating projects are discovered from `docs/_generated/active_projects.md`.
 

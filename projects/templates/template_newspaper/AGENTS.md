@@ -18,6 +18,15 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 change to the *newspaper's words or sections* requires editing `src/`, that is a
 bug in the abstraction — fix the engine to be driven by data instead.
 
+## Source of truth and configuration
+
+`content/` is the edition source of truth for newspaper pages, while
+`manuscript/config.yaml` and `manuscript/config.yaml.example` are the
+placeholder-safe paper, render, publication, and fork metadata surfaces for the
+template monorepo pipeline. Keep generated files under `output/` disposable, and
+document any new layout capability in data/config first so forks can replace the
+edition without editing engine code.
+
 ## Directory contract
 
 | Path | Role | Edit when… |

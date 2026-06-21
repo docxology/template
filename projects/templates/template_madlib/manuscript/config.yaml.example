@@ -295,3 +295,20 @@ madlib:
     - name: example_authoring_audience
       category: audiences
       section: authoring_contract
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+llm:
+  reviews:
+    enabled: false
+    types: []
+  translations:
+    enabled: false
+    languages: []
+
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0

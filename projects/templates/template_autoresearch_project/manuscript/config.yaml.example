@@ -30,3 +30,31 @@ keywords:
 metadata:
   license: "MIT"
   language: "en"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: false
+    epub: false
+
+analysis:
+  scripts:
+    - run_autoresearch_loop.py
+    - z_generate_manuscript_variables.py
+
+project_config:
+  review_policy: "human_review_required"
+  loop_stages:
+    - plan
+    - gate
+    - experiment
+    - evidence
+    - claims
+    - artifacts
+    - readiness
+  research_questions:
+    - id: "rq1"
+      question: "What bounded offline research question should this fork answer?"
+      expected_evidence: "output/reports/autoresearch_loop.md"

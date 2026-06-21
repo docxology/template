@@ -547,8 +547,81 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
             )
 
 
+SignpostOption = str | tuple[str, ...]
+
+_TEMPLATE_SIGNPOST_GROUPS: dict[str, dict[str, tuple[SignpostOption, ...]]] = {
+    "README.md": {
+        "monorepo run path": ("run via the template monorepo", "uv run python scripts/"),
+        "when to use": ("when to use this template", "use this template"),
+        "configuration entry points": (("config.yaml", "config.yaml.example"), "configuration"),
+        "tests": ("pytest", "tests"),
+        "outputs and validation": ("validate", "validation", "output", "stage 04"),
+        "publication or boundaries": ("publication", "boundary", "boundaries", "doi", "zenodo", "claim"),
+        "fork or template integrity": ("fork", "template integrity", "standalone"),
+    },
+    "AGENTS.md": {
+        "source of truth or configuration": ("ground truth", "source of truth", "config.yaml", "configuration"),
+        "commands or pipeline": ("uv run", "pipeline", "scripts/"),
+        "contracts or boundaries": ("contract", "boundary", "do not", "publication", "todo"),
+    },
+    "TODO.md": {
+        "current validation evidence": ("current validation evidence",),
+        "integrity and template-status gaps": ("integrity and template-status gaps",),
+        "configurable-surface gaps": ("configurable-surface gaps",),
+        "documentation and signposting gaps": ("documentation and signposting gaps",),
+        "test and validator gaps": ("test and validator gaps",),
+        "ordered improvement ladder": ("ordered improvement ladder",),
+    },
+}
+
+
+def _contains_signpost(text: str, options: tuple[SignpostOption, ...]) -> bool:
+    lowered = text.lower()
+    for option in options:
+        if isinstance(option, tuple):
+            if all(term in lowered for term in option):
+                return True
+        elif option in lowered:
+            return True
+    return False
+
+
+def check_template_signpost_contract(project_root: Path, report: Report, project: str) -> None:
+    for rel, groups in _TEMPLATE_SIGNPOST_GROUPS.items():
+        path = project_root / rel
+        if not path.is_file():
+            continue
+        text = _read(path)
+        for group, options in groups.items():
+            if _contains_signpost(text, options):
+                continue
+            report.add(
+                "ERROR",
+                project,
+                "missing_template_signpost",
+                f"{project}/{rel} lacks {group} signpost; accepted terms: {options}",
+            )
+
+
+def check_config_example_parity(project_root: Path, report: Report, project: str) -> None:
+    config_path = project_root / "manuscript" / "config.yaml"
+    example_path = project_root / "manuscript" / "config.yaml.example"
+    if not config_path.is_file() or not example_path.is_file():
+        return
+    config = _load_yaml_mapping(config_path)
+    example = _load_yaml_mapping(example_path)
+    for section in sorted(set(config) - set(example)):
+        report.add(
+            "ERROR",
+            project,
+            "config_example_missing_section",
+            f"{project}/manuscript/config.yaml.example lacks top-level section {section!r} from config.yaml",
+        )
+
+
 __all__ = [
     "check_all_export_drift",
+    "check_config_example_parity",
     "check_coverage_floor_consistency",
     "check_function_name_drift",
     "check_mocks_absent_from_tests",
@@ -557,5 +630,6 @@ __all__ = [
     "check_publication_metadata_consistency",
     "check_referenced_files_exist",
     "check_required_files_exist",
+    "check_template_signpost_contract",
     "check_test_class_drift",
 ]

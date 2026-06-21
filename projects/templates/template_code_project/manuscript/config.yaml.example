@@ -86,3 +86,37 @@ testing:
   max_test_failures: 0
   max_infra_test_failures: 0
   max_project_test_failures: 0
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: false
+    epub: false
+
+experiment:
+  step_sizes:
+    - 0.01
+    - 0.1
+    - 0.5
+  initial_point: 0.0
+  max_iterations: 1000
+  tolerance: 1.0e-8
+  convergence_tolerance: 1.0e-8
+  quadratic_A:
+    - - 1.0
+  quadratic_b:
+    - 1.0
+  stability_starting_points:
+    - -5.0
+    - 0.0
+    - 5.0
+  stability_step_sizes:
+    - 0.01
+    - 0.1
+    - 0.5
+  benchmark_dimensions:
+    - 1
+    - 2
+    - 5

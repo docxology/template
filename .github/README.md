@@ -71,7 +71,7 @@ Pick the entry that matches your goal — each link is stable for deep navigatio
 | Goal | Start here | Then |
 | --- | --- | --- |
 | **Clone and run** | [Quick Start](#quick-start) | [`docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md) · [`docs/guides/getting-started.md`](../docs/guides/getting-started.md) |
-| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | Start from the closest public exemplar; authoritative roster: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). Common starting points: [`template_active_inference`](../projects/templates/template_active_inference/), [`template_autoresearch_project`](../projects/templates/template_autoresearch_project/), [`template_code_project`](../projects/templates/template_code_project/), [`template_prose_project`](../projects/templates/template_prose_project/), [`template_sia`](../projects/templates/template_sia/), or [`template_template`](../projects/templates/template_template/) |
+| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | Start from the closest public exemplar; use the generated authoritative roster in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) and the differentiation map in [`docs/_generated/exemplar_roster.md`](../docs/_generated/exemplar_roster.md) instead of copying an inline list. |
 | **Debug a failed pipeline stage** | [`docs/prompts/pipeline-debugging/SKILL.md`](../docs/prompts/pipeline-debugging/SKILL.md) | [`docs/operational/troubleshooting/`](../docs/operational/troubleshooting/) |
 | **Write or fix tests** | [`docs/rules/testing_standards.md`](../docs/rules/testing_standards.md) | [`docs/prompts/test-creation/SKILL.md`](../docs/prompts/test-creation/SKILL.md) |
 | **Manuscript / PDF / citations** | [`docs/guides/manuscript-semantics.md`](../docs/guides/manuscript-semantics.md) | [`docs/prompts/manuscript-cross-references/SKILL.md`](../docs/prompts/manuscript-cross-references/SKILL.md) |
@@ -203,9 +203,9 @@ graph TD
     end
 
     subgraph "Layer 2 · Active Project Workspaces"
-        Projects --> AP["template_autoresearch_project/ ← AutoResearch exemplar"]
-        Projects --> CP["template_code_project/ ← Code exemplar"]
-        Projects --> PP["template_prose_project/ ← Prose exemplar"]
+        Projects --> AP["Public templates ← generated exemplar roster"]
+        Projects --> CP["Canonical starters ← docs/_generated/active_projects.md"]
+        Projects --> PP["Specialized exemplars ← docs/_generated/exemplar_roster.md"]
         Projects --> Dots["Rotating projects ← Auto-discovered"]
     end
 ```

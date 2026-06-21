@@ -19,13 +19,6 @@ Usage::
 
 from typing import TYPE_CHECKING, Any
 
-from infrastructure.project.codegraph import (
-    CodeGraphCommand,
-    build_codegraph_files_command,
-    build_codegraph_init_command,
-    build_scope_check_command,
-    verify_codegraph_scope_payload,
-)
 from infrastructure.project.discovery import discover_projects, resolve_project_root
 from infrastructure.project.metadata import get_project_metadata
 from infrastructure.project.project_info import ProjectInfo
@@ -37,6 +30,13 @@ from infrastructure.project.setup_hook import (
 from infrastructure.project.validation import validate_project_structure
 
 if TYPE_CHECKING:
+    from infrastructure.project.codegraph import (
+        CodeGraphCommand,
+        build_codegraph_files_command,
+        build_codegraph_init_command,
+        build_scope_check_command,
+        verify_codegraph_scope_payload,
+    )
     from infrastructure.project.public_scope import (
         PUBLIC_PROJECT_NAMES,
         public_ci_source_paths,
@@ -50,6 +50,13 @@ _PUBLIC_SCOPE_EXPORTS = {
     "public_project_infos",
     "public_project_names",
 }
+_CODEGRAPH_EXPORTS = {
+    "CodeGraphCommand",
+    "build_codegraph_files_command",
+    "build_codegraph_init_command",
+    "build_scope_check_command",
+    "verify_codegraph_scope_payload",
+}
 
 
 def __getattr__(name: str) -> Any:
@@ -59,6 +66,11 @@ def __getattr__(name: str) -> Any:
 
         public_scope = import_module("infrastructure.project.public_scope")
         return getattr(public_scope, name)
+    if name in _CODEGRAPH_EXPORTS:
+        from importlib import import_module
+
+        codegraph = import_module("infrastructure.project.codegraph")
+        return getattr(codegraph, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 

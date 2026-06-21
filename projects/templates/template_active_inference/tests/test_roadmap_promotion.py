@@ -11,6 +11,8 @@ import yaml
 from gate_support import (
     ensure_gate_artifacts,
     refresh_composed_gate_artifacts,
+    refresh_gate_artifact_session_signature,
+    refresh_output_gate_contracts,
     temporary_json_mutation,
     temporary_text_mutation,
 )
@@ -118,6 +120,7 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
     assert validate_integration_audit_artifacts(project_root) == []
     write_sheaf_track_artifacts(project_root)
     assert validate_sheaf_track_artifacts(project_root) == []
+    refresh_gate_artifact_session_signature(project_root)
 
 
 def test_toy_sweep_negative_controls(project_root: Path) -> None:
@@ -180,6 +183,8 @@ def test_toy_sweep_negative_controls(project_root: Path) -> None:
         (state_catalog, break_state_catalog, "state_space_catalog.json"),
         (causal_ablation, break_causal_ablation, "causal_ablation_matrix.json"),
     )
+    assert validate_toy_sweep_artifacts(project_root) == []
+    refresh_output_gate_contracts(project_root)
     for path, mutate, expected in cases:
         with temporary_json_mutation(path, mutate):
             assert any(expected in issue for issue in validate_toy_sweep_artifacts(project_root)), path.name
@@ -218,6 +223,7 @@ def test_toy_sweep_uses_measured_policy_and_topology_trace_artifacts(project_roo
     assert topology_traces["topology_count"] == topology["topology_count"]
     assert topology_traces["all_trace_summary_agree"] is True
     assert efe_terms["schema"] == "template_active_inference.si_efe_values.v1"
+    refresh_output_gate_contracts(project_root)
 
 
 def test_formal_interop_negative_controls(project_root: Path) -> None:
@@ -292,6 +298,8 @@ def test_formal_interop_negative_controls(project_root: Path) -> None:
             assert any("not fully proved" in issue for issue in validate_formal_interop_artifacts(project_root))
     finally:
         write_formal_interop_artifacts(project_root)
+    assert validate_formal_interop_artifacts(project_root) == []
+    refresh_output_gate_contracts(project_root)
 
 
 def test_integration_audit_negative_controls(project_root: Path) -> None:
@@ -406,13 +414,11 @@ def test_integration_audit_negative_controls(project_root: Path) -> None:
         ("release_notes", break_release_notes, "release_notes_evidence.json has unsupported notes"),
     )
     for artifact_key, mutate, expected in cases:
-        if artifact_key in {"diffoscope", "license_audit", "release_notes"}:
-            write_sheaf_track_artifacts(project_root)
-        else:
-            write_integration_audit_artifacts(project_root)
         with temporary_json_mutation(paths[artifact_key], mutate):
             issues = validate_integration_audit_artifacts(project_root)
             assert any(expected in issue for issue in issues), (artifact_key, issues)
+    assert validate_integration_audit_artifacts(project_root) == []
+    refresh_gate_artifact_session_signature(project_root)
 
 
 def test_cross_track_symbol_table_binds_type_shape_and_section_ontology(project_root: Path) -> None:
@@ -489,6 +495,8 @@ def test_scholarship_matrix_has_row_level_negative_control(project_root: Path) -
 
     with temporary_json_mutation(path, break_scholarship_row):
         assert any("disconnected source rows" in issue for issue in validate_scholarship_source_matrix(project_root))
+    assert validate_scholarship_source_matrix(project_root) == []
+    refresh_gate_artifact_session_signature(project_root)
 
 
 def test_scholarship_matrix_rederives_live_row_evidence(project_root: Path) -> None:
@@ -513,6 +521,8 @@ def test_scholarship_matrix_rederives_live_row_evidence(project_root: Path) -> N
     with temporary_json_mutation(path, forge_live_evidence):
         issues = validate_scholarship_source_matrix(project_root)
         assert any("stale or forged row evidence" in issue for issue in issues)
+    assert validate_scholarship_source_matrix(project_root) == []
+    refresh_gate_artifact_session_signature(project_root)
 
 
 def test_scholarship_matrix_scope_boundary_negative_control(project_root: Path) -> None:
@@ -535,6 +545,8 @@ def test_scholarship_matrix_scope_boundary_negative_control(project_root: Path) 
     with temporary_json_mutation(path, remove_scope_guard):
         issues = validate_scholarship_source_matrix(project_root)
         assert any("stale or forged row evidence" in issue for issue in issues)
+    assert validate_scholarship_source_matrix(project_root) == []
+    refresh_gate_artifact_session_signature(project_root)
 
 
 def test_security_posture_audit_rederives_live_row_evidence(project_root: Path) -> None:
@@ -556,6 +568,8 @@ def test_security_posture_audit_rederives_live_row_evidence(project_root: Path) 
     with temporary_json_mutation(path, forge_control_row):
         issues = validate_security_posture_audit(project_root)
         assert any("stale or forged row evidence" in issue for issue in issues)
+    assert validate_security_posture_audit(project_root) == []
+    refresh_gate_artifact_session_signature(project_root)
 
 
 def test_security_posture_secret_pattern_negative_control(project_root: Path) -> None:
@@ -586,13 +600,13 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
     from roadmap_tracks import (
         validate_integration_audit_artifacts,
         validate_toy_sweep_artifacts,
-        write_integration_audit_artifacts,
-        write_sheaf_track_artifacts,
-        write_toy_sweep_artifacts,
     )
-    from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS
 
     ensure_gate_artifacts(project_root)
+    clean_by_validator = {
+        validate_toy_sweep_artifacts: validate_toy_sweep_artifacts(project_root),
+        validate_integration_audit_artifacts: validate_integration_audit_artifacts(project_root),
+    }
 
     def break_producer(data: dict) -> None:
         data["rows"][0]["configured"] = False  # contradicts all_complete, which we leave True
@@ -682,18 +696,8 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
         ),
     ]
     for path, mutate, validator, expected_issue in cases:
-        rel = path.relative_to(project_root).as_posix()
-        if rel in {
-            "output/data/si_efe_terms.json",
-            "output/reports/graph_world_invariants.json",
-        }:
-            write_toy_sweep_artifacts(project_root)
-        elif rel == CANONICAL_ARTIFACTS["artifact_diffoscope"]:
-            write_sheaf_track_artifacts(project_root)
-        else:
-            write_integration_audit_artifacts(project_root)
         assert path.is_file(), f"missing artifact {path}"
-        assert all(expected_issue not in issue for issue in validator(project_root)), (
+        assert all(expected_issue not in issue for issue in clean_by_validator[validator]), (
             f"{path.name}: expected a clean baseline before mutation"
         )
         with temporary_json_mutation(path, mutate):
@@ -701,3 +705,4 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
             assert any(expected_issue in issue for issue in issues), (
                 f"{path.name}: gate did not catch a failing ROW under a true summary"
             )
+    refresh_gate_artifact_session_signature(project_root)

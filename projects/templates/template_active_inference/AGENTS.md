@@ -1,188 +1,94 @@
-# AGENTS.md — template_active_inference
+# AGENTS.md - template_active_inference
 
-Multi-track Active Inference public exemplar. Manuscript sections follow an
-**IMRAD outline** composed from stable canonical sheaf fragment tracks. The live
-track surface is declared in [`tracks.yaml`](tracks.yaml) and
-[`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml), not by
-hand-maintained prose lists.
+Public Active Inference exemplar with coupled analytical, simulation, GNN,
+ontology, Lean, and sheaf-manuscript tracks. Keep this file as the project
+routing layer; put directory-specific contracts in the nearest child
+`AGENTS.md`.
 
-Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+## Ground Truth
 
-## Sheaf composition (registry-driven)
-
-| File | Role |
+| Surface | Source of truth |
 | --- | --- |
-| [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml) | Fragment registry — order, renderer, optional flag |
-| [`manuscript/sheaf/manifest.yaml`](manuscript/sheaf/manifest.yaml) | IMRAD matrix; row counts come from generated manuscript variables |
-| [`manuscript/sheaf/coverage.yaml`](manuscript/sheaf/coverage.yaml) | Coverage report + heatmap styling |
-| [`figures.yaml`](figures.yaml) | Figure style, alt text, captions, `section_figures` map |
-| [`src/manuscript/sheaf/`](src/manuscript/sheaf/) | Registry, manifest, compose, coverage, report |
-| [`tracks.yaml`](tracks.yaml) | Pipeline gates; required-track count comes from generated manuscript variables |
+| Pipeline track gates | [`tracks.yaml`](tracks.yaml) |
+| Manuscript sheaf registry | [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml) |
+| IMRAD section matrix | [`manuscript/sheaf/manifest.yaml`](manuscript/sheaf/manifest.yaml) |
+| Coverage styling/report inputs | [`manuscript/sheaf/coverage.yaml`](manuscript/sheaf/coverage.yaml) |
+| Figure registry, captions, alt text | [`figures.yaml`](figures.yaml) |
+| pymdp/SI run config | [`pymdp.yaml`](pymdp.yaml) |
+| Open follow-up scope | [`TODO.md`](TODO.md) |
 
-**Compose + coverage:**
+Generated counts and claim numbers belong in
+`output/data/manuscript_variables.json` and hydrated manuscript output, not in
+hand-authored prose.
+
+## Where To Look
+
+| Task | Start here | Notes |
+| --- | --- | --- |
+| Manuscript section edits | [`manuscript/AGENTS.md`](manuscript/AGENTS.md) | Edit fragments under `manuscript/sections/imrad/`; numbered main files are mostly composed. |
+| Sheaf registry/composition | [`src/manuscript/sheaf/AGENTS.md`](src/manuscript/sheaf/AGENTS.md) | Registry, manifest, coverage, generated renderers, and semantic checks. |
+| Analytical formulas | [`src/analytical/AGENTS.md`](src/analytical/AGENTS.md) | Bernoulli K=2, MI/FE/EFE decomposition, invariants, sweep I/O. |
+| Simulation/SI harness | [`src/simulation/AGENTS.md`](src/simulation/AGENTS.md) | pymdp config/runtime, SI T-maze, graph-world traces, deterministic run logs. |
+| GNN parsing/concordance | [`src/gnn/AGENTS.md`](src/gnn/AGENTS.md) | Parser/model/concordance for `gnn/*.gnn.md`. |
+| Ontology bindings | [`src/ontology/AGENTS.md`](src/ontology/AGENTS.md) | Nested `terms:` flattening and cross-track naming contract. |
+| Output gates | [`src/gates/AGENTS.md`](src/gates/AGENTS.md) | Validation facade, manuscript/output checks, claim ledger, Lean gate. |
+| Promoted roadmap artifacts | [`src/roadmap_tracks/AGENTS.md`](src/roadmap_tracks/AGENTS.md) | Toy sweep, formal interop, integration audit, canonical sheaf tracks. |
+| Visual outputs | [`src/visualizations/AGENTS.md`](src/visualizations/AGENTS.md) | Figure registry/style/generator contracts. |
+| Thin orchestration scripts | [`scripts/AGENTS.md`](scripts/AGENTS.md) | Scripts delegate business logic to `src/`. |
+| Tests and fixtures | [`tests/AGENTS.md`](tests/AGENTS.md) | Project suite; gate-specific tests have their own child file. |
+
+## Regeneration Order
+
+Use this order when changing generated evidence or manuscript claims:
 
 ```bash
-uv run python scripts/compose_manuscript.py
-uv run python scripts/compose_manuscript.py --validate-only --strict
-uv run python scripts/compose_manuscript.py --section methods_pymdp --tracks prose,pymdp
+uv run python scripts/generate_toy_sweep_tracks.py
+uv run python scripts/generate_formal_interop_tracks.py
+uv run python scripts/generate_integration_audit.py
+uv run python scripts/generate_sheaf_tracks.py
 uv run python scripts/z_generate_manuscript_variables.py
 ```
 
-Full compose calls `emit_coverage_artifacts()` → JSON only. `generate_figures.py` calls `ensure_coverage_artifacts()` for heatmap PNG + regenerated [`manuscript/00_00_sheaf_coverage.md`](manuscript/00_00_sheaf_coverage.md). Coverage PNG/page emission is no longer part of `compose_all_sections()` (script is a thin CLI wrapper).
-
-**Visualization track:** renderer `section_figures` in [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml); `resolve_track_body()` calls `render_section_figures()` (fragment `.md` files are stubs).
-
-**Generated renderers:** `section_figures` (figures from `figures.yaml`) and `layers_report` (registry + binding matrix tables). Dispatch is centralized in [`renderers.resolve_track_body()`](src/manuscript/sheaf/renderers.py) — no section-specific branches in `compose.py`.
-
-**Manuscript variables** (`src/manuscript/variables.py`, `src/manuscript/hydrate.py`):
-
-| Token | Source |
-| --- | --- |
-| `pipeline_track_count` | `tracks.yaml` required tracks |
-| `sheaf_track_count` | `manuscript/sheaf/tracks.yaml` |
-| `appendix_sheaf_track_count` | tracks bound in `appendix_full_sheaf` manifest section |
-| `imrad_manifest_rows`, `composed_section_count`, `imrad_group_count` | live manifest |
-| `coverage_present`, `coverage_bound`, `coverage_missing` | coverage matrix at variable generation |
-| `invariants_passed`, `invariants_total` | merged `output/reports/invariants.json` when present (analytical + simulation); else live analytical run |
-| `si_tmaze_policy_len`, … | measured analysis artifacts |
-| `ising_mi_saturation` | max closed-form MI on `parameter_sweep.csv` (grid maximum, nats) |
-| `si_goal_reached`, `si_action_diversity`, `si_entropy_min/max` | `analysis_statistics.json` / SI summary |
-| `sweep_max_residual`, `sweep_rmse_mi` | analytical sweep statistics |
-| `pymdp_mode`, `pymdp_config_hash` | `pymdp.yaml` + SI summary |
-| `validation_spine_artifact_count`, `replay_matrix_row_count`, `counterexample_count` | promoted validation-spine and canonical replay artifacts |
-| `pymdp_runtime_known_warning_count`, `pymdp_runtime_unexpected_warning_count`, `pymdp_policy_posterior_row_count` | scoped pymdp/JAX runtime diagnostics + posterior grid |
-| `sensitivity_cell_count`, `uncertainty_row_count`, `benchmark_model_count`, `analytical_assumption_count`, `si_graph_world_topology_trace_count` | promoted toy sweep artifacts |
-| `model_checking_witness_count`, `interop_check_count`, `adversarial_audit_count` | formal interop and audit artifacts |
-| `semantic_restriction_count`, `dependency_edge_type_count`, `stale_artifact_fresh_count`, `manuscript_staleness_row_count`, `figure_source_coverage_count`, `visualization_quality_figure_count`, `visualization_statistics_backed_count`, `statistical_visualization_bridge_row_count`, `scope_boundary_status` | semantic and integration audit artifacts |
-| `provenance_bundle_count`, `evidence_field_count`, `release_bundle_artifact_count`, `theorem_traceability_row_count`, `validation_gate_index_count`, `track_lane_matrix_row_count`, `artifact_contract_row_count`, `artifact_contract_complete`, `artifact_contract_copied_parity_complete`, `track_improvement_row_count` | canonical sheaf-track artifacts |
-| `artifact_diffoscope_row_count`, `proof_extraction_theorem_count`, `state_space_catalog_row_count`, `causal_ablation_row_count`, `artifact_license_row_count`, `release_notes_row_count` | promoted canonical proof, finite-scope, license, and release-note artifacts |
-| `scholarship_source_count`, `scholarship_method_role_count`, `scholarship_source_locator_kind_count`, `scholarship_sources_connected`, `scholarship_rows_rederived` | source-backed scholarship matrix |
-| `security_posture_control_count`, `security_posture_enforced_count`, `security_posture_deferred_count`, `security_posture_all_controls_ok`, `security_posture_secret_finding_count`, `security_posture_high_risk_gap_count` | local security-posture audit |
-
-`z_generate_manuscript_variables.py` writes `output/data/manuscript_variables.json` and resolves `output/manuscript/` for PDF rendering. Compose emits `{{token}}` placeholders; hydration is the single substitution boundary (fail-closed on unknown or single-brace `{token}` typos).
-
-**Semantic gluing certificates:** `scripts/z_generate_manuscript_variables.py` writes
-`output/data/sheaf_gluing_certificate.json`,
-`output/data/sheaf_evidence_crosswalk.json`, and
-`output/data/validation_dependency_graph.json` via
-`src/manuscript/sheaf/semantic.py`. The certificate records section bindings,
-shared GNN/ontology symbols, typed claim evidence, artifact producers, artifact
-consumers, validation gates, and manuscript variables. `validate_manuscript`
-fails if the certificate is missing, stale, or records cross-track disagreement.
-`generate_integration_audit.py` writes producer, stale-artifact, token-provenance,
-figure-source, figure-hash, visualization-quality, statistical-visualization
-bridge, claim-audit, scope-boundary, manuscript-staleness, and adversarial audit
-reports. `generate_sheaf_tracks.py` is the canonical promotion producer for the
-semantic certificate, dependency graph, evidence-field index, release bundle,
-theorem traceability, track-improvement, blocked-scope, artifact-contract index,
-and consolidated promoted track artifacts, including the local security-posture audit. `validate_outputs` and `validate_manuscript` require
-the canonical saved artifacts after regeneration; versioned live track IDs and
-versioned public output paths are intentionally not part of the live contract.
-
-## pymdp configuration
-
-| File | Role |
-| --- | --- |
-| [`pymdp.yaml`](pymdp.yaml) | Horizon, steps, seed, mode, T-maze likelihood/preference, agent flags, logging path |
-| [`src/simulation/pymdp_config.py`](src/simulation/pymdp_config.py) | `load_pymdp_config()`, `apply_pymdp_overrides()`, `config_hash()` |
-| [`src/simulation/si_runner.py`](src/simulation/si_runner.py) | Facade → `si_{belief,policy,loop,artifacts}.py`; `run_si_tmaze()`, `run_and_persist()` |
-| [`src/simulation/invariants.py`](src/simulation/invariants.py) | Simulation-track invariants merged into `output/reports/invariants.json` |
-| [`src/simulation/statistics.py`](src/simulation/statistics.py) | `summarize_si_trace()` for `analysis_statistics.json` |
-
-```bash
-uv run python scripts/simulate_si_tmaze.py --help
-uv run python scripts/simulate_si_tmaze.py --seed 0 --mode state_inference
-uv run python scripts/compute_statistics.py
-```
-
-JSONL logging: `output/logs/pymdp_runs.jsonl` (`si_tmaze_run_header` + `si_tmaze_step` events). Run report: `output/reports/si_tmaze_run_report.json`.
-
-**SI figures** (`figures.yaml`): `si_belief_entropy_curve`, `si_obs_action_trace`, `si_tmaze_actions` bound under `results_si_tmaze` with numbering declared in `section_figures`. **Sheaf figures:** `sheaf_layers_overview` (registry stack + heatmap), `track_lane_promotion_map` (promotion obligations + sheaf-lane bindings), `artifact_contract_map` (artifact × verifier-obligation bindings), and `security_posture_map` (local controls + deferred production obligations) are bound under `methods_sheaf`. **Appendix:** MI/actions, track-lane promotion, artifact-contract, security posture, and coverage heatmap captions are also source-backed from `figures.yaml`. **Front matter:** coverage page uses “Coverage overview.” caption without a figure number.
-
-**Discussion sheaf tracks:** `discussion_outlook` binds `prose`, `simulation`, and `ontology` fragments with measured tokens.
-
-**Extension artifacts:** `simulate_si_tmaze.py` writes
-`output/data/si_policy_comparison.json`,
-`output/data/pymdp_policy_posterior_grid.json`, and
-`output/reports/pymdp_runtime_diagnostics.json`; `simulate_si_graph_world.py` writes
-`output/data/si_graph_world_summary.json` and `output/data/si_graph_world_trace.json`;
-`render_animation.py` writes a trace-derived multi-frame
-`output/figures/si_belief_trajectory.gif` and
-`output/data/animation_frame_deltas.json`. These are deterministic public
-artifacts.
-
-**Validation-spine tracks:** `generate_validation_spine.py` writes initial
-provenance, replay, and counterexample support artifacts. `generate_sheaf_tracks.py`
-then folds the strongest deterministic evidence into the canonical `provenance`,
-`replay_matrix`, `counterexample`, and `artifact_contract_index` sheaf tracks, plus the validation-spine
-tracks added for `evidence_fields`, `release_bundle`, `theorem_traceability`,
-`gate_ergonomics`, `security_posture`, and the generated track-lane matrix.
-
-**Promoted roadmap tracks:** `generate_toy_sweep_tracks.py` writes sensitivity,
-uncertainty, benchmark, measured policy-grid, EFE-availability, analytical-observable,
-analytical-assumption, graph-world topology trace, and graph-world invariant
-artifacts. `generate_formal_interop_tracks.py` writes finite model-checking, GNN
-round-trip/lint, ontology profile/alias, and Lean theorem inventory artifacts.
-`generate_integration_audit.py` writes manuscript-staleness and integration audit
-artifacts. `generate_sheaf_tracks.py` consolidates the live canonical track
-surface and removes legacy duplicate public artifacts. These tracks are live and
-toy-only; `empirical_adapter` remains blocked rather than live.
-
-Non-blocking follow-up scope is tracked in [`TODO.md`](TODO.md); keep current
-publication claims confined to deterministic toy artifacts unless new measured
-outputs are added and validated.
-
-**Methods sheaf layers (main body):** `methods_sheaf` uses explicit `track_order` to place prose/formalism/visualization, provenance, counterexample, adversarial audit, evidence fields, release bundle, gate ergonomics, manuscript staleness, and generated layer tables. Layers overview figure via `visualization` / `section_figures`; tables via optional `layers` track / `layers_report` renderer with HTML markers `sheaf-layers:*`, including the generated track-improvement scope. Front-matter audit page [`manuscript/00_00_sheaf_coverage.md`](manuscript/00_00_sheaf_coverage.md) uses `section_figures.coverage_page` (no duplicate figure number vs appendix coverage figure).
-
-**Package modules** (`src/manuscript/sheaf/`):
-
-| Module | Role |
-| --- | --- |
-| `models.py` | `SheafSection`, `CoverageMatrix`, IMRAD types |
-| `manifest.py` | Load `manifest.yaml` |
-| `compose.py` | `compose_all_sections`, `validate_manifest` |
-| `coverage.py` | `emit_coverage_artifacts`, JSON export |
-| `report.py` | `write_coverage_page`, `render_report_markdown` |
-| `layers_report.py` | `render_sheaf_layers_markdown`, table renderers, `sheaf-layers:*` markers |
-| `counts.py` | `structural_counts()` for registry-backed manuscript tokens |
-| `renderers.py` | `RENDERERS`, `resolve_track_body`, generated renderer dispatch |
-
-**Visualizations** (`src/visualizations/`): `figure_registry.py` (YAML SSOT + `write_figure_registry_json`), `figure_style.py` (palette + typography/layout tokens), `figure_helpers.py` (`styled_figure`), `figures_diagrams.py`, `lean_boundary.py`, `figures.py` (`FIGURE_GENERATORS` registry), `figures_sheaf_{payload,draw}.py`. `generate_all_figures()` emits `output/figures/figure_registry.json`; `roadmap_tracks.visualization_contract` supplies style-token and auxiliary-output checks for validation.
-
-**Appendix proof:** `appendix_full_sheaf` binds the registry tracks required for the full proof row (all except optional `layers`) → `16_appendix_full_sheaf.md`. Registry size is injected from live counts rather than hand-authored here.
-
-Edit fragments only under [`manuscript/sections/imrad/`](manuscript/sections/imrad/). Manual closing section: [`manuscript/17_conclusion.md`](manuscript/17_conclusion.md) (outside the matrix).
-
-## Layout
-
-| Path | Role |
-| --- | --- |
-| `src/orchestration/` | `analysis.py` (analysis entry), `coverage_pipeline.py` (coverage PNG + page after compose) |
-| `src/analytical/` | Bernoulli K=2 closed form; `invariants.py` — analytical invariant registry |
-| `src/invariants.py` | Thin re-export facade → `analytical/invariants.py` |
-| `src/simulation/` | pymdp T-maze SI harness (`si_runner.py` facade + `si_*.py` modules) + JSONL logging |
-| `src/gnn/` | GNN parser + ontology concordance |
-| `src/ontology/` | Section ontology YAML helpers (`load_section_ontology` flattens nested `terms:` blocks) |
-| `src/gates/` | `validation.py` facade; `output_checks`, `manuscript_checks`, `claim_ledger`, `lean` |
-| `src/validation_spine/` | Provenance hashes, deterministic replay, and counterexample matrix artifacts |
-| `src/roadmap_tracks/` | Promoted toy sweep, formal interop, integration-audit, and canonical sheaf-track artifacts |
-| `gnn/*.gnn.md` | GNN source files |
-| `lean/TemplateActiveInference/` | Lean witnesses — `build_lean` gate runs `lake build` when `lean/lakefile.lean` exists; absent Lean tree skips cleanly |
-| `scripts/` | Thin orchestrators only (extension tracks delegate to `src/visualizations/animation.py`, `src/simulation/graph_world.py`) |
+Then compose/render or validate as needed. `scripts/05_copy_outputs.py --project
+templates/template_active_inference` is the root-copy step from the parent
+template checkout when copied-root output parity matters.
 
 ## Commands
 
 ```bash
 uv run python scripts/compose_manuscript.py
+uv run python scripts/compose_manuscript.py --validate-only --strict
 uv run python scripts/check_documentation_contract.py --check
 uv run python scripts/generate_method_inventory.py --check
-uv run python scripts/compose_manuscript.py --validate-only --strict
 uv run pytest tests/ --cov=src --cov-fail-under=90
 uv run python scripts/validate_outputs.py
 ```
 
-## Parent docs
+Simulation smoke:
 
-- Root [`AGENTS.md`](../../../AGENTS.md)
-- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md)
-- [`tracks.yaml`](tracks.yaml)
+```bash
+uv run python scripts/simulate_si_tmaze.py --seed 0 --mode state_inference
+uv run python scripts/compute_statistics.py
+```
+
+## Contracts
+
+- Scripts stay thin; put analytical, simulation, visualization, sheaf, and gate
+  logic under `src/`.
+- Keep current publication claims confined to deterministic toy artifacts unless
+  new measured outputs are generated and validated.
+- Do not hand-edit copied/generated output under `output/`; regenerate from the
+  source registries and scripts.
+- When a GNN model, ontology term, analytical symbol, or simulation artifact
+  changes, update the matching track and run the relevant concordance/gate tests
+  instead of fixing one lane in isolation.
+- Edit decision memory and verifier notes according to
+  [`../../../docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md):
+  nearby `WHY:` comments only for surprising local choices, generated counts for
+  volatile facts, and negative controls for verifier-like gates.
+
+## Parent Docs
+
+- Template root: [`../../../AGENTS.md`](../../../AGENTS.md)
+- Publishing guide: [`../../../docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md)
+- Zenodo DOI strategy: [`../../../docs/guides/zenodo-doi-strategy.md`](../../../docs/guides/zenodo-doi-strategy.md)

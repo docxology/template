@@ -47,6 +47,8 @@ def drift_module():
         check_no_blanket_except_in_src=checks.check_no_blanket_except_in_src,
         check_mocks_absent_from_tests=checks.check_mocks_absent_from_tests,
         check_required_files_exist=checks.check_required_files_exist,
+        check_template_signpost_contract=checks.check_template_signpost_contract,
+        check_config_example_parity=checks.check_config_example_parity,
         check_publication_metadata_consistency=checks.check_publication_metadata_consistency,
         check_docs_hardcoded_counts=checks.check_docs_hardcoded_counts,
         check_project_src_infrastructure_boundary=checks.check_project_src_infrastructure_boundary,
@@ -61,15 +63,91 @@ def _scaffold_minimal_project(tmp_path: Path, name: str = "fake_project") -> Pat
     root = make_project(tmp_path, name, with_manuscript=True)
     (root / "docs").mkdir()
     (root / "scripts").mkdir()
-    write_doc(root / "README.md", "# Fake\n")
-    write_doc(root / "AGENTS.md", "# Fake AGENTS\n")
-    write_doc(root / "TODO.md", "# Fake TODO\n")
+    write_doc(
+        root / "README.md",
+        """# Fake
+
+## Run via the template monorepo
+
+Use `uv run python scripts/02_run_analysis.py --project templates/fake_project`.
+
+## When to use this template
+
+Use it for a fake forkable exemplar.
+
+## Configuration
+
+Edit `manuscript/config.yaml`; copy from `manuscript/config.yaml.example`.
+
+## Tests
+
+Run `uv run pytest projects/templates/fake_project/tests --cov=projects/templates/fake_project/src --cov-fail-under=90`.
+
+## Outputs and validation
+
+Run analysis, render, validate, and copy stages; review `output/templates/fake_project`.
+
+## Publication and boundaries
+
+Publication metadata and claim boundaries stay conservative.
+
+## Fork guidance
+
+Forks must replace placeholder config values and keep template integrity checks green.
+""",
+    )
+    write_doc(
+        root / "AGENTS.md",
+        """# Fake AGENTS
+
+## Ground Truth
+
+Configuration lives in `manuscript/config.yaml`; outputs are regenerated, not edited.
+
+## Commands
+
+Run the monorepo pipeline with `uv run python scripts/02_run_analysis.py --project templates/fake_project`.
+
+## Contracts
+
+Keep tests, publication boundaries, and fork TODO evidence aligned.
+""",
+    )
+    write_doc(
+        root / "TODO.md",
+        """# Fake TODO
+
+## Current validation evidence
+
+- Drift gate and tests are the current evidence.
+
+## Integrity and template-status gaps
+
+- Keep template integrity explicit.
+
+## Configurable-surface gaps
+
+- Keep config examples placeholder-safe.
+
+## Documentation and signposting gaps
+
+- Keep README and AGENTS aligned.
+
+## Test and validator gaps
+
+- Add negative controls for new validators.
+
+## Ordered improvement ladder
+
+1. Keep the gate green.
+""",
+    )
     write_doc(root / "pyproject.toml", "[tool.coverage.report]\nfail_under = 90\n")
     write_doc(root / ".gitignore", "output/\n")
     write_doc(root / "src" / "__init__.py", '"""Pkg."""\n\n__all__ = ["a", "b"]\n')
     write_doc(root / "tests" / "conftest.py", "")
-    write_doc(root / "manuscript" / "config.yaml", "{}\n")
-    write_doc(root / "manuscript" / "config.yaml.example", "{}\n")
+    write_doc(root / "manuscript" / "config.yaml", "paper: {}\npublication: {}\n")
+    write_doc(root / "manuscript" / "config.yaml.example", "paper: {}\npublication: {}\n")
     write_doc(root / "manuscript" / "references.bib", "")
     write_doc(root / "manuscript" / "preamble.md", "")
     write_doc(root / "docs" / "AGENTS.md", "# Docs\n")
@@ -496,6 +574,40 @@ def test_required_files_exist_allows_fit_for_purpose_docs(drift_module, tmp_path
     rep = drift_module.Report()
     drift_module.check_required_files_exist(root, rep, "fake_project")
     assert rep.findings == []
+
+
+def test_template_signpost_contract_flags_missing_readme_use_when(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "README.md").write_text("# Fake\n\n## Configuration\n\nUses `config.yaml`.\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_template_signpost_contract(root, rep, "fake_project")
+    assert any(
+        f.severity == "ERROR" and f.rule == "missing_template_signpost" and "README.md" in f.message
+        for f in rep.findings
+    )
+
+
+def test_template_signpost_contract_flags_missing_todo_ladder(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "TODO.md").write_text("# Fake TODO\n\n## Current validation evidence\n\n- Tests.\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_template_signpost_contract(root, rep, "fake_project")
+    assert any(
+        f.severity == "ERROR" and f.rule == "missing_template_signpost" and "TODO.md" in f.message
+        for f in rep.findings
+    )
+
+
+def test_config_example_parity_flags_missing_top_level_section(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text("paper: {}\npublication: {}\noutputs: {}\n", encoding="utf-8")
+    (root / "manuscript" / "config.yaml.example").write_text("paper: {}\npublication: {}\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_config_example_parity(root, rep, "fake_project")
+    assert any(
+        f.severity == "ERROR" and f.rule == "config_example_missing_section" and "outputs" in f.message
+        for f in rep.findings
+    )
 
 
 def test_forkability_contract_flags_missing_standalone_doc(drift_module, tmp_path):

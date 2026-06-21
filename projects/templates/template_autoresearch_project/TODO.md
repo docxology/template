@@ -13,6 +13,14 @@ machine-readable artifacts, citation source ledgers, deferred review gates,
 local security evidence, and manuscript hydration. The next wave should make
 those surfaces easier to maintain and harder to misread.
 
+## Current validation evidence
+
+Current validation is the monorepo public-template gate set: per-project pytest
+with 90% `src/` coverage, strict template drift, prerender validation, and the
+normal analysis/render/validate/copy pipeline. This TODO records future work
+only; shipped evidence belongs in generated artifacts, reports, tests, and the
+README/AGENTS contract.
+
 ## Shipped state
 
 The long checklist-heavy hardening plan that previously lived here is complete.
@@ -42,6 +50,43 @@ that remains live.
   no production SLSA claim, and no runtime monitoring claim.
 - `scripts/regenerate_mnist_fixture.py` remains manual maintenance tooling only;
   default pipeline scripts and loop execution must not import or call it.
+
+## Integrity and template-status gaps
+
+Keep the exemplar forkable as an offline starter. Future hardening should
+improve maintainability, schema compatibility, and review-boundary clarity
+without changing the default no-network, no-LLM, no-autonomous-approval
+contract.
+
+## Configurable-surface gaps
+
+New configurable behavior belongs in `manuscript/config.yaml`, the loop
+configuration helpers, source ledgers, review-boundary files, or explicit task
+adapters. Keep `manuscript/config.yaml.example` in top-level parity and scrubbed
+of project-specific release values whenever config sections change.
+
+## Documentation and signposting gaps
+
+When adding an adapter, review artifact, publication field, or report surface,
+update the nearest README/AGENTS signpost with when to use it, how to run it
+through the monorepo, what validates it, and which claims remain deliberately
+out of scope.
+
+## Test and validator gaps
+
+Every new research-loop surface needs a deterministic fixture, a positive test,
+and a negative-control gate for hollow evidence, self-approval, stale source
+ledger entries, or benchmark-boundary overclaiming. Avoid mocks for core loop
+behavior; use tiny local fixtures instead.
+
+## Ordered improvement ladder
+
+1. Preserve review/publication separation and offline deterministic execution.
+2. Keep source-ledger, evidence-overview, benchmark-boundary, and module-size
+   gates green while refactoring.
+3. Add a second task adapter only after current schemas and review packets stay
+   stable through another full public-template verification pass.
+4. Version reusable review-packet schemas before exposing downstream tooling.
 
 ## Minor
 

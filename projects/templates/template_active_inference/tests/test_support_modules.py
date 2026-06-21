@@ -5,6 +5,9 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
+import pytest
+
+from orchestration import full_verification
 from ontology.bindings import load_section_ontology, validate_gnn_ontology
 from simulation.logging_utils import RunLogger
 
@@ -54,3 +57,78 @@ def test_ontology_helpers() -> None:
     assert discussion_terms["pedagogical_scope"] == "Pedagogical scope"
     gnn = root / "gnn" / "bernoulli_toy.gnn.md"
     assert not validate_gnn_ontology(gnn)
+
+
+def test_full_verification_run_sets_defaults(monkeypatch, tmp_path: Path, capsys) -> None:
+    calls: list[dict] = []
+
+    class Result:
+        returncode = 0
+
+    def fake_run(cmd, *, cwd, env, text, check):
+        calls.append({"cmd": cmd, "cwd": cwd, "env": env, "text": text, "check": check})
+        return Result()
+
+    ticks = iter((10.0, 12.5))
+    monkeypatch.setattr(full_verification.subprocess, "run", fake_run)
+    monkeypatch.setattr(full_verification.time, "perf_counter", lambda: next(ticks))
+
+    full_verification._run(tmp_path, ["uv", "run", "pytest", "-q"], "Smoke", env={"EXTRA_FLAG": "1"})
+
+    assert calls[0]["cmd"] == ["uv", "run", "pytest", "-q"]
+    assert calls[0]["cwd"] == tmp_path
+    assert calls[0]["env"]["MPLBACKEND"] == "Agg"
+    assert calls[0]["env"]["PYTHONUNBUFFERED"] == "1"
+    assert calls[0]["env"]["TEMPLATE_ACTIVE_INFERENCE_FIXED_POINT_PASSES"] == "2"
+    assert calls[0]["env"]["EXTRA_FLAG"] == "1"
+    assert "Smoke" in capsys.readouterr().out
+
+
+def test_full_verification_run_raises_on_failure(monkeypatch, tmp_path: Path) -> None:
+    class Result:
+        returncode = 7
+
+    monkeypatch.setattr(full_verification.subprocess, "run", lambda *args, **kwargs: Result())
+    monkeypatch.setattr(full_verification.time, "perf_counter", lambda: 1.0)
+
+    with pytest.raises(RuntimeError, match="Explode failed"):
+        full_verification._run(tmp_path, ["false"], "Explode")
+
+
+def test_run_verification_skip_chunks_orders_preflight_and_postflight(monkeypatch, tmp_path: Path) -> None:
+    calls: list[tuple[str, list[str]]] = []
+    monkeypatch.setattr(
+        full_verification,
+        "_run",
+        lambda project_root, cmd, label, env=None: calls.append((label, cmd)),
+    )
+
+    full_verification.run_verification(tmp_path, skip_chunks=True)
+
+    labels = [label for label, _ in calls]
+    assert labels[0] == "Run analytical sweep"
+    assert "Focused contract and infrastructure checks" not in labels
+    assert "Full suite coverage pass" in labels
+    coverage_cmd = dict(calls)["Full suite coverage pass"]
+    assert coverage_cmd[-1] == "--maxfail=1"
+
+
+def test_run_verification_includes_chunked_sheaf_modules(monkeypatch, tmp_path: Path) -> None:
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir()
+    sheaf_path = tests_dir / "test_sheaf_alpha.py"
+    sheaf_path.write_text("", encoding="utf-8")
+    calls: list[tuple[str, list[str]]] = []
+    monkeypatch.setattr(
+        full_verification,
+        "_run",
+        lambda project_root, cmd, label, env=None: calls.append((label, cmd)),
+    )
+
+    full_verification.run_verification(tmp_path, skip_chunks=False)
+
+    chunks = dict(calls)
+    assert "Focused contract and infrastructure checks" in chunks
+    assert "Gate and manuscript-focused checks" in chunks
+    roadmap_cmd = chunks["Roadmap and sheaf consolidation checks"]
+    assert str(sheaf_path) in roadmap_cmd

@@ -118,6 +118,11 @@ graph TD
         P2[templates/template_code_project<br/>Code exemplar · see canonical facts]
         P3[templates/template_prose_project<br/>Prose exemplar · see canonical facts]
         P4[templates/template_template<br/>Meta-template exemplar · see canonical facts]
+        P5[templates/template_autoscientists<br/>Coordination exemplar · see canonical facts]
+        P6[templates/template_madlib<br/>Token-injection exemplar · see canonical facts]
+        P7[templates/template_newspaper<br/>Layout exemplar · see canonical facts]
+        P8[templates/template_sia<br/>SIA harness exemplar · see canonical facts]
+        P9[templates/template_textbook<br/>Textbook scaffold exemplar · see canonical facts]
         Pn[active/* rotating hot-seat workspaces<br/>see docs/_generated/active_projects.md]
     end
 

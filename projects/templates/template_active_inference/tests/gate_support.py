@@ -18,6 +18,8 @@ from manuscript.hydrate import write_resolved_manuscript
 from manuscript.sheaf import compose_all_sections
 from orchestration.coverage_pipeline import ensure_coverage_artifacts
 from roadmap_tracks import (
+    validate_integration_audit_artifacts,
+    validate_sheaf_track_artifacts,
     write_formal_interop_artifacts,
     write_integration_audit_artifacts,
     write_manuscript_staleness_report,
@@ -28,7 +30,11 @@ from simulation.graph_world import write_graph_world_artifacts
 from simulation.si_artifacts import write_policy_comparison, write_policy_posterior_grid
 from simulation.si_runner import pymdp_available, run_and_persist
 from validation_spine import write_validation_spine_artifacts
-from visualizations.animation import write_animation_frame_deltas, write_belief_trajectory_gif
+from visualizations.animation import (
+    validate_animation_frame_deltas,
+    write_animation_frame_deltas,
+    write_belief_trajectory_gif,
+)
 from visualizations.figures import generate_all_figures
 
 _BOOTSTRAPPED_ROOTS: set[Path] = set()
@@ -180,18 +186,17 @@ def _settle_generated_contracts(project_root: Path, out: Path, *, passes: int | 
     requested_passes = _fixed_point_passes() if passes is None else passes
     semantic_max_passes = max(4, requested_passes * 4)
     for _ in range(max(1, requested_passes)):
+        write_sheaf_track_artifacts(project_root, finalize=False)
         generate_all_figures(project_root)
         write_belief_trajectory_gif(project_root)
         write_animation_frame_deltas(project_root)
-        compose_all_sections(project_root)
-        _hydrate_fixed_point(project_root, out)
-        write_integration_audit_artifacts(project_root)
-        write_sheaf_track_artifacts(project_root, finalize=False)
         run_semantic_fixed_point(
             project_root,
             require_analysis_outputs=False,
             max_passes=semantic_max_passes,
         )
+    if not out.is_file():
+        _hydrate_fixed_point(project_root, out)
 
 
 def refresh_generated_gate_artifacts(project_root: Path, *, force: bool = True) -> None:
@@ -213,10 +218,48 @@ def refresh_generated_gate_artifacts(project_root: Path, *, force: bool = True) 
     out = root / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     _settle_generated_contracts(root, out)
+    refresh_gate_artifact_session_signature(root)
+
+
+def refresh_gate_artifact_session_signature(project_root: Path) -> None:
+    root = project_root.resolve()
     signature = _required_gate_artifacts_signature(root)
-    if signature:
-        _BOOTSTRAPPED_SIGNATURES[root] = signature
+    if not signature:
+        raise AssertionError("required gate artifacts are incomplete; cannot refresh session signature")
+    if not _gate_artifacts_present(root):
+        raise AssertionError("gate artifacts are invalid; cannot refresh session signature")
+    _BOOTSTRAPPED_SIGNATURES[root] = signature
     _BOOTSTRAPPED_ROOTS.add(root)
+
+
+def refresh_output_gate_contracts(project_root: Path) -> None:
+    root = project_root.resolve()
+    animation_issues = validate_animation_frame_deltas(root)
+    integration_issues = validate_integration_audit_artifacts(root)
+    sheaf_issues = validate_sheaf_track_artifacts(root)
+    if not animation_issues and not integration_issues and not sheaf_issues:
+        refresh_gate_artifact_session_signature(root)
+        return
+    if animation_issues:
+        write_animation_frame_deltas(root)
+    if integration_issues or sheaf_issues:
+        write_integration_audit_artifacts(root)
+        write_sheaf_track_artifacts(root)
+    animation_issues = validate_animation_frame_deltas(root)
+    if animation_issues:
+        write_animation_frame_deltas(root)
+        animation_issues = validate_animation_frame_deltas(root)
+    integration_issues = validate_integration_audit_artifacts(root)
+    sheaf_issues = validate_sheaf_track_artifacts(root)
+    remaining = {
+        "animation": animation_issues,
+        "integration": integration_issues,
+        "sheaf": sheaf_issues,
+    }
+    remaining = {name: issues for name, issues in remaining.items() if issues}
+    if remaining:
+        raise AssertionError(f"output gate contracts remain invalid after refresh: {remaining}")
+    refresh_gate_artifact_session_signature(root)
 
 
 def refresh_composed_gate_artifacts(project_root: Path) -> None:
@@ -246,6 +289,7 @@ def _gate_artifacts_present(project_root: Path) -> bool:
 
         return (
             not validate_semantic_gluing(project_root)
+            and not validate_animation_frame_deltas(project_root)
             and not validate_integration_audit_artifacts(project_root)
             and not validate_sheaf_track_artifacts(project_root)
             and validate_claim_ledger(project_root)
@@ -275,22 +319,8 @@ def ensure_gate_artifacts(project_root: Path) -> None:
     if signature and _BOOTSTRAPPED_SIGNATURES.get(root) == signature:
         _BOOTSTRAPPED_ROOTS.add(root)
         return
-    if root in _BOOTSTRAPPED_ROOTS and signature and _required_gate_artifacts_exist(root):
-        refresh_generated_gate_artifacts(root, force=False)
-        signature = _required_gate_artifacts_signature(root)
-        if signature:
-            _BOOTSTRAPPED_SIGNATURES[root] = signature
-        return
     if _gate_artifacts_present(root):
         _BOOTSTRAPPED_ROOTS.add(root)
-        if signature:
-            _BOOTSTRAPPED_SIGNATURES[root] = signature
-        return
-    if root in _BOOTSTRAPPED_ROOTS and _gate_artifacts_present(root):
-        return
-    if root in _BOOTSTRAPPED_ROOTS and _required_gate_artifacts_exist(root):
-        refresh_generated_gate_artifacts(root)
-        signature = _required_gate_artifacts_signature(root)
         if signature:
             _BOOTSTRAPPED_SIGNATURES[root] = signature
         return
@@ -306,21 +336,18 @@ def ensure_gate_artifacts(project_root: Path) -> None:
     write_analysis_statistics(project_root)
     compose_all_sections(project_root)
     ensure_coverage_artifacts(project_root, write_page=True, render_heatmap=True, force=True)
-    generate_all_figures(project_root)
-    write_belief_trajectory_gif(project_root)
-    write_animation_frame_deltas(project_root)
     write_validation_spine_artifacts(project_root)
     write_toy_sweep_artifacts(project_root)
     write_formal_interop_artifacts(project_root)
     write_validation_spine_artifacts(project_root)
     write_sheaf_track_artifacts(project_root, finalize=False)
+    generate_all_figures(project_root)
+    write_belief_trajectory_gif(project_root)
+    write_animation_frame_deltas(project_root)
     out = project_root / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     _settle_generated_contracts(project_root, out)
-    signature = _required_gate_artifacts_signature(root)
-    if signature:
-        _BOOTSTRAPPED_SIGNATURES[root] = signature
     # NOTE: the final convergence pass is intentionally narrower than the full
     # bootstrap. It settles cross-artifact contract rows after figures, integration
     # reports, sheaf consolidation, and hydrated manuscript variables have all moved.
-    _BOOTSTRAPPED_ROOTS.add(root)
+    refresh_gate_artifact_session_signature(root)

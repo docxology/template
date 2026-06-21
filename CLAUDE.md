@@ -182,6 +182,7 @@ ever git-tracked/pushed:
 - [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) — deterministic AutoResearch template
 - [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) — deterministic coordination-mechanism testbed exemplar (arXiv:2605.28655 primitives)
 - [`projects/templates/template_code_project/`](projects/templates/template_code_project/) — code-centric template
+- [`projects/templates/template_madlib/`](projects/templates/template_madlib/) — conditional token-injection manuscript template with QA probes and authoring contract
 - [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) — data-driven large-format newspaper layout engine (ReportLab broadsheet)
 - [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
 - [`projects/templates/template_sia/`](projects/templates/template_sia/) — SIA self-improvement harness template (fixture replay by default)

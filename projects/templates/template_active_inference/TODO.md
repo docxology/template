@@ -6,7 +6,7 @@ locally reproducible, public, and toy-only. Completed work belongs in generated
 artifacts, README/AGENTS files, tests, manuscript fragments, and sheaf
 registries rather than in this file.
 
-## Current verification evidence
+## Current validation evidence
 
 Current evidence on 2026-06-13:
 
@@ -64,6 +64,51 @@ validator code.
 | Visualization | `figures.yaml`, `src/visualizations/`, `src/roadmap_tracks/visualization_contract.py`, `output/data/figure_source_map.json`, `output/reports/visualization_quality_audit.json`, `output/reports/figure_hash_manifest.json`, `output/data/statistical_visualization_bridge.json` |
 | Release | `output/reports/release_bundle_manifest.json`, `output/reports/artifact_diffoscope.json`, `output/reports/artifact_license_audit.json`, `output/reports/release_notes_evidence.json`, `output/reports/release_attestation.json`, `output/reports/security_posture_audit.json` |
 | Scope | `output/reports/scope_boundary_audit.json`, `output/reports/blocked_scope_manifest.json`, `output/data/track_improvement_scope.json`, `output/data/scholarship_source_matrix.json`, `data/claim_ledger.yaml` |
+
+## Integrity and template-status gaps
+
+Keep the standalone template boundary explicit: this exemplar is a forkable
+starter for deterministic toy Active Inference manuscripts, not a source of
+empirical biological claims. Future integrity work should first tighten
+artifact/claim/release attestation around the existing canonical tracks before
+adding new track IDs.
+
+## Configurable-surface gaps
+
+Future configurable surfaces should remain registry-owned. Add or change
+capabilities through `tracks.yaml`, `manuscript/sheaf/tracks.yaml`,
+`manuscript/sheaf/manifest.yaml`, `figures.yaml`, and
+`manuscript/config.yaml`; keep `manuscript/config.yaml.example` structurally in
+parity with placeholder-safe values whenever a top-level section is added.
+
+## Documentation and signposting gaps
+
+Every new capability needs a reader-facing signpost in the nearest README or
+AGENTS file that states whether it is generic sheaf infrastructure or a
+bespoke Active Inference lane. Publication, fork, and standalone guidance must
+continue to point at generated records or `STANDALONE.md` instead of copying
+release facts into prose.
+
+## Test and validator gaps
+
+Promote only changes with a positive artifact test and a negative control that
+proves the matching gate fails closed. Keep long-running full-refresh tests as
+end-to-end sentinels, but prefer narrower row-contract tests for future
+regression coverage when they preserve the same failure mode.
+The 2026-06-21 ast-grep audit found intentional `subprocess.run` boundaries in
+Lean/lake, rendering, git metadata, validation-spine, and full-verification
+surfaces; future hardening should centralize timeout/cwd/check/error-message
+policy for those wrappers without changing their public commands.
+
+## Ordered improvement ladder
+
+1. Preserve the current deterministic toy claims, schema contracts, and copied
+   output parity through the standard monorepo pipeline.
+2. Tighten existing lane validators and negative controls before expanding the
+   manuscript surface.
+3. Add empirical, network, LLM, private-data, or non-toy claims only after the
+   blocked major-scope ladder below supplies the required provenance,
+   licensing, privacy, and evidence predicates.
 
 ## Minor upcoming
 

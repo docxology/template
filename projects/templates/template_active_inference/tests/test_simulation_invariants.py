@@ -11,9 +11,10 @@ from simulation.invariants import run_simulation_invariants, write_simulation_in
 from simulation.logging_utils import RunLogger, validate_record
 from simulation.si_runner import pymdp_available, run_and_persist
 
-# test_validate_outputs_gate_checks rebuilds the full gate-artifact bundle (~56s locally);
-# give this module a wider per-test ceiling so slower CI runners don't trip --timeout=120.
-pytestmark = pytest.mark.timeout(300)
+# test_validate_outputs_gate_checks can refresh the full gate-artifact bundle
+# after earlier mutation tests; give this module the same ceiling as the other
+# heavy Active Inference artifact-contract tests.
+pytestmark = pytest.mark.timeout(600)
 
 
 def test_validate_record_requires_step_keys() -> None:
@@ -45,9 +46,10 @@ def test_simulation_invariants_after_run(project_root: Path) -> None:
 @pytest.mark.requires_pymdp
 def test_validate_outputs_gate_checks(project_root: Path) -> None:
     from gates.validation import validate_outputs
-    from gate_support import ensure_gate_artifacts
+    from gate_support import ensure_gate_artifacts, refresh_output_gate_contracts
 
     ensure_gate_artifacts(project_root)
+    refresh_output_gate_contracts(project_root)
     checks = validate_outputs(project_root)
     assert checks.get("si_trace_present")
     assert checks.get("si_summary_schema")

@@ -30,3 +30,41 @@ keywords:
 metadata:
   license: "MIT"
   language: "en"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false
+
+llm:
+  reviews:
+    enabled: false
+  translations:
+    enabled: false
+
+testing:
+  max_test_failures: 0
+
+analysis:
+  scripts:
+    - compose_manuscript.py
+    - run_analytical_sweep.py
+    - simulate_si_tmaze.py
+    - simulate_si_graph_world.py
+    - compute_statistics.py
+    - generate_figures.py
+    - render_animation.py
+    - generate_validation_spine.py
+    - generate_toy_sweep_tracks.py
+    - generate_formal_interop_tracks.py
+    - generate_integration_audit.py
+    - generate_sheaf_tracks.py
+    - z_generate_manuscript_variables.py
+
+sheaf:
+  manifest: "manuscript/sheaf/manifest.yaml"
+  registry: "manuscript/sheaf/tracks.yaml"
+  coverage_config: "manuscript/sheaf/coverage.yaml"
+  composer: "scripts/compose_manuscript.py"
+  figures_config: "figures.yaml"

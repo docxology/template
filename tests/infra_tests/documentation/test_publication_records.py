@@ -9,6 +9,7 @@ from pathlib import Path
 from infrastructure.documentation.publication_records import (
     README_BLOCK_BEGIN,
     README_BLOCK_END,
+    check_publication_records_doc,
     load_publication_records,
     refresh_external_records,
     render_github_readme_publication_block,
@@ -133,3 +134,46 @@ def test_replace_github_readme_publication_block() -> None:
 
     assert result == "\n".join(["before", replacement, "after"])
     assert re.search(r"old table", result) is None
+
+
+def test_check_publication_records_doc_accepts_refreshed_external_columns(tmp_path: Path) -> None:
+    for name in PUBLIC_PROJECT_NAMES:
+        _scaffold_publication_project(tmp_path, name)
+    (tmp_path / "docs" / "_generated").mkdir(parents=True)
+    (tmp_path / ".github").mkdir()
+    records = load_publication_records(tmp_path)
+    for record in records:
+        record.github_latest_release_tag = "v9.9.9"
+        record.github_latest_release_url = f"https://github.com/{record.github_repository}/releases/tag/v9.9.9"
+        record.github_repo_status = "200"
+        record.github_release_status = "200"
+        record.zenodo_status = "200"
+    (tmp_path / "docs" / "_generated" / "publication_records.md").write_text(
+        render_publication_records_doc(tmp_path, records, refreshed_external=True),
+        encoding="utf-8",
+    )
+    (tmp_path / ".github" / "README.md").write_text(
+        "\n".join(["before", render_github_readme_publication_block(records), "after"]),
+        encoding="utf-8",
+    )
+
+    assert check_publication_records_doc(tmp_path) == []
+
+
+def test_check_publication_records_doc_reports_source_owned_drift(tmp_path: Path) -> None:
+    for name in PUBLIC_PROJECT_NAMES:
+        _scaffold_publication_project(tmp_path, name)
+    (tmp_path / "docs" / "_generated").mkdir(parents=True)
+    (tmp_path / ".github").mkdir()
+    records = load_publication_records(tmp_path)
+    generated = render_publication_records_doc(tmp_path, records)
+    generated = generated.replace("docxology/templates/template_active_inference", "docxology/stale", 1)
+    (tmp_path / "docs" / "_generated" / "publication_records.md").write_text(generated, encoding="utf-8")
+    (tmp_path / ".github" / "README.md").write_text(
+        "\n".join(["before", render_github_readme_publication_block(records), "after"]),
+        encoding="utf-8",
+    )
+
+    assert check_publication_records_doc(tmp_path) == [
+        "publication_records.md source-owned matrix columns drifted: changed=['templates/template_active_inference']"
+    ]

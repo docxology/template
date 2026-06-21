@@ -33,6 +33,9 @@ Keep this focused on book-scale structure, configurability, and validation.
 - Add deterministic checks for generated cover art and diagrams when visual styles change.
 - Register textbook worked-example numbers, percentages, and appendix-gallery constants as configured facts, or mark them as documentation-only examples, before treating Stage 04 as warning-free.
 - Add or document a stable final artifact-manifest refresh path for single-stage analysis/render/copy checks.
+- The 2026-06-21 ast-grep audit found the intentional Mermaid `subprocess.run`
+  renderer boundary; future hardening should keep a single timeout/cwd/error
+  policy for optional external diagram tools and document the fallback path.
 
 ## Ordered improvement ladder
 

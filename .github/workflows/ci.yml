@@ -546,6 +546,9 @@ jobs:
         # commit the result.
         run: uv run python scripts/generate_counts.py --check
 
+      - name: Verify publication_records.md is in sync with public metadata
+        run: uv run python scripts/generate_publication_records_doc.py --check
+
       - name: Verify project imports
         env:
           PUBLIC_PROJECTS: ${{ steps.project-scope.outputs.names }}

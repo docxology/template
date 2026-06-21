@@ -39,6 +39,16 @@ noise-band confirmation, stagnation-driven reorganization) rather than
 AutoResearch loop infrastructure. For the full exemplar roster see
 [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
 
+## Configuration
+
+Use [`manuscript/config.yaml`](manuscript/config.yaml) as the live metadata,
+render, analysis, project-config, approval-boundary, and publication surface.
+Keep [`manuscript/config.yaml.example`](manuscript/config.yaml.example) in
+top-level parity with placeholder-safe values so a fork can start without
+project-specific secrets or release metadata. The bounded ML task, source
+ledger, human-review boundary, and generated artifact contracts remain
+offline-first and deterministic.
+
 ## Quick start
 
 ```bash

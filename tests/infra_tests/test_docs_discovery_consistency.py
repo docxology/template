@@ -16,6 +16,12 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+def _doc_chunks(text: str) -> list[str]:
+    chunks = [line for line in text.splitlines() if line.strip()]
+    chunks.extend(block for block in re.split(r"\n\s*\n", text) if block.strip())
+    return chunks
+
+
 def test_active_projects_doc_matches_discovery() -> None:
     """docs/_generated/active_projects.md exactly matches public project scope."""
     root = _repo_root()
@@ -120,6 +126,43 @@ def test_top_level_docs_do_not_claim_stale_public_exemplar_counts() -> None:
         text = doc_path.read_text(encoding="utf-8").lower()
         for phrase in forbidden:
             assert phrase not in text, doc_path
+
+
+def test_human_docs_do_not_carry_partial_public_exemplar_rosters() -> None:
+    root = _repo_root()
+    public_leaves = {name.split("/")[-1] for name in public_project_names(root)}
+    docs_to_check = [
+        root / "AGENTS.md",
+        root / "README.md",
+        root / "CLAUDE.md",
+        root / ".cursorrules",
+        root / ".github" / "README.md",
+        root / ".github" / "AGENTS.md",
+        root / "projects" / "AGENTS.md",
+        root / "projects" / "README.md",
+        root / "docs" / "documentation-index.md",
+        root / "docs" / "guides" / "publishing-guide.md",
+        root / "docs" / "guides" / "zenodo-doi-strategy.md",
+    ]
+    failures: list[str] = []
+    for doc_path in docs_to_check:
+        text = doc_path.read_text(encoding="utf-8", errors="replace")
+        for index, chunk in enumerate(_doc_chunks(text), start=1):
+            mentioned = {leaf for leaf in public_leaves if re.search(rf"\b{re.escape(leaf)}\b", chunk)}
+            if len(mentioned) < 3 or mentioned == public_leaves:
+                continue
+            lower = chunk.lower()
+            has_generated_roster = (
+                "docs/_generated/active_projects.md" in chunk
+                or "../docs/_generated/active_projects.md" in chunk
+                or "_generated/active_projects.md" in chunk
+            )
+            allows_examples = any(phrase in lower for phrase in ("example", "starting point", "authoritative roster"))
+            if has_generated_roster and allows_examples:
+                continue
+            failures.append(f"{doc_path.relative_to(root)} chunk {index}: {sorted(mentioned)}")
+
+    assert not failures, "Partial public exemplar rosters must link the generated roster:\n" + "\n".join(failures)
 
 
 def test_consistency_lint_roots_include_public_project_docs() -> None:

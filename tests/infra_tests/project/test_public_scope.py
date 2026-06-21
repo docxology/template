@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.public_scope import (
+    LOCAL_ONLY_TEMPLATE_NAMES,
+    PUBLIC_PROJECT_NAMES,
     main,
     public_ci_source_paths,
     public_project_names,
@@ -25,12 +29,8 @@ def _scaffold_project(root: Path, qualified: str) -> Path:
 
 
 def _scaffold_exemplars(root: Path) -> None:
-    _scaffold_project(root, "templates/template_active_inference")
-    _scaffold_project(root, "templates/template_autoresearch_project")
-    _scaffold_project(root, "templates/template_code_project")
-    _scaffold_project(root, "templates/template_prose_project")
-    _scaffold_project(root, "templates/template_sia")
-    _scaffold_project(root, "templates/template_template")
+    for name in PUBLIC_PROJECT_NAMES:
+        _scaffold_project(root, name)
 
 
 def test_public_scope_filters_to_template_projects(tmp_path: Path) -> None:
@@ -42,29 +42,12 @@ def test_public_scope_filters_to_template_projects(tmp_path: Path) -> None:
 
     assert discovered == {
         "active/private_research_project",
-        "templates/template_active_inference",
-        "templates/template_autoresearch_project",
-        "templates/template_code_project",
-        "templates/template_prose_project",
-        "templates/template_sia",
-        "templates/template_template",
+        *PUBLIC_PROJECT_NAMES,
     }
-    assert public_project_names(tmp_path) == [
-        "templates/template_active_inference",
-        "templates/template_autoresearch_project",
-        "templates/template_code_project",
-        "templates/template_prose_project",
-        "templates/template_sia",
-        "templates/template_template",
-    ]
+    assert public_project_names(tmp_path) == sorted(PUBLIC_PROJECT_NAMES)
     assert public_ci_source_paths(tmp_path) == [
         Path("infrastructure"),
-        Path("projects/templates/template_active_inference/src"),
-        Path("projects/templates/template_autoresearch_project/src"),
-        Path("projects/templates/template_code_project/src"),
-        Path("projects/templates/template_prose_project/src"),
-        Path("projects/templates/template_sia/src"),
-        Path("projects/templates/template_template/src"),
+        *[Path("projects") / name / "src" for name in PUBLIC_PROJECT_NAMES],
     ]
 
 
@@ -83,14 +66,7 @@ def test_public_scope_excludes_local_private_symlink(tmp_path: Path) -> None:
     discovered = {project.qualified_name for project in discover_projects(tmp_path)}
 
     assert "active/example_private_project" in discovered
-    assert public_project_names(tmp_path) == [
-        "templates/template_active_inference",
-        "templates/template_autoresearch_project",
-        "templates/template_code_project",
-        "templates/template_prose_project",
-        "templates/template_sia",
-        "templates/template_template",
-    ]
+    assert public_project_names(tmp_path) == sorted(PUBLIC_PROJECT_NAMES)
 
 
 def test_project_names_json_cli_emits_matrix_array(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -110,13 +86,32 @@ def test_project_names_json_cli_emits_matrix_array(tmp_path: Path, capsys: pytes
     # Single line (no embedded newlines) so it slots into $GITHUB_OUTPUT.
     assert out.count("\n") == 1
     parsed = json.loads(out)
-    assert parsed == [
-        "templates/template_active_inference",
-        "templates/template_autoresearch_project",
-        "templates/template_code_project",
-        "templates/template_prose_project",
-        "templates/template_sia",
-        "templates/template_template",
-    ]
+    assert parsed == sorted(PUBLIC_PROJECT_NAMES)
     # Private symlinked/active projects never leak into the public matrix.
     assert "active/private_research_project" not in parsed
+
+
+def test_public_template_roster_has_explicit_local_only_escape_hatch() -> None:
+    repo = Path(__file__).resolve().parents[3]
+    template_root = repo / "projects" / "templates"
+    on_disk = {f"templates/{path.name}" for path in template_root.glob("template_*") if path.is_dir()}
+    declared = set(PUBLIC_PROJECT_NAMES)
+    local_only = {f"templates/{name}" for name in LOCAL_ONLY_TEMPLATE_NAMES}
+
+    assert declared <= on_disk
+    assert on_disk <= declared | local_only
+
+
+def test_public_scope_cli_is_quiet_on_stderr() -> None:
+    repo = Path(__file__).resolve().parents[3]
+
+    completed = subprocess.run(
+        [sys.executable, "-m", "infrastructure.project.public_scope", "source-paths"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+
+    assert completed.stderr == ""
+    assert completed.stdout.startswith("infrastructure ")

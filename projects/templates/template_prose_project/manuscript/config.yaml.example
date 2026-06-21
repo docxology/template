@@ -97,3 +97,11 @@ report:
   include_per_file_table: true
   include_outline: true
   include_quality_flags: true
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: false
+    epub: false
