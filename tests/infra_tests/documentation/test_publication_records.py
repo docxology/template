@@ -10,6 +10,7 @@ from infrastructure.documentation.publication_records import (
     README_BLOCK_BEGIN,
     README_BLOCK_END,
     load_publication_records,
+    refresh_external_records,
     render_github_readme_publication_block,
     render_publication_records_doc,
     replace_github_readme_publication_block,
@@ -65,9 +66,7 @@ def test_load_publication_records_follows_public_project_scope(tmp_path: Path) -
     records = load_publication_records(tmp_path)
 
     assert [record.project_name for record in records] == sorted(PUBLIC_PROJECT_NAMES)
-    assert {record.github_repository for record in records} == {
-        f"docxology/{name}" for name in PUBLIC_PROJECT_NAMES
-    }
+    assert {record.github_repository for record in records} == {f"docxology/{name}" for name in PUBLIC_PROJECT_NAMES}
     assert all(record.sidecar_status == "ok" for record in records)
 
 
@@ -85,6 +84,44 @@ def test_rendered_publication_docs_include_every_public_record(tmp_path: Path) -
         assert f"../projects/{name}/" in readme_block
     assert "Do not edit by hand" in generated
     assert "scripts/generate_publication_records_doc.py --refresh-external" in generated
+
+
+def test_monorepo_only_publication_path_is_not_checked_as_standalone_repo(tmp_path: Path) -> None:
+    name = PUBLIC_PROJECT_NAMES[0]
+    _scaffold_publication_project(tmp_path, name)
+    config_path = tmp_path / "projects" / name / "manuscript" / "config.yaml"
+    config_path.write_text(
+        "\n".join(
+            [
+                "paper:",
+                "  title: Monorepo exemplar",
+                "  version: '0.1.0'",
+                "authors:",
+                "  - name: Daniel Ari Friedman",
+                "publication:",
+                "  doi: ''",
+                "  version_doi: ''",
+                "  version_record: ''",
+                "  repository_url: 'https://github.com/docxology/template/tree/main/projects/templates/template_madlib'",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    records = load_publication_records(tmp_path)
+    record = records[0]
+    refresh_external_records(records)
+    generated = render_publication_records_doc(tmp_path, records, refreshed_external=True)
+    readme_block = render_github_readme_publication_block(records)
+
+    assert record.github_repo_status == "monorepo path"
+    assert record.github_release_status == "covered by root release"
+    assert record.zenodo_status == "not published separately"
+    assert "docxology/template path" in generated
+    assert "covered by root release" in generated
+    assert "not published separately" in generated
+    assert "404" not in readme_block
 
 
 def test_replace_github_readme_publication_block() -> None:

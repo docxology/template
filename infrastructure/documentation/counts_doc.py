@@ -41,10 +41,10 @@ from infrastructure.project.public_scope import public_project_names
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-06-13"
+GENERATED_DATE = "2026-06-21"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-06-11"
+EXEMPLAR_SNAPSHOT_DATE = "2026-06-21"
 
 
 @dataclass(frozen=True)
@@ -70,6 +70,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_autoresearch_project", 220, "92.81 %"),
     ExemplarSnapshot("template_autoscientists", 87, "99.60 %"),
     ExemplarSnapshot("template_code_project", 197, "96.96 %"),
+    ExemplarSnapshot("template_madlib", 37, "93.96 %"),
     ExemplarSnapshot("template_newspaper", 53, "94.37 %"),
     ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),
@@ -247,7 +248,7 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **{facts.project_tests}** project-scope infrastructure tests collected and **{facts.publishing_tests}** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (measured {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` coverage preserved from its 2026-06-05 project-local gate run — see note below):
+**Exemplar `pytest --collect-only` totals** (latest recorded measurements; table membership last updated {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` coverage preserved from its 2026-06-05 project-local gate run — see note below):
 
 {_exemplar_table()}
 

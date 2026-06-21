@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import urllib.error
 import urllib.request
@@ -64,9 +65,48 @@ class PublicationRecord:
         """
         if self.github_repository:
             return self.github_repository
+        path = self.github_url_path
+        if path and "/tree/" not in path and "/blob/" not in path:
+            parts = path.split("/")
+            if len(parts) >= 2:
+                return "/".join(parts[:2])
+        return ""
+
+    @property
+    def github_url_path(self) -> str:
         url = self.repository_url
         if url and "github.com/" in url:
             return url.split("github.com/", 1)[1].strip("/")
+        return ""
+
+    @property
+    def is_monorepo_publication_path(self) -> bool:
+        path = self.github_url_path
+        return not self.github_repository and ("/tree/" in path or "/blob/" in path)
+
+    @property
+    def monorepo_slug(self) -> str:
+        if not self.is_monorepo_publication_path:
+            return ""
+        parts = self.github_url_path.split("/")
+        if len(parts) >= 2:
+            return "/".join(parts[:2])
+        return ""
+
+    @property
+    def github_display_label(self) -> str:
+        if self.github_repo_slug:
+            return self.github_repo_slug
+        if self.is_monorepo_publication_path and self.monorepo_slug:
+            return f"{self.monorepo_slug} path"
+        return ""
+
+    @property
+    def github_display_url(self) -> str:
+        if self.github_repo_slug:
+            return _github_repo_url(self.github_repo_slug)
+        if self.is_monorepo_publication_path:
+            return self.repository_url
         return ""
 
     @property
@@ -229,7 +269,10 @@ def load_publication_records(repo_root: Path) -> list[PublicationRecord]:
 
 
 def _fetch_json(url: str, timeout: float) -> tuple[str, dict[str, Any]]:
-    request = urllib.request.Request(url, headers={"User-Agent": _USER_AGENT})
+    headers = {"User-Agent": _USER_AGENT}
+    if url.startswith("https://api.github.com/") and (token := os.getenv("GITHUB_TOKEN")):
+        headers["Authorization"] = f"Bearer {token}"
+    request = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:  # noqa: S310  # nosec B310 - fixed public api.github.com and zenodo.org URLs only; scheme is locked by caller
             payload = json.loads(response.read().decode("utf-8"))
@@ -246,7 +289,13 @@ def refresh_external_records(records: list[PublicationRecord], *, timeout: float
         findings: list[str] = []
 
         repo_slug = record.github_repo_slug
-        if repo_slug:
+        if record.is_monorepo_publication_path:
+            record.github_repo_status = "monorepo path"
+            record.github_release_status = "covered by root release"
+            if record.monorepo_slug:
+                record.github_latest_release_tag = "root release"
+                record.github_latest_release_url = f"https://github.com/{record.monorepo_slug}/releases/latest"
+        elif repo_slug:
             repo_status, _ = _fetch_json(f"https://api.github.com/repos/{repo_slug}", timeout)
             release_status, release_payload = _fetch_json(
                 f"https://api.github.com/repos/{repo_slug}/releases/latest",
@@ -290,6 +339,11 @@ def refresh_external_records(records: list[PublicationRecord], *, timeout: float
         elif record.version_doi:
             record.zenodo_status = "invalid version DOI"
             findings.append("invalid version_doi")
+        elif record.concept_doi:
+            record.zenodo_status = "missing version DOI"
+            findings.append("missing version_doi")
+        elif record.is_monorepo_publication_path:
+            record.zenodo_status = "not published separately"
         else:
             record.zenodo_status = "missing version DOI"
             findings.append("missing version_doi")
@@ -333,7 +387,7 @@ def render_publication_records_doc(
     ]
     for record in records:
         project_label = f"`{record.project_name}`"
-        github = _markdown_link(record.github_repo_slug, _github_repo_url(record.github_repo_slug))
+        github = _markdown_link(record.github_display_label, record.github_display_url)
         release_label = record.github_latest_release_tag or record.github_release_status
         release = _markdown_link(release_label, record.github_latest_release_url)
         concept = _markdown_link(record.concept_doi, _doi_url(record.concept_doi))
@@ -406,7 +460,7 @@ def render_github_readme_publication_block(records: list[PublicationRecord]) -> 
     ]
     for record in records:
         project = _markdown_link(f"`{record.project_name}`", f"../projects/{record.project_name}/")
-        github = _markdown_link(record.github_repo_slug, _github_repo_url(record.github_repo_slug))
+        github = _markdown_link(record.github_display_label, record.github_display_url)
         release_label = record.github_latest_release_tag or record.github_release_status
         release = _markdown_link(release_label, record.github_latest_release_url)
         concept = _markdown_link(record.concept_doi, _doi_url(record.concept_doi))

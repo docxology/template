@@ -214,7 +214,7 @@ over the `.env` value. GitHub tokens are commonly supplied live instead:
 ```bash
 # Dry-run: bundle + receipt only
 uv run python scripts/publish_project_release.py \
-  --project template_code_project \
+  --project templates/template_code_project \
   --tag v2.0.0 \
   --repo owner/template \
   --dry-run
@@ -224,13 +224,13 @@ export GITHUB_TOKEN=...
 export GITHUB_REPO=owner/template
 export ZENODO_SANDBOX_TOKEN=...
 uv run python scripts/publish_project_release.py \
-  --project template_code_project \
+  --project templates/template_code_project \
   --tag v2.0.0 \
   --repo owner/template
 
 # New Zenodo version when publication.doi is already set
 uv run python scripts/publish_project_release.py \
-  --project template_code_project \
+  --project templates/template_code_project \
   --tag v2.0.1 \
   --repo owner/template \
   --new-version
@@ -238,7 +238,7 @@ uv run python scripts/publish_project_release.py \
 # Production first release with a DOI-bearing deposited PDF
 export ZENODO_PROD_TOKEN=...
 uv run python scripts/publish_project_release.py \
-  --project template_code_project \
+  --project templates/template_code_project \
   --tag v2.0.0 \
   --repo owner/template \
   --production \
@@ -255,6 +255,88 @@ for cases where a pre-DOI deposited PDF is acceptable.
 **Outputs:** `output/{project}/release_bundle/` (`Author_Year_Topic_hash8.pdf` by default — see [Deposit upload filename](#deposit-upload-filename); legacy `{project}_combined.pdf` when disabled), `publication_metadata.json`, `manifest.json`, `RELEASE_RECEIPT.json`.
 
 Programmatic API: `infrastructure.publishing.release_workflow.run_release_workflow`.
+
+## Updating Existing GitHub and Zenodo Publications
+
+Use this checklist when the repository or a public exemplar has already been
+published and you need to decide whether to publish a new version.
+
+### Root `docxology/template` release
+
+The root repository is the software publication for the framework itself. It
+uses the Zenodo concept DOI `10.5281/zenodo.19139090`; each GitHub release
+should produce or point at a Zenodo software version under that concept DOI.
+
+1. Check what changed since the last release tag:
+
+   ```bash
+   git fetch --tags origin
+   git describe --tags --always
+   git log --oneline vX.Y.Z..HEAD
+   ```
+
+2. Publish a new root version when the accumulated changes alter public
+   behavior, public template contracts, release metadata, generated public
+   docs, or the paper/software claims. A small typo-only docs patch can usually
+   wait for the next planned release.
+
+3. Before tagging, align source metadata:
+
+   ```bash
+   rg -n "version =|version:" pyproject.toml CITATION.cff
+   uv run python scripts/generate_counts.py --check
+   uv run python scripts/check_tracked_projects.py
+   uv run python scripts/check_tracked_generated_artifacts.py
+   ```
+
+   `pyproject.toml` and root `CITATION.cff` should name the release version;
+   `CITATION.cff` keeps the concept DOI, not a version DOI.
+
+4. Create the GitHub release on the root repository and let the configured
+   Zenodo-GitHub integration archive the release, or create a Zenodo "New
+   version" manually from the latest root software record and upload the source
+   archive for the same tag. The Zenodo record must include a related identifier
+   for `https://github.com/docxology/template/tree/vX.Y.Z`.
+
+5. Verify both public surfaces after publishing:
+
+   ```bash
+   gh-axi release view vX.Y.Z --repo docxology/template
+   uv run python scripts/generate_publication_records_doc.py --refresh-external
+   ```
+
+   Also open `https://zenodo.org/records/19140303/latest`; it should redirect to
+   the latest root software record. Do not hand-edit
+   `docs/_generated/publication_records.md` or the generated block in
+   `.github/README.md`.
+
+### Public exemplar release
+
+Standalone public exemplars use `publish_project_release.py`. Use the qualified
+project name from `docs/_generated/publication_records.md`, not the short leaf
+name.
+
+```bash
+uv run python scripts/execute_pipeline.py --project templates/<name> --core-only
+uv run python scripts/publish_project_release.py \
+  --project templates/<name> \
+  --tag vX.Y.Z \
+  --repo docxology/<name> \
+  --production \
+  --new-version
+uv run python scripts/generate_publication_records_doc.py --refresh-external
+```
+
+For a first standalone exemplar release, use `--reserve-doi-first` instead of
+`--new-version`. After the run, commit the updated
+`manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, generated publication
+records, and any release-note docs.
+
+`template_madlib` is currently a canonical public template path inside the root
+`docxology/template` repository, not a standalone publication repository. Its
+publication matrix row should read as covered by the root release and "not
+published separately" on Zenodo until a deliberate standalone
+`docxology/template_madlib` repository and Zenodo DOI are minted.
 
 ### Historical integration proof (2026-05-27)
 
@@ -376,16 +458,16 @@ Dual-row integrity strip (`output/figures/transmission_integrity_strip.png`): ro
 **`template_code_project` production target:** `publication.github_repository: docxology/template_code_project` with bookends enabled in `projects/templates/template_code_project/manuscript/config.yaml`. Example production release (choose a tag from `paper.version`; keep `publication.doi` as the concept DOI and let the publish flow update `version_doi` / `version_record`):
 
 ```bash
-uv run python scripts/execute_pipeline.py --project template_code_project --core-only
-./secure_run.sh --steganography-only --project template_code_project --deterministic
+uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only
+./secure_run.sh --steganography-only --project templates/template_code_project --deterministic
 uv run python scripts/publish_project_release.py \
-  --project template_code_project \
+  --project templates/template_code_project \
   --tag vX.Y.Z \
   --repo docxology/template_code_project \
   --release-name "Convergence Analysis of Gradient Descent Optimization (vX.Y.Z)" \
   --production \
   --new-version   # when publication.doi is already set from a prior mint
-uv run python scripts/03_render_pdf.py --project template_code_project
+uv run python scripts/03_render_pdf.py --project templates/template_code_project
 ```
 
 Current production records: see the generated live matrix in [`../_generated/publication_records.md`](../_generated/publication_records.md) and each exemplar's `manuscript/config.yaml` (`publication.doi` = concept DOI for citations and PDF cover; `publication.version_doi` = latest deposit).
