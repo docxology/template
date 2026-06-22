@@ -25,6 +25,7 @@ import json
 import sys
 from pathlib import Path
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.doctor.detectors import DETECTORS, run_detectors
 from infrastructure.doctor.fixers import FIXER_REGISTRY, build_plans_for_findings
@@ -137,6 +138,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     sub.add_parser("robot-docs", help="Stable-text manual for agentic callers.")
+
+    sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit.")
 
     return parser
 
@@ -327,6 +330,11 @@ def cmd_robot_docs(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_schema(args: argparse.Namespace) -> int:
+    """Print this CLI's parameter schema as JSON and exit 0."""
+    return emit_schema(build_parser())
+
+
 _ROBOT_DOCS = """\
 infrastructure.doctor — robot-readable usage manual
 ====================================================
@@ -381,6 +389,7 @@ _DISPATCH = {
     "history": cmd_history,
     "capabilities": cmd_capabilities,
     "robot-docs": cmd_robot_docs,
+    "schema": cmd_schema,
 }
 
 

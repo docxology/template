@@ -14,10 +14,11 @@ from infrastructure.autoresearch.reports import (
     write_benchmark_scores,
 )
 from infrastructure.autoresearch.validation import validate_autoresearch_plan
+from infrastructure.core.cli_scaffold import emit_schema
 
 
-def main(argv: list[str] | None = None) -> int:
-    """Run the AutoResearch CLI."""
+def build_parser() -> argparse.ArgumentParser:
+    """Build the AutoResearch CLI argument parser."""
     parser = argparse.ArgumentParser(description="Validate deterministic AutoResearch readiness")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -37,7 +38,19 @@ def main(argv: list[str] | None = None) -> int:
     benchmark_parser = subparsers.add_parser("benchmark", help="Write benchmark task status from grading outputs")
     _add_project_args(benchmark_parser)
 
+    schema_parser = subparsers.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit")
+    schema_parser.set_defaults(func=lambda _args: emit_schema(build_parser()))
+
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Run the AutoResearch CLI."""
+    parser = build_parser()
+
     args = parser.parse_args(argv)
+    if args.command == "schema":
+        return emit_schema(build_parser())
     if args.command == "plan":
         return _plan(args.repo_root, args.project, args.projects_dir)
     if args.command == "validate":

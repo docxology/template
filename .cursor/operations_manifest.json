@@ -1,0 +1,765 @@
+{
+  "version": 1,
+  "operations": [
+    {
+      "module": "infrastructure.autoresearch",
+      "invocation": "python -m infrastructure.autoresearch",
+      "source_path": "infrastructure/autoresearch/cli.py",
+      "purpose": "Command-line interface for AutoResearch readiness checks.",
+      "subcommands": [
+        {
+          "name": "plan",
+          "help": "Write the composed AutoResearch plan JSON"
+        },
+        {
+          "name": "validate",
+          "help": "Validate a project readiness plan"
+        },
+        {
+          "name": "review-packet",
+          "help": "Write a generic human review packet"
+        },
+        {
+          "name": "summarize",
+          "help": "Write a generic AutoResearch summary"
+        },
+        {
+          "name": "benchmark",
+          "help": "Write benchmark task status from grading outputs"
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit"
+        }
+      ],
+      "exports": [
+        "AutoResearchConfig",
+        "AutoResearchIssue",
+        "AutoResearchPlan",
+        "AutoResearchReport",
+        "AutoResearchStage",
+        "BenchmarkTask",
+        "BudgetPolicy",
+        "EvidenceLink",
+        "EXTRINSIC_QUALITY_CHECKS",
+        "ExperimentCandidate",
+        "INTRINSIC_QUALITY_CHECKS",
+        "ResearchIdea",
+        "ResearchProgram",
+        "ReviewGate",
+        "RunLedger",
+        "SecurityProfile",
+        "ValidationPhase",
+        "build_autoresearch_plan",
+        "load_autoresearch_config",
+        "mad_confidence",
+        "metric_unit_from_name",
+        "parse_string_sequence",
+        "parse_metric_lines",
+        "validate_autoresearch_overlay",
+        "validate_autoresearch_plan",
+        "write_autoresearch_report"
+      ]
+    },
+    {
+      "module": "infrastructure.core.config",
+      "invocation": "python -m infrastructure.core.config",
+      "source_path": "infrastructure/core/config/cli.py",
+      "purpose": "Load manuscript configuration script - THIN ORCHESTRATOR",
+      "subcommands": [],
+      "exports": [
+        "YAML_AVAILABLE",
+        "clear_project_schema_extensions",
+        "find_config_file",
+        "generate_manuscript_config_schema",
+        "get_config_as_dict",
+        "get_project_schema_extensions",
+        "get_review_types",
+        "get_translation_languages",
+        "load_config",
+        "register_project_schema_extension"
+      ]
+    },
+    {
+      "module": "infrastructure.core.pipeline",
+      "invocation": "python -m infrastructure.core.pipeline",
+      "source_path": "infrastructure/core/pipeline/cli.py",
+      "purpose": "CLI for introspecting the declarative pipeline definition.",
+      "subcommands": [
+        {
+          "name": "describe-pipeline",
+          "help": "Print the stage catalog derived from pipeline.yaml"
+        },
+        {
+          "name": "list-stages",
+          "help": "Alias for describe-pipeline"
+        }
+      ],
+      "exports": [
+        "MultiProjectConfig",
+        "MultiProjectOrchestrator",
+        "MultiProjectResult",
+        "format_multi_project_detailed_report",
+        "format_multi_project_outcome_lines",
+        "PerformanceMetrics",
+        "PerformanceMonitor",
+        "PipelineConfig",
+        "PipelineExecutor",
+        "PipelineStageResult",
+        "PipelineControlConfig",
+        "StagePerformanceTracker",
+        "StageContract",
+        "StageHooks",
+        "StagePolicy",
+        "StageSpec",
+        "TelemetryCollector",
+        "TelemetryConfig",
+        "generate_pipeline_summary",
+        "get_system_resources"
+      ]
+    },
+    {
+      "module": "infrastructure.doctor",
+      "invocation": "python -m infrastructure.doctor",
+      "source_path": "infrastructure/doctor/cli.py",
+      "purpose": "CLI surface for ``python -m infrastructure.doctor``.",
+      "subcommands": [
+        {
+          "name": "diagnose",
+          "help": "Run detectors and print findings."
+        },
+        {
+          "name": "fix",
+          "help": "Diagnose, then apply fixes."
+        },
+        {
+          "name": "undo",
+          "help": "Reverse a previously applied fix."
+        },
+        {
+          "name": "history",
+          "help": "Print the action journal."
+        },
+        {
+          "name": "capabilities",
+          "help": "Print JSON describing every detector and fixer."
+        },
+        {
+          "name": "robot-docs",
+          "help": "Stable-text manual for agentic callers."
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit."
+        }
+      ],
+      "exports": [
+        "Severity",
+        "TherapyLevel",
+        "Finding",
+        "FixPlan",
+        "RepairLevel",
+        "MutateRecord",
+        "DoctorReport",
+        "DETECTORS",
+        "run_detectors",
+        "FIXER_REGISTRY",
+        "build_plans_for_findings",
+        "DoctorSafetyError",
+        "DoctorState",
+        "mutate",
+        "undo",
+        "load_journal",
+        "register_handler",
+        "DIMENSIONS",
+        "DIMENSION_WEIGHTS",
+        "compute_scorecard",
+        "render_report_text",
+        "render_report_json",
+        "compute_exit_code",
+        "EXIT_HEALTHY",
+        "EXIT_WARN",
+        "EXIT_ERROR",
+        "EXIT_CRITICAL",
+        "EXIT_REGRESSION",
+        "EXIT_USAGE"
+      ]
+    },
+    {
+      "module": "infrastructure.llm.cli",
+      "invocation": "python -m infrastructure.llm.cli",
+      "source_path": "infrastructure/llm/cli/__main__.py",
+      "purpose": "``python -m infrastructure.llm.cli`` entry point.",
+      "subcommands": [],
+      "exports": []
+    },
+    {
+      "module": "infrastructure.methods",
+      "invocation": "python -m infrastructure.methods",
+      "source_path": "infrastructure/methods/cli.py",
+      "purpose": "CLI for methods orchestration plans.",
+      "subcommands": [
+        {
+          "name": "plan",
+          "help": "Render a methods orchestration plan."
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit."
+        }
+      ],
+      "exports": [
+        "MethodStage",
+        "MethodsIssue",
+        "MethodsOrchestrationPlan",
+        "build_methods_orchestration_plan",
+        "render_methods_orchestration_markdown",
+        "validate_methods_orchestration_plan"
+      ]
+    },
+    {
+      "module": "infrastructure.orchestration",
+      "invocation": "python -m infrastructure.orchestration",
+      "source_path": "infrastructure/orchestration/cli.py",
+      "purpose": "Argparse + dispatch for ``python -m infrastructure.orchestration``.",
+      "subcommands": [
+        {
+          "name": "pipeline",
+          "help": "Run a single-project pipeline."
+        },
+        {
+          "name": "multi",
+          "help": "Run all-projects orchestration."
+        },
+        {
+          "name": "secure",
+          "help": "Run pipeline + steganography (or steganography-only)."
+        },
+        {
+          "name": "menu",
+          "help": "Render the interactive menu."
+        },
+        {
+          "name": "list-projects",
+          "help": "List discovered projects, one per line."
+        },
+        {
+          "name": "link-projects",
+          "help": "Symlink private lifecycle projects into local mirrors."
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit."
+        }
+      ],
+      "exports": [
+        "MENU_OPTIONS",
+        "PipelineRunner",
+        "build_parser",
+        "main",
+        "render_menu",
+        "run_secure_pipeline",
+        "select_project_interactive",
+        "setup_stage_log",
+        "validate_project_slug"
+      ]
+    },
+    {
+      "module": "infrastructure.prose",
+      "invocation": "python -m infrastructure.prose",
+      "source_path": "infrastructure/prose/cli.py",
+      "purpose": "Command-line interface for prose analysis.",
+      "subcommands": [
+        {
+          "name": "metrics",
+          "help": "Readability metrics for a single file."
+        },
+        {
+          "name": "outline",
+          "help": "Heading outline of a Markdown file."
+        },
+        {
+          "name": "quality",
+          "help": "Editorial quality flags."
+        },
+        {
+          "name": "report",
+          "help": "Full report over a manuscript directory."
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit."
+        }
+      ],
+      "exports": [
+        "ProseMetrics",
+        "compute_metrics",
+        "count_syllables",
+        "is_complex_word",
+        "split_paragraphs",
+        "split_sentences",
+        "tokenize_words",
+        "Heading",
+        "Section",
+        "StructureReport",
+        "analyze_structure",
+        "parse_headings",
+        "render_outline",
+        "QualityReport",
+        "analyze_quality",
+        "detect_hedge_words",
+        "detect_long_sentences",
+        "detect_passive_sentences",
+        "extract_citation_keys",
+        "normalise_for_prose",
+        "read_manuscript_dir",
+        "strip_front_matter",
+        "strip_fences",
+        "strip_inline_code",
+        "strip_links_to_text",
+        "FileReport",
+        "ManuscriptReport",
+        "analyze_text",
+        "analyze_files",
+        "analyze_manuscript",
+        "write_report",
+        "load_report_json"
+      ]
+    },
+    {
+      "module": "infrastructure.publishing",
+      "invocation": "python -m infrastructure.publishing",
+      "source_path": "infrastructure/publishing/cli.py",
+      "purpose": "CLI interface for publishing operations.",
+      "subcommands": [
+        {
+          "name": "extract-metadata",
+          "help": "Extract metadata"
+        },
+        {
+          "name": "generate-citation",
+          "help": "Generate citation"
+        },
+        {
+          "name": "publish-zenodo",
+          "help": "Publish to Zenodo"
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit"
+        }
+      ],
+      "exports": [
+        "PublicationMetadata",
+        "CitationStyle",
+        "ZenodoClient",
+        "ZenodoConfig",
+        "extract_publication_metadata",
+        "validate_doi",
+        "generate_citation_bibtex",
+        "generate_citation_apa",
+        "generate_citation_mla",
+        "generate_citations_markdown",
+        "create_publication_package",
+        "create_submission_checklist",
+        "extract_citations_from_markdown",
+        "generate_publication_summary",
+        "create_academic_profile_data",
+        "generate_doi_badge",
+        "create_publication_announcement",
+        "validate_publication_readiness",
+        "generate_publication_metrics",
+        "create_repository_metadata",
+        "calculate_complexity_score",
+        "publish_to_zenodo",
+        "prepare_arxiv_submission",
+        "create_github_release"
+      ]
+    },
+    {
+      "module": "infrastructure.reference.citation",
+      "invocation": "python -m infrastructure.reference.citation",
+      "source_path": "infrastructure/reference/citation/cli.py",
+      "purpose": "Command-line interface for citation export.",
+      "subcommands": [
+        {
+          "name": "validate",
+          "help": "Parse a .bib file and report issues."
+        },
+        {
+          "name": "format",
+          "help": "Re-emit a .bib file in canonical format."
+        },
+        {
+          "name": "convert",
+          "help": "Convert a JSON file of Paper records to BibTeX."
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit."
+        }
+      ],
+      "exports": [
+        "BibEntry",
+        "BibDatabase",
+        "CANONICAL_ENTRY_TYPES",
+        "render_entry",
+        "render_database",
+        "render_entries",
+        "write_bibfile",
+        "parse_bibtex",
+        "parse_bibfile",
+        "BibParseError",
+        "paper_to_bibentry",
+        "generate_citation_key",
+        "escape_latex",
+        "unescape_latex"
+      ]
+    },
+    {
+      "module": "infrastructure.reference.verification",
+      "invocation": "python -m infrastructure.reference.verification",
+      "source_path": "infrastructure/reference/verification/cli.py",
+      "purpose": "CLI for reference-existence verification.",
+      "subcommands": [
+        {
+          "name": "verify",
+          "help": "Verify references in a .bib file"
+        },
+        {
+          "name": "cache-clear",
+          "help": "Clear the persistent resolution cache"
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit"
+        }
+      ],
+      "exports": [
+        "BLOCKING_STATUSES",
+        "DEFAULT_TTL_SECONDS",
+        "ReferenceResolver",
+        "ReferenceVerdict",
+        "Resolution",
+        "ResolutionCache",
+        "VerificationReport",
+        "VerificationStatus",
+        "extract_arxiv_id",
+        "normalize_doi",
+        "parse_bib_year",
+        "title_similarity",
+        "verify_bibfile",
+        "verify_database",
+        "verify_entry"
+      ]
+    },
+    {
+      "module": "infrastructure.rendering",
+      "invocation": "python -m infrastructure.rendering",
+      "source_path": "infrastructure/rendering/cli.py",
+      "purpose": "CLI interface for rendering operations.",
+      "subcommands": [
+        {
+          "name": "pdf",
+          "help": "Render PDF"
+        },
+        {
+          "name": "all",
+          "help": "Render all formats"
+        },
+        {
+          "name": "slides",
+          "help": "Render slides"
+        },
+        {
+          "name": "web",
+          "help": "Render web output"
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit"
+        }
+      ],
+      "exports": [
+        "DocxRenderResult",
+        "EpubRenderResult",
+        "EXCLUDED_DOC_FILENAMES",
+        "RenderManager",
+        "RenderingConfig",
+        "discover_manuscript_files",
+        "render_docx",
+        "render_epub",
+        "substitute_manuscript_text",
+        "verify_figures_exist",
+        "write_resolved_manuscript_tree"
+      ]
+    },
+    {
+      "module": "infrastructure.search.deep_research",
+      "invocation": "python -m infrastructure.search.deep_research",
+      "source_path": "infrastructure/search/deep_research/cli.py",
+      "purpose": "Command-line interface for deep research dispatch.",
+      "subcommands": [
+        {
+          "name": "providers",
+          "help": "list providers usable with current environment"
+        },
+        {
+          "name": "submit",
+          "help": "submit a query and print the job handle"
+        },
+        {
+          "name": "poll",
+          "help": "poll a submitted job once and print its state"
+        },
+        {
+          "name": "cancel",
+          "help": "cancel a running background job so it stops billing"
+        },
+        {
+          "name": "run-project",
+          "help": "package a project tree, run providers to completion, save reports"
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit"
+        }
+      ],
+      "exports": [
+        "DEFAULT_GEMINI_AGENT",
+        "DEFAULT_OPENAI_MODEL",
+        "DeepResearchAnalysis",
+        "DeepResearchCitation",
+        "DeepResearchClient",
+        "DeepResearchConfig",
+        "DeepResearchJobHandle",
+        "DeepResearchMCPServer",
+        "DeepResearchReportBundle",
+        "DeepResearchRequest",
+        "DeepResearchResult",
+        "DeepResearchSources",
+        "DeepResearchProjectContext",
+        "DeepResearchWaitTimeout",
+        "GeminiDeepResearchError",
+        "GeminiDeepResearchProvider",
+        "OpenAIDeepResearchError",
+        "OpenAIDeepResearchProvider",
+        "build_project_deep_research_request",
+        "build_gemini_payload",
+        "build_gemini_tools",
+        "build_openai_payload",
+        "build_openai_tools",
+        "collect_project_context",
+        "save_deep_research_result",
+        "save_deep_research_results"
+      ]
+    },
+    {
+      "module": "infrastructure.search.exa",
+      "invocation": "python -m infrastructure.search.exa",
+      "source_path": "infrastructure/search/exa/cli.py",
+      "purpose": "Command-line interface for the Exa search interfaces.",
+      "subcommands": [
+        {
+          "name": "search",
+          "help": "POST /search"
+        },
+        {
+          "name": "contents",
+          "help": "POST /contents"
+        },
+        {
+          "name": "answer",
+          "help": "POST /answer"
+        },
+        {
+          "name": "find-similar",
+          "help": "POST /findSimilar"
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit"
+        }
+      ],
+      "exports": [
+        "API_KEY_ENV",
+        "DEFAULT_BASE_URL",
+        "DEFAULT_SEARCH_TYPE",
+        "VALID_SEARCH_TYPES",
+        "AnswerResponse",
+        "ContentsResponse",
+        "ExaAnswerInterface",
+        "ExaClient",
+        "ExaConfig",
+        "ExaContentsInterface",
+        "ExaError",
+        "ExaFindSimilarInterface",
+        "ExaHttpClient",
+        "ExaResponse",
+        "ExaResult",
+        "ExaSearchInterface",
+        "Grounding",
+        "SearchOutput",
+        "SearchResponse",
+        "UrllibExaHttpClient"
+      ]
+    },
+    {
+      "module": "infrastructure.search.literature",
+      "invocation": "python -m infrastructure.search.literature",
+      "source_path": "infrastructure/search/literature/cli.py",
+      "purpose": "Command-line interface for literature search.",
+      "subcommands": [
+        {
+          "name": "search",
+          "help": "Run a query and emit JSON."
+        },
+        {
+          "name": "to-bibtex",
+          "help": "Run a query and emit BibTeX."
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit"
+        }
+      ],
+      "exports": [
+        "Paper",
+        "SearchQuery",
+        "SearchResult",
+        "merge_papers",
+        "SearchBackend",
+        "LocalBackend",
+        "CrossrefBackend",
+        "ArxivBackend",
+        "PaperclipBackend",
+        "HttpClient",
+        "UrllibHttpClient",
+        "HttpResponse",
+        "BackendError",
+        "LiteratureClient",
+        "SearchCache",
+        "AbstractFetcher",
+        "FulltextFetcher",
+        "FetchResult",
+        "enrich_papers",
+        "write_corpus"
+      ]
+    },
+    {
+      "module": "infrastructure.sia",
+      "invocation": "python -m infrastructure.sia",
+      "source_path": "infrastructure/sia/cli.py",
+      "purpose": "CLI for SIA task validation and run inspection.",
+      "subcommands": [
+        {
+          "name": "validate",
+          "help": "Validate task directory layout"
+        },
+        {
+          "name": "inspect-run",
+          "help": "Summarize run_summary.json"
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit"
+        }
+      ],
+      "exports": [
+        "AgentExecutionLog",
+        "EvaluationResult",
+        "GenerationArtifacts",
+        "GenerationState",
+        "RunConfig",
+        "TaskLayout",
+        "append_generation",
+        "init_context",
+        "load_agent_execution",
+        "read_results_json",
+        "run_evaluation",
+        "run_sia_loop",
+        "validate_task_dir",
+        "write_results_json"
+      ]
+    },
+    {
+      "module": "infrastructure.skills",
+      "invocation": "python -m infrastructure.skills",
+      "source_path": "infrastructure/skills/cli.py",
+      "purpose": "CLI for skill discovery and manifest generation.",
+      "subcommands": [
+        {
+          "name": "list-json",
+          "help": "Print skills as JSON to stdout"
+        },
+        {
+          "name": "write",
+          "help": "Write skill manifest JSON"
+        },
+        {
+          "name": "write-index",
+          "help": "Write generated Markdown skills index"
+        },
+        {
+          "name": "check",
+          "help": "Verify manifest matches discovery"
+        },
+        {
+          "name": "check-all-exports",
+          "help": "Audit every public Python module under <audit-root> for missing __all__"
+        },
+        {
+          "name": "check-contracts",
+          "help": "Validate docs/prompts SKILL.md workflow metadata contracts"
+        },
+        {
+          "name": "operations-list-json",
+          "help": "Print the machine-readable catalog of agent-invocable CLI operations"
+        },
+        {
+          "name": "operations-write",
+          "help": "Write the operations manifest JSON (machine-readable CLI catalog)"
+        },
+        {
+          "name": "operations-check",
+          "help": "Verify the operations manifest matches live discovery"
+        }
+      ],
+      "exports": [
+        "DEFAULT_SKILL_SEARCH_ROOTS",
+        "DEFAULT_OPERATION_SEARCH_ROOTS",
+        "OperationDescriptor",
+        "SkillDescriptor",
+        "SubcommandInfo",
+        "build_skill_index_markdown",
+        "build_manifest_payload",
+        "build_operations_payload",
+        "check_skill_contracts",
+        "discover_operations",
+        "discover_skills",
+        "iter_skill_paths",
+        "iter_contract_skill_paths",
+        "load_manifest",
+        "load_operations_manifest",
+        "load_skill_descriptor",
+        "manifest_matches_discovery",
+        "manifest_skill_dicts_for_prompt",
+        "operation_descriptors_as_json_serializable",
+        "operations_manifest_matches_discovery",
+        "skill_descriptors_as_json_serializable",
+        "split_yaml_frontmatter",
+        "validate_skill_contract_file",
+        "write_operations_manifest",
+        "write_skill_manifest"
+      ]
+    },
+    {
+      "module": "infrastructure.validation.cli",
+      "invocation": "python -m infrastructure.validation.cli",
+      "source_path": "infrastructure/validation/cli/__main__.py",
+      "purpose": "Allow `python -m infrastructure.validation.cli`.",
+      "subcommands": [],
+      "exports": []
+    }
+  ]
+}

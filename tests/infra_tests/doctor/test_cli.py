@@ -105,3 +105,18 @@ def test_history_lists_actions(tmp_path: Path):
     code, stdout, _ = _capture(["--repo-root", str(tmp_path), "history"])
     assert code == 0
     assert "fix_make_run_sh_executable" in stdout
+
+
+def test_schema_subcommand_emits_valid_json(tmp_path: Path):
+    _bootstrap(tmp_path)
+    code, stdout, _ = _capture(["--repo-root", str(tmp_path), "schema"])
+    assert code == 0
+    payload = json.loads(stdout)
+    assert payload["prog"] == "infrastructure.doctor"
+    assert "options" in payload
+    assert "subcommands" in payload
+    # The schema subcommand is additive and discoverable; existing
+    # subcommands remain present in the contract.
+    assert "diagnose" in payload["subcommands"]
+    assert "fix" in payload["subcommands"]
+    assert "schema" in payload["subcommands"]

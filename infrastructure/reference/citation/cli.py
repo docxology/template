@@ -15,6 +15,7 @@ import json
 import sys
 from pathlib import Path
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reference.citation.bibtex_parser import BibParseError, parse_bibfile
 from infrastructure.reference.citation.bibtex_writer import render_database, write_bibfile
@@ -125,6 +126,9 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output .bib path, or '-' for stdout",
     )
     p_convert.set_defaults(func=_cmd_convert)
+
+    p_schema = sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit.")
+    p_schema.set_defaults(func=lambda _args: emit_schema(build_parser()))
 
     return parser
 

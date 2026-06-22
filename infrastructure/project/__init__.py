@@ -43,6 +43,11 @@ if TYPE_CHECKING:
         public_project_infos,
         public_project_names,
     )
+    from infrastructure.project.copy_exemplar import (
+        CopyResult,
+        copy_exemplar,
+        plan_copy,
+    )
 
 _PUBLIC_SCOPE_EXPORTS = {
     "PUBLIC_PROJECT_NAMES",
@@ -56,6 +61,11 @@ _CODEGRAPH_EXPORTS = {
     "build_codegraph_init_command",
     "build_scope_check_command",
     "verify_codegraph_scope_payload",
+}
+_COPY_EXEMPLAR_EXPORTS = {
+    "CopyResult",
+    "copy_exemplar",
+    "plan_copy",
 }
 
 
@@ -71,6 +81,11 @@ def __getattr__(name: str) -> Any:
 
         codegraph = import_module("infrastructure.project.codegraph")
         return getattr(codegraph, name)
+    if name in _COPY_EXEMPLAR_EXPORTS:
+        from importlib import import_module
+
+        copy_exemplar_mod = import_module("infrastructure.project.copy_exemplar")
+        return getattr(copy_exemplar_mod, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
@@ -78,12 +93,15 @@ __all__ = [
     "ProjectInfo",
     "PUBLIC_PROJECT_NAMES",
     "CodeGraphCommand",
+    "CopyResult",
     "build_codegraph_files_command",
     "build_codegraph_init_command",
     "build_scope_check_command",
+    "copy_exemplar",
     "discover_projects",
     "find_setup_hook",
     "get_project_metadata",
+    "plan_copy",
     "preflight_setup_hook",
     "public_ci_source_paths",
     "public_project_infos",

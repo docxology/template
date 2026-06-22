@@ -595,3 +595,30 @@ def test_main_no_subcommand_runs_interactive(fake_repo: Path, monkeypatch) -> No
     rc = main(["--repo-root", str(fake_repo)])
     assert rc == 0
     assert captured["repo_root"] == fake_repo
+
+
+def test_main_schema_emits_valid_json(capsys: pytest.CaptureFixture[str]) -> None:
+    """`schema` prints the CLI parameter contract as JSON and exits 0.
+
+    No mocks: invokes the real ``main`` and parses real captured stdout.
+    """
+    import json
+
+    rc = main(["schema"])
+    assert rc == 0
+
+    out = capsys.readouterr().out
+    payload = json.loads(out)
+    assert payload["prog"] == "python -m infrastructure.orchestration"
+    # The schema subcommand must appear among the introspected subcommands,
+    # alongside the pre-existing ones, proving additive coverage.
+    assert "subcommands" in payload
+    assert "schema" in payload["subcommands"]
+    assert "pipeline" in payload["subcommands"]
+
+
+def test_build_parser_recognizes_schema_subcommand() -> None:
+    """The schema subcommand parses without disturbing existing subcommands."""
+    parser = build_parser()
+    ns = parser.parse_args(["schema"])
+    assert ns.command == "schema"

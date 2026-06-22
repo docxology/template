@@ -23,6 +23,7 @@ import json
 import sys
 from pathlib import Path
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reference.verification.cache import ResolutionCache
 from infrastructure.reference.verification.models import VerificationReport
@@ -126,6 +127,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_clear = sub.add_parser("cache-clear", help="Clear the persistent resolution cache")
     _add_cache_args(p_clear)
     p_clear.set_defaults(func=cmd_cache_clear)
+
+    p_schema = sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit")
+    p_schema.set_defaults(func=lambda _args: emit_schema(build_parser()))
 
     return parser
 

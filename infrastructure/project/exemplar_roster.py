@@ -19,8 +19,10 @@ Contract enforced here (and by ``tests/infra_tests/project/test_exemplar_roster.
 from __future__ import annotations
 
 import re
+import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
@@ -182,4 +184,44 @@ def write_roster_doc(repo_root: Path, out_path: Path | None = None) -> Path:
     target = out_path if out_path is not None else repo_root / DOC_RELATIVE_PATH
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(render_roster_markdown(collect_entries(repo_root)), encoding="utf-8")
+    return target
+
+
+MANIFEST_RELATIVE_PATH = Path("infrastructure/project/template_manifest.json")
+_MANIFEST_VERSION = 1
+
+
+def build_template_manifest(repo_root: Path) -> dict[str, Any]:
+    """Build a machine-readable manifest of the public exemplar templates.
+
+    An agent asking "which template should I copy for X?" previously had to fetch
+    each exemplar's README from disk and regex-parse it. This emits the same
+    differentiation data the roster doc renders — as structured JSON derived from
+    the single roster source of truth — so an agent can query it once.
+    """
+    entries = collect_entries(repo_root)
+    return {
+        "version": _MANIFEST_VERSION,
+        "templates": [
+            {
+                "name": entry.name.split("/")[-1],
+                "qualified_name": entry.name,
+                "title": entry.title,
+                "use_when": _first_sentence(entry.use_when) if entry.use_when else "",
+                "test_file_count": entry.test_file_count,
+                "coverage_floor": entry.coverage_floor,
+            }
+            for entry in entries
+        ],
+    }
+
+
+def write_template_manifest(repo_root: Path, out_path: Path | None = None) -> Path:
+    """Write the template manifest JSON; returns the written path."""
+    target = out_path if out_path is not None else repo_root / MANIFEST_RELATIVE_PATH
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        json.dumps(build_template_manifest(repo_root), indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
     return target

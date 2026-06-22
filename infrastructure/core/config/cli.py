@@ -18,8 +18,10 @@ Usage:
 
 import argparse
 import json
+from collections.abc import Sequence
 from pathlib import Path
 
+from infrastructure.core.cli_scaffold import add_schema_flag, emit_schema
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -27,8 +29,15 @@ logger = get_logger(__name__)
 repo_root = Path(__file__).parent.parent.parent
 
 
-def main() -> None:
-    """Main function to load and export configuration."""
+def main(argv: Sequence[str] | None = None) -> int:
+    """Main function to load and export configuration.
+
+    Args:
+        argv: Optional argument vector (defaults to ``sys.argv`` via argparse).
+
+    Returns:
+        Process exit code (``0`` on success).
+    """
     try:
         from infrastructure.core.config.loader import (
             YAML_AVAILABLE,
@@ -38,7 +47,7 @@ def main() -> None:
     except ImportError as e:
         logger.error(f"Failed to import from infrastructure/core/config_loader.py: {e}")
         logger.error("Falling back to environment variables only")
-        return
+        return 0
 
     parser = argparse.ArgumentParser(
         description="Load manuscript configuration and export as environment variables",
@@ -65,17 +74,21 @@ Examples:
         action="store_true",
         help="Print the manuscript config JSON Schema instead of shell exports.",
     )
+    add_schema_flag(parser)
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+
+    if getattr(args, "schema", False):
+        return emit_schema(parser)
 
     if args.schema_json:
         print(json.dumps(generate_manuscript_config_schema(args.project or ""), indent=2))
-        return
+        return 0
 
     if not YAML_AVAILABLE:
         logger.error("PyYAML not installed. Install with: pip install pyyaml")
         logger.error("Falling back to environment variables only")
-        return
+        return 0
 
     env_vars = get_config_as_dict(repo_root, respect_existing=True)
 
@@ -89,6 +102,8 @@ Examples:
             value_escaped = value.replace('"', '\\"')
         print(f'export {key}="{value_escaped}"')
 
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

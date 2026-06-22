@@ -22,12 +22,17 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
+import json  # noqa: E402
+
 from infrastructure.project.exemplar_roster import (  # noqa: E402
     DOC_RELATIVE_PATH,
+    MANIFEST_RELATIVE_PATH,
+    build_template_manifest,
     collect_entries,
     render_roster_markdown,
     unexpected_missing_use_when,
     write_roster_doc,
+    write_template_manifest,
 )
 
 
@@ -48,17 +53,25 @@ def main() -> int:
         return 1
 
     doc_path = REPO_ROOT / DOC_RELATIVE_PATH
+    manifest_path = REPO_ROOT / MANIFEST_RELATIVE_PATH
     if args.check:
         rendered = render_roster_markdown(entries)
         on_disk = doc_path.read_text(encoding="utf-8") if doc_path.is_file() else ""
         if rendered != on_disk:
             print(f"STALE: {DOC_RELATIVE_PATH} differs from a fresh render — regenerate it")
             return 1
-        print(f"exemplar_roster: OK ({len(entries)} exemplars, doc in sync)")
+        expected_manifest = json.dumps(build_template_manifest(REPO_ROOT), indent=2, ensure_ascii=False) + "\n"
+        manifest_on_disk = manifest_path.read_text(encoding="utf-8") if manifest_path.is_file() else ""
+        if expected_manifest != manifest_on_disk:
+            print(f"STALE: {MANIFEST_RELATIVE_PATH} differs from a fresh render — regenerate it")
+            return 1
+        print(f"exemplar_roster: OK ({len(entries)} exemplars, doc + manifest in sync)")
         return 0
 
     written = write_roster_doc(REPO_ROOT)
     print(str(written))
+    manifest_written = write_template_manifest(REPO_ROOT)
+    print(str(manifest_written))
     return 0
 
 

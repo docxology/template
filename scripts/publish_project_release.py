@@ -8,6 +8,8 @@ Exit codes:
     0: Success
     1: Publish or render failure
     2: Missing PDF, credentials, or invalid inputs
+
+These map to ``scripts.exit_codes.ExitCode`` (SUCCESS=0 / FAILURE=1 / SKIP=2).
 """
 
 from __future__ import annotations

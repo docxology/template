@@ -79,3 +79,14 @@ def test_cli_convert_to_stdout(tmp_path: Path):
     result = _run(["convert", str(in_path), "-"])
     assert result.returncode == 0, result.stderr
     assert "@article{smith2024" in result.stdout
+
+
+def test_cli_schema_emits_valid_json():
+    result = _run(["schema"])
+    assert result.returncode == 0, result.stderr
+    schema = json.loads(result.stdout)
+    assert "prog" in schema
+    # The schema subcommand and existing subcommands appear in the contract.
+    assert "subcommands" in schema
+    for expected in ("validate", "format", "convert", "schema"):
+        assert expected in schema["subcommands"]

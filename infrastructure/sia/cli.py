@@ -7,6 +7,7 @@ import json
 import sys
 from pathlib import Path
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging.utils import get_logger
 
@@ -48,12 +49,8 @@ def _cmd_inspect_run(run_summary: Path, *, as_json: bool) -> int:
     return 0
 
 
-def main(argv: list[str] | None = None) -> int:
-    """Validate a SIA task directory or inspect a run summary."""
-    raw_argv = list(sys.argv[1:] if argv is None else argv)
-    if raw_argv and raw_argv[0] not in {"validate", "inspect-run", "-h", "--help"} and not raw_argv[0].startswith("-"):
-        raw_argv = ["validate", *raw_argv]
-
+def build_parser() -> argparse.ArgumentParser:
+    """Create the argparse parser for the SIA CLI."""
     parser = argparse.ArgumentParser(
         description=__doc__,
         epilog=(
@@ -77,7 +74,26 @@ def main(argv: list[str] | None = None) -> int:
     inspect_parser.add_argument("run_summary", type=Path)
     inspect_parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
 
+    schema_parser = sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit")
+    schema_parser.set_defaults(emit_schema=True)
+
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Validate a SIA task directory or inspect a run summary."""
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
+    if (
+        raw_argv
+        and raw_argv[0] not in {"validate", "inspect-run", "schema", "-h", "--help"}
+        and not raw_argv[0].startswith("-")
+    ):
+        raw_argv = ["validate", *raw_argv]
+
+    parser = build_parser()
     args = parser.parse_args(raw_argv)
+    if getattr(args, "emit_schema", False):
+        return emit_schema(parser)
     try:
         if args.command == "inspect-run":
             return _cmd_inspect_run(args.run_summary, as_json=args.json)

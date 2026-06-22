@@ -5,8 +5,10 @@ Thin orchestrator wrapping infrastructure.publishing module functionality.
 
 import argparse
 import os
+from collections.abc import Sequence
 from pathlib import Path
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.logging.utils import get_logger
 
 from .zenodo import ZenodoClient, ZenodoConfig
@@ -171,20 +173,15 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
         raise SystemExit(1) from e
 
 
-def main() -> None:
-    """Main CLI entry point for publishing operations.
+def build_parser() -> argparse.ArgumentParser:
+    """Create the argparse parser for the publishing CLI.
 
-    Parses command-line arguments and dispatches to the appropriate
-    subcommand handler. Available commands:
-        - extract-metadata: Extract publication metadata from manuscript files.
-        - generate-citation: Generate a BibTeX citation.
-        - publish-zenodo: Upload and publish to Zenodo repository.
+    Extracted from :func:`main` so the parser can be introspected (e.g. by the
+    ``schema`` subcommand) without invoking the dispatch path. Behavior of every
+    existing subcommand and flag is preserved exactly.
 
     Returns:
-        None. Exit code 0 on success, 1 on error.
-
-    Raises:
-        SystemExit: If no command is specified or if the command fails.
+        The fully configured :class:`argparse.ArgumentParser`.
     """
     parser = argparse.ArgumentParser(description="Publish research outputs to academic platforms.")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -228,18 +225,49 @@ def main() -> None:
     )
     zenodo_parser.set_defaults(func=publish_zenodo_command)
 
-    args = parser.parse_args()
+    # Schema (uniform machine-readable parameter contract)
+    schema_parser = subparsers.add_parser(
+        "schema",
+        help="Print this CLI's parameter schema as JSON and exit",
+    )
+    schema_parser.set_defaults(func=lambda _args: emit_schema(build_parser()))
+
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Main CLI entry point for publishing operations.
+
+    Parses command-line arguments and dispatches to the appropriate
+    subcommand handler. Available commands:
+        - extract-metadata: Extract publication metadata from manuscript files.
+        - generate-citation: Generate a BibTeX citation.
+        - publish-zenodo: Upload and publish to Zenodo repository.
+        - schema: Print this CLI's parameter schema as JSON and exit.
+
+    Args:
+        argv: Optional argument vector (defaults to ``sys.argv[1:]``).
+
+    Returns:
+        Exit code 0 on success.
+
+    Raises:
+        SystemExit: If no command is specified or if the command fails.
+    """
+    parser = build_parser()
+    args = parser.parse_args(argv)
 
     if not hasattr(args, "func"):
         parser.print_help()
         raise SystemExit(1)
 
     try:
-        args.func(args)
+        result = args.func(args)
     except Exception as e:
         logger.error(f"Command failed: {e}")
         raise SystemExit(1) from e
+    return int(result) if isinstance(result, int) else 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

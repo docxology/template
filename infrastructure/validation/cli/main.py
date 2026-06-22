@@ -5,8 +5,10 @@ Thin orchestrator wrapping infrastructure.validation module functionality.
 
 import argparse
 import json
+from collections.abc import Sequence
 from pathlib import Path
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 
@@ -263,8 +265,13 @@ def validate_prose_quality_command(args: argparse.Namespace) -> None:
     raise SystemExit(1 if report.has_flags and args.fail_on_flags else 0)
 
 
-def main() -> None:
-    """Main CLI entry point."""
+def build_parser() -> argparse.ArgumentParser:
+    """Construct the validation CLI argument parser.
+
+    Extracted from :func:`main` so the ``schema`` subcommand can introspect the
+    full parser. Adds no behavior beyond the existing subcommands plus the
+    additive ``schema`` subcommand.
+    """
     parser = argparse.ArgumentParser(description="Validate research output (PDFs, Markdown, integrity).")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
@@ -337,7 +344,28 @@ def main() -> None:
     )
     prose_parser.set_defaults(func=validate_prose_quality_command)
 
-    args = parser.parse_args()
+    # Schema introspection (additive; emits the whole CLI's JSON parameter contract)
+    schema_parser = subparsers.add_parser(
+        "schema",
+        help="Print this CLI's parameter schema as JSON and exit",
+    )
+    schema_parser.set_defaults(func=None)
+
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Main CLI entry point.
+
+    Returns 0 for the ``schema`` subcommand; all other subcommands dispatch to a
+    handler that raises :class:`SystemExit` with the command's own exit code
+    (behavior unchanged from before the refactor).
+    """
+    parser = build_parser()
+    args = parser.parse_args(argv)
+
+    if getattr(args, "command", None) == "schema":
+        return emit_schema(parser)
 
     if not hasattr(args, "func"):
         parser.print_help()
@@ -348,6 +376,7 @@ def main() -> None:
     except Exception as e:  # noqa: BLE001
         logger.error(f"{e}")
         raise SystemExit(1) from e
+    return 0
 
 
 if __name__ == "__main__":

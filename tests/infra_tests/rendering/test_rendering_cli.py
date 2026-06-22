@@ -5,12 +5,14 @@ Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 import argparse
+import contextlib
+import io
+import json
 import logging
 import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 
 from infrastructure.rendering import cli
 
@@ -39,9 +41,8 @@ class TestRenderPdfCommand:
         args = argparse.Namespace(source=str(tmp_path / "nonexistent.tex"))
 
         with caplog.at_level(logging.ERROR):
-            with pytest.raises(SystemExit) as exc_info:
-                cli.render_pdf_command(args)
-        assert exc_info.value.code == 1
+            rc = cli.render_pdf_command(args)
+        assert rc == 1  # handlers now return an exit code instead of raising SystemExit
 
         assert "error" in caplog.text.lower() or "not found" in caplog.text.lower()
 
@@ -69,9 +70,8 @@ class TestRenderAllCommand:
         """Test render all with nonexistent source."""
         args = argparse.Namespace(source=str(tmp_path / "nonexistent.tex"))
 
-        with pytest.raises(SystemExit) as exc_info:
-            cli.render_all_command(args)
-        assert exc_info.value.code == 1
+        rc = cli.render_all_command(args)
+        assert rc == 1  # handlers now return an exit code instead of raising SystemExit
 
 
 class TestRenderSlidesCommand:
@@ -127,9 +127,8 @@ class TestRenderSlidesCommand:
         """Test slides with nonexistent source."""
         args = argparse.Namespace(source=str(tmp_path / "nonexistent.md"), format="beamer")
 
-        with pytest.raises(SystemExit) as exc_info:
-            cli.render_slides_command(args)
-        assert exc_info.value.code == 1
+        rc = cli.render_slides_command(args)
+        assert rc == 1  # handlers now return an exit code instead of raising SystemExit
 
 
 class TestRenderWebCommand:
@@ -152,9 +151,8 @@ class TestRenderWebCommand:
         """Test web rendering with nonexistent source."""
         args = argparse.Namespace(source=str(tmp_path / "nonexistent.md"))
 
-        with pytest.raises(SystemExit) as exc_info:
-            cli.render_web_command(args)
-        assert exc_info.value.code == 1
+        rc = cli.render_web_command(args)
+        assert rc == 1  # handlers now return an exit code instead of raising SystemExit
 
 
 class TestMainCli:
@@ -431,6 +429,44 @@ class TestSlidesRendering:
 
         if hasattr(render_all_cli, "render_revealjs_command"):
             assert callable(render_all_cli.render_revealjs_command)
+
+
+class TestSchemaSubcommand:
+    """Test the additive ``schema`` subcommand (uniform parameter contract)."""
+
+    def test_schema_returns_zero_and_emits_valid_json(self):
+        """main(["schema"]) returns 0 and prints a JSON schema with expected keys."""
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            rc = cli.main(["schema"])
+        assert rc == 0
+
+        payload = json.loads(buffer.getvalue())
+        assert "prog" in payload
+        assert "options" in payload
+        assert "subcommands" in payload
+        # Existing subcommands must still be present in the contract.
+        for name in ("pdf", "all", "slides", "web", "schema"):
+            assert name in payload["subcommands"]
+
+    def test_existing_subcommand_still_parses(self, tmp_path):
+        """An existing subcommand still dispatches — proving no regression."""
+        rc = cli.main(["web", str(tmp_path / "missing.md")])
+        # Nonexistent source returns 1 via the existing handler (no crash, no new behavior).
+        assert rc == 1
+
+    def test_schema_subcommand_via_subprocess(self):
+        """`python -m infrastructure.rendering schema` exits 0 and emits JSON."""
+        result = subprocess.run(
+            [sys.executable, "-m", "infrastructure.rendering", "schema"],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
+        )
+        assert result.returncode == 0
+        payload = json.loads(result.stdout)
+        assert "subcommands" in payload
 
 
 class TestRenderCliMain:

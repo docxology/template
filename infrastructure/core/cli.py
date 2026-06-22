@@ -11,6 +11,7 @@ Implementation is split across:
 """
 
 import sys
+from collections.abc import Sequence
 
 from infrastructure.core.logging.utils import get_logger, setup_logger
 from infrastructure.core.errors import CLI_COMMAND_FAILED, CLI_UNKNOWN_COMMAND
@@ -40,10 +41,16 @@ __all__ = [
 ]
 
 
-def main() -> int:
-    """Main CLI entry point."""
+def main(argv: Sequence[str] | None = None) -> int:
+    """Main CLI entry point.
+
+    Args:
+        argv: Optional argument vector (defaults to ``sys.argv[1:]``). Accepting
+            ``argv`` lets agents and tests invoke this CLI headlessly with the
+            same ``main(argv) -> int`` contract used across infrastructure CLIs.
+    """
     parser = create_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if not args.command:
         parser.print_help()

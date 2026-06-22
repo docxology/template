@@ -8,6 +8,7 @@ import logging
 from collections.abc import Sequence
 from pathlib import Path
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.methods.orchestration import (
     build_methods_orchestration_plan,
     render_methods_orchestration_markdown,
@@ -25,12 +26,15 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("--projects-dir", default="projects", help="Projects directory relative to repo root.")
     plan.add_argument("--format", choices=("json", "markdown"), default="markdown")
     plan.add_argument("--check", action="store_true", help="Exit non-zero when validation errors exist.")
+    sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit.")
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     """Run the methods orchestration CLI."""
     args = build_parser().parse_args(argv)
+    if args.command == "schema":
+        return emit_schema(build_parser())
     if args.command == "plan":
         logging.getLogger("infrastructure.core.pipeline.dag").setLevel(logging.WARNING)
         plan = build_methods_orchestration_plan(

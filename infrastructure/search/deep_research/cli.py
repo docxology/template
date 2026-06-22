@@ -26,6 +26,7 @@ import sys
 from dataclasses import replace
 from typing import Any, Sequence
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.search.deep_research.client import DeepResearchClient, DeepResearchWaitTimeout
 from infrastructure.search.deep_research.models import DeepResearchJobHandle, DeepResearchRequest, DeepResearchResult
 
@@ -59,6 +60,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="total poll budget in seconds; on expiry the still-running jobs are reported as pending",
     )
+
+    p_schema = sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit")
+    p_schema.set_defaults(func=lambda _args: emit_schema(build_parser()))
 
     return parser
 
@@ -122,6 +126,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    func = getattr(args, "func", None)
+    if func is not None:
+        return int(func(args))
     try:
         print(json.dumps(run(args), indent=2, ensure_ascii=False))
     except Exception as exc:  # noqa: BLE001 - CLI boundary: report and exit nonzero

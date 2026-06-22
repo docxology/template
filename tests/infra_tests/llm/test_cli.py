@@ -109,6 +109,26 @@ class TestCLIArgumentParsing:
         assert args.input == "text"
 
 
+class TestCLISchemaCommand:
+    """Test the schema subcommand (uniform parameter-contract emission)."""
+
+    def test_schema_emits_valid_json_and_exits_zero(self, capsys):
+        """`schema` prints a JSON parameter contract and exits 0 (no mocks)."""
+        import json
+
+        with pytest.raises(SystemExit) as exc_info:
+            main(["schema"])
+
+        assert exc_info.value.code == 0
+
+        captured = capsys.readouterr()
+        data = json.loads(captured.out)
+        assert "prog" in data
+        assert "subcommands" in data
+        # The schema reflects every existing subcommand plus schema itself.
+        assert {"query", "check", "models", "template", "schema"} <= set(data["subcommands"])
+
+
 class TestCLICheckCommand:
     """Test check command functionality."""
 

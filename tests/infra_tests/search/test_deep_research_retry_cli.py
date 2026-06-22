@@ -7,11 +7,14 @@ tests cover the deterministic layer only.
 
 from __future__ import annotations
 
+import contextlib
+import io
+import json
 from pathlib import Path
 
 import pytest
 
-from infrastructure.search.deep_research.cli import build_parser, run
+from infrastructure.search.deep_research.cli import build_parser, main, run
 from infrastructure.search.deep_research.project_context import (
     DEFAULT_CONTEXT_DIRS,
     collect_project_context,
@@ -109,6 +112,16 @@ def test_cli_parser_covers_all_subcommands() -> None:
     assert args.command == "poll" and args.job_id == "resp_123"
     args = parser.parse_args(["run-project", "some/root", "q", "--providers", "openai"])
     assert args.command == "run-project" and args.providers == "openai"
+
+
+def test_schema_subcommand_emits_json_and_exits_zero() -> None:
+    buffer = io.StringIO()
+    with contextlib.redirect_stdout(buffer):
+        rc = main(["schema"])
+    assert rc == 0
+    payload = json.loads(buffer.getvalue())
+    assert payload["prog"] == "deep_research"
+    assert set(payload["subcommands"]) >= {"providers", "submit", "poll", "cancel", "run-project", "schema"}
 
 
 def test_idempotency_headers_fresh_per_submission() -> None:

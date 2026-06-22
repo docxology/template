@@ -15,6 +15,7 @@ import json
 import sys
 from pathlib import Path
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.prose.analysis import (
     analyze_quality,
@@ -94,6 +95,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_report.add_argument("manuscript_dir", help="Path to a manuscript/ directory")
     p_report.add_argument("--output", "-o", default="-", help="Output path or '-' for stdout")
     p_report.set_defaults(func=_cmd_report)
+
+    p_schema = sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit.")
+    p_schema.set_defaults(func=lambda _args: emit_schema(build_parser()))
 
     return parser
 

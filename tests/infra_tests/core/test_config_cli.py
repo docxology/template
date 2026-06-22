@@ -6,9 +6,12 @@ No mocks — subprocess and sys.argv try/finally only.
 
 from __future__ import annotations
 
+import io
+import json
 import os
 import subprocess
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 
 import pytest
@@ -109,3 +112,33 @@ class TestConfigCli:
             )
 
             assert result.returncode == 0
+
+    def test_main_schema_flag_emits_json(self):
+        """``main(["--schema"])`` returns 0 and prints a valid JSON schema."""
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            rc = main(["--schema"])
+        assert rc == 0
+        payload = json.loads(buffer.getvalue())
+        assert "prog" in payload or "options" in payload
+        flags = {flag for opt in payload.get("options", []) for flag in opt.get("flags", [])}
+        # Additive guarantee: pre-existing flags are still present in the schema.
+        assert "--project" in flags
+        assert "--schema-json" in flags
+
+    def test_schema_flag_via_module(self):
+        """``python -m infrastructure.core.config --schema`` exits 0 with JSON."""
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        env = os.environ.copy()
+        env["PYTHONPATH"] = str(repo_root) + os.pathsep + env.get("PYTHONPATH", "")
+        result = subprocess.run(
+            [sys.executable, "-m", "infrastructure.core.config", "--schema"],
+            capture_output=True,
+            text=True,
+            env=env,
+            cwd=str(repo_root),
+            timeout=30,
+        )
+        assert result.returncode == 0
+        payload = json.loads(result.stdout)
+        assert "options" in payload

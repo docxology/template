@@ -21,6 +21,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.project_paths import find_repo_root
 from infrastructure.orchestration.discovery import (
     discover_qualified_names,
@@ -204,6 +205,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     link.add_argument("--dry-run", action="store_true", help="Report without changing anything.")
     link.add_argument("--no-prune", action="store_true", help="Keep stale managed links.")
+
+    # 'schema' subcommand — print this CLI's parameter schema as JSON and exit.
+    sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit.")
 
     return parser
 
@@ -474,6 +478,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     """Entry point. Returns process exit code."""
     parser = build_parser()
     ns = parser.parse_args(argv)
+
+    # 'schema' is a pure diagnostic: emit the JSON parameter contract and exit
+    # without any link-sync side effects.
+    if ns.command == "schema":
+        return emit_schema(build_parser())
 
     # Auto-sync the private repo's lifecycle projects into local symlink
     # mirrors. The explicit `link-projects` command does its own sync, so skip

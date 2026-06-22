@@ -149,6 +149,26 @@ repos:
         always_run: true
         verbose: true
 
+      # Verifies .cursor/operations_manifest.json (the machine-readable catalog
+      # of every `python -m infrastructure.X` CLI) matches live AST discovery —
+      # the operations counterpart to skills-check. Regenerate with
+      # `uv run python -m infrastructure.skills operations-write`.
+      - id: operations-check
+        name: infrastructure.skills operations-check (operation manifest freshness)
+        entry: bash
+        args:
+          - -eo
+          - pipefail
+          - -c
+          - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
+            uv run python -m infrastructure.skills operations-check
+        language: system
+        pass_filenames: false
+        stages: [pre-push, manual]
+        always_run: true
+        verbose: true
+
       # Audits every public Python module under `infrastructure/` for missing
       # `__all__` on re-exporting umbrella modules. Prevents regression of the
       # `[attr-defined]` mypy class of bug — see docs/rules/api_design.md.

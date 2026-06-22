@@ -43,6 +43,15 @@ class TestVerifyCommand:
         assert rc == 2
 
 
+class TestSchemaCommand:
+    def test_schema_emits_valid_json(self, capsys):
+        rc = main(["schema"])
+        assert rc == 0
+        payload = json.loads(capsys.readouterr().out)
+        assert "subcommands" in payload
+        assert "verify" in payload["subcommands"]
+
+
 class TestCacheClearCommand:
     def test_cache_clear(self, tmp_path: Path):
         from infrastructure.reference.verification.cache import ResolutionCache

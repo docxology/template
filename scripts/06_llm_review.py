@@ -22,6 +22,8 @@ Exit codes:
     1: LLM pipeline failed hard (configuration error, unrecoverable runtime error)
     2: LLM stage skipped gracefully (Ollama unavailable, no model installed) — callers
        should treat this as a non-fatal soft-skip rather than a failure
+
+These map to ``scripts.exit_codes.ExitCode`` (SUCCESS=0 / FAILURE=1 / SKIP=2).
 """
 
 from __future__ import annotations

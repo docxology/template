@@ -163,6 +163,15 @@ def test_search_paperclip_requires_env(tmp_path: Path, monkeypatch):
     assert "PAPERCLIP_API_KEY" in str(exc.value)
 
 
+def test_schema_subcommand_emits_json(capsys):
+    rc = main(["schema"])
+    assert rc == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["prog"] == "python -m infrastructure.search.literature"
+    assert "subcommands" in payload
+    assert {"search", "to-bibtex", "schema"} <= set(payload["subcommands"])
+
+
 def test_search_with_cache(tmp_path: Path, capsys):
     corpus = _corpus(tmp_path)
     cache_dir = tmp_path / "cache"

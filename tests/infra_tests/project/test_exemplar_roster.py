@@ -21,9 +21,38 @@ from infrastructure.project.exemplar_roster import (
     unexpected_missing_use_when,
     write_roster_doc,
 )
+from infrastructure.project.exemplar_roster import (
+    MANIFEST_RELATIVE_PATH,
+    build_template_manifest,
+)
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def test_template_manifest_covers_every_public_exemplar() -> None:
+    manifest = build_template_manifest(REPO_ROOT)
+    assert manifest["version"] == 1
+    qualified = [t["qualified_name"] for t in manifest["templates"]]
+    assert qualified == list(PUBLIC_PROJECT_NAMES)
+
+
+def test_template_manifest_rows_are_agent_queryable() -> None:
+    manifest = build_template_manifest(REPO_ROOT)
+    for row in manifest["templates"]:
+        assert set(["name", "qualified_name", "title", "use_when", "coverage_floor", "test_file_count"]).issubset(row)
+        assert "/" not in row["name"]  # bare name
+        assert row["qualified_name"].startswith("templates/")
+
+
+def test_committed_manifest_in_sync_with_fresh_build() -> None:
+    import json
+
+    committed = (REPO_ROOT / MANIFEST_RELATIVE_PATH).read_text(encoding="utf-8")
+    fresh = json.dumps(build_template_manifest(REPO_ROOT), indent=2, ensure_ascii=False) + "\n"
+    assert committed == fresh, (
+        f"{MANIFEST_RELATIVE_PATH} is stale — run `uv run python scripts/generate_exemplar_roster_doc.py`"
+    )
 
 
 def test_collect_entries_covers_every_public_exemplar() -> None:

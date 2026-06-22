@@ -20,6 +20,7 @@ import sys
 from dataclasses import asdict
 from typing import Any, Sequence
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.search.exa.client import ExaClient
 from infrastructure.search.exa.config import VALID_SEARCH_TYPES
 from infrastructure.search.exa.errors import ExaError
@@ -56,6 +57,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_similar.add_argument("url")
     p_similar.add_argument("--num-results", type=int, default=None)
 
+    p_schema = sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit")
+    p_schema.set_defaults(func=lambda _args: emit_schema(build_parser()))
+
     return parser
 
 
@@ -87,6 +91,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    func = getattr(args, "func", None)
+    if func is not None:
+        result = func(args)
+        return int(result)
     try:
         print(json.dumps(run(args), indent=2, ensure_ascii=False))
     except ExaError as exc:

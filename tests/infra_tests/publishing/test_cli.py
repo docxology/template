@@ -1,5 +1,9 @@
 """Tests for infrastructure.publishing.cli module."""
 
+import contextlib
+import io
+import json
+
 from infrastructure.publishing import cli
 
 
@@ -49,3 +53,33 @@ class TestPublishingCLI:
         assert cli is not None
         assert hasattr(cli, "extract_metadata_command")
         assert callable(cli.extract_metadata_command)
+
+
+class TestPublishingCLISchema:
+    """Tests for the uniform ``schema`` subcommand (no mocks)."""
+
+    def test_schema_subcommand_emits_valid_json(self):
+        """`main(["schema"])` returns 0 and prints a JSON parameter contract."""
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            exit_code = cli.main(["schema"])
+
+        assert exit_code == 0
+        payload = json.loads(buffer.getvalue())
+        assert payload["prog"]
+        assert "subcommands" in payload
+        # Existing subcommands are still present in the contract.
+        for command in ("extract-metadata", "generate-citation", "publish-zenodo"):
+            assert command in payload["subcommands"]
+
+    def test_existing_subcommands_unchanged(self):
+        """The schema reflects existing flags without alteration."""
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            assert cli.main(["schema"]) == 0
+        payload = json.loads(buffer.getvalue())
+
+        cite = payload["subcommands"]["generate-citation"]
+        fmt = next(opt for opt in cite["options"] if opt["name"] == "format")
+        assert fmt["choices"] == ["bibtex"]
+        assert fmt["default"] == "bibtex"

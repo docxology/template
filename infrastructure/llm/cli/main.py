@@ -13,7 +13,9 @@ Usage:
 
 import argparse
 import sys
+from collections.abc import Sequence
 
+from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
@@ -217,13 +219,17 @@ Examples:
     template_parser.add_argument("--input", type=str, default=None, help="Input text (otherwise read from stdin)")
     template_parser.set_defaults(func=template_command)
 
+    # Schema command - emit this CLI's parameter contract as JSON
+    schema_parser = subparsers.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit")
+    schema_parser.set_defaults(func=lambda _args: emit_schema(create_parser()))
+
     return parser
 
 
-def main() -> None:
+def main(argv: Sequence[str] | None = None) -> None:
     """Main CLI entry point."""
     parser = create_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if not hasattr(args, "func"):
         parser.print_help()

@@ -17,6 +17,12 @@ from .discovery import (
     skill_descriptors_as_json_serializable,
     write_skill_manifest,
 )
+from .operation_registry import (
+    build_operations_payload,
+    discover_operations,
+    operations_manifest_matches_discovery,
+    write_operations_manifest,
+)
 
 logger = get_logger(__name__)
 
@@ -98,6 +104,36 @@ def cmd_check_contracts(args: argparse.Namespace) -> int:
         return 1
     logger.info("skill contracts ok")
     return 0
+
+
+def cmd_operations_list_json(args: argparse.Namespace) -> int:
+    """Print the machine-readable catalog of agent-invocable CLI operations."""
+    root = _repo_root_from_args(args)
+    ops = discover_operations(root)
+    sys.stdout.write(json.dumps(build_operations_payload(ops), indent=2, ensure_ascii=False) + "\n")
+    return 0
+
+
+def cmd_operations_write(args: argparse.Namespace) -> int:
+    """Write the operations manifest JSON (default: .cursor/operations_manifest.json)."""
+    root = _repo_root_from_args(args)
+    out = Path(args.output) if args.output else None
+    path = write_operations_manifest(root, output_path=out)
+    logger.info("Wrote operations manifest: %s", path)
+    return 0
+
+
+def cmd_operations_check(args: argparse.Namespace) -> int:
+    """Verify the operations manifest matches live discovery results."""
+    root = _repo_root_from_args(args)
+    mpath = Path(args.manifest)
+    mpath = mpath.resolve() if mpath.is_absolute() else (root / mpath).resolve()
+    ok, msg = operations_manifest_matches_discovery(root, mpath)
+    if ok:
+        logger.info("%s", msg)
+        return 0
+    logger.error("%s", msg)
+    return 1
 
 
 def _add_shared_cli_args(p: argparse.ArgumentParser) -> None:
@@ -182,6 +218,37 @@ def build_parser() -> argparse.ArgumentParser:
     _add_shared_cli_args(p_contracts)
     p_contracts.set_defaults(func=cmd_check_contracts)
 
+    p_ops_list = sub.add_parser(
+        "operations-list-json",
+        help="Print the machine-readable catalog of agent-invocable CLI operations",
+    )
+    p_ops_list.add_argument("--repo-root", default=".", help="Repository root (default: current directory)")
+    p_ops_list.set_defaults(func=cmd_operations_list_json)
+
+    p_ops_write = sub.add_parser(
+        "operations-write",
+        help="Write the operations manifest JSON (machine-readable CLI catalog)",
+    )
+    p_ops_write.add_argument("--repo-root", default=".", help="Repository root (default: current directory)")
+    p_ops_write.add_argument(
+        "--output",
+        default=None,
+        help="Output file (default: .cursor/operations_manifest.json under repo root)",
+    )
+    p_ops_write.set_defaults(func=cmd_operations_write)
+
+    p_ops_check = sub.add_parser(
+        "operations-check",
+        help="Verify the operations manifest matches live discovery",
+    )
+    p_ops_check.add_argument("--repo-root", default=".", help="Repository root (default: current directory)")
+    p_ops_check.add_argument(
+        "--manifest",
+        default=".cursor/operations_manifest.json",
+        help="Manifest path relative to repo root unless absolute",
+    )
+    p_ops_check.set_defaults(func=cmd_operations_check)
+
     return parser
 
 
@@ -189,7 +256,8 @@ def main(argv: list[str] | None = None) -> int:
     """Entry point for the skill CLI."""
     parser = build_parser()
     args = parser.parse_args(argv)
-    if args.roots is not None and len(args.roots) == 0:
+    roots = getattr(args, "roots", None)
+    if roots is not None and len(roots) == 0:
         parser.error("--roots, if passed, must list at least one directory")
     return int(args.func(args))
 

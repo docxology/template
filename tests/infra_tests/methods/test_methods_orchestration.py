@@ -19,8 +19,12 @@ def test_build_plan_maps_pipeline_contracts_to_methods_surface(repo_root: Path) 
     assert plan.project_name == "templates/template_code_project"
     assert plan.pipeline_source.as_posix().endswith("infrastructure/core/pipeline/pipeline.yaml")
     assert "projects/templates/template_code_project/manuscript/02_methodology.md" in plan.method_sections
-    assert plan.artifact_manifest == Path("projects/templates/template_code_project/output/reports/artifact_manifest.json")
-    assert plan.evidence_registry == Path("projects/templates/template_code_project/output/reports/evidence_registry.json")
+    assert plan.artifact_manifest == Path(
+        "projects/templates/template_code_project/output/reports/artifact_manifest.json"
+    )
+    assert plan.evidence_registry == Path(
+        "projects/templates/template_code_project/output/reports/evidence_registry.json"
+    )
 
     by_name = {stage.name: stage for stage in plan.stages}
     analysis = by_name["Project Analysis"]
@@ -195,3 +199,21 @@ stages:
     )
     project = make_project(repo_root, "template_test", with_manuscript=True, with_scripts=True)
     (project / "output" / "reports").mkdir(parents=True, exist_ok=True)
+
+
+def test_schema_subcommand_emits_valid_json() -> None:
+    """`schema` subcommand prints the parser schema as JSON and exits 0 (no mocks)."""
+    import contextlib
+    import io
+
+    from infrastructure.methods.cli import main
+
+    buffer = io.StringIO()
+    with contextlib.redirect_stdout(buffer):
+        code = main(["schema"])
+
+    assert code == 0
+    payload = json.loads(buffer.getvalue())
+    assert payload["prog"] == "python -m infrastructure.methods"
+    assert "plan" in payload["subcommands"]
+    assert "schema" in payload["subcommands"]

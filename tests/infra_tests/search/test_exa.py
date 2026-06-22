@@ -287,3 +287,15 @@ def test_cli_reports_error_on_missing_key(monkeypatch, capsys) -> None:  # type:
     monkeypatch.delenv("EXA_API_KEY", raising=False)
     assert main(["search", "q"]) == 1
     assert "error:" in capsys.readouterr().err
+
+
+def test_cli_schema_emits_valid_json(monkeypatch, capsys) -> None:  # type: ignore[no-untyped-def]
+    from infrastructure.search.exa.cli import main
+
+    # No API key needed: the schema subcommand must not construct a client.
+    monkeypatch.delenv("EXA_API_KEY", raising=False)
+    assert main(["schema"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["prog"] == "exa"
+    assert "schema" in payload["subcommands"]
+    assert "search" in payload["subcommands"]
