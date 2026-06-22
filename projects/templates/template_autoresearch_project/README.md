@@ -32,6 +32,11 @@ deterministic ML candidate evaluation over a fixed local dataset, with
 evidence-linked claims, machine-readable ledgers, artifact-integrity
 manifests, and deferred human-review gates. It demonstrates how to make the
 research *process* inspectable without claiming autonomous discovery.
+Metric claims come from local execution artifacts: benchmark-style command
+output may use exact `METRIC name=value` lines, candidate outcomes stay in
+explicit keep/reject/defer-style ledgers, and confidence claims must disclose
+baseline, best result, and the measurable noise floor rather than standing in
+for human publication approval.
 
 Choose [`template_autoscientists`](../template_autoscientists/) instead if
 your focus is agent-team **coordination primitives** (dead-end registries,

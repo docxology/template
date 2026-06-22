@@ -12,6 +12,7 @@ without autonomous research execution.
 - No LLM calls.
 - No generated-code execution.
 - No autonomous self-approval loops.
+- No AutoResearch CLI-style lifecycle hooks or git commit/revert ownership.
 - Scripts remain thin; use `python -m infrastructure.autoresearch.cli` instead
   of adding root entry points.
 
@@ -34,6 +35,9 @@ without autonomous research execution.
 - `AutoResearchReport`
 - `INTRINSIC_QUALITY_CHECKS` / `EXTRINSIC_QUALITY_CHECKS`
 - `load_autoresearch_config(project_root)`
+- `parse_metric_lines(output)`
+- `metric_unit_from_name(name)`
+- `mad_confidence(values, baseline, best)`
 - `parse_string_sequence(value, *, default)`
 - `build_autoresearch_plan(repo_root, project_name, projects_dir="projects")`
 - `validate_autoresearch_plan(plan, project_root, *, phase="all")`
@@ -71,6 +75,8 @@ The module validates only file-backed deterministic surfaces:
 - `output/data/review_decisions.json`
 - `output/data/benchmark_scores.json`
 - configured disclosure text or `{{DISCLOSURE_TEXT}}` token in manuscript Markdown
+- exact `METRIC name=value` command output only when a caller explicitly parses
+  it with `parse_metric_lines`
 
 ## Configuration Rules
 

@@ -9,8 +9,8 @@ stage logic out of the existing pipeline.
 Run:
 
 ```bash
-uv run python -m infrastructure.methods plan --project template_code_project --format markdown
-uv run python -m infrastructure.methods plan --project template_code_project --format json --check
+uv run python -m infrastructure.methods plan --project templates/template_code_project --format markdown
+uv run python -m infrastructure.methods plan --project templates/template_code_project --format json --check
 ```
 
 The package is read-only. It reports missing methods/evidence surfaces; pipeline

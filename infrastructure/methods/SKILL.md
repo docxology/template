@@ -20,8 +20,8 @@ from infrastructure.methods import (
 ## CLI
 
 ```bash
-uv run python -m infrastructure.methods plan --project template_code_project --format markdown
-uv run python -m infrastructure.methods plan --project template_code_project --format json --check
+uv run python -m infrastructure.methods plan --project templates/template_code_project --format markdown
+uv run python -m infrastructure.methods plan --project templates/template_code_project --format json --check
 ```
 
 ## Boundaries

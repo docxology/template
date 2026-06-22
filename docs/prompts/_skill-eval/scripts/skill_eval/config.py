@@ -41,6 +41,11 @@ EVAL_SKILL_MAP: dict[int, str] = {
     27: "docs/prompts/methods-orchestration/SKILL.md",
     28: "docs/prompts/agentic-use/SKILL.md",
     29: "docs/prompts/agentic-use/SKILL.md",
+    30: "docs/prompts/agentic-use/SKILL.md",
+    31: "docs/prompts/agentic-use/SKILL.md",
+    32: "docs/prompts/agentic-use/SKILL.md",
+    33: "docs/prompts/agentic-use/SKILL.md",
+    34: "docs/prompts/agentic-use/SKILL.md",
 }
 
 HUB_ROUTE_CHILD: dict[int, str] = {
@@ -54,6 +59,9 @@ CAPTURE_HEADINGS = frozenset(
         "Inputs to confirm",
         "Workflow",
         "Workflows",
+        "Steward OS reference map",
+        "AutoResearch CLI reference map",
+        "LEANN reference map",
         "Deliverables",
         "Verification commands",
         "Routing table",

@@ -46,6 +46,14 @@ and rejected by the generated-artifact guard if force-added. Use
 associated projects from their canonical private checkout, not through public
 `template/projects/<name>` symlinks.
 
+**Optional LEANN:** LEANN may be used as a local semantic-retrieval companion for
+agent navigation. It is not a dependency, pipeline stage, CI requirement, MCP
+default, or manuscript evidence source. `.leann/` is ignored and rejected by the
+generated-artifact guard if force-added. Use
+[`docs/guides/leann-local.md`](docs/guides/leann-local.md); build indexes from
+tracked public files or from the canonical private checkout, not through public
+`template/projects/<name>` symlinks.
+
 **Local agent memory (gitignored):** When present, read
 `.cursor/hooks/state/continual-learning-memory.json`
 for durable user preferences and workspace facts. Never commit this file or write

@@ -48,6 +48,7 @@ This is a research project template with a test-driven development workflow, aut
 | Exemplar drift checker | `uv run python scripts/check_template_drift.py` (add `--strict` for focused gates) |
 | Module line count gate | `uv run python scripts/gates/module_line_count_check.py` |
 | CodeGraph local commands | `uv run python scripts/maintenance/codegraph_local.py commands .` (optional; see [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md)) |
+| LEANN local semantic retrieval | Optional user-level companion only; see [`docs/guides/leann-local.md`](docs/guides/leann-local.md) |
 | Unified health CLI | `uv run python -m infrastructure.core.health` (optional `--gates=module-line-count`) |
 | Release-readiness dashboard (no network) | `uv run python -m infrastructure.reporting.release_readiness --out output/release_readiness.md` (add `--format html`; aggregates version/coverage/pipeline/docs-lint/evidence-graph from local artifacts only) |
 | Opt-in security scan | `uv run python scripts/gates/security_scan.py` (not default pipeline/CI; missing tools report `skipped`, not clean) |

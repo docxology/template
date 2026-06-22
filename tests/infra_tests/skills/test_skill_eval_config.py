@@ -39,6 +39,11 @@ def test_agentic_use_eval_cases_are_mapped_to_agentic_skill() -> None:
     expected = {
         28: "docs/prompts/agentic-use/SKILL.md",
         29: "docs/prompts/agentic-use/SKILL.md",
+        30: "docs/prompts/agentic-use/SKILL.md",
+        31: "docs/prompts/agentic-use/SKILL.md",
+        32: "docs/prompts/agentic-use/SKILL.md",
+        33: "docs/prompts/agentic-use/SKILL.md",
+        34: "docs/prompts/agentic-use/SKILL.md",
     }
 
     for eval_id, rel_path in expected.items():

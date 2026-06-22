@@ -6,6 +6,8 @@ description: |
   repo, debug ./run.sh or execute_pipeline.py, add a feature, write tests, scaffold a
   manuscript, verify claims, fix cross-references, run validation gates, refactor, or
   prepare a Zenodo release, discover relevant template skills, improve agent routing,
+  review external agentic operating models or retrieval references such as Steward OS,
+  AutoResearch CLI, or LEANN,
   research a topic, write/review/revise a paper, or run a research-to-publication workflow
   — even if they never say "prompt", "skill", or docs/prompts.
   Also USE WHEN intent is ambiguous ("something wrong with my manuscript", "full health
@@ -38,7 +40,7 @@ When intent is clear, open the matching child `SKILL.md` directly. When ambiguou
 - **Broken refs / "manuscript wrong"** — ask whether the failure is pipeline (validate/render) or prose (tokens/registry). Route to [manuscript-cross-references](manuscript-cross-references/SKILL.md), [validation-quality](validation-quality/SKILL.md), or [manuscript-claim-verification](manuscript-claim-verification/SKILL.md). Do **not** open [code-development](code-development/SKILL.md).
 - **Example:** "refs broken, not sure if pipeline or prose" → clarify stage vs registry; default to cross-refs when `[[FIG:]]` / `labels.yaml` mentioned.
 - **Full health check with no symptom** → [comprehensive-assessment](comprehensive-assessment/SKILL.md).
-- **Skill discovery / "make this repo more agentic"** → [agentic-use](agentic-use/SKILL.md).
+- **Skill discovery / "make this repo more agentic" / external agentic or retrieval reference review such as Steward OS, AutoResearch CLI, or LEANN** → [agentic-use](agentic-use/SKILL.md).
 - **Generic coding homework or unrelated app** → do not load template workflow skills.
 
 ## Routing table
@@ -57,7 +59,7 @@ When intent is clear, open the matching child `SKILL.md` directly. When ambiguou
 | New manuscript + project from research brief | [manuscript-creation/SKILL.md](manuscript-creation/SKILL.md) |
 | Literature search corpus synthesis (LLM blocks) | [literature-synthesis/SKILL.md](literature-synthesis/SKILL.md) |
 | Full repo audit (tests, docs, manuscript, pipeline) | [comprehensive-assessment/SKILL.md](comprehensive-assessment/SKILL.md) |
-| Skill inventory, agent onboarding, routing hardening, external skill review | [agentic-use/SKILL.md](agentic-use/SKILL.md) |
+| Skill inventory, agent onboarding, routing hardening, external skill, Steward OS-style operating-model review, AutoResearch CLI measurement patterns, or LEANN semantic-retrieval guidance | [agentic-use/SKILL.md](agentic-use/SKILL.md) |
 | Validation CLI, gates, markdown/PDF checks | [validation-quality/SKILL.md](validation-quality/SKILL.md) |
 | New module or algorithm (thin orchestrator) | [code-development/SKILL.md](code-development/SKILL.md) |
 | Tests under no-mocks policy | [test-creation/SKILL.md](test-creation/SKILL.md) |

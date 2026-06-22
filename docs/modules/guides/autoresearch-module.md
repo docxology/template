@@ -13,6 +13,7 @@
 - **Phase validation** - `validate_autoresearch_plan(..., phase="intrinsic"|"extrinsic"|"all")` separates pre-write structure checks from post-write artifact checks.
 - **File-backed configuration** - project-local `autoresearch.yaml` declares enabled checks, strictness, exact stage gates, and required artifacts.
 - **Reports** - `write_autoresearch_report()` writes JSON and Markdown readiness reports under the project `output/reports/` tree.
+- **Metric extraction** - `parse_metric_lines()` trusts only exact `METRIC name=value` lines, while `mad_confidence()` discloses improvement against a MAD noise floor.
 - **Bounded scope** - no network calls, no LLM calls, no generated-code execution, and no autonomous self-approval loops.
 
 ---
@@ -21,7 +22,7 @@
 
 ```bash
 uv run python -m infrastructure.autoresearch.cli validate \
-  --project template_autoresearch_project \
+  --project templates/template_autoresearch_project \
   --fail-on-issues
 ```
 
@@ -38,6 +39,9 @@ from infrastructure.autoresearch import (
     AutoResearchStage,
     build_autoresearch_plan,
     load_autoresearch_config,
+    mad_confidence,
+    metric_unit_from_name,
+    parse_metric_lines,
     validate_autoresearch_plan,
     write_autoresearch_report,
 )

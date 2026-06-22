@@ -5,7 +5,8 @@ designed to run through the standard template pipeline while keeping the
 AutoResearch loop deterministic, configurable, offline, and human-reviewed. It
 demonstrates a local MNIST subset, bounded numpy neural-network candidate
 evaluation, evidence-linked accepted ideas, review gates, benchmark-style
-grading, phase-settlement ledgers, figure-quality checks, local security
+grading, phase-settlement ledgers, explicit metric/noise/confidence disclosure,
+figure-quality checks, local security
 integrity artifacts, and explicit disclosure while deferring autonomous
 generated-code execution, runtime dataset downloads, and external signing.
 The generated evidence-registry report is compact by default; the full fact
@@ -14,14 +15,14 @@ dump is an opt-in local debug artifact via `TEMPLATE_EVIDENCE_REGISTRY_FULL=1`.
 Primary command:
 
 ```bash
-./run.sh --pipeline --project template_autoresearch_project --core-only --skip-infra
+./run.sh --pipeline --project templates/template_autoresearch_project --core-only --skip-infra
 ```
 
 Useful direct checks:
 
 ```bash
-uv run python scripts/02_run_analysis.py --project template_autoresearch_project
-uv run python -m infrastructure.autoresearch.cli validate --project template_autoresearch_project --fail-on-issues
+uv run python scripts/02_run_analysis.py --project templates/template_autoresearch_project
+uv run python -m infrastructure.autoresearch.cli validate --project templates/template_autoresearch_project --fail-on-issues
 uv run python -m pytest projects/templates/template_autoresearch_project/tests -q
 ```
 

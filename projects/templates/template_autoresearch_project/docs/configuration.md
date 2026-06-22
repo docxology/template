@@ -38,6 +38,11 @@ idea ledgers. The accepted ML-loop idea declares the softmax, MLP, and
 patch-attention candidate identifiers, expected artifacts, and touched paths.
 Accepted ideas must carry evidence links; candidates must keep their
 `touched_paths` inside `edit_allowlist`.
+Candidate and benchmark ledgers should keep outcomes explicit. Use
+keep/reject/defer in the project exemplar and, when adopting AutoResearch
+CLI-style review vocabulary in downstream projects, map `keep`, `discard`,
+`crash`, and `checks_failed` to file-backed review rows rather than autonomous
+write permissions.
 
 ## `human_review.yaml`
 
@@ -119,6 +124,12 @@ deterministic parameter-count tie-breaking. The task writes
 `autoresearch_candidate_lifecycle.png`,
 `mnist_class_balance.png`, `mnist_subset_contact_sheet.png`, and final registry metadata through
 `src.writers`.
+
+If a downstream project records benchmark stdout, use exact `METRIC name=value`
+lines and parse them with `infrastructure.autoresearch.parse_metric_lines`.
+Report baseline, best result, noise floor, and MAD-style confidence as
+disclosure fields; missing or zero measurable noise should remain explicit
+instead of becoming automatic approval.
 
 `mnist_task.yaml` also configures the statistical diagnostic policy:
 calibration bin count, deterministic bootstrap resamples and seed offset,

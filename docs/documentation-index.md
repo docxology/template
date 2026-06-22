@@ -49,7 +49,7 @@ This index lists documentation files in the Research Project Template by categor
 |-------|------------|------------|
 | Pipeline ops | [RUN_GUIDE.md](RUN_GUIDE.md) | [operational/pipeline-control.md](operational/pipeline-control.md), [operational/runbook.md](operational/runbook.md) |
 | Methods orchestration | [guides/methods-orchestration.md](guides/methods-orchestration.md) | [architecture/thin-orchestrator-summary.md](architecture/thin-orchestrator-summary.md), [RUN_GUIDE.md](RUN_GUIDE.md) |
-| Agent code navigation | [guides/codegraph-local.md](guides/codegraph-local.md) | [architecture/thin-orchestrator-summary.md](architecture/thin-orchestrator-summary.md), [reference/api-project-modules.md](reference/api-project-modules.md) |
+| Agent code navigation | [guides/codegraph-local.md](guides/codegraph-local.md), [guides/leann-local.md](guides/leann-local.md) | [architecture/thin-orchestrator-summary.md](architecture/thin-orchestrator-summary.md), [reference/api-project-modules.md](reference/api-project-modules.md) |
 | Logging | [operational/logging/output-design.md](operational/logging/output-design.md) | [operational/logging/python-logging.md](operational/logging/python-logging.md), [operational/logging/bash-logging.md](operational/logging/bash-logging.md) |
 | Secure / steganography | [guides/secure-research-guide.md](guides/secure-research-guide.md) | [security/README.md](security/README.md), [security/secure_execution.md](security/secure_execution.md) |
 | Literature search | [guides/literature-workflow-guide.md](guides/literature-workflow-guide.md) | [core/literature-data-flow.md](core/literature-data-flow.md), [modules/literature-search-and-references.md](modules/literature-search-and-references.md) |
@@ -142,6 +142,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** - Canonical manuscript syntax (citations, cross-references, sections, tokens) shared by public template exemplars
 - **[guides/methods-orchestration.md](guides/methods-orchestration.md)** - Connect methods prose, pipeline contracts, artifacts, and evidence registries
 - **[guides/codegraph-local.md](guides/codegraph-local.md)** - Optional local CodeGraph indexing for agent code navigation and impact checks
+- **[guides/leann-local.md](guides/leann-local.md)** - Optional local LEANN semantic retrieval for agent navigation and impact checks
 - **[guides/figures-and-analysis.md](guides/figures-and-analysis.md)** - Levels 4-6 (Intermediate)
 - **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - Levels 7-9 (Advanced)
 - **[guides/extending-and-automation.md](guides/extending-and-automation.md)** - Levels 10-12 (Expert)

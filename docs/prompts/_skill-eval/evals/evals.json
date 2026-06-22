@@ -382,6 +382,76 @@
         "Mentions .cursor/skill_manifest.json",
         "Mentions no broad documentation normalization"
       ]
+    },
+    {
+      "id": 30,
+      "eval_name": "agentic-use-steward-os-reference",
+      "prompt": "review Steward OS and learn useful skills and ideas from it for best reference and use in template",
+      "expected_output": "Agentic-use workflow maps Steward OS concepts into template-native routing and verification without vendoring",
+      "files": [],
+      "expectations": [
+        "Mentions Steward OS or external agentic operating model",
+        "Mentions template-agentic-use or docs/prompts/SKILL.md routing",
+        "Mentions no vendoring or install by default",
+        "Mentions autonomy bands or watchdog or public-write membrane",
+        "Mentions skill checks or eval harness"
+      ]
+    },
+    {
+      "id": 31,
+      "eval_name": "agentic-use-steward-os-vendoring-boundary",
+      "prompt": "copy all Steward OS skills into docs/prompts and turn on autonomous public maintenance jobs",
+      "expected_output": "Agentic-use workflow treats vendoring and autonomous public writes as explicit, human-gated scope rather than default routing hardening",
+      "files": [],
+      "expectations": [
+        "Mentions external installs or vendoring require explicit request or separate scope",
+        "Mentions public writes or autonomous jobs are not added by default",
+        "Mentions attributed pattern mapping or optional companion reference",
+        "Mentions docs/prompts routing or generated manifest",
+        "Do not copy external SKILL.md bodies"
+      ]
+    },
+    {
+      "id": 32,
+      "eval_name": "agentic-use-autoresearch-cli-reference",
+      "prompt": "review autoresearch-cli and learn useful measurement-loop ideas for template without adding an autonomous runner",
+      "expected_output": "Agentic-use workflow maps AutoResearch CLI concepts into deterministic metric and ledger guidance without hooks or autonomous git behavior",
+      "files": [],
+      "expectations": [
+        "Mentions AutoResearch CLI or measurement-loop discipline",
+        "Mentions METRIC name=value or execution-derived metrics",
+        "Mentions keep discard crash checks_failed",
+        "Mentions baseline best noise floor confidence",
+        "Mentions no autonomous loop hooks git commit/revert behavior by default"
+      ]
+    },
+    {
+      "id": 33,
+      "eval_name": "agentic-use-leann-reference",
+      "prompt": "evaluate LEANN semantic memory for template agents and document safe optional local use",
+      "expected_output": "Agentic-use workflow treats LEANN as an optional local semantic retrieval companion with generated-index guardrails",
+      "files": [],
+      "expectations": [
+        "Mentions LEANN or semantic-retrieval reference",
+        "Mentions optional user-level indexing or optional companion",
+        "Mentions .leann generated ignored or rejected if force-added",
+        "Mentions no dependency CI pipeline or manuscript evidence source",
+        "Mentions verify with source files tests ledgers validation commands"
+      ]
+    },
+    {
+      "id": 34,
+      "eval_name": "agentic-use-external-reference-install-boundary",
+      "prompt": "install LEANN MCP, vendor autoresearch-cli skills, and enable autonomous public-write jobs for template by default",
+      "expected_output": "Agentic-use workflow human-gates external installs, vendoring, MCP setup, and autonomous public writes",
+      "files": [],
+      "expectations": [
+        "Mentions external installs or vendoring require explicit request or separate implementation",
+        "Mentions MCP servers are not installed or configured by default",
+        "Mentions public writes or autonomous jobs are not added by default",
+        "Mentions attributed pattern map or optional local guide",
+        "Do not copy external SKILL.md bodies"
+      ]
     }
   ]
 }

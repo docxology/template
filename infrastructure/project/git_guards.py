@@ -49,6 +49,8 @@ ALLOWED_PROJECTS_TOPLEVEL = _ExplicitToplevelAllowlist()
 GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
     ".codegraph",
     ".codegraph/*",
+    ".leann",
+    ".leann/*",
     ".omo",
     ".omo/*",
     ".coverage",
@@ -56,6 +58,8 @@ GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
     ".DS_Store",
     "*/.codegraph",
     "*/.codegraph/*",
+    "*/.leann",
+    "*/.leann/*",
     "*/.omo",
     "*/.omo/*",
     "*/.DS_Store",

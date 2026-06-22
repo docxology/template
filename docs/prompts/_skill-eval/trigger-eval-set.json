@@ -20,5 +20,10 @@
   {"query": "implement adam optimizer in project src typed tests", "should_trigger": true},
   {"query": "discover all relevant skills for working with template and make the repo more agentic", "should_trigger": true},
   {"query": "improve agent routing skill manifest and prompt eval coverage", "should_trigger": true},
+  {"query": "review Steward OS and learn useful skills and ideas for template agent routing", "should_trigger": true},
+  {"query": "vendor every Steward OS skill directory directly into docs/prompts now", "should_trigger": true},
+  {"query": "review autoresearch-cli and learn measurement loop ideas for template", "should_trigger": true},
+  {"query": "evaluate LEANN semantic memory for safe optional local template agent navigation", "should_trigger": true},
+  {"query": "install LEANN MCP and vendor autoresearch-cli skills into template by default", "should_trigger": true},
   {"query": "docker compose postgres tuning for production", "should_trigger": false}
 ]

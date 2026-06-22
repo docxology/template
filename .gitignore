@@ -158,6 +158,11 @@ projects/templates/*/.DS_Store
 **/.codegraph
 **/.codegraph/
 **/.codegraph/**
+.leann/
+.leann
+**/.leann
+**/.leann/
+**/.leann/**
 .omo
 .omo/
 **/.omo

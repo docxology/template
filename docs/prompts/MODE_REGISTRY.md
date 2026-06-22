@@ -67,7 +67,7 @@ without copying ARS prompt content, schemas, or scripts.
 | `template-refactoring` | `behavior-preserving` | tests |
 | `template-infrastructure-module` | `package` | code, tests, docs |
 | `template-documentation-creation` | `author-docs` | comprehensive assessment |
-| `template-agentic-use` | `inventory`, `route`, `harden`, `external-review` | template-workflows, infrastructure-skills |
+| `template-agentic-use` | `inventory`, `route`, `harden`, `external-review` | template-workflows, infrastructure-skills; Steward OS, AutoResearch CLI, LEANN, and similar references remain attributed and non-vendored/non-installed by default |
 
 ## Provenance Discipline
 

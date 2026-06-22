@@ -120,6 +120,9 @@ def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> 
     artifact = tmp_path / ".codegraph" / "codegraph.db"
     artifact.parent.mkdir(parents=True)
     artifact.write_text("local index\n")
+    leann_index = tmp_path / ".leann" / "indexes" / "template-public" / "index.faiss"
+    leann_index.parent.mkdir(parents=True)
+    leann_index.write_text("local semantic index\n")
     local_agent_state = tmp_path / ".omo" / "ulw-loop" / "ledger.jsonl"
     local_agent_state.parent.mkdir(parents=True)
     local_agent_state.write_text("{}\n")
@@ -131,6 +134,7 @@ def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> 
 
     tracked = tracked_generated_artifacts(tmp_path)
     assert ".codegraph/codegraph.db" in tracked
+    assert ".leann/indexes/template-public/index.faiss" in tracked
     assert ".omo/ulw-loop/ledger.jsonl" in tracked
     assert "projects/templates/template_code_project/.codegraph/codegraph.db" in tracked
 
@@ -138,5 +142,7 @@ def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> 
 def test_generated_artifact_matcher_detects_agent_state_roots() -> None:
     assert is_generated_artifact_path(".codegraph")
     assert is_generated_artifact_path("projects/templates/template_code_project/.codegraph")
+    assert is_generated_artifact_path(".leann")
+    assert is_generated_artifact_path("projects/templates/template_code_project/.leann/indexes/x")
     assert is_generated_artifact_path(".omo")
     assert is_generated_artifact_path(".omo/ulw-loop/ledger.jsonl")

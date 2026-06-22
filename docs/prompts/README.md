@@ -24,6 +24,9 @@ Say what you need in natural language — no slash commands or copy-paste blocks
 | "Add tests, no mocks" | [test-creation/SKILL.md](test-creation/SKILL.md) |
 | "New infrastructure/ package" | [infrastructure-module/SKILL.md](infrastructure-module/SKILL.md) |
 | "Discover skills and make template more agentic" | [agentic-use/SKILL.md](agentic-use/SKILL.md) |
+| "Review Steward OS and learn useful agent skills for template" | [agentic-use/SKILL.md](agentic-use/SKILL.md) |
+| "Review autoresearch-cli measurement-loop ideas for template" | [agentic-use/SKILL.md](agentic-use/SKILL.md) |
+| "Use LEANN as optional semantic memory for template navigation" | [agentic-use/SKILL.md](agentic-use/SKILL.md) |
 
 ## Categories
 
@@ -60,7 +63,7 @@ Say what you need in natural language — no slash commands or copy-paste blocks
 | [comprehensive-assessment/](comprehensive-assessment/SKILL.md) | Wide audit |
 | [reproducibility-audit/](reproducibility-audit/SKILL.md) | Determinism before release |
 | [pipeline-debugging/](pipeline-debugging/SKILL.md) | DAG stage triage |
-| [agentic-use/](agentic-use/SKILL.md) | Skill inventory, routing, and external companion review |
+| [agentic-use/](agentic-use/SKILL.md) | Skill inventory, routing, and external companion/reference review, including Steward OS, AutoResearch CLI, and LEANN |
 
 ## Discovery
 

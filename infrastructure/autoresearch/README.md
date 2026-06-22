@@ -9,6 +9,13 @@ plans, stage/gate contracts, human-review policy, evidence-grounded claims,
 artifact readiness reports, and run lessons. It does not implement an
 autonomous idea-to-paper runner.
 
+It also adapts measurement-discipline patterns reviewed from
+[trotsky1997/autoresearch-cli](https://github.com/trotsky1997/autoresearch-cli):
+metrics must come from execution, review outcomes should be explicit, and
+baseline/best/noise/confidence reporting should be file-backed. The autonomous
+no-human loop, lifecycle hooks, and git commit/revert behavior are intentionally
+not part of this module.
+
 ## Public API
 
 The full exported surface is defined by `__all__` in
@@ -35,6 +42,9 @@ from infrastructure.autoresearch import (
     ValidationPhase,
     build_autoresearch_plan,
     load_autoresearch_config,
+    mad_confidence,
+    metric_unit_from_name,
+    parse_metric_lines,
     parse_string_sequence,
     validate_autoresearch_plan,
     write_autoresearch_report,
@@ -55,6 +65,14 @@ The module composes existing template surfaces:
 - thin-orchestrator drift checks
 - bounded method ledgers: `research_program.json`, `idea_ledger.json`,
   `run_ledger.json`, `review_decisions.json`, and `benchmark_scores.json`
+
+For benchmark stdout or similar command output, `parse_metric_lines(output)`
+extracts only exact `METRIC name=value` lines into finite floats and rejects
+malformed or duplicate metric evidence. `metric_unit_from_name(name)` provides
+display units for conventional suffixes such as `_ms`, `_pct`, `_usd`, and
+`_bytes`. `mad_confidence(values, baseline, best)` reports absolute improvement
+over the median absolute deviation noise floor, returning `None` when noise is
+not estimable.
 
 ## Configuration
 
@@ -128,11 +146,11 @@ file paths to source-manifest artifacts the plan tracks.
 ## CLI
 
 ```bash
-uv run python -m infrastructure.autoresearch.cli plan --project template_autoresearch_project
-uv run python -m infrastructure.autoresearch.cli validate --project template_code_project --fail-on-issues
-uv run python -m infrastructure.autoresearch.cli review-packet --project template_autoresearch_project
-uv run python -m infrastructure.autoresearch.cli summarize --project template_autoresearch_project
-uv run python -m infrastructure.autoresearch.cli benchmark --project template_autoresearch_project
+uv run python -m infrastructure.autoresearch.cli plan --project templates/template_autoresearch_project
+uv run python -m infrastructure.autoresearch.cli validate --project templates/template_code_project --fail-on-issues
+uv run python -m infrastructure.autoresearch.cli review-packet --project templates/template_autoresearch_project
+uv run python -m infrastructure.autoresearch.cli summarize --project templates/template_autoresearch_project
+uv run python -m infrastructure.autoresearch.cli benchmark --project templates/template_autoresearch_project
 ```
 
 Reports are written to:
