@@ -89,7 +89,7 @@ def build_fix_clean_pycache(finding: Finding, state: DoctorState) -> list[FixPla
     ignored_top = {".venv", ".doctor", "node_modules"}
     # Dormant private typed-subfolder trees; keep in sync with
     # discovery.NON_RENDERED_SUBDIRS.
-    dormant_project_subdirs = {"archive", "other", "published", "working"}
+    dormant_project_subdirs = {"archive", "ongoing", "other", "published", "working"}
     for sub in state.repo_root.rglob("*"):
         if not sub.is_dir() or sub.name not in cache_names:
             continue

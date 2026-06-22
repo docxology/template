@@ -23,7 +23,7 @@ def detect_pycache_clutter(repo_root: Path) -> list[Finding]:
         repo_root / "scripts",
         repo_root / "tests",
     )
-    dormant_project_subdirs = {"archive", "other", "published", "working"}
+    dormant_project_subdirs = {"archive", "ongoing", "other", "published", "working"}
     for scan_root in scan_roots:
         if not scan_root.is_dir():
             continue
@@ -128,7 +128,7 @@ def detect_orphan_output_dirs(repo_root: Path) -> list[Finding]:
     """``output/<name>/`` whose ``<name>`` does not match any discovered project.
 
     Project rotations between the typed subfolders under ``projects/``
-    (``active/``, ``working/``, ``published/``, ``archive/``, ``other/``) leave
+    (``active/``, ``working/``, ``ongoing/``, ``published/``, ``archive/``, ``other/``) leave
     behind output trees that nothing else refreshes. Removing them is *radical*
     — the user may want the PDFs — so we only suggest, never apply
     automatically.

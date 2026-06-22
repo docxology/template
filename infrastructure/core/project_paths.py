@@ -16,9 +16,11 @@ from pathlib import Path
 #: Typed subfolders under ``projects/`` that hold non-rendered lifecycle mirrors.
 #: Their nested projects are deliberately excluded from discovery so they never
 #: enter the render set. Only ``templates/`` (public exemplars) and optional
-#: ``active/`` hot-seat entries are discovered. Keep in sync with
+#: ``active/`` hot-seat entries are discovered. ``ongoing/`` holds long-lived
+#: projects with no publication target — visible and qualified-resolvable
+#: (``ongoing/<name>``) but never default-rendered. Keep in sync with
 #: :data:`infrastructure.project.linking.LIFECYCLE_LINK_DIRS`.
-NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "published", "archive", "other"})
+NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "published", "archive", "other"})
 
 
 def find_repo_root() -> Path:

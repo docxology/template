@@ -192,8 +192,8 @@ ever git-tracked/pushed:
 
 `.gitignore` ignores `projects/*` and negates **only** `projects/templates/`
 (the public exemplars) plus the repo-level `projects/*.md` docs. **Every other
-path under `projects/` — optional `active/` hot-seat render set, the `working/`
-and `archive/` sidecar mirrors, optional legacy `published/` and `other/`
+path under `projects/` — optional `active/` hot-seat render set, the `working/`,
+`ongoing/`, and `archive/` sidecar mirrors, optional legacy `published/` and `other/`
 lifecycle folders, plus the optional
 `template_search_project` literature-search exemplar — is LOCAL-ONLY and must
 never be committed.** This is enforced, not conventional:
@@ -206,11 +206,13 @@ workflow, then never commit it.
 
 Private work lives outside this public repo, usually at the sibling
 `$TEMPLATE_PRIVATE_PROJECTS_ROOT`/`../projects` sidecar. The current simplified
-sidecar uses `working/` and `archive/`; optional legacy `active/`, `published/`,
+sidecar uses `working/` and `archive/`; optional `ongoing/` (long-lived
+projects with no publication target) plus legacy `active/`, `published/`,
 and `other/` folders are still supported when present. `run.sh` and
 `python -m infrastructure.orchestration` auto-sync existing folders as symlinks
 into matching typed subfolders under `projects/`: `working/*` →
-`projects/working/*`, `archive/*` → `projects/archive/*`, and optional
+`projects/working/*`, `ongoing/*` → `projects/ongoing/*`, `archive/*` →
+`projects/archive/*`, and optional
 `active/*` → `projects/active/*` (discovered + rendered alongside the
 `templates/` exemplars). Inspect with
 `uv run python -m infrastructure.orchestration link-projects --dry-run`;
@@ -298,11 +300,12 @@ All project lifecycle state is expressed as typed subfolders under `projects/`:
 - **`projects/templates/`** — public exemplars from [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md), git-tracked in this repo (discovered + rendered).
 - **`projects/active/`** — optional hot-seat render set: symlinks to deliberately reintroduced private `active/` projects (discovered + rendered alongside exemplars when present).
 - **`projects/working/`** — non-rendered symlinks to the private sidecar's `working/` projects; render explicitly with qualified names such as `working/<name>`.
+- **`projects/ongoing/`** — non-rendered symlinks to the private sidecar's `ongoing/` projects: long-lived work with no publication target; render explicitly with qualified names such as `ongoing/<name>`.
 - **`projects/archive/`** — non-rendered symlinks to the private sidecar's `archive/` projects (retired / historical).
 - **`projects/published/` and `projects/other/`** — optional legacy non-rendered mirrors when those sidecar folders exist.
 - **Private `docxology/projects` repo** — the primary home for real projects, with simplified default folders `working/` and `archive/`. See [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md).
 
-Discovery renders only `projects/templates/*` and optional `projects/active/*` (qualified names `templates/<name>` and `active/<name>`); `working/` and `archive/` are linked for explicit targeted work but never default-rendered.
+Discovery renders only `projects/templates/*` and optional `projects/active/*` (qualified names `templates/<name>` and `active/<name>`); `working/`, `ongoing/`, and `archive/` are linked for explicit targeted work but never default-rendered.
 
 **Current active projects:** See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (do not hard-code names in docs).
 **Backburner / archived projects:** in the private repo's `working/` and `archive/` folders.

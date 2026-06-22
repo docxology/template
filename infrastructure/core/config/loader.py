@@ -193,7 +193,7 @@ def _infer_project_name_from_path(config_path: Path) -> str:
     Looks for a ``…/<parent>/<project_name>/manuscript/config.yaml`` pattern.
     Returns an empty string when the layout doesn't match. Recognized parents
     are ``projects`` itself plus the typed lifecycle subfolders under it
-    (``active``, ``working``, ``published``, ``archive``, ``other``,
+    (``active``, ``working``, ``ongoing``, ``published``, ``archive``, ``other``,
     ``templates``) — e.g. ``projects/active/<name>/manuscript/config.yaml`` or
     ``projects/templates/<name>/manuscript/config.yaml``.
     """
@@ -202,6 +202,7 @@ def _infer_project_name_from_path(config_path: Path) -> str:
         "projects",
         "active",
         "working",
+        "ongoing",
         "published",
         "archive",
         "other",

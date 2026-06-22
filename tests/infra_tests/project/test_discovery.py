@@ -496,7 +496,7 @@ class TestDiscoverProjects:
         assert project.has_manuscript is True
         assert project.is_valid is True
 
-    @pytest.mark.parametrize("subdir", ["working", "published", "archive", "other"])
+    @pytest.mark.parametrize("subdir", ["working", "ongoing", "published", "archive", "other"])
     def test_discover_excludes_archive_subfolder(self, tmp_path: Path, subdir: str):
         """Test discovery does not scan any NON_RENDERED_SUBDIRS subfolder."""
         # Create projects directory with valid project

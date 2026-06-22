@@ -162,7 +162,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "infrastructure/",
                 "scripts/",
                 "--exclude",
-                "projects/working,projects/published,projects/archive,projects/other",
+                "projects/working,projects/ongoing,projects/published,projects/archive,projects/other",
             ],
         ),
         (

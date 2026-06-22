@@ -178,13 +178,15 @@ autonomous agents.
 
 **Private lifecycle projects.** In Daniel's working checkout, confidential
 projects live outside this public repo at `$TEMPLATE_PRIVATE_PROJECTS_ROOT`.
-The simplified sidecar uses `working/` and `archive/`; optional legacy
+The simplified sidecar uses `working/` and `archive/`; optional `ongoing/`
+(long-lived projects with no publication target) plus legacy
 `active/`, `published/`, and `other/` folders are still supported when present.
 `run.sh` and `python -m infrastructure.orchestration` auto-sync existing folders
 into matching typed subfolders under `projects/`: `working/*` into
-`projects/working/*`, `archive/*` into `projects/archive/*`, and optional
+`projects/working/*`, `ongoing/*` into `projects/ongoing/*`, `archive/*` into
+`projects/archive/*`, and optional
 `active/*` into `projects/active/*`. `templates/` and optional `active/` links
-behave like native rendered entries; `working/` and `archive/` links are visible
+behave like native rendered entries; `working/`, `ongoing/`, and `archive/` links are visible
 for explicit targeted work but are not default-rendered. Inspect without changing
 the tree: `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 Override the sibling path with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
@@ -212,8 +214,9 @@ mkdir -p projects/my_research/{src,tests,manuscript,scripts}  # Scaffold new pro
 
 **Lifecycle:** rendered = `projects/templates/` plus optional `projects/active/`
 (discovered, executed). The simplified private sidecar normally uses
-`working/` and `archive/`; render sidecar projects explicitly with a qualified
-name such as `working/{name}`. See [`projects/PROJECTS_PARADIGM.md`](projects/PROJECTS_PARADIGM.md)
+`working/` and `archive/` (plus optional `ongoing/` for long-lived work with no
+publication target); render sidecar projects explicitly with a qualified
+name such as `working/{name}` or `ongoing/{name}`. See [`projects/PROJECTS_PARADIGM.md`](projects/PROJECTS_PARADIGM.md)
 for lifecycle, slug rules, and discovery semantics.
 
 ## 🚀 Quick Start {#quick-start}

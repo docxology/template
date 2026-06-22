@@ -32,6 +32,7 @@ from infrastructure.project.linking import (
     CONFIG_FILENAME,
     ENV_VAR,
     LIFECYCLE_SUBDIRS,
+    ONGOING_SUBDIR,
     PROTECTED_NAMES,
     REQUIRED_PRIVATE_ROOT_SUBDIRS,
     WORKING_SUBDIR,
@@ -555,3 +556,46 @@ def test_nonactive_lifecycle_links_are_not_default_discovered(tmp_path: Path) ->
     assert (repo / "projects" / "working" / "notes").resolve() == (private / WORKING_SUBDIR / "notes").resolve()
     assert (repo / "projects" / "archive" / "old").resolve() == (private / ARCHIVE_SUBDIR / "old").resolve()
     assert {p.name for p in discover_projects(repo)} == {"linked_proj"}
+
+
+def test_ongoing_lifecycle_is_linked_but_not_default_discovered(tmp_path: Path) -> None:
+    """``ongoing/`` projects (no publication target) are visible but never rendered."""
+    repo = _make_repo(tmp_path)
+    private = _make_private(tmp_path, active=["linked_proj"], name="priv")
+    _make_project(private / ONGOING_SUBDIR / "platform")
+
+    result = sync_private_project_links(repo, private)
+
+    assert "projects/ongoing/platform" in result.created
+    link = repo / "projects" / "ongoing" / "platform"
+    assert link.is_symlink()
+    assert link.resolve() == (private / ONGOING_SUBDIR / "platform").resolve()
+    # Non-rendered: discovery excludes it, only the active project renders.
+    assert {p.name for p in discover_projects(repo)} == {"linked_proj"}
+
+
+def test_ongoing_qualified_name_resolves(tmp_path: Path) -> None:
+    """``resolve_project_root`` resolves the ``ongoing/<name>`` qualified prefix."""
+    from infrastructure.core.project_paths import resolve_project_root
+
+    repo = _make_repo(tmp_path)
+    private = _make_private(tmp_path, name="priv")
+    _make_project(private / ONGOING_SUBDIR / "platform")
+    sync_private_project_links(repo, private)
+
+    resolved = resolve_project_root(repo, "ongoing/platform")
+    assert resolved.resolve() == (private / ONGOING_SUBDIR / "platform").resolve()
+
+
+def test_ongoing_prune_removes_stale_managed_link(tmp_path: Path) -> None:
+    """A project leaving ``ongoing/`` has its managed mirror link pruned."""
+    repo = _make_repo(tmp_path)
+    private = _make_private(tmp_path, name="priv")
+    _make_project(private / ONGOING_SUBDIR / "platform")
+    sync_private_project_links(repo, private)
+    # platform graduates to a publication target → moves to working/.
+    (private / ONGOING_SUBDIR / "platform").rename(private / WORKING_SUBDIR / "platform")
+    result = sync_private_project_links(repo, private)
+    assert result.removed == ["projects/ongoing/platform"]
+    assert not (repo / "projects" / "ongoing" / "platform").is_symlink()
+    assert (repo / "projects" / "working" / "platform").is_symlink()

@@ -87,6 +87,7 @@ def discover_projects(
             - ``projects/templates/`` — public canonical exemplars (rendered)
             - ``projects/active/``     — hot-seat private projects (rendered)
             - ``projects/working/``    — work-in-progress; NOT discovered
+            - ``projects/ongoing/``    — long-lived, no publication target; NOT discovered
             - ``projects/published/``  — published; NOT discovered
             - ``projects/archive/``    — retired; NOT discovered
             - ``projects/other/``      — miscellaneous; NOT discovered
@@ -95,8 +96,8 @@ def discover_projects(
         List of ProjectInfo objects for valid projects.
 
     Note:
-        The four lifecycle subfolders in :data:`NON_RENDERED_SUBDIRS`
-        (``working``/``published``/``archive``/``other``) are deliberately excluded
+        The lifecycle subfolders in :data:`NON_RENDERED_SUBDIRS`
+        (``working``/``ongoing``/``published``/``archive``/``other``) are deliberately excluded
         from discovery to prevent accidental execution/rendering.
 
     Examples:

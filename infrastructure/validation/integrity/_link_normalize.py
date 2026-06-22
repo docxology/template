@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-_PROJECT_BUCKETS: frozenset[str] = frozenset({"templates", "active", "working", "published", "archive", "other"})
+_PROJECT_BUCKETS: frozenset[str] = frozenset(
+    {"templates", "active", "working", "ongoing", "published", "archive", "other"}
+)
 
 
 def _get_actual_project_names(repo_root: Path) -> list[str]:

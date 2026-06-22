@@ -9,6 +9,7 @@ existing lifecycle folder is mirrored into a same-named *typed subfolder* under
 
 - ``active/``    — symlinked into ``projects/active/``   and rendered every run
 - ``working/``   — symlinked into ``projects/working/``   (not rendered by default)
+- ``ongoing/``   — symlinked into ``projects/ongoing/``   (long-lived, no publication target; not rendered)
 - ``published/`` — symlinked into ``projects/published/`` (optional, not rendered)
 - ``archive/``   — symlinked into ``projects/archive/``   (not rendered)
 - ``other/``     — symlinked into ``projects/other/``     (optional, not rendered)
@@ -26,10 +27,11 @@ self-versioned repo; the resolved canonical repo remains the single source of
 truth. Execution stays inside the template checkout, so ``infrastructure/``
 resolves natively and no git submodule / vendored copy is needed.
 
-The ``working``/``published``/``archive``/``other`` mirrors are excluded from the
-default render set by :func:`discover_projects` (only ``templates`` and ``active``
-are rendered). They make backburner, published, retired, and miscellaneous work
-visible to agents and humans without adding those projects to the render set.
+The ``working``/``ongoing``/``published``/``archive``/``other`` mirrors are
+excluded from the default render set by :func:`discover_projects` (only
+``templates`` and ``active`` are rendered). They make backburner, ongoing,
+published, retired, and miscellaneous work visible to agents and humans without
+adding those projects to the render set.
 
 Safety invariants (never violated):
 
@@ -62,14 +64,18 @@ PROTECTED_NAMES: frozenset[str] = frozenset(Path(name).name for name in PUBLIC_P
 #: Private root lifecycle subdirectories.
 ACTIVE_SUBDIR = "active"
 WORKING_SUBDIR = "working"
+ONGOING_SUBDIR = "ongoing"
 PUBLISHED_SUBDIR = "published"
 ARCHIVE_SUBDIR = "archive"
 OTHER_SUBDIR = "other"
 #: All supported lifecycle subdirectories. Some are optional in the simplified
-#: sidecar repo; missing folders simply produce no links.
+#: sidecar repo; missing folders simply produce no links. ``ongoing`` holds
+#: long-lived projects with no publication target (non-rendered, like
+#: ``working``/``archive``).
 LIFECYCLE_SUBDIRS = (
     ACTIVE_SUBDIR,
     WORKING_SUBDIR,
+    ONGOING_SUBDIR,
     PUBLISHED_SUBDIR,
     ARCHIVE_SUBDIR,
     OTHER_SUBDIR,
@@ -85,6 +91,7 @@ REQUIRED_PRIVATE_ROOT_SUBDIRS = (WORKING_SUBDIR, ARCHIVE_SUBDIR)
 LIFECYCLE_LINK_DIRS: dict[str, str] = {
     ACTIVE_SUBDIR: "projects/active",
     WORKING_SUBDIR: "projects/working",
+    ONGOING_SUBDIR: "projects/ongoing",
     PUBLISHED_SUBDIR: "projects/published",
     ARCHIVE_SUBDIR: "projects/archive",
     OTHER_SUBDIR: "projects/other",
@@ -250,6 +257,7 @@ def is_managed_symlink(path: Path, private_root: Path) -> bool:
 
     - ``projects/active/*``    resolves into ``private/active/*``
     - ``projects/working/*``   resolves into ``private/working/*``
+    - ``projects/ongoing/*``   resolves into ``private/ongoing/*``
     - ``projects/published/*`` resolves into ``private/published/*``
     - ``projects/archive/*``   resolves into ``private/archive/*``
     - ``projects/other/*``     resolves into ``private/other/*``
@@ -363,6 +371,7 @@ def sync_private_project_links(
 
     - ``active/<name>``    -> ``projects/active/<name>``
     - ``working/<name>``   -> ``projects/working/<name>``
+    - ``ongoing/<name>``   -> ``projects/ongoing/<name>``
     - ``published/<name>`` -> ``projects/published/<name>``
     - ``archive/<name>``   -> ``projects/archive/<name>``
     - ``other/<name>``     -> ``projects/other/<name>``
@@ -419,8 +428,9 @@ def sync_active_links(
     now delegates to :func:`sync_private_project_links`, which mirrors every
     supported lifecycle folder that exists in the private sidecar
     (``working``/``archive`` plus optional ``active``/``published``/``other``)
-    into same-named typed subfolders under ``projects/``. Only ``active`` is
-    rendered by default.
+    into same-named typed subfolders under ``projects/`` (``working``/``archive``
+    plus optional ``active``/``ongoing``/``published``/``other``). Only ``active``
+    is rendered by default.
     """
     return sync_private_project_links(repo_root, private_root, prune=prune, dry_run=dry_run)
 

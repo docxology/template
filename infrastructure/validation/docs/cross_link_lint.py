@@ -33,9 +33,11 @@ _TRACKED_PROJECT_DIRS = frozenset(PUBLIC_PROJECT_NAMES)
 _TRACKED_PROJECT_LEAF_DIRS = frozenset(name.split("/")[-1] for name in PUBLIC_PROJECT_NAMES)
 
 #: Typed subfolders whose contents are deliberately absent from a clean checkout.
-_ABSENT_TYPED_SUBDIRS: frozenset[str] = frozenset({"working", "published", "archive", "other"})
+_ABSENT_TYPED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "published", "archive", "other"})
 #: All typed subfolders that sit between ``projects/`` and a project dir.
-_TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset({"active", "working", "published", "archive", "other", "templates"})
+_TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset(
+    {"active", "working", "ongoing", "published", "archive", "other", "templates"}
+)
 
 
 def _qualified_project_segments(parts: tuple[str, ...]) -> tuple[str, int] | None:

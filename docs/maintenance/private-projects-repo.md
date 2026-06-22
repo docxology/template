@@ -26,6 +26,7 @@ mirrors existing private lifecycle folders into local template mirrors:
 | Private folder | Local mirror | Rendered by default? |
 | --- | --- | --- |
 | `working/<name>` | `template/projects/working/<name>` | No; explicit `working/<name>` commands only |
+| optional `ongoing/<name>` | `template/projects/ongoing/<name>` | No; long-lived, no publication target — explicit `ongoing/<name>` commands only |
 | `archive/<name>` | `template/projects/archive/<name>` | No |
 | optional `active/<name>` | `template/projects/active/<name>` | Yes, if deliberately reintroduced |
 | optional `published/<name>` | `template/projects/published/<name>` | No |

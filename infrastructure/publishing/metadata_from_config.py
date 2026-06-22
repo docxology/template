@@ -20,7 +20,9 @@ logger = get_logger(__name__)
 #: Typed lifecycle subfolders that sit between ``projects/`` and a project dir.
 #: Keep in sync with discovery.NON_RENDERED_SUBDIRS plus the rendered
 #: ``active``/``templates`` pools.
-_TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset({"active", "working", "published", "archive", "other", "templates"})
+_TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset(
+    {"active", "working", "ongoing", "published", "archive", "other", "templates"}
+)
 
 
 def _repo_root_and_qualified_name(project_root: Path) -> tuple[Path, str] | None:
