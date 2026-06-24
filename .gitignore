@@ -234,3 +234,4 @@ run.config.yaml
 run.config.yml
 !run.config.example.yaml
 /.humos
+/Plans
