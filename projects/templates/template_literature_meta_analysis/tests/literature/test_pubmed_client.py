@@ -1,6 +1,5 @@
-import xml.etree.ElementTree as ET
-
 import requests
+from defusedxml.ElementTree import fromstring as safe_fromstring
 from pytest_httpserver import HTTPServer
 
 from literature.models import Paper
@@ -200,7 +199,7 @@ PUBMED_ARTICLE_SET_XML = """\
 
 class TestParsePubMedArticle:
     def test_parse_complete_record(self):
-        article = ET.fromstring(SINGLE_ARTICLE_XML)
+        article = safe_fromstring(SINGLE_ARTICLE_XML)
 
         paper = _parse_pubmed_article(article)
 
@@ -216,28 +215,28 @@ class TestParsePubMedArticle:
         assert paper.canonical_id == "doi:10.1000/pubmed.001"
 
     def test_parse_missing_doi(self):
-        article = ET.fromstring(MISSING_DOI_XML)
+        article = safe_fromstring(MISSING_DOI_XML)
 
         paper = _parse_pubmed_article(article)
 
         assert paper.doi is None
 
     def test_parse_missing_abstract(self):
-        article = ET.fromstring(MISSING_ABSTRACT_XML)
+        article = safe_fromstring(MISSING_ABSTRACT_XML)
 
         paper = _parse_pubmed_article(article)
 
         assert paper.abstract == ""
 
     def test_parse_multiple_abstract_segments(self):
-        article = ET.fromstring(MULTI_ABSTRACT_XML)
+        article = safe_fromstring(MULTI_ABSTRACT_XML)
 
         paper = _parse_pubmed_article(article)
 
         assert paper.abstract == "First sentence. Second sentence."
 
     def test_parse_collective_name_author(self):
-        article = ET.fromstring(COLLECTIVE_AUTHOR_XML)
+        article = safe_fromstring(COLLECTIVE_AUTHOR_XML)
 
         paper = _parse_pubmed_article(article)
 
@@ -245,7 +244,7 @@ class TestParsePubMedArticle:
 
     def test_parse_non_numeric_year_yields_none(self):
         """A PubDate/Year that is not an integer leaves year unset (None)."""
-        article = ET.fromstring(NON_NUMERIC_YEAR_XML)
+        article = safe_fromstring(NON_NUMERIC_YEAR_XML)
 
         paper = _parse_pubmed_article(article)
 
@@ -256,7 +255,7 @@ class TestParsePubMedArticle:
 
     def test_parse_skips_empty_segments_and_authors(self):
         """Empty AbstractText and Author nodes are dropped, not emitted as blanks."""
-        article = ET.fromstring(EMPTY_SEGMENTS_XML)
+        article = safe_fromstring(EMPTY_SEGMENTS_XML)
 
         paper = _parse_pubmed_article(article)
 
