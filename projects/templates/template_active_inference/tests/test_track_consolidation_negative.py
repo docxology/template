@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-import yaml
 
 from gate_support import ensure_gate_artifacts, temporary_json_mutation, temporary_text_mutation, temporary_yaml_mutation
 from track_consolidation_support import (

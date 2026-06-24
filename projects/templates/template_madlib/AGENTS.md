@@ -23,7 +23,9 @@
 - Keep manuscript figures behind generated figure-group variables; do not hard-code image markdown in section shells.
 - Add new manuscript placeholders only after adding variables in `src/manuscript_variables.py` and coverage in `tests/test_manuscript_variables.py`.
 - Keep publication claims local unless a real DOI, release, or external validation exists.
-- Regenerate output through Stages 02-05 after source or config edits; do not hand-edit generated Markdown, PDF, HTML, slides, figures, reports, or copied deliverables.
+- Regenerate output through Stages 02-05 after source or config edits; do not hand-edit generated Markdown, PDFs, HTML, slides, figures, reports, or copied deliverables.
+
+Decision memory and verifier hardening follow [`../../../docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
 ## Verification
 

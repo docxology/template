@@ -66,3 +66,5 @@ Run the focused stage tests for the part you changed. For broad source/doc chang
 - Keep stochastic analysis deterministic with explicit seeds (`42` unless a config field says otherwise).
 - Treat the committed fixture as synthetic demonstration data. Do not turn fixture-derived modafinil numbers into empirical claims.
 - Link generated repo facts instead of copying counts or public rosters into prose.
+
+Decision memory and verifier hardening follow [`../../../docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.

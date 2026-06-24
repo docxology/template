@@ -31,6 +31,12 @@ validation_gates:
   - injection_trace
   - figure_registry
   - render_validation
+review_gates:
+  - digest_invariant_review
+  - claim_ledger_alignment
+  - review_packet_completeness
+  - fork_migration_documentation
+  - render_validation
 figure_types:
   - madlib_cover_overview
   - token_density

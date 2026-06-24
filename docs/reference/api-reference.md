@@ -71,6 +71,18 @@ The per-package symbol listings below the
 
 *symbol — defined in `infrastructure.autoresearch`*
 
+### `mad_confidence`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `metric_unit_from_name`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `parse_metric_lines`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
 ### `parse_string_sequence`
 
 *symbol — defined in `infrastructure.autoresearch`*
@@ -821,43 +833,27 @@ Validate a user-supplied project slug against discovered projects.
 
 ### `build_codegraph_files_command`
 
-*function — defined in `infrastructure.project.codegraph`*
-
-```python
-build_codegraph_files_command(path: Path) -> CodeGraphCommand
-```
-
-Build a JSON file-list command for scope verification.
+*symbol — defined in `infrastructure.project`*
 
 ### `build_codegraph_init_command`
 
-*function — defined in `infrastructure.project.codegraph`*
-
-```python
-build_codegraph_init_command(path: Path, *, index: bool=True) -> CodeGraphCommand
-```
-
-Build the recommended CodeGraph initialization command for ``path``.
+*symbol — defined in `infrastructure.project`*
 
 ### `build_scope_check_command`
 
-*function — defined in `infrastructure.project.codegraph`*
-
-```python
-build_scope_check_command(path: Path) -> CodeGraphCommand
-```
-
-Build the first command in the CodeGraph scope verification workflow.
+*symbol — defined in `infrastructure.project`*
 
 ### `CodeGraphCommand`
 
-*class — defined in `infrastructure.project.codegraph`*
+*symbol — defined in `infrastructure.project`*
 
-```python
-class CodeGraphCommand
-```
+### `copy_exemplar`
 
-A shell command recommendation without executing it.
+*symbol — defined in `infrastructure.project`*
+
+### `CopyResult`
+
+*symbol — defined in `infrastructure.project`*
 
 ### `discover_projects`
 
@@ -888,6 +884,10 @@ get_project_metadata(project_dir: Path) -> dict[str, Any]
 ```
 
 Extract metadata from project configuration files.
+
+### `plan_copy`
+
+*symbol — defined in `infrastructure.project`*
 
 ### `preflight_setup_hook`
 
@@ -957,13 +957,7 @@ Validate that project has required directory structure.
 
 ### `verify_codegraph_scope_payload`
 
-*function — defined in `infrastructure.project.codegraph`*
-
-```python
-verify_codegraph_scope_payload(payload: str) -> list[str]
-```
-
-Return private/local project paths found in a CodeGraph files payload.
+*symbol — defined in `infrastructure.project`*
 
 ## Package: `infrastructure.prose`
 
@@ -2661,6 +2655,16 @@ build_manifest_payload(skills: Sequence[SkillDescriptor]) -> dict[str, Any]
 
 Build the canonical JSON-serializable manifest structure.
 
+### `build_operations_payload`
+
+*function — defined in `infrastructure.skills.operation_registry`*
+
+```python
+build_operations_payload(ops: Sequence[OperationDescriptor]) -> dict[str, Any]
+```
+
+Build the canonical JSON-serializable operations-manifest structure.
+
 ### `build_skill_index_markdown`
 
 *function — defined in `infrastructure.skills.discovery`*
@@ -2681,6 +2685,14 @@ check_skill_contracts(repo_root: Path | str) -> list[str]
 
 Return all docs/prompts skill contract issues for a repository.
 
+### `DEFAULT_OPERATION_SEARCH_ROOTS`
+
+*constant — defined in `infrastructure.skills.operation_registry`*
+
+```python
+DEFAULT_OPERATION_SEARCH_ROOTS: tuple[str, ...] = ('infrastructure',)
+```
+
 ### `DEFAULT_SKILL_SEARCH_ROOTS`
 
 *constant — defined in `infrastructure.skills.discovery`*
@@ -2688,6 +2700,16 @@ Return all docs/prompts skill contract issues for a repository.
 ```python
 DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = ('infrastructure', 'projects', 'docs/prompts', '.cursor/skills')
 ```
+
+### `discover_operations`
+
+*function — defined in `infrastructure.skills.operation_registry`*
+
+```python
+discover_operations(repo_root: Path | str, *, search_roots: Sequence[str] | None=None) -> list[OperationDescriptor]
+```
+
+Discover every ``python -m``-invocable CLI under the search roots.
 
 ### `discover_skills`
 
@@ -2729,6 +2751,16 @@ load_manifest(manifest_path: Path | str) -> dict[str, Any]
 
 Load a manifest JSON file.
 
+### `load_operations_manifest`
+
+*function — defined in `infrastructure.skills.operation_registry`*
+
+```python
+load_operations_manifest(manifest_path: Path | str) -> dict[str, Any]
+```
+
+Load an operations manifest JSON file.
+
 ### `load_skill_descriptor`
 
 *function — defined in `infrastructure.skills.discovery`*
@@ -2758,6 +2790,36 @@ manifest_skill_dicts_for_prompt(skills: Sequence[SkillDescriptor]) -> list[dict[
 ```
 
 Compact rows suitable for logging or prompt injection.
+
+### `operation_descriptors_as_json_serializable`
+
+*function — defined in `infrastructure.skills.operation_registry`*
+
+```python
+operation_descriptors_as_json_serializable(ops: Sequence[OperationDescriptor]) -> list[dict[str, Any]]
+```
+
+Convert descriptors to plain JSON-serializable dicts.
+
+### `OperationDescriptor`
+
+*class — defined in `infrastructure.skills.operation_registry`*
+
+```python
+class OperationDescriptor
+```
+
+One agent-invocable CLI operation, discovered without importing it.
+
+### `operations_manifest_matches_discovery`
+
+*function — defined in `infrastructure.skills.operation_registry`*
+
+```python
+operations_manifest_matches_discovery(repo_root: Path | str, manifest_path: Path | str, *, search_roots: Sequence[str] | None=None) -> tuple[bool, str]
+```
+
+Return whether the manifest matches current :func:`discover_operations` output.
 
 ### `skill_descriptors_as_json_serializable`
 
@@ -2789,6 +2851,16 @@ split_yaml_frontmatter(source: str) -> tuple[dict[str, Any] | None, str]
 
 Split leading YAML frontmatter from markdown body.
 
+### `SubcommandInfo`
+
+*class — defined in `infrastructure.skills.operation_registry`*
+
+```python
+class SubcommandInfo
+```
+
+One ``add_parser("name", help=...)`` subcommand discovered statically.
+
 ### `validate_skill_contract_file`
 
 *function — defined in `infrastructure.skills.contracts`*
@@ -2798,6 +2870,16 @@ validate_skill_contract_file(skill_path: Path | str) -> list[str]
 ```
 
 Return contract issues for one workflow ``SKILL.md`` file.
+
+### `write_operations_manifest`
+
+*function — defined in `infrastructure.skills.operation_registry`*
+
+```python
+write_operations_manifest(repo_root: Path | str, output_path: Path | str | None=None, *, search_roots: Sequence[str] | None=None) -> Path
+```
+
+Write the operations manifest JSON for editors and agents.
 
 ### `write_skill_manifest`
 

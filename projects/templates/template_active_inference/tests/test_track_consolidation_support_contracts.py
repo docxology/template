@@ -8,7 +8,6 @@ import pytest
 import yaml
 
 from track_consolidation_support import (
-    JsonMutation,
     VERSIONED_TRACK_RE,
     _combine_mutations,
     _drop_last_row,

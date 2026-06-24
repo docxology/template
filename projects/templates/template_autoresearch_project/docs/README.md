@@ -15,7 +15,7 @@ dump is an opt-in local debug artifact via `TEMPLATE_EVIDENCE_REGISTRY_FULL=1`.
 Primary command:
 
 ```bash
-./run.sh --pipeline --project templates/template_autoresearch_project --core-only --skip-infra
+./run.sh --pipeline --project template_autoresearch_project --core-only --skip-infra
 ```
 
 Useful direct checks:
