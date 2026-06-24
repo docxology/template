@@ -1,0 +1,117 @@
+# Literature Meta-Analysis Template
+
+A generic, idempotent **literature meta-analysis** exemplar. Point one config key at
+a search term and get a reproducible meta-analysis of the literature: multi-engine
+retrieval with graceful degradation, record de-duplication, full-text resolution,
+descriptive statistics, language/entity analysis, document embeddings, citation and
+temporal bibliometrics, an optional knowledge-graph layer, and an auto-injected
+manuscript.
+
+The bundled default term is **`modafinil`** — a wakefulness-promoting agent with a
+large, multi-disciplinary literature (clinical, cognitive, pharmacological,
+psychiatric) that exercises every analysis path. Everything runs **offline and
+deterministically** out of the box from a committed synthetic fixture corpus; a live
+networked run swaps in real records.
+
+## When to use this template
+
+Use it whenever the research object is *a body of literature about a topic* and you
+want every reported number to trace to committed, regenerable artifacts.
+
+Typical uses:
+
+- Systematic / scoping reviews and meta-analyses around a search term.
+- Bibliometric and science-of-science studies (growth curves, citation networks,
+  topic structure, author productivity).
+- Corpus NLP over titles/abstracts/full text (entities, keyphrases, embeddings,
+  clustering).
+- Teaching reproducible-research workflow on a realistic, multi-engine retrieval
+  problem.
+
+Reach for a sibling exemplar instead when your claims trace to *your own code/data*
+(`template_code_project`), to a prose argument (`template_prose_project`), or to a
+deterministic AutoResearch loop (`template_autoresearch_project`).
+
+## What you get
+
+| Capability | Where |
+| --- | --- |
+| Multi-engine dispatch (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed) with per-engine on/off toggles and graceful `skipped` degradation when a key/network is absent | `src/literature/*_client.py`, `src/literature/search_runner.py` |
+| Canonical `Paper` record + de-duplication/merge by DOI / arXiv / S2 / OpenAlex / title-hash | `src/literature/models.py`, `src/literature/corpus.py` |
+| Full-text resolution + download (Unpaywall / OA / direct PDF), opt-in & network-gated | `src/literature/fulltext_download.py` |
+| Descriptive statistics + consolidated meta-analysis report (counts, citation distribution + Gini, author productivity) | `src/analysis/descriptive_stats.py` |
+| Language & entity analysis over title/abstract/full text (offline, no LLM required) | `src/analysis/entities.py`, `src/analysis/text_processing.py` |
+| Document embeddings (offline deterministic TF-IDF→SVD) for title/abstract/full text + similarity, clustering, 2-D projection | `src/analysis/embeddings.py` |
+| Topic modeling (NMF), temporal trends, citation network (networkx) | `src/analysis/{topic_modeling,temporal_analysis,citation_network}.py` |
+| Optional knowledge-graph layer: assertion extraction, hypothesis scoring, RDF/TriG nanopublications (LLM-gated, offline-safe) | `src/knowledge_graph/` |
+| Publication-ready figures + auto-injected manuscript | `src/visualization/`, `src/manuscript/` |
+
+## Run via the template monorepo
+
+From the [template monorepo](https://github.com/docxology/template) root:
+
+```bash
+# Install the scientific + llm dependency groups this project needs
+uv sync --group scientific --group llm
+
+# Tests (90% coverage gate on src/)
+uv run pytest projects/templates/template_literature_meta_analysis/tests/ \
+  --cov=projects/templates/template_literature_meta_analysis/src --cov-fail-under=90
+
+# Regenerate the deterministic offline fixture corpus (default term: modafinil)
+uv run python projects/templates/template_literature_meta_analysis/scripts/generate_fixture_corpus.py
+
+# Offline meta-analysis pipeline (no network, no LLM)
+uv run python projects/templates/template_literature_meta_analysis/scripts/02_meta_analysis_pipeline.py
+```
+
+To re-target to another term, edit `manuscript/config.yaml` →
+`project_config.search.term` (plus the `query` / `arxiv_queries` /
+`relevance_keywords` / `subfield_keywords` / `hypothesis_definitions` blocks) and
+regenerate the fixture corpus. For a live run, set `project_config.search.engines`
+toggles, supply any optional credentials (Unpaywall email, Semantic Scholar key), and
+the pipeline fetches real records — every engine degrades to `skipped` rather than
+failing when a key or the network is missing.
+
+## Configuration
+
+The single control surface is [`manuscript/config.yaml`](manuscript/config.yaml)
+(copy [`manuscript/config.yaml.example`](manuscript/config.yaml.example) to start a
+fresh configuration). Its `project_config.search.term`, `query`, `arxiv_queries`,
+`relevance_keywords`, `subfield_keywords`, and `hypothesis_definitions` blocks define
+what is searched and how records are classified; `project_config.search.engines`
+toggles each engine; `project_config.fulltext` and `project_config.embeddings`
+configure the optional full-text and embedding stages.
+
+## Outputs and validation
+
+The pipeline writes all artifacts under `output/` (corpus JSONL, analysis JSON,
+figures, rendered manuscript) — everything there is disposable and regenerable. The
+**validate** stage (`scripts/04_validate_output.py` / stage 04) checks the rendered
+output, and the project test suite plus the ≥90 % coverage gate validate `src/`
+before any figures or manuscript numbers are trusted.
+
+## Determinism & honesty
+
+- The committed `data/fixtures/modafinil_corpus.jsonl` is **synthetic** (reserved
+  `10.5555/` test DOIs, generated authors). It demonstrates the machinery offline and
+  is byte-stable across runs. It is **not** an empirical finding about modafinil.
+- Real bibliometric claims require a live retrieval run plus regenerated figures,
+  reports, and manuscript variables. See [`STANDALONE.md`](STANDALONE.md).
+
+## Layout
+
+```
+src/literature/      retrieval engines, Paper model, corpus, de-dup, full-text
+src/analysis/        stats, entities, embeddings, topics, temporal, citation network
+src/knowledge_graph/ assertions, hypotheses, nanopublications (optional, LLM-gated)
+src/visualization/   figures
+src/manuscript/      variable injection
+scripts/             thin orchestrators (01_literature_search … 06, fixture generator)
+tests/               no-mocks suite (pytest-httpserver + real computation), >=90% cov
+manuscript/          config.yaml (the control surface) + sections
+data/fixtures/       committed deterministic offline corpus
+```
+
+See [`AGENTS.md`](AGENTS.md) for the full module/API reference and [`docs/`](docs/)
+for architecture, testing philosophy, and the rendering pipeline.

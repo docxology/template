@@ -69,7 +69,7 @@ in a job `if:` and rejects the whole workflow at parse).**
 | 6 | `verify-no-mocks` | Verify No Mocks Policy | lint | 3.12 | ubuntu |
 | 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
 | 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu (×3.10/3.11/3.12) + macOS (3.12 only) — 4 cells |
-| 9 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | 3.10 + 3.12 | ubuntu only — 9 exemplars × 2 Python = 18 cells |
+| 9 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | 3.10 + 3.12 | ubuntu only — 11 exemplars × 2 Python = 22 cells |
 | 10 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
 | 11 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
 | 12 | `security` | Security Scan | lint | 3.12 | ubuntu |
@@ -149,7 +149,7 @@ severity as the CI `security` job, so contributors hear it before CI does.
 Required checks must match the **`name:`** field of each job in [`workflows/ci.yml`](workflows/ci.yml). `main` is currently unprotected, so the contexts below are **illustrative**. Matrix jobs expand to one check per cell:
 
 - **`test-infra`** → **Infra Tests (`<os>`, Python `<ver>`)** — 4 cells: `ubuntu-latest × 3.10/3.11/3.12` plus `macos-latest × 3.12`.
-- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — 18 cells: each public exemplar from [`../docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (`templates/template_*`) on `py3.10` and `py3.12`, ubuntu-latest only.
+- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — 22 cells: each public exemplar from [`../docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (`templates/template_*`) on `py3.10` and `py3.12`, ubuntu-latest only.
 
 Require the combinations you care about, or use GitHub rulesets that treat required checks flexibly.
 
@@ -162,7 +162,7 @@ required_status_checks:
     - "Infra Tests (ubuntu-latest, Python 3.11)"
     - "Infra Tests (ubuntu-latest, Python 3.12)"
     - "Infra Tests (macos-latest, Python 3.12)"
-    # test-project expands to 18 checks: "Project Tests (<project>, py<ver>)"
+    # test-project expands to 22 checks: "Project Tests (<project>, py<ver>)"
     # for each templates/template_* exemplar on py3.10 and py3.12. Examples:
     - "Project Tests (templates/template_active_inference, py3.12)"
     - "Project Tests (templates/template_code_project, py3.10)"

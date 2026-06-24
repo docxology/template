@@ -1,0 +1,81 @@
+# Literature Meta-Analysis Project Configuration
+# Inherits workspace settings from root pyproject.toml.
+#
+# This is a GENERIC, domain-agnostic literature meta-analysis template: point the
+# `search.term` config key at any topic (the bundled default is "modafinil") and the
+# pipeline produces merged, de-duplicated records across multiple literature engines,
+# full-text assessment, descriptive statistics, language/entity analysis, embeddings,
+# citation/temporal meta-analysis, and an auto-injected rendered manuscript.
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "template_literature_meta_analysis"
+version = "0.1.0"
+description = "Generic, idempotent literature meta-analysis template: multi-engine dispatch, de-duplication, full-text, embeddings, and bibliometrics for any search term"
+authors = [
+    {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"},
+]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "matplotlib>=3.7.0",
+    "pandas>=2.0.0",
+    "networkx>=3.0",
+    "requests>=2.31.0",
+    "rdflib>=7.0.0",
+    "pyyaml>=6.0",
+    "wordcloud>=1.9.0",
+    "scikit-learn>=1.3.0",
+    "defusedxml>=0.7.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-httpserver>=1.0.8",
+]
+# Optional real-transformer embeddings upgrade (not required for the deterministic
+# offline default, which uses hashing/TF-IDF -> SVD).
+embeddings = [
+    "sentence-transformers>=2.2.0",
+]
+# Optional LLM-backed knowledge-graph extraction (requires a running Ollama server).
+llm = [
+    "ollama>=0.1.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
+
+[tool.coverage.report]
+# >=90% on src/ is the enforced public-exemplar gate; the live coverage % is
+# tracked in docs/_generated/COUNTS.md (do not hardcode it here — it drifts).
+fail_under = 90
+show_missing = true
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+
+[project.urls]
+Homepage = "https://github.com/docxology/template_literature_meta_analysis"
+Documentation = "https://github.com/docxology/template_literature_meta_analysis/tree/main/docs"
+
+[tool.uv]
+# Inherits workspace settings from root pyproject.toml

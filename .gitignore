@@ -131,6 +131,8 @@ projects/templates/*
 !projects/templates/DESIGN.md
 !projects/templates/template_code_project/
 !projects/templates/template_code_project/**
+!projects/templates/template_literature_meta_analysis/
+!projects/templates/template_literature_meta_analysis/**
 !projects/templates/template_prose_project/
 !projects/templates/template_prose_project/**
 !projects/templates/template_active_inference/

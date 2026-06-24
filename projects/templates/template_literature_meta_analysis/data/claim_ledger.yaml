@@ -1,0 +1,36 @@
+claims:
+  - claim_id: fixture-corpus-synthetic-doi-prefix
+    kind: string
+    value: "10.5555"
+    source: projects/templates/template_literature_meta_analysis/data/fixtures/modafinil_corpus.jsonl synthetic fixture records
+    source_tier: fixture
+    freshness: active
+    artifact_path: data/fixtures/modafinil_corpus.jsonl
+  - claim_id: configured-default-search-term
+    kind: string
+    value: modafinil
+    source: projects/templates/template_literature_meta_analysis/manuscript/config.yaml project_config.search.term
+    source_tier: project_config
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: enabled-retrieval-engine-count
+    kind: number
+    value: 5
+    source: projects/templates/template_literature_meta_analysis/manuscript/config.yaml project_config.search.engines
+    source_tier: project_config
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: default-figure-dpi
+    kind: number
+    value: 300
+    source: projects/templates/template_literature_meta_analysis/src/config.py DEFAULT_DPI and src/visualization/style.py VIZ_CONFIG dpi
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/visualization/style.py
+  - claim_id: figure-font-size-floor
+    kind: number
+    value: 16
+    source: projects/templates/template_literature_meta_analysis/src/visualization/style.py apply_visual_style font-size floor
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/visualization/style.py

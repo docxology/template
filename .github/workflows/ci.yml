@@ -369,7 +369,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Sync dependencies (dev + optional test groups)
-        run: uv sync --group rendering --group monitoring --group discopy
+        # `scientific` (scipy/pandas/rdflib/wordcloud/scikit-learn) + `llm` (requests)
+        # are required by template_literature_meta_analysis's project test suite.
+        run: uv sync --group rendering --group monitoring --group discopy --group scientific --group llm
 
       # 01_run_tests.py --project runs pytest with cwd=<project> and enforces that
       # project's own --cov-fail-under=90 internally, writing coverage into the

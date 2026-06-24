@@ -32,7 +32,6 @@ _SHARED_DESIGN_TOKENS_CSS = """:root {
     --web-text: #e6eaf2;
     --web-border: #2a3447;
   }
-  body { background-color: var(--web-bg); color: var(--web-text); }
 }"""
 
 
@@ -55,6 +54,7 @@ class WebRenderer:
     # ``[@key]`` markdown into the rendered page.
     _PANDOC_CITATION_RE = re.compile(r"\[(?P<body>[^\]]*?@[A-Za-z0-9_][^\]]*?)\]")
     _PANDOC_CITEKEY_RE = re.compile(r"-?@([A-Za-z0-9_][A-Za-z0-9_:.#$%&+?<>~/-]*)")
+    _PANDOC_CROSSREF_PREFIXES = ("fig:", "tbl:", "sec:", "eq:")
 
     def __init__(self, config: RenderingConfig):
         """Initialize the web renderer with configuration."""
@@ -399,14 +399,16 @@ class WebRenderer:
         The HTML writer (unlike the citeproc-driven PDF path) leaves Pandoc
         citation syntax untouched, which would surface literal ``[@key]`` markup
         on the page and trip publication validators. Bracket groups that contain
-        at least one ``@citekey`` are rewritten to ``[key1; key2]``; groups
-        without a citekey (ordinary bracketed prose, Markdown links) are left
-        unchanged.
+        only bibliographic citekeys are rewritten to ``[key1; key2]``; pandoc-
+        crossref keys such as ``[@fig:plot]`` are preserved so the crossref
+        filter can resolve them during combined HTML rendering.
         """
 
         def _replace(match: re.Match[str]) -> str:
             keys = cls._PANDOC_CITEKEY_RE.findall(match.group("body"))
             if not keys:
+                return match.group(0)
+            if any(key.startswith(cls._PANDOC_CROSSREF_PREFIXES) for key in keys):
                 return match.group(0)
             return "[" + "; ".join(keys) + "]"
 

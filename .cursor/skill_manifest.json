@@ -645,6 +645,42 @@
       "description": "Skill for the validation infrastructure module providing PDF validation, markdown validation, output integrity checks, link verification, documentation audits, issue categorization, and repository scanning. Use when validating research outputs, checking document quality, running audits, or verifying cross-references.",
       "path": "infrastructure/validation/SKILL.md",
       "cursor_at": "infrastructure/validation/SKILL.md"
+    },
+    {
+      "name": "Meta-Analysis Source API",
+      "description": "Core orchestration guidelines and MCP interactions for the src/ library.",
+      "path": "projects/templates/template_literature_meta_analysis/src/SKILL.md",
+      "cursor_at": "projects/templates/template_literature_meta_analysis/src/SKILL.md"
+    },
+    {
+      "name": "Statistical & Metric Analysis",
+      "description": "Orchestration for bibliometrics, topological network analysis, and hypothesis scoring.",
+      "path": "projects/templates/template_literature_meta_analysis/src/analysis/SKILL.md",
+      "cursor_at": "projects/templates/template_literature_meta_analysis/src/analysis/SKILL.md"
+    },
+    {
+      "name": "LLM Extraction & KG Construction",
+      "description": "Core inference logic, prompt construction, and RDF/Nanopublication serialization.",
+      "path": "projects/templates/template_literature_meta_analysis/src/knowledge_graph/SKILL.md",
+      "cursor_at": "projects/templates/template_literature_meta_analysis/src/knowledge_graph/SKILL.md"
+    },
+    {
+      "name": "Systematic Literature Retrieval",
+      "description": "Operations for federated API querying across OpenAlex, Semantic Scholar, and arXiv.",
+      "path": "projects/templates/template_literature_meta_analysis/src/literature/SKILL.md",
+      "cursor_at": "projects/templates/template_literature_meta_analysis/src/literature/SKILL.md"
+    },
+    {
+      "name": "Manuscript Templating & Injection",
+      "description": "Tooling for injecting JSON/CSV statistics into Markdown evaluation templates.",
+      "path": "projects/templates/template_literature_meta_analysis/src/manuscript/SKILL.md",
+      "cursor_at": "projects/templates/template_literature_meta_analysis/src/manuscript/SKILL.md"
+    },
+    {
+      "name": "Data Visualization Library",
+      "description": "Orchestrates matplotlib and seaborn pipelines for rendering figures.",
+      "path": "projects/templates/template_literature_meta_analysis/src/visualization/SKILL.md",
+      "cursor_at": "projects/templates/template_literature_meta_analysis/src/visualization/SKILL.md"
     }
   ]
 }

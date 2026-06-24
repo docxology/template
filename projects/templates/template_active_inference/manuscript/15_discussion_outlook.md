@@ -38,6 +38,11 @@ relevant, while generated artifacts decide every numerical, figure, and gate
 claim. That split keeps the paper from converting background authority into an
 unsupported empirical result.
 
+Sophisticated Learning is therefore cited as a future-only parameter-learning
+direction [@hodson2023sophisticatedlearning]. It does not change the current
+T-maze state-inference default, does not promote an active-learning adapter, and
+does not alter the blocked major-scope ladder for empirical or non-toy claims.
+
 <!-- sheaf-track:ontology -->
 
 ### Ontology bindings

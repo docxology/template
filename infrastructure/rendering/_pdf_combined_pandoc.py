@@ -54,8 +54,19 @@ def build_pandoc_tex_command(
                 if geometry:
                     cmd.extend(["-V", f"geometry:{geometry}"])
                     logger.debug(f"Added geometry to pandoc args: {geometry}")
+                # Opt-in typography overrides (mirror the geometry pattern). Unset =>
+                # pandoc defaults, so existing projects are unaffected. ``documentclass``
+                # (e.g. ``extarticle``) is required for sub-10pt ``fontsize`` values.
+                documentclass = metadata.get("documentclass")
+                if documentclass:
+                    cmd.extend(["-V", f"documentclass:{documentclass}"])
+                    logger.debug(f"Added documentclass to pandoc args: {documentclass}")
+                fontsize = metadata.get("fontsize")
+                if fontsize:
+                    cmd.extend(["-V", f"fontsize:{fontsize}"])
+                    logger.debug(f"Added fontsize to pandoc args: {fontsize}")
         except (OSError, yaml.YAMLError) as e:
-            logger.warning(f"Failed to read geometry from config.yaml: {e}")
+            logger.warning(f"Failed to read typography settings from config.yaml: {e}")
 
     crossref = shutil.which("pandoc-crossref")
     if crossref:

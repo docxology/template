@@ -153,10 +153,11 @@ visualization-quality method roles; [@fig:scholarship_source_map] renders the
 resulting source-to-artifact map with {{scholarship_source_locator_kind_count}}
 locator kinds. The row set connects foundational
 free-energy and active-inference references [@friston2010fep; @buckley2017mathreview;
-@dacosta2020discrete; @parr2022active; @smith2022tutorial], implementation and
-notation anchors [@pymdp2024; @gnn2023], and applied sheaf sources
-[@curry2014sheaves; @robinson2014topological] to the exact artifact or method
-role they support.
+@dacosta2020discrete; @parr2022active; @smith2022tutorial], planning context
+[@champion2021branching; @nuijten2026efeplanning], implementation and notation
+anchors [@pymdp2024; @gnn2023], and applied sheaf/local-to-global sources
+[@curry2014sheaves; @robinson2014topological; @bosca2026localglobal] to the
+exact artifact or method role they support.
 
 The validation claim is deliberately narrow: every row must have a bibliography
 entry with a DOI or URL, a manuscript citation, registered sheaf tracks, bound
@@ -174,6 +175,12 @@ numerical, figure-quality, and figure-provenance evidence. The hydrated flags
 `{{scholarship_claim_boundaries_scope_guarded}}` are therefore
 source-traceability and scope-control claims, not claims that the toy results
 inherit empirical support from the cited literature.
+
+The newer arXiv rows are intentionally constrained. They situate the toy EFE and
+planning artifacts against branching-time and variational-planning work, and
+they situate the finite manuscript sheaf against modern local-to-global
+computation framing, but none of those citations promotes empirical, neural
+network, or scalable-agent performance claims for this exemplar.
 
 <!-- sheaf-track:security_posture -->
 

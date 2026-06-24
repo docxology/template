@@ -320,6 +320,23 @@ class TestCombineMarkdownFiles:
         assert "output/figures/" not in result
         assert result.count("../figures/") == 3
 
+    def test_html_safe_markdown_preserves_pandoc_crossrefs(self, tmp_path):
+        renderer = _make_renderer(tmp_path)
+        source = (
+            "See [@fig:coverage] and [@tbl:coverage] in [@sec:results]. "
+            "Bibliography [@smith2020; -@doe2021] remains readable."
+        )
+
+        result = renderer._html_safe_markdown(source)
+
+        assert "[@fig:coverage]" in result
+        assert "[@tbl:coverage]" in result
+        assert "[@sec:results]" in result
+        assert "[fig:coverage]" not in result
+        assert "[tbl:coverage]" not in result
+        assert "[sec:results]" not in result
+        assert "[smith2020; doe2021]" in result
+
 
 class TestEmbedCss:
     def test_embed_in_head(self, tmp_path):

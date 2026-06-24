@@ -1,0 +1,9 @@
+# Literature meta-analysis exemplar: optional monorepo adapters only.
+#
+# The domain src/ stays standalone except for these two files, which use shared
+# template infrastructure (logging + the figure-manager registry) exactly as the
+# other exemplars do. Everything else under src/ imports only stdlib + the
+# scientific stack and is forkable as an infrastructure-free package.
+allow_infrastructure_imports:
+  - src/manuscript/variables.py
+  - src/visualization/figure_runner.py

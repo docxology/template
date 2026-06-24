@@ -1,0 +1,33 @@
+conditions:
+  - name: offline_fixture
+    role: reference
+    description: "Run the deterministic synthetic fixture corpus with no network or LLM dependency."
+  - name: live_retrieval
+    role: proposed
+    description: "Run enabled engines from manuscript/config.yaml against live services with graceful skipped-engine degradation."
+  - name: knowledge_graph_resume
+    role: variant
+    description: "Reload existing nanopublications and score hypotheses without new LLM extraction."
+metrics:
+  primary:
+    name: deduplicated_corpus_size
+    direction: maximize
+  secondary:
+    - name: skipped_engine_count
+      direction: minimize
+    - name: unresolved_token_count
+      direction: minimize
+protocol: "Build or load the corpus, run deterministic analysis, optionally score existing nanopublications, generate figures, then hydrate manuscript variables."
+expected_figures:
+  - fig:growth_curve
+  - fig:subfield_distribution
+  - fig:citation_network
+  - fig:topic_term_bars
+  - fig:pca_embeddings
+expected_tables:
+  - tbl:hypothesis_scores
+  - tbl:subfield_summary
+baselines:
+  - offline_fixture
+ablations:
+  - knowledge_graph_resume

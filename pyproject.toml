@@ -262,6 +262,7 @@ ignore = [
 "scripts/*" = ["E402", "E501"]  # sys.path before imports; docstring line length
 "projects/*/scripts/**/*.py" = ["E402", "E501"]  # Path bootstrap before imports; long CLI strings
 "tests/**/*.py" = ["E712", "E402", "E501"]  # Assertions, conditional imports, long fixture payloads
+"projects/*/*/tests/**/*.py" = ["E712", "E402", "E501"]  # templates/<name>/tests: sys.path bootstrap before imports, long fixture payloads
 "__init__.py" = ["F401"]  # Allow re-exports in __init__ files
 # E501 in docstrings/comments (ruff format handles code structure line length)
 "infrastructure/__init__.py" = ["E501"]  # Module inventory docstring
@@ -350,6 +351,18 @@ ignore_errors = true
 
 [[tool.mypy.overrides]]
 module = "projects.template_active_inference.*"
+ignore_errors = true
+
+# template_literature_meta_analysis uses a src/ layout with top-level imports
+# (conftest puts src/ on sys.path), so with explicit_package_bases mypy resolves
+# its modules as top-level names. Mirror the project-src relaxation the other
+# exemplars get via `ignore_errors` (only infrastructure is held type-strict).
+# These names are specific to this exemplar (others use the `src.*` namespace).
+[[tool.mypy.overrides]]
+module = [
+    "projects.template_literature_meta_analysis.*",
+    "projects.templates.template_literature_meta_analysis.*",
+]
 ignore_errors = true
 
 [[tool.mypy.overrides]]

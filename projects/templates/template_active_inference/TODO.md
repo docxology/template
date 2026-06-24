@@ -8,20 +8,27 @@ registries rather than in this file.
 
 ## Current validation evidence
 
-Current evidence on 2026-06-13:
+Current evidence on 2026-06-23:
 
 ```bash
-COVERAGE_FILE=/tmp/template_ai_track_lane.coverage uv run pytest tests/ --cov=src --cov-fail-under=90 --durations=20 -q
+uv run python scripts/validate_outputs.py
+uv run python scripts/compose_manuscript.py --validate-only --strict
+uv run python scripts/check_documentation_contract.py --check
+uv run python scripts/generate_method_inventory.py --check
+uv run pytest tests/test_figures.py tests/test_figure_style.py tests/test_semantic_extensions.py tests/gates/ -q
+COVERAGE_FILE=/tmp/template_ai_publication.coverage uv run pytest tests/ --cov=src --cov-fail-under=90 --durations=20 -q
 ```
 
-`uv run pytest tests/ --cov=src --cov-fail-under=90` passed 392 tests with
-90.81% coverage in 1320.85s (0:22:00), run with
-`COVERAGE_FILE=/tmp/template_ai_track_lane.coverage`, `--durations=20`, and
-`-q`. Focused visualization/style/gate evidence also passed:
-`uv run pytest tests/test_figures.py tests/test_figure_style.py tests/gates/ -q`
-returned 58 passed in 240.82s (0:04:00). Manuscript mutation gates now restore
-byte-for-byte edits directly and reserve recomposition for the source-fragment
-duplicate-marker case.
+The publication-readiness pass regenerated animation, integration-audit,
+sheaf-track, manuscript-variable, scholarship, figure, and method-inventory
+artifacts before validation. `validate_outputs.py` is green for the current
+artifact tree, including the 23 registered figures, GIF evidence, auxiliary
+visualization classification, 21 connected scholarship rows, and toy-only
+scope-boundary checks. The focused regression suite returned 73 passed in
+148.32s (0:02:28). `uv run pytest tests/ --cov=src --cov-fail-under=90`
+passed 423 tests with 90.34% coverage in 1576.84s (0:26:16), using
+`COVERAGE_FILE=/tmp/template_ai_publication.coverage`, `--durations=20`, and
+`-q`.
 
 ## Promotion rule
 
@@ -95,10 +102,6 @@ Promote only changes with a positive artifact test and a negative control that
 proves the matching gate fails closed. Keep long-running full-refresh tests as
 end-to-end sentinels, but prefer narrower row-contract tests for future
 regression coverage when they preserve the same failure mode.
-The 2026-06-21 ast-grep audit found intentional `subprocess.run` boundaries in
-Lean/lake, rendering, git metadata, validation-spine, and full-verification
-surfaces; future hardening should centralize timeout/cwd/check/error-message
-policy for those wrappers without changing their public commands.
 
 ## Ordered improvement ladder
 
@@ -126,16 +129,10 @@ These rows are real future verifier or cross-track improvements. Each one needs
 additive artifacts or rows, a failing negative control, regenerated docs, and
 green gates before it can be moved out of this file.
 
-The visualization style, auxiliary-output, accessibility, and dense-matrix
-readability rows scoped on 2026-06-13 are implemented in the generated
-visualization-quality audit rather than retained as open TODO rows: the audit
-now recomputes typography-token minima, rejects raw font-size literals in figure
-generators, classifies non-registry visual outputs, and binds those checks into
-`validate_outputs` and the semantic restrictions.
-
 | ID | Size | Track lane | Future improvement | Proving artifact | Gate/predicate | Negative control |
 | --- | --- | --- | --- | --- | --- | --- |
-| `MEDIUM-TEST-PERF-1` | Medium | Test ergonomics | Continue splitting repeated full-refresh mutation tests in roadmap-promotion and claim-ledger paths while retaining one fixed-point refresh characterization | cheaper source/row-contract negative controls plus one end-to-end artifact-refresh test | focused gate tests preserve failures while `--durations=20` shows reduced redundant regeneration; current slowest rows are roadmap-promotion and claim-ledger refreshes | Source-only mutation passes without exercising the matching contract |
+| `MEDIUM-TEST-PERF-1` | Medium | Test ergonomics | Continue splitting repeated full-refresh mutation tests in roadmap-promotion, manuscript-contract, output-gate, and manuscript-variable paths while retaining one fixed-point refresh characterization | cheaper source/row-contract negative controls plus one end-to-end artifact-refresh test | focused gate tests preserve failures while `--durations=20` shows reduced redundant regeneration in the current slowest rows | Source-only mutation passes without exercising the matching contract |
+| `MEDIUM-SUBPROCESS-POLICY-1` | Medium | Test ergonomics / Release | Centralize timeout, cwd, check, and error-message policy for intentional subprocess wrappers in Lean/lake, rendering, git metadata, validation-spine, and full-verification surfaces without changing public commands | future subprocess-wrapper policy audit generated from source-owned wrapper declarations | policy audit row count matches the intentional wrapper inventory and a focused gate mutates one wrapper policy field | Wrapper without timeout, cwd, check, or useful failure text passes the policy audit |
 
 ## Blocked major scope
 

@@ -849,7 +849,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | 4 | `verify-no-mocks` | `lint` | always | Enforces the zero-mock policy (`scripts/verify_no_mocks.py`) |
 | 5 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
 | 6 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12 + macOS × Py 3.12 (4 cells), `--cov-fail-under=60` (macOS leg `continue-on-error`) |
-| 7 | `test-project` | `verify-no-mocks` | always | Per-project suites — one parallel ubuntu job per public exemplar × {py3.10, py3.12} (9 × 2 = 18 cells); each enforces that project's own ≥90 floor via `01_run_tests.py --project <name> --project-only --include-slow` |
+| 7 | `test-project` | `verify-no-mocks` | always | Per-project suites — one parallel ubuntu job per public exemplar × {py3.10, py3.12} (11 × 2 = 22 cells); each enforces that project's own ≥90 floor via `01_run_tests.py --project <name> --project-only --include-slow` |
 | 8 | `fep-lean` | `verify-no-mocks`, `detect` | `needs.detect.outputs.fep_lean == 'true'` | Lean-toolchain project build + tests (`--cov-fail-under=89` rotating exception) |
 | 9 | `validate` | `lint` | always | Manuscript/output validation (`infrastructure.validation.cli`) |
 | 10 | `security` | `lint` | always | Bandit MEDIUM+ (`bandit.yaml`) over `infrastructure/ scripts/ projects/` |
@@ -945,7 +945,7 @@ Required status checks:
   Lint & Type Check
   Infra Tests (ubuntu-latest, Python 3.10/3.11/3.12)
   Infra Tests (macos-latest, Python 3.12)
-  # test-project expands to 18 checks: Project Tests (templates/<exemplar>, py3.10|py3.12)
+  # test-project expands to 22 checks: Project Tests (templates/<exemplar>, py3.10|py3.12)
   # one per public exemplar × {py3.10, py3.12}. Examples:
   Project Tests (templates/template_active_inference, py3.12)
   Project Tests (templates/template_code_project, py3.10)

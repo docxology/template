@@ -1,0 +1,58 @@
+domain: literature_meta_analysis
+display_name: Literature Meta-Analysis Exemplar
+required_packages:
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - networkx
+  - matplotlib
+  - rdflib
+  - pytest
+preferred_outputs:
+  - pdf
+  - html
+  - docx
+  - epub
+validation_gates:
+  - artifact_manifest
+  - evidence_grounding
+  - render_validation
+  - publication_readiness
+  - no_mock_tests
+figure_types:
+  - growth_curve
+  - subfield_distribution
+  - citation_network
+  - topic_terms
+  - embeddings
+citation_policy: scholarly_or_fixture_declared
+source_policy: "Use configured literature records, committed synthetic fixtures, and generated analysis artifacts. Do not treat fixture-derived results as empirical findings."
+review_gates:
+  - render_validation
+  - publication_readiness
+  - fixture_honesty
+artifact_expectations:
+  - output/data/corpus.jsonl
+  - output/data/temporal_analysis.json
+  - output/data/subfield_classification.json
+  - output/data/topics.json
+  - output/data/citation_network.json
+  - output/figures/figure_registry.json
+  - output/manuscript/00_abstract.md
+benchmark_rubric:
+  name: literature-meta-analysis-readiness
+  dimensions:
+    - name: retrieval_reproducibility
+      weight: 1.5
+    - name: deduplication_integrity
+      weight: 1.5
+    - name: artifact_manifest
+      weight: 1.0
+    - name: evidence_grounding
+      weight: 2.0
+    - name: synthetic_fixture_honesty
+      weight: 2.0
+    - name: render_success
+      weight: 1.0
+llm_prompt_guidance: "Treat LLM extraction as optional and artifact-bound; cite generated nanopublication rows only when present and never infer live empirical support from the synthetic fixture."
