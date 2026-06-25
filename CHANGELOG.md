@@ -9,6 +9,18 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Added
+
+- 📐 **Theorem-like environments now render in web HTML** — Pandoc's HTML writer
+  silently dropped raw-LaTeX `\begin{theorem|lemma|proposition|corollary|`
+  `definition}` blocks (their `\newtheorem` definitions live in the LaTeX-only
+  preamble), so a manuscript's Theorems/Definitions vanished from the generated
+  web pages. `web_renderer.py` now rewrites them **web-only** into numbered,
+  shared-counter `.theorem-box` Divs with embedded CSS (boxed, dark-mode aware);
+  the PDF/slides paths are unchanged (they still consume the raw LaTeX against the
+  preamble) and authors keep writing `\begin{theorem}` with no portable-syntax
+  change. Covered by `tests/infra_tests/rendering/test_web_renderer.py::TestTheoremBlocks`.
+
 ### Changed
 
 - 🎨 **Generated-report web design + unified design system (WEBDESIGN-EXTEND-1)** —

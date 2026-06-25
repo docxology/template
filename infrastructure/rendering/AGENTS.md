@@ -29,6 +29,12 @@ renderers without owning validation policy or project analysis.
   belong before `\begin{figure}`.
 - PDF metadata and publishing information come from
   `projects/{name}/manuscript/config.yaml`.
+- Raw-LaTeX theorem-like environments (`\begin{theorem|lemma|proposition|`
+  `corollary|definition}`) render in the PDF via the manuscript preamble's
+  `\newtheorem` definitions. Pandoc's HTML writer cannot, so `web_renderer.py`
+  rewrites them **web-only** (`_html_theorem_blocks`) into numbered, shared-counter
+  `.theorem-box` Divs styled by the embedded CSS; the PDF/slides paths are
+  untouched. Authors keep writing `\begin{theorem}` — no portable-Div syntax needed.
 
 ## Public Commands
 

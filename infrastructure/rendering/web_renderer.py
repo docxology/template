@@ -32,7 +32,22 @@ _SHARED_DESIGN_TOKENS_CSS = """:root {
     --web-text: #e6eaf2;
     --web-border: #2a3447;
   }
-}"""
+}
+/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
+   \\newtheorem blocks, so WebRenderer rewrites them (web-only) into
+   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
+   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
+   preamble). */
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }"""
 
 
 class WebRenderer:
@@ -55,6 +70,25 @@ class WebRenderer:
     _PANDOC_CITATION_RE = re.compile(r"\[(?P<body>[^\]]*?@[A-Za-z0-9_][^\]]*?)\]")
     _PANDOC_CITEKEY_RE = re.compile(r"-?@([A-Za-z0-9_][A-Za-z0-9_:.#$%&+?<>~/-]*)")
     _PANDOC_CROSSREF_PREFIXES = ("fig:", "tbl:", "sec:", "eq:")
+    # Raw-LaTeX theorem-like environments. Pandoc's HTML writer silently DROPS
+    # these blocks (the ``\newtheorem`` definitions live in the LaTeX-only
+    # preamble), so a manuscript's Theorems/Definitions vanish from the web page.
+    # WebRenderer rewrites them (web-only) into numbered ``.theorem-box`` Divs.
+    # The display names share one running counter, mirroring the conventional
+    # ``\newtheorem{lemma}[theorem]{Lemma}`` shared-counter linkage so the web
+    # numbers match the PDF's.
+    _THEOREM_ENVS = {
+        "theorem": "Theorem",
+        "lemma": "Lemma",
+        "proposition": "Proposition",
+        "corollary": "Corollary",
+        "definition": "Definition",
+    }
+    _THEOREM_BLOCK_RE = re.compile(
+        r"\\begin\{(theorem|lemma|proposition|corollary|definition)\}"
+        r"(?:\[([^\]]*)\])?[ \t]*\n(.*?)\n\\end\{\1\}",
+        re.DOTALL,
+    )
 
     def __init__(self, config: RenderingConfig):
         """Initialize the web renderer with configuration."""
@@ -389,8 +423,40 @@ class WebRenderer:
             latex = cls._REF_RE.sub(lambda m: _visible_ref(m.group(1)), latex)
             return _clean_latex_text(latex)
 
+        # Rewrite raw-LaTeX theorem blocks into numbered Divs BEFORE the inline
+        # raw-span pass strips them; the Div body then flows through citation /
+        # ref handling like any other prose.
+        content = cls._html_theorem_blocks(content)
         content = cls._render_pandoc_citations(content)
         return cls._normalize_figure_paths(cls._RAW_LATEX_INLINE_RE.sub(_replace_raw_span, content))
+
+    @classmethod
+    def _html_theorem_blocks(cls, content: str) -> str:
+        """Rewrite raw-LaTeX theorem-like environments into numbered ``.theorem-box`` Divs.
+
+        Web-only. Each ``\\begin{theorem}[optional name]...\\end{theorem}`` block (for
+        theorem / lemma / proposition / corollary / definition) becomes a Pandoc
+        fenced Div ``::: {.theorem-box .<env>}`` led by a bold ``**Theorem N**``
+        label (the optional name follows, with its math left outside the bold so it
+        renders). The environments share one running counter so the web numbers
+        match the PDF's shared-counter convention. The PDF path never sees this —
+        it consumes the original ``\\begin{theorem}`` against the LaTeX preamble.
+        """
+        counter = {"n": 0}
+
+        def _replace(match: re.Match[str]) -> str:
+            env, name, body = match.group(1), match.group(2), match.group(3)
+            counter["n"] += 1
+            label = f"**{cls._THEOREM_ENVS[env]} {counter['n']}**"
+            if name and name.strip():
+                label += f" ({name.strip()})"
+            return (
+                f"\n\n::: {{.theorem-box .{env}}}\n"
+                f"{label}. {body.strip()}\n"
+                f":::\n\n"
+            )
+
+        return cls._THEOREM_BLOCK_RE.sub(_replace, content)
 
     @classmethod
     def _render_pandoc_citations(cls, content: str) -> str:

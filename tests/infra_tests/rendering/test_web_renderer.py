@@ -374,3 +374,55 @@ class TestEmbedCss:
         content = html_file.read_text()
         assert "--brand-1" in content
         assert "prefers-color-scheme" in content
+
+
+class TestTheoremBlocks:
+    """Web-only rewrite of raw-LaTeX theorem environments into numbered Divs."""
+
+    def test_theorem_block_becomes_numbered_div_with_name_and_body(self):
+        src = (
+            "\\begin{theorem}[Recovery corner]\n"
+            "The robust aggregator at zero robustness equals the log-linear pool.\n"
+            "\\end{theorem}"
+        )
+        out = WebRenderer._html_theorem_blocks(src)
+        assert "::: {.theorem-box .theorem}" in out
+        assert "**Theorem 1** (Recovery corner)." in out
+        assert "equals the log-linear pool." in out  # body preserved
+        assert "\\begin{theorem}" not in out  # raw LaTeX gone
+
+    def test_shared_counter_across_environments(self):
+        src = (
+            "\\begin{definition}[Free energy]\nF is defined here.\n\\end{definition}\n\n"
+            "\\begin{lemma}\nA lemma body.\n\\end{lemma}\n\n"
+            "\\begin{theorem}[Main]\nThe theorem body.\n\\end{theorem}"
+        )
+        out = WebRenderer._html_theorem_blocks(src)
+        # one running counter, mirroring \newtheorem[theorem] shared numbering
+        assert "**Definition 1** (Free energy)." in out
+        assert "**Lemma 2**." in out
+        assert "**Theorem 3** (Main)." in out
+        assert ".definition" in out and ".lemma" in out and ".theorem" in out
+
+    def test_unnamed_block_has_no_parenthetical(self):
+        out = WebRenderer._html_theorem_blocks(
+            "\\begin{proposition}\nNo name here.\n\\end{proposition}"
+        )
+        assert "**Proposition 1**." in out
+        assert "(" not in out.split("No name")[0].split("Proposition 1")[1]
+
+    def test_non_theorem_content_is_untouched(self):
+        src = "Just prose with $x = 1$ and a [@fig:a] reference.\n"
+        assert WebRenderer._html_theorem_blocks(src) == src
+
+    def test_theorems_survive_full_html_safe_pass(self, tmp_path):
+        renderer = _make_renderer(tmp_path)
+        src = (
+            "Intro.\n\n\\begin{theorem}[Descent]\n"
+            "Block-coordinate descent never increases $F$.\n"
+            "\\end{theorem}\n\nOutro."
+        )
+        result = renderer._html_safe_markdown(src)
+        assert "theorem-box" in result
+        assert "Block-coordinate descent never increases" in result  # not dropped
+        assert "\\begin{theorem}" not in result
