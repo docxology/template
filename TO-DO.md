@@ -150,6 +150,14 @@ Keep this section short. Details live in release notes or archived audits.
 
 ## Active backlog
 
+### PUB-PLATFORM-1 — Modular publishing adapters for sites and package distribution
+
+- **Problem:** The publishing surface is currently split between Zenodo/GitHub DOI releases and a separate PyPI script path, while the broader site/app/content hosting targets are only documented.
+- **Why it matters:** We need a single modular publishing story that can evolve from documentation into thin, testable adapters without coupling every host to the DOI workflow.
+- **Smallest next step:** Add a template-level deployment registry and one thin adapter/test surface per target family, starting with PyPI/package publishing and static-site hosting.
+- **Acceptance check:** The template docs point to a clear registry of first-class versus documented targets, and the codebase has a testable modular entry point for each supported publishing surface.
+- **Out of scope:** Live credentials, destructive deploys, or service-specific wrappers that cannot be tested locally.
+
 ### AI-GATE-PERF-2 — Reduce active-inference gate runtime after correctness
 
 - **Problem:** `template_active_inference` gate tests still have one heavy
