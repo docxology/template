@@ -5,8 +5,8 @@
 The refinery pipeline is fully deterministic. Given the same `manuscript/config.yaml` and `src/` code, every run produces identical output.
 
 - **Seed:** 431
-- **Config hash:** 3fcb5ca333f46401
-- **Generation timestamp:** 2026-06-26T18:02:21Z
+- **Config hash:** 646d8ce93d6d42bd
+- **Generation timestamp:** 2026-06-26T18:18:44Z
 - **Python version:** 3.12.13
 
 ## Artifact inventory
@@ -35,7 +35,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 
 All vocabulary, slots, and section conditions are declared in `manuscript/config.yaml` under `gold_refinement:`. The config is the source of truth; generated prose is disposable.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `3fcb5ca333f46401`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `646d8ce93d6d42bd`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 

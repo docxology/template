@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-26T11:03:07.881525",
+  "timestamp": "2026-06-26T11:19:53.584347",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -147,7 +147,7 @@
         "data": 3,
         "reports": 11
       },
-      "total_size_mb": 7.443285942077637,
+      "total_size_mb": 7.443788528442383,
       "issues_by_severity": {
         "critical": [],
         "warning": [
@@ -162,7 +162,7 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 3.284245491027832
+      "size_mb": 3.284359931945801
     },
     "figures": {
       "files": 25,
@@ -170,7 +170,7 @@
     },
     "data": {
       "files": 3,
-      "size_mb": 0.025499343872070312
+      "size_mb": 0.025887489318847656
     }
   },
   "summary": {

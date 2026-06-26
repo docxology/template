@@ -10,6 +10,17 @@
       "sandbox": false,
       "tag": "v0.1.0",
       "timestamp": "2026-06-26T13:58:09.398483+00:00"
+    },
+    {
+      "doi": "10.5281/zenodo.20938523",
+      "dry_run": false,
+      "github_release_url": null,
+      "github_repo": "owner/repo",
+      "pairing_valid": false,
+      "pdf_sha256": "946c484b6bc3e0b1d55be00c15eeb09936f4e52bdb2067d2bcde40c2bbea387f",
+      "sandbox": false,
+      "tag": "gold-refinement-v0.1.0-20260626-visual-integrity",
+      "timestamp": "2026-06-26T18:18:44.326898+00:00"
     }
   ],
   "schema": "template-publication-ledger-v1"

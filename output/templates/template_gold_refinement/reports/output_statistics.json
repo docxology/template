@@ -125,7 +125,7 @@
       "exists": true,
       "file_count": 11,
       "size_mb": "0.10",
-      "total_size_bytes": 106520,
+      "total_size_bytes": 106538,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -169,7 +169,7 @@
     }
   },
   "total_files": 61,
-  "total_size_mb": 7.443268775939941,
+  "total_size_mb": 7.443285942077637,
   "largest_files": [
     {
       "name": "template_gold_refinement_combined.pdf",
@@ -243,7 +243,7 @@
     "web": 0.2299346923828125,
     "figures": 3.802003860473633,
     "data": 0.025499343872070312,
-    "reports": 0.10158538818359375
+    "reports": 0.10160255432128906
   },
   "file_counts_by_type": {
     ".md": 4,
