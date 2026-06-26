@@ -1,7 +1,7 @@
 paper:
   title: "Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task"
   subtitle: "A public exemplar for autoresearch, metric loops, evidence ledgers, review gates, and template orchestration"
-  version: "0.3.1"
+  version: "0.3.2"
 
 authors:
   - name: "Daniel Ari Friedman"

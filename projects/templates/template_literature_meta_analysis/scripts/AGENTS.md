@@ -43,7 +43,7 @@ Multi-source literature search orchestrator.
 **Key flags:**
 - `--resume` / `--no-resume` — load existing `corpus.jsonl` before fetching (default: resume on)
 - `--clear-corpus` — delete existing corpus and start fresh
-- `--skip-arxiv` / `--skip-s2` / `--skip-openalex` — skip individual sources
+- `--skip-arxiv` / `--skip-s2` / `--skip-openalex` / `--skip-crossref` / `--skip-pubmed` / `--skip-sovietrxiv` / `--skip-chinarxiv` — skip individual sources
 - `--max-results N` — cap per-source results (default: 1000)
 - `--start-year YYYY` — exclude papers before this year
 - `--config PATH` — load search settings from YAML

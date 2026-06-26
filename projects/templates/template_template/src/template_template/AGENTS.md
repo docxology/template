@@ -29,7 +29,10 @@ Technical specification for the template project's source code package.
 
 - All functions accept `Path` arguments and return plain dataclasses
 - Uses `infrastructure.core.logging.utils.get_logger` for structured logging
-- Config parsing via `yaml.safe_load` with graceful error handling
+- Config parsing via `yaml.safe_load` with graceful error handling; catches
+  `(OSError, ValueError, yaml.YAMLError)` — the `yaml.YAMLError` catch was
+  added 2026-06-25 to handle malformed YAML that pyyaml raises as
+  `yaml.parser.ParserError` (a subclass of `yaml.YAMLError`, not `ValueError`)
 - Module introspection uses `importlib.import_module` with `try/except` fallback
 - Script-facing logic is imported by thin orchestrators in `projects/templates/template_template/scripts/`
 - Four-layer doc badges (`has_skill_md`, `has_pai_md`) extend standard A+R coverage

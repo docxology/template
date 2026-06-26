@@ -7,8 +7,10 @@ This template must stay honest about fixture replay versus live subprocess runs.
 
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_sia/manuscript --repo-root .`
 - Project tests and coverage: `uv run pytest projects/templates/template_sia/tests/ --cov=projects/templates/template_sia/src --cov-fail-under=90`
+  - 2026-06-25: 64 tests, 99.52% coverage (was 41 tests, 94.25%).
 - Default loop execution replays recorded fixtures; `--live-sia` is bounded but does not apply code mutations.
 - Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- ruff + mypy: both clean on `src/` (fixed unused `y_off` variable, unused `numpy` import, and `FancyArrowPatch` explicit kwargs for mypy compliance).
 - Stage 04 warning snapshot, 2026-06-20: figure registry and artifact manifest pass; evidence registry still reports unsupported illustrative `85%` and `90%` manuscript thresholds.
 
 ## Integrity and template-status gaps
@@ -29,8 +31,9 @@ This template must stay honest about fixture replay versus live subprocess runs.
 
 ## Test and validator gaps
 
-- Add negative controls for stale recorded fixtures, missing public/private task splits, and accidental live mutation.
-- Add schema tests for generation records if the artifact manifest grows.
+- ✅ Added negative controls: invalid run_summary payload, empty train CSV, all four `validate_task_dir` failure modes.
+- ✅ Added edge-case tests: single-generation delta/metric figures, empty-metrics placeholder PNGs, metrics > 1.0 (non-percentage range), non-dict YAML config, outside-root artifact manifest path.
+- ✅ Added `SIA_METRIC_DELTA = "0"` path tests for non-numeric metric values.
 - Register the remaining manuscript threshold numbers as configured facts, or rewrite them as qualitative defaults, before treating Stage 04 as warning-free.
 
 ## Ordered improvement ladder

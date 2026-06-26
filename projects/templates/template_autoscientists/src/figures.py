@@ -17,8 +17,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-if TYPE_CHECKING:
-    from src import SearchResult
+if TYPE_CHECKING:  # pragma: no cover
+    from .search import SearchResult
 
 
 class AblationRow(TypedDict):

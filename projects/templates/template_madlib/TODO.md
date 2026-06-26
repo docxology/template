@@ -11,6 +11,7 @@ same forkability contract as the older exemplars.
 - Generated artifacts come from `scripts/01_generate_madlib_artifacts.py` and `scripts/z_generate_manuscript_variables.py`.
 - Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
 - Publication evidence: standalone GitHub repository `docxology/template_madlib`, concept DOI `10.5281/zenodo.20786638`, and version DOI `10.5281/zenodo.20786639`.
+- **Coverage: 100% (144 tests) as of the last test expansion.** All branches in `config.py`, `composition.py`, `tokens.py`, `analysis.py`, `analysis_fields.py`, `analysis_figures.py`, `analysis_reports.py`, `manuscript_variables.py`, and `__init__.py` are covered.
 
 ## Integrity and template-status gaps
 
@@ -35,11 +36,12 @@ same forkability contract as the older exemplars.
 - Add a project-local output validator if Stage 04 cannot catch token provenance, figure registry, and authoring-contract regressions together.
 - Add a stale-artifact check if generated artifact names or report schemas grow beyond the current fixture coverage.
 - Preserve review-packet assertions if future copied-output layout changes make output statistics, validation reports, or copied data/report/figure categories optional.
+- Consider adding hypothesis-based property tests for the SHA-256 digest invariant if the lexicon format changes (current determinism is verified with parametric seed/lexicon tests).
 
 ## Ordered improvement ladder
 
 1. Keep release metadata, module size, tests, and drift gates green as the published canonical exemplar evolves.
-2. Add negative controls for unresolved placeholders and missing token provenance.
-3. Add negative controls for digest-invariant drift and missing review-packet artifacts.
+2. ~~Add negative controls for unresolved placeholders and missing token provenance.~~ ✓ Covered in test_config_extended, test_tokens_extended.
+3. ~~Add negative controls for digest-invariant drift and missing review-packet artifacts.~~ ✓ Covered in test_tokens_extended, test_analysis_extended.
 4. Add schema migrations only with compatibility tests from the current config.
 5. Promote domain-fork examples only after they add domain validators and explicit non-claim boundaries.

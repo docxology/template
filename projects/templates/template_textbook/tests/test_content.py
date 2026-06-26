@@ -74,3 +74,31 @@ def test_validate_chapter_detects_missing_single_section():
 def test_count_words_and_stub_markers_basics():
     assert content.count_words("one two three") == 3
     assert content.count_stub_markers("TODO: a <!-- STUB --> b TKTK") == 3
+
+
+def test_rotate_with_empty_items():
+    """_rotate with an empty tuple must return [] without raising."""
+    # Call via the internal helper through scaffold — the empty-items path
+    # can be exercised directly since _rotate is module-level.
+    from textbook.content import _rotate
+
+    assert _rotate((), "any_seed", 3) == []
+    assert _rotate((), "", 0) == []
+
+
+def test_validate_chapter_flags_bad_figure_path():
+    """validate_chapter must detect a figure path that won't resolve correctly."""
+    good_text = content.scaffold_chapter(_chapter())
+    # Inject a figure reference using the old (wrong) relative path form.
+    bad_text = good_text + "\n![alt](../figures/bad_path.png){#fig:extra}\n"
+    issues = content.validate_chapter(bad_text)
+    assert any("figures" in i for i in issues)
+
+
+def test_validate_chapter_accepts_correct_figure_path():
+    """A figure path starting with '../../output/figures/' must not raise an issue."""
+    good_text = content.scaffold_chapter(_chapter())
+    # The scaffolded chapter always uses the correct path prefix.
+    issues = content.validate_chapter(good_text)
+    figure_path_issues = [i for i in issues if "figures" in i.lower()]
+    assert figure_path_issues == []

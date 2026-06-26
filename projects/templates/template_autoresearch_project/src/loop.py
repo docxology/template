@@ -201,6 +201,8 @@ def _loop_result(
 
 
 def build_stage_results(config: AutoResearchLoopConfig, *, plan_stage_count: int) -> tuple[LoopStageResult, ...]:
+    # WHY: status is always "declared" — the loop records intent-based stage contracts,
+    # not pipeline execution proof.  Live pipeline steps produce their own artifacts.
     """Declare deterministic loop stages without claiming pipeline execution."""
     stage_actions = {
         "plan": f"Declared {plan_stage_count} pipeline stage contract(s).",
@@ -225,7 +227,17 @@ def build_stage_results(config: AutoResearchLoopConfig, *, plan_stage_count: int
 
 
 def build_claims(config: AutoResearchLoopConfig, project_root: Path) -> tuple[AutoResearchClaim, ...]:
-    """Build claims supported only by evidence files that carry real content."""
+    """Build claims supported only by evidence files that carry real content.
+
+    A claim is ``supported=True`` only when its configured ``expected_evidence``
+    path points to a file with substantive, parseable content (non-empty, non-null
+    JSON, or non-empty CSV with data rows).  An empty file, ``{}``, ``[]``, a
+    header-only CSV, or an unparseable artifact does NOT support the claim.
+
+    This binding is shared with the figure-quality and benchmark gates via
+    :func:`src.artifact_content.is_substantive_artifact` and is locked by
+    negative-control tests in ``tests/test_gate_negative_controls.py``.
+    """
     claims: list[AutoResearchClaim] = []
     for question in config.research_questions:
         evidence_path = question.expected_evidence

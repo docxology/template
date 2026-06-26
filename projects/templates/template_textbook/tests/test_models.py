@@ -126,3 +126,51 @@ def test_normalize_unit_interval_constant_and_empty():
     assert np.all(models.normalize_unit_interval([7.0, 7.0, 7.0]) == 0.0)
     with pytest.raises(ValueError):
         models.normalize_unit_interval([])
+
+
+def test_logistic_growth_initial_equals_capacity():
+    """When N_0 == K the population is already at carrying capacity for all t."""
+    t = np.linspace(0, 10, 5)
+    y = models.logistic_growth(t, r=1.0, carrying_capacity=50.0, initial=50.0)
+    assert np.allclose(y, 50.0)
+
+
+def test_logistic_growth_scalar_t():
+    """logistic_growth must accept a scalar t (not just arrays)."""
+    y = models.logistic_growth(0.0, r=1.0, carrying_capacity=100.0, initial=1.0)
+    assert float(y) == pytest.approx(1.0, rel=1e-9)
+
+
+def test_saturating_response_at_zero():
+    """Hill response at x=0 should be 0 regardless of parameters."""
+    y = models.saturating_response(np.array([0.0]), maximum=5.0, half_saturation=2.0, hill=2.0)
+    assert float(y[0]) == pytest.approx(0.0)
+
+
+def test_exponential_decay_zero_rate_is_constant():
+    """Zero decay rate means the quantity never changes."""
+    t = np.array([0.0, 5.0, 100.0])
+    y = models.exponential_decay(t, initial=42.0, rate=0.0)
+    assert np.allclose(y, 42.0)
+
+
+def test_linear_fit_predict_array():
+    """LinearFit.predict must work on an array input."""
+    fit = models.linear_fit(np.array([0.0, 1.0, 2.0]), np.array([1.0, 3.0, 5.0]))
+    preds = fit.predict(np.array([0.0, 1.0, 2.0, 3.0]))
+    assert preds[3] == pytest.approx(7.0, abs=1e-9)
+
+
+def test_descriptive_statistics_single_value():
+    """A single-element array should have std=0 and mean==value."""
+    stats = models.descriptive_statistics([42.0])
+    assert stats["mean"] == 42.0
+    assert stats["std"] == 0.0
+    assert stats["min"] == stats["max"] == 42.0
+    assert stats["count"] == 1.0
+
+
+def test_normalize_unit_interval_single_element():
+    """A single-element array is treated as a constant — returns zero."""
+    result = models.normalize_unit_interval([5.0])
+    assert result[0] == 0.0

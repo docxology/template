@@ -1,4 +1,9 @@
-"""Small image post-processing helpers used by figure + diagram renderers."""
+"""Small image post-processing helpers used by figure + diagram renderers.
+
+Helpers here are intentionally no-op-safe: they degrade gracefully when an
+optional dependency (Pillow) is absent so figure generation never hard-fails on
+a cosmetic step.
+"""
 
 from __future__ import annotations
 
@@ -8,9 +13,14 @@ from pathlib import Path
 def pad_png_to_square(path: Path) -> Path:
     """Pad a PNG to a square canvas on a white background, in place.
 
-    A no-op-safe helper: if Pillow is unavailable or the file is missing, the
-    original path is returned unchanged so figure generation never hard-fails on
-    a cosmetic step.
+    When ``path`` is already square, or when Pillow is unavailable, or when
+    ``path`` does not exist, the original path is returned unchanged.
+
+    Args:
+        path: Path to the PNG file to pad.
+
+    Returns:
+        The (possibly updated) path.
     """
     path = Path(path)
     if not path.exists():
@@ -29,3 +39,6 @@ def pad_png_to_square(path: Path) -> Path:
         canvas.paste(img, ((side - width) // 2, (side - height) // 2))
         canvas.convert("RGB").save(path)
     return path
+
+
+__all__ = ["pad_png_to_square"]

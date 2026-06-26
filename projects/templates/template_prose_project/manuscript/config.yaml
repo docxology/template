@@ -3,7 +3,7 @@
 paper:
   title: "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline"
   subtitle: "Readability, structural, and citation-density gating for research manuscripts"
-  version: "0.4.1"
+  version: "0.4.2"
 
 authors:
   - name: "Daniel Ari Friedman"

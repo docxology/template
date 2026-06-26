@@ -17,11 +17,20 @@ def main() -> int:
     parser.add_argument(
         "--skip-chunks",
         action="store_true",
-        help="Skip chunked pre-pass runs and jump directly to the full-suite pass.",
+        help="Skip chunked pre-pass runs and continue with coverage verification.",
+    )
+    parser.add_argument(
+        "--monolithic-coverage",
+        action="store_true",
+        help="Use the legacy single pytest coverage process instead of chunked coverage subprocesses.",
     )
     args = parser.parse_args()
     try:
-        run_verification(PROJECT_ROOT, skip_chunks=args.skip_chunks)
+        run_verification(
+            PROJECT_ROOT,
+            skip_chunks=args.skip_chunks,
+            monolithic_coverage=args.monolithic_coverage,
+        )
     except RuntimeError as exc:
         print(f"\nERROR: {exc}")
         return 1

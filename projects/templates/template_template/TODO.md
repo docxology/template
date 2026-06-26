@@ -7,6 +7,7 @@ focused on preserving the repository-introspection contract.
 
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_template/manuscript --repo-root .`
 - Project tests and coverage: `uv run pytest projects/templates/template_template/tests/ --cov=projects/templates/template_template/src --cov-fail-under=90`
+- Current: **125 tests, 99.36% coverage** (up from 89 tests / 91.62% baseline).
 - Public/private confidentiality behavior is exercised by the project test suite.
 - Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
 - Stage 04 warning snapshot, 2026-06-20: figure registry passes; evidence registry reports 56 unsupported generated-count or percentage tokens; artifact manifest reports advisory drift after single-stage regeneration.
@@ -29,6 +30,23 @@ focused on preserving the repository-introspection contract.
 
 ## Test and validator gaps
 
+- **Resolved (2026-06-25):** Added `test_edge_cases.py` covering 36 new edge-case tests:
+  OSError branches in `count_test_functions` and `validate_all_resolved`, missing-dir
+  guards in `count_docs_*`, `save_metrics_json`, sibling-path fallback in
+  `resolve_template_repo_root` and `locate_repo_root`, `yaml.YAMLError` catch (fixed
+  source bug that only caught `OSError/ValueError`), non-numbered chapter fallback,
+  `public_only=False` path, `analyze_test_coverage_config` YAML error, pipeline stage
+  long-name wrapping, tag text rendering, unrecognized tag colour fallback in
+  `viz_palette`, subdirectory skip in `render_all_chapters`, and OSError reading
+  rendered file in `validate_all_resolved`.
+- **Resolved (2026-06-25):** Fixed `yaml.YAMLError` not caught in
+  `_project_analysis_from_workspace` and `analyze_test_coverage_config`; now catches
+  `(OSError, ValueError, yaml.YAMLError)`.
+- Three branches remain structurally unreachable without mocking:
+  - `introspection.py:149` — `dir()` fallback (all real modules have `__all__`).
+  - `introspection.py:186->194` — redundant `is_dir()` re-check after `config.yaml` found.
+  - `introspection.py:407-408` — ImportError version fallback requires removing
+    `infrastructure` from `sys.modules`.
 - Add negative controls for stale generated metrics and accidental inclusion of local-only project paths.
 - Add schema tests before changing metrics JSON consumed by the manuscript.
 - Bind generated count/percentage claims into the evidence registry so the meta-template's introspection numbers validate without warnings.

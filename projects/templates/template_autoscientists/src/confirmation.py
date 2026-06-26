@@ -5,6 +5,10 @@ the evaluation noise rather than a real gain. Following the AutoScientists
 acceptance protocol, a candidate is confirmed only when its mean metric over
 several seeds exceeds the incumbent by more than the empirical noise band.
 
+The acceptance rule is **strictly greater than**, not ≥: a candidate whose
+mean-over-seeds delta equals the band exactly is *not* confirmed. This ensures
+the noise-band shrinks only actual noise, never a zero-gain tie.
+
 This estimator is domain-agnostic. It is kept standalone here so the exemplar
 runs self-contained, and a synchronized generic copy lives at
 ``infrastructure.scientific.confirmation`` for reuse by any other project that

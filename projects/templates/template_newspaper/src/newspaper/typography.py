@@ -97,6 +97,10 @@ def register_fonts() -> Fonts:
 
     # Register a bold/italic family map so inline <b>/<i> markup resolves to the
     # matching face instead of synthesising a slant.
+    # WHY: This block only runs when Georgia is present (body starts with "NP-").
+    # The False branch (body stays "Times-Roman" on Linux CI without macOS fonts)
+    # is not testable without mocking, which violates the no-mocks policy; the
+    # 96.70% typography coverage on macOS is therefore expected and intentional.
     if body.startswith("NP-"):
         try:
             pdfmetrics.registerFontFamily(

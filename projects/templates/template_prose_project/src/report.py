@@ -1,4 +1,20 @@
-"""Assemble the final review report (markdown)."""
+"""Assemble the final review report (markdown).
+
+The report is structured as a series of Markdown sections:
+
+1. **Title and top-line counts** — files, words, sentences, paragraphs,
+   weighted-average readability scores, unique citation keys.
+2. **Checks table** — one row per :class:`~src.pipeline.CheckResult`;
+   a ✅/❌ emoji and the check message.
+3. **Per-file metrics table** (optional, controlled by ``include_per_file_table``)
+   — word count, sentence count, FRE, FKGL, Fog, citations, hedges, passives.
+4. **Outline** (optional, controlled by ``include_outline``) — heading
+   structure per file.
+5. **Quality flags** (optional, controlled by ``include_quality_flags``) —
+   files with long sentences, passive-voice candidates, or hedge words.
+
+The only public entry point is :func:`write_review_report`.
+"""
 
 from __future__ import annotations
 
@@ -19,7 +35,27 @@ def write_review_report(
     include_outline: bool = True,
     include_quality_flags: bool = True,
 ) -> Path:
-    """Write a markdown review report and return its path."""
+    """Write a markdown review report and return its path.
+
+    Args:
+        output_path: Destination for the report.  Parent directories are
+            created automatically.
+        title: Report heading (typically ``config.title``).
+        manuscript_report: Aggregated analysis produced by
+            :func:`infrastructure.prose.analyze_manuscript`.
+        checks: Iterable of :class:`~src.pipeline.CheckResult` objects.
+            Consumed once (converted to a list internally).
+        include_per_file_table: When ``True`` and the manuscript has at least
+            one file, append a per-file metrics table.
+        include_outline: When ``True`` and the manuscript has at least one
+            file, append a heading-outline section.
+        include_quality_flags: When ``True``, append a quality-flags section
+            listing long sentences, passive-voice candidates, and hedge words
+            for every file that has at least one flag.
+
+    Returns:
+        The resolved :class:`~pathlib.Path` of the written report.
+    """
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     checks = list(checks)

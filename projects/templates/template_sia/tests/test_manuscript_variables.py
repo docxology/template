@@ -8,6 +8,7 @@ from pathlib import Path
 
 from src.generation_records import load_run_summary
 from src.loop import run_sia_loop_project
+from src.manuscript_tokens_metrics import compute_metrics_variables
 from src.manuscript_variables import compute_variables
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -40,3 +41,63 @@ def test_variables_json_round_trip():
     saved = json.loads((PROJECT_ROOT / "output" / "data" / "manuscript_variables.json").read_text())
     for key, value in variables.items():
         assert saved[key] == value
+
+
+def test_compute_metrics_variables_no_numeric_values(tmp_path: Path) -> None:
+    """When no generation has a numeric metric_value, SIA_METRIC_DELTA must be '0'."""
+    # Build a minimal run_summary with one generation whose metric_value is None.
+    summary_dir = tmp_path / "output" / "runs" / "run_1"
+    summary_dir.mkdir(parents=True)
+    payload = {
+        "run_id": 1,
+        "live": False,
+        "max_generations": 1,
+        "task_dir": "tasks/mini_classify",
+        "generations": [
+            {
+                "generation": 1,
+                "evaluation": {
+                    "metric_name": "accuracy",
+                    "metric_value": None,
+                    "n_samples": 0,
+                },
+            }
+        ],
+    }
+    (summary_dir / "run_summary.json").write_text(json.dumps(payload) + "\n", encoding="utf-8")
+    # Also need a minimal config.yaml so load_sia_settings resolves run_id=1
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    (manuscript_dir / "config.yaml").write_text("sia:\n  run_id: 1\n", encoding="utf-8")
+
+    variables = compute_metrics_variables(tmp_path)
+    assert variables["SIA_METRIC_DELTA"] == "0"
+
+
+def test_compute_metrics_variables_non_numeric_metric_value(tmp_path: Path) -> None:
+    """A string metric_value (e.g. 'n/a') must not raise; delta must be '0'."""
+    summary_dir = tmp_path / "output" / "runs" / "run_1"
+    summary_dir.mkdir(parents=True)
+    payload = {
+        "run_id": 1,
+        "live": False,
+        "max_generations": 2,
+        "task_dir": "tasks/mini_classify",
+        "generations": [
+            {
+                "generation": 1,
+                "evaluation": {"metric_name": "accuracy", "metric_value": "n/a", "n_samples": 6},
+            },
+            {
+                "generation": 2,
+                "evaluation": {"metric_name": "accuracy", "metric_value": "n/a", "n_samples": 6},
+            },
+        ],
+    }
+    (summary_dir / "run_summary.json").write_text(json.dumps(payload) + "\n", encoding="utf-8")
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    (manuscript_dir / "config.yaml").write_text("sia:\n  run_id: 1\n", encoding="utf-8")
+
+    variables = compute_metrics_variables(tmp_path)
+    assert variables["SIA_METRIC_DELTA"] == "0"

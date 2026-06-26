@@ -49,6 +49,7 @@ def plot_word_cloud(
         colormap="cividis",
         prefer_horizontal=0.7,
         min_font_size=16,
+        random_state=42,
     ).generate_from_frequencies(word_weights)
     ax.imshow(wc, interpolation="bilinear")
     ax.set_axis_off()

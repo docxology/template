@@ -134,3 +134,30 @@ def test_empty_helpers() -> None:
     assert cosine_similarity_matrix(empty).shape == (0, 0)
     assert cluster_embeddings(empty).shape == (0,)
     assert project_2d(empty).shape == (0, 2)
+
+
+def test_embed_texts_single_token_vocab() -> None:
+    """Texts with vocab_size <= 1 use the early L2-normalize branch (no SVD)."""
+    # Two documents both containing only "modafinil" — vocabulary collapses to 1 token.
+    mat = embed_texts(["modafinil", "modafinil"], n_components=5, max_features=1, seed=42)
+    assert mat.shape[0] == 2
+    # The single-token path returns normalized TF-IDF directly (shape[1] == 1).
+    assert mat.shape[1] == 1
+
+
+def test_project_2d_already_2d_input() -> None:
+    """project_2d with input already of shape (n, 2) pads nothing and returns directly."""
+    mat = np.array([[1.0, 0.0], [0.0, 1.0]], dtype=float)
+    proj = project_2d(mat, seed=42)
+    assert proj.shape == (2, 2)
+
+
+def test_embed_corpus_title_field() -> None:
+    """embed_corpus with field='title' uses only paper titles."""
+    papers = [
+        Paper(title="Modafinil wakefulness", abstract="does not matter here", doi="10.5555/t1"),
+        Paper(title="Armodafinil cognition", abstract="irrelevant text", doi="10.5555/t2"),
+    ]
+    ids, mat = embed_corpus(papers, field="title", n_components=2, seed=42)
+    assert ids == ["doi:10.5555/t1", "doi:10.5555/t2"]
+    assert mat.shape[0] == 2

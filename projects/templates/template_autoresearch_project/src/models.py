@@ -38,7 +38,17 @@ class AutoResearchClaim:
 
 @dataclass(frozen=True)
 class AutoResearchLoopResult:
-    """Result of one full deterministic AutoResearch loop."""
+    """Result of one full deterministic AutoResearch loop.
+
+    This snapshot is produced at several points during the loop — first as a
+    provisional pre-readiness snapshot and finally as the post-readiness
+    result.  Only the final instance carries ``readiness_valid=True`` and
+    populated ``output_paths``.
+
+    ``ml_task`` is a free-form summary dict serialized from
+    :class:`~src.ml.task.MLTaskResult` via its ``to_summary_dict`` method.
+    It is always present but may be empty ``{}`` in unit-test stubs.
+    """
 
     project_name: str
     generated_at: str

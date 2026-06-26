@@ -9,7 +9,7 @@ from pathlib import Path
 try:
     from .experiment_config import ExperimentConfig, load_experiment_config
     from .project_paths import resolve_project_root
-except ImportError:  # standalone load (no package context) — mirror the src/ import pattern
+except ImportError:  # pragma: no cover — standalone load (no package context)
     from experiment_config import ExperimentConfig, load_experiment_config  # type: ignore[no-redef]
     from project_paths import resolve_project_root  # type: ignore[no-redef]
 

@@ -9,10 +9,13 @@ from __future__ import annotations
 import logging
 
 import networkx as nx
+from scipy.sparse.linalg import ArpackError
 
 from literature.models import Citation, Paper
 
 logger = logging.getLogger(__name__)
+
+_CENTRALITY_ERRORS = (nx.NetworkXException, ArpackError, ArithmeticError, ValueError)
 
 
 def build_citation_graph(papers: list[Paper], citations: list[Citation]) -> nx.DiGraph:
@@ -122,7 +125,7 @@ def compute_network_metrics(
             h, a = nx.hits(graph, max_iter=hits_max_iter, tol=hits_tol)
             hubs = _top_scores(h)
             authorities = _top_scores(a)
-        except Exception as e:  # noqa: BLE001 -- safety net: HITS non-convergence must not abort metrics
+        except _CENTRALITY_ERRORS as e:
             logger.error("HITS algorithm failed: %s", e)
             hubs = {}
             authorities = {}
@@ -136,6 +139,39 @@ def compute_network_metrics(
     else:
         connected_components = 0
 
+    # Advanced centrality metrics (computed on large graphs with caps for performance)
+    betweenness: dict[str, float] = {}
+    closeness: dict[str, float] = {}
+    degree_assortativity: float = 0.0
+    avg_clustering: float = 0.0
+
+    if num_nodes > 1:
+        # Betweenness: cap to top nodes for large graphs (O(VE) complexity)
+        try:
+            if num_nodes <= 500:
+                betw = nx.betweenness_centrality(graph)
+            else:
+                betw = nx.betweenness_centrality(graph, k=200, seed=42)
+            betweenness = _top_scores(betw)
+        except _CENTRALITY_ERRORS as e:
+            logger.warning("Betweenness centrality failed: %s", e)
+
+        try:
+            close = nx.closeness_centrality(graph)
+            closeness = _top_scores(close)
+        except _CENTRALITY_ERRORS as e:
+            logger.warning("Closeness centrality failed: %s", e)
+
+        try:
+            degree_assortativity = float(nx.degree_assortativity_coefficient(graph.to_undirected()))
+        except _CENTRALITY_ERRORS as e:
+            logger.warning("Degree assortativity failed: %s", e)
+
+        try:
+            avg_clustering = float(nx.average_clustering(graph.to_undirected()))
+        except _CENTRALITY_ERRORS as e:
+            logger.warning("Average clustering failed: %s", e)
+
     return {
         "num_nodes": num_nodes,
         "num_edges": num_edges,
@@ -148,6 +184,10 @@ def compute_network_metrics(
         "hubs": hubs,
         "authorities": authorities,
         "connected_components": connected_components,
+        "betweenness": betweenness,
+        "closeness": closeness,
+        "degree_assortativity": degree_assortativity,
+        "avg_clustering": avg_clustering,
     }
 
 

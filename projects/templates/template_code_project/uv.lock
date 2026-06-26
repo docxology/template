@@ -958,7 +958,7 @@ wheels = [
 
 [[package]]
 name = "template-code-project"
-version = "0.1.0"
+version = "2.5.2"
 source = { editable = "." }
 dependencies = [
     { name = "matplotlib" },

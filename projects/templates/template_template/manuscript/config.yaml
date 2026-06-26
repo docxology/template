@@ -3,9 +3,9 @@
 
 paper:
   title: "A template/ approach to Reproducible Generative Research"
-  version: "1.0.7"
+  version: "1.0.8"
   subtitle: "Architecture and Ergonomics from Configuration through Publication"
-  date: "2026-05-03"
+  date: "2026-06-26"
 
 authors:
   - name: "Daniel Ari Friedman"

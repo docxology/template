@@ -50,3 +50,15 @@ The open work below should add tests or validators before promoting new claim su
 ## Promotion Rule
 
 Move an item out of this file only after its source producer, generated artifact, documentation, and focused tests are updated together.
+
+## Recent improvements (2026-06)
+
+- Added 87 new targeted tests covering previously untested code paths in `variables.py`,
+  `field_overview.py`, `citation_plots.py`, `figure_runner.py`, and `embeddings.py`.
+- Coverage improved from 93.64% → 96.86% (project-level src/) with 859 tests passing.
+- Key coverage gains: `variables.py` 74.11% → 96.30%, `field_overview.py` 92.41% → 100%,
+  `citation_plots.py` 93.81% → 98.97%, `figure_runner.py` 85.28% → 95.43%.
+- New test classes: `TestHumanizeList`, `TestFulltextAssessmentVariables`,
+  `TestDescriptiveStatsVariables`, `TestEntityVariables`, `TestEmbeddingAnalysisVariables`,
+  `TestAdvancedCitationVariables`.
+- `ruff` and `mypy` both clean (no new issues).

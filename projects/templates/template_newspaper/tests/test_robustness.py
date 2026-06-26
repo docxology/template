@@ -9,10 +9,11 @@ from __future__ import annotations
 
 import pytest
 
-from newspaper.components import _esc
+from newspaper.components import _esc, ad_flowables
 from newspaper.config import NewspaperConfig
-from newspaper.content import Block, Box, Edition, Figure, Page, Story, _parse_block, _parse_figure
+from newspaper.content import Ad, Block, Box, Edition, Figure, Page, Story, _parse_block, _parse_figure
 from newspaper.engine import render_edition
+from newspaper.typography import build_stylesheet, register_fonts
 
 
 # --- C1: over-tall boxes are detected, not silently shrunk -------------------
@@ -77,3 +78,77 @@ def test_figure_rejects_nonpositive_height() -> None:
 def test_pull_block_as_list_raises_named_error() -> None:
     with pytest.raises(ValueError):
         _parse_block({"pull": ["not", "a", "mapping"]})
+
+
+# --- A1: ad_flowables branch coverage ---------------------------------------
+
+def test_ad_flowables_minimal(tmp_path) -> None:
+    """ad_flowables with no graphic, no tagline, no contact covers the skipped
+    branches at lines 420->435 (no tagline) and 440->456 (no contact)."""
+    fonts = register_fonts()
+    styles = build_stylesheet(fonts)
+    ad = Ad(sponsor="Minimal Ad", tagline="", contact="", border="box")
+    items = ad_flowables(ad, styles, fonts, width=200.0, project_root=tmp_path)
+    assert len(items) >= 1
+
+
+def test_ad_flowables_with_missing_graphic(tmp_path) -> None:
+    """An ad referencing a non-existent graphic path skips the image silently
+    (covers the 393->406 branch where _resolve returns None)."""
+    fonts = register_fonts()
+    styles = build_stylesheet(fonts)
+    ad = Ad(
+        sponsor="Harbor Inn",
+        tagline="Rest easy by the sea",
+        graphic="missing/logo.png",
+        contact="555-0001",
+        border="box",
+    )
+    items = ad_flowables(ad, styles, fonts, width=200.0, project_root=tmp_path)
+    assert len(items) >= 1
+
+
+def test_ad_flowables_with_real_graphic(tmp_path) -> None:
+    """An ad with a real image that can be loaded exercises the image-placed path."""
+    from PIL import Image as PILImage
+
+    # Create a tiny valid PNG for the ad graphic.
+    img = PILImage.new("RGB", (80, 40), color=(200, 180, 140))
+    graphic_path = tmp_path / "logo.png"
+    img.save(str(graphic_path))
+
+    fonts = register_fonts()
+    styles = build_stylesheet(fonts)
+    ad = Ad(
+        sponsor="Sunny Bakery",
+        tagline="Fresh every morning",
+        graphic=str(graphic_path),
+        graphic_height=40.0,
+        contact="Main St.",
+        border="double",
+    )
+    items = ad_flowables(ad, styles, fonts, width=200.0, project_root=tmp_path)
+    assert len(items) >= 1
+
+
+def test_ad_flowables_with_corrupt_graphic(tmp_path) -> None:
+    """An ad graphic that exists but fails to load is silently skipped (403-404).
+
+    The ad renders without the image rather than crashing.
+    """
+    corrupt_path = tmp_path / "corrupt.png"
+    corrupt_path.write_bytes(b"NOT A VALID IMAGE FILE AT ALL")
+
+    fonts = register_fonts()
+    styles = build_stylesheet(fonts)
+    ad = Ad(
+        sponsor="Harbor Inn",
+        tagline="Cozy rooms",
+        graphic=str(corrupt_path),  # exists but unreadable as image
+        graphic_height=50.0,
+        contact="555-0099",
+        border="box",
+    )
+    # Must not raise — falls back gracefully.
+    items = ad_flowables(ad, styles, fonts, width=200.0, project_root=tmp_path)
+    assert len(items) >= 1

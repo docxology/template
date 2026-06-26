@@ -17,6 +17,8 @@ from analysis.citation_network import (
     detect_communities,
     resolve_citations,
 )
+from analysis.descriptive_stats import build_meta_report, save_meta_report
+from analysis.entities import corpus_entities, extract_keyphrases
 from analysis.subfield_classifier import classify_corpus
 from analysis.temporal_analysis import (
     compute_subfield_timeline,
@@ -140,11 +142,97 @@ def run_meta_analysis_pipeline(args: argparse.Namespace, *, project_root: Path) 
         "top_pagerank": {k: float(v) for k, v in list(metrics["pagerank"].items())[:5]},
         "top_hubs": {k: float(v) for k, v in list(metrics.get("hubs", {}).items())[:5]},
         "top_authorities": {k: float(v) for k, v in list(metrics.get("authorities", {}).items())[:5]},
+        "top_betweenness": {k: float(v) for k, v in list(metrics.get("betweenness", {}).items())[:5]},
+        "top_closeness": {k: float(v) for k, v in list(metrics.get("closeness", {}).items())[:5]},
+        "degree_assortativity": metrics.get("degree_assortativity", 0.0),
+        "avg_clustering": metrics.get("avg_clustering", 0.0),
     }
     network_path = data_dir / "citation_network.json"
     with open(network_path, "w", encoding="utf-8") as handle:
         json.dump(network_results, handle, indent=2)
     print(str(network_path))
+
+    # Descriptive statistics: venue distribution, author productivity, citation
+    # distribution with Gini coefficient, and metadata coverage rates.
+    meta_report = build_meta_report(papers)
+    meta_report_path = data_dir / "descriptive_stats.json"
+    save_meta_report(meta_report, meta_report_path)
+    print(str(meta_report_path))
+
+    # Entity and keyphrase extraction over abstracts.
+    # Serializes top entities and keyphrases for the corpus.
+    if papers_with_abs:
+        try:
+            entity_results = corpus_entities(papers_with_abs, field="abstract")
+            # Keep top 30 entities
+            top_entities = dict(sorted(entity_results.items(), key=lambda x: -x[1])[:30])
+            entity_path = data_dir / "entities.json"
+            with open(entity_path, "w", encoding="utf-8") as handle:
+                json.dump(top_entities, handle, indent=2)
+            print(str(entity_path))
+
+            # Top keyphrases across the corpus
+            all_keyphrases: dict[str, float] = {}
+            for paper in papers_with_abs:
+                for phrase, score in extract_keyphrases(paper.abstract, top_k=10):
+                    all_keyphrases[phrase] = max(all_keyphrases.get(phrase, 0), score)
+            top_kp = sorted(all_keyphrases.items(), key=lambda x: -x[1])[:50]
+            keyphrase_data = {"top_keyphrases": [{"phrase": p, "score": s} for p, s in top_kp]}
+            keyphrase_path = data_dir / "keyphrases.json"
+            with open(keyphrase_path, "w", encoding="utf-8") as handle:
+                json.dump(keyphrase_data, handle, indent=2)
+            print(str(keyphrase_path))
+        except (OSError, ValueError) as exc:
+            logger.warning("Entity/keyphrase extraction skipped: %s", exc)
+
+    # Embedding similarity: compute and serialize top similar pairs + cluster labels
+    if tfidf_matrix is not None and tfidf_matrix.shape[0] >= 2:
+        try:
+            from analysis.embeddings import (
+                cluster_embeddings,
+                embed_corpus,
+                most_similar,
+            )
+
+            doc_ids, embeddings = embed_corpus(
+                papers_with_abs,
+                field="abstract",
+                n_components=50,
+                max_features=args.max_features,
+                seed=42,
+            )
+
+            # Top 20 most similar pairs (excluding self-similarity)
+            similar_pairs: list[dict] = []
+            for i in range(min(len(doc_ids), 200)):  # Cap for performance
+                neighbors = most_similar(embeddings, doc_ids, i, top_k=3)
+                for neighbor_id, score in neighbors:
+                    similar_pairs.append(
+                        {
+                            "paper_a": doc_ids[i],
+                            "paper_b": neighbor_id,
+                            "similarity": float(score),
+                        }
+                    )
+            similar_pairs.sort(key=lambda x: -x["similarity"])
+            similar_pairs = similar_pairs[:20]
+
+            # Cluster labels (k=5 or fewer for small corpora)
+            n_clusters = min(5, len(papers_with_abs))
+            cluster_labels = cluster_embeddings(embeddings, n_clusters=n_clusters, seed=42)
+            cluster_data = {
+                "num_clusters": n_clusters,
+                "cluster_assignments": {
+                    doc_ids[i]: int(cluster_labels[i]) for i in range(min(len(doc_ids), len(cluster_labels)))
+                },
+                "top_similar_pairs": similar_pairs,
+            }
+            embedding_path = data_dir / "embedding_analysis.json"
+            with open(embedding_path, "w", encoding="utf-8") as handle:
+                json.dump(cluster_data, handle, indent=2)
+            print(str(embedding_path))
+        except (ImportError, OSError, ValueError, ArithmeticError) as exc:
+            logger.warning("Embedding similarity analysis skipped: %s", exc)
 
     logger.info(
         "Pipeline complete in %.1fs (%d papers, %d citation edges)",

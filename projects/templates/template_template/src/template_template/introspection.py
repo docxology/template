@@ -178,7 +178,7 @@ def _project_analysis_from_workspace(child: Path) -> ProjectAnalysis | None:
     try:
         with open(config_path, encoding="utf-8") as handle:
             config = yaml.safe_load(handle) or {}
-    except (OSError, ValueError) as exc:
+    except (OSError, ValueError, yaml.YAMLError) as exc:
         logger.warning(f"Could not load config for {child.name}: {exc}")
 
     manuscript_dir = child / "manuscript"
@@ -376,7 +376,7 @@ def analyze_test_coverage_config(project_dir: Path) -> CoverageConfig | None:
     try:
         with open(config_path, encoding="utf-8") as handle:
             config = yaml.safe_load(handle) or {}
-    except (OSError, ValueError) as exc:
+    except (OSError, ValueError, yaml.YAMLError) as exc:
         logger.warning(f"Could not parse config: {exc}")
         return None
 

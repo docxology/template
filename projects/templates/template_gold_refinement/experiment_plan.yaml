@@ -1,0 +1,23 @@
+conditions:
+  - name: ore_stage
+    role: reference
+    description: "Raw draft at ore-level purity (~37.5%, 9K)."
+  - name: smelting_stage
+    role: proposed
+    description: "Dross removed: filler and unsupported claims stripped (~75%, 18K)."
+  - name: certification_stage
+    role: variant
+    description: "Full pipeline validation and nine-nines certification."
+metrics:
+  primary:
+    name: purity_fraction
+    direction: maximize
+protocol: "Run the deterministic refinery pipeline with seed 431 across all five canonical stages, verifying monotone purity increase from ore (0.10) to nine-nines (0.999999999)."
+expected_figures: []
+expected_tables:
+  - tbl:stage_purity
+  - tbl:token_provenance
+baselines:
+  - ore_stage
+ablations:
+  - certification_stage

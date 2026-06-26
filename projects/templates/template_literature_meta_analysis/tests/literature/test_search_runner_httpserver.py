@@ -62,6 +62,10 @@ def _base_args(output_dir: Path) -> argparse.Namespace:
         skip_arxiv=False,
         skip_s2=False,
         skip_openalex=False,
+        skip_crossref=False,
+        skip_pubmed=False,
+        skip_sovietrxiv=False,
+        skip_chinarxiv=False,
         resume=False,
         clear_corpus=False,
         start_year=None,
@@ -214,3 +218,132 @@ def test_run_literature_search_clear_corpus_and_start_year(
     corpus = Corpus.load(path)
     assert all(paper.year is None or paper.year >= 2020 for paper in corpus.papers)
     assert path == stale_path
+
+
+# ---------------------------------------------------------------------------
+# SovietRxiv dispatch tests
+# ---------------------------------------------------------------------------
+
+_SOVIETRXIV_RESPONSE = {
+    "total": 2,
+    "limit": 100,
+    "next_cursor": None,
+    "data": [
+        {
+            "id": "202312.00010",
+            "title": "Modafinil and wakefulness: a SovietRxiv record",
+            "authors": ["Cyril Researcher"],
+            "abstract": "Modafinil promotes wakefulness in sleep-deprived populations.",
+            "date": "1988-05-20",
+            "source": "russiarxiv",
+            "source_url": "https://mathnet.ru/abc1",
+            "has_pdf": True,
+            "has_full_text": True,
+        },
+        {
+            "id": "202312.00011",
+            "title": "A SovietRxiv-only modafinil record",
+            "authors": ["Another Author"],
+            "date": "1992-01-10",
+            "source": "russiarxiv",
+        },
+    ],
+}
+
+
+def test_run_literature_search_sovietrxiv_dispatch(
+    httpserver: HTTPServer,
+    tmp_path: Path,
+) -> None:
+    """SovietRxiv engine dispatches and its papers enter the corpus."""
+    httpserver.expect_request("/api/v1/papers").respond_with_json(_SOVIETRXIV_RESPONSE)
+
+    output_dir = tmp_path / "output"
+    args = _base_args(output_dir)
+    args.query = "modafinil"
+    args.skip_arxiv = True
+    args.skip_s2 = True
+    args.skip_openalex = True
+
+    path = run_literature_search(
+        args,
+        project_root=tmp_path,
+        sovietrxiv_base_url=httpserver.url_for(""),
+    )
+    corpus = Corpus.load(path)
+    titles = sorted(p.title for p in corpus.papers)
+    assert "Modafinil and wakefulness: a SovietRxiv record" in titles
+    assert "A SovietRxiv-only modafinil record" in titles
+
+
+def test_run_literature_search_sovietrxiv_skip_flag(
+    httpserver: HTTPServer,
+    tmp_path: Path,
+) -> None:
+    """--skip-sovietrxiv prevents the SovietRxiv engine from dispatching."""
+    # All other keyless engines (Crossref, PubMed) would also dispatch to their
+    # real production URLs when no fixture base_url is provided. Skip them all
+    # so the corpus stays empty, proving SovietRxiv did not fire either.
+    output_dir = tmp_path / "output"
+    args = _base_args(output_dir)
+    args.skip_arxiv = True
+    args.skip_s2 = True
+    args.skip_openalex = True
+    args.skip_crossref = True
+    args.skip_pubmed = True
+    args.skip_sovietrxiv = True
+    args.skip_chinarxiv = True
+
+    path = run_literature_search(
+        args,
+        project_root=tmp_path,
+    )
+    corpus = Corpus.load(path)
+    assert len(corpus) == 0
+
+
+# ---------------------------------------------------------------------------
+# ChinaRxiv dispatch tests (same unified API as SovietRxiv)
+# ---------------------------------------------------------------------------
+
+_CHINARXIV_RESPONSE = {
+    "total": 1,
+    "limit": 100,
+    "next_cursor": None,
+    "data": [
+        {
+            "id": "202401.00001",
+            "title": "Modafinil effects on cognition: a ChinaRxiv record",
+            "authors": ["Wei Zhang"],
+            "abstract": "Modafinil improves cognitive performance under sleep restriction.",
+            "date": "2021-07-15",
+            "source": "chinaxiv",
+            "source_url": "https://chinaxiv.org/abc1",
+            "has_pdf": True,
+        },
+    ],
+}
+
+
+def test_run_literature_search_chinarxiv_dispatch(
+    httpserver: HTTPServer,
+    tmp_path: Path,
+) -> None:
+    """ChinaRxiv engine dispatches via the unified API and its papers enter the corpus."""
+    httpserver.expect_request("/api/v1/papers").respond_with_json(_CHINARXIV_RESPONSE)
+
+    output_dir = tmp_path / "output"
+    args = _base_args(output_dir)
+    args.query = "modafinil"
+    args.skip_arxiv = True
+    args.skip_s2 = True
+    args.skip_openalex = True
+
+    path = run_literature_search(
+        args,
+        project_root=tmp_path,
+        chinarxiv_base_url=httpserver.url_for(""),
+    )
+    corpus = Corpus.load(path)
+    titles = [p.title for p in corpus.papers]
+    assert "Modafinil effects on cognition: a ChinaRxiv record" in titles

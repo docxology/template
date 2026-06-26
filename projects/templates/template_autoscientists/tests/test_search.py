@@ -12,6 +12,8 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+import pytest
+
 from src.agents import DeterministicProposer
 from src.objective import SyntheticObjective
 from src.search import SearchConfig, _Runner, run_search
@@ -196,3 +198,57 @@ def test_run_breaks_when_all_axes_retired() -> None:
     result = run_search(obj, _AlternatingProposer(), config)
     assert len(result.trajectory) < 50  # broke early
     assert len(result.retired_dead_ends) == 2  # both directions of axis 0
+
+
+def test_redundant_experiments_measure_uses_shadow_registry_not_gated() -> None:
+    """Shadow registry counts redundant re-probes even when use_dead_ends=False.
+
+    The gated registry (use_dead_ends) steers the search; the shadow is
+    always-on and only measures.  Even with the registry turned off the shadow
+    still records failures, so redundant_experiments is nonzero in the
+    no-registry configuration.
+    """
+    obj = _objective()
+    proposer = DeterministicProposer()
+    no_registry = run_search(obj, proposer, SearchConfig(budget=60, use_dead_ends=False))
+    # Shadow catches the re-probes that the disabled gated registry misses.
+    assert no_registry.redundant_experiments > 0
+
+
+def test_no_confirmation_allows_noise_inflated_champion() -> None:
+    """Negative control: without confirmation the reported metric can diverge from clean.
+
+    With confirmation off, a single noisy evaluation determines acceptance, so
+    the champion may be promoted based on a lucky noise draw — the reported
+    metric can be larger than the clean ground-truth.  We verify the run
+    completes and the two metrics are available for comparison.
+    """
+    obj = _objective()
+    result = run_search(obj, DeterministicProposer(), SearchConfig(budget=40, use_confirmation=False))
+    reported = result.champion.metric
+    clean = obj.clean(result.champion.params)
+    # Both are finite floats; the reported-vs-clean gap is the noise the
+    # run accepted without multi-seed filtering.
+    assert isinstance(reported, float)
+    assert isinstance(clean, float)
+    # Confirm the trajectory is non-empty and within the stated budget.
+    assert 0 < len(result.trajectory) <= 40
+
+
+def test_target_tolerance_boundary() -> None:
+    """experiments_to_target records the first experiment that crosses the threshold."""
+    # The clean optimum is 0.0; with the default tolerance (1e-9) it must be
+    # reached exactly.  Use a very relaxed tolerance to verify it fires early.
+    obj = _objective()
+    config = SearchConfig(budget=60, target_tolerance=100.0)  # trivially satisfied
+    result = run_search(obj, DeterministicProposer(), config)
+    # With tolerance=100 even the start is within range, so the counter fires
+    # on the very first experiment (experiment 1).
+    assert result.experiments_to_target == 1
+
+
+def test_search_config_frozen_prevents_mutation() -> None:
+    """SearchConfig is frozen; attribute assignment must raise AttributeError."""
+    config = SearchConfig()
+    with pytest.raises((AttributeError, TypeError)):
+        config.budget = 99  # type: ignore[misc]

@@ -1,0 +1,42 @@
+# Claim ledger for template_gold_refinement
+# Registers manuscript numeric claims sourced from code, captions, or artifacts
+# rather than {{TOKEN}} variables.
+
+claims:
+  - id: "claim:five_stages"
+    statement: "The refinery pipeline has 5 canonical stages."
+    source: "src/refinery.py::CANONICAL_STAGES"
+    evidence_type: "code"
+    boundary: "local"
+
+  - id: "claim:monotone_purity"
+    statement: "Purity increases monotonically across all refinery stages."
+    source: "src/refinery.py::assert_monotone_increase"
+    evidence_type: "code"
+    boundary: "local"
+
+  - id: "claim:nine_nines"
+    statement: "The certification stage achieves 99.9999999% purity (nine-nines)."
+    source: "src/purity.py::NINE_NINES_PURITY"
+    evidence_type: "code"
+    boundary: "local"
+
+  - id: "claim:seed_431"
+    statement: "Token selection uses seed 431 for deterministic reproducibility."
+    source: "manuscript/config.yaml::gold_refinement.seed"
+    evidence_type: "config"
+    boundary: "local"
+
+  - id: "claim:sha256_digest"
+    statement: "Token selection uses SHA-256 digest over seed, slot, category, ordinal, and inventory."
+    source: "src/composition.py::_choose_value"
+    evidence_type: "code"
+    boundary: "local"
+
+non_claims:
+  - id: "nonclaim:empirical_validation"
+    statement: "The analogy is not empirically validated against external manuscript quality metrics."
+    boundary: "local"
+  - id: "nonclaim:domain_generalizability"
+    statement: "Specific purity fractions are not generalized to all scientific domains."
+    boundary: "local"

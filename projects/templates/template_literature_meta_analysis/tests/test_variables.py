@@ -24,10 +24,30 @@ from manuscript.variables import (
     _latex_number,
     _count_jsonl_lines,
     _count_total_references,
+    _humanize_list,
     _load_json,
     compute_variables,
     inject_variables,
 )
+
+
+# ── _humanize_list ────────────────────────────────────────────────────────
+
+
+class TestHumanizeList:
+    """Test English list serialization helper."""
+
+    def test_empty_list(self):
+        assert _humanize_list([]) == ""
+
+    def test_single_item(self):
+        assert _humanize_list(["arXiv"]) == "arXiv"
+
+    def test_two_items(self):
+        assert _humanize_list(["arXiv", "PubMed"]) == "arXiv and PubMed"
+
+    def test_three_items(self):
+        assert _humanize_list(["arXiv", "PubMed", "OpenAlex"]) == "arXiv, PubMed, and OpenAlex"
 
 
 # ── _latex_number ────────────────────────────────────────────────────────
@@ -120,6 +140,12 @@ class TestCountTotalReferences:
         p = tmp_path / "corpus.jsonl"
         p.write_text('{"title":"A","references":["r1"]}\nnot-json\n')
         assert _count_total_references(p) == 1
+
+    def test_blank_line_in_corpus_skipped(self, tmp_path):
+        """Blank lines inside a corpus JSONL are skipped without error."""
+        p = tmp_path / "corpus.jsonl"
+        p.write_text('{"title":"A","references":["r1","r2"]}\n\n{"title":"B","references":["r3"]}\n\n')
+        assert _count_total_references(p) == 3
 
 
 # ── _load_json ──────────────────────────────────────────────────────────
@@ -341,6 +367,24 @@ class TestComputeVariables:
         assert variables["CITATION_TOTAL_REFS"] == "0"
         assert variables["CITATION_RESOLUTION_PCT"] == "0.0"
 
+    def test_citation_top_authorities_and_hubs_populated(self, tmp_path):
+        """TOP_AUTHORITIES_TABLE and TOP_HUBS_TABLE are populated when data is present."""
+        (tmp_path / "corpus.jsonl").write_text("")
+        citation = {
+            "num_nodes": 3,
+            "num_edges": 2,
+            "density": 0.33,
+            "avg_in_degree": 0.67,
+            "connected_components": 1,
+            "total_references": 2,
+            "top_authorities": {"doi:10.1/a": 0.8, "doi:10.1/b": 0.5},
+            "top_hubs": {"doi:10.1/c": 0.7, "doi:10.1/d": 0.4},
+        }
+        (tmp_path / "citation_network.json").write_text(json.dumps(citation))
+        variables = compute_variables(tmp_path)
+        assert "| 1 | 10.1/a | 0.800000 |" in variables["TOP_AUTHORITIES_TABLE"]
+        assert "| 1 | 10.1/c | 0.700000 |" in variables["TOP_HUBS_TABLE"]
+
     def test_no_figures_dir(self, tmp_path):
         """NUM_FIGURES defaults when figures/ doesn't exist."""
         (tmp_path / "corpus.jsonl").write_text("")
@@ -482,6 +526,14 @@ class TestInjectVariables:
         result = inject_variables(content, variables, filename="abstract.md")
         assert result == "$N = 1,834$ papers"
 
+    def test_unresolved_variable_raises_by_default(self):
+        """inject_variables raises RuntimeError for unresolved vars in strict mode."""
+        content = "Size: {{CORPUS_SIZE}}, Unknown: {{UNKNOWN_VAR}}"
+        variables = {"CORPUS_SIZE": "42"}
+        import pytest
+        with pytest.raises(RuntimeError, match="UNKNOWN_VAR"):
+            inject_variables(content, variables, lenient=False)
+
 
 # ── Config-driven domain tokens ──────────────────────────────────────────
 
@@ -575,8 +627,8 @@ project_config:
         assert v["SEARCH_TERM"] == "the target topic"
         assert v["N_SUBFIELDS"] == "0"
         assert v["N_HYPOTHESES"] == "0"
-        # engine fallback lists all five
-        assert v["N_ENGINES"] == "5"
+        # engine fallback lists all seven
+        assert v["N_ENGINES"] == "7"
 
     def test_tfidf_default(self, tmp_path):
         """NUM_VOCAB_FEATURES defaults to 500 when tfidf_data.json missing."""
@@ -601,3 +653,248 @@ project_config:
         (data_dir / "corpus.jsonl").write_text('{"title":"A"}\n{"title":"B"}\n')
         variables = compute_variables(tmp_path)
         assert variables["CORPUS_SIZE"] == "2"
+
+
+# ── Fulltext assessment variables ────────────────────────────────────────
+
+
+class TestFulltextAssessmentVariables:
+    """compute_variables populates fulltext coverage tokens from fulltext_assessment.json."""
+
+    def test_fulltext_variables_computed(self, tmp_path):
+        (tmp_path / "corpus.jsonl").write_text("")
+        fulltext = {
+            "abstract_coverage": {"percent_with_abstract": 87.5, "has_abstract": 7, "no_abstract": 1},
+            "open_access": {"is_oa": 4, "percent_oa": 50.0},
+            "pdf_availability": {"has_pdf_url": 3, "percent_with_pdf": 37.5},
+            "identifier_coverage": {"doi": 6, "arxiv_id": 2, "openalex_id": 5},
+            "fulltext_format": {"publisher_pdf_only": 1, "no_fulltext_available": 2},
+        }
+        (tmp_path / "fulltext_assessment.json").write_text(json.dumps(fulltext))
+        v = compute_variables(tmp_path)
+        assert v["ABSTRACT_COVERAGE_PCT"] == "87.5"
+        assert v["ABSTRACT_COUNT"] == "7"
+        assert v["NO_ABSTRACT_COUNT"] == "1"
+        assert v["OA_COUNT"] == "4"
+        assert v["OA_PCT"] == "50.0"
+        assert v["PDF_AVAIL_COUNT"] == "3"
+        assert v["PDF_AVAIL_PCT"] == "37.5"
+        assert v["DOI_COUNT"] == "6"
+        assert v["ARXIV_ID_COUNT"] == "2"
+        assert v["OPENALEX_ID_COUNT"] == "5"
+        assert v["PUBLISHER_PDF_COUNT"] == "1"
+        assert v["NO_FULLTEXT_COUNT"] == "2"
+
+    def test_fulltext_variables_absent_when_missing(self, tmp_path):
+        """No fulltext variables emitted when fulltext_assessment.json is missing."""
+        (tmp_path / "corpus.jsonl").write_text("")
+        v = compute_variables(tmp_path)
+        assert "ABSTRACT_COVERAGE_PCT" not in v
+        assert "OA_PCT" not in v
+
+
+# ── Descriptive statistics variables ─────────────────────────────────────
+
+
+class TestDescriptiveStatsVariables:
+    """compute_variables populates descriptive-stats tokens from descriptive_stats.json."""
+
+    def _write_desc(self, tmp_path, desc: dict) -> None:
+        (tmp_path / "corpus.jsonl").write_text("")
+        (tmp_path / "descriptive_stats.json").write_text(json.dumps(desc))
+
+    def test_basic_descriptive_stats(self, tmp_path):
+        desc = {
+            "descriptive_stats": {
+                "unique_authors": 12,
+                "citation_count_mean": 14.3,
+                "citation_count_median": 8.0,
+                "citation_count_max": 150,
+                "citation_count_total": 858,
+                "papers_per_author_mean": 1.5,
+                "pct_with_doi": 92.3,
+                "counts_by_venue": {"Nature": 5, "Science": 3},
+            },
+            "citation_distribution": {
+                "histogram": {"0": 2, "1-9": 5, "10+": 3},
+                "gini": 0.421,
+                "n": 10,
+                "total_citations": 858,
+            },
+            "author_productivity": [["Alice Smith", 3], ["Bob Jones", 2]],
+        }
+        self._write_desc(tmp_path, desc)
+        v = compute_variables(tmp_path)
+        assert v["UNIQUE_AUTHORS"] == "12"
+        assert v["CITATION_MEAN"] == "14.3"
+        assert v["CITATION_MEDIAN"] == "8.0"
+        assert v["CITATION_MAX"] == "150"
+        assert v["CITATION_TOTAL"] == "858"
+        assert v["PAPERS_PER_AUTHOR_MEAN"] == "1.50"
+        assert v["PCT_WITH_DOI"] == "92.3"
+        assert "| Nature | 5 |" in v["TOP_VENUES_TABLE"]
+        assert v["GINI_COEFFICIENT"] == "0.421"
+        assert v["CITATION_DIST_N"] == "10"
+        assert "| 0 | 2 |" in v["CITATION_DIST_TABLE"]
+        assert "| Alice Smith" in v["TOP_AUTHORS_TABLE"]
+
+    def test_empty_venues_table(self, tmp_path):
+        """Empty venues dict produces empty table marker."""
+        desc = {
+            "descriptive_stats": {
+                "unique_authors": 1,
+                "citation_count_mean": 0.0,
+                "citation_count_median": 0.0,
+                "citation_count_max": 0,
+                "citation_count_total": 0,
+                "papers_per_author_mean": 1.0,
+                "pct_with_doi": 0.0,
+                "counts_by_venue": {},
+            },
+            "citation_distribution": {"histogram": {}, "gini": 0.0, "n": 0},
+            "author_productivity": [],
+        }
+        self._write_desc(tmp_path, desc)
+        v = compute_variables(tmp_path)
+        assert v["TOP_VENUES_TABLE"] == "| Venue | Papers |\n| --- | --- |"
+        assert v["CITATION_DIST_TABLE"] == "| Citations | Papers |\n| --- | --- |"
+        assert v["TOP_AUTHORS_TABLE"] == "| Rank | Author | Papers |\n| --- | --- | --- |"
+
+    def test_descriptive_stats_absent_when_missing(self, tmp_path):
+        (tmp_path / "corpus.jsonl").write_text("")
+        v = compute_variables(tmp_path)
+        assert "UNIQUE_AUTHORS" not in v
+        assert "GINI_COEFFICIENT" not in v
+
+
+# ── Entity and keyphrase variables ────────────────────────────────────────
+
+
+class TestEntityVariables:
+    """compute_variables populates entity and keyphrase tokens."""
+
+    def test_entities_computed(self, tmp_path):
+        data_dir = tmp_path / "data"
+        data_dir.mkdir()
+        (data_dir / "corpus.jsonl").write_text("")
+        entities = {"modafinil": 42, "wakefulness": 31, "dopamine": 18}
+        (data_dir / "entities.json").write_text(json.dumps(entities))
+        v = compute_variables(tmp_path)
+        assert "| modafinil | 42 |" in v["TOP_ENTITIES_TABLE"]
+        assert v["NUM_ENTITIES"] == "3"
+
+    def test_entities_fallback_when_missing(self, tmp_path):
+        (tmp_path / "corpus.jsonl").write_text("")
+        v = compute_variables(tmp_path)
+        assert v["NUM_ENTITIES"] == "0"
+        assert "| Entity | Frequency |" in v["TOP_ENTITIES_TABLE"]
+
+    def test_keyphrases_computed(self, tmp_path):
+        data_dir = tmp_path / "data"
+        data_dir.mkdir()
+        (data_dir / "corpus.jsonl").write_text("")
+        kp = {"top_keyphrases": [{"phrase": "sleep deprivation", "score": 0.842}]}
+        (data_dir / "keyphrases.json").write_text(json.dumps(kp))
+        v = compute_variables(tmp_path)
+        assert "| sleep deprivation | 0.8420 |" in v["TOP_KEYPHRASES_TABLE"]
+        assert v["NUM_KEYPHRASES"] == "1"
+
+    def test_keyphrases_empty_list(self, tmp_path):
+        data_dir = tmp_path / "data"
+        data_dir.mkdir()
+        (data_dir / "corpus.jsonl").write_text("")
+        kp = {"top_keyphrases": []}
+        (data_dir / "keyphrases.json").write_text(json.dumps(kp))
+        v = compute_variables(tmp_path)
+        assert v["NUM_KEYPHRASES"] == "0"
+
+    def test_keyphrases_fallback_when_missing(self, tmp_path):
+        (tmp_path / "corpus.jsonl").write_text("")
+        v = compute_variables(tmp_path)
+        assert v["NUM_KEYPHRASES"] == "0"
+
+
+# ── Embedding analysis variables ──────────────────────────────────────────
+
+
+class TestEmbeddingAnalysisVariables:
+    """compute_variables populates embedding cluster/similarity tokens."""
+
+    def test_embedding_clusters_and_pairs(self, tmp_path):
+        data_dir = tmp_path / "data"
+        data_dir.mkdir()
+        (data_dir / "corpus.jsonl").write_text("")
+        emb = {
+            "num_clusters": 3,
+            "top_similar_pairs": [
+                {"paper_a": "doi:10.1/a", "paper_b": "doi:10.1/b", "similarity": 0.91},
+            ],
+        }
+        (data_dir / "embedding_analysis.json").write_text(json.dumps(emb))
+        v = compute_variables(tmp_path)
+        assert v["NUM_EMBEDDING_CLUSTERS"] == "3"
+        assert "| doi:10.1/a" in v["TOP_SIMILAR_PAIRS_TABLE"]
+
+    def test_embedding_empty_pairs(self, tmp_path):
+        """Empty pairs list yields the header-only table."""
+        data_dir = tmp_path / "data"
+        data_dir.mkdir()
+        (data_dir / "corpus.jsonl").write_text("")
+        emb = {"num_clusters": 2, "top_similar_pairs": []}
+        (data_dir / "embedding_analysis.json").write_text(json.dumps(emb))
+        v = compute_variables(tmp_path)
+        assert v["TOP_SIMILAR_PAIRS_TABLE"] == "| Paper A | Paper B | Similarity |\n| --- | --- | --- |"
+
+    def test_embedding_fallback_when_missing(self, tmp_path):
+        (tmp_path / "corpus.jsonl").write_text("")
+        v = compute_variables(tmp_path)
+        assert v["NUM_EMBEDDING_CLUSTERS"] == "0"
+
+
+# ── Advanced citation network metric variables ────────────────────────────
+
+
+class TestAdvancedCitationVariables:
+    """compute_variables populates betweenness/assortativity/clustering tokens."""
+
+    def test_advanced_metrics_with_top_betweenness(self, tmp_path):
+        (tmp_path / "corpus.jsonl").write_text("")
+        citation = {
+            "num_nodes": 5,
+            "num_edges": 4,
+            "density": 0.2,
+            "avg_in_degree": 0.8,
+            "connected_components": 2,
+            "total_references": 4,
+            "degree_assortativity": -0.25,
+            "avg_clustering": 0.0333,
+            "top_betweenness": {"doi:10.1/a": 0.6, "doi:10.1/b": 0.4},
+        }
+        (tmp_path / "citation_network.json").write_text(json.dumps(citation))
+        v = compute_variables(tmp_path)
+        assert v["DEGREE_ASSORTATIVITY"] == "-0.2500"
+        assert v["AVG_CLUSTERING"] == "0.0333"
+        assert "| 1 | 10.1/a |" in v["TOP_BETWEENNESS_TABLE"]
+
+    def test_advanced_metrics_no_betweenness(self, tmp_path):
+        """Empty betweenness dict yields the header-only table."""
+        (tmp_path / "corpus.jsonl").write_text("")
+        citation = {
+            "num_nodes": 2,
+            "num_edges": 1,
+            "density": 0.5,
+            "avg_in_degree": 0.5,
+            "connected_components": 1,
+            "total_references": 1,
+            "top_betweenness": {},
+        }
+        (tmp_path / "citation_network.json").write_text(json.dumps(citation))
+        v = compute_variables(tmp_path)
+        assert v["TOP_BETWEENNESS_TABLE"] == "| Rank | DOI | Betweenness |\n| --- | --- | --- |"
+
+    def test_advanced_metrics_fallback_when_citation_missing(self, tmp_path):
+        """DEGREE_ASSORTATIVITY/AVG_CLUSTERING default to 0.0000 when citation_network.json is absent."""
+        (tmp_path / "corpus.jsonl").write_text("")
+        v = compute_variables(tmp_path)
+        assert v["DEGREE_ASSORTATIVITY"] == "0.0000"
+        assert v["AVG_CLUSTERING"] == "0.0000"

@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_autoscientists"
-version = "1.0.0"
+version = "1.0.2"
 description = "Deterministic reference implementation of the AutoScientists self-organizing agent coordination model"
 authors = [
     {name = "Research Template Author", email = "author@research-template.org"}

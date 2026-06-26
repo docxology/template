@@ -97,9 +97,42 @@ def test_cover_art(tmp_path):
     assert path.name == "template_textbook_cover.png"
 
 
+def test_cover_art_no_subtitle(tmp_path):
+    """cover_art with no subtitle must still produce a valid PNG."""
+    path = plots.cover_art(tmp_path)  # subtitle="" by default
+    _png_is_nonempty(path)
+    assert path.name == "template_textbook_cover.png"
+
+
 def test_figures_are_deterministic(tmp_path):
     first = tmp_path / "a"
     second = tmp_path / "b"
     p1 = plots.plot_logistic_growth(first)
     p2 = plots.plot_logistic_growth(second)
     assert p1.read_bytes() == p2.read_bytes()
+
+
+def test_figure_registry_fallback_filename(tmp_path):
+    """_figure_filename falls back to basename when path doesn't contain output/figures/."""
+    from visualization.registry import _figure_filename
+
+    # A path that doesn't contain 'output/figures' at all — the last-resort fallback.
+    image_path = "/some/completely/different/path/my_figure.png"
+    resolved = Path(image_path)
+    figures_root = tmp_path / "output" / "figures"
+    result = _figure_filename(image_path, resolved, figures_root)
+    # Fallback: just the filename.
+    assert result == "my_figure.png"
+
+
+def test_figure_registry_extracts_from_output_figures_path(tmp_path):
+    """_figure_filename extracts relative path from 'output/figures' segment."""
+    from visualization.registry import _figure_filename
+
+    # A path that has 'output/figures' in the middle.
+    image_path = "../../output/figures/gallery/gallery_bar.png"
+    resolved = (tmp_path / image_path).resolve()  # won't be under figures_root
+    figures_root = tmp_path / "nowhere"  # resolved won't be relative to this
+    result = _figure_filename(image_path, resolved, figures_root)
+    # Should extract "gallery/gallery_bar.png"
+    assert result == "gallery/gallery_bar.png"

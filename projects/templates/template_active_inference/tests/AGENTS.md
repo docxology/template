@@ -14,16 +14,16 @@ Sheaf tests are split by concern: `test_sheaf_manifest.py`, `test_sheaf_registry
 `test_coverage_pipeline.py`, `test_sweep_io.py` (no monolithic `test_sheaf.py`).
 
 The gate tests call `compose_all_sections` / `ensure_coverage_artifacts` on the
-real project root, which rewrites tracked `manuscript/*.md` (the "Generated
-status" table in `08_methods_sheaf.md` and the `00_00_sheaf_coverage.md` page)
-to reflect whatever artifacts the run produced. A session-scoped autouse
-fixture in `conftest.py` (`_restore_tracked_manuscript`) snapshots every
-tracked `manuscript/**/*.md` before the session and restores the byte-for-byte
-original at teardown, so the suite always leaves the working tree clean — never
-`git commit -a` a degraded status table after a run.
+real project root, which rewrites tracked manuscript, GNN, ontology, and config
+sources to reflect whatever artifacts the run produced. The autouse fixture in
+`conftest.py` snapshots mutable tracked project sources at session start and
+restores them after every test, so long runs do not let a mutation or composed
+status table leak into later checks. Never `git commit -a` a degraded status
+table after a run.
 
 Run full verification from this project root:
-`uv run pytest tests/ --cov=src --cov-fail-under=90`. Use focused `-q`
-commands only for package-local development loops. Runtime: the full suite is
-slow (~15-25 min serial — real pandoc/xelatex and artifact-generation/gate
-tests dominate); a quiet console for minutes is expected, not a hang.
+`uv run python scripts/run_full_verification.py`. It runs gate-heavy coverage in
+separate pytest processes and appends coverage into one final 90% gate. Use
+focused `-q` commands only for package-local development loops. The legacy
+single-process coverage run is available as `--monolithic-coverage` for
+diagnostics only.

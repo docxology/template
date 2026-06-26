@@ -57,3 +57,37 @@ def test_averages_over_seeds() -> None:
 def test_empty_seeds_rejected() -> None:
     with pytest.raises(ValueError, match="seeds must be non-empty"):
         confirm_improvement(lambda p, s: 1.0, (0.0,), 0.0, seeds=(), noise_scale=0.1)
+
+
+def test_rejects_gain_exactly_at_band_boundary() -> None:
+    """Negative control: delta <= noise_band is NOT sufficient to confirm.
+
+    The accept condition is strictly *greater than* the band.  A delta that
+    lands exactly on the boundary should be rejected, not promoted.  We construct
+    the case precisely: evaluate always returns a known value, so delta is exact.
+    """
+    # Use noise_scale=0 so the band is 0.0.  Then delta must be > 0 to confirm.
+    # A delta of exactly 0.0 (candidate equals baseline) must be rejected.
+    result = confirm_improvement(
+        evaluate=lambda params, seed: 1.0,  # mean == baseline, delta == 0
+        candidate=(0.0,),
+        baseline_metric=1.0,
+        seeds=(1, 2, 3),
+        noise_scale=0.0,
+    )
+    assert result.delta == pytest.approx(0.0)
+    assert result.noise_band == pytest.approx(0.0)
+    assert result.confirmed is False  # delta == band (0 == 0) is not strictly greater
+
+
+def test_single_seed_band_formula() -> None:
+    """Band with one seed equals sigma * noise_scale (standard error = noise_scale / sqrt(1))."""
+    result = confirm_improvement(
+        evaluate=lambda params, seed: 1.0,
+        candidate=(0.0,),
+        baseline_metric=0.0,
+        seeds=(42,),
+        noise_scale=0.5,
+        sigma=3.0,
+    )
+    assert result.noise_band == pytest.approx(1.5)  # 3.0 * 0.5

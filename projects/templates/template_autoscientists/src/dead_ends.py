@@ -3,6 +3,12 @@
 Mirrors the AutoScientists dead-end registry that agents consult *before*
 proposing, so exhausted directions are not re-explored. A direction is retired
 after it fails to improve the champion ``threshold`` times in a row.
+
+**Retirement is permanent.** Once ``(axis, direction)`` is retired it stays
+retired even if a subsequent ``record_success`` call is made; ``record_success``
+only resets the *failure streak counter*, not the retired status. An axis is
+*fully retired* — and dropped from team assignment — only when *both* its
+increase and decrease directions are retired.
 """
 
 from __future__ import annotations
@@ -46,7 +52,13 @@ class DeadEndRegistry:
             )
 
     def record_success(self, axis: int, direction: str) -> None:
-        """Clear the failure streak after an improvement on this direction."""
+        """Clear the failure streak after an improvement on this direction.
+
+        Retirement is permanent: if the direction was already retired when this
+        is called, it stays retired.  Only the consecutive-failure counter is
+        reset so future failures can be counted afresh (though a retired
+        direction will never be re-retired since it is never re-proposed).
+        """
         self._failures.pop((axis, direction), None)
 
     def retired(self) -> tuple[DeadEnd, ...]:

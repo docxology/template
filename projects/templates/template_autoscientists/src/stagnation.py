@@ -4,6 +4,14 @@ When the champion stops improving for a window of experiments, AutoScientists
 reopens discussion and reorganizes teams around different directions. Here that
 is a deterministic signal plus an axis-reassignment that rotates teams onto the
 directions ranked most promising and away from retired dead ends.
+
+**Stagnation semantics.** The detector checks the ``improved`` property on each
+``ExperimentOutcome`` in the trailing window. An outcome is ``improved`` only
+when *both* ``confirmed=True`` AND ``delta_vs_champion > 0.0`` — a positive
+delta that failed confirmation (noise-rejected) does NOT clear stagnation, and
+neither does a confirmed non-improvement (delta <= 0). This mirrors the
+AutoScientists protocol: only confirmed, genuinely-improving experiments
+count toward breaking a stagnation streak.
 """
 
 from __future__ import annotations
@@ -40,6 +48,10 @@ def reorganize_axes(
     An axis is dropped only when *both* of its directions are retired. Live
     axes are dealt round-robin across teams so each team gets a complementary
     slice of the most-promising directions first.
+
+    When *all* axes are fully retired the returned list contains ``num_teams``
+    empty sub-lists; the caller (the search loop) detects this and breaks out
+    of the experiment budget loop rather than entering an infinite cycle.
     """
     if num_teams < 1:
         raise ValueError("num_teams must be >= 1")

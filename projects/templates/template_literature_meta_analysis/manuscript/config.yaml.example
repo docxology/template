@@ -87,6 +87,18 @@ project_config:
       semantic_scholar: true
       crossref: true
       pubmed: true
+      sovietrxiv: true
+      chinarxiv: true
+    # SovietRxiv / RussiaRxiv (translated Soviet-era preprints from Math-Net.Ru
+    # and CyberLeninka). Keyless engine; set api_email for the polite rate-limit
+    # pool (300/min vs 30/min anonymous). Set source: "russiarxiv" to restrict.
+    sovietrxiv:
+      api_email: ""              # e.g. "your@email.com" for the polite pool
+      source: ""                # "russiarxiv" | "" (combined)
+    # ChinaRxiv (translated Chinese preprints from ChinaXiv). Shares the same
+    # unified API as SovietRxiv but hosted at https://chinaxiv.org.
+    chinarxiv:
+      api_email: ""              # e.g. "your@email.com" for the polite pool
     arxiv_queries:
       - 'all:"modafinil"'
       - 'all:"armodafinil"'
@@ -167,7 +179,7 @@ project_config:
       inputs: []
       outputs:
         - output/data/corpus.jsonl
-      description: "Query arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed; merge and deduplicate"
+      description: "Query arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv; merge and deduplicate"
 
     - name: meta_analysis
       script: 02_meta_analysis_pipeline.py

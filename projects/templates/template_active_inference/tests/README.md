@@ -50,8 +50,10 @@ For a reproducible complete run, prefer:
 uv run python scripts/run_full_verification.py
 ```
 
-Runtime remains ~15-25 minutes serial on a fresh run; long sections of quiet output
-are expected while heavy fixtures and preflight artifact rebuilds settle.
+Runtime is dominated by generated-artifact gates, but the verification script
+runs coverage in separate pytest processes and appends the coverage data into
+one final 90% gate. Use `--monolithic-coverage` only when diagnosing behavior
+that specifically needs the legacy single pytest process.
 
 Fixture-level performance candidates are the repeated marker variants in
 `test_validate_manuscript_methods_sheaf_layers_negative_markers` and redundant

@@ -40,7 +40,11 @@ _PLACEHOLDER_BG = Color(0.86, 0.86, 0.87)
 
 
 def _hex(value: str, default: Color) -> Color:
-    """Parse a ``#RRGGBB`` string to a ReportLab Color, falling back on default."""
+    """Parse a ``#RRGGBB`` string to a ReportLab Color, falling back on default.
+
+    An empty string or any unparseable value returns ``default`` unchanged so
+    callers never need to guard against bad hex in YAML content.
+    """
     if not value:
         return default
     try:
@@ -139,6 +143,12 @@ def pull_quote(quote: str, attribution: str, styles: StyleSheet1) -> Table:
 
 
 def _resolve_image_path(path: str, project_root: Path) -> Path | None:
+    """Resolve a figure or ad graphic path relative to ``project_root``.
+
+    Absolute paths are used as-is; relative paths are joined to ``project_root``
+    (e.g. ``output/figures/harbor.png``). Returns ``None`` if the resolved path
+    does not exist on disk so callers degrade gracefully to a placeholder.
+    """
     candidate = (project_root / path) if not Path(path).is_absolute() else Path(path)
     return candidate if candidate.exists() else None
 

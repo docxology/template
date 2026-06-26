@@ -2,10 +2,13 @@
 
 ## Overview
 
-Retrieval clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed) plus corpus management and data models.
+Retrieval clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv/ChinaRxiv) plus corpus management and data models.
 Orchestration lives in `literature/search_runner.py` (called from `scripts/01_literature_search.py`).
-`run_literature_search(..., arxiv_base_url=..., semantic_scholar_base_url=..., openalex_base_url=...)`
+`run_literature_search(..., arxiv_base_url=..., semantic_scholar_base_url=..., openalex_base_url=..., crossref_base_url=..., pubmed_esearch_url=..., pubmed_efetch_url=..., sovietrxiv_base_url=..., chinarxiv_base_url=...)`
 accepts injectable API roots for `pytest-httpserver` integration tests without changing production defaults.
+SovietRxiv and ChinaRxiv share the same unified API (`sovietrxiv_client.py`) but are hosted at
+`https://russiarxiv.org` and `https://chinaxiv.org` respectively; the `source` query parameter
+distinguishes their sub-corpora.
 Full-text reporting: `literature/fulltext_assessment.py` (`scripts/06_fulltext_assessment.py`).
 The corpus JSONL is the single input
 to all downstream pipeline stages.
@@ -13,8 +16,9 @@ to all downstream pipeline stages.
 ## Invariants Agents Must Preserve
 
 - **Injectable base URLs**: Every client (`search_arxiv`, `search_semantic_scholar`,
-  `search_openalex`) accepts a `base_url` parameter. Tests use `pytest-httpserver` local servers
-  pointed at via this parameter. Never hardcode the URL inside the function body.
+  `search_openalex`, `search_crossref`, `search_pubmed`, `search_sovietrxiv`) accepts a
+  `base_url` parameter. Tests use `pytest-httpserver` local servers pointed at via this
+  parameter. Never hardcode the URL inside the function body.
 - **No mock policy**: Tests in `tests/literature/` must use `pytest-httpserver` for HTTP calls,
   not `unittest.mock.patch`. The httpserver fixture starts a real local HTTP server.
 - **Deduplication stability**: `Corpus.add()` keeps the version with higher `metadata_completeness`.
@@ -47,6 +51,8 @@ to all downstream pipeline stages.
 | OpenAlex | Polite pool (mailto param) | 200/page, cursor | Cursor more reliable than offset |
 | Crossref | Polite pool encouraged | cursor/offset by endpoint | No key required |
 | PubMed | NCBI usage policy | retstart/retmax | API key optional |
+| SovietRxiv | 30/min anonymous, 300/min polite | 1–100/page, cursor | Keyless; `X-API-Email` header for polite pool |
+| ChinaRxiv | 30/min anonymous, 300/min polite | 1–100/page, cursor | Keyless; same unified API as SovietRxiv |
 
 ## Known Limitations
 
@@ -57,3 +63,10 @@ to all downstream pipeline stages.
 - **Title hash collisions**: Fallback ID `sha256(title.lower().strip())` is truncated to
   16 chars. Collision probability is negligible for typical corpus sizes (< 10,000 papers)
   but should not be relied upon for exact identity.
+- **SovietRxiv/ChinaRxiv no DOIs**: The unified API does not expose DOIs in the
+  `PaperSummary` schema. Records deduplicate via the `title:` fallback hash, so the same
+  paper from both SovietRxiv and ChinaRxiv (or from Crossref/PubMed with a matching title)
+  will collapse correctly, but DOI-based dedup is not possible for these engines.
+- **SovietRxiv/ChinaRxiv citation counts**: The API does not provide citation counts.
+  All records from these engines default to `citation_count=0`, so they do not contribute
+  to citation-weighted hypothesis scoring.

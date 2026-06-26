@@ -6,7 +6,7 @@
       "qualified_name": "templates/template_active_inference",
       "title": "template_active_inference",
       "use_when": "Use this template when **several independent research tracks must compose into one manuscript whose claims stay consistent where the tracks overlap** — here: a closed-form analytical oracle, a pymdp simulation harness, a Lean formalization boundary, and shared GNN/ontology notation.",
-      "test_file_count": 54,
+      "test_file_count": 55,
       "coverage_floor": 90
     },
     {
@@ -14,7 +14,7 @@
       "qualified_name": "templates/template_autoresearch_project",
       "title": "template_autoresearch_project",
       "use_when": "Use this template when you need a **bounded, offline AutoResearch loop**: deterministic ML candidate evaluation over a fixed local dataset, with evidence-linked claims, machine-readable ledgers, artifact-integrity manifests, and deferred human-review gates.",
-      "test_file_count": 15,
+      "test_file_count": 17,
       "coverage_floor": 90
     },
     {
@@ -30,7 +30,7 @@
       "qualified_name": "templates/template_literature_meta_analysis",
       "title": "Literature Meta-Analysis Template",
       "use_when": "Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts.",
-      "test_file_count": 46,
+      "test_file_count": 48,
       "coverage_floor": 90
     },
     {
@@ -38,7 +38,7 @@
       "qualified_name": "templates/template_madlib",
       "title": "Template Madlib — Deterministic Token-Injection Exemplar",
       "use_when": "Use this template when you need **configuration-driven manuscript generation with auditable token provenance, conditional section structure, explicit/default field visibility, failure-boundary reporting, and a reviewer-visible authoring contract**: lexicon categories, section titles, narrative moves, method steps, design principles, pipeline phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and slots are declared in YAML; `src/` deterministically expands those declarations; and the manuscript receives large-grain `{{TOKEN}}` bodies only after the source code has generated the supporting artifacts.",
-      "test_file_count": 4,
+      "test_file_count": 8,
       "coverage_floor": 90
     },
     {
@@ -46,7 +46,7 @@
       "qualified_name": "templates/template_newspaper",
       "title": "The Triplicate — `template_newspaper`",
       "use_when": "Use this template when you need **data-driven, large-format print layout**: multi-page broadsheets/tabloids with precise column geometry, typography-first constraints, and strict content/engine separation (YAML editions in `content/`, pure-Python ReportLab engine in `src/`).",
-      "test_file_count": 8,
+      "test_file_count": 10,
       "coverage_floor": 90
     },
     {
@@ -54,7 +54,7 @@
       "qualified_name": "templates/template_prose_project",
       "title": "template_prose_project",
       "use_when": "Use this template for **manuscript-focused editorial pipelines**: readability gates (Flesch-Kincaid bands), structural checking, citation/BibTeX validation, and prose-quality review workflows where the document itself is the artifact under test.",
-      "test_file_count": 7,
+      "test_file_count": 8,
       "coverage_floor": 90
     },
     {
@@ -63,6 +63,14 @@
       "title": "AutoScientists — Coordination-Mechanism Testbed Exemplar",
       "use_when": "Use this template when you need to **isolate and measure agent-coordination mechanisms**: coordinated teams vs single-thread baselines under matched budgets, deterministic ablation studies, and honest per-mechanism effect reporting (including nulls).",
       "test_file_count": 11,
+      "coverage_floor": 90
+    },
+    {
+      "name": "template_gold_refinement",
+      "qualified_name": "templates/template_gold_refinement",
+      "title": "Gold Refinement — Metallurgical Manuscript Composition Exemplar",
+      "use_when": "Use this template for **analogical manuscript composition research**: projects that map a scientific domain onto a refinement pipeline and generate the manuscript through deterministic mega-madlib token injection.",
+      "test_file_count": 14,
       "coverage_floor": 90
     },
     {
@@ -78,7 +86,7 @@
       "qualified_name": "templates/template_template",
       "title": "Template: Meta-Research Project",
       "use_when": "Use this template when your research subject is **the repository itself** — programmatic introspection of architecture, pipeline DAGs, module inventories, and security layers, rendered as a manuscript whose every metric is computed live (autopoietic: the paper regenerates itself from the code it describes).",
-      "test_file_count": 4,
+      "test_file_count": 5,
       "coverage_floor": 90
     },
     {

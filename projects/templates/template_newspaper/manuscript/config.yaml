@@ -9,7 +9,7 @@
 paper:
   title: "The Triplicate: A Data-Driven Large-Format Newspaper Layout Engine"
   subtitle: "Designed multi-column page layout as a reproducible-research exemplar"
-  version: "1.0.1"
+  version: "1.0.2"
 
 authors:
   - name: "Daniel Ari Friedman"

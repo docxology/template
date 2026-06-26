@@ -1,7 +1,7 @@
 paper:
   title: "Self-Improvement Agent Harness: A Deterministic SIA Exemplar"
   subtitle: "Meta → Target → Feedback loops with public/private task splits"
-  version: "0.1.1"
+  version: "0.1.2"
 
 authors:
   - name: "Daniel Ari Friedman"

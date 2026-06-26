@@ -288,6 +288,60 @@ def test_generate_all_figures_assertion_summary_zero_total(tmp_path: Path) -> No
     assert "assertion_breakdown.png" in names
 
 
+def test_generate_all_figures_descriptive_stats_entities_embedding(tmp_path: Path) -> None:
+    """Covers the descriptive_stats, entity bar chart, and embedding similarity heatmap paths."""
+    input_dir = tmp_path / "input"
+    output_dir = tmp_path / "figures"
+    input_dir.mkdir()
+
+    # descriptive_stats.json
+    with open(input_dir / "descriptive_stats.json", "w", encoding="utf-8") as handle:
+        json.dump(
+            {
+                "citation_distribution": {
+                    "histogram": {"0": 2, "1-9": 5, "10+": 3},
+                    "gini": 0.45,
+                    "n": 10,
+                    "total_citations": 100,
+                },
+                "descriptive_stats": {
+                    "counts_by_venue": {"Nature": 5, "Science": 3},
+                    "unique_authors": 8,
+                },
+                "author_productivity": [["Alice", 3], ["Bob", 2]],
+            },
+            handle,
+        )
+
+    # entities.json
+    with open(input_dir / "entities.json", "w", encoding="utf-8") as handle:
+        json.dump({"modafinil": 42, "wakefulness": 20}, handle)
+
+    # embedding_analysis.json with non-empty similar pairs
+    with open(input_dir / "embedding_analysis.json", "w", encoding="utf-8") as handle:
+        json.dump(
+            {
+                "num_clusters": 3,
+                "top_similar_pairs": [
+                    {"paper_a": "doi:10.1/a", "paper_b": "doi:10.1/b", "similarity": 0.91},
+                    {"paper_a": "doi:10.1/a", "paper_b": "doi:10.1/c", "similarity": 0.85},
+                ],
+            },
+            handle,
+        )
+
+    args = argparse.Namespace(input_dir=str(input_dir), output_dir=str(output_dir), dpi=72)
+    paths = generate_all_figures(args)
+    names = {Path(p).name for p in paths}
+
+    # All three new figure types must be generated.
+    assert "citation_distribution.png" in names
+    assert "top_venues.png" in names
+    assert "author_productivity.png" in names
+    assert "entity_bar_chart.png" in names
+    assert "similarity_heatmap.png" in names
+
+
 @pytest.mark.skipif(not _ensure_template_on_path(), reason="template infrastructure not importable")
 def test_generate_all_figures_writes_figure_registry(tmp_path: Path) -> None:
     input_dir = tmp_path / "input"

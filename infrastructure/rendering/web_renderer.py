@@ -5,6 +5,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import yaml
+
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
@@ -227,6 +229,7 @@ class WebRenderer:
             "--number-sections",
             "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
         ]
+        cmd.extend(self._pandoc_metadata_args(manuscript_dir))
 
         # Add resource paths for figure resolution
         if manuscript_dir.exists():
@@ -282,6 +285,33 @@ class WebRenderer:
 
         logger.info(f"✅ Generated combined HTML: {output_file.name}")
         return output_file
+
+    @staticmethod
+    def _pandoc_metadata_args(manuscript_dir: Path) -> list[str]:
+        config_path = manuscript_dir / "config.yaml"
+        if not config_path.exists():
+            return []
+        try:
+            config = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+        except (OSError, yaml.YAMLError) as exc:
+            logger.warning("Could not read HTML metadata from %s: %s", config_path, exc)
+            return []
+        if not isinstance(config, dict):
+            return []
+        paper = config.get("paper") or {}
+        if not isinstance(paper, dict):
+            return []
+
+        args: list[str] = []
+        title = paper.get("title")
+        subtitle = paper.get("subtitle")
+        if title:
+            title_text = str(title)
+            args.append(f"--metadata=title:{title_text}")
+            args.append(f"--metadata=pagetitle:{title_text}")
+        if subtitle:
+            args.append(f"--metadata=subtitle:{subtitle}")
+        return args
 
     def _combine_markdown_files(self, source_files: list[Path]) -> str:
         """Combine multiple markdown files into one.

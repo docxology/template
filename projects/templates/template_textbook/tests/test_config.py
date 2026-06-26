@@ -125,3 +125,42 @@ def test_validate_config_chapter_without_file():
         "parts": [{"id": "p", "title": "P", "chapters": [{"title": "no file"}]}],
     }
     assert any("chapter with no file" in i for i in validate_config(cfg))
+
+
+def test_validate_config_part_with_empty_chapter_list():
+    """A part with an empty chapters list is reported and no chapter loop runs."""
+    cfg = {
+        "book": {"title": "t"},
+        "parts": [{"id": "p", "title": "P", "chapters": []}],
+    }
+    issues = validate_config(cfg)
+    assert any("has no chapters" in i for i in issues)
+
+
+def test_validate_config_part_with_null_chapters():
+    """A part whose 'chapters' key is missing or None is also reported."""
+    cfg = {
+        "book": {"title": "t"},
+        "parts": [{"id": "p", "title": "P"}],  # no 'chapters' key
+    }
+    issues = validate_config(cfg)
+    assert any("has no chapters" in i for i in issues)
+
+
+def test_validate_config_duplicate_chapter_file():
+    """Two chapters with the same file within the same part are flagged."""
+    cfg = {
+        "book": {"title": "t"},
+        "parts": [
+            {
+                "id": "p",
+                "title": "P",
+                "chapters": [
+                    {"file": "a.md", "title": "A"},
+                    {"file": "a.md", "title": "A-dup"},
+                ],
+            }
+        ],
+    }
+    issues = validate_config(cfg)
+    assert any("duplicate chapter file" in i for i in issues)

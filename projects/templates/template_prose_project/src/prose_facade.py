@@ -1,4 +1,20 @@
-"""Project-owned prose report contracts — no infrastructure imports."""
+"""Project-owned prose report contracts — no infrastructure imports.
+
+Protocol definitions (``ManuscriptReportLike``, ``FileReportLike``, …)
+decouple ``src/`` from ``infrastructure/prose`` so the domain layer stays
+importable without the full infrastructure tree.
+
+Two free functions live here for the same reason:
+
+* :func:`render_outline` — format a :class:`StructureReportLike` as a
+  plain-text bulleted outline without touching infrastructure.
+* :func:`parse_bib_keys` — extract BibTeX citation keys via a lightweight
+  regex so :mod:`src.pipeline.checks` can cross-check citations without
+  importing :mod:`infrastructure.reference.citation`.  The full
+  ``infrastructure.reference.citation.parse_bibfile`` parser is used by the
+  scripts layer and handles all BibTeX dialect edge-cases; this helper is
+  deliberately minimal and is used only for the cross-check gate.
+"""
 
 from __future__ import annotations
 
@@ -59,12 +75,20 @@ class ManuscriptReportLike(Protocol):
 
 @dataclass(frozen=True)
 class HeadingView:
+    """Lightweight heading snapshot for rendering and testing."""
+
     level: int
     title: str
 
 
 def render_outline(structure: StructureReportLike) -> str:
-    """Render a structure report as a plain-text bulleted outline."""
+    """Render a structure report as a plain-text bulleted outline.
+
+    Each heading is indented by ``2 * (level - 1)`` spaces so the outline
+    mirrors the logical nesting of the document.  Falls back to
+    ``str(heading)`` when the heading object has no ``title`` attribute
+    (rare in practice but possible when adapting non-standard protocols).
+    """
     lines: list[str] = []
     for heading in structure.headings:
         level = int(getattr(heading, "level", 1))
@@ -74,11 +98,36 @@ def render_outline(structure: StructureReportLike) -> str:
     return "\n".join(lines)
 
 
-_BIB_KEY_RE = re.compile(r"@[A-Za-z]+\s*\{\s*([^,\s]+)", re.MULTILINE)
+# ---------------------------------------------------------------------------
+# BibTeX key extraction
+# ---------------------------------------------------------------------------
+# Matches @<entrytype>{<key>, … — intentionally excludes @comment blocks
+# because @comment{…} bodies are free-form text, not citation keys.
+# For full BibTeX dialect support use infrastructure.reference.citation.parse_bibfile.
+# ---------------------------------------------------------------------------
+
+_BIB_KEY_RE = re.compile(
+    r"@(?!comment\b)[A-Za-z]+\s*\{\s*([^,\s]+)",
+    re.MULTILINE | re.IGNORECASE,
+)
 
 
 def parse_bib_keys(bib_path: Path) -> set[str]:
-    """Extract citation keys from a BibTeX file without infrastructure."""
+    """Extract citation keys from a BibTeX file without infrastructure.
+
+    Uses a lightweight regex rather than a full BibTeX parser.  ``@comment``
+    blocks are skipped so preamble comments do not produce spurious keys.
+
+    Args:
+        bib_path: Path to the ``.bib`` file.  Returns an empty set when the
+            path does not point to an existing file (e.g. the bib is missing
+            or the path points to a directory).
+
+    Returns:
+        Set of citation key strings found in the file.  For production use
+        prefer :func:`infrastructure.reference.citation.parse_bibfile`, which
+        handles the full BibTeX dialect.
+    """
     if not bib_path.is_file():
         return set()
     text = bib_path.read_text(encoding="utf-8", errors="replace")

@@ -96,7 +96,17 @@ class DeterministicProposer:
 
 
 def _extract_json(raw: str) -> str:
-    """Pull the first JSON object out of a model reply."""
+    """Pull the first JSON object out of a model reply.
+
+    Finds the first ``{`` and the *last* ``}`` in ``raw`` and returns the
+    substring between them (inclusive).  This handles replies that wrap a JSON
+    object in conversational text (e.g. "Sure! Here: {...} Hope that helps.")
+    and also replies whose JSON value itself contains nested objects, because
+    the outermost brace pair brackets the whole object.
+
+    Raises :class:`ValueError` if no ``{`` or no ``}`` is found, or if the
+    last ``}`` precedes the first ``{``.
+    """
     start = raw.find("{")
     end = raw.rfind("}")
     if start == -1 or end == -1 or end < start:

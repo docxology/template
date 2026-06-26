@@ -170,10 +170,12 @@ def compute_variables(output_dir: Path) -> dict[str, str]:
         "semantic_scholar": "Semantic Scholar",
         "crossref": "Crossref",
         "pubmed": "PubMed",
+        "sovietrxiv": "SovietRxiv",
+        "chinarxiv": "ChinaRxiv",
     }
     enabled_engines = [_engine_labels.get(name, name) for name, on in engines_cfg.items() if on]
     if not enabled_engines:
-        enabled_engines = ["arXiv", "OpenAlex", "Semantic Scholar", "Crossref", "PubMed"]
+        enabled_engines = ["arXiv", "OpenAlex", "Semantic Scholar", "Crossref", "PubMed", "SovietRxiv", "ChinaRxiv"]
     variables["N_ENGINES"] = str(len(enabled_engines))
     variables["ENGINE_LIST"] = _humanize_list(enabled_engines)
 
@@ -209,6 +211,22 @@ def compute_variables(output_dir: Path) -> dict[str, str]:
 
         doubling = temporal.get("doubling_time", 0)
         variables["DOUBLING_TIME"] = f"{doubling:.1f}" if doubling else ""
+
+        # Additional temporal metrics
+        year_counts = temporal.get("year_counts", {})
+        total_papers_temporal = temporal.get("total_papers", corpus_size)
+        variables["TEMPORAL_TOTAL_PAPERS"] = str(total_papers_temporal)
+        variables["YEAR_SPAN"] = str(int(temporal.get("last_year", 0)) - int(temporal.get("first_year", 0)))
+
+        # Build year-count table (top 10 years by count)
+        if year_counts:
+            sorted_years = sorted(year_counts.items(), key=lambda x: -x[1])[:10]
+            yc_rows = ["| Year | Publications |", "| --- | --- |"]
+            for year, count in sorted(sorted_years, key=lambda x: x[0]):
+                yc_rows.append(f"| {year} | {count} |")
+            variables["YEAR_COUNT_TABLE"] = "\n".join(yc_rows)
+        else:
+            variables["YEAR_COUNT_TABLE"] = "| Year | Publications |\n| --- | --- |"
     else:
         logger.warning("temporal_analysis.json not found; temporal variables empty")
 
@@ -261,6 +279,52 @@ def compute_variables(output_dir: Path) -> dict[str, str]:
         # Communities
         communities = citation.get("num_communities", "")
         variables["CITATION_COMMUNITIES"] = str(communities)
+
+        # Additional citation network metrics
+        max_in = citation.get("max_in_degree", 0)
+        max_out = citation.get("max_out_degree", 0)
+        avg_out = citation.get("avg_out_degree", avg_in)
+        variables["CITATION_MAX_IN_DEGREE"] = str(max_in)
+        variables["CITATION_MAX_OUT_DEGREE"] = str(max_out)
+        variables["CITATION_AVG_OUT_DEGREE"] = f"{avg_out:.1f}"
+
+        # Top-cited papers by PageRank
+        top_pr = citation.get("top_pagerank", {})
+        if isinstance(top_pr, dict) and top_pr:
+            pr_items = sorted(top_pr.items(), key=lambda x: -x[1])[:5]
+            pr_rows = ["| Rank | DOI | PageRank |", "| --- | --- | --- |"]
+            for i, (doi, score) in enumerate(pr_items, 1):
+                clean_doi = doi.replace("doi:", "")
+                pr_rows.append(f"| {i} | {clean_doi} | {score:.6f} |")
+            variables["TOP_PAGERANK_TABLE"] = "\n".join(pr_rows)
+            variables["TOP_PAGERANK_DOI"] = pr_items[0][0].replace("doi:", "")
+        else:
+            variables["TOP_PAGERANK_TABLE"] = "| Rank | DOI | PageRank |\n| --- | --- | --- |"
+            variables["TOP_PAGERANK_DOI"] = ""
+
+        # Top authority papers
+        top_auth = citation.get("top_authorities", {})
+        if isinstance(top_auth, dict) and top_auth:
+            auth_items = sorted(top_auth.items(), key=lambda x: -x[1])[:5]
+            auth_rows = ["| Rank | DOI | Authority |", "| --- | --- | --- |"]
+            for i, (doi, score) in enumerate(auth_items, 1):
+                clean_doi = doi.replace("doi:", "")
+                auth_rows.append(f"| {i} | {clean_doi} | {score:.6f} |")
+            variables["TOP_AUTHORITIES_TABLE"] = "\n".join(auth_rows)
+        else:
+            variables["TOP_AUTHORITIES_TABLE"] = "| Rank | DOI | Authority |\n| --- | --- | --- |"
+
+        # Top hub papers
+        top_hubs = citation.get("top_hubs", {})
+        if isinstance(top_hubs, dict) and top_hubs:
+            hub_items = sorted(top_hubs.items(), key=lambda x: -x[1])[:5]
+            hub_rows = ["| Rank | DOI | Hub |", "| --- | --- | --- |"]
+            for i, (doi, score) in enumerate(hub_items, 1):
+                clean_doi = doi.replace("doi:", "")
+                hub_rows.append(f"| {i} | {clean_doi} | {score:.6f} |")
+            variables["TOP_HUBS_TABLE"] = "\n".join(hub_rows)
+        else:
+            variables["TOP_HUBS_TABLE"] = "| Rank | DOI | Hub |\n| --- | --- | --- |"
     else:
         logger.warning("citation_network.json not found; citation variables empty")
 
@@ -413,6 +477,18 @@ def compute_variables(output_dir: Path) -> dict[str, str]:
         topic_list = topics if isinstance(topics, list) else topics.get("topics", [])
         variables["NUM_TOPICS"] = str(len(topic_list))
 
+        # Build topic table
+        topic_rows = ["| Topic | Top terms |", "| --- | --- |"]
+        for t in topic_list:
+            if isinstance(t, dict):
+                tid = t.get("topic_id", "")
+                words = t.get("top_words", [])
+                top_words = ", ".join(str(w) for w in words[:8])
+                topic_rows.append(f"| {tid} | {top_words} |")
+        variables["TOPIC_TABLE"] = "\n".join(topic_rows)
+    else:
+        variables["TOPIC_TABLE"] = "| Topic | Top terms |\n| --- | --- |"
+
     # ── TF-IDF vocabulary size ────────────────────────────────────────
     tfidf = _load_json(data_dir / "tfidf_data.json")
     if tfidf.get("_error") is not None:
@@ -423,10 +499,172 @@ def compute_variables(output_dir: Path) -> dict[str, str]:
         variables["NUM_VOCAB_FEATURES"] = str(num_vocab)
         variables["NUM_VOCAB_FEATURES_LATEX"] = _latex_number(num_vocab)
         logger.info("NUM_VOCAB_FEATURES = %d", num_vocab)
+
+        # Top TF-IDF terms
+        if feature_names:
+            variables["TOP_VOCAB_TERMS"] = ", ".join(str(t) for t in feature_names[:20])
     else:
         variables["NUM_VOCAB_FEATURES"] = "500"  # Canonical default from pipeline
         variables["NUM_VOCAB_FEATURES_LATEX"] = "500"
+        variables["TOP_VOCAB_TERMS"] = ""
         logger.warning("tfidf_data.json not found; defaulting NUM_VOCAB_FEATURES to 500")
+
+    # ── Fulltext assessment ───────────────────────────────────────────
+    fulltext = _load_json(data_dir / "fulltext_assessment.json")
+    if fulltext.get("_error") is not None:
+        fulltext = _load_json(output_dir / "fulltext_assessment.json")
+    if fulltext and "_error" not in fulltext:
+        abstract_cov = fulltext.get("abstract_coverage", {})
+        variables["ABSTRACT_COVERAGE_PCT"] = f"{abstract_cov.get('percent_with_abstract', 0):.1f}"
+        variables["ABSTRACT_COUNT"] = str(abstract_cov.get("has_abstract", 0))
+        variables["NO_ABSTRACT_COUNT"] = str(abstract_cov.get("no_abstract", 0))
+
+        oa = fulltext.get("open_access", {})
+        variables["OA_COUNT"] = str(oa.get("is_oa", 0))
+        variables["OA_PCT"] = f"{oa.get('percent_oa', 0):.1f}"
+
+        pdf_avail = fulltext.get("pdf_availability", {})
+        variables["PDF_AVAIL_COUNT"] = str(pdf_avail.get("has_pdf_url", 0))
+        variables["PDF_AVAIL_PCT"] = f"{pdf_avail.get('percent_with_pdf', 0):.1f}"
+
+        id_cov = fulltext.get("identifier_coverage", {})
+        variables["DOI_COUNT"] = str(id_cov.get("doi", 0))
+        variables["ARXIV_ID_COUNT"] = str(id_cov.get("arxiv_id", 0))
+        variables["OPENALEX_ID_COUNT"] = str(id_cov.get("openalex_id", 0))
+
+        ft_format = fulltext.get("fulltext_format", {})
+        variables["PUBLISHER_PDF_COUNT"] = str(ft_format.get("publisher_pdf_only", 0))
+        variables["NO_FULLTEXT_COUNT"] = str(ft_format.get("no_fulltext_available", 0))
+    else:
+        logger.info("fulltext_assessment.json not found; fulltext variables skipped")
+
+    # ── Descriptive statistics ────────────────────────────────────────
+    desc = _load_json(data_dir / "descriptive_stats.json")
+    if desc.get("_error") is not None:
+        desc = _load_json(output_dir / "descriptive_stats.json")
+    if desc and "_error" not in desc:
+        ds = desc.get("descriptive_stats", {})
+        if isinstance(ds, dict):
+            variables["UNIQUE_AUTHORS"] = str(ds.get("unique_authors", 0))
+            variables["CITATION_MEAN"] = f"{ds.get('citation_count_mean', 0):.1f}"
+            variables["CITATION_MEDIAN"] = f"{ds.get('citation_count_median', 0):.1f}"
+            variables["CITATION_MAX"] = str(ds.get("citation_count_max", 0))
+            variables["CITATION_TOTAL"] = _latex_number(ds.get("citation_count_total", 0))
+            variables["PAPERS_PER_AUTHOR_MEAN"] = f"{ds.get('papers_per_author_mean', 0):.2f}"
+            variables["PCT_WITH_DOI"] = f"{ds.get('pct_with_doi', 0):.1f}"
+
+            # Top venues table
+            venues = ds.get("counts_by_venue", {})
+            if isinstance(venues, dict) and venues:
+                sorted_venues = sorted(venues.items(), key=lambda x: -x[1])[:10]
+                v_rows = ["| Venue | Papers |", "| --- | --- |"]
+                for venue, count in sorted_venues:
+                    v_rows.append(f"| {venue[:50]} | {count} |")
+                variables["TOP_VENUES_TABLE"] = "\n".join(v_rows)
+            else:
+                variables["TOP_VENUES_TABLE"] = "| Venue | Papers |\n| --- | --- |"
+
+        # Citation distribution (Gini)
+        cd = desc.get("citation_distribution", {})
+        if isinstance(cd, dict):
+            variables["GINI_COEFFICIENT"] = f"{cd.get('gini', 0):.3f}"
+            variables["CITATION_DIST_N"] = str(cd.get("n", 0))
+
+            # Build histogram table
+            hist = cd.get("histogram", {})
+            if isinstance(hist, dict) and hist:
+                h_rows = ["| Citations | Papers |", "| --- | --- |"]
+                for label, count in hist.items():
+                    h_rows.append(f"| {label} | {count} |")
+                variables["CITATION_DIST_TABLE"] = "\n".join(h_rows)
+            else:
+                variables["CITATION_DIST_TABLE"] = "| Citations | Papers |\n| --- | --- |"
+
+        # Author productivity table
+        authors = desc.get("author_productivity", [])
+        if isinstance(authors, list) and authors:
+            a_rows = ["| Rank | Author | Papers |", "| --- | --- | --- |"]
+            for i, entry in enumerate(authors[:10], 1):
+                if isinstance(entry, list) and len(entry) >= 2:
+                    a_rows.append(f"| {i} | {entry[0][:40]} | {entry[1]} |")
+            variables["TOP_AUTHORS_TABLE"] = "\n".join(a_rows)
+        else:
+            variables["TOP_AUTHORS_TABLE"] = "| Rank | Author | Papers |\n| --- | --- | --- |"
+    else:
+        logger.info("descriptive_stats.json not found; descriptive variables skipped")
+
+    # ── Entity and keyphrase analysis ─────────────────────────────────
+    entities = _load_json(data_dir / "entities.json")
+    if entities and "_error" not in entities:
+        if isinstance(entities, dict):
+            sorted_ent = sorted(entities.items(), key=lambda x: -x[1])[:15]
+            e_rows = ["| Entity | Frequency |", "| --- | --- |"]
+            for name, count in sorted_ent:
+                e_rows.append(f"| {name[:40]} | {count} |")
+            variables["TOP_ENTITIES_TABLE"] = "\n".join(e_rows)
+            variables["NUM_ENTITIES"] = str(len(entities))
+        else:
+            variables["TOP_ENTITIES_TABLE"] = "| Entity | Frequency |\n| --- | --- |"
+            variables["NUM_ENTITIES"] = "0"
+    else:
+        variables["TOP_ENTITIES_TABLE"] = "| Entity | Frequency |\n| --- | --- |"
+        variables["NUM_ENTITIES"] = "0"
+
+    keyphrases = _load_json(data_dir / "keyphrases.json")
+    if keyphrases and "_error" not in keyphrases:
+        kp_list = keyphrases.get("top_keyphrases", []) if isinstance(keyphrases, dict) else []
+        if kp_list:
+            k_rows = ["| Keyphrase | Score |", "| --- | --- |"]
+            for entry in kp_list[:15]:
+                if isinstance(entry, dict):
+                    k_rows.append(f"| {entry.get('phrase', '')[:40]} | {entry.get('score', 0):.4f} |")
+            variables["TOP_KEYPHRASES_TABLE"] = "\n".join(k_rows)
+            variables["NUM_KEYPHRASES"] = str(len(kp_list))
+        else:
+            variables["TOP_KEYPHRASES_TABLE"] = "| Keyphrase | Score |\n| --- | --- |"
+            variables["NUM_KEYPHRASES"] = "0"
+    else:
+        variables["TOP_KEYPHRASES_TABLE"] = "| Keyphrase | Score |\n| --- | --- |"
+        variables["NUM_KEYPHRASES"] = "0"
+
+    # ── Embedding analysis ────────────────────────────────────────────
+    emb = _load_json(data_dir / "embedding_analysis.json")
+    if emb and "_error" not in emb:
+        variables["NUM_EMBEDDING_CLUSTERS"] = str(emb.get("num_clusters", 0))
+        pairs = emb.get("top_similar_pairs", [])
+        if isinstance(pairs, list) and pairs:
+            p_rows = ["| Paper A | Paper B | Similarity |", "| --- | --- | --- |"]
+            for p in pairs[:10]:
+                if isinstance(p, dict):
+                    p_rows.append(
+                        f"| {p.get('paper_a', '')[:30]} | {p.get('paper_b', '')[:30]} | {p.get('similarity', 0):.4f} |"
+                    )
+            variables["TOP_SIMILAR_PAIRS_TABLE"] = "\n".join(p_rows)
+        else:
+            variables["TOP_SIMILAR_PAIRS_TABLE"] = "| Paper A | Paper B | Similarity |\n| --- | --- | --- |"
+    else:
+        variables["NUM_EMBEDDING_CLUSTERS"] = "0"
+        variables["TOP_SIMILAR_PAIRS_TABLE"] = "| Paper A | Paper B | Similarity |\n| --- | --- | --- |"
+
+    # ── Advanced citation network metrics ─────────────────────────────
+    # These are added to the citation_network.json by the pipeline
+    if citation and "_error" not in citation:
+        variables["DEGREE_ASSORTATIVITY"] = f"{citation.get('degree_assortativity', 0):.4f}"
+        variables["AVG_CLUSTERING"] = f"{citation.get('avg_clustering', 0):.4f}"
+
+        top_betw = citation.get("top_betweenness", {})
+        if isinstance(top_betw, dict) and top_betw:
+            betw_items = sorted(top_betw.items(), key=lambda x: -x[1])[:5]
+            betw_rows = ["| Rank | DOI | Betweenness |", "| --- | --- | --- |"]
+            for i, (doi, score) in enumerate(betw_items, 1):
+                betw_rows.append(f"| {i} | {doi.replace('doi:', '')[:40]} | {score:.6f} |")
+            variables["TOP_BETWEENNESS_TABLE"] = "\n".join(betw_rows)
+        else:
+            variables["TOP_BETWEENNESS_TABLE"] = "| Rank | DOI | Betweenness |\n| --- | --- | --- |"
+    else:
+        variables["DEGREE_ASSORTATIVITY"] = "0.0000"
+        variables["AVG_CLUSTERING"] = "0.0000"
+        variables["TOP_BETWEENNESS_TABLE"] = "| Rank | DOI | Betweenness |\n| --- | --- | --- |"
 
     logger.info("Computed %d template variables from pipeline output", len(variables))
     return variables

@@ -196,6 +196,31 @@ def _pubmed_search_fn(
     return _search
 
 
+def _sovietrxiv_search_fn(
+    base_url: str | None,
+    *,
+    fast: bool,
+    api_email: str | None = None,
+    source: str | None = None,
+) -> Callable[..., list[Paper]]:
+    from literature.sovietrxiv_client import SOVIETRXIV_API_URL, search_sovietrxiv
+
+    url = base_url or SOVIETRXIV_API_URL
+    delay = 0.0 if fast else None
+
+    def _search(query: str, max_results: int = 100) -> list[Paper]:
+        return search_sovietrxiv(
+            query,
+            max_results=max_results,
+            base_url=url,
+            api_email=api_email,
+            source=source,
+            delay_override=delay,
+        )
+
+    return _search
+
+
 def run_literature_search(
     args: argparse.Namespace,
     *,
@@ -206,6 +231,8 @@ def run_literature_search(
     crossref_base_url: str | None = None,
     pubmed_esearch_url: str | None = None,
     pubmed_efetch_url: str | None = None,
+    sovietrxiv_base_url: str | None = None,
+    chinarxiv_base_url: str | None = None,
 ) -> Path:
     """Execute literature search; return path to saved corpus JSONL.
 
@@ -235,6 +262,7 @@ def run_literature_search(
         arxiv_queries = list(DEFAULT_ARXIV_QUERIES)
         relevance_keywords = list(DEFAULT_RELEVANCE_KEYWORDS)
         engines = {}
+        cfg = {}
 
     # Term-driven fallback: when no explicit per-engine queries / keywords are
     # configured, derive them from the single search term. This keeps the
@@ -279,6 +307,8 @@ def run_literature_search(
             openalex_base_url,
             crossref_base_url,
             pubmed_esearch_url,
+            sovietrxiv_base_url,
+            chinarxiv_base_url,
         )
     )
 
@@ -344,6 +374,44 @@ def run_literature_search(
     if pubmed_on and (pubmed_esearch_url is not None or not fast_api):
         pubmed_search = _pubmed_search_fn(pubmed_esearch_url, pubmed_efetch_url, fast=fast_api)
         result = search_source("PubMed", pubmed_search, args.query, args.max_results, corpus, logger)
+        if result:
+            sources_searched.append(result)
+
+    # SovietRxiv / RussiaRxiv is a keyless engine (translated Soviet-era and
+    # Chinese preprints). It dispatches when explicitly enabled via a base_url
+    # (tests) or in a production run (no fixture base_urls) where the config
+    # `engines` toggle leaves it on. A disabled toggle or a fixture run that
+    # omits its base_url leaves it as a `skipped` source — graceful degradation.
+    sovietrxiv_cfg = cfg.get("sovietrxiv", {}) if isinstance(cfg, dict) else {}
+    sovietrxiv_on = engines.get("sovietrxiv", True) and not getattr(args, "skip_sovietrxiv", False)
+    if sovietrxiv_on and (sovietrxiv_base_url is not None or not fast_api):
+        sovietrxiv_email = sovietrxiv_cfg.get("api_email") if isinstance(sovietrxiv_cfg, dict) else None
+        sovietrxiv_source = sovietrxiv_cfg.get("source") if isinstance(sovietrxiv_cfg, dict) else None
+        sovietrxiv_search = _sovietrxiv_search_fn(
+            sovietrxiv_base_url,
+            fast=fast_api,
+            api_email=sovietrxiv_email,
+            source=sovietrxiv_source,
+        )
+        result = search_source("SovietRxiv", sovietrxiv_search, args.query, args.max_results, corpus, logger)
+        if result:
+            sources_searched.append(result)
+
+    # ChinaRxiv shares the identical unified API with SovietRxiv but is hosted
+    # at https://chinaxiv.org. It dispatches under the same conditions: enabled
+    # in config `engines`, not skipped via CLI, and either a fixture base_url is
+    # provided (tests) or this is a production run (no fixture base_urls).
+    chinarxiv_cfg = cfg.get("chinarxiv", {}) if isinstance(cfg, dict) else {}
+    chinarxiv_on = engines.get("chinarxiv", True) and not getattr(args, "skip_chinarxiv", False)
+    if chinarxiv_on and (chinarxiv_base_url is not None or not fast_api):
+        chinarxiv_email = chinarxiv_cfg.get("api_email") if isinstance(chinarxiv_cfg, dict) else None
+        chinarxiv_search = _sovietrxiv_search_fn(
+            chinarxiv_base_url,
+            fast=fast_api,
+            api_email=chinarxiv_email,
+            source="chinaxiv",
+        )
+        result = search_source("ChinaRxiv", chinarxiv_search, args.query, args.max_results, corpus, logger)
         if result:
             sources_searched.append(result)
 

@@ -9,8 +9,8 @@ authors:
     orcid: "https://orcid.org/0000-0001-6232-9096"
     affiliation: "Active Inference Institute"
     email: "daniel@activeinference.institute"
-version: '0.1.1'
-date-released: "2026-06-03"
+version: "0.1.2"
+date-released: "2026-06-26"
 license: "Apache-2.0"
 doi: "10.5281/zenodo.20533125"
 repository-code: "https://github.com/docxology/template_textbook"

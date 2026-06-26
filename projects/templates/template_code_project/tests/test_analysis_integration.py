@@ -286,3 +286,499 @@ class TestPerformanceBenchmarking:
                 pytest.fail("Performance visualization returned None")
         else:
             pytest.fail("Performance benchmarking returned None")
+
+
+# ---------------------------------------------------------------------------
+# compare_algorithms — cross-variant ranking
+# ---------------------------------------------------------------------------
+
+
+class TestCompareAlgorithms:
+    """Tests for src.analysis.compare_algorithms (lines 251-357)."""
+
+    def test_compare_returns_algorithm_comparison(self):
+        """compare_algorithms returns a populated AlgorithmComparison."""
+        from src.analysis import AlgorithmComparison, compare_algorithms
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=200)
+        result = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
+        assert isinstance(result, AlgorithmComparison)
+        assert len(result.variants) == 2
+
+    def test_compare_best_variant_converged(self):
+        """The best variant among converged candidates has the lowest final objective."""
+        from src.analysis import compare_algorithms
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1, 0.5, 1.0), max_iterations=500)
+        result = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
+        # All three should converge for H=I (α < 2)
+        if result.best_variant.converged:
+            converged = [v for v in result.variants if v.converged]
+            assert result.best_variant.final_objective == min(v.final_objective for v in converged)
+
+    def test_compare_pre_computed_results(self):
+        """compare_algorithms accepts pre-computed results dict."""
+        from src.analysis import compare_algorithms
+        from src.experiment_config import ExperimentConfig
+        from src.optimizer import OptimizationResult
+
+        pre = {
+            0.1: OptimizationResult(
+                solution=np.array([1.0]),
+                objective_value=-0.5,
+                iterations=50,
+                converged=True,
+                gradient_norm=1e-9,
+                objective_history=[0.0, -0.3, -0.5],
+            ),
+            2.5: OptimizationResult(
+                solution=np.array([100.0]),
+                objective_value=500.0,
+                iterations=200,
+                converged=False,
+                gradient_norm=100.0,
+                objective_history=[0.0, 100.0, 500.0],
+            ),
+        }
+        cfg = ExperimentConfig(step_sizes=(0.1, 2.5), max_iterations=200)
+        result = compare_algorithms(results=pre, config=cfg, stability_check=False, time_runs=False)
+        assert result.convergence_summary == pytest.approx(50.0)  # 1/2 converged
+
+    def test_compare_convergence_summary_all_converged(self):
+        """convergence_summary is 100 when all variants converge."""
+        from src.analysis import compare_algorithms
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=1000)
+        result = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
+        # Both step sizes are stable for H=I
+        assert result.convergence_summary == pytest.approx(100.0)
+
+    def test_compare_ranking_table_structure(self):
+        """ranking_table has the required keys per row."""
+        from src.analysis import compare_algorithms
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
+        result = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
+        for row in result.ranking_table:
+            assert "rank" in row
+            assert "name" in row
+            assert "step_size" in row
+            assert "converged" in row
+            assert "final_objective" in row
+            assert "iterations" in row
+
+    def test_compare_with_timing_enabled(self):
+        """time_runs=True records a non-negative timing for each variant."""
+        from src.analysis import compare_algorithms
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=50)
+        result = compare_algorithms(config=cfg, stability_check=False, time_runs=True)
+        for v in result.variants:
+            assert v.timing_s >= 0.0
+
+    def test_compare_with_stability_check(self):
+        """stability_check=True sets stability_score on each variant."""
+        from src.analysis import compare_algorithms
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=100)
+        result = compare_algorithms(config=cfg, stability_check=True, time_runs=False)
+        for v in result.variants:
+            assert v.stability_score is not None
+            assert 0.0 <= v.stability_score <= 1.0
+
+    def test_compare_history_convergence_rate(self):
+        """Variants with ≥2 history points have convergence_rate > 0."""
+        from src.analysis import compare_algorithms
+        from src.experiment_config import ExperimentConfig
+        from src.optimizer import OptimizationResult
+
+        pre = {
+            0.1: OptimizationResult(
+                solution=np.array([1.0]),
+                objective_value=-0.5,
+                iterations=5,
+                converged=True,
+                gradient_norm=1e-9,
+                objective_history=[0.0, -0.2, -0.4, -0.5],
+            )
+        }
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=100)
+        result = compare_algorithms(results=pre, config=cfg, stability_check=False, time_runs=False)
+        assert result.variants[0].convergence_rate > 0.0
+
+    def test_compare_convergence_rate_zero_when_single_history(self):
+        """Variant with <2 history points gets convergence_rate=0.0 (line 275)."""
+        from src.analysis import compare_algorithms
+        from src.experiment_config import ExperimentConfig
+        from src.optimizer import OptimizationResult
+
+        pre = {
+            0.1: OptimizationResult(
+                solution=np.array([1.0]),
+                objective_value=-0.5,
+                iterations=1,
+                converged=True,
+                gradient_norm=1e-9,
+                objective_history=[-0.5],  # only 1 point → conv_rate = 0.0
+            )
+        }
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=100)
+        result = compare_algorithms(results=pre, config=cfg, stability_check=False, time_runs=False)
+        assert result.variants[0].convergence_rate == 0.0
+
+    def test_compare_fastest_slowest_convergence(self):
+        """fastest_convergence and slowest_convergence names are populated."""
+        from src.analysis import compare_algorithms
+        from src.experiment_config import ExperimentConfig
+
+        # Two step sizes with notably different iteration counts
+        cfg = ExperimentConfig(step_sizes=(0.01, 0.9), max_iterations=5000)
+        result = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
+        # With 2 converged variants, fastest ≠ slowest (or at least one is set)
+        assert result.fastest_convergence != "none" or result.slowest_convergence != "none"
+
+
+# ---------------------------------------------------------------------------
+# multi_factor_analysis — composite scoring
+# ---------------------------------------------------------------------------
+
+
+class TestMultiFactorAnalysis:
+    """Tests for src.analysis.multi_factor_analysis (lines 438-590)."""
+
+    def test_multi_factor_returns_report(self):
+        """multi_factor_analysis returns a MultiFactorReport."""
+        from src.analysis import MultiFactorReport, multi_factor_analysis
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=200)
+        report = multi_factor_analysis(config=cfg)
+        assert isinstance(report, MultiFactorReport)
+
+    def test_composite_score_in_range(self):
+        """Composite score is ∈ [0, 1]."""
+        from src.analysis import multi_factor_analysis
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=200)
+        report = multi_factor_analysis(config=cfg)
+        assert 0.0 <= report.composite_score <= 1.0
+
+    def test_factor_weights_sum_to_one(self):
+        """Normalised factor weights sum to 1.0."""
+        from src.analysis import multi_factor_analysis
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
+        report = multi_factor_analysis(config=cfg)
+        assert sum(report.factor_weights.values()) == pytest.approx(1.0)
+
+    def test_recommendations_non_empty(self):
+        """recommendations list always has at least one entry."""
+        from src.analysis import multi_factor_analysis
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=200)
+        report = multi_factor_analysis(config=cfg)
+        assert len(report.recommendations) >= 1
+
+    def test_custom_factor_weights(self):
+        """Custom factor weights override defaults and are normalised."""
+        from src.analysis import multi_factor_analysis
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
+        report = multi_factor_analysis(
+            config=cfg, factor_weights={"convergence": 0.8, "stability": 0.2}
+        )
+        assert sum(report.factor_weights.values()) == pytest.approx(1.0)
+
+    def test_custom_factor_weights_with_unknown_key(self):
+        """Unknown keys in factor_weights are silently ignored (line 467 False branch)."""
+        from src.analysis import multi_factor_analysis
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
+        # "nonexistent_key" is not in the defaults → silently skipped
+        report = multi_factor_analysis(
+            config=cfg, factor_weights={"convergence": 0.5, "nonexistent_key": 99.0}
+        )
+        # Normalisation should still work with valid keys only
+        assert sum(report.factor_weights.values()) == pytest.approx(1.0)
+        # The unknown key should not appear in the final weights
+        assert "nonexistent_key" not in report.factor_weights
+
+    def test_factor_weights_zero_total_skips_normalisation(self):
+        """factor_weights summing to 0 skips normalisation (line 471 False branch)."""
+        from src.analysis import multi_factor_analysis
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
+        # All-zero weights → total_w = 0 → normalisation step is skipped
+        report = multi_factor_analysis(
+            config=cfg,
+            factor_weights={"convergence": 0.0, "stability": 0.0, "performance": 0.0, "efficiency": 0.0},
+        )
+        # The composite score will be 0.0 since all weights are zero
+        assert report.composite_score == pytest.approx(0.0)
+
+    def test_with_pre_computed_comparison(self):
+        """multi_factor_analysis accepts a pre-computed AlgorithmComparison."""
+        from src.analysis import compare_algorithms, multi_factor_analysis
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=200)
+        cmp = compare_algorithms(config=cfg, stability_check=True, time_runs=False)
+        report = multi_factor_analysis(comparison=cmp, config=cfg)
+        assert report.best_overall_variant != ""
+
+    def test_degenerate_empty_variants(self):
+        """Degenerate case (no variants) returns a zeroed MultiFactorReport."""
+        from src.analysis import (
+            AlgorithmComparison,
+            AlgorithmVariant,
+            MultiFactorReport,
+            multi_factor_analysis,
+        )
+        from src.experiment_config import ExperimentConfig
+
+        # Build an empty comparison — need at least one variant for the dataclass
+        # but we trigger the degenerate path by making variants=[] via a patched comparison
+        empty_cmp = AlgorithmComparison(
+            variants=[],
+            best_variant=AlgorithmVariant(
+                name="dummy",
+                step_size=0.1,
+                converged=False,
+                iterations=0,
+                final_objective=0.0,
+                gradient_norm=0.0,
+            ),
+            convergence_summary=0.0,
+            objective_spread=0.0,
+            mean_iterations=0.0,
+            fastest_convergence="none",
+            slowest_convergence="none",
+            ranking_table=[],
+        )
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
+        report = multi_factor_analysis(comparison=empty_cmp, config=cfg)
+        assert isinstance(report, MultiFactorReport)
+        assert report.composite_score == pytest.approx(0.0)
+        assert "No algorithm variants available" in report.recommendations[0]
+
+    def test_factor_breakdown_keys(self):
+        """factor_breakdown contains all expected keys."""
+        from src.analysis import multi_factor_analysis
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
+        report = multi_factor_analysis(config=cfg)
+        assert "convergence" in report.factor_breakdown
+        assert "stability" in report.factor_breakdown
+        assert "performance" in report.factor_breakdown
+        assert "efficiency" in report.factor_breakdown
+
+    def test_stability_fallback_recomputes_when_scores_none(self):
+        """When no variant has stability_score, multi_factor_analysis recomputes it."""
+        from src.analysis import (
+            AlgorithmComparison,
+            AlgorithmVariant,
+            compare_algorithms,
+            multi_factor_analysis,
+        )
+        from src.experiment_config import ExperimentConfig
+
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
+        # compare_algorithms with stability_check=False → stability_score=None
+        cmp = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
+        # Nullify all stability scores to force the fallback branch
+        for v in cmp.variants:
+            v.stability_score = None
+        report = multi_factor_analysis(comparison=cmp, config=cfg)
+        # Fallback should still produce a valid score
+        assert 0.0 <= report.stability_factor <= 1.0
+
+    def test_recommendation_low_convergence(self):
+        """convergence_factor < 0.5 triggers the convergence recommendation."""
+        from src.analysis import compare_algorithms, multi_factor_analysis
+        from src.experiment_config import ExperimentConfig
+        from src.optimizer import OptimizationResult
+
+        # One converged, three diverged → convergence_factor = 0.25 < 0.5
+        pre = {
+            0.1: OptimizationResult(
+                solution=np.array([1.0]),
+                objective_value=-0.5,
+                iterations=50,
+                converged=True,
+                gradient_norm=1e-9,
+                objective_history=[0.0, -0.5],
+            ),
+            2.5: OptimizationResult(
+                solution=np.array([1e6]),
+                objective_value=1e12,
+                iterations=100,
+                converged=False,
+                gradient_norm=1e6,
+                objective_history=[],
+            ),
+            3.0: OptimizationResult(
+                solution=np.array([1e6]),
+                objective_value=1e12,
+                iterations=100,
+                converged=False,
+                gradient_norm=1e6,
+                objective_history=[],
+            ),
+            4.0: OptimizationResult(
+                solution=np.array([1e6]),
+                objective_value=1e12,
+                iterations=100,
+                converged=False,
+                gradient_norm=1e6,
+                objective_history=[],
+            ),
+        }
+        cfg = ExperimentConfig(step_sizes=(0.1, 2.5, 3.0, 4.0), max_iterations=100)
+        cmp = compare_algorithms(results=pre, config=cfg, stability_check=False, time_runs=False)
+        report = multi_factor_analysis(comparison=cmp, config=cfg)
+        assert any("failed to converge" in r.lower() for r in report.recommendations)
+
+    def test_recommendation_low_stability(self):
+        """stability_factor < 0.8 triggers the stability recommendation.
+
+        Force by building variants with explicitly low stability scores.
+        """
+        from src.analysis import (
+            AlgorithmComparison,
+            AlgorithmVariant,
+            MultiFactorReport,
+            multi_factor_analysis,
+        )
+        from src.experiment_config import ExperimentConfig
+
+        # Create a variant with a low stability score
+        variant = AlgorithmVariant(
+            name="GD α=0.1",
+            step_size=0.1,
+            converged=True,
+            iterations=50,
+            final_objective=-0.5,
+            gradient_norm=1e-9,
+            objective_history=[0.0, -0.5],
+            stability_score=0.2,  # below 0.8 threshold
+        )
+        cmp = AlgorithmComparison(
+            variants=[variant],
+            best_variant=variant,
+            convergence_summary=100.0,
+            objective_spread=0.0,
+            mean_iterations=50.0,
+            fastest_convergence=variant.name,
+            slowest_convergence="none",
+            ranking_table=[],
+        )
+        cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
+        report = multi_factor_analysis(comparison=cmp, config=cfg)
+        assert any("stability" in r.lower() for r in report.recommendations)
+
+    def test_variant_score_unconverged_returns_negative(self):
+        """_variant_score returns -1.0 for unconverged variants (line 547)."""
+        from src.analysis import (
+            AlgorithmComparison,
+            AlgorithmVariant,
+            multi_factor_analysis,
+        )
+        from src.experiment_config import ExperimentConfig
+
+        converged_v = AlgorithmVariant(
+            name="GD α=0.1",
+            step_size=0.1,
+            converged=True,
+            iterations=10,
+            final_objective=-0.5,
+            gradient_norm=1e-9,
+            objective_history=[0.0, -0.5],
+            stability_score=0.9,
+        )
+        diverged_v = AlgorithmVariant(
+            name="GD α=3.0",
+            step_size=3.0,
+            converged=False,  # → _variant_score returns -1.0
+            iterations=200,
+            final_objective=1e6,
+            gradient_norm=1e6,
+            objective_history=[],
+            stability_score=0.1,
+        )
+        cmp = AlgorithmComparison(
+            variants=[converged_v, diverged_v],
+            best_variant=converged_v,
+            convergence_summary=50.0,
+            objective_spread=0.0,
+            mean_iterations=105.0,
+            fastest_convergence=converged_v.name,
+            slowest_convergence="none",
+            ranking_table=[],
+        )
+        cfg = ExperimentConfig(step_sizes=(0.1, 3.0), max_iterations=200)
+        report = multi_factor_analysis(comparison=cmp, config=cfg)
+        # The best_overall_variant should be the converged one, not the diverged one
+        assert report.best_overall_variant == converged_v.name
+
+
+# ---------------------------------------------------------------------------
+# AlphaSweepConfig.resolved_alphas — ValueError edge case
+# ---------------------------------------------------------------------------
+
+
+class TestAlphaSweepConfigResolvedAlphas:
+    """sweeps.py line 64: ValueError when neither alphas nor min/max/num provided."""
+
+    def test_resolved_alphas_raises_when_all_none(self):
+        """AlphaSweepConfig.resolved_alphas raises ValueError when alphas=None
+        and alpha_min/alpha_max/alpha_num are all unset."""
+        import numpy as np
+        from src.sweeps import AlphaSweepConfig
+
+        cfg = AlphaSweepConfig(
+            A=np.eye(1),
+            b=np.ones(1),
+            initial_point=np.zeros(1),
+            max_iterations=100,
+            tolerance=1e-6,
+            alphas=None,
+            alpha_min=None,
+            alpha_max=None,
+            alpha_num=None,
+        )
+        with pytest.raises(ValueError, match="Provide either alphas or alpha_min"):
+            cfg.resolved_alphas()
+
+    def test_resolved_alphas_linspace_path(self):
+        """alpha_min/max/num fully specified → linspace grid."""
+        import numpy as np
+        from src.sweeps import AlphaSweepConfig
+
+        cfg = AlphaSweepConfig(
+            A=np.eye(1),
+            b=np.ones(1),
+            initial_point=np.zeros(1),
+            max_iterations=100,
+            tolerance=1e-6,
+            alphas=None,
+            alpha_min=0.01,
+            alpha_max=0.5,
+            alpha_num=5,
+        )
+        grid = cfg.resolved_alphas()
+        assert len(grid) == 5
+        assert grid[0] == pytest.approx(0.01)
+        assert grid[-1] == pytest.approx(0.5)

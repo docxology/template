@@ -1,0 +1,24 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "A deterministic gold-refinement analogy template for scientific manuscript composition: ore, smelting, assaying, karat grading, and certification are mapped to source-owned regeneration contracts and mega-madlib token provenance.",
+  "keywords": [
+    "gold refining",
+    "manuscript composition",
+    "mega-madlib",
+    "token injection",
+    "scientific purity",
+    "assaying",
+    "karat grading",
+    "reproducible research"
+  ],
+  "license": "MIT",
+  "title": "Refinement of Gold: A Metallurgical Analogy for Scientific Manuscript Composition",
+  "upload_type": "software",
+  "version": "0.1.0"
+}

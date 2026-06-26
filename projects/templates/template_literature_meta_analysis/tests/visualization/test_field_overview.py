@@ -77,3 +77,21 @@ class TestFieldOverview:
 
         img = Image.open(output)
         assert img.width > 0 and img.height > 0
+
+    def test_plot_subfield_distribution_small_slice_grouped_into_other(self, tmp_path: Path) -> None:
+        """Subfields below the 2% threshold are folded into an 'Other' bucket."""
+        # A1_formal and C5_biology are each 1% of total=100 -> below threshold -> Other.
+        counts = {
+            "A2_philosophy": 50,
+            "C1_neuroscience": 48,
+            "A1_formal": 1,   # 1% < 2% threshold
+            "C5_biology": 1,  # 1% < 2% threshold — total Other bucket = 2
+        }
+        output = tmp_path / "other_dist.png"
+        result = plot_subfield_distribution(subfield_counts=counts, output_path=output)
+        assert result == output
+        assert output.exists()
+        assert output.stat().st_size > 0
+        from PIL import Image
+        img = Image.open(output)
+        assert img.width > 0 and img.height > 0

@@ -1,4 +1,19 @@
-"""Pure orchestration of the prose review pipeline."""
+"""Pure orchestration of the prose review pipeline.
+
+This module is the only surface in ``src/`` that imports from
+``infrastructure.prose.*``.  It receives a pre-analysed
+:class:`ManuscriptReportLike` (produced by the calling script via
+``infrastructure.prose.analyze_manuscript``), runs the configured checks,
+and optionally writes the JSON artefacts to disk.
+
+Public API:
+
+* :class:`ProseRunArtifacts` — result dataclass returned to the caller.
+* :func:`run_prose_pipeline` — the pipeline entry point.
+* :data:`CHECK_REGISTRY` — the ordered tuple of registered checks.
+* :class:`CheckResult` — outcome of one check.
+* :func:`run_configured_checks` — run enabled checks from the registry.
+"""
 
 from __future__ import annotations
 
@@ -25,7 +40,17 @@ __all__ = [
 
 @dataclass
 class ProseRunArtifacts:
-    """Outputs of a single :func:`run_prose_pipeline` call."""
+    """Outputs of a single :func:`run_prose_pipeline` call.
+
+    Attributes:
+        manuscript_report: The aggregated prose analysis produced by
+            ``infrastructure.prose.analyze_manuscript``.
+        report_path: Path of the written ``manuscript_report.json`` file,
+            or ``None`` when ``write_outputs=False``.
+        checks: Ordered list of :class:`CheckResult` objects, one per
+            enabled check in :data:`CHECK_REGISTRY`.
+        all_passed: ``True`` if every check passed; ``False`` otherwise.
+    """
 
     manuscript_report: ManuscriptReportLike
     report_path: Path | None = None
@@ -34,9 +59,16 @@ class ProseRunArtifacts:
 
     @property
     def total_words(self) -> int:
+        """Total word count across all manuscript files."""
         return self.manuscript_report.total_words
 
     def to_dict(self) -> dict[str, object]:
+        """Serialise to a JSON-compatible dictionary.
+
+        Returns a mapping with keys ``all_passed``, ``total_words``,
+        ``report_path`` (string or ``null``), ``checks`` (list), and
+        ``manuscript`` (the :meth:`ManuscriptReportLike.to_dict` payload).
+        """
         return {
             "all_passed": self.all_passed,
             "total_words": self.total_words,

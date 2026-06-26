@@ -5,6 +5,8 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
+import pytest
+
 from src.reference_agent import main, majority_label, run_agent, write_predictions
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -14,6 +16,14 @@ DATASET = PROJECT_ROOT / "tasks" / "mini_classify" / "data" / "public"
 def test_majority_label():
     label = majority_label(DATASET / "train.csv")
     assert label in {"positive", "negative"}
+
+
+def test_majority_label_empty_csv_raises(tmp_path: Path):
+    """majority_label must raise ValueError when train.csv has no data rows."""
+    empty_csv = tmp_path / "train.csv"
+    empty_csv.write_text("id,feature_0,label\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="(?i)No labels"):
+        majority_label(empty_csv)
 
 
 def _predictions(path: Path) -> dict[str, str]:

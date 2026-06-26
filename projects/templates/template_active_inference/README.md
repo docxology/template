@@ -132,10 +132,11 @@ uv run python scripts/generate_method_inventory.py
 uv run python scripts/run_full_verification.py
 ```
 
-> Runtime: the full suite is slow (~15-25 min serial) — real pandoc/xelatex
-> rendering and artifact-generation/gate tests dominate, so a quiet console for
-> several minutes is expected, not a hang. For a fast inner loop, scope with
-> `-k` (e.g. `uv run pytest tests/ -k "not gate and not figure" --no-cov`).
+> Runtime: the gate-heavy suite is slow because real pandoc/xelatex rendering
+> and artifact-generation tests dominate. Prefer `scripts/run_full_verification.py`;
+> it now runs coverage in separate pytest chunks so source mutations and generated
+> manuscript refreshes do not share one long session. For a fast inner loop, scope
+> with `-k` (e.g. `uv run pytest tests/ -k "not gate and not figure" --no-cov`).
 
 From repo root:
 
@@ -248,8 +249,12 @@ uv run python scripts/run_full_verification.py
   `compose_manuscript.py --validate-only --strict`, `z_generate_manuscript_variables.py`,
   `generate_figures.py`, `validate_outputs.py`, `check_documentation_contract.py --check`
 - chunked verification batches for gate-heavy modules
-- full `pytest` pass with coverage gate (`--cov=src --cov-fail-under=90`)
-- postflight contract checks immediately after the full pass
+- chunked `pytest` coverage passes with one combined coverage gate
+  (`--cov=src --cov-fail-under=90`)
+- postflight contract checks immediately after coverage
+
+Use `--monolithic-coverage` only when diagnosing behavior that specifically
+requires the legacy single pytest coverage process.
 
 The inventory distinguishes inline docstrings from inventory fallbacks, so missing
 docstrings remain visible without bloating internal helper code.

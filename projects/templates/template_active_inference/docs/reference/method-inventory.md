@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 797
+Total documented definitions: 802
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -521,8 +521,13 @@ Total documented definitions: 797
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 12 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:12`. |
-| 35 | `function` | `run_verification` | inventory fallback | Inventory fallback for function `run_verification` defined at `src/orchestration/full_verification.py:35`. |
+| 12 | `function` | `_relative_test_path` | inventory fallback | Inventory fallback for function `_relative_test_path` defined at `src/orchestration/full_verification.py:12`. |
+| 16 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:16`. |
+| 20 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:20`. |
+| 58 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:58`. |
+| 65 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:65`. |
+| 76 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:76`. |
+| 99 | `function` | `run_verification` | inventory fallback | Inventory fallback for function `run_verification` defined at `src/orchestration/full_verification.py:99`. |
 
 ## `src/orchestration/pipeline_manifest.py`
 

@@ -1,0 +1,230 @@
+# Gold Refinement Configuration Template
+# Copy this file to config.yaml and customize for your project.
+
+paper:
+  title: "Your Refinement Title"
+  subtitle: "Optional Subtitle"
+  version: "1.0"
+  date: ""
+
+authors:
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"
+    email: "your.email@university.edu"
+    affiliation: "Your University"
+    corresponding: true
+
+publication:
+  doi: ""
+  version_doi: ""
+  version_record: ""
+  github_repository: ""
+  journal: ""
+  volume: ""
+  pages: ""
+  year: ""
+
+keywords:
+  - "gold refining"
+  - "manuscript composition"
+  - "token injection"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+steganography:
+  enabled: true
+  overlays_enabled: true
+  barcodes_enabled: true
+  metadata_enabled: true
+  hashing_enabled: true
+  encryption_enabled: false
+  overlay_mode: "text"
+  overlay_text: "CONFIDENTIAL"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false
+    docx: false
+    epub: false
+
+llm:
+  reviews:
+    enabled: false
+    types: []
+  translations:
+    enabled: false
+    languages: []
+
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0
+
+gold_refinement:
+  seed: 431
+  composition_depth: "deep"
+  hypothesis: "Your hypothesis here"
+  section_conditions:
+    abstract: true
+    introduction: true
+    methodology: true
+    results: true
+    discussion: true
+    conclusion: true
+    reproducibility: true
+    scope: true
+    evaluation: true
+    authoring_contract: true
+  section_titles:
+    abstract: "Abstract"
+    introduction: "Introduction"
+    methodology: "Methodology"
+    results: "Results"
+    discussion: "Discussion"
+    conclusion: "Conclusion"
+    reproducibility: "Reproducibility"
+    scope: "Scope"
+    evaluation: "Evaluation"
+    authoring_contract: "Authoring Contract"
+  narrative_moves:
+    abstract:
+      - "state the problem"
+      - "name the approach"
+      - "summarize results"
+    introduction:
+      - "frame the approach"
+      - "distinguish from alternatives"
+      - "introduce the method"
+    methodology:
+      - "declare the stages"
+      - "explain the method"
+      - "connect components"
+    results:
+      - "report progression"
+      - "show grading"
+      - "bind to provenance"
+    discussion:
+      - "bound the claim"
+      - "describe cases"
+      - "name misuse modes"
+    conclusion:
+      - "summarize"
+      - "state responsibilities"
+    reproducibility:
+      - "fix seed"
+      - "write artifacts"
+      - "rerender"
+    scope:
+      - "distinguish"
+      - "limit claims"
+      - "explain forking"
+    evaluation:
+      - "name readiness criteria"
+      - "connect criteria to artifacts"
+      - "make failure probes visible"
+    authoring_contract:
+      - "state human responsibilities"
+      - "name fork obligations"
+      - "require domain validators before domain claims"
+  lexicon:
+    metallurgical_terms:
+      - "cupellation"
+      - "assaying"
+      - "smelting"
+    manuscript_terms:
+      - "draft"
+      - "claim"
+      - "citation"
+    purity_adjectives:
+      - "unrefined"
+      - "purified"
+      - "certified"
+    refinement_verbs:
+      - "assaying"
+      - "certifying"
+      - "refining"
+  slots:
+    - name: "METHOD_METAL_TERM"
+      category: "metallurgical_terms"
+      count: 3
+      section: "methodology"
+    - name: "METHOD_MANUSCRIPT_TERM"
+      category: "manuscript_terms"
+      count: 2
+      section: "methodology"
+    - name: "RESULTS_PURITY_ADJ"
+      category: "purity_adjectives"
+      count: 2
+      section: "results"
+    - name: "DISCUSSION_REFINEMENT_VERB"
+      category: "refinement_verbs"
+      count: 1
+      section: "discussion"
+  contribution_claims:
+    - name: "Five-stage refinery"
+      claim: "The refinery pipeline has 5 canonical stages from ore to nine-nines."
+      evidence: "src/refinery.py::CANONICAL_STAGES"
+      boundary: "local"
+    - name: "Monotone purity"
+      claim: "Purity increases strictly across all refinery stages."
+      evidence: "src/refinery.py::assert_monotone_increase"
+      boundary: "local"
+    - name: "Nine-nines certification"
+      claim: "The certification stage achieves 99.9999999% purity."
+      evidence: "src/purity.py::NINE_NINES_PURITY"
+      boundary: "local"
+    - name: "Deterministic tokens"
+      claim: "Token selection is deterministic via seeded SHA-256 digest."
+      evidence: "src/composition.py::_choose_value"
+      boundary: "local"
+  pipeline_phases:
+    - name: "Schema intake"
+      input_artifact: "manuscript/config.yaml"
+      transformation: "Load and validate gold_refinement block"
+      output_artifact: "GoldRefinementConfig"
+      guard: "config schema tests"
+    - name: "Refinery execution"
+      input_artifact: "GoldRefinementConfig"
+      transformation: "Run five refinery stages with monotone purity"
+      output_artifact: "RefineryResult"
+      guard: "monotone purity test"
+    - name: "Token planning"
+      input_artifact: "GoldRefinementConfig"
+      transformation: "Expand slots into deterministic token choices"
+      output_artifact: "TokenPlan"
+      guard: "seed-stability tests"
+    - name: "Figure generation"
+      input_artifact: "RefineryResult and TokenPlan"
+      transformation: "Generate purity progression, karat grading, and token density figures"
+      output_artifact: "output/figures/*.png"
+      guard: "nonblank figure tests"
+    - name: "Manuscript hydration"
+      input_artifact: "manuscript shells and manuscript_variables.json"
+      transformation: "Resolve {{TOKEN}} placeholders into output/manuscript/"
+      output_artifact: "hydrated Markdown manuscript"
+      guard: "unresolved-token scan"
+    - name: "Render and validate"
+      input_artifact: "output/manuscript"
+      transformation: "Render PDF, HTML through shared template pipeline"
+      output_artifact: "output/pdf and output/web"
+      guard: "render command"
+  audit_rules:
+    - name: "Purity monotonicity"
+      check: "Purity must strictly increase from stage to stage"
+      test: "tests/test_refinery.py"
+    - name: "Token determinism"
+      check: "Same seed and lexicon must produce same token plan"
+      test: "tests/test_composition.py"
+    - name: "Token coverage"
+      check: "Every manuscript {{TOKEN}} must have a generated variable"
+      test: "tests/test_manuscript_variables.py"
+    - name: "Config validation"
+      check: "Invalid config must raise GoldRefinementConfigError"
+      test: "tests/test_config.py"
+    - name: "Figure generation"
+      check: "All figure generators must produce non-blank PNGs"
+      test: "tests/test_figures.py"

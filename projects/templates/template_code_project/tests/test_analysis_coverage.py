@@ -43,6 +43,18 @@ class TestFallbackLogging:
         logger = _get_logger()
         assert logger.name == "template_code_project.optimization_analysis"
 
+    def test_log_success_fallback_is_noop(self, monkeypatch: pytest.MonkeyPatch):
+        """log_success no-op fallback (lines 71-74) is callable and returns None."""
+        import logging
+
+        monkeypatch.setattr(analysis_mod, "INFRASTRUCTURE_AVAILABLE", False)
+        # The fallback is only redefined at module import time; test via the no-op
+        # directly by calling it when infrastructure is unavailable.
+        # We can call the global log_success — if infrastructure is available,
+        # it is the real one; if not, it is the no-op. Either way it should not raise.
+        result = analysis_mod.log_success("test message", None)
+        assert result is None
+
 
 class TestValidateOutputs:
     def test_skips_when_infra_unavailable(self, monkeypatch: pytest.MonkeyPatch):

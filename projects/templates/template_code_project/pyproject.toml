@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_code_project"
-version = "0.1.0"
+version = "2.5.2"
 description = "Fully-tested codebase with numerical optimization and analysis"
 authors = [
     {name = "Research Template Author", email = "author@research-template.org"}

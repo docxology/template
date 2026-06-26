@@ -1,8 +1,8 @@
 paper:
   title: "Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts"
   subtitle: "A public exemplar for source-owned lexical composition"
-  version: "0.1.0"
-  date: "2026-06-21"
+  version: "0.1.1"
+  date: "2026-06-26"
   cover:
     image: "figures/madlib_cover_overview.png"
     title: "Configuration-to-manuscript audit overview"

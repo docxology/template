@@ -19,42 +19,66 @@ if str(TESTS) not in sys.path:
 
 os.environ.setdefault("MPLBACKEND", "Agg")
 
-# Tracked manuscript files whose composed/regenerated content embeds live
-# output/ artifact state (e.g. the "Generated status" table in
-# 08_methods_sheaf.md and the 00_00_sheaf_coverage.md page). The gate tests
-# call compose_all_sections / ensure_coverage_artifacts on the real project
-# root, which legitimately rewrites these tracked files to reflect whatever
-# artifacts the suite produced (pymdp present vs absent, etc.). That left the
-# working tree dirty after a run, so a contributor's `git commit -a` could
-# commit degraded values. We snapshot every tracked manuscript/*.md before the
-# session and restore the byte-for-byte original afterward so the suite always
-# leaves the working tree clean. The session-scoped finalizer below is the
-# single guarantee — individual tests need not reason about it.
-_MANUSCRIPT_DIR = PROJECT_ROOT / "manuscript"
+# Tracked source files whose composed/regenerated content embeds live output/
+# artifact state. Gate tests call compose_all_sections / ensure_coverage_artifacts
+# on the real project root, and negative controls temporarily mutate source
+# contracts such as GNN and ontology files. Restore these files after every test
+# so long full-suite runs do not let one mutation or compose pass leak into the
+# next test.
+_MUTABLE_PROJECT_SOURCE_GLOBS = (
+    "manuscript/**/*.md",
+    "manuscript/**/*.yaml",
+    "gnn/**/*.md",
+    "lean/**/*.lean",
+)
+_MUTABLE_PROJECT_SOURCE_FILES = (
+    "data/claim_ledger.yaml",
+    "pymdp.yaml",
+    "src/roadmap_tracks/__init__.py",
+    "tracks.yaml",
+)
 
 
-@pytest.fixture(scope="session", autouse=True)
-def _restore_tracked_manuscript() -> Iterator[None]:
-    """Snapshot tracked manuscript markdown, restore it at session end.
+def _iter_mutable_project_sources() -> Iterator[Path]:
+    seen: set[Path] = set()
+    for pattern in _MUTABLE_PROJECT_SOURCE_GLOBS:
+        for path in sorted(PROJECT_ROOT.glob(pattern)):
+            if path.is_file() and path not in seen:
+                seen.add(path)
+                yield path
+    for rel in _MUTABLE_PROJECT_SOURCE_FILES:
+        path = PROJECT_ROOT / rel
+        if path.is_file() and path not in seen:
+            seen.add(path)
+            yield path
 
-    Yields nothing; its only job is the teardown restore so the test suite
-    never mutates git-tracked manuscript sources (EX-2).
-    """
-    snapshots: dict[Path, str] = {}
-    if _MANUSCRIPT_DIR.is_dir():
-        for md in sorted(_MANUSCRIPT_DIR.rglob("*.md")):
-            try:
-                snapshots[md] = md.read_text(encoding="utf-8")
-            except OSError:
-                continue
-    yield
+
+def _restore_snapshots(snapshots: dict[Path, bytes]) -> None:
     for path, original in snapshots.items():
         try:
-            if path.read_text(encoding="utf-8") != original:
-                path.write_text(original, encoding="utf-8")
+            if path.read_bytes() == original:
+                continue
         except OSError:
-            # File removed by a test it owns; recreate the tracked original.
-            path.write_text(original, encoding="utf-8")
+            pass
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(original)
+
+
+@pytest.fixture(scope="session")
+def _mutable_project_source_snapshots() -> dict[Path, bytes]:
+    snapshots: dict[Path, bytes] = {}
+    for path in _iter_mutable_project_sources():
+        try:
+            snapshots[path] = path.read_bytes()
+        except OSError:
+            continue
+    return snapshots
+
+
+@pytest.fixture(autouse=True)
+def _restore_mutable_project_sources(_mutable_project_source_snapshots: dict[Path, bytes]) -> Iterator[None]:
+    yield
+    _restore_snapshots(_mutable_project_source_snapshots)
 
 
 @pytest.fixture

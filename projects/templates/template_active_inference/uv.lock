@@ -1743,7 +1743,7 @@ wheels = [
 
 [[package]]
 name = "template-active-inference"
-version = "0.3.1"
+version = "0.3.2"
 source = { editable = "." }
 dependencies = [
     { name = "inferactively-pymdp" },

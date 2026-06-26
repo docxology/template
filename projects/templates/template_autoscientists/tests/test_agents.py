@@ -164,3 +164,32 @@ def test_hermes_prompt_renders_recent_history() -> None:
     prompt = proposer._prompt(state, axes=[0])
     assert "axis=0" in prompt
     assert "confirmed=True" in prompt
+
+
+def test_hermes_parse_rejects_out_of_scope_axis_negative_control() -> None:
+    """Negative control: a reply with an axis outside the assigned set must be rejected."""
+    proposer = HermesProposer()
+    # axes=[0, 1] but the model replied with axis=5.
+    with pytest.raises(ValueError, match="outside assigned"):
+        proposer._parse('{"axis": 5, "step": 1.0}', axes=[0, 1], proposer_id="h")
+
+
+def test_hermes_parse_negative_step_is_accepted() -> None:
+    """Negative step values are valid (they probe in the decrease direction)."""
+    proposer = HermesProposer()
+    proposal = proposer._parse('{"axis": 0, "step": -1.0, "rationale": "go down"}', axes=[0], proposer_id="h")
+    assert proposal.step == -1.0
+    assert proposal.direction == "decrease"
+
+
+def test_extract_json_with_nested_braces() -> None:
+    """_extract_json uses outermost { ... } so nested content is kept."""
+    raw = 'prefix {"outer": {"inner": 1}} suffix'
+    extracted = _extract_json(raw)
+    assert extracted == '{"outer": {"inner": 1}}'
+
+
+def test_extract_json_rejects_trailing_brace_only() -> None:
+    """_extract_json raises when there is a } but no { (end < start impossible)."""
+    with pytest.raises(ValueError, match="no JSON object found"):
+        _extract_json("} no opening brace")

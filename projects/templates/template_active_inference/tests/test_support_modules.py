@@ -108,6 +108,27 @@ def test_run_verification_skip_chunks_orders_preflight_and_postflight(monkeypatc
     labels = [label for label, _ in calls]
     assert labels[0] == "Run analytical sweep"
     assert "Focused contract and infrastructure checks" not in labels
+    assert "Full suite coverage pass" not in labels
+    assert "Coverage pass: Focused contract and infrastructure checks" in labels
+    first_coverage_cmd = dict(calls)["Coverage pass: Focused contract and infrastructure checks"]
+    second_coverage_cmd = dict(calls)["Coverage pass: Gate and manuscript-focused checks"]
+    assert "--cov=src" in first_coverage_cmd
+    assert "--cov-append" not in first_coverage_cmd
+    assert "--cov-append" in second_coverage_cmd
+
+
+def test_run_verification_can_use_legacy_monolithic_coverage(monkeypatch, tmp_path: Path) -> None:
+    calls: list[tuple[str, list[str]]] = []
+    monkeypatch.setattr(
+        full_verification,
+        "_run",
+        lambda project_root, cmd, label, env=None: calls.append((label, cmd)),
+    )
+
+    full_verification.run_verification(tmp_path, skip_chunks=True, monolithic_coverage=True)
+
+    labels = [label for label, _ in calls]
+    assert "Coverage pass: Focused contract and infrastructure checks" not in labels
     assert "Full suite coverage pass" in labels
     coverage_cmd = dict(calls)["Full suite coverage pass"]
     assert coverage_cmd[-1] == "--maxfail=1"
@@ -131,4 +152,4 @@ def test_run_verification_includes_chunked_sheaf_modules(monkeypatch, tmp_path: 
     assert "Focused contract and infrastructure checks" in chunks
     assert "Gate and manuscript-focused checks" in chunks
     roadmap_cmd = chunks["Roadmap and sheaf consolidation checks"]
-    assert str(sheaf_path) in roadmap_cmd
+    assert str(sheaf_path.relative_to(tmp_path)) in roadmap_cmd

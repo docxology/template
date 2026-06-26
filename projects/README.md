@@ -23,6 +23,7 @@ and render checkout.
 Paths under `projects/` are organized as **typed subfolders** (`templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) and **change over time** as projects rotate between lifecycle folders. The set guaranteed to remain as **permanent canonical exemplars** — git-tracked under `projects/templates/` — is:
 
 - [`templates/template_code_project/`](templates/template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
+- [`templates/template_gold_refinement/`](templates/template_gold_refinement/) — metallurgical gold-refining analogy for manuscript composition (ore → nine-nines, mega-madlib token injection)
 - [`templates/template_prose_project/`](templates/template_prose_project/) — prose-centric exemplar (editorial review, BibTeX validation, readability metrics)
 - [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
 - [`templates/template_autoscientists/`](templates/template_autoscientists/) — AutoScientists coordination-mechanism testbed
@@ -55,6 +56,7 @@ projects.
 | Exemplar | Purpose | Algorithm? | Mutates `references.bib`? | Embeds figures? | Tests | Coverage |
 |---|---|---|---|---|---|---|
 | [`template_code_project`](templates/template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
+| [`template_gold_refinement`](templates/template_gold_refinement/) | Metallurgical gold-refining analogy for manuscript composition | yes (`src/refinery.py`, `src/composition.py`) | no (curated) | no (planned) | see canonical facts | see canonical facts |
 | [`template_prose_project`](templates/template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
 | [`template_autoresearch_project`](templates/template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
 | [`template_autoscientists`](templates/template_autoscientists/) | Coordination-mechanism testbed | yes (`src/coordination/*`) | no (curated) | no | see canonical facts | see canonical facts |
@@ -167,6 +169,7 @@ between lifecycle folders instead of committing it here.
 |----------------------|---------------------------|-------|----------|
 | `templates/template_active_inference/` | Active Inference multi-track exemplar (analytical + pymdp + sheaf manuscript) | see canonical facts | see canonical facts |
 | `templates/template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
+| `templates/template_gold_refinement/` | Gold-refining analogy exemplar (ore → nine-nines, mega-madlib token injection) | see canonical facts | see canonical facts |
 | `templates/template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | see canonical facts | see canonical facts |
 | `templates/template_autoresearch_project/` | AutoResearch exemplar (deterministic readiness loop) | see canonical facts | see canonical facts |
 | `templates/template_autoscientists/` | AutoScientists coordination-mechanism testbed | see canonical facts | see canonical facts |

@@ -28,7 +28,7 @@ try:
     TemplateError = _TemplateError
     ValidationError = _ValidationError
     INFRASTRUCTURE_AVAILABLE = True
-except ImportError as e:
+except ImportError as e:  # pragma: no cover — fallback when infrastructure is unavailable
     _fallback_logger = logging.getLogger("template_code_project.optimization_analysis")
     if not _fallback_logger.handlers:
         handler = logging.StreamHandler()

@@ -21,6 +21,24 @@ normal analysis/render/validate/copy pipeline. This TODO records future work
 only; shipped evidence belongs in generated artifacts, reports, tests, and the
 README/AGENTS contract.
 
+Coverage as of this pass: **95.80%** (up from 93.45% before edge-case test
+additions).  New test files added this pass:
+
+- `tests/test_edge_cases.py` — 63 tests covering config error branches,
+  source-ledger edge cases (duplicate citekey, schema mismatch, bad date),
+  loop helper functions (`_combine_readiness_reports`, `_only_changed_artifact_manifest_issues`,
+  `_final_output_path_payload`, `build_stage_results` fallback), research-object
+  out-of-tree exclusion, security render with non-list non_claims, writers/io
+  outside-root path, benchmark grading helpers, and artifact_content depth.
+- `tests/test_format_helpers.py` — 76 tests covering all manuscript token
+  format functions (`load_json_mapping`, `string_value`, `percent_value`,
+  `currency_value`, `decimal_value`, `accuracy_interval`, `bootstrap_interval`,
+  `p_value`, `last_coverage_value`, `image_shape`, `artifact_role`, all six
+  branches, `artifact_markdown_link`, `short_scope`, `per_class_count`,
+  `first_model_candidate`) plus ml/data validation helpers
+  (`_positive_int`, `_nonnegative_int`, `_probability_float`, `_decay_float`,
+  `_mapping_list`, robustness transforms, MNIST shape validation).
+
 ## Shipped state
 
 The long checklist-heavy hardening plan that previously lived here is complete.

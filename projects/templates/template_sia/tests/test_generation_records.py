@@ -21,6 +21,15 @@ def test_load_run_summary_missing(tmp_path: Path):
         load_run_summary(tmp_path)
 
 
+def test_load_run_summary_invalid_payload(tmp_path: Path):
+    """A run_summary.json that is a JSON array (not an object) must raise ValueError."""
+    path = tmp_path / "output" / "runs" / "run_1" / "run_summary.json"
+    path.parent.mkdir(parents=True)
+    path.write_text("[1, 2, 3]", encoding="utf-8")
+    with pytest.raises(ValueError, match="(?i)invalid run summary"):
+        load_run_summary(tmp_path)
+
+
 def test_generation_metrics_parses_rows():
     summary = {
         "generations": [
@@ -32,6 +41,18 @@ def test_generation_metrics_parses_rows():
     rows = generation_metrics(summary)
     assert len(rows) == 1
     assert rows[0]["metric_name"] == "accuracy"
+
+
+def test_generation_metrics_empty_generations():
+    """An empty generations list returns an empty metrics list."""
+    rows = generation_metrics({"generations": []})
+    assert rows == []
+
+
+def test_generation_metrics_missing_generations_key():
+    """A summary without a 'generations' key returns an empty list."""
+    rows = generation_metrics({})
+    assert rows == []
 
 
 def test_load_run_summary_from_fixture_run(tmp_path: Path, copy_project_sandbox: Copy):

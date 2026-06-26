@@ -1,4 +1,22 @@
-"""Declarative prose pipeline checks."""
+"""Declarative prose pipeline checks.
+
+Each check is a pure function with the signature::
+
+    (report: ManuscriptReportLike, config: ProjectConfig, *, bib_path: Path) -> CheckResult
+
+All checks share this uniform signature even when some arguments are
+unused — this makes it possible to store them in the
+:data:`CHECK_REGISTRY` tuple and call them homogeneously via
+:func:`run_configured_checks`.
+
+To add a new check:
+
+1. Write a ``_check_<name>`` function here.
+2. Add a :class:`CheckSpec` entry to :data:`CHECK_REGISTRY`.
+3. Add a test in ``tests/test_pipeline.py::TestCheckUnits`` covering both
+   ``passed=True`` and ``passed=False`` outcomes.
+4. Optionally wire the result into ``src/report.py::write_review_report``.
+"""
 
 from __future__ import annotations
 
@@ -13,7 +31,17 @@ from ..prose_facade import ManuscriptReportLike, parse_bib_keys
 
 @dataclass
 class CheckResult:
-    """Outcome of one configured check."""
+    """Outcome of one configured check.
+
+    Attributes:
+        name: Machine-readable check identifier (matches the
+            :attr:`CheckSpec.name` in :data:`CHECK_REGISTRY`).
+        passed: ``True`` if the manuscript satisfies the configured
+            threshold; ``False`` otherwise.
+        message: Human-readable summary surfaced in the review report.
+        details: Machine-readable payload for downstream tooling (CI,
+            dashboards).  Always serialisable to JSON.
+    """
 
     name: str
     passed: bool
@@ -21,6 +49,7 @@ class CheckResult:
     details: dict[str, object] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, object]:
+        """Return a JSON-serialisable mapping of all fields."""
         return asdict(self)
 
 

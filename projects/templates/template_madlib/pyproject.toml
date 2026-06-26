@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_madlib"
-version = "0.1.0"
+version = "0.1.1"
 description = "Deterministic token-injection exemplar for conditional IMRAD manuscripts with cover, pipeline, and configured-field visualizations"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}

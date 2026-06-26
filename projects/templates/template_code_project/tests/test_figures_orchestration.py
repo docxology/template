@@ -116,3 +116,85 @@ class TestFiguresOrchestration:
 
     def test_benchmark_visualization_none_path(self):
         assert generate_benchmark_visualization(None) is None
+
+
+class TestBackendProfile:
+    """Test BackendProfile pure analysis methods (covers uncovered complexity lines)."""
+
+    def test_effective_max_stable_alpha_uses_explicit_value(self):
+        """Line 53: explicit max_stable_alpha overrides the 2/L formula."""
+        from src.figures.scientific_complexity import BackendProfile
+
+        p = BackendProfile(
+            name="Custom",
+            hessian_scale=4.0,
+            description="explicit override",
+            max_stable_alpha=0.3,  # not 2/4=0.5
+        )
+        assert p.effective_max_stable_alpha() == 0.3
+
+    def test_effective_max_stable_alpha_derived(self):
+        """When max_stable_alpha is None, returns 2/hessian_scale."""
+        from src.figures.scientific_complexity import BackendProfile
+
+        p = BackendProfile(name="Derived", hessian_scale=2.0, description="derived")
+        assert p.effective_max_stable_alpha() == pytest.approx(1.0)
+
+    def test_effective_label_alpha_uses_explicit_value(self):
+        """Line 58-59: explicit label_alpha is returned directly."""
+        from src.figures.scientific_complexity import BackendProfile
+
+        p = BackendProfile(
+            name="WithLabel",
+            hessian_scale=1.0,
+            description="label override",
+            label_alpha=0.42,
+        )
+        assert p.effective_label_alpha() == 0.42
+
+    def test_effective_label_alpha_derived(self):
+        """Line 60: label_alpha defaults to 0.5 * max_stable_alpha."""
+        from src.figures.scientific_complexity import BackendProfile
+
+        p = BackendProfile(name="NoLabel", hessian_scale=1.0, description="no label")
+        # effective_max_stable_alpha = 2/1 = 2.0 → label = 0.5 * 2.0 = 1.0
+        assert p.effective_label_alpha() == pytest.approx(1.0)
+
+    def test_profile_stable_region_returns_zero_to_bound(self):
+        """Line 196: profile_stable_region always starts at 0.0."""
+        from src.figures.scientific_complexity import BackendProfile, profile_stable_region
+
+        p = BackendProfile(name="TestP", hessian_scale=5.0, description="test")
+        lo, hi = profile_stable_region(p)
+        assert lo == 0.0
+        assert hi == pytest.approx(2.0 / 5.0)
+
+    def test_compare_profiles_at_alpha_returns_one_row_per_profile(self):
+        """Lines 232-247: compare_profiles_at_alpha covers the loop + dict build."""
+        from src.figures.scientific_complexity import (
+            BACKEND_PROFILES,
+            BackendProfile,
+            compare_profiles_at_alpha,
+        )
+
+        profiles = (
+            BackendProfile(name="A", hessian_scale=1.0, description="A"),
+            BackendProfile(name="B", hessian_scale=2.0, description="B"),
+        )
+        rows = compare_profiles_at_alpha(0.4, profiles=profiles)
+        assert len(rows) == 2
+        for row in rows:
+            assert "name" in row
+            assert "contraction" in row
+            assert "theoretical_complexity" in row
+            assert "optimal_alpha" in row
+            assert "is_stable" in row
+
+    def test_compare_profiles_at_alpha_uses_default_backend_profiles(self):
+        """compare_profiles_at_alpha works with the default BACKEND_PROFILES tuple."""
+        from src.figures.scientific_complexity import BACKEND_PROFILES, compare_profiles_at_alpha
+
+        rows = compare_profiles_at_alpha(0.1)
+        assert len(rows) == len(BACKEND_PROFILES)
+        # α=0.1 with H=1: rho=|1-0.1|=0.9 → stable
+        assert rows[0]["is_stable"] is True

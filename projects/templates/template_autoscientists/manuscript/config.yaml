@@ -14,8 +14,8 @@
 paper:
   title: "A Deterministic Testbed for Self-Organizing Agent-Team Coordination"
   subtitle: "Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment Budget"
-  version: "1.0.1"
-  date: "" # Auto-generated via `infrastructure/validation/output/validator.py` if empty
+  version: "1.0.2"
+  date: "2026-06-26"
 
 # Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
 authors:

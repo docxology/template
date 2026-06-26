@@ -46,3 +46,23 @@ def test_ties_break_by_index() -> None:
 
 def test_empty_log_keeps_index_order() -> None:
     assert rank_axes([], [3, 1, 2]) == [1, 2, 3]
+
+
+def test_single_axis_returns_singleton() -> None:
+    """Edge case: one axis is always first regardless of log content."""
+    assert rank_axes([], [7]) == [7]
+    assert rank_axes([_outcome(7, 0.5)], [7]) == [7]
+
+
+def test_all_tried_with_equal_effect_breaks_by_index() -> None:
+    """When every axis has been tried and all effects are equal, sort by index."""
+    log = [_outcome(2, 0.3), _outcome(0, 0.3), _outcome(1, 0.3)]
+    assert rank_axes(log, [0, 1, 2]) == [0, 1, 2]
+
+
+def test_axis_absent_from_requested_axes_is_excluded() -> None:
+    """axis_effect_sizes ignores outcomes for axes not in the requested set."""
+    log = [_outcome(99, 5.0)]
+    effects = axis_effect_sizes(log, [0, 1])
+    assert 99 not in effects
+    assert effects == {0: 0.0, 1: 0.0}

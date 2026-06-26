@@ -52,3 +52,27 @@ def test_with_champion_resets_log() -> None:
     assert fresh.log == []
     # Original is untouched.
     assert len(state.log) == 1
+
+
+def test_best_so_far_never_decreases_with_mixed_outcomes() -> None:
+    """best_so_far only moves up; non-improving outcomes leave it unchanged."""
+    state = SharedState(champion=Champion(params=(0.0,), metric=0.5, experiment_index=-1))
+    state.record(_outcome(0.3, -0.2, confirmed=True))   # not improved
+    assert state.best_so_far() == 0.5
+    state.record(_outcome(0.8, 0.3, confirmed=True))    # improved
+    assert state.best_so_far() == 0.8
+    state.record(_outcome(0.7, -0.1, confirmed=True))   # not improved
+    assert state.best_so_far() == 0.8
+
+
+def test_record_champion_experiment_index_is_log_length_minus_one() -> None:
+    """Promoted champion gets the index of the outcome that triggered promotion."""
+    state = SharedState(champion=Champion(params=(0.0,), metric=0.0, experiment_index=-1))
+    state.record(_outcome(0.1, 0.1, confirmed=True))  # index 0
+    state.record(_outcome(0.2, 0.1, confirmed=True))  # index 1
+    assert state.champion.experiment_index == 1
+
+
+def test_proposal_direction_zero_step_is_increase() -> None:
+    """step=0 is classified as 'increase' (non-negative branch)."""
+    assert Proposal(0, 0.0, "r", "t").direction == "increase"

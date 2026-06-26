@@ -464,7 +464,7 @@ class TestLongSentenceThresholdWired:
 
     def test_low_threshold_flags_more_sentences(self, tmp_path: Path):
         sentence = "This is a sentence with " + " ".join(["filler"] * 12) + " words."
-        files = {"00_a.md": "# A\n\n" + sentence}
+        files = {"00_a.md": "# A\\n\\n" + sentence}
         root = _make_project(tmp_path, files=files, bib="")
         # Threshold below the sentence's word count → flagged.
         cfg_low = _config(
@@ -488,3 +488,167 @@ class TestLongSentenceThresholdWired:
 
         assert flagged_low > flagged_high
         assert flagged_high == 0
+
+
+class TestNegativeControls:
+    """Negative control tests — verify the system correctly rejects bad inputs
+    and that gate-like checks fail on boundary violations.
+
+    These complement the per-check unit tests in TestCheckUnits by exercising
+    the full pipeline path and confirming that a check returning passed=False
+    is surfaced in all_passed and in the to_dict() serialisation.
+    """
+
+    def test_all_passed_is_false_when_any_check_fails(self, tmp_path: Path):
+        """all_passed must be False when even a single check fails."""
+        files = {"00_abstract.md": "# A\\n\\n" + "word " * 200}
+        root = _make_project(tmp_path, files=files, bib="")
+        config = _config(
+            prose={"target_grade_level_min": -10.0, "target_grade_level_max": 30.0,
+                   "citation_density_min_per_1000": 50.0},  # impossibly high floor
+            bibliography={"fail_on_missing": False},
+        )
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root, write_outputs=False)
+        assert artifacts.all_passed is False
+
+    def test_to_dict_reflects_failure(self, tmp_path: Path):
+        """to_dict() must echo all_passed=False when checks fail."""
+        files = {"00_abstract.md": "# A\\n\\n" + "word " * 200}
+        root = _make_project(tmp_path, files=files, bib="")
+        config = _config(
+            prose={"target_grade_level_min": -10.0, "target_grade_level_max": 30.0,
+                   "citation_density_min_per_1000": 50.0},
+            bibliography={"fail_on_missing": False},
+        )
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root, write_outputs=False)
+        payload = artifacts.to_dict()
+        assert payload["all_passed"] is False
+        failed = [c for c in payload["checks"] if not c["passed"]]
+        assert len(failed) >= 1
+
+    def test_grade_level_at_exact_min_boundary_passes(self, tmp_path: Path):
+        """grade_level_in_band passes when avg FKGL exactly equals min."""
+        files = {"00_abstract.md": "# A\\n\\nbody body body."}
+        root = _make_project(tmp_path, files=files, bib="")
+        from infrastructure.prose import analyze_files as af
+        report = af({"00_abstract.md": "# A\\n\\nbody body body."})
+        actual_grade = report.avg_flesch_kincaid_grade
+        # Set band such that min == actual value.
+        config = _config(
+            prose={"target_grade_level_min": actual_grade,
+                   "target_grade_level_max": actual_grade + 10.0,
+                   "citation_density_min_per_1000": 0.0},
+            bibliography={"fail_on_missing": False},
+        )
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root, write_outputs=False)
+        grade_check = next(c for c in artifacts.checks if c.name == "grade_level_in_band")
+        assert grade_check.passed is True
+
+    def test_grade_level_just_below_min_fails(self, tmp_path: Path):
+        """grade_level_in_band fails when avg FKGL is just below min."""
+        files = {"00_abstract.md": "# A\\n\\nbody body body."}
+        root = _make_project(tmp_path, files=files, bib="")
+        from infrastructure.prose import analyze_files as af
+        report = af({"00_abstract.md": "# A\\n\\nbody body body."})
+        actual_grade = report.avg_flesch_kincaid_grade
+        # Set band entirely above actual value.
+        config = _config(
+            prose={"target_grade_level_min": actual_grade + 5.0,
+                   "target_grade_level_max": actual_grade + 15.0,
+                   "citation_density_min_per_1000": 0.0},
+            bibliography={"fail_on_missing": False},
+        )
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root, write_outputs=False)
+        grade_check = next(c for c in artifacts.checks if c.name == "grade_level_in_band")
+        assert grade_check.passed is False
+
+    def test_checks_json_written_on_failure(self, tmp_path: Path):
+        """checks.json must be written even when some checks fail."""
+        files = {"00_abstract.md": "# A\\n\\n" + "word " * 200}
+        root = _make_project(tmp_path, files=files, bib="")
+        config = _config(
+            prose={"target_grade_level_min": -10.0, "target_grade_level_max": 30.0,
+                   "citation_density_min_per_1000": 100.0},  # impossible floor
+            bibliography={"fail_on_missing": False},
+        )
+        run_prose_pipeline_with_analysis(config, project_root=root)
+        checks_path = root / "output" / "checks.json"
+        assert checks_path.exists()
+        import json
+        checks = json.loads(checks_path.read_text())
+        assert any(not c["passed"] for c in checks)
+
+    def test_run_configured_checks_all_disabled_returns_empty_list(self, tmp_path: Path):
+        """When all optional checks are disabled, the check list is still valid
+        (grade level and citation density and bibliography always run; only
+        structural checks are optional). Verify the contract for what happens
+        when every optional flag is False."""
+        from src.pipeline.checks import run_configured_checks
+        from infrastructure.prose import analyze_files as af
+
+        report = af({"f.md": "# A\\n\\nbody."})
+        config = _config(
+            prose={"target_grade_level_min": -10.0, "target_grade_level_max": 30.0,
+                   "citation_density_min_per_1000": 0.0,
+                   "require_h1_per_section": False,
+                   "forbid_skipped_levels": False},
+            bibliography={"fail_on_missing": False},
+        )
+        bib_path = tmp_path / "absent.bib"
+        results = run_configured_checks(report, config, bib_path=bib_path)
+        # grade_level, citation_density, and bibliography always run.
+        names = [r.name for r in results]
+        assert "grade_level_in_band" in names
+        assert "citation_density_above_floor" in names
+        assert "bibliography_consistency" in names
+        # Optional structural checks must be absent.
+        assert "every_file_has_h1" not in names
+        assert "no_skipped_heading_levels" not in names
+
+    def test_bibliography_missing_plus_cited_fails_with_both_flags_false(self, tmp_path: Path):
+        """Absent bib file + fail_on_missing=True fails; double-check message.
+
+        Negative control: the check message must say 'not found' so an
+        agent or CI log can distinguish 'file missing' from 'key missing'.
+        """
+        from src.pipeline.checks import _check_bibliography
+        from infrastructure.prose import analyze_files as af
+
+        report = af({"f.md": "# A\\n\\nCite [@x]."})
+        config = _config(bibliography={"fail_on_missing": True})
+        result = _check_bibliography(report, config, bib_path=tmp_path / "absent.bib")
+        assert result.passed is False
+        assert "not found" in result.message
+        assert result.name == "bibliography_consistency"
+
+    def test_citation_density_message_contains_density_value(self):
+        """Check message must surface the computed density so CI logs are informative."""
+        from src.pipeline.checks import _check_citation_density
+        from infrastructure.prose import analyze_files as af
+
+        report = af({"f.md": "# A\\n\\n" + "word " * 100})
+        config = _config(prose={"citation_density_min_per_1000": 5.0})
+        result = _check_citation_density(report, config)
+        # Message must contain a number (the computed density) and the min threshold.
+        assert "density" in result.message or "/" in result.message
+        assert "5.0" in result.message
+
+    def test_report_path_non_none_in_to_dict(self, tmp_path: Path):
+        """to_dict() must serialise report_path as a non-None string when outputs
+        are written (covers the `str(self.report_path)` branch in to_dict)."""
+        root = _make_project(
+            tmp_path,
+            files={"00_a.md": "# A\\n\\nbody."},
+            bib="",
+        )
+        config = _config(
+            prose={"target_grade_level_min": -10.0, "target_grade_level_max": 30.0,
+                   "citation_density_min_per_1000": 0.0},
+            bibliography={"fail_on_missing": False},
+        )
+        artifacts = run_prose_pipeline_with_analysis(config, project_root=root, write_outputs=True)
+        assert artifacts.report_path is not None
+        payload = artifacts.to_dict()
+        assert payload["report_path"] is not None
+        assert isinstance(payload["report_path"], str)
+        assert "manuscript_report.json" in payload["report_path"]

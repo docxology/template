@@ -84,6 +84,11 @@ def _value_is_substantive(value: Any) -> bool:
 
     Recurses into nested containers — ``{"a": {"b": null}}`` and ``[{"k": null}]``
     are NOT substantive — and rejects non-finite floats (``NaN``/``Inf``).
+
+    The catch-all ``return True`` at the end handles any future JSON-compatible
+    type not covered by the explicit branches (e.g. a custom serialised object).
+    It is kept as a safe fallback rather than raising so unexpected types do
+    not falsely block a claim.
     """
     if value is None:
         return False

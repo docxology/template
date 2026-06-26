@@ -85,9 +85,13 @@ img {
 }
 
 a {
-  color: #2980b9;
+  color: red;
   text-decoration: none;
   overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: red;
 }
 
 a:hover {
@@ -102,7 +106,7 @@ a:hover {
 }
 
 .toc a {
-  color: #2c3e50;
+  color: red;
 }
 
 .math {

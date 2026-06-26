@@ -38,6 +38,13 @@ class PageRender:
 
 
 def _make_frames(grid: ColumnGrid, top: float, bottom: float) -> list[Frame]:
+    """Build a list of zero-padded :class:`~reportlab.platypus.Frame` objects.
+
+    One frame per column in ``grid``, all spanning ``top`` → ``bottom`` on the
+    page.  Padding is zero because stories carry their own leading and space;
+    adding padding here would shrink the usable measure and miscalculate column
+    fit.
+    """
     height = top - bottom
     frames: list[Frame] = []
     for i in range(grid.n_columns):
@@ -58,6 +65,13 @@ def _make_frames(grid: ColumnGrid, top: float, bottom: float) -> list[Frame]:
 
 
 def _flow(c: Canvas, frames: list[Frame], flowables: list[Flowable]) -> int:
+    """Pour ``flowables`` into ``frames`` in order; return the count of leftovers.
+
+    ReportLab's :meth:`~reportlab.platypus.Frame.addFromList` mutates the list
+    in-place, consuming items as they fit. Any items remaining when all frames
+    are full are over-set and returned as a count so the caller can report the
+    page as incomplete rather than silently losing copy.
+    """
     items = list(flowables)
     for fr in frames:
         if not items:
@@ -75,6 +89,13 @@ def _item_flowables(
     project_root: Path,
     classified: bool = False,
 ) -> list[Flowable]:
+    """Dispatch an edition item to the appropriate flowable builder.
+
+    ``measure`` is the column width the flowables must fit into.  ``classified``
+    is True for pages rendered on the ``classified`` template so that box
+    categories flow unboxed and splittable; only boxes whose ``kind`` is
+    ``display`` retain their border on classified pages.
+    """
     if isinstance(item, Story):
         return story_flowables(item, styles, fonts, measure=measure, project_root=project_root)
     if isinstance(item, Ad):

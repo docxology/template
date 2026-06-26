@@ -153,3 +153,32 @@ def test_figure_registry_validates_manuscript_references(tmp_path: Path) -> None
     ok, issues = validate_figure_registry(registry, Path(__file__).resolve().parent.parent / "manuscript")
 
     assert ok, issues
+
+
+def test_write_figure_registry_schema_version(tmp_path: Path) -> None:
+    """The registry JSON carries the expected schema_version sentinel."""
+    import json
+
+    path = write_figure_registry(tmp_path)
+    payload = json.loads(path.read_text())
+    assert payload["schema_version"] == "template-autoscientists-figure-registry-v1"
+    assert len(payload["figures"]) == 3  # comparison + ablation + ablation_efficiency
+
+
+def test_ablation_row_none_experiments_to_target_is_serializable(tmp_path: Path) -> None:
+    """A row with experiments_to_target=None must write a valid PNG (no crash)."""
+    rows: list[AblationRow] = [
+        {
+            "configuration": "unreachable",
+            "reported_metric": -5.0,
+            "clean_metric": -5.0,
+            "noise_inflation": 0.0,
+            "confirmed_improvements": 0,
+            "experiments_used": 60,
+            "experiments_to_target": None,
+            "redundant_experiments": 0,
+        }
+    ]
+    path = tmp_path / "ablation_none.png"
+    write_ablation_figure(rows, path)
+    _assert_png(path)

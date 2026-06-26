@@ -62,3 +62,30 @@ def test_retired_keys_returns_retired_pairs() -> None:
     reg.record_failure(1, "increase")
     reg.record_failure(0, "decrease")
     assert reg.retired_keys() == frozenset({(1, "increase"), (0, "decrease")})
+
+
+def test_success_on_retired_direction_does_not_unretire() -> None:
+    """Negative control: a success after retirement must not re-open the direction.
+
+    Retirement is permanent.  A ``record_success`` call on an already-retired
+    ``(axis, direction)`` clears the *failure streak counter* for future
+    bookkeeping but must not remove the key from ``_retired`` or cause
+    ``is_dead_end`` to return False.
+    """
+    reg = DeadEndRegistry(threshold=1)
+    reg.record_failure(0, "increase")  # now retired
+    assert reg.is_dead_end(0, "increase") is True
+    reg.record_success(0, "increase")  # attempt to re-open
+    # Must still be retired.
+    assert reg.is_dead_end(0, "increase") is True
+    assert (0, "increase") in reg.retired_keys()
+
+
+def test_default_threshold_is_three() -> None:
+    """Convenience guard: the default threshold is 3 (as documented)."""
+    reg = DeadEndRegistry()
+    reg.record_failure(0, "increase")
+    reg.record_failure(0, "increase")
+    assert reg.is_dead_end(0, "increase") is False
+    reg.record_failure(0, "increase")
+    assert reg.is_dead_end(0, "increase") is True

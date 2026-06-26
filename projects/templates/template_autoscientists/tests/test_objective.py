@@ -83,3 +83,29 @@ def test_clean_rejects_wrong_length_params() -> None:
     obj = SyntheticObjective(dimensions=2)
     with pytest.raises(ValueError, match="params length must equal dimensions"):
         obj.clean((0.0, 0.0, 0.0))
+
+
+def test_objective_1d_minimal_case() -> None:
+    """1-D minimal case: start=1.5, optimum=0, descent should improve."""
+    obj = SyntheticObjective(dimensions=1, noise_scale=0.0, ripple=0.0)
+    start = obj.start_params()
+    assert start == (1.5,)
+    # Clean value at optimum is 0.0; at start it is worse.
+    assert obj.clean(start) < obj.clean(obj.optimum)
+    assert obj.clean(obj.optimum) == 0.0
+
+
+def test_custom_optimum_is_peak() -> None:
+    """Objective with a non-origin optimum peaks there, not at origin."""
+    obj = SyntheticObjective(dimensions=2, optimum=(3.0, -2.0), ripple=0.0, noise_scale=0.0)
+    assert obj.clean((3.0, -2.0)) == pytest.approx(0.0)
+    assert obj.clean((0.0, 0.0)) < 0.0
+
+
+def test_evaluate_close_to_clean_over_many_seeds() -> None:
+    """Over a wide sample of seeds the noisy evaluations stay near the clean value."""
+    obj = SyntheticObjective(noise_scale=0.02, ripple=0.0)
+    params = (0.5, 0.5, 0.5, 0.5)
+    clean = obj.clean(params)
+    samples = [obj.evaluate(params, s) for s in range(100)]
+    assert all(abs(v - clean) <= 0.02 + 1e-9 for v in samples)

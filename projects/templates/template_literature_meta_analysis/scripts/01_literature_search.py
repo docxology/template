@@ -21,7 +21,7 @@ from literature.search_runner import run_literature_search
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Search academic databases for Active Inference literature.")
+    parser = argparse.ArgumentParser(description="Search academic databases for literature (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv).")
     parser.add_argument(
         "--query",
         default="active inference free energy principle",
@@ -32,6 +32,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--skip-arxiv", action="store_true")
     parser.add_argument("--skip-s2", action="store_true")
     parser.add_argument("--skip-openalex", action="store_true")
+    parser.add_argument("--skip-crossref", action="store_true")
+    parser.add_argument("--skip-pubmed", action="store_true")
+    parser.add_argument("--skip-sovietrxiv", action="store_true")
+    parser.add_argument("--skip-chinarxiv", action="store_true")
     resume_grp = parser.add_mutually_exclusive_group()
     resume_grp.add_argument("--resume", dest="resume", action="store_true")
     resume_grp.add_argument("--no-resume", dest="resume", action="store_false")

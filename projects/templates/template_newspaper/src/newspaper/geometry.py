@@ -97,13 +97,21 @@ class ColumnGrid:
         return (self.width - self.total_gutter) / self.n_columns
 
     def column_x(self, index: int) -> float:
-        """Left edge of column ``index`` (0-based)."""
+        """Left edge of column ``index`` (0-based).
+
+        Raises:
+            IndexError: if ``index`` is not in ``0 .. n_columns - 1``.
+        """
         if not 0 <= index < self.n_columns:
             raise IndexError(f"column {index} out of range 0..{self.n_columns - 1}")
         return self.left + index * (self.column_width + self.gutter)
 
     def gutter_centers(self) -> list[float]:
-        """X positions of the centre of each interior gutter (rule positions)."""
+        """X positions of the centre of each interior gutter (rule positions).
+
+        A grid of *n* columns has *n − 1* interior gutters; a single-column
+        grid returns an empty list.
+        """
         centers: list[float] = []
         for i in range(self.n_columns - 1):
             edge = self.column_x(i) + self.column_width
@@ -111,4 +119,5 @@ class ColumnGrid:
         return centers
 
     def right(self) -> float:
+        """Right edge of the grid (``left + width``)."""
         return self.left + self.width

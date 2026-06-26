@@ -53,7 +53,7 @@ flowchart TB
     LINT --> DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
     VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12 + macOS × 3.12<br/>codecov on 3.12/ubuntu only]
-    VNM --> TP[test-project<br/>per-project: 9 exemplars × py3.10/py3.12 = 18 ubuntu jobs<br/>01_run_tests.py --project per cell]
+    VNM --> TP[test-project<br/>per-project: 12 exemplars × py3.10/py3.12 = 24 ubuntu jobs<br/>01_run_tests.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
     DET --> SHW
     DET --> FL
@@ -131,7 +131,7 @@ action — not each job.
 #### 5. Project Tests (`test-project`)
 
 - **Sync:** `uv sync --group rendering --group monitoring --group discopy` — same packages as a fresh local `uv sync` at the repo root for DisCoPy string-diagram tests: root **`default-groups`** are `dev`, `rendering`, and **`discopy`**, so `uv sync` already installs **DisCoPy**; this job adds **monitoring** (not in `default-groups`). **Hypothesis** comes from the **dev** group (parametric tests), not from `discopy` (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
-- **Matrix:** **Per-project split** — `runs-on: ubuntu-latest` (no macOS) × `python-version: [3.10, 3.12]` × each public exemplar in [`../../docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md) (`templates/template_*`) = **18 parallel jobs**. Each exemplar runs in its own job, so wall-clock is the slowest single project rather than the sequential sum. py3.10 (floor) + py3.12 (ceiling) give cross-version coverage; macOS breadth is handled by `test-infra`. Job `timeout-minutes: 45`.
+- **Matrix:** **Per-project split** — `runs-on: ubuntu-latest` (no macOS) × `python-version: [3.10, 3.12]` × each public exemplar in [`../../docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md) (`templates/template_*`) = **24 parallel jobs**. Each exemplar runs in its own job, so wall-clock is the slowest single project rather than the sequential sum. py3.10 (floor) + py3.12 (ceiling) give cross-version coverage; macOS breadth is handled by `test-infra`. Job `timeout-minutes: 45`.
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
 - **Coverage file:** `.coverage.project` (isolated; removed at the start of each job before the run)
 - **Scope:** [`scripts/01_run_tests.py`](../../scripts/01_run_tests.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell), then `coverage xml -o coverage-project.xml`. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.

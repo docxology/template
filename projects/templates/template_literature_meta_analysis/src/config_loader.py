@@ -40,6 +40,10 @@ def load_search_config(config_path: Path | None = None) -> dict[str, Any]:
         # Per-engine enable toggles (default: all engines on). A missing key
         # defaults to enabled so a minimal config still dispatches every engine.
         "engines": search_cfg.get("engines") or {},
+        # SovietRxiv-specific settings (optional, passed through as a sub-dict).
+        "sovietrxiv": search_cfg.get("sovietrxiv") or {},
+        # ChinaRxiv-specific settings (optional, passed through as a sub-dict).
+        "chinarxiv": search_cfg.get("chinarxiv") or {},
     }
     return cfg
 

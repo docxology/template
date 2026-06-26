@@ -32,7 +32,16 @@ from .security import write_security_artifacts
 
 @dataclass(frozen=True)
 class LoopRunContext:
-    """Mutable loop state shared across phase handlers."""
+    """Mutable loop state shared across ordered phase handlers.
+
+    The context is frozen so no phase can accidentally replace top-level
+    fields; mutable state is limited to ``output_paths`` (a list) which
+    phases append to as they produce artifacts.
+
+    ``diagnostics`` is computed once by :func:`build_loop_context` from the
+    deterministic ML result and reused by all figure-writing phases to avoid
+    redundant computation.
+    """
 
     project_root: Path
     repo_root: Path
@@ -48,7 +57,12 @@ class LoopRunContext:
 
 
 def append_paths(ctx: LoopRunContext, paths: list[Path] | Path) -> None:
-    """Append one path or a list of paths to the context's running output list."""
+    """Append one path or a list of paths to the context's running output list.
+
+    Accepts both a single :class:`~pathlib.Path` and a ``list[Path]`` so
+    phase handlers can forward the return value of any writer without an
+    ``isinstance`` check at every call site.
+    """
     if isinstance(paths, Path):
         ctx.output_paths.append(paths)
         return

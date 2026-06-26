@@ -26,7 +26,7 @@ book:
   author: "Daniel Ari Friedman"
   orcid: "0000-0001-6232-9096"
   edition: "0.1"
-  version: "0.1.1"  # software/deposit version — matches CITATION.cff and .zenodo.json
+  version: "0.1.2"  # software/deposit version — matches CITATION.cff and .zenodo.json
   year: 2026
   language: "en"
   license: "CC BY 4.0"

@@ -1,0 +1,43 @@
+domain: metallurgical_manuscript_composition
+display_name: Gold Refinement
+required_packages:
+  - numpy
+  - matplotlib
+  - pyyaml
+preferred_outputs:
+  - pdf
+  - html
+validation_gates:
+  - config_schema
+  - refinery_monotone_purity
+  - karat_grading
+  - deterministic_token_plan
+  - manuscript_token_coverage
+  - claim_ledger_alignment
+  - render_validation
+figure_types:
+  - purity_progression
+  - karat_grading_chart
+citation_policy: local_source_or_scholarly
+source_policy: "Claims about manuscript purity must cite project config, source code, or generated artifacts."
+artifact_expectations:
+  - output/data/refinery_results.json
+  - output/reports/token_plan.json
+  - output/data/manuscript_variables.json
+  - output/pdf/template_gold_refinement_combined.pdf
+benchmark_rubric:
+  name: gold-refinement-readiness
+  dimensions:
+    - name: purity_progression
+      weight: 2.0
+    - name: token_provenance
+      weight: 2.0
+    - name: deterministic_regeneration
+      weight: 2.0
+    - name: method_surface_clarity
+      weight: 1.5
+    - name: claim_ledger_alignment
+      weight: 1.5
+    - name: render_success
+      weight: 1.0
+llm_prompt_guidance: "Use only the configured lexicon, narrative moves, refinery stages, design principles, quality probes, failure modes, authoring obligations, and generated artifacts; do not invent unconfigured token categories or publication claims."

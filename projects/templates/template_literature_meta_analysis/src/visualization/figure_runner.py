@@ -22,6 +22,13 @@ from visualization.advanced_plots import (
     plot_word_cloud,
 )
 from visualization.citation_plots import plot_citation_network, plot_degree_distribution
+from visualization.descriptive_plots import (
+    plot_author_productivity,
+    plot_citation_distribution,
+    plot_entity_bar_chart,
+    plot_similarity_heatmap,
+    plot_top_venues,
+)
 from visualization.field_overview import plot_field_summary, plot_subfield_distribution
 from visualization.hypothesis_charts import (
     plot_assertion_summary,
@@ -50,6 +57,11 @@ FIGURE_CAPTIONS = {
     "cooccurrence_matrix.png": "Co-occurrence matrix for significant terms.",
     "assertion_breakdown.png": "Breakdown of nanopublication assertion types by hypothesis.",
     "assertion_summary.png": "Summary of total extracted nanopublication assertions.",
+    "citation_distribution.png": "Histogram of citation counts with Gini coefficient of concentration.",
+    "top_venues.png": "Top publication venues by number of papers in the corpus.",
+    "author_productivity.png": "Top authors ranked by number of corpus publications.",
+    "similarity_heatmap.png": "Top document pairs by cosine similarity of TF-IDF/SVD embeddings.",
+    "entity_bar_chart.png": "Top named entities extracted from abstracts.",
 }
 
 
@@ -187,6 +199,31 @@ def generate_all_figures(args: argparse.Namespace) -> list[str]:
                     )
                 )
             )
+
+    # Descriptive statistics figures: citation distribution, top venues, author productivity
+    descriptive_data = _load_json(input_dir / "descriptive_stats.json", logger)
+    if descriptive_data:
+        cit_dist = descriptive_data.get("citation_distribution", {})
+        if cit_dist:
+            generated_paths.append(str(plot_citation_distribution(cit_dist, output_dir / "citation_distribution.png")))
+        stats = descriptive_data.get("descriptive_stats", {})
+        if stats:
+            generated_paths.append(str(plot_top_venues(stats, output_dir / "top_venues.png")))
+        author_data = descriptive_data.get("author_productivity", [])
+        if author_data:
+            generated_paths.append(str(plot_author_productivity(author_data, output_dir / "author_productivity.png")))
+
+    # Entity bar chart
+    entity_data = _load_json(input_dir / "entities.json", logger)
+    if entity_data:
+        generated_paths.append(str(plot_entity_bar_chart(entity_data, output_dir / "entity_bar_chart.png")))
+
+    # Embedding similarity heatmap
+    embedding_data = _load_json(input_dir / "embedding_analysis.json", logger)
+    if embedding_data:
+        similar_pairs = embedding_data.get("top_similar_pairs", [])
+        if similar_pairs:
+            generated_paths.append(str(plot_similarity_heatmap(similar_pairs, output_dir / "similarity_heatmap.png")))
 
     for path_str in generated_paths:
         print(path_str)

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_sia"
-version = "0.1.0"
+version = "0.1.2"
 description = "Deterministic SIA self-improvement harness exemplar"
 authors = [{name = "Research Template Author", email = "author@research-template.org"}]
 requires-python = ">=3.10"

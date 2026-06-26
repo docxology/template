@@ -5,6 +5,13 @@ effects and deprioritizes axes whose experiments consistently produce tiny
 changes. This module turns the experiment log into a deterministic axis
 ordering used to assign work to teams.
 
+**Untried-first heuristic.** Axes that have not yet appeared in the log are
+sorted *before* all tried axes, regardless of effect size.  This ensures that
+under-explored directions are probed before the search commits to exploiting
+known-large-effect axes — a deliberate exploration bias for the early budget
+phase.  Among tried axes the ordering is by descending mean-absolute-delta;
+ties and untried axes break by axis index for full determinism.
+
 The effect-size estimator is generic (mean absolute metric delta per axis) and
 is a candidate for promotion to ``infrastructure/scientific``.
 """

@@ -159,3 +159,121 @@ def test_build_timeline_quadrant_journey():
 
 def test_mmdc_available_returns_bool():
     assert isinstance(mmdc_available(), bool)
+
+
+def test_build_flowchart_defaults():
+    """build_flowchart with no direction falls back to TD."""
+    spec = {
+        "nodes": [{"id": "X", "label": "X node"}],
+        "edges": [],
+    }
+    src = diagrams.build_flowchart(spec)
+    assert src.startswith("graph TD")
+    assert 'X["X node"]' in src
+
+
+def test_build_sequence_empty():
+    """build_sequence with no participants or messages is still valid Mermaid."""
+    src = diagrams.build_sequence({"participants": [], "messages": []})
+    assert src.strip() == "sequenceDiagram"
+
+
+def test_build_state_no_label_transition():
+    """Transitions without a label omit the colon segment."""
+    src = diagrams.build_state({"transitions": [{"from": "A", "to": "B"}]})
+    assert "A --> B" in src
+    assert ":" not in src.split("A --> B")[1].split("\n")[0]
+
+
+def test_build_class_no_relations():
+    """A class diagram with no relations is still valid."""
+    src = diagrams.build_class(
+        {"classes": [{"name": "MyClass", "members": []}], "relations": []}
+    )
+    assert "classDiagram" in src
+    assert "class MyClass {" in src
+
+
+def test_build_er_no_attributes():
+    """An ER diagram entity with no attributes still opens and closes block."""
+    src = diagrams.build_er(
+        {
+            "relations": [],
+            "entities": [{"name": "E", "attributes": []}],
+        }
+    )
+    assert "erDiagram" in src
+    assert "E {" in src
+
+
+def test_build_mindmap_flat_branches():
+    """Flat branches (no children) are emitted without recursing."""
+    src = diagrams.build_mindmap({"root": "Root", "branches": ["A", "B"]})
+    assert "mindmap" in src
+    assert "root((Root))" in src
+    assert "A" in src and "B" in src
+
+
+def test_build_gantt_no_sections():
+    """Gantt with no sections emits only the header lines."""
+    src = diagrams.build_gantt({"title": "Empty", "sections": []})
+    assert "gantt" in src
+    assert "title Empty" in src
+    assert "dateFormat" in src
+
+
+def test_build_pie_empty():
+    """Pie with no slices emits at least the chart header."""
+    src = diagrams.build_pie({"title": "Empty", "slices": []})
+    assert src.startswith("pie title Empty")
+
+
+def test_build_timeline_empty():
+    src = diagrams.build_timeline({"title": "T", "events": []})
+    assert "timeline" in src
+    assert "title T" in src
+
+
+def test_build_quadrant_no_points():
+    """Quadrant with no points still emits the chart skeleton."""
+    src = diagrams.build_quadrant(
+        {
+            "title": "Q",
+            "quadrants": ["q1", "q2", "q3", "q4"],
+            "points": [],
+        }
+    )
+    assert "quadrantChart" in src
+    assert "quadrant-4 q4" in src
+
+
+def test_build_journey_empty():
+    src = diagrams.build_journey({"title": "J", "sections": []})
+    assert "journey" in src
+    assert "title J" in src
+
+
+def test_all_spec_names_are_unique():
+    """No two specs in diagram_specs.yaml share the same name."""
+    specs = diagrams.load_specs()
+    names = [s["name"] for s in specs]
+    assert len(names) == len(set(names)), "duplicate spec names in diagram_specs.yaml"
+
+
+def test_load_specs_with_custom_path(tmp_path):
+    """load_specs can read a custom YAML file that has a valid diagrams list."""
+    custom = tmp_path / "custom.yaml"
+    custom.write_text(
+        "diagrams:\n"
+        "  - name: test_flow\n"
+        "    kind: flowchart\n"
+        "    nodes:\n"
+        "      - {id: A, label: Start}\n"
+        "    edges: []\n",
+        encoding="utf-8",
+    )
+    specs = diagrams.load_specs(custom)
+    assert len(specs) == 1
+    assert specs[0]["name"] == "test_flow"
+    # Verify the loaded spec can be built.
+    assert diagrams.build_source(specs[0]).startswith("graph")

@@ -1,8 +1,8 @@
 paper:
   title: "Active Inference Multi-Track Exemplar"
   subtitle: "Sheaf-Composed Manuscript with pymdp Sophisticated Inference"
-  version: "0.3.1"
-  date: ""
+  version: "0.3.2"
+  date: "2026-06-26"
 
 authors:
   - name: "Daniel Ari Friedman"

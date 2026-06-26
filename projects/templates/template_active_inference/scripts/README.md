@@ -33,5 +33,5 @@ Thin orchestrators that import from `../src/` and handle I/O only.
 - `compose_manuscript.py` — sheaf-compose the multi-track sections.
 - `validate_outputs.py` — run the validation gates over generated outputs.
 - `run_full_verification.py` — run preflight checks, deterministic verification
-  chunks, full-suite coverage pass, and postflight checks for contract-sensitive
-  sessions.
+  chunks, chunked coverage subprocesses, and postflight checks for
+  contract-sensitive sessions.

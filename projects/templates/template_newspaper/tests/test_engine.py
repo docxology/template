@@ -79,6 +79,29 @@ def test_build_and_render_default_path(project_root, tmp_path) -> None:
     assert result.to_dict()["page_count"] == 12
 
 
+def test_build_and_render_auto_output_path(project_root, tmp_path) -> None:
+    """build_and_render with output_path=None derives the path from project_root.
+
+    The project_root here is a tmp copy with content/ symlinked so the edition
+    loads but output/ goes to tmp_path. We pass a synthetic project_root that
+    has a content/ subdirectory with the real edition, so no real output/ is
+    written. The test verifies that the auto-derived path is returned.
+    """
+    import shutil
+
+    # Build a minimal project root in tmp with content/ pointing at real content.
+    fake_root = tmp_path / "fake_project"
+    fake_root.mkdir()
+    # Symlink the real content directory so the edition loads.
+    (fake_root / "content").symlink_to(project_root / "content")
+    # Let build_and_render derive the output path (line 101 in engine.py).
+    result = build_and_render(fake_root, output_path=None)
+    expected = fake_root / "output" / "pdf" / "the-triplicate.pdf"
+    assert result.output_path == expected
+    assert expected.exists()
+    assert result.page_count == 12
+
+
 def test_synthetic_minimal_edition(tmp_path) -> None:
     """A tiny hand-built edition exercises every template branch and renders."""
     pages = [

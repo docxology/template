@@ -127,3 +127,20 @@ class TestCitationPlots:
 
         img = Image.open(output)
         assert img.width > 0 and img.height > 0
+
+    def test_plot_degree_distribution_loglog_scale_for_high_degree(self, tmp_path: Path) -> None:
+        """Graphs with max in-degree > 20 trigger the log-log scale branch."""
+        graph = nx.DiGraph()
+        # Create a hub node that receives 25 in-edges (max_degree = 25 > 20).
+        graph.add_node("hub")
+        for i in range(25):
+            graph.add_node(f"src_{i}")
+            graph.add_edge(f"src_{i}", "hub")
+        output = tmp_path / "loglog_degree.png"
+        result = plot_degree_distribution(graph, output)
+        assert result == output
+        assert output.exists()
+        assert output.stat().st_size > 0
+        from PIL import Image
+        img = Image.open(output)
+        assert img.width > 0 and img.height > 0

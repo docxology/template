@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from analysis import summarize_sweep, write_analysis_statistics
-from simulation.statistics import summarize_si_trace
+from simulation.statistics import load_si_artifacts, summarize_si_trace
 
 
 def test_summarize_si_trace_from_fixture() -> None:
@@ -39,6 +39,49 @@ def test_summarize_si_trace_from_fixture() -> None:
     assert stats["observation_diversity"] == 2
     assert stats["trace_summary_steps_match"] is True
     assert stats["finite_trace"] is True
+
+
+def test_summarize_si_trace_empty_steps_returns_zeroed_entropy() -> None:
+    """An empty trace must return the zero-default entropy stats without raising."""
+    stats = summarize_si_trace({"steps": []}, {"steps": 0, "actions": [], "observations": []})
+    assert stats["entropy_min"] == 0.0
+    assert stats["entropy_max"] == 0.0
+    assert stats["entropy_monotone_nonincreasing"] is True
+    assert stats["goal_reached"] is False
+
+
+def test_summarize_si_trace_goal_reached_from_summary_override() -> None:
+    """When the summary carries 'goal_reached', it overrides the observation check."""
+    trace = {"steps": [{"step": 0, "belief_entropy": 0.1, "action": 0, "obs": 0}]}
+    summary = {
+        "steps": 1,
+        "actions": [0],
+        "observations": [0],  # normally goal_reached=False
+        "config": {"tmaze": {"num_obs": 2}},
+        "goal_reached": True,  # explicit override
+    }
+    stats = summarize_si_trace(trace, summary)
+    assert stats["goal_reached"] is True
+
+
+def test_load_si_artifacts_missing_files_returns_defaults(tmp_path: Path) -> None:
+    """When neither artifact file exists the function returns empty defaults."""
+    summary, trace = load_si_artifacts(tmp_path)
+    assert summary == {}
+    assert trace == {"steps": []}
+
+
+def test_load_si_artifacts_reads_existing_files(tmp_path: Path) -> None:
+    """When both artifact files exist they are loaded and returned."""
+    data_dir = tmp_path / "output" / "data"
+    data_dir.mkdir(parents=True)
+    summary_data = {"steps": 2, "goal_reached": True}
+    trace_data = {"steps": [{"step": 0, "obs": 1}]}
+    (data_dir / "si_tmaze_summary.json").write_text(json.dumps(summary_data), encoding="utf-8")
+    (data_dir / "si_tmaze_trace.json").write_text(json.dumps(trace_data), encoding="utf-8")
+    summary, trace = load_si_artifacts(tmp_path)
+    assert summary["steps"] == 2
+    assert trace["steps"][0]["obs"] == 1
 
 
 def test_summarize_sweep(tmp_path: Path) -> None:

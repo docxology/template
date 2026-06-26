@@ -2,7 +2,7 @@
 
 ## Overview
 
-`projects/templates/` contains the ten public canonical exemplar projects for
+`projects/templates/` contains the twelve public canonical exemplar projects for
 the template repository. This directory is public and tracked; private,
 rotating, archived, active, or search-only project work belongs outside this
 subtree and is guarded by `.gitignore`, `scripts/check_tracked_projects.py`, and
@@ -19,6 +19,7 @@ projects/templates/
 ├── template_autoresearch_project/  # deterministic AutoResearch loop
 ├── template_autoscientists/        # coordination-mechanism testbed
 ├── template_code_project/          # code-first numerical exemplar
+├── template_gold_refinement/       # metallurgical gold-refining analogy (ore → nine-nines)
 ├── template_madlib/                # conditional token-injection manuscript
 ├── template_newspaper/             # ReportLab newspaper layout engine
 ├── template_prose_project/         # prose/references validation exemplar
@@ -50,6 +51,7 @@ projects/templates/
 | `template_active_inference/src/manuscript/sheaf/` | Dense sheaf manuscript semantics and track binding. |
 | `template_autoresearch_project/src/` | Plan/evidence/claim/readiness loop with ML, diagnostics, security, and writers. |
 | `template_code_project/src/__init__.py` | Centralized public API for the code exemplar. |
+| `template_gold_refinement/src/` | Refinery pipeline (ore → nine-nines), karat grading, mega-madlib token composition. |
 | `template_madlib/src/__init__.py` | Public authoring/evaluation API; large config/composition modules. |
 | `template_newspaper/src/newspaper/` | Layout geometry, typography, components, and rendered page figures. |
 | `template_textbook/src/` | Textbook paths, scaffold generation, visualization, and Mermaid helpers. |

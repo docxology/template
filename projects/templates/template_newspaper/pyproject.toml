@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_newspaper"
-version = "1.0.0"
+version = "1.0.2"
 description = "Data-driven large-format newspaper layout engine (ReportLab) that renders a 12-page broadsheet — 'The Triplicate' of Crescent City, CA — from structured YAML content."
 authors = [{name = "Research Template Author", email = "author@research-template.org"}]
 requires-python = ">=3.10"
