@@ -471,27 +471,27 @@ def _paper_cover_author_lines(config: dict[str, Any]) -> list[str]:
     authors = _author_blocks(config)
     lines: list[str] = []
     for author in authors:
-        lines.append(r"{\Large\sffamily\bfseries " + _latex_text(author["name"]) + r"\par}")
+        lines.append(r"{\large\sffamily\bfseries " + _latex_text(author["name"]) + r"\par}")
         if author["affiliation"]:
-            lines.append(r"{\normalsize\sffamily " + _latex_text(author["affiliation"]) + r"\par}")
+            lines.append(r"{\small\sffamily " + _latex_text(author["affiliation"]) + r"\par}")
         if author["email"]:
-            lines.append(r"{\normalsize\sffamily\texttt{" + _latex_text(author["email"]) + r"}\par}")
+            lines.append(r"{\small\sffamily\texttt{" + _latex_text(author["email"]) + r"}\par}")
         if author["orcid"]:
             orcid = _latex_text(author["orcid"])
             lines.append(
-                r"{\normalsize\sffamily\href{https://orcid.org/"
+                r"{\small\sffamily\href{https://orcid.org/"
                 + _latex_href_url(author["orcid"])
                 + r"}{ORCID: "
                 + orcid
                 + r"}\par}"
             )
-        lines.append(r"\vspace{0.18em}")
+        lines.append(r"\vspace{0.08em}")
     if not lines:
-        lines.append(r"{\Large\sffamily\bfseries Project Author\par}")
+        lines.append(r"{\large\sffamily\bfseries Project Author\par}")
 
     doi_line = _publication_doi_line(config)
     if doi_line:
-        lines.append(r"{\normalsize\sffamily " + doi_line + r"\par}")
+        lines.append(r"{\small\sffamily " + doi_line + r"\par}")
     return lines
 
 
