@@ -1,0 +1,292 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "1.22",
+      "total_size_bytes": 1278536,
+      "largest_files": [
+        {
+          "name": "template_madlib_combined.pdf",
+          "size_mb": "0.96",
+          "path": "pdf/template_madlib_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.09",
+          "path": "pdf/_combined_manuscript.tex"
+        },
+        {
+          "name": "_combined_manuscript.log",
+          "size_mb": "0.07",
+          "path": "pdf/_combined_manuscript.log"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".pdf": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 14,
+      "size_mb": "0.31",
+      "total_size_bytes": 324427,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.10",
+          "path": "web/index.html"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.07",
+          "path": "web/_combined_manuscript.md"
+        },
+        {
+          "name": "manuscript__02_methodology.html",
+          "size_mb": "0.03",
+          "path": "web/manuscript__02_methodology.html"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".html": 13
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 94,
+      "size_mb": "1.88",
+      "total_size_bytes": 1970872,
+      "largest_files": [
+        {
+          "name": "03_results_slides.pdf",
+          "size_mb": "0.29",
+          "path": "slides/03_results_slides.pdf"
+        },
+        {
+          "name": "05_experimental_setup_slides.pdf",
+          "size_mb": "0.22",
+          "path": "slides/05_experimental_setup_slides.pdf"
+        },
+        {
+          "name": "06_evaluation_slides.pdf",
+          "size_mb": "0.17",
+          "path": "slides/06_evaluation_slides.pdf"
+        }
+      ],
+      "extensions": {
+        ".nav": 12,
+        ".vrb": 9,
+        ".pdf": 12,
+        ".tex": 13,
+        ".toc": 12,
+        ".log": 12,
+        ".snm": 12,
+        ".aux": 12
+      }
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "0.83",
+      "total_size_bytes": 867104,
+      "largest_files": [
+        {
+          "name": "madlib_cover_overview.png",
+          "size_mb": "0.16",
+          "path": "figures/madlib_cover_overview.png"
+        },
+        {
+          "name": "quality_gate_matrix.png",
+          "size_mb": "0.14",
+          "path": "figures/quality_gate_matrix.png"
+        },
+        {
+          "name": "provenance_trace_map.png",
+          "size_mb": "0.10",
+          "path": "figures/provenance_trace_map.png"
+        }
+      ],
+      "extensions": {
+        ".png": 9,
+        ".json": 1
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 5,
+      "size_mb": "0.14",
+      "total_size_bytes": 147404,
+      "largest_files": [
+        {
+          "name": "manuscript_variables.json",
+          "size_mb": "0.07",
+          "path": "data/manuscript_variables.json"
+        },
+        {
+          "name": "section_plan.json",
+          "size_mb": "0.04",
+          "path": "data/section_plan.json"
+        },
+        {
+          "name": "configured_field_inventory.json",
+          "size_mb": "0.02",
+          "path": "data/configured_field_inventory.json"
+        }
+      ],
+      "extensions": {
+        ".json": 5
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 9,
+      "size_mb": "0.10",
+      "total_size_bytes": 104116,
+      "largest_files": [
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.08",
+          "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "injection_trace.json",
+          "size_mb": "0.01",
+          "path": "reports/injection_trace.json"
+        },
+        {
+          "name": "output_statistics.json",
+          "size_mb": "0.01",
+          "path": "reports/output_statistics.json"
+        }
+      ],
+      "extensions": {
+        ".json": 5,
+        ".txt": 1,
+        ".md": 3
+      }
+    },
+    "simulations": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "llm": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "logs": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    }
+  },
+  "total_files": 142,
+  "total_size_mb": 4.4750776290893555,
+  "largest_files": [
+    {
+      "name": "template_madlib_combined.pdf",
+      "size_mb": "0.96",
+      "category": "pdf",
+      "path": "pdf/template_madlib_combined.pdf"
+    },
+    {
+      "name": "03_results_slides.pdf",
+      "size_mb": "0.29",
+      "category": "slides",
+      "path": "slides/03_results_slides.pdf"
+    },
+    {
+      "name": "05_experimental_setup_slides.pdf",
+      "size_mb": "0.22",
+      "category": "slides",
+      "path": "slides/05_experimental_setup_slides.pdf"
+    },
+    {
+      "name": "06_evaluation_slides.pdf",
+      "size_mb": "0.17",
+      "category": "slides",
+      "path": "slides/06_evaluation_slides.pdf"
+    },
+    {
+      "name": "madlib_cover_overview.png",
+      "size_mb": "0.16",
+      "category": "figures",
+      "path": "figures/madlib_cover_overview.png"
+    },
+    {
+      "name": "quality_gate_matrix.png",
+      "size_mb": "0.14",
+      "category": "figures",
+      "path": "figures/quality_gate_matrix.png"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.10",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "provenance_trace_map.png",
+      "size_mb": "0.10",
+      "category": "figures",
+      "path": "figures/provenance_trace_map.png"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.09",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "evidence_registry.json",
+      "size_mb": "0.08",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    }
+  ],
+  "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory",
+    "logs/ directory"
+  ],
+  "sizes_by_category": {
+    "pdf": 1.2193069458007812,
+    "web": 0.30939769744873047,
+    "slides": 1.8795700073242188,
+    "figures": 0.826934814453125,
+    "data": 0.14057540893554688,
+    "reports": 0.09929275512695312
+  },
+  "file_counts_by_type": {
+    ".md": 5,
+    ".log": 14,
+    ".aux": 13,
+    ".blg": 1,
+    ".bib": 1,
+    ".pdf": 13,
+    ".tex": 14,
+    ".toc": 13,
+    ".bbl": 1,
+    ".html": 13,
+    ".nav": 12,
+    ".vrb": 9,
+    ".snm": 12,
+    ".png": 9,
+    ".json": 11,
+    ".txt": 1
+  }
+}

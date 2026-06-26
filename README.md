@@ -17,8 +17,8 @@ Just cloned the repo? Do this:
 
 1. `git clone <this-repo> && cd template`
 2. `uv sync` (installs deps via uv)
-3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project template_code_project --core-only` (non-interactive, no LLM)
-4. PDFs land in `output/<project>/pdf/`. Logs in `output/<project>/logs/`.
+3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
+4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
 5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_literature_meta_analysis`, `template_madlib`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook`. The search exemplar is an optional add-on under `projects/archive/template_search_project/`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
@@ -159,6 +159,35 @@ The permanent exemplars share the same core layout and verification checklist. T
 
 Publication metadata for every public exemplar is generated from project config and sidecars into [`docs/_generated/publication_records.md`](docs/_generated/publication_records.md), and the GitHub-facing table in [`.github/README.md`](.github/README.md#published-exemplars--pipeline-productivity-advanced-provenance-and-autopoiesis) is auto-injected from that same source.
 
+### Public Exemplar Outputs And Mirrors
+
+Every canonical exemplar under `projects/templates/` is tracked in this
+monorepo, including its project-local `output/` tree. The copied release
+artifacts under `output/templates/<name>/` are tracked as well, so a clone of
+[`docxology/template`](https://github.com/docxology/template) contains both the
+source and the latest rendered public artifacts. Public output files above
+50 MB remain excluded by the generated-artifact guard; private or rotating
+project outputs remain blocked.
+
+Each exemplar also has a standalone `docxology/template_*` GitHub repository
+linked to its Zenodo concept and latest version DOI. The current matrix is
+[`docs/_generated/publication_records.md`](docs/_generated/publication_records.md).
+To regenerate any exemplar from the monorepo:
+
+```bash
+git clone https://github.com/docxology/template
+cd template
+uv sync
+./run.sh --project templates/template_code_project --pipeline --core-only
+uv run python scripts/04_validate_output.py --project templates/template_code_project
+uv run python scripts/05_copy_outputs.py --project templates/template_code_project
+```
+
+Replace `template_code_project` with any public exemplar name from the table
+above. The standalone repositories are publication mirrors; use this monorepo
+when you need the shared infrastructure, full render pipeline, or
+cross-template validation.
+
 The canonical exemplars also ship project-local composability overlays:
 `domain_profile.yaml` declares review gates, source policy, artifact
 expectations, and benchmark rubric preferences; `experiment_plan.yaml`
@@ -208,9 +237,9 @@ instead.
 
 ```bash
 ./run.sh                                     # Interactive project selection
-./run.sh --project template_code_project --pipeline
+./run.sh --project templates/template_code_project --pipeline
 ./run.sh --all-projects --pipeline           # All discovered projects sequentially
-./secure_run.sh --steganography-only --project template_code_project  # Re-watermark PDFs
+./secure_run.sh --steganography-only --project templates/template_code_project  # Re-watermark PDFs
 mkdir -p projects/my_research/{src,tests,manuscript,scripts}  # Scaffold new project
 ```
 

@@ -46,7 +46,7 @@ class _ExplicitToplevelAllowlist:
 
 ALLOWED_PROJECTS_TOPLEVEL = _ExplicitToplevelAllowlist()
 
-GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
+ALWAYS_GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
     ".codegraph",
     ".codegraph/*",
     ".leann",
@@ -69,10 +69,27 @@ GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
     "coverage*.xml",
     "coverage_project.json",
     "htmlcov/*",
+)
+
+GENERATED_OUTPUT_PATTERNS: tuple[str, ...] = (
     "output/*",
     "projects/*/output/*",
     "projects/*/*/output/*",
 )
+
+PUBLIC_TEMPLATE_OUTPUT_PREFIXES: tuple[str, ...] = tuple(
+    prefix
+    for name in PUBLIC_PROJECT_NAMES
+    for prefix in (f"projects/{name}/output/", f"output/{name}/")
+    if name.startswith("templates/")
+)
+
+PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES = 50 * 1024 * 1024
+
+
+def is_public_template_output_path(path: str) -> bool:
+    normalized = path.replace("\\", "/")
+    return any(normalized.startswith(prefix) for prefix in PUBLIC_TEMPLATE_OUTPUT_PREFIXES)
 
 
 def offending_tracked_projects(repo_root: Path) -> list[str]:
@@ -95,13 +112,22 @@ def offending_tracked_projects(repo_root: Path) -> list[str]:
 
 
 def is_generated_artifact_path(path: str) -> bool:
-    # No output/ path is exempt: all rendered output is disposable and must
-    # never be committed (see .gitignore — the former living render-proof
-    # exemption was dead and was removed). If render-proof outputs are ever
-    # reintroduced, restore an output/<name>/ allowlist here AND the matching
-    # .gitignore negation block together.
     normalized = path.replace("\\", "/")
-    return any(fnmatch.fnmatch(normalized, pattern) for pattern in GENERATED_ARTIFACT_PATTERNS)
+    if any(fnmatch.fnmatch(normalized, pattern) for pattern in ALWAYS_GENERATED_ARTIFACT_PATTERNS):
+        return True
+    if is_public_template_output_path(normalized):
+        return False
+    return any(fnmatch.fnmatch(normalized, pattern) for pattern in GENERATED_OUTPUT_PATTERNS)
+
+
+def is_oversized_public_template_output(repo_root: Path, path: str) -> bool:
+    normalized = path.replace("\\", "/")
+    if not is_public_template_output_path(normalized):
+        return False
+    try:
+        return (repo_root / normalized).stat().st_size > PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES
+    except OSError:
+        return False
 
 
 def tracked_generated_artifacts(repo_root: Path) -> list[str]:
@@ -112,4 +138,8 @@ def tracked_generated_artifacts(repo_root: Path) -> list[str]:
         capture_output=True,
     )
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
-    return sorted(path for path in paths if is_generated_artifact_path(path))
+    return sorted(
+        path
+        for path in paths
+        if is_generated_artifact_path(path) or is_oversized_public_template_output(repo_root, path)
+    )

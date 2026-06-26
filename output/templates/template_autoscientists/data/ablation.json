@@ -1,0 +1,55 @@
+{
+  "budget": 60,
+  "rows": [
+    {
+      "clean_metric": 0.0,
+      "configuration": "full coordination",
+      "confirmed_improvements": 12,
+      "experiments_to_target": 16,
+      "experiments_used": 36,
+      "noise_inflation": 0.0012065640438283457,
+      "redundant_experiments": 0,
+      "reported_metric": 0.0012065640438283457
+    },
+    {
+      "clean_metric": 0.0,
+      "configuration": "no confirmation",
+      "confirmed_improvements": 12,
+      "experiments_to_target": 16,
+      "experiments_used": 36,
+      "noise_inflation": 0.015645836069054717,
+      "redundant_experiments": 0,
+      "reported_metric": 0.015645836069054717
+    },
+    {
+      "clean_metric": 0.0,
+      "configuration": "no dead-end registry",
+      "confirmed_improvements": 12,
+      "experiments_to_target": 16,
+      "experiments_used": 60,
+      "noise_inflation": 0.0012065640438283457,
+      "redundant_experiments": 36,
+      "reported_metric": 0.0012065640438283457
+    },
+    {
+      "clean_metric": 0.0,
+      "configuration": "no effect-size ranking",
+      "confirmed_improvements": 12,
+      "experiments_to_target": 16,
+      "experiments_used": 36,
+      "noise_inflation": 0.0012065640438283457,
+      "redundant_experiments": 0,
+      "reported_metric": 0.0012065640438283457
+    },
+    {
+      "clean_metric": 0.0,
+      "configuration": "no reorganization",
+      "confirmed_improvements": 12,
+      "experiments_to_target": 16,
+      "experiments_used": 36,
+      "noise_inflation": 0.0012065640438283457,
+      "redundant_experiments": 0,
+      "reported_metric": 0.0012065640438283457
+    }
+  ]
+}

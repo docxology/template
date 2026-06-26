@@ -1,0 +1,8 @@
+stage,status,evidence,suggested_action
+plan,declared,Declared 12 pipeline stage contract(s).,review generated reports
+gate,declared,Declared exact stage-gate names from autoresearch.yaml.,review generated reports
+experiment,declared,Ran the fixed-seed bounded ML-loop candidate evaluation.,review generated reports
+evidence,declared,"Declared local domain, experiment, pipeline, and output evidence targets.",review generated reports
+claims,declared,Mapped configured questions to on-disk evidence paths.,review generated reports
+artifacts,declared,Declared machine-readable data and human-readable report outputs.,review generated reports
+readiness,declared,Scheduled intrinsic and extrinsic AutoResearch readiness checks.,review generated reports

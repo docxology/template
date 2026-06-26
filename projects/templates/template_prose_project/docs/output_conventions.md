@@ -9,7 +9,7 @@ consumer. This file is the single source of truth for that mapping.
 flowchart TB
     P[projects/templates/template_prose_project/]
     P --> M[manuscript/<br/>committed source]
-    P --> OUT[output/<br/>regeneratable · gitignored]
+    P --> OUT[output/<br/>tracked public artifacts · regeneratable]
 
     M --> M_CFG[config.yaml<br/>single source of truth]
     M --> M_PRE[preamble.md<br/>LaTeX preamble]
@@ -57,7 +57,8 @@ flowchart TB
   meaningful.
 * **PNG only for figures.** 300 dpi, colour-blind-safe palette, PNG-only
   for archival stability.
-* **`output/` is gitignored.** Everything in it is regenerable from
+* **`output/` is tracked for this public exemplar** when files stay below the
+  50 MB public output ceiling. Everything in it is regenerable from
   `manuscript/` + `manuscript/config.yaml`.
 * **`manuscript/references.bib` is read-only here.** The prose project
   *validates* citations; it never writes to the bib file. Contrast with

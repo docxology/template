@@ -3,21 +3,29 @@
 Public exemplar for the SIA (Self-Improvement Agent) harness: Meta → Target → Feedback
 loops with public/private task splits and canonical generation artifacts.
 
-## Run via the template monorepo
+## Publication and rendering
 
-This exemplar lives at `projects/templates/template_sia/` in the public
-[docxology/template](https://github.com/docxology/template) repository.
-**Tests, analysis, PDF rendering, and CI all run through that monorepo** —
-clone it, run `uv sync` at the repository root, then:
+- Standalone GitHub: [docxology/template_sia](https://github.com/docxology/template_sia)
+- Latest GitHub release: [v0.1.2](https://github.com/docxology/template_sia/releases/tag/v0.1.2)
+- Zenodo concept DOI: [10.5281/zenodo.20453879](https://doi.org/10.5281/zenodo.20453879)
+- Latest Zenodo version DOI: [10.5281/zenodo.20932066](https://doi.org/10.5281/zenodo.20932066) ([record](https://zenodo.org/records/20932066))
+- Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_sia`
+- Tracked outputs: [`output/`](output/) in this project and `output/templates/template_sia/` in the monorepo; public output files above 50 MB stay out of git.
+
+To regenerate this exemplar from the public monorepo:
 
 ```bash
+git clone https://github.com/docxology/template
+cd template
+uv sync
 ./run.sh --project templates/template_sia --pipeline --core-only
-# or: uv run python scripts/execute_pipeline.py --project templates/template_sia --core-only
+uv run python scripts/04_validate_output.py --project templates/template_sia
+uv run python scripts/05_copy_outputs.py --project templates/template_sia
 ```
 
-Several exemplars also publish standalone GitHub/Zenodo releases for citation;
-those mirrors are outputs of this pipeline. The monorepo remains the canonical
-build and render surface.
+Standalone repositories are publication mirrors for source, DOI metadata, and
+tracked rendered artifacts. Use the monorepo above when you need the full shared
+infrastructure, pipeline stages, or cross-template validation.
 
 ## When to use this template
 

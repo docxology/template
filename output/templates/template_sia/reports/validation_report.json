@@ -1,0 +1,207 @@
+{
+  "timestamp": "2026-06-21T14:17:12.811428",
+  "checks": {
+    "PDF validation": true,
+    "Transmission bookends": true,
+    "Markdown validation": true,
+    "Output structure": true,
+    "Figure registry": true,
+    "Evidence registry": false,
+    "Project design overlays": true,
+    "Artifact manifest": true
+  },
+  "figure_issues": [],
+  "output_statistics": {
+    "evidence_issues": [
+      "03_results.md: unsupported number 85%",
+      "02_methodology.md: unsupported number 90%"
+    ],
+    "detailed_validation": {
+      "structure": {
+        "valid": true,
+        "issues": [],
+        "missing_files": [],
+        "suspicious_sizes": [
+          "Combined PDF is unusually small: 0.08 MB",
+          "slides/ directory is empty"
+        ],
+        "warnings": [],
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "size_mb": 0.08,
+            "readable": true
+          },
+          "pdf": {
+            "exists": true,
+            "files": 10,
+            "size_mb": 0.15,
+            "readable": true,
+            "optional": false
+          },
+          "web": {
+            "exists": true,
+            "files": 8,
+            "size_mb": 0.05,
+            "readable": true,
+            "optional": false
+          },
+          "slides": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": false
+          },
+          "figures": {
+            "exists": true,
+            "files": 3,
+            "size_mb": 0.04,
+            "readable": true,
+            "optional": false
+          },
+          "data": {
+            "exists": true,
+            "files": 2,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": false
+          },
+          "reports": {
+            "exists": true,
+            "files": 27,
+            "size_mb": 0.1,
+            "readable": true,
+            "optional": false
+          },
+          "simulations": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "llm": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "logs": {
+            "exists": true,
+            "files": 1,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          }
+        }
+      },
+      "directories": {
+        "pdf": {
+          "exists": true,
+          "file_count": 10,
+          "size_mb": "0.15",
+          "largest_file": "template_sia_combined.pdf"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 8,
+          "size_mb": "0.05",
+          "largest_file": "index.html"
+        },
+        "slides": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "figures": {
+          "exists": true,
+          "file_count": 3,
+          "size_mb": "0.04",
+          "largest_file": "sia_metric_progression.png"
+        },
+        "data": {
+          "exists": true,
+          "file_count": 2,
+          "size_mb": "0.00",
+          "largest_file": "manuscript_variables.json"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 27,
+          "size_mb": "0.10",
+          "largest_file": "evidence_registry.json"
+        },
+        "simulations": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "llm": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "logs": {
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "pipeline.log"
+        }
+      },
+      "file_counts": {
+        "pdf": 10,
+        "web": 8,
+        "slides": 0,
+        "figures": 3,
+        "data": 2,
+        "reports": 27,
+        "simulations": 0,
+        "llm": 0,
+        "logs": 1
+      },
+      "total_size_mb": 0.3363838195800781,
+      "issues_by_severity": {
+        "critical": [],
+        "warning": [
+          "Combined PDF is unusually small: 0.08 MB"
+        ],
+        "info": [
+          "slides/ directory is empty"
+        ]
+      },
+      "recommendations": []
+    },
+    "pdf": {
+      "files": 10,
+      "size_mb": 0.15205955505371094
+    },
+    "figures": {
+      "files": 3,
+      "size_mb": 0.035422325134277344
+    },
+    "data": {
+      "files": 2,
+      "size_mb": 0.0012979507446289062
+    }
+  },
+  "summary": {
+    "total_checks": 8,
+    "passed": 7,
+    "failed": 1,
+    "figure_issues_count": 0,
+    "all_passed": false
+  },
+  "recommendations": [
+    {
+      "priority": "medium",
+      "issue": "Evidence registry reported unsupported manuscript facts",
+      "action": "Register generated facts or replace unsupported hard-coded claims",
+      "file": "projects/templates/template_sia/output/reports/evidence_registry.json"
+    }
+  ]
+}

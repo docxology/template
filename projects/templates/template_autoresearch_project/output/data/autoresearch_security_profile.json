@@ -1,0 +1,42 @@
+{
+  "claim_scope": "Local research-artifact integrity evidence for this deterministic public exemplar",
+  "enabled": true,
+  "external_signing": false,
+  "generated_at": "2026-06-26T13:21:26+00:00",
+  "integrity_algorithm": "sha256",
+  "mode": "local_deterministic",
+  "network_policy": "default_offline",
+  "non_claims": [
+    "No external signing or Sigstore verification is performed by the default run.",
+    "No formal SBOM standard is emitted; the inventory is SBOM-style local metadata.",
+    "No production-grade SLSA compliance, SOC monitoring, or deployment hardening is claimed.",
+    "No live network, LLM, or generated-code execution is part of the default path."
+  ],
+  "not_external_signing": true,
+  "not_network_security_assessment": true,
+  "not_runtime_monitoring": true,
+  "not_slsa_certification": true,
+  "reference_frameworks": [
+    {
+      "id": "NIST_SP_800_207",
+      "scope": "Zero-trust design analogy for explicit verification boundaries."
+    },
+    {
+      "id": "NIST_SP_800_218_SSDF",
+      "scope": "Secure development practice analogy for controlled inputs and review surfaces."
+    },
+    {
+      "id": "SLSA_SPEC",
+      "scope": "Supply-chain provenance analogy; local checksums do not equal signed provenance."
+    },
+    {
+      "id": "MITRE_ATTACK_T1195",
+      "scope": "Supply-chain compromise technique used to scope local artifact tamper risks."
+    }
+  ],
+  "schema": "template-autoresearch-security-profile-v1",
+  "threat_model_frameworks": [
+    "STRIDE",
+    "MITRE_ATT&CK_T1195"
+  ]
+}

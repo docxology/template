@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_introduction.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:introduction">Introduction: Ore to Nine-Nines</h1>
+<p>Gold refining is one of humanity’s oldest purification technologies.
+From ancient cupellation to modern nine-nines electrolysis, the process
+of separating noble metal from base ore has evolved into a rigorous,
+staged pipeline with measurable purity at every step. This paper asks:
+can that pipeline serve as a <strong>load-bearing</strong> operational
+model for scientific manuscript composition — not merely a decorative
+analogy, but a real mapping from metallurgical stages to
+template-infrastructure operations?</p>
+<h2 id="the-problem">The problem</h2>
+<p>A scientific manuscript accumulates impurities through its drafting
+lifecycle: unsupported claims, unresolved references, redundant prose,
+and citation gaps. The template repository provides infrastructure to
+detect and remove these impurities — validation gates, cross-reference
+checks, evidence registries, and coverage enforcement. What it lacks is
+a unifying model that names the purification stages and measures purity
+progression.</p>
+<h2 id="the-analogy-as-pipeline">The analogy as pipeline</h2>
+<p>We map five gold-refining stages onto manuscript operations:</p>
+<ul>
+<li><ol type="1">
+<li>ore (9K)</li>
+</ol></li>
+<li><ol start="2" type="1">
+<li>smelting (18K)</li>
+</ol></li>
+<li><ol start="3" type="1">
+<li>assaying (22K)</li>
+</ol></li>
+<li><ol start="4" type="1">
+<li>cupellation (24K)</li>
+</ol></li>
+<li><ol start="5" type="1">
+<li>certification (24K (nine-nines certified))</li>
+</ol></li>
+</ul>
+<p>Each stage has a metallurgical operation, a manuscript operation, an
+input purity, and an output purity. Purity increases monotonically — a
+constraint enforced by
+<code>src/refinery.py::assert_monotone_increase</code> and tested in
+<code>tests/test_refinery.py</code>.</p>
+<h2 id="mega-madlib-token-engine">Mega-madlib token engine</h2>
+<p>The manuscript’s domain vocabulary is not hand-authored prose but
+config-owned lexical data, selected deterministically by a seeded
+SHA-256 digest. The engine generates 8 tokens across 4 slots and 4
+lexicon categories. Every token choice is reproducible, traceable to its
+config key, and bound to a manuscript section.</p>
+<h2 id="open-question-pinned">Open question pinned</h2>
+<p>Is the analogy load-bearing or rhetorical? We assert it is
+<strong>both</strong>: it frames the methods paper (rhetorical) and
+operationalizes each stage against real infrastructure (load-bearing).
+The open question is not whether to use the analogy, but where the
+mapping breaks — a question the discussion addresses.</p>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>appendix_formalisms.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:appendix_formalisms">Appendix — Formalisms</h1>
+<p>A worked example of every <strong>formal</strong> element a technical
+book uses: definitions, theorems with proofs, lemmas, algorithms in
+pseudocode, step-by-step derivations, systems of numbered equations, and
+dimensioned quantities. Each maps to a tested function in
+<code>src/textbook/models.py</code>, so the prose and the code stay in
+agreement.
+<!-- STUB: replace these generic statements with your field's. --></p>
+<blockquote>
+<p><strong>Convention.</strong> Theorem-like environments below use a
+portable bold-label block-quote form that renders in every target. If
+your render profile loads <code>amsthm</code> (the preamble does), you
+may instead use native LaTeX <code>theorem</code>, <code>lemma</code>,
+<code>definition</code>, and <code>proof</code> environments.</p>
+</blockquote>
+<hr />
+<h2 id="definitions">1. Definitions</h2>
+<blockquote>
+<p><strong>Definition 1 (Equilibrium).</strong> A state <span
+class="math inline">\(N^{*}\)</span> of a dynamical system <span
+class="math inline">\(\dot N = f(N)\)</span> is an <em>equilibrium</em>
+if <span class="math inline">\(f(N^{*}) = 0\)</span>. See <a
+href="#gl:equilibrium"><strong>equilibrium</strong></a>.</p>
+</blockquote>
+<blockquote>
+<p><strong>Definition 2 (Carrying capacity).</strong> For logistic
+dynamics, the <em>carrying capacity</em> <span
+class="math inline">\(K\)</span> is the non-zero equilibrium toward
+which trajectories converge.</p>
+</blockquote>
+<hr />
+<h2 id="a-theorem-with-proof">2. A theorem with proof</h2>
+<blockquote>
+<p><strong>Theorem 1 (Logistic limit).</strong> For the logistic model
+in <span class="citation"
+data-cites="eq:formalisms_logistic">[@eq:formalisms_logistic]</span>
+with <span class="math inline">\(r &gt; 0\)</span> and <span
+class="math inline">\(0 &lt; N_0 \le K\)</span>, the trajectory
+satisfies <span class="math inline">\(\lim_{t \to \infty} N(t) =
+K\)</span>.</p>
+</blockquote>
+<p><span class="math display">\[ N(t) = \frac{K}{1 + A e^{-rt}}, \qquad
+A = \frac{K - N_0}{N_0} . \]</span> {#eq:formalisms_logistic}</p>
+<p><em>Proof.</em> Because <span class="math inline">\(r &gt;
+0\)</span>, the term <span class="math inline">\(e^{-rt} \to 0\)</span>
+as <span class="math inline">\(t \to \infty\)</span>. Hence the
+denominator <span class="math inline">\(1 + A e^{-rt} \to 1\)</span>,
+and therefore <span class="math inline">\(N(t) \to K/1 = K\)</span>. The
+constant <span class="math inline">\(A \ge 0\)</span> follows from <span
+class="math inline">\(0 &lt; N_0 \le K\)</span>, so <span
+class="math inline">\(N(t)\)</span> is increasing and the limit is
+approached from below. <span
+class="math inline">\(\qquad\blacksquare\)</span></p>
+<p>This is exactly the asymptotic behaviour the test
+<code>tests/test_models.py::test_logistic_growth_starts_at_initial_and_approaches_capacity</code>
+verifies numerically — the proof and the test assert the same fact.</p>
+<hr />
+<h2 id="a-lemma">3. A lemma</h2>
+<blockquote>
+<p><strong>Lemma 1 (Half-life).</strong> For exponential decay <span
+class="math inline">\(y(t) = y_0 e^{-\lambda t}\)</span> with <span
+class="math inline">\(\lambda &gt; 0\)</span>, the time at which <span
+class="math inline">\(y\)</span> falls to half its initial value is
+<span class="math inline">\(t_{1/2} = \ln 2 / \lambda\)</span>,
+independent of <span class="math inline">\(y_0\)</span>.</p>
+</blockquote>
+<p><em>Proof.</em> Set <span class="math inline">\(y(t_{1/2}) =
+y_0/2\)</span>. Then <span class="math inline">\(e^{-\lambda t_{1/2}} =
+1/2\)</span>, so <span class="math inline">\(-\lambda t_{1/2} = -\ln
+2\)</span>, giving <span class="math inline">\(t_{1/2} = \ln 2 /
+\lambda\)</span>. The result does not depend on <span
+class="math inline">\(y_0\)</span>. <span
+class="math inline">\(\qquad\blacksquare\)</span></p>
+<p>Implemented as <code>textbook.models.half_life</code>.</p>
+<hr />
+<h2 id="algorithms-pseudocode">4. Algorithms (pseudocode)</h2>
+<p>Where the preamble provides an algorithm package, use it; otherwise
+this fenced form renders everywhere.</p>
+<pre class="text"><code>Algorithm 1: Ordinary least-squares line fit
+Input : points (x_i, y_i), i = 1..n,  n &gt;= 2
+Output: slope m, intercept b, coefficient of determination R^2
+1  x_bar &lt;- mean(x);  y_bar &lt;- mean(y)
+2  m &lt;- sum((x_i - x_bar)(y_i - y_bar)) / sum((x_i - x_bar)^2)
+3  b &lt;- y_bar - m * x_bar
+4  SS_res &lt;- sum((y_i - (m x_i + b))^2)
+5  SS_tot &lt;- sum((y_i - y_bar)^2)
+6  R^2 &lt;- 1 - SS_res / SS_tot      (define R^2 = 1 when SS_tot = 0)
+7  return (m, b, R^2)</code></pre>
+<p>This is <code>textbook.models.linear_fit</code>; Step 6’s degenerate
+case is covered by
+<code>tests/test_models.py::test_linear_fit_constant_y_gives_r_squared_one</code>.</p>
+<hr />
+<h2 id="a-step-by-step-derivation">5. A step-by-step derivation</h2>
+<p>Starting from the logistic differential equation and separating
+variables:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{dN}{dt} &amp;= rN\left(1 - \frac{N}{K}\right) \\
+\int \frac{dN}{N(1 - N/K)} &amp;= \int r \, dt \\
+\ln\!\left(\frac{N}{K - N}\right) &amp;= rt + C \\
+N(t) &amp;= \frac{K}{1 + A e^{-rt}}, \qquad A = e^{-C},
+\end{aligned}
+\]</span></p>
+<p>which recovers <span class="citation"
+data-cites="eq:formalisms_logistic">[@eq:formalisms_logistic]</span>.
+Each line is one algebraic move; show your work at this granularity so
+readers can follow without gaps.</p>
+<hr />
+<h2 id="a-system-of-numbered-equations">6. A system of numbered
+equations</h2>
+<p>A simple predator–prey system, with each equation individually
+referenceable (<span class="citation"
+data-cites="eq:formalisms_prey">[@eq:formalisms_prey]</span>, <span
+class="citation"
+data-cites="eq:formalisms_pred">[@eq:formalisms_pred]</span>):</p>
+<p><span class="math display">\[ \frac{dx}{dt} = \alpha x - \beta x y
+\]</span> {#eq:formalisms_prey}</p>
+<p><span class="math display">\[ \frac{dy}{dt} = \delta x y - \gamma y
+\]</span> {#eq:formalisms_pred}</p>
+<p>The vector-field figure style for such systems is demonstrated by the
+quiver plot in the format gallery (<span class="citation"
+data-cites="sec:appendix_format_gallery">[@sec:appendix_format_gallery]</span>).</p>
+<hr />
+<h2 id="dimensioned-quantities">7. Dimensioned quantities</h2>
+<p>State parameters with units explicitly, in math mode so they render
+in every target:</p>
+<table id="tbl:formalisms_units">
+<caption>Worked-model parameters with representative dimensioned
+values.</caption>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Quantity</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(r\)</span></td>
+<td>intrinsic rate</td>
+<td><span class="math inline">\(0.8\ \mathrm{s^{-1}}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\lambda\)</span></td>
+<td>decay constant</td>
+<td><span class="math inline">\(0.5\ \mathrm{s^{-1}}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(t_{1/2}\)</span></td>
+<td>half-life</td>
+<td><span class="math inline">\(1.386\ \mathrm{s}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(K\)</span></td>
+<td>carrying capacity</td>
+<td><span class="math inline">\(100\)</span> individuals</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="notation-summary">8. Notation summary</h2>
+<!-- STUB: maintain a running notation table; cross-reference Appendix B. -->
+<p>Symbols used throughout are collected in the notation appendix (<span
+class="citation"
+data-cites="sec:appendix_notation">[@sec:appendix_notation]</span>);
+glossary definitions for narrative terms such as <a
+href="#gl:gradient"><strong>gradient</strong></a> and <a
+href="#gl:threshold"><strong>threshold</strong></a> are in the master
+glossary.</p>
+</body>
+</html>

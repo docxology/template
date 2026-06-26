@@ -1,0 +1,29 @@
+{
+  "figures": [
+    {
+      "caption": "SIA metric progression across generations.",
+      "filename": "sia_metric_progression.png",
+      "generated_by": "src.figures",
+      "label": "fig:sia-metric-progression"
+    },
+    {
+      "caption": "Meta \u2192 Target \u2192 Feedback loop topology for the SIA harness, generated programmatically by write_sia_loop_topology.",
+      "filename": "sia_loop_topology.png",
+      "generated_by": "src.figures",
+      "label": "fig:sia-loop-topology"
+    },
+    {
+      "caption": "Per-generation metric heatmap showing accuracy and sample count across SIA generations.",
+      "filename": "sia_generation_heatmap.png",
+      "generated_by": "src.figures",
+      "label": "fig:sia-generation-heatmap"
+    },
+    {
+      "caption": "Generation-over-generation metric delta (\u0394accuracy) for the SIA loop, illustrating the incremental improvement at each self-refinement step.",
+      "filename": "sia_improvement_delta.png",
+      "generated_by": "src.figures",
+      "label": "fig:sia-improvement-delta"
+    }
+  ],
+  "schema_version": "template-sia-figure-registry-v1"
+}

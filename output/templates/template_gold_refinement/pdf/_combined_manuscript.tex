@@ -1,0 +1,1107 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% \usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage[]{natbib}
+\bibliographystyle{plainnat}
+\makeatletter
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\captionsetup[subfigure]{margin=0.5em}
+\AtBeginDocument{%
+\renewcommand*\figurename{Figure}
+\renewcommand*\tablename{Table}
+}
+\AtBeginDocument{%
+\renewcommand*\listfigurename{List of Figures}
+\renewcommand*\listtablename{List of Tables}
+}
+\newcounter{pandoccrossref@subfigures@footnote@counter}
+\newenvironment{pandoccrossrefsubfigures}{%
+\setcounter{pandoccrossref@subfigures@footnote@counter}{0}
+\begin{figure}\centering%
+\gdef\global@pandoccrossref@subfigures@footnotes{}%
+\DeclareRobustCommand{\footnote}[1]{\footnotemark%
+\stepcounter{pandoccrossref@subfigures@footnote@counter}%
+\ifx\global@pandoccrossref@subfigures@footnotes\empty%
+\gdef\global@pandoccrossref@subfigures@footnotes{{##1}}%
+\else%
+\g@addto@macro\global@pandoccrossref@subfigures@footnotes{, {##1}}%
+\fi}}%
+{\end{figure}%
+\addtocounter{footnote}{-\value{pandoccrossref@subfigures@footnote@counter}}
+\@for\f:=\global@pandoccrossref@subfigures@footnotes\do{\stepcounter{footnote}\footnotetext{\f}}%
+\gdef\global@pandoccrossref@subfigures@footnotes{}}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+\protected\def\breakseq#1{\seqsplit{#1}}
+\protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
+\title{Refinement of Gold: A Metallurgical Analogy for Scientific Manuscript Composition}
+\author{Daniel Ari Friedman\\\footnotesize{Active Inference Institute}\\\footnotesize{\texttt{daniel@activeinference.institute}}\\\footnotesize{\href{https://orcid.org/0000-0001-6232-9096}{ORCID: 0000-0001-6232-9096}} \\ \footnotesize{DOI: \href{https://doi.org/10.5281/zenodo.20931955}{10.5281/zenodo.20931955}}}
+\date{2026-06-25}
+
+% Core mathematics
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+
+% Document layout
+\usepackage{geometry}
+\geometry{margin=0.25in}
+\usepackage{float}
+\usepackage{graphicx}
+
+% Tables
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+
+% Typography and formatting
+\usepackage{microtype}
+\usepackage{xcolor}
+
+% Cross-references and citations
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    allcolors=red
+}
+\usepackage[capitalise,noabbrev]{cleveref}
+\usepackage{natbib}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\LARGE\bfseries Refinement of Gold: A Metallurgical Analogy for Scientific Manuscript Composition\par}
+\vspace{0.75em}
+{\large From Ore to Nine-Nines Purity via Mega-Madlib Token Injection\par}
+\vfill
+\makeatletter
+{\@author\par}
+\vspace{1em}
+{\@date\par}
+\makeatother
+\vfill
+\end{titlepage}
+\thispagestyle{empty}
+\tableofcontents
+\newpage
+
+
+\section{Abstract}\label{sec:abstract}
+
+This paper presents a metallurgical analogy for scientific manuscript
+composition, mapping gold-refining stages onto the template
+infrastructure pipeline. The refinery processes manuscript ore through 5
+stages --- from raw draft (9K, about 37.5\% purity) through
+smelting, assaying, and cupellation --- to nine-nines certification
+(99.9999999\%), the ultra-high-purity standard of electronics-grade
+gold.
+
+The analogy is \textbf{load-bearing}, not merely rhetorical: each
+metallurgical stage corresponds to a real template-infrastructure
+operation. Smelting removes dross (filler, unsupported claims); assaying
+tests claims against evidence; cupellation resolves cross-references;
+certification validates the full pipeline. The mega-madlib token engine
+selects 8 domain tokens deterministically via seeded SHA-256 digest over
+category inventories, ensuring every prose element is traceable and
+reproducible.
+
+\textbf{Results:} The refinery achieves final purity of 99.9999999\%
+(nine-nines) (24K (nine-nines certified)) with a total purity gain of
+90.00\% across all stages. Nine-nines certification: Yes. The purity
+progression is shown in fig.~\ref{fig:purity_progression}, and the karat
+grading scale in fig.~\ref{fig:karat_grading}.
+
+\textbf{Keywords:} gold refining, manuscript composition, mega-madlib,
+token injection, scientific purity, assaying, karat grading
+
+\newpage
+
+\section{Introduction: Ore to Nine-Nines}\label{sec:introduction}
+
+Gold refining is one of humanity's oldest purification technologies.
+From ancient cupellation to modern nine-nines electrolysis, the process
+of separating noble metal from base ore has evolved into a rigorous,
+staged pipeline with measurable purity at every step. This paper asks:
+can that pipeline serve as a \textbf{load-bearing} operational model for
+scientific manuscript composition --- not merely a decorative analogy,
+but a real mapping from metallurgical stages to template-infrastructure
+operations?
+
+\subsection{The problem}\label{the-problem}
+
+A scientific manuscript accumulates impurities through its drafting
+lifecycle: unsupported claims, unresolved references, redundant prose,
+and citation gaps. The template repository provides infrastructure to
+detect and remove these impurities --- validation gates, cross-reference
+checks, evidence registries, and coverage enforcement. What it lacks is
+a unifying model that names the purification stages and measures purity
+progression.
+
+\subsection{The analogy as pipeline}\label{the-analogy-as-pipeline}
+
+We map five gold-refining stages onto manuscript operations:
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \tightlist
+  \item
+    ore (9K)
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \setcounter{enumi}{1}
+  \tightlist
+  \item
+    smelting (18K)
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \setcounter{enumi}{2}
+  \tightlist
+  \item
+    assaying (22K)
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \setcounter{enumi}{3}
+  \tightlist
+  \item
+    cupellation (24K)
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \setcounter{enumi}{4}
+  \tightlist
+  \item
+    certification (24K (nine-nines certified))
+  \end{enumerate}
+\end{itemize}
+
+Each stage has a metallurgical operation, a manuscript operation, an
+input purity, and an output purity. Purity increases monotonically --- a
+constraint enforced by
+\breaktt{src/refinery.py::assert\_monotone\_increase} and tested in
+\breaktt{tests/test\_refinery.py}.
+
+\subsection{Mega-madlib token engine}\label{mega-madlib-token-engine}
+
+The manuscript's domain vocabulary is not hand-authored prose but
+config-owned lexical data, selected deterministically by a seeded
+SHA-256 digest. The engine generates 8 tokens across 4 slots and 4
+lexicon categories. Every token choice is reproducible, traceable to its
+config key, and bound to a manuscript section.
+
+\subsection{Open question pinned}\label{open-question-pinned}
+
+Is the analogy load-bearing or rhetorical? We assert it is
+\textbf{both}: it frames the methods paper (rhetorical) and
+operationalizes each stage against real infrastructure (load-bearing).
+The open question is not whether to use the analogy, but where the
+mapping breaks --- a question the discussion addresses.
+
+\newpage
+
+\section{Methodology: The Refinery Pipeline}\label{sec:methodology}
+
+The refinery pipeline consists of 5 canonical stages, each mapping a
+metallurgical operation to a manuscript-composition operation. The
+pipeline is implemented in \texttt{src/refinery.py} and validated by
+\texttt{src/purity.py}.
+
+\subsection{Stage definitions}\label{stage-definitions}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.0556}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1296}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2407}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1296}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.4444}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\#
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Stage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Output purity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Karat
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Metallurgical operation
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & ore & 37.50\% & 9K & Extract raw gold-bearing ore from the earth \\
+2 & smelting & 75.00\% & 18K & Heat ore to separate gold from slag and
+dross \\
+3 & assaying & 91.67\% & 22K & Test a sample to determine gold content
+and impurities \\
+4 & cupellation & 99.900\% & 24K & Refine by blowing air through molten
+lead-gold alloy \\
+5 & certification & 99.9999999\% (nine-nines) & 24K (nine-nines
+certified) & Certify purity grade and stamp hallmark \\
+\end{longtable}
+}
+
+\subsection{Purity progression}\label{purity-progression}
+
+The purity sequence across all stages is: 0.100000, 0.375000, 0.750000,
+0.916700, 0.999000, 1.000000
+
+Purity is strictly increasing --- enforced by
+\breaktt{assert\_monotone\_increase()} which raises \texttt{ValueError}
+if any stage's output purity does not exceed its input. Formally, for
+stages \(s_1, \ldots, s_n\) with input purity \(p_{\text{in}}^{(i)}\)
+and output purity \(p_{\text{out}}^{(i)}\):
+
+\[
+p_{\text{out}}^{(i)} > p_{\text{in}}^{(i)} \quad \text{and} \quad p_{\text{in}}^{(i+1)} = p_{\text{out}}^{(i)} \quad \forall i \in \{1, \ldots, n-1\}
+\]
+
+The full purity progression is shown in
+fig.~\ref{fig:purity_progression} (see sec.~\ref{sec:results}).
+
+\subsection{Token selection}\label{token-selection}
+
+The mega-madlib engine selects tokens from config-owned lexicon
+categories using a deterministic digest:
+
+\[
+\text{index} = \text{int}\left(\text{SHA-256}\left(\text{seed} \mid \text{slot} \mid \text{category} \mid \text{ordinal} \mid \text{inventory}\right)[:12], 16\right) \mod n
+\]
+
+where \(n\) is the size of the lexicon category inventory. Selected
+metallurgical terms: hallmark, cupellation, assaying. Selected
+manuscript terms: evidence, evidence.
+
+\subsection{Config-owned lexicon}\label{config-owned-lexicon}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Category & Count & Sample \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+manuscript\_terms & 5 & draft, claim, citation\ldots{} \\
+metallurgical\_terms & 5 & cupellation, assaying, smelting\ldots{} \\
+purity\_adjectives & 5 & unrefined, purified, certified\ldots{} \\
+refinement\_verbs & 5 & assaying, certifying, refining\ldots{} \\
+\end{longtable}
+}
+
+\subsection{Karat grading}\label{karat-grading}
+
+Karat grades map purity fractions to standard gold fineness:
+
+\begin{itemize}
+\tightlist
+\item
+  9K = 37.5\% (ore stage)
+\item
+  18K = 75.0\% (smelting stage)
+\item
+  22K = 91.67\% (assaying stage)
+\item
+  24K = 99.9\% (cupellation stage)
+\item
+  Nine-nines = 99.9999999\% (certification stage)
+\end{itemize}
+
+The mapping is implemented in
+\breaktt{src/purity.py::karat\_for\_purity()}. The karat grading chart is
+shown in fig.~\ref{fig:karat_grading} (see sec.~\ref{sec:results}).
+
+\subsection{Pipeline phases}\label{pipeline-phases}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1556}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1556}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3556}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1556}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Phase
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Input
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Transformation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Output
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Guard
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Schema intake & manuscript/config.yaml & Load and validate
+gold\_refinement block & GoldRefinementConfig & config schema tests \\
+Refinery execution & GoldRefinementConfig & Run five refinery stages
+with monotone purity & RefineryResult & monotone purity test \\
+Token planning & GoldRefinementConfig & Expand slots into deterministic
+token choices & TokenPlan & seed-stability tests \\
+Figure generation & RefineryResult and TokenPlan & Generate purity
+progression, karat grading, and token density figures & ../figures/*.png
+& nonblank figure tests \\
+Manuscript hydration & manuscript shells and manuscript\_variables.json
+& Resolve \{\{TOKEN\}\} placeholders into output/manuscript/ & hydrated
+Markdown manuscript & unresolved-token scan \\
+Render and validate & output/manuscript & Render PDF, HTML through
+shared template pipeline & output/pdf and output/web & render command \\
+\end{longtable}
+}
+
+\newpage
+
+\section{Results: Purity Progression and Karat
+Grading}\label{sec:results}
+
+The refinery pipeline produces a monotonically increasing purity
+sequence across 5 stages, reaching final purity of 99.9999999\%
+(nine-nines) (24K (nine-nines certified)).
+
+\subsection{Purity progression}\label{purity-progression-1}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Purity progression across refinery stages}]{../figures/purity_progression.png}}
+\caption{Purity progression across refinery
+stages}\label{fig:purity_progression}
+\end{figure}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1750}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1750}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Stage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Output purity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Karat
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Gain
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & ore & 37.50\% & 9K & Extract raw gold-bearing ore from the earth \\
+2 & smelting & 75.00\% & 18K & Heat ore to separate gold from slag and
+dross \\
+3 & assaying & 91.67\% & 22K & Test a sample to determine gold content
+and impurities \\
+4 & cupellation & 99.900\% & 24K & Refine by blowing air through molten
+lead-gold alloy \\
+5 & certification & 99.9999999\% (nine-nines) & 24K (nine-nines
+certified) & Certify purity grade and stamp hallmark \\
+\end{longtable}
+}
+
+\subsection{Karat grading scale}\label{karat-grading-scale}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Gold karat grading scale with refinery stage markers}]{../figures/karat_grading.png}}
+\caption{Gold karat grading scale with refinery stage
+markers}\label{fig:karat_grading}
+\end{figure}
+
+\subsection{Final certification}\label{final-certification}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Final purity:} 99.9999999\% (nine-nines)
+\item
+  \textbf{Final karat:} 24K (nine-nines certified)
+\item
+  \textbf{Total purity gain:} 90.00\%
+\item
+  \textbf{Nine-nines certified:} Yes
+\item
+  \textbf{Nines count:} 9
+\end{itemize}
+
+\subsection{Token plan summary}\label{token-plan-summary}
+
+The mega-madlib engine generated 8 tokens from seed 431 across 4 lexicon
+categories.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Mega-madlib token distribution}]{../figures/token_density.png}}
+\caption{Mega-madlib token distribution}\label{fig:token_density}
+\end{figure}
+
+\subsubsection{Category distribution}\label{category-distribution}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Category & Count \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+manuscript\_terms & 2 \\
+metallurgical\_terms & 3 \\
+purity\_adjectives & 2 \\
+refinement\_verbs & 1 \\
+\end{longtable}
+}
+
+\subsubsection{Section distribution}\label{section-distribution}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Section & Token count \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+discussion & 1 \\
+methodology & 5 \\
+results & 2 \\
+\end{longtable}
+}
+
+\subsubsection{Provenance trace}\label{provenance-trace}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2273}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2273}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1591}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2045}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1818}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Category
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Section
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Source
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+DISCUSSION\_REFINEMENT\_VERB & refinement\_verbs & smelting & discussion
+&
+manuscript/config.yaml\#gold\_refinement.lexicon.refinement\_verbs{[}3{]} \\
+METHOD\_MANUSCRIPT\_TERM\_1 & manuscript\_terms & evidence & methodology
+&
+manuscript/config.yaml\#gold\_refinement.lexicon.manuscript\_terms{[}4{]} \\
+METHOD\_MANUSCRIPT\_TERM\_2 & manuscript\_terms & evidence & methodology
+&
+manuscript/config.yaml\#gold\_refinement.lexicon.manuscript\_terms{[}4{]} \\
+METHOD\_METAL\_TERM\_1 & metallurgical\_terms & hallmark & methodology &
+manuscript/config.yaml\#gold\_refinement.lexicon.metallurgical\_terms{[}4{]} \\
+METHOD\_METAL\_TERM\_2 & metallurgical\_terms & cupellation &
+methodology &
+manuscript/config.yaml\#gold\_refinement.lexicon.metallurgical\_terms{[}0{]} \\
+METHOD\_METAL\_TERM\_3 & metallurgical\_terms & assaying & methodology &
+manuscript/config.yaml\#gold\_refinement.lexicon.metallurgical\_terms{[}1{]} \\
+RESULTS\_PURITY\_ADJ\_1 & purity\_adjectives & unrefined & results &
+manuscript/config.yaml\#gold\_refinement.lexicon.purity\_adjectives{[}0{]} \\
+RESULTS\_PURITY\_ADJ\_2 & purity\_adjectives & purified & results &
+manuscript/config.yaml\#gold\_refinement.lexicon.purity\_adjectives{[}1{]} \\
+\end{longtable}
+}
+
+Selected purity adjectives for this section: unrefined, purified.
+
+\subsection{Provenance flow}\label{provenance-flow}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Provenance flow diagram}]{../figures/provenance_sankey.png}}
+\caption{Provenance flow diagram}\label{fig:provenance_sankey}
+\end{figure}
+
+\subsection{Purity vs claim support}\label{purity-vs-claim-support}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Purity vs claim support}]{../figures/purity_claim_scatter.png}}
+\caption{Purity vs claim support}\label{fig:purity_claim_scatter}
+\end{figure}
+
+\subsection{Token selection
+sensitivity}\label{token-selection-sensitivity}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Token selection heatmap}]{../figures/token_heatmap.png}}
+\caption{Token selection heatmap}\label{fig:token_heatmap}
+\end{figure}
+
+\subsection{Contribution claims}\label{contribution-claims}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1842}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2895}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2632}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2632}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Claim
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Statement
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Evidence
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Boundary
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Five-stage refinery & The refinery pipeline has 5 canonical stages from
+ore to nine-nines. & src/refinery.py::CANONICAL\_STAGES & local \\
+Monotone purity & Purity increases strictly across all refinery stages.
+& src/refinery.py::assert\_monotone\_increase & local \\
+Nine-nines certification & The certification stage achieves 99.9999999\%
+purity. & src/purity.py::NINE\_NINES\_PURITY & local \\
+Deterministic tokens & Token selection is deterministic via seeded
+SHA-256 digest. & src/composition.py::\_choose\_value & local \\
+\end{longtable}
+}
+
+\newpage
+
+\section{Discussion: Load-Bearing vs Rhetorical
+Analogy}\label{sec:discussion}
+
+\subsection{Load-bearing vs
+rhetorical}\label{load-bearing-vs-rhetorical}
+
+The gold-refining analogy operates on two levels. \textbf{Rhetorically},
+it provides a memorable framing for a methods paper: purity progression,
+karat grading, and certification are vivid metaphors for manuscript
+quality. \textbf{Operationally}, each stage maps to a real
+template-infrastructure operation --- smelting to claim removal,
+assaying to evidence validation, cupellation to cross-reference
+resolution, and certification to full pipeline validation.
+
+The analogy is smelting the manuscript: it performs the refinement it
+describes.
+
+\subsection{Useful adaptation cases}\label{useful-adaptation-cases}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Domain-specific refinement pipelines}: fork the exemplar and
+  remap stages to domain operations (e.g., clinical evidence, legal
+  citation, engineering specification).
+\item
+  \textbf{Purity measurement}: adopt the purity fraction and karat grade
+  vocabulary for any staged quality process.
+\item
+  \textbf{Mega-madlib composition}: reuse the deterministic token engine
+  for any config-owned lexical composition task.
+\end{itemize}
+
+\subsection{Misuse modes}\label{misuse-modes}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1714}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1714}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3143}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3429}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Mode
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Risk
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Detection
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Mitigation
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Non-monotone purity & A stage has lower output purity than input. &
+assert\_monotone\_increase raises ValueError. & Fix stage purity targets
+in src/refinery.py. \\
+Empty lexicon category & A required lexicon category is empty or
+missing. & Config validation raises GoldRefinementConfigError. & Add
+vocabulary to manuscript/config.yaml. \\
+Unresolved token & A manuscript placeholder has no generated variable. &
+test\_all\_manuscript\_tokens\_are\_generated fails. & Add variable in
+src/manuscript\_variables.py. \\
+Rhetorical-only analogy & The analogy is decorative with no operational
+mapping. & Review that each stage maps to a real infrastructure
+operation. & Connect stages to template pipeline operations. \\
+\end{longtable}
+}
+
+\subsection{Design principles}\label{design-principles}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Principle
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Rationale
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Analogy is load-bearing & Each metallurgical stage maps to a real
+template-infrastructure operation, not mere decoration. \\
+Purity increases monotonically & The refinery pipeline guarantees
+strictly increasing purity from ore to certification. \\
+Token selection is deterministic & A fixed seed and lexicon produce the
+same injection plan across reruns. \\
+Configuration owns prose choices & Reviewers can inspect the declared
+language surface before generation. \\
+Generated output is disposable & The durable artifact is the
+regeneration contract, not hand-edited output. \\
+\end{longtable}
+}
+
+\newpage
+
+\section{Conclusion: Certification and Forking}\label{sec:conclusion}
+
+The gold-refinery pipeline demonstrates that a metallurgical analogy can
+be load-bearing: each stage maps to a real template-infrastructure
+operation, purity increases monotonically, and the final stage achieves
+nine-nines certification (99.9999999\% (nine-nines)).
+
+\subsection{Summary}\label{summary}
+
+\begin{itemize}
+\tightlist
+\item
+  5 refinery stages from ore (9K) to certification (nine-nines)
+\item
+  Final purity: 99.9999999\% (nine-nines) (24K (nine-nines certified))
+\item
+  8 tokens generated deterministically from seed 431
+\item
+  Config hash: ef9773080d4a8bec
+\end{itemize}
+
+\subsection{Forking responsibilities}\label{forking-responsibilities}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Remap metallurgical stages to domain operations
+\item
+  Update lexicon categories in \breaktt{manuscript/config.yaml}
+\item
+  Add domain-specific evidence and validators
+\item
+  Regenerate all outputs through the pipeline
+\item
+  Do not hand-edit generated manuscript, PDFs, or figures
+\end{enumerate}
+
+\newpage
+
+\section{Reproducibility: Seeded
+Regeneration}\label{sec:reproducibility}
+
+\subsection{Deterministic
+regeneration}\label{deterministic-regeneration}
+
+The refinery pipeline is fully deterministic. Given the same
+\breaktt{manuscript/config.yaml} and \texttt{src/} code, every run
+produces identical output.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Seed:} 431
+\item
+  \textbf{Config hash:} ef9773080d4a8bec
+\item
+  \textbf{Generation timestamp:} 2026-06-26T13:57:48Z
+\item
+  \textbf{Python version:} 3.12.13
+\end{itemize}
+
+\subsection{Artifact inventory}\label{artifact-inventory}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Category & Count \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Figures & 6 \\
+Data files & 2 \\
+Reports & 9 \\
+\textbf{Total} & 17 \\
+\end{longtable}
+}
+
+\subsection{Regeneration commands}\label{regeneration-commands}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Run the refinery analysis}
+\ExtensionTok{uv}\NormalTok{ run python projects/templates/template\_gold\_refinement/scripts/refinement\_analysis.py}
+
+\CommentTok{\# Generate manuscript variables}
+\ExtensionTok{uv}\NormalTok{ run python projects/templates/template\_gold\_refinement/scripts/z\_generate\_manuscript\_variables.py}
+
+\CommentTok{\# Full pipeline (from repo root)}
+\ExtensionTok{./run.sh} \AttributeTok{{-}{-}project}\NormalTok{ templates/template\_gold\_refinement }\AttributeTok{{-}{-}pipeline} \AttributeTok{{-}{-}core{-}only}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Config ownership}\label{config-ownership}
+
+All vocabulary, slots, and section conditions are declared in
+\breaktt{manuscript/config.yaml} under \breaktt{gold\_refinement:}. The
+config is the source of truth; generated prose is disposable.
+
+\newpage
+
+\section{Scope: Related Work and Limitations}\label{sec:scope}
+
+\subsection{Scope limitations}\label{scope-limitations}
+
+This exemplar demonstrates the gold-refining analogy as a
+\textbf{methods paper}. It does not claim:
+
+\begin{itemize}
+\tightlist
+\item
+  Empirical validation of manuscript quality metrics against external
+  standards
+\item
+  Generalizability of specific purity fractions to all scientific
+  domains
+\item
+  That the analogy replaces domain-specific peer review or expert
+  judgement
+\end{itemize}
+
+\subsection{Related work}\label{related-work}
+
+The mega-madlib token injection pattern follows
+\texttt{template\_madlib}'s deterministic lexical composition approach.
+The pipeline-staging model draws on \breaktt{template\_code\_project}'s
+thin-orchestrator pattern. The refinement analogy is novel to this
+exemplar but builds on the template repository's existing validation and
+rendering infrastructure.
+
+\subsection{Responsible forking}\label{responsible-forking}
+
+A fork must:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Add domain-specific evidence before making domain claims
+\item
+  Update lexicon categories to reflect domain vocabulary
+\item
+  Connect refinery stages to real domain operations
+\item
+  Add domain validators beyond the exemplar's generic gates
+\item
+  Regenerate all outputs through the pipeline
+\end{enumerate}
+
+\newpage
+
+\section{Quality Probes}\label{sec:evaluation}
+
+\subsection{QA probes}\label{qa-probes}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2381}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3571}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2381}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Probe
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Question
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Passing signal
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Artifact
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Monotone purity & Does purity increase strictly across all refinery
+stages? & assert\_monotone\_increase passes on the purity sequence. &
+src/refinery.py and output/data/refinery\_results.json \\
+Token provenance & Can every selected token be traced to a category,
+section, value, and config key? & The token plan contains one row for
+each generated token. & output/reports/token\_plan.json \\
+Karat grade correctness & Does each stage map to the correct karat
+grade? & karat\_for\_purity returns the expected grade for each stage. &
+src/purity.py \\
+\end{longtable}
+}
+
+\subsection{Audit rules}\label{audit-rules}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3158}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3684}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3158}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Rule
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Check
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Test
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Purity monotonicity & Purity must strictly increase from stage to stage
+& tests/test\_refinery.py \\
+Token determinism & Same seed and lexicon must produce same token plan &
+tests/test\_composition.py \\
+Token coverage & Every manuscript \{\{TOKEN\}\} must have a generated
+variable & tests/test\_manuscript\_variables.py \\
+Config validation & Invalid config must raise GoldRefinementConfigError
+& tests/test\_config.py \\
+Figure generation & All figure generators must produce non-blank PNGs &
+tests/test\_figures.py \\
+\end{longtable}
+}
+
+\newpage
+
+\section{Authoring Contract}\label{sec:authoring_contract}
+
+\subsection{Obligations}\label{obligations}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4800}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5200}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Obligation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Requirement
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Domain validator & Add domain-specific evidence before making domain
+claims beyond the exemplar. \\
+Config ownership & Keep lexicon and slots in config.yaml, not in
+generated prose. \\
+Regeneration contract & Regenerate outputs through the pipeline, not by
+hand-editing. \\
+\end{longtable}
+}
+
+\subsection{Fork checklist}\label{fork-checklist}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Remap metallurgical stages to domain operations in
+  \texttt{src/refinery.py}
+\item
+  Update lexicon categories in \breaktt{manuscript/config.yaml} under
+  \breaktt{gold\_refinement.lexicon}
+\item
+  Update \breaktt{contribution\_claims} with domain-specific evidence
+  pointers
+\item
+  Add domain validators beyond the exemplar's generic gates
+\item
+  Regenerate all outputs through the pipeline:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{uv}\NormalTok{ run python scripts/refinement\_analysis.py}
+\ExtensionTok{uv}\NormalTok{ run python scripts/z\_generate\_manuscript\_variables.py}
+\end{Highlighting}
+\end{Shaded}
+\item
+  Do not hand-edit generated manuscript, PDFs, or figures
+\end{enumerate}
+
+
+
+\clearpage
+
+\bibliography{references}
+\end{document}

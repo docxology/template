@@ -1,0 +1,221 @@
+\frametitle{Related Work And Current Trends}
+\protect\phantomsection\label{sec:related-work}
+\begin{block}{Information Overload And Machine-Readable Science}
+\protect\phantomsection\label{sec:information-overload-machine-readable-science}
+The current AutoResearch literature is driven by a practical bottleneck:
+scientific output is growing faster than document-centered review and
+synthesis can absorb. Recent science-of-science evidence complicates any
+simple productivity story: AI-augmented scientists can publish and be
+cited more often, but the same adoption pattern can narrow the
+collective range of topics and interactions in science
+\breakseq{[@hao\_ai\_tools\_focus\_2026]}. This is a 2026 Nature result, not a
+2024 analysis, and it motivates governance rather than celebration.
+
+One response is to make literature synthesis more source governed.
+OpenScholar uses retrieval-augmented generation over a large scientific
+passage store and reports citation accuracy improvements on literature
+synthesis tasks \breakseq{[@asai\_openscholar\_2026]}. PaperQA2 similarly
+evaluates literature-search agents against expert scientific tasks and
+emphasizes cited answers, contradiction detection, and factuality
+\breakseq{[@skarlinski\_paperqa2\_2024]}. STORM, PaperQA, and GPT Researcher
+are adjacent source-grounded writing systems that motivate this
+project's insistence on citation-backed claims and visible evidence
+surfaces \breakseq{[@shao\_storm\_2024; @lala\_paperqa\_2023;
+@gpt\_researcher\_2026]}. The common lesson is that automated writing
+is not enough: claims must remain tied to inspectable sources,
+artifacts, and evaluation records.
+\end{block}
+
+\begin{block}{Structured Distillation And Conceptual Knowledge
+Substrates}
+\protect\phantomsection\label{sec:structured-distillation-knowledge-substrates}
+The Discovery Engine proposes a more structural answer to the same
+overload problem. It distills publications into source-linked knowledge
+artifacts, organizes those artifacts under a conceptual schema, encodes
+them into a high-dimensional Conceptual Tensor, and unrolls that tensor
+into graph and vector views for agent navigation
+\breakseq{[@baulin\_discovery\_engine\_2025]}. This project does not construct
+a Conceptual Nexus Model or claim domain-scale literature synthesis. It
+adopts a much smaller analogue: outputs, ledgers, evidence registries,
+figure records, and hydrated manuscript variables are file-backed
+objects whose provenance can be checked before publication.
+
+The representational background is broader than one framework. FAIR
+principles argue for data that are findable, accessible, interoperable,
+and reusable by people and machines \breakseq{[@wilkinson2016fair]}. RO-Crate
+and Workflow Run RO-Crate package research artifacts and computational
+executions with linked-data metadata \breakseq{[@soiland\_reyes2022rocrate;
+@soiland\_reyes2024workflow\_run\_rocrate]}. Hyperdimensional computing
+and vector symbolic architectures provide one route for robust
+high-dimensional symbolic-subsymbolic representations
+\breakseq{[@heddes\_hdc\_2024]}, while tensor factorization methods such as
+TuckER and mixed-geometry tensor factorization show how multi-relational
+knowledge graphs can be completed and queried as structured tensors
+\breakseq{[@balazevic\_tucker\_2019; @yusupov\_mixed\_geometry\_2025]}. The
+local contribution here is not a new knowledge representation method; it
+is an executable template that makes a small research workflow
+compatible with that machine-readable direction.
+\end{block}
+
+\begin{block}{End-To-End AutoResearch Systems}
+\protect\phantomsection\label{sec:end-to-end-autoresearch-systems}
+The most ambitious AutoResearch systems now aim at the entire scientific
+lifecycle. The AI Scientist assembles idea generation, experiment
+execution, paper writing, and automated review
+\breakseq{[@lu\_aiscientist\_2024]}, and its Nature version reports an
+end-to-end AI research pipeline whose generated manuscript passed a
+workshop peer-review round \breakseq{[@lu\_ai\_scientist\_nature\_2026]}. AI
+Scientist-v2 removes more hand-authored scaffolding and uses agentic
+tree search for broader hypothesis exploration
+\breakseq{[@yamada\_ai\_scientist\_v2\_2025]}. FutureHouse's platform exposes
+specialized scientific agents for literature search, deep review,
+novelty checking, and chemistry planning
+\breakseq{[@futurehouse\_platform\_2025]}, while Robin integrates literature
+and data-analysis agents in a lab-in-the-loop discovery workflow
+\breakseq{[@ghareeb\_robin\_2026]}.
+
+Survey work is already separating reliable assistance from risky
+autonomy. The AI for Auto-Research roadmap describes the full lifecycle
+from creation to dissemination, but stresses that novelty,
+research-level implementation, and judgment remain fragile under
+automation \breakseq{[@kong\_ai\_auto\_research\_2026]}. EXHYTE frames
+discovery as an iterative Exploration, Hypothesis generation, and
+Testing loop, clarifying where current systems are mature and where
+closed-loop autonomy remains thin \breakseq{[@hasib\_exhyte\_2025]}. This
+exemplar therefore takes the opposite stance from full autonomy: it
+implements a bounded local loop whose candidate space, data, cost,
+outputs, and review gates can be audited.
+\end{block}
+
+\begin{block}{Autoformalization And Verification}
+\protect\phantomsection\label{sec:autoformalization-verification}
+Autoformalization supplies a different kind of boundary: instead of only
+asking whether generated text is plausible, it asks whether an informal
+statement can be translated into a form that a proof assistant or
+compiler can check. AlphaProof shows the power of reinforcement learning
+over formal mathematical proof search \breakseq{[@hubert\_alphaproof\_2025]}.
+Process-driven autoformalization in Lean uses compiler feedback as a
+precise signal for improving translations from natural-language
+mathematics to formal statements and proofs
+\breakseq{[@lu\_process\_driven\_autoformalization\_2024]}. APOLLO turns Lean
+feedback into an iterative proof-repair workflow in which generated
+proofs are decomposed, patched, and reverified
+\breakseq{[@apollo\_lean\_collaboration\_2025]}.
+
+This project does not perform theorem proving, proof repair, or formal
+mathematical verification. It borrows the architectural lesson:
+generated research artifacts should be checked by deterministic tools
+with explicit error surfaces. Here those tools are test suites, schema
+checks, evidence registries, render validation, source hygiene greps,
+and review packets rather than Lean, Isabelle, or Coq.
+\end{block}
+
+\begin{block}{ML For ML And Evolutionary Algorithm Discovery}
+\protect\phantomsection\label{sec:ml-for-ml-evolutionary-discovery}
+ML-for-ML systems optimize models, code, or algorithms with search loops
+that are themselves subject to evaluation. Karpathy's
+\texttt{autoresearch} repository frames a minimal version of this
+pattern as a prompt-controlled system with a fixed budget, editable code
+surface, and comparable metric \breakseq{[@karpathy\_autoresearch\_2026]}.
+MLAgentBench and MLE-bench package machine learning tasks as scored,
+replayable environments with logs and grading outputs
+\breakseq{[@huang\_mlagentbench\_2023; @chan\_mle\_bench\_2024]}.
+
+At a larger scale, AlphaEvolve couples language-model proposals to
+evolutionary program search and automated evaluators, producing
+algorithmic improvements in mathematics and computing
+\breakseq{[@romera\_paredes\_alphaevolve\_2025]}. DeepEvolve adds external
+retrieval, multi-file code editing, and debugging to the same basic
+proposal-implementation-evaluation loop \breakseq{[@deepevolve\_2025]}. This
+manuscript's candidate search is intentionally smaller: a finite list of
+configured model families is evaluated against \texttt{test\_accuracy},
+with deterministic selection and recorded deferrals rather than
+unbounded code mutation.
+\end{block}
+
+\begin{block}{Agentic Science, Graph Retrieval, And Epistemic Foraging}
+\protect\phantomsection\label{sec:agentic-science-graph-retrieval}
+Agentic science surveys describe systems that move from tool use toward
+scientific agency across perception, knowledge representation, planning,
+experimentation, analysis, and communication
+\breakseq{[@wei\_agentic\_science\_2025; @gridach\_agentic\_science\_2025]}.
+GraphRAG work adds structured retrieval to that picture: graph
+construction and graph-aware retrieval can support multi-hop reasoning,
+but benchmarks also show that knowledge-graph RAG remains brittle when
+relevant knowledge is incomplete \breakseq{[@graphrag\_bench\_2026;
+@brink\_kg\_rag\_2026]}. Active-inference perspectives make a similar
+design demand in different language: scientific agents need persistent
+uncertainty-aware memory, causal models, counterfactual exploration,
+deterministic validation, and human judgment as an architectural
+component \breakseq{[@active\_inference\_science\_2025]}.
+
+This exemplar uses those ideas as constraints, not as capabilities it
+already possesses. It does not run live literature mining, autonomous
+proof search, external agent swarms, graph-based hypothesis hunting, or
+self-approval. Instead it exposes bounded candidates, explicit budgets,
+local evidence links, local \texttt{MNIST} input data, benchmark-style
+scoring, source-linked figures, manuscript hydration, and human review
+gates. That is the intended safe baseline for a public template.
+\end{block}
+
+\begin{block}{Benchmark, Documentation, And Process Analogies}
+\protect\phantomsection\label{sec:benchmark-documentation-process-analogies}
+\texttt{MNIST} and LeNet remain useful here because they provide a
+compact historical benchmark for small neural networks and handwriting
+recognition \breakseq{[@lecun\_gradient\_1998; @lecun\_mnist\_database]}.
+Vision Transformers introduce the patch-token pattern for image
+classification at scale \breakseq{[@dosovitskiy\_vit\_2020]}; this exemplar
+borrows only the patching and attention representation through
+\breaktt{Tiny\ patch-attention\ classifier}, then keeps the
+implementation inside the configured candidate budget. MLPerf Tiny and
+OpenML motivate explicit task descriptions, fixed inputs,
+machine-readable run metadata, and checkable metrics
+\breakseq{[@banbury\_mlperf\_tiny\_2021; @vanschoren\_openml\_2014]}.
+Machine-learning reproducibility checklists motivate reporting data,
+seeds, model sizes, hyperparameters, and compute boundaries
+\breakseq{[@pineau\_reproducibility\_2020]}.
+
+Dataset and model documentation work further informs the safe boundary.
+Datasheets for Datasets motivate explicit reporting of dataset
+motivation, composition, collection, and recommended use
+\breakseq{[@gebru2021datasheets]}. Model Cards motivate structured reporting of
+model context, intended use, evaluation procedure, and limitations
+\breakseq{[@mitchell2019model\_cards]}. The diagnostic layer follows the same
+conservative reporting posture: calibration is treated as separate from
+accuracy \breakseq{[@guo2017calibration]}, binomial accuracy intervals use
+Wilson-style score intervals \breakseq{[@wilson1927probable\_inference]},
+matched classifier comparison is summarized through paired discordance
+\breakseq{[@dietterich1998statistical\_tests]}, deterministic bootstrap
+intervals are local resampling diagnostics \breakseq{[@efron1993bootstrap]},
+and probability quality is reported with Brier score, negative log
+likelihood, and chance-corrected agreement \breakseq{[@brier1950verification;
+@cohen1960coefficient]}.
+
+The process language is borrowed cautiously from teleology and
+theoretical biology. Kant's account of organized beings treats a natural
+purpose as a whole whose parts and whole mutually condition one another
+\breakseq{[@ginsborg\_kant\_aesthetics\_teleology]}. Autopoiesis characterizes
+living systems through self-producing organization
+\breakseq{[@varela\_autopoiesis\_1974]}, and later work connects Kantian
+natural purpose to autopoietic individuality
+\breakseq{[@weber\_varela\_life\_after\_kant\_2002]}. Moreno and Mossio's
+account of biological autonomy emphasizes organizational closure and
+self-maintenance \breakseq{[@moreno\_mossio\_biological\_autonomy\_2015]}. This
+paper uses those ideas only as disciplined analogies for configured
+scientific workflows whose artifacts help reproduce, constrain, and
+evaluate subsequent artifacts.
+
+Security and supply-chain references enter with the same restraint.
+NIST's zero-trust architecture treats verification as explicit and
+continuous rather than inherited from a trusted perimeter
+\breakseq{[@nist\_sp800\_207\_zero\_trust]}. The NIST Secure Software
+Development Framework emphasizes repeatable practices for reducing
+software vulnerability risk \breakseq{[@nist\_sp800\_218\_ssdf]}. SLSA frames
+software-artifact provenance and supply-chain integrity as a graded
+assurance problem \breakseq{[@slsa\_spec\_latest]}, while MITRE ATT\&CK T1195
+names supply-chain compromise as a concrete adversary technique
+\breakseq{[@mitre\_attack\_t1195]}. This exemplar borrows those frameworks as
+disciplined analogies for local research artifact integrity: checksums,
+inventories, review gates, and explicit non-claims, not production
+deployment certification.
+\end{block}

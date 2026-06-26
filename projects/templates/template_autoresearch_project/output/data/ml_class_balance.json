@@ -1,0 +1,131 @@
+{
+  "claim_boundary": "Class-balance counts describe the local offline fixture used by this run.",
+  "dataset_path": "data/mnist_small.npz",
+  "provenance_path": "data/mnist_small_provenance.json",
+  "rows": [
+    {
+      "class_label": 0,
+      "count": 200,
+      "fraction": 0.1,
+      "split": "train"
+    },
+    {
+      "class_label": 1,
+      "count": 200,
+      "fraction": 0.1,
+      "split": "train"
+    },
+    {
+      "class_label": 2,
+      "count": 200,
+      "fraction": 0.1,
+      "split": "train"
+    },
+    {
+      "class_label": 3,
+      "count": 200,
+      "fraction": 0.1,
+      "split": "train"
+    },
+    {
+      "class_label": 4,
+      "count": 200,
+      "fraction": 0.1,
+      "split": "train"
+    },
+    {
+      "class_label": 5,
+      "count": 200,
+      "fraction": 0.1,
+      "split": "train"
+    },
+    {
+      "class_label": 6,
+      "count": 200,
+      "fraction": 0.1,
+      "split": "train"
+    },
+    {
+      "class_label": 7,
+      "count": 200,
+      "fraction": 0.1,
+      "split": "train"
+    },
+    {
+      "class_label": 8,
+      "count": 200,
+      "fraction": 0.1,
+      "split": "train"
+    },
+    {
+      "class_label": 9,
+      "count": 200,
+      "fraction": 0.1,
+      "split": "train"
+    },
+    {
+      "class_label": 0,
+      "count": 50,
+      "fraction": 0.1,
+      "split": "test"
+    },
+    {
+      "class_label": 1,
+      "count": 50,
+      "fraction": 0.1,
+      "split": "test"
+    },
+    {
+      "class_label": 2,
+      "count": 50,
+      "fraction": 0.1,
+      "split": "test"
+    },
+    {
+      "class_label": 3,
+      "count": 50,
+      "fraction": 0.1,
+      "split": "test"
+    },
+    {
+      "class_label": 4,
+      "count": 50,
+      "fraction": 0.1,
+      "split": "test"
+    },
+    {
+      "class_label": 5,
+      "count": 50,
+      "fraction": 0.1,
+      "split": "test"
+    },
+    {
+      "class_label": 6,
+      "count": 50,
+      "fraction": 0.1,
+      "split": "test"
+    },
+    {
+      "class_label": 7,
+      "count": 50,
+      "fraction": 0.1,
+      "split": "test"
+    },
+    {
+      "class_label": 8,
+      "count": 50,
+      "fraction": 0.1,
+      "split": "test"
+    },
+    {
+      "class_label": 9,
+      "count": 50,
+      "fraction": 0.1,
+      "split": "test"
+    }
+  ],
+  "schema": "template-autoresearch-class-balance-v1",
+  "task_id": "mnist_small_neural_search",
+  "test_size": 500,
+  "train_size": 2000
+}

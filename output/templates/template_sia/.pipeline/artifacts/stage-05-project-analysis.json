@@ -1,0 +1,14 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/context.md",
+      "sha256": "6ad7523a6d7ee399951336ebb5970a4cc313d2c50f596ccd8978880efc2c1109",
+      "size_bytes": 3890,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:49:42+00:00"
+    }
+  ],
+  "issues": []
+}

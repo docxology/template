@@ -1,0 +1,23 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/reports/validation_report.json",
+      "sha256": "66dc42136386247faf2a600802b4efdbb660c8d7409a21e129cfc8eebbe55ed6",
+      "size_bytes": 5825,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-14T19:49:19+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/validation_report.md",
+      "sha256": "062292788eaa4a2672e4cf4441aed096e6f5ec4c86d6dc5c554503515beade3e",
+      "size_bytes": 332,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-14T19:49:19+00:00"
+    }
+  ],
+  "issues": []
+}

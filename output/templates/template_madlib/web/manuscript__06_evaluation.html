@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>06_evaluation.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1
+id="evaluation-gate-criteria-qa-probes-and-failure-discovery">Evaluation:
+Gate Criteria, QA Probes, and Failure Discovery</h1>
+<p>The evaluation section is configured to name readiness criteria,
+connect criteria to artifacts, separate local checks from publication
+readiness, and make failure probes visible. The local readiness surface
+is not a human preference score; it is a set of deterministic checks
+that connect generated manuscript claims to source files and pipeline
+gates.</p>
+<p>The active criteria use analysis, copy, pytest, validation as gate
+labels and inspect artifacts such as token-injection flow, quality-gate
+matrix, configured-field figures. A passing run means the exemplar is
+locally render-ready: placeholders resolve, token provenance is present,
+figure references are registered, evidence scanning has not found
+unsupported numbers, and project design overlays remain internally
+consistent.</p>
+<p>That readiness is deliberately narrower than publication readiness. A
+local pass does not imply a standalone DOI, external release, reader
+preference result, or empirical validation. It means the tracked project
+tree can regenerate the committed artifact surface through its declared
+pipeline.</p>
+<p>The QA probes are Method row completeness, Field-origin visibility,
+Placeholder survival, Provenance completeness, Section-switch
+observability, Figure registry coverage, Method-figure alignment,
+Evidence cleanliness, Fork readiness, Copied-output parity, Digest
+invariant review, Claim-ledger alignment, Review packet completeness,
+Fork migration sufficiency. They are phrased as questions so they can be
+reused by reviewers and by forks of the exemplar: did the placeholder
+disappear, did the provenance survive, did the figure registry cover
+every reference, and did copied outputs preserve the same evidence
+surface that validation inspected?</p>
+<figure id="fig:quality-gate-matrix">
+<img src="../figures/quality_gate_matrix.png"
+alt="Quality gate matrix" />
+<figcaption aria-hidden="true">Quality gate matrix</figcaption>
+</figure>
+<h2 id="evaluation-criteria">Evaluation Criteria</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Target</th>
+<th>Evidence</th>
+<th>Gate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Placeholder resolution</td>
+<td>No unresolved uppercase manuscript placeholders remain in
+output/manuscript or rendered web output.</td>
+<td>tests/test_manuscript_variables.py and rg unresolved-token
+scan.</td>
+<td><code>pytest</code></td>
+</tr>
+<tr>
+<td>Token provenance coverage</td>
+<td>Every selected token maps to category, selected value, section, and
+config pointer.</td>
+<td>output/reports/injection_trace.json and
+output/data/token_inventory.json.</td>
+<td><code>analysis</code></td>
+</tr>
+<tr>
+<td>Figure registry integrity</td>
+<td>Every referenced figure label is present in
+../figures/figure_registry.json.</td>
+<td>scripts/04_validate_output.py figure registry check.</td>
+<td><code>validation</code></td>
+</tr>
+<tr>
+<td>Evidence registry cleanliness</td>
+<td>Generated manuscript numbers and claims pass the project evidence
+registry.</td>
+<td>output/reports/evidence_registry.json.</td>
+<td><code>validation</code></td>
+</tr>
+<tr>
+<td>Copied-output readiness</td>
+<td>PDF, HTML, slides, figures, data, and reports copy into
+output/templates/template_madlib.</td>
+<td>scripts/05_copy_outputs.py output statistics.</td>
+<td><code>copy</code></td>
+</tr>
+<tr>
+<td>Reviewer packet completeness</td>
+<td>Hydrated Markdown, rendered PDF, web output, slides, figures, data,
+reports, validation results, and copy statistics are all present for
+review.</td>
+<td>Stage 04 validation report and Stage 05 output_statistics.json.</td>
+<td><code>copy</code></td>
+</tr>
+<tr>
+<td>Method-invariant traceability</td>
+<td>Token choices can be explained only by seed, slot, category,
+ordinal, and ordered category inventory.</td>
+<td>tests/test_tokens.py and generated Methods digest prose.</td>
+<td><code>pytest</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="quality-probes">Quality Probes</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Probe</th>
+<th>Question</th>
+<th>Passing signal</th>
+<th>Artifact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Method row completeness</td>
+<td>Does the protocol table cover schema intake, token planning,
+composition, figures, validation, copy, and review handoff?</td>
+<td>method_protocol includes rows for every major pipeline
+responsibility.</td>
+<td><code>manuscript/config.yaml and output/data/section_plan.json</code></td>
+</tr>
+<tr>
+<td>Field-origin visibility</td>
+<td>Can a reviewer tell which visible fields were authored and which
+were defaulted?</td>
+<td>Configured-field inventory and summary tables report explicit and
+defaulted paths.</td>
+<td><code>output/data/configured_field_inventory.json</code></td>
+</tr>
+<tr>
+<td>Placeholder survival</td>
+<td>Did any source token survive hydration?</td>
+<td>No uppercase placeholders are found in generated manuscript or web
+files.</td>
+<td><code>output/manuscript and output/web</code></td>
+</tr>
+<tr>
+<td>Provenance completeness</td>
+<td>Can every selected token be traced to a category, section, value,
+and config key?</td>
+<td>The injection trace and token inventory contain one row for each
+generated token.</td>
+<td><code>output/reports/injection_trace.json</code></td>
+</tr>
+<tr>
+<td>Section-switch observability</td>
+<td>Does a disabled section resolve to a visible explanation?</td>
+<td>Disabled section bodies cite their controlling section
+condition.</td>
+<td><code>output/data/section_plan.json</code></td>
+</tr>
+<tr>
+<td>Figure registry coverage</td>
+<td>Does every manuscript figure reference have a generated registry
+entry?</td>
+<td>Figure registry validation passes.</td>
+<td><code>../figures/figure_registry.json</code></td>
+</tr>
+<tr>
+<td>Method-figure alignment</td>
+<td>Do method figures describe generated data rather than decorative or
+unsupported claims?</td>
+<td>Figure registry captions, nonblank PNG tests, and manual visual QA
+align with artifact data.</td>
+<td><code>output/figures</code></td>
+</tr>
+<tr>
+<td>Evidence cleanliness</td>
+<td>Do generated claims stay within local evidence boundaries?</td>
+<td>Evidence registry validation passes without unsupported claims.</td>
+<td><code>output/reports/evidence_registry.json</code></td>
+</tr>
+<tr>
+<td>Fork readiness</td>
+<td>Does the authoring contract tell downstream forks what to extend
+before adding domain claims?</td>
+<td>Authoring obligations cite config diffs, claim ledger updates,
+validators, and full reruns.</td>
+<td><code>output/manuscript/10_authoring_contract.md</code></td>
+</tr>
+<tr>
+<td>Copied-output parity</td>
+<td>Did copied deliverables preserve the validated project output
+surface?</td>
+<td>Copy-stage statistics include PDF, HTML, slides, figures, data, and
+reports.</td>
+<td><code>output/templates/template_madlib</code></td>
+</tr>
+<tr>
+<td>Digest invariant review</td>
+<td>Are the allowed token-selection inputs documented and protected by
+tests?</td>
+<td>Methods prose names the digest inputs and token tests prove
+seed/category sensitivity.</td>
+<td><code>src/tokens.py and output/manuscript/02_methodology.md</code></td>
+</tr>
+<tr>
+<td>Claim-ledger alignment</td>
+<td>Do method and documentation claims point to config, source,
+generated artifacts, or explicit non-claim boundaries?</td>
+<td>Claim-ledger rows cover expanded method protocol and fork-validator
+boundaries.</td>
+<td><code>data/claim_ledger.yaml</code></td>
+</tr>
+<tr>
+<td>Review packet completeness</td>
+<td>Can a reviewer inspect every output surface needed to audit the
+method?</td>
+<td>Copied outputs include manuscript, web, slides, figures, data,
+reports, validation, and copy statistics.</td>
+<td><code>output/templates/template_madlib and output/reports/output_statistics.json</code></td>
+</tr>
+<tr>
+<td>Fork migration sufficiency</td>
+<td>Does the documentation tell forks which surfaces to change before
+adding domain claims?</td>
+<td>README, STANDALONE, manuscript README, and Authoring Contract list
+config, source, test, validator, and claim-ledger obligations.</td>
+<td><code>README.md, STANDALONE.md, manuscript/README.md, and output/manuscript/10_authoring_contract.md</code></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

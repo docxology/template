@@ -1,0 +1,176 @@
+{
+  "entries": [
+    {
+      "path": "output/data/manuscript_variables.json",
+      "size_bytes": 859,
+      "sha256": "f06586c2983fd1771c004732285132622a45be25bda2ad611dab6f9eda7412f5",
+      "stage_num": 2,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/figures/sia_generation_heatmap.png",
+      "size_bytes": 29479,
+      "sha256": "e350faafe9dc7bc096699e1cf2c7164beb132fc3c61633367dfbefa0dc1ad50f",
+      "stage_num": 16,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/figures/sia_improvement_delta.png",
+      "size_bytes": 55415,
+      "sha256": "2ff73a7828ad2e32f31a22b502ea08e89f83a48b814de85b41b334546ad9d022",
+      "stage_num": 17,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/figures/sia_loop_topology.png",
+      "size_bytes": 42241,
+      "sha256": "44d2310b802ee4a2b4a1c15b914c9184ea450a3044525fc6e403234b47e2e8c9",
+      "stage_num": 18,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/figures/sia_metric_progression.png",
+      "size_bytes": 52500,
+      "sha256": "592e655eabccc3e2e7345514f6434c059414ced34f371b4cbb56f26d0ea27ef8",
+      "stage_num": 19,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/reports/sia_loop_report.md",
+      "size_bytes": 250,
+      "sha256": "c29ed2e40bb6bbd30010a808a6f6cd23151790031770a06dbfa5342033ecfb74",
+      "stage_num": 1,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/context.md",
+      "size_bytes": 67140,
+      "sha256": "df50ac1f02b27b0e943225c50a1873cd208c053b7a7c3269fe4b2178a0b7c1b9",
+      "stage_num": 4,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_1/agent_execution.json",
+      "size_bytes": 51,
+      "sha256": "8ffb5263911834731bd28ec4b61b4eba3734659f55b9d014b7848fb6e75a99f2",
+      "stage_num": 6,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_1/results.json",
+      "size_bytes": 60,
+      "sha256": "48a949a4a51a514596a86176018c90b8f4bb94918bb90bcc0cde8565708f3751",
+      "stage_num": 7,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_1/target_agent.py",
+      "size_bytes": 1630,
+      "sha256": "2979300632a41ffa3f0e6e3cd0b1d8ce8f0cad36f945185deb3759f45db38f2d",
+      "stage_num": 5,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_2/agent_execution.json",
+      "size_bytes": 51,
+      "sha256": "b17e996e29d6fd2cce10d88886a9a50d5f6c3ceb2086468d90762f6b2a9e4604",
+      "stage_num": 9,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_2/improvement.md",
+      "size_bytes": 47,
+      "sha256": "8fc03054a72f2b5fa07b619b8f99de2fbe44cc11b38d4381bbcffa737a5e900b",
+      "stage_num": 10,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_2/results.json",
+      "size_bytes": 63,
+      "sha256": "008615bf1c29a333b4ceb36f43504676cc90747e8b83cb05ac125ebcf29d8959",
+      "stage_num": 11,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_2/target_agent.py",
+      "size_bytes": 1630,
+      "sha256": "2979300632a41ffa3f0e6e3cd0b1d8ce8f0cad36f945185deb3759f45db38f2d",
+      "stage_num": 8,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_3/agent_execution.json",
+      "size_bytes": 51,
+      "sha256": "8c447c0b63ae15ae3d5411623337588658cf80524c19f440d015b78ad59103b8",
+      "stage_num": 13,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_3/improvement.md",
+      "size_bytes": 48,
+      "sha256": "db6fa923a54fde17bf48c05e587dc9bba8f0c6d18020a774f36cdc2821bc8883",
+      "stage_num": 14,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_3/results.json",
+      "size_bytes": 63,
+      "sha256": "e23e8f4454142ad3435b5a02510ccbe42b457451f64f1ee63a91fc9097e69d80",
+      "stage_num": 15,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/gen_3/target_agent.py",
+      "size_bytes": 1630,
+      "sha256": "2979300632a41ffa3f0e6e3cd0b1d8ce8f0cad36f945185deb3759f45db38f2d",
+      "stage_num": 12,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    },
+    {
+      "path": "output/runs/run_1/run_summary.json",
+      "size_bytes": 2472,
+      "sha256": "3d08b3b99f7c4d4b27116b6006454407de207ab921073cf592dca148273291cc",
+      "stage_num": 3,
+      "stage_name": "SIA loop",
+      "contract_match": true,
+      "timestamp": "2026-06-26T13:24:25+00:00"
+    }
+  ],
+  "issues": []
+}

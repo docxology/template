@@ -4,21 +4,29 @@ A self-referential research study that programmatically analyzes and documents t
 
 **Location:** git-tracked public exemplar at `projects/templates/template_template/` in the public template checkout.
 
-## Run via the template monorepo
+## Publication and rendering
 
-This exemplar lives at `projects/templates/template_template/` in the public
-[docxology/template](https://github.com/docxology/template) repository.
-**Tests, analysis, PDF rendering, and CI all run through that monorepo** —
-clone it, run `uv sync` at the repository root, then:
+- Standalone GitHub: [docxology/template_template](https://github.com/docxology/template_template)
+- Latest GitHub release: [v1.0.8](https://github.com/docxology/template_template/releases/tag/v1.0.8)
+- Zenodo concept DOI: [10.5281/zenodo.20419007](https://doi.org/10.5281/zenodo.20419007)
+- Latest Zenodo version DOI: [10.5281/zenodo.20932076](https://doi.org/10.5281/zenodo.20932076) ([record](https://zenodo.org/records/20932076))
+- Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_template`
+- Tracked outputs: [`output/`](output/) in this project and `output/templates/template_template/` in the monorepo; public output files above 50 MB stay out of git.
+
+To regenerate this exemplar from the public monorepo:
 
 ```bash
+git clone https://github.com/docxology/template
+cd template
+uv sync
 ./run.sh --project templates/template_template --pipeline --core-only
-# or: uv run python scripts/execute_pipeline.py --project templates/template_template --core-only
+uv run python scripts/04_validate_output.py --project templates/template_template
+uv run python scripts/05_copy_outputs.py --project templates/template_template
 ```
 
-Several exemplars also publish standalone GitHub/Zenodo releases for citation;
-those mirrors are outputs of this pipeline. The monorepo remains the canonical
-build and render surface.
+Standalone repositories are publication mirrors for source, DOI metadata, and
+tracked rendered artifacts. Use the monorepo above when you need the full shared
+infrastructure, pipeline stages, or cross-template validation.
 
 ## When to use this template
 

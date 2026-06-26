@@ -1,0 +1,285 @@
+# Literature Meta-Analysis Configuration
+#
+# This is the SINGLE control surface for the whole pipeline. It is domain-agnostic:
+# point `project_config.search.term` (and the query/keyword/subfield/hypothesis blocks
+# below) at ANY topic and re-run. The bundled default is "modafinil" — a wakefulness-
+# promoting agent with a large, multi-disciplinary literature (clinical, cognitive,
+# pharmacological, psychiatric) that exercises every analysis path.
+
+paper:
+  title: "A Living Meta-Analysis of the Modafinil Literature"
+  subtitle: "Multi-Engine Retrieval, De-duplication, Embeddings, and Bibliometrics for a Single Search Term"
+  version: "0.1.0"
+  date: "" # Auto-generated
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliations:
+      - "Active Inference Institute"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.20931964"
+  version_doi: "10.5281/zenodo.20931965"
+  version_record: "https://zenodo.org/records/20931965"
+  github_repository: "docxology/template_literature_meta_analysis"
+  repository_url: "https://github.com/docxology/template_literature_meta_analysis"
+  repository_label: "docxology/template_literature_meta_analysis"
+  journal: ""
+  volume: ""
+  pages: ""
+  year: "2026"
+
+keywords:
+  - "modafinil"
+  - "meta-analysis"
+  - "literature retrieval"
+  - "bibliometrics"
+  - "record de-duplication"
+  - "full-text mining"
+  - "document embeddings"
+  - "citation network"
+  - "topic modeling"
+  - "entity extraction"
+  - "wakefulness"
+  - "cognitive enhancement"
+  - "reproducible research"
+
+metadata:
+  license: "CC-BY-4.0"
+  language: "en"
+  repository: "https://github.com/docxology/template_literature_meta_analysis"
+
+llm:
+  reviews:
+    enabled: true
+    types:
+      - executive_summary
+  translations:
+    enabled: true
+    languages:
+      - zh
+
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0
+
+# Project-specific configuration namespace.
+# Keys under project_config are passed through without schema validation warnings.
+# Access in scripts via: config.get('project_config', {}).get('search', {})
+project_config:
+  search:
+    # `term` is the human-readable topic; everything downstream (titles, captions,
+    # word-cloud) derives from it. Change THIS to re-target the template.
+    term: "modafinil"
+    start_year: 1990
+    query: '"modafinil" OR "provigil" OR "armodafinil"'
+    max_results: 1000
+    resume: true
+    clear_corpus: false
+    # Per-engine enable toggles. Engines with no API key / no network simply report
+    # `skipped` and the pipeline still completes from the remaining engines + the
+    # committed fixture corpus (multiple dispatch with graceful degradation).
+    engines:
+      arxiv: true
+      openalex: true
+      semantic_scholar: true
+      crossref: true
+      pubmed: true
+      sovietrxiv: true
+      chinarxiv: true
+    # SovietRxiv / RussiaRxiv (translated Soviet-era preprints from Math-Net.Ru
+    # and CyberLeninka). Keyless engine; set api_email for the polite rate-limit
+    # pool (300/min vs 30/min anonymous). Set source: "russiarxiv" to restrict.
+    sovietrxiv:
+      api_email: ""              # e.g. "your@email.com" for the polite pool
+      source: ""                # "russiarxiv" | "" (combined)
+    # ChinaRxiv (translated Chinese preprints from ChinaXiv). Shares the same
+    # unified API as SovietRxiv but hosted at https://chinaxiv.org.
+    chinarxiv:
+      api_email: ""              # e.g. "your@email.com" for the polite pool
+    arxiv_queries:
+      - 'all:"modafinil"'
+      - 'all:"armodafinil"'
+      - 'all:"wakefulness promoting agent"'
+      - 'all:"modafinil" AND all:"cognition"'
+    relevance_keywords:
+      - "modafinil"
+      - "armodafinil"
+      - "provigil"
+      - "wakefulness"
+      - "narcolepsy"
+      - "cognitive enhancement"
+      - "alertness"
+      - "sleep deprivation"
+      - "vigilance"
+      - "eugeroic"
+
+  # Optional full-text download (opt-in; network + politeness email gated).
+  fulltext:
+    enabled: false
+    unpaywall_email: ""        # required by Unpaywall for the OA resolver
+    download_dir: "output/fulltext"
+
+  # Offline-deterministic embeddings (TF-IDF -> truncated SVD / LSA). Set
+  # method: transformer and install the `embeddings` extra to upgrade.
+  embeddings:
+    method: "tfidf_svd"
+    n_components: 50
+    max_features: 2000
+    seed: 42
+
+  knowledge_graph:
+    resume: true
+    checkpoint_interval: 50
+    checkpoint_path: "output/data/nanopublications.jsonl"
+    clear_assertions: false
+    max_papers: null
+
+  llm_extraction:
+    model: "gemma3:4b"
+    base_url: "http://localhost:11434"
+    temperature: 0.1
+    max_tokens: 2048
+    timeout_seconds: 120
+    max_retries: 3
+    min_confidence: 0.6
+
+  # Domain hypotheses scored against the corpus. Replace these to re-target.
+  hypothesis_definitions:
+    H1:
+      name: "Wakefulness Efficacy"
+      description: "Modafinil reliably promotes wakefulness in sleep-disorder populations (narcolepsy, shift-work, OSA)"
+      scope: "clinical"
+    H2:
+      name: "Cognitive Enhancement"
+      description: "Modafinil improves attention, working memory, and executive function, especially under sleep deprivation"
+      scope: "cognitive"
+    H3:
+      name: "Low Abuse Liability"
+      description: "Modafinil has lower abuse potential and dependence risk than classical psychostimulants"
+      scope: "safety"
+    H4:
+      name: "Dopaminergic Mechanism"
+      description: "Modafinil acts substantially via dopamine-transporter inhibition rather than a purely novel mechanism"
+      scope: "pharmacological"
+    H5:
+      name: "Off-label Psychiatric Utility"
+      description: "Modafinil is a useful adjunct for fatigue and cognition in psychiatric and neurological conditions"
+      scope: "applied"
+    H6:
+      name: "Tolerability"
+      description: "Modafinil is generally well tolerated, with predominantly mild, transient adverse effects"
+      scope: "safety"
+
+  pipeline_stages:
+    - name: literature_search
+      script: 01_literature_search.py
+      inputs: []
+      outputs:
+        - output/data/corpus.jsonl
+      description: "Query arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv; merge and deduplicate"
+
+    - name: meta_analysis
+      script: 02_meta_analysis_pipeline.py
+      inputs:
+        - output/data/corpus.jsonl
+      outputs:
+        - output/data/subfield_classification.json
+        - output/data/subfield_timeline.json
+        - output/data/temporal_analysis.json
+        - output/data/tfidf_data.json
+        - output/data/topics.json
+        - output/data/citation_network.json
+        - output/data/citation_graph.gml
+      description: "Classify subfields, compute temporal metrics, TF-IDF, NMF, citation network"
+
+    - name: knowledge_graph
+      script: 03_build_knowledge_graph.py
+      inputs:
+        - output/data/corpus.jsonl
+      outputs:
+        - output/data/nanopublications.jsonl
+        - output/data/nanopublications.trig
+        - output/data/hypothesis_scores.json
+        - output/data/hypothesis_trends.json
+        - output/data/assertion_summary.json
+      description: "Extract LLM-based assertions (optional), build KG, score hypotheses, export RDF/TriG nanopubs"
+
+    - name: figure_generation
+      script: 04_generate_figures.py
+      inputs:
+        - output/data/temporal_analysis.json
+        - output/data/topics.json
+        - output/data/citation_network.json
+      outputs:
+        - output/figures/field_summary.png
+        - output/figures/subfield_distribution.png
+        - output/figures/growth_curve.png
+        - output/figures/citation_network.png
+        - output/figures/word_cloud.png
+        - output/figures/pca_embeddings.png
+        - output/figures/topic_term_bars.png
+      description: "Render publication-ready visualizations from analysis JSON outputs"
+
+    - name: inject_variables
+      script: 05_inject_variables.py
+      inputs:
+        - output/data/corpus.jsonl
+        - output/data/temporal_analysis.json
+        - output/data/subfield_classification.json
+      outputs:
+        - manuscript/00_abstract.md
+      description: "Compute dynamic variables from pipeline outputs and inject them into manuscript Markdown templates"
+
+  # Subfield taxonomy: keyword sets that classify each record into one bucket.
+  # These are domain-specific (modafinil); swap them when re-targeting.
+  subfield_keywords:
+    clinical_sleep:
+      - "narcolepsy"
+      - "shift work"
+      - "obstructive sleep apnea"
+      - "excessive daytime sleepiness"
+      - "wakefulness"
+      - "hypersomnia"
+      - "sleep disorder"
+    cognition:
+      - "cognitive enhancement"
+      - "working memory"
+      - "attention"
+      - "executive function"
+      - "vigilance"
+      - "psychomotor"
+      - "neuroenhancement"
+    pharmacology:
+      - "pharmacokinetics"
+      - "dopamine transporter"
+      - "mechanism of action"
+      - "half-life"
+      - "metabolism"
+      - "cyp3a4"
+      - "bioavailability"
+    psychiatry:
+      - "depression"
+      - "adhd"
+      - "schizophrenia"
+      - "bipolar"
+      - "fatigue"
+      - "adjunctive"
+    safety:
+      - "adverse"
+      - "abuse potential"
+      - "dependence"
+      - "tolerability"
+      - "side effect"
+      - "stevens-johnson"
+    neuroscience:
+      - "orexin"
+      - "hypothalamus"
+      - "neuroimaging"
+      - "fmri"
+      - "eeg"
+      - "histamine"

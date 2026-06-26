@@ -1,0 +1,21 @@
+\frametitle{References}
+The bibliography is maintained in \texttt{references.bib}. Key sources:
+
+\begin{itemize}
+\tightlist
+\item
+  ReportLab Ltd.~\emph{ReportLab PDF Library --- User Guide.} The
+  platypus flowable and frame model underpins this engine's column flow
+  \breakseq{[@reportlab]}.
+\item
+  Bringhurst, R. \emph{The Elements of Typographic Style.} The measure,
+  scale and rule conventions that inform the stylesheet
+  \breakseq{[@bringhurst]}.
+\item
+  Wong, B. ``Points of view: Color blindness.'' \emph{Nature Methods}
+  (2011). The basis for accessible, here monochrome, figure palettes
+  \breakseq{[@wong2011]}.
+\item
+  García, M. \emph{Contemporary Newspaper Design.} Grid, modular layout
+  and the rail/well distinction \breakseq{[@garcia]}.
+\end{itemize}

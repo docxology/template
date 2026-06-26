@@ -1,0 +1,269 @@
+{
+  "all_fresh": true,
+  "excluded_producers": [
+    "generate_integration_audit.py",
+    "generate_sheaf_tracks.py",
+    "z_generate_manuscript_variables.py"
+  ],
+  "rows": [
+    {
+      "artifact": "output/data/analysis_statistics.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "d00535628dfa61a475a882f2c648a135d632c89571b0c5fc611b22cc3bd60ff6"
+    },
+    {
+      "artifact": "output/data/analytical_assumption_index.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "341a92f92293650afc1f34b77dc524a81173c5cb6b98a79d5a40fe040169ac96"
+    },
+    {
+      "artifact": "output/data/analytical_observable_sweep.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a"
+    },
+    {
+      "artifact": "output/data/animation_frame_deltas.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58"
+    },
+    {
+      "artifact": "output/data/causal_ablation_matrix.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0"
+    },
+    {
+      "artifact": "output/data/gnn_roundtrip_report.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "3b91cfa950d1dfc8442ea50510c895a1006770631235db92467c0fcd33cda209"
+    },
+    {
+      "artifact": "output/data/interop_roundtrip_report.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "ceb3f2b3c34ebdd06e9deaf34da62f640b53e8476f7a2bc94780f228d41bd78d"
+    },
+    {
+      "artifact": "output/data/ontology_alias_index.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "8c01513c5afa5f22b31cdf1e0976b5626c3b2a12e4dd4aaaf3f8442bdd736311"
+    },
+    {
+      "artifact": "output/data/ontology_profile_matrix.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "2fefa687a32bf615e165292dc7df8edcc6d712f6b22d268deb263eccefb1379d"
+    },
+    {
+      "artifact": "output/data/parameter_sweep.csv",
+      "exists": true,
+      "fresh": true,
+      "sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc"
+    },
+    {
+      "artifact": "output/data/proof_extraction_index.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2"
+    },
+    {
+      "artifact": "output/data/pymdp_policy_posterior_grid.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "9513f33271013f594069aa97d5cfc7b4e6b6b37476a6a49f107aa12c82fcce61"
+    },
+    {
+      "artifact": "output/data/sheaf_coverage_matrix.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "ca776e2bdcc3936ed3d07ebb11b7ffd68a2d5e92242ef880b936197cf83bc230"
+    },
+    {
+      "artifact": "output/data/si_efe_terms.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "2b389ab27228f2f44a43d56733941e43e47463c6e2ebb97715aef7dfc51af936"
+    },
+    {
+      "artifact": "output/data/si_graph_world_summary.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080"
+    },
+    {
+      "artifact": "output/data/si_graph_world_topology_sweep.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "f9610cc62493a5f02a4eaa8842188366d1cc2e5ed67e9e23a42c0b7e30c631fe"
+    },
+    {
+      "artifact": "output/data/si_graph_world_topology_traces.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "00f086b46f8ddd55b5521978945e652d041f16c0bfd59331ced0b1caaa128bc5"
+    },
+    {
+      "artifact": "output/data/si_graph_world_trace.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549"
+    },
+    {
+      "artifact": "output/data/si_policy_comparison.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "2ff44eadc0db5f57abdc579b8a1d9f2e13f6e17370fe7d79d9be1c67c92783ed"
+    },
+    {
+      "artifact": "output/data/si_policy_grid.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "f49abb96cc04bcfa207c30205a38bdd344147fe52dcab95f586313e2da286490"
+    },
+    {
+      "artifact": "output/data/si_tmaze_summary.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e"
+    },
+    {
+      "artifact": "output/data/si_tmaze_trace.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "962f2a01908e353298f20f714e87f71cb266bb3d9ac96fb6fdb0c8232648992e"
+    },
+    {
+      "artifact": "output/data/state_space_catalog.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f"
+    },
+    {
+      "artifact": "output/data/toy_benchmark_matrix.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f"
+    },
+    {
+      "artifact": "output/figures/artifact_contract_map.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f"
+    },
+    {
+      "artifact": "output/figures/causal_ablation_heatmap.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740"
+    },
+    {
+      "artifact": "output/figures/figure_registry.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "ef2c0fe943c5fab8c02ae95896980207af7ecb58221e3582d6c970efef95f3b9"
+    },
+    {
+      "artifact": "output/figures/scholarship_source_map.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175"
+    },
+    {
+      "artifact": "output/figures/security_posture_map.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7"
+    },
+    {
+      "artifact": "output/figures/semantic_gluing_graph.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14"
+    },
+    {
+      "artifact": "output/figures/sheaf_coverage_heatmap.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57"
+    },
+    {
+      "artifact": "output/figures/sheaf_layers_overview.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31"
+    },
+    {
+      "artifact": "output/figures/si_belief_trajectory.gif",
+      "exists": true,
+      "fresh": true,
+      "sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9"
+    },
+    {
+      "artifact": "output/figures/theorem_traceability_graph.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604"
+    },
+    {
+      "artifact": "output/reports/gnn_lint_report.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "a29ce1922701512403c542664a92af5787df00b874fc85ec439837049815aa89"
+    },
+    {
+      "artifact": "output/reports/graph_world_invariants.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9"
+    },
+    {
+      "artifact": "output/reports/invariants.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975"
+    },
+    {
+      "artifact": "output/reports/lean_graph_world_inventory.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "13bf2cf6c614f60f8e3ca9dc354d95bee67ea3dc353560d6f7b60cf039e3f0cb"
+    },
+    {
+      "artifact": "output/reports/lean_theorem_inventory.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "58e56fb6cbce951384aa4c34a7485a71255660fe6f96f668d3e8fb6afe90450d"
+    },
+    {
+      "artifact": "output/reports/pymdp_runtime_diagnostics.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "35caed4ed4032ce46e5e8f6d00ecfcd0bdf0bd4dc0e633059484df307bb01b75"
+    },
+    {
+      "artifact": "output/reports/reproducibility_replay.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "c14c0419111bd07e66c8cb83bf98d87ee006fbb6f6d4ae6e810f3cad9f94bcc4"
+    },
+    {
+      "artifact": "output/reports/si_invariants.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c"
+    },
+    {
+      "artifact": "output/reports/si_tmaze_run_report.json",
+      "exists": true,
+      "fresh": true,
+      "sha256": "fd834b08c1c0987ec5753ab96ec04fae817c44aeba7992888381ce654038f44f"
+    }
+  ],
+  "schema": "template_active_inference.stale_artifact_report.v1"
+}

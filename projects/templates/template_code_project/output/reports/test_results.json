@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-06-14T11:36:43.113172",
+  "infrastructure": {},
+  "project": {
+    "passed": 197,
+    "failed": 0,
+    "skipped": 0,
+    "total": 197,
+    "warnings": 0,
+    "exit_code": 0,
+    "discovery_count": 197,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 20.48,
+      "collection": 20.48,
+      "execution": 20.48
+    },
+    "test_categories": {},
+    "coverage_percent": 95.73,
+    "failed_tests": []
+  },
+  "summary": {
+    "total_passed": 197,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 197,
+    "all_passed": true,
+    "project_coverage": 95.73
+  }
+}

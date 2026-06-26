@@ -56,7 +56,7 @@ graph TD
     Reporting -->|Formats| Manuscript
     Manuscript -->|Compiled with| Config
     Config -->|Sent to| Rendering
-    Rendering -->|Produces| PDF["output/template_code_project/pdf/template_code_project_combined.pdf"]:::project
+    Rendering -->|Produces| PDF["output/templates/template_code_project/pdf/template_code_project_combined.pdf"]:::project
 ```
 
 ## Quick Start
@@ -67,9 +67,9 @@ Experience the automated pipeline directly:
 # From repository root
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
-uv run python scripts/03_render_pdf.py --project template_code_project
+uv run python scripts/03_render_pdf.py --project templates/template_code_project
 
-open output/template_code_project/pdf/template_code_project_combined.pdf
+open output/templates/template_code_project/pdf/template_code_project_combined.pdf
 ```
 
 ## AI Agent Directives

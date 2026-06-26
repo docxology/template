@@ -72,8 +72,10 @@ coverage_*.json
 ehthumbs.db
 Thumbs.db
 
-# Generated outputs and caches are disposable and regeneratable by the pipeline.
-# Never commit them (per CLAUDE.md and AGENTS.md). Cleaned by 00_setup_environment.py.
+# Generated outputs and caches are disposable by default. Public canonical
+# template render outputs are the exception: they are tracked as release
+# artifacts in both their project-local `output/` trees and the copied
+# `output/templates/<name>/` trees.
 **/output/
 # EXCEPTION: `infrastructure/validation/output/` is a SOURCE package
 # (validator.py, pipeline.py, no_mock_enforcer.py) whose name collides with
@@ -85,14 +87,34 @@ Thumbs.db
 !infrastructure/validation/output/
 !infrastructure/validation/output/**
 **/projects/*/output/
-# NOTE: there is intentionally NO negation for output/ here. Every path under
-# output/ — including the public exemplars' rendered output under
-# output/templates/<name>/ — is disposable, regeneratable, and NEVER committed
-# (per CLAUDE.md / AGENTS.md). The former "living render-proof" exemption that
-# re-included output/templates/template_*/ was dead (zero such paths were ever
-# tracked) and was removed so this config matches reality. If render-proof
-# outputs are ever reintroduced, restore both the negation block here AND the
-# matching allowlist in infrastructure/project/git_guards.py together.
+!output/
+output/*
+!output/templates/
+output/templates/*
+!output/templates/template_active_inference/
+!output/templates/template_active_inference/**
+!output/templates/template_autoresearch_project/
+!output/templates/template_autoresearch_project/**
+!output/templates/template_autoscientists/
+!output/templates/template_autoscientists/**
+!output/templates/template_code_project/
+!output/templates/template_code_project/**
+!output/templates/template_gold_refinement/
+!output/templates/template_gold_refinement/**
+!output/templates/template_literature_meta_analysis/
+!output/templates/template_literature_meta_analysis/**
+!output/templates/template_madlib/
+!output/templates/template_madlib/**
+!output/templates/template_newspaper/
+!output/templates/template_newspaper/**
+!output/templates/template_prose_project/
+!output/templates/template_prose_project/**
+!output/templates/template_sia/
+!output/templates/template_sia/**
+!output/templates/template_template/
+!output/templates/template_template/**
+!output/templates/template_textbook/
+!output/templates/template_textbook/**
 **/.benchmarks/
 **/.pytest_cache/
 **/.venv/
@@ -172,10 +194,6 @@ projects/templates/*/.DS_Store
 **/.omo
 **/.omo/
 **/.omo/**
-# Exemplar project-local output is a disposable working tree (tracked render-
-# proof lives at output/templates/<name>/, not here).
-projects/templates/*/output/
-projects/templates/*/output/**
 projects/*/*.egg-info/
 projects/*/src/*.egg-info/
 projects/templates/*/*.egg-info/

@@ -1,0 +1,81 @@
+{
+  "all_proved": true,
+  "all_required_theorems_present": true,
+  "forbidden_tokens": [],
+  "required_theorems": {
+    "two_policy_posterior_weights_sum_to_two": "finite_two_policy_posterior_normalization",
+    "two_state_belief_weights_sum_to_two": "finite_two_state_belief_update_normalization"
+  },
+  "rows": [
+    {
+      "name": "branch_graph_world_three_steps_reach_goal",
+      "status": "proved"
+    },
+    {
+      "name": "diamond_graph_world_four_steps_reach_goal",
+      "status": "proved"
+    },
+    {
+      "name": "efe_additive_identity_from_relations",
+      "status": "proved"
+    },
+    {
+      "name": "efe_total_eq_neg_value",
+      "status": "proved"
+    },
+    {
+      "name": "efe_witness_residual_zero",
+      "status": "proved"
+    },
+    {
+      "name": "graph_world_three_steps_reach_goal",
+      "status": "proved"
+    },
+    {
+      "name": "ising_coupling_sum_zero",
+      "status": "proved"
+    },
+    {
+      "name": "loop_graph_world_four_steps_reach_goal",
+      "status": "proved"
+    },
+    {
+      "name": "policy_enumeration_contains_forward",
+      "status": "proved"
+    },
+    {
+      "name": "promotion_all_fields_complete",
+      "status": "proved"
+    },
+    {
+      "name": "promotion_complete_iff_all_fields",
+      "status": "proved"
+    },
+    {
+      "name": "promotion_missing_producer_incomplete",
+      "status": "proved"
+    },
+    {
+      "name": "sophisticated_requires_horizon",
+      "status": "proved"
+    },
+    {
+      "name": "tmaze_goal_absorbing",
+      "status": "proved"
+    },
+    {
+      "name": "tmaze_two_forward_steps_reach_goal",
+      "status": "proved"
+    },
+    {
+      "name": "two_policy_posterior_weights_sum_to_two",
+      "status": "proved"
+    },
+    {
+      "name": "two_state_belief_weights_sum_to_two",
+      "status": "proved"
+    }
+  ],
+  "schema": "template_active_inference.lean_theorem_inventory.v1",
+  "theorem_count": 17
+}

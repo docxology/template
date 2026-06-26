@@ -1,0 +1,255 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% Slide layout defaults for warning-clean scientific decks.
+\usepackage{etoolbox}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+\protected\def\breakseq#1{\seqsplit{#1}}
+\protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
+\setlength{\emergencystretch}{6em}
+\tolerance=5000
+\hbadness=10000
+\hfuzz=1pt
+\setlength{\tabcolsep}{2pt}
+\AtBeginEnvironment{longtable}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+\AtBeginEnvironment{tabular}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+
+% Natbib and cross-reference fallbacks — slides don't load natbib
+% or cleveref, but combined-PDF manuscript prose may emit these
+% commands. The fallback renders citations as a bracketed key list
+% and cross-references as detokenized labels so slides don't fail on
+% undefined control sequences or raw underscores. \providecommand is
+% a no-op if packages load later.
+\providecommand{\citep}[1]{[#1]}
+\providecommand{\citet}[1]{#1}
+\providecommand{\citealp}[1]{#1}
+\providecommand{\citeauthor}[1]{#1}
+\providecommand{\citeyear}[1]{#1}
+\providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
+\providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile,allowframebreaks]{Future Directions}
+\protect\phantomsection\label{future-directions}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Supply-chain provenance}: Integration with software supply
+  chain frameworks such as in-toto \breakseq{[@torresarias2019intoto]} and SLSA
+  (Supply-chain Levels for Software Artifacts) \breakseq{[@openssf2023slsa]} to
+  provide end-to-end attestation from source commit through build
+  pipeline to published artifact. SLSA's four graduated levels of build
+  integrity (from basic provenance to hermetic, reproducible builds)
+  provide a natural extension ladder for the template's currently
+  document-centric provenance model. The template's existing
+  steganographic layer embeds document-level provenance; supply-chain
+  frameworks would add build-level provenance, closing the gap between
+  ``this PDF was produced by this pipeline'' and ``this pipeline was
+  executed with this verified source code.''
+\item
+  \textbf{Decentralized provenance}: Integration with IPFS or Arweave
+  for immutable publication records, extending the SHA-256-based tamper
+  detection to content-addressed storage networks.
+\item
+  \textbf{Digital signatures}: GPG or X.509 signing integrated into the
+  steganographic layer, providing cryptographic non-repudiation in
+  addition to tamper detection.
+\item
+  \textbf{Continuous integration}: GitHub Actions workflows that execute
+  the pipeline on every push, with PDF artifacts as release assets and
+  automated DOI registration via Zenodo.
+\item
+  \textbf{Multi-language support}: Extension of the Thin Orchestrator
+  pattern to R, Julia, and Rust projects, enabling polyglot research
+  workflows within the Two-Layer Architecture.
+\item
+  \textbf{Automated FAIR4RS assessment}: Periodic self-scoring against
+  FAIRsoft metrics \breakseq{[@garijo2024fairsoft]}, with quality indicators
+  (executability, documentation completeness, metadata richness) tracked
+  as pipeline artifacts alongside test coverage and rendering status.
+\item
+  \textbf{Knowledge graph integration}: Connecting pipeline outputs to
+  Active Inference Knowledge Base entries for automated meta-analysis
+  and cross-project citation tracking.
+\item
+  \textbf{Formal verification}: Static analysis tooling to enforce the
+  Thin Orchestrator pattern---verifying that scripts contain no
+  algorithmic logic and that \texttt{src/} modules do not import from
+  \texttt{scripts/}.
+\item
+  \textbf{Agentic research pipelines via MCP}: The \texttt{SKILL.md}
+  descriptors already define the interface contracts for each
+  infrastructure module; the natural next step is to expose them as MCP
+  server endpoints \breakseq{[@anthropic2024mcp]}. An MCP server wrapping
+  \breaktt{infrastructure.llm} would expose \texttt{query},
+  \breaktt{review\_manuscript}, and \breaktt{translate\_abstract} as
+  protocol-native Tools; an MCP server wrapping
+  \breaktt{infrastructure.publishing} would expose
+  \breaktt{publish\_to\_zenodo} and \breaktt{generate\_citation\_bibtex}.
+  A research agent could then compose these Tools to execute the full
+  pipeline---environment setup → test execution → analysis → rendering →
+  validation → LLM review → DOI registration---without any human in the
+  loop. This closes the loop opened by Lu et al.'s AI Scientist
+  \breakseq{[@lu2024aiscientist]}, which demonstrated automated hypothesis
+  generation and experimental iteration but relied on ad hoc laboratory
+  scaffolding. \texttt{template/}'s pipeline, fully exposed as MCP
+  tools, provides that scaffolding in a reproducible, versioned, and
+  certified form. Longer-term, the Agent2Agent (A2A) protocol
+  \breakseq{[@google2025a2a]} enables heterogeneous specialist agents---a
+  statistical analyst, a figure designer, a peer-review simulator---to
+  coordinate via a shared, protocol-mediated workspace built on
+  precisely the kind of modular, well-documented infrastructure that
+  \texttt{template/} provides.
+\item
+  \textbf{Research Infrastructure as Code and software citation}: The
+  DevOps IaC paradigm, applied to research, means the entire manuscript
+  pipeline is a version-controlled, reproducible artifact in its own
+  right. Software Heritage \breakseq{[@cosmo2020softwareheritage]} provides
+  persistent SWHIDs (Software Hash Identifiers) for source-code
+  snapshots, enabling \texttt{template/} itself to be cited as a
+  software artifact with a DOI-equivalent stable identifier. Combining
+  this with Zenodo DOI registration (already supported by
+  \breaktt{infrastructure.publishing}) creates a full citation chain: the
+  paper cites the data (DOI), the data provenance cites the pipeline
+  (SWHID), and the pipeline cites the framework release (Zenodo DOI).
+  This three-link citation chain operationalizes the Katz et al.
+  \breakseq{[@katz2021software]} software citation principles at the
+  infrastructure level.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Conclusion}
+\protect\phantomsection\label{conclusion}
+\texttt{template/} demonstrates that high-integrity, reproducible
+research need not be onerous. By embedding provenance, testing, and
+documentation into the architecture itself---rather than layering them
+atop a fragmented workflow---the template transforms ``best practices''
+from aspirational guidelines into enforced invariants
+\breakseq{[@wilson2017good; @sandve2013ten; @lamprecht2020towards]}. The
+Two-Layer Architecture ensures that infrastructure improvements
+propagate to all projects without coupling. The Zero-Mock policy ensures
+that tests
+\href{05a_zeromock_tradeoff.md\#the-zero-mock-tradeoff}{reflect
+reality}. The steganographic provenance layer ensures that published
+artifacts carry their own
+\href{07_security_provenance.md\#security-and-provenance}{authentication}.
+The \href{08f_appendix_matrix.md\#appendix-matrix}{comparative analysis}
+confirms that no existing tool integrates all eleven distinctive
+capabilities---testing enforcement, coverage thresholds, cryptographic
+provenance, steganographic watermarking, multi-project management,
+AI-agent documentation, the agentic skill protocol, interactive TUI,
+Zero-Mock policy, manuscript rendering, and pipeline
+orchestration---within a single enforced pipeline.
+
+The template is not merely a build tool; it is an epistemological
+commitment. It asserts that a research paper is not a static document
+but a build artifact---reproducible, verifiable, and traceable to the
+code that generated it. As Knuth observed, programs should be written
+for humans to read and only incidentally for machines to execute
+\breakseq{[@knuth1984literate]}. We extend this dictum: research manuscripts
+should be \emph{built} for verification and only incidentally for
+reading. In an era of generative AI, AI-native research workspaces, and
+synthetic media---where the boundary between human-authored and
+machine-generated text grows increasingly indeterminate
+\breakseq{[@gruenpeter2021research]}---the provenance chain from source code to
+published PDF is not an administrative convenience. It is the epistemic
+ground on which scientific trust must be rebuilt. That this manuscript
+was itself built, tested, and watermarked by the pipeline it
+describes---its metrics computed from the repository it inhabits, its
+figures rendered by the code it documents---is not a rhetorical device
+but a structural proof: the system works because you are reading its
+output.
+\end{frame}
+
+\end{document}

@@ -1,0 +1,7 @@
+sequenceDiagram
+  participant Author
+  participant Engine
+  participant Renderer
+  Author ->> Engine: edit config.yaml
+  Engine ->> Renderer: emit manuscript
+  Renderer -->> Author: PDF

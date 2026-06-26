@@ -23,7 +23,10 @@ def main(argv: list[str] | None = None) -> int:
         print("No tracked generated artifacts found.")
         return 0
 
-    print("Tracked generated artifacts found; untrack them with `git rm --cached`:")
+    print(
+        "Tracked generated/local artifacts or oversized public template outputs found; "
+        "untrack them with `git rm --cached`:"
+    )
     for path in offenders:
         print(f"  {path}")
     return 1

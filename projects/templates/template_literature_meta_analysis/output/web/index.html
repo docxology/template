@@ -1,0 +1,2760 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>A Living Meta-Analysis of the Modafinil Literature</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+
+<style>
+:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+}
+/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
+   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
+   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
+   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
+   preamble). */
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  width: 100vw;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  body {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    width: 390px;
+    max-width: 100vw;
+    margin: 0;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: red;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: red;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: red;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">A Living Meta-Analysis of the Modafinil
+Literature</h1>
+<p class="subtitle">Multi-Engine Retrieval, De-duplication, Embeddings,
+and Bibliometrics for a Single Search Term</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#abstract" id="toc-abstract"><span
+class="toc-section-number">1</span> Abstract</a></li>
+<li><a href="#introduction" id="toc-introduction"><span
+class="toc-section-number">2</span> Introduction</a>
+<ul>
+<li><a href="#research-questions" id="toc-research-questions"><span
+class="toc-section-number">2.1</span> Research Questions</a></li>
+<li><a href="#contributions" id="toc-contributions"><span
+class="toc-section-number">2.2</span> Contributions</a></li>
+</ul></li>
+<li><a href="#methods-overview" id="toc-methods-overview"><span
+class="toc-section-number">3</span> Methods Overview</a>
+<ul>
+<li><a href="#pipeline-stages" id="toc-pipeline-stages"><span
+class="toc-section-number">3.1</span> Pipeline Stages</a></li>
+<li><a href="#reproducibility-model"
+id="toc-reproducibility-model"><span
+class="toc-section-number">3.2</span> Reproducibility Model</a></li>
+<li><a href="#configuration-surface"
+id="toc-configuration-surface"><span
+class="toc-section-number">3.3</span> Configuration Surface</a></li>
+</ul></li>
+<li><a href="#retrieval-and-de-duplication"
+id="toc-retrieval-and-de-duplication"><span
+class="toc-section-number">4</span> Retrieval and De-duplication</a>
+<ul>
+<li><a href="#engine-details" id="toc-engine-details"><span
+class="toc-section-number">4.1</span> Engine Details</a></li>
+<li><a href="#canonical-identifier-hierarchy"
+id="toc-canonical-identifier-hierarchy"><span
+class="toc-section-number">4.2</span> Canonical Identifier
+Hierarchy</a></li>
+<li><a href="#relevance-filtering" id="toc-relevance-filtering"><span
+class="toc-section-number">4.3</span> Relevance Filtering</a></li>
+</ul></li>
+<li><a href="#full-text-language-and-embeddings"
+id="toc-full-text-language-and-embeddings"><span
+class="toc-section-number">5</span> Full Text, Language, and
+Embeddings</a>
+<ul>
+<li><a href="#full-text-availability"
+id="toc-full-text-availability"><span
+class="toc-section-number">5.1</span> Full-Text Availability</a></li>
+<li><a href="#language-and-entity-extraction"
+id="toc-language-and-entity-extraction"><span
+class="toc-section-number">5.2</span> Language and Entity
+Extraction</a></li>
+<li><a href="#embeddings" id="toc-embeddings"><span
+class="toc-section-number">5.3</span> Embeddings</a></li>
+</ul></li>
+<li><a href="#bibliometric-and-temporal-analysis"
+id="toc-bibliometric-and-temporal-analysis"><span
+class="toc-section-number">6</span> Bibliometric and Temporal
+Analysis</a>
+<ul>
+<li><a href="#growth-metrics" id="toc-growth-metrics"><span
+class="toc-section-number">6.1</span> Growth Metrics</a></li>
+<li><a href="#subfield-classification"
+id="toc-subfield-classification"><span
+class="toc-section-number">6.2</span> Subfield Classification</a></li>
+<li><a href="#topic-modeling" id="toc-topic-modeling"><span
+class="toc-section-number">6.3</span> Topic Modeling</a></li>
+</ul></li>
+<li><a href="#optional-knowledge-graph-layer"
+id="toc-optional-knowledge-graph-layer"><span
+class="toc-section-number">7</span> Optional Knowledge-Graph Layer</a>
+<ul>
+<li><a href="#assertion-model" id="toc-assertion-model"><span
+class="toc-section-number">7.1</span> Assertion Model</a></li>
+<li><a href="#incremental-extraction"
+id="toc-incremental-extraction"><span
+class="toc-section-number">7.2</span> Incremental Extraction</a></li>
+<li><a href="#gating-and-defaults" id="toc-gating-and-defaults"><span
+class="toc-section-number">7.3</span> Gating and Defaults</a></li>
+</ul></li>
+<li><a href="#visualization-and-manuscript-injection"
+id="toc-visualization-and-manuscript-injection"><span
+class="toc-section-number">8</span> Visualization and Manuscript
+Injection</a>
+<ul>
+<li><a href="#figure-generation" id="toc-figure-generation"><span
+class="toc-section-number">8.1</span> Figure Generation</a></li>
+<li><a href="#variable-injection" id="toc-variable-injection"><span
+class="toc-section-number">8.2</span> Variable Injection</a></li>
+</ul></li>
+<li><a href="#results-hypotheses-explored"
+id="toc-results-hypotheses-explored"><span
+class="toc-section-number">9</span> Results: Hypotheses Explored</a>
+<ul>
+<li><a href="#interpretation" id="toc-interpretation"><span
+class="toc-section-number">9.1</span> Interpretation</a></li>
+</ul></li>
+<li><a href="#results-field-overview"
+id="toc-results-field-overview"><span
+class="toc-section-number">10</span> Results: Field Overview</a>
+<ul>
+<li><a href="#rq1-field-size-and-growth"
+id="toc-rq1-field-size-and-growth"><span
+class="toc-section-number">10.1</span> RQ1: Field Size and
+Growth</a></li>
+<li><a href="#rq2-subfield-composition"
+id="toc-rq2-subfield-composition"><span
+class="toc-section-number">10.2</span> RQ2: Subfield
+Composition</a></li>
+<li><a href="#identifier-and-full-text-coverage"
+id="toc-identifier-and-full-text-coverage"><span
+class="toc-section-number">10.3</span> Identifier and Full-Text
+Coverage</a></li>
+<li><a href="#descriptive-bibliometrics"
+id="toc-descriptive-bibliometrics"><span
+class="toc-section-number">10.4</span> Descriptive
+Bibliometrics</a></li>
+</ul></li>
+<li><a href="#results-subfield-structure"
+id="toc-results-subfield-structure"><span
+class="toc-section-number">11</span> Results: Subfield Structure</a>
+<ul>
+<li><a href="#per-subfield-characterization"
+id="toc-per-subfield-characterization"><span
+class="toc-section-number">11.1</span> Per-Subfield
+Characterization</a></li>
+</ul></li>
+<li><a href="#results-language-topics-and-embeddings"
+id="toc-results-language-topics-and-embeddings"><span
+class="toc-section-number">12</span> Results: Language, Topics, and
+Embeddings</a>
+<ul>
+<li><a href="#rq3-topical-and-linguistic-structure"
+id="toc-rq3-topical-and-linguistic-structure"><span
+class="toc-section-number">12.1</span> RQ3: Topical and Linguistic
+Structure</a></li>
+<li><a href="#document-embeddings" id="toc-document-embeddings"><span
+class="toc-section-number">12.2</span> Document Embeddings</a></li>
+<li><a href="#term-analysis" id="toc-term-analysis"><span
+class="toc-section-number">12.3</span> Term Analysis</a></li>
+<li><a href="#named-entity-analysis"
+id="toc-named-entity-analysis"><span
+class="toc-section-number">12.4</span> Named Entity Analysis</a></li>
+<li><a href="#embedding-similarity-and-clustering"
+id="toc-embedding-similarity-and-clustering"><span
+class="toc-section-number">12.5</span> Embedding Similarity and
+Clustering</a></li>
+</ul></li>
+<li><a href="#results-citation-network"
+id="toc-results-citation-network"><span
+class="toc-section-number">13</span> Results: Citation Network</a>
+<ul>
+<li><a href="#rq4-citation-geometry"
+id="toc-rq4-citation-geometry"><span
+class="toc-section-number">13.1</span> RQ4: Citation Geometry</a></li>
+<li><a href="#centrality-analysis" id="toc-centrality-analysis"><span
+class="toc-section-number">13.2</span> Centrality Analysis</a></li>
+<li><a href="#advanced-network-metrics"
+id="toc-advanced-network-metrics"><span
+class="toc-section-number">13.3</span> Advanced Network Metrics</a></li>
+</ul></li>
+<li><a href="#conclusion" id="toc-conclusion"><span
+class="toc-section-number">14</span> Conclusion</a>
+<ul>
+<li><a href="#key-findings" id="toc-key-findings"><span
+class="toc-section-number">14.1</span> Key Findings</a></li>
+<li><a href="#architectural-contribution"
+id="toc-architectural-contribution"><span
+class="toc-section-number">14.2</span> Architectural
+Contribution</a></li>
+<li><a href="#reproducibility" id="toc-reproducibility"><span
+class="toc-section-number">14.3</span> Reproducibility</a></li>
+</ul></li>
+<li><a href="#discussion" id="toc-discussion"><span
+class="toc-section-number">15</span> Discussion</a>
+<ul>
+<li><a href="#what-the-template-is-and-is-not"
+id="toc-what-the-template-is-and-is-not"><span
+class="toc-section-number">15.1</span> What the Template Is, and Is
+Not</a></li>
+<li><a href="#engine-coverage-and-bias"
+id="toc-engine-coverage-and-bias"><span
+class="toc-section-number">15.2</span> Engine Coverage and Bias</a></li>
+<li><a href="#honest-defaults" id="toc-honest-defaults"><span
+class="toc-section-number">15.3</span> Honest Defaults</a></li>
+<li><a href="#limitations-and-extensions"
+id="toc-limitations-and-extensions"><span
+class="toc-section-number">15.4</span> Limitations and
+Extensions</a></li>
+</ul></li>
+<li><a href="#appendix-a-tooling-and-reproduction"
+id="toc-appendix-a-tooling-and-reproduction"><span
+class="toc-section-number">16</span> Appendix A: Tooling and
+Reproduction</a>
+<ul>
+<li><a href="#reproduce-the-offline-default-run"
+id="toc-reproduce-the-offline-default-run"><span
+class="toc-section-number">16.1</span> Reproduce the Offline Default
+Run</a></li>
+<li><a href="#reproduce-the-live-run"
+id="toc-reproduce-the-live-run"><span
+class="toc-section-number">16.2</span> Reproduce the Live Run</a></li>
+<li><a href="#re-target-to-another-topic"
+id="toc-re-target-to-another-topic"><span
+class="toc-section-number">16.3</span> Re-target to Another
+Topic</a></li>
+<li><a href="#live-retrieval" id="toc-live-retrieval"><span
+class="toc-section-number">16.4</span> Live Retrieval</a></li>
+<li><a href="#test-suite" id="toc-test-suite"><span
+class="toc-section-number">16.5</span> Test Suite</a></li>
+</ul></li>
+<li><a href="#appendix-b-technical-notes"
+id="toc-appendix-b-technical-notes"><span
+class="toc-section-number">17</span> Appendix B: Technical Notes</a>
+<ul>
+<li><a href="#determinism" id="toc-determinism"><span
+class="toc-section-number">17.1</span> Determinism</a></li>
+<li><a href="#data-model" id="toc-data-model"><span
+class="toc-section-number">17.2</span> Data Model</a></li>
+<li><a href="#nmf-mathematics" id="toc-nmf-mathematics"><span
+class="toc-section-number">17.3</span> NMF Mathematics</a></li>
+<li><a href="#growth-rate-estimation"
+id="toc-growth-rate-estimation"><span
+class="toc-section-number">17.4</span> Growth Rate Estimation</a></li>
+<li><a href="#configuration-surface-1"
+id="toc-configuration-surface-1"><span
+class="toc-section-number">17.5</span> Configuration Surface</a></li>
+<li><a href="#artifacts" id="toc-artifacts"><span
+class="toc-section-number">17.6</span> Artifacts</a></li>
+</ul></li>
+<li><a href="#appendix-c-accessibility-and-provenance"
+id="toc-appendix-c-accessibility-and-provenance"><span
+class="toc-section-number">18</span> Appendix C: Accessibility and
+Provenance</a>
+<ul>
+<li><a href="#figure-accessibility" id="toc-figure-accessibility"><span
+class="toc-section-number">18.1</span> Figure Accessibility</a></li>
+<li><a href="#provenance-chain" id="toc-provenance-chain"><span
+class="toc-section-number">18.2</span> Provenance Chain</a></li>
+<li><a href="#fair-data-principles" id="toc-fair-data-principles"><span
+class="toc-section-number">18.3</span> FAIR Data Principles</a></li>
+<li><a href="#honesty" id="toc-honesty"><span
+class="toc-section-number">18.4</span> Honesty</a></li>
+</ul></li>
+<li><a href="#glossary" id="toc-glossary"><span
+class="toc-section-number">19</span> Glossary</a></li>
+<li><a href="#references" id="toc-references"><span
+class="toc-section-number">20</span> References</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="abstract"><span
+class="header-section-number">1</span> Abstract</h1>
+<p>Manual synthesis cannot keep pace with a fast-growing research
+literature, and ad-hoc reviews bind no evidence to a reproducible
+pipeline. We present a configurable, reproducible meta-analysis
+framework that takes a single search term and produces a complete
+quantitative portrait of its literature. For this instance the term is
+<strong>Modafinil</strong>. The pipeline dispatches across 7 literature
+engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
+SovietRxiv, and ChinaRxiv), each degrading gracefully to a skipped
+source when an API key or the network is unavailable, then merges and
+de-duplicates records by a canonical identifier hierarchy (DOI <span
+class="math inline">\(&gt;\)</span> arXiv ID <span
+class="math inline">\(&gt;\)</span> Semantic Scholar ID <span
+class="math inline">\(&gt;\)</span> OpenAlex ID <span
+class="math inline">\(&gt;\)</span> title digest) into a corpus of <span
+class="math inline">\(N = 2302\)</span> records spanning 2000–2026 (26
+years). Records are classified into a configurable 6-bucket subfield
+taxonomy (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety,
+and Neuroscience); the largest subfield is <strong>Clinical
+Sleep</strong> (64.3% of the classified corpus). The corpus grows at a
+compound annual rate of 3.45% (mean year-over-year growth 6.3%, doubling
+time 11.3 years), peaking in 2025 with 112 records.</p>
+<p>Non-negative matrix factorization extracts 5 latent topics over a
+500-feature vocabulary, offline deterministic embeddings place every
+title, abstract, and (when available) full text in a shared vector
+space, and citation-network analysis exposes the corpus’s internal
+structure (8,772 intra-corpus edges across 2204 nodes, 1377 communities,
+graph density 0.18%). Of 38,802 total outgoing references, 22.6% resolve
+to another record inside the corpus. Abstract coverage stands at 55.5%,
+open-access status is known for 14.4% of records, and 40.9% have a
+direct PDF link. An optional, LLM-gated knowledge-graph stage scores the
+6 hypotheses explored against the evidence. This run produced 18
+publication-quality figures.</p>
+<p>Every domain-specific value in this manuscript — the search term,
+keyword set, engine roster, subfield taxonomy, and hypotheses — is
+injected from a single configuration file and the pipeline’s own
+outputs; re-targeting the configuration re-targets the entire paper. The
+result is a reusable architecture for <em>living literature
+reviews</em>: continuously re-runnable, evidence-bound syntheses for any
+topic.</p>
+<p><strong>Keywords:</strong> modafinil, meta-analysis, literature
+retrieval, bibliometrics, record de-duplication, full-text mining,
+document embeddings, citation network, topic modeling, entity
+extraction, wakefulness, cognitive enhancement, reproducible
+research</p>
+<hr />
+<h1 data-number="2" id="introduction"><span
+class="header-section-number">2</span> Introduction</h1>
+<p>The scholarly literature on any active topic grows faster than any
+individual can read. A researcher entering a field needs to know how
+large it is, how fast it is growing, what sub-areas compose it, which
+works anchor its citation structure, what language and concepts recur,
+and which claims the field actually tests. Answering those questions by
+hand is slow, unrepeatable, and binds no number to evidence. Systematic
+reviews, while the gold standard for evidence synthesis, are
+labour-intensive and become stale between updates — the Cochrane review
+cycle, for instance, targets a two-year refresh interval that many
+fields outpace [page2021prisma]. Bibliometric dashboards (Scopus, Web of
+Science, Dimensions) offer breadth but no reproducible link from a
+reported statistic to a regenerable artifact, and they do not frame or
+test domain-specific hypotheses.</p>
+<p>This project is a <strong>configurable, reproducible meta-analysis
+template</strong>. It takes one search term and produces a quantitative
+portrait of that term’s literature, with every reported number traceable
+to a committed artifact and regenerable by re-running the pipeline. The
+bundled instance targets <strong>Modafinil</strong>, a
+wakefulness-promoting agent with a large, multi-disciplinary literature
+spanning clinical sleep medicine, cognitive neuroscience, pharmacology,
+psychiatry, and safety research; pointing the configuration at a
+different term re-targets the whole analysis with no code change.</p>
+<h2 data-number="2.1" id="research-questions"><span
+class="header-section-number">2.1</span> Research Questions</h2>
+<p>The pipeline is designed around four research questions (RQs) that a
+researcher entering the field would ask:</p>
+<ol type="1">
+<li><p><strong>RQ1 — Field size and growth.</strong> How large is the
+literature on Modafinil, how fast is it growing, and when did it peak?
+The corpus of <span class="math inline">\(N = 2302\)</span> records
+spanning 2000–2026 answers this directly, with a compound annual growth
+rate of 3.45% and a peak in 2025.</p></li>
+<li><p><strong>RQ2 — Subfield composition.</strong> What sub-areas
+compose the literature, and what is their relative weight? A
+configurable 6-bucket taxonomy (Clinical Sleep, Cognition, Pharmacology,
+Psychiatry, Safety, and Neuroscience) classifies every record, with
+<strong>Clinical Sleep</strong> the largest bucket at 64.3%.</p></li>
+<li><p><strong>RQ3 — Topical and linguistic structure.</strong> What
+language and concepts recur, and what latent topics cross-cut the
+keyword taxonomy? TF-IDF over a 500-feature vocabulary feeds
+non-negative matrix factorization, which extracts 5 latent topics. The
+top vocabulary terms are: modafinil, treatment, study, effects,
+patients, results, sleep, used, use, drug, studies, clinical, mg, using,
+placebo, cognitive, associated, effect, however, disorder.</p></li>
+<li><p><strong>RQ4 — Citation geometry and evidence landscape.</strong>
+Which works anchor the citation structure, how self-contained is the
+retrieved slice, and which claims does the field test? The citation
+network of 2204 nodes and 8,772 edges (22.6% reference resolution rate)
+exposes hubs, authorities, and communities, while 6 configured
+hypotheses frame the evidence landscape.</p></li>
+</ol>
+<h2 data-number="2.2" id="contributions"><span
+class="header-section-number">2.2</span> Contributions</h2>
+<p>The pipeline contributes an end-to-end, domain-agnostic workflow:</p>
+<ol type="1">
+<li><p><strong>Multiple-engine retrieval with graceful
+degradation.</strong> Records are gathered from 7 independent engines
+(arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, and
+ChinaRxiv). An engine with no API key or no network reports a
+<em>skipped</em> status; the run completes from whatever engines remain
+plus a committed offline corpus. For this live run, OpenAlex contributed
+the largest share of records, followed by Crossref and PubMed; Semantic
+Scholar was rate-limited (HTTP 429) and returned zero records without
+aborting the pipeline.</p></li>
+<li><p><strong>Record de-duplication.</strong> Heterogeneous records are
+merged by a canonical identifier hierarchy, keeping the most complete
+version of each work. Of 2302 retrieved records, 2248 carry DOIs, 932
+carry OpenAlex IDs, and 1 carry arXiv IDs.</p></li>
+<li><p><strong>Descriptive and bibliometric analysis.</strong> Counts by
+year, venue, and author; growth metrics (CAGR 3.45%, doubling time 11.3
+years); a configurable 6-bucket subfield classification; topic models;
+and a citation network with 1377 communities.</p></li>
+<li><p><strong>Language, entity, and embedding analysis.</strong>
+Keyphrase and entity extraction and offline deterministic document
+embeddings over titles, abstracts, and full text. The TF-IDF vocabulary
+of 500 features captures the lexical landscape.</p></li>
+<li><p><strong>Optional hypothesis evidence.</strong> An LLM-gated
+knowledge-graph stage scores the 6 configured hypotheses explored
+against the corpus.</p></li>
+</ol>
+<p>Because the writing itself is token-injected from configuration and
+pipeline outputs, the manuscript is part of the reproducible artifact
+rather than a separate hand-authored narrative. Every number, table, and
+figure reference in this document traces to a committed, regenerable
+file under <code>output/</code>.</p>
+<hr />
+<h1 data-number="3" id="methods-overview"><span
+class="header-section-number">3</span> Methods Overview</h1>
+<p>The pipeline is a sequence of deterministic stages, each reading the
+previous stage’s committed artifacts and writing its own. Business logic
+lives in tested <code>src/</code> modules; the numbered
+<code>scripts/</code> are thin orchestrators that wire I/O,
+configuration loading, logging, and stage sequencing. The architecture
+follows the thin orchestrator pattern: no computational logic resides in
+scripts.</p>
+<h2 data-number="3.1" id="pipeline-stages"><span
+class="header-section-number">3.1</span> Pipeline Stages</h2>
+<ol type="1">
+<li><p><strong>Retrieval</strong> (<code>01_literature_search.py</code>)
+— dispatch the configured query across 7 engines (arXiv, OpenAlex,
+Semantic Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv), merge,
+and de-duplicate into <code>corpus.jsonl</code>. Each engine is an
+isolated adapter exposing a uniform
+<code>search(query) -&gt; list[Paper]</code> interface; engines that are
+keyless need no credentials, while Semantic Scholar uses a key when
+present. SovietRxiv and ChinaRxiv share a unified API with an optional
+<code>X-API-Email</code> header for the polite rate-limit pool (300/min
+vs 30/min anonymous).</p></li>
+<li><p><strong>Meta-analysis</strong>
+(<code>02_meta_analysis_pipeline.py</code>) — subfield classification,
+temporal metrics, TF-IDF, non-negative matrix factorization topics, and
+the citation network. This stage reads <code>corpus.jsonl</code> and
+emits <code>subfield_classification.json</code>,
+<code>temporal_analysis.json</code>, <code>tfidf_data.json</code>,
+<code>topics.json</code>, <code>citation_network.json</code>, and
+<code>citation_graph.gml</code>.</p></li>
+<li><p><strong>Knowledge graph</strong>
+(<code>03_build_knowledge_graph.py</code>, optional/LLM-gated) — extract
+assertions and score the 6 configured hypotheses. Outputs
+<code>nanopublications.jsonl</code>,
+<code>hypothesis_scores.json</code>, and
+<code>assertion_summary.json</code>.</p></li>
+<li><p><strong>Figures</strong> (<code>04_generate_figures.py</code>) —
+render 18 publication-ready visualizations from the analysis JSON
+outputs. All figures use a colourblind-safe palette (Wong 2011),
+high-contrast labels at <span class="math inline">\(\geq 16\)</span>pt,
+and a headless matplotlib backend (Agg).</p></li>
+<li><p><strong>Injection</strong> (<code>05_inject_variables.py</code>)
+— compute manuscript variables from the artifacts above and substitute
+them into these Markdown sections. An unresolved placeholder is a hard
+error, not a silent gap.</p></li>
+<li><p><strong>Fulltext assessment</strong>
+(<code>06_fulltext_assessment.py</code>) — report abstract coverage
+(55.5%), open-access status (14.4%), and PDF availability (40.9%) across
+the corpus.</p></li>
+</ol>
+<h2 data-number="3.2" id="reproducibility-model"><span
+class="header-section-number">3.2</span> Reproducibility Model</h2>
+<p>The system runs <strong>offline and deterministically</strong> by
+default: a committed synthetic seed corpus drives every stage with fixed
+seeds (seed = 42 for NMF, SVD, and graph layouts), so re-running
+produces byte-identical outputs. A live run with engines enabled and
+credentials supplied replaces the seed corpus with real records — as in
+this instance, which retrieved 2302 live records. The template is
+domain-agnostic: the search term, query, keyword set, subfield taxonomy,
+and hypotheses all come from <code>manuscript/config.yaml</code>.</p>
+<h2 data-number="3.3" id="configuration-surface"><span
+class="header-section-number">3.3</span> Configuration Surface</h2>
+<p>A single <code>manuscript/config.yaml</code> controls:</p>
+<ul>
+<li><strong>Search parameters</strong>: term, query string, per-engine
+queries, relevance keywords, start year, max results, resume/clear
+behaviour</li>
+<li><strong>Engine toggles</strong>: arXiv, OpenAlex, Semantic Scholar,
+Crossref, PubMed, SovietRxiv, ChinaRxiv (each independently enabled or
+disabled)</li>
+<li><strong>SovietRxiv/ChinaRxiv settings</strong>: optional
+<code>api_email</code> for the polite pool, <code>source</code> filter
+(<code>russiarxiv</code> or <code>chinaxiv</code>)</li>
+<li><strong>Full-text download</strong>: opt-in Unpaywall resolution
+with <code>unpaywall_email</code></li>
+<li><strong>Embeddings</strong>: method (<code>tfidf_svd</code> or
+<code>transformer</code>), dimensionality, max features</li>
+<li><strong>Knowledge graph</strong>: checkpoint interval, LLM model,
+base URL, temperature, max tokens</li>
+<li><strong>Hypothesis definitions</strong>: 6 named hypotheses with
+scope labels</li>
+<li><strong>Subfield taxonomy</strong>: 6 buckets, each with a keyword
+list</li>
+<li><strong>Paper metadata</strong>: title, authors, DOI, keywords,
+license, repository URL</li>
+</ul>
+<hr />
+<h1 data-number="4" id="retrieval-and-de-duplication"><span
+class="header-section-number">4</span> Retrieval and De-duplication</h1>
+<p>Retrieval dispatches the configured query across 7 independent
+literature engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
+SovietRxiv, and ChinaRxiv). Each engine is an isolated adapter exposing
+a uniform <code>search(query) -&gt; list[Record]</code> interface;
+engines that are keyless — arXiv, OpenAlex [priem2022openalex], Crossref
+[hendricks2020crossref], PubMed/Entrez [sayers2022entrez], SovietRxiv /
+RussiaRxiv, and ChinaRxiv — need no credentials, while Semantic Scholar
+[kinney2023semantic] uses a key when present. SovietRxiv is a translated
+archive of Soviet-era scientific preprints sourced from Math-Net.Ru and
+CyberLeninka [sovietrxiv]; ChinaRxiv serves translated Chinese preprints
+from ChinaXiv via the same unified API. Both retain original-language
+PDFs alongside each translation, and their polite rate-limit pool
+(300/min vs 30/min anonymous) is activated by an optional
+<code>X-API-Email</code> header. Optional full-text resolution queries
+Unpaywall [piwowar2018state] for open-access locations. <strong>Multiple
+dispatch degrades gracefully</strong>: an engine that is disabled in the
+configuration, lacks a required key, or cannot reach the network returns
+a <em>skipped</em> status, and the run completes from the remaining
+engines plus the committed offline corpus.</p>
+<h2 data-number="4.1" id="engine-details"><span
+class="header-section-number">4.1</span> Engine Details</h2>
+<p>Each engine adapter follows a uniform contract: a module-level API
+URL constant, a pure <code>_parse_*</code> parser function, and a
+<code>search_*</code> entry point with pagination, retry, and graceful
+error handling. All functions accept an injectable <code>base_url</code>
+parameter for hermetic testing with <code>pytest-httpserver</code> — no
+engine hardcodes its URL inside the function body.</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Rate limit</th>
+<th>Pagination</th>
+<th>Auth</th>
+<th>Records (this run)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>arXiv</td>
+<td>3s between requests</td>
+<td>100/page, offset</td>
+<td>Keyless</td>
+<td>Sparse</td>
+</tr>
+<tr>
+<td>Semantic Scholar</td>
+<td>1 req/s (unauth.)</td>
+<td>100/page, offset</td>
+<td>Optional key</td>
+<td>Skipped (429)</td>
+</tr>
+<tr>
+<td>OpenAlex</td>
+<td>Polite pool (mailto)</td>
+<td>200/page, cursor</td>
+<td>Keyless</td>
+<td>1,000</td>
+</tr>
+<tr>
+<td>Crossref</td>
+<td>Polite pool (mailto)</td>
+<td>1,000/page, offset</td>
+<td>Keyless</td>
+<td>1,000</td>
+</tr>
+<tr>
+<td>PubMed</td>
+<td>NCBI usage policy</td>
+<td>retstart/retmax</td>
+<td>Keyless</td>
+<td>986</td>
+</tr>
+<tr>
+<td>SovietRxiv</td>
+<td>30/min (300/min polite)</td>
+<td>1–100/page, cursor</td>
+<td><code>X-API-Email</code></td>
+<td>0</td>
+</tr>
+<tr>
+<td>ChinaRxiv</td>
+<td>30/min (300/min polite)</td>
+<td>1–100/page, cursor</td>
+<td><code>X-API-Email</code></td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>SovietRxiv and ChinaRxiv returned zero records for the modafinil
+query, which is expected: the Soviet-era archive covers mathematics,
+physics, and engineering preprints, while ChinaXiv covers Chinese
+scientific preprints, and neither domain has substantial modafinil
+literature. The engines dispatched correctly, queried the live API, and
+returned empty result sets without error — confirming graceful
+degradation.</p>
+<h2 data-number="4.2" id="canonical-identifier-hierarchy"><span
+class="header-section-number">4.2</span> Canonical Identifier
+Hierarchy</h2>
+<p>Heterogeneous records are reconciled by a <strong>canonical
+identifier hierarchy</strong> — DOI <span
+class="math inline">\(&gt;\)</span> arXiv ID <span
+class="math inline">\(&gt;\)</span> Semantic Scholar ID <span
+class="math inline">\(&gt;\)</span> OpenAlex ID <span
+class="math inline">\(&gt;\)</span> a stable digest of the normalized
+title. When two records share a canonical identifier they are merged,
+keeping the version with the most complete metadata (a count of non-None
+optional fields). The DOI is normalized: case-folded, resolver-prefix
+stripped, so the same paper returned by two engines under
+case/format-variant DOIs merges. For this run, 2248 records carry DOIs,
+932 carry OpenAlex IDs, and 1 carry arXiv IDs. The de-duplicated corpus
+for this run holds <span class="math inline">\(N = 2302\)</span> records
+published across 2000–2026.</p>
+<h2 data-number="4.3" id="relevance-filtering"><span
+class="header-section-number">4.3</span> Relevance Filtering</h2>
+<p>After de-duplication, a relevance filter drops papers whose title and
+abstract contain none of the configured relevance keywords (modafinil,
+armodafinil, provigil, wakefulness, narcolepsy, cognitive enhancement,
+alertness, sleep deprivation, vigilance, eugeroic). Keywords are matched
+case-insensitively; an empty keyword list is treated as no filter to
+avoid silently wiping the corpus. A year filter then excludes papers
+published before the configured start year (2000).</p>
+<hr />
+<h1 data-number="5" id="full-text-language-and-embeddings"><span
+class="header-section-number">5</span> Full Text, Language, and
+Embeddings</h1>
+<p>Beyond bibliographic metadata, the pipeline mines the textual content
+of each record. This stage bridges the gap between a bibliographic
+inventory and a semantic understanding of the literature.</p>
+<h2 data-number="5.1" id="full-text-availability"><span
+class="header-section-number">5.1</span> Full-Text Availability</h2>
+<p>An open-access resolver maps each record to a downloadable PDF where
+one exists (a known <code>pdf_url</code>, or an Unpaywall lookup by
+DOI), and an opt-in, network-gated downloader fetches it to a
+deterministic path. Full-text availability is summarized without
+requiring any download, so the offline default still reports coverage.
+For this run:</p>
+<ul>
+<li><strong>Abstract coverage</strong>: 55.5% of records (1277 of
+<ol start="2302" type="1">
+<li>carry an abstract; 1025 records lack one.</li>
+</ol></li>
+<li><strong>Open-access status</strong>: 14.4% of records are open
+access (331 records); the remainder are closed or unknown.</li>
+<li><strong>PDF availability</strong>: 40.9% of records (941) have a
+direct PDF link; 940 have a publisher PDF, and 1361 have no full-text
+source available.</li>
+</ul>
+<p>The identifier coverage for this corpus is: 2248 DOIs, 932 OpenAlex
+IDs, and 1 arXiv IDs. DOI coverage dominates, enabling robust
+cross-engine de-duplication.</p>
+<h2 data-number="5.2" id="language-and-entity-extraction"><span
+class="header-section-number">5.2</span> Language and Entity
+Extraction</h2>
+<p>Titles, abstracts, and (when present) full text are tokenized and
+reduced to keyphrases and named entities by offline, dependency-light
+extractors — no mandatory LLM. Term-frequency statistics drive a TF-IDF
+representation over a 500-feature vocabulary. The most frequent terms in
+the corpus are: modafinil, treatment, study, effects, patients, results,
+sleep, used, use, drug, studies, clinical, mg, using, placebo,
+cognitive, associated, effect, however, disorder. These terms reflect
+the clinical, pharmacological, and cognitive vocabulary characteristic
+of the modafinil literature.</p>
+<h2 data-number="5.3" id="embeddings"><span
+class="header-section-number">5.3</span> Embeddings</h2>
+<p>Every title, abstract, and full text is embedded into a shared vector
+space by a deterministic, offline method — TF-IDF followed by truncated
+SVD, i.e. latent semantic analysis [deerwester1990indexing]. The
+embedding dimensionality is 50 components (configurable via
+<code>project_config.embeddings.n_components</code>), and the TF-IDF
+vocabulary is capped at 500 features (configurable via
+<code>project_config.embeddings.max_features</code>). The embedding is
+byte-stable across runs: the same input text always yields identical
+vectors, so the derived similarity matrix, nearest-neighbour lists,
+clusters, and two-dimensional projection are all reproducible.</p>
+<p>An optional transformer backend can be enabled by setting
+<code>project_config.embeddings.method: transformer</code> (requires the
+<code>embeddings</code> extra), which upgrades the embedding fidelity
+without changing the interface or downstream analysis.</p>
+<p>The embeddings support semantic retrieval over the corpus and feed
+two visualizations: a PCA two-dimensional projection ((Figure pca
+embeddings)) that maps the topical geography of the literature, and a
+hierarchical clustering dendrogram ((Figure dendrogram)) that reveals
+the similarity structure of the document collection.</p>
+<hr />
+<h1 data-number="6" id="bibliometric-and-temporal-analysis"><span
+class="header-section-number">6</span> Bibliometric and Temporal
+Analysis</h1>
+<p>Descriptive statistics summarize the corpus along every available
+axis: counts by year, venue, and author; citation-count distributions;
+and author productivity. Temporal analysis fits the publication time
+series, reporting a compound annual growth rate of 3.45% across
+2000–2026 (a span of 26 years), with a mean year-over-year growth rate
+of 6.3% and a doubling time of 11.3 years. The peak publication year is
+2025 with 112 records.</p>
+<h2 data-number="6.1" id="growth-metrics"><span
+class="header-section-number">6.1</span> Growth Metrics</h2>
+<p>The compound annual growth rate (CAGR) is computed as:</p>
+<p><span class="math display">\[
+\text{CAGR} =
+\left(\frac{N_{\text{end}}}{N_{\text{start}}}\right)^{1/(\text{year
+span})} - 1
+\]</span></p>
+<p>where <span class="math inline">\(N_{\text{start}}\)</span> is the
+publication count in the first year (2000) and <span
+class="math inline">\(N_{\text{end}}\)</span> is the count in the last
+year (2026). The mean year-over-year growth rate <span
+class="math inline">\(\bar{g}\)</span> is the arithmetic mean of annual
+ratios. The doubling time is <span class="math inline">\(t_d = \ln(2) /
+\ln(1 + \text{CAGR})\)</span>. These metrics are stored in
+<code>temporal_analysis.json</code> and injected into the manuscript at
+render time.</p>
+<h2 data-number="6.2" id="subfield-classification"><span
+class="header-section-number">6.2</span> Subfield Classification</h2>
+<p>Subfield classification assigns each record to one of 6 configurable
+buckets (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety,
+and Neuroscience) by priority-aware keyword matching; the taxonomy is
+defined entirely in configuration
+(<code>project_config.subfield_keywords</code>). The largest bucket is
+<strong>Clinical Sleep</strong> at 64.3% of the classified corpus. A
+per-subfield temporal breakdown (<code>subfield_timeline.json</code>)
+tracks how each sub-area has grown over time, enabling identification of
+emerging or declining research threads.</p>
+<h2 data-number="6.3" id="topic-modeling"><span
+class="header-section-number">6.3</span> Topic Modeling</h2>
+<p>A TF-IDF term-weighting of titles and abstracts [salton1988term]
+feeds non-negative matrix factorization (NMF) [lee1999learning],
+implemented with scikit-learn [pedregosa2011scikit]. NMF decomposes the
+document-term matrix <span class="math inline">\(\mathbf{V} \approx
+\mathbf{W} \mathbf{H}\)</span>, where <span
+class="math inline">\(\mathbf{W}\)</span> is the document-topic matrix
+and <span class="math inline">\(\mathbf{H}\)</span> is the topic-term
+matrix. The factorization extracts 5 latent topics that cross-cut the
+keyword taxonomy. The random seed is fixed at 42 for reproducibility.
+The reporting follows established systematic-review practice
+[page2021prisma], with every figure and statistic traceable to a
+committed artifact.</p>
+<hr />
+<h1 data-number="7" id="optional-knowledge-graph-layer"><span
+class="header-section-number">7</span> Optional Knowledge-Graph
+Layer</h1>
+<p>An optional, <strong>LLM-gated</strong> stage lifts the corpus from
+bibliometrics to hypothesis-level evidence. For each record, a local
+language model (Ollama, default model <code>gemma3:4b</code>) extracts
+structured <em>assertions</em> — each encoding a direction (supports /
+contradicts / neutral), a confidence score, and a short natural-language
+justification — against the 6 hypotheses declared in configuration.
+Assertions are serialized as RDF-compatible nanopublications
+[kuhn2016decentralized] and scored by a citation-weighted evidence
+function.</p>
+<h2 data-number="7.1" id="assertion-model"><span
+class="header-section-number">7.1</span> Assertion Model</h2>
+<p>Each assertion <span class="math inline">\(a\)</span> encodes:</p>
+<ul>
+<li><strong>Direction</strong>: <span
+class="math inline">\(\text{supports}\)</span>, <span
+class="math inline">\(\text{contradicts}\)</span>, or <span
+class="math inline">\(\text{neutral}\)</span> with respect to a
+hypothesis <span class="math inline">\(H\)</span></li>
+<li><strong>Confidence</strong>: a score <span class="math inline">\(c_a
+\in [0, 1]\)</span> from the LLM</li>
+<li><strong>Citation weight</strong>: <span class="math inline">\(\log(1
++ n_{\text{cites}})\)</span>, where <span
+class="math inline">\(n_{\text{cites}}\)</span> is the citation count of
+the asserting paper</li>
+</ul>
+<p>The evidence score for hypothesis <span
+class="math inline">\(H\)</span> is:</p>
+<p><span class="math display">\[
+\text{score}(H) = \frac{\sum_{a \in A(H)^+} c_a \cdot \log(1 +
+n_{\text{cites}}(a)) -
+\sum_{a \in A(H)^-} c_a \cdot \log(1 + n_{\text{cites}}(a))}
+{\sum_{a \in A(H)} c_a \cdot \log(1 + n_{\text{cites}}(a))}
+\]</span></p>
+<p>where <span class="math inline">\(A(H)^+\)</span> is the set of
+supporting assertions and <span class="math inline">\(A(H)^-\)</span>
+the contradicting ones. The score ranges from <span
+class="math inline">\(-1\)</span> (all evidence contradicts) to <span
+class="math inline">\(+1\)</span> (all evidence supports).</p>
+<h2 data-number="7.2" id="incremental-extraction"><span
+class="header-section-number">7.2</span> Incremental Extraction</h2>
+<p>Assertion extraction is <strong>incremental and resumable</strong>:
+assertions are appended to <code>nanopublications.jsonl</code> at
+configurable checkpoint intervals (default: 50 papers). On restart,
+already-processed papers are skipped automatically, so a long extraction
+run that is interrupted can resume without re-processing. The
+<code>--clear-assertions</code> flag discards previous results for a
+fresh start.</p>
+<h2 data-number="7.3" id="gating-and-defaults"><span
+class="header-section-number">7.3</span> Gating and Defaults</h2>
+<p>This stage is entirely optional and never runs in the offline
+default: with no language model available it is skipped, and the
+hypothesis evidence scores read <em>pending</em>. The hypotheses
+themselves — their names and scope — come from configuration and are
+reported regardless of whether the scoring stage has run.</p>
+<p>The hypotheses explored in this instance are: H1 Wakefulness
+Efficacy; H2 Cognitive Enhancement; H3 Low Abuse Liability; H4
+Dopaminergic Mechanism; H5 Off-label Psychiatric Utility; H6
+Tolerability.</p>
+<hr />
+<h1 data-number="8" id="visualization-and-manuscript-injection"><span
+class="header-section-number">8</span> Visualization and Manuscript
+Injection</h1>
+<h2 data-number="8.1" id="figure-generation"><span
+class="header-section-number">8.1</span> Figure Generation</h2>
+<p>Figures are rendered headlessly (matplotlib Agg backend) and
+deterministically from the analysis artifacts: subfield distributions,
+the publication growth curve, the citation network, topic-term bars, a
+term cloud, and embedding projections. All figures use a
+colourblind-safe palette (Wong 2011, 8 colours) with high-contrast
+labels at <span class="math inline">\(\geq 16\)</span>pt. This run
+produced 18 figures at 300 DPI. The full figure set includes:</p>
+<ul>
+<li><strong>Field overview</strong>: field summary and subfield
+distribution ((Figure field summary; Figure subfield distribution))</li>
+<li><strong>Temporal</strong>: growth curve and subfield timeline
+((Figure growth curve; Figure subfield timeline))</li>
+<li><strong>Citation network</strong>: network layout and degree
+distribution ((Figure citation network; Figure degree
+distribution))</li>
+<li><strong>Hypothesis</strong>: dashboard and evidence timeline
+((Figure hypothesis dashboard))</li>
+<li><strong>Text analytics</strong>: word cloud, topic-term bars, PCA
+embeddings, term heatmap, dendrogram, and co-occurrence matrix ((Figure
+word cloud; Figure topic term bars; Figure pca embeddings; Figure term
+heatmap; Figure dendrogram; Figure cooccurrence matrix))</li>
+</ul>
+<p>Each figure is registered in <code>figure_registry.json</code> with
+its source data file, generation parameters, and SHA-256 hash, binding
+the visual output to the exact pipeline run.</p>
+<h2 data-number="8.2" id="variable-injection"><span
+class="header-section-number">8.2</span> Variable Injection</h2>
+<p>The manuscript itself is generated, not hand-maintained. A variable
+computation step reads the configuration and the pipeline outputs and
+emits a flat table of named values; an injection step substitutes each
+named placeholder in these Markdown sections with its computed value
+before rendering. Because the substitution is total — an unresolved
+placeholder is a hard error, not a silent gap — every number in the
+rendered document is guaranteed to trace to a committed artifact.
+Re-running the pipeline after a configuration change re-computes the
+values and re-targets the prose automatically.</p>
+<p>The injection system computes variables from seven sources:</p>
+<ol type="1">
+<li><code>manuscript/config.yaml</code> — search term, engine roster,
+subfield taxonomy, hypotheses</li>
+<li><code>corpus.jsonl</code> — corpus size</li>
+<li><code>temporal_analysis.json</code> — year range, CAGR, peak year,
+doubling time</li>
+<li><code>citation_network.json</code> — edges, nodes, density,
+communities, PageRank, hubs</li>
+<li><code>subfield_classification.json</code> — per-bucket counts and
+percentages</li>
+<li><code>assertion_summary.json</code> — assertion counts and
+directions</li>
+<li><code>hypothesis_scores.json</code> — per-hypothesis evidence
+scores</li>
+</ol>
+<hr />
+<h1 data-number="9" id="results-hypotheses-explored"><span
+class="header-section-number">9</span> Results: Hypotheses Explored</h1>
+<p>The template scores a configurable set of hypotheses about the topic.
+For this instance 6 hypotheses are declared in configuration; Table 7
+lists them with their scope and evidence score.</p>
+<p><strong>Table 7. Hypotheses explored.</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Hypothesis</th>
+<th>Scope</th>
+<th>Evidence score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1</td>
+<td>Wakefulness Efficacy</td>
+<td>clinical</td>
+<td>+0.00</td>
+</tr>
+<tr>
+<td>H2</td>
+<td>Cognitive Enhancement</td>
+<td>cognitive</td>
+<td>+0.00</td>
+</tr>
+<tr>
+<td>H3</td>
+<td>Low Abuse Liability</td>
+<td>safety</td>
+<td>+0.00</td>
+</tr>
+<tr>
+<td>H4</td>
+<td>Dopaminergic Mechanism</td>
+<td>pharmacological</td>
+<td>+0.00</td>
+</tr>
+<tr>
+<td>H5</td>
+<td>Off-label Psychiatric Utility</td>
+<td>applied</td>
+<td>+0.00</td>
+</tr>
+<tr>
+<td>H6</td>
+<td>Tolerability</td>
+<td>safety</td>
+<td>+0.00</td>
+</tr>
+</tbody>
+</table>
+<p>Evidence scores are produced by the optional, LLM-gated
+knowledge-graph stage. In the offline default run that stage does not
+execute, so scores read <em>pending</em> — the hypotheses, their names,
+and their scope are nonetheless reported directly from configuration. A
+live run with a language model available populates the scores from
+citation-weighted assertion extraction.</p>
+<h2 data-number="9.1" id="interpretation"><span
+class="header-section-number">9.1</span> Interpretation</h2>
+<p>Reported scores, when present, should be read as relative rankings
+rather than calibrated probabilities: absolute magnitudes are inflated
+by publication bias and the linguistic asymmetry of academic writing. A
+positive score indicates that the retrieved corpus <em>talks about</em>
+the hypothesis in a supporting direction; a negative score indicates
+contradicting evidence; a score near zero indicates either balanced
+evidence or insufficient coverage.</p>
+<p>The six hypotheses frame the evidence landscape for Modafinil:</p>
+<ul>
+<li><p><strong>H1 (Wakefulness Efficacy)</strong> — the clinical claim
+that modafinil reliably promotes wakefulness in sleep-disorder
+populations. This is the primary indication and the most-studied claim
+in the corpus.</p></li>
+<li><p><strong>H2 (Cognitive Enhancement)</strong> — the claim that
+modafinil improves attention, working memory, and executive function,
+especially under sleep deprivation. This hypothesis drives the
+neuroenhancement literature and is the subject of significant public and
+scientific debate.</p></li>
+<li><p><strong>H3 (Low Abuse Liability)</strong> — the safety claim that
+modafinil has lower abuse potential than classical psychostimulants.
+This is critical for regulatory classification and prescribing
+decisions.</p></li>
+<li><p><strong>H4 (Dopaminergic Mechanism)</strong> — the
+pharmacological claim that modafinil acts substantially via
+dopamine-transporter inhibition rather than a purely novel mechanism.
+This hypothesis has mechanistic and translational implications.</p></li>
+<li><p><strong>H5 (Off-label Psychiatric Utility)</strong> — the applied
+claim that modafinil is a useful adjunct for fatigue and cognition in
+psychiatric and neurological conditions, including depression, ADHD, and
+schizophrenia.</p></li>
+<li><p><strong>H6 (Tolerability)</strong> — the safety claim that
+modafinil is generally well tolerated, with predominantly mild,
+transient adverse effects. This underpins its clinical acceptability
+relative to alternative wakefulness agents.</p></li>
+</ul>
+<!-- FIGURE: hypothesis_dashboard.png -->
+<p><img src="figures/hypothesis_dashboard.png"
+title="Hypothesis Dashboard"
+alt="Hypothesis dashboard for Modafinil. The dashboard summarizes the evidence scores across the 6 configured hypotheses, showing the direction and magnitude of citation-weighted assertion evidence." />{{#fig:hypothesis_dashboard}}</p>
+<hr />
+<h1 data-number="10" id="results-field-overview"><span
+class="header-section-number">10</span> Results: Field Overview</h1>
+<p>The de-duplicated corpus for <strong>Modafinil</strong> contains
+<span class="math inline">\(N = 2302\)</span> records spanning 2000–2026
+(26 years). Publication volume grows at a compound annual rate of 3.45%
+(mean year-over-year growth 6.3%, doubling time 11.3 years), peaking in
+2025 with 112 records that year. The growth curve is the first-order
+signal that the literature is active rather than dormant.</p>
+<!-- FIGURE: growth_curve.png -->
+<p><img src="figures/growth_curve.png" title="Publication Growth Curve"
+alt="Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2026, peaking in 2025." />{{#fig:growth_curve}}</p>
+<h2 data-number="10.1" id="rq1-field-size-and-growth"><span
+class="header-section-number">10.1</span> RQ1: Field Size and
+Growth</h2>
+<p>The temporal analysis reveals a literature that has grown steadily
+over 26 years. The compound annual growth rate of 3.45% means the corpus
+roughly doubles every 11.3 years — a pace that exceeds the general
+biomedical literature growth rate of approximately 4% per year. The peak
+year 2025 with 112 publications likely reflects both genuine research
+activity and the lag between publication and indexing in the source
+databases.</p>
+<p><strong>Table 1. Top publication years.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Publications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015</td>
+<td>101</td>
+</tr>
+<tr>
+<td>2016</td>
+<td>110</td>
+</tr>
+<tr>
+<td>2017</td>
+<td>109</td>
+</tr>
+<tr>
+<td>2018</td>
+<td>101</td>
+</tr>
+<tr>
+<td>2019</td>
+<td>107</td>
+</tr>
+<tr>
+<td>2020</td>
+<td>109</td>
+</tr>
+<tr>
+<td>2021</td>
+<td>106</td>
+</tr>
+<tr>
+<td>2022</td>
+<td>103</td>
+</tr>
+<tr>
+<td>2024</td>
+<td>109</td>
+</tr>
+<tr>
+<td>2025</td>
+<td>112</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="10.2" id="rq2-subfield-composition"><span
+class="header-section-number">10.2</span> RQ2: Subfield Composition</h2>
+<p>Records distribute across the 6 configured subfields as shown in
+Table 2, with <strong>Clinical Sleep</strong> the largest bucket at
+64.3% of the classified corpus. The dominance of Clinical Sleep reflects
+the clinical primacy of modafinil as a wakefulness-promoting agent: the
+largest body of literature addresses its use in narcolepsy, shift-work
+disorder, and obstructive sleep apnea.</p>
+<p><strong>Table 2. Subfield distribution.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Subfield</th>
+<th>Papers</th>
+<th>Share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clinical Sleep</td>
+<td>1417</td>
+<td>64.3%</td>
+</tr>
+<tr>
+<td>Cognition</td>
+<td>233</td>
+<td>10.6%</td>
+</tr>
+<tr>
+<td>Pharmacology</td>
+<td>74</td>
+<td>3.4%</td>
+</tr>
+<tr>
+<td>Psychiatry</td>
+<td>357</td>
+<td>16.2%</td>
+</tr>
+<tr>
+<td>Safety</td>
+<td>82</td>
+<td>3.7%</td>
+</tr>
+<tr>
+<td>Neuroscience</td>
+<td>41</td>
+<td>1.9%</td>
+</tr>
+</tbody>
+</table>
+<!-- FIGURE: field_summary.png -->
+<p><img src="figures/field_summary.png" title="Field Summary"
+alt="Field summary dashboard for Modafinil. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel." />{{#fig:field_summary}}</p>
+<!-- FIGURE: subfield_distribution.png -->
+<p><img src="figures/subfield_distribution.png"
+title="Subfield Distribution"
+alt="Subfield distribution for Modafinil. The 6-bucket taxonomy shows the relative weight of each configured sub-area, with Clinical Sleep dominant at 64.3%." />{{#fig:subfield_distribution}}</p>
+<!-- FIGURE: subfield_timeline.png -->
+<p><img src="figures/subfield_timeline.png" title="Subfield Timeline"
+alt="Subfield timeline for Modafinil. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads." />{{#fig:subfield_timeline}}</p>
+<h2 data-number="10.3" id="identifier-and-full-text-coverage"><span
+class="header-section-number">10.3</span> Identifier and Full-Text
+Coverage</h2>
+<p>The corpus has strong identifier coverage: 2248 of 2302 records
+(98.0%) carry DOIs, enabling robust cross-engine de-duplication.
+OpenAlex IDs are present for 932 records. Abstract coverage stands at
+55.5% (1277 records), which limits the text analytics to that subset.
+Open-access status is confirmed for 14.4% of records, and 40.9% have a
+direct PDF link.</p>
+<h2 data-number="10.4" id="descriptive-bibliometrics"><span
+class="header-section-number">10.4</span> Descriptive Bibliometrics</h2>
+<p>The corpus spans 7259 unique authors across 2302 papers, yielding a
+mean of 1.34 papers per author. Citation counts range from zero to 1333
+(mean 30.9, median 0.0), with a total of 68,151 citations across the
+corpus. The Gini coefficient of citation concentration is 0.812,
+indicating a highly skewed distribution characteristic of scientific
+literature.</p>
+<p><strong>Table 3. Citation count distribution.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Citations</th>
+<th>Papers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1184</td>
+</tr>
+<tr>
+<td>1-9</td>
+<td>195</td>
+</tr>
+<tr>
+<td>10-49</td>
+<td>421</td>
+</tr>
+<tr>
+<td>50-99</td>
+<td>214</td>
+</tr>
+<tr>
+<td>100-499</td>
+<td>179</td>
+</tr>
+<tr>
+<td>500+</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+<!-- FIGURE: citation_distribution.png -->
+<p><img src="figures/citation_distribution.png"
+title="Citation Distribution"
+alt="Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks." />{{#fig:citation_distribution}}</p>
+<p><strong>Table 4. Top publication venues.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Venue</th>
+<th>Papers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reactions Weekly</td>
+<td>142</td>
+</tr>
+<tr>
+<td>Psychopharmacology</td>
+<td>41</td>
+</tr>
+<tr>
+<td>SLEEP</td>
+<td>34</td>
+</tr>
+<tr>
+<td>Sleep Medicine</td>
+<td>33</td>
+</tr>
+<tr>
+<td>The Journal of Clinical Psychiatry</td>
+<td>31</td>
+</tr>
+<tr>
+<td>European Neuropsychopharmacology</td>
+<td>27</td>
+</tr>
+<tr>
+<td>Neuropharmacology</td>
+<td>26</td>
+</tr>
+<tr>
+<td>Inpharma Weekly</td>
+<td>25</td>
+</tr>
+<tr>
+<td>PubMed</td>
+<td>24</td>
+</tr>
+<tr>
+<td>American Journal of Psychiatry</td>
+<td>23</td>
+</tr>
+</tbody>
+</table>
+<!-- FIGURE: top_venues.png -->
+<p><img src="figures/top_venues.png" title="Top Venues"
+alt="Top publication venues for Modafinil. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published." />{{#fig:top_venues}}</p>
+<p><strong>Table 5. Top authors by publication count.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Author</th>
+<th>Papers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>&amp;NA;</td>
+<td>66</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Ronghua Yang</td>
+<td>26</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Yves Dauvilliers</td>
+<td>26</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Amy Hauck Newman</td>
+<td>22</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Barbara J. Sahakian</td>
+<td>20</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Edward T. Hellriegel</td>
+<td>17</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Gianluigi Tanda</td>
+<td>16</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Philmore Robertson</td>
+<td>16</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Sanjay Arora</td>
+<td>16</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Gert Lubec</td>
+<td>15</td>
+</tr>
+</tbody>
+</table>
+<!-- FIGURE: author_productivity.png -->
+<p><img src="figures/author_productivity.png"
+title="Author Productivity"
+alt="Author productivity for Modafinil. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature." />{{#fig:author_productivity}}</p>
+<hr />
+<h1 data-number="11" id="results-subfield-structure"><span
+class="header-section-number">11</span> Results: Subfield Structure</h1>
+<p>The subfield taxonomy is defined entirely in configuration; for this
+instance it spans 6 buckets (Clinical Sleep, Cognition, Pharmacology,
+Psychiatry, Safety, and Neuroscience). Each record is assigned to the
+highest-priority bucket whose keywords it matches, so the distribution
+reflects the configured taxonomy rather than a fixed schema. Table 2
+(previous section) reports the counts; the largest bucket is
+<strong>Clinical Sleep</strong> (64.3%).</p>
+<h2 data-number="11.1" id="per-subfield-characterization"><span
+class="header-section-number">11.1</span> Per-Subfield
+Characterization</h2>
+<p>The subfield breakdown reveals the multi-disciplinary nature of the
+modafinil literature:</p>
+<ul>
+<li><p><strong>Clinical Sleep</strong> dominates at 64.3%, reflecting
+the drug’s primary indication for narcolepsy, shift-work disorder, and
+obstructive sleep apnea. This bucket includes randomized controlled
+trials, meta-analyses of efficacy, and long-term safety studies in
+sleep-disorder populations.</p></li>
+<li><p><strong>Cognition</strong> represents studies of cognitive
+enhancement, working memory, attention, and executive function —
+particularly in sleep-deprived populations. This subfield has grown with
+the broader interest in neuroenhancement and “smart drugs.”</p></li>
+<li><p><strong>Pharmacology</strong> covers pharmacokinetics, mechanism
+of action (dopamine transporter inhibition, orexin system interactions),
+metabolism, and drug interactions.</p></li>
+<li><p><strong>Psychiatry</strong> addresses off-label uses including
+ADHD, depression, bipolar disorder, and schizophrenia — often as an
+adjunctive therapy targeting fatigue and cognitive symptoms.</p></li>
+<li><p><strong>Safety</strong> encompasses adverse effects, abuse
+potential, dependence, tolerability, and rare but serious events such as
+Stevens-Johnson syndrome.</p></li>
+<li><p><strong>Neuroscience</strong> includes neuroimaging (fMRI, EEG),
+orexin/hypothalamus studies, and preclinical mechanistic work.</p></li>
+</ul>
+<p>Because the taxonomy is data, not code, re-targeting the template to
+another topic — or refining the buckets for the same topic — changes
+this section’s structure and numbers without any change to the analysis
+code. The subfield assignment also feeds the temporal and citation
+analyses, allowing per-subfield growth and connectivity to be read off
+the same artifacts.</p>
+<hr />
+<h1 data-number="12" id="results-language-topics-and-embeddings"><span
+class="header-section-number">12</span> Results: Language, Topics, and
+Embeddings</h1>
+<h2 data-number="12.1" id="rq3-topical-and-linguistic-structure"><span
+class="header-section-number">12.1</span> RQ3: Topical and Linguistic
+Structure</h2>
+<p>Text analysis operates over titles, abstracts, and (when available)
+full text. A TF-IDF representation over a 500-feature vocabulary feeds
+non-negative matrix factorization, which extracts 5 latent topics
+cross-cutting the subfield taxonomy. The top vocabulary terms are:
+modafinil, treatment, study, effects, patients, results, sleep, used,
+use, drug, studies, clinical, mg, using, placebo, cognitive, associated,
+effect, however, disorder.</p>
+<p><strong>Table 3. NMF topics extracted from the corpus.</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Top terms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>cognitive, use, drugs, enhancement, performance, drug, effects,
+modafinil</td>
+</tr>
+<tr>
+<td>1</td>
+<td>adhd, ci, 95, studies, trials, evidence, risk, treatment</td>
+</tr>
+<tr>
+<td>2</td>
+<td>modafinil, mg, kg, effects, dose, rats, induced, placebo</td>
+</tr>
+<tr>
+<td>3</td>
+<td>sleep, narcolepsy, sleepiness, patients, eds, daytime, excessive,
+cataplexy</td>
+</tr>
+<tr>
+<td>4</td>
+<td>fatigue, patients, placebo, modafinil, scale, depression, treatment,
+armodafinil</td>
+</tr>
+</tbody>
+</table>
+<p>The topics reveal the thematic structure of the literature: Topic 0
+centres on cognitive enhancement and neuroenhancement; Topic 1 addresses
+ADHD treatment and clinical evidence; Topic 2 covers pharmacological
+dose-response studies (including animal models); Topic 3 focuses on
+sleep disorders (narcolepsy, excessive daytime sleepiness); and Topic 4
+addresses fatigue in psychiatric populations. These topics cross-cut the
+keyword-based subfield taxonomy, revealing connections that the explicit
+classification does not capture.</p>
+<!-- FIGURE: topic_term_bars.png -->
+<p><img src="figures/topic_term_bars.png" title="Topic-Term Weights"
+alt="Topic-term bar charts for Modafinil. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the \mathbf{H} matrix." />{{#fig:topic_term_bars}}</p>
+<h2 data-number="12.2" id="document-embeddings"><span
+class="header-section-number">12.2</span> Document Embeddings</h2>
+<p>Offline deterministic embeddings (TF-IDF followed by truncated SVD)
+place every document in a shared 50-dimensional vector space. Embedding
+the same text twice yields identical vectors, so the derived similarity
+matrix, nearest-neighbour lists, clusters, and two-dimensional
+projection are all reproducible.</p>
+<!-- FIGURE: pca_embeddings.png -->
+<p><img src="figures/pca_embeddings.png" title="PCA Embeddings"
+alt="PCA projection of document embeddings for Modafinil. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy." />{{#fig:pca_embeddings}}</p>
+<!-- FIGURE: dendrogram.png -->
+<p><img src="figures/dendrogram.png" title="Document Dendrogram"
+alt="Hierarchical clustering dendrogram of document embeddings. The tree shows the similarity structure of the corpus: documents that join low in the tree are semantically similar, while high-level splits separate the major topical clusters." />{{#fig:dendrogram}}</p>
+<h2 data-number="12.3" id="term-analysis"><span
+class="header-section-number">12.3</span> Term Analysis</h2>
+<p>The TF-IDF term heatmap reveals which terms discriminate between
+subfields: terms with high between-subfield variance (rather than high
+global mean) are selected for display.</p>
+<!-- FIGURE: term_heatmap.png -->
+<p><img src="figures/term_heatmap.png" title="Term Heatmap"
+alt="Term heatmap for Modafinil. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms." />{{#fig:term_heatmap}}</p>
+<h2 data-number="12.4" id="named-entity-analysis"><span
+class="header-section-number">12.4</span> Named Entity Analysis</h2>
+<p>Named entity extraction over the 1277 abstracts identified 30 unique
+entities. The most frequent entities reflect the clinical and
+pharmacological vocabulary of the modafinil literature.</p>
+<p><strong>Table 4. Top named entities in abstracts.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADHD</td>
+<td>338</td>
+</tr>
+<tr>
+<td>CI</td>
+<td>315</td>
+</tr>
+<tr>
+<td>EDS</td>
+<td>258</td>
+</tr>
+<tr>
+<td>OSA</td>
+<td>236</td>
+</tr>
+<tr>
+<td>MOD</td>
+<td>158</td>
+</tr>
+<tr>
+<td>RESULTS</td>
+<td>152</td>
+</tr>
+<tr>
+<td>DAT</td>
+<td>133</td>
+</tr>
+<tr>
+<td>MS</td>
+<td>132</td>
+</tr>
+<tr>
+<td>CONCLUSIONS</td>
+<td>130</td>
+</tr>
+<tr>
+<td>ESS</td>
+<td>127</td>
+</tr>
+<tr>
+<td>SD</td>
+<td>113</td>
+</tr>
+<tr>
+<td>METHODS</td>
+<td>102</td>
+</tr>
+<tr>
+<td>CE</td>
+<td>101</td>
+</tr>
+<tr>
+<td>MD</td>
+<td>97</td>
+</tr>
+<tr>
+<td>IH</td>
+<td>88</td>
+</tr>
+</tbody>
+</table>
+<!-- FIGURE: entity_bar_chart.png -->
+<p><img src="figures/entity_bar_chart.png" title="Named Entities"
+alt="Top named entities for Modafinil. The horizontal bar chart shows the 20 most frequently extracted named entities from abstracts, revealing the dominant drugs, conditions, and concepts in the literature." />{{#fig:entity_bar_chart}}</p>
+<p><strong>Table 5. Top keyphrases by TF-IDF score.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Keyphrase</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>available</td>
+<td>0.3333</td>
+</tr>
+<tr>
+<td>abstract</td>
+<td>0.3333</td>
+</tr>
+<tr>
+<td>abstract available</td>
+<td>0.3333</td>
+</tr>
+<tr>
+<td>content</td>
+<td>0.1053</td>
+</tr>
+<tr>
+<td>access</td>
+<td>0.1053</td>
+</tr>
+<tr>
+<td>md</td>
+<td>0.0870</td>
+</tr>
+<tr>
+<td>jama</td>
+<td>0.0826</td>
+</tr>
+<tr>
+<td>cleveland</td>
+<td>0.0763</td>
+</tr>
+<tr>
+<td>modafinil</td>
+<td>0.0741</td>
+</tr>
+<tr>
+<td>depression</td>
+<td>0.0741</td>
+</tr>
+<tr>
+<td>substance</td>
+<td>0.0694</td>
+</tr>
+<tr>
+<td>drug</td>
+<td>0.0667</td>
+</tr>
+<tr>
+<td>conditions</td>
+<td>0.0667</td>
+</tr>
+<tr>
+<td>continuous</td>
+<td>0.0667</td>
+</tr>
+<tr>
+<td>continuous flow</td>
+<td>0.0667</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="12.5" id="embedding-similarity-and-clustering"><span
+class="header-section-number">12.5</span> Embedding Similarity and
+Clustering</h2>
+<p>The TF-IDF/SVD embeddings place every document in a 50-dimensional
+vector space. K-means clustering with <span class="math inline">\(k =
+5\)</span> clusters partitions the corpus into topically coherent
+groups. The top similar document pairs, ranked by cosine similarity,
+reveal the most closely related works in the corpus.</p>
+<p><strong>Table 6. Top 10 most similar document pairs.</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Paper A</th>
+<th>Paper B</th>
+<th>Similarity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>doi:10.1176/appi.ajp.163.12.21</td>
+<td>doi:10.1176/ajp.2006.163.12.21</td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td>doi:10.1176/ajp.2006.163.12.21</td>
+<td>doi:10.1176/appi.ajp.163.12.21</td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td>doi:10.1197/j.aem.2005.08.013</td>
+<td>doi:10.1111/j.1553-2712.2006.t</td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td>doi:10.1345/aph.1h302</td>
+<td>doi:10.1136/bcr.08.2011.4652</td>
+<td>0.9687</td>
+</tr>
+<tr>
+<td>doi:10.4088/jcp.09m05900gry</td>
+<td>doi:10.1186/s40345-015-0034-0</td>
+<td>0.9628</td>
+</tr>
+<tr>
+<td>doi:10.1016/s2215-0366(18)3026</td>
+<td>doi:10.1016/s2215-0366(25)0006</td>
+<td>0.9621</td>
+</tr>
+<tr>
+<td>doi:10.1345/aph.1h302</td>
+<td>doi:10.1017/neu.2023.6</td>
+<td>0.9598</td>
+</tr>
+<tr>
+<td>doi:10.1111/j.1365-2869.2008.0</td>
+<td>doi:10.3109/07420528.2011.6352</td>
+<td>0.9538</td>
+</tr>
+<tr>
+<td>doi:10.1513/annalsats.202006-6</td>
+<td>doi:10.3760/cma.j.cn112147-202</td>
+<td>0.9532</td>
+</tr>
+<tr>
+<td>doi:10.1345/aph.1h302</td>
+<td>doi:10.1192/bjo.2024.75</td>
+<td>0.9517</td>
+</tr>
+</tbody>
+</table>
+<!-- FIGURE: similarity_heatmap.png -->
+<p><img src="figures/similarity_heatmap.png"
+title="Similar Document Pairs"
+alt="Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content." />{{#fig:similarity_heatmap}}</p>
+<!-- FIGURE: word_cloud.png -->
+<p><img src="figures/word_cloud.png" title="Term Cloud"
+alt="Term cloud for Modafinil. Term sizes are proportional to their TF-IDF weights across the corpus, providing a visual summary of the dominant vocabulary." />{{#fig:word_cloud}}</p>
+<!-- FIGURE: cooccurrence_matrix.png -->
+<p><img src="figures/cooccurrence_matrix.png" title="Term Co-occurrence"
+alt="Term co-occurrence matrix for Modafinil. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature." />{{#fig:cooccurrence_matrix}}</p>
+<p>These embeddings support semantic retrieval over the corpus and the
+visual map of the literature’s topical geography.</p>
+<hr />
+<h1 data-number="13" id="results-citation-network"><span
+class="header-section-number">13</span> Results: Citation Network</h1>
+<h2 data-number="13.1" id="rq4-citation-geometry"><span
+class="header-section-number">13.1</span> RQ4: Citation Geometry</h2>
+<p>Resolving each record’s references against the corpus yields an
+intra-corpus citation graph (built and analyzed with NetworkX
+[hagberg2008exploring]) of 2204 nodes and 8,772 edges across 1371
+connected components, with a graph density of 0.18% and a mean in-degree
+of 4.0. Of 38,802 total outgoing references, 22.6% resolve to another
+record inside the corpus — a resolution rate that reflects how
+self-contained the retrieved slice of the literature is rather than the
+underlying citation density of any single work.</p>
+<p>The citation network has 1377 communities (detected by modularity
+optimization), a maximum in-degree of 165 (the most-cited paper within
+the corpus), and a maximum out-degree of 145 (the paper that cites the
+most other corpus members).</p>
+<h2 data-number="13.2" id="centrality-analysis"><span
+class="header-section-number">13.2</span> Centrality Analysis</h2>
+<p>Centrality scores (PageRank [page1999pagerank] and HITS) and
+modularity-based community detection [clauset2004finding] are rounded
+and ranked with a stable tiebreaker so the reported hub and authority
+rankings are byte-reproducible across runs despite the floating-point
+non-associativity of the underlying iterative solvers.</p>
+<p><strong>Table 4. Top 5 papers by PageRank.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>DOI</th>
+<th>PageRank</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10.1177/026988110001400107</td>
+<td>0.036955</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10.1212/wnl.54.5.1166</td>
+<td>0.027240</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10.1523/jneurosci.21-05-01787.2001</td>
+<td>0.013811</td>
+</tr>
+<tr>
+<td>4</td>
+<td>10.1523/jneurosci.20-22-08620.2000</td>
+<td>0.011443</td>
+</tr>
+<tr>
+<td>5</td>
+<td>10.4088/jcp.v61n0510</td>
+<td>0.008104</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 5. Top 5 authority papers (HITS).</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>DOI</th>
+<th>Authority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10.1038/sj.npp.1301534</td>
+<td>0.017582</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10.1007/s00213-002-1250-8</td>
+<td>0.015979</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10.1124/jpet.106.106583</td>
+<td>0.015039</td>
+</tr>
+<tr>
+<td>4</td>
+<td>10.1001/jama.2009.351</td>
+<td>0.014535</td>
+</tr>
+<tr>
+<td>5</td>
+<td>10.1523/jneurosci.21-05-01787.2001</td>
+<td>0.014289</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 6. Top 5 hub papers (HITS).</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>DOI</th>
+<th>Hub</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10.3389/fnins.2021.656475</td>
+<td>0.012064</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10.1016/bs.apha.2023.10.006</td>
+<td>0.011690</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10.1038/sj.npp.1301534</td>
+<td>0.010781</td>
+</tr>
+<tr>
+<td>4</td>
+<td>10.1080/08897077.2019.1700584</td>
+<td>0.010618</td>
+</tr>
+<tr>
+<td>5</td>
+<td>10.1007/s00213-013-3232-4</td>
+<td>0.009971</td>
+</tr>
+</tbody>
+</table>
+<p>The most influential paper by PageRank (DOI
+10.1177/026988110001400107) is a foundational work that anchors the
+citation structure — its high authority score confirms it is frequently
+cited by other corpus members. Hub papers, which cite many other corpus
+members, serve as integrative reviews or meta-analyses that connect
+disparate threads of the literature.</p>
+<!-- FIGURE: citation_network.png -->
+<p><img src="figures/citation_network.png" title="Citation Network"
+alt="Citation network for Modafinil. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (1377 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility." />{{#fig:citation_network}}</p>
+<!-- FIGURE: degree_distribution.png -->
+<p><img src="figures/degree_distribution.png"
+title="Degree Distribution"
+alt="Degree distribution for the Modafinil citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks." />{{#fig:degree_distribution}}</p>
+<p>The heavy-tailed degree distribution is characteristic of citation
+networks: a small number of highly-cited papers anchor the structure,
+while the long tail of low-degree nodes represents newer or peripheral
+works. The low graph density (0.18%) reflects the sparsity of
+intra-corpus citation links — most papers cite works outside the
+retrieved slice, which is expected for a max-results-capped
+retrieval.</p>
+<h2 data-number="13.3" id="advanced-network-metrics"><span
+class="header-section-number">13.3</span> Advanced Network Metrics</h2>
+<p>Beyond PageRank and HITS, the network analysis computes betweenness
+centrality (which papers bridge different communities), closeness
+centrality (which papers are near all others), degree assortativity (do
+highly-cited papers cite other highly-cited papers?), and average
+clustering coefficient (how tightly knit are local neighborhoods).</p>
+<p>The degree assortativity coefficient is -0.0579, and the average
+clustering coefficient is 0.1047. A negative assortativity indicates
+that highly-cited papers tend to cite less-cited papers (dissortative
+mixing), which is typical of citation networks where review papers (high
+in-degree) cite many primary studies (low in-degree).</p>
+<p><strong>Table 7. Top 5 papers by betweenness centrality.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>DOI</th>
+<th>Betweenness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10.1038/sj.npp.1301534</td>
+<td>0.006017</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10.4088/jcp.v67n0406</td>
+<td>0.003330</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10.2165/00003495-200868130-00003</td>
+<td>0.002036</td>
+</tr>
+<tr>
+<td>4</td>
+<td>10.1124/jpet.106.106583</td>
+<td>0.001949</td>
+</tr>
+<tr>
+<td>5</td>
+<td>10.1007/s00213-005-0044-1</td>
+<td>0.001899</td>
+</tr>
+</tbody>
+</table>
+<p>Papers with high betweenness centrality serve as bridges between
+different topical communities in the citation network — their removal
+would fragment the graph into disconnected components. These bridging
+papers are often review articles or methodological papers that connect
+disparate research threads.</p>
+<hr />
+<h1 data-number="14" id="conclusion"><span
+class="header-section-number">14</span> Conclusion</h1>
+<p>We have presented a configurable, reproducible meta-analysis template
+that turns a single search term into a complete, evidence-bound portrait
+of its literature. Applied to <strong>Modafinil</strong>, it retrieved
+and de-duplicated 2302 records across 7 engines (arXiv, OpenAlex,
+Semantic Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv),
+classified them into 6 configurable subfields (with <strong>Clinical
+Sleep</strong> dominant at 64.3%), extracted 5 topics over a 500-feature
+vocabulary, computed reproducible document embeddings, mapped the
+citation network (2204 nodes, 8,772 edges, 1377 communities), and framed
+6 hypotheses for optional evidence scoring.</p>
+<h2 data-number="14.1" id="key-findings"><span
+class="header-section-number">14.1</span> Key Findings</h2>
+<p>The analysis answers the four research questions posed in the
+introduction:</p>
+<ol type="1">
+<li><p><strong>RQ1 (Growth)</strong>: The modafinil literature spans 26
+years (2000–2026) and grows at a CAGR of 3.45%, doubling every 11.3
+years. The peak year 2025 produced 112 publications, indicating
+sustained and active research interest.</p></li>
+<li><p><strong>RQ2 (Subfields)</strong>: The 6-bucket taxonomy reveals a
+multi-disciplinary literature dominated by clinical sleep research
+(64.3%), with significant representation from cognition, psychiatry, and
+pharmacology.</p></li>
+<li><p><strong>RQ3 (Topics)</strong>: NMF extracted 5 latent topics —
+cognitive enhancement, ADHD treatment, pharmacological dose-response,
+sleep disorders, and psychiatric fatigue — that cross-cut the explicit
+subfield taxonomy and reveal the thematic structure of the
+field.</p></li>
+<li><p><strong>RQ4 (Citations)</strong>: The citation network of 2204
+nodes and 8,772 edges has a resolution rate of 22.6%, 1377 communities,
+and a maximum in-degree of</p>
+<ol start="165" type="1">
+<li>The heavy-tailed degree distribution is characteristic of citation
+networks, with a small number of foundational works anchoring the
+structure.</li>
+</ol></li>
+</ol>
+<h2 data-number="14.2" id="architectural-contribution"><span
+class="header-section-number">14.2</span> Architectural
+Contribution</h2>
+<p>The contribution is architectural rather than topical: every
+domain-specific value flows from one configuration file and the
+pipeline’s own outputs into a generated manuscript, so the same
+machinery re-targets to any topic by editing configuration alone.
+Combined with an offline, deterministic default run, this yields a
+<em>living literature review</em> — a synthesis that can be re-executed
+on demand as a field evolves, with every number traceable to a
+regenerable artifact.</p>
+<h2 data-number="14.3" id="reproducibility"><span
+class="header-section-number">14.3</span> Reproducibility</h2>
+<p>This manuscript was generated from a live retrieval run using 7
+engines. Every number, table, and figure in this document is injected
+from a committed artifact (<code>output/data/*.json</code>,
+<code>../figures/*.png</code>). Re-running the pipeline with the same
+configuration reproduces identical data outputs; the 18 figures are
+deterministic given fixed seeds, and the manuscript text is regenerated
+from the same template. No number in this document was typed by
+hand.</p>
+<hr />
+<h1 data-number="15" id="discussion"><span
+class="header-section-number">15</span> Discussion</h1>
+<h2 data-number="15.1" id="what-the-template-is-and-is-not"><span
+class="header-section-number">15.1</span> What the Template Is, and Is
+Not</h2>
+<p>The pipeline measures the <em>shape</em> of a literature — its size,
+growth, subfield composition, topical structure, citation geometry, and
+the hypotheses a field frames. It does not adjudicate scientific truth.
+The optional hypothesis scores summarize how the retrieved corpus
+<em>talks about</em> each claim, weighted by citation influence; they
+are an evidence-landscape instrument, not a verdict.</p>
+<p>The 5 topics extracted by NMF provide a data-driven complement to the
+keyword-based subfield taxonomy. Where the taxonomy assigns each paper
+to a single bucket, the topics reveal overlapping thematic structure: a
+paper on modafinil’s cognitive effects in ADHD patients belongs to the
+“Psychiatry” subfield but also loads on the “Cognitive Enhancement” and
+“ADHD Treatment” topics. This multi-resolution view is more informative
+than either approach alone.</p>
+<h2 data-number="15.2" id="engine-coverage-and-bias"><span
+class="header-section-number">15.2</span> Engine Coverage and Bias</h2>
+<p>For this live run, the corpus is dominated by OpenAlex (1,000
+records) and Crossref (1,000 records), with PubMed contributing 986
+records and arXiv contributing 1. Semantic Scholar was rate-limited
+(HTTP 429) and returned zero records — a known limitation of its
+unauthenticated API tier. SovietRxiv and ChinaRxiv returned zero records
+for the modafinil query, which is expected given their coverage
+domains.</p>
+<p>The max-results cap of 1,000 per engine means the full literature is
+larger than the retrieved corpus; the 2302 records represent a bounded
+sample rather than the complete literature. The citation network
+resolution rate of 22.6% reflects this: many cited works lie outside the
+retrieved slice. Increasing the cap or adding more engines would improve
+coverage but also increase runtime and API load.</p>
+<h2 data-number="15.3" id="honest-defaults"><span
+class="header-section-number">15.3</span> Honest Defaults</h2>
+<p>The committed seed corpus is synthetic (reserved test DOIs, generated
+authors) so that the whole pipeline runs offline and byte-identically.
+Its numbers demonstrate the machinery; they are not empirical findings
+about modafinil. Real claims require a live retrieval run with
+regenerated figures, reports, and manuscript variables — as produced in
+this instance.</p>
+<h2 data-number="15.4" id="limitations-and-extensions"><span
+class="header-section-number">15.4</span> Limitations and
+Extensions</h2>
+<p>Several limitations bound the interpretation of results:</p>
+<ul>
+<li><p><strong>Coverage is bounded by the enabled engines and the
+query.</strong> The max-results cap truncates each engine’s
+contribution. Semantic Scholar’s rate limiting excluded a major source;
+a Semantic Scholar API key would resolve this.</p></li>
+<li><p><strong>Subfield classification is keyword-based</strong> and
+only as good as the configured taxonomy. Ambiguous papers may be
+misclassified; a classifier based on embeddings or supervised learning
+could improve accuracy.</p></li>
+<li><p><strong>The default embeddings are lexical</strong> (TF-IDF/SVD).
+They capture term co-occurrence but not semantic similarity; a
+transformer backend (<code>embeddings</code> extra) would improve the
+quality of nearest-neighbour retrieval and clustering.</p></li>
+<li><p><strong>Hypothesis scoring depends on an external language
+model.</strong> Without Ollama running, scores read <em>pending</em>.
+The scoring is also sensitive to prompt design and model choice; the
+default <code>gemma3:4b</code> is a lightweight model suitable for
+demonstration but may miss nuanced assertions.</p></li>
+<li><p><strong>Abstract coverage is 55.5%.</strong> Text analytics
+operate only on the subset of records with abstracts, biasing topic
+models and embeddings toward well-indexed sources.</p></li>
+</ul>
+<p>Each limitation is a configuration or dependency choice rather than a
+change to the core architecture.</p>
+<hr />
+<h1 data-number="16" id="appendix-a-tooling-and-reproduction"><span
+class="header-section-number">16</span> Appendix A: Tooling and
+Reproduction</h1>
+<p>The pipeline is a two-layer system: generic infrastructure
+(rendering, validation, logging) shared across the template monorepo,
+and project-local <code>src/</code> modules that implement the
+meta-analysis. All numbered <code>scripts/</code> are thin orchestrators
+that wire I/O, configuration loading, and logging — no computational
+logic resides in scripts.</p>
+<h2 data-number="16.1" id="reproduce-the-offline-default-run"><span
+class="header-section-number">16.1</span> Reproduce the Offline Default
+Run</h2>
+<p>No network, no language model required:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/generate_fixture_corpus.py <span class="at">--out</span> output/data/corpus.jsonl</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/02_meta_analysis_pipeline.py</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_build_knowledge_graph.py <span class="at">--max-papers</span> 0</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/04_generate_figures.py <span class="at">--dpi</span> 300</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/05_inject_variables.py</span></code></pre></div>
+<h2 data-number="16.2" id="reproduce-the-live-run"><span
+class="header-section-number">16.2</span> Reproduce the Live Run</h2>
+<p>This manuscript was generated from a live retrieval run. To
+reproduce:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Live search (all 7 engines, max 1000 per engine)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/01_literature_search.py <span class="at">--query</span> modafinil <span class="at">--max-results</span> 1000 <span class="at">--no-resume</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis pipeline</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/02_meta_analysis_pipeline.py</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_build_knowledge_graph.py <span class="at">--max-papers</span> 0</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/04_generate_figures.py <span class="at">--dpi</span> 300</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/05_inject_variables.py</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/06_fulltext_assessment.py</span></code></pre></div>
+<h2 data-number="16.3" id="re-target-to-another-topic"><span
+class="header-section-number">16.3</span> Re-target to Another
+Topic</h2>
+<p>Edit <code>manuscript/config.yaml</code> —
+<code>project_config.search.term</code>, <code>query</code>,
+<code>relevance_keywords</code>, <code>subfield_keywords</code>, and
+<code>hypothesis_definitions</code> — then regenerate the seed corpus
+and re-run. No code changes are required; the manuscript re-targets
+through token injection.</p>
+<h2 data-number="16.4" id="live-retrieval"><span
+class="header-section-number">16.4</span> Live Retrieval</h2>
+<p>Enable engines under <code>project_config.search.engines</code>,
+supply any optional credentials (Unpaywall email, Semantic Scholar key),
+and run <code>scripts/01_literature_search.py</code>; absent engines
+degrade to skipped sources. The CLI supports per-engine skip flags:
+<code>--skip-arxiv</code>, <code>--skip-s2</code>,
+<code>--skip-openalex</code>, <code>--skip-crossref</code>,
+<code>--skip-pubmed</code>, <code>--skip-sovietrxiv</code>,
+<code>--skip-chinarxiv</code>.</p>
+<h2 data-number="16.5" id="test-suite"><span
+class="header-section-number">16.5</span> Test Suite</h2>
+<p>Every stage is covered by a no-mocks test suite (real computation and
+<code>pytest-httpserver</code> for network adapters) gated at <span
+class="math inline">\(\geq 90\%\)</span> statement coverage on
+<code>src/</code>. The suite includes 819 tests covering:</p>
+<ul>
+<li>Record models and serialization (deduplication, canonical ID
+hierarchy)</li>
+<li>All 7 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref,
+PubMed, SovietRxiv, ChinaRxiv) with pytest-httpserver integration
+tests</li>
+<li>Search runner (multi-engine dispatch, relevance filtering,
+resume/clear, YAML config)</li>
+<li>Bibliometric analysis (subfield classification, temporal metrics,
+TF-IDF, NMF, citation network)</li>
+<li>Knowledge graph (schema, nanopublications, hypothesis scoring, LLM
+extraction)</li>
+<li>Visualization (headless figure generation, style config)</li>
+<li>Manuscript variable computation and injection</li>
+</ul>
+<hr />
+<h1 data-number="17" id="appendix-b-technical-notes"><span
+class="header-section-number">17</span> Appendix B: Technical Notes</h1>
+<h2 data-number="17.1" id="determinism"><span
+class="header-section-number">17.1</span> Determinism</h2>
+<p>All stochastic steps use fixed seeds (seed = 42 for NMF, SVD, and
+graph layouts). The fixture corpus, TF-IDF/SVD embeddings, and topic
+factorization are byte-stable across runs. Graph centrality scores are
+rounded to a fixed precision and ranked with a node-id tiebreaker so
+that floating-point non-associativity in iterative solvers cannot
+perturb the reported rankings. Record identity uses a content digest
+(SHA-1, <code>usedforsecurity=False</code>) rather than a salted hash,
+so de-duplication and corpus byte-stability hold across processes.</p>
+<h2 data-number="17.2" id="data-model"><span
+class="header-section-number">17.2</span> Data Model</h2>
+<p>Each record is a <code>Paper</code> dataclass with: title, abstract,
+authors (list of <code>Author</code>), year, DOI, arXiv ID, Semantic
+Scholar ID, OpenAlex ID, venue, citation count, references (list of
+canonical IDs), publication date, PDF URL, open-access flag, and
+full-text source. The canonical identifier hierarchy governs
+de-duplication and citation resolution:</p>
+<p><span class="math display">\[
+\text{canonical\_id} = \begin{cases}
+\texttt{doi:} + \text{normalize}(\text{DOI}) &amp; \text{if DOI present}
+\\
+\texttt{arxiv:} + \text{arXiv\_id} &amp; \text{if arXiv ID present} \\
+\texttt{s2:} + \text{S2\_id} &amp; \text{if S2 ID present} \\
+\texttt{openalex:} + \text{OpenAlex\_id} &amp; \text{if OpenAlex ID
+present} \\
+\texttt{title:} + \text{SHA1}(\text{title})[:16] &amp; \text{otherwise}
+\end{cases}
+\]</span></p>
+<p>DOI normalization lower-cases the DOI and strips any
+<code>https://doi.org/</code> or <code>dx.doi.org/</code> prefix, so the
+same paper returned by two engines under different case or format
+variants merges to a single canonical ID.</p>
+<h2 data-number="17.3" id="nmf-mathematics"><span
+class="header-section-number">17.3</span> NMF Mathematics</h2>
+<p>Non-negative matrix factorization decomposes the TF-IDF document-term
+matrix <span class="math inline">\(\mathbf{V} \in \mathbb{R}^{m \times
+n}\)</span> (where <span class="math inline">\(m\)</span> is the number
+of documents and <span class="math inline">\(n\)</span> is the
+vocabulary size) into <span class="math inline">\(\mathbf{W} \in
+\mathbb{R}^{m \times k}\)</span> and <span
+class="math inline">\(\mathbf{H} \in \mathbb{R}^{k \times n}\)</span>,
+where <span class="math inline">\(k\)</span> is the number of topics
+(here 5). The factorization minimizes:</p>
+<p><span class="math display">\[
+\min_{\mathbf{W}, \mathbf{H} \geq 0} \|\mathbf{V} - \mathbf{W}
+\mathbf{H}\|_F^2
+\]</span></p>
+<p>using multiplicative update rules [lee1999learning] with a fixed
+random seed for reproducibility. The topic-term matrix <span
+class="math inline">\(\mathbf{H}\)</span> gives the top terms per topic;
+the document-topic matrix <span
+class="math inline">\(\mathbf{W}\)</span> gives each document’s topic
+loadings.</p>
+<h2 data-number="17.4" id="growth-rate-estimation"><span
+class="header-section-number">17.4</span> Growth Rate Estimation</h2>
+<p>The compound annual growth rate is:</p>
+<p><span class="math display">\[
+\text{CAGR} =
+\left(\frac{N_{\text{end}}}{N_{\text{start}}}\right)^{1/(T_{\text{end}}
+- T_{\text{start}})} - 1
+\]</span></p>
+<p>where <span class="math inline">\(N_{\text{start}}\)</span> and <span
+class="math inline">\(N_{\text{end}}\)</span> are the publication counts
+in the first and last years of the corpus, respectively. The doubling
+time is <span class="math inline">\(t_d = \ln(2) / \ln(1 +
+\text{CAGR})\)</span>. For this run: CAGR = 3.45%, doubling time = 11.3
+years.</p>
+<h2 data-number="17.5" id="configuration-surface-1"><span
+class="header-section-number">17.5</span> Configuration Surface</h2>
+<p>A single <code>manuscript/config.yaml</code> controls the search
+term, per-engine query and keyword sets, engine enable toggles, subfield
+taxonomy, hypotheses, full-text and embedding options, and paper
+metadata. This run drew on 7 engines, a 6-bucket taxonomy, and 6
+hypotheses.</p>
+<h2 data-number="17.6" id="artifacts"><span
+class="header-section-number">17.6</span> Artifacts</h2>
+<p>Intermediate and final outputs live under <code>output/</code> and
+are disposable and regenerable:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>File</th>
+<th>Stage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>corpus.jsonl</code></td>
+<td>01</td>
+<td>De-duplicated corpus (2302 records)</td>
+</tr>
+<tr>
+<td><code>temporal_analysis.json</code></td>
+<td>02</td>
+<td>Year counts, CAGR, doubling time, peak year</td>
+</tr>
+<tr>
+<td><code>subfield_classification.json</code></td>
+<td>02</td>
+<td>Per-bucket paper counts</td>
+</tr>
+<tr>
+<td><code>subfield_timeline.json</code></td>
+<td>02</td>
+<td>Per-subfield annual breakdown</td>
+</tr>
+<tr>
+<td><code>tfidf_data.json</code></td>
+<td>02</td>
+<td>TF-IDF matrix, feature names, doc tokens</td>
+</tr>
+<tr>
+<td><code>topics.json</code></td>
+<td>02</td>
+<td>NMF topic-term distributions</td>
+</tr>
+<tr>
+<td><code>citation_network.json</code></td>
+<td>02</td>
+<td>Network metrics, PageRank, HITS, communities</td>
+</tr>
+<tr>
+<td><code>citation_graph.gml</code></td>
+<td>02</td>
+<td>GraphML citation graph</td>
+</tr>
+<tr>
+<td><code>nanopublications.jsonl</code></td>
+<td>03</td>
+<td>LLM-extracted assertions (0 in this run)</td>
+</tr>
+<tr>
+<td><code>hypothesis_scores.json</code></td>
+<td>03</td>
+<td>Per-hypothesis evidence scores</td>
+</tr>
+<tr>
+<td><code>fulltext_assessment.json</code></td>
+<td>06</td>
+<td>Abstract/OA/PDF coverage report</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 data-number="18" id="appendix-c-accessibility-and-provenance"><span
+class="header-section-number">18</span> Appendix C: Accessibility and
+Provenance</h1>
+<h2 data-number="18.1" id="figure-accessibility"><span
+class="header-section-number">18.1</span> Figure Accessibility</h2>
+<p>All 18 figures are rendered with a colourblind-safe palette (Wong
+2011, 8 colours) and high-contrast labels at publication DPI (300). Each
+figure carries a descriptive caption so the visual claims are
+recoverable from text alone. The palette avoids red-green colour pairs
+that are indistinguishable for deuteranopia and protanopia; when more
+than 8 categories are needed, continuous colormaps
+(<code>viridis</code>, <code>plasma</code>) are used instead of
+extending the discrete palette. Font sizes are enforced at <span
+class="math inline">\(\geq 16\)</span>pt via a centralized style module,
+ensuring readability at both screen and print sizes.</p>
+<h2 data-number="18.2" id="provenance-chain"><span
+class="header-section-number">18.2</span> Provenance Chain</h2>
+<p>Every reported number is injected from a committed artifact rather
+than typed by hand; an unresolved placeholder is a hard error, so the
+rendered manuscript can contain no orphaned or stale figures. The
+configuration hash and artifact inventory bind the prose to the exact
+pipeline run that produced it. The provenance chain is:</p>
+<ol type="1">
+<li><code>manuscript/config.yaml</code> defines the search term,
+engines, taxonomy, and hypotheses</li>
+<li><code>scripts/01_literature_search.py</code> retrieves records →
+<code>corpus.jsonl</code></li>
+<li><code>scripts/02_meta_analysis_pipeline.py</code> analyses the
+corpus → <code>*.json</code> data files</li>
+<li><code>scripts/04_generate_figures.py</code> renders figures →
+<code>*.png</code> + <code>figure_registry.json</code></li>
+<li><code>scripts/05_inject_variables.py</code> computes variables from
+data files → manuscript text</li>
+</ol>
+<p>Each figure in <code>figure_registry.json</code> records its source
+data file, generation parameters, and SHA-256 hash, binding the visual
+output to the exact pipeline run. Re-running the pipeline with the same
+configuration and seed produces identical data outputs.</p>
+<h2 data-number="18.3" id="fair-data-principles"><span
+class="header-section-number">18.3</span> FAIR Data Principles</h2>
+<p>The pipeline supports FAIR (Findable, Accessible, Interoperable,
+Reusable) data principles:</p>
+<ul>
+<li><strong>Findable</strong>: Each record carries persistent
+identifiers (DOI, arXiv ID, OpenAlex ID) that make it findable across
+databases.</li>
+<li><strong>Accessible</strong>: The corpus is stored as plain JSONL,
+readable by any JSON parser; figures are standard PNG files.</li>
+<li><strong>Interoperable</strong>: The data model uses standard
+bibliographic fields (title, abstract, authors, DOI, year, venue);
+nanopublications are serialized as RDF/TriG.</li>
+<li><strong>Reusable</strong>: The entire pipeline is regenerable from
+<code>manuscript/config.yaml</code>; re-running with the same
+configuration reproduces identical outputs.</li>
+</ul>
+<h2 data-number="18.4" id="honesty"><span
+class="header-section-number">18.4</span> Honesty</h2>
+<p>The default corpus is synthetic and labelled as such; the manuscript
+does not present fixture-derived numbers as empirical findings about
+modafinil. Live findings require a real retrieval run with regenerated
+artifacts — as produced in this instance, which retrieved 2302 real
+records from 7 live engines.</p>
+<hr />
+<h1 data-number="19" id="glossary"><span
+class="header-section-number">19</span> Glossary</h1>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Record / Paper</strong></td>
+<td>A single bibliographic entry with metadata and identifiers.</td>
+</tr>
+<tr>
+<td><strong>Canonical identifier</strong></td>
+<td>The highest-priority available ID (DOI <span
+class="math inline">\(&gt;\)</span> arXiv <span
+class="math inline">\(&gt;\)</span> Semantic Scholar <span
+class="math inline">\(&gt;\)</span> OpenAlex <span
+class="math inline">\(&gt;\)</span> title digest) used for
+de-duplication and citation resolution.</td>
+</tr>
+<tr>
+<td><strong>Engine</strong></td>
+<td>An independent literature source adapter (arXiv, OpenAlex, Semantic
+Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv) with a uniform
+search interface and graceful skip-on-failure.</td>
+</tr>
+<tr>
+<td><strong>Subfield</strong></td>
+<td>One of the 6 configurable keyword-defined buckets (Clinical Sleep,
+Cognition, Pharmacology, Psychiatry, Safety, and Neuroscience) into
+which records are classified.</td>
+</tr>
+<tr>
+<td><strong>Topic</strong></td>
+<td>A latent theme from non-negative matrix factorization over the
+TF-IDF representation.</td>
+</tr>
+<tr>
+<td><strong>Embedding</strong></td>
+<td>A deterministic offline vector (TF-IDF <span
+class="math inline">\(\rightarrow\)</span> truncated SVD) for a title,
+abstract, or full text.</td>
+</tr>
+<tr>
+<td><strong>Hypothesis</strong></td>
+<td>One of the 6 configured claims about the topic, optionally scored by
+the knowledge-graph stage.</td>
+</tr>
+<tr>
+<td><strong>Assertion</strong></td>
+<td>A directional (supports / contradicts / neutral) statement extracted
+from a record against a hypothesis, with a confidence score.</td>
+</tr>
+<tr>
+<td><strong>Nanopublication</strong></td>
+<td>An RDF-serialized assertion plus its provenance.</td>
+</tr>
+<tr>
+<td><strong>CAGR</strong></td>
+<td>Compound annual growth rate of publication volume (3.45% for this
+corpus).</td>
+</tr>
+<tr>
+<td><strong>Living literature review</strong></td>
+<td>A synthesis that can be re-executed as the field evolves, with every
+number regenerable.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 data-number="20" id="references"><span
+class="header-section-number">20</span> References</h1>
+<p>The bibliography is generated automatically during PDF compilation
+from <code>references.bib</code>. All citation keys used in the
+manuscript (e.g., <code>\citep{friston2010free}</code>) resolve to
+entries below; unused entries have been pruned. Pandoc’s
+<code>--natbib</code> flag injects <code>\usepackage{natbib}</code> and
+<code>\bibliographystyle{plainnat}</code>, so neither directive appears
+in this section or in <code>preamble.md</code>.</p>
+<!--
+References management notes:
+
+* Entries are maintained in `references.bib` (BibTeX format).
+* Each entry must include `title`, `author` (or `editor`), and `year`.
+* DOIs are preferred over URLs where available.
+* When adding a new citation, run the integrity sweep documented in `AGENTS.md`
+  to confirm a 1:1 match between cited keys and bibliography entries.
+-->
+</body>
+</html>

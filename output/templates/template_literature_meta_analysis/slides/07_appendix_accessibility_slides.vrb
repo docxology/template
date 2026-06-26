@@ -1,0 +1,22 @@
+\frametitle{FAIR Data Principles}
+\protect\phantomsection\label{fair-data-principles}
+The pipeline supports FAIR (Findable, Accessible, Interoperable,
+Reusable) data principles:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Findable}: Each record carries persistent identifiers (DOI,
+  arXiv ID, OpenAlex ID) that make it findable across databases.
+\item
+  \textbf{Accessible}: The corpus is stored as plain JSONL, readable by
+  any JSON parser; figures are standard PNG files.
+\item
+  \textbf{Interoperable}: The data model uses standard bibliographic
+  fields (title, abstract, authors, DOI, year, venue); nanopublications
+  are serialized as RDF/TriG.
+\item
+  \textbf{Reusable}: The entire pipeline is regenerable from
+  \breaktt{manuscript/config.yaml}; re-running with the same
+  configuration reproduces identical outputs.
+\end{itemize}

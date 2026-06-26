@@ -1,0 +1,14 @@
+{
+  "budget_exhausted": true,
+  "budget_policy": {
+    "max_cost_usd": 0.0,
+    "max_iterations": 4,
+    "max_llm_calls": 0,
+    "max_wall_clock_minutes": 20
+  },
+  "cost_usd_used": 0.0,
+  "exhaustion_reason": "candidate iteration budget reached",
+  "iterations_used": 4,
+  "llm_calls_used": 0,
+  "wall_clock_minutes_used": 0
+}

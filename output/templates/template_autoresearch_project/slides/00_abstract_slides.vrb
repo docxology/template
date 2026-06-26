@@ -1,0 +1,26 @@
+\frametitle{Abstract}
+This paper presents
+\breaktt{Deterministic\ bounded\ AutoResearch\ for\ a\ small\ MNIST\ neural-network\ task},
+a public template exemplar that turns an AutoResearch loop into ordinary
+reproducible research infrastructure. The case study is intentionally
+small but concrete: \texttt{2000} training and \texttt{500} test images
+from \breaktt{MNIST\ handwritten\ digit\ database} are evaluated by the
+bounded \breaktt{small\ MNIST\ neural-network\ classification} loop. The
+run evaluates \texttt{4} of \texttt{5} proposed candidates, including
+\breaktt{Tiny\ patch-attention\ classifier}, selects
+\texttt{exp-mlp-tanh-64} (\texttt{MLP}, \texttt{50890} parameters), and
+improves \texttt{test\_accuracy} from \texttt{82.6\%} to \texttt{89.4\%}
+(\texttt{6.8\%} absolute change). The validated diagnostic layer reports
+macro F1 \texttt{89.4\%}, bootstrap accuracy interval
+\breaktt{86.4\%\ to\ 92.0\%}, Brier score \texttt{0.161}, negative log
+likelihood \texttt{0.361}, top-2 accuracy \texttt{95.6\%}, and exact
+McNemar p-value \texttt{0.000}. The same pipeline writes proposal,
+candidate, run, review, benchmark, evidence, figure, confusion-matrix,
+statistical-summary, probability-quality, and security-integrity
+artifacts from declared output contracts; uses \texttt{0} LLM calls at
+USD \texttt{0.00} cost; and records \texttt{7} configured stages,
+\texttt{6} supported local-artifact claims, and \texttt{78} required
+artifacts. The local security attestation status is \texttt{passed},
+with \texttt{0} checksum mismatch(es). The final readiness status is
+\texttt{passed}, with review gates deferred to a human rather than
+self-approved by the generated run.

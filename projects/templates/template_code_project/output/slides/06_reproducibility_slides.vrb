@@ -1,0 +1,25 @@
+\frametitle{Madlib Injection Verification}
+\protect\phantomsection\label{madlib-injection-verification}
+This manuscript demonstrates the template's ``madlib'' capability: every
+quantitative claim is injected from computed data at render time. The
+substitution system processed the following variables:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Configuration variables}: Drawn from
+  \breaktt{manuscript/config.yaml} (\texttt{experiment:} section)
+\item
+  \textbf{Result variables}: Computed from
+  \breaktt{output/data/optimization\_results.csv}
+\item
+  \textbf{Stability variables}: Extracted from
+  \breaktt{output/reports/stability\_analysis.json}
+\item
+  \textbf{Provenance variables}: Generated at substitution time
+  (timestamps, hashes, versions)
+\end{itemize}
+
+To verify: modifying any value in \texttt{config.yaml} and re-running
+the pipeline will automatically update every corresponding claim in this
+document. No manual transcription is required or permitted.

@@ -35,4 +35,6 @@ Live test counts and coverage snapshots belong in `../../../../docs/_generated/C
 - `src/manuscript/variables.py` owns `{{TOKEN}}` values.
 - `scripts/` are thin stage orchestrators.
 
-Generated `output/` files are disposable and gitignored.
+Generated `output/` files are tracked as public release artifacts when they
+stay below the 50 MB public output ceiling; regenerate them from source rather
+than editing them by hand.

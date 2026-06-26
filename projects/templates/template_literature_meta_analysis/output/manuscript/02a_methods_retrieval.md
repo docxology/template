@@ -1,0 +1,61 @@
+# Retrieval and De-duplication
+
+Retrieval dispatches the configured query across 7 independent literature
+engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv). Each engine is an isolated adapter exposing a uniform
+`search(query) -> list[Record]` interface; engines that are keyless — arXiv, OpenAlex
+[@priem2022openalex], Crossref [@hendricks2020crossref], PubMed/Entrez
+[@sayers2022entrez], SovietRxiv / RussiaRxiv, and ChinaRxiv — need no credentials,
+while Semantic Scholar [@kinney2023semantic] uses a key when present. SovietRxiv is a
+translated archive of Soviet-era scientific preprints sourced from Math-Net.Ru and
+CyberLeninka [@sovietrxiv]; ChinaRxiv serves translated Chinese preprints from ChinaXiv
+via the same unified API. Both retain original-language PDFs alongside each translation,
+and their polite rate-limit pool (300/min vs 30/min anonymous) is activated by an
+optional `X-API-Email` header. Optional full-text resolution queries Unpaywall
+[@piwowar2018state] for open-access locations. **Multiple dispatch degrades gracefully**:
+an engine that is disabled in the configuration, lacks a required key, or cannot reach
+the network returns a *skipped* status, and the run completes from the remaining engines
+plus the committed offline corpus.
+
+## Engine Details
+
+Each engine adapter follows a uniform contract: a module-level API URL constant, a pure
+`_parse_*` parser function, and a `search_*` entry point with pagination, retry, and
+graceful error handling. All functions accept an injectable `base_url` parameter for
+hermetic testing with `pytest-httpserver` — no engine hardcodes its URL inside the
+function body.
+
+| Engine | Rate limit | Pagination | Auth | Records (this run) |
+| --- | --- | --- | --- | --- |
+| arXiv | 3s between requests | 100/page, offset | Keyless | Sparse |
+| Semantic Scholar | 1 req/s (unauth.) | 100/page, offset | Optional key | Skipped (429) |
+| OpenAlex | Polite pool (mailto) | 200/page, cursor | Keyless | 1,000 |
+| Crossref | Polite pool (mailto) | 1,000/page, offset | Keyless | 1,000 |
+| PubMed | NCBI usage policy | retstart/retmax | Keyless | 986 |
+| SovietRxiv | 30/min (300/min polite) | 1–100/page, cursor | `X-API-Email` | 0 |
+| ChinaRxiv | 30/min (300/min polite) | 1–100/page, cursor | `X-API-Email` | 0 |
+
+SovietRxiv and ChinaRxiv returned zero records for the modafinil query, which is
+expected: the Soviet-era archive covers mathematics, physics, and engineering
+preprints, while ChinaXiv covers Chinese scientific preprints, and neither domain has
+substantial modafinil literature. The engines dispatched correctly, queried the live
+API, and returned empty result sets without error — confirming graceful degradation.
+
+## Canonical Identifier Hierarchy
+
+Heterogeneous records are reconciled by a **canonical identifier hierarchy** —
+DOI $>$ arXiv ID $>$ Semantic Scholar ID $>$ OpenAlex ID $>$ a stable digest of the
+normalized title. When two records share a canonical identifier they are merged, keeping
+the version with the most complete metadata (a count of non-None optional fields). The
+DOI is normalized: case-folded, resolver-prefix stripped, so the same paper returned by
+two engines under case/format-variant DOIs merges. For this run, 2248 records
+carry DOIs, 932 carry OpenAlex IDs, and 1 carry arXiv
+IDs. The de-duplicated corpus for this run holds $N = 2302$ records published
+across 2000--2026.
+
+## Relevance Filtering
+
+After de-duplication, a relevance filter drops papers whose title and abstract contain
+none of the configured relevance keywords (modafinil, armodafinil, provigil, wakefulness, narcolepsy, cognitive enhancement, alertness, sleep deprivation, vigilance, eugeroic). Keywords are matched
+case-insensitively; an empty keyword list is treated as no filter to avoid silently
+wiping the corpus. A year filter then excludes papers published before the configured
+start year (2000).

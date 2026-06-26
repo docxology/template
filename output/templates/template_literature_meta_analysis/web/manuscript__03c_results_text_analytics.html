@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03c_results_text_analytics.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="results-language-topics-and-embeddings">Results: Language,
+Topics, and Embeddings</h1>
+<h2 id="rq3-topical-and-linguistic-structure">RQ3: Topical and
+Linguistic Structure</h2>
+<p>Text analysis operates over titles, abstracts, and (when available)
+full text. A TF-IDF representation over a 500-feature vocabulary feeds
+non-negative matrix factorization, which extracts 5 latent topics
+cross-cutting the subfield taxonomy. The top vocabulary terms are:
+modafinil, treatment, study, effects, patients, results, sleep, used,
+use, drug, studies, clinical, mg, using, placebo, cognitive, associated,
+effect, however, disorder.</p>
+<p><strong>Table 3. NMF topics extracted from the corpus.</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Top terms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>cognitive, use, drugs, enhancement, performance, drug, effects,
+modafinil</td>
+</tr>
+<tr>
+<td>1</td>
+<td>adhd, ci, 95, studies, trials, evidence, risk, treatment</td>
+</tr>
+<tr>
+<td>2</td>
+<td>modafinil, mg, kg, effects, dose, rats, induced, placebo</td>
+</tr>
+<tr>
+<td>3</td>
+<td>sleep, narcolepsy, sleepiness, patients, eds, daytime, excessive,
+cataplexy</td>
+</tr>
+<tr>
+<td>4</td>
+<td>fatigue, patients, placebo, modafinil, scale, depression, treatment,
+armodafinil</td>
+</tr>
+</tbody>
+</table>
+<p>The topics reveal the thematic structure of the literature: Topic 0
+centres on cognitive enhancement and neuroenhancement; Topic 1 addresses
+ADHD treatment and clinical evidence; Topic 2 covers pharmacological
+dose-response studies (including animal models); Topic 3 focuses on
+sleep disorders (narcolepsy, excessive daytime sleepiness); and Topic 4
+addresses fatigue in psychiatric populations. These topics cross-cut the
+keyword-based subfield taxonomy, revealing connections that the explicit
+classification does not capture.</p>
+<!-- FIGURE: topic_term_bars.png -->
+<p><img src="figures/topic_term_bars.png" title="Topic-Term Weights"
+alt="Topic-term bar charts for Modafinil. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the \mathbf{H} matrix." />{{#fig:topic_term_bars}}</p>
+<h2 id="document-embeddings">Document Embeddings</h2>
+<p>Offline deterministic embeddings (TF-IDF followed by truncated SVD)
+place every document in a shared 50-dimensional vector space. Embedding
+the same text twice yields identical vectors, so the derived similarity
+matrix, nearest-neighbour lists, clusters, and two-dimensional
+projection are all reproducible.</p>
+<!-- FIGURE: pca_embeddings.png -->
+<p><img src="figures/pca_embeddings.png" title="PCA Embeddings"
+alt="PCA projection of document embeddings for Modafinil. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy." />{{#fig:pca_embeddings}}</p>
+<!-- FIGURE: dendrogram.png -->
+<p><img src="figures/dendrogram.png" title="Document Dendrogram"
+alt="Hierarchical clustering dendrogram of document embeddings. The tree shows the similarity structure of the corpus: documents that join low in the tree are semantically similar, while high-level splits separate the major topical clusters." />{{#fig:dendrogram}}</p>
+<h2 id="term-analysis">Term Analysis</h2>
+<p>The TF-IDF term heatmap reveals which terms discriminate between
+subfields: terms with high between-subfield variance (rather than high
+global mean) are selected for display.</p>
+<!-- FIGURE: term_heatmap.png -->
+<p><img src="figures/term_heatmap.png" title="Term Heatmap"
+alt="Term heatmap for Modafinil. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms." />{{#fig:term_heatmap}}</p>
+<h2 id="named-entity-analysis">Named Entity Analysis</h2>
+<p>Named entity extraction over the 1277 abstracts identified 30 unique
+entities. The most frequent entities reflect the clinical and
+pharmacological vocabulary of the modafinil literature.</p>
+<p><strong>Table 4. Top named entities in abstracts.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADHD</td>
+<td>338</td>
+</tr>
+<tr>
+<td>CI</td>
+<td>315</td>
+</tr>
+<tr>
+<td>EDS</td>
+<td>258</td>
+</tr>
+<tr>
+<td>OSA</td>
+<td>236</td>
+</tr>
+<tr>
+<td>MOD</td>
+<td>158</td>
+</tr>
+<tr>
+<td>RESULTS</td>
+<td>152</td>
+</tr>
+<tr>
+<td>DAT</td>
+<td>133</td>
+</tr>
+<tr>
+<td>MS</td>
+<td>132</td>
+</tr>
+<tr>
+<td>CONCLUSIONS</td>
+<td>130</td>
+</tr>
+<tr>
+<td>ESS</td>
+<td>127</td>
+</tr>
+<tr>
+<td>SD</td>
+<td>113</td>
+</tr>
+<tr>
+<td>METHODS</td>
+<td>102</td>
+</tr>
+<tr>
+<td>CE</td>
+<td>101</td>
+</tr>
+<tr>
+<td>MD</td>
+<td>97</td>
+</tr>
+<tr>
+<td>IH</td>
+<td>88</td>
+</tr>
+</tbody>
+</table>
+<!-- FIGURE: entity_bar_chart.png -->
+<p><img src="figures/entity_bar_chart.png" title="Named Entities"
+alt="Top named entities for Modafinil. The horizontal bar chart shows the 20 most frequently extracted named entities from abstracts, revealing the dominant drugs, conditions, and concepts in the literature." />{{#fig:entity_bar_chart}}</p>
+<p><strong>Table 5. Top keyphrases by TF-IDF score.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Keyphrase</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>available</td>
+<td>0.3333</td>
+</tr>
+<tr>
+<td>abstract</td>
+<td>0.3333</td>
+</tr>
+<tr>
+<td>abstract available</td>
+<td>0.3333</td>
+</tr>
+<tr>
+<td>content</td>
+<td>0.1053</td>
+</tr>
+<tr>
+<td>access</td>
+<td>0.1053</td>
+</tr>
+<tr>
+<td>md</td>
+<td>0.0870</td>
+</tr>
+<tr>
+<td>jama</td>
+<td>0.0826</td>
+</tr>
+<tr>
+<td>cleveland</td>
+<td>0.0763</td>
+</tr>
+<tr>
+<td>modafinil</td>
+<td>0.0741</td>
+</tr>
+<tr>
+<td>depression</td>
+<td>0.0741</td>
+</tr>
+<tr>
+<td>substance</td>
+<td>0.0694</td>
+</tr>
+<tr>
+<td>drug</td>
+<td>0.0667</td>
+</tr>
+<tr>
+<td>conditions</td>
+<td>0.0667</td>
+</tr>
+<tr>
+<td>continuous</td>
+<td>0.0667</td>
+</tr>
+<tr>
+<td>continuous flow</td>
+<td>0.0667</td>
+</tr>
+</tbody>
+</table>
+<h2 id="embedding-similarity-and-clustering">Embedding Similarity and
+Clustering</h2>
+<p>The TF-IDF/SVD embeddings place every document in a 50-dimensional
+vector space. K-means clustering with <span class="math inline">\(k =
+5\)</span> clusters partitions the corpus into topically coherent
+groups. The top similar document pairs, ranked by cosine similarity,
+reveal the most closely related works in the corpus.</p>
+<p><strong>Table 6. Top 10 most similar document pairs.</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Paper A</th>
+<th>Paper B</th>
+<th>Similarity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>doi:10.1176/appi.ajp.163.12.21</td>
+<td>doi:10.1176/ajp.2006.163.12.21</td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td>doi:10.1176/ajp.2006.163.12.21</td>
+<td>doi:10.1176/appi.ajp.163.12.21</td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td>doi:10.1197/j.aem.2005.08.013</td>
+<td>doi:10.1111/j.1553-2712.2006.t</td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td>doi:10.1345/aph.1h302</td>
+<td>doi:10.1136/bcr.08.2011.4652</td>
+<td>0.9687</td>
+</tr>
+<tr>
+<td>doi:10.4088/jcp.09m05900gry</td>
+<td>doi:10.1186/s40345-015-0034-0</td>
+<td>0.9628</td>
+</tr>
+<tr>
+<td>doi:10.1016/s2215-0366(18)3026</td>
+<td>doi:10.1016/s2215-0366(25)0006</td>
+<td>0.9621</td>
+</tr>
+<tr>
+<td>doi:10.1345/aph.1h302</td>
+<td>doi:10.1017/neu.2023.6</td>
+<td>0.9598</td>
+</tr>
+<tr>
+<td>doi:10.1111/j.1365-2869.2008.0</td>
+<td>doi:10.3109/07420528.2011.6352</td>
+<td>0.9538</td>
+</tr>
+<tr>
+<td>doi:10.1513/annalsats.202006-6</td>
+<td>doi:10.3760/cma.j.cn112147-202</td>
+<td>0.9532</td>
+</tr>
+<tr>
+<td>doi:10.1345/aph.1h302</td>
+<td>doi:10.1192/bjo.2024.75</td>
+<td>0.9517</td>
+</tr>
+</tbody>
+</table>
+<!-- FIGURE: similarity_heatmap.png -->
+<p><img src="figures/similarity_heatmap.png"
+title="Similar Document Pairs"
+alt="Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content." />{{#fig:similarity_heatmap}}</p>
+<!-- FIGURE: word_cloud.png -->
+<p><img src="figures/word_cloud.png" title="Term Cloud"
+alt="Term cloud for Modafinil. Term sizes are proportional to their TF-IDF weights across the corpus, providing a visual summary of the dominant vocabulary." />{{#fig:word_cloud}}</p>
+<!-- FIGURE: cooccurrence_matrix.png -->
+<p><img src="figures/cooccurrence_matrix.png" title="Term Co-occurrence"
+alt="Term co-occurrence matrix for Modafinil. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature." />{{#fig:cooccurrence_matrix}}</p>
+<p>These embeddings support semantic retrieval over the corpus and the
+visual map of the literature’s topical geography.</p>
+</body>
+</html>

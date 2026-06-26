@@ -1,0 +1,16 @@
+{
+  "releases": [
+    {
+      "doi": "10.5281/zenodo.20931965",
+      "dry_run": false,
+      "github_release_url": "https://github.com/docxology/template_literature_meta_analysis/releases/tag/v0.1.0",
+      "github_repo": "docxology/template_literature_meta_analysis",
+      "pairing_valid": true,
+      "pdf_sha256": "412d4fcf4b0c2e14fb950f9080f107d81fd9a90dfdf216b9161a13833eff62ff",
+      "sandbox": false,
+      "tag": "v0.1.0",
+      "timestamp": "2026-06-26T14:00:07.771239+00:00"
+    }
+  ],
+  "schema": "template-publication-ledger-v1"
+}

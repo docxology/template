@@ -132,7 +132,7 @@ When AI agents or humans refer to files in logs, documentation, comments, or imp
 | variable hydration (runner) | `projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py` |
 | config | `projects/templates/template_code_project/manuscript/config.yaml` |
 | results CSV | `projects/templates/template_code_project/output/data/optimization_results.csv` |
-| final PDF | `output/template_code_project/template_code_project_combined.pdf` |
+| final PDF | `output/templates/template_code_project/template_code_project_combined.pdf` |
 
 **Forbidden (relative / ambiguous)**:
 ```

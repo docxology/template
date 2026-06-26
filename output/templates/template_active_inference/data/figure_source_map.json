@@ -1,0 +1,1528 @@
+{
+  "all_claim_lanes_valid": true,
+  "all_figures_have_claim_lanes": true,
+  "all_figures_mapped": true,
+  "allowed_claim_lanes": [
+    "analytical",
+    "formal",
+    "pymdp",
+    "release",
+    "scope",
+    "semantic",
+    "visualization"
+  ],
+  "claim_lane_coverage": {
+    "analytical": 6,
+    "formal": 9,
+    "pymdp": 7,
+    "release": 2,
+    "scope": 2,
+    "semantic": 7,
+    "visualization": 1
+  },
+  "figure_count": 23,
+  "rows": [
+    {
+      "axis_channel_mapping": {
+        "channel": "status",
+        "x": "contract_obligation",
+        "y": "artifact"
+      },
+      "caption": "Artifact contract map: {{artifact_contract_row_count}} generated artifact rows with complete contract status {{artifact_contract_complete}} and copied-output parity complete {{artifact_contract_copied_parity_complete}}. Cycle rows are explicit in `output/data/artifact_contract_index.json`.",
+      "claim_lane_count": 2,
+      "claim_lanes": [
+        "release",
+        "semantic"
+      ],
+      "dimensions": {
+        "height": 3670,
+        "width": 2285
+      },
+      "figure_id": "artifact_contract_map",
+      "image_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "formal",
+        "pymdp",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "animation",
+        "animation_delta",
+        "artifact_diffoscope",
+        "artifact_license",
+        "assumption_index",
+        "benchmark",
+        "causal_ablation",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "gnn",
+        "interop",
+        "layers",
+        "lean",
+        "manuscript_staleness",
+        "model_checking",
+        "ontology",
+        "proof_extraction",
+        "prose",
+        "provenance",
+        "pymdp",
+        "release_bundle",
+        "release_notes",
+        "replay_matrix",
+        "scholarship",
+        "security_posture",
+        "sensitivity",
+        "simulation",
+        "state_space_catalog",
+        "theorem_traceability",
+        "uncertainty",
+        "visualization"
+      ],
+      "source_artifact": "output/data/artifact_contract_index.json",
+      "source_artifacts": [
+        "output/data/artifact_contract_index.json",
+        "output/reports/release_bundle_manifest.json",
+        "output/data/artifact_provenance.json",
+        "output/reports/security_posture_audit.json"
+      ],
+      "source_claim_lanes": [
+        "release",
+        "semantic"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$",
+        "$",
+        "$"
+      ],
+      "sources": [
+        "output/data/artifact_contract_index.json",
+        "output/reports/release_bundle_manifest.json",
+        "output/data/artifact_provenance.json",
+        "output/reports/security_posture_audit.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "effect",
+        "x": "lambda",
+        "y": "perturbation"
+      },
+      "caption": "Causal-ablation heatmap: {{ablation_sensitivity_row_count}} source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: {{ablation_sensitivity_source_backed}}.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "analytical"
+      ],
+      "dimensions": {
+        "height": 771,
+        "width": 1329
+      },
+      "figure_id": "causal_ablation_heatmap",
+      "image_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "appendix_full_sheaf"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "formal",
+        "pymdp",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "animation",
+        "animation_delta",
+        "artifact_diffoscope",
+        "artifact_license",
+        "assumption_index",
+        "benchmark",
+        "causal_ablation",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "gnn",
+        "interop",
+        "lean",
+        "manuscript_staleness",
+        "model_checking",
+        "ontology",
+        "proof_extraction",
+        "prose",
+        "provenance",
+        "pymdp",
+        "release_bundle",
+        "release_notes",
+        "replay_matrix",
+        "scholarship",
+        "security_posture",
+        "sensitivity",
+        "simulation",
+        "state_space_catalog",
+        "theorem_traceability",
+        "uncertainty",
+        "visualization"
+      ],
+      "source_artifact": "output/data/causal_ablation_matrix.json",
+      "source_artifacts": [
+        "output/data/causal_ablation_matrix.json",
+        "output/reports/ablation_sensitivity_report.json"
+      ],
+      "source_claim_lanes": [
+        "analytical"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "output/data/causal_ablation_matrix.json",
+        "output/reports/ablation_sensitivity_report.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Cue-then-reward T-maze where epistemic value is strictly necessary. Left: the cue carries {{cue_information_gain_formatted}} nats of information and the cue-sampling agent reaches reward with a measured advantage of {{cue_behavioral_advantage_formatted}} nats over a greedy agent. Right: flat Expected Free Energy scores the cue-first and greedy policies identically ({{cue_flat_efe_indistinguishable}}), so the sophisticated observation- conditioned evaluator is what makes information-seeking required. Closed form (no sampling).",
+      "claim_lane_count": 2,
+      "claim_lanes": [
+        "formal",
+        "pymdp"
+      ],
+      "dimensions": {
+        "height": 620,
+        "width": 1502
+      },
+      "figure_id": "cue_tmaze_advantage",
+      "image_sha256": "2aee915d1e2dcecb63006943091d67b5b271406684af0e3e8186d64fb134d496",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "results_si_tmaze"
+      ],
+      "section_claim_lanes": [
+        "pymdp",
+        "visualization"
+      ],
+      "section_tracks": [
+        "prose",
+        "pymdp",
+        "visualization"
+      ],
+      "source_artifact": "src/simulation/cue_tmaze_model.py",
+      "source_artifacts": [
+        "src/simulation/cue_tmaze_model.py",
+        "src/simulation/efe_decomposition.py"
+      ],
+      "source_claim_lanes": [
+        "formal",
+        "pymdp"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "src/simulation/cue_tmaze_model.py",
+        "src/simulation/efe_decomposition.py"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Dirichlet model learning: KL$(A_{\\text{true}} \\,\\|\\, A_{\\text{learned}})$ versus concentration-update step. The expected likelihood $E[A] = pA / \\sum_o pA$ converges monotonically to the true generative likelihood; the run reaches the convergence tolerance at step {{dirichlet_steps_to_converge}} with final KL {{dirichlet_final_kl_formatted}} nats. Deterministic (no sampling), so the curve is byte-reproducible.",
+      "claim_lane_count": 2,
+      "claim_lanes": [
+        "formal",
+        "pymdp"
+      ],
+      "dimensions": {
+        "height": 557,
+        "width": 1101
+      },
+      "figure_id": "dirichlet_convergence",
+      "image_sha256": "2c843351030dd467baa9783d65b004a4d60cc8ed44801c129b0b22037ce86eab",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "results_si_tmaze"
+      ],
+      "section_claim_lanes": [
+        "pymdp",
+        "visualization"
+      ],
+      "section_tracks": [
+        "prose",
+        "pymdp",
+        "visualization"
+      ],
+      "source_artifact": "src/simulation/dirichlet_learning.py",
+      "source_artifacts": [
+        "src/simulation/dirichlet_learning.py",
+        "src/simulation/tmaze_model.py"
+      ],
+      "source_claim_lanes": [
+        "formal",
+        "pymdp"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "src/simulation/dirichlet_learning.py",
+        "src/simulation/tmaze_model.py"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Closed-form Expected Free Energy decomposition over the finite T-maze policies. Left: $G(\\pi)$ = risk + ambiguity (stacked), with the goal-seeking minimiser marked. Right: the pragmatic and epistemic values, which sum to $-G(\\pi)$. Both forms are computed in closed form (no sampling) and satisfy risk + ambiguity + pragmatic + epistemic = 0 to machine precision.",
+      "claim_lane_count": 2,
+      "claim_lanes": [
+        "formal",
+        "pymdp"
+      ],
+      "dimensions": {
+        "height": 620,
+        "width": 1502
+      },
+      "figure_id": "efe_decomposition",
+      "image_sha256": "1059380851d052fcfeda0d196ed4b8c34608ed871372a5939a6929226fe65218",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "results_si_tmaze"
+      ],
+      "section_claim_lanes": [
+        "pymdp",
+        "visualization"
+      ],
+      "section_tracks": [
+        "prose",
+        "pymdp",
+        "visualization"
+      ],
+      "source_artifact": "src/simulation/efe_decomposition.py",
+      "source_artifacts": [
+        "src/simulation/efe_decomposition.py",
+        "src/simulation/tmaze_model.py"
+      ],
+      "source_claim_lanes": [
+        "formal",
+        "pymdp"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "src/simulation/efe_decomposition.py",
+        "src/simulation/tmaze_model.py"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Free energy of the entangled posterior relative to the mean-field prior across the hyperparameter sweep (grid points {{param_sweep_grid_points}}); relative to the entangled prior, the same posterior has identically zero free energy.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "formal"
+      ],
+      "dimensions": {
+        "height": 619,
+        "width": 1022
+      },
+      "figure_id": "free_energy_curve",
+      "image_sha256": "c1e3a03818fff7193d19e5da4ad48e387e2bc939acf1dc184744ce30fd87938d",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "results_free_energy"
+      ],
+      "section_claim_lanes": [
+        "visualization"
+      ],
+      "section_tracks": [
+        "prose",
+        "visualization"
+      ],
+      "source_artifact": "src/analytical/decomposition.py",
+      "source_artifacts": [
+        "src/analytical/decomposition.py"
+      ],
+      "source_claim_lanes": [
+        "formal"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$"
+      ],
+      "sources": [
+        "src/analytical/decomposition.py"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "GNN $\\leftrightarrow$ ontology concordance for the Bernoulli\u2013Ising toy ({{gnn_spec_version}}).",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "formal"
+      ],
+      "dimensions": {
+        "height": 717,
+        "width": 1465
+      },
+      "figure_id": "gnn_ontology_concordance",
+      "image_sha256": "2743175db326688431bf66bd969fc1cf2ae53462e1330adb334ae6b5f2b102f9",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "methods_analytical"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "pymdp",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "assumption_index",
+        "formalism",
+        "gnn",
+        "ontology",
+        "prose",
+        "simulation",
+        "visualization"
+      ],
+      "source_artifact": "gnn",
+      "source_artifacts": [
+        "gnn",
+        "manuscript/sections/imrad"
+      ],
+      "source_claim_lanes": [
+        "formal"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "gnn",
+        "manuscript/sections/imrad"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Invariant dashboard: {{invariants_passed}} / {{invariants_total}} merged analytical and simulation checks from the validation registry.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "analytical"
+      ],
+      "dimensions": {
+        "height": 841,
+        "width": 1434
+      },
+      "figure_id": "invariant_dashboard",
+      "image_sha256": "502a6b700507e77923b25907173c5b826a26b3b6e691051ed8ae33782eda6691",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "results_invariants"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "pymdp",
+        "release",
+        "visualization"
+      ],
+      "section_tracks": [
+        "benchmark",
+        "causal_ablation",
+        "prose",
+        "replay_matrix",
+        "sensitivity",
+        "simulation",
+        "state_space_catalog",
+        "uncertainty",
+        "visualization"
+      ],
+      "source_artifact": "output/reports/invariants.json",
+      "source_artifacts": [
+        "output/reports/invariants.json"
+      ],
+      "source_claim_lanes": [
+        "analytical"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$"
+      ],
+      "sources": [
+        "output/reports/invariants.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "x": "lambda",
+        "y": "mutual_information"
+      },
+      "caption": "Closed-form $I(\\lambda)$ and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across {{param_sweep_grid_points}} grid points up to $\\lambda_{\\max}$ = {{lambda_max}}; grid maximum {{ising_mi_saturation}} nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual {{sweep_max_residual}} nats), not a sampling residual.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "analytical"
+      ],
+      "dimensions": {
+        "height": 587,
+        "width": 1422
+      },
+      "figure_id": "ising_mi_curve",
+      "image_sha256": "757c8590152bb94a6f748b5c16953229de98eab33444cc610b3f9e227ec0f4bd",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "appendix_full_sheaf",
+        "methods_analytical",
+        "results_mi_sweep"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "formal",
+        "pymdp",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "animation",
+        "animation_delta",
+        "artifact_diffoscope",
+        "artifact_license",
+        "assumption_index",
+        "benchmark",
+        "causal_ablation",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "gnn",
+        "interop",
+        "lean",
+        "manuscript_staleness",
+        "model_checking",
+        "ontology",
+        "proof_extraction",
+        "prose",
+        "provenance",
+        "pymdp",
+        "release_bundle",
+        "release_notes",
+        "replay_matrix",
+        "scholarship",
+        "security_posture",
+        "sensitivity",
+        "simulation",
+        "state_space_catalog",
+        "theorem_traceability",
+        "uncertainty",
+        "visualization"
+      ],
+      "source_artifact": "output/data/parameter_sweep.csv",
+      "source_artifacts": [
+        "output/data/parameter_sweep.csv"
+      ],
+      "source_claim_lanes": [
+        "analytical"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$"
+      ],
+      "sources": [
+        "output/data/parameter_sweep.csv"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Lean formalization boundary: module witnesses checked by lake build.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "formal"
+      ],
+      "dimensions": {
+        "height": 2045,
+        "width": 1454
+      },
+      "figure_id": "lean_boundary_status",
+      "image_sha256": "0e5fb35912475b0cd830e741de656a96a03e74965101b2f19b8ec0b378717dd9",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "methods_lean"
+      ],
+      "section_claim_lanes": [
+        "formal",
+        "visualization"
+      ],
+      "section_tracks": [
+        "lean",
+        "model_checking",
+        "proof_extraction",
+        "prose",
+        "theorem_traceability",
+        "visualization"
+      ],
+      "source_artifact": "lean/TemplateActiveInference",
+      "source_artifacts": [
+        "lean/TemplateActiveInference"
+      ],
+      "source_claim_lanes": [
+        "formal"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$"
+      ],
+      "sources": [
+        "lean/TemplateActiveInference"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Multi-track architecture: analytical, pymdp, and sheaf composition lanes mapped to {{pipeline_track_count}} pipeline gates and {{sheaf_track_count}} composable fragment types.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "semantic"
+      ],
+      "dimensions": {
+        "height": 1165,
+        "width": 1870
+      },
+      "figure_id": "multi_track_architecture",
+      "image_sha256": "a96b2bcc8b99b46e7c71a63c7dd8a306d49e4cadc2f311c1f283c4f1f20400a7",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "intro_contributions"
+      ],
+      "section_claim_lanes": [
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "ontology",
+        "prose",
+        "visualization"
+      ],
+      "source_artifact": "tracks.yaml",
+      "source_artifacts": [
+        "tracks.yaml",
+        "manuscript/sheaf/tracks.yaml"
+      ],
+      "source_claim_lanes": [
+        "semantic"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "tracks.yaml",
+        "manuscript/sheaf/tracks.yaml"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Precision sweep over the closed-form T-maze policy posterior $q(\\pi)\\propto\\exp(-\\gamma G)$ across {{precision_gamma_grid_points}} grid points up to $\\gamma$={{precision_gamma_max}}. Entropy falls from $\\ln 4$ to the $\\ln|\\Pi^\\star|$ floor ({{precision_optimal_set_size}} tied optima, second action irrelevant under the absorbing goal); the optimal-set mass crosses {{precision_selection_threshold}} at $\\gamma$={{precision_gamma_deterministic}}. Entropy at $\\gamma$=1 is {{precision_entropy_at_gamma_one_formatted}} nats. Computed in closed form (no sampling).",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "formal"
+      ],
+      "dimensions": {
+        "height": 617,
+        "width": 1182
+      },
+      "figure_id": "precision_sweep",
+      "image_sha256": "6a031acadd05922977fd1374e9c39efdc8a834acd95041244e70daba56e040fd",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "results_si_tmaze"
+      ],
+      "section_claim_lanes": [
+        "pymdp",
+        "visualization"
+      ],
+      "section_tracks": [
+        "prose",
+        "pymdp",
+        "visualization"
+      ],
+      "source_artifact": "src/simulation/precision_sweep.py",
+      "source_artifacts": [
+        "src/simulation/precision_sweep.py",
+        "src/simulation/efe_decomposition.py"
+      ],
+      "source_claim_lanes": [
+        "formal"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "src/simulation/precision_sweep.py",
+        "src/simulation/efe_decomposition.py"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Scholarship source map: {{scholarship_source_count}} source rows across {{scholarship_method_role_count}} method roles and {{scholarship_source_family_count}} source families. Connected status: {{scholarship_sources_connected}}; row evidence rederived: {{scholarship_rows_rederived}}.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "scope"
+      ],
+      "dimensions": {
+        "height": 1648,
+        "width": 1941
+      },
+      "figure_id": "scholarship_source_map",
+      "image_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "formal",
+        "pymdp",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "animation",
+        "animation_delta",
+        "artifact_diffoscope",
+        "artifact_license",
+        "assumption_index",
+        "benchmark",
+        "causal_ablation",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "gnn",
+        "interop",
+        "layers",
+        "lean",
+        "manuscript_staleness",
+        "model_checking",
+        "ontology",
+        "proof_extraction",
+        "prose",
+        "provenance",
+        "pymdp",
+        "release_bundle",
+        "release_notes",
+        "replay_matrix",
+        "scholarship",
+        "security_posture",
+        "sensitivity",
+        "simulation",
+        "state_space_catalog",
+        "theorem_traceability",
+        "uncertainty",
+        "visualization"
+      ],
+      "source_artifact": "output/data/scholarship_source_matrix.json",
+      "source_artifacts": [
+        "output/data/scholarship_source_matrix.json",
+        "manuscript/references.bib"
+      ],
+      "source_claim_lanes": [
+        "scope"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "output/data/scholarship_source_matrix.json",
+        "manuscript/references.bib"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "status",
+        "x": "security_evidence",
+        "y": "control"
+      },
+      "caption": "Security posture map: {{security_posture_control_count}} controls, {{security_posture_enforced_count}} enforced and {{security_posture_deferred_count}} scoped as deferred; secret findings: {{security_posture_secret_finding_count}}; high-risk gaps: {{security_posture_high_risk_gap_count}}.",
+      "claim_lane_count": 3,
+      "claim_lanes": [
+        "release",
+        "scope",
+        "semantic"
+      ],
+      "dimensions": {
+        "height": 1007,
+        "width": 2019
+      },
+      "figure_id": "security_posture_map",
+      "image_sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "formal",
+        "pymdp",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "animation",
+        "animation_delta",
+        "artifact_diffoscope",
+        "artifact_license",
+        "assumption_index",
+        "benchmark",
+        "causal_ablation",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "gnn",
+        "interop",
+        "layers",
+        "lean",
+        "manuscript_staleness",
+        "model_checking",
+        "ontology",
+        "proof_extraction",
+        "prose",
+        "provenance",
+        "pymdp",
+        "release_bundle",
+        "release_notes",
+        "replay_matrix",
+        "scholarship",
+        "security_posture",
+        "sensitivity",
+        "simulation",
+        "state_space_catalog",
+        "theorem_traceability",
+        "uncertainty",
+        "visualization"
+      ],
+      "source_artifact": "output/reports/security_posture_audit.json",
+      "source_artifacts": [
+        "output/reports/security_posture_audit.json",
+        "output/reports/blocked_scope_manifest.json"
+      ],
+      "source_claim_lanes": [
+        "release",
+        "scope",
+        "semantic"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "output/reports/security_posture_audit.json",
+        "output/reports/blocked_scope_manifest.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "semantic"
+      ],
+      "dimensions": {
+        "height": 941,
+        "width": 1614
+      },
+      "figure_id": "semantic_gluing_graph",
+      "image_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "methods_sheaf"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "artifact_diffoscope",
+        "artifact_license",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "layers",
+        "manuscript_staleness",
+        "prose",
+        "provenance",
+        "release_bundle",
+        "scholarship",
+        "security_posture",
+        "visualization"
+      ],
+      "source_artifact": "output/data/validation_dependency_graph.json",
+      "source_artifacts": [
+        "output/data/validation_dependency_graph.json",
+        "output/data/sheaf_gluing_certificate.json",
+        "output/data/evidence_field_index.json"
+      ],
+      "source_claim_lanes": [
+        "semantic"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$",
+        "$"
+      ],
+      "sources": [
+        "output/data/validation_dependency_graph.json",
+        "output/data/sheaf_gluing_certificate.json",
+        "output/data/evidence_field_index.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "coverage_status",
+        "x": "section",
+        "y": "track"
+      },
+      "caption": "Sheaf track coverage matrix: {{imrad_manifest_rows}} IMRAD rows \u00d7 {{sheaf_track_count}} fragment columns. Black = present (P), white = absent (\u2014), gray = missing (M). Counts: {{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing. Generated from `output/data/sheaf_coverage_matrix.json`.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "semantic"
+      ],
+      "dimensions": {
+        "height": 1427,
+        "width": 5054
+      },
+      "figure_id": "sheaf_coverage_heatmap",
+      "image_sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "appendix_full_sheaf",
+        "coverage_page"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "formal",
+        "pymdp",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "animation",
+        "animation_delta",
+        "artifact_diffoscope",
+        "artifact_license",
+        "assumption_index",
+        "benchmark",
+        "causal_ablation",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "gnn",
+        "interop",
+        "lean",
+        "manuscript_staleness",
+        "model_checking",
+        "ontology",
+        "proof_extraction",
+        "prose",
+        "provenance",
+        "pymdp",
+        "release_bundle",
+        "release_notes",
+        "replay_matrix",
+        "scholarship",
+        "security_posture",
+        "sensitivity",
+        "simulation",
+        "state_space_catalog",
+        "theorem_traceability",
+        "uncertainty",
+        "visualization"
+      ],
+      "source_artifact": "output/data/sheaf_coverage_matrix.json",
+      "source_artifacts": [
+        "output/data/sheaf_coverage_matrix.json"
+      ],
+      "source_claim_lanes": [
+        "semantic"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$"
+      ],
+      "sources": [
+        "output/data/sheaf_coverage_matrix.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for {{sheaf_track_count}} fragment types across {{imrad_manifest_rows}} manifest rows ({{coverage_present}} present / {{coverage_bound}} bound / {{coverage_missing}} missing), generated from `output/data/sheaf_coverage_matrix.json`.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "semantic"
+      ],
+      "dimensions": {
+        "height": 1959,
+        "width": 2371
+      },
+      "figure_id": "sheaf_layers_overview",
+      "image_sha256": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "methods_sheaf"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "artifact_diffoscope",
+        "artifact_license",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "layers",
+        "manuscript_staleness",
+        "prose",
+        "provenance",
+        "release_bundle",
+        "scholarship",
+        "security_posture",
+        "visualization"
+      ],
+      "source_artifact": "output/data/sheaf_coverage_matrix.json",
+      "source_artifacts": [
+        "output/data/sheaf_coverage_matrix.json"
+      ],
+      "source_claim_lanes": [
+        "semantic"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$"
+      ],
+      "sources": [
+        "output/data/sheaf_coverage_matrix.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "x": "step",
+        "y": "belief_entropy"
+      },
+      "caption": "Belief entropy over time for the T-maze rollout (mean {{si_tmaze_mean_belief_entropy_formatted}} nats).",
+      "claim_lane_count": 2,
+      "claim_lanes": [
+        "analytical",
+        "pymdp"
+      ],
+      "dimensions": {
+        "height": 557,
+        "width": 1166
+      },
+      "figure_id": "si_belief_entropy_curve",
+      "image_sha256": "39bcaf1764b47e519c27739dc3f5870e0d50e93112b4db3da5ecb30275828b6c",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "results_si_tmaze"
+      ],
+      "section_claim_lanes": [
+        "pymdp",
+        "visualization"
+      ],
+      "section_tracks": [
+        "prose",
+        "pymdp",
+        "visualization"
+      ],
+      "source_artifact": "output/data/si_tmaze_trace.json",
+      "source_artifacts": [
+        "output/data/si_tmaze_trace.json"
+      ],
+      "source_claim_lanes": [
+        "analytical",
+        "pymdp"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$"
+      ],
+      "sources": [
+        "output/data/si_tmaze_trace.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Observation and action traces for the T-maze rollout (action diversity {{si_action_diversity}}).",
+      "claim_lane_count": 2,
+      "claim_lanes": [
+        "analytical",
+        "pymdp"
+      ],
+      "dimensions": {
+        "height": 717,
+        "width": 1166
+      },
+      "figure_id": "si_obs_action_trace",
+      "image_sha256": "010f9586befab4d14c39a3cdfff4420a7027691365b91ea6fdb42f4a2c900cff",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "results_si_tmaze"
+      ],
+      "section_claim_lanes": [
+        "pymdp",
+        "visualization"
+      ],
+      "section_tracks": [
+        "prose",
+        "pymdp",
+        "visualization"
+      ],
+      "source_artifact": "output/data/si_tmaze_summary.json",
+      "source_artifacts": [
+        "output/data/si_tmaze_summary.json"
+      ],
+      "source_claim_lanes": [
+        "analytical",
+        "pymdp"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$"
+      ],
+      "sources": [
+        "output/data/si_tmaze_summary.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Discrete action index over time for the pymdp T-maze rollout (policy length {{si_tmaze_policy_len}}).",
+      "claim_lane_count": 2,
+      "claim_lanes": [
+        "analytical",
+        "pymdp"
+      ],
+      "dimensions": {
+        "height": 557,
+        "width": 1166
+      },
+      "figure_id": "si_tmaze_actions",
+      "image_sha256": "d8f878240fe1a71c29e036bb2e22ac78e06c6d533c95b34bdd253ed46c7c39ac",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "appendix_full_sheaf",
+        "results_si_tmaze"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "formal",
+        "pymdp",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "animation",
+        "animation_delta",
+        "artifact_diffoscope",
+        "artifact_license",
+        "assumption_index",
+        "benchmark",
+        "causal_ablation",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "gnn",
+        "interop",
+        "lean",
+        "manuscript_staleness",
+        "model_checking",
+        "ontology",
+        "proof_extraction",
+        "prose",
+        "provenance",
+        "pymdp",
+        "release_bundle",
+        "release_notes",
+        "replay_matrix",
+        "scholarship",
+        "security_posture",
+        "sensitivity",
+        "simulation",
+        "state_space_catalog",
+        "theorem_traceability",
+        "uncertainty",
+        "visualization"
+      ],
+      "source_artifact": "output/data/si_tmaze_summary.json",
+      "source_artifacts": [
+        "output/data/si_tmaze_summary.json"
+      ],
+      "source_claim_lanes": [
+        "analytical",
+        "pymdp"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$"
+      ],
+      "sources": [
+        "output/data/si_tmaze_summary.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "Theorem traceability graph generated from {{theorem_traceability_row_count}} linked theorem rows and {{proof_dependency_edge_count}} proof-dependency edges.",
+      "claim_lane_count": 1,
+      "claim_lanes": [
+        "formal"
+      ],
+      "dimensions": {
+        "height": 813,
+        "width": 1550
+      },
+      "figure_id": "theorem_traceability_graph",
+      "image_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "appendix_full_sheaf"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "formal",
+        "pymdp",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "animation",
+        "animation_delta",
+        "artifact_diffoscope",
+        "artifact_license",
+        "assumption_index",
+        "benchmark",
+        "causal_ablation",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "gnn",
+        "interop",
+        "lean",
+        "manuscript_staleness",
+        "model_checking",
+        "ontology",
+        "proof_extraction",
+        "prose",
+        "provenance",
+        "pymdp",
+        "release_bundle",
+        "release_notes",
+        "replay_matrix",
+        "scholarship",
+        "security_posture",
+        "sensitivity",
+        "simulation",
+        "state_space_catalog",
+        "theorem_traceability",
+        "uncertainty",
+        "visualization"
+      ],
+      "source_artifact": "output/data/theorem_traceability_matrix.json",
+      "source_artifacts": [
+        "output/data/theorem_traceability_matrix.json",
+        "output/data/proof_dependency_graph.json"
+      ],
+      "source_claim_lanes": [
+        "formal"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "output/data/theorem_traceability_matrix.json",
+        "output/data/proof_dependency_graph.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "pixels"
+      },
+      "caption": "T-maze generative model schematic ({{si_tmaze_policy_len}}-step policy horizon, {{pymdp_mode}} mode).",
+      "claim_lane_count": 2,
+      "claim_lanes": [
+        "pymdp",
+        "visualization"
+      ],
+      "dimensions": {
+        "height": 653,
+        "width": 1134
+      },
+      "figure_id": "tmaze_schematic",
+      "image_sha256": "0989e1aa5855e8d9210c1aa212d6e788740efa44349b4a1e7cfe4caac4b15cc0",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "methods_pymdp"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "pymdp",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "formalism",
+        "gnn",
+        "interop",
+        "ontology",
+        "prose",
+        "pymdp",
+        "visualization"
+      ],
+      "source_artifact": "pymdp.yaml",
+      "source_artifacts": [
+        "pymdp.yaml",
+        "output/reports/pymdp_runtime_diagnostics.json",
+        "output/data/pymdp_policy_posterior_grid.json"
+      ],
+      "source_claim_lanes": [
+        "pymdp",
+        "visualization"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$",
+        "$"
+      ],
+      "sources": [
+        "pymdp.yaml",
+        "output/reports/pymdp_runtime_diagnostics.json",
+        "output/data/pymdp_policy_posterior_grid.json"
+      ]
+    },
+    {
+      "axis_channel_mapping": {
+        "channel": "status",
+        "x": "promotion_requirement",
+        "y": "pipeline_track"
+      },
+      "caption": "Track-lane promotion map: {{track_lane_matrix_row_count}} pipeline-to-sheaf rows with complete promotion status {{track_lane_matrix_complete}}. Left: seven promotion-rule obligations; right: sheaf fragment bindings.",
+      "claim_lane_count": 2,
+      "claim_lanes": [
+        "formal",
+        "semantic"
+      ],
+      "dimensions": {
+        "height": 2238,
+        "width": 2429
+      },
+      "figure_id": "track_lane_promotion_map",
+      "image_sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
+      "mapped": true,
+      "pixel_provenance_ok": true,
+      "renderer": "visualizations.figures.generate_all_figures",
+      "section_bindings": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "section_claim_lanes": [
+        "analytical",
+        "formal",
+        "pymdp",
+        "release",
+        "scope",
+        "semantic",
+        "visualization"
+      ],
+      "section_tracks": [
+        "adversarial_audit",
+        "animation",
+        "animation_delta",
+        "artifact_diffoscope",
+        "artifact_license",
+        "assumption_index",
+        "benchmark",
+        "causal_ablation",
+        "counterexample",
+        "evidence_fields",
+        "formalism",
+        "gate_ergonomics",
+        "gnn",
+        "interop",
+        "layers",
+        "lean",
+        "manuscript_staleness",
+        "model_checking",
+        "ontology",
+        "proof_extraction",
+        "prose",
+        "provenance",
+        "pymdp",
+        "release_bundle",
+        "release_notes",
+        "replay_matrix",
+        "scholarship",
+        "security_posture",
+        "sensitivity",
+        "simulation",
+        "state_space_catalog",
+        "theorem_traceability",
+        "uncertainty",
+        "visualization"
+      ],
+      "source_artifact": "output/data/track_lane_matrix.json",
+      "source_artifacts": [
+        "output/data/track_lane_matrix.json",
+        "lean/TemplateActiveInference/PromotionProof.lean"
+      ],
+      "source_claim_lanes": [
+        "formal",
+        "semantic"
+      ],
+      "source_jsonpath": "$",
+      "source_jsonpaths": [
+        "$",
+        "$"
+      ],
+      "sources": [
+        "output/data/track_lane_matrix.json",
+        "lean/TemplateActiveInference/PromotionProof.lean"
+      ]
+    }
+  ],
+  "schema": "template_active_inference.figure_source_map.v1"
+}

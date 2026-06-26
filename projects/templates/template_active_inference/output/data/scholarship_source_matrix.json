@@ -1,0 +1,771 @@
+{
+  "all_citations_present": true,
+  "all_claim_boundaries_scope_guarded": true,
+  "all_expected_sources_present": true,
+  "all_rows_rederived": true,
+  "all_sources_connected": true,
+  "declared_section_citation_overlap_count": 19,
+  "expected_sources": [
+    "bosca2026localglobal",
+    "buckley2017mathreview",
+    "champion2021branching",
+    "curry2014sheaves",
+    "dacosta2020discrete",
+    "dacosta2023reward",
+    "friston2010fep",
+    "friston2021sophisticated",
+    "gershman2019fepbrain",
+    "gnn2023",
+    "hodson2023sophisticatedlearning",
+    "nuijten2026efeplanning",
+    "parr2022active",
+    "pymdp2024",
+    "robinson2014topological",
+    "smith2022tutorial"
+  ],
+  "method_role_count": 21,
+  "observed_sources": [
+    "bosca2026localglobal",
+    "buckley2017mathreview",
+    "champion2021branching",
+    "curry2014sheaves",
+    "dacosta2020discrete",
+    "dacosta2023reward",
+    "friston2010fep",
+    "friston2021sophisticated",
+    "gershman2019fepbrain",
+    "gnn2023",
+    "hodson2023sophisticatedlearning",
+    "nuijten2026efeplanning",
+    "parr2022active",
+    "pymdp2024",
+    "robinson2014topological",
+    "smith2022tutorial"
+  ],
+  "primary_source_count": 9,
+  "quantitative_method_role_count": 3,
+  "rows": [
+    {
+      "artifact": "output/data/scholarship_source_matrix.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "friston2010fep",
+      "citation_sections": [
+        "intro_motivation",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "intro_motivation",
+        "methods_sheaf"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "background only; no empirical biological claim is inferred",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "intro_motivation",
+        "methods_sheaf"
+      ],
+      "method_role": "scope_background",
+      "sections_bound": true,
+      "source_family": "free_energy_principle",
+      "source_kind": "primary_article",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "prose",
+        "formalism",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/analytical_assumption_index.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "buckley2017mathreview",
+      "citation_sections": [
+        "intro_motivation",
+        "methods_analytical",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_analytical"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "supports finite variational-free-energy notation only",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_analytical",
+        "appendix_full_sheaf"
+      ],
+      "method_role": "mathematical_review",
+      "sections_bound": true,
+      "source_family": "free_energy_principle",
+      "source_kind": "mathematical_review",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "formalism",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/analysis_statistics.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "buckley2017mathreview",
+      "citation_sections": [
+        "intro_motivation",
+        "methods_analytical",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [],
+      "cited_in_declared_sections": false,
+      "cited_in_manuscript": true,
+      "claim_boundary": "supports reporting deterministic toy statistics, not inferential population statistics",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "results_si_tmaze",
+        "results_invariants"
+      ],
+      "method_role": "statistics_boundary",
+      "sections_bound": true,
+      "source_family": "free_energy_principle",
+      "source_kind": "mathematical_review",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "simulation",
+        "uncertainty",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/reports/model_checking_witnesses.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "dacosta2020discrete",
+      "citation_sections": [
+        "conclusion",
+        "methods_pymdp",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_pymdp"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "finite toy state spaces only",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_pymdp",
+        "methods_lean"
+      ],
+      "method_role": "discrete_planning_formalism",
+      "sections_bound": true,
+      "source_family": "discrete_state_space_active_inference",
+      "source_kind": "primary_article",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "pymdp",
+        "model_checking",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/si_policy_grid.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "friston2021sophisticated",
+      "citation_sections": [
+        "conclusion",
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "cited_declared_sections": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "supports finite-horizon policy inference context only",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "method_role": "sophisticated_inference_formalism",
+      "sections_bound": true,
+      "source_family": "sophisticated_inference",
+      "source_kind": "primary_article",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "pymdp",
+        "model_checking",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/si_policy_comparison.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "dacosta2023reward",
+      "citation_sections": [
+        "conclusion",
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "cited_declared_sections": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "supports toy finite-horizon policy-comparison context only",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "method_role": "finite_horizon_reward_planning",
+      "sections_bound": true,
+      "source_family": "discrete_state_space_active_inference",
+      "source_kind": "primary_article",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "pymdp",
+        "benchmark",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/uncertainty_summary.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "parr2022active",
+      "citation_sections": [
+        "intro_motivation",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "intro_motivation"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "conceptual context, not evidence for toy metrics",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "intro_motivation",
+        "results_invariants"
+      ],
+      "method_role": "conceptual_reference",
+      "sections_bound": true,
+      "source_family": "active_inference",
+      "source_kind": "monograph",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "prose",
+        "uncertainty",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/si_policy_grid.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "smith2022tutorial",
+      "citation_sections": [
+        "methods_pymdp",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_pymdp"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "empirical fitting is out of scope until an adapter is promoted",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "method_role": "model_building_tutorial",
+      "sections_bound": true,
+      "source_family": "active_inference_practice",
+      "source_kind": "tutorial_article",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "pymdp",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/reports/blocked_scope_manifest.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "smith2022tutorial",
+      "citation_sections": [
+        "methods_pymdp",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [],
+      "cited_in_declared_sections": false,
+      "cited_in_manuscript": true,
+      "claim_boundary": "keeps empirical-data tutorial relevance separate from this public toy-only exemplar",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "discussion_outlook",
+        "appendix_full_sheaf"
+      ],
+      "method_role": "empirical_scope_boundary",
+      "sections_bound": true,
+      "source_family": "active_inference_practice",
+      "source_kind": "tutorial_article",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "adversarial_audit",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/reports/blocked_scope_manifest.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "gershman2019fepbrain",
+      "citation_sections": [
+        "conclusion",
+        "discussion_outlook",
+        "intro_motivation",
+        "methods_analytical"
+      ],
+      "cited_declared_sections": [
+        "discussion_outlook",
+        "intro_motivation"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "supports the methodological-scope boundary, not empirical brain claims",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "intro_motivation",
+        "discussion_outlook"
+      ],
+      "method_role": "critical_scope_boundary",
+      "sections_bound": true,
+      "source_family": "free_energy_principle",
+      "source_kind": "critical_review",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "prose",
+        "adversarial_audit",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/reports/pymdp_runtime_diagnostics.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "pymdp2024",
+      "citation_sections": [
+        "intro_motivation",
+        "methods_pymdp",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_pymdp"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "JOSS software citation for runtime construction and diagnostics only",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_pymdp",
+        "appendix_full_sheaf"
+      ],
+      "method_role": "implementation_anchor",
+      "sections_bound": true,
+      "source_family": "pymdp_implementation",
+      "source_kind": "software_article",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "pymdp",
+        "interop",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/reports/model_checking_witnesses.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "champion2021branching",
+      "citation_sections": [
+        "methods_pymdp",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_pymdp"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "related branching-time planning context only; current witnesses remain finite toy checks",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_pymdp"
+      ],
+      "method_role": "branching_time_planning_context",
+      "sections_bound": true,
+      "source_family": "sophisticated_inference",
+      "source_kind": "primary_preprint",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "pymdp",
+        "model_checking",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/reports/blocked_scope_manifest.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "hodson2023sophisticatedlearning",
+      "citation_sections": [
+        "discussion_outlook"
+      ],
+      "cited_declared_sections": [
+        "discussion_outlook"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "future-only active learning context; no current parameter-learning claim is promoted",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "discussion_outlook"
+      ],
+      "method_role": "active_learning_future_boundary",
+      "sections_bound": true,
+      "source_family": "sophisticated_inference",
+      "source_kind": "primary_preprint",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "pymdp",
+        "adversarial_audit",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/si_efe_terms.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "nuijten2026efeplanning",
+      "citation_sections": [
+        "methods_pymdp",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_pymdp"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "related EFE-planning formulation only; current policy terms are generated locally",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_pymdp"
+      ],
+      "method_role": "efe_variational_planning_context",
+      "sections_bound": true,
+      "source_family": "expected_free_energy_planning",
+      "source_kind": "primary_preprint",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "pymdp",
+        "formalism",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/interop_roundtrip_report.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "gnn2023",
+      "citation_sections": [
+        "appendix_full_sheaf",
+        "conclusion",
+        "methods_analytical",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "appendix_full_sheaf",
+        "methods_analytical"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "notation and round-trip contract only",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_analytical",
+        "methods_pymdp",
+        "appendix_full_sheaf"
+      ],
+      "method_role": "notation_anchor",
+      "sections_bound": true,
+      "source_family": "generalized_notation_notation",
+      "source_kind": "primary_preprint",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "gnn",
+        "ontology",
+        "interop",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/sheaf_gluing_certificate.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "curry2014sheaves",
+      "citation_sections": [
+        "conclusion",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_sheaf"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "finite manuscript-stalk analogy, not full sheaf cohomology",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_sheaf",
+        "appendix_full_sheaf"
+      ],
+      "method_role": "sheaf_gluing_background",
+      "sections_bound": true,
+      "source_family": "cellular_sheaves",
+      "source_kind": "dissertation",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "prose",
+        "formalism",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/sheaf_section_status_matrix.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "curry2014sheaves",
+      "citation_sections": [
+        "conclusion",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_sheaf"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "supports finite sheaf-law phrasing over the manuscript base poset only",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_sheaf",
+        "appendix_full_sheaf"
+      ],
+      "method_role": "finite_sheaf_law_boundary",
+      "sections_bound": true,
+      "source_family": "cellular_sheaves",
+      "source_kind": "dissertation",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "formalism",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/sheaf_coverage_matrix.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "robinson2014topological",
+      "citation_sections": [
+        "conclusion",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_sheaf"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "applied local/global consistency analogy only",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_sheaf",
+        "appendix_full_sheaf"
+      ],
+      "method_role": "local_to_global_consistency",
+      "sections_bound": true,
+      "source_family": "applied_sheaf_signal_processing",
+      "source_kind": "monograph",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "visualization",
+        "prose",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/reports/visualization_quality_audit.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "robinson2014topological",
+      "citation_sections": [
+        "conclusion",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_sheaf"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "supports visual local-to-global diagnostics, not empirical truth of the toy figures",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_sheaf",
+        "appendix_full_sheaf"
+      ],
+      "method_role": "visualization_quality_audit",
+      "sections_bound": true,
+      "source_family": "applied_sheaf_signal_processing",
+      "source_kind": "monograph",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "visualization",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/data/sheaf_gluing_certificate.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "bosca2026localglobal",
+      "citation_sections": [
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_sheaf"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "related local-to-global computation context only; no neural-network claim is inferred",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_sheaf"
+      ],
+      "method_role": "modern_local_to_global_context",
+      "sections_bound": true,
+      "source_family": "cellular_sheaves",
+      "source_kind": "primary_preprint",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "prose",
+        "formalism",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    },
+    {
+      "artifact": "output/reports/visualization_quality_audit.json",
+      "artifact_exists": true,
+      "bib_has_entry": true,
+      "bib_has_locator": true,
+      "citation_key": "buckley2017mathreview",
+      "citation_sections": [
+        "intro_motivation",
+        "methods_analytical",
+        "methods_sheaf"
+      ],
+      "cited_declared_sections": [
+        "methods_sheaf"
+      ],
+      "cited_in_declared_sections": true,
+      "cited_in_manuscript": true,
+      "claim_boundary": "connects deterministic toy statistics to figure provenance without claiming population inference",
+      "claim_boundary_scope_guarded": true,
+      "connected": true,
+      "manuscript_sections": [
+        "methods_sheaf",
+        "results_si_tmaze",
+        "appendix_full_sheaf"
+      ],
+      "method_role": "statistical_visualization_bridge",
+      "sections_bound": true,
+      "source_family": "free_energy_principle",
+      "source_kind": "mathematical_review",
+      "source_locator_kind": "doi+url",
+      "tracks": [
+        "simulation",
+        "visualization",
+        "scholarship"
+      ],
+      "tracks_registered": true
+    }
+  ],
+  "schema": "template_active_inference.scholarship_source_matrix.v1",
+  "source_count": 21,
+  "source_family_count": 10,
+  "source_locator_kind_count": 1
+}

@@ -1,0 +1,33 @@
+{
+  "sweep": {
+    "max_residual": 4.440892098500626e-16,
+    "rmse_mi": 2.122461271936776e-16,
+    "argmax_lambda": 4.0,
+    "grid_points": 21
+  },
+  "si_tmaze": {
+    "steps": 2,
+    "action_diversity": 2,
+    "action_switch_count": 1,
+    "action_switch_rate": 1.0,
+    "observation_diversity": 1,
+    "terminal_observation": 1,
+    "goal_reached": true,
+    "trace_step_count": 2,
+    "trace_summary_steps_match": true,
+    "policy_posterior_available_steps": 0,
+    "expected_free_energy_available_steps": 0,
+    "finite_trace": true,
+    "entropy_min": 0.32508314364563223,
+    "entropy_max": 0.32508314364563223,
+    "entropy_mean": 0.32508314364563223,
+    "entropy_initial": 0.32508314364563223,
+    "entropy_terminal": 0.32508314364563223,
+    "entropy_drop": 0.0,
+    "entropy_span": 0.0,
+    "entropy_auc": 0.6501662872912645,
+    "entropy_monotone_nonincreasing": true
+  },
+  "pymdp_mode": "state_inference",
+  "pymdp_config_hash": "81eb061f43b7bfd7"
+}

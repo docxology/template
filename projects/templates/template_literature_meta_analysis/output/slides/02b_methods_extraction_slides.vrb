@@ -1,0 +1,24 @@
+\frametitle{Embeddings}
+\protect\phantomsection\label{embeddings}
+Every title, abstract, and full text is embedded into a shared vector
+space by a deterministic, offline method --- TF-IDF followed by
+truncated SVD, i.e.~latent semantic analysis
+\breakseq{[@deerwester1990indexing]}. The embedding dimensionality is 50
+components (configurable via
+\breaktt{project\_config.embeddings.n\_components}), and the TF-IDF
+vocabulary is capped at 500 features (configurable via
+\breaktt{project\_config.embeddings.max\_features}). The embedding is
+byte-stable across runs: the same input text always yields identical
+vectors, so the derived similarity matrix, nearest-neighbour lists,
+clusters, and two-dimensional projection are all reproducible.
+
+An optional transformer backend can be enabled by setting
+\breaktt{project\_config.embeddings.method:\ transformer} (requires the
+\texttt{embeddings} extra), which upgrades the embedding fidelity
+without changing the interface or downstream analysis.
+
+The embeddings support semantic retrieval over the corpus and feed two
+visualizations: a PCA two-dimensional projection ((Figure pca
+embeddings)) that maps the topical geography of the literature, and a
+hierarchical clustering dendrogram ((Figure dendrogram)) that reveals
+the similarity structure of the document collection.

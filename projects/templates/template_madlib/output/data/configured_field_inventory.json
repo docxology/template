@@ -1,0 +1,818 @@
+[
+  {
+    "origin": "explicit",
+    "path": "madlib",
+    "scope": "schema",
+    "summary": "configured field"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.audit_rules",
+    "scope": "schema",
+    "summary": "12 entries"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.authoring_obligations",
+    "scope": "schema",
+    "summary": "8 entries"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.composition_depth",
+    "scope": "schema",
+    "summary": "deep"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.contribution_claims",
+    "scope": "schema",
+    "summary": "9 entries"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.design_principles",
+    "scope": "schema",
+    "summary": "13 entries"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.evaluation_criteria",
+    "scope": "schema",
+    "summary": "7 entries"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.failure_modes",
+    "scope": "schema",
+    "summary": "13 entries"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.hypothesis",
+    "scope": "schema",
+    "summary": "Deterministic lexical injection can generate a complete conditional IMRAD manuscript while preserving token provenance, section intent, and audit-ready method evidence."
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon",
+    "scope": "schema",
+    "summary": "10 categories"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon.adjectives",
+    "scope": "lexicon",
+    "summary": "7 tokens"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon.artifacts",
+    "scope": "lexicon",
+    "summary": "12 tokens"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon.audiences",
+    "scope": "lexicon",
+    "summary": "4 tokens"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon.constraints",
+    "scope": "lexicon",
+    "summary": "5 tokens"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon.failures",
+    "scope": "lexicon",
+    "summary": "5 tokens"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon.measures",
+    "scope": "lexicon",
+    "summary": "8 tokens"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon.methods",
+    "scope": "lexicon",
+    "summary": "5 tokens"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon.nouns",
+    "scope": "lexicon",
+    "summary": "7 tokens"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon.qualities",
+    "scope": "lexicon",
+    "summary": "5 tokens"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.lexicon.verbs",
+    "scope": "lexicon",
+    "summary": "7 tokens"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.method_protocol",
+    "scope": "schema",
+    "summary": "18 entries"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves",
+    "scope": "schema",
+    "summary": "configured field"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.abstract",
+    "scope": "section",
+    "summary": "3 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.authoring_contract",
+    "scope": "section",
+    "summary": "5 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.configuration",
+    "scope": "section",
+    "summary": "3 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.discussion",
+    "scope": "section",
+    "summary": "4 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.evaluation",
+    "scope": "section",
+    "summary": "4 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.introduction",
+    "scope": "section",
+    "summary": "4 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.limitations",
+    "scope": "section",
+    "summary": "4 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.methods",
+    "scope": "section",
+    "summary": "13 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.reproducibility",
+    "scope": "section",
+    "summary": "4 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.results",
+    "scope": "section",
+    "summary": "4 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.narrative_moves.scope",
+    "scope": "section",
+    "summary": "4 moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.pipeline_phases",
+    "scope": "schema",
+    "summary": "17 entries"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.quality_probes",
+    "scope": "schema",
+    "summary": "14 entries"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions",
+    "scope": "schema",
+    "summary": "configured field"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.abstract",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.authoring_contract",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.configuration",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.discussion",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.evaluation",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.introduction",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.limitations",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.methods",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.reproducibility",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.results",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_conditions.scope",
+    "scope": "section",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles",
+    "scope": "schema",
+    "summary": "configured field"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.abstract",
+    "scope": "section",
+    "summary": "Abstract"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.authoring_contract",
+    "scope": "section",
+    "summary": "Authoring Contract: Human Review and Forking Obligations"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.configuration",
+    "scope": "section",
+    "summary": "Configuration: Schema-Controlled Lexicon, Slots, and Narrative Moves"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.discussion",
+    "scope": "section",
+    "summary": "Discussion: Accountability Boundaries for Generated Prose"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.evaluation",
+    "scope": "section",
+    "summary": "Evaluation: Gate Criteria, QA Probes, and Failure Discovery"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.introduction",
+    "scope": "section",
+    "summary": "Introduction: Lexicon as Data and Manuscript as Build Artifact"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.limitations",
+    "scope": "section",
+    "summary": "Limitations: Non-Claims, Misuse Modes, and Human Review"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.methods",
+    "scope": "section",
+    "summary": "Methods: Source-Owned Token Injection and Conditional IMRAD Assembly"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.reproducibility",
+    "scope": "section",
+    "summary": "Reproducibility: Seeded Regeneration and Artifact Trace"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.results",
+    "scope": "section",
+    "summary": "Results: Provenance, Density, and Resolved Manuscript Surface"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.section_titles.scope",
+    "scope": "section",
+    "summary": "Scope: Related Generators and Responsible Forking"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.seed",
+    "scope": "schema",
+    "summary": "431"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots",
+    "scope": "schema",
+    "summary": "22 slot rules, 40 token choices"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.authoring_audience",
+    "scope": "slot",
+    "summary": "audiences -> authoring_contract (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.authoring_audience.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.authoring_audience.section",
+    "scope": "slot",
+    "summary": "authoring_contract"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.authoring_quality",
+    "scope": "slot",
+    "summary": "qualities -> authoring_contract (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.authoring_quality.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.authoring_quality.section",
+    "scope": "slot",
+    "summary": "authoring_contract"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.config_constraint",
+    "scope": "slot",
+    "summary": "constraints -> configuration (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.config_constraint.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.config_constraint.section",
+    "scope": "slot",
+    "summary": "configuration"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.discussion_adjective",
+    "scope": "slot",
+    "summary": "adjectives -> discussion (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.discussion_adjective.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.discussion_adjective.section",
+    "scope": "slot",
+    "summary": "discussion"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.discussion_audience",
+    "scope": "slot",
+    "summary": "audiences -> discussion (2)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.discussion_audience.count",
+    "scope": "slot",
+    "summary": "2"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.discussion_audience.section",
+    "scope": "slot",
+    "summary": "discussion"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.evaluation_artifact",
+    "scope": "slot",
+    "summary": "artifacts -> evaluation (2)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.evaluation_artifact.count",
+    "scope": "slot",
+    "summary": "2"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.evaluation_artifact.section",
+    "scope": "slot",
+    "summary": "evaluation"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.evaluation_measure",
+    "scope": "slot",
+    "summary": "measures -> evaluation (3)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.evaluation_measure.count",
+    "scope": "slot",
+    "summary": "3"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.evaluation_measure.section",
+    "scope": "slot",
+    "summary": "evaluation"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.intro_nouns",
+    "scope": "slot",
+    "summary": "nouns -> introduction (4)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.intro_nouns.count",
+    "scope": "slot",
+    "summary": "4"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.intro_nouns.section",
+    "scope": "slot",
+    "summary": "introduction"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.intro_verbs",
+    "scope": "slot",
+    "summary": "verbs -> introduction (4)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.intro_verbs.count",
+    "scope": "slot",
+    "summary": "4"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.intro_verbs.section",
+    "scope": "slot",
+    "summary": "introduction"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.limitation_failure",
+    "scope": "slot",
+    "summary": "failures -> limitations (3)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.limitation_failure.count",
+    "scope": "slot",
+    "summary": "3"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.limitation_failure.section",
+    "scope": "slot",
+    "summary": "limitations"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.method_artifact",
+    "scope": "slot",
+    "summary": "artifacts -> methods (2)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.method_artifact.count",
+    "scope": "slot",
+    "summary": "2"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.method_artifact.section",
+    "scope": "slot",
+    "summary": "methods"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.method_constraint",
+    "scope": "slot",
+    "summary": "constraints -> methods (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.method_constraint.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.method_constraint.section",
+    "scope": "slot",
+    "summary": "methods"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.method_name",
+    "scope": "slot",
+    "summary": "methods -> methods (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.method_name.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.method_name.section",
+    "scope": "slot",
+    "summary": "methods"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.method_quality",
+    "scope": "slot",
+    "summary": "qualities -> methods (2)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.method_quality.count",
+    "scope": "slot",
+    "summary": "2"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.method_quality.section",
+    "scope": "slot",
+    "summary": "methods"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.reproducibility_artifact",
+    "scope": "slot",
+    "summary": "artifacts -> reproducibility (2)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.reproducibility_artifact.count",
+    "scope": "slot",
+    "summary": "2"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.reproducibility_artifact.section",
+    "scope": "slot",
+    "summary": "reproducibility"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.result_artifact",
+    "scope": "slot",
+    "summary": "artifacts -> results (2)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.result_artifact.count",
+    "scope": "slot",
+    "summary": "2"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.result_artifact.section",
+    "scope": "slot",
+    "summary": "results"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.result_measure",
+    "scope": "slot",
+    "summary": "measures -> results (3)"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.result_measure.count",
+    "scope": "slot",
+    "summary": "3"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.result_measure.section",
+    "scope": "slot",
+    "summary": "results"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.scope_audience",
+    "scope": "slot",
+    "summary": "audiences -> scope (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.scope_audience.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.scope_audience.section",
+    "scope": "slot",
+    "summary": "scope"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.scope_constraint",
+    "scope": "slot",
+    "summary": "constraints -> scope (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.scope_constraint.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.scope_constraint.section",
+    "scope": "slot",
+    "summary": "scope"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.study_adjective",
+    "scope": "slot",
+    "summary": "adjectives -> abstract (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.study_adjective.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.study_adjective.section",
+    "scope": "slot",
+    "summary": "abstract"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.study_noun",
+    "scope": "slot",
+    "summary": "nouns -> abstract (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.study_noun.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.study_noun.section",
+    "scope": "slot",
+    "summary": "abstract"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.study_verb",
+    "scope": "slot",
+    "summary": "verbs -> abstract (1)"
+  },
+  {
+    "origin": "defaulted",
+    "path": "madlib.slots.study_verb.count",
+    "scope": "slot",
+    "summary": "1"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.slots.study_verb.section",
+    "scope": "slot",
+    "summary": "abstract"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.visualizations",
+    "scope": "visualization",
+    "summary": "enabled"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.visualizations.configured_field_matrix",
+    "scope": "visualization",
+    "summary": "true"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.visualizations.enabled",
+    "scope": "visualization",
+    "summary": "true"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.visualizations.field_origin_summary",
+    "scope": "visualization",
+    "summary": "true"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.visualizations.provenance_trace_map",
+    "scope": "visualization",
+    "summary": "true"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.visualizations.quality_gate_matrix",
+    "scope": "visualization",
+    "summary": "true"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.visualizations.section_configuration_heatmap",
+    "scope": "visualization",
+    "summary": "true"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.visualizations.section_token_allocation",
+    "scope": "visualization",
+    "summary": "true"
+  },
+  {
+    "origin": "explicit",
+    "path": "madlib.visualizations.token_injection_flow",
+    "scope": "visualization",
+    "summary": "true"
+  }
+]

@@ -1,0 +1,436 @@
+{
+  "fig:autoresearch_candidate_lifecycle": {
+    "caption": "Candidate lifecycle ledger from output/data/ml_candidate_ledger.json: 4 evaluated out of 5 proposed candidates, with deferred proposals kept visible instead of executed automatically. Generation method: Candidate lifecycle status-count bar chart. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_020",
+    "filename": "autoresearch_candidate_lifecycle.png",
+    "generated_by": "src.figures.write_candidate_lifecycle_figure",
+    "label": "fig:autoresearch_candidate_lifecycle",
+    "metadata": {
+      "alt_text": "Bar chart of proposed, evaluated, accepted, rejected, and deferred candidate counts.",
+      "claim_boundary": "Lifecycle counts describe bounded orchestration, not autonomous approval.",
+      "method": "Candidate lifecycle status-count bar chart.",
+      "source": "output/data/ml_candidate_ledger.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.78\\textwidth"
+  },
+  "fig:autoresearch_closure_flow": {
+    "caption": "File-backed AutoResearch closure from program through review, with 6 supported claims and readiness passed; review remains a deferred human decision and the provenance path remains inspectable. Generation method: File-backed process-flow diagram from final loop state. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_003",
+    "filename": "autoresearch_closure_flow.png",
+    "generated_by": "src.figures.write_closure_flow_figure",
+    "label": "fig:autoresearch_closure_flow",
+    "metadata": {
+      "alt_text": "Flow diagram linking program, proposals, evaluation, ledgers, claims, manuscript, readiness, and review.",
+      "claim_boundary": "The workflow is file-backed and inspectable but not self-approving.",
+      "method": "File-backed process-flow diagram from final loop state.",
+      "source": "output/data/autoresearch_loop.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.95\\textwidth"
+  },
+  "fig:autoresearch_integrity_chain": {
+    "caption": "Local integrity chain from output/data/autoresearch_integrity_attestation.json; checksums summarize the observed run artifacts and remain unsigned local evidence. Generation method: Local checksum attestation chain with checked, missing, and mismatch counts. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_024",
+    "filename": "autoresearch_integrity_chain.png",
+    "generated_by": "src.figures.write_security_integrity_chain_figure",
+    "label": "fig:autoresearch_integrity_chain",
+    "metadata": {
+      "alt_text": "Process-chain diagram and bar chart summarizing checked, missing, and mismatched local artifact records.",
+      "claim_boundary": "Integrity checks are local SHA-256 observations and are not externally signed provenance.",
+      "method": "Local checksum attestation chain with checked, missing, and mismatch counts.",
+      "source": "output/data/autoresearch_integrity_attestation.json",
+      "source_inventory": "output/data/autoresearch_supply_chain_inventory.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.84\\textwidth"
+  },
+  "fig:autoresearch_security_control_matrix": {
+    "caption": "Local security-control matrix from output/data/autoresearch_threat_model.json; controls map NIST, SLSA, and ATT&CK-inspired safeguards to deterministic evidence surfaces without claiming production security certification. Generation method: structured control matrix with separate control, evidence, framework, and status columns. Generation method: Structured control matrix from local threat-model controls. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_023",
+    "filename": "autoresearch_security_control_matrix.png",
+    "generated_by": "src.figures.write_security_control_matrix_figure",
+    "label": "fig:autoresearch_security_control_matrix",
+    "metadata": {
+      "alt_text": "Matrix of local security controls mapped to framework-inspired evidence surfaces and status.",
+      "claim_boundary": "Controls are local research-artifact safeguards, not production security certification.",
+      "method": "Structured control matrix from local threat-model controls.",
+      "source": "output/data/autoresearch_threat_model.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Methodology",
+    "width": "0.84\\textwidth"
+  },
+  "fig:autoresearch_stage_matrix": {
+    "caption": "Validated AutoResearch run with 7 stages, 6 supported claims, and 78 required artifacts from output/data/autoresearch_loop.json; the count summarizes readiness artifacts, not human approval. Generation method: Horizontal count summary from final loop metrics. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_000",
+    "filename": "autoresearch_stage_matrix.png",
+    "generated_by": "src.figures.write_stage_matrix_figure",
+    "label": "fig:autoresearch_stage_matrix",
+    "metadata": {
+      "alt_text": "Horizontal bar chart showing configured stages, supported claims, and required artifacts.",
+      "claim_boundary": "Readiness artifacts summarize local validation only; publication approval is human.",
+      "method": "Horizontal count summary from final loop metrics.",
+      "source": "output/data/autoresearch_loop.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.8\\textwidth"
+  },
+  "fig:ml_bootstrap_intervals": {
+    "caption": "Deterministic percentile-bootstrap intervals for exp-mlp-tanh-64 from output/data/ml_bootstrap_intervals.json; the intervals summarize local sampling variation for accuracy and macro F1. Generation method: Horizontal percentile-bootstrap interval plot. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_014",
+    "filename": "ml_bootstrap_intervals.png",
+    "generated_by": "src.figures.write_ml_bootstrap_intervals_figure",
+    "label": "fig:ml_bootstrap_intervals",
+    "metadata": {
+      "alt_text": "Horizontal interval chart for accepted-candidate accuracy and macro F1.",
+      "claim_boundary": "Bootstrap intervals summarize local test-set resampling only.",
+      "method": "Horizontal percentile-bootstrap interval plot.",
+      "source": "output/data/ml_bootstrap_intervals.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.78\\textwidth"
+  },
+  "fig:ml_calibration_reliability": {
+    "caption": "Reliability curve for exp-mlp-tanh-64 from output/data/ml_calibration_report.json; expected calibration error and bin counts summarize the accepted candidate on the fixed local test split. Generation method: Reliability curve with confidence-bin support histogram. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_008",
+    "filename": "ml_calibration_reliability.png",
+    "generated_by": "src.figures.write_ml_calibration_reliability_figure",
+    "label": "fig:ml_calibration_reliability",
+    "metadata": {
+      "alt_text": "Reliability curve with accepted-candidate confidence-bin counts.",
+      "claim_boundary": "Calibration values describe the fixed local split only.",
+      "method": "Reliability curve with confidence-bin support histogram.",
+      "source": "output/data/ml_calibration_report.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.82\\textwidth"
+  },
+  "fig:ml_candidate_rank_stability": {
+    "caption": "Rank-stability summary for exp-mlp-tanh-64 from output/data/ml_candidate_rank_stability.json; deterministic local bootstrap resampling shows how often each evaluated candidate ranks first under the fixed test split. Generation method: Bootstrap top-rank frequency and mean-rank comparison. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_019",
+    "filename": "ml_candidate_rank_stability.png",
+    "generated_by": "src.figures.write_ml_candidate_rank_stability_figure",
+    "label": "fig:ml_candidate_rank_stability",
+    "metadata": {
+      "alt_text": "Two-panel chart of candidate top-rank frequency and mean rank under deterministic bootstrap resampling.",
+      "claim_boundary": "Rank stability describes local resampling behavior, not model-selection certainty.",
+      "method": "Bootstrap top-rank frequency and mean-rank comparison.",
+      "source": "output/data/ml_candidate_rank_stability.json",
+      "source_results": "output/data/ml_task_results.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.82\\textwidth"
+  },
+  "fig:ml_candidate_scores": {
+    "caption": "Held-out accuracy with Wilson intervals for the baseline and evaluated candidates from output/data/ml_candidate_intervals.json; accepted candidate exp-mlp-tanh-64 improves accuracy from 82.6% to 89.4% on the fixed subset, with deferred proposals kept in the candidate ledger. Generation method: Lollipop accuracy comparison with Wilson interval error bars and direct labels. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_001",
+    "filename": "ml_candidate_scores.png",
+    "generated_by": "src.figures.write_ml_candidate_scores_figure",
+    "label": "fig:ml_candidate_scores",
+    "metadata": {
+      "alt_text": "Lollipop chart comparing baseline and evaluated candidate accuracies with Wilson interval error bars.",
+      "claim_boundary": "Scores apply only to the fixed local subset and configured candidates.",
+      "method": "Lollipop accuracy comparison with Wilson interval error bars and direct labels.",
+      "source": "output/data/ml_candidate_intervals.json",
+      "source_results": "output/data/ml_task_results.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.8\\textwidth"
+  },
+  "fig:ml_classification_metrics_heatmap": {
+    "caption": "Per-class precision, recall, and F1 for exp-mlp-tanh-64, sourced from output/data/ml_classification_diagnostics.json; metrics are scoped to the local test split. Generation method: Per-class precision, recall, and F1 heatmap. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_009",
+    "filename": "ml_classification_metrics_heatmap.png",
+    "generated_by": "src.figures.write_ml_classification_metrics_heatmap",
+    "label": "fig:ml_classification_metrics_heatmap",
+    "metadata": {
+      "alt_text": "Heatmap of per-class precision, recall, and F1 for the accepted candidate.",
+      "claim_boundary": "Class metrics diagnose this run only and are not full-dataset estimates.",
+      "method": "Per-class precision, recall, and F1 heatmap.",
+      "source": "output/data/ml_classification_diagnostics.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.76\\textwidth"
+  },
+  "fig:ml_complexity_accuracy": {
+    "caption": "Parameter-count versus held-out accuracy for the baseline and evaluated candidates from output/data/ml_task_results.json; the accepted candidate is highlighted without claiming a general scaling law. Generation method: Log-parameter scatter plot against held-out accuracy. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_006",
+    "filename": "ml_complexity_accuracy.png",
+    "generated_by": "src.figures.write_ml_complexity_accuracy_figure",
+    "label": "fig:ml_complexity_accuracy",
+    "metadata": {
+      "alt_text": "Scatter plot comparing parameter count and held-out accuracy.",
+      "claim_boundary": "The plot compares this bounded candidate set and does not infer a scaling law.",
+      "method": "Log-parameter scatter plot against held-out accuracy.",
+      "source": "output/data/ml_task_results.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.78\\textwidth"
+  },
+  "fig:ml_confusion_matrix": {
+    "caption": "Accepted-candidate confusion matrix for exp-mlp-tanh-64 on the fixed MNIST handwritten digit database test split, sourced from output/data/ml_confusion_matrix.csv; it diagnoses the selected run, not general full-dataset performance. Generation method: Row-normalized heatmap with cell counts and row percentages. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_002",
+    "filename": "ml_confusion_matrix.png",
+    "generated_by": "src.figures.write_ml_confusion_matrix_figure",
+    "label": "fig:ml_confusion_matrix",
+    "metadata": {
+      "alt_text": "Ten-by-ten confusion matrix for the accepted candidate on the local test split.",
+      "claim_boundary": "Confusion counts diagnose this run only and do not imply full-dataset generalization.",
+      "method": "Row-normalized heatmap with cell counts and row percentages.",
+      "source": "output/data/ml_confusion_matrix.csv",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.72\\textwidth"
+  },
+  "fig:ml_confusion_pairs": {
+    "caption": "Top non-diagonal confusion pairs for exp-mlp-tanh-64, sourced from output/data/ml_classification_diagnostics.json; the bars highlight which local digit pairs account for accepted-candidate errors. Generation method: Ranked off-diagonal confusion-pair bars with true-class error rates. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_010",
+    "filename": "ml_confusion_pairs.png",
+    "generated_by": "src.figures.write_ml_confusion_pairs_figure",
+    "label": "fig:ml_confusion_pairs",
+    "metadata": {
+      "alt_text": "Horizontal bar chart of the most frequent non-diagonal confusion pairs.",
+      "claim_boundary": "Pair counts identify local error cases and are not a general taxonomy.",
+      "method": "Ranked off-diagonal confusion-pair bars with true-class error rates.",
+      "source": "output/data/ml_classification_diagnostics.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.82\\textwidth"
+  },
+  "fig:ml_generalization_gap": {
+    "caption": "Train/test accuracy and loss for evaluated candidates from output/data/ml_classification_diagnostics.json; the plot exposes local generalization gaps without claiming full-dataset behavior. Generation method: Grouped train/test accuracy and loss bars by evaluated candidate. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_011",
+    "filename": "ml_generalization_gap.png",
+    "generated_by": "src.figures.write_ml_generalization_gap_figure",
+    "label": "fig:ml_generalization_gap",
+    "metadata": {
+      "alt_text": "Grouped bars comparing train and test accuracy and loss by candidate.",
+      "claim_boundary": "Gaps are local bounded-loop diagnostics, not convergence guarantees.",
+      "method": "Grouped train/test accuracy and loss bars by evaluated candidate.",
+      "source": "output/data/ml_classification_diagnostics.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.82\\textwidth"
+  },
+  "fig:ml_learning_curves": {
+    "caption": "Epoch-level held-out accuracy curves for evaluated candidates from output/data/ml_training_history.csv; the accepted curve is visually emphasized for exp-mlp-tanh-64. Generation method: Epoch-level held-out accuracy lines with accepted best-epoch marker. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_005",
+    "filename": "ml_learning_curves.png",
+    "generated_by": "src.figures.write_ml_learning_curve_figure",
+    "label": "fig:ml_learning_curves",
+    "metadata": {
+      "alt_text": "Line chart of held-out accuracy by epoch for each evaluated candidate.",
+      "claim_boundary": "Learning curves diagnose configured training only, not convergence in general.",
+      "method": "Epoch-level held-out accuracy lines with accepted best-epoch marker.",
+      "source": "output/data/ml_training_history.csv",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.82\\textwidth"
+  },
+  "fig:ml_paired_correctness": {
+    "caption": "Matched correctness comparison between exp-mlp-tanh-64 and the nearest_centroid_baseline baseline from output/data/ml_paired_comparison.json; discordant cells support the paired test summary. Generation method: Matched accepted-versus-baseline correctness heatmap. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_015",
+    "filename": "ml_paired_correctness.png",
+    "generated_by": "src.figures.write_ml_paired_correctness_figure",
+    "label": "fig:ml_paired_correctness",
+    "metadata": {
+      "alt_text": "Two-by-two heatmap of baseline and accepted-candidate correctness on matched examples.",
+      "claim_boundary": "Matched comparison is limited to the fixed local test split.",
+      "method": "Matched accepted-versus-baseline correctness heatmap.",
+      "source": "output/data/ml_paired_comparison.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.66\\textwidth"
+  },
+  "fig:ml_per_class_accuracy": {
+    "caption": "Per-class accuracy for exp-mlp-tanh-64, computed from output/data/ml_confusion_matrix.csv; variation across digits is a run diagnostic for the fixed local test split. Generation method: Per-class accuracy bars computed from the confusion matrix diagonal. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_004",
+    "filename": "ml_per_class_accuracy.png",
+    "generated_by": "src.figures.write_ml_per_class_accuracy_figure",
+    "label": "fig:ml_per_class_accuracy",
+    "metadata": {
+      "alt_text": "Bar chart of accepted-candidate accuracy for each true digit class.",
+      "claim_boundary": "Per-class values diagnose this local split only and do not certify robustness.",
+      "method": "Per-class accuracy bars computed from the confusion matrix diagonal.",
+      "source": "output/data/ml_confusion_matrix.csv",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.78\\textwidth"
+  },
+  "fig:ml_probability_margin_distribution": {
+    "caption": "Confidence and prediction-margin histograms for exp-mlp-tanh-64 from output/data/ml_probability_diagnostics.json; the figure separates correct and incorrect local test predictions. Generation method: Confidence and margin histograms split by correctness. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_013",
+    "filename": "ml_probability_margin_distribution.png",
+    "generated_by": "src.figures.write_ml_probability_margin_figure",
+    "label": "fig:ml_probability_margin_distribution",
+    "metadata": {
+      "alt_text": "Two histograms of accepted-candidate confidence and prediction margin by correctness.",
+      "claim_boundary": "Distributions are descriptive diagnostics for the fixed local test split.",
+      "method": "Confidence and margin histograms split by correctness.",
+      "source": "output/data/ml_probability_diagnostics.json",
+      "source_predictions": "output/data/ml_prediction_records.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.82\\textwidth"
+  },
+  "fig:ml_probability_quality": {
+    "caption": "Brier score and negative log likelihood for evaluated candidates from output/data/ml_statistical_summary.json; lower values indicate better probability quality within the configured local run, and the accepted candidate is highlighted. Generation method: Brier score and negative-log-likelihood bar comparison. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_017",
+    "filename": "ml_probability_quality.png",
+    "generated_by": "src.figures.write_ml_probability_quality_figure",
+    "label": "fig:ml_probability_quality",
+    "metadata": {
+      "alt_text": "Paired horizontal bar charts of Brier score and negative log likelihood with the accepted candidate highlighted.",
+      "claim_boundary": "Probability-quality metrics compare the configured evaluated candidates only.",
+      "method": "Brier score and negative-log-likelihood bar comparison.",
+      "source": "output/data/ml_statistical_summary.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.82\\textwidth"
+  },
+  "fig:ml_robustness_matrix": {
+    "caption": "Accuracy for evaluated candidates under identity, one-pixel shifts, and low contrast from output/data/ml_robustness_report.json; the deterministic transforms provide a bounded smoke test only. Generation method: Candidate-by-transform accuracy heatmap for deterministic perturbations. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_012",
+    "filename": "ml_robustness_matrix.png",
+    "generated_by": "src.figures.write_ml_robustness_matrix_figure",
+    "label": "fig:ml_robustness_matrix",
+    "metadata": {
+      "alt_text": "Heatmap of candidate accuracy under identity, shift, and low-contrast transforms.",
+      "claim_boundary": "Deterministic perturbations are a smoke test and do not certify robustness.",
+      "method": "Candidate-by-transform accuracy heatmap for deterministic perturbations.",
+      "source": "output/data/ml_robustness_report.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.84\\textwidth"
+  },
+  "fig:ml_selective_accuracy": {
+    "caption": "Confidence-threshold trade-off for exp-mlp-tanh-64 from output/data/ml_statistical_summary.json; the plot compares retained coverage, selective accuracy, and the unthresholded accepted-candidate accuracy on the fixed local split. Generation method: Confidence-threshold coverage and selective-accuracy line chart. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_016",
+    "filename": "ml_selective_accuracy.png",
+    "generated_by": "src.figures.write_ml_selective_accuracy_figure",
+    "label": "fig:ml_selective_accuracy",
+    "metadata": {
+      "alt_text": "Line chart comparing coverage, selective accuracy, and overall accuracy by confidence threshold.",
+      "claim_boundary": "Selective accuracy describes thresholded predictions on the fixed local split only.",
+      "method": "Confidence-threshold coverage and selective-accuracy line chart.",
+      "source": "output/data/ml_statistical_summary.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.76\\textwidth"
+  },
+  "fig:ml_training_dynamics": {
+    "caption": "Configured-training dynamics for evaluated candidates from output/data/ml_training_diagnostics.json; exp-mlp-tanh-64 is highlighted while best-epoch markers and train-test gaps remain bounded to the local run. Generation method: Final and best-epoch accuracy bars plus train-test gap bars. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_018",
+    "filename": "ml_training_dynamics.png",
+    "generated_by": "src.figures.write_ml_training_dynamics_figure",
+    "label": "fig:ml_training_dynamics",
+    "metadata": {
+      "alt_text": "Two-panel chart showing final versus best held-out accuracy and train-test accuracy gaps by candidate.",
+      "claim_boundary": "Training dynamics diagnose this configured deterministic run only.",
+      "method": "Final and best-epoch accuracy bars plus train-test gap bars.",
+      "source": "output/data/ml_training_diagnostics.json",
+      "source_history": "output/data/ml_training_history.csv",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.84\\textwidth"
+  },
+  "fig:mnist_class_balance": {
+    "caption": "Train and test class counts from output/data/ml_class_balance.json; the local fixture contains 2000 train and 500 test examples across 10 classes. Generation method: Grouped train/test class-count bars from the local MNIST fixture. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_022",
+    "filename": "mnist_class_balance.png",
+    "generated_by": "src.figures.write_mnist_class_balance_figure",
+    "label": "fig:mnist_class_balance",
+    "metadata": {
+      "alt_text": "Grouped bar chart showing train and test example counts for each digit class.",
+      "claim_boundary": "Class counts describe the local fixed fixture and are not population statistics.",
+      "method": "Grouped train/test class-count bars from the local MNIST fixture.",
+      "source": "output/data/ml_class_balance.json",
+      "source_fixture": "data/mnist_small.npz",
+      "source_provenance": "data/mnist_small_provenance.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Methodology",
+    "width": "0.78\\textwidth"
+  },
+  "fig:mnist_error_examples": {
+    "caption": "First accepted-candidate error examples for exp-mlp-tanh-64, sourced from output/data/ml_error_examples.json and data/mnist_small.npz; these images support qualitative diagnosis only. Generation method: Deterministic grid of the first accepted-candidate misclassifications. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_007",
+    "filename": "mnist_error_examples.png",
+    "generated_by": "src.figures.write_mnist_error_examples_figure",
+    "label": "fig:mnist_error_examples",
+    "metadata": {
+      "alt_text": "Grid of accepted-candidate misclassified test examples with true and predicted labels.",
+      "claim_boundary": "Examples are qualitative diagnostics for this run, not an error taxonomy.",
+      "method": "Deterministic grid of the first accepted-candidate misclassifications.",
+      "source": "output/data/ml_error_examples.json",
+      "source_images": "data/mnist_small.npz",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.82\\textwidth"
+  },
+  "fig:mnist_subset_contact_sheet": {
+    "caption": "Deterministic class-balanced contact sheet for MNIST handwritten digit database from data/mnist_small.npz and data/mnist_small_provenance.json; the figure documents the local subset used by the offline run. Generation method: Class-balanced contact sheet from fixed local MNIST arrays. Registry metadata records the generation method, source artifact, and claim boundary for validation.",
+    "figure_id": "figure_021",
+    "filename": "mnist_subset_contact_sheet.png",
+    "generated_by": "src.figures.write_mnist_subset_contact_sheet_figure",
+    "label": "fig:mnist_subset_contact_sheet",
+    "metadata": {
+      "alt_text": "Two-row grid with one local handwritten digit example for each class zero through nine.",
+      "claim_boundary": "The sheet illustrates the local fixed subset and is not a statistical sample claim.",
+      "method": "Class-balanced contact sheet from fixed local MNIST arrays.",
+      "source": "data/mnist_small.npz",
+      "source_provenance": "data/mnist_small_provenance.json",
+      "validated_by": "Stage 04 output validation, figure registry validation, and AutoResearch readiness validation."
+    },
+    "placement": "h",
+    "section": "Methodology",
+    "width": "0.78\\textwidth"
+  }
+}

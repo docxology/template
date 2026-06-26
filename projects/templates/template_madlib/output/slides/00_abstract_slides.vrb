@@ -1,0 +1,22 @@
+\frametitle{Abstract}
+This exemplar asks whether a reviewable pipeline can hydrate a complete
+IMRAD manuscript from configuration-owned lexical data while preserving
+an audit trail that remains readable before and after rendering. The
+project deliberately keeps playful Mad Lib mechanics inside a serious
+reproducibility contract: the manuscript shell names large placeholders,
+the config declares allowable language, and the source code decides what
+text is emitted.
+
+The committed seed is \texttt{431} and the current schema expands 22
+slot rule(s) into 40 token choice(s) across 10 lexicon categories. The
+configured narrative moves are state the manuscript-generation problem,
+name the deterministic intervention, and summarize the audit surface.
+The central hypothesis is: Deterministic lexical injection can generate
+a complete conditional IMRAD manuscript while preserving token
+provenance, section intent, and audit-ready method evidence.
+
+The result is not a claim that lexical substitution creates scholarship.
+It is a worked template for conditional manuscript assembly: section
+enablement, token provenance, figure registration, and
+unresolved-placeholder checks all become inspectable artifacts before
+the shared renderer produces PDF, HTML, and slides.

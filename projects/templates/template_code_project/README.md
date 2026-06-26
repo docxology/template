@@ -2,21 +2,29 @@
 
 Research project demonstrating optimization algorithms with automated figure generation and publication-quality output. Exemplar roster: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
 
-## Run via the template monorepo
+## Publication and rendering
 
-This exemplar lives at `projects/templates/template_code_project/` in the public
-[docxology/template](https://github.com/docxology/template) repository.
-**Tests, analysis, PDF rendering, and CI all run through that monorepo** —
-clone it, run `uv sync` at the repository root, then:
+- Standalone GitHub: [docxology/template_code_project](https://github.com/docxology/template_code_project)
+- Latest GitHub release: [v2.5.2](https://github.com/docxology/template_code_project/releases/tag/v2.5.2)
+- Zenodo concept DOI: [10.5281/zenodo.20417136](https://doi.org/10.5281/zenodo.20417136)
+- Latest Zenodo version DOI: [10.5281/zenodo.20931934](https://doi.org/10.5281/zenodo.20931934) ([record](https://zenodo.org/records/20931934))
+- Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_code_project`
+- Tracked outputs: [`output/`](output/) in this project and `output/templates/template_code_project/` in the monorepo; public output files above 50 MB stay out of git.
+
+To regenerate this exemplar from the public monorepo:
 
 ```bash
+git clone https://github.com/docxology/template
+cd template
+uv sync
 ./run.sh --project templates/template_code_project --pipeline --core-only
-# or: uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only
+uv run python scripts/04_validate_output.py --project templates/template_code_project
+uv run python scripts/05_copy_outputs.py --project templates/template_code_project
 ```
 
-Several exemplars also publish standalone GitHub/Zenodo releases for citation;
-those mirrors are outputs of this pipeline. The monorepo remains the canonical
-build and render surface.
+Standalone repositories are publication mirrors for source, DOI metadata, and
+tracked rendered artifacts. Use the monorepo above when you need the full shared
+infrastructure, pipeline stages, or cross-template validation.
 
 ## When to use this template
 
@@ -40,7 +48,7 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 uv run pytest projects/templates/template_code_project/tests/ -v
 
 # View final deliverables (after scripts/05_copy_outputs.py)
-ls -la output/template_code_project/
+ls -la output/templates/template_code_project/
 ```
 
 ## Prerequisites & verification
@@ -65,7 +73,7 @@ npx --yes puppeteer browsers install chrome-headless-shell
 
 Without it the **PDF Rendering** stage fails while slides still render — see
 [`docs/troubleshooting.md`](docs/troubleshooting.md#pdf-rendering-fails-mmdc-could-not-find-chrome).
-Full end-to-end: `uv run python scripts/execute_pipeline.py --project template_code_project --core-only`.
+Full end-to-end: `uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only`.
 
 ## Dependencies
 

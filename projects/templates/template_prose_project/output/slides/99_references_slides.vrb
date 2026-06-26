@@ -1,0 +1,24 @@
+\frametitle{References}
+Bibliography lives in
+\href{references.bib}{\breaktt{manuscript/references.bib}} and is read by
+Pandoc during PDF render. The build pipeline invokes Pandoc with
+\texttt{-\/-natbib}, so every \texttt{\breakseq{[@key]}} citation in the
+manuscript is rewritten to the appropriate
+\texttt{\textbackslash{}cite\{\}}/\texttt{\textbackslash{}citep\{\}}/\texttt{\textbackslash{}citet\{\}}
+LaTeX command and resolved against the bib file.
+
+This project does not auto-generate the bibliography --- it
+\textbf{validates} that every \texttt{\breakseq{[@key]}} cited in the prose has
+a matching entry, via
+\href{../../../../infrastructure/reference/citation/SKILL.md}{\breaktt{infrastructure.reference.citation.parse\_bibfile}}.
+The check policy is configured under \texttt{bibliography:} in
+\href{config.yaml}{\texttt{config.yaml}}.
+
+To validate that \texttt{references.bib} is syntactically clean:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{uv}\NormalTok{ run python }\AttributeTok{{-}m}\NormalTok{ infrastructure.reference.citation.cli validate }\DataTypeTok{\textbackslash{}}
+\NormalTok{    projects/templates/template\_prose\_project/manuscript/references.bib }\AttributeTok{{-}{-}strict}
+\end{Highlighting}
+\end{Shaded}

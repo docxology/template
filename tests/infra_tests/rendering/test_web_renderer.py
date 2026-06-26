@@ -221,6 +221,16 @@ def _make_renderer(tmp_path):
     return WebRenderer(config)
 
 
+def test_pandoc_metadata_args_enable_linked_references(tmp_path: Path) -> None:
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    (manuscript_dir / "config.yaml").write_text("paper:\n  title: Test\n", encoding="utf-8")
+
+    args = WebRenderer._pandoc_metadata_args(manuscript_dir)
+
+    assert "--metadata=linkReferences:true" in args
+
+
 def test_individual_render_output_names_include_parent_context(tmp_path: Path) -> None:
     renderer = _make_renderer(tmp_path)
     source_a = tmp_path / "manuscript" / "parts" / "alpha" / "00-overview.md"

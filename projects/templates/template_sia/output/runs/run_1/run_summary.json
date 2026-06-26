@@ -1,0 +1,47 @@
+{
+  "run_id": 1,
+  "live": false,
+  "max_generations": 3,
+  "task_dir": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/tasks/mini_classify",
+  "generations": [
+    {
+      "generation": 1,
+      "gen_dir": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_1",
+      "target_agent": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_1/target_agent.py",
+      "agent_execution": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_1/agent_execution.json",
+      "improvement": "",
+      "results": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_1/results.json",
+      "evaluation": {
+        "metric_name": "accuracy",
+        "metric_value": 0.5,
+        "n_samples": 6
+      }
+    },
+    {
+      "generation": 2,
+      "gen_dir": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_2",
+      "target_agent": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_2/target_agent.py",
+      "agent_execution": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_2/agent_execution.json",
+      "improvement": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_2/improvement.md",
+      "results": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_2/results.json",
+      "evaluation": {
+        "metric_name": "accuracy",
+        "metric_value": 0.6667,
+        "n_samples": 6
+      }
+    },
+    {
+      "generation": 3,
+      "gen_dir": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_3",
+      "target_agent": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_3/target_agent.py",
+      "agent_execution": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_3/agent_execution.json",
+      "improvement": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_3/improvement.md",
+      "results": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/runs/run_1/gen_3/results.json",
+      "evaluation": {
+        "metric_name": "accuracy",
+        "metric_value": 0.8333,
+        "n_samples": 6
+      }
+    }
+  ]
+}

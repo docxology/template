@@ -29,4 +29,4 @@ uv run python scripts/01_generate_madlib_artifacts.py
 uv run python scripts/z_generate_manuscript_variables.py
 ```
 
-Keep DOI metadata tied to real deposited records. The canonical public exemplar is published at `https://github.com/docxology/template_madlib` with concept DOI `10.5281/zenodo.20786638` and version DOI `10.5281/zenodo.20786639`; forks should replace those identifiers only after minting their own records. Do not hand-edit generated Markdown, PDF, HTML, slides, figures, reports, or copied deliverables as if they were source; regenerate them through the equivalent Stage 02-05 pipeline.
+Keep DOI metadata tied to real deposited records. The canonical public exemplar is published at `https://github.com/docxology/template_madlib` with concept DOI `10.5281/zenodo.20786638` and version DOI `10.5281/zenodo.20932025`; forks should replace those identifiers only after minting their own records. Do not hand-edit generated Markdown, PDF, HTML, slides, figures, reports, or copied deliverables as if they were source; regenerate them through the equivalent Stage 02-05 pipeline.

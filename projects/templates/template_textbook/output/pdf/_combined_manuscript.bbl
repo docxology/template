@@ -1,0 +1,59 @@
+\begin{thebibliography}{10}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Brown(2017)]{brown2017principles}
+Casey Brown.
+\newblock \emph{First Principles: A Placeholder Reference}.
+\newblock Placeholder Press, 2017.
+
+\bibitem[Doe(2019)]{doe2019methods}
+Jordan Doe.
+\newblock Core methods: A placeholder reference.
+\newblock \emph{Journal of Placeholders}, 1:\penalty0 1--20, 2019.
+
+\bibitem[Garcia(2022)]{garcia2022dynamics}
+Robin Garcia.
+\newblock Dynamics and change: A placeholder reference.
+\newblock \emph{Journal of Placeholders}, 4:\penalty0 88--110, 2022.
+
+\bibitem[Kim(2020)]{kim2020data}
+Dana Kim.
+\newblock Working with data: A placeholder reference.
+\newblock \emph{Journal of Placeholders}, 2:\penalty0 200--225, 2020.
+
+\bibitem[Lee(2021)]{lee2021systems}
+Sam Lee.
+\newblock Systems thinking: A placeholder reference.
+\newblock \emph{Journal of Placeholders}, 3:\penalty0 44--67, 2021.
+
+\bibitem[Nguyen(2023)]{nguyen2023synthesis}
+Minh Nguyen.
+\newblock Synthesis across scales: A placeholder reference.
+\newblock \emph{Journal of Placeholders}, 5:\penalty0 12--34, 2023.
+
+\bibitem[Patel(2018)]{patel2018models}
+Riya Patel.
+\newblock \emph{Modelling Practice: A Placeholder Reference}.
+\newblock Placeholder Press, 2018.
+
+\bibitem[Smith(2020)]{smith2020foundations}
+Alex Smith.
+\newblock \emph{Foundations of the Field: A Placeholder Reference}.
+\newblock Placeholder Press, 2020.
+\newblock STUB entry — replace with a real source.
+
+\bibitem[Taylor(2019)]{taylor2019theory}
+Quinn Taylor.
+\newblock Toward a theory: A placeholder reference.
+\newblock \emph{Journal of Placeholders}, 1:\penalty0 300--330, 2019.
+
+\bibitem[Wilson(2021)]{wilson2021analysis}
+Drew Wilson.
+\newblock Methods of analysis: A placeholder reference.
+\newblock \emph{Journal of Placeholders}, 3:\penalty0 130--158, 2021.
+
+\end{thebibliography}

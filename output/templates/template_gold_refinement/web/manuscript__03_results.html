@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_results.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:results">Results: Purity Progression and Karat Grading</h1>
+<p>The refinery pipeline produces a monotonically increasing purity
+sequence across 5 stages, reaching final purity of 99.9999999%
+(nine-nines) (24K (nine-nines certified)).</p>
+<h2 id="purity-progression">Purity progression</h2>
+<figure id="fig:purity_progression">
+<img src="../figures/purity_progression.png"
+alt="Purity progression across refinery stages" />
+<figcaption aria-hidden="true">Purity progression across refinery
+stages</figcaption>
+</figure>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 15%" />
+<col style="width: 35%" />
+<col style="width: 17%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Name</th>
+<th>Output purity</th>
+<th>Karat</th>
+<th>Gain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>ore</td>
+<td>37.50%</td>
+<td>9K</td>
+<td>Extract raw gold-bearing ore from the earth</td>
+</tr>
+<tr>
+<td>2</td>
+<td>smelting</td>
+<td>75.00%</td>
+<td>18K</td>
+<td>Heat ore to separate gold from slag and dross</td>
+</tr>
+<tr>
+<td>3</td>
+<td>assaying</td>
+<td>91.67%</td>
+<td>22K</td>
+<td>Test a sample to determine gold content and impurities</td>
+</tr>
+<tr>
+<td>4</td>
+<td>cupellation</td>
+<td>99.900%</td>
+<td>24K</td>
+<td>Refine by blowing air through molten lead-gold alloy</td>
+</tr>
+<tr>
+<td>5</td>
+<td>certification</td>
+<td>99.9999999% (nine-nines)</td>
+<td>24K (nine-nines certified)</td>
+<td>Certify purity grade and stamp hallmark</td>
+</tr>
+</tbody>
+</table>
+<h2 id="karat-grading-scale">Karat grading scale</h2>
+<figure id="fig:karat_grading">
+<img src="../figures/karat_grading.png"
+alt="Gold karat grading scale with refinery stage markers" />
+<figcaption aria-hidden="true">Gold karat grading scale with refinery
+stage markers</figcaption>
+</figure>
+<h2 id="final-certification">Final certification</h2>
+<ul>
+<li><strong>Final purity:</strong> 99.9999999% (nine-nines)</li>
+<li><strong>Final karat:</strong> 24K (nine-nines certified)</li>
+<li><strong>Total purity gain:</strong> 90.00%</li>
+<li><strong>Nine-nines certified:</strong> Yes</li>
+<li><strong>Nines count:</strong> 9</li>
+</ul>
+<h2 id="token-plan-summary">Token plan summary</h2>
+<p>The mega-madlib engine generated 8 tokens from seed 431 across 4
+lexicon categories.</p>
+<figure id="fig:token_density">
+<img src="../figures/token_density.png"
+alt="Mega-madlib token distribution" />
+<figcaption aria-hidden="true">Mega-madlib token
+distribution</figcaption>
+</figure>
+<h3 id="category-distribution">Category distribution</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>manuscript_terms</td>
+<td>2</td>
+</tr>
+<tr>
+<td>metallurgical_terms</td>
+<td>3</td>
+</tr>
+<tr>
+<td>purity_adjectives</td>
+<td>2</td>
+</tr>
+<tr>
+<td>refinement_verbs</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-distribution">Section distribution</h3>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Token count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>discussion</td>
+<td>1</td>
+</tr>
+<tr>
+<td>methodology</td>
+<td>5</td>
+</tr>
+<tr>
+<td>results</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="provenance-trace">Provenance trace</h3>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 15%" />
+<col style="width: 20%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Category</th>
+<th>Value</th>
+<th>Section</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DISCUSSION_REFINEMENT_VERB</td>
+<td>refinement_verbs</td>
+<td>smelting</td>
+<td>discussion</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs[3]</td>
+</tr>
+<tr>
+<td>METHOD_MANUSCRIPT_TERM_1</td>
+<td>manuscript_terms</td>
+<td>evidence</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4]</td>
+</tr>
+<tr>
+<td>METHOD_MANUSCRIPT_TERM_2</td>
+<td>manuscript_terms</td>
+<td>evidence</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4]</td>
+</tr>
+<tr>
+<td>METHOD_METAL_TERM_1</td>
+<td>metallurgical_terms</td>
+<td>hallmark</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[4]</td>
+</tr>
+<tr>
+<td>METHOD_METAL_TERM_2</td>
+<td>metallurgical_terms</td>
+<td>cupellation</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[0]</td>
+</tr>
+<tr>
+<td>METHOD_METAL_TERM_3</td>
+<td>metallurgical_terms</td>
+<td>assaying</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1]</td>
+</tr>
+<tr>
+<td>RESULTS_PURITY_ADJ_1</td>
+<td>purity_adjectives</td>
+<td>unrefined</td>
+<td>results</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[0]</td>
+</tr>
+<tr>
+<td>RESULTS_PURITY_ADJ_2</td>
+<td>purity_adjectives</td>
+<td>purified</td>
+<td>results</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[1]</td>
+</tr>
+</tbody>
+</table>
+<p>Selected purity adjectives for this section: unrefined, purified.</p>
+<h2 id="provenance-flow">Provenance flow</h2>
+<figure id="fig:provenance_sankey">
+<img src="../figures/provenance_sankey.png"
+alt="Provenance flow diagram" />
+<figcaption aria-hidden="true">Provenance flow diagram</figcaption>
+</figure>
+<h2 id="purity-vs-claim-support">Purity vs claim support</h2>
+<figure id="fig:purity_claim_scatter">
+<img src="../figures/purity_claim_scatter.png"
+alt="Purity vs claim support" />
+<figcaption aria-hidden="true">Purity vs claim support</figcaption>
+</figure>
+<h2 id="token-selection-sensitivity">Token selection sensitivity</h2>
+<figure id="fig:token_heatmap">
+<img src="../figures/token_heatmap.png" alt="Token selection heatmap" />
+<figcaption aria-hidden="true">Token selection heatmap</figcaption>
+</figure>
+<h2 id="contribution-claims">Contribution claims</h2>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 28%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Statement</th>
+<th>Evidence</th>
+<th>Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Five-stage refinery</td>
+<td>The refinery pipeline has 5 canonical stages from ore to
+nine-nines.</td>
+<td>src/refinery.py::CANONICAL_STAGES</td>
+<td>local</td>
+</tr>
+<tr>
+<td>Monotone purity</td>
+<td>Purity increases strictly across all refinery stages.</td>
+<td>src/refinery.py::assert_monotone_increase</td>
+<td>local</td>
+</tr>
+<tr>
+<td>Nine-nines certification</td>
+<td>The certification stage achieves 99.9999999% purity.</td>
+<td>src/purity.py::NINE_NINES_PURITY</td>
+<td>local</td>
+</tr>
+<tr>
+<td>Deterministic tokens</td>
+<td>Token selection is deterministic via seeded SHA-256 digest.</td>
+<td>src/composition.py::_choose_value</td>
+<td>local</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

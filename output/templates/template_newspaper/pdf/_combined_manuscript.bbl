@@ -1,0 +1,29 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bringhurst(2013)]{bringhurst}
+Robert Bringhurst.
+\newblock \emph{The Elements of Typographic Style}.
+\newblock Hartley \& Marks, 4 edition, 2013.
+
+\bibitem[Garc{\'i}a(1987)]{garcia}
+Mario~R. Garc{\'i}a.
+\newblock \emph{Contemporary Newspaper Design}.
+\newblock Prentice Hall, 1987.
+
+\bibitem[{ReportLab Ltd.}(2024)]{reportlab}
+{ReportLab Ltd.}
+\newblock \emph{ReportLab PDF Library --- User Guide}, 2024.
+\newblock URL \url{https://www.reportlab.com/docs/reportlab-userguide.pdf}.
+
+\bibitem[Wong(2011)]{wong2011}
+Bang Wong.
+\newblock Points of view: Color blindness.
+\newblock \emph{Nature Methods}, 8\penalty0 (6):\penalty0 441, 2011.
+\newblock \doi{10.1038/nmeth.1618}.
+
+\end{thebibliography}

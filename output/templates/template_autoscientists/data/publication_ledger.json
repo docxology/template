@@ -1,0 +1,27 @@
+{
+  "releases": [
+    {
+      "doi": "10.5281/zenodo.20533669",
+      "dry_run": true,
+      "github_release_url": "https://github.com/docxology/template_autoscientists/releases/tag/v1.0.1",
+      "github_repo": "docxology/template_autoscientists",
+      "pairing_valid": true,
+      "pdf_sha256": "972bc4e0a82c97a88442ffc4370a17dd3323de96f27f91294dcb19dab3934a29",
+      "sandbox": true,
+      "tag": "v1.0.1",
+      "timestamp": "2026-06-14T19:50:32.771502+00:00"
+    },
+    {
+      "doi": "10.5281/zenodo.20931927",
+      "dry_run": false,
+      "github_release_url": "https://github.com/docxology/template_autoscientists/releases/tag/v1.0.2",
+      "github_repo": "docxology/template_autoscientists",
+      "pairing_valid": true,
+      "pdf_sha256": "0af391375b14eb397812a8050657e2980fbc3a768e6fb108aa2f7eff46773e16",
+      "sandbox": false,
+      "tag": "v1.0.2",
+      "timestamp": "2026-06-26T13:56:51.237053+00:00"
+    }
+  ],
+  "schema": "template-publication-ledger-v1"
+}

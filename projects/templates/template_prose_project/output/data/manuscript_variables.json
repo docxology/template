@@ -1,0 +1,13 @@
+{
+  "config_title": "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline",
+  "total_words": 1742,
+  "total_sentences": 86,
+  "total_paragraphs": 64,
+  "avg_grade_level": 15.93,
+  "avg_reading_ease": 19.46,
+  "avg_gunning_fog": 16.69,
+  "citation_count": 6,
+  "files_analysed": 8,
+  "longest_section_words": 413,
+  "shortest_section_words": 17
+}

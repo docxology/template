@@ -92,7 +92,7 @@ projects/templates/template_code_project/output/pdf/template_code_project_combin
 
 Promoted copy (used by CI for artifact upload):
 ```
-output/template_code_project/template_code_project_combined.pdf
+output/templates/template_code_project/template_code_project_combined.pdf
 ```
 
 ## Common pitfalls

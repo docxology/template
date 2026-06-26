@@ -1,0 +1,22 @@
+# Run Lessons
+
+- **pause_recommendation** [info] stage 0 (Evidence registry): pause recommended
+- **pause_recommendation** [info] stage 0 (Figure registry): pause recommended
+- **pause_recommendation** [info] stage 0 (Infrastructure Tests): pause recommended
+- **pause_recommendation** [info] stage 0 (PDF Rendering): pause recommended
+- **pause_recommendation** [info] stage 0 (Project Tests): pause recommended
+- **validation_defect** [warning] stage 0 (validation): Figure registry did not pass
+- **validation_defect** [warning] stage 0 (validation): Evidence registry did not pass
+- **validation_defect** [warning] stage 0 (validation): 03_results.md: unsupported number 0.00121
+- **validation_defect** [warning] stage 0 (validation): 03_results.md: unsupported number 0.01565
+- **validation_defect** [warning] stage 0 (validation): 03_results.md: unsupported number 13
+- **validation_defect** [warning] stage 0 (validation): 02_methodology.md: unsupported number 0.15
+- **validation_defect** [warning] stage 0 (validation): 04_experimental_setup.md: unsupported number 0.15
+- **validation_defect** [warning] stage 0 (validation): 04_experimental_setup.md: unsupported number 101
+- **validation_defect** [warning] stage 0 (validation): 04_experimental_setup.md: unsupported number 202
+- **validation_defect** [warning] stage 0 (validation): 04_experimental_setup.md: unsupported number 303
+- **validation_defect** [warning] stage 0 (validation): 04_experimental_setup.md: unsupported number 7
+- **validation_defect** [warning] stage 0 (validation): 06_scope_and_related_work.md: unsupported number 13
+- **slow_telemetry** [warning] stage 0 (Infrastructure Tests): Stage 'Infrastructure Tests' took 7.7s (2.0× the average 3.4s)
+- **slow_telemetry** [warning] stage 0 (Project Tests): Stage 'Project Tests' took 7.0s (2.0× the average 3.4s)
+- **slow_telemetry** [warning] stage 0 (PDF Rendering): Stage 'PDF Rendering' took 8.9s (2.0× the average 3.4s)

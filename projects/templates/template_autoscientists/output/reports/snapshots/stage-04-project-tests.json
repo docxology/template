@@ -1,0 +1,16 @@
+{
+  "artifact_manifest_hash": "a8db8a10aec36dc31e4dc6957e860164badf963f5d4acdbe9b6b235161403285",
+  "artifacts": {
+    "output/reports/test_results.json": "870cf2dee7f04d24c2e8984aa4bc251a818350beba84eda87f5be0499add5d32",
+    "output/reports/test_results.md": "46769d5dfe5c0cd2e3b74897a19a014167489ab5c0017212a9e7334272e39ac1"
+  },
+  "evidence_fact_count": 0,
+  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoscientists/output/reports/snapshots/stage-04-project-tests.json",
+  "stage_name": "Project Tests",
+  "stage_num": 4,
+  "timestamp": "2026-06-14T19:49:09+00:00",
+  "validation_summary": {
+    "checks": {},
+    "summary": {}
+  }
+}

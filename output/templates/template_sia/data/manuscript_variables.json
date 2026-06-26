@@ -1,0 +1,22 @@
+{
+  "CONFIG_TITLE": "Self-Improvement Agent Harness: A Deterministic SIA Exemplar",
+  "SIA_TASK_NAME": "mini_classify",
+  "SIA_RUN_ID": "1",
+  "SIA_MAX_GENERATIONS": "3",
+  "SIA_LIVE_MODE": "false",
+  "SIA_GENERATION_COUNT": "3",
+  "SIA_FINAL_METRIC_NAME": "accuracy",
+  "SIA_FINAL_METRIC_VALUE": "0.8333",
+  "SIA_FINAL_N_SAMPLES": "6",
+  "SIA_GEN1_METRIC_NAME": "accuracy",
+  "SIA_GEN1_METRIC_VALUE": "0.5000",
+  "SIA_GEN1_N_SAMPLES": "6",
+  "SIA_GEN2_METRIC_NAME": "accuracy",
+  "SIA_GEN2_METRIC_VALUE": "0.6667",
+  "SIA_GEN2_N_SAMPLES": "6",
+  "SIA_GEN3_METRIC_NAME": "accuracy",
+  "SIA_GEN3_METRIC_VALUE": "0.8333",
+  "SIA_GEN3_N_SAMPLES": "6",
+  "SIA_METRICS_TABLE": "| Gen | Metric | Value | N |\n| --- | --- | ---: | ---: |\n| 1 | accuracy | 0.5000 | 6 |\n| 2 | accuracy | 0.6667 | 6 |\n| 3 | accuracy | 0.8333 | 6 |",
+  "SIA_METRIC_DELTA": "0.3333"
+}

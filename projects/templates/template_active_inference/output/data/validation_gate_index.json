@@ -1,0 +1,403 @@
+{
+  "all_indexed": true,
+  "gate_count": 26,
+  "rows": [
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/reports/validation_report.json"
+      ],
+      "id": "validate_outputs",
+      "indexed": true,
+      "inputs": [
+        "output/data",
+        "output/reports"
+      ],
+      "negative_control_id": "stale_provenance_hash",
+      "required_inputs": [
+        "output/data",
+        "output/reports"
+      ]
+    },
+    {
+      "command": "uv run python scripts/compose_manuscript.py --validate-only --strict",
+      "declared_outputs": [
+        "output/data/sheaf_gluing_certificate.json"
+      ],
+      "id": "validate_manuscript",
+      "indexed": true,
+      "inputs": [
+        "manuscript/sheaf",
+        "output/manuscript"
+      ],
+      "negative_control_id": "stale_semantic_certificate",
+      "required_inputs": [
+        "manuscript/sheaf",
+        "output/manuscript"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/sheaf_gluing_certificate.json"
+      ],
+      "id": "semantic_sheaf_gluing",
+      "indexed": true,
+      "inputs": [
+        "output/data/sheaf_gluing_certificate.json"
+      ],
+      "negative_control_id": "stale_semantic_certificate",
+      "required_inputs": [
+        "output/data/sheaf_gluing_certificate.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/reports/claim_evidence_audit.json"
+      ],
+      "id": "typed_claim_evidence",
+      "indexed": true,
+      "inputs": [
+        "data/claim_ledger.yaml"
+      ],
+      "negative_control_id": "missing_typed_claim",
+      "required_inputs": [
+        "data/claim_ledger.yaml"
+      ]
+    },
+    {
+      "command": "uv run python scripts/compose_manuscript.py --validate-only --strict",
+      "declared_outputs": [
+        "output/reports/manuscript_staleness_report.json"
+      ],
+      "id": "manuscript_staleness_report",
+      "indexed": true,
+      "inputs": [
+        "output/manuscript",
+        "output/data/manuscript_variables.json"
+      ],
+      "negative_control_id": "stale_hydrated_manuscript_value",
+      "required_inputs": [
+        "output/manuscript",
+        "output/data/manuscript_variables.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/animation_frame_deltas.json"
+      ],
+      "id": "animation_frame_deltas",
+      "indexed": true,
+      "inputs": [
+        "output/figures/si_belief_trajectory.gif"
+      ],
+      "negative_control_id": "static_animation_delta_manifest",
+      "required_inputs": [
+        "output/figures/si_belief_trajectory.gif"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/reports/pymdp_runtime_diagnostics.json"
+      ],
+      "id": "pymdp_runtime_diagnostics",
+      "indexed": true,
+      "inputs": [
+        "output/reports/pymdp_runtime_diagnostics.json"
+      ],
+      "negative_control_id": "unexpected_pymdp_runtime_warning",
+      "required_inputs": [
+        "output/reports/pymdp_runtime_diagnostics.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/pymdp_policy_posterior_grid.json"
+      ],
+      "id": "pymdp_policy_posterior_grid",
+      "indexed": true,
+      "inputs": [
+        "output/data/pymdp_policy_posterior_grid.json"
+      ],
+      "negative_control_id": "unnormalized_policy_posterior",
+      "required_inputs": [
+        "output/data/pymdp_policy_posterior_grid.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/analytical_assumption_index.json"
+      ],
+      "id": "analytical_assumption_index",
+      "indexed": true,
+      "inputs": [
+        "output/data/analytical_assumption_index.json"
+      ],
+      "negative_control_id": "missing_analytical_assumption",
+      "required_inputs": [
+        "output/data/analytical_assumption_index.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/track_improvement_scope.json"
+      ],
+      "id": "canonical_sheaf_tracks",
+      "indexed": true,
+      "inputs": [
+        "output/data/track_improvement_scope.json"
+      ],
+      "negative_control_id": "missing_sheaf_track_producer",
+      "required_inputs": [
+        "output/data/track_improvement_scope.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/reports/release_bundle_manifest.json"
+      ],
+      "id": "release_bundle_manifest",
+      "indexed": true,
+      "inputs": [
+        "output/reports/release_bundle_manifest.json"
+      ],
+      "negative_control_id": "release_bundle_parity_failure",
+      "required_inputs": [
+        "output/reports/release_bundle_manifest.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/evidence_field_index.json"
+      ],
+      "id": "evidence_field_index",
+      "indexed": true,
+      "inputs": [
+        "output/data/evidence_field_index.json"
+      ],
+      "negative_control_id": "missing_typed_claim",
+      "required_inputs": [
+        "output/data/evidence_field_index.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/theorem_traceability_matrix.json"
+      ],
+      "id": "theorem_traceability_matrix",
+      "indexed": true,
+      "inputs": [
+        "output/data/theorem_traceability_matrix.json"
+      ],
+      "negative_control_id": "theorem_traceability_unlinked",
+      "required_inputs": [
+        "output/data/theorem_traceability_matrix.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/reports/artifact_diffoscope.json"
+      ],
+      "id": "artifact_diffoscope",
+      "indexed": true,
+      "inputs": [
+        "output/reports/artifact_diffoscope.json"
+      ],
+      "negative_control_id": "artifact_diffoscope_missed_hash_drift",
+      "required_inputs": [
+        "output/reports/artifact_diffoscope.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/proof_extraction_index.json"
+      ],
+      "id": "proof_extraction_index",
+      "indexed": true,
+      "inputs": [
+        "output/data/proof_extraction_index.json"
+      ],
+      "negative_control_id": "proof_extraction_missing_statement",
+      "required_inputs": [
+        "output/data/proof_extraction_index.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/state_space_catalog.json"
+      ],
+      "id": "state_space_catalog",
+      "indexed": true,
+      "inputs": [
+        "output/data/state_space_catalog.json"
+      ],
+      "negative_control_id": "state_space_catalog_missing_finite_space",
+      "required_inputs": [
+        "output/data/state_space_catalog.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/causal_ablation_matrix.json"
+      ],
+      "id": "causal_ablation_matrix",
+      "indexed": true,
+      "inputs": [
+        "output/data/causal_ablation_matrix.json"
+      ],
+      "negative_control_id": "causal_ablation_missing_cell",
+      "required_inputs": [
+        "output/data/causal_ablation_matrix.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/reports/artifact_license_audit.json"
+      ],
+      "id": "artifact_license_audit",
+      "indexed": true,
+      "inputs": [
+        "output/reports/artifact_license_audit.json"
+      ],
+      "negative_control_id": "artifact_license_unsafe_artifact",
+      "required_inputs": [
+        "output/reports/artifact_license_audit.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/reports/release_notes_evidence.json"
+      ],
+      "id": "release_notes_evidence",
+      "indexed": true,
+      "inputs": [
+        "output/reports/release_notes_evidence.json"
+      ],
+      "negative_control_id": "release_notes_claim_failed_gate_passed",
+      "required_inputs": [
+        "output/reports/release_notes_evidence.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/proof_dependency_graph.json"
+      ],
+      "id": "proof_dependency_graph",
+      "indexed": true,
+      "inputs": [
+        "output/data/proof_dependency_graph.json"
+      ],
+      "negative_control_id": "proof_dependency_unlinked_theorem",
+      "required_inputs": [
+        "output/data/proof_dependency_graph.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/state_transition_table.json"
+      ],
+      "id": "state_transition_table",
+      "indexed": true,
+      "inputs": [
+        "output/data/state_transition_table.json"
+      ],
+      "negative_control_id": "state_transition_missing_model",
+      "required_inputs": [
+        "output/data/state_transition_table.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/reports/ablation_sensitivity_report.json"
+      ],
+      "id": "ablation_sensitivity_report",
+      "indexed": true,
+      "inputs": [
+        "output/reports/ablation_sensitivity_report.json"
+      ],
+      "negative_control_id": "ablation_sensitivity_unbacked_effect",
+      "required_inputs": [
+        "output/reports/ablation_sensitivity_report.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/reports/release_attestation.json"
+      ],
+      "id": "release_attestation",
+      "indexed": true,
+      "inputs": [
+        "output/reports/release_attestation.json"
+      ],
+      "negative_control_id": "release_attestation_failed_gate",
+      "required_inputs": [
+        "output/reports/release_attestation.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/data/track_improvement_scope.json"
+      ],
+      "id": "track_improvement_scope",
+      "indexed": true,
+      "inputs": [
+        "output/data/track_improvement_scope.json"
+      ],
+      "negative_control_id": "missing_sheaf_track_producer",
+      "required_inputs": [
+        "output/data/track_improvement_scope.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/validate_outputs.py",
+      "declared_outputs": [
+        "output/reports/blocked_scope_manifest.json"
+      ],
+      "id": "blocked_scope_manifest",
+      "indexed": true,
+      "inputs": [
+        "output/reports/blocked_scope_manifest.json"
+      ],
+      "negative_control_id": "empirical_adapter_live",
+      "required_inputs": [
+        "output/reports/blocked_scope_manifest.json"
+      ]
+    },
+    {
+      "command": "uv run python scripts/generate_formal_interop_tracks.py",
+      "declared_outputs": [
+        "output/reports/lean_theorem_inventory.json"
+      ],
+      "id": "lake_build",
+      "indexed": true,
+      "inputs": [
+        "lean/lakefile.lean"
+      ],
+      "negative_control_id": "lean_forbidden_token",
+      "required_inputs": [
+        "lean/lakefile.lean"
+      ]
+    }
+  ],
+  "schema": "template_active_inference.validation_gate_index.v1"
+}

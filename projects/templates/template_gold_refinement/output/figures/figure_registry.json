@@ -1,0 +1,40 @@
+{
+  "figures": [
+    {
+      "name": "purity_progression",
+      "path": "purity_progression.png",
+      "caption": "Purity progression across the five refinery stages from ore (9K) to nine-nines certification.",
+      "label": "fig:purity_progression"
+    },
+    {
+      "name": "karat_grading",
+      "path": "karat_grading.png",
+      "caption": "Gold karat grading scale (9K–24K + nine-nines) with refinery stage markers.",
+      "label": "fig:karat_grading"
+    },
+    {
+      "name": "token_density",
+      "path": "token_density.png",
+      "caption": "Mega-madlib token distribution across manuscript sections and lexicon categories.",
+      "label": "fig:token_density"
+    },
+    {
+      "name": "provenance_sankey",
+      "path": "provenance_sankey.png",
+      "caption": "Provenance trace: ore → stages → certification purity flow.",
+      "label": "fig:provenance_sankey"
+    },
+    {
+      "name": "purity_claim_scatter",
+      "path": "purity_claim_scatter.png",
+      "caption": "Purity vs claim support rate scatter plot.",
+      "label": "fig:purity_claim_scatter"
+    },
+    {
+      "name": "token_heatmap",
+      "path": "token_heatmap.png",
+      "caption": "Token selection heatmap: seed × category → selected index.",
+      "label": "fig:token_heatmap"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-06-26T13:21:26+00:00",
+  "task_count": 2,
+  "tasks": [
+    {
+      "description": "Confirm the deterministic AutoResearch loop emits graded readiness artifacts.",
+      "grading_output_path": "output/reports/benchmark_readiness_smoke.json",
+      "id": "readiness-smoke",
+      "score": 1.0,
+      "status": "graded"
+    },
+    {
+      "description": "Grade bounded ML-loop metric improvement, budget compliance, and offline execution.",
+      "grading_output_path": "output/reports/ml_benchmark_score.json",
+      "id": "ml-loop-score",
+      "score": 1.0,
+      "status": "graded"
+    }
+  ]
+}

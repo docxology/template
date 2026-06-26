@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-06-14T19:49:51+00:00",
+  "recommendations": [
+    {
+      "evidence": [
+        "validation_failed: Evidence registry",
+        "evidence_error: 03_results.md: unsupported number 85%",
+        "evidence_error: 02_methodology.md: unsupported number 90%"
+      ],
+      "reason_codes": [
+        "validation_failed",
+        "evidence_error"
+      ],
+      "score": 2.0,
+      "stage_name": "Evidence registry",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-06-14T19:49:51+00:00"
+    },
+    {
+      "evidence": [
+        "validation_failed: Figure registry"
+      ],
+      "reason_codes": [
+        "validation_failed"
+      ],
+      "score": 1.0,
+      "stage_name": "Figure registry",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-06-14T19:49:51+00:00"
+    },
+    {
+      "evidence": [
+        "slow_telemetry: Stage 'PDF Rendering' took 8.0s (2.0\u00d7 the average 3.8s)"
+      ],
+      "reason_codes": [
+        "slow_telemetry"
+      ],
+      "score": 1.0,
+      "stage_name": "PDF Rendering",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-06-14T19:49:51+00:00"
+    },
+    {
+      "evidence": [
+        "slow_telemetry: Stage 'Project Tests' took 11.5s (2.0\u00d7 the average 3.8s)"
+      ],
+      "reason_codes": [
+        "slow_telemetry"
+      ],
+      "score": 1.0,
+      "stage_name": "Project Tests",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-06-14T19:49:51+00:00"
+    }
+  ]
+}

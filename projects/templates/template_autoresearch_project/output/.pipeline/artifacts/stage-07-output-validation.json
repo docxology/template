@@ -1,0 +1,41 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/reports/autoresearch_readiness.json",
+      "sha256": "6f7bfe8906d59a2c55336b26d556b2434b9d077c4aed4099327df0e471cce87f",
+      "size_bytes": 18508,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-14T19:18:53+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/autoresearch_readiness.md",
+      "sha256": "0deee52eb6c4e6144ffb4f572080cfd0fea11b4853144dc4d8f0494fd2c7a579",
+      "size_bytes": 510,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-14T19:18:53+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/validation_report.json",
+      "sha256": "9fd449313454fd0d35fe4db1380df73fd5e2d348348fddd6886709916ab395aa",
+      "size_bytes": 5054,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-14T19:18:53+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/validation_report.md",
+      "sha256": "2203a8b867a4405d486942db78f64afceedce5e247906e9516c28664a064a08f",
+      "size_bytes": 332,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-14T19:18:53+00:00"
+    }
+  ],
+  "issues": []
+}

@@ -1,0 +1,44 @@
+{
+  "generated_at": "2026-06-14T19:18:54+00:00",
+  "recommendations": [
+    {
+      "evidence": [
+        "validation_failed: Artifact manifest"
+      ],
+      "reason_codes": [
+        "validation_failed"
+      ],
+      "score": 1.0,
+      "stage_name": "Artifact manifest",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-06-14T19:18:54+00:00"
+    },
+    {
+      "evidence": [
+        "slow_telemetry: Stage 'PDF Rendering' took 38.7s (2.0\u00d7 the average 16.7s)"
+      ],
+      "reason_codes": [
+        "slow_telemetry"
+      ],
+      "score": 1.0,
+      "stage_name": "PDF Rendering",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-06-14T19:18:54+00:00"
+    },
+    {
+      "evidence": [
+        "slow_telemetry: Stage 'Project Tests' took 69.9s (2.0\u00d7 the average 16.7s)"
+      ],
+      "reason_codes": [
+        "slow_telemetry"
+      ],
+      "score": 1.0,
+      "stage_name": "Project Tests",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-06-14T19:18:54+00:00"
+    }
+  ]
+}

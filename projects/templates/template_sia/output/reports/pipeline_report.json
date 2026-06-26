@@ -1,0 +1,342 @@
+{
+  "timestamp": "2026-06-14T12:49:51.326326",
+  "total_duration": 30.51934242248535,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.010154008865356445,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 1.3078200817108154,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Infrastructure Tests",
+      "exit_code": 0,
+      "duration": 7.552203178405762,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 11.520396947860718,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 1.0542151927947998,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 8.035770893096924,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 0.5612771511077881,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.4775049686431885,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 10,
+        "size_mb": "0.15",
+        "total_size_bytes": 159269,
+        "largest_files": [
+          {
+            "name": "template_sia_combined.pdf",
+            "size_mb": "0.08",
+            "path": "pdf/template_sia_combined.pdf"
+          },
+          {
+            "name": "_combined_manuscript.log",
+            "size_mb": "0.05",
+            "path": "pdf/_combined_manuscript.log"
+          },
+          {
+            "name": "_combined_manuscript.tex",
+            "size_mb": "0.01",
+            "path": "pdf/_combined_manuscript.tex"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".log": 2,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".pdf": 1,
+          ".tex": 1,
+          ".toc": 1,
+          ".bbl": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 8,
+        "size_mb": "0.04",
+        "total_size_bytes": 46890,
+        "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.01",
+            "path": "web/index.html"
+          },
+          {
+            "name": "manuscript__02_methodology.html",
+            "size_mb": "0.01",
+            "path": "web/manuscript__02_methodology.html"
+          },
+          {
+            "name": "manuscript__03_results.html",
+            "size_mb": "0.00",
+            "path": "web/manuscript__03_results.html"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".html": 7
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 2,
+        "size_mb": "0.03",
+        "total_size_bytes": 36584,
+        "largest_files": [
+          {
+            "name": "sia_metric_progression.png",
+            "size_mb": "0.03",
+            "path": "figures/sia_metric_progression.png"
+          },
+          {
+            "name": "sia_loop_topology.png",
+            "size_mb": "0.01",
+            "path": "figures/sia_loop_topology.png"
+          }
+        ],
+        "extensions": {
+          ".png": 2
+        }
+      },
+      "data": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 859,
+        "largest_files": [
+          {
+            "name": "manuscript_variables.json",
+            "size_mb": "0.00",
+            "path": "data/manuscript_variables.json"
+          }
+        ],
+        "extensions": {
+          ".json": 1
+        }
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 24,
+        "size_mb": "0.09",
+        "total_size_bytes": 94643,
+        "largest_files": [
+          {
+            "name": "evidence_registry.json",
+            "size_mb": "0.03",
+            "path": "reports/evidence_registry.json"
+          },
+          {
+            "name": "artifact_manifest.json",
+            "size_mb": "0.01",
+            "path": "reports/artifact_manifest.json"
+          },
+          {
+            "name": "stage-08-copy-outputs.json",
+            "size_mb": "0.01",
+            "path": "reports/snapshots/stage-08-copy-outputs.json"
+          }
+        ],
+        "extensions": {
+          ".md": 5,
+          ".json": 16,
+          ".jsonl": 1,
+          ".txt": 2
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 152,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 46,
+    "total_size_mb": 0.3227205276489258,
+    "largest_files": [
+      {
+        "name": "template_sia_combined.pdf",
+        "size_mb": "0.08",
+        "category": "pdf",
+        "path": "pdf/template_sia_combined.pdf"
+      },
+      {
+        "name": "_combined_manuscript.log",
+        "size_mb": "0.05",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.log"
+      },
+      {
+        "name": "sia_metric_progression.png",
+        "size_mb": "0.03",
+        "category": "figures",
+        "path": "figures/sia_metric_progression.png"
+      },
+      {
+        "name": "evidence_registry.json",
+        "size_mb": "0.03",
+        "category": "reports",
+        "path": "reports/evidence_registry.json"
+      },
+      {
+        "name": "_combined_manuscript.tex",
+        "size_mb": "0.01",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.tex"
+      },
+      {
+        "name": "index.html",
+        "size_mb": "0.01",
+        "category": "web",
+        "path": "web/index.html"
+      },
+      {
+        "name": "manuscript__02_methodology.html",
+        "size_mb": "0.01",
+        "category": "web",
+        "path": "web/manuscript__02_methodology.html"
+      },
+      {
+        "name": "sia_loop_topology.png",
+        "size_mb": "0.01",
+        "category": "figures",
+        "path": "figures/sia_loop_topology.png"
+      },
+      {
+        "name": "artifact_manifest.json",
+        "size_mb": "0.01",
+        "category": "reports",
+        "path": "reports/artifact_manifest.json"
+      },
+      {
+        "name": "stage-08-copy-outputs.json",
+        "size_mb": "0.01",
+        "category": "reports",
+        "path": "reports/snapshots/stage-08-copy-outputs.json"
+      }
+    ],
+    "missing_expected_files": [],
+    "sizes_by_category": {
+      "pdf": 0.15189075469970703,
+      "web": 0.04471778869628906,
+      "slides": 0.0,
+      "figures": 0.03488922119140625,
+      "data": 0.0008192062377929688,
+      "reports": 0.09025859832763672,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.00014495849609375
+    },
+    "file_counts_by_type": {
+      ".md": 7,
+      ".log": 3,
+      ".aux": 1,
+      ".blg": 1,
+      ".bib": 1,
+      ".pdf": 1,
+      ".tex": 1,
+      ".toc": 1,
+      ".bbl": 1,
+      ".html": 7,
+      ".png": 2,
+      ".json": 17,
+      ".jsonl": 1,
+      ".txt": 2
+    },
+    "log_file": {
+      "exists": true,
+      "size": 152,
+      "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/logs/pipeline.log"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "artifact_manifest_hash": "e90c71ba2566a351281e282a20723f565a713f850a9c2e126ca46e56f7dbf7d1",
+  "artifacts": {
+    "output/data/render_report.json": "7a5d2ff9818a2af7af04a7876498b6979a45023028fede01677923a8830e000a",
+    "output/figures/ad_bakery.png": "103f53809650ea5530a64f6f1abc7a204347701273f832ab662d5951f9150208",
+    "output/figures/ad_festival.png": "6188b6b81033426ecf225abf2c34b73641a73877276592ee6b64816ba7486d47",
+    "output/figures/ad_grocery.png": "199008cc0e705eae0dad6f80aa0b631727f7efc8a2e5d40073843729d25d2723",
+    "output/figures/ad_realty.png": "6dcc962e5fa190330c6d5b7cd62dbe6c2af80ad82d63da27cd7b73027d4bc0ea",
+    "output/figures/baseball.png": "f43a62644a1cf993ebaaa59c670e7131ef7f57fff57774290a74a5e3d1d7c4f6",
+    "output/figures/crab_boat.png": "859c4f037e55bedb7c964bef4052306f6edf061af73b6d839c48a76ff627a566",
+    "output/figures/crab_landings.png": "557546816226c16f5c021821f6ce586b4db9569c0c20d21fa235f9441992283c",
+    "output/figures/harbor.png": "6f5ffd4c1f16f2255a55089fa4f1b5ad7b97b49b25b623a92b0056b1d35a9357",
+    "output/figures/lighthouse.png": "a3762074afa5ec060a98a5a5b9561f2852ed58554bd7ffd29626f7c428a1c3fd",
+    "output/figures/lily_fields.png": "9a760e939a28fe01583506dbd0366b51c98fdb01f05e7d3d478a170bce266f20",
+    "output/figures/redwoods.png": "690e45200bd3851262550b6770903808b6a0a842478308a62512d39184898198",
+    "output/figures/tides.png": "d7c019f42a2f148e0ce0b6b095b6e813f6e1a98b4a9d1c8d40b96d67a552481d",
+    "output/figures/weather_7day.png": "8d57499dd2d8c04829879b81f93b8db271e6eaaf02cc7a19135b9a2d7cfdcb58",
+    "output/pdf/the-triplicate.pdf": "c312f5dbe3eab6ef2fa246e3e553994fdb8e1e4d090196137817ff2dc2404079",
+    "output/reports/render_summary.txt": "a3d12c1b70aa4996109e44ef4c5a20d188493e1210426ab92583aa90fc37c5c4",
+    "output/reports/test_results.json": "3646a4ed3c18d08777d773312851af6adc6475f081cb4fe82289903921efee2b",
+    "output/reports/test_results.md": "3493fbf3e6569b6562e14f01a6c2df878d6a48e6d966184b2d33bfc388034316"
+  },
+  "evidence_fact_count": 0,
+  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_newspaper/output/reports/snapshots/stage-05-project-analysis.json",
+  "stage_name": "Project Analysis",
+  "stage_num": 5,
+  "timestamp": "2026-06-14T19:20:14+00:00",
+  "validation_summary": {
+    "checks": {},
+    "summary": {}
+  }
+}

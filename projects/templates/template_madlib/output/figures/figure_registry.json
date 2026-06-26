@@ -1,0 +1,65 @@
+{
+  "fig:configured-field-matrix": {
+    "caption": "Configured field origins by schema scope",
+    "filename": "configured_field_matrix.png",
+    "generated_by": "scripts/01_generate_madlib_artifacts.py",
+    "label": "fig:configured-field-matrix",
+    "section": "Configuration"
+  },
+  "fig:field-origin-summary": {
+    "caption": "Explicit versus defaulted configured fields",
+    "filename": "field_origin_summary.png",
+    "generated_by": "scripts/01_generate_madlib_artifacts.py",
+    "label": "fig:field-origin-summary",
+    "section": "Configuration"
+  },
+  "fig:madlib-cover-overview": {
+    "caption": "Configuration-to-manuscript audit overview for the Madlib exemplar",
+    "filename": "madlib_cover_overview.png",
+    "generated_by": "scripts/01_generate_madlib_artifacts.py",
+    "label": "fig:madlib-cover-overview",
+    "section": "Cover"
+  },
+  "fig:provenance-trace-map": {
+    "caption": "Token provenance by section and lexicon category",
+    "filename": "provenance_trace_map.png",
+    "generated_by": "scripts/01_generate_madlib_artifacts.py",
+    "label": "fig:provenance-trace-map",
+    "section": "Results"
+  },
+  "fig:quality-gate-matrix": {
+    "caption": "Quality gates, probes, and failure-boundary coverage",
+    "filename": "quality_gate_matrix.png",
+    "generated_by": "scripts/01_generate_madlib_artifacts.py",
+    "label": "fig:quality-gate-matrix",
+    "section": "Evaluation"
+  },
+  "fig:section-configuration-heatmap": {
+    "caption": "Section-level configured field coverage",
+    "filename": "section_configuration_heatmap.png",
+    "generated_by": "scripts/01_generate_madlib_artifacts.py",
+    "label": "fig:section-configuration-heatmap",
+    "section": "Configuration"
+  },
+  "fig:section-token-allocation": {
+    "caption": "Section-level token allocation and enablement",
+    "filename": "section_token_allocation.png",
+    "generated_by": "scripts/01_generate_madlib_artifacts.py",
+    "label": "fig:section-token-allocation",
+    "section": "Results"
+  },
+  "fig:token-density": {
+    "caption": "Token choices by lexicon category",
+    "filename": "token_density.png",
+    "generated_by": "scripts/01_generate_madlib_artifacts.py",
+    "label": "fig:token-density",
+    "section": "Results"
+  },
+  "fig:token-injection-flow": {
+    "caption": "Deterministic token-injection pipeline from config to rendered outputs",
+    "filename": "token_injection_flow.png",
+    "generated_by": "scripts/01_generate_madlib_artifacts.py",
+    "label": "fig:token-injection-flow",
+    "section": "Methods"
+  }
+}

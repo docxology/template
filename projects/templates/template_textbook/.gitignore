@@ -1,6 +1,3 @@
-# Disposable outputs (regeneratable from scripts + config)
-output/
-
 # Python virtual environment
 .venv/
 

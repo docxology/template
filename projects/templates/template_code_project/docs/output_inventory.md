@@ -3,9 +3,8 @@
 > Every file in `output/` is **disposable but regeneratable**. This document
 > is the contract between the pipeline and the manuscript: it inventories
 > what the pipeline produces, which generator emits it, and which stage it
-> lands in. It lives under `docs/` (not project `output/`) because
-> `projects/*/output/` is gitignored; the inventory itself, though, is
-> documentation of the producer/consumer graph that future agents and
+> lands in. It lives under `docs/` rather than project `output/` because it is
+> source documentation for the producer/consumer graph that future agents and
 > forkers need.
 
 Paths in the table are relative to `projects/templates/template_code_project/`.
@@ -35,7 +34,7 @@ Paths in the table are relative to `projects/templates/template_code_project/`.
 | `output/pdf/_combined_manuscript.{tex,aux,log}` | LaTeX intermediates | `xelatex` via Pandoc | 5 — Render PDF |
 | `output/logs/*.log` | Per-stage pipeline logs | `scripts/execute_pipeline.py` | every stage |
 
-The repo-level `output/template_code_project/` (written by `scripts/05_copy_outputs.py` at stage 9) is the **public-facing deliverables tree** consumed by CI artifact upload and the multi-project executive report.
+The repo-level `output/templates/template_code_project/` (written by `scripts/05_copy_outputs.py` at stage 9) is the **public-facing deliverables tree** consumed by CI artifact upload and the multi-project executive report.
 
 ## Adding a New Output File
 
@@ -45,7 +44,7 @@ The repo-level `output/template_code_project/` (written by `scripts/05_copy_outp
    - **Reports** → `src/dashboard.py` or `infrastructure.reporting.*`
 2. Append a row to the table above naming the file, role, generator, and pipeline stage.
 3. If the new artifact is consumed by the manuscript, add a `{{TOKEN}}` to `src/manuscript_variables.py::generate_variables()` and reference it in the appropriate `manuscript/*.md` section.
-4. Re-run the pipeline (`./run.sh --pipeline` or `uv run python scripts/execute_pipeline.py --project template_code_project --core-only`) and confirm the new file appears.
+4. Re-run the pipeline (`./run.sh --pipeline --project templates/template_code_project --core-only` or `uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only`) and confirm the new file appears.
 
 ## Regeneration Sequence
 
@@ -62,16 +61,16 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
 
 # 4. Render PDF (produces pdf/, slides/, web/)
-uv run python scripts/03_render_pdf.py --project template_code_project
+uv run python scripts/03_render_pdf.py --project templates/template_code_project
 
 # 5. Copy final deliverables to repo-level output/ (stage 9)
-uv run python scripts/05_copy_outputs.py --project template_code_project
+uv run python scripts/05_copy_outputs.py --project templates/template_code_project
 ```
 
 Or, equivalently, the full pipeline:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only
 ```
 
 ## See Also

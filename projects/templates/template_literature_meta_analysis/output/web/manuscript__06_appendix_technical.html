@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>06_appendix_technical.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="appendix-b-technical-notes">Appendix B: Technical Notes</h1>
+<h2 id="determinism">Determinism</h2>
+<p>All stochastic steps use fixed seeds (seed = 42 for NMF, SVD, and
+graph layouts). The fixture corpus, TF-IDF/SVD embeddings, and topic
+factorization are byte-stable across runs. Graph centrality scores are
+rounded to a fixed precision and ranked with a node-id tiebreaker so
+that floating-point non-associativity in iterative solvers cannot
+perturb the reported rankings. Record identity uses a content digest
+(SHA-1, <code>usedforsecurity=False</code>) rather than a salted hash,
+so de-duplication and corpus byte-stability hold across processes.</p>
+<h2 id="data-model">Data Model</h2>
+<p>Each record is a <code>Paper</code> dataclass with: title, abstract,
+authors (list of <code>Author</code>), year, DOI, arXiv ID, Semantic
+Scholar ID, OpenAlex ID, venue, citation count, references (list of
+canonical IDs), publication date, PDF URL, open-access flag, and
+full-text source. The canonical identifier hierarchy governs
+de-duplication and citation resolution:</p>
+<p><span class="math display">\[
+\text{canonical\_id} = \begin{cases}
+\texttt{doi:} + \text{normalize}(\text{DOI}) &amp; \text{if DOI present}
+\\
+\texttt{arxiv:} + \text{arXiv\_id} &amp; \text{if arXiv ID present} \\
+\texttt{s2:} + \text{S2\_id} &amp; \text{if S2 ID present} \\
+\texttt{openalex:} + \text{OpenAlex\_id} &amp; \text{if OpenAlex ID
+present} \\
+\texttt{title:} + \text{SHA1}(\text{title})[:16] &amp; \text{otherwise}
+\end{cases}
+\]</span></p>
+<p>DOI normalization lower-cases the DOI and strips any
+<code>https://doi.org/</code> or <code>dx.doi.org/</code> prefix, so the
+same paper returned by two engines under different case or format
+variants merges to a single canonical ID.</p>
+<h2 id="nmf-mathematics">NMF Mathematics</h2>
+<p>Non-negative matrix factorization decomposes the TF-IDF document-term
+matrix <span class="math inline">\(\mathbf{V} \in \mathbb{R}^{m \times
+n}\)</span> (where <span class="math inline">\(m\)</span> is the number
+of documents and <span class="math inline">\(n\)</span> is the
+vocabulary size) into <span class="math inline">\(\mathbf{W} \in
+\mathbb{R}^{m \times k}\)</span> and <span
+class="math inline">\(\mathbf{H} \in \mathbb{R}^{k \times n}\)</span>,
+where <span class="math inline">\(k\)</span> is the number of topics
+(here 5). The factorization minimizes:</p>
+<p><span class="math display">\[
+\min_{\mathbf{W}, \mathbf{H} \geq 0} \|\mathbf{V} - \mathbf{W}
+\mathbf{H}\|_F^2
+\]</span></p>
+<p>using multiplicative update rules [lee1999learning] with a fixed
+random seed for reproducibility. The topic-term matrix <span
+class="math inline">\(\mathbf{H}\)</span> gives the top terms per topic;
+the document-topic matrix <span
+class="math inline">\(\mathbf{W}\)</span> gives each document’s topic
+loadings.</p>
+<h2 id="growth-rate-estimation">Growth Rate Estimation</h2>
+<p>The compound annual growth rate is:</p>
+<p><span class="math display">\[
+\text{CAGR} =
+\left(\frac{N_{\text{end}}}{N_{\text{start}}}\right)^{1/(T_{\text{end}}
+- T_{\text{start}})} - 1
+\]</span></p>
+<p>where <span class="math inline">\(N_{\text{start}}\)</span> and <span
+class="math inline">\(N_{\text{end}}\)</span> are the publication counts
+in the first and last years of the corpus, respectively. The doubling
+time is <span class="math inline">\(t_d = \ln(2) / \ln(1 +
+\text{CAGR})\)</span>. For this run: CAGR = 3.45%, doubling time = 11.3
+years.</p>
+<h2 id="configuration-surface">Configuration Surface</h2>
+<p>A single <code>manuscript/config.yaml</code> controls the search
+term, per-engine query and keyword sets, engine enable toggles, subfield
+taxonomy, hypotheses, full-text and embedding options, and paper
+metadata. This run drew on 7 engines, a 6-bucket taxonomy, and 6
+hypotheses.</p>
+<h2 id="artifacts">Artifacts</h2>
+<p>Intermediate and final outputs live under <code>output/</code> and
+are disposable and regenerable:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>File</th>
+<th>Stage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>corpus.jsonl</code></td>
+<td>01</td>
+<td>De-duplicated corpus (2302 records)</td>
+</tr>
+<tr>
+<td><code>temporal_analysis.json</code></td>
+<td>02</td>
+<td>Year counts, CAGR, doubling time, peak year</td>
+</tr>
+<tr>
+<td><code>subfield_classification.json</code></td>
+<td>02</td>
+<td>Per-bucket paper counts</td>
+</tr>
+<tr>
+<td><code>subfield_timeline.json</code></td>
+<td>02</td>
+<td>Per-subfield annual breakdown</td>
+</tr>
+<tr>
+<td><code>tfidf_data.json</code></td>
+<td>02</td>
+<td>TF-IDF matrix, feature names, doc tokens</td>
+</tr>
+<tr>
+<td><code>topics.json</code></td>
+<td>02</td>
+<td>NMF topic-term distributions</td>
+</tr>
+<tr>
+<td><code>citation_network.json</code></td>
+<td>02</td>
+<td>Network metrics, PageRank, HITS, communities</td>
+</tr>
+<tr>
+<td><code>citation_graph.gml</code></td>
+<td>02</td>
+<td>GraphML citation graph</td>
+</tr>
+<tr>
+<td><code>nanopublications.jsonl</code></td>
+<td>03</td>
+<td>LLM-extracted assertions (0 in this run)</td>
+</tr>
+<tr>
+<td><code>hypothesis_scores.json</code></td>
+<td>03</td>
+<td>Per-hypothesis evidence scores</td>
+</tr>
+<tr>
+<td><code>fulltext_assessment.json</code></td>
+<td>06</td>
+<td>Abstract/OA/PDF coverage report</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

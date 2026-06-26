@@ -1,0 +1,86 @@
+{
+  "generated_at": "2026-06-14T19:26:37+00:00",
+  "recommendations": [
+    {
+      "evidence": [
+        "validation_failed: Evidence registry",
+        "evidence_error: 00_abstract.md: unsupported number 36%",
+        "evidence_error: 00_abstract.md: unsupported number 24%",
+        "evidence_error: 00_abstract.md: unsupported number 1.4",
+        "evidence_error: 00_abstract.md: unsupported number 90%",
+        "evidence_error: 00_abstract.md: unsupported number 60%",
+        "evidence_error: 00_abstract.md: unsupported number 2.0",
+        "evidence_error: 02_introduction.md: unsupported number 1.2",
+        "evidence_error: 03a_architecture.md: unsupported number 02",
+        "evidence_error: 03e_quality.md: unsupported number 90%",
+        "evidence_error: 03e_quality.md: unsupported number 60%",
+        "evidence_error: 04_results.md: unsupported number 40",
+        "evidence_error: 04_results.md: unsupported number 90%",
+        "evidence_error: 04_results.md: unsupported number 35",
+        "evidence_error: 04_results.md: unsupported number 30",
+        "evidence_error: 04_results.md: unsupported number 02",
+        "evidence_error: 04_results.md: unsupported number 60",
+        "evidence_error: 04_results.md: unsupported number 80",
+        "evidence_error: 04_results.md: unsupported number 0.3",
+        "evidence_error: 04_results.md: unsupported number 0.8",
+        "evidence_error: 04_results.md: unsupported number 0.4",
+        "evidence_error: 04_results.md: unsupported number 1.5",
+        "evidence_error: 04_results.md: unsupported number 25",
+        "evidence_error: 04_results.md: unsupported number 0.9",
+        "evidence_error: 04_results.md: unsupported number 1.6",
+        "evidence_error: 08d_appendix_exemplars.md: unsupported number 02",
+        "evidence_error: 08d_appendix_exemplars.md: unsupported number 90%",
+        "evidence_error: 08e_appendix_docs.md: unsupported number 90",
+        "evidence_error: 08f_appendix_matrix.md: unsupported number 25",
+        "evidence_error: 08f_appendix_matrix.md: unsupported number 1.2",
+        "evidence_error: 02_introduction.md: unsupported number 1576",
+        "evidence_error: 02_introduction.md: unsupported number 70%",
+        "evidence_error: 02_introduction.md: unsupported number 28",
+        "evidence_error: 02_introduction.md: unsupported number 1.4",
+        "evidence_error: 02_introduction.md: unsupported number 24%",
+        "evidence_error: 02_introduction.md: unsupported number 36%",
+        "evidence_error: 02_introduction.md: unsupported number 60%",
+        "evidence_error: 02_introduction.md: unsupported number 90",
+        "evidence_error: 03b_pipeline.md: unsupported number 60",
+        "evidence_error: 03b_pipeline.md: unsupported number 90",
+        "evidence_error: 03b_pipeline.md: unsupported number 02",
+        "evidence_error: 03c_documentation.md: unsupported number 90",
+        "evidence_error: 03e_quality.md: unsupported number 01",
+        "evidence_error: 03e_quality.md: unsupported number 150",
+        "evidence_error: 03e_quality.md: unsupported number 300",
+        "evidence_error: 05b_scalability.md: unsupported number 90%",
+        "evidence_error: 05b_scalability.md: unsupported number 02",
+        "evidence_error: 05c_comparison.md: unsupported number 90%",
+        "evidence_error: 05c_comparison.md: unsupported number 24",
+        "evidence_error: 05d_ai_collaboration.md: unsupported number 53%",
+        "evidence_error: 05d_ai_collaboration.md: unsupported number 50",
+        "evidence_error: 05d_ai_collaboration.md: unsupported number 170",
+        "evidence_error: 05d_ai_collaboration.md: unsupported number 7",
+        "evidence_error: 06_infrastructure_modules.md: unsupported number 01",
+        "evidence_error: 07_security_provenance.md: unsupported number 8601"
+      ],
+      "reason_codes": [
+        "validation_failed",
+        "evidence_error"
+      ],
+      "score": 2.0,
+      "stage_name": "Evidence registry",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-06-14T19:26:37+00:00"
+    },
+    {
+      "evidence": [
+        "slow_telemetry: Stage 'PDF Rendering' took 116.7s (2.0\u00d7 the average 23.1s)"
+      ],
+      "reason_codes": [
+        "slow_telemetry"
+      ],
+      "score": 1.0,
+      "stage_name": "PDF Rendering",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-06-14T19:26:37+00:00"
+    }
+  ]
+}

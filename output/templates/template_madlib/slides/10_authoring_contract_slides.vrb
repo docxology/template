@@ -1,0 +1,43 @@
+\frametitle{Authoring Obligations}
+\protect\phantomsection\label{authoring-obligations}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Obligation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Required action
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Review surface
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Review generated claims & Inspect hydrated manuscript bodies before
+copied outputs are treated as reader-ready. &
+\breaktt{output/manuscript\ and\ output/web} \\
+Review config diffs & Treat lexicon, slot, title, move, and
+section-switch edits as source-data changes. &
+\breaktt{manuscript/config.yaml} \\
+Extend claim evidence & Update the claim ledger when generated prose
+adds a new claim boundary. & \breaktt{data/claim\_ledger.yaml} \\
+Add domain validators & Add tests and validation artifacts before using
+the template for domain-specific claims. &
+\breaktt{tests\ and\ output/reports} \\
+Rerun the full project path & Regenerate analysis artifacts, render
+outputs, validate outputs, and copy deliverables. &
+\breaktt{pipeline\ command\ logs} \\
+Review method invariants & Confirm changed tokens are explained only by
+seed, slot, category, ordinal, or category inventory changes. &
+\breaktt{src/tokens.py,\ token\_inventory.json,\ and\ output/manuscript/02\_methodology.md} \\
+Assemble reviewer packet & Provide hydrated manuscript, rendered
+outputs, figures, data, reports, validation report, and output
+statistics together. & \breaktt{output/templates/template\_madlib} \\
+Write fork migration notes & Document config, source, test, validator,
+and claim-ledger changes required by a domain fork. &
+\breaktt{README.md,\ STANDALONE.md,\ and\ data/claim\_ledger.yaml} \\
+\bottomrule\noalign{}
+\end{longtable}
+}

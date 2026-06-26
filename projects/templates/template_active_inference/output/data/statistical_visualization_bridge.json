@@ -1,0 +1,442 @@
+{
+  "all_complete": true,
+  "all_figures_referenced": true,
+  "all_reference_sections_sheaf_bound": true,
+  "all_reference_sections_visualization_bound": true,
+  "all_rows_complete": true,
+  "all_rows_connected": true,
+  "all_scholarship_rows_connected": true,
+  "all_sheaf_tracks_registered": true,
+  "all_statistical_sources_present": true,
+  "manuscript_sections": [
+    "appendix_full_sheaf",
+    "methods_sheaf",
+    "results_si_tmaze"
+  ],
+  "row_count": 7,
+  "rows": [
+    {
+      "complete": true,
+      "connected": true,
+      "figure_id": "causal_ablation_heatmap",
+      "figure_path": "output/figures/causal_ablation_heatmap.png",
+      "figure_reference_sections": [
+        "appendix_full_sheaf"
+      ],
+      "manuscript_sections": [
+        "appendix_full_sheaf",
+        "methods_sheaf",
+        "results_si_tmaze"
+      ],
+      "reference_sections_sheaf_bound": true,
+      "reference_sections_visualization_bound": true,
+      "reference_track_bindings": {
+        "appendix_full_sheaf": [
+          "adversarial_audit",
+          "animation",
+          "animation_delta",
+          "artifact_diffoscope",
+          "artifact_license",
+          "assumption_index",
+          "benchmark",
+          "causal_ablation",
+          "counterexample",
+          "evidence_fields",
+          "formalism",
+          "gate_ergonomics",
+          "gnn",
+          "interop",
+          "lean",
+          "manuscript_staleness",
+          "model_checking",
+          "ontology",
+          "proof_extraction",
+          "prose",
+          "provenance",
+          "pymdp",
+          "release_bundle",
+          "release_notes",
+          "replay_matrix",
+          "scholarship",
+          "security_posture",
+          "sensitivity",
+          "simulation",
+          "state_space_catalog",
+          "theorem_traceability",
+          "uncertainty",
+          "visualization"
+        ]
+      },
+      "referenced_in_manuscript": true,
+      "scholarship_method_roles": [
+        "statistical_visualization_bridge",
+        "visualization_quality_audit"
+      ],
+      "scholarship_rows_connected": true,
+      "sheaf_tracks": [
+        "scholarship",
+        "simulation",
+        "visualization"
+      ],
+      "sheaf_tracks_registered": true,
+      "statistical_source_count": 2,
+      "statistical_sources": [
+        "output/data/causal_ablation_matrix.json",
+        "output/reports/ablation_sensitivity_report.json"
+      ],
+      "statistical_sources_present": true,
+      "visualization_audit": "output/reports/visualization_quality_audit.json"
+    },
+    {
+      "complete": true,
+      "connected": true,
+      "figure_id": "invariant_dashboard",
+      "figure_path": "output/figures/invariant_dashboard.png",
+      "figure_reference_sections": [
+        "results_invariants"
+      ],
+      "manuscript_sections": [
+        "appendix_full_sheaf",
+        "methods_sheaf",
+        "results_si_tmaze"
+      ],
+      "reference_sections_sheaf_bound": true,
+      "reference_sections_visualization_bound": true,
+      "reference_track_bindings": {
+        "results_invariants": [
+          "benchmark",
+          "causal_ablation",
+          "prose",
+          "replay_matrix",
+          "sensitivity",
+          "simulation",
+          "state_space_catalog",
+          "uncertainty",
+          "visualization"
+        ]
+      },
+      "referenced_in_manuscript": true,
+      "scholarship_method_roles": [
+        "statistical_visualization_bridge",
+        "visualization_quality_audit"
+      ],
+      "scholarship_rows_connected": true,
+      "sheaf_tracks": [
+        "scholarship",
+        "simulation",
+        "visualization"
+      ],
+      "sheaf_tracks_registered": true,
+      "statistical_source_count": 1,
+      "statistical_sources": [
+        "output/reports/invariants.json"
+      ],
+      "statistical_sources_present": true,
+      "visualization_audit": "output/reports/visualization_quality_audit.json"
+    },
+    {
+      "complete": true,
+      "connected": true,
+      "figure_id": "ising_mi_curve",
+      "figure_path": "output/figures/ising_mi_curve.png",
+      "figure_reference_sections": [
+        "appendix_full_sheaf",
+        "methods_analytical",
+        "results_mi_sweep"
+      ],
+      "manuscript_sections": [
+        "appendix_full_sheaf",
+        "methods_sheaf",
+        "results_si_tmaze"
+      ],
+      "reference_sections_sheaf_bound": true,
+      "reference_sections_visualization_bound": true,
+      "reference_track_bindings": {
+        "appendix_full_sheaf": [
+          "adversarial_audit",
+          "animation",
+          "animation_delta",
+          "artifact_diffoscope",
+          "artifact_license",
+          "assumption_index",
+          "benchmark",
+          "causal_ablation",
+          "counterexample",
+          "evidence_fields",
+          "formalism",
+          "gate_ergonomics",
+          "gnn",
+          "interop",
+          "lean",
+          "manuscript_staleness",
+          "model_checking",
+          "ontology",
+          "proof_extraction",
+          "prose",
+          "provenance",
+          "pymdp",
+          "release_bundle",
+          "release_notes",
+          "replay_matrix",
+          "scholarship",
+          "security_posture",
+          "sensitivity",
+          "simulation",
+          "state_space_catalog",
+          "theorem_traceability",
+          "uncertainty",
+          "visualization"
+        ],
+        "methods_analytical": [
+          "assumption_index",
+          "formalism",
+          "gnn",
+          "ontology",
+          "prose",
+          "simulation",
+          "visualization"
+        ],
+        "results_mi_sweep": [
+          "formalism",
+          "prose",
+          "simulation",
+          "visualization"
+        ]
+      },
+      "referenced_in_manuscript": true,
+      "scholarship_method_roles": [
+        "statistical_visualization_bridge",
+        "visualization_quality_audit"
+      ],
+      "scholarship_rows_connected": true,
+      "sheaf_tracks": [
+        "scholarship",
+        "simulation",
+        "visualization"
+      ],
+      "sheaf_tracks_registered": true,
+      "statistical_source_count": 1,
+      "statistical_sources": [
+        "output/data/parameter_sweep.csv"
+      ],
+      "statistical_sources_present": true,
+      "visualization_audit": "output/reports/visualization_quality_audit.json"
+    },
+    {
+      "complete": true,
+      "connected": true,
+      "figure_id": "si_belief_entropy_curve",
+      "figure_path": "output/figures/si_belief_entropy_curve.png",
+      "figure_reference_sections": [
+        "results_si_tmaze"
+      ],
+      "manuscript_sections": [
+        "appendix_full_sheaf",
+        "methods_sheaf",
+        "results_si_tmaze"
+      ],
+      "reference_sections_sheaf_bound": true,
+      "reference_sections_visualization_bound": true,
+      "reference_track_bindings": {
+        "results_si_tmaze": [
+          "prose",
+          "pymdp",
+          "visualization"
+        ]
+      },
+      "referenced_in_manuscript": true,
+      "scholarship_method_roles": [
+        "statistical_visualization_bridge",
+        "visualization_quality_audit"
+      ],
+      "scholarship_rows_connected": true,
+      "sheaf_tracks": [
+        "scholarship",
+        "simulation",
+        "visualization"
+      ],
+      "sheaf_tracks_registered": true,
+      "statistical_source_count": 1,
+      "statistical_sources": [
+        "output/data/si_tmaze_trace.json"
+      ],
+      "statistical_sources_present": true,
+      "visualization_audit": "output/reports/visualization_quality_audit.json"
+    },
+    {
+      "complete": true,
+      "connected": true,
+      "figure_id": "si_obs_action_trace",
+      "figure_path": "output/figures/si_obs_action_trace.png",
+      "figure_reference_sections": [
+        "results_si_tmaze"
+      ],
+      "manuscript_sections": [
+        "appendix_full_sheaf",
+        "methods_sheaf",
+        "results_si_tmaze"
+      ],
+      "reference_sections_sheaf_bound": true,
+      "reference_sections_visualization_bound": true,
+      "reference_track_bindings": {
+        "results_si_tmaze": [
+          "prose",
+          "pymdp",
+          "visualization"
+        ]
+      },
+      "referenced_in_manuscript": true,
+      "scholarship_method_roles": [
+        "statistical_visualization_bridge",
+        "visualization_quality_audit"
+      ],
+      "scholarship_rows_connected": true,
+      "sheaf_tracks": [
+        "scholarship",
+        "simulation",
+        "visualization"
+      ],
+      "sheaf_tracks_registered": true,
+      "statistical_source_count": 1,
+      "statistical_sources": [
+        "output/data/si_tmaze_summary.json"
+      ],
+      "statistical_sources_present": true,
+      "visualization_audit": "output/reports/visualization_quality_audit.json"
+    },
+    {
+      "complete": true,
+      "connected": true,
+      "figure_id": "si_tmaze_actions",
+      "figure_path": "output/figures/si_tmaze_actions.png",
+      "figure_reference_sections": [
+        "appendix_full_sheaf",
+        "results_si_tmaze"
+      ],
+      "manuscript_sections": [
+        "appendix_full_sheaf",
+        "methods_sheaf",
+        "results_si_tmaze"
+      ],
+      "reference_sections_sheaf_bound": true,
+      "reference_sections_visualization_bound": true,
+      "reference_track_bindings": {
+        "appendix_full_sheaf": [
+          "adversarial_audit",
+          "animation",
+          "animation_delta",
+          "artifact_diffoscope",
+          "artifact_license",
+          "assumption_index",
+          "benchmark",
+          "causal_ablation",
+          "counterexample",
+          "evidence_fields",
+          "formalism",
+          "gate_ergonomics",
+          "gnn",
+          "interop",
+          "lean",
+          "manuscript_staleness",
+          "model_checking",
+          "ontology",
+          "proof_extraction",
+          "prose",
+          "provenance",
+          "pymdp",
+          "release_bundle",
+          "release_notes",
+          "replay_matrix",
+          "scholarship",
+          "security_posture",
+          "sensitivity",
+          "simulation",
+          "state_space_catalog",
+          "theorem_traceability",
+          "uncertainty",
+          "visualization"
+        ],
+        "results_si_tmaze": [
+          "prose",
+          "pymdp",
+          "visualization"
+        ]
+      },
+      "referenced_in_manuscript": true,
+      "scholarship_method_roles": [
+        "statistical_visualization_bridge",
+        "visualization_quality_audit"
+      ],
+      "scholarship_rows_connected": true,
+      "sheaf_tracks": [
+        "scholarship",
+        "simulation",
+        "visualization"
+      ],
+      "sheaf_tracks_registered": true,
+      "statistical_source_count": 1,
+      "statistical_sources": [
+        "output/data/si_tmaze_summary.json"
+      ],
+      "statistical_sources_present": true,
+      "visualization_audit": "output/reports/visualization_quality_audit.json"
+    },
+    {
+      "complete": true,
+      "connected": true,
+      "figure_id": "tmaze_schematic",
+      "figure_path": "output/figures/tmaze_schematic.png",
+      "figure_reference_sections": [
+        "methods_pymdp"
+      ],
+      "manuscript_sections": [
+        "appendix_full_sheaf",
+        "methods_sheaf",
+        "results_si_tmaze"
+      ],
+      "reference_sections_sheaf_bound": true,
+      "reference_sections_visualization_bound": true,
+      "reference_track_bindings": {
+        "methods_pymdp": [
+          "formalism",
+          "gnn",
+          "interop",
+          "ontology",
+          "prose",
+          "pymdp",
+          "visualization"
+        ]
+      },
+      "referenced_in_manuscript": true,
+      "scholarship_method_roles": [
+        "statistical_visualization_bridge",
+        "visualization_quality_audit"
+      ],
+      "scholarship_rows_connected": true,
+      "sheaf_tracks": [
+        "scholarship",
+        "simulation",
+        "visualization"
+      ],
+      "sheaf_tracks_registered": true,
+      "statistical_source_count": 2,
+      "statistical_sources": [
+        "output/reports/pymdp_runtime_diagnostics.json",
+        "output/data/pymdp_policy_posterior_grid.json"
+      ],
+      "statistical_sources_present": true,
+      "visualization_audit": "output/reports/visualization_quality_audit.json"
+    }
+  ],
+  "schema": "template_active_inference.statistical_visualization_bridge.v1",
+  "scholarship_method_roles": [
+    "statistical_visualization_bridge",
+    "visualization_quality_audit"
+  ],
+  "sheaf_tracks": [
+    "scholarship",
+    "simulation",
+    "visualization"
+  ],
+  "statistical_source_count": 9
+}

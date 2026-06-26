@@ -1,0 +1,186 @@
+{
+  "timestamp": "2026-06-26T07:09:56.461619",
+  "checks": {
+    "PDF validation": true,
+    "Transmission bookends": true,
+    "Markdown validation": true,
+    "Output structure": true,
+    "Figure registry": true,
+    "Evidence registry": true,
+    "Project design overlays": true,
+    "Artifact manifest": true
+  },
+  "figure_issues": [],
+  "output_statistics": {
+    "detailed_validation": {
+      "structure": {
+        "valid": true,
+        "issues": [
+          "Missing directory: slides/"
+        ],
+        "missing_files": [],
+        "suspicious_sizes": [],
+        "warnings": [],
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "size_mb": 3.91,
+            "readable": true
+          },
+          "pdf": {
+            "exists": true,
+            "files": 10,
+            "size_mb": 4.44,
+            "readable": true,
+            "optional": false
+          },
+          "web": {
+            "exists": true,
+            "files": 18,
+            "size_mb": 0.56,
+            "readable": true,
+            "optional": false
+          },
+          "slides": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": false
+          },
+          "figures": {
+            "exists": true,
+            "files": 27,
+            "size_mb": 3.79,
+            "readable": true,
+            "optional": false
+          },
+          "data": {
+            "exists": true,
+            "files": 48,
+            "size_mb": 2.79,
+            "readable": true,
+            "optional": false
+          },
+          "reports": {
+            "exists": true,
+            "files": 35,
+            "size_mb": 0.46,
+            "readable": true,
+            "optional": false
+          },
+          "simulations": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          },
+          "llm": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          },
+          "logs": {
+            "exists": true,
+            "files": 1,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          }
+        }
+      },
+      "directories": {
+        "pdf": {
+          "exists": true,
+          "file_count": 10,
+          "size_mb": "4.44",
+          "largest_file": "template_active_inference_combined.pdf"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 18,
+          "size_mb": "0.56",
+          "largest_file": "index.html"
+        },
+        "slides": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "figures": {
+          "exists": true,
+          "file_count": 27,
+          "size_mb": "3.79",
+          "largest_file": "sheaf_layers_overview.png"
+        },
+        "data": {
+          "exists": true,
+          "file_count": 48,
+          "size_mb": "2.79",
+          "largest_file": "sheaf_section_status_matrix.json"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 35,
+          "size_mb": "0.46",
+          "largest_file": "evidence_registry.json"
+        },
+        "simulations": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "llm": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "logs": {
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "pymdp_runs.jsonl"
+        }
+      },
+      "file_counts": {
+        "pdf": 10,
+        "web": 18,
+        "figures": 27,
+        "data": 48,
+        "reports": 35,
+        "logs": 1
+      },
+      "total_size_mb": 12.03107738494873,
+      "issues_by_severity": {
+        "critical": [],
+        "warning": [
+          "Directory 'slides/' missing or empty",
+          "Directory 'simulations/' missing or empty",
+          "Directory 'llm/' missing or empty"
+        ],
+        "info": []
+      },
+      "recommendations": []
+    },
+    "pdf": {
+      "files": 10,
+      "size_mb": 4.44167423248291
+    },
+    "figures": {
+      "files": 27,
+      "size_mb": 3.785637855529785
+    },
+    "data": {
+      "files": 48,
+      "size_mb": 2.789571762084961
+    }
+  },
+  "summary": {
+    "total_checks": 8,
+    "passed": 8,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
+  },
+  "recommendations": []
+}

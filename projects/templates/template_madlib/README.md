@@ -4,15 +4,29 @@
 
 `manuscript/config.yaml` owns the `madlib:` schema: seed, lexicon, slots, section switches, section titles, narrative moves, method protocol, design principles, operational phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and contribution claims. The Python package expands that schema into token choices, configured-field origin inventories, evidence tables, reports, a figure registry, nine generated figure artifacts (the cover overview plus eight interior manuscript figures), and a hydrated IMRAD manuscript under `output/manuscript/`. The current method protocol is intentionally broad: it covers schema ingestion, review-scenario declaration, field-origin tracking, lexicon governance, digest construction, invariant review, slot expansion, section-condition handling, body composition, evidence-table assembly, claim-ledger alignment, figure registry generation, manuscript hydration, render validation, review-packet assembly, copy validation, and fork-migration documentation.
 
-## Run via the template monorepo
+## Publication and rendering
+
+- Standalone GitHub: [docxology/template_madlib](https://github.com/docxology/template_madlib)
+- Latest GitHub release: [v0.1.1](https://github.com/docxology/template_madlib/releases/tag/v0.1.1)
+- Zenodo concept DOI: [10.5281/zenodo.20786638](https://doi.org/10.5281/zenodo.20786638)
+- Latest Zenodo version DOI: [10.5281/zenodo.20932025](https://doi.org/10.5281/zenodo.20932025) ([record](https://zenodo.org/records/20932025))
+- Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_madlib`
+- Tracked outputs: [`output/`](output/) in this project and `output/templates/template_madlib/` in the monorepo; public output files above 50 MB stay out of git.
+
+To regenerate this exemplar from the public monorepo:
 
 ```bash
-uv run pytest projects/templates/template_madlib/tests/ --cov=projects/templates/template_madlib/src --cov-fail-under=90
-uv run python scripts/02_run_analysis.py --project templates/template_madlib
-uv run python scripts/03_render_pdf.py --project templates/template_madlib
+git clone https://github.com/docxology/template
+cd template
+uv sync
+./run.sh --project templates/template_madlib --pipeline --core-only
 uv run python scripts/04_validate_output.py --project templates/template_madlib
 uv run python scripts/05_copy_outputs.py --project templates/template_madlib
 ```
+
+Standalone repositories are publication mirrors for source, DOI metadata, and
+tracked rendered artifacts. Use the monorepo above when you need the full shared
+infrastructure, pipeline stages, or cross-template validation.
 
 ## When to use this template
 
@@ -81,7 +95,6 @@ Stage 03 renders PDF, HTML, and slides from the hydrated manuscript. Stage 04 ve
 
 ## Boundaries
 
-Publication metadata now identifies the standalone public repository and Zenodo deposit for this exemplar: repository [`docxology/template_madlib`](https://github.com/docxology/template_madlib), concept DOI [`10.5281/zenodo.20786638`](https://doi.org/10.5281/zenodo.20786638), and latest version DOI [`10.5281/zenodo.20786639`](https://doi.org/10.5281/zenodo.20786639). The publication claim is still narrow: it covers the source-owned token-injection exemplar, local evidence artifacts, and reproducible render outputs. It does not claim empirical validation, natural-language quality benchmarking, or domain truth.
 
 ## Template integrity
 

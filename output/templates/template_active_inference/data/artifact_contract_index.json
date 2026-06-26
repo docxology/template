@@ -1,0 +1,3176 @@
+{
+  "all_artifact_rows_match_semantic_map": true,
+  "all_claim_required_rows_bound": true,
+  "all_copied_parity_complete": true,
+  "all_freshness_hashes_current": true,
+  "all_negative_controls_bound": true,
+  "all_rows_complete": true,
+  "all_validators_bound": true,
+  "artifact_ids": [
+    "output/data/analysis_statistics.json",
+    "output/data/analytical_assumption_index.json",
+    "output/data/analytical_observable_sweep.json",
+    "output/data/animation_frame_deltas.json",
+    "output/data/artifact_contract_index.json",
+    "output/data/artifact_provenance.json",
+    "output/data/causal_ablation_matrix.json",
+    "output/data/cross_track_symbol_table.json",
+    "output/data/evidence_field_index.json",
+    "output/data/figure_source_map.json",
+    "output/data/gnn_roundtrip_report.json",
+    "output/data/interop_roundtrip_report.json",
+    "output/data/manuscript_evidence_tables.json",
+    "output/data/manuscript_token_provenance.json",
+    "output/data/manuscript_variables.json",
+    "output/data/ontology_alias_index.json",
+    "output/data/ontology_profile_matrix.json",
+    "output/data/parameter_sweep.csv",
+    "output/data/proof_dependency_graph.json",
+    "output/data/proof_extraction_index.json",
+    "output/data/pymdp_policy_posterior_grid.json",
+    "output/data/scholarship_source_matrix.json",
+    "output/data/sensitivity_sweep.json",
+    "output/data/sheaf_coverage_matrix.json",
+    "output/data/sheaf_evidence_crosswalk.json",
+    "output/data/sheaf_gluing_certificate.json",
+    "output/data/sheaf_section_status_matrix.json",
+    "output/data/si_efe_terms.json",
+    "output/data/si_graph_world_summary.json",
+    "output/data/si_graph_world_topology_sweep.json",
+    "output/data/si_graph_world_topology_traces.json",
+    "output/data/si_graph_world_trace.json",
+    "output/data/si_policy_comparison.json",
+    "output/data/si_policy_grid.json",
+    "output/data/si_tmaze_summary.json",
+    "output/data/si_tmaze_trace.json",
+    "output/data/state_space_catalog.json",
+    "output/data/state_transition_table.json",
+    "output/data/statistical_visualization_bridge.json",
+    "output/data/theorem_traceability_matrix.json",
+    "output/data/toy_benchmark_matrix.json",
+    "output/data/track_improvement_scope.json",
+    "output/data/track_lane_matrix.json",
+    "output/data/uncertainty_summary.json",
+    "output/data/validation_dependency_graph.json",
+    "output/data/validation_gate_index.json",
+    "output/figures/artifact_contract_map.png",
+    "output/figures/causal_ablation_heatmap.png",
+    "output/figures/figure_registry.json",
+    "output/figures/scholarship_source_map.png",
+    "output/figures/security_posture_map.png",
+    "output/figures/semantic_gluing_graph.png",
+    "output/figures/sheaf_coverage_heatmap.png",
+    "output/figures/sheaf_layers_overview.png",
+    "output/figures/si_belief_trajectory.gif",
+    "output/figures/theorem_traceability_graph.png",
+    "output/reports/ablation_sensitivity_report.json",
+    "output/reports/adversarial_audit.json",
+    "output/reports/artifact_diffoscope.json",
+    "output/reports/artifact_license_audit.json",
+    "output/reports/blocked_scope_manifest.json",
+    "output/reports/claim_evidence_audit.json",
+    "output/reports/counterexample_matrix.json",
+    "output/reports/figure_hash_manifest.json",
+    "output/reports/gnn_lint_report.json",
+    "output/reports/graph_world_invariants.json",
+    "output/reports/invariants.json",
+    "output/reports/lean_graph_world_inventory.json",
+    "output/reports/lean_theorem_inventory.json",
+    "output/reports/manuscript_staleness_report.json",
+    "output/reports/model_checking_witnesses.json",
+    "output/reports/producer_completeness.json",
+    "output/reports/pymdp_runtime_diagnostics.json",
+    "output/reports/release_attestation.json",
+    "output/reports/release_bundle_manifest.json",
+    "output/reports/release_notes_evidence.json",
+    "output/reports/replay_matrix.json",
+    "output/reports/reproducibility_replay.json",
+    "output/reports/scope_boundary_audit.json",
+    "output/reports/security_posture_audit.json",
+    "output/reports/sheaf_render_log.json",
+    "output/reports/si_invariants.json",
+    "output/reports/si_tmaze_run_report.json",
+    "output/reports/stale_artifact_report.json",
+    "output/reports/visualization_quality_audit.json"
+  ],
+  "row_count": 85,
+  "rows": [
+    {
+      "artifact": "output/data/analysis_statistics.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/analysis_statistics.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/analysis_statistics.json"
+      ],
+      "manuscript_consumers": [
+        "results_invariants",
+        "results_si_tmaze"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "compute_statistics.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "d00535628dfa61a475a882f2c648a135d632c89571b0c5fc611b22cc3bd60ff6",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/analytical_assumption_index.json",
+      "claim_ids": [
+        "analytical_assumption_index"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/analytical_assumption_index.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/analytical_assumption_index.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_analytical"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [
+        "assumption_index"
+      ],
+      "producer": "generate_toy_sweep_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "assumption_index"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "341a92f92293650afc1f34b77dc524a81173c5cb6b98a79d5a40fe040169ac96",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/analytical_observable_sweep.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/analytical_observable_sweep.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/analytical_observable_sweep.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_toy_sweep_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/animation_frame_deltas.json",
+      "claim_ids": [
+        "animation_frame_deltas_nonzero"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/animation_frame_deltas.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/data/animation_frame_deltas.json",
+        "src/visualizations"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [
+        "animation_delta"
+      ],
+      "producer": "render_animation.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "animation_delta"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/artifact_contract_index.json",
+      "claim_ids": [
+        "artifact_contract_copied_parity_complete",
+        "artifact_contract_index_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/artifact_contract_index.json",
+      "copied_required": true,
+      "copied_sha256": "4516c6baf463fbf092b08196f3c1ed79dc7d4e549f601494636f500b8f973c31",
+      "copied_status": "deferred",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/data/artifact_contract_index.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "892395cfb71721d206dae2ae20d55fdb97e5ba7d5ec48b1352e3debf91d19897",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/artifact_provenance.json",
+      "claim_ids": [
+        "artifact_provenance_seed_config",
+        "artifact_provenance_spine"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/artifact_provenance.json",
+      "copied_required": true,
+      "copied_sha256": "b1c2e7760e6409442e9ab1d446077904ba2626402b55461091de929b3c8cf99d",
+      "copied_status": "deferred",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/data/artifact_provenance.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "methods_sheaf"
+      ],
+      "negative_control": "missing_sheaf_track_producer",
+      "pipeline_tracks": [
+        "provenance"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "provenance"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "5956f793227a1f3cda1c879725e6ff30958f0950a06064b488947461724f0004",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/causal_ablation_matrix.json",
+      "claim_ids": [
+        "causal_ablation_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/causal_ablation_matrix.json",
+      "copied_required": true,
+      "copied_sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/causal_ablation_matrix.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "causal_ablation_missing_cell",
+      "pipeline_tracks": [
+        "causal_ablation"
+      ],
+      "producer": "generate_toy_sweep_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "causal_ablation"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/cross_track_symbol_table.json",
+      "claim_ids": [
+        "cross_track_symbols_consistent"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/cross_track_symbol_table.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/cross_track_symbol_table.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "41a58ba8e5482f222b316a7f563c7b7782548c874b057090a09d990699a0146d",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/evidence_field_index.json",
+      "claim_ids": [
+        "evidence_fields_mapped"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/evidence_field_index.json",
+      "copied_required": true,
+      "copied_sha256": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/evidence_field_index.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "missing_typed_claim",
+      "pipeline_tracks": [
+        "evidence_fields"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "evidence_fields"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/figure_source_map.json",
+      "claim_ids": [
+        "figure_source_map_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/figure_source_map.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/figure_source_map.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "7973a24fe82ea022eb353a5b84f05628454022345020057a05609b893dabba76",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/gnn_roundtrip_report.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/gnn_roundtrip_report.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/gnn_roundtrip_report.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_pymdp"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_formal_interop_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "3b91cfa950d1dfc8442ea50510c895a1006770631235db92467c0fcd33cda209",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/interop_roundtrip_report.json",
+      "claim_ids": [
+        "interop_lossless",
+        "interop_roundtrip_lossless"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/interop_roundtrip_report.json",
+      "copied_required": true,
+      "copied_sha256": "ceb3f2b3c34ebdd06e9deaf34da62f640b53e8476f7a2bc94780f228d41bd78d",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/interop_roundtrip_report.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_pymdp"
+      ],
+      "negative_control": "interop_shape_loss",
+      "pipeline_tracks": [
+        "interop"
+      ],
+      "producer": "generate_formal_interop_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "interop"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "ceb3f2b3c34ebdd06e9deaf34da62f640b53e8476f7a2bc94780f228d41bd78d",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/manuscript_evidence_tables.json",
+      "claim_ids": [
+        "manuscript_evidence_tables_source_backed"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/manuscript_evidence_tables.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/manuscript_evidence_tables.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "3495c0aa4deb2d43122c4424330481072e6f7c3d9e1a260b3c917b3686326b36",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/manuscript_token_provenance.json",
+      "claim_ids": [
+        "manuscript_token_provenance_mapped"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/manuscript_token_provenance.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/manuscript_token_provenance.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "3afc9041ebd0139f4b824fa762049b69b7bda446ceaddac3f285d5756a6e65b7",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/manuscript_variables.json",
+      "claim_ids": [
+        "composed_appendix_full_sheaf"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/manuscript_variables.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/data/manuscript_variables.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "z_generate_manuscript_variables.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "1d1d57fe8ddca405e03b73499d9a6fec458c5c04e5c565a702b707edfd04fdb3",
+      "validation_gates": [
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/ontology_alias_index.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/ontology_alias_index.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/ontology_alias_index.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_pymdp"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_formal_interop_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "8c01513c5afa5f22b31cdf1e0976b5626c3b2a12e4dd4aaaf3f8442bdd736311",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/ontology_profile_matrix.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/ontology_profile_matrix.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/ontology_profile_matrix.json",
+        "src/ontology"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_pymdp"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [
+        "ontology"
+      ],
+      "producer": "generate_formal_interop_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "ontology"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "2fefa687a32bf615e165292dc7df8edcc6d712f6b22d268deb263eccefb1379d",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/parameter_sweep.csv",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/parameter_sweep.csv",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/parameter_sweep.csv",
+        "src/analytical"
+      ],
+      "manuscript_consumers": [
+        "methods_analytical",
+        "results_mi_sweep"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [
+        "analytical"
+      ],
+      "producer": "run_analytical_sweep.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "assumption_index",
+        "formalism",
+        "simulation"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/proof_dependency_graph.json",
+      "claim_ids": [
+        "proof_dependency_graph_resolved"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/proof_dependency_graph.json",
+      "copied_required": true,
+      "copied_sha256": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/proof_dependency_graph.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_lean"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/proof_extraction_index.json",
+      "claim_ids": [
+        "proof_extraction_constructive"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/proof_extraction_index.json",
+      "copied_required": true,
+      "copied_sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/proof_extraction_index.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_lean"
+      ],
+      "negative_control": "proof_extraction_missing_statement",
+      "pipeline_tracks": [
+        "proof_extraction"
+      ],
+      "producer": "generate_formal_interop_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "proof_extraction"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/pymdp_policy_posterior_grid.json",
+      "claim_ids": [
+        "pymdp_policy_posterior_grid_normalized"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/pymdp_policy_posterior_grid.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/pymdp_policy_posterior_grid.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_pymdp"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "simulate_si_tmaze.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "9513f33271013f594069aa97d5cfc7b4e6b6b37476a6a49f107aa12c82fcce61",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/scholarship_source_matrix.json",
+      "claim_ids": [
+        "scholarship_source_matrix_connected"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/scholarship_source_matrix.json",
+      "copied_required": true,
+      "copied_sha256": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/scholarship_source_matrix.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "missing_scholarship_source_binding",
+      "pipeline_tracks": [
+        "scholarship"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "scholarship"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/sensitivity_sweep.json",
+      "claim_ids": [
+        "sensitivity_complete_grid",
+        "sensitivity_complete_grid"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/sensitivity_sweep.json",
+      "copied_required": true,
+      "copied_sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/sensitivity_sweep.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "missing_sensitivity_cell",
+      "pipeline_tracks": [
+        "sensitivity"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "sensitivity"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_coverage_matrix.json",
+      "claim_ids": [
+        "sheaf_coverage_matrix"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/sheaf_coverage_matrix.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/sheaf_coverage_matrix.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "ca776e2bdcc3936ed3d07ebb11b7ffd68a2d5e92242ef880b936197cf83bc230",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_evidence_crosswalk.json",
+      "claim_ids": [
+        "sheaf_evidence_crosswalk"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/sheaf_evidence_crosswalk.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/sheaf_evidence_crosswalk.json"
+      ],
+      "manuscript_consumers": [
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "79c38673a666594140175dcd5bffdce9e0d1da379d36931552aba56a6b043f65",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_gluing_certificate.json",
+      "claim_ids": [
+        "coverage_no_gray",
+        "lean_graph_world_policy_boundary",
+        "semantic_gluing_ok",
+        "sheaf_gluing_certificate",
+        "si_graph_world_trace_consistency"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/sheaf_gluing_certificate.json",
+      "copied_required": true,
+      "copied_sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439",
+      "copied_status": "deferred",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/data/sheaf_gluing_certificate.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "5b0fb179b009103b361d84baeaa189ff56a097b4de8089666770cd2d70e1f68d",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_section_status_matrix.json",
+      "claim_ids": [
+        "sheaf_section_status_matrix_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/sheaf_section_status_matrix.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/sheaf_section_status_matrix.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "333867025a1762b84cc770de08190d1d4f7aeec4ede3a83d7013ea099d9923a9",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_efe_terms.json",
+      "claim_ids": [
+        "si_efe_rows_explained"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/si_efe_terms.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/si_efe_terms.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_toy_sweep_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "2b389ab27228f2f44a43d56733941e43e47463c6e2ebb97715aef7dfc51af936",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_graph_world_summary.json",
+      "claim_ids": [
+        "si_graph_world_summary"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/si_graph_world_summary.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/si_graph_world_summary.json"
+      ],
+      "manuscript_consumers": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "simulate_si_graph_world.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_graph_world_topology_sweep.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/si_graph_world_topology_sweep.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/si_graph_world_topology_sweep.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_toy_sweep_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "f9610cc62493a5f02a4eaa8842188366d1cc2e5ed67e9e23a42c0b7e30c631fe",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_graph_world_topology_traces.json",
+      "claim_ids": [
+        "graph_world_topology_traces_consistent"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/si_graph_world_topology_traces.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/si_graph_world_topology_traces.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_toy_sweep_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "00f086b46f8ddd55b5521978945e652d041f16c0bfd59331ced0b1caaa128bc5",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_graph_world_trace.json",
+      "claim_ids": [
+        "si_graph_world_trace"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/si_graph_world_trace.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/si_graph_world_trace.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "simulate_si_graph_world.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_policy_comparison.json",
+      "claim_ids": [
+        "si_policy_comparison",
+        "si_policy_comparison_modes"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/si_policy_comparison.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/si_policy_comparison.json",
+        "src/simulation"
+      ],
+      "manuscript_consumers": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [
+        "pymdp"
+      ],
+      "producer": "simulate_si_tmaze.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "pymdp"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "2ff44eadc0db5f57abdc579b8a1d9f2e13f6e17370fe7d79d9be1c67c92783ed",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_policy_grid.json",
+      "claim_ids": [
+        "si_policy_grid_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/si_policy_grid.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/si_policy_grid.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_toy_sweep_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "f49abb96cc04bcfa207c30205a38bdd344147fe52dcab95f586313e2da286490",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_tmaze_summary.json",
+      "claim_ids": [
+        "si_tmaze_summary"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/si_tmaze_summary.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/si_tmaze_summary.json"
+      ],
+      "manuscript_consumers": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "simulate_si_tmaze.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_tmaze_trace.json",
+      "claim_ids": [
+        "si_tmaze_trace"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/si_tmaze_trace.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/si_tmaze_trace.json"
+      ],
+      "manuscript_consumers": [
+        "methods_pymdp",
+        "results_si_tmaze"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "simulate_si_tmaze.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "962f2a01908e353298f20f714e87f71cb266bb3d9ac96fb6fdb0c8232648992e",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/state_space_catalog.json",
+      "claim_ids": [
+        "state_space_catalog_finite"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/state_space_catalog.json",
+      "copied_required": true,
+      "copied_sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/state_space_catalog.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "state_space_catalog_missing_finite_space",
+      "pipeline_tracks": [
+        "state_space_catalog"
+      ],
+      "producer": "generate_toy_sweep_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "state_space_catalog"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/state_transition_table.json",
+      "claim_ids": [
+        "state_transition_table_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/state_transition_table.json",
+      "copied_required": true,
+      "copied_sha256": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/state_transition_table.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/statistical_visualization_bridge.json",
+      "claim_ids": [
+        "statistical_visualization_crosswalk_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/statistical_visualization_bridge.json",
+      "copied_required": true,
+      "copied_sha256": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/statistical_visualization_bridge.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/theorem_traceability_matrix.json",
+      "claim_ids": [
+        "theorem_traceability_linked"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/theorem_traceability_matrix.json",
+      "copied_required": true,
+      "copied_sha256": "629fcb99fe2ba481ac9a019913b8a42f7d613335c6c605fb289742203dcb0130",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/theorem_traceability_matrix.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_lean"
+      ],
+      "negative_control": "theorem_traceability_unlinked",
+      "pipeline_tracks": [
+        "theorem_traceability"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "theorem_traceability"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "629fcb99fe2ba481ac9a019913b8a42f7d613335c6c605fb289742203dcb0130",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/toy_benchmark_matrix.json",
+      "claim_ids": [
+        "benchmark_rows_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/toy_benchmark_matrix.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/toy_benchmark_matrix.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [
+        "benchmark"
+      ],
+      "producer": "generate_toy_sweep_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "benchmark"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/track_improvement_scope.json",
+      "claim_ids": [
+        "track_improvement_scope_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "data/track_improvement_scope.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/data/track_improvement_scope.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "f74366a4e4b0a7fd3f615edc12256c7d876e93a43bc479acb3b6cf709ce2f4dc",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/track_lane_matrix.json",
+      "claim_ids": [
+        "track_lane_matrix_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/track_lane_matrix.json",
+      "copied_required": true,
+      "copied_sha256": "841037bd7b1c357031b492e874191ab6b2677f488922d707d05e9fdd386c1904",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/track_lane_matrix.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "841037bd7b1c357031b492e874191ab6b2677f488922d707d05e9fdd386c1904",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/uncertainty_summary.json",
+      "claim_ids": [
+        "uncertainty_normalized",
+        "uncertainty_rows_normalized"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/uncertainty_summary.json",
+      "copied_required": true,
+      "copied_sha256": "adc47fd54967a3eee7cf595633ab1b20559f56177d290614c2115750ce4d9797",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/uncertainty_summary.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "unnormalized_uncertainty_row",
+      "pipeline_tracks": [
+        "uncertainty"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "uncertainty"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "adc47fd54967a3eee7cf595633ab1b20559f56177d290614c2115750ce4d9797",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/validation_dependency_graph.json",
+      "claim_ids": [
+        "dependency_graph_edges",
+        "validation_dependency_graph"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/validation_dependency_graph.json",
+      "copied_required": true,
+      "copied_sha256": "0dbacf83556e0010876ed5895f258e4c866043cc98c9c76cf77cf436a489434c",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/data/validation_dependency_graph.json"
+      ],
+      "manuscript_consumers": [
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "0dbacf83556e0010876ed5895f258e4c866043cc98c9c76cf77cf436a489434c",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/validation_gate_index.json",
+      "claim_ids": [
+        "gate_ergonomics_indexed",
+        "validation_gate_index_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "data/validation_gate_index.json",
+      "copied_required": true,
+      "copied_sha256": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/data/validation_gate_index.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "gate_ergonomics_unindexed",
+      "pipeline_tracks": [
+        "gate_ergonomics"
+      ],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "gate_ergonomics"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/artifact_contract_map.png",
+      "claim_ids": [
+        "artifact_contract_map_figure"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "figures/artifact_contract_map.png",
+      "copied_required": true,
+      "copied_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/figures/artifact_contract_map.png"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
+      "validation_gates": [
+        "figure_registry",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/causal_ablation_heatmap.png",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "figures/causal_ablation_heatmap.png",
+      "copied_required": true,
+      "copied_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/figures/causal_ablation_heatmap.png"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
+      "validation_gates": [
+        "figure_registry",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/figure_registry.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "figures/figure_registry.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/figures/figure_registry.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "ef2c0fe943c5fab8c02ae95896980207af7ecb58221e3582d6c970efef95f3b9",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/scholarship_source_map.png",
+      "claim_ids": [
+        "scholarship_source_map_figure"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "figures/scholarship_source_map.png",
+      "copied_required": true,
+      "copied_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/figures/scholarship_source_map.png"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
+      "validation_gates": [
+        "figure_registry",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/security_posture_map.png",
+      "claim_ids": [
+        "security_posture_map_figure"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "figures/security_posture_map.png",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/figures/security_posture_map.png"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
+      "validation_gates": [
+        "figure_registry",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/semantic_gluing_graph.png",
+      "claim_ids": [
+        "semantic_gluing_graph_figure"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "figures/semantic_gluing_graph.png",
+      "copied_required": true,
+      "copied_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/figures/semantic_gluing_graph.png"
+      ],
+      "manuscript_consumers": [
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
+      "validation_gates": [
+        "figure_registry",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/sheaf_coverage_heatmap.png",
+      "claim_ids": [
+        "sheaf_coverage_heatmap"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "figures/sheaf_coverage_heatmap.png",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/figures/sheaf_coverage_heatmap.png"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
+      "validation_gates": [
+        "figure_registry",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/sheaf_layers_overview.png",
+      "claim_ids": [
+        "sheaf_layers_overview"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "figures/sheaf_layers_overview.png",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/figures/sheaf_layers_overview.png"
+      ],
+      "manuscript_consumers": [
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31",
+      "validation_gates": [
+        "figure_registry",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/si_belief_trajectory.gif",
+      "claim_ids": [
+        "si_belief_trajectory_gif"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "figures/si_belief_trajectory.gif",
+      "copied_required": true,
+      "copied_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/figures/si_belief_trajectory.gif"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "render_animation.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/theorem_traceability_graph.png",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "figures/theorem_traceability_graph.png",
+      "copied_required": true,
+      "copied_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/figures/theorem_traceability_graph.png"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
+      "validation_gates": [
+        "figure_registry",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/ablation_sensitivity_report.json",
+      "claim_ids": [
+        "ablation_sensitivity_source_backed"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/ablation_sensitivity_report.json",
+      "copied_required": true,
+      "copied_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/ablation_sensitivity_report.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/adversarial_audit.json",
+      "claim_ids": [
+        "adversarial_audit_expected_failures",
+        "adversarial_audit_known_bad_blocked"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/adversarial_audit.json",
+      "copied_required": true,
+      "copied_sha256": "5eabc21a2e038130eea3dc7af0bea89bd9744a5a4c94d1773e00f1790b7f7708",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/adversarial_audit.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "adversarial_known_bad_passes",
+      "pipeline_tracks": [
+        "adversarial_audit"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "adversarial_audit"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "5eabc21a2e038130eea3dc7af0bea89bd9744a5a4c94d1773e00f1790b7f7708",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/artifact_diffoscope.json",
+      "claim_ids": [
+        "artifact_diffoscope_equal"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/artifact_diffoscope.json",
+      "copied_required": true,
+      "copied_sha256": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/reports/artifact_diffoscope.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_diffoscope_missed_hash_drift",
+      "pipeline_tracks": [
+        "artifact_diffoscope"
+      ],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "artifact_diffoscope"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/artifact_license_audit.json",
+      "claim_ids": [
+        "artifact_license_safe"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/artifact_license_audit.json",
+      "copied_required": true,
+      "copied_sha256": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/artifact_license_audit.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_license_unsafe_artifact",
+      "pipeline_tracks": [
+        "artifact_license"
+      ],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "artifact_license"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/blocked_scope_manifest.json",
+      "claim_ids": [
+        "empirical_adapter_blocked"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/blocked_scope_manifest.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/blocked_scope_manifest.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "discussion_outlook",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/claim_evidence_audit.json",
+      "claim_ids": [
+        "claim_evidence_audit_typed"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/claim_evidence_audit.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/claim_evidence_audit.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/counterexample_matrix.json",
+      "claim_ids": [
+        "counterexample_expected_failures",
+        "counterexample_matrix_spine"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/counterexample_matrix.json",
+      "copied_required": true,
+      "copied_sha256": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/counterexample_matrix.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "methods_sheaf"
+      ],
+      "negative_control": "known_bad_counterexample_passed",
+      "pipeline_tracks": [
+        "counterexample"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "counterexample"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/figure_hash_manifest.json",
+      "claim_ids": [
+        "figure_hash_manifest_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/figure_hash_manifest.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/figure_hash_manifest.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "f401215be721181657fd679a1e753d7ba9e8a607b06a0045ff682baec30f5b87",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/gnn_lint_report.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/gnn_lint_report.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "gnn",
+        "output/reports/gnn_lint_report.json",
+        "src/gnn"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_pymdp"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [
+        "gnn"
+      ],
+      "producer": "generate_formal_interop_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "gnn"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "a29ce1922701512403c542664a92af5787df00b874fc85ec439837049815aa89",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/graph_world_invariants.json",
+      "claim_ids": [
+        "graph_world_invariants_pass"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/graph_world_invariants.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/graph_world_invariants.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_toy_sweep_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/invariants.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/invariants.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/invariants.json"
+      ],
+      "manuscript_consumers": [
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "run_analytical_sweep.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/lean_graph_world_inventory.json",
+      "claim_ids": [
+        "lean_graph_world_topologies_witnessed"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/lean_graph_world_inventory.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/lean_graph_world_inventory.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_lean"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_formal_interop_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "13bf2cf6c614f60f8e3ca9dc354d95bee67ea3dc353560d6f7b60cf039e3f0cb",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/lean_theorem_inventory.json",
+      "claim_ids": [
+        "lean_theorem_inventory_proved"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/lean_theorem_inventory.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "lean/TemplateActiveInference",
+        "output/reports/lean_theorem_inventory.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_lean"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [
+        "lean"
+      ],
+      "producer": "generate_formal_interop_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "lean"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "58e56fb6cbce951384aa4c34a7485a71255660fe6f96f668d3e8fb6afe90450d",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/manuscript_staleness_report.json",
+      "claim_ids": [
+        "manuscript_staleness_fresh"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/manuscript_staleness_report.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/reports/manuscript_staleness_report.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [
+        "manuscript_staleness"
+      ],
+      "producer": "z_generate_manuscript_variables.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "manuscript_staleness"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "d0efcf3605cd0d9ce50adad9751d103996b6b6300b9ca2dde92595c0c4ef0b3f",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/model_checking_witnesses.json",
+      "claim_ids": [
+        "model_checking_exhaustive",
+        "model_checking_witnesses_pass"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/model_checking_witnesses.json",
+      "copied_required": true,
+      "copied_sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/model_checking_witnesses.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_lean"
+      ],
+      "negative_control": "missed_model_checking_counterexample",
+      "pipeline_tracks": [
+        "model_checking"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "model_checking"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/producer_completeness.json",
+      "claim_ids": [
+        "producer_completeness"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/producer_completeness.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/producer_completeness.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "8d0aad956caf2c1944024a46a0a30524c885fbb37228ed27b77abd2f3abeaf17",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/pymdp_runtime_diagnostics.json",
+      "claim_ids": [
+        "pymdp_runtime_diagnostics_ok"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/pymdp_runtime_diagnostics.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/pymdp_runtime_diagnostics.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_pymdp"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "simulate_si_tmaze.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "35caed4ed4032ce46e5e8f6d00ecfcd0bdf0bd4dc0e633059484df307bb01b75",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/release_attestation.json",
+      "claim_ids": [
+        "release_attestation_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/release_attestation.json",
+      "copied_required": true,
+      "copied_sha256": "5be967be7f475bb123eb01726188c0e2ce62b9b344031f180fd22e7d28b2779a",
+      "copied_status": "deferred",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/reports/release_attestation.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "discussion_outlook"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "63b986306c820b081bcd866cb09fbb6c0608f5dac416b6e4157467aae71f78ed",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/release_bundle_manifest.json",
+      "claim_ids": [
+        "release_bundle_sources_present"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/release_bundle_manifest.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/reports/release_bundle_manifest.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "release_bundle_parity_failure",
+      "pipeline_tracks": [
+        "release_bundle"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "release_bundle"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "cad92e137f9085175a7dda09d6e57f68fe06e6cffac08e857b8e007bbce57e4e",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/release_notes_evidence.json",
+      "claim_ids": [
+        "release_notes_source_backed"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/release_notes_evidence.json",
+      "copied_required": true,
+      "copied_sha256": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/release_notes_evidence.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "discussion_outlook"
+      ],
+      "negative_control": "release_notes_claim_failed_gate_passed",
+      "pipeline_tracks": [
+        "release_notes"
+      ],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "release_notes"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/replay_matrix.json",
+      "claim_ids": [
+        "replay_matrix_all_replayed"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/replay_matrix.json",
+      "copied_required": true,
+      "copied_sha256": "7706795e7749bd4c1f6b4ead01a2a05316d7a42222ab08026a5e1a05937e6f81",
+      "copied_status": "deferred",
+      "freshness_cycle_excluded": true,
+      "freshness_inputs": [
+        "output/reports/replay_matrix.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "results_invariants"
+      ],
+      "negative_control": "replay_mismatch",
+      "pipeline_tracks": [
+        "replay_matrix"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "replay_matrix"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "b5166e0bbf7a2367843f16c2e37c57c090409d907cd07457e72445ed2c84477a",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/reproducibility_replay.json",
+      "claim_ids": [
+        "replay_matrix_spine"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/reproducibility_replay.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/reproducibility_replay.json"
+      ],
+      "manuscript_consumers": [
+        "results_invariants"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_validation_spine.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "c14c0419111bd07e66c8cb83bf98d87ee006fbb6f6d4ae6e810f3cad9f94bcc4",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/scope_boundary_audit.json",
+      "claim_ids": [
+        "scope_boundary_toy_only"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/scope_boundary_audit.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/scope_boundary_audit.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "e8c06e11b7b176df8d596460b9c3037cba43696f4e75bbd35694ae59f0602577",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/security_posture_audit.json",
+      "claim_ids": [
+        "security_posture_controls_ok"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/security_posture_audit.json",
+      "copied_required": true,
+      "copied_sha256": "63f9d0d4c4aa3938af7a16eb6a5a325dc68e99e02405666ab3fcf68720e928ad",
+      "copied_status": "matched",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/security_posture_audit.json",
+        "src/roadmap_tracks"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "security_posture_aggregate_forgery",
+      "pipeline_tracks": [
+        "security_posture"
+      ],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "security_posture"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "63f9d0d4c4aa3938af7a16eb6a5a325dc68e99e02405666ab3fcf68720e928ad",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/sheaf_render_log.json",
+      "claim_ids": [
+        "sheaf_render_log_events_ok"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/sheaf_render_log.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/sheaf_render_log.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_sheaf_tracks.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "747a62db51fe9bf6308afe199c4bf2a5adcb7ea9eb54386230a65d19374bebc0",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/si_invariants.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/si_invariants.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/si_invariants.json"
+      ],
+      "manuscript_consumers": [
+        "results_si_tmaze"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "simulate_si_tmaze.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/si_tmaze_run_report.json",
+      "claim_ids": [],
+      "claim_required": false,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/si_tmaze_run_report.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/si_tmaze_run_report.json"
+      ],
+      "manuscript_consumers": [
+        "results_si_tmaze"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "simulate_si_tmaze.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "fd834b08c1c0987ec5753ab96ec04fae817c44aeba7992888381ce654038f44f",
+      "validation_gates": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/stale_artifact_report.json",
+      "claim_ids": [
+        "stale_artifact_report_fresh"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "reports/stale_artifact_report.json",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/stale_artifact_report.json"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "ebe4d41d73c39c9acfc6c29013ce716adda9bd98b73a11ea398d3c3fa45c0c69",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/visualization_quality_audit.json",
+      "claim_ids": [
+        "visualization_quality_audit_complete",
+        "visualization_statistics_bridge_complete"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": true,
+      "copied_parity_ok": true,
+      "copied_path": "reports/visualization_quality_audit.json",
+      "copied_required": true,
+      "copied_sha256": "0c9b77060b9f594f92f74eb28b32e26cc30ceafdbf11745fd425b501347d96a0",
+      "copied_status": "deferred",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/reports/visualization_quality_audit.json",
+        "src/visualizations"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [
+        "visualization",
+        "visualizations"
+      ],
+      "producer": "generate_integration_audit.py",
+      "producer_configured": true,
+      "sheaf_tracks": [
+        "visualization"
+      ],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c",
+      "validation_gates": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    }
+  ],
+  "schema": "template_active_inference.artifact_contract_index.v1",
+  "schema_version": "template_active_inference.canonical_sheaf_tracks.v1",
+  "semantic_artifact_ids": [
+    "output/data/analysis_statistics.json",
+    "output/data/analytical_assumption_index.json",
+    "output/data/analytical_observable_sweep.json",
+    "output/data/animation_frame_deltas.json",
+    "output/data/artifact_contract_index.json",
+    "output/data/artifact_provenance.json",
+    "output/data/causal_ablation_matrix.json",
+    "output/data/cross_track_symbol_table.json",
+    "output/data/evidence_field_index.json",
+    "output/data/figure_source_map.json",
+    "output/data/gnn_roundtrip_report.json",
+    "output/data/interop_roundtrip_report.json",
+    "output/data/manuscript_evidence_tables.json",
+    "output/data/manuscript_token_provenance.json",
+    "output/data/manuscript_variables.json",
+    "output/data/ontology_alias_index.json",
+    "output/data/ontology_profile_matrix.json",
+    "output/data/parameter_sweep.csv",
+    "output/data/proof_dependency_graph.json",
+    "output/data/proof_extraction_index.json",
+    "output/data/pymdp_policy_posterior_grid.json",
+    "output/data/scholarship_source_matrix.json",
+    "output/data/sensitivity_sweep.json",
+    "output/data/sheaf_coverage_matrix.json",
+    "output/data/sheaf_evidence_crosswalk.json",
+    "output/data/sheaf_gluing_certificate.json",
+    "output/data/sheaf_section_status_matrix.json",
+    "output/data/si_efe_terms.json",
+    "output/data/si_graph_world_summary.json",
+    "output/data/si_graph_world_topology_sweep.json",
+    "output/data/si_graph_world_topology_traces.json",
+    "output/data/si_graph_world_trace.json",
+    "output/data/si_policy_comparison.json",
+    "output/data/si_policy_grid.json",
+    "output/data/si_tmaze_summary.json",
+    "output/data/si_tmaze_trace.json",
+    "output/data/state_space_catalog.json",
+    "output/data/state_transition_table.json",
+    "output/data/statistical_visualization_bridge.json",
+    "output/data/theorem_traceability_matrix.json",
+    "output/data/toy_benchmark_matrix.json",
+    "output/data/track_improvement_scope.json",
+    "output/data/track_lane_matrix.json",
+    "output/data/uncertainty_summary.json",
+    "output/data/validation_dependency_graph.json",
+    "output/data/validation_gate_index.json",
+    "output/figures/artifact_contract_map.png",
+    "output/figures/causal_ablation_heatmap.png",
+    "output/figures/figure_registry.json",
+    "output/figures/scholarship_source_map.png",
+    "output/figures/security_posture_map.png",
+    "output/figures/semantic_gluing_graph.png",
+    "output/figures/sheaf_coverage_heatmap.png",
+    "output/figures/sheaf_layers_overview.png",
+    "output/figures/si_belief_trajectory.gif",
+    "output/figures/theorem_traceability_graph.png",
+    "output/reports/ablation_sensitivity_report.json",
+    "output/reports/adversarial_audit.json",
+    "output/reports/artifact_diffoscope.json",
+    "output/reports/artifact_license_audit.json",
+    "output/reports/blocked_scope_manifest.json",
+    "output/reports/claim_evidence_audit.json",
+    "output/reports/counterexample_matrix.json",
+    "output/reports/figure_hash_manifest.json",
+    "output/reports/gnn_lint_report.json",
+    "output/reports/graph_world_invariants.json",
+    "output/reports/invariants.json",
+    "output/reports/lean_graph_world_inventory.json",
+    "output/reports/lean_theorem_inventory.json",
+    "output/reports/manuscript_staleness_report.json",
+    "output/reports/model_checking_witnesses.json",
+    "output/reports/producer_completeness.json",
+    "output/reports/pymdp_runtime_diagnostics.json",
+    "output/reports/release_attestation.json",
+    "output/reports/release_bundle_manifest.json",
+    "output/reports/release_notes_evidence.json",
+    "output/reports/replay_matrix.json",
+    "output/reports/reproducibility_replay.json",
+    "output/reports/scope_boundary_audit.json",
+    "output/reports/security_posture_audit.json",
+    "output/reports/sheaf_render_log.json",
+    "output/reports/si_invariants.json",
+    "output/reports/si_tmaze_run_report.json",
+    "output/reports/stale_artifact_report.json",
+    "output/reports/visualization_quality_audit.json"
+  ]
+}

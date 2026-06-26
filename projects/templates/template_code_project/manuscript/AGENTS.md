@@ -97,7 +97,7 @@ Follow these steps in order whenever you change behavior and need to update the 
    ```
 6. **Render PDF** from the repository root:
    ```bash
-   uv run python scripts/03_render_pdf.py --project template_code_project
+   uv run python scripts/03_render_pdf.py --project templates/template_code_project
    ```
 7. **Verify figures and table appear** in the rendered PDF; check `output/tex/*.log` for LaTeX errors.
 
@@ -109,7 +109,7 @@ Follow these steps in order whenever you change behavior and need to update the 
 > **PDF Rendering** stage fails while per-section slides still render. Full
 > detail: [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md#prerequisite-mermaid-diagrams-need-chrome-headless-shell).
 
-Final deliverables appear under `output/template_code_project/` after `scripts/05_copy_outputs.py` runs (working files remain under `projects/templates/template_code_project/output/` during the run).
+Final deliverables appear under `output/templates/template_code_project/` after `scripts/05_copy_outputs.py` runs (working files remain under `projects/templates/template_code_project/output/` during the run).
 
 ## RASP Conventions
 

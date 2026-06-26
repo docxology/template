@@ -1,0 +1,25 @@
+\frametitle{Relationship to FAIR and Formal Provenance Standards}
+\protect\phantomsection\label{relationship-to-fair-and-formal-provenance-standards}
+The steganographic layer supports the FAIR for Research Software
+(FAIR4RS) principles \breakseq{[@barker2022fair4rs]} at the artifact level.
+PDFs carry embedded metadata (Findability) in standardized XMP format
+(Interoperability). The SHA-256 hash manifest enables persistent
+integrity verification (a prerequisite for Reusability). The
+Documentation Duality standard ensures that the software producing the
+artifact is inspectable and well-documented (satisfying FAIRsoft
+\breakseq{[@garijo2024fairsoft]} metadata and documentation indicators). Full
+PROV-compliant provenance traces---capturing the derivation chain from
+source data through analysis scripts to rendered PDF---are a natural
+extension and a primary target for future development.
+
+Software Heritage \breakseq{[@cosmo2020softwareheritage]} complements this
+picture at the source-code level: by archiving the \texttt{template/}
+repository and assigning a reproducible SWHID (Software Hash Identifier)
+to each commit, Software Heritage makes the pipeline itself---not just
+its output---a citable, persistent digital artifact. A published SWHID
+alongside the PDF DOI creates a complete, two-artifact citation record:
+the paper's content is versioned via DOI; the code that generated it is
+versioned via SWHID. This combination satisfies the Katz et al.
+\breakseq{[@katz2021software]} software citation principles' requirement that
+software used in research be independently citable and permanently
+accessible.

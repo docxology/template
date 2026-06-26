@@ -1,0 +1,123 @@
+{
+  "claim_boundary": "Phase ledger records deterministic artifact-settlement order only; it is not runtime autonomy, self-approval, or external workflow certification.",
+  "generated_at": "2026-06-26T13:21:26+00:00",
+  "phases": [
+    {
+      "artifact_group": "readiness",
+      "description": "validate configured project-intrinsic contracts",
+      "observed_artifact_count": 3,
+      "order": 1,
+      "phase": "intrinsic_readiness"
+    },
+    {
+      "artifact_group": "loop",
+      "description": "write plan, stage matrix, and provisional loop outputs",
+      "observed_artifact_count": 0,
+      "order": 2,
+      "phase": "core_artifacts"
+    },
+    {
+      "artifact_group": "evidence",
+      "description": "write local evidence registry",
+      "observed_artifact_count": 2,
+      "order": 3,
+      "phase": "evidence_registry"
+    },
+    {
+      "artifact_group": "ml",
+      "description": "run fixed-seed bounded candidate evaluation",
+      "observed_artifact_count": 54,
+      "order": 4,
+      "phase": "ml_task"
+    },
+    {
+      "artifact_group": "governance",
+      "description": "write program, idea, run, review, and benchmark ledgers",
+      "observed_artifact_count": 3,
+      "order": 5,
+      "phase": "method_contract"
+    },
+    {
+      "artifact_group": "settlement",
+      "description": "refresh loop payloads before extrinsic validation",
+      "observed_artifact_count": 12,
+      "order": 6,
+      "phase": "provisional_payloads"
+    },
+    {
+      "artifact_group": "security",
+      "description": "write local security and integrity evidence",
+      "observed_artifact_count": 10,
+      "order": 7,
+      "phase": "security_artifacts"
+    },
+    {
+      "artifact_group": "figures",
+      "description": "write final registry-backed figures",
+      "observed_artifact_count": 54,
+      "order": 8,
+      "phase": "final_visuals"
+    },
+    {
+      "artifact_group": "manuscript",
+      "description": "write variables, provenance, and figure blocks",
+      "observed_artifact_count": 9,
+      "order": 9,
+      "phase": "manuscript_hydration"
+    },
+    {
+      "artifact_group": "settlement",
+      "description": "refresh checksum manifest before extrinsic validation",
+      "observed_artifact_count": 12,
+      "order": 10,
+      "phase": "readiness_manifest"
+    },
+    {
+      "artifact_group": "schema",
+      "description": "write generated JSON schema-version manifest",
+      "observed_artifact_count": 2,
+      "order": 11,
+      "phase": "schema_manifest"
+    },
+    {
+      "artifact_group": "packaging",
+      "description": "write local research-object manifest",
+      "observed_artifact_count": 2,
+      "order": 12,
+      "phase": "research_object_manifest"
+    },
+    {
+      "artifact_group": "readiness",
+      "description": "validate generated artifacts and extrinsic contracts",
+      "observed_artifact_count": 3,
+      "order": 13,
+      "phase": "extrinsic_readiness"
+    },
+    {
+      "artifact_group": "schema",
+      "description": "refresh schema manifest after final payload updates",
+      "observed_artifact_count": 2,
+      "order": 14,
+      "phase": "final_schema_manifest"
+    },
+    {
+      "artifact_group": "packaging",
+      "description": "refresh local research-object manifest",
+      "observed_artifact_count": 2,
+      "order": 15,
+      "phase": "final_research_object_manifest"
+    },
+    {
+      "artifact_group": "settlement",
+      "description": "write final artifact checksum manifest",
+      "observed_artifact_count": 12,
+      "order": 16,
+      "phase": "artifact_manifest"
+    }
+  ],
+  "project_name": "template_autoresearch_project",
+  "publication_approved": false,
+  "readiness_valid": true,
+  "schema": "template-autoresearch-phase-ledger-v1",
+  "settlement_pass_count": 3
+}

@@ -1,0 +1,280 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "0.41",
+      "total_size_bytes": 431795,
+      "largest_files": [
+        {
+          "name": "template_autoscientists_combined.pdf",
+          "size_mb": "0.26",
+          "path": "pdf/template_autoscientists_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.log",
+          "size_mb": "0.05",
+          "path": "pdf/_combined_manuscript.log"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.04",
+          "path": "pdf/_combined_manuscript.tex"
+        }
+      ],
+      "extensions": {
+        ".pdf": 1,
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 11,
+      "size_mb": "0.16",
+      "total_size_bytes": 172600,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.06",
+          "path": "web/index.html"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.03",
+          "path": "web/_combined_manuscript.md"
+        },
+        {
+          "name": "manuscript__03_results.html",
+          "size_mb": "0.01",
+          "path": "web/manuscript__03_results.html"
+        }
+      ],
+      "extensions": {
+        ".html": 10,
+        ".md": 1
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 4,
+      "size_mb": "0.16",
+      "total_size_bytes": 163815,
+      "largest_files": [
+        {
+          "name": "ablation_efficiency.png",
+          "size_mb": "0.05",
+          "path": "figures/ablation_efficiency.png"
+        },
+        {
+          "name": "search_comparison.png",
+          "size_mb": "0.05",
+          "path": "figures/search_comparison.png"
+        },
+        {
+          "name": "ablation.png",
+          "size_mb": "0.05",
+          "path": "figures/ablation.png"
+        }
+      ],
+      "extensions": {
+        ".png": 3,
+        ".json": 1
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 3,
+      "size_mb": "0.00",
+      "total_size_bytes": 2902,
+      "largest_files": [
+        {
+          "name": "ablation.json",
+          "size_mb": "0.00",
+          "path": "data/ablation.json"
+        },
+        {
+          "name": "search_comparison.json",
+          "size_mb": "0.00",
+          "path": "data/search_comparison.json"
+        },
+        {
+          "name": "publication_ledger.json",
+          "size_mb": "0.00",
+          "path": "data/publication_ledger.json"
+        }
+      ],
+      "extensions": {
+        ".json": 3
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 26,
+      "size_mb": "0.15",
+      "total_size_bytes": 154414,
+      "largest_files": [
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.08",
+          "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "artifact_manifest.json",
+          "size_mb": "0.01",
+          "path": "reports/artifact_manifest.json"
+        },
+        {
+          "name": "pipeline_report.json",
+          "size_mb": "0.01",
+          "path": "reports/pipeline_report.json"
+        }
+      ],
+      "extensions": {
+        ".json": 16,
+        ".jsonl": 1,
+        ".txt": 3,
+        ".md": 5,
+        ".html": 1
+      }
+    },
+    "simulations": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "llm": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "logs": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 163,
+      "largest_files": [
+        {
+          "name": "pipeline.log",
+          "size_mb": "0.00",
+          "path": "logs/pipeline.log"
+        }
+      ],
+      "extensions": {
+        ".log": 1
+      }
+    }
+  },
+  "total_files": 55,
+  "total_size_mb": 0.8828058242797852,
+  "largest_files": [
+    {
+      "name": "template_autoscientists_combined.pdf",
+      "size_mb": "0.26",
+      "category": "pdf",
+      "path": "pdf/template_autoscientists_combined.pdf"
+    },
+    {
+      "name": "evidence_registry.json",
+      "size_mb": "0.08",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.06",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "_combined_manuscript.log",
+      "size_mb": "0.05",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.log"
+    },
+    {
+      "name": "ablation_efficiency.png",
+      "size_mb": "0.05",
+      "category": "figures",
+      "path": "figures/ablation_efficiency.png"
+    },
+    {
+      "name": "search_comparison.png",
+      "size_mb": "0.05",
+      "category": "figures",
+      "path": "figures/search_comparison.png"
+    },
+    {
+      "name": "ablation.png",
+      "size_mb": "0.05",
+      "category": "figures",
+      "path": "figures/ablation.png"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.04",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "_combined_manuscript.md",
+      "size_mb": "0.03",
+      "category": "web",
+      "path": "web/_combined_manuscript.md"
+    },
+    {
+      "name": "manuscript__03_results.html",
+      "size_mb": "0.01",
+      "category": "web",
+      "path": "web/manuscript__03_results.html"
+    }
+  ],
+  "missing_expected_files": [],
+  "sizes_by_category": {
+    "pdf": 0.4117918014526367,
+    "web": 0.16460418701171875,
+    "slides": 0.0,
+    "figures": 0.15622615814208984,
+    "data": 0.0027675628662109375,
+    "reports": 0.1472606658935547,
+    "simulations": 0.0,
+    "llm": 0.0,
+    "logs": 0.00015544891357421875
+  },
+  "file_counts_by_type": {
+    ".pdf": 1,
+    ".md": 7,
+    ".log": 3,
+    ".aux": 1,
+    ".blg": 1,
+    ".bib": 1,
+    ".tex": 1,
+    ".toc": 1,
+    ".bbl": 1,
+    ".html": 11,
+    ".png": 3,
+    ".json": 20,
+    ".jsonl": 1,
+    ".txt": 3
+  }
+}

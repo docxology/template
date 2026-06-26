@@ -1,0 +1,85 @@
+\frametitle{Comparison to Existing Tools}
+\protect\phantomsection\label{comparison-to-existing-tools}
+The \href{02_introduction.md\#the-gap}{gap analysis} established that no
+single tool integrates all six cross-cutting concerns. Here we
+synthesize the
+\href{08f_appendix_matrix.md\#appendix-matrix}{fourteen-dimension
+comparison} into three structural insights. First, the landscape
+bifurcates: workflow managers (Snakemake \breakseq{[@koster2012snakemake]},
+Nextflow \breakseq{[@ditommaso2017nextflow]}, CWL \breakseq{[@amstutz2016cwl]})
+provide distributed execution but no manuscript support; publication
+tools (Quarto \breakseq{[@allaire2024quarto]}, Jupyter Book, R Markdown
+\breakseq{[@xie2018dynamic]}, Overleaf \breakseq{[@overleaf2025]}, Prism
+\breakseq{[@openai2026prism]}) author documents but embed no integrity
+guarantees; and DVC \breakseq{[@iterative2024dvc]} versions artifacts without
+orchestrating pipelines. \texttt{template/} occupies the intersection,
+sacrificing distributed execution for unified enforcement of testing,
+provenance, and documentation. This positioning is complementary---a
+mature deployment might use Nextflow upstream and \texttt{template/} for
+rendering, testing enforcement, and provenance downstream. Typst
+\breakseq{[@madje2023typst]}, with its faster compilation cycle, is not one of
+the nine compared peers but could serve as an alternative rendering
+backend if a Pandoc writer were contributed.
+
+Second, the eight enforcement capabilities \texttt{template/}
+co-enforces---testing enforcement, coverage thresholds, steganographic
+watermarking, multi-project management, AI-agent documentation, the
+agentic skill protocol, an interactive TUI, and Zero-Mock policy---are
+individually straightforward (and several, such as multi-project
+management and AI-agent documentation, are matched in part by individual
+peers); their novelty lies in \emph{co-enforcement} within a single
+pipeline, ensuring that a passing build guarantees documentation
+completeness, provenance embedding, and AI-navigability alongside
+computational correctness. The FAIR4RS principles \breakseq{[@barker2022fair4rs;
+@lamprecht2020towards]} articulate what research software quality
+requires; FAIRsoft \breakseq{[@garijo2024fairsoft]} scores compliance
+observationally; \texttt{template/} operationalizes these standards by
+coupling them to pipeline gates that halt the build if coverage drops
+below 90\% or provenance embedding fails. Cohen et al.'s four pillars of
+research software engineering \breakseq{[@cohen2021four]}---sustainability,
+quality, community, and policy---are operationalized by
+\texttt{template/} through the first two pillars via quality-gated
+automation.
+
+Third, the AI-agent documentation dimension reveals an underserved need.
+Overleaf and Prism provide AI \emph{writing} assistance, but neither
+exposes structured documentation for \emph{external} agents to consume.
+\texttt{template/}'s \texttt{AGENTS.md} + \texttt{SKILL.md} layer
+enables an agent entering the repository to discover capabilities,
+understand API contracts, and invoke modules without prior training
+(\href{03c_documentation.md\#documentation-duality-and-ai-collaboration}{Documentation
+Duality}, \href{05d_ai_collaboration.md\#the-ai-collaboration-model}{AI
+Collaboration}).
+
+\begin{block}{FAIR4RS Evolution (2024--2026)}
+\protect\phantomsection\label{fair4rs-evolution-20242026}
+Since the FAIR4RS principles were published \breakseq{[@barker2022fair4rs]},
+the community has moved toward operationalization. The RDA Virtual
+Plenary 24 (April 2025) featured a two-year retrospective review
+\breakseq{[@honeyman2024fair4rs]} recommending principle amendments---notably
+adding \emph{reproducibility} as an explicit requirement and clarifying
+``domain-relevant standards''---alongside a leadership refresh and
+parallel guidance activities. The ReSA Actionable FAIR4RS Task Force
+(launched December 2024) analyzed the 17 principles into six actionable
+categories (identifiers, metadata for publication/discovery/reuse,
+standards, references, and licenses), with a first draft expected by
+September 2025 \breakseq{[@resa2024actionable]}. Tools for automated FAIR
+assessment have also matured: the F-UJI extension for research software
+evaluation now scores against FRSM-04 through FRSM-17 metrics,
+complementing Garijo et al.'s FAIRsoft evaluator
+\breakseq{[@garijo2024fairsoft]}. \texttt{template/}'s pipeline-enforced
+quality gates---coverage thresholds, documentation completeness checks,
+and provenance embedding---anticipate this operationalization trend by
+implementing FAIR4RS not as a post-hoc assessment but as an
+architectural invariant.
+
+In Gentleman and Temple Lang's terminology \breakseq{[@gentleman2007research]},
+\texttt{template/} is a \emph{research compendium} scaled to the
+repository level---bundling not just one study's code and data but N
+studies, with shared infrastructure, automated testing, and embedded
+provenance. Nüst et al.'s executable research compendium (ERC)
+\breakseq{[@nust2017containerization]} extends this vision with containerized
+reproduction environments; \texttt{template/} complements
+containerization by adding the testing enforcement, multi-project
+management, and provenance embedding layers that ERCs do not address.
+\end{block}

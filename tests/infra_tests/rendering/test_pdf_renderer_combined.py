@@ -17,10 +17,26 @@ from infrastructure.rendering._pdf_latex_helpers import (
     generate_title_page_body,
     generate_title_page_preamble,
 )
+from infrastructure.rendering._pdf_combined_pandoc import build_pandoc_tex_command
 from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
+
+
+def test_pandoc_tex_command_enables_linked_references(tmp_path: Path) -> None:
+    config = RenderingConfig(figures_dir=str(tmp_path / "figures"))
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+
+    command = build_pandoc_tex_command(
+        config,
+        tmp_path / "combined.md",
+        tmp_path / "combined.tex",
+        manuscript_dir,
+    )
+
+    assert "--metadata=linkReferences:true" in command
 
 
 class TestTitlePageGeneration:

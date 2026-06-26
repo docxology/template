@@ -1,0 +1,354 @@
+{
+  "timestamp": "2026-06-21T14:18:18.100409",
+  "checks": {
+    "PDF validation": true,
+    "Transmission bookends": true,
+    "Markdown validation": true,
+    "Output structure": true,
+    "Figure registry": true,
+    "Evidence registry": false,
+    "Project design overlays": true,
+    "Artifact manifest": false
+  },
+  "figure_issues": [],
+  "output_statistics": {
+    "evidence_issues": [
+      "00_abstract.md: unsupported number 36%",
+      "00_abstract.md: unsupported number 24%",
+      "00_abstract.md: unsupported number 1.4",
+      "00_abstract.md: unsupported number 90%",
+      "00_abstract.md: unsupported number 60%",
+      "00_abstract.md: unsupported number 2.0",
+      "02_introduction.md: unsupported number 1.2",
+      "03a_architecture.md: unsupported number 02",
+      "03e_quality.md: unsupported number 90%",
+      "03e_quality.md: unsupported number 60%",
+      "04_results.md: unsupported number 40",
+      "04_results.md: unsupported number 90%",
+      "04_results.md: unsupported number 35",
+      "04_results.md: unsupported number 30",
+      "04_results.md: unsupported number 02",
+      "04_results.md: unsupported number 60",
+      "04_results.md: unsupported number 80",
+      "04_results.md: unsupported number 0.3",
+      "04_results.md: unsupported number 0.8",
+      "04_results.md: unsupported number 0.4",
+      "04_results.md: unsupported number 1.5",
+      "04_results.md: unsupported number 25",
+      "04_results.md: unsupported number 0.9",
+      "04_results.md: unsupported number 1.6",
+      "08d_appendix_exemplars.md: unsupported number 02",
+      "08d_appendix_exemplars.md: unsupported number 90%",
+      "08e_appendix_docs.md: unsupported number 90",
+      "08f_appendix_matrix.md: unsupported number 25",
+      "08f_appendix_matrix.md: unsupported number 1.2",
+      "02_introduction.md: unsupported number 1576",
+      "02_introduction.md: unsupported number 70%",
+      "02_introduction.md: unsupported number 28",
+      "02_introduction.md: unsupported number 1.4",
+      "02_introduction.md: unsupported number 24%",
+      "02_introduction.md: unsupported number 36%",
+      "02_introduction.md: unsupported number 17",
+      "02_introduction.md: unsupported number 60%",
+      "02_introduction.md: unsupported number 90",
+      "03b_pipeline.md: unsupported number 60",
+      "03b_pipeline.md: unsupported number 90",
+      "03b_pipeline.md: unsupported number 02",
+      "03c_documentation.md: unsupported number 90",
+      "03e_quality.md: unsupported number 01",
+      "03e_quality.md: unsupported number 150",
+      "03e_quality.md: unsupported number 300",
+      "05b_scalability.md: unsupported number 90%",
+      "05b_scalability.md: unsupported number 02",
+      "05c_comparison.md: unsupported number 90%",
+      "05c_comparison.md: unsupported number 24",
+      "05c_comparison.md: unsupported number 17",
+      "05d_ai_collaboration.md: unsupported number 53%",
+      "05d_ai_collaboration.md: unsupported number 50",
+      "05d_ai_collaboration.md: unsupported number 170",
+      "05d_ai_collaboration.md: unsupported number 7",
+      "06_infrastructure_modules.md: unsupported number 01",
+      "07_security_provenance.md: unsupported number 8601"
+    ],
+    "artifact_manifest_issues": [
+      "changed artifact: output/data/metrics.json",
+      "changed artifact: output/figures/architecture_overview.png",
+      "changed artifact: output/figures/module_inventory.png",
+      "changed artifact: output/manuscript/00_abstract.md",
+      "changed artifact: output/manuscript/02_introduction.md",
+      "changed artifact: output/manuscript/03a_architecture.md",
+      "changed artifact: output/manuscript/03e_quality.md",
+      "changed artifact: output/manuscript/04_results.md",
+      "changed artifact: output/manuscript/05a_zeromock_tradeoff.md",
+      "changed artifact: output/manuscript/05b_scalability.md",
+      "changed artifact: output/manuscript/06_infrastructure_modules.md",
+      "changed artifact: output/manuscript/08c_appendix_directory.md",
+      "changed artifact: output/manuscript/08d_appendix_exemplars.md",
+      "changed artifact: output/manuscript/config.yaml",
+      "changed artifact: output/manuscript/config.yaml.example",
+      "changed artifact: output/data/transmission_manifest.json",
+      "changed artifact: output/figures/transmission_integrity_strip.png",
+      "changed artifact: output/figures/transmission_pairing.png",
+      "changed artifact: output/manuscript/00_00_transmission_begin.md",
+      "changed artifact: output/manuscript/99_zz_transmission_end.md",
+      "changed artifact: output/pdf/_combined_manuscript.md",
+      "changed artifact: output/pdf/_combined_manuscript.tex",
+      "changed artifact: output/pdf/template_template_combined.pdf",
+      "changed artifact: output/slides/00_abstract_slides.pdf",
+      "changed artifact: output/slides/00_abstract_slides.tex",
+      "changed artifact: output/slides/02_introduction_slides.pdf",
+      "changed artifact: output/slides/02_introduction_slides.tex",
+      "changed artifact: output/slides/03a_architecture_slides.pdf",
+      "changed artifact: output/slides/03a_architecture_slides.tex",
+      "changed artifact: output/slides/03b_pipeline_slides.pdf",
+      "changed artifact: output/slides/03b_pipeline_slides.tex",
+      "changed artifact: output/slides/03c_documentation_slides.pdf",
+      "changed artifact: output/slides/03c_documentation_slides.tex",
+      "changed artifact: output/slides/03d_fair_iac_slides.pdf",
+      "changed artifact: output/slides/03d_fair_iac_slides.tex",
+      "changed artifact: output/slides/03e_quality_slides.pdf",
+      "changed artifact: output/slides/03e_quality_slides.tex",
+      "changed artifact: output/slides/04_results_slides.pdf",
+      "changed artifact: output/slides/04_results_slides.tex",
+      "changed artifact: output/slides/05a_zeromock_tradeoff_slides.pdf",
+      "changed artifact: output/slides/05a_zeromock_tradeoff_slides.tex",
+      "changed artifact: output/slides/05b_scalability_slides.pdf",
+      "changed artifact: output/slides/05b_scalability_slides.tex",
+      "changed artifact: output/slides/05c_comparison_slides.pdf",
+      "changed artifact: output/slides/05c_comparison_slides.tex",
+      "changed artifact: output/slides/05d_ai_collaboration_slides.pdf",
+      "changed artifact: output/slides/05d_ai_collaboration_slides.tex",
+      "changed artifact: output/slides/05e_future_conclusion_slides.pdf",
+      "changed artifact: output/slides/05e_future_conclusion_slides.tex",
+      "changed artifact: output/slides/06_infrastructure_modules_slides.pdf",
+      "changed artifact: output/slides/06_infrastructure_modules_slides.tex",
+      "changed artifact: output/slides/07_security_provenance_slides.pdf",
+      "changed artifact: output/slides/07_security_provenance_slides.tex",
+      "changed artifact: output/slides/08a_appendix_pipeline_slides.pdf",
+      "changed artifact: output/slides/08a_appendix_pipeline_slides.tex",
+      "changed artifact: output/slides/08b_appendix_config_slides.pdf",
+      "changed artifact: output/slides/08b_appendix_config_slides.tex",
+      "changed artifact: output/slides/08c_appendix_directory_slides.pdf",
+      "changed artifact: output/slides/08c_appendix_directory_slides.tex",
+      "changed artifact: output/slides/08d_appendix_exemplars_slides.pdf",
+      "changed artifact: output/slides/08d_appendix_exemplars_slides.tex",
+      "changed artifact: output/slides/08e_appendix_docs_slides.pdf",
+      "changed artifact: output/slides/08e_appendix_docs_slides.tex",
+      "changed artifact: output/slides/08f_appendix_matrix_slides.pdf",
+      "changed artifact: output/slides/08f_appendix_matrix_slides.tex",
+      "changed artifact: output/web/_combined_manuscript.md",
+      "changed artifact: output/web/index.html",
+      "changed artifact: output/web/manuscript__00_abstract.html",
+      "changed artifact: output/web/manuscript__02_introduction.html",
+      "changed artifact: output/web/manuscript__03a_architecture.html",
+      "changed artifact: output/web/manuscript__03b_pipeline.html",
+      "changed artifact: output/web/manuscript__03c_documentation.html",
+      "changed artifact: output/web/manuscript__03d_fair_iac.html",
+      "changed artifact: output/web/manuscript__03e_quality.html",
+      "changed artifact: output/web/manuscript__04_results.html",
+      "changed artifact: output/web/manuscript__05a_zeromock_tradeoff.html",
+      "changed artifact: output/web/manuscript__05b_scalability.html",
+      "changed artifact: output/web/manuscript__05c_comparison.html",
+      "changed artifact: output/web/manuscript__05d_ai_collaboration.html",
+      "changed artifact: output/web/manuscript__05e_future_conclusion.html",
+      "changed artifact: output/web/manuscript__06_infrastructure_modules.html",
+      "changed artifact: output/web/manuscript__07_security_provenance.html",
+      "changed artifact: output/web/manuscript__08a_appendix_pipeline.html",
+      "changed artifact: output/web/manuscript__08b_appendix_config.html",
+      "changed artifact: output/web/manuscript__08c_appendix_directory.html",
+      "changed artifact: output/web/manuscript__08d_appendix_exemplars.html",
+      "changed artifact: output/web/manuscript__08e_appendix_docs.html",
+      "changed artifact: output/web/manuscript__08f_appendix_matrix.html",
+      "changed artifact: output/reports/validation_report.json",
+      "changed artifact: output/reports/validation_report.md",
+      "changed artifact: output/reports/output_statistics.json",
+      "changed artifact: output/reports/output_statistics.txt"
+    ],
+    "detailed_validation": {
+      "structure": {
+        "valid": true,
+        "issues": [],
+        "missing_files": [],
+        "suspicious_sizes": [],
+        "warnings": [],
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "size_mb": 1.33,
+            "readable": true
+          },
+          "pdf": {
+            "exists": true,
+            "files": 10,
+            "size_mb": 1.75,
+            "readable": true,
+            "optional": false
+          },
+          "web": {
+            "exists": true,
+            "files": 23,
+            "size_mb": 0.5,
+            "readable": true,
+            "optional": false
+          },
+          "slides": {
+            "exists": true,
+            "files": 169,
+            "size_mb": 3.4,
+            "readable": true,
+            "optional": false
+          },
+          "figures": {
+            "exists": true,
+            "files": 6,
+            "size_mb": 1.07,
+            "readable": true,
+            "optional": false
+          },
+          "data": {
+            "exists": true,
+            "files": 3,
+            "size_mb": 0.01,
+            "readable": true,
+            "optional": false
+          },
+          "reports": {
+            "exists": true,
+            "files": 26,
+            "size_mb": 0.23,
+            "readable": true,
+            "optional": false
+          },
+          "simulations": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "llm": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "logs": {
+            "exists": true,
+            "files": 1,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          }
+        }
+      },
+      "directories": {
+        "pdf": {
+          "exists": true,
+          "file_count": 10,
+          "size_mb": "1.75",
+          "largest_file": "template_template_combined.pdf"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 23,
+          "size_mb": "0.50",
+          "largest_file": "index.html"
+        },
+        "slides": {
+          "exists": true,
+          "file_count": 169,
+          "size_mb": "3.40",
+          "largest_file": "04_results_slides.pdf"
+        },
+        "figures": {
+          "exists": true,
+          "file_count": 6,
+          "size_mb": "1.07",
+          "largest_file": "comparative_feature_matrix.png"
+        },
+        "data": {
+          "exists": true,
+          "file_count": 3,
+          "size_mb": "0.01",
+          "largest_file": "metrics.json"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 26,
+          "size_mb": "0.23",
+          "largest_file": "evidence_registry.json"
+        },
+        "simulations": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "llm": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "logs": {
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "pipeline.log"
+        }
+      },
+      "file_counts": {
+        "pdf": 10,
+        "web": 23,
+        "slides": 169,
+        "figures": 6,
+        "data": 3,
+        "reports": 26,
+        "simulations": 0,
+        "llm": 0,
+        "logs": 1
+      },
+      "total_size_mb": 6.967052459716797,
+      "issues_by_severity": {
+        "critical": [],
+        "warning": [],
+        "info": []
+      },
+      "recommendations": []
+    },
+    "pdf": {
+      "files": 10,
+      "size_mb": 1.7471857070922852
+    },
+    "figures": {
+      "files": 6,
+      "size_mb": 1.0730724334716797
+    },
+    "data": {
+      "files": 3,
+      "size_mb": 0.009634017944335938
+    }
+  },
+  "summary": {
+    "total_checks": 8,
+    "passed": 6,
+    "failed": 2,
+    "figure_issues_count": 0,
+    "all_passed": false
+  },
+  "recommendations": [
+    {
+      "priority": "medium",
+      "issue": "Evidence registry reported unsupported manuscript facts",
+      "action": "Register generated facts or replace unsupported hard-coded claims",
+      "file": "projects/templates/template_template/output/reports/evidence_registry.json"
+    },
+    {
+      "priority": "medium",
+      "issue": "Artifact manifest reported drift or missing declared outputs",
+      "action": "Regenerate declared outputs or update the stage contract",
+      "file": "projects/templates/template_template/output/reports/artifact_manifest.json"
+    }
+  ]
+}

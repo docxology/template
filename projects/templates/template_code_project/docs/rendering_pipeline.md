@@ -86,12 +86,12 @@ uv run python projects/templates/template_code_project/scripts/z_generate_manusc
 
 **Command**:
 ```bash
-uv run python scripts/03_render_pdf.py --project template_code_project
+uv run python scripts/03_render_pdf.py --project templates/template_code_project
 ```
 
 **Inputs**: `output/manuscript/*.md` (substituted) + `manuscript/config.yaml` + `manuscript/preamble.md` + `manuscript/references.bib`
 
-When `publication.transmission_bookends.enabled: true`, the combined PDF also includes generated `00_00_transmission_begin.md` and `99_zz_transmission_end.md` (compact metadata, dual-row integrity strip, `transmission_manifest.json`, prior releases capped at three rows on the end page). Verify single-page fit: `uv run python -m infrastructure.publishing.transmission_page_check projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf`. After render, run `uv run python -m infrastructure.orchestration secure --steganography-only --project template_code_project --deterministic` for the hardened `*_steganography.pdf` and `.hashes.json` manifest; the Python `secure` subcommand owns `--deterministic`. See [`docs/guides/publishing-guide.md`](../../../../docs/guides/publishing-guide.md#transmission-bookends-optional).
+When `publication.transmission_bookends.enabled: true`, the combined PDF also includes generated `00_00_transmission_begin.md` and `99_zz_transmission_end.md` (compact metadata, dual-row integrity strip, `transmission_manifest.json`, prior releases capped at three rows on the end page). Verify single-page fit: `uv run python -m infrastructure.publishing.transmission_page_check projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf`. After render, run `uv run python -m infrastructure.orchestration secure --steganography-only --project templates/template_code_project --deterministic` for the hardened `*_steganography.pdf` and `.hashes.json` manifest; the Python `secure` subcommand owns `--deterministic`. See [`docs/guides/publishing-guide.md`](../../../../docs/guides/publishing-guide.md#transmission-bookends-optional).
 
 Zenodo and GitHub uploads use a metadata-driven basename from `publication.deposit_filename` (e.g. `Author_2026_Convergence_b591a0ce.pdf`); the local working file remains `template_code_project_combined.pdf`. See [Deposit upload filename](../../../../docs/guides/publishing-guide.md#deposit-upload-filename).
 
@@ -106,7 +106,7 @@ Zenodo and GitHub uploads use a metadata-driven basename from `publication.depos
 
 **Outputs**:
 - `projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf` — working publication PDF
-- `output/template_code_project/pdf/template_code_project_combined.pdf` — copied final publication PDF after Stage 07
+- `output/templates/template_code_project/pdf/template_code_project_combined.pdf` — copied final publication PDF after Stage 07
 - `projects/templates/template_code_project/output/pdf/_combined_manuscript.*` — LaTeX intermediates (`.tex`, `.aux`, `.log`)
 - `projects/templates/template_code_project/output/slides/` — per-section Beamer slide PDFs (one per manuscript section)
 - `projects/templates/template_code_project/output/web/` — HTML versions of each section
@@ -117,10 +117,10 @@ Zenodo and GitHub uploads use a metadata-driven basename from `publication.depos
 
 **Command**:
 ```bash
-uv run python scripts/05_copy_outputs.py --project template_code_project
+uv run python scripts/05_copy_outputs.py --project templates/template_code_project
 ```
 
-**Output**: Final PDF and figures copied to `output/template_code_project/` at the repository root (used by CI artifact upload and the multi-project executive report).
+**Output**: Final PDF and figures copied to `output/templates/template_code_project/` at the repository root (used by CI artifact upload and the multi-project executive report).
 
 ## config.yaml Controls
 

@@ -1,0 +1,246 @@
+{
+  "composition_depth": "deep",
+  "provenance": {
+    "AUTHORING_AUDIENCE": {
+      "category": "audiences",
+      "section": "authoring_contract",
+      "source": "manuscript/config.yaml#madlib.lexicon.audiences[1]",
+      "value": "manuscript reviewers"
+    },
+    "AUTHORING_QUALITY": {
+      "category": "qualities",
+      "section": "authoring_contract",
+      "source": "manuscript/config.yaml#madlib.lexicon.qualities[3]",
+      "value": "render readiness"
+    },
+    "CONFIG_CONSTRAINT": {
+      "category": "constraints",
+      "section": "configuration",
+      "source": "manuscript/config.yaml#madlib.lexicon.constraints[2]",
+      "value": "disabled sections retain explicit traceability"
+    },
+    "DISCUSSION_ADJECTIVE": {
+      "category": "adjectives",
+      "section": "discussion",
+      "source": "manuscript/config.yaml#madlib.lexicon.adjectives[0]",
+      "value": "auditable"
+    },
+    "DISCUSSION_AUDIENCE_1": {
+      "category": "audiences",
+      "section": "discussion",
+      "source": "manuscript/config.yaml#madlib.lexicon.audiences[2]",
+      "value": "pipeline maintainers"
+    },
+    "DISCUSSION_AUDIENCE_2": {
+      "category": "audiences",
+      "section": "discussion",
+      "source": "manuscript/config.yaml#madlib.lexicon.audiences[3]",
+      "value": "research educators"
+    },
+    "EVALUATION_ARTIFACT_1": {
+      "category": "artifacts",
+      "section": "evaluation",
+      "source": "manuscript/config.yaml#madlib.lexicon.artifacts[3]",
+      "value": "manuscript variable map"
+    },
+    "EVALUATION_ARTIFACT_2": {
+      "category": "artifacts",
+      "section": "evaluation",
+      "source": "manuscript/config.yaml#madlib.lexicon.artifacts[8]",
+      "value": "provenance trace map"
+    },
+    "EVALUATION_MEASURE_1": {
+      "category": "measures",
+      "section": "evaluation",
+      "source": "manuscript/config.yaml#madlib.lexicon.measures[7]",
+      "value": "copied output readiness"
+    },
+    "EVALUATION_MEASURE_2": {
+      "category": "measures",
+      "section": "evaluation",
+      "source": "manuscript/config.yaml#madlib.lexicon.measures[5]",
+      "value": "figure registry completeness"
+    },
+    "EVALUATION_MEASURE_3": {
+      "category": "measures",
+      "section": "evaluation",
+      "source": "manuscript/config.yaml#madlib.lexicon.measures[2]",
+      "value": "category density"
+    },
+    "INTRO_NOUNS_1": {
+      "category": "nouns",
+      "section": "introduction",
+      "source": "manuscript/config.yaml#madlib.lexicon.nouns[5]",
+      "value": "protocol"
+    },
+    "INTRO_NOUNS_2": {
+      "category": "nouns",
+      "section": "introduction",
+      "source": "manuscript/config.yaml#madlib.lexicon.nouns[3]",
+      "value": "section"
+    },
+    "INTRO_NOUNS_3": {
+      "category": "nouns",
+      "section": "introduction",
+      "source": "manuscript/config.yaml#madlib.lexicon.nouns[2]",
+      "value": "lexicon"
+    },
+    "INTRO_NOUNS_4": {
+      "category": "nouns",
+      "section": "introduction",
+      "source": "manuscript/config.yaml#madlib.lexicon.nouns[6]",
+      "value": "artifact"
+    },
+    "INTRO_VERBS_1": {
+      "category": "verbs",
+      "section": "introduction",
+      "source": "manuscript/config.yaml#madlib.lexicon.verbs[3]",
+      "value": "condition"
+    },
+    "INTRO_VERBS_2": {
+      "category": "verbs",
+      "section": "introduction",
+      "source": "manuscript/config.yaml#madlib.lexicon.verbs[6]",
+      "value": "bind"
+    },
+    "INTRO_VERBS_3": {
+      "category": "verbs",
+      "section": "introduction",
+      "source": "manuscript/config.yaml#madlib.lexicon.verbs[6]",
+      "value": "bind"
+    },
+    "INTRO_VERBS_4": {
+      "category": "verbs",
+      "section": "introduction",
+      "source": "manuscript/config.yaml#madlib.lexicon.verbs[0]",
+      "value": "compose"
+    },
+    "LIMITATION_FAILURE_1": {
+      "category": "failures",
+      "section": "limitations",
+      "source": "manuscript/config.yaml#madlib.lexicon.failures[4]",
+      "value": "domain misuse"
+    },
+    "LIMITATION_FAILURE_2": {
+      "category": "failures",
+      "section": "limitations",
+      "source": "manuscript/config.yaml#madlib.lexicon.failures[1]",
+      "value": "overclaimed generated prose"
+    },
+    "LIMITATION_FAILURE_3": {
+      "category": "failures",
+      "section": "limitations",
+      "source": "manuscript/config.yaml#madlib.lexicon.failures[3]",
+      "value": "figure provenance gap"
+    },
+    "METHOD_ARTIFACT_1": {
+      "category": "artifacts",
+      "section": "methods",
+      "source": "manuscript/config.yaml#madlib.lexicon.artifacts[6]",
+      "value": "token-injection flow"
+    },
+    "METHOD_ARTIFACT_2": {
+      "category": "artifacts",
+      "section": "methods",
+      "source": "manuscript/config.yaml#madlib.lexicon.artifacts[9]",
+      "value": "quality-gate matrix"
+    },
+    "METHOD_CONSTRAINT": {
+      "category": "constraints",
+      "section": "methods",
+      "source": "manuscript/config.yaml#madlib.lexicon.constraints[3]",
+      "value": "publication claims stay local until release"
+    },
+    "METHOD_NAME": {
+      "category": "methods",
+      "section": "methods",
+      "source": "manuscript/config.yaml#madlib.lexicon.methods[3]",
+      "value": "conditional section hydration"
+    },
+    "METHOD_QUALITY_1": {
+      "category": "qualities",
+      "section": "methods",
+      "source": "manuscript/config.yaml#madlib.lexicon.qualities[4]",
+      "value": "claim humility"
+    },
+    "METHOD_QUALITY_2": {
+      "category": "qualities",
+      "section": "methods",
+      "source": "manuscript/config.yaml#madlib.lexicon.qualities[3]",
+      "value": "render readiness"
+    },
+    "REPRODUCIBILITY_ARTIFACT_1": {
+      "category": "artifacts",
+      "section": "reproducibility",
+      "source": "manuscript/config.yaml#madlib.lexicon.artifacts[1]",
+      "value": "section plan"
+    },
+    "REPRODUCIBILITY_ARTIFACT_2": {
+      "category": "artifacts",
+      "section": "reproducibility",
+      "source": "manuscript/config.yaml#madlib.lexicon.artifacts[3]",
+      "value": "manuscript variable map"
+    },
+    "RESULT_ARTIFACT_1": {
+      "category": "artifacts",
+      "section": "results",
+      "source": "manuscript/config.yaml#madlib.lexicon.artifacts[10]",
+      "value": "configured-field figures"
+    },
+    "RESULT_ARTIFACT_2": {
+      "category": "artifacts",
+      "section": "results",
+      "source": "manuscript/config.yaml#madlib.lexicon.artifacts[0]",
+      "value": "token inventory"
+    },
+    "RESULT_MEASURE_1": {
+      "category": "measures",
+      "section": "results",
+      "source": "manuscript/config.yaml#madlib.lexicon.measures[3]",
+      "value": "provenance coverage"
+    },
+    "RESULT_MEASURE_2": {
+      "category": "measures",
+      "section": "results",
+      "source": "manuscript/config.yaml#madlib.lexicon.measures[6]",
+      "value": "evidence registry cleanliness"
+    },
+    "RESULT_MEASURE_3": {
+      "category": "measures",
+      "section": "results",
+      "source": "manuscript/config.yaml#madlib.lexicon.measures[2]",
+      "value": "category density"
+    },
+    "SCOPE_AUDIENCE": {
+      "category": "audiences",
+      "section": "scope",
+      "source": "manuscript/config.yaml#madlib.lexicon.audiences[2]",
+      "value": "pipeline maintainers"
+    },
+    "SCOPE_CONSTRAINT": {
+      "category": "constraints",
+      "section": "scope",
+      "source": "manuscript/config.yaml#madlib.lexicon.constraints[1]",
+      "value": "all lexicon entries live in config"
+    },
+    "STUDY_ADJECTIVE": {
+      "category": "adjectives",
+      "section": "abstract",
+      "source": "manuscript/config.yaml#madlib.lexicon.adjectives[5]",
+      "value": "reviewable"
+    },
+    "STUDY_NOUN": {
+      "category": "nouns",
+      "section": "abstract",
+      "source": "manuscript/config.yaml#madlib.lexicon.nouns[4]",
+      "value": "pipeline"
+    },
+    "STUDY_VERB": {
+      "category": "verbs",
+      "section": "abstract",
+      "source": "manuscript/config.yaml#madlib.lexicon.verbs[1]",
+      "value": "hydrate"
+    }
+  },
+  "seed": 431
+}

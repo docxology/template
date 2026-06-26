@@ -1,0 +1,27 @@
+========================================================================
+ TELEMETRY REPORT: templates/template_code_project
+========================================================================
+
+Total Duration : 109.3s
+Total Stages   : 8
+Failed Stages  : 0
+
+Stage                                   Time   Mem MB   CPU%   Status
+------------------------------------------------------------------------
+Clean Output Directories                0.0s       0   0.0     ✓ OK
+Environment Setup                       1.4s       0   0.0     ✓ OK
+Infrastructure Tests                    8.0s       0   0.0     ✓ OK
+Project Tests                          29.8s       0   0.0     ✓ OK
+Project Analysis                        4.1s       0   0.0     ✓ OK
+PDF Rendering                          63.5s       0   0.0     ✓ OK
+Output Validation                       1.2s       0   0.0     ✓ OK
+Copy Outputs                            1.1s       0   0.0     ✓ OK
+
+Performance Warnings (2):
+------------------------------------------------------------------------
+  ⚠ [slow_stage] Stage 'Project Tests' took 29.8s (2.0× the average 13.7s)
+    → Consider optimizing this stage or running it in parallel
+  ⚠ [slow_stage] Stage 'PDF Rendering' took 63.5s (2.0× the average 13.7s)
+    → Consider optimizing this stage or running it in parallel
+
+========================================================================

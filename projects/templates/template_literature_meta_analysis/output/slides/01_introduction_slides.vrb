@@ -1,0 +1,40 @@
+\frametitle{Contributions}
+\protect\phantomsection\label{contributions}
+The pipeline contributes an end-to-end, domain-agnostic workflow:
+
+\begin{enumerate}
+\item
+  \textbf{Multiple-engine retrieval with graceful degradation.} Records
+  are gathered from 7 independent engines (arXiv, OpenAlex, Semantic
+  Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv). An engine with
+  no API key or no network reports a \emph{skipped} status; the run
+  completes from whatever engines remain plus a committed offline
+  corpus. For this live run, OpenAlex contributed the largest share of
+  records, followed by Crossref and PubMed; Semantic Scholar was
+  rate-limited (HTTP 429) and returned zero records without aborting the
+  pipeline.
+\item
+  \textbf{Record de-duplication.} Heterogeneous records are merged by a
+  canonical identifier hierarchy, keeping the most complete version of
+  each work. Of 2302 retrieved records, 2248 carry DOIs, 932 carry
+  OpenAlex IDs, and 1 carry arXiv IDs.
+\item
+  \textbf{Descriptive and bibliometric analysis.} Counts by year, venue,
+  and author; growth metrics (CAGR 3.45\%, doubling time 11.3 years); a
+  configurable 6-bucket subfield classification; topic models; and a
+  citation network with 1377 communities.
+\item
+  \textbf{Language, entity, and embedding analysis.} Keyphrase and
+  entity extraction and offline deterministic document embeddings over
+  titles, abstracts, and full text. The TF-IDF vocabulary of 500
+  features captures the lexical landscape.
+\item
+  \textbf{Optional hypothesis evidence.} An LLM-gated knowledge-graph
+  stage scores the 6 configured hypotheses explored against the corpus.
+\end{enumerate}
+
+Because the writing itself is token-injected from configuration and
+pipeline outputs, the manuscript is part of the reproducible artifact
+rather than a separate hand-authored narrative. Every number, table, and
+figure reference in this document traces to a committed, regenerable
+file under \texttt{output/}.

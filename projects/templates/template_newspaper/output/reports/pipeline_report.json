@@ -1,0 +1,375 @@
+{
+  "timestamp": "2026-06-14T12:20:59.044690",
+  "total_duration": 91.52627158164978,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.021727323532104492,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 1.7010550498962402,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Infrastructure Tests",
+      "exit_code": 0,
+      "duration": 9.24527883529663,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 33.61936116218567,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 3.133975028991699,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 42.1630163192749,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 1.1735589504241943,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.46829891204833984,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 11,
+        "size_mb": "0.60",
+        "total_size_bytes": 624740,
+        "largest_files": [
+          {
+            "name": "the-triplicate.pdf",
+            "size_mb": "0.46",
+            "path": "pdf/the-triplicate.pdf"
+          },
+          {
+            "name": "template_newspaper_combined.pdf",
+            "size_mb": "0.06",
+            "path": "pdf/template_newspaper_combined.pdf"
+          },
+          {
+            "name": "_combined_manuscript.log",
+            "size_mb": "0.05",
+            "path": "pdf/_combined_manuscript.log"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".log": 2,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".tex": 1,
+          ".toc": 1,
+          ".pdf": 2,
+          ".bbl": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 8,
+        "size_mb": "0.06",
+        "total_size_bytes": 63864,
+        "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.02",
+            "path": "web/index.html"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.01",
+            "path": "web/_combined_manuscript.md"
+          },
+          {
+            "name": "manuscript__02_engine_architecture.html",
+            "size_mb": "0.01",
+            "path": "web/manuscript__02_engine_architecture.html"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".html": 7
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 49,
+        "size_mb": "0.52",
+        "total_size_bytes": 540480,
+        "largest_files": [
+          {
+            "name": "99_references_slides.log",
+            "size_mb": "0.06",
+            "path": "slides/99_references_slides.log"
+          },
+          {
+            "name": "02_engine_architecture_slides.log",
+            "size_mb": "0.06",
+            "path": "slides/02_engine_architecture_slides.log"
+          },
+          {
+            "name": "03_typography_and_figures_slides.log",
+            "size_mb": "0.06",
+            "path": "slides/03_typography_and_figures_slides.log"
+          }
+        ],
+        "extensions": {
+          ".nav": 6,
+          ".pdf": 6,
+          ".toc": 6,
+          ".tex": 7,
+          ".vrb": 6,
+          ".log": 6,
+          ".aux": 6,
+          ".snm": 6
+        }
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 13,
+        "size_mb": "0.17",
+        "total_size_bytes": 176923,
+        "largest_files": [
+          {
+            "name": "weather_7day.png",
+            "size_mb": "0.04",
+            "path": "figures/weather_7day.png"
+          },
+          {
+            "name": "crab_landings.png",
+            "size_mb": "0.04",
+            "path": "figures/crab_landings.png"
+          },
+          {
+            "name": "tides.png",
+            "size_mb": "0.03",
+            "path": "figures/tides.png"
+          }
+        ],
+        "extensions": {
+          ".png": 13
+        }
+      },
+      "data": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 189,
+        "largest_files": [
+          {
+            "name": "render_report.json",
+            "size_mb": "0.00",
+            "path": "data/render_report.json"
+          }
+        ],
+        "extensions": {
+          ".json": 1
+        }
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 23,
+        "size_mb": "0.10",
+        "total_size_bytes": 110019,
+        "largest_files": [
+          {
+            "name": "evidence_registry.json",
+            "size_mb": "0.05",
+            "path": "reports/evidence_registry.json"
+          },
+          {
+            "name": "artifact_manifest.json",
+            "size_mb": "0.01",
+            "path": "reports/artifact_manifest.json"
+          },
+          {
+            "name": "output_statistics.json",
+            "size_mb": "0.01",
+            "path": "reports/output_statistics.json"
+          }
+        ],
+        "extensions": {
+          ".json": 15,
+          ".jsonl": 1,
+          ".txt": 3,
+          ".md": 4
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 158,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 106,
+    "total_size_mb": 1.4461259841918945,
+    "largest_files": [
+      {
+        "name": "the-triplicate.pdf",
+        "size_mb": "0.46",
+        "category": "pdf",
+        "path": "pdf/the-triplicate.pdf"
+      },
+      {
+        "name": "template_newspaper_combined.pdf",
+        "size_mb": "0.06",
+        "category": "pdf",
+        "path": "pdf/template_newspaper_combined.pdf"
+      },
+      {
+        "name": "99_references_slides.log",
+        "size_mb": "0.06",
+        "category": "slides",
+        "path": "slides/99_references_slides.log"
+      },
+      {
+        "name": "02_engine_architecture_slides.log",
+        "size_mb": "0.06",
+        "category": "slides",
+        "path": "slides/02_engine_architecture_slides.log"
+      },
+      {
+        "name": "03_typography_and_figures_slides.log",
+        "size_mb": "0.06",
+        "category": "slides",
+        "path": "slides/03_typography_and_figures_slides.log"
+      },
+      {
+        "name": "_combined_manuscript.log",
+        "size_mb": "0.05",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.log"
+      },
+      {
+        "name": "evidence_registry.json",
+        "size_mb": "0.05",
+        "category": "reports",
+        "path": "reports/evidence_registry.json"
+      },
+      {
+        "name": "weather_7day.png",
+        "size_mb": "0.04",
+        "category": "figures",
+        "path": "figures/weather_7day.png"
+      },
+      {
+        "name": "crab_landings.png",
+        "size_mb": "0.04",
+        "category": "figures",
+        "path": "figures/crab_landings.png"
+      },
+      {
+        "name": "tides.png",
+        "size_mb": "0.03",
+        "category": "figures",
+        "path": "figures/tides.png"
+      }
+    ],
+    "missing_expected_files": [],
+    "sizes_by_category": {
+      "pdf": 0.5957984924316406,
+      "web": 0.06090545654296875,
+      "slides": 0.51544189453125,
+      "figures": 0.16872692108154297,
+      "data": 0.00018024444580078125,
+      "reports": 0.10492229461669922,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.0001506805419921875
+    },
+    "file_counts_by_type": {
+      ".md": 6,
+      ".log": 9,
+      ".aux": 7,
+      ".blg": 1,
+      ".bib": 1,
+      ".tex": 8,
+      ".toc": 7,
+      ".pdf": 8,
+      ".bbl": 1,
+      ".html": 7,
+      ".nav": 6,
+      ".vrb": 6,
+      ".snm": 6,
+      ".png": 13,
+      ".json": 16,
+      ".jsonl": 1,
+      ".txt": 3
+    },
+    "log_file": {
+      "exists": true,
+      "size": 158,
+      "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_newspaper/output/logs/pipeline.log"
+    }
+  }
+}

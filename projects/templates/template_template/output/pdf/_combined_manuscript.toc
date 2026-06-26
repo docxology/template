@@ -1,0 +1,103 @@
+\contentsline {section}{\numberline {1}Abstract}{4}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Research Tools as Epistemic Infrastructure}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Related Work}{5}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Workflow Managers}{5}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Literate Programming and Publication Tools}{6}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Containerization and Environment Capture}{6}{subsubsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.4}Best-Practice Frameworks and Data Standards}{6}{subsubsection.2.2.4}%
+\contentsline {subsubsection}{\numberline {2.2.5}The Gap}{7}{subsubsection.2.2.5}%
+\contentsline {subsubsection}{\numberline {2.2.6}Summary: Gaps Left by Existing Tools}{7}{subsubsection.2.2.6}%
+\contentsline {subsection}{\numberline {2.3}\texttt {template/}: An Integrated Solution}{7}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Scope and Contributions}{8}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Paper Organization}{9}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Methods}{10}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The Two-Layer Architecture}{10}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}The Standalone Project Paradigm}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}The Thin Orchestrator Pattern}{10}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}DAG Pipeline Declared by \texttt {pipeline.yaml}}{12}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Stage Highlights}{12}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}Interactive Orchestration}{12}{subsubsection.3.4.2}%
+\contentsline {paragraph}{\numberline {3.4.2.1}\texttt {run.sh}}{12}{paragraph.3.4.2.1}%
+\contentsline {paragraph}{\numberline {3.4.2.2}\texttt {secure\_run.sh}}{12}{paragraph.3.4.2.2}%
+\contentsline {subsection}{\numberline {3.5}Documentation Duality and AI Collaboration}{14}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Agentic Skill Architecture}{14}{subsection.3.6}%
+\contentsline {subsubsection}{\numberline {3.6.1}The Three-Tier Skill Protocol}{14}{subsubsection.3.6.1}%
+\contentsline {subsubsection}{\numberline {3.6.2}Module Skill Coverage}{15}{subsubsection.3.6.2}%
+\contentsline {subsubsection}{\numberline {3.6.3}MCP Server Mapping}{15}{subsubsection.3.6.3}%
+\contentsline {subsection}{\numberline {3.7}FAIR Alignment and Research Infrastructure as Code}{16}{subsection.3.7}%
+\contentsline {subsubsection}{\numberline {3.7.1}Principle-by-Principle Alignment}{16}{subsubsection.3.7.1}%
+\contentsline {subsubsection}{\numberline {3.7.2}Infrastructure as Code for Research}{16}{subsubsection.3.7.2}%
+\contentsline {subsection}{\numberline {3.8}Quality Assurance}{17}{subsection.3.8}%
+\contentsline {subsubsection}{\numberline {3.8.1}Zero-Mock Testing Policy}{17}{subsubsection.3.8.1}%
+\contentsline {subsubsection}{\numberline {3.8.2}Coverage Thresholds}{17}{subsubsection.3.8.2}%
+\contentsline {subsubsection}{\numberline {3.8.3}Test Suite Composition}{17}{subsubsection.3.8.3}%
+\contentsline {subsubsection}{\numberline {3.8.4}Visualization Standards}{17}{subsubsection.3.8.4}%
+\contentsline {section}{\numberline {4}Results}{19}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Multi-Project Pipeline Execution}{19}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Infrastructure Test Suite}{19}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Infrastructure Module Inventory}{19}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Agentic Skill Documentation Coverage}{21}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}DAG Reference (Declarative Executor)}{21}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Steganographic Performance}{22}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Self-Referential Analysis}{22}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}Comparative Feature Analysis}{24}{subsection.4.8}%
+\contentsline {subsection}{\numberline {4.9}Test Quality Metrics}{25}{subsection.4.9}%
+\contentsline {section}{\numberline {5}Discussion}{26}{section.5}%
+\contentsline {subsection}{\numberline {5.1}The Zero-Mock Tradeoff}{26}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}When Mocks Are Not the Problem}{26}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Practical Implementation}{26}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}Scalability: From 1 to N Projects}{27}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Multi-Project Orchestration}{27}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Scaling Metrics}{27}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.3}Comparison to Existing Tools}{28}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}FAIR4RS Evolution (2024--2026)}{28}{subsubsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.4}The AI Collaboration Model}{29}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}The Learning Curve}{29}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Limitations}{29}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Future Directions}{31}{subsection.5.7}%
+\contentsline {subsection}{\numberline {5.8}Conclusion}{31}{subsection.5.8}%
+\contentsline {section}{\numberline {6}Infrastructure Module Reference}{33}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Alphabetical summaries}{34}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}\breaktt {infrastructure.autoresearch} (8 files)}{34}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}\breaktt {infrastructure.benchmark} (3 files)}{34}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.3}\breaktt {infrastructure/config} (non-package subdirectory)}{34}{subsubsection.6.1.3}%
+\contentsline {subsubsection}{\numberline {6.1.4}\breaktt {infrastructure.core} (105 files)}{34}{subsubsection.6.1.4}%
+\contentsline {subsubsection}{\numberline {6.1.5}\breaktt {infrastructure.doctor} (14 files)}{34}{subsubsection.6.1.5}%
+\contentsline {subsubsection}{\numberline {6.1.6}\breaktt {infrastructure.docker} (0 files)}{35}{subsubsection.6.1.6}%
+\contentsline {subsubsection}{\numberline {6.1.7}\breaktt {infrastructure.documentation} (12 files)}{35}{subsubsection.6.1.7}%
+\contentsline {subsubsection}{\numberline {6.1.8}\breaktt {infrastructure.llm} (54 files)}{35}{subsubsection.6.1.8}%
+\contentsline {subsubsection}{\numberline {6.1.9}\breaktt {infrastructure.methods} (5 files)}{35}{subsubsection.6.1.9}%
+\contentsline {subsubsection}{\numberline {6.1.10}\breaktt {infrastructure.orchestration} (8 files)}{35}{subsubsection.6.1.10}%
+\contentsline {subsubsection}{\numberline {6.1.11}\breaktt {infrastructure.project} (27 files)}{35}{subsubsection.6.1.11}%
+\contentsline {subsubsection}{\numberline {6.1.12}\breaktt {infrastructure.prose} (8 files)}{35}{subsubsection.6.1.12}%
+\contentsline {subsubsection}{\numberline {6.1.13}\breaktt {infrastructure.publishing} (44 files)}{35}{subsubsection.6.1.13}%
+\contentsline {subsubsection}{\numberline {6.1.14}\breaktt {infrastructure.reference} (16 files)}{35}{subsubsection.6.1.14}%
+\contentsline {subsubsection}{\numberline {6.1.15}\breaktt {infrastructure.rendering} (49 files)}{35}{subsubsection.6.1.15}%
+\contentsline {subsubsection}{\numberline {6.1.16}\breaktt {infrastructure.reporting} (57 files)}{35}{subsubsection.6.1.16}%
+\contentsline {subsubsection}{\numberline {6.1.17}\breaktt {infrastructure.scientific} (4 files)}{35}{subsubsection.6.1.17}%
+\contentsline {subsubsection}{\numberline {6.1.18}\breaktt {infrastructure.search} (44 files)}{35}{subsubsection.6.1.18}%
+\contentsline {subsubsection}{\numberline {6.1.19}\breaktt {infrastructure.sia} (9 files)}{36}{subsubsection.6.1.19}%
+\contentsline {subsubsection}{\numberline {6.1.20}\breaktt {infrastructure.skills} (6 files)}{36}{subsubsection.6.1.20}%
+\contentsline {subsubsection}{\numberline {6.1.21}\breaktt {infrastructure.steganography} (11 files)}{36}{subsubsection.6.1.21}%
+\contentsline {subsubsection}{\numberline {6.1.22}\breaktt {infrastructure.validation} (83 files)}{36}{subsubsection.6.1.22}%
+\contentsline {subsubsection}{\numberline {6.1.23}\breaktt {infrastructure/logrotate.d} (0 files)}{36}{subsubsection.6.1.23}%
+\contentsline {section}{\numberline {7}Security and Provenance}{37}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Threat Model}{37}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Steganographic Layers}{37}{subsection.7.2}%
+\contentsline {subsubsection}{\numberline {7.2.1}Layer 1: PDF Metadata Injection}{37}{subsubsection.7.2.1}%
+\contentsline {subsubsection}{\numberline {7.2.2}Layer 2: Cryptographic Hashing}{37}{subsubsection.7.2.2}%
+\contentsline {subsubsection}{\numberline {7.2.3}Layer 3: Alpha-Channel Text Overlay}{37}{subsubsection.7.2.3}%
+\contentsline {subsubsection}{\numberline {7.2.4}Layer 4: QR Code Injection}{38}{subsubsection.7.2.4}%
+\contentsline {subsection}{\numberline {7.3}The \texttt {secure\_run.sh} Orchestrator}{38}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Tamper Detection}{38}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Limitations}{38}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Relationship to Software Supply Chain Integrity}{38}{subsection.7.6}%
+\contentsline {subsection}{\numberline {7.7}Relationship to FAIR and Formal Provenance Standards}{39}{subsection.7.7}%
+\contentsline {section}{\numberline {8}Appendices}{40}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Appendix: Pipeline Stage Reference}{40}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Appendix: Configuration Reference}{41}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Appendix: Repository Directory Structure}{42}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Appendix: Exemplar Project Summary}{43}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Appendix: Documentation Inventory}{44}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Appendix: Comparative Tool Matrix}{45}{subsection.8.6}%

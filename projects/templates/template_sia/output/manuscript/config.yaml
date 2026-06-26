@@ -1,0 +1,46 @@
+paper:
+  title: "Self-Improvement Agent Harness: A Deterministic SIA Exemplar"
+  subtitle: "Meta → Target → Feedback loops with public/private task splits"
+  version: "0.1.2"
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.20453879" # Concept DOI — stable citation
+  version_doi: "10.5281/zenodo.20932066" # Latest Zenodo deposit (v0.1.0)
+  version_record: "https://zenodo.org/records/20932066"
+  year: "2026"
+  github_repository: "docxology/template_sia"
+
+keywords:
+  - "self-improvement agents"
+  - "benchmark harness"
+  - "reproducible research"
+  - "agent evaluation"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+manuscript_dir: "manuscript"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false
+    docx: false
+    epub: false
+
+sia:
+  task_name: mini_classify
+  run_id: 1
+  max_generations: 3
+  live: false
+  target_timeout_sec: 60
+  llm_model: ""

@@ -1,0 +1,251 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% Slide layout defaults for warning-clean scientific decks.
+\usepackage{etoolbox}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+\protected\def\breakseq#1{\seqsplit{#1}}
+\protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
+\setlength{\emergencystretch}{6em}
+\tolerance=5000
+\hbadness=10000
+\hfuzz=1pt
+\setlength{\tabcolsep}{2pt}
+\AtBeginEnvironment{longtable}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+\AtBeginEnvironment{tabular}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+
+% Natbib and cross-reference fallbacks — slides don't load natbib
+% or cleveref, but combined-PDF manuscript prose may emit these
+% commands. The fallback renders citations as a bracketed key list
+% and cross-references as detokenized labels so slides don't fail on
+% undefined control sequences or raw underscores. \providecommand is
+% a no-op if packages load later.
+\providecommand{\citep}[1]{[#1]}
+\providecommand{\citet}[1]{#1}
+\providecommand{\citealp}[1]{#1}
+\providecommand{\citeauthor}[1]{#1}
+\providecommand{\citeyear}[1]{#1}
+\providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
+\providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile,allowframebreaks]{DAG Pipeline Declared by
+\texttt{pipeline.yaml}}
+\protect\phantomsection\label{dag-pipeline-declared-by-pipeline.yaml}
+Single-project pipelines read
+\breaktt{infrastructure/core/pipeline/pipeline.yaml}.
+\breaktt{scripts/execute\_pipeline.py} expands the declarative DAG,
+applies tag filters (\texttt{-\/-core-only} skips \texttt{llm} stages),
+checkpoints between nodes, then dispatches numbered scripts
+(\texttt{scripts/NN\_*.py}) or builtin methods
+(\breaktt{\_run\_clean\_outputs}).
+
+The \textbf{default YAML graph contains ten named stages} (plus
+telemetry configuration metadata):
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Clean Output Directories} --- wipes prior
+  \texttt{projects/\textless{}name\textgreater{}/output/} + delivered
+  \texttt{output/\textless{}name\textgreater{}/} paths so stale PDFs
+  cannot satisfy validation.
+\item
+  \textbf{Environment Setup} (\breaktt{00\_setup\_environment.py}) ---
+  Python/uv probing, toolchain discovery, scaffolding directories,
+  \texttt{PYTHONPATH} wiring.
+\item
+  \textbf{Infrastructure Tests}
+  (\breaktt{01\_run\_tests.py\ -\/-infra-only}) --- \texttt{tests/} suite
+  with infra coverage thresholds (≥60\,\%).
+\item
+  \textbf{Project Tests} (\breaktt{01\_run\_tests.py\ -\/-project-only})
+  --- per-project suites with ≥90\,\% coverage mandate.
+\item
+  \textbf{Project Analysis} (\breaktt{02\_run\_analysis.py}) ---
+  lexicographically ordered
+  \texttt{projects/\textless{}name\textgreater{}/scripts/*.py}, each a
+  thin orchestrator (\texttt{src/} does real work).
+\item
+  \textbf{PDF Rendering} (\breaktt{03\_render\_pdf.py}) ---
+  Pandoc\,→\,XeLaTeX loop, bibliography assembly, injected variables
+  from Stage~02 artefacts.
+\item
+  \textbf{Output Validation} (\breaktt{04\_validate\_output.py}) --- PDF
+  structure, manifests, Markdown hygiene.
+\item
+  \textbf{LLM Scientific Review}
+  (\breaktt{06\_llm\_review.py\ -\/-reviews-only}; \texttt{tags:\ llm})
+  --- executive + quality critiques via local Ollama;
+  \breaktt{allow\_skip:\ true}.
+\item
+  \textbf{LLM Translations}
+  (\breaktt{06\_llm\_review.py\ -\/-translations-only}; tags
+  \texttt{llm}, same dependency edges) --- multilingual abstract
+  expansion.
+\item
+  \textbf{Copy Outputs} (\breaktt{05\_copy\_outputs.py}) --- reproducible
+  snapshots into canonical
+  \texttt{output/\textless{}project\textgreater{}/}.
+\end{enumerate}
+
+Two LLM nodes intentionally share one script module with orthogonal CLI
+switches; both depend only on validation so they can parallelize
+logically while remaining optional.
+
+\textbf{Executive reporting}
+(\breaktt{scripts/07\_generate\_executive\_report.py}) is \textbf{not} a
+YAML node inside the single-project executor. \breaktt{-\/-all-projects}
+/ \breaktt{execute\_multi\_project.py} invokes it once after iterating
+projects, consolidating cross-project KPIs dashboards.
+
+Topological order therefore differs slightly from lexical script
+numbering (e.g., copy executes after validation even though script
+\texttt{05} precedes \texttt{06} lexically).
+
+\begin{block}{Stage Highlights}
+\protect\phantomsection\label{stage-highlights}
+\textbf{Infrastructure vs project tests.} Splitting pytest invocations
+isolates flaky infra regressions (\breaktt{MAX\_TEST\_FAILURES} knobs)
+from zero-tolerance gates on domain code
+(\breaktt{max\_project\_test\_failures} default~0 declared in YAML
+front-matter/testing blocks).
+
+\textbf{Stage~02 illustration.} Rather than hypothetical diagram
+factories, canonical projects ship concrete
+behaviours---\breaktt{template\_autoresearch\_project} runs readiness
+validation; archived \breaktt{template\_search\_project} merges remote
+literature JSON, scripted figures
+(\breaktt{y\_generate\_search\_figures.py}), and manifest writers;
+\breaktt{template\_code\_project} emits optimization plots;
+\breaktt{template\_prose\_project} mainly triggers structural validation
+scaffolding.
+\end{block}
+
+\begin{block}{Interactive Orchestration}
+\protect\phantomsection\label{interactive-orchestration}
+\begin{block}{\texttt{run.sh}}
+\protect\phantomsection\label{run.sh}
+Thin wrapper invoking \breaktt{python\ -m\ infrastructure.orchestration}.
+Offers:
+
+\begin{itemize}
+\tightlist
+\item
+  per-project staged execution,
+\item
+  chained digits (\texttt{234} shorthand),
+\item
+  multi-project grid (\texttt{a}--\texttt{d} presets),
+\item
+  graceful quit / resume parity with \breaktt{scripts/README.md}.
+\end{itemize}
+
+Selecting \textbf{\texttt{d} alone} after a passing multi-project run
+exits immediately once summaries print---avoiding repetitive menu
+redraw.
+\end{block}
+
+\begin{block}{\texttt{secure\_run.sh}}
+\protect\phantomsection\label{secure_run.sh}
+Executes Python \texttt{secure} path: standard pipeline artefact
+reproduction \textbf{then} invokes \breaktt{run\_secure\_pipeline} for
+steganographic PDF hardening (\breaktt{infrastructure.steganography}).
+Original PDFs stay immutable; hardened companions carry QR overlays plus
+hash manifests sidecars.
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

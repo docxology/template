@@ -1,0 +1,21 @@
+{
+  "artifact_manifest_hash": "af736f81073ef3e39aab561a12e0518be168afde7d2e963fc945e18b66f4b9f2",
+  "artifacts": {
+    "output/data/ablation.json": "8c64fa8392f5f6db6cd54d97e76ffd618e246f23cc6cb8e23f7976d05a3bd159",
+    "output/data/search_comparison.json": "52c6b21e9a6439a761b6db7a00dab4f9653dc0b0d68a2c56133d5c09e6aa7ffc",
+    "output/figures/ablation.png": "1b40f009d05d492646e277d7b24f87f99275736c694c62afbb5ab48fe2700fa1",
+    "output/figures/ablation_efficiency.png": "dd666fffa09536bea41e1e1f85a12a6e47959c2a98a362935cba6bfe4ac4fc3e",
+    "output/figures/search_comparison.png": "845fa5295bfe4c8f14d3d5e1579502369e91895fb3becea515881d19cf4b538e",
+    "output/reports/test_results.json": "870cf2dee7f04d24c2e8984aa4bc251a818350beba84eda87f5be0499add5d32",
+    "output/reports/test_results.md": "46769d5dfe5c0cd2e3b74897a19a014167489ab5c0017212a9e7334272e39ac1"
+  },
+  "evidence_fact_count": 0,
+  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoscientists/output/reports/snapshots/stage-05-project-analysis.json",
+  "stage_name": "Project Analysis",
+  "stage_num": 5,
+  "timestamp": "2026-06-14T19:49:10+00:00",
+  "validation_summary": {
+    "checks": {},
+    "summary": {}
+  }
+}

@@ -75,6 +75,7 @@ Pick the entry that matches your goal — each link is stable for deep navigatio
 | **Debug a failed pipeline stage** | [`docs/prompts/pipeline-debugging/SKILL.md`](../docs/prompts/pipeline-debugging/SKILL.md) | [`docs/operational/troubleshooting/`](../docs/operational/troubleshooting/) |
 | **Write or fix tests** | [`docs/rules/testing_standards.md`](../docs/rules/testing_standards.md) | [`docs/prompts/test-creation/SKILL.md`](../docs/prompts/test-creation/SKILL.md) |
 | **Manuscript / PDF / citations** | [`docs/guides/manuscript-semantics.md`](../docs/guides/manuscript-semantics.md) | [`docs/prompts/manuscript-cross-references/SKILL.md`](../docs/prompts/manuscript-cross-references/SKILL.md) |
+| **Published exemplars / tracked outputs** | [`docs/_generated/publication_records.md`](../docs/_generated/publication_records.md) | [`docs/guides/publishing-guide.md#public-exemplar-release`](../docs/guides/publishing-guide.md#public-exemplar-release) |
 | **Contribute / open a PR** | [CI/CD](#cicd) · [Issue & PR templates](#issue--pr-templates) | [`docs/development/contributing.md`](../docs/development/contributing.md) |
 | **Mirror CI locally** | [Simulate CI locally](#simulate-ci-locally) | [`docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md) · [`scripts/ci_local.sh`](../scripts/ci_local.sh) |
 | **Cloud / headless deploy** | [`docs/CLOUD_DEPLOY.md`](../docs/CLOUD_DEPLOY.md) | [`infrastructure/docker/`](../infrastructure/docker/) |
@@ -129,8 +130,8 @@ Natural-language tasks map to one child skill under [`docs/prompts/`](../docs/pr
 
 ```bash
 uv sync                                                          # install deps
-./run.sh --pipeline --project template_code_project --core-only  # 8-stage core DAG
-uv run python scripts/01_run_tests.py --project template_code_project
+./run.sh --pipeline --project templates/template_code_project --core-only  # 8-stage core DAG
+uv run python scripts/01_run_tests.py --project templates/template_code_project
 uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
 uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
 uv run python -m infrastructure.skills check                     # manifest freshness
@@ -170,9 +171,9 @@ uv sync
 ./run.sh
 
 # 4. Or run non-interactively against the exemplar project
-./run.sh --pipeline --project template_code_project
+./run.sh --pipeline --project templates/template_code_project
 
-# Outputs → output/template_code_project/
+# Outputs → output/templates/template_code_project/
 ```
 
 > **Don't have `uv`?** → `curl -Ls https://astral.sh/uv/install.sh | sh`

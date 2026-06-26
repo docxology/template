@@ -1,0 +1,278 @@
+{
+  "all_mapped_once": true,
+  "profile_kinds": [
+    "gnn_variable",
+    "graph_world_model",
+    "toy_benchmark_model"
+  ],
+  "profile_models": [
+    "bernoulli_ising",
+    "bernoulli_toy",
+    "graph_world",
+    "graph_world_branch4",
+    "graph_world_diamond5",
+    "graph_world_linear4",
+    "graph_world_loop5",
+    "si_tmaze"
+  ],
+  "row_count": 19,
+  "rows": [
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "Stream1HabitPrior",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        2,
+        1
+      ],
+      "source": "gnn/bernoulli_toy.gnn.md",
+      "variable": "E1"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "Stream2HabitPrior",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        2,
+        1
+      ],
+      "source": "gnn/bernoulli_toy.gnn.md",
+      "variable": "E2"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "CrossStreamCouplingPotential",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        2,
+        2
+      ],
+      "source": "gnn/bernoulli_toy.gnn.md",
+      "variable": "J"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "SophisticationWeight",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        1
+      ],
+      "source": "gnn/bernoulli_toy.gnn.md",
+      "variable": "gamma"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "EntanglementDeformationParameter",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        1
+      ],
+      "source": "gnn/bernoulli_toy.gnn.md",
+      "variable": "lam"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "Stream1PolicyVector",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        2,
+        1
+      ],
+      "source": "gnn/bernoulli_toy.gnn.md",
+      "variable": "pi1"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "Stream2PolicyVector",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        2,
+        1
+      ],
+      "source": "gnn/bernoulli_toy.gnn.md",
+      "variable": "pi2"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ontology": "EntangledJointPosterior",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        2,
+        2
+      ],
+      "source": "gnn/bernoulli_toy.gnn.md",
+      "variable": "q_joint"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ontology": "BeliefEntropy",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        1
+      ],
+      "source": "gnn/si_tmaze.gnn.md",
+      "variable": "belief_entropy"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ontology": "HiddenState",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        2,
+        1
+      ],
+      "source": "gnn/si_tmaze.gnn.md",
+      "variable": "loc"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ontology": "ObservationLikelihood",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        2,
+        1
+      ],
+      "source": "gnn/si_tmaze.gnn.md",
+      "variable": "obs"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ontology": "PolicyPosterior",
+      "profile_complete": true,
+      "profile_kind": "gnn_variable",
+      "shape": [
+        2,
+        1
+      ],
+      "source": "gnn/si_tmaze.gnn.md",
+      "variable": "pi"
+    },
+    {
+      "dtype": "record",
+      "mapped_once": true,
+      "model": "graph_world_linear4",
+      "ontology": "FiniteGraphWorld",
+      "profile_complete": true,
+      "profile_kind": "graph_world_model",
+      "shape": [
+        4
+      ],
+      "source": "output/data/si_graph_world_topology_sweep.json",
+      "variable": "finite_topology"
+    },
+    {
+      "dtype": "record",
+      "mapped_once": true,
+      "model": "graph_world_branch4",
+      "ontology": "FiniteGraphWorld",
+      "profile_complete": true,
+      "profile_kind": "graph_world_model",
+      "shape": [
+        4
+      ],
+      "source": "output/data/si_graph_world_topology_sweep.json",
+      "variable": "finite_topology"
+    },
+    {
+      "dtype": "record",
+      "mapped_once": true,
+      "model": "graph_world_loop5",
+      "ontology": "FiniteGraphWorld",
+      "profile_complete": true,
+      "profile_kind": "graph_world_model",
+      "shape": [
+        5
+      ],
+      "source": "output/data/si_graph_world_topology_sweep.json",
+      "variable": "finite_topology"
+    },
+    {
+      "dtype": "record",
+      "mapped_once": true,
+      "model": "graph_world_diamond5",
+      "ontology": "FiniteGraphWorld",
+      "profile_complete": true,
+      "profile_kind": "graph_world_model",
+      "shape": [
+        5
+      ],
+      "source": "output/data/si_graph_world_topology_sweep.json",
+      "variable": "finite_topology"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "bernoulli_ising",
+      "ontology": "ToyBenchmarkMetric",
+      "profile_complete": true,
+      "profile_kind": "toy_benchmark_model",
+      "shape": [
+        1
+      ],
+      "source": "output/data/toy_benchmark_matrix.json",
+      "variable": "max_closed_form_mi"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ontology": "ToyBenchmarkMetric",
+      "profile_complete": true,
+      "profile_kind": "toy_benchmark_model",
+      "shape": [
+        1
+      ],
+      "source": "output/data/toy_benchmark_matrix.json",
+      "variable": "goal_reached"
+    },
+    {
+      "dtype": "float",
+      "mapped_once": true,
+      "model": "graph_world",
+      "ontology": "ToyBenchmarkMetric",
+      "profile_complete": true,
+      "profile_kind": "toy_benchmark_model",
+      "shape": [
+        1
+      ],
+      "source": "output/data/toy_benchmark_matrix.json",
+      "variable": "goal_reached"
+    }
+  ],
+  "schema": "template_active_inference.ontology_profile_matrix.v1"
+}

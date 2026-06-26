@@ -1,0 +1,60 @@
+# Run Lessons
+
+- **pause_recommendation** [info] stage 0 (Evidence registry): pause recommended
+- **pause_recommendation** [info] stage 0 (PDF Rendering): pause recommended
+- **validation_defect** [warning] stage 0 (validation): Evidence registry did not pass
+- **validation_defect** [warning] stage 0 (validation): 00_abstract.md: unsupported number 36%
+- **validation_defect** [warning] stage 0 (validation): 00_abstract.md: unsupported number 24%
+- **validation_defect** [warning] stage 0 (validation): 00_abstract.md: unsupported number 1.4
+- **validation_defect** [warning] stage 0 (validation): 00_abstract.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 00_abstract.md: unsupported number 60%
+- **validation_defect** [warning] stage 0 (validation): 00_abstract.md: unsupported number 2.0
+- **validation_defect** [warning] stage 0 (validation): 02_introduction.md: unsupported number 1.2
+- **validation_defect** [warning] stage 0 (validation): 03a_architecture.md: unsupported number 02
+- **validation_defect** [warning] stage 0 (validation): 03e_quality.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 03e_quality.md: unsupported number 60%
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 40
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 35
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 30
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 02
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 60
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 80
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 0.3
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 0.8
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 0.4
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 1.5
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 25
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 0.9
+- **validation_defect** [warning] stage 0 (validation): 04_results.md: unsupported number 1.6
+- **validation_defect** [warning] stage 0 (validation): 08d_appendix_exemplars.md: unsupported number 02
+- **validation_defect** [warning] stage 0 (validation): 08d_appendix_exemplars.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 08e_appendix_docs.md: unsupported number 90
+- **validation_defect** [warning] stage 0 (validation): 08f_appendix_matrix.md: unsupported number 25
+- **validation_defect** [warning] stage 0 (validation): 08f_appendix_matrix.md: unsupported number 1.2
+- **validation_defect** [warning] stage 0 (validation): 02_introduction.md: unsupported number 1576
+- **validation_defect** [warning] stage 0 (validation): 02_introduction.md: unsupported number 70%
+- **validation_defect** [warning] stage 0 (validation): 02_introduction.md: unsupported number 28
+- **validation_defect** [warning] stage 0 (validation): 02_introduction.md: unsupported number 1.4
+- **validation_defect** [warning] stage 0 (validation): 02_introduction.md: unsupported number 24%
+- **validation_defect** [warning] stage 0 (validation): 02_introduction.md: unsupported number 36%
+- **validation_defect** [warning] stage 0 (validation): 02_introduction.md: unsupported number 60%
+- **validation_defect** [warning] stage 0 (validation): 02_introduction.md: unsupported number 90
+- **validation_defect** [warning] stage 0 (validation): 03b_pipeline.md: unsupported number 60
+- **validation_defect** [warning] stage 0 (validation): 03b_pipeline.md: unsupported number 90
+- **validation_defect** [warning] stage 0 (validation): 03b_pipeline.md: unsupported number 02
+- **validation_defect** [warning] stage 0 (validation): 03c_documentation.md: unsupported number 90
+- **validation_defect** [warning] stage 0 (validation): 03e_quality.md: unsupported number 01
+- **validation_defect** [warning] stage 0 (validation): 03e_quality.md: unsupported number 150
+- **validation_defect** [warning] stage 0 (validation): 03e_quality.md: unsupported number 300
+- **validation_defect** [warning] stage 0 (validation): 05b_scalability.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 05b_scalability.md: unsupported number 02
+- **validation_defect** [warning] stage 0 (validation): 05c_comparison.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 05c_comparison.md: unsupported number 24
+- **validation_defect** [warning] stage 0 (validation): 05d_ai_collaboration.md: unsupported number 53%
+- **validation_defect** [warning] stage 0 (validation): 05d_ai_collaboration.md: unsupported number 50
+- **validation_defect** [warning] stage 0 (validation): 05d_ai_collaboration.md: unsupported number 170
+- **validation_defect** [warning] stage 0 (validation): 05d_ai_collaboration.md: unsupported number 7
+- **validation_defect** [warning] stage 0 (validation): 06_infrastructure_modules.md: unsupported number 01
+- **validation_defect** [warning] stage 0 (validation): 07_security_provenance.md: unsupported number 8601
+- **slow_telemetry** [warning] stage 0 (PDF Rendering): Stage 'PDF Rendering' took 116.7s (2.0× the average 23.1s)

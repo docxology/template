@@ -1,0 +1,76 @@
+paper:
+  title: "Active Inference Multi-Track Exemplar"
+  subtitle: "Sheaf-Composed Manuscript with pymdp Sophisticated Inference"
+  version: "0.3.2"
+  date: "2026-06-26"
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.20417021" # Concept DOI — stable citation
+  version_doi: "10.5281/zenodo.20931870" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20931870"
+  github_repository: "docxology/template_active_inference"
+  transmission_bookends:
+    enabled: true
+    max_prior_releases: 5
+    show_steganography: true
+
+keywords:
+  - "active inference"
+  - "pymdp"
+  - "sophisticated inference"
+  - "generalized notation notation"
+  - "lean"
+
+metadata:
+  license: "MIT"
+  language: "en"
+  # Dense, config-driven page margins (single source of truth — do not also set
+  # \geometry in preamble.md). Forwarded to pandoc as `-V geometry:` by
+  # infrastructure/rendering/_pdf_combined_pandoc.py::build_pandoc_tex_command.
+  geometry: "margin=0.5in"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false
+
+llm:
+  reviews:
+    enabled: false
+  translations:
+    enabled: false
+
+testing:
+  max_test_failures: 0
+
+analysis:
+  scripts:
+    - compose_manuscript.py
+    - run_analytical_sweep.py
+    - simulate_si_tmaze.py
+    - simulate_si_graph_world.py
+    - compute_statistics.py
+    - generate_figures.py
+    - render_animation.py
+    - generate_validation_spine.py
+    - generate_toy_sweep_tracks.py
+    - generate_formal_interop_tracks.py
+    - generate_integration_audit.py
+    - generate_sheaf_tracks.py
+    - z_generate_manuscript_variables.py
+
+sheaf:
+  manifest: manuscript/sheaf/manifest.yaml
+  registry: manuscript/sheaf/tracks.yaml
+  coverage_config: manuscript/sheaf/coverage.yaml
+  composer: scripts/compose_manuscript.py
+  figures_config: figures.yaml
+  # Row/section counts are registry-backed (structural_counts); do not hard-code here.

@@ -46,32 +46,29 @@ deterministic AutoResearch loop (`template_autoresearch_project`).
 | Optional knowledge-graph layer: assertion extraction, hypothesis scoring, RDF/TriG nanopublications (LLM-gated, offline-safe) | `src/knowledge_graph/` |
 | Publication-ready figures + auto-injected manuscript | `src/visualization/`, `src/manuscript/` |
 
-## Run via the template monorepo
+## Publication and rendering
 
-From the [template monorepo](https://github.com/docxology/template) root:
+- Standalone GitHub: [docxology/template_literature_meta_analysis](https://github.com/docxology/template_literature_meta_analysis)
+- Latest GitHub release: [v0.1.0](https://github.com/docxology/template_literature_meta_analysis/releases/tag/v0.1.0)
+- Zenodo concept DOI: [10.5281/zenodo.20931964](https://doi.org/10.5281/zenodo.20931964)
+- Latest Zenodo version DOI: [10.5281/zenodo.20931965](https://doi.org/10.5281/zenodo.20931965) ([record](https://zenodo.org/records/20931965))
+- Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_literature_meta_analysis`
+- Tracked outputs: [`output/`](output/) in this project and `output/templates/template_literature_meta_analysis/` in the monorepo; public output files above 50 MB stay out of git.
+
+To regenerate this exemplar from the public monorepo:
 
 ```bash
-# Install the scientific + llm dependency groups this project needs
-uv sync --group scientific --group llm
-
-# Tests (90% coverage gate on src/)
-uv run pytest projects/templates/template_literature_meta_analysis/tests/ \
-  --cov=projects/templates/template_literature_meta_analysis/src --cov-fail-under=90
-
-# Regenerate the deterministic offline fixture corpus (default term: modafinil)
-uv run python projects/templates/template_literature_meta_analysis/scripts/generate_fixture_corpus.py
-
-# Offline meta-analysis pipeline (no network, no LLM)
-uv run python projects/templates/template_literature_meta_analysis/scripts/02_meta_analysis_pipeline.py
+git clone https://github.com/docxology/template
+cd template
+uv sync
+./run.sh --project templates/template_literature_meta_analysis --pipeline --core-only
+uv run python scripts/04_validate_output.py --project templates/template_literature_meta_analysis
+uv run python scripts/05_copy_outputs.py --project templates/template_literature_meta_analysis
 ```
 
-To re-target to another term, edit `manuscript/config.yaml` →
-`project_config.search.term` (plus the `query` / `arxiv_queries` /
-`relevance_keywords` / `subfield_keywords` / `hypothesis_definitions` blocks) and
-regenerate the fixture corpus. For a live run, set `project_config.search.engines`
-toggles, supply any optional credentials (Unpaywall email, Semantic Scholar key), and
-the pipeline fetches real records — every engine degrades to `skipped` rather than
-failing when a key or the network is missing.
+Standalone repositories are publication mirrors for source, DOI metadata, and
+tracked rendered artifacts. Use the monorepo above when you need the full shared
+infrastructure, pipeline stages, or cross-template validation.
 
 ## Configuration
 

@@ -1,0 +1,65 @@
+```{=latex}
+\phantomsection
+\addcontentsline{toc}{section}{Methods}
+\section*{Methods}
+```
+
+# Bernoulli–Ising analytical model {#sec:methods_analytical}
+
+<!-- sheaf-track:prose -->
+
+The analytical method is a finite **K=2 Bernoulli / Ising** oracle. The entangled joint [@eq:entangled_joint] gives closed-form mutual information $I(\lambda)$; `output/data/parameter_sweep.csv` then checks the same curve by an independent exact total-correlation recomputation before the value is used in [@sec:results_mi_sweep]. GNN and ontology rows share the same symbol surface ([@fig:gnn_ontology_concordance]), so the derivation, sweep, and model notation are one audited toy contract rather than parallel descriptions.
+
+The scope is intentionally small: finite variational quantities only, no sampling, and no empirical generalization. "Free energy" here means exactly computed variational functionals on this tiny discrete state-space, aligned with mathematical FEP reviews [@buckley2017mathreview], not continuous-time or biological FEP dynamics [@gershman2019fepbrain]. The generated sweep contains 21 grid points, and the merged invariant report records 12 / 12 passing checks.
+
+<!-- sheaf-track:formalism -->
+
+The entangled joint over binary policies satisfies
+
+$$
+q_\lambda(\pi) \propto E(\pi)\,\exp(\lambda J(\pi)),
+$$ {#eq:entangled_joint}
+
+with symmetric Ising coupling $J$ and deformation parameter $\lambda$. Let $\sigma(\lambda)=q_\lambda(\pi_1=\pi_2)$ be the probability that the two streams agree (the diagonal mass of the $2\times2$ joint); by symmetry both marginals are uniform. With binary entropy $H_b(p)=-p\log p-(1-p)\log(1-p)$ in nats, the joint entropy is $H(q_\lambda)=\log 2 + H_b(\sigma(\lambda))$ while each marginal contributes $\log 2$, so the mutual information is
+
+$$
+I(\lambda)=\sum_k H(q_k)-H(q_\lambda)=\log 2 - H_b(\sigma(\lambda)),
+$$
+
+vanishing at $\lambda=0$ ($\sigma=\tfrac12$, independent streams) and saturating at $\log 2$ as $\lambda\to\infty$ ($\sigma\to1$, perfectly entangled). These symbols are the rows of `analytical_assumption_index.json`, so the derivation is auditable rather than asserted.
+
+<!-- sheaf-track:simulation -->
+
+The analytical track writes a parameter sweep comparing closed-form mutual information with an independent exact recomputation of it (via total correlation) across $\lambda \in [0, 4]$ on 21 grid points ([@sec:results_mi_sweep], [@fig:ising_mi_curve]).
+
+<!-- sheaf-track:assumption_index -->
+
+The `assumption_index` fragment makes the analytical equations inspectable as a generated artifact instead of relying on prose labels. `output/data/analytical_assumption_index.json` indexes 7 finite-model equation identifiers and 7 rows; the hydrated pass flag is `true`.
+
+The index is deliberately narrow. It covers the Bernoulli-Ising toy equations, their finite binary state assumptions, and the generated artifacts that test the same symbols. Any missing equation identifier or empty assumption list fails the toy-sweep validation gate.
+
+<!-- sheaf-track:visualization -->
+
+![Closed-form $I(\lambda)$ and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to $\lambda_{\max}$ = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual.](../figures/ising_mi_curve.png){#fig:ising_mi_curve width=90% fig-alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark line) and an independent exact recomputation via total correlation (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows the recompute-minus-closed-form residual versus lambda with a zero reference line; the two deterministic estimators agree to machine precision."}
+
+![GNN $\leftrightarrow$ ontology concordance for the Bernoulli–Ising toy (GNN v1.1).](../figures/gnn_ontology_concordance.png){#fig:gnn_ontology_concordance width=90% fig-alt="Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms."}
+
+<!-- sheaf-track:gnn -->
+
+The Bernoulli toy is declared in `gnn/bernoulli_toy.gnn.md` (GNN v1.1), following the GNN notation role described by Smekal and Friedman [@gnn2023]. [@fig:gnn_ontology_concordance] links GNN variables to Active Inference Ontology terms bound in the analytical ontology fragment; round-trip parity is checked before render.
+
+Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbol map used in the concordance diagram.
+
+<!-- sheaf-track:ontology -->
+
+### Ontology bindings
+
+- `E1` → **Stream1HabitPrior**
+- `E2` → **Stream2HabitPrior**
+- `J` → **CrossStreamCouplingPotential**
+- `gamma` → **SophisticationWeight**
+- `lam` → **EntanglementDeformationParameter**
+- `pi1` → **Stream1PolicyVector**
+- `pi2` → **Stream2PolicyVector**
+- `q_joint` → **EntangledJointPosterior**
+

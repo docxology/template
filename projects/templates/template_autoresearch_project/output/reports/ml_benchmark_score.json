@@ -1,0 +1,12 @@
+{
+  "description": "Grade bounded ML-loop metric improvement, budget compliance, and offline execution.",
+  "evidence": {
+    "accepted_candidate_id": "exp-mlp-tanh-64",
+    "accuracy_delta": 0.068,
+    "candidate_ledger": "output/data/ml_candidate_ledger.json",
+    "results": "output/data/ml_task_results.json"
+  },
+  "id": "ml-loop-score",
+  "score": 1.0,
+  "status": "graded"
+}

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05b_scalability.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h2 id="scalability-from-1-to-n-projects">Scalability: From 1 to N
+Projects</h2>
+<p>The Standalone Project Paradigm enables horizontal scaling: adding a
+new project requires creating a directory with
+<code>manuscript/config.yaml</code> and nothing else. No infrastructure
+code changes, no <code>pyproject.toml</code> modifications, no CI
+configuration updates. The <code>run.sh</code> orchestrator
+automatically discovers new projects and presents them in its
+interactive menu.</p>
+<p>We have validated scaling with 10 canonical exemplars under
+<code>projects/templates/</code>—always present for onboarding and
+tooling—and with this manuscript from
+<code>projects/templates/template_template</code> (89 tests) as a
+git-tracked public exemplar in the same automated discovery menus.</p>
+<p>Canonical trio:</p>
+<ul>
+<li><strong><code>template_code_project</code></strong>: Numerical
+optimization example with gradient-descent narration, 197 tests, 90%+
+coverage. Minimal footprint: compact <code>src/</code>, scripted
+analysis, short manuscript sections.</li>
+<li><strong><code>template_prose_project</code></strong>: Prose-heavy
+manuscript emphasizing narrative structure and bibliography discipline,
+78 tests, 90%+ coverage—tests exercise rendering and Markdown integrity
+without heavyweight numerics.</li>
+<li><strong><code>template_autoresearch_project</code></strong>:
+AutoResearch readiness workflow invoking
+<code>projects/template_search_project/scripts/</code> to run corpus
+builders, scripted figures (<code>../figures/</code>), and
+manifold-variable injection (the archive-only literature-search
+exemplar, restored on demand). Typical Stage 02 workloads include
+bibliography fusion, corpus JSON assembly, deep-search aggregates, and
+report composition.</li>
+</ul>
+<p>Meta manuscript
+(<strong><code>projects/templates/template_template</code></strong>)
+analyzes the repository via <code>src/template_template/</code>
+introspection metrics; it now lives alongside the other public exemplars
+under <code>projects/templates/</code>.</p>
+<p>These workspaces share no project-level code—only Layer 1 (23
+infrastructure subdirectories, ~567 Python files)—validating insulation
+between domain repos and reusable services.</p>
+<h3 id="multi-project-orchestration">Multi-Project Orchestration</h3>
+<p>When the <code>--all-projects</code> flag is passed to
+<code>run.sh</code>, the pipeline executes each discovered project
+sequentially, running infrastructure tests once at the start and
+skipping them for individual projects to avoid redundant validation.
+After all projects complete, a cross-project executive report aggregates
+metrics (test counts, coverage percentages, page counts, rendering
+durations) into a unified dashboard with both JSON and Markdown output
+formats. This executive reporting stage provides repository-level
+visibility without requiring any project-specific reporting code.</p>
+<h3 id="scaling-metrics">Scaling Metrics</h3>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 25%" />
+<col style="width: 41%" />
+<col style="width: 19%" />
+</colgroup>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: center;"><code>template_code_project</code></th>
+<th style="text-align: center;"><code>template_prose_project</code></th>
+<th
+style="text-align: center;"><code>template_autoresearch_project</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source modules</td>
+<td style="text-align: center;">25</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">60</td>
+</tr>
+<tr>
+<td>Test files</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">15</td>
+</tr>
+<tr>
+<td>Test count</td>
+<td style="text-align: center;">197</td>
+<td style="text-align: center;">78</td>
+<td style="text-align: center;">157</td>
+</tr>
+<tr>
+<td>Manuscript chapters</td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">6</td>
+</tr>
+<tr>
+<td>Analysis scripts</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">4</td>
+</tr>
+<tr>
+<td>Figures (auto-generated)</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">27</td>
+</tr>
+</tbody>
+</table>
+<p>The infrastructure overhead per project is constant regardless of
+project size: the same 23 modules, the same 11 pipeline stages, the same
+rendering and validation logic. This O(1) infrastructure cost is the
+architectural payoff of the Two-Layer separation.</p>
+</body>
+</html>

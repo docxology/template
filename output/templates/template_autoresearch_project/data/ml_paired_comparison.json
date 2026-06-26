@@ -1,0 +1,14 @@
+{
+  "accepted_candidate_id": "exp-mlp-tanh-64",
+  "accepted_only_correct": 44,
+  "baseline_id": "nearest_centroid_baseline",
+  "baseline_only_correct": 10,
+  "both_correct": 403,
+  "both_wrong": 43,
+  "claim_boundary": "Matched comparison over the fixed local test split; not an external benchmark claim.",
+  "discordant_count": 54,
+  "exact_mcnemar_p": 3e-06,
+  "net_accuracy_gain": 0.068,
+  "schema": "template-autoresearch-paired-comparison-v1",
+  "test_size": 500
+}

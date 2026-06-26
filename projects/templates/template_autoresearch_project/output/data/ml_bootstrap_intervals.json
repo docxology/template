@@ -1,0 +1,24 @@
+{
+  "accepted_candidate_id": "exp-mlp-tanh-64",
+  "claim_boundary": "Intervals describe sampling variability on the fixed local test split.",
+  "intervals": [
+    {
+      "ci_high": 0.92005,
+      "ci_low": 0.864,
+      "metric": "accuracy",
+      "observed": 0.894,
+      "resample_mean": 0.894146
+    },
+    {
+      "ci_high": 0.919408,
+      "ci_low": 0.864513,
+      "metric": "macro_f1",
+      "observed": 0.89367,
+      "resample_mean": 0.892788
+    }
+  ],
+  "method": "deterministic percentile bootstrap",
+  "resamples": 1000,
+  "schema": "template-autoresearch-bootstrap-intervals-v1",
+  "seed": 20270528
+}

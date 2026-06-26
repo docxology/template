@@ -1,0 +1,23 @@
+{
+  "baseline": {
+    "clean_metric": 0.0,
+    "confirmed_improvements": 12,
+    "experiments_to_target": 12,
+    "experiments_used": 60,
+    "redundant_experiments": 36,
+    "reported_metric": 0.0012065640438283457,
+    "retired_dead_ends": 0
+  },
+  "budget": 60,
+  "clean_metric_advantage": 0.0,
+  "coordinated": {
+    "clean_metric": 0.0,
+    "confirmed_improvements": 12,
+    "experiments_to_target": 16,
+    "experiments_used": 36,
+    "redundant_experiments": 0,
+    "reported_metric": 0.0012065640438283457,
+    "retired_dead_ends": 8
+  },
+  "note": "Coordinated teams partition the same sequential experiment budget as the baseline, so this is a robustness/efficiency comparison, not a parallel-compute speedup. Clean metric is the noise-free ground truth."
+}

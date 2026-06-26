@@ -1,0 +1,11 @@
+\contentsline {section}{\numberline {1}Abstract}{2}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{3}{section.2}%
+\contentsline {section}{\numberline {3}Methodology}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}SIA loop}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Task layout}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Determinism contract}{4}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Per-generation metric overview}{4}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Results}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Incremental improvement}{5}{subsection.4.1}%
+\contentsline {section}{\numberline {5}Conclusion}{6}{section.5}%
+\contentsline {section}{\numberline {6}References}{7}{section.6}%

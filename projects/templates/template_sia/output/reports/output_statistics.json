@@ -1,0 +1,275 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "0.29",
+      "total_size_bytes": 303889,
+      "largest_files": [
+        {
+          "name": "template_sia_combined.pdf",
+          "size_mb": "0.21",
+          "path": "pdf/template_sia_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.log",
+          "size_mb": "0.05",
+          "path": "pdf/_combined_manuscript.log"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.01",
+          "path": "pdf/_combined_manuscript.tex"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".pdf": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 8,
+      "size_mb": "0.05",
+      "total_size_bytes": 52293,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.02",
+          "path": "web/index.html"
+        },
+        {
+          "name": "manuscript__02_methodology.html",
+          "size_mb": "0.01",
+          "path": "web/manuscript__02_methodology.html"
+        },
+        {
+          "name": "manuscript__03_results.html",
+          "size_mb": "0.01",
+          "path": "web/manuscript__03_results.html"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".html": 7
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 5,
+      "size_mb": "0.17",
+      "total_size_bytes": 180750,
+      "largest_files": [
+        {
+          "name": "sia_improvement_delta.png",
+          "size_mb": "0.05",
+          "path": "figures/sia_improvement_delta.png"
+        },
+        {
+          "name": "sia_metric_progression.png",
+          "size_mb": "0.05",
+          "path": "figures/sia_metric_progression.png"
+        },
+        {
+          "name": "sia_loop_topology.png",
+          "size_mb": "0.04",
+          "path": "figures/sia_loop_topology.png"
+        }
+      ],
+      "extensions": {
+        ".json": 1,
+        ".png": 4
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "0.00",
+      "total_size_bytes": 1796,
+      "largest_files": [
+        {
+          "name": "publication_ledger.json",
+          "size_mb": "0.00",
+          "path": "data/publication_ledger.json"
+        },
+        {
+          "name": "manuscript_variables.json",
+          "size_mb": "0.00",
+          "path": "data/manuscript_variables.json"
+        }
+      ],
+      "extensions": {
+        ".json": 2
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 27,
+      "size_mb": "0.10",
+      "total_size_bytes": 107835,
+      "largest_files": [
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.03",
+          "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "pipeline_report.json",
+          "size_mb": "0.01",
+          "path": "reports/pipeline_report.json"
+        },
+        {
+          "name": "output_statistics.json",
+          "size_mb": "0.01",
+          "path": "reports/output_statistics.json"
+        }
+      ],
+      "extensions": {
+        ".md": 6,
+        ".json": 16,
+        ".jsonl": 1,
+        ".txt": 3,
+        ".html": 1
+      }
+    },
+    "simulations": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "llm": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "logs": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 152,
+      "largest_files": [
+        {
+          "name": "pipeline.log",
+          "size_mb": "0.00",
+          "path": "logs/pipeline.log"
+        }
+      ],
+      "extensions": {
+        ".log": 1
+      }
+    }
+  },
+  "total_files": 53,
+  "total_size_mb": 0.616755485534668,
+  "largest_files": [
+    {
+      "name": "template_sia_combined.pdf",
+      "size_mb": "0.21",
+      "category": "pdf",
+      "path": "pdf/template_sia_combined.pdf"
+    },
+    {
+      "name": "_combined_manuscript.log",
+      "size_mb": "0.05",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.log"
+    },
+    {
+      "name": "sia_improvement_delta.png",
+      "size_mb": "0.05",
+      "category": "figures",
+      "path": "figures/sia_improvement_delta.png"
+    },
+    {
+      "name": "sia_metric_progression.png",
+      "size_mb": "0.05",
+      "category": "figures",
+      "path": "figures/sia_metric_progression.png"
+    },
+    {
+      "name": "sia_loop_topology.png",
+      "size_mb": "0.04",
+      "category": "figures",
+      "path": "figures/sia_loop_topology.png"
+    },
+    {
+      "name": "evidence_registry.json",
+      "size_mb": "0.03",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.02",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.01",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "manuscript__02_methodology.html",
+      "size_mb": "0.01",
+      "category": "web",
+      "path": "web/manuscript__02_methodology.html"
+    },
+    {
+      "name": "manuscript__03_results.html",
+      "size_mb": "0.01",
+      "category": "web",
+      "path": "web/manuscript__03_results.html"
+    }
+  ],
+  "missing_expected_files": [],
+  "sizes_by_category": {
+    "pdf": 0.2898111343383789,
+    "web": 0.04987049102783203,
+    "slides": 0.0,
+    "figures": 0.1723766326904297,
+    "data": 0.001712799072265625,
+    "reports": 0.10283946990966797,
+    "simulations": 0.0,
+    "llm": 0.0,
+    "logs": 0.00014495849609375
+  },
+  "file_counts_by_type": {
+    ".md": 8,
+    ".log": 3,
+    ".aux": 1,
+    ".blg": 1,
+    ".bib": 1,
+    ".pdf": 1,
+    ".tex": 1,
+    ".toc": 1,
+    ".bbl": 1,
+    ".html": 8,
+    ".json": 19,
+    ".png": 4,
+    ".jsonl": 1,
+    ".txt": 3
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/reports/output_statistics.json",
+      "sha256": "b5bd689b0476b0673a9df9f548200bca652d89453444f8db3cfa5b9f605090f5",
+      "size_bytes": 6025,
+      "stage_name": "Copy Outputs",
+      "stage_num": 8,
+      "timestamp": "2026-06-14T19:49:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/output_statistics.txt",
+      "sha256": "a9f4b528fc7d5ef231f17638cc887fc680ddf6b8cefcb24f75f126a096097779",
+      "size_bytes": 914,
+      "stage_name": "Copy Outputs",
+      "stage_num": 8,
+      "timestamp": "2026-06-14T19:49:51+00:00"
+    }
+  ],
+  "issues": []
+}

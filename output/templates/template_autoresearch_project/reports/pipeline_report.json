@@ -1,0 +1,388 @@
+{
+  "timestamp": "2026-06-14T12:18:54.546209",
+  "total_duration": 133.59462118148804,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.028833866119384766,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 1.5684709548950195,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Infrastructure Tests",
+      "exit_code": 0,
+      "duration": 6.659009695053101,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 69.8930311203003,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 11.316099643707275,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 38.666351079940796,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 4.401737928390503,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 1.061086893081665,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 10,
+        "size_mb": "1.66",
+        "total_size_bytes": 1742063,
+        "largest_files": [
+          {
+            "name": "template_autoresearch_project_combined.pdf",
+            "size_mb": "1.28",
+            "path": "pdf/template_autoresearch_project_combined.pdf"
+          },
+          {
+            "name": "_combined_manuscript.tex",
+            "size_mb": "0.12",
+            "path": "pdf/_combined_manuscript.tex"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.08",
+            "path": "pdf/_combined_manuscript.md"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".log": 2,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".tex": 1,
+          ".toc": 1,
+          ".bbl": 1,
+          ".pdf": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 8,
+        "size_mb": "0.34",
+        "total_size_bytes": 354145,
+        "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.12",
+            "path": "web/index.html"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.08",
+            "path": "web/_combined_manuscript.md"
+          },
+          {
+            "name": "manuscript__03_results.html",
+            "size_mb": "0.07",
+            "path": "web/manuscript__03_results.html"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".html": 7
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 49,
+        "size_mb": "1.88",
+        "total_size_bytes": 1967706,
+        "largest_files": [
+          {
+            "name": "03_results_slides.pdf",
+            "size_mb": "1.01",
+            "path": "slides/03_results_slides.pdf"
+          },
+          {
+            "name": "02_methodology_slides.pdf",
+            "size_mb": "0.18",
+            "path": "slides/02_methodology_slides.pdf"
+          },
+          {
+            "name": "03_results_slides.log",
+            "size_mb": "0.08",
+            "path": "slides/03_results_slides.log"
+          }
+        ],
+        "extensions": {
+          ".nav": 6,
+          ".pdf": 6,
+          ".log": 6,
+          ".toc": 6,
+          ".tex": 7,
+          ".snm": 6,
+          ".aux": 6,
+          ".vrb": 6
+        }
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 28,
+        "size_mb": "1.12",
+        "total_size_bytes": 1170995,
+        "largest_files": [
+          {
+            "name": "autoresearch_security_control_matrix.png",
+            "size_mb": "0.08",
+            "path": "figures/autoresearch_security_control_matrix.png"
+          },
+          {
+            "name": "ml_calibration_reliability.png",
+            "size_mb": "0.07",
+            "path": "figures/ml_calibration_reliability.png"
+          },
+          {
+            "name": "ml_confusion_matrix.png",
+            "size_mb": "0.06",
+            "path": "figures/ml_confusion_matrix.png"
+          }
+        ],
+        "extensions": {
+          ".png": 27,
+          ".json": 1
+        }
+      },
+      "data": {
+        "exists": true,
+        "file_count": 47,
+        "size_mb": "2.48",
+        "total_size_bytes": 2600692,
+        "largest_files": [
+          {
+            "name": "ml_prediction_records.json",
+            "size_mb": "0.94",
+            "path": "data/ml_prediction_records.json"
+          },
+          {
+            "name": "ml_task_results.json",
+            "size_mb": "0.67",
+            "path": "data/ml_task_results.json"
+          },
+          {
+            "name": "ml_candidate_ledger.json",
+            "size_mb": "0.54",
+            "path": "data/ml_candidate_ledger.json"
+          }
+        ],
+        "extensions": {
+          ".json": 44,
+          ".csv": 3
+        }
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 33,
+        "size_mb": "0.27",
+        "total_size_bytes": 278552,
+        "largest_files": [
+          {
+            "name": "evidence_registry.json",
+            "size_mb": "0.09",
+            "path": "reports/evidence_registry.json"
+          },
+          {
+            "name": "artifact_manifest.json",
+            "size_mb": "0.05",
+            "path": "reports/artifact_manifest.json"
+          },
+          {
+            "name": "autoresearch_readiness.json",
+            "size_mb": "0.02",
+            "path": "reports/autoresearch_readiness.json"
+          }
+        ],
+        "extensions": {
+          ".json": 19,
+          ".md": 11,
+          ".jsonl": 1,
+          ".txt": 2
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 169,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 176,
+    "total_size_mb": 7.738420486450195,
+    "largest_files": [
+      {
+        "name": "template_autoresearch_project_combined.pdf",
+        "size_mb": "1.28",
+        "category": "pdf",
+        "path": "pdf/template_autoresearch_project_combined.pdf"
+      },
+      {
+        "name": "03_results_slides.pdf",
+        "size_mb": "1.01",
+        "category": "slides",
+        "path": "slides/03_results_slides.pdf"
+      },
+      {
+        "name": "ml_prediction_records.json",
+        "size_mb": "0.94",
+        "category": "data",
+        "path": "data/ml_prediction_records.json"
+      },
+      {
+        "name": "ml_task_results.json",
+        "size_mb": "0.67",
+        "category": "data",
+        "path": "data/ml_task_results.json"
+      },
+      {
+        "name": "ml_candidate_ledger.json",
+        "size_mb": "0.54",
+        "category": "data",
+        "path": "data/ml_candidate_ledger.json"
+      },
+      {
+        "name": "02_methodology_slides.pdf",
+        "size_mb": "0.18",
+        "category": "slides",
+        "path": "slides/02_methodology_slides.pdf"
+      },
+      {
+        "name": "_combined_manuscript.tex",
+        "size_mb": "0.12",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.tex"
+      },
+      {
+        "name": "index.html",
+        "size_mb": "0.12",
+        "category": "web",
+        "path": "web/index.html"
+      },
+      {
+        "name": "evidence_registry.json",
+        "size_mb": "0.09",
+        "category": "reports",
+        "path": "reports/evidence_registry.json"
+      },
+      {
+        "name": "_combined_manuscript.md",
+        "size_mb": "0.08",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.md"
+      }
+    ],
+    "missing_expected_files": [],
+    "sizes_by_category": {
+      "pdf": 1.661360740661621,
+      "web": 0.3377389907836914,
+      "slides": 1.8765506744384766,
+      "figures": 1.1167478561401367,
+      "data": 2.480213165283203,
+      "reports": 0.26564788818359375,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.00016117095947265625
+    },
+    "file_counts_by_type": {
+      ".md": 13,
+      ".log": 9,
+      ".aux": 7,
+      ".blg": 1,
+      ".bib": 1,
+      ".tex": 8,
+      ".toc": 7,
+      ".bbl": 1,
+      ".pdf": 7,
+      ".html": 7,
+      ".nav": 6,
+      ".snm": 6,
+      ".vrb": 6,
+      ".png": 27,
+      ".json": 64,
+      ".csv": 3,
+      ".jsonl": 1,
+      ".txt": 2
+    },
+    "log_file": {
+      "exists": true,
+      "size": 169,
+      "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoresearch_project/output/logs/pipeline.log"
+    }
+  }
+}

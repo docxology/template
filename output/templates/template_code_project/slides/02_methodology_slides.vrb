@@ -1,0 +1,15 @@
+\frametitle{Analysis Pipeline \& LaTeX Integration}
+\protect\phantomsection\label{analysis-pipeline-latex-integration}
+The automated analysis script leverages
+\href{https://github.com/docxology/template/blob/main/infrastructure/core/progress.py}{\breaktt{infrastructure.core.progress}}
+(\texttt{ProgressBar}, \breaktt{SubStageProgress}) to orchestrate
+experiments, collect convergence trajectories, and generate
+publication-quality visualizations seamlessly.
+
+The research template supports advanced LaTeX customization through the
+\texttt{preamble.md} configuration. This is ingested directly by
+\breaktt{infrastructure.rendering.latex\_utils.py} and
+\texttt{pdf\_renderer.py}, automatically linking compiled PGF plots and
+BibTeX citations. This automated approach ensures an unbreakable chain
+of custody from raw algorithmic execution to the final rendered
+manuscript.

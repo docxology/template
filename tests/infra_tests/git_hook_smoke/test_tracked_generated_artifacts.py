@@ -15,7 +15,7 @@ def _repo_root() -> Path:
 
 def test_generated_artifact_path_matcher() -> None:
     """Matcher catches disposable paths without flagging source files."""
-    assert is_generated_artifact_path("projects/templates/template_code_project/output/data/results.json")
+    assert not is_generated_artifact_path("projects/templates/template_code_project/output/data/results.json")
     assert is_generated_artifact_path("projects/templates/template_code_project/.DS_Store")
     assert is_generated_artifact_path("projects/demo/src/demo.egg-info/PKG-INFO")
     assert is_generated_artifact_path("coverage_project.json")
@@ -23,13 +23,10 @@ def test_generated_artifact_path_matcher() -> None:
     assert not is_generated_artifact_path("projects/templates/template_code_project/src/optimizer.py")
     assert not is_generated_artifact_path("docs/_generated/COUNTS.md")
 
-    # No output/ path is exempt: the former exemplar render-proof exemption was
-    # dead (zero such paths were ever tracked) and was removed, so all rendered
-    # output — exemplars included — is correctly guarded.
-    assert is_generated_artifact_path("output/templates/template_code_project/pdf/template_code_project_combined.pdf")
-    assert is_generated_artifact_path("output/templates/template_prose_project/figures/wordcount.png")
-    # A confidential/active project's top-level output stays guarded too.
+    assert not is_generated_artifact_path("output/templates/template_code_project/pdf/template_code_project_combined.pdf")
+    assert not is_generated_artifact_path("output/templates/template_prose_project/figures/wordcount.png")
     assert is_generated_artifact_path("output/actinf_policy_entanglement_lean/pdf/x.pdf")
+    assert is_generated_artifact_path("projects/working/private_project/output/data/x.csv")
 
 
 def test_current_repo_has_no_tracked_generated_artifacts() -> None:
@@ -52,7 +49,6 @@ def test_current_repo_has_no_tracked_generated_artifacts() -> None:
 
 
 def test_projects_docs_are_trackable_while_rotating_projects_remain_ignored() -> None:
-    """Gitignore keeps repo-level projects docs visible without exposing project trees."""
     repo_root = _repo_root()
 
     docs_proc = subprocess.run(
@@ -69,9 +65,24 @@ def test_projects_docs_are_trackable_while_rotating_projects_remain_ignored() ->
         check=False,
         timeout=30,
     )
+    public_output_proc = subprocess.run(
+        [
+            "git",
+            "check-ignore",
+            "--no-index",
+            "projects/templates/template_code_project/output/data/results.json",
+            "output/templates/template_code_project/pdf/template_code_project_combined.pdf",
+        ],
+        cwd=repo_root,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
 
     assert docs_proc.stdout == ""
     assert private_proc.returncode == 0
+    assert public_output_proc.stdout == ""
 
 
 def test_generated_fixture_payloads_are_ignored_but_committed_fixture_docs_are_visible() -> None:

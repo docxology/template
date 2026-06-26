@@ -1,0 +1,33 @@
+\frametitle{Configuration Surface}
+\protect\phantomsection\label{configuration-surface}
+A single \breaktt{manuscript/config.yaml} controls:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Search parameters}: term, query string, per-engine queries,
+  relevance keywords, start year, max results, resume/clear behaviour
+\item
+  \textbf{Engine toggles}: arXiv, OpenAlex, Semantic Scholar, Crossref,
+  PubMed, SovietRxiv, ChinaRxiv (each independently enabled or disabled)
+\item
+  \textbf{SovietRxiv/ChinaRxiv settings}: optional \texttt{api\_email}
+  for the polite pool, \texttt{source} filter (\texttt{russiarxiv} or
+  \texttt{chinaxiv})
+\item
+  \textbf{Full-text download}: opt-in Unpaywall resolution with
+  \texttt{unpaywall\_email}
+\item
+  \textbf{Embeddings}: method (\texttt{tfidf\_svd} or
+  \texttt{transformer}), dimensionality, max features
+\item
+  \textbf{Knowledge graph}: checkpoint interval, LLM model, base URL,
+  temperature, max tokens
+\item
+  \textbf{Hypothesis definitions}: 6 named hypotheses with scope labels
+\item
+  \textbf{Subfield taxonomy}: 6 buckets, each with a keyword list
+\item
+  \textbf{Paper metadata}: title, authors, DOI, keywords, license,
+  repository URL
+\end{itemize}

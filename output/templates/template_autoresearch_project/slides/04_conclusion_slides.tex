@@ -1,0 +1,172 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% Slide layout defaults for warning-clean scientific decks.
+\usepackage{etoolbox}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+\protected\def\breakseq#1{\seqsplit{#1}}
+\protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
+\setlength{\emergencystretch}{6em}
+\tolerance=5000
+\hbadness=10000
+\hfuzz=1pt
+\setlength{\tabcolsep}{2pt}
+\AtBeginEnvironment{longtable}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+\AtBeginEnvironment{tabular}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+
+% Natbib and cross-reference fallbacks — slides don't load natbib
+% or cleveref, but combined-PDF manuscript prose may emit these
+% commands. The fallback renders citations as a bracketed key list
+% and cross-references as detokenized labels so slides don't fail on
+% undefined control sequences or raw underscores. \providecommand is
+% a no-op if packages load later.
+\providecommand{\citep}[1]{[#1]}
+\providecommand{\citet}[1]{#1}
+\providecommand{\citealp}[1]{#1}
+\providecommand{\citeauthor}[1]{#1}
+\providecommand{\citeyear}[1]{#1}
+\providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
+\providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Conclusion}\label{sec:conclusion}
+
+\begin{frame}[fragile,allowframebreaks]{Conclusion}
+\breaktt{template\_autoresearch\_project} shows how a tractable
+AutoResearch task can be represented as reproducible template
+infrastructure. The
+\breaktt{small\ MNIST\ neural-network\ classification} experiment is
+small by design, but it exercises the method surfaces that matter for a
+public default: a declared research program, local input-data
+provenance, bounded candidate families
+(\breaktt{MLP,\ nearest-centroid,\ softmax\ regression,\ tiny\ patch-attention}),
+objective scoring, budget and cost ledgers, evidence-linked claims,
+generated figures, benchmark grading, manuscript-variable hydration,
+loop-settlement ledgers, figure-quality checks, validation, local
+integrity attestation (\texttt{passed}), and human review gates.
+
+The broader field is converging across five related trends. Autoresearch
+systems seek end-to-end automation of ideation, experiment execution,
+writing, and review. Autoformalization pushes informal claims toward
+machine-checkable representations. ML-for-ML systems use search,
+evaluation, and evolutionary code loops to improve algorithms. Agentic
+science composes retrieval, planning, experimentation, and communication
+into higher-autonomy workflows. Structured knowledge synthesis supplies
+the substrate that all of those systems need: source-linked artifacts,
+knowledge graphs, tensors, vector spaces, and uncertainty-aware memories
+that can be navigated without losing provenance.
+
+This exemplar makes a deliberately narrower contribution. It does not
+mine the live literature, construct a Conceptual Nexus Model, search for
+Lean proofs, mutate arbitrary code, coordinate external agents, or
+approve its own paper. Instead it demonstrates governance infrastructure
+for automated research workflows: every important claim is hydrated from
+run artifacts, every generated figure is registry-bound and locally
+checked for source and pixel integrity, every budget and candidate
+decision is recorded, and review state remains outside generated
+self-approval. The security layer adds local inventory and checksum
+evidence while keeping external signing and production deployment claims
+out of scope.
+
+The durable product is therefore not only the \texttt{MNIST} metric. It
+is a reproducible research process whose data, claims, captions,
+figures, review gates, and manuscript variables can be reviewed, rerun,
+and extended. As more ambitious automated-science systems mature, this
+kind of offline, deterministic, evidence-governed baseline remains
+useful because it preserves the part of scientific automation that
+should not be optional: inspectable provenance, explicit limits, and
+human-governed publication judgment.
+\end{frame}
+
+\end{document}

@@ -1,0 +1,5 @@
+The Triplicate — render summary
+========================================
+pages:        12
+all_pages_fit: True
+output:       /Users/4d/Documents/GitHub/template/projects/templates/template_newspaper/output/pdf/the-triplicate.pdf

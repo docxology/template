@@ -20,7 +20,7 @@ analysis stage, or the token is not defined in `src/manuscript_variables.py::gen
    ```
 3. Re-render:
    ```bash
-   uv run python scripts/03_render_pdf.py --project template_code_project
+   uv run python scripts/03_render_pdf.py --project templates/template_code_project
    ```
 4. If the token is still literal, add it to `generate_variables()` in
    `src/manuscript_variables.py`.
@@ -54,13 +54,13 @@ stage ran (it does not re-execute `optimization_analysis.py`).
 ```bash
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
-uv run python scripts/03_render_pdf.py --project template_code_project
+uv run python scripts/03_render_pdf.py --project templates/template_code_project
 ```
 
 Or just re-run the full pipeline:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only
 ```
 
 ## `Figure ???` in the rendered PDF
@@ -205,7 +205,7 @@ asymmetry is the tell.
 npx --yes puppeteer browsers install chrome-headless-shell@131.0.6778.204
 # or the line mmdc/puppeteer resolves by default:
 npx --yes puppeteer browsers install chrome-headless-shell
-uv run python scripts/03_render_pdf.py --project template_code_project   # re-verify
+uv run python scripts/03_render_pdf.py --project templates/template_code_project   # re-verify
 ```
 
 Environment provisioning, not a manuscript defect — CI provisions it; a
@@ -214,7 +214,7 @@ fresh clone does not. See
 
 ## Tests report PASSED but ran 0 tests / 0.0% coverage
 
-**Symptom:** `scripts/01_run_tests.py --project template_code_project` prints
+**Symptom:** `scripts/01_run_tests.py --project templates/template_code_project` prints
 `Project: ✓ PASSED (0/0 tests, 0.0% coverage)` and exits 0, while the
 documented direct command runs the current project suite with the measured
 coverage shown in the repo canonical facts.

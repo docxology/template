@@ -1,0 +1,75 @@
+\contentsline {section}{\numberline {1}Abstract}{3}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Research Questions}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Contributions}{4}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Methods Overview}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Pipeline Stages}{6}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Reproducibility Model}{6}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Configuration Surface}{6}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Retrieval and De-duplication}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Engine Details}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Canonical Identifier Hierarchy}{7}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Relevance Filtering}{7}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Full Text, Language, and Embeddings}{8}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Full-Text Availability}{8}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Language and Entity Extraction}{8}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Embeddings}{8}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Bibliometric and Temporal Analysis}{9}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Growth Metrics}{9}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Subfield Classification}{9}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Topic Modeling}{9}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Optional Knowledge-Graph Layer}{10}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Assertion Model}{10}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Incremental Extraction}{10}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Gating and Defaults}{10}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Visualization and Manuscript Injection}{11}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Figure Generation}{11}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Variable Injection}{11}{subsection.8.2}%
+\contentsline {section}{\numberline {9}Results: Hypotheses Explored}{12}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Interpretation}{12}{subsection.9.1}%
+\contentsline {section}{\numberline {10}Results: Field Overview}{14}{section.10}%
+\contentsline {subsection}{\numberline {10.1}RQ1: Field Size and Growth}{14}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}RQ2: Subfield Composition}{14}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Identifier and Full-Text Coverage}{17}{subsection.10.3}%
+\contentsline {subsection}{\numberline {10.4}Descriptive Bibliometrics}{17}{subsection.10.4}%
+\contentsline {section}{\numberline {11}Results: Subfield Structure}{21}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Per-Subfield Characterization}{21}{subsection.11.1}%
+\contentsline {section}{\numberline {12}Results: Language, Topics, and Embeddings}{22}{section.12}%
+\contentsline {subsection}{\numberline {12.1}RQ3: Topical and Linguistic Structure}{22}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Document Embeddings}{22}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Term Analysis}{24}{subsection.12.3}%
+\contentsline {subsection}{\numberline {12.4}Named Entity Analysis}{25}{subsection.12.4}%
+\contentsline {subsection}{\numberline {12.5}Embedding Similarity and Clustering}{26}{subsection.12.5}%
+\contentsline {section}{\numberline {13}Results: Citation Network}{30}{section.13}%
+\contentsline {subsection}{\numberline {13.1}RQ4: Citation Geometry}{30}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Centrality Analysis}{30}{subsection.13.2}%
+\contentsline {subsection}{\numberline {13.3}Advanced Network Metrics}{32}{subsection.13.3}%
+\contentsline {section}{\numberline {14}Conclusion}{33}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Key Findings}{33}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Architectural Contribution}{33}{subsection.14.2}%
+\contentsline {subsection}{\numberline {14.3}Reproducibility}{33}{subsection.14.3}%
+\contentsline {section}{\numberline {15}Discussion}{34}{section.15}%
+\contentsline {subsection}{\numberline {15.1}What the Template Is, and Is Not}{34}{subsection.15.1}%
+\contentsline {subsection}{\numberline {15.2}Engine Coverage and Bias}{34}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}Honest Defaults}{34}{subsection.15.3}%
+\contentsline {subsection}{\numberline {15.4}Limitations and Extensions}{34}{subsection.15.4}%
+\contentsline {section}{\numberline {16}Appendix A: Tooling and Reproduction}{35}{section.16}%
+\contentsline {subsection}{\numberline {16.1}Reproduce the Offline Default Run}{35}{subsection.16.1}%
+\contentsline {subsection}{\numberline {16.2}Reproduce the Live Run}{35}{subsection.16.2}%
+\contentsline {subsection}{\numberline {16.3}Re-target to Another Topic}{35}{subsection.16.3}%
+\contentsline {subsection}{\numberline {16.4}Live Retrieval}{35}{subsection.16.4}%
+\contentsline {subsection}{\numberline {16.5}Test Suite}{35}{subsection.16.5}%
+\contentsline {section}{\numberline {17}Appendix B: Technical Notes}{36}{section.17}%
+\contentsline {subsection}{\numberline {17.1}Determinism}{36}{subsection.17.1}%
+\contentsline {subsection}{\numberline {17.2}Data Model}{36}{subsection.17.2}%
+\contentsline {subsection}{\numberline {17.3}NMF Mathematics}{36}{subsection.17.3}%
+\contentsline {subsection}{\numberline {17.4}Growth Rate Estimation}{36}{subsection.17.4}%
+\contentsline {subsection}{\numberline {17.5}Configuration Surface}{36}{subsection.17.5}%
+\contentsline {subsection}{\numberline {17.6}Artifacts}{36}{subsection.17.6}%
+\contentsline {section}{\numberline {18}Appendix C: Accessibility and Provenance}{38}{section.18}%
+\contentsline {subsection}{\numberline {18.1}Figure Accessibility}{38}{subsection.18.1}%
+\contentsline {subsection}{\numberline {18.2}Provenance Chain}{38}{subsection.18.2}%
+\contentsline {subsection}{\numberline {18.3}FAIR Data Principles}{38}{subsection.18.3}%
+\contentsline {subsection}{\numberline {18.4}Honesty}{38}{subsection.18.4}%
+\contentsline {section}{\numberline {19}Glossary}{39}{section.19}%
+\contentsline {section}{\numberline {20}References}{40}{section.20}%

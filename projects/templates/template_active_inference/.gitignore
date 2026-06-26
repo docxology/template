@@ -1,4 +1,3 @@
-output/
 .venv/
 .pytest_cache/
 .coverage*

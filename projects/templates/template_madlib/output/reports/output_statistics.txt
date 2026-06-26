@@ -1,0 +1,40 @@
+
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: output
+
+Total Files: 142
+Total Size: 4.48 MB
+
+Files by Category:
+  • pdf: 10 files (1.22 MB)
+  • web: 14 files (0.31 MB)
+  • slides: 94 files (1.88 MB)
+  • figures: 10 files (0.83 MB)
+  • data: 5 files (0.14 MB)
+  • reports: 9 files (0.10 MB)
+
+Largest Files:
+  • template_madlib_combined.pdf: 0.96 MB (pdf)
+  • 03_results_slides.pdf: 0.29 MB (slides)
+  • 05_experimental_setup_slides.pdf: 0.22 MB (slides)
+  • 06_evaluation_slides.pdf: 0.17 MB (slides)
+  • madlib_cover_overview.png: 0.16 MB (figures)
+
+Missing Expected Files:
+  ⚠  simulations/ directory
+  ⚠  llm/ directory
+  ⚠  logs/ directory
+
+File Types:
+  • .log: 14 file(s)
+  • .tex: 14 file(s)
+  • .aux: 13 file(s)
+  • .pdf: 13 file(s)
+  • .toc: 13 file(s)
+  • .html: 13 file(s)
+  • .nav: 12 file(s)
+  • .snm: 12 file(s)
+  • .json: 11 file(s)
+  • .vrb: 9 file(s)

@@ -1,0 +1,257 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/data/manuscript_variables.json",
+      "sha256": "f06586c2983fd1771c004732285132622a45be25bda2ad611dab6f9eda7412f5",
+      "size_bytes": 859,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/sia_loop_topology.png",
+      "sha256": "de866112810f222bfcd114eb988db241a2b18e6bdb5f727c1303b5343736b830",
+      "size_bytes": 9891,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/sia_metric_progression.png",
+      "sha256": "eeb1d0a07387bc8697820373eab955e456c6cfd0ab8006e8cd084e524ffd4ad6",
+      "size_bytes": 26693,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "5464fa69c20d8d0b375dc0690959ebea5b912bb0d564ac3db75263b7b578d176",
+      "size_bytes": 667,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "a3d25ca43de424a0f8e43b89a4d6d62d844dca07b3a0da5866eae12c4b4998a1",
+      "size_bytes": 950,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "57aa7885bbe58f89f6f3f46ef22cc01fdec2e355c4ccc3eae3204d06c4c8c5ee",
+      "size_bytes": 1400,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "4d8fa750780a99371cd4cdb96928f01d117d5cfefd41d1e6116476e49728f1fd",
+      "size_bytes": 539,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/04_conclusion.md",
+      "sha256": "af551e991ce45612bba9679d22e70e7b320683b752d64ca794ce12a706dbbbb1",
+      "size_bytes": 727,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "799f575a7a6c31f7863c189973720a058d3833ec723a3211cf6891462185a286",
+      "size_bytes": 182,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/config.yaml",
+      "sha256": "1bd6cf125cbd77c5627003c6b3e747924dc5ce23ebcbc945aee41718c626d977",
+      "size_bytes": 1053,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/preamble.md",
+      "sha256": "cb91cd9cc3e1409c8bdc3170a070729018279a775d3ba281b2378ea6a07fc8b7",
+      "size_bytes": 34,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/references.bib",
+      "sha256": "7a67eadaa4284bc20cd6f7e456c60dd88520d132387222508fadca61df0ce95d",
+      "size_bytes": 423,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/sia_loop_report.md",
+      "sha256": "c29ed2e40bb6bbd30010a808a6f6cd23151790031770a06dbfa5342033ecfb74",
+      "size_bytes": 250,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.json",
+      "sha256": "e1b9dcf37b5241585528146d51534afbebd94cb740c9a5e203de5d3a6f161e16",
+      "size_bytes": 608,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.md",
+      "sha256": "09ef55a713c2cbbec6bb0c4e958525433b4ac4a51ffb129e0ea78ed24e37f1e7",
+      "size_bytes": 290,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/context.md",
+      "sha256": "1214209704bbcb9c82e989fb4bc348580072ebd48403e864052716b9c3f51580",
+      "size_bytes": 3340,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_1/agent_execution.json",
+      "sha256": "8ffb5263911834731bd28ec4b61b4eba3734659f55b9d014b7848fb6e75a99f2",
+      "size_bytes": 51,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_1/results.json",
+      "sha256": "48a949a4a51a514596a86176018c90b8f4bb94918bb90bcc0cde8565708f3751",
+      "size_bytes": 60,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_1/target_agent.py",
+      "sha256": "2979300632a41ffa3f0e6e3cd0b1d8ce8f0cad36f945185deb3759f45db38f2d",
+      "size_bytes": 1630,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_2/agent_execution.json",
+      "sha256": "b17e996e29d6fd2cce10d88886a9a50d5f6c3ceb2086468d90762f6b2a9e4604",
+      "size_bytes": 51,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_2/improvement.md",
+      "sha256": "8fc03054a72f2b5fa07b619b8f99de2fbe44cc11b38d4381bbcffa737a5e900b",
+      "size_bytes": 47,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_2/results.json",
+      "sha256": "008615bf1c29a333b4ceb36f43504676cc90747e8b83cb05ac125ebcf29d8959",
+      "size_bytes": 63,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_2/target_agent.py",
+      "sha256": "2979300632a41ffa3f0e6e3cd0b1d8ce8f0cad36f945185deb3759f45db38f2d",
+      "size_bytes": 1630,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_3/agent_execution.json",
+      "sha256": "8c447c0b63ae15ae3d5411623337588658cf80524c19f440d015b78ad59103b8",
+      "size_bytes": 51,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_3/improvement.md",
+      "sha256": "db6fa923a54fde17bf48c05e587dc9bba8f0c6d18020a774f36cdc2821bc8883",
+      "size_bytes": 48,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_3/results.json",
+      "sha256": "e23e8f4454142ad3435b5a02510ccbe42b457451f64f1ee63a91fc9097e69d80",
+      "size_bytes": 63,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/gen_3/target_agent.py",
+      "sha256": "2979300632a41ffa3f0e6e3cd0b1d8ce8f0cad36f945185deb3759f45db38f2d",
+      "size_bytes": 1630,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/runs/run_1/run_summary.json",
+      "sha256": "3d08b3b99f7c4d4b27116b6006454407de207ab921073cf592dca148273291cc",
+      "size_bytes": 2472,
+      "stage_name": "Project Tests",
+      "stage_num": 4,
+      "timestamp": "2026-06-14T19:49:41+00:00"
+    }
+  ],
+  "issues": []
+}

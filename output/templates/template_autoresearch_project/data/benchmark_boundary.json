@@ -1,0 +1,69 @@
+{
+  "baseline": {
+    "accuracy": 0.826,
+    "family": "nearest_centroid"
+  },
+  "benchmark_tasks": [
+    {
+      "description": "Confirm the deterministic AutoResearch loop emits graded readiness artifacts.",
+      "grading_output": "output/reports/benchmark_readiness_smoke.json",
+      "id": "readiness-smoke"
+    },
+    {
+      "description": "Grade bounded ML-loop metric improvement, budget compliance, and offline execution.",
+      "grading_output": "output/reports/ml_benchmark_score.json",
+      "id": "ml-loop-score"
+    }
+  ],
+  "budget": {
+    "max_cost_usd": 0.0,
+    "max_iterations": 4,
+    "max_llm_calls": 0
+  },
+  "candidate_families": [
+    "mlp",
+    "softmax_regression",
+    "tiny_patch_transformer"
+  ],
+  "claim_boundary": "Benchmark-adjacent statistics describe the deterministic bundled fixture only; they are readiness diagnostics, not broad empirical or publication claims.",
+  "fixture_scope": {
+    "dataset": "local fixture",
+    "network_access": false,
+    "offline_only": true,
+    "task_name": "small MNIST neural-network classification"
+  },
+  "metric": {
+    "direction": "maximize",
+    "minimum_meaningful_delta": 0.005,
+    "name": "accuracy_delta_vs_baseline"
+  },
+  "non_claims": [
+    "not a general benchmark leaderboard",
+    "not evidence of empirical superiority outside the bundled fixture",
+    "not publication approval",
+    "not a network or LLM-evidence claim"
+  ],
+  "schema": "template-autoresearch-benchmark-boundary-v1",
+  "statistical_methods": [
+    {
+      "artifact": "output/data/ml_candidate_intervals.json",
+      "name": "Wilson score accuracy intervals",
+      "scope": "baseline and evaluated candidates on the bundled offline fixture"
+    },
+    {
+      "artifact": "output/data/ml_bootstrap_intervals.json",
+      "name": "deterministic bootstrap intervals",
+      "scope": "accepted-candidate accuracy and macro-F1 uncertainty on the bundled offline fixture"
+    },
+    {
+      "artifact": "output/data/ml_paired_comparison.json",
+      "name": "exact McNemar paired comparison",
+      "scope": "matched baseline-vs-accepted correctness on the local test split"
+    },
+    {
+      "artifact": "output/data/ml_candidate_rank_stability.json",
+      "name": "bootstrap rank-stability frequencies",
+      "scope": "candidate ordering stability within the configured candidate budget"
+    }
+  ]
+}

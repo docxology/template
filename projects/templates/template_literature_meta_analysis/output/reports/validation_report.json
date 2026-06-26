@@ -1,0 +1,204 @@
+{
+  "timestamp": "2026-06-26T07:10:07.395354",
+  "checks": {
+    "PDF validation": true,
+    "Transmission bookends": true,
+    "Markdown validation": true,
+    "Output structure": true,
+    "Figure registry": true,
+    "Evidence registry": false,
+    "Project design overlays": true,
+    "Artifact manifest": true
+  },
+  "figure_issues": [],
+  "output_statistics": {
+    "evidence_issues": [
+      "02a_methods_retrieval.md: unsupported number 429",
+      "02a_methods_retrieval.md: unsupported number 200",
+      "02a_methods_retrieval.md: unsupported number 1000",
+      "02a_methods_retrieval.md: unsupported number 986",
+      "01_introduction.md: unsupported number 429",
+      "02d_methods_knowledge_graph.md: unsupported number -1",
+      "04a_discussion.md: unsupported number 1000",
+      "04a_discussion.md: unsupported number 986",
+      "04a_discussion.md: unsupported number 429",
+      "05_appendix_tooling.md: unsupported number 90",
+      "05_appendix_tooling.md: unsupported number 819"
+    ],
+    "detailed_validation": {
+      "structure": {
+        "valid": true,
+        "issues": [],
+        "missing_files": [],
+        "suspicious_sizes": [],
+        "warnings": [],
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "size_mb": 6.98,
+            "readable": true
+          },
+          "pdf": {
+            "exists": true,
+            "files": 10,
+            "size_mb": 7.23,
+            "readable": true,
+            "optional": false
+          },
+          "web": {
+            "exists": true,
+            "files": 22,
+            "size_mb": 0.32,
+            "readable": true,
+            "optional": false
+          },
+          "slides": {
+            "exists": true,
+            "files": 154,
+            "size_mb": 8.82,
+            "readable": true,
+            "optional": false
+          },
+          "figures": {
+            "exists": true,
+            "files": 19,
+            "size_mb": 6.87,
+            "readable": true,
+            "optional": false
+          },
+          "data": {
+            "exists": true,
+            "files": 17,
+            "size_mb": 11.5,
+            "readable": true,
+            "optional": false
+          },
+          "reports": {
+            "exists": true,
+            "files": 8,
+            "size_mb": 0.09,
+            "readable": true,
+            "optional": false
+          },
+          "simulations": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          },
+          "llm": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          },
+          "logs": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          }
+        }
+      },
+      "directories": {
+        "pdf": {
+          "exists": true,
+          "file_count": 10,
+          "size_mb": "7.23",
+          "largest_file": "template_literature_meta_analysis_combined.pdf"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 22,
+          "size_mb": "0.32",
+          "largest_file": "index.html"
+        },
+        "slides": {
+          "exists": true,
+          "file_count": 154,
+          "size_mb": "8.82",
+          "largest_file": "03c_results_text_analytics_slides.pdf"
+        },
+        "figures": {
+          "exists": true,
+          "file_count": 19,
+          "size_mb": "6.87",
+          "largest_file": "word_cloud.png"
+        },
+        "data": {
+          "exists": true,
+          "file_count": 17,
+          "size_mb": "11.50",
+          "largest_file": "tfidf_data.json"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 8,
+          "size_mb": "0.09",
+          "largest_file": "evidence_registry.json"
+        },
+        "simulations": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "llm": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "logs": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        }
+      },
+      "file_counts": {
+        "pdf": 10,
+        "web": 22,
+        "slides": 154,
+        "figures": 19,
+        "data": 17,
+        "reports": 8
+      },
+      "total_size_mb": 34.83731651306152,
+      "issues_by_severity": {
+        "critical": [],
+        "warning": [
+          "Directory 'simulations/' missing or empty",
+          "Directory 'llm/' missing or empty",
+          "Directory 'logs/' missing or empty"
+        ],
+        "info": []
+      },
+      "recommendations": []
+    },
+    "pdf": {
+      "files": 10,
+      "size_mb": 7.229328155517578
+    },
+    "figures": {
+      "files": 19,
+      "size_mb": 6.86977481842041
+    },
+    "data": {
+      "files": 17,
+      "size_mb": 11.502429962158203
+    }
+  },
+  "summary": {
+    "total_checks": 8,
+    "passed": 7,
+    "failed": 1,
+    "figure_issues_count": 0,
+    "all_passed": false
+  },
+  "recommendations": [
+    {
+      "priority": "medium",
+      "issue": "Evidence registry reported unsupported manuscript facts",
+      "action": "Register generated facts or replace unsupported hard-coded claims",
+      "file": "projects/templates/template_literature_meta_analysis/output/reports/evidence_registry.json"
+    }
+  ]
+}

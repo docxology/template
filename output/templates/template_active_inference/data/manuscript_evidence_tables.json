@@ -1,0 +1,122 @@
+{
+  "all_source_backed": true,
+  "schema": "template_active_inference.manuscript_evidence_tables.v1",
+  "table_count": 23,
+  "tables": [
+    {
+      "id": "claim_evidence",
+      "row_count": 97,
+      "source": "output/reports/claim_evidence_audit.json"
+    },
+    {
+      "id": "artifact_producers",
+      "row_count": 85,
+      "source": "output/data/validation_dependency_graph.json"
+    },
+    {
+      "id": "artifact_provenance",
+      "row_count": 85,
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "id": "manuscript_staleness",
+      "row_count": 322,
+      "source": "output/reports/manuscript_staleness_report.json"
+    },
+    {
+      "id": "pymdp_policy_posterior",
+      "row_count": 10,
+      "source": "output/data/pymdp_policy_posterior_grid.json"
+    },
+    {
+      "id": "pymdp_runtime_diagnostics",
+      "row_count": 4,
+      "source": "output/reports/pymdp_runtime_diagnostics.json"
+    },
+    {
+      "id": "semantic_restrictions",
+      "row_count": 126,
+      "source": "output/data/sheaf_gluing_certificate.json"
+    },
+    {
+      "id": "track_improvement_scope",
+      "row_count": 39,
+      "source": "output/data/track_improvement_scope.json"
+    },
+    {
+      "id": "replay_matrix",
+      "row_count": 13,
+      "source": "output/reports/replay_matrix.json"
+    },
+    {
+      "id": "artifact_diffoscope",
+      "row_count": 41,
+      "source": "output/reports/artifact_diffoscope.json"
+    },
+    {
+      "id": "proof_extraction",
+      "row_count": 12,
+      "source": "output/data/proof_extraction_index.json"
+    },
+    {
+      "id": "state_space_catalog",
+      "row_count": 6,
+      "source": "output/data/state_space_catalog.json"
+    },
+    {
+      "id": "causal_ablation",
+      "row_count": 36,
+      "source": "output/data/causal_ablation_matrix.json"
+    },
+    {
+      "id": "artifact_license",
+      "row_count": 85,
+      "source": "output/reports/artifact_license_audit.json"
+    },
+    {
+      "id": "release_notes",
+      "row_count": 3,
+      "source": "output/reports/release_notes_evidence.json"
+    },
+    {
+      "id": "scholarship_sources",
+      "row_count": 21,
+      "source": "output/data/scholarship_source_matrix.json"
+    },
+    {
+      "id": "security_posture",
+      "row_count": 9,
+      "source": "output/reports/security_posture_audit.json"
+    },
+    {
+      "id": "visualization_quality",
+      "row_count": 23,
+      "source": "output/reports/visualization_quality_audit.json"
+    },
+    {
+      "id": "statistical_visualization_bridge",
+      "row_count": 7,
+      "source": "output/data/statistical_visualization_bridge.json"
+    },
+    {
+      "id": "proof_dependency_graph",
+      "row_count": 207,
+      "source": "output/data/proof_dependency_graph.json"
+    },
+    {
+      "id": "state_transition_table",
+      "row_count": 24,
+      "source": "output/data/state_transition_table.json"
+    },
+    {
+      "id": "ablation_sensitivity",
+      "row_count": 36,
+      "source": "output/reports/ablation_sensitivity_report.json"
+    },
+    {
+      "id": "release_attestation",
+      "row_count": 7,
+      "source": "output/reports/release_attestation.json"
+    }
+  ]
+}

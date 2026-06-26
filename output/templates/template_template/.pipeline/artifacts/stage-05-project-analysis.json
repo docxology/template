@@ -1,0 +1,302 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/data/metrics.json",
+      "sha256": "f65b601991937d2d3449a5820cbabe1ac376929a4cc7d7088cde44d211eb4dd1",
+      "size_bytes": 8801,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/architecture_overview.png",
+      "sha256": "1e58f85b9f7bfe4e0055305ed93d7ed342e977ec7b3ca98ca91252ee9815b845",
+      "size_bytes": 340799,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/comparative_feature_matrix.png",
+      "sha256": "3e873026ac82003435c8fe5022b4023bf09d1d91a13ff682a8cc6d0b47541219",
+      "size_bytes": 356405,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/module_inventory.png",
+      "sha256": "638094fe5b6d7254ebe4b4e1f5b3af3f35cc14ecc9ed2df53c90133b2fea23d9",
+      "size_bytes": 277941,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/pipeline_stages.png",
+      "sha256": "e4b86eac2cb5fbdc6e14e363b13dc9879169fab40bcf953da026ddfee35cc729",
+      "size_bytes": 122506,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "f4d76c1ac16ab530e232ff91d699218ca5952276c279b85f5d1d1e528c88abbe",
+      "size_bytes": 3935,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/02_introduction.md",
+      "sha256": "d17d705c770931bfd3e69e42e117a46bbd63f47569a05550518472492d62492e",
+      "size_bytes": 18328,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03a_architecture.md",
+      "sha256": "0d80726bee1b1e5de8d534a726892e7896ed434f1384fd93525a38c05dbac78e",
+      "size_bytes": 4839,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03b_pipeline.md",
+      "sha256": "cabe33f65dc4b79e8ddbc789585c7dcdd4d97c44beb841aeaa3ef9415776a4de",
+      "size_bytes": 3818,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03c_documentation.md",
+      "sha256": "0438069894526ffa6300399deeef9fac678ff1a1f7922223db82618bf34d8b97",
+      "size_bytes": 6964,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03d_fair_iac.md",
+      "sha256": "764037083c3812394a92a0b801cb63a9f1d99d91dca77cf42cb5044e5b5ffccd",
+      "size_bytes": 3746,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03e_quality.md",
+      "sha256": "fe12754ee549cff420bb27344dcbb4ba04cd91b35d5db716158b08bb9c7e2e72",
+      "size_bytes": 3911,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/04_results.md",
+      "sha256": "23f224cc3916990da8e08d27005e0b2cac0078650a85a1f318082a846026deed",
+      "size_bytes": 9109,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/05a_zeromock_tradeoff.md",
+      "sha256": "84286e51e0beb6361f647c1a0d02451afe354cf86569425b1ed22f417502d8ad",
+      "size_bytes": 3869,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/05b_scalability.md",
+      "sha256": "8ffcf79f904d5b8015a3f77a2fa2bd2849db1e18bb1304878f427496ed60801e",
+      "size_bytes": 3195,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/05c_comparison.md",
+      "sha256": "5af0b1dbe5f8d44a31fb066ccfc6b90f808e567315698bd3282888eb470a432f",
+      "size_bytes": 4812,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/05d_ai_collaboration.md",
+      "sha256": "27516e6e05e002f6515fb72d3d697918b7f139c5a256c0bdc463f3d106aafc80",
+      "size_bytes": 4611,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/05e_future_conclusion.md",
+      "sha256": "1e800f2871a4053d69f6571ea141f33f804ac18e534d165a9715bdb2be7a5eb7",
+      "size_bytes": 6711,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/06_infrastructure_modules.md",
+      "sha256": "2945d123bc8307f856b19bf1bb77c3c8e20e2270831d47bbc6d75bf744712fbe",
+      "size_bytes": 6584,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/07_security_provenance.md",
+      "sha256": "9e20badbff1732729b75aad27b725ca8248b0985c392cff98b1af786dd0549e1",
+      "size_bytes": 9076,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/08a_appendix_pipeline.md",
+      "sha256": "9cc5ac8796d9a537be78f423b8d009783a9eff09198b28711637db68b3becbc5",
+      "size_bytes": 2185,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/08b_appendix_config.md",
+      "sha256": "f3c8b5f4f1c3c1eb1d0996a8bc21e521ccc643f295dff878f6732409141cf2e8",
+      "size_bytes": 928,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/08c_appendix_directory.md",
+      "sha256": "8e41096b6c152d24903f8202c9bd7077c7441d5dfa485a30d6005b0b6e8ee61c",
+      "size_bytes": 1951,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/08d_appendix_exemplars.md",
+      "sha256": "bc54da319056e37a05374b54c6102e444a6717267cf11e1a8915e79a0b4c186d",
+      "size_bytes": 1986,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/08e_appendix_docs.md",
+      "sha256": "8b9ddf193f3ad9e135eea6814f8cfa11cf8195176e475e963f2523326b607e3b",
+      "size_bytes": 1439,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/08f_appendix_matrix.md",
+      "sha256": "32f8861bad3035638fd0d18d5e5b8e93da756522a7acf5e4060769a59e82390d",
+      "size_bytes": 2260,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/AGENTS.md",
+      "sha256": "2c80d172828b8ef3dfd552c53abe46a1906b5638a162b1d28f0fe89457d104c4",
+      "size_bytes": 2813,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/README.md",
+      "sha256": "dc5d89909c25b34057940cae502538d19582b94a30dc91d91456a879fbedf56f",
+      "size_bytes": 890,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/config.yaml",
+      "sha256": "ef4b032fc6c7aeb8245361dce8590e3fdb4d35b2012f068bb7c9519696ee58b1",
+      "size_bytes": 1506,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/config.yaml.example",
+      "sha256": "aa4359907d8a1083c49e275e3cedece850f8747f4fc72a5d4145cac197ea07f6",
+      "size_bytes": 914,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/layer_contract.yaml",
+      "sha256": "a95522c31d152c5920e710f48057dfac02ae9519597bdfd2431236ec8df544bb",
+      "size_bytes": 245,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/preamble.md",
+      "sha256": "fafbaa4885ba69093ea6a668b92b760eeda6bfec39ec578fd9a9d3983e1762b0",
+      "size_bytes": 521,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/references.bib",
+      "sha256": "b32ce14433bf10e31f3dcd45752b0ec6c9d2273929887ace5c33eaaa15a71f92",
+      "size_bytes": 25191,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:24:38+00:00"
+    }
+  ],
+  "issues": []
+}

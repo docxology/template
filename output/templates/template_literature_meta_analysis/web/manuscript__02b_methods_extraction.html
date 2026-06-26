@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02b_methods_extraction.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="full-text-language-and-embeddings">Full Text, Language, and
+Embeddings</h1>
+<p>Beyond bibliographic metadata, the pipeline mines the textual content
+of each record. This stage bridges the gap between a bibliographic
+inventory and a semantic understanding of the literature.</p>
+<h2 id="full-text-availability">Full-Text Availability</h2>
+<p>An open-access resolver maps each record to a downloadable PDF where
+one exists (a known <code>pdf_url</code>, or an Unpaywall lookup by
+DOI), and an opt-in, network-gated downloader fetches it to a
+deterministic path. Full-text availability is summarized without
+requiring any download, so the offline default still reports coverage.
+For this run:</p>
+<ul>
+<li><strong>Abstract coverage</strong>: 55.5% of records (1277 of
+<ol start="2302" type="1">
+<li>carry an abstract; 1025 records lack one.</li>
+</ol></li>
+<li><strong>Open-access status</strong>: 14.4% of records are open
+access (331 records); the remainder are closed or unknown.</li>
+<li><strong>PDF availability</strong>: 40.9% of records (941) have a
+direct PDF link; 940 have a publisher PDF, and 1361 have no full-text
+source available.</li>
+</ul>
+<p>The identifier coverage for this corpus is: 2248 DOIs, 932 OpenAlex
+IDs, and 1 arXiv IDs. DOI coverage dominates, enabling robust
+cross-engine de-duplication.</p>
+<h2 id="language-and-entity-extraction">Language and Entity
+Extraction</h2>
+<p>Titles, abstracts, and (when present) full text are tokenized and
+reduced to keyphrases and named entities by offline, dependency-light
+extractors — no mandatory LLM. Term-frequency statistics drive a TF-IDF
+representation over a 500-feature vocabulary. The most frequent terms in
+the corpus are: modafinil, treatment, study, effects, patients, results,
+sleep, used, use, drug, studies, clinical, mg, using, placebo,
+cognitive, associated, effect, however, disorder. These terms reflect
+the clinical, pharmacological, and cognitive vocabulary characteristic
+of the modafinil literature.</p>
+<h2 id="embeddings">Embeddings</h2>
+<p>Every title, abstract, and full text is embedded into a shared vector
+space by a deterministic, offline method — TF-IDF followed by truncated
+SVD, i.e. latent semantic analysis [deerwester1990indexing]. The
+embedding dimensionality is 50 components (configurable via
+<code>project_config.embeddings.n_components</code>), and the TF-IDF
+vocabulary is capped at 500 features (configurable via
+<code>project_config.embeddings.max_features</code>). The embedding is
+byte-stable across runs: the same input text always yields identical
+vectors, so the derived similarity matrix, nearest-neighbour lists,
+clusters, and two-dimensional projection are all reproducible.</p>
+<p>An optional transformer backend can be enabled by setting
+<code>project_config.embeddings.method: transformer</code> (requires the
+<code>embeddings</code> extra), which upgrades the embedding fidelity
+without changing the interface or downstream analysis.</p>
+<p>The embeddings support semantic retrieval over the corpus and feed
+two visualizations: a PCA two-dimensional projection ((Figure pca
+embeddings)) that maps the topical geography of the literature, and a
+hierarchical clustering dendrogram ((Figure dendrogram)) that reveals
+the similarity structure of the document collection.</p>
+</body>
+</html>

@@ -1,0 +1,255 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "1.11",
+      "total_size_bytes": 1167892,
+      "largest_files": [
+        {
+          "name": "template_gold_refinement_combined.pdf",
+          "size_mb": "0.97",
+          "path": "pdf/template_gold_refinement_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.log",
+          "size_mb": "0.05",
+          "path": "pdf/_combined_manuscript.log"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.04",
+          "path": "pdf/_combined_manuscript.tex"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1,
+        ".pdf": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 12,
+      "size_mb": "0.13",
+      "total_size_bytes": 140767,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.05",
+          "path": "web/index.html"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.02",
+          "path": "web/_combined_manuscript.md"
+        },
+        {
+          "name": "manuscript__03_results.html",
+          "size_mb": "0.01",
+          "path": "web/manuscript__03_results.html"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".html": 11
+      }
+    },
+    "slides": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 7,
+      "size_mb": "0.88",
+      "total_size_bytes": 927213,
+      "largest_files": [
+        {
+          "name": "purity_progression.png",
+          "size_mb": "0.20",
+          "path": "figures/purity_progression.png"
+        },
+        {
+          "name": "token_heatmap.png",
+          "size_mb": "0.18",
+          "path": "figures/token_heatmap.png"
+        },
+        {
+          "name": "token_density.png",
+          "size_mb": "0.14",
+          "path": "figures/token_density.png"
+        }
+      ],
+      "extensions": {
+        ".json": 1,
+        ".png": 6
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "0.01",
+      "total_size_bytes": 13127,
+      "largest_files": [
+        {
+          "name": "manuscript_variables.json",
+          "size_mb": "0.01",
+          "path": "data/manuscript_variables.json"
+        },
+        {
+          "name": "refinery_results.json",
+          "size_mb": "0.00",
+          "path": "data/refinery_results.json"
+        }
+      ],
+      "extensions": {
+        ".json": 2
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 7,
+      "size_mb": "0.01",
+      "total_size_bytes": 9844,
+      "largest_files": [
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.00",
+          "path": "reports/validation_report.json"
+        },
+        {
+          "name": "token_plan.json",
+          "size_mb": "0.00",
+          "path": "reports/token_plan.json"
+        },
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.00",
+          "path": "reports/evidence_registry.json"
+        }
+      ],
+      "extensions": {
+        ".json": 5,
+        ".md": 2
+      }
+    },
+    "simulations": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "llm": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "logs": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    }
+  },
+  "total_files": 38,
+  "total_size_mb": 2.154200553894043,
+  "largest_files": [
+    {
+      "name": "template_gold_refinement_combined.pdf",
+      "size_mb": "0.97",
+      "category": "pdf",
+      "path": "pdf/template_gold_refinement_combined.pdf"
+    },
+    {
+      "name": "purity_progression.png",
+      "size_mb": "0.20",
+      "category": "figures",
+      "path": "figures/purity_progression.png"
+    },
+    {
+      "name": "token_heatmap.png",
+      "size_mb": "0.18",
+      "category": "figures",
+      "path": "figures/token_heatmap.png"
+    },
+    {
+      "name": "token_density.png",
+      "size_mb": "0.14",
+      "category": "figures",
+      "path": "figures/token_density.png"
+    },
+    {
+      "name": "_combined_manuscript.log",
+      "size_mb": "0.05",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.log"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.05",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.04",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "_combined_manuscript.md",
+      "size_mb": "0.02",
+      "category": "web",
+      "path": "web/_combined_manuscript.md"
+    },
+    {
+      "name": "manuscript__03_results.html",
+      "size_mb": "0.01",
+      "category": "web",
+      "path": "web/manuscript__03_results.html"
+    },
+    {
+      "name": "manuscript_variables.json",
+      "size_mb": "0.01",
+      "category": "data",
+      "path": "data/manuscript_variables.json"
+    }
+  ],
+  "missing_expected_files": [
+    "slides/ directory",
+    "simulations/ directory",
+    "llm/ directory",
+    "logs/ directory"
+  ],
+  "sizes_by_category": {
+    "pdf": 1.1137886047363281,
+    "web": 0.1342458724975586,
+    "figures": 0.8842592239379883,
+    "data": 0.012518882751464844,
+    "reports": 0.009387969970703125
+  },
+  "file_counts_by_type": {
+    ".md": 4,
+    ".log": 2,
+    ".aux": 1,
+    ".blg": 1,
+    ".bib": 1,
+    ".tex": 1,
+    ".toc": 1,
+    ".bbl": 1,
+    ".pdf": 1,
+    ".html": 11,
+    ".json": 8,
+    ".png": 6
+  }
+}

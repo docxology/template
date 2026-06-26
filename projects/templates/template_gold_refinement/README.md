@@ -11,16 +11,29 @@ by template infrastructure. If your project is primarily numerical optimization,
 prose review, or layout, see `template_code_project`, `template_prose_project`,
 or `template_newspaper` instead.
 
-## Run via the template monorepo
+## Publication and rendering
 
-This exemplar lives at `projects/templates/template_gold_refinement/` in the
-public [docxology/template](https://github.com/docxology/template) repository.
-Tests, analysis, PDF rendering, and CI all run through that monorepo:
+- Standalone GitHub: [docxology/template_gold_refinement](https://github.com/docxology/template_gold_refinement)
+- Latest GitHub release: [v0.1.0](https://github.com/docxology/template_gold_refinement/releases/tag/v0.1.0)
+- Zenodo concept DOI: [10.5281/zenodo.20931955](https://doi.org/10.5281/zenodo.20931955)
+- Latest Zenodo version DOI: [10.5281/zenodo.20931956](https://doi.org/10.5281/zenodo.20931956) ([record](https://zenodo.org/records/20931956))
+- Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_gold_refinement`
+- Tracked outputs: [`output/`](output/) in this project and `output/templates/template_gold_refinement/` in the monorepo; public output files above 50 MB stay out of git.
+
+To regenerate this exemplar from the public monorepo:
 
 ```bash
+git clone https://github.com/docxology/template
+cd template
+uv sync
 ./run.sh --project templates/template_gold_refinement --pipeline --core-only
-# or: uv run python scripts/execute_pipeline.py --project templates/template_gold_refinement --core-only
+uv run python scripts/04_validate_output.py --project templates/template_gold_refinement
+uv run python scripts/05_copy_outputs.py --project templates/template_gold_refinement
 ```
+
+Standalone repositories are publication mirrors for source, DOI metadata, and
+tracked rendered artifacts. Use the monorepo above when you need the full shared
+infrastructure, pipeline stages, or cross-template validation.
 
 ## Quick Start
 

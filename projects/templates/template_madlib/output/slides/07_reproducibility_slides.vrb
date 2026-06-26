@@ -1,0 +1,38 @@
+\frametitle{Reproducibility: Seeded Regeneration and Artifact Trace}
+Re-running generation with seed \texttt{431} and the same lexicon
+produces the same token plan. The artifact set records
+\breaktt{token\_inventory.json}, \breaktt{section\_plan.json},
+\breaktt{injection\_trace.json}, \breaktt{manuscript\_variables.json},
+\breaktt{figure\_registry.json}, and the
+cover/results/configuration/evaluation figure set so the manuscript can
+be audited without reading the PDF.
+
+The protocol emits MadlibConfig, review scenario, explicit/default path
+inventory, validated lexicon, digest input records, selection invariant
+set, TokenPlan, enabled section set, section variables, Markdown
+evidence tables, claim-aligned evidence surface, registered figure set,
+output/data, output/reports, and output/figures, output/manuscript,
+validated project output, review packet, copied publication-review
+bundle, fork migration notes. Project tests cover deterministic token
+choice, seed sensitivity, category-input sensitivity, malformed config
+rejection, section disablement, artifact writing, and unresolved
+manuscript-token detection. The shared output validator then checks
+rendered PDFs, Markdown, figure registry, evidence registry, and design
+overlays.
+
+The copied root output is therefore a consequence of local source and
+config. Generated files remain disposable; the durable contract is the
+ability to regenerate them from the tracked project tree and to observe
+the same validation gates passing.
+
+\begin{itemize}
+\tightlist
+\item
+  Config hash: \breaktt{3c4268ae54c35130}
+\item
+  Generated: \breaktt{2026-06-26T14:00:22Z}
+\item
+  Python: \texttt{3.12.13}
+\item
+  Platform: \texttt{Darwin\ arm64}
+\end{itemize}

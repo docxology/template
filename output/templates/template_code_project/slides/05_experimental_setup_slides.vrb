@@ -1,0 +1,32 @@
+\frametitle{Relation to figures}
+\protect\phantomsection\label{relation-to-figures}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5263}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4737}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Figure (\breakseq{[@sec:results]})
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Primary inputs
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Convergence trajectories & \breaktt{experiment.step\_sizes},
+\texttt{initial\_point}, \texttt{tolerance}, \texttt{max\_iterations} \\
+Step-size sensitivity & Dense \(\alpha\) sweep internal to
+\breaktt{generate\_step\_size\_sensitivity\_plot()} \\
+Convergence rate & Same trajectories as above; tolerance line uses
+\breaktt{convergence\_tolerance} \\
+Complexity quad panel & One bar chart per row of
+\breaktt{optimization\_results.csv} \\
+Stability heatmap & \breaktt{stability\_starting\_points} \(\times\)
+\breaktt{stability\_step\_sizes} \\
+Dimensional benchmark & \breaktt{benchmark\_dimensions}, fixed
+\(\alpha=0.1\), internal tol \(10^{-10}\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+This table is descriptive documentation only; it is not executed as code
+during the build.

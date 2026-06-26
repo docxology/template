@@ -1,0 +1,28 @@
+\frametitle{Typography and Figures}
+A newspaper's voice is its type. The engine registers, when present, the
+elegant text faces a real paper would license --- Didot for the
+nameplate and display headlines, Georgia for body text, and a grotesque
+sans for kickers and labels --- and falls back to ReportLab's
+always-available base-14 fonts when a face is missing. Registration is
+best-effort and never fatal: a checkout on a machine without the macOS
+supplemental fonts still renders a structurally identical paper in Times
+and Helvetica. Only the typography module names a font; every other
+module refers to four logical roles (display, body, sans, and their bold
+and italic variants), so a change of typeface touches one file.
+
+A subtle lesson is recorded in the code: the bold weight inside a
+\texttt{.ttc} font collection is at a face-specific subfont index.
+Didot's collection orders its faces Regular, Italic, Bold; an early
+render produced \emph{italic} headlines because the bold index was
+assumed to be one rather than two. The fix --- and the comment that now
+guards it --- came from inspecting the rendered raster, not the source.
+
+Figures are generated in the monochrome idiom of newsprint by two means.
+Photo- graphic elements --- the harbor, the lighthouse, the redwoods ---
+are procedural grayscale scenes drawn with Pillow and passed through a
+forty-five-degree halftone screen, so they read as classic dot-screened
+newspaper photographs. Data graphics --- a seven-day forecast, a tide
+curve, a Dungeness-crab landings bar chart --- are rendered with
+Matplotlib in black and gray with serif labels, so they sit naturally
+beside the type rather than fighting it. A missing image file degrades
+to a clearly labelled placeholder, never a crash.

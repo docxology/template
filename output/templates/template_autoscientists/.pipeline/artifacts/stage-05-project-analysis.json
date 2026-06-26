@@ -1,0 +1,50 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/data/ablation.json",
+      "sha256": "8c64fa8392f5f6db6cd54d97e76ffd618e246f23cc6cb8e23f7976d05a3bd159",
+      "size_bytes": 1610,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:49:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/search_comparison.json",
+      "sha256": "52c6b21e9a6439a761b6db7a00dab4f9653dc0b0d68a2c56133d5c09e6aa7ffc",
+      "size_bytes": 768,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:49:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/ablation.png",
+      "sha256": "1b40f009d05d492646e277d7b24f87f99275736c694c62afbb5ab48fe2700fa1",
+      "size_bytes": 51600,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:49:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/ablation_efficiency.png",
+      "sha256": "dd666fffa09536bea41e1e1f85a12a6e47959c2a98a362935cba6bfe4ac4fc3e",
+      "size_bytes": 56834,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:49:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/search_comparison.png",
+      "sha256": "845fa5295bfe4c8f14d3d5e1579502369e91895fb3becea515881d19cf4b538e",
+      "size_bytes": 54602,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:49:10+00:00"
+    }
+  ],
+  "issues": []
+}

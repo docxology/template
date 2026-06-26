@@ -1,0 +1,8 @@
+\textbf{Documentation maturity:} Coverage statements in Results pull
+from introspection---not hand-maintained denominators---so newly
+promoted modules automatically flow into manuscripts after
+\breaktt{generate\_manuscript\_metrics.py}.
+
+\textbf{FAIR+RSE linkage:} MCP-ready \texttt{SKILL.md} artefacts align
+with evaluator heuristics (executability + metadata richness) emphasized
+by FAIRsoft guidance \breakseq{[@garijo2024fairsoft]}.

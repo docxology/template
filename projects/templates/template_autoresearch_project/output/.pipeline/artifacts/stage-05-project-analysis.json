@@ -1,0 +1,185 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/data/autoresearch_evidence_overview.json",
+      "sha256": "e8ae884b727e306e40fc0daf9b8ca819f55397c73f4ccef6677db1754b2d2cd4",
+      "size_bytes": 4436,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/autoresearch_integrity_attestation.json",
+      "sha256": "ba89764bc3bca6eaf8f3e85f675652a88e25d25f02feed034527737c928084c9",
+      "size_bytes": 22755,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/autoresearch_inventory_export.json",
+      "sha256": "fd8196de996ea99b838c5911a38ec5635cbe969315f8f48160dd7a5dbb2bf1fd",
+      "size_bytes": 20203,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/autoresearch_loop.json",
+      "sha256": "cee3f6d09423a851a11808e7e48f2d6948d9cc4625e921fcd1d9658c2dc992fc",
+      "size_bytes": 16085,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/autoresearch_phase_ledger.json",
+      "sha256": "05062c380b6d37dcd746b96d8d64644654559626b73cb93c584a37ac024be071",
+      "size_bytes": 3779,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/autoresearch_review_packet.json",
+      "sha256": "100ff68d44f1b853f478d4e1072edf0afcae35fc3981ae7b613e5b799d95e452",
+      "size_bytes": 16204,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/autoresearch_schema_manifest.json",
+      "sha256": "c6c32282eb0efbad88b2394e2c6cd4bb2b20116d8dd9356f18c814a2b68f0950",
+      "size_bytes": 7226,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/autoresearch_security_profile.json",
+      "sha256": "cd9e9b016d40dd44a912f9e64bd828e7b956747918d78d1792ca1a908cd6bffc",
+      "size_bytes": 1537,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/autoresearch_supply_chain_inventory.json",
+      "sha256": "924d4c2caf24078e929a87b4fa0f376e126b312444fc7c584e4409debe54321a",
+      "size_bytes": 21459,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/autoresearch_threat_model.json",
+      "sha256": "6f2e16250f47ffe6244cdb2cce6e52e5ecb4326706181e3c424608e3c4ef6111",
+      "size_bytes": 6370,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/benchmark_scores.json",
+      "sha256": "b908f8aa1cc191893a21f93fd4865df45e71e83cae559a909ed2e894c79d3925",
+      "size_bytes": 621,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/figure_quality_report.json",
+      "sha256": "f36b1eda91a170c7ce633513fcc78725a6bb39df3ef50c07d00bf6ada9688ad0",
+      "size_bytes": 16001,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/figure_style.json",
+      "sha256": "36183d1b33686177c5a3ebf0be299b22af492df7e6685ae3d2140fb464f4ea1a",
+      "size_bytes": 1117,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/idea_ledger.json",
+      "sha256": "2687a0b78a5c0ff8a47c9ac69b2a2e93bbb74c80bf6ad7f548f39b4c2dd19d14",
+      "size_bytes": 5233,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/manuscript_variables.json",
+      "sha256": "8efbdca271d675d84efa860105901bfa2023b41de5d1ad11a09b9a0b641c9f08",
+      "size_bytes": 54968,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/ml_candidate_ledger.json",
+      "sha256": "8e9453cce3dcf9f392ccb7febc930acb156776e0e926d45c856ef995c848756c",
+      "size_bytes": 570872,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/research_object_manifest.json",
+      "sha256": "a05c8fb44bc2e587881d7a14248342a660ff322823aa900ca28fd166fdc3e749",
+      "size_bytes": 20652,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/review_decisions.json",
+      "sha256": "a1600f7b235ca55ae496dcd43166f5008934c284a21945ec35c44a8b71caa257",
+      "size_bytes": 669,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "6eecf2ce9952364c8f0355a94090fc964d0d3bc656638d6310e61b09e9949a9a",
+      "size_bytes": 39363,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/autoresearch_loop.json",
+      "sha256": "cee3f6d09423a851a11808e7e48f2d6948d9cc4625e921fcd1d9658c2dc992fc",
+      "size_bytes": 16085,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T19:18:10+00:00"
+    }
+  ],
+  "issues": []
+}

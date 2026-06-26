@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02d_methods_knowledge_graph.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="optional-knowledge-graph-layer">Optional Knowledge-Graph
+Layer</h1>
+<p>An optional, <strong>LLM-gated</strong> stage lifts the corpus from
+bibliometrics to hypothesis-level evidence. For each record, a local
+language model (Ollama, default model <code>gemma3:4b</code>) extracts
+structured <em>assertions</em> — each encoding a direction (supports /
+contradicts / neutral), a confidence score, and a short natural-language
+justification — against the 6 hypotheses declared in configuration.
+Assertions are serialized as RDF-compatible nanopublications
+[kuhn2016decentralized] and scored by a citation-weighted evidence
+function.</p>
+<h2 id="assertion-model">Assertion Model</h2>
+<p>Each assertion <span class="math inline">\(a\)</span> encodes:</p>
+<ul>
+<li><strong>Direction</strong>: <span
+class="math inline">\(\text{supports}\)</span>, <span
+class="math inline">\(\text{contradicts}\)</span>, or <span
+class="math inline">\(\text{neutral}\)</span> with respect to a
+hypothesis <span class="math inline">\(H\)</span></li>
+<li><strong>Confidence</strong>: a score <span class="math inline">\(c_a
+\in [0, 1]\)</span> from the LLM</li>
+<li><strong>Citation weight</strong>: <span class="math inline">\(\log(1
++ n_{\text{cites}})\)</span>, where <span
+class="math inline">\(n_{\text{cites}}\)</span> is the citation count of
+the asserting paper</li>
+</ul>
+<p>The evidence score for hypothesis <span
+class="math inline">\(H\)</span> is:</p>
+<p><span class="math display">\[
+\text{score}(H) = \frac{\sum_{a \in A(H)^+} c_a \cdot \log(1 +
+n_{\text{cites}}(a)) -
+\sum_{a \in A(H)^-} c_a \cdot \log(1 + n_{\text{cites}}(a))}
+{\sum_{a \in A(H)} c_a \cdot \log(1 + n_{\text{cites}}(a))}
+\]</span></p>
+<p>where <span class="math inline">\(A(H)^+\)</span> is the set of
+supporting assertions and <span class="math inline">\(A(H)^-\)</span>
+the contradicting ones. The score ranges from <span
+class="math inline">\(-1\)</span> (all evidence contradicts) to <span
+class="math inline">\(+1\)</span> (all evidence supports).</p>
+<h2 id="incremental-extraction">Incremental Extraction</h2>
+<p>Assertion extraction is <strong>incremental and resumable</strong>:
+assertions are appended to <code>nanopublications.jsonl</code> at
+configurable checkpoint intervals (default: 50 papers). On restart,
+already-processed papers are skipped automatically, so a long extraction
+run that is interrupted can resume without re-processing. The
+<code>--clear-assertions</code> flag discards previous results for a
+fresh start.</p>
+<h2 id="gating-and-defaults">Gating and Defaults</h2>
+<p>This stage is entirely optional and never runs in the offline
+default: with no language model available it is skipped, and the
+hypothesis evidence scores read <em>pending</em>. The hypotheses
+themselves — their names and scope — come from configuration and are
+reported regardless of whether the scoring stage has run.</p>
+<p>The hypotheses explored in this instance are: H1 Wakefulness
+Efficacy; H2 Cognitive Enhancement; H3 Low Abuse Liability; H4
+Dopaminergic Mechanism; H5 Off-label Psychiatric Utility; H6
+Tolerability.</p>
+</body>
+</html>

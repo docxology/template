@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05_methods_analytical.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:methods_analytical">Bernoulli–Ising analytical model</h1>
+<!-- sheaf-track:prose -->
+<p>The analytical method is a finite <strong>K=2 Bernoulli /
+Ising</strong> oracle. The entangled joint <span class="citation"
+data-cites="eq:entangled_joint">[@eq:entangled_joint]</span> gives
+closed-form mutual information <span
+class="math inline">\(I(\lambda)\)</span>;
+<code>output/data/parameter_sweep.csv</code> then checks the same curve
+by an independent exact total-correlation recomputation before the value
+is used in <span class="citation"
+data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>. GNN
+and ontology rows share the same symbol surface (<span class="citation"
+data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>),
+so the derivation, sweep, and model notation are one audited toy
+contract rather than parallel descriptions.</p>
+<p>The scope is intentionally small: finite variational quantities only,
+no sampling, and no empirical generalization. “Free energy” here means
+exactly computed variational functionals on this tiny discrete
+state-space, aligned with mathematical FEP reviews
+[buckley2017mathreview], not continuous-time or biological FEP dynamics
+[gershman2019fepbrain]. The generated sweep contains 21 grid points, and
+the merged invariant report records 12 / 12 passing checks.</p>
+<!-- sheaf-track:formalism -->
+<p>The entangled joint over binary policies satisfies</p>
+<p><span class="math display">\[
+q_\lambda(\pi) \propto E(\pi)\,\exp(\lambda J(\pi)),
+\]</span> {#eq:entangled_joint}</p>
+<p>with symmetric Ising coupling <span class="math inline">\(J\)</span>
+and deformation parameter <span class="math inline">\(\lambda\)</span>.
+Let <span
+class="math inline">\(\sigma(\lambda)=q_\lambda(\pi_1=\pi_2)\)</span> be
+the probability that the two streams agree (the diagonal mass of the
+<span class="math inline">\(2\times2\)</span> joint); by symmetry both
+marginals are uniform. With binary entropy <span
+class="math inline">\(H_b(p)=-p\log p-(1-p)\log(1-p)\)</span> in nats,
+the joint entropy is <span class="math inline">\(H(q_\lambda)=\log 2 +
+H_b(\sigma(\lambda))\)</span> while each marginal contributes <span
+class="math inline">\(\log 2\)</span>, so the mutual information is</p>
+<p><span class="math display">\[
+I(\lambda)=\sum_k H(q_k)-H(q_\lambda)=\log 2 - H_b(\sigma(\lambda)),
+\]</span></p>
+<p>vanishing at <span class="math inline">\(\lambda=0\)</span> (<span
+class="math inline">\(\sigma=\tfrac12\)</span>, independent streams) and
+saturating at <span class="math inline">\(\log 2\)</span> as <span
+class="math inline">\(\lambda\to\infty\)</span> (<span
+class="math inline">\(\sigma\to1\)</span>, perfectly entangled). These
+symbols are the rows of <code>analytical_assumption_index.json</code>,
+so the derivation is auditable rather than asserted.</p>
+<!-- sheaf-track:simulation -->
+<p>The analytical track writes a parameter sweep comparing closed-form
+mutual information with an independent exact recomputation of it (via
+total correlation) across <span class="math inline">\(\lambda \in [0,
+4]\)</span> on 21 grid points (<span class="citation"
+data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>, <span
+class="citation"
+data-cites="fig:ising_mi_curve">[@fig:ising_mi_curve]</span>).</p>
+<!-- sheaf-track:assumption_index -->
+<p>The <code>assumption_index</code> fragment makes the analytical
+equations inspectable as a generated artifact instead of relying on
+prose labels. <code>output/data/analytical_assumption_index.json</code>
+indexes 7 finite-model equation identifiers and 7 rows; the hydrated
+pass flag is <code>true</code>.</p>
+<p>The index is deliberately narrow. It covers the Bernoulli-Ising toy
+equations, their finite binary state assumptions, and the generated
+artifacts that test the same symbols. Any missing equation identifier or
+empty assumption list fails the toy-sweep validation gate.</p>
+<!-- sheaf-track:visualization -->
+<figure id="fig:ising_mi_curve">
+<img src="../figures/ising_mi_curve.png" style="width:90.0%"
+data-fig-alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark line) and an independent exact recomputation via total correlation (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows the recompute-minus-closed-form residual versus lambda with a zero reference line; the two deterministic estimators agree to machine precision."
+alt="Closed-form I(\lambda) and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to \lambda_{\max} = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual." />
+<figcaption aria-hidden="true">Closed-form <span
+class="math inline">\(I(\lambda)\)</span> and an independent exact
+recomputation via total correlation for the symmetric Bernoulli-Ising
+toy across 21 grid points up to <span
+class="math inline">\(\lambda_{\max}\)</span> = 4; grid maximum 0.6031
+nats. Both estimators are deterministic (no sampling), so the right
+panel is a cross-implementation agreement check (max residual 0 nats),
+not a sampling residual.</figcaption>
+</figure>
+<figure id="fig:gnn_ontology_concordance">
+<img src="../figures/gnn_ontology_concordance.png" style="width:90.0%"
+data-fig-alt="Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms."
+alt="GNN \leftrightarrow ontology concordance for the Bernoulli–Ising toy (GNN v1.1)." />
+<figcaption aria-hidden="true">GNN <span
+class="math inline">\(\leftrightarrow\)</span> ontology concordance for
+the Bernoulli–Ising toy (GNN v1.1).</figcaption>
+</figure>
+<!-- sheaf-track:gnn -->
+<p>The Bernoulli toy is declared in
+<code>gnn/bernoulli_toy.gnn.md</code> (GNN v1.1), following the GNN
+notation role described by Smekal and Friedman [gnn2023]. <span
+class="citation"
+data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>
+links GNN variables to Active Inference Ontology terms bound in the
+analytical ontology fragment; round-trip parity is checked before
+render.</p>
+<p>Measured MI and sweep artifacts in <span class="citation"
+data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span> ground
+the same symbol map used in the concordance diagram.</p>
+<!-- sheaf-track:ontology -->
+<h3 id="ontology-bindings">Ontology bindings</h3>
+<ul>
+<li><code>E1</code> → <strong>Stream1HabitPrior</strong></li>
+<li><code>E2</code> → <strong>Stream2HabitPrior</strong></li>
+<li><code>J</code> → <strong>CrossStreamCouplingPotential</strong></li>
+<li><code>gamma</code> → <strong>SophisticationWeight</strong></li>
+<li><code>lam</code> →
+<strong>EntanglementDeformationParameter</strong></li>
+<li><code>pi1</code> → <strong>Stream1PolicyVector</strong></li>
+<li><code>pi2</code> → <strong>Stream2PolicyVector</strong></li>
+<li><code>q_joint</code> → <strong>EntangledJointPosterior</strong></li>
+</ul>
+</body>
+</html>

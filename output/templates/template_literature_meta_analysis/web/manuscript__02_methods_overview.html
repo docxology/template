@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_methods_overview.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="methods-overview">Methods Overview</h1>
+<p>The pipeline is a sequence of deterministic stages, each reading the
+previous stage’s committed artifacts and writing its own. Business logic
+lives in tested <code>src/</code> modules; the numbered
+<code>scripts/</code> are thin orchestrators that wire I/O,
+configuration loading, logging, and stage sequencing. The architecture
+follows the thin orchestrator pattern: no computational logic resides in
+scripts.</p>
+<h2 id="pipeline-stages">Pipeline Stages</h2>
+<ol type="1">
+<li><p><strong>Retrieval</strong> (<code>01_literature_search.py</code>)
+— dispatch the configured query across 7 engines (arXiv, OpenAlex,
+Semantic Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv), merge,
+and de-duplicate into <code>corpus.jsonl</code>. Each engine is an
+isolated adapter exposing a uniform
+<code>search(query) -&gt; list[Paper]</code> interface; engines that are
+keyless need no credentials, while Semantic Scholar uses a key when
+present. SovietRxiv and ChinaRxiv share a unified API with an optional
+<code>X-API-Email</code> header for the polite rate-limit pool (300/min
+vs 30/min anonymous).</p></li>
+<li><p><strong>Meta-analysis</strong>
+(<code>02_meta_analysis_pipeline.py</code>) — subfield classification,
+temporal metrics, TF-IDF, non-negative matrix factorization topics, and
+the citation network. This stage reads <code>corpus.jsonl</code> and
+emits <code>subfield_classification.json</code>,
+<code>temporal_analysis.json</code>, <code>tfidf_data.json</code>,
+<code>topics.json</code>, <code>citation_network.json</code>, and
+<code>citation_graph.gml</code>.</p></li>
+<li><p><strong>Knowledge graph</strong>
+(<code>03_build_knowledge_graph.py</code>, optional/LLM-gated) — extract
+assertions and score the 6 configured hypotheses. Outputs
+<code>nanopublications.jsonl</code>,
+<code>hypothesis_scores.json</code>, and
+<code>assertion_summary.json</code>.</p></li>
+<li><p><strong>Figures</strong> (<code>04_generate_figures.py</code>) —
+render 18 publication-ready visualizations from the analysis JSON
+outputs. All figures use a colourblind-safe palette (Wong 2011),
+high-contrast labels at <span class="math inline">\(\geq 16\)</span>pt,
+and a headless matplotlib backend (Agg).</p></li>
+<li><p><strong>Injection</strong> (<code>05_inject_variables.py</code>)
+— compute manuscript variables from the artifacts above and substitute
+them into these Markdown sections. An unresolved placeholder is a hard
+error, not a silent gap.</p></li>
+<li><p><strong>Fulltext assessment</strong>
+(<code>06_fulltext_assessment.py</code>) — report abstract coverage
+(55.5%), open-access status (14.4%), and PDF availability (40.9%) across
+the corpus.</p></li>
+</ol>
+<h2 id="reproducibility-model">Reproducibility Model</h2>
+<p>The system runs <strong>offline and deterministically</strong> by
+default: a committed synthetic seed corpus drives every stage with fixed
+seeds (seed = 42 for NMF, SVD, and graph layouts), so re-running
+produces byte-identical outputs. A live run with engines enabled and
+credentials supplied replaces the seed corpus with real records — as in
+this instance, which retrieved 2302 live records. The template is
+domain-agnostic: the search term, query, keyword set, subfield taxonomy,
+and hypotheses all come from <code>manuscript/config.yaml</code>.</p>
+<h2 id="configuration-surface">Configuration Surface</h2>
+<p>A single <code>manuscript/config.yaml</code> controls:</p>
+<ul>
+<li><strong>Search parameters</strong>: term, query string, per-engine
+queries, relevance keywords, start year, max results, resume/clear
+behaviour</li>
+<li><strong>Engine toggles</strong>: arXiv, OpenAlex, Semantic Scholar,
+Crossref, PubMed, SovietRxiv, ChinaRxiv (each independently enabled or
+disabled)</li>
+<li><strong>SovietRxiv/ChinaRxiv settings</strong>: optional
+<code>api_email</code> for the polite pool, <code>source</code> filter
+(<code>russiarxiv</code> or <code>chinaxiv</code>)</li>
+<li><strong>Full-text download</strong>: opt-in Unpaywall resolution
+with <code>unpaywall_email</code></li>
+<li><strong>Embeddings</strong>: method (<code>tfidf_svd</code> or
+<code>transformer</code>), dimensionality, max features</li>
+<li><strong>Knowledge graph</strong>: checkpoint interval, LLM model,
+base URL, temperature, max tokens</li>
+<li><strong>Hypothesis definitions</strong>: 6 named hypotheses with
+scope labels</li>
+<li><strong>Subfield taxonomy</strong>: 6 buckets, each with a keyword
+list</li>
+<li><strong>Paper metadata</strong>: title, authors, DOI, keywords,
+license, repository URL</li>
+</ul>
+</body>
+</html>

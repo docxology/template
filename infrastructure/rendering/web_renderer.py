@@ -303,6 +303,7 @@ class WebRenderer:
             return []
 
         args: list[str] = []
+        args.append("--metadata=linkReferences:true")
         title = paper.get("title")
         subtitle = paper.get("subtitle")
         if title:

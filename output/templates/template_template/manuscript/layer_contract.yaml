@@ -1,0 +1,5 @@
+# Meta-template exception: runtime introspection of Layer 1 is documented and allowlisted.
+allow_infrastructure_imports:
+  - src/template_template/introspection.py
+  - src/template_template/metrics.py
+  - src/template_template/inject_metrics.py

@@ -1,0 +1,129 @@
+{
+  "accepted_candidate_id": "exp-mlp-tanh-64",
+  "bins": [
+    {
+      "accuracy": 0.0,
+      "bin_index": 0,
+      "ci_high": 0.0,
+      "ci_low": 0.0,
+      "count": 0,
+      "empty_bin": true,
+      "lower": 0.0,
+      "mean_confidence": 0.0,
+      "successes": 0,
+      "upper": 0.1
+    },
+    {
+      "accuracy": 0.0,
+      "bin_index": 1,
+      "ci_high": 0.0,
+      "ci_low": 0.0,
+      "count": 0,
+      "empty_bin": true,
+      "lower": 0.1,
+      "mean_confidence": 0.0,
+      "successes": 0,
+      "upper": 0.2
+    },
+    {
+      "accuracy": 0.0,
+      "bin_index": 2,
+      "ci_high": 0.561506,
+      "ci_low": 0.0,
+      "count": 3,
+      "empty_bin": false,
+      "lower": 0.2,
+      "mean_confidence": 0.272087,
+      "successes": 0,
+      "upper": 0.3
+    },
+    {
+      "accuracy": 0.75,
+      "bin_index": 3,
+      "ci_high": 0.954414,
+      "ci_low": 0.300636,
+      "count": 4,
+      "empty_bin": false,
+      "lower": 0.3,
+      "mean_confidence": 0.349808,
+      "successes": 3,
+      "upper": 0.4
+    },
+    {
+      "accuracy": 0.428571,
+      "bin_index": 4,
+      "ci_high": 0.634538,
+      "ci_low": 0.244697,
+      "count": 21,
+      "empty_bin": false,
+      "lower": 0.4,
+      "mean_confidence": 0.457408,
+      "successes": 9,
+      "upper": 0.5
+    },
+    {
+      "accuracy": 0.678571,
+      "bin_index": 5,
+      "ci_high": 0.82067,
+      "ci_low": 0.493385,
+      "count": 28,
+      "empty_bin": false,
+      "lower": 0.5,
+      "mean_confidence": 0.553816,
+      "successes": 19,
+      "upper": 0.6
+    },
+    {
+      "accuracy": 0.666667,
+      "bin_index": 6,
+      "ci_high": 0.82028,
+      "ci_low": 0.46706,
+      "count": 24,
+      "empty_bin": false,
+      "lower": 0.6,
+      "mean_confidence": 0.64959,
+      "successes": 16,
+      "upper": 0.7
+    },
+    {
+      "accuracy": 0.678571,
+      "bin_index": 7,
+      "ci_high": 0.82067,
+      "ci_low": 0.493385,
+      "count": 28,
+      "empty_bin": false,
+      "lower": 0.7,
+      "mean_confidence": 0.755613,
+      "successes": 19,
+      "upper": 0.8
+    },
+    {
+      "accuracy": 0.90566,
+      "bin_index": 8,
+      "ci_high": 0.959028,
+      "ci_low": 0.79746,
+      "count": 53,
+      "empty_bin": false,
+      "lower": 0.8,
+      "mean_confidence": 0.857897,
+      "successes": 48,
+      "upper": 0.9
+    },
+    {
+      "accuracy": 0.982301,
+      "bin_index": 9,
+      "ci_high": 0.991864,
+      "ci_low": 0.961929,
+      "count": 339,
+      "empty_bin": false,
+      "lower": 0.9,
+      "mean_confidence": 0.974052,
+      "successes": 333,
+      "upper": 1.0
+    }
+  ],
+  "claim_boundary": "Intervals describe calibration-bin uncertainty on the fixed local test split.",
+  "method": "Wilson 95% binomial interval for empirical bin accuracy",
+  "schema": "template-autoresearch-calibration-bin-intervals-v1",
+  "source_calibration": "output/data/ml_calibration_report.json"
+}

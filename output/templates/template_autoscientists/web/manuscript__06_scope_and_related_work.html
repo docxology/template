@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>06_scope_and_related_work.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:scope">Scope and Related Work</h1>
+<h2 id="what-this-exemplar-claims">What this exemplar claims</h2>
+<ul>
+<li>The five AutoScientists coordination mechanisms
+[gao2026autoscientists] are re-implemented faithfully enough to be
+<strong>individually ablatable</strong>, and each is independently
+tested.</li>
+<li>Under a <strong>matched sequential experiment budget</strong>,
+coordinated teams reach the same clean optimum as a single-thread
+baseline (advantage <span class="math inline">\(= 0.0000\)</span>).</li>
+<li><strong>Noise-band confirmation</strong> produces a measurable,
+reproducible reduction in accepted evaluation noise (a <span
+class="math inline">\(\sim 13\times\)</span> smaller reported-vs-clean
+gap on this objective).</li>
+<li>The <strong>dead-end registry</strong> produces a measurable,
+reproducible search-hygiene gain: consulted by the proposer, it cuts
+redundant re-probes of retired directions from <span
+class="math inline">\(36\)</span> to <span
+class="math inline">\(0\)</span> and halts the search at <span
+class="math inline">\(36\)</span> of <span
+class="math inline">\(60\)</span> experiments, with the clean optimum
+unchanged.</li>
+<li>The <strong>language-model proposer is a clean plug-in
+seam</strong>: a live Hermes agent can replace the deterministic
+proposer without changing the coordination loop.</li>
+</ul>
+<h2 id="what-this-exemplar-does-not-claim">What this exemplar does
+<em>not</em> claim</h2>
+<ul>
+<li><strong>No speedup.</strong> Because coordinated teams partition one
+budget rather than adding parallel compute, this testbed is not evidence
+that coordination is faster or reaches better solutions. It is
+constructed so that no such claim would be honest, and the measured
+advantage is zero.</li>
+<li><strong>No generalization of the magnitudes.</strong> The <span
+class="math inline">\(\sim 13\times\)</span> noise-reduction figure, the
+<span class="math inline">\(36 \to 0\)</span> redundancy reduction, and
+the null effect of effect-size ranking and reorganization on every
+measured quantity are properties of <em>this</em> synthetic objective,
+budget, and deterministic proposer. They illustrate the measurement, not
+a universal constant.</li>
+<li><strong>No agentic-quality claim.</strong> The live Hermes path
+demonstrates that the seam works, not that an LLM proposer outperforms
+the rule-based one.</li>
+</ul>
+<h2 id="relationship-to-autoscientists">Relationship to
+AutoScientists</h2>
+<p>The original system [gao2026autoscientists] runs real language-model
+agent teams on real, expensive scientific tasks and reports end-to-end
+performance. This exemplar deliberately strips that to a deterministic
+core so the <em>mechanisms</em> can be attributed and the noise behavior
+measured in isolation. It is a complement — a microscope on the
+coordination primitives — not a reproduction of the full system or its
+empirical results.</p>
+<h2 id="related-context">Related context</h2>
+<p>The confirmation mechanism is an application of standard effect-size
+and standard-error reasoning [cohen1988statistical] to online acceptance
+decisions. The dead-end registry, effect-size ranking, and
+reorganization are coordination heuristics whose lineage runs through
+population- and restart-based search [whitley2001overview]; the
+contribution here is not the heuristics but their honest, ablatable
+measurement. The broader setting — teams of language-model agents
+pursuing a long-running objective — sits within the rapidly growing
+literature on LLM-based autonomous agents [wang2023survey]. Throughout,
+the emphasis on regenerable figures, fixed seeds, and a tested core
+follows the reproducible-research tradition [peng2011reproducible].</p>
+</body>
+</html>

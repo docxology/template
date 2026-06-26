@@ -1,0 +1,62 @@
+{
+  "stage_count": 5,
+  "final_purity": 0.999999999,
+  "final_karat": "24K (nine-nines certified)",
+  "total_purity_gain": 0.899999999,
+  "is_nine_nines_certified": true,
+  "purity_sequence": [
+    0.1,
+    0.375,
+    0.75,
+    0.9167,
+    0.999,
+    0.999999999
+  ],
+  "stages": [
+    {
+      "order": 1,
+      "name": "ore",
+      "input_purity": 0.1,
+      "output_purity": 0.375,
+      "karat": "9K",
+      "metallurgical_operation": "Extract raw gold-bearing ore from the earth",
+      "manuscript_operation": "Draft prose and raw claims from source material"
+    },
+    {
+      "order": 2,
+      "name": "smelting",
+      "input_purity": 0.375,
+      "output_purity": 0.75,
+      "karat": "18K",
+      "metallurgical_operation": "Heat ore to separate gold from slag and dross",
+      "manuscript_operation": "Remove filler, unsupported claims, and redundant prose"
+    },
+    {
+      "order": 3,
+      "name": "assaying",
+      "input_purity": 0.75,
+      "output_purity": 0.9167,
+      "karat": "22K",
+      "metallurgical_operation": "Test a sample to determine gold content and impurities",
+      "manuscript_operation": "Validate every claim against evidence and citation"
+    },
+    {
+      "order": 4,
+      "name": "cupellation",
+      "input_purity": 0.9167,
+      "output_purity": 0.999,
+      "karat": "24K",
+      "metallurgical_operation": "Refine by blowing air through molten lead-gold alloy",
+      "manuscript_operation": "Resolve cross-references and audit citation integrity"
+    },
+    {
+      "order": 5,
+      "name": "certification",
+      "input_purity": 0.999,
+      "output_purity": 0.999999999,
+      "karat": "24K (nine-nines certified)",
+      "metallurgical_operation": "Certify purity grade and stamp hallmark",
+      "manuscript_operation": "Full pipeline validation, reproducibility, nine-nines"
+    }
+  ]
+}

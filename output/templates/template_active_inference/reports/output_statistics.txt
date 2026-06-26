@@ -1,0 +1,40 @@
+
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: output
+
+Total Files: 138
+Total Size: 12.03 MB
+
+Files by Category:
+  • pdf: 10 files (4.44 MB)
+  • web: 18 files (0.56 MB)
+  • figures: 27 files (3.78 MB)
+  • data: 47 files (2.79 MB)
+  • reports: 35 files (0.46 MB)
+  • logs: 1 files (0.00 MB)
+
+Largest Files:
+  • template_active_inference_combined.pdf: 3.91 MB (pdf)
+  • sheaf_section_status_matrix.json: 0.76 MB (data)
+  • sheaf_layers_overview.png: 0.54 MB (figures)
+  • scholarship_source_map.png: 0.45 MB (figures)
+  • artifact_contract_map.png: 0.44 MB (figures)
+
+Missing Expected Files:
+  ⚠  slides/ directory
+  ⚠  simulations/ directory
+  ⚠  llm/ directory
+
+File Types:
+  • .json: 80 file(s)
+  • .png: 25 file(s)
+  • .html: 17 file(s)
+  • .md: 3 file(s)
+  • .log: 2 file(s)
+  • .pdf: 1 file(s)
+  • .aux: 1 file(s)
+  • .blg: 1 file(s)
+  • .bib: 1 file(s)
+  • .tex: 1 file(s)

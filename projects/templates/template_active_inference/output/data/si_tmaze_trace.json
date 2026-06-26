@@ -1,0 +1,42 @@
+{
+  "steps": [
+    {
+      "step": 0,
+      "obs": 1,
+      "action": 0,
+      "belief_entropy": 0.32508314364563223,
+      "qs_state1": 0.1000000774860336,
+      "mode": "state_inference",
+      "policy_method": "state_inference",
+      "policy_posterior_available": false,
+      "policy_posterior_source": "state_inference",
+      "q_pi": [],
+      "q_pi_sum": null,
+      "q_pi_entropy": null,
+      "q_pi_normalized": false,
+      "expected_free_energy_available": false,
+      "expected_free_energy_values": [],
+      "selected_policy_expected_free_energy": null,
+      "fallback_reason": "state_inference mode does not call infer_policies"
+    },
+    {
+      "step": 1,
+      "obs": 1,
+      "action": 1,
+      "belief_entropy": 0.32508314364563223,
+      "qs_state1": 0.8999999225139664,
+      "mode": "state_inference",
+      "policy_method": "state_inference",
+      "policy_posterior_available": false,
+      "policy_posterior_source": "state_inference",
+      "q_pi": [],
+      "q_pi_sum": null,
+      "q_pi_entropy": null,
+      "q_pi_normalized": false,
+      "expected_free_energy_available": false,
+      "expected_free_energy_values": [],
+      "selected_policy_expected_free_energy": null,
+      "fallback_reason": "state_inference mode does not call infer_policies"
+    }
+  ]
+}

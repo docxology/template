@@ -1,0 +1,463 @@
+\begin{thebibliography}{55}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Asai et~al.(2026)Asai, He, Shao, Shi, Singh, Chang, Lo, Soldaini,
+  Feldman, D'Arcy, et~al.]{asai_openscholar_2026}
+Akari Asai, Jacqueline He, Rulin Shao, Weijia Shi, Amanpreet Singh, Joseph~Chee
+  Chang, Kyle Lo, Luca Soldaini, Sergey Feldman, Mike D'Arcy, et~al.
+\newblock Synthesizing scientific literature with retrieval-augmented language
+  models.
+\newblock \emph{Nature}, 650:\penalty0 857--863, 2026.
+\newblock \doi{10.1038/s41586-025-10072-4}.
+\newblock URL \url{https://www.nature.com/articles/s41586-025-10072-4}.
+
+\bibitem[Balazevic et~al.(2019)Balazevic, Allen, and
+  Hospedales]{balazevic_tucker_2019}
+Ivana Balazevic, Carl Allen, and Timothy Hospedales.
+\newblock Tucker: Tensor factorization for knowledge graph completion.
+\newblock In \emph{Proceedings of the 2019 Conference on Empirical Methods in
+  Natural Language Processing and the 9th International Joint Conference on
+  Natural Language Processing}, pages 5185--5194. Association for Computational
+  Linguistics, 2019.
+\newblock \doi{10.18653/v1/D19-1522}.
+\newblock URL \url{https://aclanthology.org/D19-1522/}.
+
+\bibitem[Banbury et~al.(2021)Banbury, Reddi, Torelli, Holleman, Jeffries,
+  Kiraly, Montino, Kanter, Ahmed, Pau, Thakker, Torrini, Warden, Cordaro,
+  Di~Guglielmo, Duarte, Gibellini, Parekh, Tran, Tran, Wenxu, and
+  Xuesong]{banbury_mlperf_tiny_2021}
+Colby Banbury, Vijay~Janapa Reddi, Peter Torelli, Jeremy Holleman, Nat
+  Jeffries, Csaba Kiraly, Pietro Montino, David Kanter, Sebastian Ahmed, Danilo
+  Pau, Urmish Thakker, Antonio Torrini, Pete Warden, Jay Cordaro, Giuseppe
+  Di~Guglielmo, Javier Duarte, Stephen Gibellini, Videet Parekh, Honson Tran,
+  Nhan Tran, Xu~Wenxu, and Zhang Xuesong.
+\newblock Mlperf tiny benchmark, 2021.
+\newblock URL \url{https://arxiv.org/abs/2106.07597}.
+
+\bibitem[Baulin et~al.(2025)Baulin, Cook, Friedman, Lumiruusu, Pashea, Rahman,
+  and Waldeck]{baulin_discovery_engine_2025}
+Vladimir Baulin, Austin Cook, Daniel Friedman, Janna Lumiruusu, Andrew Pashea,
+  Shagor Rahman, and Benedikt Waldeck.
+\newblock The discovery engine: A framework for ai-driven synthesis and
+  navigation of scientific knowledge landscapes, 2025.
+\newblock URL \url{https://arxiv.org/abs/2505.17500}.
+
+\bibitem[Brier(1950)]{brier1950verification}
+Glenn~W. Brier.
+\newblock Verification of forecasts expressed in terms of probability.
+\newblock \emph{Monthly Weather Review}, 78\penalty0 (1):\penalty0 1--3, 1950.
+\newblock \doi{10.1175/1520-0493(1950)078<0001:VOFEIT>2.0.CO;2}.
+\newblock URL
+  \url{https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml}.
+
+\bibitem[Chan et~al.(2024)Chan, Chowdhery, et~al.]{chan_mle_bench_2024}
+Jun~Shern Chan, Aakanksha Chowdhery, et~al.
+\newblock Mle-bench: Evaluating machine learning agents on machine learning
+  engineering, 2024.
+\newblock URL \url{https://arxiv.org/abs/2410.07095}.
+
+\bibitem[Cohen(1960)]{cohen1960coefficient}
+Jacob Cohen.
+\newblock A coefficient of agreement for nominal scales.
+\newblock \emph{Educational and Psychological Measurement}, 20\penalty0
+  (1):\penalty0 37--46, 1960.
+\newblock \doi{10.1177/001316446002000104}.
+\newblock URL
+  \url{https://journals.sagepub.com/doi/10.1177/001316446002000104}.
+
+\bibitem[Contributors(2026)]{gpt_researcher_2026}
+GPT~Researcher Contributors.
+\newblock Gpt researcher, 2026.
+\newblock URL \url{https://github.com/assafelovic/gpt-researcher}.
+
+\bibitem[Dietterich(1998)]{dietterich1998statistical_tests}
+Thomas~G. Dietterich.
+\newblock Approximate statistical tests for comparing supervised classification
+  learning algorithms.
+\newblock \emph{Neural Computation}, 10\penalty0 (7):\penalty0 1895--1923,
+  1998.
+\newblock \doi{10.1162/089976698300017197}.
+\newblock URL \url{https://dblp.org/rec/journals/neco/Dietterich98}.
+
+\bibitem[Dosovitskiy et~al.(2020)Dosovitskiy, Beyer, Kolesnikov, Weissenborn,
+  Zhai, Unterthiner, Dehghani, Minderer, Heigold, Gelly, Uszkoreit, and
+  Houlsby]{dosovitskiy_vit_2020}
+Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn,
+  Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg
+  Heigold, Sylvain Gelly, Jakob Uszkoreit, and Neil Houlsby.
+\newblock An image is worth 16x16 words: Transformers for image recognition at
+  scale, 2020.
+\newblock URL \url{https://arxiv.org/abs/2010.11929}.
+
+\bibitem[Duraisamy(2025)]{active_inference_science_2025}
+Karthik Duraisamy.
+\newblock Active inference ai systems for scientific discovery, 2025.
+\newblock URL \url{https://arxiv.org/abs/2506.21329}.
+
+\bibitem[Efron and Tibshirani(1993)]{efron1993bootstrap}
+Bradley Efron and Robert~J. Tibshirani.
+\newblock \emph{An Introduction to the Bootstrap}.
+\newblock Chapman and Hall/CRC, 1993.
+\newblock \doi{10.1201/9780429246593}.
+
+\bibitem[{FutureHouse}(2025)]{futurehouse_platform_2025}
+{FutureHouse}.
+\newblock Futurehouse platform: Superintelligent ai agents for scientific
+  discovery, 2025.
+\newblock URL
+  \url{https://www.futurehouse.org/research-announcements/launching-futurehouse-platform-ai-agents}.
+
+\bibitem[Gebru et~al.(2021)Gebru, Morgenstern, Vecchione, Vaughan, Wallach,
+  Daumé~III, and Crawford]{gebru2021datasheets}
+Timnit Gebru, Jamie Morgenstern, Briana Vecchione, Jennifer~Wortman Vaughan,
+  Hanna Wallach, Hal Daumé~III, and Kate Crawford.
+\newblock Datasheets for datasets.
+\newblock \emph{Communications of the ACM}, 64\penalty0 (12):\penalty0 86--92,
+  2021.
+\newblock \doi{10.1145/3458723}.
+\newblock URL
+  \url{https://www.microsoft.com/en-us/research/publication/datasheets-for-datasets/}.
+
+\bibitem[Ghareeb et~al.(2026)Ghareeb, Chang, Mitchener, Yiu, Szostkiewicz,
+  Shved, Gyimesi, Laurent, Wright, Razzak, et~al.]{ghareeb_robin_2026}
+Ali~Essam Ghareeb, Benjamin Chang, Ludovico Mitchener, Angela Yiu, Caralyn~J.
+  Szostkiewicz, Dmytro Shved, Gavin~J. Gyimesi, Jon~M. Laurent, Samantha~M.
+  Wright, Muhammed~T. Razzak, et~al.
+\newblock A multi-agent system for automating scientific discovery.
+\newblock \emph{Nature}, 2026.
+\newblock \doi{10.1038/s41586-026-10652-y}.
+\newblock URL \url{https://www.nature.com/articles/s41586-026-10652-y}.
+
+\bibitem[Ginsborg(2022)]{ginsborg_kant_aesthetics_teleology}
+Hannah Ginsborg.
+\newblock Kant's aesthetics and teleology, 2022.
+\newblock URL \url{https://plato.stanford.edu/entries/kant-aesthetics/}.
+
+\bibitem[Gridach et~al.(2025)Gridach, Nanavati, Zine El~Abidine, Mendes, and
+  Mack]{gridach_agentic_science_2025}
+Mourad Gridach, Jay Nanavati, Khaldoun Zine El~Abidine, Lenon Mendes, and
+  Christina Mack.
+\newblock Agentic ai for scientific discovery: A survey of progress,
+  challenges, and future directions, 2025.
+\newblock URL \url{https://arxiv.org/abs/2503.08979}.
+
+\bibitem[Guo et~al.(2017)Guo, Pleiss, Sun, and Weinberger]{guo2017calibration}
+Chuan Guo, Geoff Pleiss, Yu~Sun, and Kilian~Q. Weinberger.
+\newblock On calibration of modern neural networks.
+\newblock In \emph{Proceedings of the 34th International Conference on Machine
+  Learning}, volume~70 of \emph{Proceedings of Machine Learning Research},
+  pages 1321--1330. PMLR, 2017.
+\newblock URL \url{https://proceedings.mlr.press/v70/guo17a.html}.
+
+\bibitem[Hao et~al.(2026)Hao, Xu, Li, and Evans]{hao_ai_tools_focus_2026}
+Qianyue Hao, Fengli Xu, Yong Li, and James~A. Evans.
+\newblock Artificial intelligence tools expand scientists' impact but contract
+  science's focus.
+\newblock \emph{Nature}, 649:\penalty0 1237--1243, 2026.
+\newblock \doi{10.1038/s41586-025-09922-y}.
+\newblock URL \url{https://www.nature.com/articles/s41586-025-09922-y}.
+
+\bibitem[Hasib et~al.(2025)Hasib, Jo, Sinha, Song, Liu, Galloway, Huang, Zhang,
+  Gao, Chiu, et~al.]{hasib_exhyte_2025}
+Md~Musaddaqul Hasib, Sumin Jo, Harsh Sinha, Jimin Song, Zhentao Liu, Hugh
+  Galloway, Huey Huang, Kexun Zhang, Shou-Jiang Gao, Yu-Chiao Chiu, et~al.
+\newblock A process-centric survey of ai for scientific discovery through the
+  exhyte framework, 2025.
+\newblock URL \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC12776506/}.
+
+\bibitem[Heddes et~al.(2024)Heddes, Nunes, Givargis, Nicolau, and
+  Veidenbaum]{heddes_hdc_2024}
+Mike Heddes, Igor Nunes, Tony Givargis, Alexandru Nicolau, and Alex Veidenbaum.
+\newblock Hyperdimensional computing: A framework for stochastic computation
+  and symbolic ai.
+\newblock \emph{Journal of Big Data}, 11\penalty0 (145), 2024.
+\newblock \doi{10.1186/s40537-024-01010-8}.
+\newblock URL
+  \url{https://link.springer.com/article/10.1186/s40537-024-01010-8}.
+
+\bibitem[Huang et~al.(2023)Huang, Vora, Liang, and
+  Leskovec]{huang_mlagentbench_2023}
+Qian Huang, Jeevana Priya~Inala Vora, Percy Liang, and Jure Leskovec.
+\newblock Mlagentbench: Evaluating language agents on machine learning
+  experimentation, 2023.
+\newblock URL \url{https://arxiv.org/abs/2310.03302}.
+
+\bibitem[Hubert et~al.(2025)Hubert, Mehta, Sartran, Horvath, Zuzic, Wieser,
+  Huang, Schrittwieser, Schroecker, Masoom, et~al.]{hubert_alphaproof_2025}
+Thomas Hubert, Rishi Mehta, Laurent Sartran, Miklos~Z. Horvath, Goran Zuzic,
+  Eric Wieser, Aja Huang, Julian Schrittwieser, Yannick Schroecker, Hussain
+  Masoom, et~al.
+\newblock Olympiad-level formal mathematical reasoning with reinforcement
+  learning.
+\newblock \emph{Nature}, 651:\penalty0 607--613, 2025.
+\newblock \doi{10.1038/s41586-025-09833-y}.
+\newblock URL \url{https://www.nature.com/articles/s41586-025-09833-y}.
+\newblock Version of record 2026.
+
+\bibitem[Karpathy(2026)]{karpathy_autoresearch_2026}
+Andrej Karpathy.
+\newblock autoresearch, 2026.
+\newblock URL \url{https://github.com/karpathy/autoresearch}.
+
+\bibitem[Kong et~al.(2026)Kong, Sun, Chow, Li, Lin, Zhang, Wang, Li, Wu, Gao,
+  et~al.]{kong_ai_auto_research_2026}
+Lingdong Kong, Xian Sun, Wei Chow, Linfeng Li, Kevin~Qinghong Lin, Xuan~Billy
+  Zhang, Song Wang, Rong Li, Qing Wu, Wei Gao, et~al.
+\newblock Ai for auto-research: Roadmap and user guide, 2026.
+\newblock URL \url{https://arxiv.org/abs/2605.18661}.
+
+\bibitem[Lala et~al.(2023)Lala, Mantsch, Zhou, LaBruna, Sinha, and
+  Choudhary]{lala_paperqa_2023}
+Ankit Lala, Henry Mantsch, Cindy Zhou, Theodore LaBruna, Ronak Sinha, and Manav
+  Choudhary.
+\newblock Paperqa: Retrieval-augmented generative agent for scientific
+  research, 2023.
+\newblock URL \url{https://arxiv.org/abs/2312.07559}.
+
+\bibitem[LeCun et~al.()LeCun, Cortes, and Burges]{lecun_mnist_database}
+Yann LeCun, Corinna Cortes, and Christopher J.~C. Burges.
+\newblock The mnist database of handwritten digits.
+\newblock URL \url{https://yann.lecun.org/exdb/mnist/}.
+
+\bibitem[LeCun et~al.(1998)LeCun, Bottou, Bengio, and
+  Haffner]{lecun_gradient_1998}
+Yann LeCun, Léon Bottou, Yoshua Bengio, and Patrick Haffner.
+\newblock Gradient-based learning applied to document recognition.
+\newblock \emph{Proceedings of the IEEE}, 86\penalty0 (11):\penalty0
+  2278--2324, 1998.
+\newblock URL \url{https://bottou.org/papers/lecun-98h}.
+
+\bibitem[Leo et~al.(2024)Leo, Crusoe, Rodríguez-Navas, Sirvent, Kanitz,
+  De~Geest, et~al.]{soiland_reyes2024workflow_run_rocrate}
+Simone Leo, Michael~R. Crusoe, Laura Rodríguez-Navas, Raül Sirvent, Alexander
+  Kanitz, Paul De~Geest, et~al.
+\newblock Recording provenance of workflow runs with ro-crate.
+\newblock \emph{PLOS ONE}, 19\penalty0 (9):\penalty0 e0309210, 2024.
+\newblock \doi{10.1371/journal.pone.0309210}.
+\newblock URL
+  \url{https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0309210}.
+
+\bibitem[Liu et~al.(2025)Liu, Zhu, Chen, and Jiang]{deepevolve_2025}
+Gang Liu, Yihan Zhu, Jie Chen, and Meng Jiang.
+\newblock Scientific algorithm discovery by augmenting alphaevolve with deep
+  research, 2025.
+\newblock URL \url{https://arxiv.org/abs/2510.06056}.
+
+\bibitem[Lu et~al.(2024{\natexlab{a}})Lu, Lu, Lange, Foerster, Clune, and
+  Ha]{lu_aiscientist_2024}
+Chris Lu, Cong Lu, Robert~Tjarko Lange, Jakob Foerster, Jeff Clune, and David
+  Ha.
+\newblock The ai scientist: Towards fully automated open-ended scientific
+  discovery, 2024{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/2408.06292}.
+
+\bibitem[Lu et~al.(2026)Lu, Lu, Lange, Yamada, Hu, Foerster, Ha, and
+  Clune]{lu_ai_scientist_nature_2026}
+Chris Lu, Cong Lu, Robert~Tjarko Lange, Yutaro Yamada, Shengran Hu, Jakob
+  Foerster, David Ha, and Jeff Clune.
+\newblock Towards end-to-end automation of ai research.
+\newblock \emph{Nature}, 651:\penalty0 914--919, 2026.
+\newblock \doi{10.1038/s41586-026-10265-5}.
+\newblock URL \url{https://www.nature.com/articles/s41586-026-10265-5}.
+
+\bibitem[Lu et~al.(2024{\natexlab{b}})Lu, Wan, Liu, Huang, Xiong, Liu, Shen,
+  Jin, Zhang, Wang, et~al.]{lu_process_driven_autoformalization_2024}
+Jianqiao Lu, Yingjia Wan, Zhengying Liu, Yinya Huang, Jing Xiong, Chengwu Liu,
+  Jianhao Shen, Hui Jin, Jipeng Zhang, Haiming Wang, et~al.
+\newblock Process-driven autoformalization in lean 4, 2024{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2406.01940}.
+
+\bibitem[Mitchell et~al.(2019)Mitchell, Wu, Zaldivar, Barnes, Vasserman,
+  Hutchinson, Spitzer, Raji, and Gebru]{mitchell2019model_cards}
+Margaret Mitchell, Simone Wu, Andrew Zaldivar, Parker Barnes, Lucy Vasserman,
+  Ben Hutchinson, Elena Spitzer, Inioluwa~Deborah Raji, and Timnit Gebru.
+\newblock Model cards for model reporting.
+\newblock In \emph{Proceedings of the Conference on Fairness, Accountability,
+  and Transparency}, pages 220--229, 2019.
+\newblock \doi{10.1145/3287560.3287596}.
+\newblock URL
+  \url{https://research.google/pubs/model-cards-for-model-reporting/}.
+
+\bibitem[{MITRE ATT\&CK}(2026)]{mitre_attack_t1195}
+{MITRE ATT\&CK}.
+\newblock Supply chain compromise, technique t1195.
+\newblock Online technique catalog, 2026.
+\newblock URL \url{https://attack.mitre.org/techniques/T1195/}.
+
+\bibitem[Moreno and Mossio(2015)]{moreno_mossio_biological_autonomy_2015}
+Alvaro Moreno and Matteo Mossio.
+\newblock \emph{Biological Autonomy: A Philosophical and Theoretical Enquiry}.
+\newblock Springer, 2015.
+\newblock \doi{10.1007/978-94-017-9837-2}.
+\newblock URL \url{https://link.springer.com/book/10.1007/978-94-017-9837-2}.
+
+\bibitem[Novikov et~al.(2025)Novikov, Vu, Eisenberger, Dupont, Huang, Wagner,
+  Shirobokov, Kozlovskii, Ruiz, Mehrabian,
+  et~al.]{romera_paredes_alphaevolve_2025}
+Alexander Novikov, Ngan Vu, Marvin Eisenberger, Emilien Dupont, Po-Sen Huang,
+  Adam~Zsolt Wagner, Sergey Shirobokov, Borislav Kozlovskii, Francisco J.~R.
+  Ruiz, Abbas Mehrabian, et~al.
+\newblock Alphaevolve: A coding agent for scientific and algorithmic discovery,
+  2025.
+\newblock URL \url{https://arxiv.org/abs/2506.13131}.
+
+\bibitem[{Open Source Security Foundation}(2026)]{slsa_spec_latest}
+{Open Source Security Foundation}.
+\newblock Supply-chain levels for software artifacts specification.
+\newblock Online specification, 2026.
+\newblock URL \url{https://slsa.dev/spec/latest/}.
+
+\bibitem[Ospanov et~al.(2025)Ospanov, Farnia, and
+  Yousefzadeh]{apollo_lean_collaboration_2025}
+Azim Ospanov, Farzan Farnia, and Roozbeh Yousefzadeh.
+\newblock Apollo: Automated llm and lean collaboration for advanced formal
+  reasoning, 2025.
+\newblock URL \url{https://arxiv.org/abs/2505.05758}.
+
+\bibitem[Pineau et~al.(2020)Pineau, Vincent-Lamarre, Sinha, Larivière,
+  Beygelzimer, d'Alché Buc, Fox, and Larochelle]{pineau_reproducibility_2020}
+Joelle Pineau, Philippe Vincent-Lamarre, Koustuv Sinha, Vincent Larivière,
+  Alina Beygelzimer, Florence d'Alché Buc, Emily Fox, and Hugo Larochelle.
+\newblock Improving reproducibility in machine learning research: A report from
+  the neurips 2019 reproducibility program, 2020.
+\newblock URL \url{https://arxiv.org/abs/2003.12206}.
+
+\bibitem[Rose et~al.(2020)Rose, Borchert, Mitchell, and
+  Connelly]{nist_sp800_207_zero_trust}
+Scott Rose, Oliver Borchert, Stu Mitchell, and Sean Connelly.
+\newblock Zero trust architecture.
+\newblock Special Publication 800-207, National Institute of Standards and
+  Technology, 2020.
+\newblock URL
+  \url{https://www.nist.gov/publications/zero-trust-architecture-0}.
+
+\bibitem[Shao et~al.(2024)Shao, Jiang, Kanell, Xu, Khattab, and
+  Lam]{shao_storm_2024}
+Yijia Shao, Yucheng Jiang, Theodore Kanell, Peter Xu, Omar Khattab, and
+  Monica~S. Lam.
+\newblock Assisting in writing wikipedia-like articles from scratch with large
+  language models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2402.14207}.
+
+\bibitem[Skarlinski et~al.(2024)Skarlinski, Cox, Laurent, Braza, Hinks,
+  Hammerling, Ponnapati, Rodriques, and White]{skarlinski_paperqa2_2024}
+Michael~D. Skarlinski, Sam Cox, Jon~M. Laurent, James~D. Braza, Michaela Hinks,
+  Michael~J. Hammerling, Manvitha Ponnapati, Samuel~G. Rodriques, and Andrew~D.
+  White.
+\newblock Language agents achieve superhuman synthesis of scientific knowledge,
+  2024.
+\newblock URL \url{https://arxiv.org/abs/2409.13740}.
+
+\bibitem[Soiland-Reyes et~al.(2022)Soiland-Reyes, Sefton, Crosas, Castro,
+  Coppens, Fernández, Garijo, Grüning, La~Rosa, Leo, Ó~Carragáin, Portier,
+  Trisovic, Groth, and Goble]{soiland_reyes2022rocrate}
+Stian Soiland-Reyes, Peter Sefton, Mercè Crosas, Leyla~Jael Castro, Frederik
+  Coppens, José~M. Fernández, Daniel Garijo, Björn Grüning, Marco La~Rosa,
+  Simone Leo, Eoghan Ó~Carragáin, Marc Portier, Ana Trisovic, Paul Groth, and
+  Carole Goble.
+\newblock Packaging research artefacts with ro-crate.
+\newblock \emph{Data Science}, 5\penalty0 (2):\penalty0 97--138, 2022.
+\newblock \doi{10.3233/DS-210053}.
+\newblock URL \url{https://doi.org/10.3233/DS-210053}.
+
+\bibitem[Souppaya et~al.(2022)Souppaya, Scarfone, and
+  Dodson]{nist_sp800_218_ssdf}
+Murugiah Souppaya, Karen Scarfone, and Donna Dodson.
+\newblock Secure software development framework (ssdf) version 1.1:
+  Recommendations for mitigating the risk of software vulnerabilities.
+\newblock Special Publication 800-218, National Institute of Standards and
+  Technology, 2022.
+\newblock URL \url{https://csrc.nist.gov/pubs/sp/800/218/final}.
+
+\bibitem[Vanschoren et~al.(2014)Vanschoren, van Rijn, Bischl, and
+  Torgo]{vanschoren_openml_2014}
+Joaquin Vanschoren, Jan~N. van Rijn, Bernd Bischl, and Luis Torgo.
+\newblock Openml: Networked science in machine learning, 2014.
+\newblock URL \url{https://arxiv.org/abs/1407.7722}.
+
+\bibitem[Varela et~al.(1974)Varela, Maturana, and
+  Uribe]{varela_autopoiesis_1974}
+Francisco~G. Varela, Humberto~R. Maturana, and Ricardo Uribe.
+\newblock Autopoiesis: The organization of living systems, its characterization
+  and a model.
+\newblock \emph{BioSystems}, 5\penalty0 (4):\penalty0 187--196, 1974.
+\newblock \doi{10.1016/0303-2647(74)90031-8}.
+\newblock URL \url{https://repositorio.uchile.cl/handle/2250/160309}.
+
+\bibitem[Weber and Varela(2002)]{weber_varela_life_after_kant_2002}
+Andreas Weber and Francisco~J. Varela.
+\newblock Life after kant: Natural purposes and the autopoietic foundations of
+  biological individuality.
+\newblock \emph{Phenomenology and the Cognitive Sciences}, 1\penalty0
+  (2):\penalty0 97--125, 2002.
+\newblock \doi{10.1023/A:1020368120174}.
+\newblock URL \url{https://philpapers.org/rec/WEBLAK}.
+
+\bibitem[Wei et~al.(2025)Wei, Yang, Zhang, Chen, Zhuang, Gao, Zhou, Wang, Gao,
+  Cao, et~al.]{wei_agentic_science_2025}
+Jiaqi Wei, Yuejin Yang, Xiang Zhang, Yuhan Chen, Xiang Zhuang, Zhangyang Gao,
+  Dongzhan Zhou, Guangshuai Wang, Zhiqiang Gao, Juntai Cao, et~al.
+\newblock From ai for science to agentic science: A survey on autonomous
+  scientific discovery, 2025.
+\newblock URL \url{https://arxiv.org/abs/2508.14111}.
+
+\bibitem[Wilkinson et~al.(2016)Wilkinson, Dumontier, Aalbersberg, Appleton,
+  Axton, Baak, Blomberg, Boiten, da~Silva~Santos, Bourne,
+  et~al.]{wilkinson2016fair}
+Mark~D. Wilkinson, Michel Dumontier, IJsbrand~Jan Aalbersberg, Gabrielle
+  Appleton, Myles Axton, Arie Baak, Niklas Blomberg, Jan-Willem Boiten,
+  Luiz~Bonino da~Silva~Santos, Philip~E. Bourne, et~al.
+\newblock The fair guiding principles for scientific data management and
+  stewardship.
+\newblock \emph{Scientific Data}, 3:\penalty0 160018, 2016.
+\newblock \doi{10.1038/sdata.2016.18}.
+\newblock URL \url{https://www.nature.com/articles/sdata201618}.
+
+\bibitem[Wilson(1927)]{wilson1927probable_inference}
+Edwin~B. Wilson.
+\newblock Probable inference, the law of succession, and statistical inference.
+\newblock \emph{Journal of the American Statistical Association}, 22\penalty0
+  (158):\penalty0 209--212, 1927.
+\newblock \doi{10.1080/01621459.1927.10502953}.
+\newblock URL
+  \url{https://www.tandfonline.com/doi/abs/10.1080/01621459.1927.10502953}.
+
+\bibitem[Xiao et~al.(2025)Xiao, Dong, Zhou, Dong, Zhang, Yin, Sun, and
+  Huang]{graphrag_bench_2026}
+Yilin Xiao, Junnan Dong, Chuang Zhou, Su~Dong, Qian-wen Zhang, Di~Yin, Xing
+  Sun, and Xiao Huang.
+\newblock Graphrag-bench: Challenging domain-specific reasoning for evaluating
+  graph retrieval-augmented generation, 2025.
+\newblock URL \url{https://arxiv.org/abs/2506.02404}.
+
+\bibitem[Yamada et~al.(2025)Yamada, Lange, Lu, Hu, Lu, Foerster, Clune, and
+  Ha]{yamada_ai_scientist_v2_2025}
+Yutaro Yamada, Robert~Tjarko Lange, Cong Lu, Shengran Hu, Chris Lu, Jakob
+  Foerster, Jeff Clune, and David Ha.
+\newblock The ai scientist-v2: Workshop-level automated scientific discovery
+  via agentic tree search, 2025.
+\newblock URL \url{https://arxiv.org/abs/2504.08066}.
+
+\bibitem[Yusupov et~al.(2025)Yusupov, Rakhuba, and
+  Frolov]{yusupov_mixed_geometry_2025}
+Viacheslav Yusupov, Maxim Rakhuba, and Evgeny Frolov.
+\newblock Knowledge graph completion with mixed geometry tensor factorization.
+\newblock In \emph{Proceedings of The 28th International Conference on
+  Artificial Intelligence and Statistics}, volume 258 of \emph{Proceedings of
+  Machine Learning Research}, pages 4924--4932. PMLR, 2025.
+\newblock URL \url{https://proceedings.mlr.press/v258/yusupov25a.html}.
+
+\bibitem[Zhou et~al.(2026)Zhou, Zhu, Wang, Zhou, He, Chen, Staab, and
+  Kharlamov]{brink_kg_rag_2026}
+Dongzhuoran Zhou, Yuqicheng Zhu, Xiaxia Wang, Hongkuan Zhou, Yuan He, Jiaoyan
+  Chen, Steffen Staab, and Evgeny Kharlamov.
+\newblock What breaks knowledge graph based rag? benchmarking and empirical
+  insights into reasoning under incomplete knowledge, 2026.
+\newblock URL \url{https://arxiv.org/abs/2508.08344}.
+\newblock Accepted at EACL 2026.
+
+\end{thebibliography}

@@ -13,6 +13,9 @@
 | `output/manuscript/*.md` | Injection pass | PDF renderer |
 | `output/pdf/template_sia_combined.pdf` | Stage 05 | Validation, publication |
 
-Working tree under `projects/templates/template_sia/output/` is gitignored. Tracked render-proof copies live under `output/templates/template_sia/` when copied by Stage 09.
+The public template tracks this project-local `output/` tree and the copied
+`output/templates/template_sia/` tree as release artifacts when files stay below
+the 50 MB public output ceiling.
 
-Disposable: delete `output/` anytime; regenerate with the pipeline.
+Regenerate `output/` with the pipeline after producer changes instead of editing
+rendered artifacts by hand.

@@ -1,0 +1,35 @@
+\frametitle{Variable Injection}
+\protect\phantomsection\label{variable-injection}
+The manuscript itself is generated, not hand-maintained. A variable
+computation step reads the configuration and the pipeline outputs and
+emits a flat table of named values; an injection step substitutes each
+named placeholder in these Markdown sections with its computed value
+before rendering. Because the substitution is total --- an unresolved
+placeholder is a hard error, not a silent gap --- every number in the
+rendered document is guaranteed to trace to a committed artifact.
+Re-running the pipeline after a configuration change re-computes the
+values and re-targets the prose automatically.
+
+The injection system computes variables from seven sources:
+
+\begin{enumerate}
+\tightlist
+\item
+  \breaktt{manuscript/config.yaml} --- search term, engine roster,
+  subfield taxonomy, hypotheses
+\item
+  \texttt{corpus.jsonl} --- corpus size
+\item
+  \breaktt{temporal\_analysis.json} --- year range, CAGR, peak year,
+  doubling time
+\item
+  \breaktt{citation\_network.json} --- edges, nodes, density,
+  communities, PageRank, hubs
+\item
+  \breaktt{subfield\_classification.json} --- per-bucket counts and
+  percentages
+\item
+  \breaktt{assertion\_summary.json} --- assertion counts and directions
+\item
+  \breaktt{hypothesis\_scores.json} --- per-hypothesis evidence scores
+\end{enumerate}

@@ -1,0 +1,206 @@
+\frametitle{Evidence And Scoring}
+\protect\phantomsection\label{sec:evidence-scoring}
+The experiment writes \breaktt{output/data/ml\_task\_results.json},
+\breaktt{output/data/ml\_candidate\_ledger.json},
+\breaktt{output/data/ml\_confusion\_matrix.csv},
+\breaktt{output/data/ml\_training\_history.csv},
+\breaktt{output/data/ml\_error\_examples.json},
+\breaktt{output/data/ml\_prediction\_records.json},
+\breaktt{output/data/ml\_classification\_diagnostics.json},
+\breaktt{output/data/ml\_candidate\_intervals.json},
+\breaktt{output/data/ml\_class\_balance.json},
+\breaktt{output/data/ml\_calibration\_report.json},
+\breaktt{output/data/ml\_calibration\_bin\_intervals.json},
+\breaktt{output/data/ml\_robustness\_report.json},
+\breaktt{output/data/ml\_probability\_diagnostics.json},
+\breaktt{output/data/ml\_bootstrap\_intervals.json},
+\breaktt{output/data/ml\_paired\_comparison.json},
+\breaktt{output/data/ml\_candidate\_rank\_stability.json},
+\breaktt{output/data/ml\_statistical\_summary.json},
+\breaktt{output/data/ml\_training\_diagnostics.json},
+\breaktt{output/reports/ml\_benchmark\_score.json},
+\breaktt{output/data/benchmark\_boundary.json},
+\breaktt{output/data/figure\_quality\_report.json}, and registered
+figures through \breaktt{output/figures/figure\_registry.json}. The
+diagnostic payloads preserve probabilities, confidence and margin
+summaries, class metrics, calibration bins, confusion-pair summaries,
+train/test gaps, deterministic no-retrain perturbation scores, bootstrap
+intervals, paired baseline comparison, rank-stability frequencies,
+calibration-bin Wilson intervals, selective accuracy thresholds, Brier
+score, negative log likelihood, top-2 accuracy, probability-quality
+comparisons, learning-rate traces, best-epoch markers, final learning
+rates, and train-test gap summaries without serializing model weights.
+The benchmark score combines metric improvement, budget compliance,
+offline execution, transformer-candidate coverage, and
+candidate-selection status. The benchmark-boundary artifact records
+fixture scope, metric direction, candidate families, budget,
+statistical-method artifacts, and explicit non-claims, so
+benchmark-adjacent statistics remain local readiness diagnostics rather
+than broad empirical or publication claims. Manuscript variables are
+hydrated from these artifacts, and readiness validation checks
+\breaktt{output/reports/evidence\_registry.json},
+\breaktt{output/reports/artifact\_manifest.json}, method ledgers, review
+gates, benchmark outputs, the phase ledger, figure-quality report, and
+AI-assisted disclosure before rendering is treated as ready for review.
+The reviewer-facing
+\breaktt{output/data/autoresearch\_evidence\_overview.json} then
+summarizes readiness versus publication approval, claim-evidence rows,
+source-ledger status, benchmark boundary issues, and security/integrity
+status without granting approval. The generated tables and figure blocks
+used in @sec:results are sourced through
+\breaktt{output/data/manuscript\_variable\_provenance.json} and
+\breaktt{output/data/manuscript\_figure\_blocks.json}, so captions,
+artifact tables, and run-derived result statements share the same
+validated artifact base.
+
+The figure registry also carries the method contract for each
+visualization: source artifact, generated file, rendering method, and
+claim boundary. The rendered method table below is generated from that
+registry rather than maintained manually.
+
+\begingroup\footnotesize
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\caption{Registry-backed figure methods from
+\href{../figures/figure_registry.json}{\protect\breaktt{figure\_registry.json}};
+full validation hooks, alt text, and claim boundaries remain in the
+registry.}\label{tbl:figure-methods}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Figure
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Source
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Method
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Scope
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Figure
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Source
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Method
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Scope
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+@fig:autoresearch\_candidate\_lifecycle &
+\href{../data/ml_candidate_ledger.json}{candidate ledger} & Candidate
+lifecycle status-count bar chart. & Lifecycle counts describe bounded
+orchestration, not autonomous approval. \\
+@fig:autoresearch\_closure\_flow &
+\href{../data/autoresearch_loop.json}{loop} & File-backed process-flow
+diagram from final loop state. & The workflow is file-backed and
+inspectable but not self-approving. \\
+@fig:autoresearch\_integrity\_chain &
+\href{../data/autoresearch_integrity_attestation.json}{integrity
+attestation} & Local checksum attestation chain with checked, missing,
+and mismatch counts. & Integrity checks are local SHA-256 observations
+and are not externally signed provenance. \\
+@fig:autoresearch\_security\_control\_matrix &
+\href{../data/autoresearch_threat_model.json}{threat model} & Structured
+control matrix from local threat-model controls. & Controls are local
+research-artifact safeguards, not production security certification. \\
+@fig:autoresearch\_stage\_matrix &
+\href{../data/autoresearch_loop.json}{loop} & Horizontal count summary
+from final loop metrics. & Readiness artifacts summarize local
+validation only; publication approval is human. \\
+@fig:ml\_bootstrap\_intervals &
+\href{../data/ml_bootstrap_intervals.json}{bootstrap intervals} &
+Horizontal percentile-bootstrap interval plot. & Bootstrap intervals
+summarize local test-set resampling only. \\
+@fig:ml\_calibration\_reliability &
+\href{../data/ml_calibration_report.json}{calibration report} &
+Reliability curve with confidence-bin support histogram. & Calibration
+values describe the fixed local split only. \\
+@fig:ml\_candidate\_rank\_stability &
+\href{../data/ml_candidate_rank_stability.json}{candidate rank
+stability} & Bootstrap top-rank frequency and mean-rank comparison. &
+Rank stability describes local resampling behavior, not model-selection
+certainty. \\
+@fig:ml\_candidate\_scores &
+\href{../data/ml_candidate_intervals.json}{candidate intervals} &
+Lollipop accuracy comparison with Wilson interval error bars and direct
+labels. & Scores apply only to the fixed local subset and configured
+candidates. \\
+@fig:ml\_classification\_metrics\_heatmap &
+\href{../data/ml_classification_diagnostics.json}{class diagnostics} &
+Per-class precision, recall, and F1 heatmap. & Class metrics diagnose
+this run only and are not full-dataset estimates. \\
+@fig:ml\_complexity\_accuracy & \href{../data/ml_task_results.json}{task
+results} & Log-parameter scatter plot against held-out accuracy. & The
+plot compares this bounded candidate set and does not infer a scaling
+law. \\
+@fig:ml\_confusion\_matrix &
+\href{../data/ml_confusion_matrix.csv}{confusion matrix} &
+Row-normalized heatmap with cell counts and row percentages. & Confusion
+counts diagnose this run only and do not imply full-dataset
+generalization. \\
+@fig:ml\_confusion\_pairs &
+\href{../data/ml_classification_diagnostics.json}{class diagnostics} &
+Ranked off-diagonal confusion-pair bars with true-class error rates. &
+Pair counts identify local error cases and are not a general
+taxonomy. \\
+@fig:ml\_generalization\_gap &
+\href{../data/ml_classification_diagnostics.json}{class diagnostics} &
+Grouped train/test accuracy and loss bars by evaluated candidate. & Gaps
+are local bounded-loop diagnostics, not convergence guarantees. \\
+@fig:ml\_learning\_curves &
+\href{../data/ml_training_history.csv}{training history} & Epoch-level
+held-out accuracy lines with accepted best-epoch marker. & Learning
+curves diagnose configured training only, not convergence in general. \\
+@fig:ml\_paired\_correctness &
+\href{../data/ml_paired_comparison.json}{paired comparison} & Matched
+accepted-versus-baseline correctness heatmap. & Matched comparison is
+limited to the fixed local test split. \\
+@fig:ml\_per\_class\_accuracy &
+\href{../data/ml_confusion_matrix.csv}{confusion matrix} & Per-class
+accuracy bars computed from the confusion matrix diagonal. & Per-class
+values diagnose this local split only and do not certify robustness. \\
+@fig:ml\_probability\_margin\_distribution &
+\href{../data/ml_probability_diagnostics.json}{probability diagnostics}
+& Confidence and margin histograms split by correctness. & Distributions
+are descriptive diagnostics for the fixed local test split. \\
+@fig:ml\_probability\_quality &
+\href{../data/ml_statistical_summary.json}{statistical summary} & Brier
+score and negative-log-likelihood bar comparison. & Probability-quality
+metrics compare the configured evaluated candidates only. \\
+@fig:ml\_robustness\_matrix &
+\href{../data/ml_robustness_report.json}{robustness report} &
+Candidate-by-transform accuracy heatmap for deterministic perturbations.
+& Deterministic perturbations are a smoke test and do not certify
+robustness. \\
+@fig:ml\_selective\_accuracy &
+\href{../data/ml_statistical_summary.json}{statistical summary} &
+Confidence-threshold coverage and selective-accuracy line chart. &
+Selective accuracy describes thresholded predictions on the fixed local
+split only. \\
+@fig:ml\_training\_dynamics &
+\href{../data/ml_training_diagnostics.json}{training diagnostics} &
+Final and best-epoch accuracy bars plus train-test gap bars. & Training
+dynamics diagnose this configured deterministic run only. \\
+@fig:mnist\_class\_balance & \href{../data/ml_class_balance.json}{class
+balance} & Grouped train/test class-count bars from the local MNIST
+fixture. & Class counts describe the local fixed fixture and are not
+population statistics. \\
+@fig:mnist\_error\_examples &
+\href{../data/ml_error_examples.json}{error examples} & Deterministic
+grid of the first accepted-candidate misclassifications. & Examples are
+qualitative diagnostics for this run, not an error taxonomy. \\
+@fig:mnist\_subset\_contact\_sheet &
+\href{../../data/mnist_small.npz}{small} & Class-balanced contact sheet
+from fixed local MNIST arrays. & The sheet illustrates the local fixed
+subset and is not a statistical sample claim. \\
+\bottomrule\noalign{}
+\end{longtable}
+
+\endgroup

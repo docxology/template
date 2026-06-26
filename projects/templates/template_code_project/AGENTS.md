@@ -76,7 +76,7 @@ flowchart TB
     P --> T[tests]
     P --> DOCS[docs<br/>Agent-facing documentation hub]
     P --> M[manuscript]
-    P --> OUT[output<br/>Working outputs · regenerated · gitignored]
+    P --> OUT[output<br/>Tracked public artifacts · regenerated]
     P --> PY[pyproject.toml<br/>Pytest/coverage config · project metadata]
     P --> DP[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 

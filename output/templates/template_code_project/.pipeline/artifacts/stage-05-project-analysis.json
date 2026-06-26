@@ -1,0 +1,311 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/citations/citation_apa.txt",
+      "sha256": "f489108236f1ba29435da80a70c4e8a09dadd93dbcebab911a8ebcdbd3cf010f",
+      "size_bytes": 83,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/citations/citation_bibtex.txt",
+      "sha256": "1599e7016e3c3af22ae1a805b0caf5daac3ae5a5aa1868d7f6ba0806dd70f644",
+      "size_bytes": 412,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/citations/citation_mla.txt",
+      "sha256": "783e0f9aa82b086815677630962434ab757bf7219eaaec3934e31a1330276a85",
+      "size_bytes": 84,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/citations/optimization_metadata.json",
+      "sha256": "c68578d36fa3b3684f95db73fc60069bf7e60061561b670d58f9090969aef94a",
+      "size_bytes": 611,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/citations/publication_summary.md",
+      "sha256": "be61886a73c1a1041b50f1674f706b891795d2f23a66b2c66cbc71ecb541ad2a",
+      "size_bytes": 960,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/convergence_plot.json",
+      "sha256": "9cdfc223be2eb25c1871c39564e380e323f55fee11657af09a6e296b29bc4169",
+      "size_bytes": 71360,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/dashboard_payload.json",
+      "sha256": "4c47f224989d1ea66346755d009b23380547f030d2de33fff488ac6bfbd2a403",
+      "size_bytes": 109977,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/manuscript_variables.json",
+      "sha256": "5e18e688d031b5291dd36d7ea52d666ca7135e5bb27857fda8f979b68a83878a",
+      "size_bytes": 3213,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/optimization_results.csv",
+      "sha256": "3da2994cf5e66945479aad9326fe65dcca8ec3c3f2479bc976373cb63ef8cff4",
+      "size_bytes": 483,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/transmission_manifest.json",
+      "sha256": "f84096d92de41079c95334d69ecaec1e4a45f2d82f7085963691026e5ed1668e",
+      "size_bytes": 345,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/algorithm_complexity.png",
+      "sha256": "4cba129c65155a078b31baabd67ffab38adf32684e899e3d747b57a6f90a4070",
+      "size_bytes": 398220,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/convergence_plot.png",
+      "sha256": "db9c5be0d6d1175ec1db4847a4e8560f5aed3885d27c4d80ee4118b6c3e78fc5",
+      "size_bytes": 210962,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/convergence_rate_comparison.png",
+      "sha256": "78a08cf7726d1045202ff79c720698cc9af3209494320f184b906072d663a267",
+      "size_bytes": 301544,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/figure_registry.json",
+      "sha256": "a3a1f57b70796530d5d7481a036badc42437f4963f0c728149511bc51f3639ff",
+      "size_bytes": 2145,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/performance_benchmark.png",
+      "sha256": "be56f19189ed223fdc94f385756d6579b14d471a4ee5a65748fa47ca1a1c44ff",
+      "size_bytes": 187218,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/step_size_sensitivity.png",
+      "sha256": "31a85e909e6efa8c1e2151134d07083320f78c84ef9071809add4cdcd222413c",
+      "size_bytes": 252644,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/transmission_pairing.png",
+      "sha256": "284d129e77d6bfb9eb3a0fb419207bfa1c962b518131abdfb9958ee9586936e4",
+      "size_bytes": 10862,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "aa72fdbd8313a3b5304d140c7b421b2d03d0be39e3cd8078be7d18d3c570fdef",
+      "size_bytes": 2316,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "200930295efeb62d9cfd775e0171c414b5c98bd43a1f5d0d1d73be6fd4a96a62",
+      "size_bytes": 5497,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "c24f29e6ac805a5ea7eb33f9f3d6b7657fff0c4d41096a598031892fc1a96d65",
+      "size_bytes": 7192,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "abcc06a4ddd2cebb3429015f73a7337ba2f6e531c0c5d0637ec50d96bb950388",
+      "size_bytes": 16129,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/04_conclusion.md",
+      "sha256": "11b1d933c62c6e44b9049dbb4532cc231f830c7c89835ea4215cba192123a9b1",
+      "size_bytes": 4551,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/05_experimental_setup.md",
+      "sha256": "fc3ebef54357a1ba9b0682bfad5817ba66b6e31208cb0d8ebb2e92851d634933",
+      "size_bytes": 3530,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/06_reproducibility.md",
+      "sha256": "7913991e1f3e87d3cd3cbf4cd4eea59ee11b4d2162092c9254f3542832afd86b",
+      "size_bytes": 3036,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/07_scope_and_related_work.md",
+      "sha256": "32ffd0603850f7ca6a4d97beb11f2f09bbd531379fc790abcf47304610a4bf98",
+      "size_bytes": 2869,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "a15a782c0f136d441b1265654f2528a5a70764208389ed8a5bd60806e26d6cd3",
+      "size_bytes": 616,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/config.yaml",
+      "sha256": "f97810cc9edea09a9964d587b093a03f902add7e6c98866289665a6863fb0e86",
+      "size_bytes": 4517,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/preamble.md",
+      "sha256": "9823d6a91848b6544625d6ca9c5d8e99623580489103bf00afb5fcfb41c06ebd",
+      "size_bytes": 2657,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/references.bib",
+      "sha256": "dfcf6ebf855fd74fecc23b4dd865aea3e7144aabe1be23da9bb5c2e2d5c4d819",
+      "size_bytes": 2799,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/dashboard_invariants.txt",
+      "sha256": "1fd9ae628d3906991543747e1635ab05a5951da3f6d019b5e6eb2e907bb12fd9",
+      "size_bytes": 4748,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/dashboard_summary.txt",
+      "sha256": "8444161ae8807ced9e588eb6a5ae233c90d50885898b2d6c9dc900a1f27d492d",
+      "size_bytes": 957,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/output_validation.json",
+      "sha256": "17b42dca5a1a4ad242a60403ae6d6e55a9d0b3986b611b04939b4eded0ee8189",
+      "size_bytes": 148,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/performance_benchmark.json",
+      "sha256": "bdd47a7dbe9b618cfbeee48c3ceb2813202e1a1ac4469eee3b117edba222c62a",
+      "size_bytes": 212,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/dashboard.html",
+      "sha256": "6b9cd62d18ea6be7a5e9554748a62d29b7271039a1745eac53d4e9681a5f3511",
+      "size_bytes": 121147,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-06-14T18:36:47+00:00"
+    }
+  ],
+  "issues": []
+}

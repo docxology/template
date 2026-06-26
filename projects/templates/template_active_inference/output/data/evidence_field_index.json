@@ -1,0 +1,2430 @@
+{
+  "all_fields_mapped": true,
+  "field_count": 97,
+  "rows": [
+    {
+      "artifact": "manuscript/sheaf/tracks.yaml",
+      "claim_id": "sheaf_registry",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "tracks",
+      "field_present": true,
+      "jsonpath": "$.tracks",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "sheaf_registry_evidence_field_present",
+      "source_artifact": "manuscript/sheaf/tracks.yaml",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "manuscript/sheaf/manifest.yaml",
+      "claim_id": "sheaf_manifest",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "sections",
+      "field_present": true,
+      "jsonpath": "$.sections",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "sheaf_manifest_evidence_field_present",
+      "source_artifact": "manuscript/sheaf/manifest.yaml",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "manuscript/sheaf/coverage.yaml",
+      "claim_id": "sheaf_coverage_config",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "heatmap",
+      "field_present": true,
+      "jsonpath": "$.heatmap",
+      "manuscript_section": "sheaf_coverage",
+      "semantic_restriction": "sheaf_coverage_config_evidence_field_present",
+      "source_artifact": "manuscript/sheaf/coverage.yaml",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "visualization"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_coverage_matrix.json",
+      "claim_id": "sheaf_coverage_matrix",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "sections",
+      "field_present": true,
+      "jsonpath": "$.sections",
+      "manuscript_section": "sheaf_coverage",
+      "semantic_restriction": "sheaf_coverage_matrix_evidence_field_present",
+      "source_artifact": "output/data/sheaf_coverage_matrix.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_gluing_certificate.json",
+      "claim_id": "sheaf_gluing_certificate",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "ok",
+      "field_present": true,
+      "jsonpath": "$.ok",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "sheaf_gluing_certificate_evidence_field_present",
+      "source_artifact": "output/data/sheaf_gluing_certificate.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "gnn",
+        "ontology",
+        "pymdp",
+        "visualization"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_evidence_crosswalk.json",
+      "claim_id": "sheaf_evidence_crosswalk",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "claim_count",
+      "field_present": true,
+      "jsonpath": "$.claim_count",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "sheaf_evidence_crosswalk_evidence_field_present",
+      "source_artifact": "output/data/sheaf_evidence_crosswalk.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/validation_dependency_graph.json",
+      "claim_id": "validation_dependency_graph",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "issues",
+      "field_present": true,
+      "jsonpath": "$.issues",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "validation_dependency_graph_evidence_field_present",
+      "source_artifact": "output/data/validation_dependency_graph.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/semantic_gluing_graph.png",
+      "claim_id": "semantic_gluing_graph_figure",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "semantic_gluing_graph_figure_evidence_field_present",
+      "source_artifact": "output/figures/semantic_gluing_graph.png",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "visualization",
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
+    {
+      "artifact": "output/figures/track_lane_promotion_map.png",
+      "claim_id": "track_lane_promotion_map_figure",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "track_lane_promotion_map_figure_evidence_field_present",
+      "source_artifact": "output/figures/track_lane_promotion_map.png",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "visualization",
+        "manuscript",
+        "sheaf",
+        "lean"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/artifact_provenance.json",
+      "claim_id": "artifact_provenance_spine",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_hashed",
+      "field_present": true,
+      "jsonpath": "$.all_hashed",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "artifact_provenance_spine_evidence_field_present",
+      "source_artifact": "output/data/artifact_provenance.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "provenance",
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/artifact_provenance.json",
+      "claim_id": "artifact_provenance_seed_config",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_seeded",
+      "field_present": true,
+      "jsonpath": "$.all_seeded",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "artifact_provenance_seed_config_evidence_field_present",
+      "source_artifact": "output/data/artifact_provenance.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "provenance",
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/reproducibility_replay.json",
+      "claim_id": "replay_matrix_spine",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_passed",
+      "field_present": true,
+      "jsonpath": "$.all_passed",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "replay_matrix_spine_evidence_field_present",
+      "source_artifact": "output/reports/reproducibility_replay.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "replay_matrix",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/counterexample_matrix.json",
+      "claim_id": "counterexample_matrix_spine",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_expected_failures_documented",
+      "field_present": true,
+      "jsonpath": "$.all_expected_failures_documented",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "counterexample_matrix_spine_evidence_field_present",
+      "source_artifact": "output/reports/counterexample_matrix.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "counterexample",
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/figures/sheaf_coverage_heatmap.png",
+      "claim_id": "sheaf_coverage_heatmap",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "sheaf_coverage",
+      "semantic_restriction": "sheaf_coverage_heatmap_evidence_field_present",
+      "source_artifact": "output/figures/sheaf_coverage_heatmap.png",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "visualization",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_gluing_certificate.json",
+      "claim_id": "coverage_no_gray",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "restrictions.coverage_missing",
+      "field_present": true,
+      "jsonpath": "$.restrictions.coverage_missing",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "coverage_no_gray_evidence_field_present",
+      "source_artifact": "output/data/sheaf_gluing_certificate.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "manuscript/02_intro_motivation.md",
+      "claim_id": "composed_intro_motivation",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "intro_motivation",
+      "semantic_restriction": "composed_intro_motivation_evidence_field_present",
+      "source_artifact": "manuscript/02_intro_motivation.md",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "manuscript/05_methods_analytical.md",
+      "claim_id": "composed_methods_analytical",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "methods_analytical",
+      "semantic_restriction": "composed_methods_analytical_evidence_field_present",
+      "source_artifact": "manuscript/05_methods_analytical.md",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "analytical",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "manuscript/10_results_mi_sweep.md",
+      "claim_id": "composed_results_mi",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "results_mi_sweep",
+      "semantic_restriction": "composed_results_mi_evidence_field_present",
+      "source_artifact": "manuscript/10_results_mi_sweep.md",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "analytical",
+        "simulation",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/manuscript_variables.json",
+      "claim_id": "composed_appendix_full_sheaf",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "appendix_sheaf_track_count",
+      "field_present": true,
+      "jsonpath": "$.appendix_sheaf_track_count",
+      "manuscript_section": "appendix_full_sheaf",
+      "semantic_restriction": "composed_appendix_full_sheaf_evidence_field_present",
+      "source_artifact": "output/data/manuscript_variables.json",
+      "token_count": 180,
+      "tokens": [
+        "ablation_sensitivity_row_count",
+        "ablation_sensitivity_source_backed",
+        "adversarial_audit_all_documented",
+        "adversarial_audit_count",
+        "adversarial_known_bad_passed",
+        "analytical_assumption_count",
+        "analytical_assumptions_indexed",
+        "analytical_equation_count",
+        "animation_delta_count",
+        "animation_deltas_all_nonzero",
+        "appendix_sheaf_track_count",
+        "artifact_contract_complete",
+        "artifact_contract_copied_parity_complete",
+        "artifact_contract_row_count",
+        "artifact_diffoscope_all_equal",
+        "artifact_diffoscope_row_count",
+        "artifact_license_all_safe",
+        "artifact_license_row_count",
+        "benchmark_all_models_complete",
+        "benchmark_model_count",
+        "bernoulli_state_count",
+        "causal_ablation_complete_grid",
+        "causal_ablation_row_count",
+        "claim_evidence_audit_all_artifacts_resolved",
+        "claim_evidence_audit_all_complete",
+        "claim_evidence_audit_all_predicates_hold",
+        "claim_evidence_audit_count",
+        "composed_section_count",
+        "counterexample_all_known_bad_fail",
+        "counterexample_count",
+        "coverage_bound",
+        "coverage_missing",
+        "coverage_present",
+        "cue_behavioral_advantage_formatted",
+        "cue_epistemic_reward_formatted",
+        "cue_flat_efe_indistinguishable",
+        "cue_greedy_reward_formatted",
+        "cue_information_gain_formatted",
+        "cue_num_states",
+        "dirichlet_final_kl_formatted",
+        "dirichlet_initial_kl_formatted",
+        "dirichlet_steps_to_converge",
+        "efe_ambiguity_at_min_formatted",
+        "efe_epistemic_at_min_formatted",
+        "efe_max_identity_residual_formatted",
+        "efe_minimizing_policy",
+        "efe_minimizing_total_formatted",
+        "efe_policy_count",
+        "efe_pragmatic_at_min_formatted",
+        "efe_risk_at_min_formatted",
+        "evidence_field_count",
+        "evidence_fields_mapped",
+        "free_energy_argmin_lambda",
+        "gnn_spec_version",
+        "imrad_group_count",
+        "imrad_manifest_rows",
+        "interop_all_lossless",
+        "interop_check_count",
+        "invariants_passed",
+        "invariants_total",
+        "ising_mi_saturation",
+        "lambda_max",
+        "lean_graph_world_all_topologies_witnessed",
+        "lean_graph_world_topology_witness_count",
+        "manuscript_staleness_all_fresh",
+        "manuscript_staleness_row_count",
+        "model_checking_all_passed",
+        "model_checking_witness_count",
+        "param_sweep_grid_points",
+        "pipeline_track_count",
+        "precision_entropy_at_gamma_one_formatted",
+        "precision_entropy_floor_formatted",
+        "precision_gamma_deterministic",
+        "precision_gamma_grid_points",
+        "precision_gamma_max",
+        "precision_optimal_set_size",
+        "precision_selection_threshold",
+        "proof_dependency_all_resolved",
+        "proof_dependency_edge_count",
+        "proof_extraction_all_constructive",
+        "proof_extraction_theorem_count",
+        "provenance_all_seeded",
+        "provenance_bundle_complete",
+        "provenance_bundle_count",
+        "provenance_seeded_count",
+        "pymdp_config_hash",
+        "pymdp_mode",
+        "pymdp_policy_posterior_available_count",
+        "pymdp_policy_posterior_row_count",
+        "pymdp_policy_posteriors_normalized",
+        "pymdp_runtime_construction_count",
+        "pymdp_runtime_known_warning_count",
+        "pymdp_runtime_unexpected_warning_count",
+        "release_attestation_all_attested",
+        "release_attestation_row_count",
+        "release_bundle_artifact_count",
+        "release_bundle_sources_present",
+        "release_notes_row_count",
+        "release_notes_source_backed",
+        "replay_matrix_all_matched",
+        "replay_matrix_row_count",
+        "scholarship_citations_present",
+        "scholarship_claim_boundaries_scope_guarded",
+        "scholarship_declared_section_citation_overlap_count",
+        "scholarship_method_role_count",
+        "scholarship_quantitative_method_role_count",
+        "scholarship_rows_rederived",
+        "scholarship_source_count",
+        "scholarship_source_family_count",
+        "scholarship_source_locator_kind_count",
+        "scholarship_sources_connected",
+        "scope_boundary_status",
+        "security_posture_all_controls_ok",
+        "security_posture_all_evidence_present",
+        "security_posture_control_count",
+        "security_posture_deferred_count",
+        "security_posture_enforced_count",
+        "security_posture_high_risk_gap_count",
+        "security_posture_secret_finding_count",
+        "sensitivity_cell_count",
+        "sensitivity_complete_grid",
+        "sheaf_law_count",
+        "sheaf_laws_verified",
+        "sheaf_track_count",
+        "si_action_diversity",
+        "si_action_switch_count",
+        "si_action_switch_rate_formatted",
+        "si_entropy_drop_formatted",
+        "si_entropy_max",
+        "si_entropy_min",
+        "si_goal_reached",
+        "si_graph_world_goal_reached",
+        "si_graph_world_node_count",
+        "si_graph_world_steps",
+        "si_graph_world_topology_trace_count",
+        "si_graph_world_topology_traces_agree",
+        "si_observation_diversity",
+        "si_policy_comparison_complete_grid",
+        "si_policy_comparison_goal_reached_count",
+        "si_policy_comparison_policy_goal_count",
+        "si_policy_comparison_run_count",
+        "si_policy_comparison_state_goal_count",
+        "si_policy_efe_rows_explained",
+        "si_tmaze_mean_belief_entropy",
+        "si_tmaze_mean_belief_entropy_formatted",
+        "si_tmaze_policy_len",
+        "si_tmaze_steps",
+        "si_trace_finite",
+        "si_trace_steps_match",
+        "state_space_catalog_all_finite",
+        "state_space_catalog_row_count",
+        "state_transition_all_covered",
+        "state_transition_row_count",
+        "statistical_visualization_bridge_all_connected",
+        "statistical_visualization_bridge_all_referenced",
+        "statistical_visualization_bridge_references_sheaf_bound",
+        "statistical_visualization_bridge_references_visualization_bound",
+        "statistical_visualization_bridge_row_count",
+        "statistical_visualization_bridge_source_count",
+        "sweep_max_residual",
+        "sweep_rmse_mi",
+        "theorem_traceability_linked",
+        "theorem_traceability_row_count",
+        "track_lane_matrix_complete",
+        "track_lane_matrix_row_count",
+        "uncertainty_all_normalized",
+        "uncertainty_bin_count",
+        "uncertainty_row_count",
+        "validation_gate_index_count",
+        "validation_spine_artifact_count",
+        "visualization_figures_section_bound",
+        "visualization_intent_metadata_complete",
+        "visualization_paper_claims_complete",
+        "visualization_quality_accessibility_count",
+        "visualization_quality_all_ok",
+        "visualization_quality_figure_count",
+        "visualization_quality_rendered_count",
+        "visualization_quality_source_mapped_count",
+        "visualization_statistics_backed_count",
+        "visualization_statistics_bridge_ok"
+      ],
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 1,
+      "validators": [
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/si_tmaze_summary.json",
+      "claim_id": "si_tmaze_summary",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "steps",
+      "field_present": true,
+      "jsonpath": "$.steps",
+      "manuscript_section": "results_si_tmaze",
+      "semantic_restriction": "si_tmaze_summary_evidence_field_present",
+      "source_artifact": "output/data/si_tmaze_summary.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_tmaze_trace.json",
+      "claim_id": "si_tmaze_trace",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "steps",
+      "field_present": true,
+      "jsonpath": "$.steps",
+      "manuscript_section": "results_si_tmaze",
+      "semantic_restriction": "si_tmaze_trace_evidence_field_present",
+      "source_artifact": "output/data/si_tmaze_trace.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_policy_comparison.json",
+      "claim_id": "si_policy_comparison",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "summary.run_count",
+      "field_present": true,
+      "jsonpath": "$.summary.run_count",
+      "manuscript_section": "results_si_tmaze",
+      "semantic_restriction": "si_policy_comparison_evidence_field_present",
+      "source_artifact": "output/data/si_policy_comparison.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_policy_comparison.json",
+      "claim_id": "si_policy_comparison_modes",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "summary.modes",
+      "field_present": true,
+      "jsonpath": "$.summary.modes",
+      "manuscript_section": "results_si_tmaze",
+      "semantic_restriction": "si_policy_comparison_modes_evidence_field_present",
+      "source_artifact": "output/data/si_policy_comparison.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/pymdp_runtime_diagnostics.json",
+      "claim_id": "pymdp_runtime_diagnostics_ok",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "ok",
+      "field_present": true,
+      "jsonpath": "$.ok",
+      "manuscript_section": "methods_pymdp",
+      "semantic_restriction": "pymdp_runtime_diagnostics_ok_evidence_field_present",
+      "source_artifact": "output/reports/pymdp_runtime_diagnostics.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "provenance",
+        "adversarial_audit"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/pymdp_policy_posterior_grid.json",
+      "claim_id": "pymdp_policy_posterior_grid_normalized",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_available_posteriors_normalized",
+      "field_present": true,
+      "jsonpath": "$.all_available_posteriors_normalized",
+      "manuscript_section": "methods_pymdp",
+      "semantic_restriction": "pymdp_policy_posterior_grid_normalized_evidence_field_present",
+      "source_artifact": "output/data/pymdp_policy_posterior_grid.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "uncertainty",
+        "interop"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/si_graph_world_summary.json",
+      "claim_id": "si_graph_world_summary",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "status",
+      "field_present": true,
+      "jsonpath": "$.status",
+      "manuscript_section": "results_si_tmaze",
+      "semantic_restriction": "si_graph_world_summary_evidence_field_present",
+      "source_artifact": "output/data/si_graph_world_summary.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_graph_world_trace.json",
+      "claim_id": "si_graph_world_trace",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "steps",
+      "field_present": true,
+      "jsonpath": "$.steps",
+      "manuscript_section": "results_si_tmaze",
+      "semantic_restriction": "si_graph_world_trace_evidence_field_present",
+      "source_artifact": "output/data/si_graph_world_trace.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "simulation"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_gluing_certificate.json",
+      "claim_id": "si_graph_world_trace_consistency",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "restrictions.graph_world_steps_match",
+      "field_present": true,
+      "jsonpath": "$.restrictions.graph_world_steps_match",
+      "manuscript_section": "results_si_tmaze",
+      "semantic_restriction": "si_graph_world_trace_consistency_evidence_field_present",
+      "source_artifact": "output/data/sheaf_gluing_certificate.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "simulation",
+        "manuscript"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/si_belief_entropy_curve.png",
+      "claim_id": "si_belief_entropy_figure",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "results_si_tmaze",
+      "semantic_restriction": "si_belief_entropy_figure_evidence_field_present",
+      "source_artifact": "output/figures/si_belief_entropy_curve.png",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "visualization",
+        "pymdp"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/si_belief_trajectory.gif",
+      "claim_id": "si_belief_trajectory_gif",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "appendix_full_sheaf",
+      "semantic_restriction": "si_belief_trajectory_gif_evidence_field_present",
+      "source_artifact": "output/figures/si_belief_trajectory.gif",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "animation",
+        "visualization"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "manuscript/15_discussion_outlook.md",
+      "claim_id": "composed_discussion",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "discussion_outlook",
+      "semantic_restriction": "composed_discussion_evidence_field_present",
+      "source_artifact": "manuscript/15_discussion_outlook.md",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "simulation",
+        "ontology",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/figures/sheaf_layers_overview.png",
+      "claim_id": "sheaf_layers_overview",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "sheaf_layers_overview_evidence_field_present",
+      "source_artifact": "output/figures/sheaf_layers_overview.png",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "visualization",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_gluing_certificate.json",
+      "claim_id": "lean_graph_world_policy_boundary",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "restrictions.lean_all_proved",
+      "field_present": true,
+      "jsonpath": "$.restrictions.lean_all_proved",
+      "manuscript_section": "methods_lean",
+      "semantic_restriction": "lean_graph_world_policy_boundary_evidence_field_present",
+      "source_artifact": "output/data/sheaf_gluing_certificate.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "lean",
+        "manuscript"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "manuscript/08_methods_sheaf.md",
+      "claim_id": "composed_methods_sheaf",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "composed_methods_sheaf_evidence_field_present",
+      "source_artifact": "manuscript/08_methods_sheaf.md",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/sensitivity_sweep.json",
+      "claim_id": "sensitivity_complete_grid",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "complete_grid",
+      "field_present": true,
+      "jsonpath": "$.complete_grid",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "sensitivity_complete_grid_evidence_field_present",
+      "source_artifact": "output/data/sensitivity_sweep.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "sensitivity",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/analytical_assumption_index.json",
+      "claim_id": "analytical_assumption_index",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_equations_indexed",
+      "field_present": true,
+      "jsonpath": "$.all_equations_indexed",
+      "manuscript_section": "methods_analytical",
+      "semantic_restriction": "analytical_assumption_index_evidence_field_present",
+      "source_artifact": "output/data/analytical_assumption_index.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "assumption_index",
+        "analytical",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/uncertainty_summary.json",
+      "claim_id": "uncertainty_rows_normalized",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_normalized",
+      "field_present": true,
+      "jsonpath": "$.all_normalized",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "uncertainty_rows_normalized_evidence_field_present",
+      "source_artifact": "output/data/uncertainty_summary.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "uncertainty",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/toy_benchmark_matrix.json",
+      "claim_id": "benchmark_rows_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "models",
+      "field_present": true,
+      "jsonpath": "$.models",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "benchmark_rows_complete_evidence_field_present",
+      "source_artifact": "output/data/toy_benchmark_matrix.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "benchmark",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_policy_grid.json",
+      "claim_id": "si_policy_grid_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "complete_grid",
+      "field_present": true,
+      "jsonpath": "$.complete_grid",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "si_policy_grid_complete_evidence_field_present",
+      "source_artifact": "output/data/si_policy_grid.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "sensitivity"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_efe_terms.json",
+      "claim_id": "si_efe_rows_explained",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_rows_explained",
+      "field_present": true,
+      "jsonpath": "$.all_rows_explained",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "si_efe_rows_explained_evidence_field_present",
+      "source_artifact": "output/data/si_efe_terms.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "sensitivity"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/si_graph_world_topology_traces.json",
+      "claim_id": "graph_world_topology_traces_consistent",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_trace_summary_agree",
+      "field_present": true,
+      "jsonpath": "$.all_trace_summary_agree",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "graph_world_topology_traces_consistent_evidence_field_present",
+      "source_artifact": "output/data/si_graph_world_topology_traces.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "sensitivity"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/graph_world_invariants.json",
+      "claim_id": "graph_world_invariants_pass",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_passed",
+      "field_present": true,
+      "jsonpath": "$.all_passed",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "graph_world_invariants_pass_evidence_field_present",
+      "source_artifact": "output/reports/graph_world_invariants.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "pymdp",
+        "sensitivity"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/model_checking_witnesses.json",
+      "claim_id": "model_checking_witnesses_pass",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_passed",
+      "field_present": true,
+      "jsonpath": "$.all_passed",
+      "manuscript_section": "methods_lean",
+      "semantic_restriction": "model_checking_witnesses_pass_evidence_field_present",
+      "source_artifact": "output/reports/model_checking_witnesses.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "model_checking",
+        "lean"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/interop_roundtrip_report.json",
+      "claim_id": "interop_roundtrip_lossless",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_lossless",
+      "field_present": true,
+      "jsonpath": "$.all_lossless",
+      "manuscript_section": "methods_pymdp",
+      "semantic_restriction": "interop_roundtrip_lossless_evidence_field_present",
+      "source_artifact": "output/data/interop_roundtrip_report.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "interop",
+        "gnn",
+        "ontology"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/lean_theorem_inventory.json",
+      "claim_id": "lean_theorem_inventory_proved",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_proved",
+      "field_present": true,
+      "jsonpath": "$.all_proved",
+      "manuscript_section": "methods_lean",
+      "semantic_restriction": "lean_theorem_inventory_proved_evidence_field_present",
+      "source_artifact": "output/reports/lean_theorem_inventory.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "lean",
+        "model_checking"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/lean_graph_world_inventory.json",
+      "claim_id": "lean_graph_world_topologies_witnessed",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_topologies_witnessed",
+      "field_present": true,
+      "jsonpath": "$.all_topologies_witnessed",
+      "manuscript_section": "methods_lean",
+      "semantic_restriction": "lean_graph_world_topologies_witnessed_evidence_field_present",
+      "source_artifact": "output/reports/lean_graph_world_inventory.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "lean",
+        "model_checking",
+        "sensitivity"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_gluing_certificate.json",
+      "claim_id": "semantic_gluing_ok",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "ok",
+      "field_present": true,
+      "jsonpath": "$.ok",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "semantic_gluing_ok_evidence_field_present",
+      "source_artifact": "output/data/sheaf_gluing_certificate.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "adversarial_audit"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/validation_dependency_graph.json",
+      "claim_id": "dependency_graph_edges",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_required_edge_types_present",
+      "field_present": true,
+      "jsonpath": "$.all_required_edge_types_present",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "dependency_graph_edges_evidence_field_present",
+      "source_artifact": "output/data/validation_dependency_graph.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "provenance"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/producer_completeness.json",
+      "claim_id": "producer_completeness",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_complete",
+      "field_present": true,
+      "jsonpath": "$.all_complete",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "producer_completeness_evidence_field_present",
+      "source_artifact": "output/reports/producer_completeness.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "provenance",
+        "adversarial_audit"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/stale_artifact_report.json",
+      "claim_id": "stale_artifact_report_fresh",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_fresh",
+      "field_present": true,
+      "jsonpath": "$.all_fresh",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "stale_artifact_report_fresh_evidence_field_present",
+      "source_artifact": "output/reports/stale_artifact_report.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "provenance",
+        "replay_matrix"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/cross_track_symbol_table.json",
+      "claim_id": "cross_track_symbols_consistent",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_consistent",
+      "field_present": true,
+      "jsonpath": "$.all_consistent",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "cross_track_symbols_consistent_evidence_field_present",
+      "source_artifact": "output/data/cross_track_symbol_table.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "gnn",
+        "ontology",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/manuscript_evidence_tables.json",
+      "claim_id": "manuscript_evidence_tables_source_backed",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_source_backed",
+      "field_present": true,
+      "jsonpath": "$.all_source_backed",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "manuscript_evidence_tables_source_backed_evidence_field_present",
+      "source_artifact": "output/data/manuscript_evidence_tables.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/manuscript_token_provenance.json",
+      "claim_id": "manuscript_token_provenance_mapped",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_tokens_mapped",
+      "field_present": true,
+      "jsonpath": "$.all_tokens_mapped",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "manuscript_token_provenance_mapped_evidence_field_present",
+      "source_artifact": "output/data/manuscript_token_provenance.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/claim_evidence_audit.json",
+      "claim_id": "claim_evidence_audit_typed",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_complete",
+      "field_present": true,
+      "jsonpath": "$.all_complete",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "claim_evidence_audit_typed_evidence_field_present",
+      "source_artifact": "output/reports/claim_evidence_audit.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "adversarial_audit",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/validation_gate_index.json",
+      "claim_id": "validation_gate_index_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_indexed",
+      "field_present": true,
+      "jsonpath": "$.all_indexed",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "validation_gate_index_complete_evidence_field_present",
+      "source_artifact": "output/data/validation_gate_index.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "gate_ergonomics"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/sheaf_section_status_matrix.json",
+      "claim_id": "sheaf_section_status_matrix_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_bound_fragments_present",
+      "field_present": true,
+      "jsonpath": "$.all_bound_fragments_present",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "sheaf_section_status_matrix_complete_evidence_field_present",
+      "source_artifact": "output/data/sheaf_section_status_matrix.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "layers"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/sheaf_render_log.json",
+      "claim_id": "sheaf_render_log_events_ok",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_events_ok",
+      "field_present": true,
+      "jsonpath": "$.all_events_ok",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "sheaf_render_log_events_ok_evidence_field_present",
+      "source_artifact": "output/reports/sheaf_render_log.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "gate_ergonomics"
+      ],
+      "validator": "validate_manuscript",
+      "validator_count": 2,
+      "validators": [
+        "validate_manuscript",
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/figure_source_map.json",
+      "claim_id": "figure_source_map_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_figures_mapped",
+      "field_present": true,
+      "jsonpath": "$.all_figures_mapped",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "figure_source_map_complete_evidence_field_present",
+      "source_artifact": "output/data/figure_source_map.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "visualization",
+        "provenance"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/figure_hash_manifest.json",
+      "claim_id": "figure_hash_manifest_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_hashes_present",
+      "field_present": true,
+      "jsonpath": "$.all_hashes_present",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "figure_hash_manifest_complete_evidence_field_present",
+      "source_artifact": "output/reports/figure_hash_manifest.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "visualization",
+        "provenance"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/visualization_quality_audit.json",
+      "claim_id": "visualization_quality_audit_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_quality_ok",
+      "field_present": true,
+      "jsonpath": "$.all_quality_ok",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "visualization_quality_audit_complete_evidence_field_present",
+      "source_artifact": "output/reports/visualization_quality_audit.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "visualization",
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/visualization_quality_audit.json",
+      "claim_id": "visualization_statistics_bridge_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_statistical_sources_present",
+      "field_present": true,
+      "jsonpath": "$.all_statistical_sources_present",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "visualization_statistics_bridge_complete_evidence_field_present",
+      "source_artifact": "output/reports/visualization_quality_audit.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "visualization",
+        "simulation",
+        "scholarship",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/statistical_visualization_bridge.json",
+      "claim_id": "statistical_visualization_crosswalk_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_rows_connected",
+      "field_present": true,
+      "jsonpath": "$.all_rows_connected",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "statistical_visualization_crosswalk_complete_evidence_field_present",
+      "source_artifact": "output/data/statistical_visualization_bridge.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "visualization",
+        "simulation",
+        "scholarship",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/scope_boundary_audit.json",
+      "claim_id": "scope_boundary_toy_only",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "scope_boundary_status",
+      "field_present": true,
+      "jsonpath": "$.scope_boundary_status",
+      "manuscript_section": "discussion_outlook",
+      "semantic_restriction": "scope_boundary_toy_only_evidence_field_present",
+      "source_artifact": "output/reports/scope_boundary_audit.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "adversarial_audit",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/adversarial_audit.json",
+      "claim_id": "adversarial_audit_expected_failures",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_expected_failures_documented",
+      "field_present": true,
+      "jsonpath": "$.all_expected_failures_documented",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "adversarial_audit_expected_failures_evidence_field_present",
+      "source_artifact": "output/reports/adversarial_audit.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "adversarial_audit",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/animation_frame_deltas.json",
+      "claim_id": "animation_frame_deltas_nonzero",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_nonzero",
+      "field_present": true,
+      "jsonpath": "$.all_nonzero",
+      "manuscript_section": "appendix_full_sheaf",
+      "semantic_restriction": "animation_frame_deltas_nonzero_evidence_field_present",
+      "source_artifact": "output/data/animation_frame_deltas.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "animation_delta",
+        "animation",
+        "visualization"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/manuscript_staleness_report.json",
+      "claim_id": "manuscript_staleness_fresh",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_fresh",
+      "field_present": true,
+      "jsonpath": "$.all_fresh",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "manuscript_staleness_fresh_evidence_field_present",
+      "source_artifact": "output/reports/manuscript_staleness_report.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript_staleness",
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/replay_matrix.json",
+      "claim_id": "replay_matrix_all_replayed",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_replay_rows_matched",
+      "field_present": true,
+      "jsonpath": "$.all_replay_rows_matched",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "replay_matrix_all_replayed_evidence_field_present",
+      "source_artifact": "output/reports/replay_matrix.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "replay_matrix"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/sensitivity_sweep.json",
+      "claim_id": "sensitivity_complete_grid",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "complete_grid",
+      "field_present": true,
+      "jsonpath": "$.complete_grid",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "sensitivity_complete_grid_evidence_field_present",
+      "source_artifact": "output/data/sensitivity_sweep.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "sensitivity"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/uncertainty_summary.json",
+      "claim_id": "uncertainty_normalized",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_normalized",
+      "field_present": true,
+      "jsonpath": "$.all_normalized",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "uncertainty_normalized_evidence_field_present",
+      "source_artifact": "output/data/uncertainty_summary.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "uncertainty"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/counterexample_matrix.json",
+      "claim_id": "counterexample_expected_failures",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "covered_tracks",
+      "field_present": true,
+      "jsonpath": "$.covered_tracks",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "counterexample_expected_failures_evidence_field_present",
+      "source_artifact": "output/reports/counterexample_matrix.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "counterexample",
+        "adversarial_audit"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/evidence_field_index.json",
+      "claim_id": "evidence_fields_mapped",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_fields_mapped",
+      "field_present": true,
+      "jsonpath": "$.all_fields_mapped",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "evidence_fields_mapped_evidence_field_present",
+      "source_artifact": "output/data/evidence_field_index.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "evidence_fields"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/model_checking_witnesses.json",
+      "claim_id": "model_checking_exhaustive",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_exhaustive",
+      "field_present": true,
+      "jsonpath": "$.all_exhaustive",
+      "manuscript_section": "methods_lean",
+      "semantic_restriction": "model_checking_exhaustive_evidence_field_present",
+      "source_artifact": "output/reports/model_checking_witnesses.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "model_checking",
+        "lean"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/data/interop_roundtrip_report.json",
+      "claim_id": "interop_lossless",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_lossless",
+      "field_present": true,
+      "jsonpath": "$.all_lossless",
+      "manuscript_section": "methods_pymdp",
+      "semantic_restriction": "interop_lossless_evidence_field_present",
+      "source_artifact": "output/data/interop_roundtrip_report.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "interop",
+        "gnn",
+        "ontology"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 1,
+      "validators": [
+        "validate_outputs"
+      ]
+    },
+    {
+      "artifact": "output/reports/adversarial_audit.json",
+      "claim_id": "adversarial_audit_known_bad_blocked",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "known_bad_rows_passed",
+      "field_present": true,
+      "jsonpath": "$.known_bad_rows_passed",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "adversarial_audit_known_bad_blocked_evidence_field_present",
+      "source_artifact": "output/reports/adversarial_audit.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "adversarial_audit"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/track_improvement_scope.json",
+      "claim_id": "track_improvement_scope_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_live_tracks_valid",
+      "field_present": true,
+      "jsonpath": "$.all_live_tracks_valid",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "track_improvement_scope_complete_evidence_field_present",
+      "source_artifact": "output/data/track_improvement_scope.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "provenance"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/track_lane_matrix.json",
+      "claim_id": "track_lane_matrix_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_pipeline_tracks_complete",
+      "field_present": true,
+      "jsonpath": "$.all_pipeline_tracks_complete",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "track_lane_matrix_complete_evidence_field_present",
+      "source_artifact": "output/data/track_lane_matrix.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "manuscript",
+        "sheaf",
+        "provenance",
+        "gate_ergonomics"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/blocked_scope_manifest.json",
+      "claim_id": "empirical_adapter_blocked",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_blocked",
+      "field_present": true,
+      "jsonpath": "$.all_blocked",
+      "manuscript_section": "discussion_outlook",
+      "semantic_restriction": "empirical_adapter_blocked_evidence_field_present",
+      "source_artifact": "output/reports/blocked_scope_manifest.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "adversarial_audit",
+        "manuscript"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/release_bundle_manifest.json",
+      "claim_id": "release_bundle_sources_present",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_required_sources_present",
+      "field_present": true,
+      "jsonpath": "$.all_required_sources_present",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "release_bundle_sources_present_evidence_field_present",
+      "source_artifact": "output/reports/release_bundle_manifest.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "release_bundle",
+        "provenance"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/theorem_traceability_matrix.json",
+      "claim_id": "theorem_traceability_linked",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_theorems_linked",
+      "field_present": true,
+      "jsonpath": "$.all_theorems_linked",
+      "manuscript_section": "methods_lean",
+      "semantic_restriction": "theorem_traceability_linked_evidence_field_present",
+      "source_artifact": "output/data/theorem_traceability_matrix.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "theorem_traceability",
+        "model_checking",
+        "lean"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/validation_gate_index.json",
+      "claim_id": "gate_ergonomics_indexed",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_indexed",
+      "field_present": true,
+      "jsonpath": "$.all_indexed",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "gate_ergonomics_indexed_evidence_field_present",
+      "source_artifact": "output/data/validation_gate_index.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "gate_ergonomics",
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/artifact_diffoscope.json",
+      "claim_id": "artifact_diffoscope_equal",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_equal",
+      "field_present": true,
+      "jsonpath": "$.all_equal",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "artifact_diffoscope_equal_evidence_field_present",
+      "source_artifact": "output/reports/artifact_diffoscope.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "artifact_diffoscope",
+        "provenance",
+        "release_bundle"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/proof_extraction_index.json",
+      "claim_id": "proof_extraction_constructive",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_constructive",
+      "field_present": true,
+      "jsonpath": "$.all_constructive",
+      "manuscript_section": "methods_lean",
+      "semantic_restriction": "proof_extraction_constructive_evidence_field_present",
+      "source_artifact": "output/data/proof_extraction_index.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "proof_extraction",
+        "lean",
+        "theorem_traceability"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/state_space_catalog.json",
+      "claim_id": "state_space_catalog_finite",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_finite",
+      "field_present": true,
+      "jsonpath": "$.all_finite",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "state_space_catalog_finite_evidence_field_present",
+      "source_artifact": "output/data/state_space_catalog.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "state_space_catalog",
+        "model_checking",
+        "benchmark"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/causal_ablation_matrix.json",
+      "claim_id": "causal_ablation_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "complete_grid",
+      "field_present": true,
+      "jsonpath": "$.complete_grid",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "causal_ablation_complete_evidence_field_present",
+      "source_artifact": "output/data/causal_ablation_matrix.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "causal_ablation",
+        "sensitivity",
+        "benchmark"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/artifact_license_audit.json",
+      "claim_id": "artifact_license_safe",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_license_safe",
+      "field_present": true,
+      "jsonpath": "$.all_license_safe",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "artifact_license_safe_evidence_field_present",
+      "source_artifact": "output/reports/artifact_license_audit.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "artifact_license",
+        "provenance",
+        "release_bundle"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/release_notes_evidence.json",
+      "claim_id": "release_notes_source_backed",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_notes_source_backed",
+      "field_present": true,
+      "jsonpath": "$.all_notes_source_backed",
+      "manuscript_section": "discussion_outlook",
+      "semantic_restriction": "release_notes_source_backed_evidence_field_present",
+      "source_artifact": "output/reports/release_notes_evidence.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "release_notes",
+        "release_bundle",
+        "gate_ergonomics"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/proof_dependency_graph.json",
+      "claim_id": "proof_dependency_graph_resolved",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_theorems_have_dependencies",
+      "field_present": true,
+      "jsonpath": "$.all_theorems_have_dependencies",
+      "manuscript_section": "methods_lean",
+      "semantic_restriction": "proof_dependency_graph_resolved_evidence_field_present",
+      "source_artifact": "output/data/proof_dependency_graph.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "proof_extraction",
+        "theorem_traceability",
+        "lean"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/state_transition_table.json",
+      "claim_id": "state_transition_table_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_reachable_states_covered",
+      "field_present": true,
+      "jsonpath": "$.all_reachable_states_covered",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "state_transition_table_complete_evidence_field_present",
+      "source_artifact": "output/data/state_transition_table.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "state_space_catalog",
+        "model_checking",
+        "sensitivity"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/reports/ablation_sensitivity_report.json",
+      "claim_id": "ablation_sensitivity_source_backed",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_effects_source_backed",
+      "field_present": true,
+      "jsonpath": "$.all_effects_source_backed",
+      "manuscript_section": "results_invariants",
+      "semantic_restriction": "ablation_sensitivity_source_backed_evidence_field_present",
+      "source_artifact": "output/reports/ablation_sensitivity_report.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "causal_ablation",
+        "sensitivity",
+        "uncertainty"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/scholarship_source_matrix.json",
+      "claim_id": "scholarship_source_matrix_connected",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_rows_rederived",
+      "field_present": true,
+      "jsonpath": "$.all_rows_rederived",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "scholarship_source_matrix_connected_evidence_field_present",
+      "source_artifact": "output/data/scholarship_source_matrix.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "scholarship",
+        "manuscript",
+        "sheaf"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/figures/scholarship_source_map.png",
+      "claim_id": "scholarship_source_map_figure",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "scholarship_source_map_figure_evidence_field_present",
+      "source_artifact": "output/figures/scholarship_source_map.png",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "scholarship",
+        "visualization"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
+    {
+      "artifact": "output/reports/security_posture_audit.json",
+      "claim_id": "security_posture_controls_ok",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_controls_ok",
+      "field_present": true,
+      "jsonpath": "$.all_controls_ok",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "security_posture_controls_ok_evidence_field_present",
+      "source_artifact": "output/reports/security_posture_audit.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "security_posture",
+        "release_bundle",
+        "gate_ergonomics"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/figures/security_posture_map.png",
+      "claim_id": "security_posture_map_figure",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "security_posture_map_figure_evidence_field_present",
+      "source_artifact": "output/figures/security_posture_map.png",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "security_posture",
+        "visualization"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
+    {
+      "artifact": "output/data/artifact_contract_index.json",
+      "claim_id": "artifact_contract_index_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_rows_complete",
+      "field_present": true,
+      "jsonpath": "$.all_rows_complete",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "artifact_contract_index_complete_evidence_field_present",
+      "source_artifact": "output/data/artifact_contract_index.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "provenance",
+        "release_bundle",
+        "gate_ergonomics"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/data/artifact_contract_index.json",
+      "claim_id": "artifact_contract_copied_parity_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_copied_parity_complete",
+      "field_present": true,
+      "jsonpath": "$.all_copied_parity_complete",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "artifact_contract_copied_parity_complete_evidence_field_present",
+      "source_artifact": "output/data/artifact_contract_index.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "release_bundle",
+        "artifact_diffoscope"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    },
+    {
+      "artifact": "output/figures/artifact_contract_map.png",
+      "claim_id": "artifact_contract_map_figure",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "",
+      "field_present": true,
+      "jsonpath": "$",
+      "manuscript_section": "methods_sheaf",
+      "semantic_restriction": "artifact_contract_map_figure_evidence_field_present",
+      "source_artifact": "output/figures/artifact_contract_map.png",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "release_bundle",
+        "provenance",
+        "visualization"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
+    {
+      "artifact": "output/reports/release_attestation.json",
+      "claim_id": "release_attestation_complete",
+      "edge_kind": "claim_field_to_artifact",
+      "field": "all_attested",
+      "field_present": true,
+      "jsonpath": "$.all_attested",
+      "manuscript_section": "discussion_outlook",
+      "semantic_restriction": "release_attestation_complete_evidence_field_present",
+      "source_artifact": "output/reports/release_attestation.json",
+      "token_count": 0,
+      "tokens": [],
+      "tracks": [
+        "release_bundle",
+        "release_notes",
+        "gate_ergonomics"
+      ],
+      "validator": "validate_outputs",
+      "validator_count": 2,
+      "validators": [
+        "validate_outputs",
+        "validate_manuscript"
+      ]
+    }
+  ],
+  "schema": "template_active_inference.evidence_field_index.v1",
+  "schema_version": "template_active_inference.canonical_sheaf_tracks.v1"
+}

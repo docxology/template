@@ -1,0 +1,39 @@
+{
+  "all_summary_trace_agree": true,
+  "rows": [
+    {
+      "goal_reached": true,
+      "node_count": 4,
+      "steps": 4,
+      "summary_trace_agreement": true,
+      "topology": "linear4",
+      "trace_steps": 4
+    },
+    {
+      "goal_reached": true,
+      "node_count": 4,
+      "steps": 4,
+      "summary_trace_agreement": true,
+      "topology": "branch4",
+      "trace_steps": 4
+    },
+    {
+      "goal_reached": true,
+      "node_count": 5,
+      "steps": 5,
+      "summary_trace_agreement": true,
+      "topology": "loop5",
+      "trace_steps": 5
+    },
+    {
+      "goal_reached": true,
+      "node_count": 5,
+      "steps": 5,
+      "summary_trace_agreement": true,
+      "topology": "diamond5",
+      "trace_steps": 5
+    }
+  ],
+  "schema": "template_active_inference.si_graph_world_topology_sweep.v1",
+  "topology_count": 4
+}

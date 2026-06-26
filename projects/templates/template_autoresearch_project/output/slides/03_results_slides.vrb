@@ -1,0 +1,52 @@
+\frametitle{Manuscript Hydration Provenance}
+\protect\phantomsection\label{sec:manuscript-hydration-provenance}
+The final run supports \texttt{6} manuscript-facing claim(s) and checks
+\texttt{78} required artifact(s). The rendered manuscript uses injected
+variables from generated data payloads, so the abstract and results
+track the latest analysis run rather than hard-coded counts. The final
+readiness status is \texttt{passed}; generated review decisions are
+recorded as deferred for human review rather than as self-approval.
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Variable provenance summary from
+\protect\breaktt{output/data/manuscript\_variable\_provenance.json}.}\label{tbl:variable-provenance}\tabularnewline
+\toprule\noalign{}
+Source artifact & Injected variables or fragments \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Source artifact & Injected variables or fragments \\
+\midrule\noalign{}
+\endhead
+output/data/autoresearch\_integrity\_attestation.json & 5 \\
+output/data/autoresearch\_loop.json & 57 \\
+output/data/autoresearch\_phase\_ledger.json & 2 \\
+output/data/autoresearch\_schema\_manifest.json & 1 \\
+output/data/autoresearch\_security\_profile.json & 6 \\
+output/data/autoresearch\_supply\_chain\_inventory.json & 3 \\
+output/data/autoresearch\_threat\_model.json & 4 \\
+output/data/benchmark\_scores.json & 1 \\
+output/data/figure\_quality\_report.json & 3 \\
+output/data/manuscript\_variable\_provenance.json & 1 \\
+output/data/ml\_bootstrap\_intervals.json & 3 \\
+output/data/ml\_calibration\_bin\_intervals.json & 1 \\
+output/data/ml\_calibration\_report.json & 3 \\
+output/data/ml\_candidate\_intervals.json & 1 \\
+output/data/ml\_candidate\_ledger.json & 1 \\
+output/data/ml\_candidate\_rank\_stability.json & 3 \\
+output/data/ml\_candidate\_selection\_audit.json & 1 \\
+output/data/ml\_class\_balance.json & 3 \\
+output/data/ml\_classification\_diagnostics.json & 5 \\
+output/data/ml\_diagnostic\_boundary.json & 1 \\
+output/data/ml\_paired\_comparison.json & 3 \\
+output/data/ml\_probability\_diagnostics.json & 4 \\
+output/data/ml\_robustness\_report.json & 2 \\
+output/data/ml\_statistical\_summary.json & 9 \\
+output/data/ml\_task\_results.json & 39 \\
+output/data/ml\_training\_diagnostics.json & 7 \\
+output/data/research\_object\_manifest.json & 2 \\
+output/data/review\_decisions.json & 1 \\
+output/figures/figure\_registry.json & 51 \\
+output/reports/artifact\_manifest.json & 1 \\
+\bottomrule\noalign{}
+\end{longtable}

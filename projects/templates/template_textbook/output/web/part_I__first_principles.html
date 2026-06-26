@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>first_principles.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:part_I_first_principles">First Principles</h1>
+<figure id="fig:part_I_first_principles">
+<img src="../figures/logistic_growth.png" style="width:85.0%"
+alt="A logistic growth curve for three growth rates, approaching the carrying capacity K = 100. Produced deterministically by visualization.plots.plot_logistic_growth." />
+<figcaption aria-hidden="true">A logistic growth curve for three growth
+rates, approaching the carrying capacity <span class="math inline">\(K =
+100\)</span>. Produced deterministically by
+<code>visualization.plots.plot_logistic_growth</code>.</figcaption>
+</figure>
+<!-- alt: Three S-shaped curves rising from a small initial value and levelling
+off at a horizontal asymptote labelled K = 100; steeper curves correspond to
+larger growth rates. -->
+<!-- chapter-metadata-badge -->
+<blockquote>
+<p>Level 1/3 · 25 min read · 40 min lecture · Prerequisites: none</p>
+</blockquote>
+<blockquote>
+<p><strong>This chapter is a worked reference.</strong> It is filled to
+completion to show what a finished chapter looks like. The other
+chapters in this template ship as structurally-complete stubs (marked
+with stub comments and TODO notes); fill them the same way.</p>
+</blockquote>
+<h2 id="learning-objectives">Learning Objectives</h2>
+<p>By the end of this chapter you should be able to:</p>
+<ol type="1">
+<li>Explain what it means to model a <a
+href="#gl:system"><strong>system</strong></a> as a small set of <a
+href="#gl:state"><strong>state</strong></a> variables and a rule for how
+they change.</li>
+<li>Distinguish a <a href="#gl:parameter"><strong>parameter</strong></a>
+from a <a href="#gl:variable"><strong>variable</strong></a>, and
+identify each in a worked model.</li>
+<li>Derive and interpret the logistic growth law and predict its
+long-run behaviour toward an <a
+href="#gl:equilibrium"><strong>equilibrium</strong></a>.</li>
+<li>Compute model values with the tested function
+<code>textbook.models.logistic_growth</code> rather than re-deriving
+arithmetic by hand.</li>
+</ol>
+<!-- curriculum-scaffold-start -->
+<h3 id="study-blueprint">Study Blueprint</h3>
+<ul>
+<li><strong>Big idea:</strong> A great deal of change in the world is
+captured by a handful of variables and a single rule relating their
+rates — the <em>first principle</em> of quantitative modelling.</li>
+<li><strong>Core concepts:</strong> <a
+href="#gl:system"><strong>system</strong></a>, <a
+href="#gl:state"><strong>state</strong></a>, <a
+href="#gl:parameter"><strong>parameter</strong></a>, <a
+href="#gl:equilibrium"><strong>equilibrium</strong></a>.</li>
+<li><strong>Quantitative lens:</strong> the logistic law in <span
+class="citation"
+data-cites="eq:part_I_first_principles_model">[@eq:part_I_first_principles_model]</span>.</li>
+<li><strong>Data skill:</strong> read an S-curve and estimate its
+carrying capacity by eye, then confirm numerically.</li>
+<li><strong>Common misconception to repair:</strong> “exponential” and
+“logistic” are not the same — unbounded growth is an early-time
+approximation, not the rule.</li>
+<li><strong>Primary lab:</strong> <span class="citation"
+data-cites="sec:lab_part_I_first_principles">[@sec:lab_part_I_first_principles]</span>.</li>
+<li><strong>Question bank:</strong> <span class="citation"
+data-cites="sec:q_part_I_first_principles">[@sec:q_part_I_first_principles]</span>.</li>
+<li><strong>Bridge to computation:</strong>
+<code>textbook.models.logistic_growth</code>.
+<!-- curriculum-scaffold-end --></li>
+</ul>
+<hr />
+<blockquote>
+<p><strong>Opening Vignette: Counting before you explain.</strong></p>
+<p>A population biologist watches a colony double, then double again,
+then — unexpectedly — slow. A start-up tracks users that grow the same
+way before the market saturates. A chemist measures a reaction that
+races, then crawls as substrate runs low. Three unrelated fields, one
+shape. The job of a first model is not to capture everything; it is to
+capture <em>that shape</em> with as few moving parts as possible.</p>
+</blockquote>
+<hr />
+<h2 id="from-a-system-to-a-model">From a system to a model</h2>
+<p>A <strong>model</strong> is a deliberate simplification. We choose a
+small number of <a href="#gl:state"><strong>state</strong></a> variables
+— here, a single quantity <span class="math inline">\(N(t)\)</span> —
+and write a rule for how the state changes. The art is leaving things
+out: a first model that fits on one line teaches more than a faithful
+one that fills a page.</p>
+<p>The variables are what change; the <a
+href="#gl:parameter"><strong>parameter</strong></a>s are what we hold
+fixed while we reason. In the growth model below, <span
+class="math inline">\(N\)</span> is the variable, while the rate <span
+class="math inline">\(r\)</span> and the carrying capacity <span
+class="math inline">\(K\)</span> are parameters. Confusing the two is
+the most common beginner error: if you find yourself “solving for <span
+class="math inline">\(K\)</span> over time,” you have mislabelled a
+parameter as a variable.</p>
+<h2 id="a-first-quantitative-law">A first quantitative law</h2>
+<p>Unbounded (exponential) growth assumes nothing ever pushes back. Real
+systems saturate. The simplest law that grows fast when small and levels
+off when large is the <strong>logistic</strong> equation, written as a
+rate of change in <span class="citation"
+data-cites="eq:part_I_first_principles_rate">[@eq:part_I_first_principles_rate]</span>
+and in closed form in <span class="citation"
+data-cites="eq:part_I_first_principles_model">[@eq:part_I_first_principles_model]</span>:</p>
+<p><span class="math display">\[ \frac{dN}{dt} = rN\left(1 -
+\frac{N}{K}\right) \]</span> {#eq:part_I_first_principles_rate}</p>
+<p><span class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
+N_0}{N_0}\right) e^{-rt}} \]</span>
+{#eq:part_I_first_principles_model}</p>
+<p>Read <span class="citation"
+data-cites="eq:part_I_first_principles_rate">[@eq:part_I_first_principles_rate]</span>
+aloud: the rate of change is proportional to how much there is (<span
+class="math inline">\(rN\)</span>) <em>times</em> how much room remains
+(<span class="math inline">\(1 - N/K\)</span>). When <span
+class="math inline">\(N\)</span> is small the second factor is near
+<span class="math inline">\(1\)</span> and growth is nearly exponential;
+as <span class="math inline">\(N\)</span> approaches <span
+class="math inline">\(K\)</span> the factor approaches <span
+class="math inline">\(0\)</span> and growth stalls. The parameters are
+collected in <span class="citation"
+data-cites="tbl:part_I_first_principles_parameters">[@tbl:part_I_first_principles_parameters]</span>.</p>
+<table id="tbl:part_I_first_principles_parameters">
+<caption>Parameters of the logistic model. Variables change over time;
+parameters are held fixed while reasoning.</caption>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Name</th>
+<th>Role</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(N(t)\)</span></td>
+<td>quantity</td>
+<td>variable</td>
+<td>computed</td>
+</tr>
+<tr>
+<td><span class="math inline">\(r\)</span></td>
+<td>intrinsic rate</td>
+<td>parameter</td>
+<td><span class="math inline">\(0.8\ \mathrm{s^{-1}}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(K\)</span></td>
+<td>carrying capacity</td>
+<td>parameter</td>
+<td><span class="math inline">\(100\)</span> units</td>
+</tr>
+<tr>
+<td><span class="math inline">\(N_0\)</span></td>
+<td>initial value</td>
+<td>parameter</td>
+<td><span class="math inline">\(5\)</span> units</td>
+</tr>
+</tbody>
+</table>
+<h2 id="worked-example">Worked example</h2>
+<p>Take <span class="math inline">\(r = 0.8\)</span>, <span
+class="math inline">\(K = 100\)</span>, and <span
+class="math inline">\(N_0 = 5\)</span>. Rather than evaluate the
+exponential by hand, call the tested backbone:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">2.0</span>, <span class="fl">5.0</span>, <span class="fl">10.0</span>])</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> models.logistic_growth(t, r<span class="op">=</span><span class="fl">0.8</span>, carrying_capacity<span class="op">=</span><span class="fl">100.0</span>, initial<span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># N -&gt; [ 5.00, 20.68, 74.18, 99.37 ]</span></span></code></pre></div>
+<p>The trajectory starts at <span class="math inline">\(N(0) =
+5.00\)</span>, reaches <span class="math inline">\(N(2) =
+20.68\)</span>, passes the steep middle near <span
+class="math inline">\(t = 5\)</span> with <span
+class="math inline">\(N(5) = 74.18\)</span>, and by <span
+class="math inline">\(t = 10\)</span> has all but arrived at <span
+class="math inline">\(N(10) = 99.37\)</span> — within one part in a
+hundred of the carrying capacity. This is the S-curve plotted in <span
+class="citation"
+data-cites="fig:part_I_first_principles">[@fig:part_I_first_principles]</span>:
+an early near-exponential rise, an inflection, and a long approach to
+the asymptote.</p>
+<p>The long-run behaviour is exact, not approximate. Because <span
+class="math inline">\(r &gt; 0\)</span>, the term <span
+class="math inline">\(e^{-rt} \to 0\)</span>, so <span
+class="math inline">\(N(t) \to K\)</span>. The proof is one line and is
+recorded as Theorem 1 in <span class="citation"
+data-cites="sec:appendix_formalisms">[@sec:appendix_formalisms]</span>;
+the same fact is asserted numerically by the test suite, so the prose
+and the code cannot silently disagree.</p>
+<h2 id="how-the-pieces-connect">How the pieces connect</h2>
+<pre class="mermaid"><code>graph TD
+  A[Choose state variables] --&gt; B[Write a rate rule]
+  B --&gt; C[Solve or simulate]
+  C --&gt; D[Predict long-run behaviour]
+  D --&gt;|compare to data| A</code></pre>
+<p>This loop — choose, write, solve, predict, compare — is the first
+principle the rest of the book elaborates. Foundational treatments of
+model-building include [brown2017principles] and [patel2018models].</p>
+<h2 id="summary">Summary</h2>
+<p>A model trades completeness for clarity: a few <a
+href="#gl:state"><strong>state</strong></a> variables and one rule. The
+logistic law adds a single idea — finite room — to exponential growth,
+and that idea changes the long-run behaviour from unbounded increase to
+a stable <a href="#gl:equilibrium"><strong>equilibrium</strong></a> at
+the carrying capacity <span class="math inline">\(K\)</span>. Compute
+with the tested <code>logistic_growth</code> function so your worked
+numbers are reproducible and correct by construction.</p>
+<h2 id="key-terms">Key Terms</h2>
+<p><a href="#gl:system"><strong>system</strong></a>, <a
+href="#gl:model"><strong>model</strong></a>, <a
+href="#gl:state"><strong>state</strong></a>, <a
+href="#gl:parameter"><strong>parameter</strong></a>, <a
+href="#gl:equilibrium"><strong>equilibrium</strong></a>.</p>
+<h2 id="further-reading">Further Reading</h2>
+<ul>
+<li><span class="citation"
+data-cites="brown2017principles">@brown2017principles</span> — a
+readable introduction to reasoning from first principles; start with its
+opening chapter on what a model is for.</li>
+<li><span class="citation"
+data-cites="patel2018models">@patel2018models</span> — a broader survey
+of model families; use it to see where the logistic law sits among
+alternatives.</li>
+</ul>
+<h2 id="practice">Practice</h2>
+<ul>
+<li><strong>Lab:</strong> <span class="citation"
+data-cites="sec:lab_part_I_first_principles">[@sec:lab_part_I_first_principles]</span>
+— measure an S-curve and estimate its parameters.</li>
+<li><strong>Question bank:</strong> <span class="citation"
+data-cites="sec:q_part_I_first_principles">[@sec:q_part_I_first_principles]</span>
+— recall through synthesis.</li>
+</ul>
+</body>
+</html>

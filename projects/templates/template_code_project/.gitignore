@@ -1,5 +1,3 @@
-# Generated outputs are regeneratable; never commit them.
-output/
 .coverage
 .coverage.*
 .pytest_cache/

@@ -1,0 +1,10 @@
+\frametitle{References}
+The bibliography is generated automatically during PDF compilation from
+\texttt{references.bib}. All citation keys used in the manuscript (e.g.,
+\texttt{\textbackslash{}citep\{friston2010free\}}) resolve to entries
+below; unused entries have been pruned. Pandoc's \texttt{-\/-natbib}
+flag injects \texttt{\textbackslash{}usepackage\{natbib\}} and
+\texttt{\textbackslash{}bibliographystyle\{plainnat\}}, so neither
+directive appears in this section or in \texttt{preamble.md}.
+
+\bibliography{references}

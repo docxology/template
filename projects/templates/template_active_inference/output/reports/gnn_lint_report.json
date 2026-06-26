@@ -1,0 +1,269 @@
+{
+  "all_variables_mapped_once": true,
+  "issues": [],
+  "rows": [
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "Stream1HabitPrior",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ok": true,
+      "ontology": "Stream1HabitPrior",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "Stream1HabitPrior"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "bernoulli_toy",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "variable": "E1"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "Stream2HabitPrior",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ok": true,
+      "ontology": "Stream2HabitPrior",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "Stream2HabitPrior"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "bernoulli_toy",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "variable": "E2"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "CrossStreamCouplingPotential",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ok": true,
+      "ontology": "CrossStreamCouplingPotential",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "CrossStreamCouplingPotential"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "bernoulli_toy",
+      "shape": [
+        2,
+        2
+      ],
+      "shape_declared": true,
+      "variable": "J"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "SophisticationWeight",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ok": true,
+      "ontology": "SophisticationWeight",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "SophisticationWeight"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "bernoulli_toy",
+      "shape": [
+        1
+      ],
+      "shape_declared": true,
+      "variable": "gamma"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "EntanglementDeformationParameter",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ok": true,
+      "ontology": "EntanglementDeformationParameter",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "EntanglementDeformationParameter"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "bernoulli_toy",
+      "shape": [
+        1
+      ],
+      "shape_declared": true,
+      "variable": "lam"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "Stream1PolicyVector",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ok": true,
+      "ontology": "Stream1PolicyVector",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "Stream1PolicyVector"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "bernoulli_toy",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "variable": "pi1"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "Stream2PolicyVector",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ok": true,
+      "ontology": "Stream2PolicyVector",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "Stream2PolicyVector"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "bernoulli_toy",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "variable": "pi2"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "EntangledJointPosterior",
+      "mapped_once": true,
+      "model": "bernoulli_toy",
+      "ok": true,
+      "ontology": "EntangledJointPosterior",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "EntangledJointPosterior"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "bernoulli_toy",
+      "shape": [
+        2,
+        2
+      ],
+      "shape_declared": true,
+      "variable": "q_joint"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "BeliefEntropy",
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ok": true,
+      "ontology": "BeliefEntropy",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "BeliefEntropy"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "si_tmaze",
+      "shape": [
+        1
+      ],
+      "shape_declared": true,
+      "variable": "belief_entropy"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "HiddenState",
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ok": true,
+      "ontology": "HiddenState",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "HiddenState"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "si_tmaze",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "variable": "loc"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "ObservationLikelihood",
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ok": true,
+      "ontology": "ObservationLikelihood",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "ObservationLikelihood"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "si_tmaze",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "variable": "obs"
+    },
+    {
+      "dtype": "float",
+      "dtype_declared": true,
+      "duplicate": false,
+      "expected_ontology": "PolicyPosterior",
+      "mapped_once": true,
+      "model": "si_tmaze",
+      "ok": true,
+      "ontology": "PolicyPosterior",
+      "ontology_term_count": 1,
+      "ontology_terms": [
+        "PolicyPosterior"
+      ],
+      "roundtrip_lossless": true,
+      "roundtrip_row_id": "si_tmaze",
+      "shape": [
+        2,
+        1
+      ],
+      "shape_declared": true,
+      "variable": "pi"
+    }
+  ],
+  "schema": "template_active_inference.gnn_lint_report.v1",
+  "variable_count": 12
+}

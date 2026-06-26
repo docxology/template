@@ -1,0 +1,54 @@
+{
+  "all_attested": true,
+  "attestation_hash": "2b0bfe65752868544b510857152cf7fffab4274beaf3905486f93b60e2e28925",
+  "bundle_hash": "5558645937cd314cf34e2f1daf0e3fe7542d1a08158adc690d58c91fb7e731af",
+  "row_count": 7,
+  "rows": [
+    {
+      "deferred_until_validation": true,
+      "id": "validation_report",
+      "passed": false,
+      "source": "output/reports/validation_report.json"
+    },
+    {
+      "bundle_hash": "5558645937cd314cf34e2f1daf0e3fe7542d1a08158adc690d58c91fb7e731af",
+      "deferred_until_validation": false,
+      "id": "release_bundle",
+      "passed": true,
+      "source": "output/reports/release_bundle_manifest.json"
+    },
+    {
+      "deferred_until_validation": false,
+      "id": "artifact_license",
+      "passed": true,
+      "source": "output/reports/artifact_license_audit.json"
+    },
+    {
+      "deferred_until_validation": false,
+      "id": "blocked_scope",
+      "passed": true,
+      "source": "output/reports/blocked_scope_manifest.json"
+    },
+    {
+      "deferred_until_validation": false,
+      "id": "visualization_quality",
+      "passed": true,
+      "source": "output/reports/visualization_quality_audit.json",
+      "statistical_bridge_passed": true
+    },
+    {
+      "deferred_until_validation": false,
+      "id": "statistical_visualization_bridge",
+      "passed": true,
+      "source": "output/data/statistical_visualization_bridge.json"
+    },
+    {
+      "deferred_until_validation": false,
+      "id": "semantic_certificate",
+      "ignored_self_restrictions": [],
+      "passed": true,
+      "source": "output/data/sheaf_gluing_certificate.json"
+    }
+  ],
+  "schema": "template_active_inference.release_attestation.v1"
+}

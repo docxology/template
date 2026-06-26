@@ -1,0 +1,40 @@
+
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: output
+
+Total Files: 230
+Total Size: 34.84 MB
+
+Files by Category:
+  • pdf: 10 files (7.23 MB)
+  • web: 22 files (0.32 MB)
+  • slides: 154 files (8.82 MB)
+  • figures: 19 files (6.87 MB)
+  • data: 17 files (11.50 MB)
+  • reports: 8 files (0.09 MB)
+
+Largest Files:
+  • template_literature_meta_analysis_combined.pdf: 6.98 MB (pdf)
+  • tfidf_data.json: 5.93 MB (data)
+  • corpus.jsonl: 4.68 MB (data)
+  • 03c_results_text_analytics_slides.pdf: 3.88 MB (slides)
+  • 03a_results_field_overview_slides.pdf: 1.66 MB (slides)
+
+Missing Expected Files:
+  ⚠  simulations/ directory
+  ⚠  llm/ directory
+  ⚠  logs/ directory
+
+File Types:
+  • .log: 22 file(s)
+  • .tex: 22 file(s)
+  • .pdf: 21 file(s)
+  • .aux: 21 file(s)
+  • .toc: 21 file(s)
+  • .html: 21 file(s)
+  • .json: 21 file(s)
+  • .nav: 20 file(s)
+  • .snm: 20 file(s)
+  • .png: 18 file(s)

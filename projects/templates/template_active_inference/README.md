@@ -1,28 +1,34 @@
 # template_active_inference
 
-📦 **Archived on Zenodo.** The [Zenodo concept DOI for template_active_inference](https://doi.org/10.5281/zenodo.20417021) always resolves to the latest version; the current release **v0.3.1** is the [Zenodo version DOI for v0.3.1](https://doi.org/10.5281/zenodo.20693424). Each Zenodo deposit links back to its matching [GitHub release](https://github.com/docxology/template_active_inference/releases). Cite via the concept DOI or [`CITATION.cff`](CITATION.cff).
-
 Public exemplar: **sheaf-composed** Active Inference manuscript with configurable
 multi-track sections. The live surface is declared in [`tracks.yaml`](tracks.yaml),
 [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml), and
 [`figures.yaml`](figures.yaml); generated artifacts and gates, not prose lists,
 define the current contract.
 
-## Run via the template monorepo
+## Publication and rendering
 
-This exemplar lives at `projects/templates/template_active_inference/` in the public
-[docxology/template](https://github.com/docxology/template) repository.
-**Tests, analysis, PDF rendering, and CI all run through that monorepo** —
-clone it, run `uv sync` at the repository root, then:
+- Standalone GitHub: [docxology/template_active_inference](https://github.com/docxology/template_active_inference)
+- Latest GitHub release: [v0.3.2](https://github.com/docxology/template_active_inference/releases/tag/v0.3.2)
+- Zenodo concept DOI: [10.5281/zenodo.20417021](https://doi.org/10.5281/zenodo.20417021)
+- Latest Zenodo version DOI: [10.5281/zenodo.20931870](https://doi.org/10.5281/zenodo.20931870) ([record](https://zenodo.org/records/20931870))
+- Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_active_inference`
+- Tracked outputs: [`output/`](output/) in this project and `output/templates/template_active_inference/` in the monorepo; public output files above 50 MB stay out of git.
+
+To regenerate this exemplar from the public monorepo:
 
 ```bash
+git clone https://github.com/docxology/template
+cd template
+uv sync
 ./run.sh --project templates/template_active_inference --pipeline --core-only
-# or: uv run python scripts/execute_pipeline.py --project templates/template_active_inference --core-only
+uv run python scripts/04_validate_output.py --project templates/template_active_inference
+uv run python scripts/05_copy_outputs.py --project templates/template_active_inference
 ```
 
-Several exemplars also publish standalone GitHub/Zenodo releases for citation;
-those mirrors are outputs of this pipeline. The monorepo remains the canonical
-build and render surface.
+Standalone repositories are publication mirrors for source, DOI metadata, and
+tracked rendered artifacts. Use the monorepo above when you need the full shared
+infrastructure, pipeline stages, or cross-template validation.
 
 ## When to use this template
 

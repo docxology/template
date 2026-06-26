@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_experimental_setup.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:setup">Experimental Setup</h1>
+<h2 id="objective-and-budget">Objective and budget</h2>
+<p>All experiments optimize the synthetic objective of <span
+class="citation" data-cites="sec:methodology">@sec:methodology</span>
+with <span class="math inline">\(d = 4\)</span> dimensions, ripple
+amplitude <span class="math inline">\(\rho = 0.15\)</span>, and
+per-evaluation noise scale <span
+class="math inline">\(\sigma_{\text{noise}} = 0.02\)</span>. The global
+optimum is the origin, where the clean objective equals <span
+class="math inline">\(0\)</span>. Every configuration is given the
+<strong>same</strong> budget of <span class="math inline">\(60\)</span>
+sequential experiments; coordinated configurations partition that budget
+across teams.</p>
+<h2 id="configurations">Configurations</h2>
+<p>The configurations compared in <span class="citation"
+data-cites="sec:results">@sec:results</span> correspond directly to
+<code>SearchConfig</code> objects:</p>
+<ul>
+<li><strong>Coordinated teams</strong> — the full configuration: <span
+class="math inline">\(3\)</span> teams, all mechanisms on
+(<code>use_confirmation</code>, <code>use_dead_ends</code>,
+<code>use_ranking</code>, <code>use_reorganization</code> all
+true).</li>
+<li><strong>Single-thread baseline</strong> —
+<code>SearchConfig.single_thread_baseline()</code>: <span
+class="math inline">\(1\)</span> team, confirmation on (so the baseline
+is itself noise-honest), all structural coordination off.</li>
+<li><strong>Ablations</strong> — the full configuration with exactly one
+mechanism switched off, generated via
+<code>dataclasses.replace</code>.</li>
+</ul>
+<p>Confirmation averages each candidate over seeds <span
+class="math inline">\((101, 202, 303)\)</span> and tests against a <span
+class="math inline">\(\sigma = 2\)</span> noise band; the primary
+evaluation seed is <span class="math inline">\(7\)</span>; the
+stagnation window is <span class="math inline">\(10\)</span>
+experiments; a direction is retired after <span
+class="math inline">\(3\)</span> consecutive non-improving experiments.
+These values are the <code>SearchConfig</code> defaults and are echoed
+in <code>manuscript/config.yaml</code>.</p>
+<h2 id="proposer">Proposer</h2>
+<p>The rendered figures and the JSON summaries are produced with
+<code>DeterministicProposer</code>, a rule-based agent that reads the
+shared state and emits a concrete proposal. No mock objects are used
+anywhere. The live <code>HermesProposer</code> path is not part of the
+rendered pipeline; it is exercised separately (see <span
+class="citation"
+data-cites="sec:reproducibility">@sec:reproducibility</span>).</p>
+<h2 id="outputs">Outputs</h2>
+<p>Two thin orchestrator scripts produce all results:</p>
+<ul>
+<li><code>scripts/run_search_comparison.py</code> →
+<code>../figures/search_comparison.png</code>,
+<code>output/data/search_comparison.json</code>.</li>
+<li><code>scripts/run_ablation.py</code> →
+<code>../figures/ablation.png</code>,
+<code>output/data/ablation.json</code>.</li>
+</ul>
+<p>Each script imports all computation from <code>src/</code>, runs the
+configurations, and writes a figure plus a machine-readable summary. The
+numbers quoted in <span class="citation"
+data-cites="sec:results">@sec:results</span> are read directly from
+those JSON files.</p>
+</body>
+</html>

@@ -1,0 +1,271 @@
+{
+  "all_controls_ok": true,
+  "all_deferred_controls_scoped": true,
+  "all_evidence_present": true,
+  "all_negative_controls_declared": true,
+  "all_secret_patterns_absent": true,
+  "all_validators_bound": true,
+  "attack_tactics": [
+    "collection",
+    "credential_access",
+    "defense_evasion",
+    "impact",
+    "supply_chain_compromise",
+    "tampering",
+    "valid_accounts"
+  ],
+  "control_count": 9,
+  "deferred_count": 2,
+  "enforced_count": 7,
+  "high_risk_gap_count": 0,
+  "pillars": [
+    "artifact_integrity",
+    "data_protection",
+    "evidence_integrity",
+    "formal_integrity",
+    "release_integrity",
+    "secret_hygiene",
+    "slsa_attestation",
+    "supply_chain_integrity",
+    "zero_trust"
+  ],
+  "rows": [
+    {
+      "attack_tactic": "collection",
+      "boundary": "public toy-only exemplar; private, restricted, empirical, network, and LLM evidence are blocked",
+      "boundary_declared": true,
+      "control_id": "public_data_boundary",
+      "control_ok": true,
+      "deferred_scoped": true,
+      "evidence_artifacts": [
+        "output/reports/blocked_scope_manifest.json",
+        "output/reports/scope_boundary_audit.json"
+      ],
+      "evidence_present": true,
+      "mitigation": "blocked-scope rows must stay non-live until provenance and privacy gates exist",
+      "negative_control_declared": true,
+      "negative_control_id": "private_data_manifest_live",
+      "pillar": "data_protection",
+      "secret_findings_absent": true,
+      "status": "enforced",
+      "threat_model": "private or restricted data enters a public release artifact",
+      "validator_bound": true,
+      "validators": [
+        "validate_outputs.blocked_scope_manifest_schema",
+        "validate_outputs.scope_boundary_audit_schema"
+      ]
+    },
+    {
+      "attack_tactic": "supply_chain_compromise",
+      "boundary": "core evidence is generated from local deterministic artifacts rather than live network calls",
+      "boundary_declared": true,
+      "control_id": "offline_reproducibility",
+      "control_ok": true,
+      "deferred_scoped": true,
+      "evidence_artifacts": [
+        "output/reports/reproducibility_replay.json",
+        "output/reports/replay_matrix.json"
+      ],
+      "evidence_present": true,
+      "mitigation": "network-derived research remains blocked until an offline replay manifest is promoted",
+      "negative_control_declared": true,
+      "negative_control_id": "network_research_claim_without_replay",
+      "pillar": "supply_chain_integrity",
+      "secret_findings_absent": true,
+      "status": "enforced",
+      "threat_model": "network-dependent research or runtime fetch changes the published evidence",
+      "validator_bound": true,
+      "validators": [
+        "validate_outputs.reproducibility_replay_schema",
+        "validate_outputs.replay_matrix_schema"
+      ]
+    },
+    {
+      "attack_tactic": "tampering",
+      "boundary": "generated artifacts are hashed and diffed against live filesystem outputs",
+      "boundary_declared": true,
+      "control_id": "artifact_hash_integrity",
+      "control_ok": true,
+      "deferred_scoped": true,
+      "evidence_artifacts": [
+        "output/data/artifact_provenance.json",
+        "output/reports/artifact_diffoscope.json",
+        "output/reports/figure_hash_manifest.json"
+      ],
+      "evidence_present": true,
+      "mitigation": "hash drift fails validation before release evidence can be cited",
+      "negative_control_declared": true,
+      "negative_control_id": "artifact_hash_drift",
+      "pillar": "artifact_integrity",
+      "secret_findings_absent": true,
+      "status": "enforced",
+      "threat_model": "post-generation artifact drift is published without detection",
+      "validator_bound": true,
+      "validators": [
+        "validate_outputs.artifact_provenance_schema",
+        "validate_outputs.artifact_diffoscope_schema",
+        "validate_outputs.figure_hash_manifest_schema"
+      ]
+    },
+    {
+      "attack_tactic": "tampering",
+      "boundary": "release parity is checked locally; PDF and web outputs may defer until render/copy stages",
+      "boundary_declared": true,
+      "control_id": "release_bundle_parity",
+      "control_ok": true,
+      "deferred_scoped": true,
+      "evidence_artifacts": [
+        "output/reports/release_bundle_manifest.json",
+        "output/reports/release_attestation.json"
+      ],
+      "evidence_present": true,
+      "mitigation": "copy parity and release attestation must be refreshed before publication delivery",
+      "negative_control_declared": true,
+      "negative_control_id": "release_bundle_parity_failure",
+      "pillar": "release_integrity",
+      "secret_findings_absent": true,
+      "status": "enforced",
+      "threat_model": "project-local and copied-root deliverables diverge",
+      "validator_bound": true,
+      "validators": [
+        "validate_outputs.release_bundle_manifest_schema",
+        "validate_outputs.release_attestation_schema"
+      ]
+    },
+    {
+      "attack_tactic": "impact",
+      "boundary": "claims must map to typed fields, guarded source roles, and promotion rows",
+      "boundary_declared": true,
+      "control_id": "claim_scope_traceability",
+      "control_ok": true,
+      "deferred_scoped": true,
+      "evidence_artifacts": [
+        "output/data/evidence_field_index.json",
+        "output/reports/claim_evidence_audit.json",
+        "output/data/scholarship_source_matrix.json",
+        "output/data/track_lane_matrix.json"
+      ],
+      "evidence_present": true,
+      "mitigation": "claim ledger, scholarship rows, and track-lane rows must agree",
+      "negative_control_declared": true,
+      "negative_control_id": "claim_without_evidence_field",
+      "pillar": "evidence_integrity",
+      "secret_findings_absent": true,
+      "status": "enforced",
+      "threat_model": "publication claim laundering through uncited or untyped evidence",
+      "validator_bound": true,
+      "validators": [
+        "validate_outputs.evidence_field_index_schema",
+        "validate_outputs.claim_evidence_audit_schema",
+        "validate_outputs.scholarship_source_matrix_schema",
+        "validate_outputs.track_lane_matrix_schema"
+      ]
+    },
+    {
+      "attack_tactic": "defense_evasion",
+      "boundary": "Lean-backed rows are explicit; non-proved boundaries stay outside empirical claims",
+      "boundary_declared": true,
+      "control_id": "formal_boundary",
+      "control_ok": true,
+      "deferred_scoped": true,
+      "evidence_artifacts": [
+        "output/reports/lean_theorem_inventory.json",
+        "output/data/proof_extraction_index.json",
+        "output/data/theorem_traceability_matrix.json"
+      ],
+      "evidence_present": true,
+      "mitigation": "Lean inventory and proof extraction must remain constructive and linked",
+      "negative_control_declared": true,
+      "negative_control_id": "proof_extraction_missing_statement",
+      "pillar": "formal_integrity",
+      "secret_findings_absent": true,
+      "status": "enforced",
+      "threat_model": "informal claims are mistaken for proved Lean obligations",
+      "validator_bound": true,
+      "validators": [
+        "validate_outputs.lean_theorem_inventory_schema",
+        "validate_outputs.proof_extraction_index_schema",
+        "validate_outputs.theorem_traceability_matrix_schema"
+      ]
+    },
+    {
+      "attack_tactic": "credential_access",
+      "boundary": "tracked project source/config surfaces are scanned for high-risk credential patterns",
+      "boundary_declared": true,
+      "control_id": "secret_pattern_absence",
+      "control_ok": true,
+      "deferred_scoped": true,
+      "evidence_artifacts": [
+        "project_source_tree"
+      ],
+      "evidence_present": true,
+      "mitigation": "secret-pattern hits must be zero; findings report path and pattern only, not secret values",
+      "negative_control_declared": true,
+      "negative_control_id": "embedded_secret_pattern",
+      "pillar": "secret_hygiene",
+      "secret_findings_absent": true,
+      "status": "enforced",
+      "threat_model": "long-lived credential or private key is committed to the public exemplar",
+      "validator_bound": true,
+      "validators": [
+        "validate_outputs.security_posture_audit_schema"
+      ]
+    },
+    {
+      "attack_tactic": "supply_chain_compromise",
+      "boundary": "the exemplar is a local public template; production Sigstore/cosign signing is not claimed",
+      "boundary_declared": true,
+      "control_id": "signed_release_attestation",
+      "control_ok": true,
+      "deferred_scoped": true,
+      "evidence_artifacts": [
+        "output/reports/release_attestation.json"
+      ],
+      "evidence_present": true,
+      "mitigation": "production adoption must add signed in-toto/SBOM provenance before deployment",
+      "negative_control_declared": true,
+      "negative_control_id": "unsigned_production_release_claim",
+      "pillar": "slsa_attestation",
+      "secret_findings_absent": true,
+      "status": "deferred",
+      "threat_model": "production release lacks signed provenance or SBOM attestation",
+      "validator_bound": true,
+      "validators": [
+        "validate_outputs.release_attestation_schema"
+      ]
+    },
+    {
+      "attack_tactic": "valid_accounts",
+      "boundary": "no deployed service, identity plane, endpoint fleet, or production network is claimed",
+      "boundary_declared": true,
+      "control_id": "zero_trust_runtime_boundary",
+      "control_ok": true,
+      "deferred_scoped": true,
+      "evidence_artifacts": [
+        "tracks.yaml",
+        "output/reports/blocked_scope_manifest.json"
+      ],
+      "evidence_present": true,
+      "mitigation": "production use must add identity, device posture, workload identity, logging, and IR gates",
+      "negative_control_declared": true,
+      "negative_control_id": "production_zero_trust_claim_without_runtime",
+      "pillar": "zero_trust",
+      "secret_findings_absent": true,
+      "status": "deferred",
+      "threat_model": "a manuscript reader infers production zero-trust runtime coverage from a static exemplar",
+      "validator_bound": true,
+      "validators": [
+        "validate_manuscript.blocked_empirical_adapter",
+        "validate_outputs.security_posture_audit_schema"
+      ]
+    }
+  ],
+  "schema": "template_active_inference.security_posture_audit.v1",
+  "secret_finding_count": 0,
+  "secret_scan": {
+    "file_count": 396,
+    "findings": [],
+    "pattern_count": 4,
+    "scan_root_count": 7
+  }
+}

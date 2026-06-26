@@ -332,9 +332,33 @@ For a first standalone exemplar release, use `--reserve-doi-first` instead of
 `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, generated publication
 records, and any release-note docs.
 
+Public exemplars also track their rendered outputs. In the root monorepo, keep
+both `projects/templates/<name>/output/` and the copied
+`output/templates/<name>/` tree in git when files stay below the 50 MB public
+output ceiling. The generated-artifact guard still blocks private project
+outputs and oversized public output files. In the standalone
+`docxology/template_*` repository, sync the same project-local `output/` tree
+so the GitHub source mirror, GitHub release, and Zenodo record all point to the
+same rendered state.
+
+The render source of truth is still the public monorepo:
+
+```bash
+git clone https://github.com/docxology/template
+cd template
+uv sync
+./run.sh --project templates/<name> --pipeline --core-only
+uv run python scripts/04_validate_output.py --project templates/<name>
+uv run python scripts/05_copy_outputs.py --project templates/<name>
+```
+
+The standalone repositories are publication mirrors for source, DOI metadata,
+and tracked artifacts; use `docxology/template` for shared infrastructure,
+pipeline stages, and cross-template validation.
+
 `template_madlib` is now a standalone publication repository at
 `docxology/template_madlib`, with concept DOI `10.5281/zenodo.20786638` and
-version DOI `10.5281/zenodo.20786639`. Future first-release work for a new
+version DOI `10.5281/zenodo.20932025`. Future first-release work for a new
 canonical exemplar should follow the same pattern: mint the Zenodo record,
 publish the dedicated GitHub repository and release, then regenerate the
 publication matrix so the external checks report live GitHub and Zenodo status.

@@ -10,7 +10,7 @@ same forkability contract as the older exemplars.
 - Project tests and coverage: `uv run pytest projects/templates/template_madlib/tests/ --cov=projects/templates/template_madlib/src --cov-fail-under=90`
 - Generated artifacts come from `scripts/01_generate_madlib_artifacts.py` and `scripts/z_generate_manuscript_variables.py`.
 - Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
-- Publication evidence: standalone GitHub repository `docxology/template_madlib`, concept DOI `10.5281/zenodo.20786638`, and version DOI `10.5281/zenodo.20786639`.
+- Publication evidence: standalone GitHub repository `docxology/template_madlib`, concept DOI `10.5281/zenodo.20786638`, and version DOI `10.5281/zenodo.20932025`.
 - **Coverage: 100% (144 tests) as of the last test expansion.** All branches in `config.py`, `composition.py`, `tokens.py`, `analysis.py`, `analysis_fields.py`, `analysis_figures.py`, `analysis_reports.py`, `manuscript_variables.py`, and `__init__.py` are covered.
 
 ## Integrity and template-status gaps

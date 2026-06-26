@@ -37,6 +37,7 @@ def build_pandoc_tex_command(
         "--standalone",
         "--number-sections",
         "--natbib",
+        "--metadata=linkReferences:true",
         "--resource-path=" + str(manuscript_dir),
         "--resource-path=" + str(figures_dir),
     ]

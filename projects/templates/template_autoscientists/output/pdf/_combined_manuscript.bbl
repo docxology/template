@@ -1,0 +1,43 @@
+\begin{thebibliography}{5}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Cohen(1988)]{cohen1988statistical}
+Jacob Cohen.
+\newblock \emph{Statistical Power Analysis for the Behavioral Sciences}.
+\newblock Lawrence Erlbaum Associates, Hillsdale, NJ, USA, 2 edition, 1988.
+\newblock ISBN 978-0-8058-0283-2.
+
+\bibitem[Gao et~al.(2026)Gao, Fang, and Zitnik]{gao2026autoscientists}
+Shanghua Gao, Wenhao Fang, and Marinka Zitnik.
+\newblock {AutoScientists}: Self-organizing agent teams for long-running
+  scientific experimentation.
+\newblock \emph{arXiv preprint arXiv:2605.28655}, 2026.
+\newblock \doi{10.48550/arXiv.2605.28655}.
+\newblock URL \url{https://arxiv.org/abs/2605.28655}.
+
+\bibitem[Peng(2011)]{peng2011reproducible}
+Roger~D Peng.
+\newblock Reproducible research in computational science.
+\newblock \emph{Science}, 334\penalty0 (6060):\penalty0 1226--1227, 2011.
+\newblock \doi{10.1126/science.1213847}.
+
+\bibitem[Wang et~al.(2024)Wang, Ma, Feng, Zhang, Yang, et~al.]{wang2023survey}
+Lei Wang, Chen Ma, Xueyang Feng, Zeyu Zhang, Hao Yang, et~al.
+\newblock A survey on large language model based autonomous agents.
+\newblock \emph{Frontiers of Computer Science}, 18\penalty0 (6), 2024.
+\newblock \doi{10.1007/s11704-024-40231-1}.
+\newblock URL \url{https://arxiv.org/abs/2308.11432}.
+
+\bibitem[Whitley(2001)]{whitley2001overview}
+Darrell Whitley.
+\newblock An overview of evolutionary algorithms: practical issues and common
+  pitfalls.
+\newblock \emph{Information and Software Technology}, 43\penalty0
+  (14):\penalty0 817--831, 2001.
+\newblock \doi{10.1016/S0950-5849(01)00188-4}.
+
+\end{thebibliography}

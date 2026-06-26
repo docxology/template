@@ -1,0 +1,32 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/reports/diagnostics.json",
+      "sha256": "ba5e7a192c2113ad9c919c80ef3ae6bb572534a99bc0f9ce47ecae5705fa285d",
+      "size_bytes": 545,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-14T19:49:50+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/validation_report.json",
+      "sha256": "17671c64af8f26503d48bfe2ee7be279f4ce5d205f85780a78e078dc50c542a5",
+      "size_bytes": 5476,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-14T19:49:50+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/validation_report.md",
+      "sha256": "b6a7354084a60372513cf3952f6f3fdd341cbeb4078aed38d90ef805f7b14002",
+      "size_bytes": 332,
+      "stage_name": "Output Validation",
+      "stage_num": 7,
+      "timestamp": "2026-06-14T19:49:50+00:00"
+    }
+  ],
+  "issues": []
+}

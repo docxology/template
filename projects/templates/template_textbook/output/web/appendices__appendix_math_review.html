@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>appendix_math_review.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:appendix_math_review">Appendix C — Mathematical Review</h1>
+<!-- chapter-metadata-badge -->
+<blockquote>
+<p>Reference appendix · Just-enough mathematics for the worked
+models.</p>
+</blockquote>
+<p>A brief refresher on the mathematics the book relies on. Each section
+ties directly to a function in <a
+href="../../src/textbook/models.py"><code>src/textbook/models.py</code></a>
+so you can move from formula to tested code without a gap. Replace the
+stubs with the depth your audience needs.</p>
+<h2 id="functions-and-variables">Functions and Variables</h2>
+<!-- STUB -->
+<p>A function maps an input to an output; here state quantities depend
+on a <a href="../glossary.md#gl:variable"><strong>variable</strong></a>
+such as time, tuned by <a
+href="../glossary.md#gl:parameter"><strong>parameters</strong></a>. See
+<code>normalize_unit_interval</code> for rescaling inputs to [0, 1].</p>
+<h2 id="growth-and-decay">Growth and Decay</h2>
+<!-- STUB -->
+<p>Logistic growth (<code>logistic_growth</code>) rises then saturates
+at the carrying capacity <em>K</em>; exponential decay
+(<code>exponential_decay</code>) falls by a fixed fraction per unit
+time, summarised by the half-life <em>t</em>½ (<code>half_life</code>).
+These are the canonical examples of <a
+href="../glossary.md#gl:dynamics"><strong>dynamics</strong></a>.</p>
+<h2 id="saturating-responses">Saturating Responses</h2>
+<!-- STUB -->
+<p>The saturating (Michaelis–Menten-style) response
+(<code>saturating_response</code>) climbs toward <em>V</em>max with
+half-maximum at <em>K</em>ₘ — a recurring shape whenever a resource or
+signal becomes limiting near a <a
+href="../glossary.md#gl:threshold"><strong>threshold</strong></a>.</p>
+<h2 id="linear-fits">Linear Fits</h2>
+<!-- STUB -->
+<p>Least-squares fitting (<code>linear_fit</code>) returns a slope
+<em>m</em> and intercept <em>b</em> for paired data, the simplest way to
+summarise a trend before reaching for a richer <a
+href="../glossary.md#gl:model"><strong>model</strong></a>.</p>
+<h2 id="basic-statistics">Basic Statistics</h2>
+<!-- STUB -->
+<p>Descriptive statistics (<code>descriptive_statistics</code>) report
+the mean <em>μ</em> and standard deviation <em>σ</em> — the first
+numbers to compute on any <a
+href="../glossary.md#gl:observable"><strong>observable</strong></a>
+before inference.</p>
+<!-- STUB: add worked numeric examples or exercises tied to each function. -->
+<p>See also: <a href="appendix_notation.md">Appendix B — Notation</a>
+and the <a href="appendix_authoring_guide.md">Authoring Guide</a>.</p>
+</body>
+</html>

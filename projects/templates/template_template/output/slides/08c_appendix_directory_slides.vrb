@@ -1,0 +1,37 @@
+\frametitle{Appendix: Repository Directory Structure}
+\protect\phantomsection\label{appendix-directory}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{template/}
+\NormalTok{├── infrastructure/}
+\NormalTok{│   ├── config/ docker/ documentation/ llm/}
+\NormalTok{│   ├── orchestration/   \# Thin Python entry equal to \textasciigrave{}./run.sh\textasciigrave{} backend}
+\NormalTok{│   ├── prose/ reference/ rendering/ reporting/}
+\NormalTok{│   ├── scientific/ search/ skills/ steganography/ validation/}
+\NormalTok{│   ├── project/ core/}
+\NormalTok{│   └── logrotate.d/      \# Operational rotation templates (no Python pkg)}
+\NormalTok{├── scripts/}
+\NormalTok{│   ├── 00\_setup\_environment.py … 07\_generate\_executive\_report.py}
+\NormalTok{│   ├── execute\_pipeline.py execute\_multi\_project.py}
+\NormalTok{├── projects/                    \# Typed program subfolders (\textasciigrave{}discover\_projects\textasciigrave{})}
+\NormalTok{│   ├── templates/               \# Public exemplars (git{-}tracked)}
+\NormalTok{│   │   ├── template\_active\_inference/}
+\NormalTok{│   │   ├── template\_autoresearch\_project/}
+\NormalTok{│   │   ├── template\_code\_project/}
+\NormalTok{│   │   ├── template\_prose\_project/}
+\NormalTok{│   │   └── template\_template/   \# Present manuscript (\textasciigrave{}manuscript/\textasciigrave{} here)}
+\NormalTok{│   ├── active/                  \# Hot{-}seat rendered set (symlinked, private)}
+\NormalTok{│   ├── working/                 \# Non{-}rendered backburner (symlinked, private)}
+\NormalTok{│   ├── published/               \# Non{-}rendered published (symlinked, private)}
+\NormalTok{│   ├── archive/                 \# Non{-}rendered retired (symlinked, private)}
+\NormalTok{│   └── other/                   \# Non{-}rendered misc (symlinked, private)}
+\NormalTok{├── docs/ (18 top{-}level areas, 376+ markdown files per live counter)}
+\NormalTok{├── tests/                       \# Infra suites (426+ files)}
+\NormalTok{├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml}
+\NormalTok{├── run.sh / secure\_run.sh}
+\NormalTok{└── output/ …                    \# Mirrors after copy stage}
+\end{Highlighting}
+\end{Shaded}
+
+See \breaktt{docs/\_generated/active\_projects.md} for regenerated slugs
+(\breaktt{uv\ run\ python\ scripts/generate\_active\_projects\_doc.py}).

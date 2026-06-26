@@ -1,0 +1,57 @@
+\frametitle{Provenance Matrix}
+\protect\phantomsection\label{provenance-matrix}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3000}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Section
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Token variables
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Source categories
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Abstract & \texttt{STUDY\_ADJECTIVE}, \texttt{STUDY\_NOUN},
+\texttt{STUDY\_VERB} & adjectives, nouns, verbs \\
+Introduction: Lexicon as Data and Manuscript as Build Artifact &
+\texttt{INTRO\_NOUNS\_1}, \texttt{INTRO\_NOUNS\_2},
+\texttt{INTRO\_NOUNS\_3}, \texttt{INTRO\_NOUNS\_4},
+\texttt{INTRO\_VERBS\_1}, \texttt{INTRO\_VERBS\_2},
+\texttt{INTRO\_VERBS\_3}, \texttt{INTRO\_VERBS\_4} & nouns, verbs \\
+Methods: Source-Owned Token Injection and Conditional IMRAD Assembly &
+\texttt{METHOD\_NAME}, \breaktt{METHOD\_CONSTRAINT},
+\breaktt{METHOD\_ARTIFACT\_1}, \breaktt{METHOD\_ARTIFACT\_2},
+\breaktt{METHOD\_QUALITY\_1}, \breaktt{METHOD\_QUALITY\_2} & artifacts,
+constraints, methods, qualities \\
+Results: Provenance, Density, and Resolved Manuscript Surface &
+\breaktt{RESULT\_MEASURE\_1}, \breaktt{RESULT\_MEASURE\_2},
+\breaktt{RESULT\_MEASURE\_3}, \breaktt{RESULT\_ARTIFACT\_1},
+\breaktt{RESULT\_ARTIFACT\_2} & artifacts, measures \\
+Discussion: Accountability Boundaries for Generated Prose &
+\breaktt{DISCUSSION\_ADJECTIVE}, \breaktt{DISCUSSION\_AUDIENCE\_1},
+\breaktt{DISCUSSION\_AUDIENCE\_2} & adjectives, audiences \\
+Configuration: Schema-Controlled Lexicon, Slots, and Narrative Moves &
+\breaktt{CONFIG\_CONSTRAINT} & constraints \\
+Evaluation: Gate Criteria, QA Probes, and Failure Discovery &
+\breaktt{EVALUATION\_MEASURE\_1}, \breaktt{EVALUATION\_MEASURE\_2},
+\breaktt{EVALUATION\_MEASURE\_3}, \breaktt{EVALUATION\_ARTIFACT\_1},
+\breaktt{EVALUATION\_ARTIFACT\_2} & artifacts, measures \\
+Reproducibility: Seeded Regeneration and Artifact Trace &
+\breaktt{REPRODUCIBILITY\_ARTIFACT\_1},
+\breaktt{REPRODUCIBILITY\_ARTIFACT\_2} & artifacts \\
+Limitations: Non-Claims, Misuse Modes, and Human Review &
+\breaktt{LIMITATION\_FAILURE\_1}, \breaktt{LIMITATION\_FAILURE\_2},
+\breaktt{LIMITATION\_FAILURE\_3} & failures \\
+Scope: Related Generators and Responsible Forking &
+\breaktt{SCOPE\_CONSTRAINT}, \texttt{SCOPE\_AUDIENCE} & audiences,
+constraints \\
+Authoring Contract: Human Review and Forking Obligations &
+\breaktt{AUTHORING\_AUDIENCE}, \breaktt{AUTHORING\_QUALITY} & audiences,
+qualities \\
+\bottomrule\noalign{}
+\end{longtable}
+}
