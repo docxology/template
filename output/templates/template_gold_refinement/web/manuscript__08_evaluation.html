@@ -212,8 +212,21 @@ and config key?</td>
 <td>karat_for_purity returns the expected grade for each stage.</td>
 <td>src/purity.py</td>
 </tr>
+<tr>
+<td>Integrity risk visibility</td>
+<td>Can the manuscript identify high-severity integrity failures and the
+validator or artifact that detects them?</td>
+<td>The integrity risk model emits dimensions, owners, residual risk
+scores, and evidence-tier rows.</td>
+<td>src/integrity.py and ../figures/integrity_risk_matrix.png</td>
+</tr>
 </tbody>
 </table>
+<p>The selected evaluation gate terms are prerender and citation
+validation. They are intentionally narrower than peer review: they check
+source ownership, token coverage, figure registration, claim support,
+and rendering integrity before a human reviewer assesses the substantive
+analogy.</p>
 <h2 id="audit-rules">Audit rules</h2>
 <table style="width:100%;">
 <colgroup>
@@ -254,7 +267,28 @@ and config key?</td>
 <td>All figure generators must produce non-blank PNGs</td>
 <td>tests/test_figures.py</td>
 </tr>
+<tr>
+<td>Integrity model coverage</td>
+<td>Integrity dimensions must have unique IDs, owners, validators, and
+evidence surfaces</td>
+<td>tests/test_integrity.py</td>
+</tr>
 </tbody>
 </table>
+<p>The audit rules are summarized visually in <span class="citation"
+data-cites="fig:integrity_gate_matrix">[@fig:integrity_gate_matrix]</span>
+and algebraically in <span class="citation"
+data-cites="eq:integrity_vector">[@eq:integrity_vector]</span>. A failed
+audit rule should block certification language even if the PDF
+renders.</p>
+<p>The risk model adds prioritization to the gate list. <span
+class="citation"
+data-cites="fig:integrity_risk_matrix">[@fig:integrity_risk_matrix]</span>
+separates easy-to-detect implementation failures from severe boundary
+failures that need clearer ownership. This keeps the evaluation surface
+from becoming a checklist of equally weighted boxes: token coverage,
+citation validity, claim support, and render readiness all matter, but a
+high-severity low-detectability failure should shape the next source
+edit before cosmetic manuscript polish.</p>
 </body>
 </html>

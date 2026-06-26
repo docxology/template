@@ -4,22 +4,22 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 38
-Total Size: 2.15 MB
+Total Files: 61
+Total Size: 7.44 MB
 
 Files by Category:
-  • pdf: 10 files (1.11 MB)
-  • web: 12 files (0.13 MB)
-  • figures: 7 files (0.88 MB)
-  • data: 2 files (0.01 MB)
-  • reports: 7 files (0.01 MB)
+  • pdf: 10 files (3.28 MB)
+  • web: 12 files (0.23 MB)
+  • figures: 25 files (3.80 MB)
+  • data: 3 files (0.03 MB)
+  • reports: 11 files (0.10 MB)
 
 Largest Files:
-  • template_gold_refinement_combined.pdf: 0.97 MB (pdf)
-  • purity_progression.png: 0.20 MB (figures)
-  • token_heatmap.png: 0.18 MB (figures)
-  • token_density.png: 0.14 MB (figures)
-  • _combined_manuscript.log: 0.05 MB (pdf)
+  • template_gold_refinement_combined.pdf: 3.06 MB (pdf)
+  • claim_evidence_assay.png: 0.58 MB (figures)
+  • formalism_traceability.png: 0.41 MB (figures)
+  • implementation_circuit.png: 0.32 MB (figures)
+  • index.html: 0.08 MB (web)
 
 Missing Expected Files:
   ⚠  slides/ directory
@@ -28,13 +28,13 @@ Missing Expected Files:
   ⚠  logs/ directory
 
 File Types:
+  • .svg: 12 file(s)
+  • .png: 12 file(s)
+  • .json: 12 file(s)
   • .html: 11 file(s)
-  • .json: 8 file(s)
-  • .png: 6 file(s)
   • .md: 4 file(s)
   • .log: 2 file(s)
   • .aux: 1 file(s)
   • .blg: 1 file(s)
   • .bib: 1 file(s)
   • .tex: 1 file(s)
-  • .toc: 1 file(s)

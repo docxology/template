@@ -94,7 +94,7 @@ def main() -> int:
     # Build evidence registry
     from evidence import build_evidence_registry, write_evidence_registry
     registry = build_evidence_registry(gr_config, root)
-    registry_path = reports_dir / "evidence_registry.json"
+    registry_path = reports_dir / "claim_support_registry.json"
     write_evidence_registry(registry, registry_path)
     print(f"Wrote {registry_path}")
     print(f"  Evidence: {registry.supported_claims}/{registry.total_claims} claims supported")

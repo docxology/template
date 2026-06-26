@@ -81,7 +81,7 @@ class TestRunRefinery:
 
     def test_purity_sequence_empty_stages(self):
         """RefineryResult with empty stages tuple returns empty purity_sequence."""
-        from refinery import RefineryResult, KaratGrade
+        from refinery import RefineryResult
         from purity import karat_for_purity
         result = RefineryResult(
             stages=(),

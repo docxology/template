@@ -187,7 +187,17 @@ to claim removal, assaying to evidence validation, cupellation to
 cross-reference resolution, and certification to full pipeline
 validation.</p>
 <p>The analogy is smelting the manuscript: it performs the refinement it
-describes.</p>
+describes. Its fork obligation is equally important. Gold refining can
+model staged purification, but it cannot certify domain truth unless the
+fork supplies a real domain validator and evidence source.</p>
+<p>The added implementation and claim-assay figures sharpen that
+boundary. They show that “purity” is not a free-standing aesthetic
+judgment. It is a local statement about whether source-owned stages,
+generated artifacts, claim ledgers, figure registries, and validation
+commands agree. The figures therefore make a negative claim as important
+as the positive one: when a fork lacks a validator, a ledger, or a
+source artifact, the metaphor must stop at analogy and cannot be
+promoted to certification.</p>
 <h2 id="useful-adaptation-cases">Useful adaptation cases</h2>
 <ul>
 <li><strong>Domain-specific refinement pipelines</strong>: fork the
@@ -239,6 +249,15 @@ token engine for any config-owned lexical composition task.</li>
 <td>Review that each stage maps to a real infrastructure operation.</td>
 <td>Connect stages to template pipeline operations.</td>
 </tr>
+<tr>
+<td>Undetected integrity gap</td>
+<td>A high-severity failure mode is present but no owner, validator, or
+generated artifact makes it visible.</td>
+<td>build_integrity_dimensions lists severity, detectability, owner,
+validator, and evidence surface.</td>
+<td>Add or revise the source-owned integrity dimension before promoting
+the manuscript.</td>
+</tr>
 </tbody>
 </table>
 <h2 id="design-principles">Design principles</h2>
@@ -281,5 +300,35 @@ output.</td>
 </tr>
 </tbody>
 </table>
+<h2 id="analogy-break-boundary">Analogy-break boundary</h2>
+<p>The analogy breaks when purity becomes a rhetorical grade detached
+from evidence. In this exemplar, <span class="citation"
+data-cites="eq:claim_support">[@eq:claim_support]</span> and <span
+class="citation"
+data-cites="eq:integrity_vector">[@eq:integrity_vector]</span> keep the
+grade tied to claim support and gate coverage. A fork that cannot
+provide comparable source-owned gates should keep the gold-refining
+language as metaphor only and avoid publication-strength claims.</p>
+<p>The practical rule is simple: do not add an impressive figure unless
+its path through <span class="citation"
+data-cites="fig:implementation_circuit">[@fig:implementation_circuit]</span>
+is visible. A visual can summarize an idea, but it only supports a
+manuscript claim when the claim-evidence assay can point to the owning
+file, symbol, generated artifact, and validation surface.</p>
+<p>The integrity risk matrix adds one more brake. A fork may have all
+figures registered and still be scientifically weak if its
+highest-severity risks are only weakly detectable. In this exemplar,
+<span class="citation"
+data-cites="tbl:integrity_dimensions">[@tbl:integrity_dimensions]</span>
+makes that weakness inspectable by pairing each dimension with an owner
+and validator. The useful question for a fork is therefore not “can the
+manuscript render?” but “which severe failures would the current
+pipeline miss, and what source-owned gate would expose them?”</p>
+<p>The evidence-tier ladder also prevents a common drift in generated
+manuscripts: treating generated artifacts as if they were independent
+evidence. A generated metric can support an internal consistency claim,
+but a domain claim needs a domain source tier. The ladder makes that
+distinction visible without pretending that a large fact count is the
+same as stronger external validity.</p>
 </body>
 </html>

@@ -267,8 +267,17 @@ exemplar.</td>
 <td>Regeneration contract</td>
 <td>Regenerate outputs through the pipeline, not by hand-editing.</td>
 </tr>
+<tr>
+<td>Risk review</td>
+<td>Treat high-residual-risk integrity dimensions as fork obligations
+before publication claims are expanded.</td>
+</tr>
 </tbody>
 </table>
+<p>The authoring boundary tokens for this section are analogy boundary
+and non-claim. They mark the point where an author must either add new
+evidence and validators or lower the claim from certification to
+analogy.</p>
 <h2 id="fork-checklist">Fork checklist</h2>
 <ol type="1">
 <li><p>Remap metallurgical stages to domain operations in
@@ -279,11 +288,22 @@ under <code>gold_refinement.lexicon</code></p></li>
 evidence pointers</p></li>
 <li><p>Add domain validators beyond the exemplar’s generic
 gates</p></li>
+<li><p>Replace or extend <code>src/integrity.py</code> dimensions when
+the fork introduces new failure modes</p></li>
 <li><p>Regenerate all outputs through the pipeline:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/refinement_analysis.py</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/z_generate_manuscript_variables.py</span></code></pre></div></li>
 <li><p>Do not hand-edit generated manuscript, PDFs, or figures</p></li>
 </ol>
+<p>Do not hard-code equation, figure, or table numbers in prose. Use
+<code>[@eq:...]</code>, <code>[@fig:...]</code>,
+<code>[@tbl:...]</code>, and <code>[@sec:...]</code> so the renderer
+owns numbering and the tests can detect dangling references.</p>
+<p>The authoring contract treats the risk matrix as a source checklist,
+not as a retrospective dashboard. If a fork cannot name who owns a
+high-severity integrity dimension, which validator detects it, and which
+evidence tier supports it, the fork should lower the claim boundary
+until that missing surface exists.</p>
 </body>
 </html>

@@ -54,7 +54,7 @@ def build_dashboard_html(
             token_data = {}
 
     if evidence_data is None:
-        ep = project_root / "output" / "reports" / "evidence_registry.json"
+        ep = project_root / "output" / "reports" / "claim_support_registry.json"
         if ep.exists():
             with ep.open("r") as f:
                 evidence_data = json.load(f)

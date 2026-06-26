@@ -436,8 +436,11 @@ class="toc-section-number">2.2</span> The analogy as pipeline</a></li>
 <li><a href="#mega-madlib-token-engine"
 id="toc-mega-madlib-token-engine"><span
 class="toc-section-number">2.3</span> Mega-madlib token engine</a></li>
+<li><a href="#implementation-circuit"
+id="toc-implementation-circuit"><span
+class="toc-section-number">2.4</span> Implementation circuit</a></li>
 <li><a href="#open-question-pinned" id="toc-open-question-pinned"><span
-class="toc-section-number">2.4</span> Open question pinned</a></li>
+class="toc-section-number">2.5</span> Open question pinned</a></li>
 </ul></li>
 <li><a href="#sec:methodology" id="toc-sec:methodology"><span
 class="toc-section-number">3</span> Methodology: The Refinery
@@ -447,14 +450,22 @@ Pipeline</a>
 class="toc-section-number">3.1</span> Stage definitions</a></li>
 <li><a href="#purity-progression" id="toc-purity-progression"><span
 class="toc-section-number">3.2</span> Purity progression</a></li>
+<li><a href="#formalism-registry" id="toc-formalism-registry"><span
+class="toc-section-number">3.3</span> Formalism registry</a></li>
 <li><a href="#token-selection" id="toc-token-selection"><span
-class="toc-section-number">3.3</span> Token selection</a></li>
+class="toc-section-number">3.4</span> Token selection</a></li>
 <li><a href="#config-owned-lexicon" id="toc-config-owned-lexicon"><span
-class="toc-section-number">3.4</span> Config-owned lexicon</a></li>
+class="toc-section-number">3.5</span> Config-owned lexicon</a></li>
 <li><a href="#karat-grading" id="toc-karat-grading"><span
-class="toc-section-number">3.5</span> Karat grading</a></li>
+class="toc-section-number">3.6</span> Karat grading</a></li>
 <li><a href="#pipeline-phases" id="toc-pipeline-phases"><span
-class="toc-section-number">3.6</span> Pipeline phases</a></li>
+class="toc-section-number">3.7</span> Pipeline phases</a></li>
+<li><a href="#implementation-trace" id="toc-implementation-trace"><span
+class="toc-section-number">3.8</span> Implementation trace</a></li>
+<li><a href="#scientific-integrity-model"
+id="toc-scientific-integrity-model"><span
+class="toc-section-number">3.9</span> Scientific integrity
+model</a></li>
 </ul></li>
 <li><a href="#sec:results" id="toc-sec:results"><span
 class="toc-section-number">4</span> Results: Purity Progression and
@@ -486,8 +497,32 @@ class="toc-section-number">4.6</span> Purity vs claim support</a></li>
 id="toc-token-selection-sensitivity"><span
 class="toc-section-number">4.7</span> Token selection
 sensitivity</a></li>
+<li><a href="#integrity-gate-matrix"
+id="toc-integrity-gate-matrix"><span
+class="toc-section-number">4.8</span> Integrity gate matrix</a></li>
+<li><a href="#formalism-traceability"
+id="toc-formalism-traceability"><span
+class="toc-section-number">4.9</span> Formalism traceability</a></li>
+<li><a href="#implementation-circuit-1"
+id="toc-implementation-circuit-1"><span
+class="toc-section-number">4.10</span> Implementation circuit</a></li>
+<li><a href="#claim-evidence-assay" id="toc-claim-evidence-assay"><span
+class="toc-section-number">4.11</span> Claim-evidence assay</a></li>
+<li><a href="#scientific-integrity-risk-matrix"
+id="toc-scientific-integrity-risk-matrix"><span
+class="toc-section-number">4.12</span> Scientific-integrity risk
+matrix</a></li>
+<li><a href="#evidence-tier-ladder" id="toc-evidence-tier-ladder"><span
+class="toc-section-number">4.13</span> Evidence-tier ladder</a></li>
 <li><a href="#contribution-claims" id="toc-contribution-claims"><span
-class="toc-section-number">4.8</span> Contribution claims</a></li>
+class="toc-section-number">4.14</span> Contribution claims</a></li>
+<li><a href="#shared-evidence-registry-summary"
+id="toc-shared-evidence-registry-summary"><span
+class="toc-section-number">4.15</span> Shared evidence registry
+summary</a></li>
+<li><a href="#figure-quality-report"
+id="toc-figure-quality-report"><span
+class="toc-section-number">4.16</span> Figure quality report</a></li>
 </ul></li>
 <li><a href="#sec:discussion" id="toc-sec:discussion"><span
 class="toc-section-number">5</span> Discussion: Load-Bearing vs
@@ -504,6 +539,9 @@ class="toc-section-number">5.2</span> Useful adaptation cases</a></li>
 class="toc-section-number">5.3</span> Misuse modes</a></li>
 <li><a href="#design-principles" id="toc-design-principles"><span
 class="toc-section-number">5.4</span> Design principles</a></li>
+<li><a href="#analogy-break-boundary"
+id="toc-analogy-break-boundary"><span
+class="toc-section-number">5.5</span> Analogy-break boundary</a></li>
 </ul></li>
 <li><a href="#sec:conclusion" id="toc-sec:conclusion"><span
 class="toc-section-number">6</span> Conclusion: Certification and
@@ -530,6 +568,10 @@ id="toc-regeneration-commands"><span
 class="toc-section-number">7.3</span> Regeneration commands</a></li>
 <li><a href="#config-ownership" id="toc-config-ownership"><span
 class="toc-section-number">7.4</span> Config ownership</a></li>
+<li><a href="#evidence-registry-separation"
+id="toc-evidence-registry-separation"><span
+class="toc-section-number">7.5</span> Evidence-registry
+separation</a></li>
 </ul></li>
 <li><a href="#sec:scope" id="toc-sec:scope"><span
 class="toc-section-number">8</span> Scope: Related Work and
@@ -574,14 +616,22 @@ each metallurgical stage corresponds to a real template-infrastructure
 operation. Smelting removes dross (filler, unsupported claims); assaying
 tests claims against evidence; cupellation resolves cross-references;
 certification validates the full pipeline. The mega-madlib token engine
-selects 8 domain tokens deterministically via seeded SHA-256 digest over
-category inventories, ensuring every prose element is traceable and
+selects 24 domain tokens deterministically via seeded SHA-256 digest
+over category inventories, ensuring every prose element is traceable and
 reproducible.</p>
+<p>The contribution is also formalized: 6 equation-backed formalisms
+define purity, monotone refinement, token selection, claim support, gate
+vectors, and certification. The project-local claim assay reports 8/8
+supported contribution claims (100.00%, passing), while the integrity
+model exposes 8 source-owned risk dimensions and the shared template
+evidence registry contributes 230 source-tiered facts when the
+validation gate has run.</p>
 <p><strong>Results:</strong> The refinery achieves final purity of
 99.9999999% (nine-nines) (24K (nine-nines certified)) with a total
 purity gain of 90.00% across all stages. Nine-nines certification: Yes.
-The purity progression is shown in fig. 1, and the karat grading scale
-in fig. 2.</p>
+The purity progression is shown in fig. <a
+href="#fig:purity_progression">1</a>, and the karat grading scale in
+fig. <a href="#fig:karat_grading">2</a>.</p>
 <p><strong>Keywords:</strong> gold refining, manuscript composition,
 mega-madlib, token injection, scientific purity, assaying, karat
 grading</p>
@@ -606,6 +656,11 @@ detect and remove these impurities — validation gates, cross-reference
 checks, evidence registries, and coverage enforcement. What it lacks is
 a unifying model that names the purification stages and measures purity
 progression.</p>
+<p>This exemplar treats source tier and evidence spine as first-class
+manuscript objects. A claim is not considered refined because it sounds
+plausible; it is refined when its source path, generated variable,
+figure label, citation key, and validation gate can all be
+inspected.</p>
 <h2 data-number="2.2" id="the-analogy-as-pipeline"><span
 class="header-section-number">2.2</span> The analogy as pipeline</h2>
 <p>We map five gold-refining stages onto manuscript operations:</p>
@@ -635,11 +690,29 @@ constraint enforced by
 class="header-section-number">2.3</span> Mega-madlib token engine</h2>
 <p>The manuscript’s domain vocabulary is not hand-authored prose but
 config-owned lexical data, selected deterministically by a seeded
-SHA-256 digest. The engine generates 8 tokens across 4 slots and 4
+SHA-256 digest. The engine generates 24 tokens across 11 slots and 8
 lexicon categories. Every token choice is reproducible, traceable to its
 config key, and bound to a manuscript section.</p>
-<h2 data-number="2.4" id="open-question-pinned"><span
-class="header-section-number">2.4</span> Open question pinned</h2>
+<p>The deeper token inventory is deliberately spread across the paper.
+Introduction tokens name the integrity frame; methods tokens bind
+evidence validation, figure registry check, and citation validation to
+source-owned operations; results tokens surface artifact manifest,
+figure registry, and token provenance; discussion tokens mark the fork
+obligation and domain validator where the analogy must stop.</p>
+<h2 data-number="2.4" id="implementation-circuit"><span
+class="header-section-number">2.4</span> Implementation circuit</h2>
+<p>The metaphor becomes operational only when every transformation has
+an implementation owner. In this exemplar, configuration creates the
+ore, <code>src/refinery.py</code> defines the purity stages,
+<code>src/composition.py</code> turns slots into deterministic tokens,
+<code>src/formalisms.py</code> owns the equation registry,
+<code>src/figures.py</code> turns those sources into registered visuals,
+and the template validators decide whether the hydrated manuscript can
+be treated as publication metal. The loop is deliberately closed:
+failures from the validators point back to source files, not to
+hand-polished output.</p>
+<h2 data-number="2.5" id="open-question-pinned"><span
+class="header-section-number">2.5</span> Open question pinned</h2>
 <p>Is the analogy load-bearing or rhetorical? We assert it is
 <strong>both</strong>: it frames the methods paper (rhetorical) and
 operationalizes each stage against real infrastructure (load-bearing).
@@ -652,7 +725,9 @@ Pipeline</h1>
 <p>The refinery pipeline consists of 5 canonical stages, each mapping a
 metallurgical operation to a manuscript-composition operation. The
 pipeline is implemented in <code>src/refinery.py</code> and validated by
-<code>src/purity.py</code>.</p>
+<code>src/purity.py</code>. The methods surface now has three coupled
+layers: the refinery stages, the mega-madlib token plan, and the
+generated formalism registry.</p>
 <h2 data-number="3.1" id="stage-definitions"><span
 class="header-section-number">3.1</span> Stage definitions</h2>
 <table>
@@ -726,9 +801,124 @@ p_{\text{out}}^{(i)} &gt; p_{\text{in}}^{(i)} \quad \text{and} \quad
 p_{\text{in}}^{(i+1)} = p_{\text{out}}^{(i)} \quad \forall i \in \{1,
 \ldots, n-1\}
 \]</span></p>
-<p>The full purity progression is shown in fig. 1 (see sec. 4).</p>
-<h2 data-number="3.3" id="token-selection"><span
-class="header-section-number">3.3</span> Token selection</h2>
+<p>The full purity progression is shown in fig. <a
+href="#fig:purity_progression">1</a> (see sec. <a
+href="#sec:results">4</a>).</p>
+<h2 data-number="3.3" id="formalism-registry"><span
+class="header-section-number">3.3</span> Formalism registry</h2>
+<p>The formal layer is generated from <code>src/formalisms.py</code>,
+not hand-numbered prose. tbl. <a href="#tbl:formalism_registry">1</a>
+lists the source evidence for each equation, and the equation blocks
+below are auto-numbered by the renderer.</p>
+<table id="tbl:formalism_registry">
+<caption>Table 1: Source-owned formalism registry.</caption>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 33%" />
+<col style="width: 30%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Formalism</th>
+<th>Equation</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F1</td>
+<td>Purity functional</td>
+<td>eq. <a href="#eq:purity_functional">1</a></td>
+<td><code>src/purity.py::format_purity</code></td>
+</tr>
+<tr>
+<td>F2</td>
+<td>Monotone refinement</td>
+<td>eq. <a href="#eq:monotone_refinery">2</a></td>
+<td><code>src/refinery.py::assert_monotone_increase</code></td>
+</tr>
+<tr>
+<td>F3</td>
+<td>Token-selection digest</td>
+<td>eq. <a href="#eq:token_digest">3</a></td>
+<td><code>src/composition.py::_choose_value</code></td>
+</tr>
+<tr>
+<td>F4</td>
+<td>Claim-support fraction</td>
+<td>eq. <a href="#eq:claim_support">4</a></td>
+<td><code>src/evidence.py::EvidenceRegistry.support_rate</code></td>
+</tr>
+<tr>
+<td>F5</td>
+<td>Integrity vector</td>
+<td>eq. <a href="#eq:integrity_vector">5</a></td>
+<td><code>manuscript/config.yaml#gold_refinement.audit_rules</code></td>
+</tr>
+<tr>
+<td>F6</td>
+<td>Certification predicate</td>
+<td>eq. <a href="#eq:certification_predicate">6</a></td>
+<td><code>src/refinery.py::RefineryResult.is_nine_nines_certified</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>F1: Purity functional.</strong> Manuscript purity is treated
+as a bounded fraction mapped to a reader-facing grade.</p>
+<p><span id="eq:purity_functional"><span class="math display">\[
+\pi(s) \in [0, 1], \qquad g(s) = \operatorname{karat}(\pi(s))
+\qquad{(1)}\]</span></span></p>
+<p>The value is descriptive: it summarizes local validation state rather
+than external quality. Source:
+<code>src/purity.py::format_purity</code>.</p>
+<p><strong>F2: Monotone refinement.</strong> A valid refinery run
+requires every stage to improve the previous purity state.</p>
+<p><span id="eq:monotone_refinery"><span class="math display">\[
+\pi_0 &lt; \pi_1 &lt; \cdots &lt; \pi_n
+\qquad{(2)}\]</span></span></p>
+<p>The test suite rejects equal or decreasing stage outputs. Source:
+<code>src/refinery.py::assert_monotone_increase</code>.</p>
+<p><strong>F3: Token-selection digest.</strong> Every mega-madlib token
+is selected from config-owned inventory by a deterministic digest.</p>
+<p><span id="eq:token_digest"><span class="math display">\[
+i = \operatorname{int}(\operatorname{SHA256}(seed \Vert slot \Vert
+category \Vert ordinal \Vert inventory)_{0:12}, 16) \bmod \lvert
+inventory \rvert
+\qquad{(3)}\]</span></span></p>
+<p>Changing the seed or inventory changes the plan; replaying both
+reproduces it. Source:
+<code>src/composition.py::_choose_value</code>.</p>
+<p><strong>F4: Claim-support fraction.</strong> Contribution claims are
+assayed by counting supported local evidence pointers.</p>
+<p><span id="eq:claim_support"><span class="math display">\[
+\sigma = \frac{\lvert\{c \in C : supported(c)\}\rvert}{\lvert C \rvert}
+\qquad{(4)}\]</span></span></p>
+<p>The numerator and denominator come from the project-local
+claim-support registry. Source:
+<code>src/evidence.py::EvidenceRegistry.support_rate</code>.</p>
+<p><strong>F5: Integrity vector.</strong> Scientific integrity is
+represented as a vector of gate outcomes rather than one scalar
+badge.</p>
+<p><span id="eq:integrity_vector"><span class="math display">\[
+\mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render},
+v_{references})
+\qquad{(5)}\]</span></span></p>
+<p>A publication claim is only as strong as the weakest required gate.
+Source:
+<code>manuscript/config.yaml#gold_refinement.audit_rules</code>.</p>
+<p><strong>F6: Certification predicate.</strong> Certification is a
+predicate over final purity and validation readiness.</p>
+<p><span id="eq:certification_predicate"><span class="math display">\[
+\operatorname{certified}(r) \iff \pi_{final}(r) \geq 0.999999999 \land
+gates(r)
+\qquad{(6)}\]</span></span></p>
+<p>The predicate binds the nine-nines metaphor to the actual validation
+chain. Source:
+<code>src/refinery.py::RefineryResult.is_nine_nines_certified</code>.</p>
+<h2 data-number="3.4" id="token-selection"><span
+class="header-section-number">3.4</span> Token selection</h2>
 <p>The mega-madlib engine selects tokens from config-owned lexicon
 categories using a deterministic digest:</p>
 <p><span class="math display">\[
@@ -738,11 +928,19 @@ categories using a deterministic digest:</p>
 \]</span></p>
 <p>where <span class="math inline">\(n\)</span> is the size of the
 lexicon category inventory. Selected metallurgical terms: hallmark,
-cupellation, assaying. Selected manuscript terms: evidence,
-evidence.</p>
-<h2 data-number="3.4" id="config-owned-lexicon"><span
-class="header-section-number">3.4</span> Config-owned lexicon</h2>
+cupellation, assaying. Selected manuscript terms: evidence, evidence.
+The same digest rule is formalized in eq. <a
+href="#eq:token_digest">3</a>, while the gate vocabulary for this
+section binds evidence validation, figure registry check, and citation
+validation to concrete validation surfaces.</p>
+<h2 data-number="3.5" id="config-owned-lexicon"><span
+class="header-section-number">3.5</span> Config-owned lexicon</h2>
 <table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 28%" />
+<col style="width: 32%" />
+</colgroup>
 <thead>
 <tr>
 <th>Category</th>
@@ -751,6 +949,26 @@ class="header-section-number">3.4</span> Config-owned lexicon</h2>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>boundary_terms</td>
+<td>5</td>
+<td>local claim, analogy boundary, fork obligation…</td>
+</tr>
+<tr>
+<td>evidence_terms</td>
+<td>5</td>
+<td>fact registry, artifact manifest, citation check…</td>
+</tr>
+<tr>
+<td>gate_terms</td>
+<td>5</td>
+<td>prerender, evidence validation, figure registry check…</td>
+</tr>
+<tr>
+<td>integrity_terms</td>
+<td>5</td>
+<td>evidence spine, source tier, validation gate…</td>
+</tr>
 <tr>
 <td>manuscript_terms</td>
 <td>5</td>
@@ -773,8 +991,8 @@ class="header-section-number">3.4</span> Config-owned lexicon</h2>
 </tr>
 </tbody>
 </table>
-<h2 data-number="3.5" id="karat-grading"><span
-class="header-section-number">3.5</span> Karat grading</h2>
+<h2 data-number="3.6" id="karat-grading"><span
+class="header-section-number">3.6</span> Karat grading</h2>
 <p>Karat grades map purity fractions to standard gold fineness:</p>
 <ul>
 <li>9K = 37.5% (ore stage)</li>
@@ -785,9 +1003,10 @@ class="header-section-number">3.5</span> Karat grading</h2>
 </ul>
 <p>The mapping is implemented in
 <code>src/purity.py::karat_for_purity()</code>. The karat grading chart
-is shown in fig. 2 (see sec. 4).</p>
-<h2 data-number="3.6" id="pipeline-phases"><span
-class="header-section-number">3.6</span> Pipeline phases</h2>
+is shown in fig. <a href="#fig:karat_grading">2</a> (see sec. <a
+href="#sec:results">4</a>).</p>
+<h2 data-number="3.7" id="pipeline-phases"><span
+class="header-section-number">3.7</span> Pipeline phases</h2>
 <table>
 <colgroup>
 <col style="width: 15%" />
@@ -836,6 +1055,14 @@ figures</td>
 <td>nonblank figure tests</td>
 </tr>
 <tr>
+<td>Integrity risk modeling</td>
+<td>audit rules, failure modes, claims, and shared evidence
+registry</td>
+<td>Score integrity dimensions and summarize evidence tiers</td>
+<td>integrity tables and risk visualizations</td>
+<td>tests/test_integrity.py</td>
+</tr>
+<tr>
 <td>Manuscript hydration</td>
 <td>manuscript shells and manuscript_variables.json</td>
 <td>Resolve {{TOKEN}} placeholders into output/manuscript/</td>
@@ -851,6 +1078,165 @@ figures</td>
 </tr>
 </tbody>
 </table>
+<p>The pipeline table is intentionally operational rather than
+decorative: a fork that changes the stages must update the source
+function, generated variables, figures, and validation gates
+together.</p>
+<h2 data-number="3.8" id="implementation-trace"><span
+class="header-section-number">3.8</span> Implementation trace</h2>
+<p>The implementation circuit shown in fig. <a
+href="#fig:implementation_circuit">9</a> is the method’s wiring diagram.
+It distinguishes three ownership layers. First, authored sources own
+intent: config declares vocabulary and claims, <code>src/</code> owns
+computation, and the claim ledger registers evidence facts. Second,
+generated artifacts own observation: token plans, figures, resolved
+Markdown, reports, and dashboards are rebuilt rather than edited. Third,
+template gates own permission to promote the manuscript: unresolved
+tokens, unsupported facts, missing citations, broken references, and
+invalid PDFs block certification.</p>
+<p>This split keeps the gold metaphor honest. A fork is allowed to
+change the ore, the furnace, or the assay, but it must do so in the
+source layer and then let the generated and validation layers expose the
+consequences.</p>
+<h2 data-number="3.9" id="scientific-integrity-model"><span
+class="header-section-number">3.9</span> Scientific integrity model</h2>
+<p>The integrity model converts manuscript risks into source-owned
+dimensions. It does not replace peer review or domain validation. It
+names the failure class, severity, detectability, evidence surface,
+owner, and validator so the manuscript can distinguish “the analogy is
+vivid” from “the claim is backed by a regenerable check.” The current
+pass reports 8 integrity dimensions; highest residual risk is I4
+(Analogy boundary) at 15.</p>
+<table id="tbl:integrity_dimensions">
+<caption>Table 2: Source-owned scientific-integrity
+dimensions.</caption>
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 22%" />
+<col style="width: 31%" />
+<col style="width: 14%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Dimension</th>
+<th>Residual risk</th>
+<th>Owner</th>
+<th>Validator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I1</td>
+<td>Monotone refinery</td>
+<td>4</td>
+<td>source code</td>
+<td>tests/test_refinery.py</td>
+</tr>
+<tr>
+<td>I2</td>
+<td>Lexicon completeness</td>
+<td>3</td>
+<td>config</td>
+<td>tests/test_config.py</td>
+</tr>
+<tr>
+<td>I3</td>
+<td>Token hydration</td>
+<td>5</td>
+<td>generated variables</td>
+<td>tests/test_manuscript_variables.py</td>
+</tr>
+<tr>
+<td>I4</td>
+<td>Analogy boundary</td>
+<td>15</td>
+<td>claim ledger</td>
+<td>infrastructure.validation.cli evidence –fail-on-issues</td>
+</tr>
+<tr>
+<td>I5</td>
+<td>Claim support</td>
+<td>10</td>
+<td>evidence assay</td>
+<td>output/reports/claim_support_registry.json</td>
+</tr>
+<tr>
+<td>I6</td>
+<td>Figure registry</td>
+<td>8</td>
+<td>figure producer</td>
+<td>tests/test_registry_integrity.py</td>
+</tr>
+<tr>
+<td>I7</td>
+<td>Citation hygiene</td>
+<td>4</td>
+<td>bibliography</td>
+<td>infrastructure.reference.citation validate</td>
+</tr>
+<tr>
+<td>I8</td>
+<td>Render readiness</td>
+<td>8</td>
+<td>template pipeline</td>
+<td>template pipeline render and validate stages</td>
+</tr>
+</tbody>
+</table>
+<p>The residual-risk score is deliberately simple: high severity and low
+detectability raise priority. The score is not a universal risk model;
+it is a local audit heuristic used to decide where a fork must add
+validators before expanding claims.</p>
+<table id="tbl:integrity_owners">
+<caption>Table 3: Integrity dimensions by owning surface.</caption>
+<thead>
+<tr>
+<th>Owner</th>
+<th>Dimensions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bibliography</td>
+<td>1</td>
+</tr>
+<tr>
+<td>claim ledger</td>
+<td>1</td>
+</tr>
+<tr>
+<td>config</td>
+<td>1</td>
+</tr>
+<tr>
+<td>evidence assay</td>
+<td>1</td>
+</tr>
+<tr>
+<td>figure producer</td>
+<td>1</td>
+</tr>
+<tr>
+<td>generated variables</td>
+<td>1</td>
+</tr>
+<tr>
+<td>source code</td>
+<td>1</td>
+</tr>
+<tr>
+<td>template pipeline</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>This table also makes generated-number ownership explicit. Counts,
+support rates, and figure labels belong to regenerated reports and
+registries; the manuscript consumes them through variables. Authored
+prose may interpret those values, but it should not silently restate
+them as hand-maintained facts.</p>
 <hr />
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results: Purity Progression and
@@ -940,7 +1326,7 @@ class="header-section-number">4.3</span> Final certification</h2>
 </ul>
 <h2 data-number="4.4" id="token-plan-summary"><span
 class="header-section-number">4.4</span> Token plan summary</h2>
-<p>The mega-madlib engine generated 8 tokens from seed 431 across 4
+<p>The mega-madlib engine generated 24 tokens from seed 431 across 8
 lexicon categories.</p>
 <figure id="fig:token_density">
 <img src="../figures/token_density.png"
@@ -958,6 +1344,22 @@ class="header-section-number">4.4.1</span> Category distribution</h3>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>boundary_terms</td>
+<td>4</td>
+</tr>
+<tr>
+<td>evidence_terms</td>
+<td>5</td>
+</tr>
+<tr>
+<td>gate_terms</td>
+<td>5</td>
+</tr>
+<tr>
+<td>integrity_terms</td>
+<td>2</td>
+</tr>
 <tr>
 <td>manuscript_terms</td>
 <td>2</td>
@@ -987,16 +1389,32 @@ class="header-section-number">4.4.2</span> Section distribution</h3>
 </thead>
 <tbody>
 <tr>
+<td>authoring_contract</td>
+<td>2</td>
+</tr>
+<tr>
 <td>discussion</td>
-<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>evaluation</td>
+<td>2</td>
+</tr>
+<tr>
+<td>introduction</td>
+<td>2</td>
 </tr>
 <tr>
 <td>methodology</td>
-<td>5</td>
+<td>8</td>
+</tr>
+<tr>
+<td>reproducibility</td>
+<td>2</td>
 </tr>
 <tr>
 <td>results</td>
-<td>2</td>
+<td>5</td>
 </tr>
 </tbody>
 </table>
@@ -1021,11 +1439,88 @@ class="header-section-number">4.4.3</span> Provenance trace</h3>
 </thead>
 <tbody>
 <tr>
+<td>AUTHORING_BOUNDARY_TERM_1</td>
+<td>boundary_terms</td>
+<td>analogy boundary</td>
+<td>authoring_contract</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[1]</td>
+</tr>
+<tr>
+<td>AUTHORING_BOUNDARY_TERM_2</td>
+<td>boundary_terms</td>
+<td>non-claim</td>
+<td>authoring_contract</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[4]</td>
+</tr>
+<tr>
+<td>DISCUSSION_BOUNDARY_TERM_1</td>
+<td>boundary_terms</td>
+<td>fork obligation</td>
+<td>discussion</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[2]</td>
+</tr>
+<tr>
+<td>DISCUSSION_BOUNDARY_TERM_2</td>
+<td>boundary_terms</td>
+<td>domain validator</td>
+<td>discussion</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[3]</td>
+</tr>
+<tr>
 <td>DISCUSSION_REFINEMENT_VERB</td>
 <td>refinement_verbs</td>
 <td>smelting</td>
 <td>discussion</td>
 <td>manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs[3]</td>
+</tr>
+<tr>
+<td>EVALUATION_GATE_TERM_1</td>
+<td>gate_terms</td>
+<td>prerender</td>
+<td>evaluation</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0]</td>
+</tr>
+<tr>
+<td>EVALUATION_GATE_TERM_2</td>
+<td>gate_terms</td>
+<td>citation validation</td>
+<td>evaluation</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]</td>
+</tr>
+<tr>
+<td>INTRO_INTEGRITY_TERM_1</td>
+<td>integrity_terms</td>
+<td>source tier</td>
+<td>introduction</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[1]</td>
+</tr>
+<tr>
+<td>INTRO_INTEGRITY_TERM_2</td>
+<td>integrity_terms</td>
+<td>evidence spine</td>
+<td>introduction</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[0]</td>
+</tr>
+<tr>
+<td>METHOD_GATE_TERM_1</td>
+<td>gate_terms</td>
+<td>evidence validation</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1]</td>
+</tr>
+<tr>
+<td>METHOD_GATE_TERM_2</td>
+<td>gate_terms</td>
+<td>figure registry check</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2]</td>
+</tr>
+<tr>
+<td>METHOD_GATE_TERM_3</td>
+<td>gate_terms</td>
+<td>citation validation</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]</td>
 </tr>
 <tr>
 <td>METHOD_MANUSCRIPT_TERM_1</td>
@@ -1063,6 +1558,41 @@ class="header-section-number">4.4.3</span> Provenance trace</h3>
 <td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1]</td>
 </tr>
 <tr>
+<td>REPRO_EVIDENCE_TERM_1</td>
+<td>evidence_terms</td>
+<td>fact registry</td>
+<td>reproducibility</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0]</td>
+</tr>
+<tr>
+<td>REPRO_EVIDENCE_TERM_2</td>
+<td>evidence_terms</td>
+<td>figure registry</td>
+<td>reproducibility</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3]</td>
+</tr>
+<tr>
+<td>RESULTS_EVIDENCE_TERM_1</td>
+<td>evidence_terms</td>
+<td>artifact manifest</td>
+<td>results</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1]</td>
+</tr>
+<tr>
+<td>RESULTS_EVIDENCE_TERM_2</td>
+<td>evidence_terms</td>
+<td>figure registry</td>
+<td>results</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3]</td>
+</tr>
+<tr>
+<td>RESULTS_EVIDENCE_TERM_3</td>
+<td>evidence_terms</td>
+<td>token provenance</td>
+<td>results</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[4]</td>
+</tr>
+<tr>
 <td>RESULTS_PURITY_ADJ_1</td>
 <td>purity_adjectives</td>
 <td>unrefined</td>
@@ -1078,7 +1608,9 @@ class="header-section-number">4.4.3</span> Provenance trace</h3>
 </tr>
 </tbody>
 </table>
-<p>Selected purity adjectives for this section: unrefined, purified.</p>
+<p>Selected purity adjectives for this section: unrefined, purified.
+Selected evidence terms: artifact manifest, figure registry, token
+provenance.</p>
 <h2 data-number="4.5" id="provenance-flow"><span
 class="header-section-number">4.5</span> Provenance flow</h2>
 <figure id="fig:provenance_sankey">
@@ -1104,8 +1636,133 @@ alt="Figure 6: Token selection heatmap" />
 <figcaption aria-hidden="true">Figure 6: Token selection
 heatmap</figcaption>
 </figure>
-<h2 data-number="4.8" id="contribution-claims"><span
-class="header-section-number">4.8</span> Contribution claims</h2>
+<h2 data-number="4.8" id="integrity-gate-matrix"><span
+class="header-section-number">4.8</span> Integrity gate matrix</h2>
+<p>The integrity gate matrix in fig. <a
+href="#fig:integrity_gate_matrix">7</a> makes the validation story
+visible: audit rules are not prose promises unless they connect to
+tests, manuscript surfaces, and generated artifacts.</p>
+<figure id="fig:integrity_gate_matrix">
+<img src="../figures/integrity_gate_matrix.png"
+alt="Figure 7: Integrity-gate matrix" />
+<figcaption aria-hidden="true">Figure 7: Integrity-gate
+matrix</figcaption>
+</figure>
+<h2 data-number="4.9" id="formalism-traceability"><span
+class="header-section-number">4.9</span> Formalism traceability</h2>
+<p>The formalism traceability view in fig. <a
+href="#fig:formalism_traceability">8</a> links each equation-backed
+formalism to the source surface that owns it. This is the visual
+counterpart to tbl. <a href="#tbl:formalism_registry">1</a>.</p>
+<figure id="fig:formalism_traceability">
+<img src="../figures/formalism_traceability.png"
+alt="Figure 8: Formalism traceability" />
+<figcaption aria-hidden="true">Figure 8: Formalism
+traceability</figcaption>
+</figure>
+<h2 data-number="4.10" id="implementation-circuit-1"><span
+class="header-section-number">4.10</span> Implementation circuit</h2>
+<p>The implementation circuit in fig. <a
+href="#fig:implementation_circuit">9</a> shows how the concept is
+executed rather than merely described. Configuration feeds code; code
+emits variables, figures, and reports; manuscript hydration consumes
+those artifacts; validators feed errors back to source ownership. The
+figure is intentionally circular because the artifact is not complete
+after prose generation. It is complete only after the validation return
+path has no blocking evidence, citation, reference, or render
+failures.</p>
+<figure id="fig:implementation_circuit">
+<img src="../figures/implementation_circuit.png"
+alt="Figure 9: Gold-refinement implementation circuit" />
+<figcaption aria-hidden="true">Figure 9: Gold-refinement implementation
+circuit</figcaption>
+</figure>
+<h2 data-number="4.11" id="claim-evidence-assay"><span
+class="header-section-number">4.11</span> Claim-evidence assay</h2>
+<p>The claim-evidence assay in fig. <a
+href="#fig:claim_evidence_assay">10</a> turns the assaying stage into a
+reader-facing diagnostic. Each bar is a contribution claim from
+<code>manuscript/config.yaml</code>, and each annotation names the
+source file or symbol used to support it. This makes the contribution
+ledger inspectable at the same level as the purity plots: unsupported
+claims would appear as failed assays rather than remaining hidden in
+prose.</p>
+<figure id="fig:claim_evidence_assay">
+<img src="../figures/claim_evidence_assay.png"
+alt="Figure 10: Claim-evidence assay" />
+<figcaption aria-hidden="true">Figure 10: Claim-evidence
+assay</figcaption>
+</figure>
+<h2 data-number="4.12" id="scientific-integrity-risk-matrix"><span
+class="header-section-number">4.12</span> Scientific-integrity risk
+matrix</h2>
+<p>The integrity risk matrix in fig. <a
+href="#fig:integrity_risk_matrix">11</a> plots severity against
+detectability for the 8 integrity dimensions in tbl. <a
+href="#tbl:integrity_dimensions">2</a>. Bubble size encodes residual
+risk, while color encodes the source tier that owns the evidence
+surface. This makes boundary failures more visible than cosmetic source
+checks without hiding whether the support comes from config, source
+code, claim ledger, generated metric, artifact, bibliography, or
+validation gate. The matrix is intentionally local: it prioritizes where
+this exemplar needs source ownership, not where every future manuscript
+should focus.</p>
+<figure id="fig:integrity_risk_matrix">
+<img src="../figures/integrity_risk_matrix.png"
+alt="Figure 11: Scientific-integrity risk matrix" />
+<figcaption aria-hidden="true">Figure 11: Scientific-integrity risk
+matrix</figcaption>
+</figure>
+<h2 data-number="4.13" id="evidence-tier-ladder"><span
+class="header-section-number">4.13</span> Evidence-tier ladder</h2>
+<p>The evidence-tier ladder in fig. <a
+href="#fig:evidence_tier_ladder">12</a> summarizes the evidence surfaces
+available to the shared template evidence registry or, before that gate
+has run, the fallback source tiers from the integrity model. It gives a
+quick view of whether the manuscript is leaning on generated metrics,
+claim-ledger facts, bibliography records, source code, or disposable
+artifacts.</p>
+<figure id="fig:evidence_tier_ladder">
+<img src="../figures/evidence_tier_ladder.png"
+alt="Figure 12: Evidence-tier ladder" />
+<figcaption aria-hidden="true">Figure 12: Evidence-tier
+ladder</figcaption>
+</figure>
+<table id="tbl:evidence_tiers">
+<caption>Table 4: Evidence tiers used by the integrity model and shared
+registry when available.</caption>
+<thead>
+<tr>
+<th>Source tier</th>
+<th>Count</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>artifact</td>
+<td>117</td>
+<td>Generated artifacts exposed to readers</td>
+</tr>
+<tr>
+<td>generated_metric</td>
+<td>94</td>
+<td>Numbers regenerated from project analysis</td>
+</tr>
+<tr>
+<td>claim_ledger</td>
+<td>14</td>
+<td>Source-owned claim and fact declarations</td>
+</tr>
+<tr>
+<td>bibliography</td>
+<td>5</td>
+<td>Reference records and citation metadata</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="4.14" id="contribution-claims"><span
+class="header-section-number">4.14</span> Contribution claims</h2>
 <table>
 <colgroup>
 <col style="width: 18%" />
@@ -1147,6 +1804,232 @@ nine-nines.</td>
 <td>src/composition.py::_choose_value</td>
 <td>local</td>
 </tr>
+<tr>
+<td>Formalism registry</td>
+<td>The manuscript exposes 6 source-owned formalisms with equation
+labels.</td>
+<td>src/formalisms.py::FORMALISMS</td>
+<td>local</td>
+</tr>
+<tr>
+<td>Claim-support report separation</td>
+<td>The project-local contribution-claim report is written to
+claim_support_registry.json.</td>
+<td>scripts/refinement_analysis.py::claim_support_registry</td>
+<td>local</td>
+</tr>
+<tr>
+<td>Implementation-linked visualizations</td>
+<td>The manuscript includes generated visualizations that link the
+refinery analogy to source code, variables, evidence, and validation
+gates.</td>
+<td>src/figures.py::generate_implementation_circuit</td>
+<td>local</td>
+</tr>
+<tr>
+<td>Scientific-integrity risk model</td>
+<td>The manuscript includes a source-owned integrity risk model linking
+failure modes, validators, evidence surfaces, and fork obligations.</td>
+<td>src/integrity.py::build_integrity_dimensions</td>
+<td>local</td>
+</tr>
+</tbody>
+</table>
+<p>The project-local claim-support assay reports 8 supported claims out
+of 8 total claims, for 100.00% support. Unsupported claims: 0. The
+generated project report path is
+<code>output/reports/claim_support_registry.json</code>; the shared
+template evidence report remains
+<code>output/reports/evidence_registry.json</code>.</p>
+<h2 data-number="4.15" id="shared-evidence-registry-summary"><span
+class="header-section-number">4.15</span> Shared evidence registry
+summary</h2>
+<p>When the template evidence gate has run, the shared registry supplies
+source-tiered facts used by the evidence validator. Current fact count
+available to this variable pass: 230.</p>
+<table id="tbl:shared_evidence_kinds">
+<caption>Table 5: Shared evidence-registry fact kinds when
+available.</caption>
+<thead>
+<tr>
+<th>Fact kind</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>artifact</td>
+<td>75</td>
+</tr>
+<tr>
+<td>citation</td>
+<td>5</td>
+</tr>
+<tr>
+<td>equation</td>
+<td>7</td>
+</tr>
+<tr>
+<td>figure</td>
+<td>27</td>
+</tr>
+<tr>
+<td>number</td>
+<td>100</td>
+</tr>
+<tr>
+<td>section</td>
+<td>10</td>
+</tr>
+<tr>
+<td>table</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="4.16" id="figure-quality-report"><span
+class="header-section-number">4.16</span> Figure quality report</h2>
+<p>The visualization registry is paired with
+<code>output/reports/figure_quality_report.json</code>, a generated QA
+report that checks PNG and SVG existence, file dimensions, nonblank
+pixel mass, color variance, and registry parity. Current status: passing
+with 12/12 registered figures passing and registry parity reported as
+Yes. PNG remains the manuscript render path; SVG is the companion
+technical artifact for inspection, reuse, and source-level debugging.
+tbl. <a href="#tbl:figure_quality">6</a> summarizes the generated
+surface.</p>
+<table id="tbl:figure_quality">
+<caption>Table 6: Figure-quality report generated from source-owned
+figure specs.</caption>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 20%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr>
+<th>Figure</th>
+<th>PNG</th>
+<th>SVG</th>
+<th>Dimensions</th>
+<th>Nonwhite</th>
+<th>Variance</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>claim_evidence_assay</td>
+<td>yes</td>
+<td>yes</td>
+<td>3947x1904</td>
+<td>0.211</td>
+<td>0.05905715</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>evidence_tier_ladder</td>
+<td>yes</td>
+<td>yes</td>
+<td>3254x1319</td>
+<td>0.194</td>
+<td>0.05465268</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>formalism_traceability</td>
+<td>yes</td>
+<td>yes</td>
+<td>4170x1866</td>
+<td>0.096</td>
+<td>0.03165302</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>implementation_circuit</td>
+<td>yes</td>
+<td>yes</td>
+<td>3720x2129</td>
+<td>0.049</td>
+<td>0.01648025</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>integrity_gate_matrix</td>
+<td>yes</td>
+<td>yes</td>
+<td>1953x1559</td>
+<td>0.457</td>
+<td>0.17734427</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>integrity_risk_matrix</td>
+<td>yes</td>
+<td>yes</td>
+<td>2969x2069</td>
+<td>0.402</td>
+<td>0.01475595</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>karat_grading</td>
+<td>yes</td>
+<td>yes</td>
+<td>3241x1829</td>
+<td>0.286</td>
+<td>0.07357948</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>provenance_sankey</td>
+<td>yes</td>
+<td>yes</td>
+<td>3570x1400</td>
+<td>0.059</td>
+<td>0.01855784</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>purity_claim_scatter</td>
+<td>yes</td>
+<td>yes</td>
+<td>2587x1889</td>
+<td>0.028</td>
+<td>0.01227429</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>purity_progression</td>
+<td>yes</td>
+<td>yes</td>
+<td>3029x2125</td>
+<td>0.182</td>
+<td>0.03971092</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>token_density</td>
+<td>yes</td>
+<td>yes</td>
+<td>3865x1663</td>
+<td>0.206</td>
+<td>0.06115993</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>token_heatmap</td>
+<td>yes</td>
+<td>yes</td>
+<td>2648x2424</td>
+<td>0.637</td>
+<td>0.12747028</td>
+<td>pass</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -1164,7 +2047,17 @@ to claim removal, assaying to evidence validation, cupellation to
 cross-reference resolution, and certification to full pipeline
 validation.</p>
 <p>The analogy is smelting the manuscript: it performs the refinement it
-describes.</p>
+describes. Its fork obligation is equally important. Gold refining can
+model staged purification, but it cannot certify domain truth unless the
+fork supplies a real domain validator and evidence source.</p>
+<p>The added implementation and claim-assay figures sharpen that
+boundary. They show that “purity” is not a free-standing aesthetic
+judgment. It is a local statement about whether source-owned stages,
+generated artifacts, claim ledgers, figure registries, and validation
+commands agree. The figures therefore make a negative claim as important
+as the positive one: when a fork lacks a validator, a ledger, or a
+source artifact, the metaphor must stop at analogy and cannot be
+promoted to certification.</p>
 <h2 data-number="5.2" id="useful-adaptation-cases"><span
 class="header-section-number">5.2</span> Useful adaptation cases</h2>
 <ul>
@@ -1218,6 +2111,15 @@ class="header-section-number">5.3</span> Misuse modes</h2>
 <td>Review that each stage maps to a real infrastructure operation.</td>
 <td>Connect stages to template pipeline operations.</td>
 </tr>
+<tr>
+<td>Undetected integrity gap</td>
+<td>A high-severity failure mode is present but no owner, validator, or
+generated artifact makes it visible.</td>
+<td>build_integrity_dimensions lists severity, detectability, owner,
+validator, and evidence surface.</td>
+<td>Add or revise the source-owned integrity dimension before promoting
+the manuscript.</td>
+</tr>
 </tbody>
 </table>
 <h2 data-number="5.4" id="design-principles"><span
@@ -1261,6 +2163,33 @@ output.</td>
 </tr>
 </tbody>
 </table>
+<h2 data-number="5.5" id="analogy-break-boundary"><span
+class="header-section-number">5.5</span> Analogy-break boundary</h2>
+<p>The analogy breaks when purity becomes a rhetorical grade detached
+from evidence. In this exemplar, eq. <a href="#eq:claim_support">4</a>
+and eq. <a href="#eq:integrity_vector">5</a> keep the grade tied to
+claim support and gate coverage. A fork that cannot provide comparable
+source-owned gates should keep the gold-refining language as metaphor
+only and avoid publication-strength claims.</p>
+<p>The practical rule is simple: do not add an impressive figure unless
+its path through fig. <a href="#fig:implementation_circuit">9</a> is
+visible. A visual can summarize an idea, but it only supports a
+manuscript claim when the claim-evidence assay can point to the owning
+file, symbol, generated artifact, and validation surface.</p>
+<p>The integrity risk matrix adds one more brake. A fork may have all
+figures registered and still be scientifically weak if its
+highest-severity risks are only weakly detectable. In this exemplar,
+tbl. <a href="#tbl:integrity_dimensions">2</a> makes that weakness
+inspectable by pairing each dimension with an owner and validator. The
+useful question for a fork is therefore not “can the manuscript render?”
+but “which severe failures would the current pipeline miss, and what
+source-owned gate would expose them?”</p>
+<p>The evidence-tier ladder also prevents a common drift in generated
+manuscripts: treating generated artifacts as if they were independent
+evidence. A generated metric can support an internal consistency claim,
+but a domain claim needs a domain source tier. The ladder makes that
+distinction visible without pretending that a large fact count is the
+same as stronger external validity.</p>
 <hr />
 <h1 data-number="6" id="sec:conclusion"><span
 class="header-section-number">6</span> Conclusion: Certification and
@@ -1275,8 +2204,17 @@ class="header-section-number">6.1</span> Summary</h2>
 <li>5 refinery stages from ore (9K) to certification (nine-nines)</li>
 <li>Final purity: 99.9999999% (nine-nines) (24K (nine-nines
 certified))</li>
-<li>8 tokens generated deterministically from seed 431</li>
-<li>Config hash: ef9773080d4a8bec</li>
+<li>24 tokens generated deterministically from seed 431</li>
+<li>Config hash: 3fcb5ca333f46401</li>
+<li>6 source-owned formalisms with equation labels:
+eq:purity_functional, eq:monotone_refinery, eq:token_digest,
+eq:claim_support, eq:integrity_vector, eq:certification_predicate</li>
+<li>Claim-support status: 8/8 supported (passing)</li>
+<li>8 integrity dimensions with residual-risk scoring and
+owner/validator links.</li>
+<li>Registered visual evidence spans purity progression, token coverage,
+formalism traceability, implementation flow, claim-evidence assay,
+risk-matrix, and evidence-tier surfaces.</li>
 </ul>
 <h2 data-number="6.2" id="forking-responsibilities"><span
 class="header-section-number">6.2</span> Forking responsibilities</h2>
@@ -1288,6 +2226,17 @@ class="header-section-number">6.2</span> Forking responsibilities</h2>
 <li>Regenerate all outputs through the pipeline</li>
 <li>Do not hand-edit generated manuscript, PDFs, or figures</li>
 </ol>
+<p>The durable result is not the current prose snapshot. It is the
+reproducible contract that can rebuild the prose, figures, formalisms,
+and validation reports from source.</p>
+<p>That contract is the paper’s central contribution. It demonstrates
+how an analogy can be useful without being loose: every metaphorical
+move either points to a source-owned implementation surface or stays
+explicitly inside the discussion boundary.</p>
+<p>The added integrity model makes the same claim in a stricter form:
+every high-value visual or formal statement should have an owner, an
+evidence tier, and a validator. Without those three surfaces, the right
+outcome is not a more polished metaphor; it is a narrower claim.</p>
 <hr />
 <h1 data-number="7" id="sec:reproducibility"><span
 class="header-section-number">7</span> Reproducibility: Seeded
@@ -1299,8 +2248,8 @@ class="header-section-number">7.1</span> Deterministic regeneration</h2>
 run produces identical output.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
-<li><strong>Config hash:</strong> ef9773080d4a8bec</li>
-<li><strong>Generation timestamp:</strong> 2026-06-26T13:57:48Z</li>
+<li><strong>Config hash:</strong> 3fcb5ca333f46401</li>
+<li><strong>Generation timestamp:</strong> 2026-06-26T18:02:21Z</li>
 <li><strong>Python version:</strong> 3.12.13</li>
 </ul>
 <h2 data-number="7.2" id="artifact-inventory"><span
@@ -1315,19 +2264,19 @@ class="header-section-number">7.2</span> Artifact inventory</h2>
 <tbody>
 <tr>
 <td>Figures</td>
-<td>6</td>
+<td>24</td>
 </tr>
 <tr>
 <td>Data files</td>
-<td>2</td>
+<td>3</td>
 </tr>
 <tr>
 <td>Reports</td>
-<td>9</td>
+<td>11</td>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td>17</td>
+<td>38</td>
 </tr>
 </tbody>
 </table>
@@ -1347,6 +2296,45 @@ class="header-section-number">7.4</span> Config ownership</h2>
 <p>All vocabulary, slots, and section conditions are declared in
 <code>manuscript/config.yaml</code> under <code>gold_refinement:</code>.
 The config is the source of truth; generated prose is disposable.</p>
+<p>The reproducibility spine uses fact registry and figure registry as
+generated artifacts rather than reader trust signals. Variable
+generation records <code>3fcb5ca333f46401</code>; analysis writes
+refinery, token, claim-support, dashboard, and figure artifacts;
+validation may add the shared evidence registry used by template
+scientific-integrity checks.</p>
+<p>The implementation circuit gives a reproducibility checklist for
+future forks. A reader should be able to start at any rendered figure or
+claim, follow it to a generated variable or report, follow that artifact
+to <code>src/</code> or <code>manuscript/config.yaml</code>, and rerun
+the same stage command. If that path is broken, the fork has produced a
+static illustration rather than a reproducible refinement pipeline.</p>
+<p>The same rule applies to visual polish. The figure registry is
+source-owned, every registered PNG now has a companion SVG, and
+<code>output/reports/figure_quality_report.json</code> records 12 PNG
+files, 12 SVG files, and 12 passing visual-quality checks for the
+current variable pass. A fork should treat tbl. <a
+href="#tbl:figure_quality">6</a> as the figure-layer analogue of the
+claim-support registry: it proves that the visuals are regenerated,
+present in both raster and vector forms, nonblank, and aligned with the
+registry before prose promotes them.</p>
+<h2 data-number="7.5" id="evidence-registry-separation"><span
+class="header-section-number">7.5</span> Evidence-registry
+separation</h2>
+<p>This exemplar now separates two evidence surfaces.
+<code>output/reports/claim_support_registry.json</code> is the
+project-local contribution-claim assay consumed by the dashboard and
+claim-support figure. <code>output/reports/evidence_registry.json</code>
+is reserved for the shared template evidence validator, which registers
+numbers, citations, equations, sections, figures, tables, generated
+data, and claim-ledger facts.</p>
+<p>The evidence-tier ladder in fig. <a
+href="#fig:evidence_tier_ladder">12</a> is the reproducibility
+counterpart to that separation. It does not merely count files. It shows
+which tier owns each support surface, so a future fork can see whether a
+conclusion rests on config declarations, generated metrics, claim-ledger
+facts, bibliography records, or rendered artifacts. That distinction
+matters because only some tiers can support domain truth; others support
+reproducibility, formatting, or local consistency.</p>
 <hr />
 <h1 data-number="8" id="sec:scope"><span
 class="header-section-number">8</span> Scope: Related Work and
@@ -1381,6 +2369,18 @@ class="header-section-number">8.3</span> Responsible forking</h2>
 <li>Add domain validators beyond the exemplar’s generic gates</li>
 <li>Regenerate all outputs through the pipeline</li>
 </ol>
+<p>The formalism registry is local to this exemplar. It states how this
+project maps refinery stages, token selection, and evidence gates into
+equations; it does not prove that gold refining is a universal model of
+scientific writing. Domain forks should replace or narrow the formalism
+set before reusing the certification language.</p>
+<p>The same limitation applies to the integrity risk model. The current
+8 dimensions are tuned to a template exemplar: token hydration, figure
+registration, claim support, citation hygiene, render readiness, and
+analogy boundaries. A fork that studies a real domain must add
+domain-specific risks, domain evidence tiers, and validators before
+treating fig. <a href="#fig:integrity_risk_matrix">11</a> as a
+publication-readiness claim.</p>
 <hr />
 <h1 data-number="9" id="sec:evaluation"><span
 class="header-section-number">9</span> Quality Probes</h1>
@@ -1421,8 +2421,21 @@ and config key?</td>
 <td>karat_for_purity returns the expected grade for each stage.</td>
 <td>src/purity.py</td>
 </tr>
+<tr>
+<td>Integrity risk visibility</td>
+<td>Can the manuscript identify high-severity integrity failures and the
+validator or artifact that detects them?</td>
+<td>The integrity risk model emits dimensions, owners, residual risk
+scores, and evidence-tier rows.</td>
+<td>src/integrity.py and ../figures/integrity_risk_matrix.png</td>
+</tr>
 </tbody>
 </table>
+<p>The selected evaluation gate terms are prerender and citation
+validation. They are intentionally narrower than peer review: they check
+source ownership, token coverage, figure registration, claim support,
+and rendering integrity before a human reviewer assesses the substantive
+analogy.</p>
 <h2 data-number="9.2" id="audit-rules"><span
 class="header-section-number">9.2</span> Audit rules</h2>
 <table style="width:100%;">
@@ -1464,8 +2477,26 @@ class="header-section-number">9.2</span> Audit rules</h2>
 <td>All figure generators must produce non-blank PNGs</td>
 <td>tests/test_figures.py</td>
 </tr>
+<tr>
+<td>Integrity model coverage</td>
+<td>Integrity dimensions must have unique IDs, owners, validators, and
+evidence surfaces</td>
+<td>tests/test_integrity.py</td>
+</tr>
 </tbody>
 </table>
+<p>The audit rules are summarized visually in fig. <a
+href="#fig:integrity_gate_matrix">7</a> and algebraically in eq. <a
+href="#eq:integrity_vector">5</a>. A failed audit rule should block
+certification language even if the PDF renders.</p>
+<p>The risk model adds prioritization to the gate list. fig. <a
+href="#fig:integrity_risk_matrix">11</a> separates easy-to-detect
+implementation failures from severe boundary failures that need clearer
+ownership. This keeps the evaluation surface from becoming a checklist
+of equally weighted boxes: token coverage, citation validity, claim
+support, and render readiness all matter, but a high-severity
+low-detectability failure should shape the next source edit before
+cosmetic manuscript polish.</p>
 <hr />
 <h1 data-number="10" id="sec:authoring_contract"><span
 class="header-section-number">10</span> Authoring Contract</h1>
@@ -1496,8 +2527,17 @@ exemplar.</td>
 <td>Regeneration contract</td>
 <td>Regenerate outputs through the pipeline, not by hand-editing.</td>
 </tr>
+<tr>
+<td>Risk review</td>
+<td>Treat high-residual-risk integrity dimensions as fork obligations
+before publication claims are expanded.</td>
+</tr>
 </tbody>
 </table>
+<p>The authoring boundary tokens for this section are analogy boundary
+and non-claim. They mark the point where an author must either add new
+evidence and validators or lower the claim from certification to
+analogy.</p>
 <h2 data-number="10.2" id="fork-checklist"><span
 class="header-section-number">10.2</span> Fork checklist</h2>
 <ol type="1">
@@ -1509,11 +2549,22 @@ under <code>gold_refinement.lexicon</code></p></li>
 evidence pointers</p></li>
 <li><p>Add domain validators beyond the exemplar’s generic
 gates</p></li>
+<li><p>Replace or extend <code>src/integrity.py</code> dimensions when
+the fork introduces new failure modes</p></li>
 <li><p>Regenerate all outputs through the pipeline:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/refinement_analysis.py</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/z_generate_manuscript_variables.py</span></code></pre></div></li>
 <li><p>Do not hand-edit generated manuscript, PDFs, or figures</p></li>
 </ol>
+<p>Do not hard-code equation, figure, or table numbers in prose. Use
+<code>[@eq:...]</code>, <code>[@fig:...]</code>,
+<code>[@tbl:...]</code>, and <code>[@sec:...]</code> so the renderer
+owns numbering and the tests can detect dangling references.</p>
+<p>The authoring contract treats the risk matrix as a source checklist,
+not as a retrospective dashboard. If a fork cannot name who owns a
+high-severity integrity dimension, which validator detects it, and which
+evidence tier supports it, the fork should lower the claim boundary
+until that missing surface exists.</p>
 </body>
 </html>

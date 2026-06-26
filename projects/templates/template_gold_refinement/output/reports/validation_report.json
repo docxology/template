@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-26T07:10:01.016087",
+  "timestamp": "2026-06-26T11:03:07.881525",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -12,10 +12,6 @@
   },
   "figure_issues": [],
   "output_statistics": {
-    "evidence_issues": [
-      "02_methodology.md: unsupported number 12",
-      "02_methodology.md: unsupported number 16"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -28,20 +24,20 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 0.97,
+            "size_mb": 3.06,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.11,
+            "size_mb": 3.28,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 12,
-            "size_mb": 0.13,
+            "size_mb": 0.23,
             "readable": true,
             "optional": false
           },
@@ -53,22 +49,22 @@
           },
           "figures": {
             "exists": true,
-            "files": 7,
-            "size_mb": 0.88,
+            "files": 25,
+            "size_mb": 3.8,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
             "files": 3,
-            "size_mb": 0.01,
+            "size_mb": 0.03,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 9,
-            "size_mb": 0.02,
+            "files": 11,
+            "size_mb": 0.1,
             "readable": true,
             "optional": false
           },
@@ -96,13 +92,13 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.11",
+          "size_mb": "3.28",
           "largest_file": "template_gold_refinement_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 12,
-          "size_mb": "0.13",
+          "size_mb": "0.23",
           "largest_file": "index.html"
         },
         "slides": {
@@ -112,21 +108,21 @@
         },
         "figures": {
           "exists": true,
-          "file_count": 7,
-          "size_mb": "0.88",
-          "largest_file": "purity_progression.png"
+          "file_count": 25,
+          "size_mb": "3.80",
+          "largest_file": "claim_evidence_assay.png"
         },
         "data": {
           "exists": true,
           "file_count": 3,
-          "size_mb": "0.01",
+          "size_mb": "0.03",
           "largest_file": "manuscript_variables.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 9,
-          "size_mb": "0.02",
-          "largest_file": "output_statistics.json"
+          "file_count": 11,
+          "size_mb": "0.10",
+          "largest_file": "evidence_registry.json"
         },
         "simulations": {
           "exists": false,
@@ -147,11 +143,11 @@
       "file_counts": {
         "pdf": 10,
         "web": 12,
-        "figures": 7,
+        "figures": 25,
         "data": 3,
-        "reports": 9
+        "reports": 11
       },
-      "total_size_mb": 2.161771774291992,
+      "total_size_mb": 7.443285942077637,
       "issues_by_severity": {
         "critical": [],
         "warning": [
@@ -166,15 +162,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.1146392822265625
+      "size_mb": 3.284245491027832
     },
     "figures": {
-      "files": 7,
-      "size_mb": 0.8842592239379883
+      "files": 25,
+      "size_mb": 3.802003860473633
     },
     "data": {
       "files": 3,
-      "size_mb": 0.012559890747070312
+      "size_mb": 0.025499343872070312
     }
   },
   "summary": {

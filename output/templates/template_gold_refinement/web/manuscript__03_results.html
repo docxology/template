@@ -257,7 +257,7 @@ stage markers</figcaption>
 <li><strong>Nines count:</strong> 9</li>
 </ul>
 <h2 id="token-plan-summary">Token plan summary</h2>
-<p>The mega-madlib engine generated 8 tokens from seed 431 across 4
+<p>The mega-madlib engine generated 24 tokens from seed 431 across 8
 lexicon categories.</p>
 <figure id="fig:token_density">
 <img src="../figures/token_density.png"
@@ -274,6 +274,22 @@ distribution</figcaption>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>boundary_terms</td>
+<td>4</td>
+</tr>
+<tr>
+<td>evidence_terms</td>
+<td>5</td>
+</tr>
+<tr>
+<td>gate_terms</td>
+<td>5</td>
+</tr>
+<tr>
+<td>integrity_terms</td>
+<td>2</td>
+</tr>
 <tr>
 <td>manuscript_terms</td>
 <td>2</td>
@@ -302,16 +318,32 @@ distribution</figcaption>
 </thead>
 <tbody>
 <tr>
+<td>authoring_contract</td>
+<td>2</td>
+</tr>
+<tr>
 <td>discussion</td>
-<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>evaluation</td>
+<td>2</td>
+</tr>
+<tr>
+<td>introduction</td>
+<td>2</td>
 </tr>
 <tr>
 <td>methodology</td>
-<td>5</td>
+<td>8</td>
+</tr>
+<tr>
+<td>reproducibility</td>
+<td>2</td>
 </tr>
 <tr>
 <td>results</td>
-<td>2</td>
+<td>5</td>
 </tr>
 </tbody>
 </table>
@@ -335,11 +367,88 @@ distribution</figcaption>
 </thead>
 <tbody>
 <tr>
+<td>AUTHORING_BOUNDARY_TERM_1</td>
+<td>boundary_terms</td>
+<td>analogy boundary</td>
+<td>authoring_contract</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[1]</td>
+</tr>
+<tr>
+<td>AUTHORING_BOUNDARY_TERM_2</td>
+<td>boundary_terms</td>
+<td>non-claim</td>
+<td>authoring_contract</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[4]</td>
+</tr>
+<tr>
+<td>DISCUSSION_BOUNDARY_TERM_1</td>
+<td>boundary_terms</td>
+<td>fork obligation</td>
+<td>discussion</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[2]</td>
+</tr>
+<tr>
+<td>DISCUSSION_BOUNDARY_TERM_2</td>
+<td>boundary_terms</td>
+<td>domain validator</td>
+<td>discussion</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[3]</td>
+</tr>
+<tr>
 <td>DISCUSSION_REFINEMENT_VERB</td>
 <td>refinement_verbs</td>
 <td>smelting</td>
 <td>discussion</td>
 <td>manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs[3]</td>
+</tr>
+<tr>
+<td>EVALUATION_GATE_TERM_1</td>
+<td>gate_terms</td>
+<td>prerender</td>
+<td>evaluation</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0]</td>
+</tr>
+<tr>
+<td>EVALUATION_GATE_TERM_2</td>
+<td>gate_terms</td>
+<td>citation validation</td>
+<td>evaluation</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]</td>
+</tr>
+<tr>
+<td>INTRO_INTEGRITY_TERM_1</td>
+<td>integrity_terms</td>
+<td>source tier</td>
+<td>introduction</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[1]</td>
+</tr>
+<tr>
+<td>INTRO_INTEGRITY_TERM_2</td>
+<td>integrity_terms</td>
+<td>evidence spine</td>
+<td>introduction</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[0]</td>
+</tr>
+<tr>
+<td>METHOD_GATE_TERM_1</td>
+<td>gate_terms</td>
+<td>evidence validation</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1]</td>
+</tr>
+<tr>
+<td>METHOD_GATE_TERM_2</td>
+<td>gate_terms</td>
+<td>figure registry check</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2]</td>
+</tr>
+<tr>
+<td>METHOD_GATE_TERM_3</td>
+<td>gate_terms</td>
+<td>citation validation</td>
+<td>methodology</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]</td>
 </tr>
 <tr>
 <td>METHOD_MANUSCRIPT_TERM_1</td>
@@ -377,6 +486,41 @@ distribution</figcaption>
 <td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1]</td>
 </tr>
 <tr>
+<td>REPRO_EVIDENCE_TERM_1</td>
+<td>evidence_terms</td>
+<td>fact registry</td>
+<td>reproducibility</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0]</td>
+</tr>
+<tr>
+<td>REPRO_EVIDENCE_TERM_2</td>
+<td>evidence_terms</td>
+<td>figure registry</td>
+<td>reproducibility</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3]</td>
+</tr>
+<tr>
+<td>RESULTS_EVIDENCE_TERM_1</td>
+<td>evidence_terms</td>
+<td>artifact manifest</td>
+<td>results</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1]</td>
+</tr>
+<tr>
+<td>RESULTS_EVIDENCE_TERM_2</td>
+<td>evidence_terms</td>
+<td>figure registry</td>
+<td>results</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3]</td>
+</tr>
+<tr>
+<td>RESULTS_EVIDENCE_TERM_3</td>
+<td>evidence_terms</td>
+<td>token provenance</td>
+<td>results</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[4]</td>
+</tr>
+<tr>
 <td>RESULTS_PURITY_ADJ_1</td>
 <td>purity_adjectives</td>
 <td>unrefined</td>
@@ -392,7 +536,9 @@ distribution</figcaption>
 </tr>
 </tbody>
 </table>
-<p>Selected purity adjectives for this section: unrefined, purified.</p>
+<p>Selected purity adjectives for this section: unrefined, purified.
+Selected evidence terms: artifact manifest, figure registry, token
+provenance.</p>
 <h2 id="provenance-flow">Provenance flow</h2>
 <figure id="fig:provenance_sankey">
 <img src="../figures/provenance_sankey.png"
@@ -410,6 +556,124 @@ alt="Purity vs claim support" />
 <img src="../figures/token_heatmap.png" alt="Token selection heatmap" />
 <figcaption aria-hidden="true">Token selection heatmap</figcaption>
 </figure>
+<h2 id="integrity-gate-matrix">Integrity gate matrix</h2>
+<p>The integrity gate matrix in <span class="citation"
+data-cites="fig:integrity_gate_matrix">[@fig:integrity_gate_matrix]</span>
+makes the validation story visible: audit rules are not prose promises
+unless they connect to tests, manuscript surfaces, and generated
+artifacts.</p>
+<figure id="fig:integrity_gate_matrix">
+<img src="../figures/integrity_gate_matrix.png"
+alt="Integrity-gate matrix" />
+<figcaption aria-hidden="true">Integrity-gate matrix</figcaption>
+</figure>
+<h2 id="formalism-traceability">Formalism traceability</h2>
+<p>The formalism traceability view in <span class="citation"
+data-cites="fig:formalism_traceability">[@fig:formalism_traceability]</span>
+links each equation-backed formalism to the source surface that owns it.
+This is the visual counterpart to <span class="citation"
+data-cites="tbl:formalism_registry">[@tbl:formalism_registry]</span>.</p>
+<figure id="fig:formalism_traceability">
+<img src="../figures/formalism_traceability.png"
+alt="Formalism traceability" />
+<figcaption aria-hidden="true">Formalism traceability</figcaption>
+</figure>
+<h2 id="implementation-circuit">Implementation circuit</h2>
+<p>The implementation circuit in <span class="citation"
+data-cites="fig:implementation_circuit">[@fig:implementation_circuit]</span>
+shows how the concept is executed rather than merely described.
+Configuration feeds code; code emits variables, figures, and reports;
+manuscript hydration consumes those artifacts; validators feed errors
+back to source ownership. The figure is intentionally circular because
+the artifact is not complete after prose generation. It is complete only
+after the validation return path has no blocking evidence, citation,
+reference, or render failures.</p>
+<figure id="fig:implementation_circuit">
+<img src="../figures/implementation_circuit.png"
+alt="Gold-refinement implementation circuit" />
+<figcaption aria-hidden="true">Gold-refinement implementation
+circuit</figcaption>
+</figure>
+<h2 id="claim-evidence-assay">Claim-evidence assay</h2>
+<p>The claim-evidence assay in <span class="citation"
+data-cites="fig:claim_evidence_assay">[@fig:claim_evidence_assay]</span>
+turns the assaying stage into a reader-facing diagnostic. Each bar is a
+contribution claim from <code>manuscript/config.yaml</code>, and each
+annotation names the source file or symbol used to support it. This
+makes the contribution ledger inspectable at the same level as the
+purity plots: unsupported claims would appear as failed assays rather
+than remaining hidden in prose.</p>
+<figure id="fig:claim_evidence_assay">
+<img src="../figures/claim_evidence_assay.png"
+alt="Claim-evidence assay" />
+<figcaption aria-hidden="true">Claim-evidence assay</figcaption>
+</figure>
+<h2 id="scientific-integrity-risk-matrix">Scientific-integrity risk
+matrix</h2>
+<p>The integrity risk matrix in <span class="citation"
+data-cites="fig:integrity_risk_matrix">[@fig:integrity_risk_matrix]</span>
+plots severity against detectability for the 8 integrity dimensions in
+<span class="citation"
+data-cites="tbl:integrity_dimensions">[@tbl:integrity_dimensions]</span>.
+Bubble size encodes residual risk, while color encodes the source tier
+that owns the evidence surface. This makes boundary failures more
+visible than cosmetic source checks without hiding whether the support
+comes from config, source code, claim ledger, generated metric,
+artifact, bibliography, or validation gate. The matrix is intentionally
+local: it prioritizes where this exemplar needs source ownership, not
+where every future manuscript should focus.</p>
+<figure id="fig:integrity_risk_matrix">
+<img src="../figures/integrity_risk_matrix.png"
+alt="Scientific-integrity risk matrix" />
+<figcaption aria-hidden="true">Scientific-integrity risk
+matrix</figcaption>
+</figure>
+<h2 id="evidence-tier-ladder">Evidence-tier ladder</h2>
+<p>The evidence-tier ladder in <span class="citation"
+data-cites="fig:evidence_tier_ladder">[@fig:evidence_tier_ladder]</span>
+summarizes the evidence surfaces available to the shared template
+evidence registry or, before that gate has run, the fallback source
+tiers from the integrity model. It gives a quick view of whether the
+manuscript is leaning on generated metrics, claim-ledger facts,
+bibliography records, source code, or disposable artifacts.</p>
+<figure id="fig:evidence_tier_ladder">
+<img src="../figures/evidence_tier_ladder.png"
+alt="Evidence-tier ladder" />
+<figcaption aria-hidden="true">Evidence-tier ladder</figcaption>
+</figure>
+<table id="tbl:evidence_tiers">
+<caption>Evidence tiers used by the integrity model and shared registry
+when available.</caption>
+<thead>
+<tr>
+<th>Source tier</th>
+<th>Count</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>artifact</td>
+<td>117</td>
+<td>Generated artifacts exposed to readers</td>
+</tr>
+<tr>
+<td>generated_metric</td>
+<td>94</td>
+<td>Numbers regenerated from project analysis</td>
+</tr>
+<tr>
+<td>claim_ledger</td>
+<td>14</td>
+<td>Source-owned claim and fact declarations</td>
+</tr>
+<tr>
+<td>bibliography</td>
+<td>5</td>
+<td>Reference records and citation metadata</td>
+</tr>
+</tbody>
+</table>
 <h2 id="contribution-claims">Contribution claims</h2>
 <table>
 <colgroup>
@@ -451,6 +715,230 @@ nine-nines.</td>
 <td>Token selection is deterministic via seeded SHA-256 digest.</td>
 <td>src/composition.py::_choose_value</td>
 <td>local</td>
+</tr>
+<tr>
+<td>Formalism registry</td>
+<td>The manuscript exposes 6 source-owned formalisms with equation
+labels.</td>
+<td>src/formalisms.py::FORMALISMS</td>
+<td>local</td>
+</tr>
+<tr>
+<td>Claim-support report separation</td>
+<td>The project-local contribution-claim report is written to
+claim_support_registry.json.</td>
+<td>scripts/refinement_analysis.py::claim_support_registry</td>
+<td>local</td>
+</tr>
+<tr>
+<td>Implementation-linked visualizations</td>
+<td>The manuscript includes generated visualizations that link the
+refinery analogy to source code, variables, evidence, and validation
+gates.</td>
+<td>src/figures.py::generate_implementation_circuit</td>
+<td>local</td>
+</tr>
+<tr>
+<td>Scientific-integrity risk model</td>
+<td>The manuscript includes a source-owned integrity risk model linking
+failure modes, validators, evidence surfaces, and fork obligations.</td>
+<td>src/integrity.py::build_integrity_dimensions</td>
+<td>local</td>
+</tr>
+</tbody>
+</table>
+<p>The project-local claim-support assay reports 8 supported claims out
+of 8 total claims, for 100.00% support. Unsupported claims: 0. The
+generated project report path is
+<code>output/reports/claim_support_registry.json</code>; the shared
+template evidence report remains
+<code>output/reports/evidence_registry.json</code>.</p>
+<h2 id="shared-evidence-registry-summary">Shared evidence registry
+summary</h2>
+<p>When the template evidence gate has run, the shared registry supplies
+source-tiered facts used by the evidence validator. Current fact count
+available to this variable pass: 230.</p>
+<table id="tbl:shared_evidence_kinds">
+<caption>Shared evidence-registry fact kinds when available.</caption>
+<thead>
+<tr>
+<th>Fact kind</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>artifact</td>
+<td>75</td>
+</tr>
+<tr>
+<td>citation</td>
+<td>5</td>
+</tr>
+<tr>
+<td>equation</td>
+<td>7</td>
+</tr>
+<tr>
+<td>figure</td>
+<td>27</td>
+</tr>
+<tr>
+<td>number</td>
+<td>100</td>
+</tr>
+<tr>
+<td>section</td>
+<td>10</td>
+</tr>
+<tr>
+<td>table</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+<h2 id="figure-quality-report">Figure quality report</h2>
+<p>The visualization registry is paired with
+<code>output/reports/figure_quality_report.json</code>, a generated QA
+report that checks PNG and SVG existence, file dimensions, nonblank
+pixel mass, color variance, and registry parity. Current status: passing
+with 12/12 registered figures passing and registry parity reported as
+Yes. PNG remains the manuscript render path; SVG is the companion
+technical artifact for inspection, reuse, and source-level debugging.
+<span class="citation"
+data-cites="tbl:figure_quality">[@tbl:figure_quality]</span> summarizes
+the generated surface.</p>
+<table id="tbl:figure_quality">
+<caption>Figure-quality report generated from source-owned figure
+specs.</caption>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 20%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr>
+<th>Figure</th>
+<th>PNG</th>
+<th>SVG</th>
+<th>Dimensions</th>
+<th>Nonwhite</th>
+<th>Variance</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>claim_evidence_assay</td>
+<td>yes</td>
+<td>yes</td>
+<td>3947x1904</td>
+<td>0.211</td>
+<td>0.05905715</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>evidence_tier_ladder</td>
+<td>yes</td>
+<td>yes</td>
+<td>3254x1319</td>
+<td>0.194</td>
+<td>0.05465268</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>formalism_traceability</td>
+<td>yes</td>
+<td>yes</td>
+<td>4170x1866</td>
+<td>0.096</td>
+<td>0.03165302</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>implementation_circuit</td>
+<td>yes</td>
+<td>yes</td>
+<td>3720x2129</td>
+<td>0.049</td>
+<td>0.01648025</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>integrity_gate_matrix</td>
+<td>yes</td>
+<td>yes</td>
+<td>1953x1559</td>
+<td>0.457</td>
+<td>0.17734427</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>integrity_risk_matrix</td>
+<td>yes</td>
+<td>yes</td>
+<td>2969x2069</td>
+<td>0.402</td>
+<td>0.01475595</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>karat_grading</td>
+<td>yes</td>
+<td>yes</td>
+<td>3241x1829</td>
+<td>0.286</td>
+<td>0.07357948</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>provenance_sankey</td>
+<td>yes</td>
+<td>yes</td>
+<td>3570x1400</td>
+<td>0.059</td>
+<td>0.01855784</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>purity_claim_scatter</td>
+<td>yes</td>
+<td>yes</td>
+<td>2587x1889</td>
+<td>0.028</td>
+<td>0.01227429</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>purity_progression</td>
+<td>yes</td>
+<td>yes</td>
+<td>3029x2125</td>
+<td>0.182</td>
+<td>0.03971092</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>token_density</td>
+<td>yes</td>
+<td>yes</td>
+<td>3865x1663</td>
+<td>0.206</td>
+<td>0.06115993</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>token_heatmap</td>
+<td>yes</td>
+<td>yes</td>
+<td>2648x2424</td>
+<td>0.637</td>
+<td>0.12747028</td>
+<td>pass</td>
 </tr>
 </tbody>
 </table>

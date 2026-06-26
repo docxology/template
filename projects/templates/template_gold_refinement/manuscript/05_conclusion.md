@@ -8,6 +8,10 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be load
 - Final purity: {{REFINERY_FINAL_PURITY}} ({{REFINERY_FINAL_KARAT}})
 - {{TOKEN_COUNT}} tokens generated deterministically from seed {{TOKEN_SEED}}
 - Config hash: {{CONFIG_HASH}}
+- {{FORMALISM_COUNT}} source-owned formalisms with equation labels: {{FORMALISM_EQUATION_LABELS}}
+- Claim-support status: {{CLAIM_SUPPORT_SUPPORTED}}/{{CLAIM_SUPPORT_TOTAL}} supported ({{CLAIM_SUPPORT_STATUS}})
+- {{INTEGRITY_DIMENSION_COUNT}} integrity dimensions with residual-risk scoring and owner/validator links.
+- Registered visual evidence spans purity progression, token coverage, formalism traceability, implementation flow, claim-evidence assay, risk-matrix, and evidence-tier surfaces.
 
 ## Forking responsibilities
 
@@ -16,3 +20,9 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be load
 3. Add domain-specific evidence and validators
 4. Regenerate all outputs through the pipeline
 5. Do not hand-edit generated manuscript, PDFs, or figures
+
+The durable result is not the current prose snapshot. It is the reproducible contract that can rebuild the prose, figures, formalisms, and validation reports from source.
+
+That contract is the paper's central contribution. It demonstrates how an analogy can be useful without being loose: every metaphorical move either points to a source-owned implementation surface or stays explicitly inside the discussion boundary.
+
+The added integrity model makes the same claim in a stricter form: every high-value visual or formal statement should have an owner, an evidence tier, and a validator. Without those three surfaces, the right outcome is not a more polished metaphor; it is a narrower claim.

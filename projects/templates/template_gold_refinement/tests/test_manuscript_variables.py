@@ -139,6 +139,13 @@ def test_table_variables_present(tmp_path):
     assert "TOKEN_PROVENANCE_TABLE" in v
     assert "LEXICON_TABLE" in v
     assert "PURITY_SEQUENCE" in v
+    assert "FORMALISM_TABLE_ROWS" in v
+    assert "FORMALISM_EQUATION_BLOCKS" in v
+    assert "FORMALISM_TRACEABILITY_TABLE" in v
+    assert "INTEGRITY_DIMENSION_TABLE" in v
+    assert "INTEGRITY_OWNER_TABLE" in v
+    assert "EVIDENCE_TIER_TABLE" in v
+    assert "FIGURE_QUALITY_TABLE" in v
 
 
 def test_title_variables_present(tmp_path):
@@ -147,6 +154,81 @@ def test_title_variables_present(tmp_path):
     assert "TITLE_ABSTRACT" in v
     assert "TITLE_INTRODUCTION" in v
     assert "TITLE_METHODOLOGY" in v
+
+
+def test_real_project_expanded_token_surface():
+    project_root = Path(__file__).resolve().parent.parent
+    v = generate_variables(project_root)
+    assert v["TOKEN_COUNT"] == "24"
+    assert v["CONFIG_TOTAL_TOKEN_COUNT"] == "24"
+    for token in (
+        "INTRO_INTEGRITY_TERM_1",
+        "METHOD_GATE_TERM_3",
+        "RESULTS_EVIDENCE_TERM_3",
+        "DISCUSSION_BOUNDARY_TERM_2",
+        "REPRO_EVIDENCE_TERM_2",
+        "EVALUATION_GATE_TERM_2",
+        "AUTHORING_BOUNDARY_TERM_2",
+    ):
+        assert token in v
+
+
+def test_formalism_and_claim_support_variables_present(tmp_path):
+    root = _make_minimal_project(tmp_path)
+    v = generate_variables(root)
+    assert v["FORMALISM_COUNT"] == "6"
+    assert "eq:certification_predicate" in v["FORMALISM_EQUATION_LABELS"]
+    assert v["CLAIM_SUPPORT_REGISTRY_PATH"] == "output/reports/claim_support_registry.json"
+    assert v["FIGURE_QUALITY_REPORT_PATH"] == "output/reports/figure_quality_report.json"
+    assert "FIGURE_QUALITY_STATUS" in v
+    assert "FIGURE_QUALITY_PASSING_COUNT" in v
+    assert "SHARED_EVIDENCE_KIND_TABLE" in v
+    assert "fig:implementation_circuit" in v["FIGURE_IMPLEMENTATION_CIRCUIT"]
+    assert "fig:claim_evidence_assay" in v["FIGURE_CLAIM_EVIDENCE_ASSAY"]
+    assert "fig:integrity_risk_matrix" in v["FIGURE_INTEGRITY_RISK_MATRIX"]
+    assert "fig:evidence_tier_ladder" in v["FIGURE_EVIDENCE_TIER_LADDER"]
+    assert v["INTEGRITY_DIMENSION_COUNT"] == "8"
+    assert "highest residual risk" in v["INTEGRITY_RISK_SUMMARY"]
+
+
+def test_figure_quality_variables_read_generated_report(tmp_path):
+    root = _make_minimal_project(tmp_path)
+    reports_dir = root / "output" / "reports"
+    reports_dir.mkdir(parents=True)
+    (reports_dir / "figure_quality_report.json").write_text(
+        json.dumps(
+            {
+                "schema": "template-gold-refinement-figure-quality-v1",
+                "figure_count": 1,
+                "png_count": 1,
+                "svg_count": 1,
+                "passing_count": 1,
+                "registry_parity": True,
+                "records": [
+                    {
+                        "name": "purity_progression",
+                        "png_exists": True,
+                        "svg_exists": True,
+                        "width_px": 1800,
+                        "height_px": 1200,
+                        "nonwhite_fraction": 0.123456,
+                        "color_variance": 0.01234567,
+                        "passes_quality": True,
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    v = generate_variables(root)
+    assert v["FIGURE_QUALITY_STATUS"] == "passing"
+    assert v["FIGURE_QUALITY_TOTAL"] == "1"
+    assert v["FIGURE_QUALITY_PNG_COUNT"] == "1"
+    assert v["FIGURE_QUALITY_SVG_COUNT"] == "1"
+    assert v["FIGURE_QUALITY_REGISTRY_PARITY"] == "Yes"
+    assert "| purity_progression | yes | yes | 1800x1200 | 0.123 | 0.01234567 | pass |" in v[
+        "FIGURE_QUALITY_TABLE"
+    ]
 
 
 def test_config_hash_na_when_no_config(tmp_path):

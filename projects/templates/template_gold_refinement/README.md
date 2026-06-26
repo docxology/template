@@ -49,6 +49,44 @@ uv run pytest projects/templates/template_gold_refinement/tests/ \
   --cov=projects/templates/template_gold_refinement/src --cov-fail-under=90
 ```
 
+## Generated artifact contract
+
+All rendered artifacts are source-owned and disposable. Do not hand-edit
+`output/`; regenerate it through Stage 02/03/04 or the project scripts.
+
+| Artifact | Source owner | Purpose |
+| --- | --- | --- |
+| `output/data/refinery_results.json` | `src/refinery.py`, `src/purity.py` | Canonical purity sequence and certification result |
+| `output/reports/token_plan.json` | `src/composition.py`, `manuscript/config.yaml` | Deterministic mega-madlib token choices and provenance |
+| `output/reports/claim_support_registry.json` | `src/evidence.py` | Project-local contribution-claim assay |
+| `output/reports/evidence_registry.json` | template evidence validator | Shared evidence facts consumed by validation gates |
+| `output/figures/figure_registry.json` | `src/figures.py::FIGURE_SPECS` | Figure label/path/caption/source registry |
+| `output/reports/figure_quality_report.json` | `src/figures.py::write_figure_quality_report` | PNG/SVG existence, dimensions, nonblank pixels, color variance, and registry parity |
+
+## Visualization and scientific-integrity surface
+
+The visualization layer is a technical contract, not a decorative export.
+`src/figures.py` defines a single `FIGURE_SPECS` registry for all 12 stable
+figure labels and writes both PNG and SVG files for every figure. Manuscript
+Markdown variables continue to reference PNGs for PDF compatibility; SVG files
+are companion artifacts for inspection and reuse.
+
+Graph-like figures use deterministic NetworkX-backed source graphs:
+
+| Figure | Technical encoding |
+| --- | --- |
+| `fig:provenance_sankey` | Directed stage flow with edge width proportional to purity gain |
+| `fig:formalism_traceability` | Formalism → equation label → source-owner graph |
+| `fig:implementation_circuit` | Config/code/artifact/manuscript/validator/publication circuit |
+| `fig:claim_evidence_assay` | Claim-support bars plus claim → evidence → boundary topology |
+
+Quantitative figures expose late-stage or integrity-relevant structure:
+`fig:purity_progression` includes a nines transform, `fig:integrity_risk_matrix`
+colors points by source tier and sizes them by residual risk, and
+`fig:evidence_tier_ladder` reports source-tier counts and percentages. The
+quality report must pass before the visuals should be treated as publication
+artifacts.
+
 ## The analogy
 
 Gold refining provides a load-bearing pipeline — not merely a rhetorical frame —
@@ -69,9 +107,11 @@ function cross-checked by a live regression test.
 
 ## Dependencies
 
-Run `uv sync` at the **repository root**. Root `pyproject.toml` has
-`[tool.uv.workspace]` with `members = []`, so this folder is not a separate
-workspace package.
+Run `uv sync` at the **repository root** for the shared template pipeline. Stage
+02 executes this project with `uv run --directory
+projects/templates/template_gold_refinement`, so the project-local
+`pyproject.toml` also declares the runtime dependencies needed by the exemplar,
+including `networkx>=3.4.2` for deterministic graph layouts.
 
 ## Key Features
 
@@ -80,6 +120,9 @@ workspace package.
 - **Karat grading**: maps purity fractions to standard gold karat grades (9K–24K)
 - **Nine-nines certification**: extends purity to 99.9999999% for the final stage
 - **Manuscript variable generation**: every prose number is a `{{TOKEN}}` from one Python function
+- **Source-owned formalisms**: auto-numbered equation blocks from `src/formalisms.py`
+- **Scientific-integrity gates**: claim support, evidence tiers, source owners, and risk dimensions from source registries
+- **Technical visualization QA**: PNG+SVG generation, registry parity, nonblank pixel checks, and color-variance checks
 - **Zero-mock test suite**: real data, real computation, real files
 
 ## More Information

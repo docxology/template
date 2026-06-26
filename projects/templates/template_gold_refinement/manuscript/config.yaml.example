@@ -147,7 +147,27 @@ gold_refinement:
       - "assaying"
       - "certifying"
       - "refining"
+    integrity_terms:
+      - "evidence spine"
+      - "source tier"
+      - "validation gate"
+    evidence_terms:
+      - "fact registry"
+      - "artifact manifest"
+      - "token provenance"
+    boundary_terms:
+      - "local claim"
+      - "analogy boundary"
+      - "domain validator"
+    gate_terms:
+      - "prerender"
+      - "evidence validation"
+      - "coverage gate"
   slots:
+    - name: "INTRO_INTEGRITY_TERM"
+      category: "integrity_terms"
+      count: 2
+      section: "introduction"
     - name: "METHOD_METAL_TERM"
       category: "metallurgical_terms"
       count: 3
@@ -156,14 +176,38 @@ gold_refinement:
       category: "manuscript_terms"
       count: 2
       section: "methodology"
+    - name: "METHOD_GATE_TERM"
+      category: "gate_terms"
+      count: 3
+      section: "methodology"
     - name: "RESULTS_PURITY_ADJ"
       category: "purity_adjectives"
       count: 2
+      section: "results"
+    - name: "RESULTS_EVIDENCE_TERM"
+      category: "evidence_terms"
+      count: 3
       section: "results"
     - name: "DISCUSSION_REFINEMENT_VERB"
       category: "refinement_verbs"
       count: 1
       section: "discussion"
+    - name: "DISCUSSION_BOUNDARY_TERM"
+      category: "boundary_terms"
+      count: 2
+      section: "discussion"
+    - name: "REPRO_EVIDENCE_TERM"
+      category: "evidence_terms"
+      count: 2
+      section: "reproducibility"
+    - name: "EVALUATION_GATE_TERM"
+      category: "gate_terms"
+      count: 2
+      section: "evaluation"
+    - name: "AUTHORING_BOUNDARY_TERM"
+      category: "boundary_terms"
+      count: 2
+      section: "authoring_contract"
   contribution_claims:
     - name: "Five-stage refinery"
       claim: "The refinery pipeline has 5 canonical stages from ore to nine-nines."
@@ -180,6 +224,22 @@ gold_refinement:
     - name: "Deterministic tokens"
       claim: "Token selection is deterministic via seeded SHA-256 digest."
       evidence: "src/composition.py::_choose_value"
+      boundary: "local"
+    - name: "Formalism registry"
+      claim: "The manuscript exposes 6 source-owned formalisms with equation labels."
+      evidence: "src/formalisms.py::FORMALISMS"
+      boundary: "local"
+    - name: "Claim-support report separation"
+      claim: "The project-local contribution-claim report is written to claim_support_registry.json."
+      evidence: "scripts/refinement_analysis.py::claim_support_registry"
+      boundary: "local"
+    - name: "Implementation-linked visualizations"
+      claim: "The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates."
+      evidence: "src/figures.py::generate_implementation_circuit"
+      boundary: "local"
+    - name: "Scientific-integrity risk model"
+      claim: "The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations."
+      evidence: "src/integrity.py::build_integrity_dimensions"
       boundary: "local"
   pipeline_phases:
     - name: "Schema intake"
@@ -202,6 +262,11 @@ gold_refinement:
       transformation: "Generate purity progression, karat grading, and token density figures"
       output_artifact: "output/figures/*.png"
       guard: "nonblank figure tests"
+    - name: "Integrity risk modeling"
+      input_artifact: "audit rules, failure modes, claims, and shared evidence registry"
+      transformation: "Score integrity dimensions and summarize evidence tiers"
+      output_artifact: "integrity tables and risk visualizations"
+      guard: "tests/test_integrity.py"
     - name: "Manuscript hydration"
       input_artifact: "manuscript shells and manuscript_variables.json"
       transformation: "Resolve {{TOKEN}} placeholders into output/manuscript/"
@@ -228,3 +293,6 @@ gold_refinement:
     - name: "Figure generation"
       check: "All figure generators must produce non-blank PNGs"
       test: "tests/test_figures.py"
+    - name: "Integrity model coverage"
+      check: "Integrity dimensions must have unique IDs, owners, validators, and evidence surfaces"
+      test: "tests/test_integrity.py"

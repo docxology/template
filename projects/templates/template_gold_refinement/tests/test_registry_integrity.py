@@ -7,11 +7,36 @@ import re
 from pathlib import Path
 
 import pytest
+from figures import FIGURE_SPECS
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 _FIG_LABEL_RE = re.compile(r"\[@fig:([a-z_]+)\]")
+_EQ_REF_RE = re.compile(r"\[@(eq:[A-Za-z0-9_.:-]+)\]")
+_EQ_DEF_RE = re.compile(r"\{#(eq:[A-Za-z0-9_.:-]+)\}|\\label\{(eq:[A-Za-z0-9_.:-]+)\}")
+_TBL_REF_RE = re.compile(r"\[@(tbl:[A-Za-z0-9_.:-]+)\]")
+_TBL_DEF_RE = re.compile(r"\{#(tbl:[A-Za-z0-9_.:-]+)\}")
 _DOC_ONLY = frozenset({"AGENTS.md", "README.md", "SYNTAX.md"})
+
+
+def _resolved_manuscript_text() -> str:
+    from manuscript_variables import generate_variables
+
+    variables = generate_variables(_PROJECT_ROOT)
+    parts = []
+    for md_file in sorted((_PROJECT_ROOT / "manuscript").glob("*.md")):
+        if md_file.name in _DOC_ONLY:
+            continue
+        text = md_file.read_text(encoding="utf-8")
+        for key, value in variables.items():
+            text = text.replace(f"{{{{{key}}}}}", value)
+        parts.append(text)
+    return "\n\n".join(parts)
+
+
+def _strip_markdown_code(text: str) -> str:
+    text = re.sub(r"```.*?```", "", text, flags=re.DOTALL)
+    return re.sub(r"`[^`]*`", "", text)
 
 
 class TestFigureRegistryIntegrity:
@@ -50,16 +75,10 @@ class TestFigureRegistryIntegrity:
             pytest.skip("figure_registry.json not found")
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         labels = {f["label"] for f in registry.get("figures", [])}
-        expected = {
-            "fig:purity_progression",
-            "fig:karat_grading",
-            "fig:token_density",
-            "fig:provenance_sankey",
-            "fig:purity_claim_scatter",
-            "fig:token_heatmap",
-        }
+        expected = {spec.label for spec in FIGURE_SPECS}
         missing = expected - labels
         assert not missing, f"Missing figures in registry: {missing}"
+        assert labels == expected
 
     def test_all_pngs_exist(self):
         registry_path = _PROJECT_ROOT / "output" / "figures" / "figure_registry.json"
@@ -69,8 +88,37 @@ class TestFigureRegistryIntegrity:
         figures_dir = _PROJECT_ROOT / "output" / "figures"
         for fig in registry.get("figures", []):
             png_path = figures_dir / fig["path"]
+            svg_path = figures_dir / fig["svg_path"]
+            assert {"name", "caption", "generated_by", "data_sources", "visual_encoding"} <= set(fig)
             assert png_path.exists(), f"Figure PNG not found: {png_path}"
+            assert svg_path.exists(), f"Figure SVG not found: {svg_path}"
             assert png_path.stat().st_size > 100, f"Figure appears blank: {png_path}"
+            assert svg_path.stat().st_size > 100, f"Figure SVG appears blank: {svg_path}"
+
+    def test_figure_quality_report_matches_registry(self):
+        quality_path = _PROJECT_ROOT / "output" / "reports" / "figure_quality_report.json"
+        if not quality_path.exists():
+            pytest.skip("figure_quality_report.json not found")
+        report = json.loads(quality_path.read_text(encoding="utf-8"))
+        assert report["figure_count"] == len(FIGURE_SPECS)
+        assert report["png_count"] == len(FIGURE_SPECS)
+        assert report["svg_count"] == len(FIGURE_SPECS)
+        assert report["registry_parity"] is True
+        assert report["passing_count"] == len(FIGURE_SPECS)
+
+
+class TestFormalReferenceIntegrity:
+    def test_all_equation_refs_have_definitions(self):
+        text = _strip_markdown_code(_resolved_manuscript_text())
+        refs = set(_EQ_REF_RE.findall(text))
+        defs = {a or b for a, b in _EQ_DEF_RE.findall(text)}
+        assert refs <= defs, f"Missing equation definitions: {sorted(refs - defs)}"
+
+    def test_all_table_refs_have_definitions(self):
+        text = _strip_markdown_code(_resolved_manuscript_text())
+        refs = set(_TBL_REF_RE.findall(text))
+        defs = set(_TBL_DEF_RE.findall(text))
+        assert refs <= defs, f"Missing table definitions: {sorted(refs - defs)}"
 
 
 class TestDashboardIntegrity:

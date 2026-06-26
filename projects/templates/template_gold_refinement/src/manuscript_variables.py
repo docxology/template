@@ -28,11 +28,43 @@ import yaml
 try:
     from .composition import generate_token_plan
     from .config import load_gold_refinement_config
+    from .evidence import build_evidence_registry
+    from .formalisms import (
+        equation_labels,
+        formalism_count,
+        formalism_equation_blocks,
+        formalism_table_rows,
+        formalism_traceability_rows,
+    )
+    from .integrity import (
+        build_evidence_tiers,
+        build_integrity_dimensions,
+        evidence_tier_table_rows,
+        integrity_dimension_table_rows,
+        integrity_owner_table_rows,
+        integrity_summary_line,
+    )
     from .purity import format_purity, purity_to_nines
     from .refinery import run_refinery
 except ImportError:  # pragma: no cover
     from composition import generate_token_plan  # type: ignore[no-redef]
     from config import load_gold_refinement_config  # type: ignore[no-redef]
+    from evidence import build_evidence_registry  # type: ignore[no-redef]
+    from formalisms import (  # type: ignore[no-redef]
+        equation_labels,
+        formalism_count,
+        formalism_equation_blocks,
+        formalism_table_rows,
+        formalism_traceability_rows,
+    )
+    from integrity import (  # type: ignore[no-redef]
+        build_evidence_tiers,
+        build_integrity_dimensions,
+        evidence_tier_table_rows,
+        integrity_dimension_table_rows,
+        integrity_owner_table_rows,
+        integrity_summary_line,
+    )
     from purity import format_purity, purity_to_nines  # type: ignore[no-redef]
     from refinery import run_refinery  # type: ignore[no-redef]
 
@@ -86,6 +118,45 @@ def _count_output_artifacts(project_root: Path) -> dict[str, int]:
         else:
             counts[subdir] = 0
     return counts
+
+
+def _load_json_object(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    with path.open("r") as f:
+        data = json.load(f)
+    return data if isinstance(data, dict) else {}
+
+
+def _shared_evidence_kind_rows(shared_evidence: dict[str, Any]) -> str:
+    kind_counts = shared_evidence.get("kind_counts", {})
+    if not isinstance(kind_counts, dict) or not kind_counts:
+        return "| not generated | 0 |"
+    return "\n".join(f"| {kind} | {count} |" for kind, count in sorted(kind_counts.items()))
+
+
+def _figure_quality_table_rows(figure_quality: dict[str, Any]) -> str:
+    records = figure_quality.get("records", [])
+    if not isinstance(records, list) or not records:
+        return "| not generated | no | no | 0x0 | 0.000 | 0.00000000 | missing |"
+    rows = []
+    for record in sorted(
+        (item for item in records if isinstance(item, dict)),
+        key=lambda item: str(item.get("name", "")),
+    ):
+        width = int(record.get("width_px", 0) or 0)
+        height = int(record.get("height_px", 0) or 0)
+        status = "pass" if record.get("passes_quality") else "fail"
+        rows.append(
+            f"| {record.get('name', '')} "
+            f"| {'yes' if record.get('png_exists') else 'no'} "
+            f"| {'yes' if record.get('svg_exists') else 'no'} "
+            f"| {width}x{height} "
+            f"| {float(record.get('nonwhite_fraction', 0.0) or 0.0):.3f} "
+            f"| {float(record.get('color_variance', 0.0) or 0.0):.8f} "
+            f"| {status} |"
+        )
+    return "\n".join(rows)
 
 
 # --------------------------------------------------------------------------- #
@@ -257,6 +328,25 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     variables["FIGURE_TOKEN_HEATMAP"] = (
         "![Token selection heatmap](../output/figures/token_heatmap.png){#fig:token_heatmap}"
     )
+    variables["FIGURE_INTEGRITY_GATE_MATRIX"] = (
+        "![Integrity-gate matrix](../output/figures/integrity_gate_matrix.png){#fig:integrity_gate_matrix}"
+    )
+    variables["FIGURE_FORMALISM_TRACEABILITY"] = (
+        "![Formalism traceability](../output/figures/formalism_traceability.png){#fig:formalism_traceability}"
+    )
+    variables["FIGURE_IMPLEMENTATION_CIRCUIT"] = (
+        "![Gold-refinement implementation circuit](../output/figures/implementation_circuit.png)"
+        "{#fig:implementation_circuit}"
+    )
+    variables["FIGURE_CLAIM_EVIDENCE_ASSAY"] = (
+        "![Claim-evidence assay](../output/figures/claim_evidence_assay.png){#fig:claim_evidence_assay}"
+    )
+    variables["FIGURE_INTEGRITY_RISK_MATRIX"] = (
+        "![Scientific-integrity risk matrix](../output/figures/integrity_risk_matrix.png){#fig:integrity_risk_matrix}"
+    )
+    variables["FIGURE_EVIDENCE_TIER_LADDER"] = (
+        "![Evidence-tier ladder](../output/figures/evidence_tier_ladder.png){#fig:evidence_tier_ladder}"
+    )
 
     # ---- Contribution claims table ----
     claim_rows = []
@@ -311,6 +401,54 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
             f"| {fm.get('name', '')} | {fm.get('risk', '')} | {fm.get('detection', '')} | {fm.get('mitigation', '')} |"
         )
     variables["FAILURE_MODES_TABLE"] = "\n".join(failure_rows)
+
+    labels = equation_labels()
+    variables["FORMALISM_COUNT"] = str(formalism_count())
+    variables["FORMALISM_TABLE_ROWS"] = formalism_table_rows()
+    variables["FORMALISM_EQUATION_BLOCKS"] = formalism_equation_blocks()
+    variables["FORMALISM_TRACEABILITY_TABLE"] = formalism_traceability_rows()
+    variables["FORMALISM_EQUATION_LABELS"] = ", ".join(labels)
+    variables["FORMALISM_EQUATION_REFS"] = ", ".join(f"[@{label}]" for label in labels)
+
+    claim_registry = build_evidence_registry(gr_config, project_root)
+    variables["CLAIM_SUPPORT_TOTAL"] = str(claim_registry.total_claims)
+    variables["CLAIM_SUPPORT_SUPPORTED"] = str(claim_registry.supported_claims)
+    variables["CLAIM_SUPPORT_UNSUPPORTED"] = str(claim_registry.unsupported_claims)
+    variables["CLAIM_SUPPORT_RATE"] = f"{claim_registry.support_rate:.2%}"
+    variables["CLAIM_SUPPORT_STATUS"] = "passing" if claim_registry.is_passing else "failing"
+    variables["CLAIM_SUPPORT_REGISTRY_PATH"] = "output/reports/claim_support_registry.json"
+
+    shared_evidence = _load_json_object(project_root / "output" / "reports" / "evidence_registry.json")
+    variables["SHARED_EVIDENCE_FACT_COUNT"] = str(shared_evidence.get("fact_count", 0))
+    variables["SHARED_EVIDENCE_KIND_TABLE"] = _shared_evidence_kind_rows(shared_evidence)
+    variables["SHARED_EVIDENCE_SCHEMA"] = str(shared_evidence.get("schema", "not generated"))
+
+    figure_quality = _load_json_object(project_root / "output" / "reports" / "figure_quality_report.json")
+    figure_count = int(figure_quality.get("figure_count", 0) or 0)
+    passing_count = int(figure_quality.get("passing_count", 0) or 0)
+    registry_parity = bool(figure_quality.get("registry_parity", False))
+    if figure_count == 0:
+        quality_status = "not generated"
+    elif passing_count == figure_count and registry_parity:
+        quality_status = "passing"
+    else:
+        quality_status = "failing"
+    variables["FIGURE_QUALITY_REPORT_PATH"] = "output/reports/figure_quality_report.json"
+    variables["FIGURE_QUALITY_TOTAL"] = str(figure_count)
+    variables["FIGURE_QUALITY_PNG_COUNT"] = str(int(figure_quality.get("png_count", 0) or 0))
+    variables["FIGURE_QUALITY_SVG_COUNT"] = str(int(figure_quality.get("svg_count", 0) or 0))
+    variables["FIGURE_QUALITY_PASSING_COUNT"] = str(passing_count)
+    variables["FIGURE_QUALITY_REGISTRY_PARITY"] = "Yes" if registry_parity else "No"
+    variables["FIGURE_QUALITY_STATUS"] = quality_status
+    variables["FIGURE_QUALITY_TABLE"] = _figure_quality_table_rows(figure_quality)
+
+    integrity_dimensions = build_integrity_dimensions(gr_config)
+    evidence_tiers = build_evidence_tiers(shared_evidence, integrity_dimensions)
+    variables["INTEGRITY_DIMENSION_COUNT"] = str(len(integrity_dimensions))
+    variables["INTEGRITY_RISK_SUMMARY"] = integrity_summary_line(integrity_dimensions)
+    variables["INTEGRITY_DIMENSION_TABLE"] = integrity_dimension_table_rows(integrity_dimensions)
+    variables["INTEGRITY_OWNER_TABLE"] = integrity_owner_table_rows(integrity_dimensions)
+    variables["EVIDENCE_TIER_TABLE"] = evidence_tier_table_rows(evidence_tiers)
 
     # ---- Manuscript staleness detection ----
     variables["MANUSCRIPT_STALENESS"] = _detect_staleness(project_root)

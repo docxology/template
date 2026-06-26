@@ -182,7 +182,9 @@
 <p>The refinery pipeline consists of 5 canonical stages, each mapping a
 metallurgical operation to a manuscript-composition operation. The
 pipeline is implemented in <code>src/refinery.py</code> and validated by
-<code>src/purity.py</code>.</p>
+<code>src/purity.py</code>. The methods surface now has three coupled
+layers: the refinery stages, the mega-madlib token plan, and the
+generated formalism registry.</p>
 <h2 id="stage-definitions">Stage definitions</h2>
 <table>
 <colgroup>
@@ -258,6 +260,125 @@ p_{\text{in}}^{(i+1)} = p_{\text{out}}^{(i)} \quad \forall i \in \{1,
 data-cites="fig:purity_progression">[@fig:purity_progression]</span>
 (see <span class="citation"
 data-cites="sec:results">[@sec:results]</span>).</p>
+<h2 id="formalism-registry">Formalism registry</h2>
+<p>The formal layer is generated from <code>src/formalisms.py</code>,
+not hand-numbered prose. <span class="citation"
+data-cites="tbl:formalism_registry">[@tbl:formalism_registry]</span>
+lists the source evidence for each equation, and the equation blocks
+below are auto-numbered by the renderer.</p>
+<table id="tbl:formalism_registry">
+<caption>Source-owned formalism registry.</caption>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 33%" />
+<col style="width: 30%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Formalism</th>
+<th>Equation</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F1</td>
+<td>Purity functional</td>
+<td><span class="citation"
+data-cites="eq:purity_functional">[@eq:purity_functional]</span></td>
+<td><code>src/purity.py::format_purity</code></td>
+</tr>
+<tr>
+<td>F2</td>
+<td>Monotone refinement</td>
+<td><span class="citation"
+data-cites="eq:monotone_refinery">[@eq:monotone_refinery]</span></td>
+<td><code>src/refinery.py::assert_monotone_increase</code></td>
+</tr>
+<tr>
+<td>F3</td>
+<td>Token-selection digest</td>
+<td><span class="citation"
+data-cites="eq:token_digest">[@eq:token_digest]</span></td>
+<td><code>src/composition.py::_choose_value</code></td>
+</tr>
+<tr>
+<td>F4</td>
+<td>Claim-support fraction</td>
+<td><span class="citation"
+data-cites="eq:claim_support">[@eq:claim_support]</span></td>
+<td><code>src/evidence.py::EvidenceRegistry.support_rate</code></td>
+</tr>
+<tr>
+<td>F5</td>
+<td>Integrity vector</td>
+<td><span class="citation"
+data-cites="eq:integrity_vector">[@eq:integrity_vector]</span></td>
+<td><code>manuscript/config.yaml#gold_refinement.audit_rules</code></td>
+</tr>
+<tr>
+<td>F6</td>
+<td>Certification predicate</td>
+<td><span class="citation"
+data-cites="eq:certification_predicate">[@eq:certification_predicate]</span></td>
+<td><code>src/refinery.py::RefineryResult.is_nine_nines_certified</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>F1: Purity functional.</strong> Manuscript purity is treated
+as a bounded fraction mapped to a reader-facing grade.</p>
+<p><span class="math display">\[
+\pi(s) \in [0, 1], \qquad g(s) = \operatorname{karat}(\pi(s))
+\]</span> {#eq:purity_functional}</p>
+<p>The value is descriptive: it summarizes local validation state rather
+than external quality. Source:
+<code>src/purity.py::format_purity</code>.</p>
+<p><strong>F2: Monotone refinement.</strong> A valid refinery run
+requires every stage to improve the previous purity state.</p>
+<p><span class="math display">\[
+\pi_0 &lt; \pi_1 &lt; \cdots &lt; \pi_n
+\]</span> {#eq:monotone_refinery}</p>
+<p>The test suite rejects equal or decreasing stage outputs. Source:
+<code>src/refinery.py::assert_monotone_increase</code>.</p>
+<p><strong>F3: Token-selection digest.</strong> Every mega-madlib token
+is selected from config-owned inventory by a deterministic digest.</p>
+<p><span class="math display">\[
+i = \operatorname{int}(\operatorname{SHA256}(seed \Vert slot \Vert
+category \Vert ordinal \Vert inventory)_{0:12}, 16) \bmod \lvert
+inventory \rvert
+\]</span> {#eq:token_digest}</p>
+<p>Changing the seed or inventory changes the plan; replaying both
+reproduces it. Source:
+<code>src/composition.py::_choose_value</code>.</p>
+<p><strong>F4: Claim-support fraction.</strong> Contribution claims are
+assayed by counting supported local evidence pointers.</p>
+<p><span class="math display">\[
+\sigma = \frac{\lvert\{c \in C : supported(c)\}\rvert}{\lvert C \rvert}
+\]</span> {#eq:claim_support}</p>
+<p>The numerator and denominator come from the project-local
+claim-support registry. Source:
+<code>src/evidence.py::EvidenceRegistry.support_rate</code>.</p>
+<p><strong>F5: Integrity vector.</strong> Scientific integrity is
+represented as a vector of gate outcomes rather than one scalar
+badge.</p>
+<p><span class="math display">\[
+\mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render},
+v_{references})
+\]</span> {#eq:integrity_vector}</p>
+<p>A publication claim is only as strong as the weakest required gate.
+Source:
+<code>manuscript/config.yaml#gold_refinement.audit_rules</code>.</p>
+<p><strong>F6: Certification predicate.</strong> Certification is a
+predicate over final purity and validation readiness.</p>
+<p><span class="math display">\[
+\operatorname{certified}(r) \iff \pi_{final}(r) \geq 0.999999999 \land
+gates(r)
+\]</span> {#eq:certification_predicate}</p>
+<p>The predicate binds the nine-nines metaphor to the actual validation
+chain. Source:
+<code>src/refinery.py::RefineryResult.is_nine_nines_certified</code>.</p>
 <h2 id="token-selection">Token selection</h2>
 <p>The mega-madlib engine selects tokens from config-owned lexicon
 categories using a deterministic digest:</p>
@@ -268,10 +389,18 @@ categories using a deterministic digest:</p>
 \]</span></p>
 <p>where <span class="math inline">\(n\)</span> is the size of the
 lexicon category inventory. Selected metallurgical terms: hallmark,
-cupellation, assaying. Selected manuscript terms: evidence,
-evidence.</p>
+cupellation, assaying. Selected manuscript terms: evidence, evidence.
+The same digest rule is formalized in <span class="citation"
+data-cites="eq:token_digest">[@eq:token_digest]</span>, while the gate
+vocabulary for this section binds evidence validation, figure registry
+check, and citation validation to concrete validation surfaces.</p>
 <h2 id="config-owned-lexicon">Config-owned lexicon</h2>
 <table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 28%" />
+<col style="width: 32%" />
+</colgroup>
 <thead>
 <tr>
 <th>Category</th>
@@ -280,6 +409,26 @@ evidence.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>boundary_terms</td>
+<td>5</td>
+<td>local claim, analogy boundary, fork obligation…</td>
+</tr>
+<tr>
+<td>evidence_terms</td>
+<td>5</td>
+<td>fact registry, artifact manifest, citation check…</td>
+</tr>
+<tr>
+<td>gate_terms</td>
+<td>5</td>
+<td>prerender, evidence validation, figure registry check…</td>
+</tr>
+<tr>
+<td>integrity_terms</td>
+<td>5</td>
+<td>evidence spine, source tier, validation gate…</td>
+</tr>
 <tr>
 <td>manuscript_terms</td>
 <td>5</td>
@@ -365,6 +514,14 @@ figures</td>
 <td>nonblank figure tests</td>
 </tr>
 <tr>
+<td>Integrity risk modeling</td>
+<td>audit rules, failure modes, claims, and shared evidence
+registry</td>
+<td>Score integrity dimensions and summarize evidence tiers</td>
+<td>integrity tables and risk visualizations</td>
+<td>tests/test_integrity.py</td>
+</tr>
+<tr>
 <td>Manuscript hydration</td>
 <td>manuscript shells and manuscript_variables.json</td>
 <td>Resolve {{TOKEN}} placeholders into output/manuscript/</td>
@@ -380,5 +537,161 @@ figures</td>
 </tr>
 </tbody>
 </table>
+<p>The pipeline table is intentionally operational rather than
+decorative: a fork that changes the stages must update the source
+function, generated variables, figures, and validation gates
+together.</p>
+<h2 id="implementation-trace">Implementation trace</h2>
+<p>The implementation circuit shown in <span class="citation"
+data-cites="fig:implementation_circuit">[@fig:implementation_circuit]</span>
+is the method’s wiring diagram. It distinguishes three ownership layers.
+First, authored sources own intent: config declares vocabulary and
+claims, <code>src/</code> owns computation, and the claim ledger
+registers evidence facts. Second, generated artifacts own observation:
+token plans, figures, resolved Markdown, reports, and dashboards are
+rebuilt rather than edited. Third, template gates own permission to
+promote the manuscript: unresolved tokens, unsupported facts, missing
+citations, broken references, and invalid PDFs block certification.</p>
+<p>This split keeps the gold metaphor honest. A fork is allowed to
+change the ore, the furnace, or the assay, but it must do so in the
+source layer and then let the generated and validation layers expose the
+consequences.</p>
+<h2 id="scientific-integrity-model">Scientific integrity model</h2>
+<p>The integrity model converts manuscript risks into source-owned
+dimensions. It does not replace peer review or domain validation. It
+names the failure class, severity, detectability, evidence surface,
+owner, and validator so the manuscript can distinguish “the analogy is
+vivid” from “the claim is backed by a regenerable check.” The current
+pass reports 8 integrity dimensions; highest residual risk is I4
+(Analogy boundary) at 15.</p>
+<table id="tbl:integrity_dimensions">
+<caption>Source-owned scientific-integrity dimensions.</caption>
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 22%" />
+<col style="width: 31%" />
+<col style="width: 14%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Dimension</th>
+<th>Residual risk</th>
+<th>Owner</th>
+<th>Validator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I1</td>
+<td>Monotone refinery</td>
+<td>4</td>
+<td>source code</td>
+<td>tests/test_refinery.py</td>
+</tr>
+<tr>
+<td>I2</td>
+<td>Lexicon completeness</td>
+<td>3</td>
+<td>config</td>
+<td>tests/test_config.py</td>
+</tr>
+<tr>
+<td>I3</td>
+<td>Token hydration</td>
+<td>5</td>
+<td>generated variables</td>
+<td>tests/test_manuscript_variables.py</td>
+</tr>
+<tr>
+<td>I4</td>
+<td>Analogy boundary</td>
+<td>15</td>
+<td>claim ledger</td>
+<td>infrastructure.validation.cli evidence –fail-on-issues</td>
+</tr>
+<tr>
+<td>I5</td>
+<td>Claim support</td>
+<td>10</td>
+<td>evidence assay</td>
+<td>output/reports/claim_support_registry.json</td>
+</tr>
+<tr>
+<td>I6</td>
+<td>Figure registry</td>
+<td>8</td>
+<td>figure producer</td>
+<td>tests/test_registry_integrity.py</td>
+</tr>
+<tr>
+<td>I7</td>
+<td>Citation hygiene</td>
+<td>4</td>
+<td>bibliography</td>
+<td>infrastructure.reference.citation validate</td>
+</tr>
+<tr>
+<td>I8</td>
+<td>Render readiness</td>
+<td>8</td>
+<td>template pipeline</td>
+<td>template pipeline render and validate stages</td>
+</tr>
+</tbody>
+</table>
+<p>The residual-risk score is deliberately simple: high severity and low
+detectability raise priority. The score is not a universal risk model;
+it is a local audit heuristic used to decide where a fork must add
+validators before expanding claims.</p>
+<table id="tbl:integrity_owners">
+<caption>Integrity dimensions by owning surface.</caption>
+<thead>
+<tr>
+<th>Owner</th>
+<th>Dimensions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bibliography</td>
+<td>1</td>
+</tr>
+<tr>
+<td>claim ledger</td>
+<td>1</td>
+</tr>
+<tr>
+<td>config</td>
+<td>1</td>
+</tr>
+<tr>
+<td>evidence assay</td>
+<td>1</td>
+</tr>
+<tr>
+<td>figure producer</td>
+<td>1</td>
+</tr>
+<tr>
+<td>generated variables</td>
+<td>1</td>
+</tr>
+<tr>
+<td>source code</td>
+<td>1</td>
+</tr>
+<tr>
+<td>template pipeline</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>This table also makes generated-number ownership explicit. Counts,
+support rates, and figure labels belong to regenerated reports and
+registries; the manuscript consumes them through variables. Authored
+prose may interpret those values, but it should not silently restate
+them as hand-maintained facts.</p>
 </body>
 </html>

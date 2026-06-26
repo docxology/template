@@ -21,3 +21,7 @@ A fork must:
 3. Connect refinery stages to real domain operations
 4. Add domain validators beyond the exemplar's generic gates
 5. Regenerate all outputs through the pipeline
+
+The formalism registry is local to this exemplar. It states how this project maps refinery stages, token selection, and evidence gates into equations; it does not prove that gold refining is a universal model of scientific writing. Domain forks should replace or narrow the formalism set before reusing the certification language.
+
+The same limitation applies to the integrity risk model. The current {{INTEGRITY_DIMENSION_COUNT}} dimensions are tuned to a template exemplar: token hydration, figure registration, claim support, citation hygiene, render readiness, and analogy boundaries. A fork that studies a real domain must add domain-specific risks, domain evidence tiers, and validators before treating [@fig:integrity_risk_matrix] as a publication-readiness claim.

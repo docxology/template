@@ -12,11 +12,9 @@ Targets uncovered paths identified by coverage analysis:
 from __future__ import annotations
 
 import json
-import os
 import sys
 from pathlib import Path
 
-import pytest
 import yaml
 
 # ---- helpers ----------------------------------------------------------------
@@ -200,7 +198,7 @@ class TestDashboardWithPopulatedData:
             }),
             encoding="utf-8",
         )
-        (reports_dir / "evidence_registry.json").write_text(
+        (reports_dir / "claim_support_registry.json").write_text(
             json.dumps({
                 "total_claims": 2,
                 "supported_claims": 2,
@@ -294,13 +292,12 @@ class TestFiguresNonePathFallbacks:
         assert out.exists()
         assert out.name == "purity_claim_scatter.png"
 
-    def test_purity_claim_scatter_loads_evidence_registry(self, tmp_path):
-        """Purity-claim scatter reads evidence_registry.json when available."""
+    def test_purity_claim_scatter_loads_claim_support_registry(self, tmp_path):
         figures_dir = tmp_path / "output" / "figures"
         figures_dir.mkdir(parents=True)
         reports_dir = tmp_path / "output" / "reports"
         reports_dir.mkdir(parents=True)
-        (reports_dir / "evidence_registry.json").write_text(
+        (reports_dir / "claim_support_registry.json").write_text(
             json.dumps({"support_rate": 0.75}), encoding="utf-8"
         )
         from figures import generate_purity_claim_scatter
@@ -415,13 +412,12 @@ class TestPublicAPIImport:
             sys.path.insert(0, pkg_path)
         # The __init__.py uses relative imports; we access via direct import
         # of each module (conftest adds src/ to path already)
-        from refinery import run_refinery, CANONICAL_STAGES, RefinementStage, RefineryResult
-        from purity import KARAT_GRADES, NINE_NINES_PURITY, KaratGrade, format_purity, karat_for_purity
-        from config import GoldRefinementConfig, GoldRefinementConfigError, SlotSpec
-        from composition import TokenChoice, TokenPlan, generate_token_plan
-        from assay import AssayReport, ClaimRecord, assay_claims, compute_assay_purity
-        from evidence import EvidenceEntry, EvidenceRegistry, build_evidence_registry
-        from dashboard import build_dashboard_html, write_dashboard
+        from refinery import run_refinery, CANONICAL_STAGES
+        from purity import NINE_NINES_PURITY
+        from config import GoldRefinementConfig
+        from assay import ClaimRecord
+        from evidence import EvidenceRegistry
+        from dashboard import build_dashboard_html
         # Verify key imports resolve
         assert run_refinery is not None
         assert CANONICAL_STAGES is not None

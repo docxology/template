@@ -40,7 +40,7 @@ class TestBuildDashboardHtml:
             json.dumps({"total_tokens": 8, "section_counts": {"methodology": 5}}),
             encoding="utf-8",
         )
-        (reports_dir / "evidence_registry.json").write_text(
+        (reports_dir / "claim_support_registry.json").write_text(
             json.dumps({"total_claims": 4, "supported_claims": 4, "entries": []}),
             encoding="utf-8",
         )

@@ -1,0 +1,73 @@
+{
+  "total_claims": 8,
+  "supported_claims": 8,
+  "unsupported_claims": 0,
+  "support_rate": 1.0,
+  "is_passing": true,
+  "entries": [
+    {
+      "claim_name": "Five-stage refinery",
+      "claim_statement": "The refinery pipeline has 5 canonical stages from ore to nine-nines.",
+      "evidence_source": "src/refinery.py::CANONICAL_STAGES",
+      "boundary": "local",
+      "supported": true,
+      "notes": ""
+    },
+    {
+      "claim_name": "Monotone purity",
+      "claim_statement": "Purity increases strictly across all refinery stages.",
+      "evidence_source": "src/refinery.py::assert_monotone_increase",
+      "boundary": "local",
+      "supported": true,
+      "notes": ""
+    },
+    {
+      "claim_name": "Nine-nines certification",
+      "claim_statement": "The certification stage achieves 99.9999999% purity.",
+      "evidence_source": "src/purity.py::NINE_NINES_PURITY",
+      "boundary": "local",
+      "supported": true,
+      "notes": ""
+    },
+    {
+      "claim_name": "Deterministic tokens",
+      "claim_statement": "Token selection is deterministic via seeded SHA-256 digest.",
+      "evidence_source": "src/composition.py::_choose_value",
+      "boundary": "local",
+      "supported": true,
+      "notes": ""
+    },
+    {
+      "claim_name": "Formalism registry",
+      "claim_statement": "The manuscript exposes 6 source-owned formalisms with equation labels.",
+      "evidence_source": "src/formalisms.py::FORMALISMS",
+      "boundary": "local",
+      "supported": true,
+      "notes": ""
+    },
+    {
+      "claim_name": "Claim-support report separation",
+      "claim_statement": "The project-local contribution-claim report is written to claim_support_registry.json.",
+      "evidence_source": "scripts/refinement_analysis.py::claim_support_registry",
+      "boundary": "local",
+      "supported": true,
+      "notes": ""
+    },
+    {
+      "claim_name": "Implementation-linked visualizations",
+      "claim_statement": "The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates.",
+      "evidence_source": "src/figures.py::generate_implementation_circuit",
+      "boundary": "local",
+      "supported": true,
+      "notes": ""
+    },
+    {
+      "claim_name": "Scientific-integrity risk model",
+      "claim_statement": "The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations.",
+      "evidence_source": "src/integrity.py::build_integrity_dimensions",
+      "boundary": "local",
+      "supported": true,
+      "notes": ""
+    }
+  ]
+}
