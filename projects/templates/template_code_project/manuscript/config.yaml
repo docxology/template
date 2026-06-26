@@ -24,8 +24,8 @@ authors:
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
   doi: "10.5281/zenodo.20417136" # Concept DOI — stable citation; cover page and CITATION.cff
-  version_doi: "10.5281/zenodo.20692963" # Latest Zenodo deposit (updated by publish_project_release.py)
-  version_record: "https://zenodo.org/records/20692963"
+  version_doi: "10.5281/zenodo.20931934" # Latest Zenodo deposit (updated by publish_project_release.py)
+  version_record: "https://zenodo.org/records/20931934"
   github_repository: "docxology/template_code_project"
   transmission_bookends:
     enabled: true

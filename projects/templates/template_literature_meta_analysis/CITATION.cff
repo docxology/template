@@ -4,7 +4,8 @@ authors:
   given-names: Daniel Ari
   orcid: 0000-0001-6232-9096
 cff-version: 1.2.0
-date-released: '2026-06-24'
+date-released: '2026-06-26'
+doi: 10.5281/zenodo.20931964
 keywords:
 - literature meta-analysis
 - bibliometrics

@@ -28,8 +28,8 @@ authors:
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
   doi: "10.5281/zenodo.20533669"  # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20693001" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20693001"
+  version_doi: "10.5281/zenodo.20931927" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20931927"
   github_repository: "docxology/template_autoscientists"
   year: "2026"
 

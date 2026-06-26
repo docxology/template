@@ -13,8 +13,8 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.20417021" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20693424" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20693424"
+  version_doi: "10.5281/zenodo.20931870" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20931870"
   github_repository: "docxology/template_active_inference"
   transmission_bookends:
     enabled: true

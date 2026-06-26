@@ -12,8 +12,8 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.20453879" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20693012" # Latest Zenodo deposit (v0.1.0)
-  version_record: "https://zenodo.org/records/20693012"
+  version_doi: "10.5281/zenodo.20932066" # Latest Zenodo deposit (v0.1.2)
+  version_record: "https://zenodo.org/records/20932066"
   year: "2026"
   github_repository: "docxology/template_sia"
 

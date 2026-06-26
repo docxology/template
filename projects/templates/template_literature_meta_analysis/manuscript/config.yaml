@@ -21,9 +21,9 @@ authors:
     corresponding: true
 
 publication:
-  doi: ""
-  version_doi: ""
-  version_record: ""
+  doi: "10.5281/zenodo.20931964"
+  version_doi: "10.5281/zenodo.20931965"
+  version_record: "https://zenodo.org/records/20931965"
   github_repository: "docxology/template_literature_meta_analysis"
   repository_url: "https://github.com/docxology/template_literature_meta_analysis"
   repository_label: "docxology/template_literature_meta_analysis"

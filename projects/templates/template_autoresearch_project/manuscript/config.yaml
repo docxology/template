@@ -12,8 +12,8 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.20417016" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20692993" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20692993"
+  version_doi: "10.5281/zenodo.20931907" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20931907"
   year: "2026"
   github_repository: "docxology/template_autoresearch_project"
   transmission_bookends:

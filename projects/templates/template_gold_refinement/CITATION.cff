@@ -17,5 +17,6 @@ keywords:
   - assaying
 license: "MIT"
 repository-code: https://github.com/docxology/template_gold_refinement
+doi: "10.5281/zenodo.20931955"
 version: "0.1.0"
-date-released: "2026-06-25"
+date-released: "2026-06-26"

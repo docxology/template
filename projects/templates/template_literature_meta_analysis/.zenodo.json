@@ -19,6 +19,13 @@
     "reproducible research"
   ],
   "license": "CC-BY-4.0",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20931964",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
   "title": "A Generic Literature Meta-Analysis Template (default term: modafinil)",
   "upload_type": "software",
   "version": "0.1.0"

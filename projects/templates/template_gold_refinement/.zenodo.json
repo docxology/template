@@ -18,6 +18,13 @@
     "reproducible research"
   ],
   "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20931955",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
   "title": "Refinement of Gold: A Metallurgical Analogy for Scientific Manuscript Composition",
   "upload_type": "software",
   "version": "0.1.0"

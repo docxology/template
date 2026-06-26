@@ -14,8 +14,8 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.20417104" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20693007" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20693007"
+  version_doi: "10.5281/zenodo.20932047" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20932047"
   year: "2026"
   github_repository: "docxology/template_prose_project"
   transmission_bookends:

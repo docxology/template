@@ -480,11 +480,7 @@ class WebRenderer:
             label = f"**{cls._THEOREM_ENVS[env]} {counter['n']}**"
             if name and name.strip():
                 label += f" ({name.strip()})"
-            return (
-                f"\n\n::: {{.theorem-box .{env}}}\n"
-                f"{label}. {body.strip()}\n"
-                f":::\n\n"
-            )
+            return f"\n\n::: {{.theorem-box .{env}}}\n{label}. {body.strip()}\n:::\n\n"
 
         return cls._THEOREM_BLOCK_RE.sub(_replace, content)
 

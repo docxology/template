@@ -16,8 +16,8 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.20419007" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20693013" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20693013"
+  version_doi: "10.5281/zenodo.20932076" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20932076"
   github_repository: "docxology/template_template"
   transmission_bookends:
     enabled: true

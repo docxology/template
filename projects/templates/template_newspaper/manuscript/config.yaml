@@ -33,8 +33,8 @@ publication:
   # in-repo and the generated publication table lists it as not-yet-deposited.
   github_repository: "docxology/template_newspaper"
   doi: "10.5281/zenodo.20533675"  # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20693002" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20693002"
+  version_doi: "10.5281/zenodo.20932039" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20932039"
   year: "2026"  # Zenodo publication_date / deposit description year
 
 metadata:

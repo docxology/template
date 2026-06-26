@@ -44,8 +44,8 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.20533125"  # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20693022" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20693022"
+  version_doi: "10.5281/zenodo.20932112" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20932112"
   repository_url: "https://github.com/docxology/template_textbook"
   repository_label: "Source repository"
   github_repository: "docxology/template_textbook"
