@@ -27,7 +27,7 @@ from typing import Any
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 USE_WHEN_HEADING = "## When to use this template"
-RUN_VIA_MONOREPO_HEADING = "## Run via the template monorepo"
+RUN_VIA_MONOREPO_HEADING = "## Publication and rendering"
 MONOREPO_CANONICAL_URL = "https://github.com/docxology/template"
 
 # Exemplars temporarily allowed to lack the use-when section. Keep this empty

@@ -1,26 +1,62 @@
 # `infrastructure/publishing/archival/`
 
-Folder-level routing doc for Stage 11 multi-target archival publication. Implementation
-lives in the sibling module [`../archival.py`](../archival.py) (opt-in; not in the
-default pipeline DAG).
+Multi-target archival mirror for long-horizon redundancy (Stage 11). Deposits an
+executable bundle or publication artifact to independent providers so no single
+provider policy change erases the record.
 
-## Purpose
+The canonical implementation now lives in this subpackage. The sibling
+[`../archival.py`](../archival.py) is kept for backwards compatibility and
+re-exports all public symbols from here.
 
-Mirror an executable bundle or publication artifact to independent archival targets
-so no single provider policy change erases the deposit. Supported providers (when
-credentials are present):
+## Public API
 
-| Provider | Module symbol | Credential env |
+```python
+from infrastructure.publishing.archival import (
+    ArchivalReceipt,
+    ArchivalRun,
+    ArchivalCredentials,
+    ArchivalError,
+    DEFAULT_CREDENTIALS_PATH,
+    archive_publication,
+    load_credentials,
+)
+```
+
+### `models.py`
+
+| Symbol | Notes |
+| --- | --- |
+| `ArchivalReceipt` | Per-provider result: `provider`, `success`, `deposit_id`, `url`, `error` |
+| `ArchivalRun` | Aggregated result for one call: list of `ArchivalReceipt` + `dry_run` flag |
+| `ArchivalCredentials` | Token bag loaded from env or JSON file; never logged |
+| `ArchivalError` | Raised on unrecoverable provider errors |
+| `DEFAULT_CREDENTIALS_PATH` | `~/.config/template-archival/credentials.json` |
+
+### `providers.py`
+
+`ArchivalProvider` protocol — all four providers implement `.deposit(bundle_path, credentials, dry_run) -> ArchivalReceipt`:
+
+| Class | Credential env | Notes |
 | --- | --- | --- |
-| Zenodo | `ZenodoProvider` | `ZENODO_API_TOKEN` |
-| IPFS (Pinata) | `IPFSPinataProvider` | `PINATA_JWT` |
-| IPFS (Web3.Storage) | `IPFSWeb3StorageProvider` | `WEB3_STORAGE_TOKEN` |
-| Software Heritage | `SoftwareHeritageProvider` | (anonymous save-code-now) |
+| `ZenodoProvider` | `ZENODO_API_TOKEN` | Delegates to shared `ZenodoClient`; bundle mirror (no rich metadata) |
+| `IPFSPinataProvider` | `PINATA_JWT` | Pinata pinning API |
+| `IPFSWeb3StorageProvider` | `WEB3_STORAGE_TOKEN` | Web3.Storage pinning |
+| `SoftwareHeritageProvider` | none | save-code-now (anonymous) |
+
+### `orchestrate.py`
+
+| Symbol | Role |
+| --- | --- |
+| `archive_publication(bundle_path, providers, dry_run)` | Fan out deposits; collect `ArchivalRun` |
+| `load_credentials()` | Env vars first; fallback to `DEFAULT_CREDENTIALS_PATH` |
+
+`dry_run=True` is the default at every layer — accidental imports cannot trigger
+real deposits.
 
 ## Entry points
 
 ```bash
-# Dry-run (default — no network deposits)
+# Dry-run (default)
 uv run python scripts/09_archive_publication.py --project {name}
 
 # Real deposits (requires credentials)
@@ -32,29 +68,14 @@ uv run python scripts/09_archive_publication.py \
 
 CLI wrapper: [`../archival_cli.py`](../archival_cli.py).
 
-## Public API
+## Files
 
-```python
-from infrastructure.publishing.archival import (
-    ArchivalRun,
-    ArchivalReceipt,
-    archive_publication,
-    load_credentials,
-)
-```
-
-`dry_run=True` is the default at every layer — accidental imports cannot trigger
-real deposits.
-
-## Design and credentials
-
-- Threat scenarios and provider rationale:
-  [`docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md)
-- Stage 11 contract:
-  [`docs/maintenance/stage-10-executable-bundle.md`](../../../docs/maintenance/stage-10-executable-bundle.md)
-  (bundle) + archival stage in [`infrastructure/core/pipeline/pipeline.yaml`](../../core/pipeline/pipeline.yaml)
-- Tokens: environment variables first; fallback
-  `~/.config/template-archival/credentials.json` (never logged)
+| File | Purpose |
+| --- | --- |
+| `__init__.py` | Re-exports all public symbols |
+| `models.py` | `ArchivalReceipt`, `ArchivalRun`, `ArchivalCredentials`, `ArchivalError` |
+| `providers.py` | `ArchivalProvider` protocol + 4 provider classes |
+| `orchestrate.py` | `archive_publication()`, `load_credentials()` |
 
 ## Tests
 
@@ -64,5 +85,7 @@ uv run pytest tests/infra_tests/publishing/test_archival.py -q
 
 ## See also
 
+- [`README.md`](README.md)
 - [`../AGENTS.md`](../AGENTS.md) — publishing module overview
 - [`../zenodo/AGENTS.md`](../zenodo/AGENTS.md) — rich-metadata Zenodo path (distinct from archival mirror)
+- [`docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md) — threat scenarios and provider rationale

@@ -30,6 +30,38 @@ result = publish_to_zenodo(
 print(f"Published with DOI: {result.doi}")
 ```
 
+## Platform adapters
+
+| Platform | Tier | Module | Credentials needed |
+| --- | --- | --- | --- |
+| Zenodo | first_class | `infrastructure.publishing.zenodo` | caller-provided token; `ZENODO_API_TOKEN` (archival) |
+| GitHub Releases | first_class | `infrastructure.publishing.github` | `GITHUB_TOKEN` |
+| arXiv | first_class | `infrastructure.publishing.arxiv` | — (local tarball only) |
+| PyPI | first_class | `infrastructure.publishing.pypi` | `PYPI_TOKEN` |
+| TestPyPI | first_class | `infrastructure.publishing.pypi` | `TESTPYPI_TOKEN` |
+| IPFS (Pinata) | first_class | `infrastructure.publishing.archival` | `PINATA_JWT` |
+| IPFS (Web3.Storage) | first_class | `infrastructure.publishing.archival` | `WEB3_STORAGE_TOKEN` |
+| Software Heritage | first_class | `infrastructure.publishing.archival` | — |
+| GitHub Pages | first_class | `infrastructure.publishing.static_site` | `GITHUB_TOKEN` |
+| Cloudflare Pages | first_class | `infrastructure.publishing.static_site` | `CLOUDFLARE_API_TOKEN` |
+| Netlify | first_class | `infrastructure.publishing.static_site` | `NETLIFY_AUTH_TOKEN` |
+| HuggingFace Hub | documented | `infrastructure.publishing.huggingface` | `HUGGINGFACE_TOKEN` |
+| OSF | documented | `infrastructure.publishing.osf` | `OSF_TOKEN` |
+
+`first_class` = implemented, tested, locally verifiable. `documented` = future adapter; registered but no live implementation yet.
+
+Use `infrastructure.publishing.registry` to enumerate or look up platforms programmatically:
+
+```python
+from infrastructure.publishing.registry import list_platforms, get_platform, PublishingTier
+
+for p in list_platforms(tier=PublishingTier.FIRST_CLASS):
+    print(p.name, p.env_vars)
+
+info = get_platform("pypi")
+print(info.adapter_class)  # 'PyPIAdapter'
+```
+
 ## Modules
 
 ```mermaid
@@ -50,6 +82,8 @@ graph TD
         ZENODO[publish_to_zenodo<br/>DOI minting]
         ARXIV[prepare_arxiv_submission<br/>Preprint tarball]
         GITHUB[create_github_release<br/>Release + assets]
+        PYPI[PyPIAdapter<br/>build then check then upload]
+        STATIC[static_site/<br/>GitHub Pages and Cloudflare and Netlify]
     end
 
     subgraph Archival["Long-horizon Archival"]
@@ -66,6 +100,10 @@ graph TD
 - **zenodo/** - [Zenodo REST API](https://developers.zenodo.org/) client and publish workflow
 - **github/** - GitHub Releases API
 - **arxiv/** - arXiv submission tarball preparation
+- **pypi/** - PyPI / TestPyPI build, check, upload pipeline (`PyPIAdapter`, `build_dist`, `upload_dist`, `check_dist`, `verify_install`)
+- **static_site/** - Static-site hosting adapters (`GitHubPagesAdapter`, `CloudflarePagesAdapter`, `NetlifyAdapter`, `get_adapter()`)
+- **archival/** - Multi-target long-horizon archival subpackage (`ZenodoProvider`, `IPFSPinataProvider`, `IPFSWeb3StorageProvider`, `SoftwareHeritageProvider`)
+- **registry.py** - `PLATFORM_REGISTRY`, `list_platforms()`, `get_platform()`, `PublishingTier` enum: 10 first-class + 2 documented
 - **platforms.py** / **api.py** - Backwards-compatible re-exports
 
 ## Key Classes
@@ -84,6 +122,9 @@ graph TD
 - `ZenodoClient` / `ZenodoConfig` — [`zenodo/`](zenodo/) (also via `infrastructure.publishing.api`)
 - `DepositionResult` — create-deposition result (id + bucket URL)
 - `PublishResult` — high-level Zenodo publish result (DOI + deposition id)
+- `PyPIAdapter` / `PyPIConfig` / `PyPIResult` — [`pypi/`](pypi/)
+- `GitHubPagesAdapter` / `CloudflarePagesAdapter` / `NetlifyAdapter` — [`static_site/`](static_site/)
+- `SiteDeployConfig` / `SiteDeployResult` / `SiteHosting` — [`static_site/`](static_site/)
 
 ## Key Functions
 
@@ -108,6 +149,8 @@ graph TD
 - `publish_to_zenodo()` - Publish with DOI minting
 - `prepare_arxiv_submission()` - Create arXiv package
 - `create_github_release()` - Automate GitHub releases
+- `PyPIAdapter.publish()` - Build, check, and upload to PyPI / TestPyPI
+- `get_adapter(config).deploy()` - Deploy static site to GitHub Pages, Cloudflare Pages, or Netlify
 
 ### Utilities
 - `extract_citations_from_markdown()` - Citation extraction
@@ -131,7 +174,7 @@ uv run python -m infrastructure.publishing.cli publish-zenodo output/ --token $Z
 uv run python -m infrastructure.publishing.publish_cli \
   --token $GITHUB_TOKEN --repo owner/repo --tag v1.0.0 --name "Release 1.0.0"
 
-# Archival dry-run (Stage 11; default is safe — no real deposits)
+# Archival dry-run (Stage 11; default is safe -- no real deposits)
 uv run python -m infrastructure.publishing.archival_cli \
   --bundle output/template_code_project/executable_bundle \
   --providers zenodo software_heritage ipfs_pinata ipfs_web3storage
@@ -140,8 +183,25 @@ uv run python -m infrastructure.publishing.archival_cli \
 ## Environment Variables
 
 ```bash
-export ZENODO_TOKEN="your-token"
-export GITHUB_TOKEN="your-token"
+# Academic publishing
+export ZENODO_TOKEN="your-token"          # Zenodo production (release workflow)
+export ZENODO_SANDBOX_TOKEN="your-token"  # Zenodo sandbox (scripts/publish_project_release.py)
+export ZENODO_API_TOKEN="your-token"      # Archival Zenodo provider
+
+# Code hosting / releases
+export GITHUB_TOKEN="your-token"          # GitHub Releases and GitHub Pages
+
+# Package distribution
+export PYPI_TOKEN="your-token"            # PyPI production (pypi/)
+export TESTPYPI_TOKEN="your-token"        # TestPyPI (PyPIConfig(test=True))
+
+# Static-site hosting
+export CLOUDFLARE_API_TOKEN="your-token"  # Cloudflare Pages via Wrangler
+export NETLIFY_AUTH_TOKEN="your-token"    # Netlify via netlify CLI
+
+# Long-horizon archival
+export PINATA_JWT="your-jwt"              # IPFS archival via Pinata
+export WEB3_STORAGE_TOKEN="your-token"    # IPFS archival via Web3.Storage
 ```
 
 ## Testing

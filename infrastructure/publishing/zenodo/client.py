@@ -20,7 +20,7 @@ except ImportError:
 from infrastructure.core.credentials import make_bearer_auth_headers
 from infrastructure.core.exceptions import PublishingError, UploadError
 
-from infrastructure.publishing.http import REQUEST_TIMEOUT
+from infrastructure.publishing.http_constants import REQUEST_TIMEOUT
 
 from .config import ZenodoConfig
 from .models import DepositionResult

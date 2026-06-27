@@ -15,7 +15,7 @@ except ImportError:
 from infrastructure.core.credentials import make_token_auth_headers
 from infrastructure.core.exceptions import PublishingError
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.publishing.http import REQUEST_TIMEOUT
+from infrastructure.publishing.http_constants import REQUEST_TIMEOUT
 
 logger = get_logger(__name__)
 

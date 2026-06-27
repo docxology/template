@@ -3,7 +3,7 @@
 Prefer ``infrastructure.publishing.zenodo`` for new code.
 """
 
-from infrastructure.publishing.http import REQUEST_TIMEOUT
+from infrastructure.publishing.http_constants import REQUEST_TIMEOUT
 from infrastructure.publishing.zenodo.client import ZenodoClient
 from infrastructure.publishing.zenodo.config import ZenodoConfig
 from infrastructure.publishing.zenodo.models import DepositionResult

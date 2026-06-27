@@ -97,3 +97,4 @@ uv run python -m infrastructure.validation.cli evidence \
 
 - Template root: [`../../../AGENTS.md`](../../../AGENTS.md)
 - Publishing guide: [`../../../docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md)
+- Memory and decision records: [`../../../docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md)

@@ -570,7 +570,7 @@
     },
     {
       "name": "infrastructure-publishing",
-      "description": "Skill for the publishing infrastructure module providing academic publishing workflows including BibTeX CLI citation generation, APA/MLA citation helper functions, DOI management, Zenodo publication, arXiv submission preparation, GitHub releases, and publication readiness validation. Use when publishing research, generating citations, minting DOIs, or preparing submissions.",
+      "description": "Skill for the publishing infrastructure module providing academic publishing workflows including BibTeX CLI citation generation, APA/MLA citation helper functions, DOI management, Zenodo publication, arXiv submission preparation, GitHub releases, PyPI and TestPyPI package distribution, static-site deployment to GitHub Pages / Cloudflare Pages / Netlify, multi-target long-horizon archival (IPFS Pinata, Web3.Storage, Software Heritage), a central platform registry, and publication readiness validation. Use when publishing research, generating citations, minting DOIs, distributing Python packages, deploying documentation sites, or preparing archival submissions.",
       "path": "infrastructure/publishing/SKILL.md",
       "cursor_at": "infrastructure/publishing/SKILL.md"
     },

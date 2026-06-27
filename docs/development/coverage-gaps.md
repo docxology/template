@@ -4,7 +4,7 @@ This document tracks infrastructure test coverage gaps by Layer-1 module. The
 global infrastructure gate remains 60%; the rows below are targets and notes,
 not new CI gates.
 
-**Last verified:** 2026-06-16
+**Last verified:** 2026-06-27
 
 **Coverage oracle:** full infrastructure gate:
 
@@ -67,14 +67,6 @@ user-visible command behavior, not line-chasing through dispatch glue.
 
 | Module | Coverage | Target note |
 | --- | ---: | --- |
-| `rendering/_combined_exports.py` | 15.70% | Add fixture-driven branches for existing/missing PDF, HTML, DOCX, EPUB, and no-output export decisions without invoking real renderers. |
-| `project/drift/runner.py` | 18.64% | Add subprocess smoke for `check_template_drift` plus branch coverage for `--strict`, `--project`, and missing-project paths. |
-| `doctor/detectors/layout.py` | 31.08% | Add positive and negative repository-layout fixtures, including misplaced generated files and missing expected docs. |
-| `core/install_commands.py` | 38.89% | Cover supported-tool, unsupported-tool, and platform-specific command recommendations. |
-| `rendering/pipeline.py` | 39.37% | Cover missing project, missing manuscript, invalid config, and summary branches; keep full render paths LaTeX/Pandoc gated. |
-| `core/runtime/env_deps.py` | 46.22% | Cover present/missing dependency branches with temporary PATH fixtures. |
-| `core/runtime/setup_checks.py` | 46.67% | Cover setup-check success, missing-tool, and remediation-message branches. |
-| `project/working_render.py` | 46.67% | Cover working/archive lifecycle paths, no-project handling, failed stage propagation, and output-copy decisions. |
 | `project/workspace.py` | 51.11% | Added malformed pyproject, no-table, and missing-`uv` tests; next target is subprocess coverage for init/repair flows. |
 | `publishing/transmission_page_check.py` | 58.04% | Add negative fixtures for incomplete transmission pages and malformed publication metadata. |
 | `rendering/docx_renderer.py` | 58.43% | Cover missing Pandoc, missing manuscript, and output-path branches without requiring DOCX generation. |
@@ -94,6 +86,52 @@ user-visible command behavior, not line-chasing through dispatch glue.
 | `llm/utils/server.py` | 55.69% | Server lifecycle path; default target is unavailable-server diagnostics and timeout handling. |
 | `validation/docs/lint_runner.py` | 56.93% | Subprocess/tool-gated docs runner; cover missing `mmdc`/Chrome fallbacks and failed-tool aggregation. |
 | `search/deep_research/openai.py` | 56.99% | External API backend; default target is missing-key, timeout, and malformed-response handling. |
+
+## Recently Added Module Tests (2026-06-27)
+
+Eight modules promoted out of the "First-Party Logic Below 60%" table. All now exceed
+the 60% gate; branch coverage was driven with real files, subprocess fixtures, and
+deterministic local paths — no mocks introduced.
+
+| Module | Previous | Current | Tests added | Test file |
+| --- | ---: | ---: | ---: | --- |
+| `rendering/_combined_exports.py` | 15.70% | 83.43% | +24 | `tests/infra_tests/rendering/test_combined_exports.py` |
+| `project/drift/runner.py` | 18.64% | 100.00% | +17 | `tests/infra_tests/project/test_thin_orchestrator_drift.py` |
+| `doctor/detectors/layout.py` | 31.08% | 95.95% | +11 | `tests/infra_tests/doctor/test_detectors.py` |
+| `core/install_commands.py` | 38.89% | 100.00% | +8 | `tests/infra_tests/core/test_install_commands.py` |
+| `rendering/pipeline.py` | 39.37% | 96.85% | +11 | `tests/infra_tests/rendering/test_pipeline.py` |
+| `core/runtime/env_deps.py` | 46.22% | 84.03% | +8 | `tests/infra_tests/core/test_env_deps.py` |
+| `core/runtime/setup_checks.py` | 46.67% | 85.71% | +15 | `tests/infra_tests/core/test_setup_checks.py` |
+| `project/working_render.py` | 46.67% | 90.33% | +25 | `tests/infra_tests/project/test_working_render.py` |
+
+Scripts audit (43/49 clean thin orchestrators): six violations identified — two embed
+non-trivial algorithms in scripts (`generate_api_reference_doc.py` package discovery,
+`06_llm_review.py` stage-label resolution); two inline data-shaping logic that belongs
+in infrastructure (`audit_filepaths.py` statistics formatting, `verify_no_mocks.py`
+scan-root resolution); one embeds a mini-test-runner loop duplicating infrastructure
+aggregation (`00_setup_environment.py`); one hardcodes a canonical configuration list
+(`generate_stage_table_doc.py`). No hardcoded external URLs found.
+
+Parity notes: `infrastructure/docker/` has partial coverage via
+`tests/infra_tests/rendering/test_dockerfile_gen.py` (no dedicated `tests/infra_tests/docker/`
+needed — not a Python package). `infrastructure/logrotate.d/` is a config directory with
+zero test coverage by design; `tests/infra_tests/gates/` and `tests/infra_tests/git_hook_smoke/`
+are legitimate test locations for non-infrastructure code (gate scripts and git hooks).
+
+## Recently Added Module Tests (2026-06-26)
+
+New subpackages from PUB-PLATFORM-1. Coverage measured via dry-run / local-fixture
+paths; live network and credential-gated paths are excluded from the default suite.
+
+| Module | Current coverage | Test file |
+| --- | ---: | --- |
+| `publishing/pypi/adapter.py` | dry-run paths only | `tests/infra_tests/publishing/test_pypi.py` (11 tests) |
+| `publishing/static_site/registry.py` | 100% (pure factory) | `tests/infra_tests/publishing/test_static_site.py` (22 tests) |
+| `publishing/archival/orchestrate.py` | dry-run paths only | `tests/infra_tests/publishing/test_archival_module.py` (57 tests) |
+| `publishing/registry.py` | 100% (pure registry) | `tests/infra_tests/publishing/test_registry.py` (47 tests) |
+
+Next targets: `orchestrate.load_credentials` fallback for missing credentials file and
+`_missing_credential_receipt` return paths in providers — both driveable with `tmp_path`.
 
 ## Recently Added Module Tests (2026-06-16)
 

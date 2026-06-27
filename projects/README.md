@@ -24,6 +24,7 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 
 - [`templates/template_code_project/`](templates/template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
 - [`templates/template_gold_refinement/`](templates/template_gold_refinement/) — metallurgical gold-refining analogy for manuscript composition (ore → nine-nines, mega-madlib token injection)
+- [`templates/template_literature_meta_analysis/`](templates/template_literature_meta_analysis/) — generic literature meta-analysis (multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics; default term `modafinil`)
 - [`templates/template_prose_project/`](templates/template_prose_project/) — prose-centric exemplar (editorial review, BibTeX validation, readability metrics)
 - [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
 - [`templates/template_autoscientists/`](templates/template_autoscientists/) — AutoScientists coordination-mechanism testbed
@@ -57,6 +58,7 @@ projects.
 |---|---|---|---|---|---|---|
 | [`template_code_project`](templates/template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
 | [`template_gold_refinement`](templates/template_gold_refinement/) | Metallurgical gold-refining analogy for manuscript composition | yes (`src/refinery.py`, `src/composition.py`) | no (curated) | no (planned) | see canonical facts | see canonical facts |
+| [`template_literature_meta_analysis`](templates/template_literature_meta_analysis/) | Generic literature meta-analysis (multi-engine retrieval + de-dup + full-text + embeddings + bibliometrics) | yes (`src/retrieval.py`) | no (curated) | yes (bibliometric figures) | see canonical facts | see canonical facts |
 | [`template_prose_project`](templates/template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
 | [`template_autoresearch_project`](templates/template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
 | [`template_autoscientists`](templates/template_autoscientists/) | Coordination-mechanism testbed | yes (`src/coordination/*`) | no (curated) | no | see canonical facts | see canonical facts |
@@ -170,6 +172,7 @@ between lifecycle folders instead of committing it here.
 | `templates/template_active_inference/` | Active Inference multi-track exemplar (analytical + pymdp + sheaf manuscript) | see canonical facts | see canonical facts |
 | `templates/template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
 | `templates/template_gold_refinement/` | Gold-refining analogy exemplar (ore → nine-nines, mega-madlib token injection) | see canonical facts | see canonical facts |
+| `templates/template_literature_meta_analysis/` | Generic literature meta-analysis exemplar (multi-engine retrieval, de-dup, full-text, embeddings) | see canonical facts | see canonical facts |
 | `templates/template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | see canonical facts | see canonical facts |
 | `templates/template_autoresearch_project/` | AutoResearch exemplar (deterministic readiness loop) | see canonical facts | see canonical facts |
 | `templates/template_autoscientists/` | AutoScientists coordination-mechanism testbed | see canonical facts | see canonical facts |
@@ -937,6 +940,8 @@ infrastructure compliance:
 - **template_autoresearch_project**: AutoResearch exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_autoscientists**: AutoScientists coordination exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_code_project**: Optimization research exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_gold_refinement**: Metallurgical gold-refining analogy exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_literature_meta_analysis**: Generic literature meta-analysis exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_madlib**: Conditional token-injection manuscript exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_newspaper**: Newspaper layout exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)

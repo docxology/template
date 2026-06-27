@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_literature_meta_analysis`, `template_madlib`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook`. The search exemplar is an optional add-on under `projects/archive/template_search_project/`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook`. The search exemplar is an optional add-on under `projects/archive/template_search_project/`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 

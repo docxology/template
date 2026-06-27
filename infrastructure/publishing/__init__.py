@@ -11,7 +11,11 @@ Modules:
     zenodo: Zenodo REST API client and publish workflow
     github: GitHub Releases API
     arxiv: arXiv submission tarball preparation
+    pypi: PyPI / TestPyPI package distribution
+    static_site: GitHub Pages, Cloudflare Pages, Netlify deployment
+    archival: IPFS, Software Heritage, and multi-provider archival
     platforms: Backwards-compatible platform re-exports
+    registry: Central platform adapter registry
     api: Backwards-compatible Zenodo re-exports
 """
 
@@ -44,6 +48,31 @@ from .platforms import (
     create_github_release,
     prepare_arxiv_submission,
     publish_to_zenodo,
+    PyPIAdapter,
+    build_dist,
+    upload_dist,
+    check_dist,
+    GitHubPagesAdapter,
+    CloudflarePagesAdapter,
+    NetlifyAdapter,
+    get_static_site_adapter,
+    SiteDeployConfig,
+    SiteDeployResult,
+    SiteHosting,
+    archive_publication,
+    load_credentials,
+    ArchivalProvider,
+    ArchivalReceipt,
+    ArchivalRun,
+)
+from .registry import (
+    PLATFORM_REGISTRY,
+    PlatformInfo,
+    PublishingTier,
+    list_platforms,
+    get_platform,
+    first_class_platforms,
+    documented_platforms,
 )
 
 __all__ = [
@@ -70,8 +99,35 @@ __all__ = [
     "generate_publication_metrics",
     "create_repository_metadata",
     "calculate_complexity_score",
-    # Dissemination
+    # Dissemination — core
     "publish_to_zenodo",
     "prepare_arxiv_submission",
     "create_github_release",
+    # PyPI
+    "PyPIAdapter",
+    "build_dist",
+    "upload_dist",
+    "check_dist",
+    # Static site
+    "GitHubPagesAdapter",
+    "CloudflarePagesAdapter",
+    "NetlifyAdapter",
+    "get_static_site_adapter",
+    "SiteDeployConfig",
+    "SiteDeployResult",
+    "SiteHosting",
+    # Archival
+    "archive_publication",
+    "load_credentials",
+    "ArchivalProvider",
+    "ArchivalReceipt",
+    "ArchivalRun",
+    # Registry
+    "PLATFORM_REGISTRY",
+    "PlatformInfo",
+    "PublishingTier",
+    "list_platforms",
+    "get_platform",
+    "first_class_platforms",
+    "documented_platforms",
 ]

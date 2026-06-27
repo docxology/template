@@ -13,6 +13,19 @@ psychiatric) that exercises every analysis path. Everything runs **offline and
 deterministically** out of the box from a committed synthetic fixture corpus; a live
 networked run swaps in real records.
 
+## Publication and rendering
+
+- Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_literature_meta_analysis`
+
+To regenerate this exemplar from the public monorepo:
+
+```bash
+git clone https://github.com/docxology/template
+cd template
+uv sync
+./run.sh --project templates/template_literature_meta_analysis --pipeline --core-only
+```
+
 ## When to use this template
 
 Use it whenever the research object is *a body of literature about a topic* and you

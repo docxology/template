@@ -180,16 +180,16 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3947x1904 | 0.211 | 0.05905715 | pass |
-| evidence_tier_ladder | yes | yes | 3254x1319 | 0.194 | 0.05465268 | pass |
-| formalism_traceability | yes | yes | 4170x1866 | 0.096 | 0.03165302 | pass |
-| implementation_circuit | yes | yes | 3720x2129 | 0.049 | 0.01648025 | pass |
-| integrity_gate_matrix | yes | yes | 1953x1559 | 0.457 | 0.17734427 | pass |
-| integrity_risk_matrix | yes | yes | 2969x2069 | 0.402 | 0.01475595 | pass |
-| karat_grading | yes | yes | 3241x1829 | 0.286 | 0.07357948 | pass |
-| provenance_sankey | yes | yes | 3570x1400 | 0.059 | 0.01855784 | pass |
-| purity_claim_scatter | yes | yes | 2587x1889 | 0.028 | 0.01227429 | pass |
-| purity_progression | yes | yes | 3029x2125 | 0.182 | 0.03971092 | pass |
-| token_density | yes | yes | 3865x1663 | 0.206 | 0.06115993 | pass |
-| token_heatmap | yes | yes | 2648x2424 | 0.637 | 0.12747028 | pass |
+| claim_evidence_assay | yes | yes | 3952x1904 | 0.211 | 0.05899335 | pass |
+| evidence_tier_ladder | yes | yes | 3284x1320 | 0.193 | 0.05469461 | pass |
+| formalism_traceability | yes | yes | 4170x1866 | 0.096 | 0.03186282 | pass |
+| implementation_circuit | yes | yes | 3720x2128 | 0.051 | 0.01688323 | pass |
+| integrity_gate_matrix | yes | yes | 1944x1560 | 0.459 | 0.17763563 | pass |
+| integrity_risk_matrix | yes | yes | 2970x2070 | 0.403 | 0.01449939 | pass |
+| karat_grading | yes | yes | 3242x1824 | 0.286 | 0.07374303 | pass |
+| provenance_sankey | yes | yes | 3570x1400 | 0.059 | 0.01864058 | pass |
+| purity_claim_scatter | yes | yes | 2584x1884 | 0.028 | 0.01227757 | pass |
+| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
+| token_density | yes | yes | 3865x1667 | 0.207 | 0.06142913 | pass |
+| token_heatmap | yes | yes | 2649x2422 | 0.645 | 0.12792323 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}

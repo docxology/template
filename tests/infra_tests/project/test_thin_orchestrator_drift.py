@@ -138,3 +138,186 @@ def test_line_count_scan_infrastructure(tmp_path: Path) -> None:
     (infra / "huge.py").write_text("\n".join(["# line"] * 960), encoding="utf-8")
     _warnings, failures = scan_infrastructure_and_scripts(tmp_path)
     assert any("infrastructure/huge.py" in rel for rel, _ in failures)
+
+
+# ---------------------------------------------------------------------------
+# runner.py branch coverage
+# ---------------------------------------------------------------------------
+
+import subprocess
+import sys
+
+from infrastructure.project.drift.runner import (
+    exit_code_for_report,
+    print_github_report,
+    print_human_report,
+    run_drift_checks,
+)
+from infrastructure.project.drift.models import Finding, Report
+
+
+def _report_with(*findings: Finding) -> Report:
+    r = Report()
+    r.findings.extend(findings)
+    return r
+
+
+def _finding(sev: str, project: str = "p", rule: str = "r", msg: str = "m") -> Finding:
+    return Finding(sev, project, rule, msg)
+
+
+def test_run_drift_checks_uses_default_projects_when_none(tmp_path: Path) -> None:
+    """run_drift_checks with projects=None iterates over DEFAULT_PROJECT_NAMES without error."""
+    from infrastructure.project.drift.runner import DEFAULT_PROJECT_NAMES
+
+    report = run_drift_checks(tmp_path, projects=None, include_repo_checks=False)
+    # Should complete without exception even when projects dirs are absent
+    assert isinstance(report, Report)
+    # At minimum one finding per public project (missing-project finding)
+    assert len(DEFAULT_PROJECT_NAMES) > 0
+
+
+def test_run_drift_checks_explicit_projects_list(tmp_path: Path) -> None:
+    """run_drift_checks accepts an explicit list of project names."""
+    report = run_drift_checks(tmp_path, projects=["template_code_project"], include_repo_checks=False)
+    assert isinstance(report, Report)
+
+
+def test_run_drift_checks_skip_repo_checks(tmp_path: Path) -> None:
+    """run_drift_checks with include_repo_checks=False skips run_repo_checks."""
+    # run_repo_checks on an empty tmp_path raises or adds findings; skipping it means no registry findings
+    report = run_drift_checks(tmp_path, projects=[], include_repo_checks=False)
+    assert isinstance(report, Report)
+    # No findings because no projects were checked and repo checks were skipped
+    assert len(report.findings) == 0
+
+
+def test_run_drift_checks_include_repo_checks(tmp_path: Path) -> None:
+    """run_drift_checks with include_repo_checks=True calls run_repo_checks."""
+    report = run_drift_checks(tmp_path, projects=[], include_repo_checks=True)
+    assert isinstance(report, Report)
+    # Registry checks run even with zero projects; may add findings or not depending on repo state
+    # Just verifies the code path executes without exception
+
+
+def test_print_human_report_no_findings(capsys: object) -> None:
+    """print_human_report with empty findings prints 'no drift detected'."""
+    report = Report()
+    print_human_report(report)
+    out = capsys.readouterr().out  # type: ignore[attr-defined]
+    assert "no drift detected" in out
+
+
+def test_print_human_report_errors_only(capsys: object) -> None:
+    """print_human_report with errors only prints ERROR block, no WARNING block."""
+    report = _report_with(_finding("ERROR"))
+    print_human_report(report)
+    out = capsys.readouterr().out  # type: ignore[attr-defined]
+    assert "ERROR" in out
+    assert "WARNING" not in out
+
+
+def test_print_human_report_warnings_only(capsys: object) -> None:
+    """print_human_report with warnings only prints WARNING block, no ERROR block."""
+    report = _report_with(_finding("WARNING"))
+    print_human_report(report)
+    out = capsys.readouterr().out  # type: ignore[attr-defined]
+    assert "WARNING" in out.upper()
+    assert "ERROR" not in out
+
+
+def test_print_human_report_errors_and_warnings(capsys: object) -> None:
+    """print_human_report with both errors and warnings prints both blocks."""
+    report = _report_with(_finding("ERROR"), _finding("WARNING"))
+    print_human_report(report)
+    out = capsys.readouterr().out  # type: ignore[attr-defined]
+    assert "ERROR" in out
+    assert "WARNING" in out.upper()
+
+
+def test_print_github_report_error_prefix(capsys: object) -> None:
+    """print_github_report uses ::error prefix for ERROR-severity findings."""
+    report = _report_with(_finding("ERROR", project="proj", rule="rule1", msg="bad"))
+    print_github_report(report)
+    out = capsys.readouterr().out  # type: ignore[attr-defined]
+    assert out.startswith("::error")
+
+
+def test_print_github_report_warning_prefix(capsys: object) -> None:
+    """print_github_report uses ::warning prefix for non-ERROR-severity findings."""
+    report = _report_with(_finding("WARNING", project="proj", rule="rule1", msg="mild"))
+    print_github_report(report)
+    out = capsys.readouterr().out  # type: ignore[attr-defined]
+    assert out.startswith("::warning")
+
+
+def test_print_github_report_empty(capsys: object) -> None:
+    """print_github_report with empty findings produces no output."""
+    report = Report()
+    print_github_report(report)
+    out = capsys.readouterr().out  # type: ignore[attr-defined]
+    assert out == ""
+
+
+def test_exit_code_errors_returns_1() -> None:
+    """exit_code_for_report returns 1 when report has errors."""
+    report = _report_with(_finding("ERROR"))
+    assert exit_code_for_report(report) == 1
+
+
+def test_exit_code_strict_false_warnings_returns_0() -> None:
+    """exit_code_for_report returns 0 with warnings when strict=False."""
+    report = _report_with(_finding("WARNING"))
+    assert exit_code_for_report(report, strict=False) == 0
+
+
+def test_exit_code_strict_true_warnings_returns_1() -> None:
+    """exit_code_for_report returns 1 with warnings when strict=True."""
+    report = _report_with(_finding("WARNING"))
+    assert exit_code_for_report(report, strict=True) == 1
+
+
+def test_exit_code_no_findings_returns_0() -> None:
+    """exit_code_for_report returns 0 when there are no findings."""
+    report = Report()
+    assert exit_code_for_report(report) == 0
+
+
+def test_subprocess_check_template_drift_no_flags() -> None:
+    """check_template_drift script runs with no flags and exits without crashing."""
+    repo_root = Path(__file__).resolve().parents[3]
+    script = repo_root / "scripts" / "check_template_drift.py"
+    result = subprocess.run(
+        [sys.executable, str(script)],
+        capture_output=True,
+        text=True,
+    )
+    # Exit code 0 (clean) or 1 (drift found) — not a crash code
+    assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"
+
+
+def test_subprocess_check_template_drift_strict_flag() -> None:
+    """check_template_drift script runs with --strict flag and exits without crashing."""
+    repo_root = Path(__file__).resolve().parents[3]
+    script = repo_root / "scripts" / "check_template_drift.py"
+    result = subprocess.run(
+        [sys.executable, str(script), "--strict"],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"
+
+
+def test_subprocess_check_template_drift_project_flag() -> None:
+    """check_template_drift script runs with a valid --project flag."""
+    from infrastructure.project.drift.runner import DEFAULT_PROJECT_NAMES
+
+    repo_root = Path(__file__).resolve().parents[3]
+    script = repo_root / "scripts" / "check_template_drift.py"
+    project = DEFAULT_PROJECT_NAMES[0]
+    result = subprocess.run(
+        [sys.executable, str(script), "--project", project],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"

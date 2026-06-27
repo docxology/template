@@ -19,6 +19,10 @@ figure_types:
   - purity_progression
   - karat_grading_chart
 citation_policy: local_source_or_scholarly
+review_gates:
+  - purity_monotone_check
+  - token_attribution_completeness
+  - claim_ledger_alignment
 source_policy: "Claims about manuscript purity must cite project config, source code, or generated artifacts."
 artifact_expectations:
   - output/data/refinery_results.json

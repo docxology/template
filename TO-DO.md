@@ -38,6 +38,24 @@ hard-coded here.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **Coverage sweep (2026-06-26, `[Unreleased]`):** added 119 tests across 8
+  infrastructure modules, closing the coverage gaps below 50% identified in the
+  2026-06-26 sweep. Overall test count: 7780 collected (9 failures under
+  investigation). Scripts audit identified 6 thin-orchestrator violations now
+  tracked as `SCRIPTS-LOGIC-1` through `SCRIPTS-LOGIC-6`; 43 of 49 scripts are
+  clean. Parity gaps logged as `INFRA-TEST-PARITY-1` (docker) and
+  `INFRA-TEST-PARITY-2` (logrotate.d).
+- **Modular publishing adapter suite (2026-06-26, `[Unreleased]`):** closed
+  `PUB-PLATFORM-1`. Shipped `infrastructure/publishing/registry.py`
+  (`PLATFORM_REGISTRY`, `PublishingTier`, `list_platforms()`, `get_platform()` —
+  10 first-class + 2 documented targets); `infrastructure/publishing/pypi/`
+  (`PyPIAdapter` with build/check/upload/verify, `PyPIConfig`, `PyPIResult`);
+  `infrastructure/publishing/static_site/` (`GitHubPagesAdapter`,
+  `CloudflarePagesAdapter`, `NetlifyAdapter`, per-family registry); and promoted
+  `infrastructure/publishing/archival/` to a proper subpackage (`models.py`,
+  `providers.py`, `orchestrate.py`). Pinned by 137 tests across
+  `tests/infra_tests/publishing/test_pypi.py` (11), `test_static_site.py` (22),
+  `test_archival_module.py` (57), `test_registry.py` (47).
 - **AutoResearch reviewer-boundary closeout (2026-06-13, `[Unreleased]`):**
   closed `AR-REPORT-ERGONOMICS-1`, `AR-BENCHMARK-ERGONOMICS-1`, and
   `AR-SOURCE-LEDGER-2`. The loop now emits
@@ -150,14 +168,6 @@ Keep this section short. Details live in release notes or archived audits.
 
 ## Active backlog
 
-### PUB-PLATFORM-1 — Modular publishing adapters for sites and package distribution
-
-- **Problem:** The publishing surface is currently split between Zenodo/GitHub DOI releases and a separate PyPI script path, while the broader site/app/content hosting targets are only documented.
-- **Why it matters:** We need a single modular publishing story that can evolve from documentation into thin, testable adapters without coupling every host to the DOI workflow.
-- **Smallest next step:** Add a template-level deployment registry and one thin adapter/test surface per target family, starting with PyPI/package publishing and static-site hosting.
-- **Acceptance check:** The template docs point to a clear registry of first-class versus documented targets, and the codebase has a testable modular entry point for each supported publishing surface.
-- **Out of scope:** Live credentials, destructive deploys, or service-specific wrappers that cannot be tested locally.
-
 ### AI-GATE-PERF-2 — Reduce active-inference gate runtime after correctness
 
 - **Problem:** `template_active_inference` gate tests still have one heavy
@@ -166,14 +176,183 @@ Keep this section short. Details live in release notes or archived audits.
   durations-driven pass.
 - **Why it matters:** slow gates discourage local verification and make future
   semantic changes harder to review.
-- **Smallest next step:** complete the remaining project-local
-  `MEDIUM-TEST-PERF-1` split with cheap source-only negative controls plus one
-  end-to-end refresh characterization.
-- **Acceptance check:** focused mutation tests still catch the known failure
-  classes, `--durations=20` shows fewer redundant artifact refreshes, and the
-  manuscript gate still passes.
+- **Blocker (2026-06-26):** The `template_active_inference` test suite currently
+  has 47 collection errors due to a Python 3.14/3.12 binary incompatibility —
+  the project venv was built for Python 3.14 but the main runner is Python 3.12.
+  Running `--durations=20` locally is blocked until the project venv is rebuilt
+  with the correct interpreter. **Fix:** run `uv sync` inside the
+  `projects/templates/template_active_inference/` directory to rebuild the venv
+  for the active Python version before attempting any perf profiling.
+- **Smallest next step:** rebuild the project venv (prerequisite above), then
+  complete the remaining project-local `MEDIUM-TEST-PERF-1` split with cheap
+  source-only negative controls plus one end-to-end refresh characterization.
+- **Acceptance check:** 47 collection errors are gone, focused mutation tests
+  still catch the known failure classes, `--durations=20` shows fewer redundant
+  artifact refreshes, and the manuscript gate still passes.
 - **Out of scope:** weakening coverage, skipping pymdp-backed evidence, or
   dropping the end-to-end refresh characterization.
+
+---
+
+### SCRIPTS-LOGIC-1 — Move `_discover_packages` out of `generate_api_reference_doc.py`
+
+- **Problem:** `scripts/generate_api_reference_doc.py` implements a
+  non-trivial package-discovery algorithm inline (`_discover_packages`: glob,
+  filter by name prefix, exclude underscore-prefixed dirs, return sorted). This
+  reusable domain operation belongs in `infrastructure.documentation` (e.g.
+  `infrastructure/documentation/api_reference_gen.py`), not in the orchestrator.
+- **Why it matters:** thin-orchestrator policy — scripts coordinate, modules
+  implement. Inline algorithms are untested and drift from infrastructure
+  patterns.
+- **Smallest next step:** extract `_discover_packages` into
+  `infrastructure/documentation/api_reference_gen.py`, add a unit test, and
+  update the script to import from there.
+- **Acceptance check:** `scripts/generate_api_reference_doc.py` contains no
+  discovery logic; the extracted function has a test under
+  `tests/infra_tests/documentation/`; `uv run python scripts/generate_api_reference_doc.py`
+  still produces the same output.
+- **Out of scope:** changing the discovery semantics or adding new documentation
+  targets.
+
+---
+
+### SCRIPTS-LOGIC-2 — Move `_stage_label` out of `06_llm_review.py`
+
+- **Problem:** `scripts/06_llm_review.py` implements a non-trivial stage-label
+  resolution algorithm inline (`_stage_label`): iterates candidate YAML paths,
+  instantiates `PipelineDAG`, searches for a stage name by index, and formats a
+  label string with fallback. It also hardcodes two candidate YAML path patterns.
+  This pipeline metadata logic belongs in `infrastructure.core.pipeline` (e.g.
+  a `stage_label()` helper on `PipelineDAG`).
+- **Why it matters:** pipeline metadata resolution spread across scripts and
+  infrastructure creates divergence risk; the algorithm should live next to the
+  DAG it queries.
+- **Smallest next step:** add a `stage_label(index: int) -> str` helper to
+  `infrastructure/core/pipeline/` (or `PipelineDAG`), cover it with a test, and
+  update `06_llm_review.py` to call it.
+- **Acceptance check:** `06_llm_review.py` has no inline stage-resolution logic;
+  the helper is tested under `tests/infra_tests/`; existing LLM review runs
+  produce identical stage labels.
+- **Out of scope:** changing the stage-label format or the fallback behavior.
+
+---
+
+### SCRIPTS-LOGIC-3 — Move `_scan_roots` out of `verify_no_mocks.py`
+
+- **Problem:** `scripts/verify_no_mocks.py` implements a non-trivial scan-root
+  resolution algorithm inline (`_scan_roots`): combines the repo-level `tests/`
+  directory with per-project `tests/` directories via `public_project_infos`,
+  applies existence filtering. This belongs in
+  `infrastructure.validation.output.no_mock_enforcer` or
+  `infrastructure.project.public_scope`.
+- **Why it matters:** which test trees are in scope for the no-mocks policy is
+  domain logic — it should be tested and co-located with the enforcer, not
+  repeated inline in the script.
+- **Smallest next step:** extract `_scan_roots` into the enforcer module, add a
+  unit test, update the script to import it.
+- **Acceptance check:** `verify_no_mocks.py` contains no root-resolution logic;
+  extracted function is tested; `uv run python scripts/verify_no_mocks.py` still
+  identifies the same test roots.
+- **Out of scope:** changing which directories are in scope.
+
+---
+
+### SCRIPTS-LOGIC-4 — Move statistics formatting out of `audit_filepaths.py`
+
+- **Problem:** `scripts/audit_filepaths.py` performs inline data-shaping in its
+  statistics summary loop (lines 111–123): computes `total_issues`, iterates
+  `scan_results.statistics.items()`, and formats per-category output with
+  `category.replace('_', ' ').title()`. This belongs in
+  `infrastructure.validation.repo.audit_orchestrator` as a
+  `format_audit_summary()` helper.
+- **Why it matters:** formatting logic in scripts cannot be tested independently
+  and drifts from how other audit tools report statistics.
+- **Smallest next step:** add `format_audit_summary(stats: dict) -> str` to the
+  audit orchestrator, test it, and update the script to call it.
+- **Acceptance check:** `audit_filepaths.py` summary loop is replaced by a
+  single helper call; the helper is tested; output format is unchanged.
+- **Out of scope:** changing the human-readable category names or summary
+  structure.
+
+---
+
+### SCRIPTS-LOGIC-5 — Move `_DEFAULT_TARGETS` out of `generate_stage_table_doc.py`
+
+- **Problem:** `scripts/generate_stage_table_doc.py` hardcodes seven specific
+  repository file paths inline in `_DEFAULT_TARGETS` (lines 43–51). This
+  canonical list of documentation targets is configuration data that belongs in
+  `infrastructure.documentation.stage_table` (or a config file) so the single
+  source of truth is co-located with the injection logic.
+- **Why it matters:** adding a new doc target requires editing both the script
+  and any prose that describes which docs receive stage tables — a split
+  responsibility that will drift.
+- **Smallest next step:** move `_DEFAULT_TARGETS` into
+  `infrastructure/documentation/stage_table.py` as a module-level constant,
+  update the script to import it, add a test that the list is non-empty and
+  all paths are relative strings.
+- **Acceptance check:** the script contains no hardcoded path list; the constant
+  lives in the module; existing injection runs produce identical output.
+- **Out of scope:** adding new documentation targets or changing the injection
+  logic.
+
+---
+
+### SCRIPTS-LOGIC-6 — Refactor mini-test-runner in `00_setup_environment.py`
+
+- **Problem:** `scripts/00_setup_environment.py` contains a mini-test-runner
+  implemented inline (lines 80–97): a `checks` list-of-tuples dispatch table,
+  a loop that collects boolean results, and a pass/fail aggregation
+  (`all_passed`). Each individual check delegates to infrastructure, but the
+  aggregation pattern could drift from how `infrastructure.core` reports failures
+  elsewhere. Minor: `log_header('Setup Summary')` on line 90 omits the `logger`
+  argument present on all other `log_header` calls in the file.
+- **Why it matters:** consistency — setup reporting should follow the same
+  aggregation path as all other pipeline stages.
+- **Smallest next step:** extract the aggregation loop into a shared helper in
+  `infrastructure.core` (or reuse an existing one), fix the missing `logger`
+  argument, and update the script to call it.
+- **Acceptance check:** `00_setup_environment.py` has no inline aggregation
+  loop; all `log_header` calls include the `logger` argument; `./run.sh
+  --pipeline` still prints a correct Setup Summary.
+- **Out of scope:** changing which checks run during environment setup.
+
+---
+
+### INFRA-TEST-PARITY-1 — Add `tests/infra_tests/docker/` test directory
+
+- **Problem:** `infrastructure/docker/` (Dockerfile, docker-compose.yml) has
+  partial coverage only via `tests/infra_tests/rendering/test_dockerfile_gen.py`
+  but no dedicated `tests/infra_tests/docker/` directory. The three-tree mirror
+  convention expects a parallel test tree for each infrastructure package.
+- **Why it matters:** docker build correctness is not explicitly gated; a drift
+  in the Dockerfile or compose file would not be caught by a targeted suite.
+- **Smallest next step:** create `tests/infra_tests/docker/__init__.py` and at
+  least one test (`test_docker_config.py`) that validates the Dockerfile and
+  docker-compose.yml exist, are non-empty, and pass a basic structural check
+  (e.g. `FROM` line present, required services declared).
+- **Acceptance check:** `tests/infra_tests/docker/` exists with at least one
+  passing test; overall infra coverage is unchanged or improved.
+- **Out of scope:** full Docker build smoke tests in CI (those belong in a
+  separate job with Docker-in-Docker).
+
+---
+
+### INFRA-TEST-PARITY-2 — Add test coverage for `infrastructure/logrotate.d/`
+
+- **Problem:** `infrastructure/logrotate.d/` contains only config files
+  (AGENTS.md, README.md, a logrotate template) with zero test coverage anywhere
+  in the test tree. The package has no `__init__.py` but ships infrastructure
+  config that should be validated.
+- **Why it matters:** a broken logrotate template would silently fail in
+  production deployments; there is currently no gate to catch structural errors.
+- **Smallest next step:** add a test (location: `tests/infra_tests/` or a new
+  `tests/infra_tests/logrotate/`) that reads the template file, confirms it is
+  non-empty, and validates that it contains the expected logrotate directives
+  (e.g. rotation interval, compress flag).
+- **Acceptance check:** at least one test covers the logrotate template; the
+  test passes; CI `test-infra` job picks it up.
+- **Out of scope:** testing actual logrotate binary execution or OS-level log
+  rotation.
 
 ---
 

@@ -11,6 +11,35 @@ not to the contents of any specific workspace.
 
 ### Added
 
+- 🧪 **Coverage sweep — 8 infrastructure modules, 119 new tests** —
+  added tests for `rendering/_combined_exports.py` (83%), `project/drift/runner.py` (100%),
+  `doctor/detectors/layout.py` (96%), `core/install_commands.py` (100%),
+  `rendering/pipeline.py` (97%), `core/runtime/env_deps.py` (84%),
+  `core/runtime/setup_checks.py` (86%), and `project/working_render.py` (90%);
+  thin-orchestrator audit confirmed 43 scripts clean (6 violations noted); test/infra parity 91% (21/23); overall suite 7780 tests.
+
+- 🏗️ **Publishing platform modular adapters (PUB-PLATFORM-1)** —
+  added a first-class multi-platform publishing layer to `infrastructure/publishing/`:
+  - `registry.py` — `PLATFORM_REGISTRY` covering 10 first-class and 2 documented
+    platforms; `PlatformInfo` dataclass, `PublishingTier` enum, and helpers
+    `list_platforms()`, `get_platform()`, `first_class_platforms()`,
+    `documented_platforms()`.
+  - `archival/` subpackage — promoted the flat `archival.py` module into a proper
+    package: `models.py` (`ArchivalReceipt`, `ArchivalRun`, `ArchivalCredentials`,
+    `ArchivalError`), `providers.py` (`ZenodoProvider`, `IPFSPinataProvider`,
+    `IPFSWeb3StorageProvider`, `SoftwareHeritageProvider`, `ArchivalProvider`
+    protocol), `orchestrate.py` (`archive_publication`, `load_credentials`); flat
+    `archival.py` retained for backwards compatibility.
+  - `pypi/` subpackage — `PyPIAdapter` (build → check → upload), `PyPIConfig`,
+    `PyPIResult`, `build_dist` (`uv build`), `upload_dist`/`check_dist` (twine),
+    `verify_install`; respects `PYPI_TOKEN` / `TESTPYPI_TOKEN` env vars.
+  - `static_site/` subpackage — `GitHubPagesAdapter` (gh-pages branch push),
+    `CloudflarePagesAdapter` (Wrangler CLI), `NetlifyAdapter` (netlify CLI);
+    shared `SiteDeployConfig`/`SiteDeployResult`, `STATIC_SITE_ADAPTERS` registry;
+    all adapters default to `dry_run=True`.
+  - 137 new tests across `test_pypi.py` (11), `test_static_site.py` (22),
+    `test_archival_module.py` (57), and `test_registry.py` (47); all 137 green.
+
 - 📐 **Theorem-like environments now render in web HTML** — Pandoc's HTML writer
   silently dropped raw-LaTeX `\begin{theorem|lemma|proposition|corollary|`
   `definition}` blocks (their `\newtheorem` definitions live in the LaTeX-only
@@ -47,6 +76,27 @@ not to the contents of any specific workspace.
   green.
 
 ### Fixed
+
+- 🗂️ **`template_gold_refinement` public-scope onboarding + doc roster fixes (2026-06-27)** —
+  completed the six remaining invariants required after `template_gold_refinement` was added to
+  `PUBLIC_PROJECT_NAMES`: (1) added `data/README.md` and `data/AGENTS.md` (doc-pair lint gate);
+  (2) added `ExemplarSnapshot("template_gold_refinement", 248, "97.55 %")` to the
+  `EXEMPLAR_SNAPSHOT` tuple in `counts_doc.py` so `generate_counts.py --write` regenerates
+  the COUNTS.md table row without being reverted by the DocIntegrity hook; (3) added the
+  canonical `memory_and_decision_records.md` link to `AGENTS.md` (memory-decision contract);
+  (4) added `review_gates` field to `domain_profile.yaml` (forkability overlay test);
+  (5) regenerated the skills manifest (`uv run python -m infrastructure.skills write`);
+  (6) updated all human-authored doc rosters — `README.md`, `.cursorrules`, `projects/README.md`
+  (4 locations) — to include `template_gold_refinement` (and `template_literature_meta_analysis`
+  where also missing), ensuring no partial roster triggers the docs-discovery-consistency gate.
+  All 53 docs-consistency + skills-discovery tests now pass.
+
+- 🔗 **`infrastructure/publishing/http.py` → `http_constants.py` (namespace fix)** —
+  renamed the file via `git mv` to eliminate a stdlib `http` namespace collision: subprocess
+  tests that added `infrastructure/publishing/` to `sys.path[0]` caused
+  `ModuleNotFoundError: No module named 'http.client'` when new platform adapters imported
+  `requests` at module level. Updated three import sites (`api.py`, `github/release.py`,
+  `zenodo/client.py`). All 538 publishing tests remain green.
 
 - 📐 **TeX Live 2026 beamer compatibility (TEXLIVE-2026-BEAMER-1)** —
   `latex_utils.compile_latex` now downgrades the benign `! Illegal parameter number
