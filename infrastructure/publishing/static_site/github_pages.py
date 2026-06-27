@@ -1,4 +1,5 @@
 """GitHub Pages deployment via git push to gh-pages branch."""
+
 from __future__ import annotations
 
 import shutil
@@ -36,11 +37,7 @@ class GitHubPagesAdapter:
 
         repo = self.config.repo or "owner/repo"
         branch = self.config.branch or "gh-pages"
-        url = (
-            f"https://{repo.split('/')[0]}.github.io/{repo.split('/')[-1]}/"
-            if "/" in repo
-            else None
-        )
+        url = f"https://{repo.split('/')[0]}.github.io/{repo.split('/')[-1]}/" if "/" in repo else None
 
         if dry_run:
             return SiteDeployResult(

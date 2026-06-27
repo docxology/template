@@ -1,4 +1,5 @@
 """Registry of available static-site adapters."""
+
 from __future__ import annotations
 
 from .cloudflare_pages import CloudflarePagesAdapter

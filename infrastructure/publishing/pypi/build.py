@@ -62,15 +62,11 @@ def build_dist(
         text=True,
     )
     if result.returncode != 0:
-        raise RuntimeError(
-            f"uv build failed:\n{result.stderr.strip() or result.stdout.strip()}"
-        )
+        raise RuntimeError(f"uv build failed:\n{result.stderr.strip() or result.stdout.strip()}")
 
     wheels, sdists = list_dist_files(out)
     if not wheels and not sdists:
-        raise RuntimeError(
-            f"uv build succeeded but produced no distribution files in {out}"
-        )
+        raise RuntimeError(f"uv build succeeded but produced no distribution files in {out}")
 
     logger.info(
         "Built %d wheel(s) + %d sdist(s) in %s",

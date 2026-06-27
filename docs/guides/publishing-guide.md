@@ -69,8 +69,10 @@ apa = generate_citation_apa(metadata)
 mla = generate_citation_mla(metadata)
 
 print(bibtex)
-# @article{friedman2026template,
-#   title={A template/ approach to Reproducible Research},
+# generate_citation_bibtex always emits an @software entry; the citation key is
+# the lowercased, space-stripped first author followed by the year.
+# @software{danielarifriedman2026,
+#   title={A template approach to Reproducible Research},
 #   author={Friedman, Daniel Ari},
 #   year={2026},
 #   doi={10.5281/zenodo.12345678}
@@ -85,6 +87,36 @@ from infrastructure.publishing import generate_citations_markdown
 # Creates a markdown block with BibTeX, APA, and MLA through the Python API
 citations_md = generate_citations_markdown(metadata)
 ```
+
+---
+
+## Verify credentials first
+
+Before any real deposit, confirm your tokens actually authenticate.
+`credential_check` sends a single **read-only** GET per platform (an
+identity/verify endpoint) and reports whether the credential is live. It never
+writes, uploads, or mutates anything, and token values are never printed — only
+the HTTP status and a public identity field (login, account name).
+
+```bash
+# Probe every platform whose token is present (uses os.environ, plus an optional .env)
+uv run python -m infrastructure.publishing.credential_check --env-file .env
+
+# Restrict to specific platforms
+uv run python -m infrastructure.publishing.credential_check --only github zenodo
+```
+
+The probe catalogue (`PROBES`) covers `github`, `huggingface_hub`, `osf`,
+`ipfs_pinata`, `zenodo`, `netlify`, and `cloudflare_pages`. `pypi` reports
+`no-endpoint` — it has no read-only identity endpoint, so its token is only
+validated at upload time. Each result is `pass`, `fail`, `skipped` (no
+credential set), or `no-endpoint`. The CLI **exits non-zero if any present
+credential fails**, so it works as a pre-release gate.
+
+Credential presence is machine-specific and volatile, so it deliberately lives
+in this opt-in operational check — never in a committed README. The durable,
+version-controlled record of *what has been published* is the separate
+[publishing-status block](#compile-the-readme-publishing-status-block).
 
 ---
 
@@ -542,6 +574,7 @@ Set `publication.deposit_filename.enabled: false` to keep `{project}_combined.pd
 | `publication.doi` | No | **Concept DOI** — stable citation; PDF cover, CITATION.cff; not overwritten on re-deposit when `version_doi` is set |
 | `publication.version_doi` | No | Latest Zenodo **version** DOI; updated by `update_publication_after_zenodo_deposit()` |
 | `publication.version_record` | No | Latest Zenodo record URL (`https://zenodo.org/records/{id}`) |
+| `publication.published_artifacts` | No | Map of platform-name → durable URL; marks extra platforms published in the README status block (consumed by `status_report.py`) |
 | `publication.year` | No | Zenodo `publication_date` when `paper.date` absent |
 | `publication.repository_url` | No | Extra Zenodo `related_identifiers` (`references`) when distinct from GitHub release URL |
 | `publication.zenodo_description` | No | Override abstract body for deposits (footer still appended) |
@@ -602,11 +635,14 @@ from pathlib import Path
 
 from infrastructure.publishing.executable_bundle import bundle_project
 
-manifest = bundle_project(
-    Path("projects/templates/template_code_project"),
-    Path("output/template_code_project/executable_bundle"),
+# bundle_project(repo_root, project_name, *, python_version="3.12") -> Path
+# project_name is the discovery name (e.g. "templates/template_code_project");
+# the bundle is written under output/<project>/executable_bundle/.
+bundle_path = bundle_project(
+    Path("."),
+    "templates/template_code_project",
 )
-print(manifest)
+print(bundle_path)
 ```
 
 ---
@@ -631,6 +667,139 @@ Add `--commit` to perform real deposits (requires credentials — see [`archival
 
 ---
 
+## Publish to all platforms
+
+`infrastructure.publishing.upload_runner` is the reusable multi-platform upload
+dispatch — the per-platform helpers plus a batch orchestrator. Every uploader is
+**dry-run by default**, returns a plain receipt dict, and a failure in one
+platform is captured (never raised) so a batch always completes.
+
+- Core uploaders (`CORE_UPLOADERS`, run by default): `pinata`, `huggingface`,
+  `osf`, `testpypi`.
+- Opt-in uploaders (`OPTIONAL_UPLOADERS`): `github`, `netlify`, `cloudflare` —
+  these create a real GitHub release/tag or need the `netlify`/`wrangler` CLIs,
+  so `select_jobs(..., include_github=True, include_static=True)` must opt them
+  in.
+
+The `template_gold_refinement` exemplar ships a thin CLI over this module at
+`scripts/publish/upload_gold_refinement.py`:
+
+```bash
+# Always verify tokens first
+uv run python -m infrastructure.publishing.credential_check --env-file .env
+
+# Safe: dry-run every core platform (no writes)
+uv run python scripts/publish/upload_gold_refinement.py
+
+# REAL uploads to the core platforms (pinata, huggingface, osf, testpypi)
+uv run python scripts/publish/upload_gold_refinement.py --commit
+
+# Restrict to a subset
+uv run python scripts/publish/upload_gold_refinement.py --commit \
+  --only pinata huggingface osf testpypi
+
+# Add the opt-in GitHub release and static-site deploys
+uv run python scripts/publish/upload_gold_refinement.py --commit \
+  --include-github --include-static
+```
+
+The script loads the repo-root `.env`, requires the rendered combined PDF
+(`output/pdf/template_gold_refinement_combined.pdf` — build it with
+`./run.sh --project templates/template_gold_refinement --pipeline --core-only`),
+and writes a JSON receipt to
+`output/templates/template_gold_refinement/upload_receipts.json`.
+
+Programmatic API: build an `UploadTargets`, choose jobs with `select_jobs(...)`,
+then `run_uploads(targets, jobs=..., commit=...)` returns an `UploadRun`
+(`.results`, `.mode`, `.ok`). Full signatures are in the
+[Publishing Module Reference](../modules/guides/publishing-module.md).
+
+### Worked example — `template_gold_refinement` (2026-06-27)
+
+The gold_refinement exemplar was published and fetch-back-confirmed across the
+publishing surface on 2026-06-27 (README status block: "12 platforms, 7
+published"):
+
+| Platform | Durable identifier |
+| --- | --- |
+| Zenodo (concept DOI) | `10.5281/zenodo.20931955` |
+| Zenodo (version DOI) | `10.5281/zenodo.20938523` |
+| GitHub | release `v0.1.0` |
+| IPFS (Pinata) | CID `QmQBXK5qoGv5NSWC8mzcx22AgkHeqBJL8z8HrCgEy7nzio` |
+| Hugging Face | https://huggingface.co/datasets/ActiveInference/template_gold_refinement |
+| OSF | https://osf.io/u485p/ |
+| TestPyPI | `template-gold-refinement` 0.1.0 |
+| Software Heritage | save-request 2375286 (task succeeded) |
+
+See [Troubleshooting](#troubleshooting) for the Hugging Face Git-LFS, namespace,
+TestPyPI, and Software Heritage gotchas hit during this run.
+
+---
+
+## Compile the README publishing-status block
+
+After durable identifiers exist, record them once in `manuscript/config.yaml`
+and regenerate a committed README "publishing status" block with
+`infrastructure.publishing.status_report`. The block is delimited by stable
+HTML-comment markers (`<!-- PUBLISHING-STATUS:START ... -->` and
+`<!-- PUBLISHING-STATUS:END -->`) and is rebuilt deterministically without
+disturbing the surrounding prose.
+
+The block reports **durable publication state only** — DOIs, repository, and
+release identifiers from `config.yaml`. It never encodes machine-specific
+credential presence (that is the separate
+[credential check](#verify-credentials-first)). Platform rows are generated from
+the 12-platform registry (`registry.PLATFORM_REGISTRY`), so adding a platform to
+the registry automatically surfaces it here.
+
+```bash
+# Preview the block (no write)
+uv run python -m infrastructure.publishing.status_report \
+  --project projects/templates/template_gold_refinement
+
+# Write it into the README (first write needs a heading to insert after)
+uv run python -m infrastructure.publishing.status_report \
+  --project projects/templates/template_gold_refinement \
+  --write --init-after "## Publication and rendering"
+
+# CI gate: exit non-zero if the README block is missing or stale
+uv run python -m infrastructure.publishing.status_report \
+  --project projects/templates/template_gold_refinement --check
+```
+
+### Recording extra published platforms (`published_artifacts`)
+
+Zenodo (from `publication.doi`) and GitHub (from
+`publication.github_repository`) are detected automatically. For platforms whose
+durable URL lives outside those fields — an IPFS CID, a Hugging Face dataset, an
+OSF node — add them under a `publication.published_artifacts` map (platform name
+→ durable URL); `status_report` consumes it to mark those rows published:
+
+```yaml
+publication:
+  doi: "10.5281/zenodo.20931955"
+  version_doi: "10.5281/zenodo.20938523"
+  github_repository: "docxology/template_gold_refinement"
+  published_artifacts:
+    ipfs_pinata: "https://ipfs.io/ipfs/QmQBXK5qoGv5NSWC8mzcx22AgkHeqBJL8z8HrCgEy7nzio"
+    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_gold_refinement"
+    osf: "https://osf.io/u485p/"
+```
+
+A `--published name=url` CLI flag overrides config for one-off runs (it only ever
+upgrades a row to published — it never downgrades):
+
+```bash
+uv run python -m infrastructure.publishing.status_report \
+  --project projects/templates/template_gold_refinement \
+  --published osf=https://osf.io/u485p/ --write
+```
+
+> Never hand-edit the text between the `PUBLISHING-STATUS` markers — edit
+> `config.yaml` (or pass `--published`) and regenerate.
+
+---
+
 ## Publication Readiness
 
 ```python
@@ -640,21 +809,22 @@ from infrastructure.publishing import (
     create_publication_package,
 )
 
-# Check if everything is ready
-readiness = validate_publication_readiness(
-    project_dir=Path("projects/templates/template_code_project/"),
-)
-print(f"Ready: {readiness.is_ready}")
-for issue in readiness.issues:
+# Check if everything is ready. The function takes two list[Path] arguments
+# (manuscript markdown + rendered PDFs) and returns a plain dict.
+markdown_files = sorted(Path("projects/templates/template_code_project/manuscript").glob("*.md"))
+pdf_files = sorted(Path("output/template_code_project/pdf").glob("*.pdf"))
+readiness = validate_publication_readiness(markdown_files, pdf_files)
+print(f"Ready: {readiness['ready_for_publication']} (score {readiness['completeness_score']})")
+for issue in readiness["missing_elements"]:
     print(f"  - {issue}")
 
 # Generate a checklist
 checklist = create_submission_checklist(metadata)
 
-# Bundle everything for submission
+# Bundle metadata + files for submission: create_publication_package(output_dir, metadata)
 package = create_publication_package(
-    project_dir=Path("projects/templates/template_code_project/"),
-    output_dir=Path("output/template_code_project/publication/"),
+    Path("output/template_code_project/publication/"),
+    metadata,
 )
 ```
 
@@ -685,6 +855,19 @@ is_valid = validate_doi("10.5281/zenodo.12345678")
 **Missing metadata fields:**
 - Run `validate_publication_readiness()` to identify gaps
 - Ensure `config.yaml` has all required fields (title, authors, DOI)
+
+**Multi-platform upload gotchas** (seen during the `template_gold_refinement` run):
+- **Hugging Face large PDFs:** the shipped `HuggingFaceHubAdapter` base64-inlines
+  the blob and returns HTTP 400 on large binary PDFs (it needs Git-LFS). For real
+  PDFs, upload via the official `huggingface_hub` `HfApi.upload_file`, which
+  switches to LFS automatically.
+- **Hugging Face namespace:** the repo namespace must match the token's account —
+  a token without org access cannot create a repo under another namespace.
+- **TestPyPI:** install `twine` in the venv first; version `0.1.0` is one-shot
+  (re-uploading the same version fails). Confirm via the `/simple/` index, not the
+  `/pypi/<name>/json` endpoint.
+- **Software Heritage:** `deposit()` resolves the git origin from the directory's
+  `origin` remote, or from a text file whose first line is the repository URL.
 
 ---
 

@@ -85,11 +85,7 @@ def check_dist(dist_dir: Path) -> list[str]:
         capture_output=True,
         text=True,
     )
-    issues = [
-        ln.strip()
-        for ln in (result.stdout + result.stderr).splitlines()
-        if "FAILED" in ln or "ERROR" in ln
-    ]
+    issues = [ln.strip() for ln in (result.stdout + result.stderr).splitlines() if "FAILED" in ln or "ERROR" in ln]
     return issues
 
 

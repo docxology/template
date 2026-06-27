@@ -19,6 +19,7 @@
 |------|---------|
 | `.env.template` | Template listing all supported environment variables with descriptions. Copy to `.env` and fill in values. |
 | `secure_config.yaml` | Default steganography, watermarking, and hashing settings used by `secure_run.sh`. Override individual keys in your project or pass a custom path to the steganography module. |
+| `README.md` | Directory overview clarifying this is a non-Python config dir; points `from infrastructure.config import ...` users to `infrastructure/core/config/`. |
 | `SKILL.md` | AI skill descriptor for this directory (MCP-aligned, consumed by `infrastructure.skills`). |
 | `AGENTS.md` | Machine-readable directory guide for AI agents. |
 

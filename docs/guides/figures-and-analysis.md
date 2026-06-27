@@ -100,17 +100,20 @@ import matplotlib
 matplotlib.use('Agg')  # Headless backend
 import matplotlib.pyplot as plt
 
-# IMPORT from projects/{name}/src/ - never implement algorithms here
-from projects.template_code_project.src.example import calculate_average, find_maximum, find_minimum
+# IMPORT from src/ - never implement algorithms here.
+# `example.py` (calculate_average/find_maximum/find_minimum) is an illustrative
+# stand-in for an analysis module you add to src/; the statistics.py and
+# correlation.py modules used later in this guide ARE built step by step below.
+from projects.templates.template_code_project.src.example import calculate_average, find_maximum, find_minimum
 
 def main():
     # Sample data
     data = [1.2, 2.3, 1.8, 3.4, 2.1]
 
-    # USE projects/{name}/src/ methods for computation - NEVER implement here
-    avg = calculate_average(data)  # From projects/templates/template_code_project/src/example.py
-    max_val = find_maximum(data)   # From projects/templates/template_code_project/src/example.py
-    min_val = find_minimum(data)   # From projects/templates/template_code_project/src/example.py
+    # USE src/ methods for computation - NEVER implement here
+    avg = calculate_average(data)  # illustrative: src/example.py
+    max_val = find_maximum(data)   # illustrative: src/example.py
+    min_val = find_minimum(data)   # illustrative: src/example.py
 
     # Script ONLY handles visualization
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -173,7 +176,7 @@ def calculate_std_dev(values):
 
 ```python
 # projects/templates/template_code_project/tests/test_statistics.py
-from projects.template_code_project.src.statistics import calculate_variance, calculate_std_dev
+from projects.templates.template_code_project.src.statistics import calculate_variance, calculate_std_dev
 
 def test_calculate_variance():
     values = [1, 2, 3, 4, 5]
@@ -203,7 +206,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.template_code_project.src.statistics import calculate_std_dev  # Import from src/
+from projects.templates.template_code_project.src.statistics import calculate_std_dev  # Import from src/
 
 def main():
     # Generate sample data
@@ -321,7 +324,7 @@ When adding new analysis capabilities:
 ```python
 # projects/templates/template_code_project/tests/test_correlation.py
 import pytest
-from projects.template_code_project.src.correlation import calculate_correlation, calculate_r_squared, linear_regression
+from projects.templates.template_code_project.src.correlation import calculate_correlation, calculate_r_squared, linear_regression
 
 def test_calculate_correlation_perfect():
     """Test positive correlation."""
@@ -434,7 +437,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.template_code_project.src.correlation import calculate_correlation, linear_regression  # From projects/templates/template_code_project/src/
+from projects.templates.template_code_project.src.correlation import calculate_correlation, linear_regression  # illustrative: from your project's src/
 
 def main():
     # Generate sample data
@@ -571,7 +574,7 @@ open output/template_code_project/pdf/template_code_project_combined.pdf
 **Advanced workflow with validation**:
 
 ```bash
-# 1. Full rebuild with validation (recommended — core pipeline, ten stages by default)
+# 1. Full rebuild with validation (recommended — core pipeline, eight stages with --core-only)
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Or use unified interactive menu
@@ -673,7 +676,7 @@ fig.savefig(os.path.join(output_dir, 'figure.png'), dpi=300)
 
 ### Import Errors in Scripts
 
-**Symptom**: `ModuleNotFoundError: No module named 'projects.template_code_project.src'`
+**Symptom**: `ModuleNotFoundError: No module named 'projects.templates.template_code_project.src'`
 
 **Cause**: Script run outside of project context
 

@@ -84,7 +84,7 @@ The full authoritative export list is in `infrastructure/search/__init__.py`.
 from infrastructure.search import LiteratureClient, SearchQuery, ArxivBackend
 
 client = LiteratureClient(backends=[ArxivBackend()])
-result = client.search(SearchQuery(text="free energy principle", limit=20))
+result = client.search(SearchQuery(text="free energy principle", max_results=20))
 for paper in result.papers:
     print(paper.title, paper.year)
 ```

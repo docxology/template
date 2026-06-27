@@ -331,7 +331,7 @@ if __name__ == '__main__':
     main()
 ```
 
-**Note**: The template ships with a production CI configuration at [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) with 13 jobs, including the detect gate, actionlint, lint, the informational health report, verify-no-mocks, infra and project test matrices, validation, security, docs lint, performance, and the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) documented in [`.github/AGENTS.md`](../../.github/AGENTS.md). Study it as a reference for your own CI setup.
+**Note**: The template ships with a production CI configuration at [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) with 14 jobs, including the detect and detect-projects gates, actionlint, lint, the informational health report, verify-no-mocks, infra and project test matrices, validation, security, docs lint, performance, and the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) documented in [`.github/AGENTS.md`](../../.github/AGENTS.md). Study it as a reference for your own CI setup.
 
 ---
 
@@ -361,7 +361,8 @@ Generate citations, mint DOIs, and publish to Zenodo:
 from infrastructure.publishing import generate_citation_bibtex, extract_publication_metadata
 from pathlib import Path
 
-metadata = extract_publication_metadata(Path("projects/templates/template_code_project/manuscript/config.yaml"))
+manuscript_dir = Path("projects/templates/template_code_project/manuscript")
+metadata = extract_publication_metadata(sorted(manuscript_dir.glob("*.md")))
 print(generate_citation_bibtex(metadata))
 ```
 
@@ -377,7 +378,7 @@ import requests
 from collections import Counter
 
 # Import from projects/{name}/src/ (implement these as needed)
-from projects.template_code_project.src.text_analysis import extract_keywords, analyze_trends
+from projects.templates.template_code_project.src.text_analysis import extract_keywords, analyze_trends
 
 def fetch_papers(query, max_results=100):
     """Fetch papers from API (e.g., arXiv, PubMed)."""
@@ -425,7 +426,7 @@ vim projects/templates/template_code_project/src/new_algorithm.py
 vim projects/templates/template_code_project/tests/test_new_algorithm.py
 
 # Ensure coverage requirements met
-uv run pytest projects/templates/template_code_project/tests/ --cov=projects.template_code_project.src --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/ --cov=projects.templates.template_code_project.src --cov-report=term-missing
 
 # Commit with conventional commit messages
 git add projects/templates/template_code_project/src/new_algorithm.py projects/templates/template_code_project/tests/test_new_algorithm.py

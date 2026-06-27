@@ -107,8 +107,8 @@ prompt = (
     "assumptions, and disagreements across the following abstracts.\n\n"
     + joined
 )
-report = llm.generate(prompt)
-(OUT / "synthesis.md").write_text(report.text, encoding="utf-8")
+report = llm.query(prompt)  # LLMClient.query(prompt) -> str
+(OUT / "synthesis.md").write_text(report, encoding="utf-8")
 ```
 
 ## Reproducibility

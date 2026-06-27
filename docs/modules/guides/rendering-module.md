@@ -68,7 +68,7 @@ on/off booleans plus output-path overrides:
 | `docx_dir` | `output/docx` | output directory for DOCX |
 | `epub_dir` | `output/epub` | output directory for EPUB |
 
-Factory: `RenderingConfig.from_project_config(yaml_mapping, *, env=None)`
+Factory: `RenderingConfig.from_project_config(project_config, *, env=None)`
 reads the `render.formats` block from a parsed `manuscript/config.yaml`
 mapping; env vars (`ENABLE_PDF`, `ENABLE_HTML`, `ENABLE_SLIDES`,
 `ENABLE_DOCX`, `ENABLE_EPUB`) override yaml.
@@ -85,13 +85,13 @@ from pathlib import Path
 
 manager = RenderManager()
 
-# Render all formats from markdown
+# render_all() dispatches by source suffix: a .md source emits Beamer slides + HTML;
+# a .tex source emits PDF. (The combined-PDF stage is driven separately, not by render_all.)
 outputs = manager.render_all(Path("manuscript/main.md"))
 
-# Outputs are written under the project output tree, e.g.:
-# - PDF: projects/{name}/output/pdf/
+# For a .md source the outputs are written under the project output tree, e.g.:
 # - Slides: projects/{name}/output/slides/
-# - Web: projects/{name}/output/web/
+# - Web:    projects/{name}/output/web/
 # Final copy stage may mirror to output/{name}/ (see RUN_GUIDE)
 ```
 
@@ -184,7 +184,7 @@ The rendering hooks resolve any nested structures using flatten techniques:
 For structural project topologies resembling `fep_lean`—but completely backward-compatible with generalized architectures (`template_code_project`, `template`)—the module automatically evaluates synthetic parameters to simplify front-end syntax:
 
 - Synthesizes `total_topics` and `total_areas` aggregations based on count metrics if relevant keys exist.
-- Emits derived representations like dynamically scaled `maturity_icon` semantics (`✅`, `⚠️`, `○`) and string metric transformations like `lean_chars` based on codebase properties.
+- Emits derived representations like `maturity_icon` semantics keyed on `mathlib_status` (`✅` real, `🔶` partial, `🔷` aspirational) and string metric transformations like `lean_chars` (character length of each topic's `lean_sketch`).
 - **Robust Schema Binding:** Deep type inspections guarantee that the generalized rendering layer skips variable derivations exclusively relying on arrays or absent dictionary structures on minimalist or newer templates running within the `projects/` subdirectories.
 
 ---

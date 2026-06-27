@@ -149,7 +149,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** - New project checklist (all learnings)
 - **[guides/new-project-one-shot-prompt.md](guides/new-project-one-shot-prompt.md)** - One-shot LLM prompt for new `projects/{name}/` (primary exemplar: [`projects/templates/template_code_project/`](../projects/templates/template_code_project/); other active names: [_generated/active_projects.md](_generated/active_projects.md))
 - **[guides/llm-integration-guide.md](guides/llm-integration-guide.md)** - AI-assisted research with Ollama
-- **[guides/publishing-guide.md](guides/publishing-guide.md)** - Publishing workflow (DOI, Zenodo, arXiv, citations)
+- **[guides/publishing-guide.md](guides/publishing-guide.md)** - Publishing workflow across the 12-platform registry (DOI, Zenodo, GitHub, arXiv, PyPI, IPFS, Software Heritage, Hugging Face, OSF, static hosts), credential verification, and README status compilation
 - **[guides/zenodo-doi-strategy.md](guides/zenodo-doi-strategy.md)** - Concept vs version DOI layout for Zenodo deposits
 - **[guides/secure-research-guide.md](guides/secure-research-guide.md)** - PDF watermarking, provenance, and integrity
 - **[../projects/templates/template_code_project/README.md](../projects/templates/template_code_project/README.md)** - Control-positive exemplar under `projects/`
@@ -215,7 +215,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[modules/guides/integrity-module.md](modules/guides/integrity-module.md)**
 - **[modules/guides/llm-module.md](modules/guides/llm-module.md)**
 - **[modules/guides/project-module.md](modules/guides/project-module.md)**
-- **[modules/guides/publishing-module.md](modules/guides/publishing-module.md)**
+- **[modules/guides/publishing-module.md](modules/guides/publishing-module.md)** - 12-platform registry, DOI/citations, credential verification, README status compilation, multi-platform upload dispatch
 - **[modules/guides/rendering-module.md](modules/guides/rendering-module.md)**
 - **[modules/guides/reporting-module.md](modules/guides/reporting-module.md)**
 - **[modules/guides/scientific-module.md](modules/guides/scientific-module.md)**

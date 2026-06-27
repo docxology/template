@@ -71,23 +71,35 @@ client = LLMClient(config)
 
 # Generate text
 options = GenerationOptions(temperature=0.7, max_tokens=1000)
-response = client.generate("Summarize the key findings of this paper.", options=options)
+response = client.query("Summarize the key findings of this paper.", options=options)
 print(response)
 ```
 
 ### Manuscript Review
 
 ```python
-from infrastructure.llm import generate_review_with_metrics
+from infrastructure.llm import LLMClient, OllamaClientConfig, generate_review_with_metrics
+from infrastructure.llm.review import extract_manuscript_text
+from infrastructure.llm.templates import ManuscriptQualityReview
 from pathlib import Path
 
-# Generate a structured review of a manuscript
+client = LLMClient(OllamaClientConfig(default_model="gemma3:4b"))
+
+# Extract manuscript text from a rendered PDF
+text, _ = extract_manuscript_text(
+    Path("output/template_code_project/pdf/template_code_project_combined.pdf")
+)
+
+# Generate a structured quality review
 result, metrics = generate_review_with_metrics(
-    manuscript_path=Path("projects/templates/template_code_project/output/manuscript/"),
+    client=client,
+    text=text,
     review_type="quality_review",
+    review_name="quality review",
+    template_class=ManuscriptQualityReview,
 )
 print(result)
-print(f"Tokens used: {metrics}")
+print(f"Generation time: {metrics.generation_time_seconds:.1f}s")
 ```
 
 ### Prompt Templates
@@ -96,8 +108,8 @@ print(f"Tokens used: {metrics}")
 from infrastructure.llm import get_template
 
 # Get a built-in template
-template = get_template("executive_summary")
-print(template)  # Shows the prompt structure
+template = get_template("manuscript_executive_summary")
+print(template.template_str)  # Shows the prompt structure
 ```
 
 ### Output Validation
@@ -109,7 +121,7 @@ from infrastructure.llm import validate_complete, is_off_topic
 is_valid = validate_complete(response_text)
 
 # Check if response drifted off-topic
-off_topic = is_off_topic(response_text, expected_topic="gradient descent")
+off_topic = is_off_topic(response_text)
 ```
 
 ---
@@ -118,13 +130,13 @@ off_topic = is_off_topic(response_text, expected_topic="gradient descent")
 
 ```bash
 # Query the LLM directly
-uv run python -m infrastructure.llm.cli.main query "What is gradient descent?"
+uv run python -m infrastructure.llm.cli query "What is gradient descent?"
 
 # Check Ollama connectivity
-uv run python -m infrastructure.llm.cli.main check
+uv run python -m infrastructure.llm.cli check
 
 # List available models
-uv run python -m infrastructure.llm.cli.main models
+uv run python -m infrastructure.llm.cli models
 ```
 
 ---

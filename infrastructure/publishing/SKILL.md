@@ -29,6 +29,13 @@ from infrastructure.publishing import PublicationMetadata, extract_publication_m
 metadata = extract_publication_metadata([Path("manuscript/01_introduction.md")])
 ```
 
+The `publication:` block in `manuscript/config.yaml` records durable identifiers
+(`doi`, `version_doi`, `version_record`, `github_repository`, `repository_url`).
+The `publication.published_artifacts` key — a `{platform_name: durable_url}` map —
+records artifacts published outside those fields (e.g. an IPFS CID or a
+HuggingFace dataset URL) and is consumed by `status_report.py` to mark those
+platforms as published.
+
 ## Citation generation
 
 The Python API exposes BibTeX, APA, and MLA helpers. The
@@ -125,7 +132,7 @@ Credentials: `GITHUB_TOKEN` (GitHub Pages), `CLOUDFLARE_API_TOKEN` (Cloudflare),
 
 ## Platform registry
 
-`registry.py` is the single source of truth for all adapter metadata (10 first-class + 2 documented platforms).
+`registry.py` is the single source of truth for all adapter metadata (12 first-class platforms; `documented_platforms()` is currently empty).
 
 ```python
 from infrastructure.publishing.registry import get_platform, list_platforms, PublishingTier
@@ -137,12 +144,95 @@ for p in list_platforms(tag="static_site"):
     print(p.name, p.adapter_class)
 ```
 
+## README publishing-status compilation
+
+`status_report.py` turns the registry (which platforms exist) plus a project's
+`manuscript/config.yaml` (what has been published) into a regenerable README
+block delimited by `<!-- PUBLISHING-STATUS:START ... -->` / `<!-- PUBLISHING-STATUS:END -->`
+markers. The committed block reflects durable publication state (DOIs, repo,
+`published_artifacts`) only — never machine-specific credential presence.
+
+```python
+from pathlib import Path
+from infrastructure.publishing.status_report import (
+    compile_publishing_status, render_status_block, update_readme_block,
+)
+
+report = compile_publishing_status(Path("projects/templates/template_gold_refinement"))
+print(report.published_count)              # e.g. 7
+block = render_status_block(report)        # marker-wrapped Markdown
+new_text, changed = update_readme_block(
+    readme_text, report, init_after_heading="## Publication and rendering"
+)
+```
+
+A caller-supplied `published={"ipfs_pinata": "https://..."}` map upgrades extra
+rows to PUBLISHED, overriding config. `PublicationState` is `PUBLISHED`,
+`AVAILABLE`, or `PLANNED`.
+
+```bash
+uv run python -m infrastructure.publishing.status_report --project <path> --write \
+  --init-after "## Publication and rendering"
+uv run python -m infrastructure.publishing.status_report --project <path> --check  # CI gate: exits non-zero on drift
+```
+
+## Credential verification
+
+`credential_check.py` is a read-only, non-destructive check that publishing
+credentials authenticate. It sends a single GET per platform and never writes,
+uploads, or prints token values. `PROBES` covers `github`, `huggingface_hub`,
+`osf`, `ipfs_pinata`, `zenodo`, `netlify`, and `cloudflare_pages`; `pypi` has no
+read-only endpoint and reports `no-endpoint`.
+
+```python
+from infrastructure.publishing.credential_check import check_all, format_results
+
+results = check_all(only=["github", "zenodo"])   # ProbeResult.status: pass|fail|skipped|no-endpoint
+print(format_results(results))
+```
+
+```bash
+uv run python -m infrastructure.publishing.credential_check [--only NAMES] [--env-file .env]
+# exits 1 if any present credential fails
+```
+
+## Multi-platform upload runner
+
+`upload_runner.py` houses the reusable per-platform upload helpers and the batch
+orchestrator (extracted from `scripts/publish/upload_gold_refinement.py`, now a
+thin CLI). Every uploader is dry-run by default and returns a receipt dict; a
+per-platform failure is captured, never aborting the batch.
+
+```python
+from pathlib import Path
+from infrastructure.publishing.upload_runner import (
+    UploadTargets, select_jobs, run_uploads,
+)
+
+targets = UploadTargets(
+    project_root=Path("."),
+    pdf=Path("output/paper.pdf"),
+    web_dir=Path("output/web"),
+    hf_repo_id="org/dataset",
+    github_repo="owner/repo",
+    osf_title="My Project",
+)
+jobs = select_jobs(include_github=False, include_static=False)  # CORE_UPLOADERS only
+run = run_uploads(targets, jobs=jobs, commit=False)             # dry-run
+print(run.mode, run.ok, run.results)
+```
+
+`CORE_UPLOADERS` are `pinata`, `huggingface`, `osf`, `testpypi`;
+`OPTIONAL_UPLOADERS` (`github`, `netlify`, `cloudflare`) are opt-in via
+`include_github` / `include_static`. `commit=True` performs real uploads.
+
 ## Publication readiness
 
 ```python
 from infrastructure.publishing import validate_publication_readiness, create_submission_checklist
 
-readiness = validate_publication_readiness(project_path)
+readiness = validate_publication_readiness(markdown_files, pdf_files)  # both list[Path]
+# -> dict: ready_for_publication, completeness_score, missing_elements, recommendations, skipped_files
 checklist = create_submission_checklist(metadata)
 ```
 

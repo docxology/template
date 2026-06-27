@@ -77,7 +77,7 @@ flowchart TD
 ```python
 # projects/templates/template_code_project/tests/test_optimization.py
 import pytest
-from projects.template_code_project.src.optimization import gradient_descent
+from projects.templates.template_code_project.src.optimization import gradient_descent
 
 def test_gradient_descent_converges():
     """Test that gradient descent converges for quadratic function."""
@@ -347,7 +347,7 @@ def adam_optimizer(
 # projects/templates/template_code_project/tests/test_optimizers.py
 import pytest
 import numpy as np
-from projects.template_code_project.src.optimizers import (
+from projects.templates.template_code_project.src.optimizers import (
     gradient_descent_with_momentum,
     adam_optimizer,
     OptimizerConfig
@@ -428,7 +428,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.template_code_project.src.optimizers import (
+from projects.templates.template_code_project.src.optimizers import (
     gradient_descent_with_momentum,
     adam_optimizer,
     OptimizerConfig

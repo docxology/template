@@ -10,9 +10,9 @@
 ## Key Features
 
 - **BibTeX I/O** — `parse_bibtex` / `parse_bibfile`, `render_entry` / `render_database`, `write_bibfile`.
-- **Entry model** — `BibEntry`, `BibDatabase` immutable dataclasses; `BibParseError` for malformed input.
+- **Entry model** — `BibEntry`, `BibDatabase` order-preserving dataclasses; `BibParseError` for malformed input.
 - **Conversion** — `paper_to_bibentry()` turns a `Paper` (from the [search module](search-module.md)) into a stable `BibEntry`.
-- **Citation key generation** — `generate_citation_key()` produces deterministic, collision-resistant keys.
+- **Citation key generation** — `generate_citation_key()` produces deterministic keys in the project's house style (`<author_surname><year><title_word>`).
 
 This module is the **export side** of the literature workflow; the discovery side lives in [`search`](search-module.md).
 

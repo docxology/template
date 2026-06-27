@@ -1,4 +1,5 @@
 """Static-site hosting adapters (GitHub Pages, Cloudflare Pages, Netlify)."""
+
 from .models import SiteDeployConfig, SiteDeployResult, SiteHosting
 from .github_pages import GitHubPagesAdapter
 from .cloudflare_pages import CloudflarePagesAdapter

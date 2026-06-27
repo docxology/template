@@ -54,11 +54,10 @@ summary = client.apply_template(
     text=abstract_text
 )
 
-# Generate literature review section
+# Generate literature review paragraph from paper summaries
 review = client.apply_template(
     "literature_review",
-    topic="machine learning",
-    papers=["paper1", "paper2", "paper3"]
+    summaries="Summary 1...\nSummary 2...\nSummary 3..."
 )
 ```
 

@@ -10,7 +10,7 @@
 ## Key Features
 
 - **Diagonal Watermark Overlays**: Alpha-channel text rendered across every page with configurable opacity, color, font size, and repetition count
-- **QR Code and Barcode Strips**: Error-correction Q-level QR codes and Code128 barcodes encoding document metadata, author mailto links, and hash digests
+- **QR Code and Barcode Strips**: Error-correction M-level QR codes and Code128 barcodes encoding document metadata, author mailto links, and hash digests
 - **SHA-256/SHA-512 Hashing**: Cryptographic hash computation with JSON manifest sidecar output
 - **PDF Metadata Injection**: XMP packets and PDF Info dictionary injection with embedded manifest attachments
 - **AES-256 PDF Encryption**: Optional PDF password protection when `pdf_password` is configured
