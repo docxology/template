@@ -210,21 +210,21 @@ after success without redrawing the TUI banner.</p>
 <td><code>template_code_project</code></td>
 <td>8</td>
 <td>~40 s</td>
-<td>197/197</td>
+<td>231/231</td>
 <td>90%+</td>
 </tr>
 <tr>
 <td><code>template_prose_project</code></td>
 <td>8</td>
 <td>~35 s</td>
-<td>78/78</td>
+<td>120/120</td>
 <td>90%+</td>
 </tr>
 <tr>
 <td><code>template_autoresearch_project</code></td>
 <td>8</td>
 <td>~30 s</td>
-<td>157/157</td>
+<td>296/296</td>
 <td>90%+</td>
 </tr>
 </tbody>
@@ -242,7 +242,7 @@ for sampled runs.</p>
 <p><em>Timing illustrative (Apple Silicon workstation, SSD, fixed
 seeds).</em></p>
 <p>Search-stage overhead dwarfs the optimization exemplar’s
-runtime—confirming Stage 02 remains the bottleneck for outbound API
+runtime—confirming Stage 02 remains the bottleneck for outbound API
 traffic while retaining Zero-Mock subprocess + filesystem checks
 downstream.</p>
 <h2 id="infrastructure-test-suite">Infrastructure Test Suite</h2>
@@ -260,11 +260,11 @@ downstream.</p>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>426+</td>
+<td>447+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~7,375</td>
+<td>~7,780</td>
 </tr>
 <tr>
 <td>Infrastructure coverage gate</td>
@@ -305,7 +305,7 @@ table below—every row reflects
 <tbody>
 <tr>
 <td><code>autoresearch</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">10</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>build_autoresearch_plan</code>, readiness validation CLI</td>
@@ -326,7 +326,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">105</td>
+<td style="text-align: center;">109</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -392,14 +392,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>prose</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">9</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Markdown readability + prose tooling</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">44</td>
+<td style="text-align: center;">71</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -413,7 +413,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">49</td>
+<td style="text-align: center;">50</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
@@ -442,7 +442,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>sia</code></td>
-<td style="text-align: center;">9</td>
+<td style="text-align: center;">10</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Self-Improving-AI loop: task validation, harness, metric
@@ -450,7 +450,7 @@ capture</td>
 </tr>
 <tr>
 <td><code>skills</code></td>
-<td style="text-align: center;">6</td>
+<td style="text-align: center;">7</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_skills</code>, SKILL manifest regeneration</td>
@@ -509,7 +509,7 @@ Documentation Coverage</h2>
 </tr>
 </tbody>
 </table>
-<p><code>376+</code> Markdown shards under <code>docs/</code> capture
+<p><code>390+</code> Markdown shards under <code>docs/</code> capture
 operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 id="dag-reference-declarative-executor">DAG Reference (Declarative
@@ -651,8 +651,10 @@ iterating active projects—not a tenth DAG node for single-repo runs
 </tr>
 </tbody>
 </table>
-<p>Measurements single-thread Apple Silicon; dominated by watermark
-overlay complexity.</p>
+<p>All measurements use single-threaded execution on Apple Silicon, and
+the totals are dominated by watermark-overlay complexity rather than by
+hashing or metadata embedding, which each stay well under one-tenth of a
+second per document.</p>
 <h2 id="self-referential-analysis">Self-Referential Analysis</h2>
 <p>Rendered via <code>projects/templates/template_template</code>
 (<code>generate_manuscript_metrics.py</code> → injected tokens such as
@@ -660,19 +662,34 @@ overlay complexity.</p>
 href="../src/template_template/architecture_viz.py"><code>template_template.architecture_viz</code></a>—font
 sizes constrained by §QA.</p>
 <p><img src="../figures/architecture_overview.png"
-alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live
-Two-Layer graph with documentation badges <code>[ARSP]</code> and
-per-module file counts derived from introspection snapshots.</p>
+alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live
+rendering of the Two-Layer Architecture from repository introspection:
+the infrastructure layer (top) holds the <code>23</code> reusable
+subpackages, each annotated with its Python file count and a four-slot
+documentation badge—<code>A</code> AGENTS.md, <code>R</code> README.md,
+<code>S</code> SKILL.md, <code>P</code> PAI.md, with <code>·</code>
+marking an absent file—so a fully documented module reads
+<code>[ARSP]</code>. A YAML DAG arrow connects it to the project layer
+(bottom) of public exemplars labelled with chapter and test counts. The
+takeaway: documentation-duality coverage is near-uniform across the
+infrastructure, and every box was placed from the same live data the
+prose cites.</p>
 <p><img src="../figures/pipeline_stages.png"
-alt="Pipeline Stage Flow" /> <strong>Figure 2.</strong> Pipeline DAG
+alt="Pipeline Stage Flow" /> <strong>Figure 2.</strong> Pipeline DAG
 with 12 YAML-declared stages (core, LLM, bundle, archival tags).</p>
 <p><img src="../figures/module_inventory.png"
-alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
-File-count histogram for each infrastructure subdirectory.</p>
+alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
+Horizontal file-count histogram of every infrastructure subdirectory,
+sorted largest-first. The long tail of small, single-purpose packages
+beside a handful of larger ones (<code>core</code>,
+<code>validation</code>, <code>publishing</code>) is the visual
+signature of the Unix-philosophy modularity the architecture section
+argues for—capability concentrated where it compounds, not spread evenly
+by fiat.</p>
 <h2 id="comparative-feature-analysis">Comparative Feature Analysis</h2>
-<p>Figure 4 summarizes the Appendix F capability matrix.</p>
+<p>Figure 4 summarizes the Appendix F capability matrix.</p>
 <p><img src="../figures/comparative_feature_matrix.png"
-alt="Comparative Feature Analysis Heatmap" /> <strong>Figure 4.</strong>
+alt="Comparative Feature Analysis Heatmap" /> <strong>Figure 4.</strong>
 14 × 10 heatmap annotated in appendix text—green <strong>✓</strong> full
 native capability, yellow <strong>◐</strong> partial / plugin-hosted,
 red <strong>—</strong> unavailable. Rows group <em>Core Pipeline</em>,

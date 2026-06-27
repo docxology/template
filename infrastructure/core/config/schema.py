@@ -153,6 +153,7 @@ class ManuscriptConfig(TypedDict, total=False):
     steganography: SteganographyConfigYAML
     render: RenderConfig
     analysis: AnalysisConfig
+    validation: dict[str, Any]
     manuscript_dir: str
     prose: dict[str, Any]
     bibliography: dict[str, Any]
@@ -241,6 +242,7 @@ def generate_manuscript_config_schema(
             },
             "additionalProperties": True,
         },
+        "validation": {"type": "object", "additionalProperties": True},
         "manuscript_dir": {"type": "string"},
         "prose": {"type": "object", "additionalProperties": True},
         "bibliography": {"type": "object", "additionalProperties": True},

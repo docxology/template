@@ -4,8 +4,8 @@
 > documented. Real methods only; never mocks or fakes. Every release ships with
 > green tests and accurate docs.
 
-This file tracks live work after the `v3.4.0` release (latest published release:
-`v3.4.0`, tagged 2026-06-12). Historical release detail belongs in
+This file tracks live work after the `v3.5.1` release (latest published release:
+`v3.5.1`). Historical release detail belongs in
 [`CHANGELOG.md`](CHANGELOG.md); generated counts and project rosters belong in
 [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) and
 [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
@@ -14,23 +14,23 @@ This file tracks live work after the `v3.4.0` release (latest published release:
 
 ## Live state snapshot
 
-Refreshed on **2026-06-13** on branch `codex/template-exemplar-forkability`
-after the forkability and verifier-first roadmap pass. Re-run the
+Refreshed on **2026-06-27** on branch `main` during the contributor-strategy
+docs pass. Re-run the
 commands in the **Source** column before copying any number into prose; live
 counts belong in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), not
 hard-coded here.
 
 | Gate or surface | Current value | Source |
 | --- | --- | --- |
-| Package version | `3.4.0` | `pyproject.toml#[project].version` |
-| Latest published release | `v3.4.0` (tagged + GitHub release published 2026-06-12; CHANGELOG `[3.4.0]` body) | `gh release list`, `git tag` |
-| Public source scope | `infrastructure` plus nine public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
-| Public exemplars | `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook` | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
+| Package version | `3.5.1` | `pyproject.toml#[project].version` |
+| Latest published release | `v3.5.1` (GitHub release; tag exists locally) | `gh-axi release list --limit 10`, `git tag --list "v3.5*"` |
+| Public source scope | `infrastructure` plus 12 public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
+| Public exemplars | Link the generated roster; do not copy it here | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
 | Canonical generated facts | Importable infrastructure packages, infrastructure Python-module count, project-scope + publishing test collections, and per-exemplar coverage — all live-derived; do not hard-code here | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) (regenerate with `uv run python scripts/generate_counts.py --write`) |
-| Open GitHub PRs | 0 open | `/opt/homebrew/bin/gh-axi pr list` |
-| Docs lint status | links-only, consistency-only, and doc-pairs all clean (re-verified 2026-06-13) | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
-| Mermaid lint status | clean with chunked batch rendering under the default total budget | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
-| Release verification baseline | drift `--strict`, COUNTS/skills/exports gates, tracked-project/generated-artifact guards, docs-lint (links/consistency), reporting+evidence+repro suites (877), and the LLM suite (1244, live Ollama) all green at the v3.4.0 commit | `v3.4.0` release + local command history |
+| Open GitHub PRs | 1 open: Dependabot PR #32 (`actions/checkout` 7.0.0) | `gh-axi pr list --limit 20` |
+| Docs lint status | links-only, consistency-only, and doc-pairs rerun during the 2026-06-27 docs pass; current failures are in active literature-meta-analysis, active-inference `.omo`, and in-progress publishing lanes | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
+| Mermaid lint status | not rerun in the contributor-strategy docs pass | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
+| Release verification baseline | `v3.5.1` is the latest GitHub release, but the current local tree is dirty; do not treat this snapshot as release readiness | `gh-axi release view v3.5.1`, `git status --short --branch` |
 
 ---
 
@@ -43,8 +43,10 @@ Keep this section short. Details live in release notes or archived audits.
   2026-06-26 sweep. Overall test count: 7780 collected (9 failures under
   investigation). Scripts audit identified 6 thin-orchestrator violations now
   tracked as `SCRIPTS-LOGIC-1` through `SCRIPTS-LOGIC-6`; 43 of 49 scripts are
-  clean. Parity gaps logged as `INFRA-TEST-PARITY-1` (docker) and
-  `INFRA-TEST-PARITY-2` (logrotate.d).
+  clean. Parity findings were later reconciled in
+  [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md):
+  Docker already has partial coverage through the rendering tests and
+  `logrotate.d` is a config directory with zero test coverage by design.
 - **Modular publishing adapter suite (2026-06-26, `[Unreleased]`):** closed
   `PUB-PLATFORM-1`. Shipped `infrastructure/publishing/registry.py`
   (`PLATFORM_REGISTRY`, `PublishingTier`, `list_platforms()`, `get_platform()` —
@@ -318,52 +320,15 @@ Keep this section short. Details live in release notes or archived audits.
 
 ---
 
-### INFRA-TEST-PARITY-1 — Add `tests/infra_tests/docker/` test directory
-
-- **Problem:** `infrastructure/docker/` (Dockerfile, docker-compose.yml) has
-  partial coverage only via `tests/infra_tests/rendering/test_dockerfile_gen.py`
-  but no dedicated `tests/infra_tests/docker/` directory. The three-tree mirror
-  convention expects a parallel test tree for each infrastructure package.
-- **Why it matters:** docker build correctness is not explicitly gated; a drift
-  in the Dockerfile or compose file would not be caught by a targeted suite.
-- **Smallest next step:** create `tests/infra_tests/docker/__init__.py` and at
-  least one test (`test_docker_config.py`) that validates the Dockerfile and
-  docker-compose.yml exist, are non-empty, and pass a basic structural check
-  (e.g. `FROM` line present, required services declared).
-- **Acceptance check:** `tests/infra_tests/docker/` exists with at least one
-  passing test; overall infra coverage is unchanged or improved.
-- **Out of scope:** full Docker build smoke tests in CI (those belong in a
-  separate job with Docker-in-Docker).
-
----
-
-### INFRA-TEST-PARITY-2 — Add test coverage for `infrastructure/logrotate.d/`
-
-- **Problem:** `infrastructure/logrotate.d/` contains only config files
-  (AGENTS.md, README.md, a logrotate template) with zero test coverage anywhere
-  in the test tree. The package has no `__init__.py` but ships infrastructure
-  config that should be validated.
-- **Why it matters:** a broken logrotate template would silently fail in
-  production deployments; there is currently no gate to catch structural errors.
-- **Smallest next step:** add a test (location: `tests/infra_tests/` or a new
-  `tests/infra_tests/logrotate/`) that reads the template file, confirms it is
-  non-empty, and validates that it contains the expected logrotate directives
-  (e.g. rotation interval, compress flag).
-- **Acceptance check:** at least one test covers the logrotate template; the
-  test passes; CI `test-infra` job picks it up.
-- **Out of scope:** testing actual logrotate binary execution or OS-level log
-  rotation.
-
----
-
 ## Known divergences from `CHANGELOG.md`
 
-As of 2026-06-12 there are **no known divergences**: `pyproject.toml`,
-`CHANGELOG.md`, and the published tag all agree at **`3.4.0`** (the prior
-"`v3.3.1` bumped but not released" gap was resolved by cutting `v3.4.0`, which
-folds the dated `[3.3.1]` entry and all post-`3.3.1` work into one published
-release). The docs-lint (links/consistency/doc-pairs), drift, and canonical-facts
-gates are clean.
+As of 2026-06-27, `pyproject.toml` and the latest GitHub release agree at
+**`3.5.1`** / **`v3.5.1`**. `CHANGELOG.md` still carries current work under
+`[Unreleased]` rather than a `3.5.x` heading; confirm release-note reconciliation
+before claiming changelog parity. The docs-lint links/consistency/doc-pairs gates
+were rerun for the contributor-strategy docs pass and reported unrelated active
+lane failures; full release-readiness gates were not rerun against the dirty
+local tree.
 
 If a new drift appears between [`CHANGELOG.md`](CHANGELOG.md), `TO-DO.md`,
 generated facts, or `.github/workflows/ci.yml`, fix forward and record the

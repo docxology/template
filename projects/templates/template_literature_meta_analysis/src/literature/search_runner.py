@@ -11,6 +11,7 @@ from typing import Callable
 from config_loader import load_search_config
 from literature.corpus import Corpus
 from literature.models import Paper
+from literature.query_router import QueryRouter
 
 
 def search_source(
@@ -312,7 +313,28 @@ def run_literature_search(
         )
     )
 
-    if not args.skip_arxiv:
+    route = QueryRouter().route(
+        args.query,
+        [
+            "arxiv",
+            "semantic_scholar",
+            "openalex",
+            "crossref",
+            "pubmed",
+            "sovietrxiv",
+            "chinarxiv",
+        ],
+    )
+    logger.info(
+        "Routing query as %s (confidence %.2f, preprints=%s)",
+        route.query_type,
+        route.confidence,
+        "preferred" if route.prefer_preprints else "deprioritized",
+    )
+
+    def run_arxiv() -> None:
+        if args.skip_arxiv:
+            return
         arxiv_search = _arxiv_search_fn(arxiv_base_url, fast=fast_api)
         arxiv_total_before = len(corpus)
         for i, arxiv_query in enumerate(arxiv_queries, 1):
@@ -333,7 +355,9 @@ def run_literature_search(
             len(arxiv_queries),
         )
 
-    if not args.skip_s2:
+    def run_semantic_scholar() -> None:
+        if args.skip_s2:
+            return
         s2_search = _semantic_scholar_search_fn(semantic_scholar_base_url, fast=fast_api)
         result = search_source(
             "Semantic Scholar",
@@ -346,7 +370,9 @@ def run_literature_search(
         if result:
             sources_searched.append(result)
 
-    if not args.skip_openalex:
+    def run_openalex() -> None:
+        if args.skip_openalex:
+            return
         openalex_search = _openalex_search_fn(openalex_base_url, fast=fast_api)
         result = search_source(
             "OpenAlex",
@@ -359,32 +385,30 @@ def run_literature_search(
         if result:
             sources_searched.append(result)
 
-    # Crossref and PubMed are keyless engines. They dispatch when explicitly enabled
-    # via a base_url (tests) or in a production run (no fixture base_urls) where the
-    # config `engines` toggle leaves them on. A disabled toggle or a fixture run that
-    # omits their base_url leaves them as a `skipped` source — graceful degradation.
-    crossref_on = engines.get("crossref", True) and not getattr(args, "skip_crossref", False)
-    if crossref_on and (crossref_base_url is not None or not fast_api):
+    def run_crossref() -> None:
+        crossref_on = engines.get("crossref", True) and not getattr(args, "skip_crossref", False)
+        if not crossref_on or (crossref_base_url is None and fast_api):
+            return
         crossref_search = _crossref_search_fn(crossref_base_url, fast=fast_api)
         result = search_source("Crossref", crossref_search, args.query, args.max_results, corpus, logger)
         if result:
             sources_searched.append(result)
 
-    pubmed_on = engines.get("pubmed", True) and not getattr(args, "skip_pubmed", False)
-    if pubmed_on and (pubmed_esearch_url is not None or not fast_api):
+    def run_pubmed() -> None:
+        pubmed_on = engines.get("pubmed", True) and not getattr(args, "skip_pubmed", False)
+        if not pubmed_on or (pubmed_esearch_url is None and fast_api):
+            return
         pubmed_search = _pubmed_search_fn(pubmed_esearch_url, pubmed_efetch_url, fast=fast_api)
         result = search_source("PubMed", pubmed_search, args.query, args.max_results, corpus, logger)
         if result:
             sources_searched.append(result)
 
-    # SovietRxiv / RussiaRxiv is a keyless engine (translated Soviet-era and
-    # Chinese preprints). It dispatches when explicitly enabled via a base_url
-    # (tests) or in a production run (no fixture base_urls) where the config
-    # `engines` toggle leaves it on. A disabled toggle or a fixture run that
-    # omits its base_url leaves it as a `skipped` source — graceful degradation.
-    sovietrxiv_cfg = cfg.get("sovietrxiv", {}) if isinstance(cfg, dict) else {}
-    sovietrxiv_on = engines.get("sovietrxiv", True) and not getattr(args, "skip_sovietrxiv", False)
-    if sovietrxiv_on and (sovietrxiv_base_url is not None or not fast_api):
+    def run_sovietrxiv() -> None:
+        sovietrxiv_cfg = cfg.get("sovietrxiv", {}) if isinstance(cfg, dict) else {}
+        if not engines.get("sovietrxiv", True) or getattr(args, "skip_sovietrxiv", False):
+            return
+        if sovietrxiv_base_url is None and fast_api:
+            return
         sovietrxiv_email = sovietrxiv_cfg.get("api_email") if isinstance(sovietrxiv_cfg, dict) else None
         sovietrxiv_source = sovietrxiv_cfg.get("source") if isinstance(sovietrxiv_cfg, dict) else None
         sovietrxiv_search = _sovietrxiv_search_fn(
@@ -397,13 +421,12 @@ def run_literature_search(
         if result:
             sources_searched.append(result)
 
-    # ChinaRxiv shares the identical unified API with SovietRxiv but is hosted
-    # at https://chinaxiv.org. It dispatches under the same conditions: enabled
-    # in config `engines`, not skipped via CLI, and either a fixture base_url is
-    # provided (tests) or this is a production run (no fixture base_urls).
-    chinarxiv_cfg = cfg.get("chinarxiv", {}) if isinstance(cfg, dict) else {}
-    chinarxiv_on = engines.get("chinarxiv", True) and not getattr(args, "skip_chinarxiv", False)
-    if chinarxiv_on and (chinarxiv_base_url is not None or not fast_api):
+    def run_chinarxiv() -> None:
+        chinarxiv_cfg = cfg.get("chinarxiv", {}) if isinstance(cfg, dict) else {}
+        if not engines.get("chinarxiv", True) or getattr(args, "skip_chinarxiv", False):
+            return
+        if chinarxiv_base_url is None and fast_api:
+            return
         chinarxiv_email = chinarxiv_cfg.get("api_email") if isinstance(chinarxiv_cfg, dict) else None
         chinarxiv_search = _sovietrxiv_search_fn(
             chinarxiv_base_url,
@@ -414,6 +437,21 @@ def run_literature_search(
         result = search_source("ChinaRxiv", chinarxiv_search, args.query, args.max_results, corpus, logger)
         if result:
             sources_searched.append(result)
+
+    source_runners = {
+        "arxiv": run_arxiv,
+        "semantic_scholar": run_semantic_scholar,
+        "openalex": run_openalex,
+        "crossref": run_crossref,
+        "pubmed": run_pubmed,
+        "sovietrxiv": run_sovietrxiv,
+        "chinarxiv": run_chinarxiv,
+    }
+
+    for source_key in route.source_order:
+        runner = source_runners.get(source_key)
+        if runner is not None:
+            runner()
 
     apply_relevance_filter(corpus, relevance_keywords, logger)
 
@@ -429,6 +467,14 @@ def run_literature_search(
                 pre_year,
                 len(corpus),
             )
+
+    deduped = corpus.deduplicate_by_metadata(prefer_preprints=route.prefer_preprints)
+    if deduped:
+        logger.info(
+            "Metadata dedupe: removed %d versioned duplicate papers (%d total remaining)",
+            deduped,
+            len(corpus),
+        )
 
     corpus.save(corpus_path)
     total_elapsed = time.monotonic() - pipeline_start

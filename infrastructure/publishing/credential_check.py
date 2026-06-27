@@ -145,9 +145,14 @@ def _dig(payload: Any, path: tuple[str, ...]) -> str | None:
 
 
 def _http_get_json(url: str, headers: dict[str, str]) -> tuple[int, Any]:
-    request = urllib.request.Request(url, headers=headers)  # noqa: S310 — https only, read-only
+    parts = urlsplit(url)
+    localhost = parts.hostname in {"127.0.0.1", "::1", "localhost"}
+    if parts.scheme != "https" and not (parts.scheme == "http" and localhost):
+        return 0, {"_error": f"blocked unsupported credential probe URL scheme: {parts.scheme or '<missing>'}"}
+
+    request = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT) as resp:  # noqa: S310
+        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT) as resp:  # nosec B310 - scheme/host validated above.
             body = resp.read().decode("utf-8", "replace")
             return resp.status, _try_json(body)
     except urllib.error.HTTPError as exc:

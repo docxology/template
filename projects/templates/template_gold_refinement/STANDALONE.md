@@ -13,8 +13,12 @@ keep these surfaces aligned:
 - `src/config.py` owns schema validation and the mega-madlib config dataclass.
 - `src/composition.py` owns deterministic token selection and section composition.
 - `src/assay.py` owns claim-evidence validation.
+- `src/pipeline_policy.py` owns the secure-pipeline profile and optional LLM review gates.
+- `src/domain_adapter.py` owns domain metric translation into the refinery purity scale.
 - `src/manuscript_variables.py` owns the hydrated manuscript variable map.
 - `scripts/z_generate_manuscript_variables.py` owns writing `output/manuscript/`.
+
+See `docs/domain_fork_guide.md` for the stage-remap template and boundary rules.
 
 Before a fork claims a new method, update the config-owned method surface first:
 

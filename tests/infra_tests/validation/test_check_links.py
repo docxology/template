@@ -223,7 +223,7 @@ class TestLinkAuditPerformance:
         # Exactly one broken file reference — the known needle.
         (root / "README.md").write_text("# Root\n\nSee [the missing doc](docs/this_does_not_exist.md).\n")
         # Excluded trees the walk must prune before descending.
-        for excluded in (".git", ".venv", "node_modules", "output", "__pycache__"):
+        for excluded in (".git", ".omo", ".venv", "node_modules", "output", "__pycache__"):
             big = root / excluded / "deep" / "nested"
             big.mkdir(parents=True, exist_ok=True)
             for j in range(200):

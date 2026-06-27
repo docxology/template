@@ -313,14 +313,14 @@ source code.</p>
 <h3 id="test-suite-composition">Test Suite Composition</h3>
 <p>The repository maintains three test suites:</p>
 <ul>
-<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~7,375
+<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~7,780
 tests validating the 23 infrastructure subdirectories, covering logging,
 rendering, validation, steganography, reporting, and LLM
 integration.</li>
 <li><strong>Project tests</strong> (<code>projects/*/tests/</code>):
 Per-project suites whose sizes scale with each exemplar’s surface area —
-for example 157 tests in <code>template_autoresearch_project</code> and
-197 in <code>template_code_project</code>, with several exemplars larger
+for example 296 tests in <code>template_autoresearch_project</code> and
+231 in <code>template_code_project</code>, with several exemplars larger
 still. (A true min/max span would require dedicated
 <code>project_test_count_min</code>/<code>project_test_count_max</code>
 tokens in <code>build_manuscript_metrics_dict</code>; see the

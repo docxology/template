@@ -11,7 +11,7 @@ Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
 [![uv](https://img.shields.io/badge/package%20manager-uv-purple?logo=astral)](https://docs.astral.sh/uv/)
 [![Ruff](https://img.shields.io/badge/linter-ruff-orange?logo=ruff)](https://docs.astral.sh/ruff/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)](../LICENSE)
-[![Version](https://img.shields.io/badge/version-3.1.0-informational)](../pyproject.toml)
+[![Version](https://img.shields.io/badge/version-3.5.1-informational)](../pyproject.toml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
 > **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
@@ -76,7 +76,7 @@ Pick the entry that matches your goal — each link is stable for deep navigatio
 | **Write or fix tests** | [`docs/rules/testing_standards.md`](../docs/rules/testing_standards.md) | [`docs/prompts/test-creation/SKILL.md`](../docs/prompts/test-creation/SKILL.md) |
 | **Manuscript / PDF / citations** | [`docs/guides/manuscript-semantics.md`](../docs/guides/manuscript-semantics.md) | [`docs/prompts/manuscript-cross-references/SKILL.md`](../docs/prompts/manuscript-cross-references/SKILL.md) |
 | **Published exemplars / tracked outputs** | [`docs/_generated/publication_records.md`](../docs/_generated/publication_records.md) | [`docs/guides/publishing-guide.md#public-exemplar-release`](../docs/guides/publishing-guide.md#public-exemplar-release) |
-| **Contribute / open a PR** | [CI/CD](#cicd) · [Issue & PR templates](#issue--pr-templates) | [`docs/development/contributing.md`](../docs/development/contributing.md) |
+| **Contribute / open a PR** | [CI/CD](#cicd) · [Issue & PR templates](#issue--pr-templates) | [`docs/development/contributing.md`](../docs/development/contributing.md) · [`docs/development/contribution-map.md`](../docs/development/contribution-map.md) |
 | **Mirror CI locally** | [Simulate CI locally](#simulate-ci-locally) | [`docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md) · [`scripts/ci_local.sh`](../scripts/ci_local.sh) |
 | **Cloud / headless deploy** | [`docs/CLOUD_DEPLOY.md`](../docs/CLOUD_DEPLOY.md) | [`infrastructure/docker/`](../infrastructure/docker/) |
 | **Full system reference** | [`../AGENTS.md`](../AGENTS.md) | [`docs/documentation-index.md`](../docs/documentation-index.md) |
@@ -852,7 +852,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | 4 | `verify-no-mocks` | `lint` | always | Enforces the zero-mock policy (`scripts/verify_no_mocks.py`) |
 | 5 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
 | 6 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12 + macOS × Py 3.12 (4 cells), `--cov-fail-under=60` (macOS leg `continue-on-error`) |
-| 7 | `test-project` | `verify-no-mocks` | always | Per-project suites — one parallel ubuntu job per public exemplar × {py3.10, py3.12} (11 × 2 = 22 cells); each enforces that project's own ≥90 floor via `01_run_tests.py --project <name> --project-only --include-slow` |
+| 7 | `test-project` | `verify-no-mocks` | always | Per-project suites — one parallel ubuntu job per public exemplar listed in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) × {py3.10, py3.12}; each enforces that project's own ≥90 floor via `01_run_tests.py --project <name> --project-only --include-slow` |
 | 8 | `fep-lean` | `verify-no-mocks`, `detect` | `needs.detect.outputs.fep_lean == 'true'` | Lean-toolchain project build + tests (`--cov-fail-under=89` rotating exception) |
 | 9 | `validate` | `lint` | always | Manuscript/output validation (`infrastructure.validation.cli`) |
 | 10 | `security` | `lint` | always | Bandit MEDIUM+ (`bandit.yaml`) over `infrastructure/ scripts/ projects/` |
@@ -948,8 +948,8 @@ Required status checks:
   Lint & Type Check
   Infra Tests (ubuntu-latest, Python 3.10/3.11/3.12)
   Infra Tests (macos-latest, Python 3.12)
-  # test-project expands to 22 checks: Project Tests (templates/<exemplar>, py3.10|py3.12)
-  # one per public exemplar × {py3.10, py3.12}. Examples:
+  # test-project expands from docs/_generated/active_projects.md:
+  # one check per public exemplar × {py3.10, py3.12}. Examples:
   Project Tests (templates/template_active_inference, py3.12)
   Project Tests (templates/template_code_project, py3.10)
   Validate Manuscripts · Security Scan · Documentation Lint · Performance Check

@@ -38,6 +38,8 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   \breaktt{templates/template\_autoresearch\_project},
   \breaktt{templates/template\_autoscientists},
   \breaktt{templates/template\_code\_project},
+  \breaktt{templates/template\_gold\_refinement},
+  \breaktt{templates/template\_literature\_meta\_analysis},
   \breaktt{templates/template\_madlib},
   \breaktt{templates/template\_newspaper},
   \breaktt{templates/template\_prose\_project},

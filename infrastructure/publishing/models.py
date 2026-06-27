@@ -1,48 +1,66 @@
-"""Data models for academic publishing."""
+"""Data models for the Open Science Framework (OSF) publishing adapter."""
+
+from __future__ import annotations
 
 from dataclasses import dataclass, field
 
 
-@dataclass
-class AuthorRecord:
-    """Structured author metadata for deposit APIs."""
+@dataclass(frozen=True)
+class OSFConfig:
+    """Configuration for an OSF publish.
 
-    name: str
-    orcid: str | None = None
-    affiliation: str | None = None
-    email: str | None = None
+    Parameters
+    ----------
+    title:
+        Project (node) title used when creating a new node.
+    token:
+        OSF personal access token. When ``None`` the adapter reads ``OSF_TOKEN``
+        from the environment.
+    node_id:
+        Existing OSF node (5-char GUID, e.g. ``ab12c``) to upload into. When
+        ``None`` a new node is created from ``title``.
+    category:
+        OSF node category (``project``, ``data``, ``software``, ...).
+    public:
+        Make the node public. OSF nodes are private by default; this adapter
+        defaults to public to match a publication workflow.
+    description:
+        Optional node description.
+    api_base:
+        OSF JSON:API base. Overridable for ``pytest-httpserver``.
+    files_base:
+        Waterbutler file-storage base. Overridable for tests. OSF separates
+        metadata (api.osf.io) from file I/O (files.osf.io).
+    storage_provider:
+        Waterbutler storage provider (default ``osfstorage``).
+    timeout:
+        Per-request timeout (seconds).
+    """
+
+    title: str = "Untitled deposit"
+    token: str | None = None
+    node_id: str | None = None
+    category: str = "project"
+    public: bool = True
+    description: str = ""
+    api_base: str = "https://api.osf.io/v2"
+    files_base: str = "https://files.osf.io/v1"
+    storage_provider: str = "osfstorage"
+    timeout: float = 30.0
 
 
-@dataclass
-class PublicationMetadata:
-    """Container for publication metadata."""
+@dataclass(frozen=True)
+class OSFResult:
+    """Result of an OSF publish attempt. Never raised — inspected by callers."""
 
-    title: str
-    authors: list[str]
-    abstract: str
-    keywords: list[str]
-    doi: str | None = None
-    journal: str | None = None
-    conference: str | None = None
-    publication_date: str | None = None
-    publisher: str | None = None
-    license: str = "CC-BY-4.0"
-    repository_url: str | None = None
-    citation_count: int = 0
-    download_count: int = 0
-    author_records: list[AuthorRecord] = field(default_factory=list)
-    deposit_description: str | None = None
-    pdf_sha256: str | None = None
-    release_tag: str | None = None
-    paper_version: str | None = None
-    github_release_url: str | None = None
-    zenodo_description_override: str | None = None
+    status: str  # "ok" | "error" | "dry-run"
+    node_id: str | None = None
+    url: str | None = None
+    uploaded: tuple[str, ...] = field(default_factory=tuple)
+    error: str | None = None
+    timestamp_utc: str | None = None
+    extra: dict[str, str] = field(default_factory=dict)
 
-
-@dataclass
-class CitationStyle:
-    """Container for citation style configuration."""
-
-    name: str
-    format_string: str
-    example: str
+    @property
+    def ok(self) -> bool:
+        return self.status == "ok"

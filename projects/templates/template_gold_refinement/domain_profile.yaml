@@ -23,6 +23,27 @@ review_gates:
   - purity_monotone_check
   - token_attribution_completeness
   - claim_ledger_alignment
+stage_mappings:
+  - refinery_stage: ore
+    domain_operation: raw manuscript drafting
+    purity_target: 0.375
+    evidence_surface: manuscript/config.yaml
+  - refinery_stage: smelting
+    domain_operation: remove unsupported prose and duplicated claims
+    purity_target: 0.750
+    evidence_surface: src/composition.py
+  - refinery_stage: assaying
+    domain_operation: validate claims against evidence and citations
+    purity_target: 0.9167
+    evidence_surface: src/evidence.py
+  - refinery_stage: cupellation
+    domain_operation: resolve cross-references and citation integrity
+    purity_target: 0.999
+    evidence_surface: src/formalisms.py
+  - refinery_stage: certification
+    domain_operation: run render and validation gates
+    purity_target: 0.999999999
+    evidence_surface: scripts/refinement_analysis.py
 source_policy: "Claims about manuscript purity must cite project config, source code, or generated artifacts."
 artifact_expectations:
   - output/data/refinery_results.json
@@ -45,3 +66,11 @@ benchmark_rubric:
     - name: render_success
       weight: 1.0
 llm_prompt_guidance: "Use only the configured lexicon, narrative moves, refinery stages, design principles, quality probes, failure modes, authoring obligations, and generated artifacts; do not invent unconfigured token categories or publication claims."
+analogy_boundary:
+  thesis: "The analogy is load-bearing for staged purification and source-owned validation."
+  limits:
+    - "It does not certify domain truth without domain-specific validators."
+    - "A purity score is not a substitute for evidence."
+  non_claims:
+    - "The analogy is universal."
+    - "The purity scale can replace expert review."

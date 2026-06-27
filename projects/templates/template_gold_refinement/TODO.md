@@ -6,37 +6,46 @@ same forkability contract as the other exemplars.
 
 ## Current validation evidence
 
-- 217 tests pass at 98.87% coverage on `src/` (90% gate enforced)
+- 255 tests pass at 93.17% coverage on `src/` (90% gate enforced)
 - Ruff lint clean on `src/`, `tests/`, and `scripts/`
 - Mypy type-check clean on `src/`
 - Refinery pipeline runs end-to-end: ore (9K) → nine-nines certification
 - All manuscript `{{TOKEN}}` variables resolve with zero unresolved tokens
 - `check_tracked_projects.py` passes (confidentiality guard)
 - `check_template_drift.py --strict` passes (no drift)
-- Figure generation: 6 figures (purity progression, karat grading, token density,
-  provenance Sankey, purity-claim scatter, token heatmap)
+- Figure generation: 12 figures (purity progression, karat grading, token density,
+  provenance Sankey, purity-claim scatter, token heatmap, integrity gate matrix,
+  formalism traceability, implementation circuit, claim-evidence assay,
+  integrity risk matrix, evidence tier ladder)
 - Evidence registry: `src/evidence.py` cross-checks contribution claims
 - Interactive HTML dashboard: `src/dashboard.py` with refinery metrics
 - Mega-madlib token injection: deterministic, seeded, config-owned lexicon
-- Config blocks: contribution_claims, pipeline_phases, audit_rules
+- Config blocks: contribution_claims, pipeline_phases, audit_rules, steganography,
+  and explicit llm review gates
+- Domain adapter profile: `domain_profile.yaml` plus `src/domain_adapter.py`
+- Secure pipeline hook: `src/pipeline_policy.py` parses steganography and llm
+  review policy
 - Docs subtree: architecture, testing philosophy, style guide, syntax guide,
-  FAQ, quickstart, output conventions, troubleshooting, agent instructions
+  FAQ, quickstart, output conventions, troubleshooting, agent instructions,
+  domain fork guide
 - Manuscript staleness detection in `src/manuscript_variables.py`
 - Claim-ledger alignment test
 - Negative-control tests for broken configs and purity values
 - Figure-registry validation: every `[@fig:...]` cross-checked
 - Bug fix: `generate_purity_claim_scatter` evidence path corrected (was using `.parent`)
-- Edge-case tests: _check_evidence_source (#/:: paths, missing files/symbols),
-  dashboard category+evidence rows, figure None-path fallbacks, staleness detection,
-  SOURCE_DATE_EPOCH, config branch misses, composition empty-lexicon error path
+- Edge-case tests: _check_evidence_source (#/:: paths, missing files/symbols,
+  path escapes), dashboard category+evidence rows and preloaded snapshots,
+  figure None-path fallbacks, staleness detection, SOURCE_DATE_EPOCH, config
+  branch misses, composition empty-lexicon error path, secure-pipeline policy,
+  and domain adapter purity scoring
 
 ## integrity and template-status gaps
 
 - [x] Add figure generation (purity progression, karat grading, token density)
   to `src/figures.py`
-- [ ] Add steganography profile to `manuscript/config.yaml` when secure
+- [x] Add steganography profile to `manuscript/config.yaml` when secure
   pipeline is needed
-- [ ] Add LLM review enablement when Ollama is available
+- [x] Add LLM review enablement when Ollama is available
 - [x] Add `contribution_claims` config block for generated method claims
 - [x] Add `pipeline_phases` config block for stage-level provenance
 - [x] Add `audit_rules` config block for compliance tracking
@@ -48,6 +57,7 @@ same forkability contract as the other exemplars.
 - [x] Add `audit_rules` to `manuscript/config.yaml.example` fork template
 - [x] Add `evaluation` and `authoring_contract` narrative moves to config.yaml.example
 - [x] Add steganography and render format blocks to config.yaml.example
+- [x] Add explicit LLM review gating fields to config.yaml.example
 
 ## documentation and signposting gaps
 
@@ -59,6 +69,7 @@ same forkability contract as the other exemplars.
 - [x] Add `docs/output_conventions.md` for output file layout
 - [x] Add `docs/troubleshooting.md` for common errors
 - [x] Add `docs/agent_instructions.md` for AI agent guidance
+- [x] Add `docs/domain_fork_guide.md` for stage remapping and analogy boundaries
 
 ## test and validator gaps
 
@@ -132,20 +143,20 @@ same forkability contract as the other exemplars.
 
 ### Phase 7: Domain extension and forking (future)
 
-1. [ ] Create a domain-specific fork guide showing how to remap stages to
-      clinical evidence, legal citation, or engineering specification domains
-2. [ ] Add a "domain adapter" pattern in `src/` that translates domain-specific
-      quality metrics into the refinery's purity scale
-3. [ ] Document the analogy-break boundary: where does gold-refining fail as a
-      model for manuscript composition?
+1. [x] Create a domain-specific fork guide showing how to remap stages to
+   clinical evidence, legal citation, or engineering specification domains
+2. [x] Add a "domain adapter" pattern in `src/` that translates domain-specific
+   quality metrics into the refinery's purity scale
+3. [x] Document the analogy-break boundary: where does gold-refining fail as a
+   model for manuscript composition?
 
 ### Phase 8: Publishing and provenance (future)
 
 1. [ ] Add `.zenodo.json` for Zenodo deposit integration
 2. [ ] Add `manuscript/config.yaml` DOI fields when published
 3. [ ] Add transmission bookends (transmission_begin/end manuscript sections)
-4. [ ] Add steganography profile for secure pipeline (`secure_run.sh`)
-5. [ ] Add LLM review enablement (`manuscript/config.yaml` llm block)
+4. [x] Add steganography profile for secure pipeline (`secure_run.sh`)
+5. [x] Add LLM review enablement (`manuscript/config.yaml` llm block)
 
 ### Phase 9: Deeper analogy research (future)
 

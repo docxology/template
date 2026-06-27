@@ -12,6 +12,7 @@ MarkdownDiscoveryScope = Literal["tree", "repo", "link_audit"]
 _LINK_AUDIT_EXCLUDE_PARTS: frozenset[str] = frozenset(
     {
         ".git",
+        ".omo",
         ".pytest_cache",
         "__pycache__",
         "htmlcov",

@@ -22,6 +22,9 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/05_in
 
 # Full-text availability report
 uv run python projects/templates/template_literature_meta_analysis/scripts/06_fulltext_assessment.py
+
+# Corpus evaluation / routing coverage
+uv run python projects/templates/template_literature_meta_analysis/scripts/07_literature_evaluation.py --query "active inference"
 ```
 
 ## Pipeline Notes

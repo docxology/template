@@ -6,9 +6,12 @@ build-backend = "setuptools.build_meta"
 name = "template_gold_refinement"
 version = "0.1.0"
 description = "Metallurgical gold-refining analogy for scientific manuscript composition: ore → smelting → assaying → karat grading with mega-madlib token injection"
+readme = "README.md"
+license = {text = "MIT"}
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
+keywords = ["gold refining", "manuscript composition", "mega-madlib", "token injection", "reproducible research"]
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.24.0",

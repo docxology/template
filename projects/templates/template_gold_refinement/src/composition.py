@@ -10,7 +10,10 @@ import hashlib
 from collections import Counter
 from dataclasses import asdict, dataclass
 
-from config import GoldRefinementConfig, SlotSpec
+try:
+    from .config import GoldRefinementConfig, SlotSpec
+except ImportError:
+    from config import GoldRefinementConfig, SlotSpec  # type: ignore[no-redef]
 
 
 @dataclass(frozen=True)

@@ -42,6 +42,12 @@ steganography:
   encryption_enabled: false
   overlay_mode: "text"
   overlay_text: "CONFIDENTIAL"
+  overlay_opacity: 0.08
+  pdf_encryption_algorithm: "AES-256"
+  kmyth_enabled: false
+  kmyth_required: false
+  kmyth_pcrs: []
+  kmyth_seal_artifacts: []
 
 render:
   formats:
@@ -54,7 +60,11 @@ render:
 llm:
   reviews:
     enabled: false
-    types: []
+    types:
+      - executive_summary
+      - methodology_review
+    requires_ollama: true
+    requires_explicit_opt_in: true
   translations:
     enabled: false
     languages: []
@@ -215,7 +225,7 @@ gold_refinement:
       boundary: "local"
     - name: "Monotone purity"
       claim: "Purity increases strictly across all refinery stages."
-      evidence: "src/refinery.py::assert_monotone_increase"
+      evidence: "src/purity.py::assert_monotone_increase"
       boundary: "local"
     - name: "Nine-nines certification"
       claim: "The certification stage achieves 99.9999999% purity."
@@ -231,7 +241,7 @@ gold_refinement:
       boundary: "local"
     - name: "Claim-support report separation"
       claim: "The project-local contribution-claim report is written to claim_support_registry.json."
-      evidence: "scripts/refinement_analysis.py::claim_support_registry"
+      evidence: "scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME"
       boundary: "local"
     - name: "Implementation-linked visualizations"
       claim: "The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates."

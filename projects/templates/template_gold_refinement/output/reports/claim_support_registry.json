@@ -16,7 +16,7 @@
     {
       "claim_name": "Monotone purity",
       "claim_statement": "Purity increases strictly across all refinery stages.",
-      "evidence_source": "src/refinery.py::assert_monotone_increase",
+      "evidence_source": "src/purity.py::assert_monotone_increase",
       "boundary": "local",
       "supported": true,
       "notes": ""
@@ -48,7 +48,7 @@
     {
       "claim_name": "Claim-support report separation",
       "claim_statement": "The project-local contribution-claim report is written to claim_support_registry.json.",
-      "evidence_source": "scripts/refinement_analysis.py::claim_support_registry",
+      "evidence_source": "scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME",
       "boundary": "local",
       "supported": true,
       "notes": ""

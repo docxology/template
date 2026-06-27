@@ -30,6 +30,13 @@ from infrastructure.llm.validation.repetition import deduplicate_sections, detec
 
 logger = get_logger(__name__)
 
+_PLACEHOLDER_RE = re.compile(
+    r"(?:\{\{[^{}]+\}\}|<<[^<>]+>>|\[(?:insert|placeholder|todo|tbd)[^\]]*\]|\[citation needed\]|__+[A-Z0-9_\- ]+__+|\b(?:todo|tbd|placeholder)\b)",
+    re.IGNORECASE,
+)
+_PLACEHOLDER_LINE_RE = re.compile(r"(?im)^\s*(?:todo|tbd|insert placeholder|placeholder)\b.*$")
+_DOUBLE_BLANK_RE = re.compile(r"\n{3,}")
+
 
 def validate_json(content: str) -> Any:
     """Validate and parse JSON output."""
@@ -158,6 +165,64 @@ def validate_citations(content: str) -> list[str]:
     return citations
 
 
+def strip_placeholder_tokens(content: str) -> str:
+    content = _PLACEHOLDER_RE.sub("", content)
+    content = _PLACEHOLDER_LINE_RE.sub("", content)
+    return content
+
+
+def normalize_output_whitespace(content: str) -> str:
+    lines = [line.rstrip() for line in content.splitlines()]
+    text = "\n".join(lines)
+    text = _DOUBLE_BLANK_RE.sub("\n\n", text)
+    return text.strip()
+
+
+def citation_density(content: str) -> float:
+    words = max(len(content.split()), 1)
+    return len(validate_citations(content)) * 1000.0 / words
+
+
+def validate_citation_density(
+    content: str,
+    min_per_1000_words: float = 0.0,
+    max_per_1000_words: float | None = None,
+) -> tuple[bool, dict[str, Any]]:
+    density = citation_density(content)
+    details = {
+        "citation_density_per_1000_words": density,
+        "min_per_1000_words": min_per_1000_words,
+        "max_per_1000_words": max_per_1000_words,
+        "citations_found": len(validate_citations(content)),
+    }
+    if density < min_per_1000_words:
+        logger.warning(
+            "Citation density too low: %.2f < %.2f per 1000 words",
+            density,
+            min_per_1000_words,
+        )
+        return False, details
+    if max_per_1000_words is not None and density > max_per_1000_words:
+        logger.warning(
+            "Citation density too high: %.2f > %.2f per 1000 words",
+            density,
+            max_per_1000_words,
+        )
+        return False, details
+    return True, details
+
+
+def clean_agent_output(
+    content: str,
+    *,
+    max_repetitions: int = 2,
+) -> str:
+    cleaned = strip_placeholder_tokens(content)
+    cleaned = clean_repetitive_output(cleaned, max_repetitions=max_repetitions)
+    cleaned = normalize_output_whitespace(cleaned)
+    return cleaned
+
+
 def validate_formatting(content: str) -> bool:
     """Validate basic formatting quality of LLM output.
 
@@ -175,6 +240,8 @@ def validate_formatting(content: str) -> bool:
     # Check for common typos/issues
     if "  " in content:
         issues.append("Double spaces detected")
+    if _PLACEHOLDER_RE.search(content) or _PLACEHOLDER_LINE_RE.search(content):
+        issues.append("Placeholder tokens detected")
 
     if issues:
         logger.warning(f"Formatting issues: {', '.join(issues)}")
@@ -282,6 +349,11 @@ __all__ = [
     "validate_long_response",
     "validate_structure",
     "validate_citations",
+    "strip_placeholder_tokens",
+    "normalize_output_whitespace",
+    "citation_density",
+    "validate_citation_density",
+    "clean_agent_output",
     "validate_formatting",
     "validate_complete",
     "validate_no_repetition",

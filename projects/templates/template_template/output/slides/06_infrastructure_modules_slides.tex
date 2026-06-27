@@ -134,7 +134,7 @@ Reference}\label{infrastructure-module-reference}
 \begin{frame}[fragile,allowframebreaks]{Infrastructure Module Reference}
 This section inventories every Layer‑1 subdirectory returned by
 \texttt{23} \breaktt{discover\_infrastructure\_modules(repo\_root)}. File
-totals use \texttt{567} Python sources across infra + \texttt{7,375}
+totals use \texttt{604} Python sources across infra + \texttt{7,780}
 infra tests guarding them. Documentation Duality = paired
 \texttt{README.md} + \texttt{AGENTS.md}; optional \texttt{SKILL.md}
 manifests feed \breaktt{python\ -m\ infrastructure.skills}.
@@ -160,13 +160,13 @@ Key Exports
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-\texttt{autoresearch} & 8 & ✓ & ✓ & \breaktt{build\_autoresearch\_plan},
+\texttt{autoresearch} & 10 & ✓ & ✓ & \breaktt{build\_autoresearch\_plan},
 readiness validation CLI \\
 \texttt{benchmark} & 3 & ✓ & ✓ & Template harness scoring + comparative
 gates \\
 \texttt{config} & 0 & ✓ & ✓ & Repository defaults + hardened
 templates \\
-\texttt{core} & 105 & ✓ & ✓ & \texttt{get\_logger},
+\texttt{core} & 109 & ✓ & ✓ & \texttt{get\_logger},
 \texttt{load\_config}, \texttt{TemplateError} \\
 \texttt{docker} & 0 & ✓ & ✓ & Containerisation scaffolding \\
 \texttt{doctor} & 14 & ✓ & ✓ & Checkout diagnose/fix/undo repairs \\
@@ -183,11 +183,11 @@ validation \\
 point for \texttt{./run.sh} \\
 \texttt{project} & 27 & ✓ & ✓ & \breaktt{discover\_projects}, workspace
 management \\
-\texttt{prose} & 8 & ✓ & ✓ & Markdown readability + prose tooling \\
-\texttt{publishing} & 44 & ✓ & ✓ & Zenodo, executable bundle, archival
+\texttt{prose} & 9 & ✓ & ✓ & Markdown readability + prose tooling \\
+\texttt{publishing} & 71 & ✓ & ✓ & Zenodo, executable bundle, archival
 targets \\
 \texttt{reference} & 16 & ✓ & ✓ & BibTeX models, parsers, converters \\
-\texttt{rendering} & 49 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
+\texttt{rendering} & 50 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
 filters \\
 \texttt{reporting} & 57 & ✓ & ✓ & Coverage parsers, dashboards,
 executive artefacts \\
@@ -195,9 +195,9 @@ executive artefacts \\
 \breaktt{benchmark\_function} \\
 \texttt{search} & 44 & ✓ & ✓ & \breaktt{infrastructure.search.literature}
 clients + cache \\
-\texttt{sia} & 9 & ✓ & ✓ & Self-Improving-AI loop: task validation,
+\texttt{sia} & 10 & ✓ & ✓ & Self-Improving-AI loop: task validation,
 harness, metric capture \\
-\texttt{skills} & 6 & ✓ & ✓ & \texttt{discover\_skills}, SKILL manifest
+\texttt{skills} & 7 & ✓ & ✓ & \texttt{discover\_skills}, SKILL manifest
 regeneration \\
 \texttt{steganography} & 11 & ✓ & ✓ & Watermark overlays + hash
 manifests \\
@@ -212,8 +212,8 @@ manifests \\
 Below, \texttt{\$\{module\_*\_python\_file\_count\}} placeholders expand
 per subdirectory at render-time.
 
-\begin{block}{\breaktt{infrastructure.autoresearch} (8 files)}
-\protect\phantomsection\label{infrastructure.autoresearch-8-files}
+\begin{block}{\breaktt{infrastructure.autoresearch} (10 files)}
+\protect\phantomsection\label{infrastructure.autoresearch-10-files}
 Readiness planner, validation CLI, and report models for
 AutoResearch-style project promotion
 (\breaktt{infrastructure/autoresearch/}).
@@ -233,8 +233,8 @@ Repository-wide YAML templates and secure manifests
 configuration subdirectory rather than an importable package.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.core} (105 files)}
-\protect\phantomsection\label{infrastructure.core-105-files}
+\begin{block}{\breaktt{infrastructure.core} (109 files)}
+\protect\phantomsection\label{infrastructure.core-109-files}
 Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.
@@ -283,14 +283,14 @@ Canonical discovery (\breaktt{discover\_projects}) enforcing
 \texttt{src/} + \texttt{tests/}, slug validation, nested WIP namespaces.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.prose} (8 files)}
-\protect\phantomsection\label{infrastructure.prose-8-files}
+\begin{block}{\breaktt{infrastructure.prose} (9 files)}
+\protect\phantomsection\label{infrastructure.prose-9-files}
 Readability metrics + Markdown tooling for prose-centric manuscripts /
 CI gates.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.publishing} (44 files)}
-\protect\phantomsection\label{infrastructure.publishing-44-files}
+\begin{block}{\breaktt{infrastructure.publishing} (71 files)}
+\protect\phantomsection\label{infrastructure.publishing-71-files}
 Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 \end{block}
 
@@ -300,8 +300,8 @@ Citation/BibTeX parsing + conversion utilities leveraged by manuscripts
 and retrieval scripts.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.rendering} (49 files)}
-\protect\phantomsection\label{infrastructure.rendering-49-files}
+\begin{block}{\breaktt{infrastructure.rendering} (50 files)}
+\protect\phantomsection\label{infrastructure.rendering-50-files}
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.
 \end{block}
@@ -325,15 +325,15 @@ powering archive-only \breaktt{template\_search\_project} literature
 workflows when copied locally from \breaktt{projects/archive/}.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.sia} (9 files)}
-\protect\phantomsection\label{infrastructure.sia-9-files}
+\begin{block}{\breaktt{infrastructure.sia} (10 files)}
+\protect\phantomsection\label{infrastructure.sia-10-files}
 Generic Self-Improving-AI loop utilities: task-layout validation,
 execution harness, and metric capture reused by \texttt{template\_sia}
 (fixture-replay by default).
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.skills} (6 files)}
-\protect\phantomsection\label{infrastructure.skills-6-files}
+\begin{block}{\breaktt{infrastructure.skills} (7 files)}
+\protect\phantomsection\label{infrastructure.skills-7-files}
 Discovers \texttt{SKILL.md} frontmatter →
 \breaktt{.cursor/skill\_manifest.json}.
 \end{block}

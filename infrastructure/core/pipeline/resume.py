@@ -158,6 +158,18 @@ class PipelineResumeMixin(ABC):
                 duration=r.duration,
                 timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
                 completed=r.success,
+                status="passed" if r.success else "failed",
+                context={
+                    "stage_num": r.stage_num,
+                    "stage_name": r.stage_name,
+                    "success": r.success,
+                    "exit_code": r.exit_code,
+                    "hitl_pause": r.hitl_pause,
+                    "stage_completed": r.stage_completed,
+                    "lessons": list(r.lessons),
+                    "error_message": r.error_message,
+                    "exception_type": r.exception_type,
+                },
             )
             for r in results
         ]

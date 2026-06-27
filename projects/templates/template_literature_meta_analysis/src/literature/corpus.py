@@ -17,6 +17,17 @@ from .models import Paper
 logger = logging.getLogger(__name__)
 
 
+def _preprint_rank(paper: Paper, *, prefer_preprints: bool) -> tuple[int, int, int, int, int, int]:
+    return (
+        int(paper.is_preprint if prefer_preprints else not paper.is_preprint),
+        int(paper.doi is not None),
+        int(paper.publication_date is not None),
+        int(paper.metadata_completeness),
+        int(len(paper.abstract or "")),
+        int(paper.citation_count),
+    )
+
+
 class Corpus:
     """Manages a collection of Paper objects with dedup, merge, and persistence.
 
@@ -59,6 +70,25 @@ class Corpus:
         else:
             self._papers[cid] = paper
             logger.debug("Corpus.add: new paper %s", cid)
+
+    def deduplicate_by_metadata(self, *, prefer_preprints: bool = False) -> int:
+        grouped: dict[str, list[str]] = {}
+        for cid, paper in self._papers.items():
+            grouped.setdefault(paper.publication_signature, []).append(cid)
+
+        removed = 0
+        for ids in grouped.values():
+            if len(ids) <= 1:
+                continue
+            winner_id = max(ids, key=lambda cid: _preprint_rank(self._papers[cid], prefer_preprints=prefer_preprints))
+            winner = self._papers[winner_id]
+            for cid in ids:
+                if cid == winner_id:
+                    continue
+                self._papers.pop(cid, None)
+                removed += 1
+            self._papers[winner.canonical_id] = winner
+        return removed
 
     def merge(self, other: Corpus) -> None:
         """Merge another corpus into this one.

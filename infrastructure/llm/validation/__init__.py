@@ -2,6 +2,8 @@
 
 from infrastructure.llm.validation.core import (
     clean_repetitive_output,
+    clean_agent_output,
+    citation_density,
     estimate_tokens,
     validate_citations,
     validate_complete,
@@ -12,6 +14,9 @@ from infrastructure.llm.validation.core import (
     validate_no_repetition,
     validate_short_response,
     validate_structure,
+    validate_citation_density,
+    normalize_output_whitespace,
+    strip_placeholder_tokens,
 )
 from infrastructure.llm.validation.format import (
     CONVERSATIONAL_PATTERNS,
@@ -43,10 +48,15 @@ __all__ = [
     "validate_long_response",
     "validate_structure",
     "validate_citations",
+    "strip_placeholder_tokens",
+    "normalize_output_whitespace",
+    "citation_density",
+    "validate_citation_density",
     "validate_formatting",
     "validate_complete",
     "validate_no_repetition",
     "clean_repetitive_output",
+    "clean_agent_output",
     "RepetitionResult",
     "detect_repetition",
     "calculate_unique_content_ratio",

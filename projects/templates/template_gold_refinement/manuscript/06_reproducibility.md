@@ -33,7 +33,9 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 
 ## Config ownership
 
-All vocabulary, slots, and section conditions are declared in `manuscript/config.yaml` under `gold_refinement:`. The config is the source of truth; generated prose is disposable.
+All vocabulary, slots, section conditions, steganography toggles, and optional LLM review gates are declared in `manuscript/config.yaml` under `gold_refinement:`, `steganography:`, and `llm:`. The config is the source of truth; generated prose is disposable.
+
+`src/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
 The reproducibility spine uses {{REPRO_EVIDENCE_TERM_1}} and {{REPRO_EVIDENCE_TERM_2}} as generated artifacts rather than reader trust signals. Variable generation records `{{CONFIG_HASH}}`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 

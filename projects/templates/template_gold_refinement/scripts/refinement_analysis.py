@@ -23,6 +23,8 @@ sys.path.insert(0, str(_PROJECT_ROOT / "src"))
 sys.path.insert(0, str(_PROJECT_ROOT))
 sys.path.insert(0, str(_PROJECT_ROOT.parents[2]))
 
+CLAIM_SUPPORT_REGISTRY_NAME = "claim_support_registry.json"
+
 
 def main() -> int:
     from composition import generate_token_plan
@@ -94,7 +96,7 @@ def main() -> int:
     # Build evidence registry
     from evidence import build_evidence_registry, write_evidence_registry
     registry = build_evidence_registry(gr_config, root)
-    registry_path = reports_dir / "claim_support_registry.json"
+    registry_path = reports_dir / CLAIM_SUPPORT_REGISTRY_NAME
     write_evidence_registry(registry, registry_path)
     print(f"Wrote {registry_path}")
     print(f"  Evidence: {registry.supported_claims}/{registry.total_claims} claims supported")

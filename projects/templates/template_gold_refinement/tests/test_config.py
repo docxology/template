@@ -54,6 +54,16 @@ class TestLoadConfig:
         assert "metallurgical_terms" in cfg.lexicon
         assert len(cfg.slots) > 0
 
+    def test_infrastructure_loader_accepts_gold_refinement_extension(self, caplog):
+        from infrastructure.core.config.loader import load_config
+
+        project_root = Path(__file__).resolve().parent.parent
+        config_path = project_root / "manuscript" / "config.yaml"
+        with caplog.at_level("WARNING"):
+            loaded = load_config(config_path)
+        assert loaded is not None
+        assert not any("Unknown config key 'gold_refinement'" in record.message for record in caplog.records)
+
     def test_load_from_missing_file_returns_defaults(self, tmp_path):
         cfg = load_gold_refinement_config(tmp_path)
         assert cfg.seed == 431
@@ -248,6 +258,12 @@ class TestConstants:
 
     def test_default_section_titles(self):
         assert DEFAULT_SECTION_TITLES["abstract"] == "Abstract"
+
+    def test_project_lexicon_terms_are_unique(self):
+        project_root = Path(__file__).resolve().parent.parent
+        cfg = load_gold_refinement_config(project_root)
+        for category, terms in cfg.lexicon.items():
+            assert len(terms) == len(set(terms)), f"{category} contains duplicate terms: {terms}"
 
 
 class TestConfigBranchEdgeCases:

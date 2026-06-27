@@ -23,10 +23,20 @@ import networkx as nx
 import numpy as np
 
 try:
-    from .purity import format_purity
+    from .composition import generate_token_plan
+    from .config import load_gold_refinement_config
+    from .evidence import build_evidence_registry
+    from .formalisms import FORMALISMS
+    from .integrity import build_evidence_tiers, build_integrity_dimensions
+    from .purity import KARAT_GRADES, NINE_NINES_PURITY, format_purity
     from .refinery import run_refinery
-except ImportError:  # pragma: no cover
-    from purity import format_purity  # type: ignore[no-redef]
+except ImportError:
+    from composition import generate_token_plan  # type: ignore[no-redef]
+    from config import load_gold_refinement_config  # type: ignore[no-redef]
+    from evidence import build_evidence_registry  # type: ignore[no-redef]
+    from formalisms import FORMALISMS  # type: ignore[no-redef]
+    from integrity import build_evidence_tiers, build_integrity_dimensions  # type: ignore[no-redef]
+    from purity import KARAT_GRADES, NINE_NINES_PURITY, format_purity  # type: ignore[no-redef]
     from refinery import run_refinery  # type: ignore[no-redef]
 
 import logging
@@ -243,7 +253,6 @@ def _normalize_svg_whitespace(svg_path: Path) -> None:
 
 
 def _save_figure(fig: plt.Figure, out_path: Path) -> Path:
-    fig.tight_layout()
     svg_path = _svg_path(out_path)
     fig.savefig(out_path, dpi=FIGURE_DPI, bbox_inches="tight")
     fig.savefig(svg_path, format="svg", bbox_inches="tight")
@@ -365,11 +374,6 @@ def build_provenance_flow_graph() -> tuple[nx.DiGraph, list[float]]:
 
 
 def build_formalism_traceability_graph() -> nx.DiGraph:
-    try:
-        from .formalisms import FORMALISMS
-    except ImportError:
-        from formalisms import FORMALISMS  # type: ignore
-
     graph = nx.DiGraph()
     for idx, item in enumerate(FORMALISMS):
         y = len(FORMALISMS) - idx
@@ -552,8 +556,6 @@ def generate_karat_grading_chart(
             output_dir = Path("output") / "figures"
     _ensure_output_dir(output_dir)
 
-    from purity import KARAT_GRADES, NINE_NINES_PURITY
-
     result = run_refinery()
 
     grades = sorted(KARAT_GRADES.items())
@@ -628,18 +630,7 @@ def generate_token_density_chart(
             with plan_path.open("r") as f:
                 token_plan_data = json.load(f)
         else:
-            # Generate from config
-            try:
-                from composition import generate_token_plan
-                from config import load_gold_refinement_config
-            except ImportError:  # pragma: no cover
-                from composition import generate_token_plan
-                from config import load_gold_refinement_config
-
-            if project_root is not None:
-                cfg = load_gold_refinement_config(project_root)
-            else:
-                cfg = load_gold_refinement_config()
+            cfg = load_gold_refinement_config(project_root) if project_root else load_gold_refinement_config()
             plan = generate_token_plan(cfg)
             token_plan_data = {
                 "section_counts": plan.section_counts,
@@ -894,11 +885,6 @@ def generate_token_heatmap(
         output_dir = (project_root or Path(".")) / "output" / "figures"
     _ensure_output_dir(output_dir)
 
-    try:
-        from .config import load_gold_refinement_config
-    except ImportError:
-        from config import load_gold_refinement_config  # type: ignore
-
     cfg = load_gold_refinement_config(project_root) if project_root else load_gold_refinement_config()
 
     categories = sorted(cfg.lexicon.keys())
@@ -908,11 +894,6 @@ def generate_token_heatmap(
     matrix = np.zeros((len(seeds), len(categories)))
     for si, seed in enumerate(seeds):
         modified_cfg = replace(cfg, seed=seed)
-        try:
-            from .composition import generate_token_plan
-        except ImportError:  # pragma: no cover
-            from composition import generate_token_plan  # type: ignore
-
         plan = generate_token_plan(modified_cfg)
         for ci, cat in enumerate(categories):
             vals = plan.values_for_category(cat)
@@ -965,11 +946,6 @@ def generate_integrity_gate_matrix(
     if output_dir is None:
         output_dir = (project_root or Path(".")) / "output" / "figures"
     _ensure_output_dir(output_dir)
-
-    try:
-        from .config import load_gold_refinement_config
-    except ImportError:
-        from config import load_gold_refinement_config  # type: ignore
 
     cfg = load_gold_refinement_config(project_root) if project_root else load_gold_refinement_config()
     rules = cfg.audit_rules or []
@@ -1069,13 +1045,6 @@ def generate_claim_evidence_assay(
         output_dir = (project_root or Path(".")) / "output" / "figures"
     _ensure_output_dir(output_dir)
 
-    try:
-        from .config import load_gold_refinement_config
-        from .evidence import build_evidence_registry
-    except ImportError:
-        from config import load_gold_refinement_config  # type: ignore
-        from evidence import build_evidence_registry  # type: ignore
-
     root = project_root or Path(".")
     cfg = load_gold_refinement_config(root)
     registry = build_evidence_registry(cfg, root)
@@ -1146,13 +1115,6 @@ def generate_integrity_risk_matrix(
     if output_dir is None:
         output_dir = (project_root or Path(".")) / "output" / "figures"
     _ensure_output_dir(output_dir)
-
-    try:
-        from .config import load_gold_refinement_config
-        from .integrity import build_integrity_dimensions
-    except ImportError:
-        from config import load_gold_refinement_config  # type: ignore
-        from integrity import build_integrity_dimensions  # type: ignore
 
     root = project_root or Path(".")
     cfg = load_gold_refinement_config(root)
@@ -1242,13 +1204,6 @@ def generate_evidence_tier_ladder(
     if output_dir is None:
         output_dir = (project_root or Path(".")) / "output" / "figures"
     _ensure_output_dir(output_dir)
-
-    try:
-        from .config import load_gold_refinement_config
-        from .integrity import build_evidence_tiers, build_integrity_dimensions
-    except ImportError:  # pragma: no cover
-        from config import load_gold_refinement_config  # type: ignore
-        from integrity import build_evidence_tiers, build_integrity_dimensions  # type: ignore
 
     root = project_root or Path(".")
     cfg = load_gold_refinement_config(root)

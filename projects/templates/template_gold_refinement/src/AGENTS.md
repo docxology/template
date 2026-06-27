@@ -7,7 +7,9 @@ exemplar. The refinery pipeline (`refinery.py`, `purity.py`) models the five
 metallurgical stages; the mega-madlib engine (`config.py`, `composition.py`)
 handles deterministic token injection; `assay.py` validates claims against
 evidence; `formalisms.py` owns equation-backed formal claims; `integrity.py`
-owns source-tiered risk and evidence models; `figures.py` owns all technical
+owns source-tiered risk and evidence models; `pipeline_policy.py` owns the
+secure-pipeline and optional LLM-review gates; `domain_adapter.py` translates
+domain metrics into the refinery purity scale; `figures.py` owns all technical
 visualization specs and quality reports; and `manuscript_variables.py`
 generates all `{{TOKEN}}` values.
 
@@ -28,6 +30,8 @@ in `scripts/` (thin orchestrators).
 | `evidence.py` | Project-local contribution-claim registry and claim-ledger alignment |
 | `formalisms.py` | Auto-numbered equation registry, formalism table rows, and traceability rows |
 | `integrity.py` | Source-tiered integrity dimensions, residual-risk scores, and evidence-tier rows |
+| `pipeline_policy.py` | Steganography profile parsing and optional LLM-review gating |
+| `domain_adapter.py` | Domain metric translation and stage-remap profile loading |
 | `figures.py` | Shared figure specs, deterministic graph layouts, PNG/SVG save behavior, and quality report |
 | `manuscript_variables.py` | Generates all `{{TOKEN}}` values for manuscript injection |
 
@@ -37,6 +41,8 @@ in `scripts/` (thin orchestrators).
 - Token selection is deterministic: same seed + lexicon = same plan
 - Every `{{TOKEN}}` in manuscript source must be produced by `generate_variables()`
 - Config owns all prose choices (lexicon, slots, narrative moves)
+- `manuscript/config.yaml` also owns the secure-pipeline `steganography` block and the optional `llm` review gate
+- `domain_profile.yaml` owns the stage-remap profile, benchmark rubric, and analogy-boundary notes
 - Figure labels, paths, captions, and visual encodings must come from
   `FIGURE_SPECS`; do not duplicate registry metadata in scripts or manuscript
   prose.

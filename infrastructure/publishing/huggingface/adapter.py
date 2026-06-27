@@ -263,9 +263,7 @@ class HuggingFaceHubAdapter:
         """Escalate to ``huggingface_hub`` only against the real Hub (never test servers)."""
         return _hub_available() and self.config.base_url.rstrip("/") == _PUBLIC_HUB_URL
 
-    def _publish_via_hub(
-        self, files: list[Path], rel_names: tuple[str, ...], revision: str
-    ) -> HuggingFaceResult:
+    def _publish_via_hub(self, files: list[Path], rel_names: tuple[str, ...], revision: str) -> HuggingFaceResult:
         """Upload via the official ``huggingface_hub`` client, which handles Git-LFS."""
         from huggingface_hub import HfApi  # noqa: PLC0415
 

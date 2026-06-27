@@ -31,7 +31,7 @@ The formal layer is generated from `src/formalisms.py`, not hand-numbered prose.
 | ID | Formalism | Equation | Source |
 |----|-----------|----------|--------|
 | F1 | Purity functional | [@eq:purity_functional] | `src/purity.py::format_purity` |
-| F2 | Monotone refinement | [@eq:monotone_refinery] | `src/refinery.py::assert_monotone_increase` |
+| F2 | Monotone refinement | [@eq:monotone_refinery] | `src/purity.py::assert_monotone_increase` |
 | F3 | Token-selection digest | [@eq:token_digest] | `src/composition.py::_choose_value` |
 | F4 | Claim-support fraction | [@eq:claim_support] | `src/evidence.py::EvidenceRegistry.support_rate` |
 | F5 | Integrity vector | [@eq:integrity_vector] | `manuscript/config.yaml#gold_refinement.audit_rules` |
@@ -52,7 +52,7 @@ $$
 \pi_0 < \pi_1 < \cdots < \pi_n
 $$ {#eq:monotone_refinery}
 
-The test suite rejects equal or decreasing stage outputs. Source: `src/refinery.py::assert_monotone_increase`.
+The test suite rejects equal or decreasing stage outputs. Source: `src/purity.py::assert_monotone_increase`.
 
 **F3: Token-selection digest.** Every mega-madlib token is selected from config-owned inventory by a deterministic digest.
 
@@ -94,7 +94,7 @@ $$
 \text{index} = \text{int}\left(\text{SHA-256}\left(\text{seed} \mid \text{slot} \mid \text{category} \mid \text{ordinal} \mid \text{inventory}\right)[:12], 16\right) \mod n
 $$
 
-where $n$ is the size of the lexicon category inventory. Selected metallurgical terms: hallmark, cupellation, assaying. Selected manuscript terms: evidence, evidence. The same digest rule is formalized in [@eq:token_digest], while the gate vocabulary for this section binds evidence validation, figure registry check, and citation validation to concrete validation surfaces.
+where $n$ is the size of the lexicon category inventory. Selected metallurgical terms: assaying, parting, smelting. Selected manuscript terms: evidence, evidence. The same digest rule is formalized in [@eq:token_digest], while the gate vocabulary for this section binds evidence validation, figure registry check, and citation validation to concrete validation surfaces.
 
 ## Config-owned lexicon
 

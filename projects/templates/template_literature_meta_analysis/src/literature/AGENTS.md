@@ -2,10 +2,12 @@
 
 ## Overview
 
-Retrieval clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv/ChinaRxiv) plus corpus management and data models.
+Retrieval clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv/ChinaRxiv), query routing, corpus management, and data models.
 Orchestration lives in `literature/search_runner.py` (called from `scripts/01_literature_search.py`).
 `run_literature_search(..., arxiv_base_url=..., semantic_scholar_base_url=..., openalex_base_url=..., crossref_base_url=..., pubmed_esearch_url=..., pubmed_efetch_url=..., sovietrxiv_base_url=..., chinarxiv_base_url=...)`
 accepts injectable API roots for `pytest-httpserver` integration tests without changing production defaults.
+`query_router.py` routes queries across engines and toggles preprint preference.
+`evaluation.py` reports corpus coverage, source mix, routing choice, and claim-verification summaries for the stage-07 harness.
 SovietRxiv and ChinaRxiv share the same unified API (`sovietrxiv_client.py`) but are hosted at
 `https://russiarxiv.org` and `https://chinaxiv.org` respectively; the `source` query parameter
 distinguishes their sub-corpora.
@@ -24,6 +26,9 @@ to all downstream pipeline stages.
 - **Deduplication stability**: `Corpus.add()` keeps the version with higher `metadata_completeness`.
   The completeness score counts non-None optional fields. Do not change this strategy without
   updating the score calculation and re-validating deduplication.
+- **Metadata dedupe stability**: `Corpus.deduplicate_by_metadata(prefer_preprints=...)` collapses
+  title+author duplicates after relevance/year filtering. Preserve its preprint preference and
+  keep the routing tests aligned if the signature changes.
 - **citation_count ≥ 0**: The hypothesis scoring weight `log(1 + citations)` is undefined for
   negative citation counts. API responses can occasionally return `null` — the parser defaults
   to 0 in that case. Never pass negative values to `Assertion.citation_count`.
@@ -41,6 +46,12 @@ to all downstream pipeline stages.
 2. Add a `pytest-httpserver` test in `tests/literature/test_new_source_client.py`.
 3. Wire the client from `literature/search_runner.py` (not directly in the script).
 4. Update this file and `README.md`.
+
+## Adding a New Routing or Evaluation Surface
+
+1. Add the routing or scoring logic in `src/literature/query_router.py` or `src/literature/evaluation.py`.
+2. Keep script `07_literature_evaluation.py` thin: parse args, load corpus, call `evaluate_corpus`, write JSON.
+3. Add tests for source ordering, preprint preference, and summary fields before widening the routing matrix.
 
 ## Rate Limits and API Policies
 
