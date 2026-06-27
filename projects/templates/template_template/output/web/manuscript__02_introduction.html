@@ -425,14 +425,14 @@ pipeline-enforced system with version-controlled infrastructure
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
 scripts, data). 23 infrastructure subdirectories (20 importable
-packages) comprising ~567 Python modules provide reusable services;
+packages) comprising ~604 Python modules provide reusable services;
 projects consume them without modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: A Zero-Mock testing policy
 where pipeline advancement is contingent on test passage. Infrastructure
 tests must achieve 60% coverage; project tests must achieve 90%. All
 tests use real filesystem operations, real subprocess calls, and real
 network connections—no mock objects, no fake services, no synthetic test
-doubles. ~7,375 infrastructure tests and 1236+ project tests enforce
+doubles. ~7,780 infrastructure tests and 2902+ project tests enforce
 this standard.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -502,6 +502,8 @@ the fourteen enforcement capabilities enumerated in §Results.</li>
 <code>templates/template_autoresearch_project</code>,
 <code>templates/template_autoscientists</code>,
 <code>templates/template_code_project</code>,
+<code>templates/template_gold_refinement</code>,
+<code>templates/template_literature_meta_analysis</code>,
 <code>templates/template_madlib</code>,
 <code>templates/template_newspaper</code>,
 <code>templates/template_prose_project</code>,

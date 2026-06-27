@@ -60,6 +60,20 @@ def count_docs_subdirs(repo_root: Path) -> int:
     return sum(1 for path in docs_dir.iterdir() if path.is_dir())
 
 
+def count_prompt_templates(repo_root: Path) -> int:
+    """Count AI prompt-template workflows under ``docs/prompts/``.
+
+    Per ``docs/prompts/README.md`` each workflow lives in its own
+    subdirectory carrying a ``SKILL.md`` descriptor. Top-level registry
+    files (``README.md``, ``AGENTS.md``, ``SKILL.md``, ``MODE_REGISTRY.md``)
+    are housekeeping, not templates, and are excluded.
+    """
+    prompts_dir = repo_root / "docs" / "prompts"
+    if not prompts_dir.is_dir():
+        return 0
+    return sum(1 for sub in prompts_dir.iterdir() if sub.is_dir() and (sub / "SKILL.md").is_file())
+
+
 def format_count(n: int, approx: bool = False) -> str:
     """Format a count and optionally prefix with ``~`` for approximate display."""
     if n >= 1000:
@@ -151,6 +165,7 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
     total_infra_py = sum(module.python_file_count for module in report.modules)
     docs_file_count = count_docs_markdown_files(repo_root)
     docs_subdir_count = count_docs_subdirs(repo_root)
+    prompt_template_count = count_prompt_templates(repo_root)
 
     # ``project_metrics`` only contains projects ``discover_projects`` already
     # found on disk (public-only), so every entry is present by construction —
@@ -180,6 +195,7 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
         "total_test_count_approx": format_count(infra_test_count + all_projects_test_count),
         "docs_file_count": docs_file_count,
         "docs_subdir_count": docs_subdir_count,
+        "prompt_template_count": prompt_template_count,
         "infrastructure_version": report.infrastructure_version,
         # ── Per-project metrics (flat) ────────────────────────────────
         **{f"project_{name}_{k}": str(v) for name, stats in project_metrics.items() for k, v in stats.items()},
