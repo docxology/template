@@ -7,7 +7,6 @@ orchestrator can import a shared type surface without circular imports.
 from __future__ import annotations
 
 import hashlib
-import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path

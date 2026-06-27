@@ -25,6 +25,8 @@ class DomainProfile:
     source_policy: str = ""
     artifact_expectations: tuple[str, ...] = ()
     benchmark_rubric: dict[str, Any] | None = None
+    stage_mappings: tuple[dict[str, Any], ...] = ()
+    analogy_boundary: dict[str, Any] | None = None
 
 
 _BUILTIN_PROFILES: dict[str, DomainProfile] = {
@@ -85,6 +87,8 @@ def load_domain_profile(project_root: Path, *, default_profile: str = "generic")
         source_policy=str(payload.get("source_policy", "") or ""),
         artifact_expectations=_tuple_of_strings(payload.get("artifact_expectations")),
         benchmark_rubric=_dict_or_none(payload.get("benchmark_rubric")),
+        stage_mappings=_tuple_of_dicts(payload.get("stage_mappings")),
+        analogy_boundary=_dict_or_none(payload.get("analogy_boundary")),
     )
     if not profile.display_name:
         raise ValueError("domain_profile display_name must not be empty")
@@ -105,6 +109,8 @@ _SUPPORTED_KEYS = frozenset(
         "source_policy",
         "artifact_expectations",
         "benchmark_rubric",
+        "stage_mappings",
+        "analogy_boundary",
     }
 )
 
@@ -127,3 +133,13 @@ def _dict_or_none(value: Any) -> dict[str, Any] | None:
     if not isinstance(value, dict):
         raise ValueError("domain_profile benchmark_rubric must be a mapping")
     return value
+
+
+def _tuple_of_dicts(value: Any) -> tuple[dict[str, Any], ...]:
+    if value is None:
+        return ()
+    if not isinstance(value, list | tuple):
+        raise ValueError("domain_profile stage_mappings must be a list of mappings")
+    if not all(isinstance(item, dict) for item in value):
+        raise ValueError("domain_profile stage_mappings entries must be mappings")
+    return tuple(value)

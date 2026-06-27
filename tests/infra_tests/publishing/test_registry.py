@@ -68,6 +68,8 @@ _FIRST_CLASS_NAMES = {
     "github_pages",
     "cloudflare_pages",
     "netlify",
+    "huggingface_hub",
+    "osf",
 }
 
 
@@ -96,12 +98,14 @@ def test_first_class_platforms_no_documented_entries() -> None:
 # 3. documented_platforms()
 # ---------------------------------------------------------------------------
 
-_DOCUMENTED_NAMES = {"huggingface_hub", "osf"}
+# All previously-documented platforms (huggingface_hub, osf) now ship live
+# first-class adapters, so the DOCUMENTED tier is currently empty.
+_DOCUMENTED_NAMES: set[str] = set()
 
 
-def test_documented_platforms_exist() -> None:
-    """documented_platforms() must be non-empty."""
-    assert len(documented_platforms()) > 0
+def test_documented_platforms_returns_tuple() -> None:
+    """documented_platforms() returns a tuple (possibly empty once all ship)."""
+    assert isinstance(documented_platforms(), tuple)
 
 
 def test_documented_platforms_are_only_documented_tier() -> None:
@@ -145,9 +149,9 @@ def test_get_platform_known_arxiv() -> None:
 
 
 def test_get_platform_known_huggingface_hub() -> None:
-    """get_platform('huggingface_hub') returns a DOCUMENTED platform."""
+    """get_platform('huggingface_hub') returns a FIRST_CLASS platform."""
     info = get_platform("huggingface_hub")
-    assert info.tier == PublishingTier.DOCUMENTED
+    assert info.tier == PublishingTier.FIRST_CLASS
 
 
 def test_get_platform_unknown_raises_key_error() -> None:
@@ -181,9 +185,8 @@ def test_list_platforms_by_first_class_tier() -> None:
 
 
 def test_list_platforms_by_documented_tier() -> None:
-    """list_platforms(tier=DOCUMENTED) returns only DOCUMENTED entries."""
+    """list_platforms(tier=DOCUMENTED) returns only DOCUMENTED entries (possibly none)."""
     result = list_platforms(tier=PublishingTier.DOCUMENTED)
-    assert len(result) > 0
     for p in result:
         assert p.tier == PublishingTier.DOCUMENTED
 
@@ -420,15 +423,17 @@ def test_github_pages_adapter_module_set() -> None:
     assert "static_site" in info.tags
 
 
-def test_huggingface_hub_is_documented_tier() -> None:
-    """huggingface_hub is a future adapter; must be DOCUMENTED tier."""
+def test_huggingface_hub_is_first_class() -> None:
+    """huggingface_hub now ships a live adapter; must be FIRST_CLASS tier."""
     info = get_platform("huggingface_hub")
-    assert info.tier == PublishingTier.DOCUMENTED
+    assert info.tier == PublishingTier.FIRST_CLASS
+    assert info.adapter_class == "HuggingFaceHubAdapter"
     assert "HUGGINGFACE_TOKEN" in info.env_vars
 
 
-def test_osf_is_documented_tier() -> None:
-    """osf is a future adapter; must be DOCUMENTED tier."""
+def test_osf_is_first_class() -> None:
+    """osf now ships a live adapter; must be FIRST_CLASS tier."""
     info = get_platform("osf")
-    assert info.tier == PublishingTier.DOCUMENTED
+    assert info.tier == PublishingTier.FIRST_CLASS
+    assert info.adapter_class == "OSFAdapter"
     assert "OSF_TOKEN" in info.env_vars

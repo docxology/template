@@ -1,4 +1,5 @@
 """Netlify deployment via netlify CLI."""
+
 from __future__ import annotations
 
 import json
@@ -35,9 +36,7 @@ class NetlifyAdapter:
                 status="dry-run",
                 url=None,
                 timestamp_utc=_now_utc(),
-                extra={
-                    "would_run": f"netlify deploy --dir {site_dir} {prod_flag}".strip()
-                },
+                extra={"would_run": f"netlify deploy --dir {site_dir} {prod_flag}".strip()},
             )
 
         token = self.config.token or os.environ.get("NETLIFY_AUTH_TOKEN")

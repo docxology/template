@@ -174,6 +174,7 @@ class IPFSPinataProvider:
         if self._session_arg is not None:
             return self._session_arg
         import requests  # noqa: PLC0415
+
         if not hasattr(self, "_lazy_session"):
             self._lazy_session: Any = requests.Session()
         return self._lazy_session
@@ -270,6 +271,7 @@ class IPFSWeb3StorageProvider:
         if self._session_arg is not None:
             return self._session_arg
         import requests  # noqa: PLC0415
+
         if not hasattr(self, "_lazy_session"):
             self._lazy_session: Any = requests.Session()
         return self._lazy_session
@@ -376,6 +378,7 @@ class SoftwareHeritageProvider:
         if self._session_arg is not None:
             return self._session_arg
         import requests  # noqa: PLC0415
+
         if not hasattr(self, "_lazy_session"):
             self._lazy_session: Any = requests.Session()
         return self._lazy_session
@@ -465,5 +468,5 @@ class SoftwareHeritageProvider:
         for line in git_config.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if line.startswith("url = "):
-                return line[len("url = "):].strip()
+                return line[len("url = ") :].strip()
         return None

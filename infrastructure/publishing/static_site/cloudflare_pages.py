@@ -1,4 +1,5 @@
 """Cloudflare Pages deployment via Wrangler CLI."""
+
 from __future__ import annotations
 
 import os
@@ -33,11 +34,7 @@ class CloudflarePagesAdapter:
                 status="dry-run",
                 url=f"https://{project}.pages.dev",
                 timestamp_utc=_now_utc(),
-                extra={
-                    "would_run": (
-                        f"wrangler pages deploy {site_dir} --project-name {project}"
-                    )
-                },
+                extra={"would_run": (f"wrangler pages deploy {site_dir} --project-name {project}")},
             )
 
         token = self.config.token or os.environ.get("CLOUDFLARE_API_TOKEN")

@@ -55,8 +55,10 @@ from pathlib import Path
 from infrastructure.project import get_project_metadata
 
 metadata = get_project_metadata(Path("projects/templates/template_code_project"))
-print(f"Title: {metadata.title}")
-print(f"Authors: {metadata.authors}")
+# get_project_metadata returns a dict; "title" is present only when
+# manuscript/config.yaml defines paper.title, so fall back to the name.
+print(f"Title: {metadata.get('title', metadata['name'])}")
+print(f"Authors: {metadata['authors']}")
 ```
 
 ### Build CodeGraph Commands

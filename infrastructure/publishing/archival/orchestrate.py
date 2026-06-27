@@ -14,7 +14,6 @@ from pathlib import Path
 from .models import (
     ArchivalCredentials,
     ArchivalError,
-    ArchivalReceipt,
     ArchivalRun,
     DEFAULT_CREDENTIALS_PATH,
     _now_utc_iso,

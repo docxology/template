@@ -17,8 +17,9 @@
 
 | File | Purpose |
 |------|---------|
-| `Dockerfile` | Multi-stage image: installs `uv`, Python 3.12, LaTeX, Pandoc, and all Python workspace dependencies. |
+| `Dockerfile` | Image based on `python:3.12-slim`: copies in `uv`, installs LaTeX (TeX Live), `git`, `curl`, and all Python workspace dependencies via `uv sync`. |
 | `docker-compose.yml` | Two service definitions: `research-template` (dev container) and `ollama` (LLM sidecar), controlled via `--profile`. |
+| `README.md` | Short pointer to `docs/CLOUD_DEPLOY.md` for usage patterns. |
 | `SKILL.md` | AI skill descriptor for this directory (MCP-aligned). |
 | `AGENTS.md` | Machine-readable directory guide for AI agents. |
 

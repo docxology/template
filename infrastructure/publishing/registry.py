@@ -4,24 +4,25 @@ This is the single source of truth for the publishing surface. Import from here
 to discover which platforms are available (first-class vs documented), what
 credentials they need, and how to instantiate their adapters.
 """
+
 from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
 
 
 class PublishingTier(str, Enum):
-    FIRST_CLASS = "first_class"   # implemented, tested, locally verifiable
-    DOCUMENTED = "documented"     # documented intent, no live adapter yet
+    FIRST_CLASS = "first_class"  # implemented, tested, locally verifiable
+    DOCUMENTED = "documented"  # documented intent, no live adapter yet
 
 
 @dataclass(frozen=True)
 class PlatformInfo:
     """Metadata about a publishing platform adapter."""
+
     name: str
     tier: PublishingTier
     description: str
-    adapter_module: str        # importable module path
+    adapter_module: str  # importable module path
     adapter_class: str | None  # class name if applicable
     env_vars: tuple[str, ...] = field(default_factory=tuple)
     requires_network: bool = True
@@ -123,19 +124,19 @@ PLATFORM_REGISTRY: tuple[PlatformInfo, ...] = (
     ),
     PlatformInfo(
         name="huggingface_hub",
-        tier=PublishingTier.DOCUMENTED,
-        description="HuggingFace Hub dataset / model card publishing (future adapter)",
-        adapter_module="infrastructure.publishing.huggingface",
-        adapter_class=None,
-        env_vars=("HUGGINGFACE_TOKEN",),
+        tier=PublishingTier.FIRST_CLASS,
+        description="HuggingFace Hub dataset / model / space publishing via the Hub REST API",
+        adapter_module="infrastructure.publishing.huggingface.adapter",
+        adapter_class="HuggingFaceHubAdapter",
+        env_vars=("HUGGINGFACE_TOKEN", "HF_TOKEN"),
         tags=("ml", "dataset"),
     ),
     PlatformInfo(
         name="osf",
-        tier=PublishingTier.DOCUMENTED,
-        description="Open Science Framework preregistration and data sharing (future adapter)",
-        adapter_module="infrastructure.publishing.osf",
-        adapter_class=None,
+        tier=PublishingTier.FIRST_CLASS,
+        description="Open Science Framework node creation + file deposit via OSF API v2 / Waterbutler",
+        adapter_module="infrastructure.publishing.osf.adapter",
+        adapter_class="OSFAdapter",
         env_vars=("OSF_TOKEN",),
         tags=("academic", "open-science"),
     ),

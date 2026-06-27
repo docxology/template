@@ -75,8 +75,8 @@ from infrastructure.core.exceptions import (
     chain_exceptions,
 )
 
-# Raise with file context for debugging
-raise_with_context(ValidationError("Invalid format"), file_path="doc.md", line=42)
+# Raise an exception class with structured context for debugging
+raise_with_context(ValidationError, "Invalid format", file="doc.md", line=42)
 
 # Chain exceptions to preserve causal context
 try:
@@ -96,19 +96,24 @@ from pathlib import Path
 # Load a project's config.yaml
 config = load_config(Path("projects/my_project/manuscript/config.yaml"))
 
-# Auto-discover config file from project root
-config_path = find_config_file(Path("projects/my_project"))
+# Auto-discover a project's config file from the repository root
+config_path = find_config_file(Path("."), project_name="my_project")
 
-# Get config as a plain dictionary
-config_dict = get_config_as_dict(config_path)
+# Resolve config into a flat dict of substitution keys (PROJECT_TITLE, AUTHOR_NAME, ...)
+config_dict = get_config_as_dict(Path("."))
 ```
 
 ### Pipeline Execution
 
 ```python
+from pathlib import Path
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 
-config = PipelineConfig(project_name="template_code_project", skip_llm=True)
+config = PipelineConfig(
+    project_name="template_code_project",
+    repo_root=Path("."),
+    skip_llm=True,
+)
 executor = PipelineExecutor(config)
 result = executor.execute_core_pipeline()
 ```
@@ -116,9 +121,13 @@ result = executor.execute_core_pipeline()
 ### Multi-Project Orchestration
 
 ```python
+from pathlib import Path
 from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
+from infrastructure.project import discover_projects
 
-config = MultiProjectConfig(projects=["proj_a", "proj_b"])
+repo_root = Path(".")
+projects = discover_projects(repo_root)  # list[ProjectInfo]
+config = MultiProjectConfig(repo_root=repo_root, projects=projects)
 orchestrator = MultiProjectOrchestrator(config)
 result = orchestrator.execute_all_projects_full()
 ```
@@ -186,7 +195,7 @@ for i in range(100):
 from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
 
 config = TelemetryConfig()
-collector = TelemetryCollector(config)
+collector = TelemetryCollector(config, "my_project")
 # Collector records CPU, memory, and wall-clock time per pipeline stage
 ```
 

@@ -106,7 +106,8 @@ Both registry shapes are accepted:
 * **Dict shape** — ``{"fig:label": {...}, ...}`` (emitted by
   ``FigureManager``).
 * **List shape** — ``[{"label": "fig:label", ...}, ...]`` (emitted by
-  project-side scripts, e.g. ``cognitive_case_diagrams/scripts/generate_diagrams.py``).
+  project-side scripts that publish a flat figure manifest). An envelope
+  variant — ``{"figures": [{"label": "fig:label", ...}, ...]}`` — is also accepted.
 
 ### Repository Audit and Issue Management
 
@@ -120,13 +121,21 @@ from infrastructure.validation import (
 
 project_path = Path("projects/templates/template_code_project")
 
-# Run all validation checks in a single pass
+# Run all validation checks in a single pass (returns a ScanResults)
 audit_results = run_comprehensive_audit(project_path)
 report = generate_audit_report(audit_results)
 
-# Process and triage discovered issues
-categorized = categorize_by_type(audit_results)
-filtered = filter_false_positives(categorized)
+# Flatten the ScanResults into a single issue list for triage
+issues = (
+    audit_results.link_issues
+    + audit_results.accuracy_issues
+    + audit_results.completeness_gaps
+    + audit_results.quality_issues
+)
+
+# Process and triage discovered issues (each helper takes a list of issues)
+categorized = categorize_by_type(issues)
+filtered = filter_false_positives(issues)
 prioritized = prioritize_issues(filtered)
 summary = generate_issue_summary(prioritized)
 ```
@@ -138,10 +147,7 @@ from pathlib import Path
 from infrastructure.validation import validate_output_structure, validate_copied_outputs
 
 validate_output_structure(Path("output/template_code_project"))
-validate_copied_outputs(
-    source_dir=Path("projects/templates/template_code_project/output"),
-    dest_dir=Path("output/template_code_project"),
-)
+validate_copied_outputs(Path("output/template_code_project"))
 ```
 
 ### Link Verification
@@ -150,8 +156,9 @@ validate_copied_outputs(
 from pathlib import Path
 from infrastructure.validation import LinkValidator
 
-validator = LinkValidator()
-results = validator.check_all(Path("docs"))
+validator = LinkValidator(Path("docs"))
+results = validator.validate_all_markdown_files()
+report = validator.generate_report(results)
 ```
 
 ---
@@ -178,7 +185,7 @@ The validation package is organized into four logical subpackage groups:
 | Group | Modules | Purpose |
 |-------|---------|---------|
 | **Content** | `pdf_validator`, `markdown_validator`, `figure_validator` | File-type-specific validation |
-| **Integrity** | `integrity`, `link_validator`, `check_links` | Cross-reference and link verification |
+| **Integrity** | `checks`, `link_validator`, `check_links` | Cross-reference and link verification |
 | **Repository** | `scanner`, `audit_orchestrator`, `issue_categorizer` | Project-wide scanning and triage |
 | **Output** | `validator` | Pipeline output structure checks |
 

@@ -14,7 +14,7 @@ The steganography module can add visible and invisible provenance layers to PDFs
 - **Watermark overlay**: Semi-transparent text plus footer metadata
 - **QR and barcode strip**: Document metadata, author contact links, and integrity payloads
 - **SHA-256/SHA-512 hashes**: Cryptographic hashes of the rendered source PDF
-- **PDF metadata**: XMP metadata injection (author, title, DOI)
+- **PDF metadata**: XMP metadata injection (title, authors, keywords, document ID, hashes)
 - **Hash manifest**: `.hashes.json` file for independent verification
 - **PDF encryption**: Optional AES-256 password protection when configured
 

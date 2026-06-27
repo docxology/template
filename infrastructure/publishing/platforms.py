@@ -15,6 +15,13 @@ from infrastructure.publishing.static_site import (
     SiteDeployResult,
     SiteHosting,
 )
+from infrastructure.publishing.huggingface import (
+    HuggingFaceHubAdapter,
+    HuggingFaceConfig,
+    HuggingFaceResult,
+    HFRepoType,
+)
+from infrastructure.publishing.osf import OSFAdapter, OSFConfig, OSFResult
 from infrastructure.publishing.archival import (
     archive_publication,
     load_credentials,
@@ -38,6 +45,13 @@ __all__ = [
     "SiteDeployConfig",
     "SiteDeployResult",
     "SiteHosting",
+    "HuggingFaceHubAdapter",
+    "HuggingFaceConfig",
+    "HuggingFaceResult",
+    "HFRepoType",
+    "OSFAdapter",
+    "OSFConfig",
+    "OSFResult",
     "archive_publication",
     "load_credentials",
     "ArchivalProvider",

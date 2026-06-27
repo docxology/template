@@ -60,6 +60,50 @@ benchmark_rubric:
     )
 
 
+def test_load_domain_profile_with_stage_mappings_and_analogy_boundary(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "domain_profile.yaml").write_text(
+        """
+domain: metallurgical_manuscript_composition
+display_name: Gold Refinement
+stage_mappings:
+  - refinery_stage: ore
+    domain_operation: raw manuscript drafting
+    purity_target: 0.375
+  - refinery_stage: certification
+    domain_operation: run render and validation gates
+    purity_target: 0.999999999
+analogy_boundary:
+  thesis: "The analogy is load-bearing."
+  limits:
+    - "It does not certify domain truth."
+""",
+        encoding="utf-8",
+    )
+
+    profile = load_domain_profile(project)
+
+    assert len(profile.stage_mappings) == 2
+    assert profile.stage_mappings[0]["refinery_stage"] == "ore"
+    assert profile.stage_mappings[1]["purity_target"] == 0.999999999
+    assert profile.analogy_boundary is not None
+    assert profile.analogy_boundary["thesis"] == "The analogy is load-bearing."
+    assert profile.analogy_boundary["limits"] == ["It does not certify domain truth."]
+
+
+def test_stage_mappings_must_be_list_of_mappings(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "domain_profile.yaml").write_text(
+        "domain: x\ndisplay_name: X\nstage_mappings: [just_a_string]\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="stage_mappings entries must be mappings"):
+        load_domain_profile(project)
+
+
 def test_missing_domain_profile_returns_generic_profile(tmp_path: Path) -> None:
     profile = load_domain_profile(tmp_path)
 
