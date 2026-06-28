@@ -8,7 +8,7 @@ with {{PEAK_YEAR_PUBS}} records that year. The growth curve is the first-order s
 that the literature is active rather than dormant.
 
 <!-- FIGURE: growth_curve.png -->
-![Publication growth curve for {{SEARCH_TERM_TITLE}}. Annual publication counts (bars) and cumulative total (line) show sustained growth from {{YEAR_START}} through {{YEAR_END}}, peaking in {{PEAK_YEAR}}.](figures/growth_curve.png "Publication Growth Curve"){{#fig:growth_curve}}
+![Publication growth curve for {{SEARCH_TERM_TITLE}}. Annual publication counts (bars) and cumulative total (line) show sustained growth from {{YEAR_START}} through {{YEAR_END}}, peaking in {{PEAK_YEAR}}.](../output/figures/growth_curve.png "Publication Growth Curve"){{#fig:growth_curve}}
 
 ## RQ1: Field Size and Growth
 
@@ -36,13 +36,13 @@ its use in narcolepsy, shift-work disorder, and obstructive sleep apnea.
 {{SUBFIELD_TABLE}}
 
 <!-- FIGURE: field_summary.png -->
-![Field summary dashboard for {{SEARCH_TERM_TITLE}}. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel.](figures/field_summary.png "Field Summary"){{#fig:field_summary}}
+![Field summary dashboard for {{SEARCH_TERM_TITLE}}. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel.](../output/figures/field_summary.png "Field Summary"){{#fig:field_summary}}
 
 <!-- FIGURE: subfield_distribution.png -->
-![Subfield distribution for {{SEARCH_TERM_TITLE}}. The {{N_SUBFIELDS}}-bucket taxonomy shows the relative weight of each configured sub-area, with {{TOP_SUBFIELD}} dominant at {{TOP_SUBFIELD_PCT}}\%.](figures/subfield_distribution.png "Subfield Distribution"){{#fig:subfield_distribution}}
+![Subfield distribution for {{SEARCH_TERM_TITLE}}. The {{N_SUBFIELDS}}-bucket taxonomy shows the relative weight of each configured sub-area, with {{TOP_SUBFIELD}} dominant at {{TOP_SUBFIELD_PCT}}\%.](../output/figures/subfield_distribution.png "Subfield Distribution"){{#fig:subfield_distribution}}
 
 <!-- FIGURE: subfield_timeline.png -->
-![Subfield timeline for {{SEARCH_TERM_TITLE}}. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads.](figures/subfield_timeline.png "Subfield Timeline"){{#fig:subfield_timeline}}
+![Subfield timeline for {{SEARCH_TERM_TITLE}}. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads.](../output/figures/subfield_timeline.png "Subfield Timeline"){{#fig:subfield_timeline}}
 
 ## Identifier and Full-Text Coverage
 
@@ -67,18 +67,18 @@ characteristic of scientific literature.
 {{CITATION_DIST_TABLE}}
 
 <!-- FIGURE: citation_distribution.png -->
-![Citation distribution for {{SEARCH_TERM_TITLE}}. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](figures/citation_distribution.png "Citation Distribution"){{#fig:citation_distribution}}
+![Citation distribution for {{SEARCH_TERM_TITLE}}. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](../output/figures/citation_distribution.png "Citation Distribution"){{#fig:citation_distribution}}
 
 **Table 4. Top publication venues.**
 
 {{TOP_VENUES_TABLE}}
 
 <!-- FIGURE: top_venues.png -->
-![Top publication venues for {{SEARCH_TERM_TITLE}}. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published.](figures/top_venues.png "Top Venues"){{#fig:top_venues}}
+![Top publication venues for {{SEARCH_TERM_TITLE}}. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published.](../output/figures/top_venues.png "Top Venues"){{#fig:top_venues}}
 
 **Table 5. Top authors by publication count.**
 
 {{TOP_AUTHORS_TABLE}}
 
 <!-- FIGURE: author_productivity.png -->
-![Author productivity for {{SEARCH_TERM_TITLE}}. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature.](figures/author_productivity.png "Author Productivity"){{#fig:author_productivity}}
+![Author productivity for {{SEARCH_TERM_TITLE}}. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature.](../output/figures/author_productivity.png "Author Productivity"){{#fig:author_productivity}}
