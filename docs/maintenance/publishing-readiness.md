@@ -124,9 +124,7 @@ uv run python -m infrastructure.publishing.archival_cli \
   --bundle <file-with-repo-url> --providers software_heritage --commit
 
 # TestPyPI (build already verified)
-TESTPYPI_TOKEN=... uv run python -c "from pathlib import Path; \
-from infrastructure.publishing.pypi import run_pypi_release; \
-print(run_pypi_release(Path('projects/templates/template_gold_refinement'), test=True, dry_run=False))"
+TESTPYPI_TOKEN=... uv run python scripts/publish/upload_gold_refinement.py --commit --only testpypi
 ```
 
 HuggingFace and OSF run through `HuggingFaceHubAdapter` / `OSFAdapter`
