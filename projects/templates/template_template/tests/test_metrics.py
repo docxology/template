@@ -10,6 +10,7 @@ from template_template.metrics import (
     build_module_inventory_table,
     count_docs_markdown_files,
     count_docs_subdirs,
+    count_prompt_templates,
     count_test_functions,
     format_count,
 )
@@ -56,6 +57,33 @@ class TestDocsCounters:
         (docs / "y").mkdir()
         (docs / "file.md").write_text("# f", encoding="utf-8")
         assert count_docs_subdirs(tmp_path) == 2
+
+    def test_count_prompt_templates_missing_dir(self, tmp_path: Path) -> None:
+        assert count_prompt_templates(tmp_path) == 0
+
+    def test_count_prompt_templates_counts_workflow_subdirs(self, tmp_path: Path) -> None:
+        """A prompt template is a subdirectory carrying a ``SKILL.md``.
+
+        Binds the count to the real spec (``docs/prompts/README.md``), not to
+        the implementation: top-level registry ``.md`` files and a bare
+        subdirectory without ``SKILL.md`` are negative controls.
+        """
+        prompts = tmp_path / "docs" / "prompts"
+        (prompts / "academic-paper").mkdir(parents=True)
+        (prompts / "academic-paper" / "SKILL.md").write_text("# a", encoding="utf-8")
+        (prompts / "deep-research").mkdir()
+        (prompts / "deep-research" / "SKILL.md").write_text("# d", encoding="utf-8")
+        # subdirectory without SKILL.md → not a complete template (negative control)
+        (prompts / "draft").mkdir()
+        (prompts / "draft" / "notes.md").write_text("# n", encoding="utf-8")
+        # THREE top-level registry files → housekeeping, not templates. Having a
+        # different count of top-level .md (3) than real templates (2) makes this
+        # a true discriminator: a top-level-.md implementation would return 3 and
+        # fail, so the test binds to the workflow-subdir spec, not the impl.
+        (prompts / "README.md").write_text("# r", encoding="utf-8")
+        (prompts / "SKILL.md").write_text("# s", encoding="utf-8")
+        (prompts / "AGENTS.md").write_text("# a", encoding="utf-8")
+        assert count_prompt_templates(tmp_path) == 2
 
 
 class TestFormatCount:

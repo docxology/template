@@ -31,6 +31,7 @@ Scripts **must** run in numbered order because each stage depends on the outputs
 | `04` | All `output/data/*.json`, `citation_graph.gml` | `output/figures/*.png`, `figure_registry.json` | `02`, `03` |
 | `05` | `output/data/*.json`, `manuscript/*.md` | `output/manuscript/*.md` (rendered) | `02`, `03` |
 | `06` | `corpus.jsonl` | `fulltext_assessment.json` | `01` |
+| `07` | `corpus.jsonl` | `output/data/literature_evaluation.json` | `01` |
 
 ## Script Details
 
@@ -137,6 +138,19 @@ Reports full-text and open-access availability across the corpus.
 
 **Imports from `src/`:** `literature.corpus.Corpus`.
 
+### `07_literature_evaluation.py`
+
+Corpus-quality and routing coverage summary for the literature workflow.
+
+**Key flags:**
+- `--corpus PATH` — corpus JSONL path
+- `--query TEXT` — optional query string for routing diagnostics
+- `--output-dir PATH` — output directory for `literature_evaluation.json`
+
+**Reports:** total paper count, DOI coverage, preprint coverage, metadata completeness, duplicate-title groups, source distribution, query routing choice, and optional claim-verification summary.
+
+**Imports from `src/`:** `literature.corpus.Corpus`, `literature.evaluation.evaluate_corpus`.
+
 ## Thin Orchestrator Pattern
 
 **CRITICAL:** These scripts must NOT contain computational logic. They:
@@ -171,7 +185,8 @@ output/
 │   ├── hypothesis_scores.json        # 03
 │   ├── hypothesis_trends.json        # 03
 │   ├── assertion_summary.json        # 03
-│   └── fulltext_assessment.json      # 06
+│   ├── fulltext_assessment.json      # 06
+│   └── literature_evaluation.json   # 07
 ├── figures/                          # 04
 │   ├── *.png (16 figures)
 │   └── figure_registry.json

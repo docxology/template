@@ -44,6 +44,10 @@ from infrastructure.validation.output.prose_quality import (
     prose_quality_enabled as _is_prose_quality_enabled,
     validate_prose_quality as _validate_prose_quality,
 )
+from infrastructure.validation.output.claim_verification import (
+    claim_verification_enabled as _is_claim_verification_enabled,
+    verify_project_claims as _verify_project_claims,
+)
 from infrastructure.validation.output.validator import collect_detailed_validation_results
 
 logger = get_logger(__name__)
@@ -389,15 +393,24 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
             logger.error(f"  [{i}/{len(checks)}] {check_name}: ❌ FAILED - {e}", exc_info=True)
             results.append((check_name, False))
 
+    project_root = _project_root(project_name)
+    manuscript_dir = project_root / "manuscript"
+
+    claim_report = None
+    if _is_claim_verification_enabled(project_root):
+        try:
+            claim_report = _verify_project_claims(project_root)
+            results.append(("Claim verification", True))
+        except Exception as e:
+            logger.error(f"Error during claim verification: {e}", exc_info=True)
+            results.append(("Claim verification", False))
+
     try:
         structure_result, detailed_validation = verify_outputs_exist(project_name)
         results.append(("Output structure", structure_result))
     except Exception as e:
         logger.error(f"Error during output structure validation: {e}", exc_info=True)
         results.append(("Output structure", False))
-
-    project_root = _project_root(project_name)
-    manuscript_dir = project_root / "manuscript"
 
     try:
         registry_path = project_root / "output" / "figures" / "figure_registry.json"
@@ -419,6 +432,9 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
         logger.error(f"Error during evidence registry validation: {e}", exc_info=True)
         results.append(("Evidence registry", False))
         output_statistics = {}
+
+    if claim_report is not None:
+        output_statistics["claim_verification"] = claim_report.summary()
 
     output_dir = project_root / "output"
 

@@ -21,12 +21,12 @@
 | Field | Value |
 | --- | --- |
 | Title | A template/ approach to Reproducible Generative Research |
-| Version | 1.0.8 |
+| Version | 1.0.9 |
 | Concept DOI | 10.5281/zenodo.20419007 |
-| Version DOI | 10.5281/zenodo.20932076 |
-| GitHub | [https://github.com/docxology/template_template/releases/tag/v1.0.8](https://github.com/docxology/template_template/releases/tag/v1.0.8) |
+| Version DOI | 10.5281/zenodo.20976048 |
+| GitHub | [https://github.com/docxology/template_template/releases/tag/v1.0.9](https://github.com/docxology/template_template/releases/tag/v1.0.9) |
 | Zenodo | [https://zenodo.org/records/20419007](https://zenodo.org/records/20419007) |
-| SHA-256 | `b9bc5cf3bedcb84a…` |
+| SHA-256 | `535bd80943d0ae9f…` |
 | SHA-512 | pending |
 
 ```{=latex}

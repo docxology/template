@@ -18,12 +18,14 @@ The authoring boundary tokens for this section are {{AUTHORING_BOUNDARY_TERM_1}}
 3. Update `contribution_claims` with domain-specific evidence pointers
 4. Add domain validators beyond the exemplar's generic gates
 5. Replace or extend `src/integrity.py` dimensions when the fork introduces new failure modes
-6. Regenerate all outputs through the pipeline:
+6. Update `domain_profile.yaml`, `src/domain_adapter.py`, and `docs/domain_fork_guide.md` when the analogy is forked into a new domain
+7. Keep `steganography` and `llm` policy blocks explicit when the secure pipeline or optional review path is used
+8. Regenerate all outputs through the pipeline:
    ```bash
    uv run python scripts/refinement_analysis.py
    uv run python scripts/z_generate_manuscript_variables.py
    ```
-7. Do not hand-edit generated manuscript, PDFs, or figures
+9. Do not hand-edit generated manuscript, PDFs, or figures
 
 Do not hard-code equation, figure, or table numbers in prose. Use `[@eq:...]`, `[@fig:...]`, `[@tbl:...]`, and `[@sec:...]` so the renderer owns numbering and the tests can detect dangling references.
 

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  26 JUN 2026 07:03
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  27 JUN 2026 14:01
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1584,6 +1584,9 @@ t/slides/08e_appendix_docs_slides.vrb) [2
 ] [3
 
 
+] [4
+
+
 ]
 \tf@nav=\write5
 \openout5 = `08e_appendix_docs_slides.nav'.
@@ -1603,13 +1606,13 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 30911 strings out of 468168
- 621833 string characters out of 5432815
- 1174830 words of memory out of 5000000
- 59119 multiletter control sequences out of 15000+600000
+ 30913 strings out of 468168
+ 621849 string characters out of 5432815
+ 1176875 words of memory out of 5000000
+ 59121 multiletter control sequences out of 15000+600000
  628413 words of font info for 54 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1108b,623s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
-te_template/output/slides/08e_appendix_docs_slides.pdf (3 pages).
+te_template/output/slides/08e_appendix_docs_slides.pdf (4 pages).

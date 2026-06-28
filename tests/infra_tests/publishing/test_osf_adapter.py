@@ -4,6 +4,7 @@ No mocks — the real HTTP path runs against a local ``pytest-httpserver``.
 OSF splits metadata (api base) and file I/O (files base); both point at the
 same local server here with distinct paths.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -52,12 +53,10 @@ def test_token_resolved_from_env() -> None:
 
 
 def test_create_node_and_upload(httpserver: HTTPServer, single_file: Path) -> None:
-    httpserver.expect_request("/v2/nodes/", method="POST").respond_with_json(
-        {"data": {"id": "ab12c", "type": "nodes"}}
+    httpserver.expect_request("/v2/nodes/", method="POST").respond_with_json({"data": {"id": "ab12c", "type": "nodes"}})
+    httpserver.expect_request("/v1/resources/ab12c/providers/osfstorage/", method="PUT").respond_with_json(
+        {"data": {"id": "osfstorage/xyz"}}, status=201
     )
-    httpserver.expect_request(
-        "/v1/resources/ab12c/providers/osfstorage/", method="PUT"
-    ).respond_with_json({"data": {"id": "osfstorage/xyz"}}, status=201)
 
     adapter = OSFAdapter(
         OSFConfig(
@@ -76,9 +75,9 @@ def test_create_node_and_upload(httpserver: HTTPServer, single_file: Path) -> No
 
 def test_existing_node_skips_creation(httpserver: HTTPServer, bundle_dir: Path) -> None:
     # No /v2/nodes/ handler registered — creation must NOT be called.
-    httpserver.expect_request(
-        "/v1/resources/zzzzz/providers/osfstorage/", method="PUT"
-    ).respond_with_json({"data": {"id": "ok"}}, status=201)
+    httpserver.expect_request("/v1/resources/zzzzz/providers/osfstorage/", method="PUT").respond_with_json(
+        {"data": {"id": "ok"}}, status=201
+    )
 
     adapter = OSFAdapter(
         OSFConfig(
@@ -95,9 +94,7 @@ def test_existing_node_skips_creation(httpserver: HTTPServer, bundle_dir: Path) 
 
 
 def test_node_creation_http_error(httpserver: HTTPServer, single_file: Path) -> None:
-    httpserver.expect_request("/v2/nodes/", method="POST").respond_with_data(
-        "unauthorized", status=401
-    )
+    httpserver.expect_request("/v2/nodes/", method="POST").respond_with_data("unauthorized", status=401)
     adapter = OSFAdapter(
         OSFConfig(
             title="x",

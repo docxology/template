@@ -153,11 +153,14 @@ signatures. All 23 infrastructure modules carry \texttt{AGENTS.md} and
 no documentation blind spots.
 
 This three-tier model is, to our knowledge, novel in the research
-software engineering literature. The scale of the
-investment---approximately 170 documentation files across
-\texttt{docs/}, \texttt{AGENTS.md}/\texttt{README.md} pairs, and
-per-module skill descriptors---represents a deliberate commitment to
-machine-readable context that reduces hallucination surface area.
+software engineering literature. The scale of the investment is
+substantial: \texttt{390} Markdown files under \texttt{docs/} alone,
+plus an \texttt{AGENTS.md}/\texttt{README.md} pair in every directory
+and a \texttt{SKILL.md} descriptor on every infrastructure module. That
+count is itself injected from live introspection---the manuscript
+refuses to quote a documentation total it cannot recompute---and it
+represents a deliberate commitment to machine-readable context that
+shrinks the surface on which an agent can hallucinate.
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{The Learning Curve}

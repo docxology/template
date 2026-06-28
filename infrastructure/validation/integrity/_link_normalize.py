@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 
 _PROJECT_BUCKETS: frozenset[str] = frozenset(
@@ -9,29 +10,37 @@ _PROJECT_BUCKETS: frozenset[str] = frozenset(
 )
 
 
-def _get_actual_project_names(repo_root: Path) -> list[str]:
-    """Return discoverable project path segments for template substitution."""
+@lru_cache(maxsize=32)
+def _get_actual_project_names_cached(repo_root_key: str) -> tuple[str, ...]:
     from infrastructure.project.discovery import discover_projects
 
     names: list[str] = []
     seen: set[str] = set()
-    for project in discover_projects(repo_root):
+    for project in discover_projects(Path(repo_root_key)):
         for candidate in (project.qualified_name, project.name):
             if candidate and candidate not in seen:
                 names.append(candidate)
                 seen.add(candidate)
-    return names
+    return tuple(names)
 
 
-def _nearest_project_root(source_file: Path | None, repo_root: Path) -> Path | None:
-    """Return the containing project root for docs under ``projects/``."""
-    if source_file is None:
-        return None
+def _get_actual_project_names(repo_root: Path) -> list[str]:
+    """Return discoverable project path segments for template substitution."""
+    repo_root_key = str(repo_root if repo_root.is_absolute() else repo_root.resolve())
+    return list(_get_actual_project_names_cached(repo_root_key))
 
+
+@lru_cache(maxsize=4096)
+def _nearest_project_root_cached(source_file_key: str, repo_root_key: str) -> str | None:
+    source_file = Path(source_file_key)
+    repo_root = Path(repo_root_key)
     try:
-        relative = source_file.resolve().relative_to(repo_root.resolve())
+        relative = source_file.relative_to(repo_root)
     except ValueError:
-        return None
+        try:
+            relative = source_file.resolve().relative_to(repo_root.resolve())
+        except ValueError:
+            return None
 
     parts = relative.parts
     if len(parts) < 2 or parts[0] != "projects":
@@ -40,12 +49,22 @@ def _nearest_project_root(source_file: Path | None, repo_root: Path) -> Path | N
     if parts[1] in _PROJECT_BUCKETS:
         if len(parts) < 4:
             return None
-        return repo_root / "projects" / parts[1] / parts[2]
+        return str(repo_root / "projects" / parts[1] / parts[2])
 
     if len(parts) < 3 or not (repo_root / "projects" / parts[1]).is_dir():
         return None
 
-    return repo_root / "projects" / parts[1]
+    return str(repo_root / "projects" / parts[1])
+
+
+def _nearest_project_root(source_file: Path | None, repo_root: Path) -> Path | None:
+    """Return the containing project root for docs under ``projects/``."""
+    if source_file is None:
+        return None
+    source_file_key = str(source_file if source_file.is_absolute() else source_file.resolve())
+    repo_root_key = str(repo_root if repo_root.is_absolute() else repo_root.resolve())
+    project_root = _nearest_project_root_cached(source_file_key, repo_root_key)
+    return Path(project_root) if project_root else None
 
 
 def _resolve_template_path(path_ref: str, repo_root: Path, source_file: Path | None = None) -> Path | None:

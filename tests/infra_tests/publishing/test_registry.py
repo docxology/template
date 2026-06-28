@@ -89,9 +89,7 @@ def test_first_class_platforms_includes_expected() -> None:
 def test_first_class_platforms_no_documented_entries() -> None:
     """first_class_platforms() must not include any DOCUMENTED-tier entries."""
     for p in first_class_platforms():
-        assert p.tier == PublishingTier.FIRST_CLASS, (
-            f"{p.name} has tier {p.tier!r}, expected FIRST_CLASS"
-        )
+        assert p.tier == PublishingTier.FIRST_CLASS, f"{p.name} has tier {p.tier!r}, expected FIRST_CLASS"
 
 
 # ---------------------------------------------------------------------------
@@ -111,9 +109,7 @@ def test_documented_platforms_returns_tuple() -> None:
 def test_documented_platforms_are_only_documented_tier() -> None:
     """Every entry returned by documented_platforms() must be DOCUMENTED tier."""
     for p in documented_platforms():
-        assert p.tier == PublishingTier.DOCUMENTED, (
-            f"{p.name} has tier {p.tier!r}, expected DOCUMENTED"
-        )
+        assert p.tier == PublishingTier.DOCUMENTED, f"{p.name} has tier {p.tier!r}, expected DOCUMENTED"
 
 
 def test_documented_platforms_includes_expected() -> None:
@@ -286,9 +282,7 @@ def test_all_platforms_have_non_empty_adapter_module() -> None:
 def test_all_first_class_support_dry_run() -> None:
     """Every FIRST_CLASS platform must have supports_dry_run=True."""
     for p in first_class_platforms():
-        assert p.supports_dry_run is True, (
-            f"{p.name}: FIRST_CLASS platforms must support dry_run"
-        )
+        assert p.supports_dry_run is True, f"{p.name}: FIRST_CLASS platforms must support dry_run"
 
 
 def test_all_platforms_env_vars_are_tuples_of_strings() -> None:
@@ -296,9 +290,7 @@ def test_all_platforms_env_vars_are_tuples_of_strings() -> None:
     for p in PLATFORM_REGISTRY:
         assert isinstance(p.env_vars, tuple), f"{p.name}: env_vars must be a tuple"
         for var in p.env_vars:
-            assert isinstance(var, str), (
-                f"{p.name}: each env_var must be a string, got {type(var)}"
-            )
+            assert isinstance(var, str), f"{p.name}: each env_var must be a string, got {type(var)}"
 
 
 def test_all_platforms_tags_are_tuples_of_strings() -> None:
@@ -306,20 +298,14 @@ def test_all_platforms_tags_are_tuples_of_strings() -> None:
     for p in PLATFORM_REGISTRY:
         assert isinstance(p.tags, tuple), f"{p.name}: tags must be a tuple"
         for tag in p.tags:
-            assert isinstance(tag, str), (
-                f"{p.name}: each tag must be a string, got {type(tag)}"
-            )
+            assert isinstance(tag, str), f"{p.name}: each tag must be a string, got {type(tag)}"
 
 
 def test_all_platforms_boolean_flags_are_bool() -> None:
     """requires_network and supports_dry_run must be actual booleans."""
     for p in PLATFORM_REGISTRY:
-        assert isinstance(p.requires_network, bool), (
-            f"{p.name}: requires_network must be bool"
-        )
-        assert isinstance(p.supports_dry_run, bool), (
-            f"{p.name}: supports_dry_run must be bool"
-        )
+        assert isinstance(p.requires_network, bool), f"{p.name}: requires_network must be bool"
+        assert isinstance(p.supports_dry_run, bool), f"{p.name}: supports_dry_run must be bool"
 
 
 # ---------------------------------------------------------------------------

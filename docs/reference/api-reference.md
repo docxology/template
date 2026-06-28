@@ -1283,6 +1283,56 @@ Persist *report* as pretty-printed JSON.
 
 ## Package: `infrastructure.publishing`
 
+### `ArchivalProvider`
+
+*class — defined in `infrastructure.publishing.archival`*
+
+```python
+class ArchivalProvider(Protocol)
+```
+
+Protocol every archival provider must implement.
+
+### `ArchivalReceipt`
+
+*class — defined in `infrastructure.publishing.archival`*
+
+```python
+class ArchivalReceipt
+```
+
+Structured record of a single archival deposit attempt.
+
+### `ArchivalRun`
+
+*class — defined in `infrastructure.publishing.archival`*
+
+```python
+class ArchivalRun
+```
+
+Aggregate result of an ``archive_publication`` call.
+
+### `archive_publication`
+
+*function — defined in `infrastructure.publishing.archival`*
+
+```python
+archive_publication(bundle: Path, *, providers: list[ArchivalProvider], dry_run: bool=True, output_receipts_path: Path | None=None) -> ArchivalRun
+```
+
+Mirror a publication bundle to N independent archival targets.
+
+### `build_dist`
+
+*function — defined in `infrastructure.publishing.pypi.build`*
+
+```python
+build_dist(project_root: Path, *, dist_dir: Path | None=None, clean: bool=True) -> Path
+```
+
+Build wheel + sdist using ``uv build``.
+
 ### `calculate_complexity_score`
 
 *function — defined in `infrastructure.publishing._metadata_reporting`*
@@ -1293,6 +1343,16 @@ calculate_complexity_score(metadata: PublicationMetadata) -> int
 
 Backwards-compatible alias — prefer ``calculate_metadata_complexity_score``.
 
+### `check_dist`
+
+*function — defined in `infrastructure.publishing.pypi.upload`*
+
+```python
+check_dist(dist_dir: Path) -> list[str]
+```
+
+Run ``twine check`` on all distribution files in *dist_dir*.
+
 ### `CitationStyle`
 
 *class — defined in `infrastructure.publishing.models`*
@@ -1302,6 +1362,14 @@ class CitationStyle
 ```
 
 Container for citation style configuration.
+
+### `CloudflarePagesAdapter`
+
+*class — defined in `infrastructure.publishing.static_site.cloudflare_pages`*
+
+```python
+class CloudflarePagesAdapter(config: SiteDeployConfig)
+```
 
 ### `create_academic_profile_data`
 
@@ -1363,6 +1431,16 @@ create_submission_checklist(metadata: PublicationMetadata) -> str
 
 Create a submission checklist for academic conferences/journals.
 
+### `documented_platforms`
+
+*function — defined in `infrastructure.publishing.registry`*
+
+```python
+documented_platforms() -> tuple[PlatformInfo, ...]
+```
+
+Return only documented (future) platforms.
+
 ### `extract_citations_from_markdown`
 
 *function — defined in `infrastructure.publishing.citations`*
@@ -1382,6 +1460,16 @@ extract_publication_metadata(markdown_files: list[Path]) -> PublicationMetadata
 ```
 
 Extract publication metadata from markdown files.
+
+### `first_class_platforms`
+
+*function — defined in `infrastructure.publishing.registry`*
+
+```python
+first_class_platforms() -> tuple[PlatformInfo, ...]
+```
+
+Return only first-class (implemented) platforms.
 
 ### `generate_citation_apa`
 
@@ -1453,6 +1541,80 @@ generate_publication_summary(metadata: PublicationMetadata) -> str
 
 Generate a publication summary for repository README.
 
+### `get_platform`
+
+*function — defined in `infrastructure.publishing.registry`*
+
+```python
+get_platform(name: str) -> PlatformInfo
+```
+
+Return PlatformInfo by name. Raises KeyError if not found.
+
+### `get_static_site_adapter`
+
+*function — defined in `infrastructure.publishing.static_site.registry`*
+
+```python
+get_adapter(config: SiteDeployConfig) -> GitHubPagesAdapter | CloudflarePagesAdapter | NetlifyAdapter
+```
+
+Return the right adapter instance for config.hosting.
+
+### `GitHubPagesAdapter`
+
+*class — defined in `infrastructure.publishing.static_site.github_pages`*
+
+```python
+class GitHubPagesAdapter(config: SiteDeployConfig)
+```
+
+### `list_platforms`
+
+*function — defined in `infrastructure.publishing.registry`*
+
+```python
+list_platforms(*, tier: PublishingTier | None=None, tag: str | None=None) -> tuple[PlatformInfo, ...]
+```
+
+Return platforms, optionally filtered by tier or tag.
+
+### `load_credentials`
+
+*function — defined in `infrastructure.publishing.archival`*
+
+```python
+load_credentials(*, env: dict[str, str] | None=None, credentials_path: Path | None=None) -> ArchivalCredentials
+```
+
+Read provider credentials from env vars first, then a JSON file.
+
+### `NetlifyAdapter`
+
+*class — defined in `infrastructure.publishing.static_site.netlify`*
+
+```python
+class NetlifyAdapter(config: SiteDeployConfig)
+```
+
+### `PLATFORM_REGISTRY`
+
+*constant — defined in `infrastructure.publishing.registry`*
+
+```python
+PLATFORM_REGISTRY: tuple[PlatformInfo, ...] = (PlatformInfo(name='zenodo', tier=PublishingTier.FIRST_CLASS, description='CE...
+```
+
+### `PlatformInfo`
+
+*class — defined in `infrastructure.publishing.registry`*
+
+```python
+class PlatformInfo
+```
+
+Metadata about a publishing platform adapter.
+
 ### `prepare_arxiv_submission`
 
 *function — defined in `infrastructure.publishing.arxiv.submission`*
@@ -1482,6 +1644,62 @@ publish_to_zenodo(metadata: PublicationMetadata, file_paths: list[Path], access_
 ```
 
 Publish research artifacts to Zenodo and return DOI plus deposition id.
+
+### `PublishingTier`
+
+*class — defined in `infrastructure.publishing.registry`*
+
+```python
+class PublishingTier(str, Enum)
+```
+
+### `PyPIAdapter`
+
+*class — defined in `infrastructure.publishing.pypi.adapter`*
+
+```python
+class PyPIAdapter(config: PyPIConfig | None=None, *, env: dict[str, str] | None=None)
+```
+
+Build → check → upload orchestrator for PyPI / TestPyPI.
+
+### `SiteDeployConfig`
+
+*class — defined in `infrastructure.publishing.static_site.models`*
+
+```python
+class SiteDeployConfig
+```
+
+Configuration for a static-site deployment.
+
+### `SiteDeployResult`
+
+*class — defined in `infrastructure.publishing.static_site.models`*
+
+```python
+class SiteDeployResult
+```
+
+Result of a static-site deploy attempt.
+
+### `SiteHosting`
+
+*class — defined in `infrastructure.publishing.static_site.models`*
+
+```python
+class SiteHosting(str, Enum)
+```
+
+### `upload_dist`
+
+*function — defined in `infrastructure.publishing.pypi.upload`*
+
+```python
+upload_dist(dist_dir: Path, config: PyPIConfig, *, dry_run: bool=True) -> PyPIResult
+```
+
+Upload wheel + sdist artefacts to PyPI or TestPyPI via twine.
 
 ### `validate_doi`
 

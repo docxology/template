@@ -179,8 +179,8 @@
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>23</code> <code>discover_infrastructure_modules(repo_root)</code>.
-File totals use <code>567</code> Python sources across infra +
-<code>7,375</code> infra tests guarding them. Documentation Duality =
+File totals use <code>604</code> Python sources across infra +
+<code>7,780</code> infra tests guarding them. Documentation Duality =
 paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <code>SKILL.md</code> manifests feed
 <code>python -m infrastructure.skills</code>.</p>
@@ -204,7 +204,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <tbody>
 <tr>
 <td><code>autoresearch</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">10</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>build_autoresearch_plan</code>, readiness validation CLI</td>
@@ -225,7 +225,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">105</td>
+<td style="text-align: center;">109</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -291,14 +291,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>prose</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">9</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Markdown readability + prose tooling</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">44</td>
+<td style="text-align: center;">71</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -312,7 +312,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">49</td>
+<td style="text-align: center;">50</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
@@ -341,7 +341,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>sia</code></td>
-<td style="text-align: center;">9</td>
+<td style="text-align: center;">10</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Self-Improving-AI loop: task validation, harness, metric
@@ -349,7 +349,7 @@ capture</td>
 </tr>
 <tr>
 <td><code>skills</code></td>
-<td style="text-align: center;">6</td>
+<td style="text-align: center;">7</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_skills</code>, SKILL manifest regeneration</td>
@@ -374,8 +374,8 @@ capture</td>
 <p>Below, <code>${module_*_python_file_count}</code> placeholders expand
 per subdirectory at render-time.</p>
 <h3
-id="infrastructure.autoresearch-8-files"><code>infrastructure.autoresearch</code>
-(8 files)</h3>
+id="infrastructure.autoresearch-10-files"><code>infrastructure.autoresearch</code>
+(10 files)</h3>
 <p>Readiness planner, validation CLI, and report models for
 AutoResearch-style project promotion
 (<code>infrastructure/autoresearch/</code>).</p>
@@ -391,8 +391,8 @@ id="infrastructureconfig-non-package-subdirectory"><code>infrastructure/config</
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 id="infrastructure.core-105-files"><code>infrastructure.core</code>
-(105 files)</h3>
+<h3 id="infrastructure.core-109-files"><code>infrastructure.core</code>
+(109 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
@@ -438,13 +438,13 @@ id="infrastructure.project-27-files"><code>infrastructure.project</code>
 <p>Canonical discovery (<code>discover_projects</code>) enforcing
 <code>src/</code> + <code>tests/</code>, slug validation, nested WIP
 namespaces.</p>
-<h3 id="infrastructure.prose-8-files"><code>infrastructure.prose</code>
-(8 files)</h3>
+<h3 id="infrastructure.prose-9-files"><code>infrastructure.prose</code>
+(9 files)</h3>
 <p>Readability metrics + Markdown tooling for prose-centric manuscripts
 / CI gates.</p>
 <h3
-id="infrastructure.publishing-44-files"><code>infrastructure.publishing</code>
-(44 files)</h3>
+id="infrastructure.publishing-71-files"><code>infrastructure.publishing</code>
+(71 files)</h3>
 <p>Metadata models, APA/BibTeX/MLA formatters, optional Zenodo
 clients.</p>
 <h3
@@ -453,8 +453,8 @@ id="infrastructure.reference-16-files"><code>infrastructure.reference</code>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
 <h3
-id="infrastructure.rendering-49-files"><code>infrastructure.rendering</code>
-(49 files)</h3>
+id="infrastructure.rendering-50-files"><code>infrastructure.rendering</code>
+(50 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
 <h3
@@ -474,13 +474,13 @@ id="infrastructure.search-44-files"><code>infrastructure.search</code>
 backends, caches) powering archive-only
 <code>template_search_project</code> literature workflows when copied
 locally from <code>projects/archive/</code>.</p>
-<h3 id="infrastructure.sia-9-files"><code>infrastructure.sia</code> (9
+<h3 id="infrastructure.sia-10-files"><code>infrastructure.sia</code> (10
 files)</h3>
 <p>Generic Self-Improving-AI loop utilities: task-layout validation,
 execution harness, and metric capture reused by
 <code>template_sia</code> (fixture-replay by default).</p>
 <h3
-id="infrastructure.skills-6-files"><code>infrastructure.skills</code> (6
+id="infrastructure.skills-7-files"><code>infrastructure.skills</code> (7
 files)</h3>
 <p>Discovers <code>SKILL.md</code> frontmatter →
 <code>.cursor/skill_manifest.json</code>.</p>

@@ -1,406 +1,107 @@
 {
   "all_expected_failures_documented": true,
   "all_expected_failures_observed": true,
-  "counterexample_count": 25,
-  "covered_tracks": [
-    "adversarial_audit",
-    "artifact_diffoscope",
-    "artifact_license",
-    "causal_ablation",
-    "counterexample",
-    "evidence_fields",
-    "gate_ergonomics",
-    "interop",
-    "model_checking",
-    "proof_extraction",
-    "provenance",
-    "release_bundle",
-    "release_notes",
-    "replay_matrix",
-    "scholarship",
-    "security_posture",
-    "sensitivity",
-    "state_space_catalog",
-    "theorem_traceability",
-    "uncertainty"
-  ],
+  "counterexample_count": 11,
   "rows": [
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "missing_sheaf_track_producer",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_manuscript.canonical_sheaf_tracks_bound",
-      "id": "missing_sheaf_track_producer",
-      "mutation": "missing_sheaf_track_producer",
-      "observed": "expected_failure",
-      "promoted_track": "provenance",
-      "target_gate": "validate_manuscript.canonical_sheaf_tracks_bound",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "missing_manuscript_binding",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_manuscript.canonical_sheaf_tracks_bound",
-      "id": "missing_manuscript_binding",
-      "mutation": "missing_manuscript_binding",
-      "observed": "expected_failure",
-      "promoted_track": "sensitivity",
-      "target_gate": "validate_manuscript.canonical_sheaf_tracks_bound",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "missing_typed_claim",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.canonical_sheaf_track_schemas",
-      "id": "missing_typed_claim",
-      "mutation": "missing_typed_claim",
-      "observed": "expected_failure",
-      "promoted_track": "evidence_fields",
-      "target_gate": "validate_outputs.canonical_sheaf_track_schemas",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "stale_semantic_certificate",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
       "gate": "validate_manuscript.semantic_sheaf_gluing",
       "id": "stale_semantic_certificate",
-      "mutation": "stale_semantic_certificate",
+      "mutation": "change a saved artifact producer in sheaf_gluing_certificate.json",
       "observed": "expected_failure",
-      "promoted_track": "semantic",
-      "target_gate": "validate_manuscript.semantic_sheaf_gluing",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_semantic_sheaf.py::test_semantic_gluing_rejects_stale_saved_certificate"
     },
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "dependency_edge_loss",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.validation_dependency_graph_schema",
-      "id": "dependency_edge_loss",
-      "mutation": "dependency_edge_loss",
+      "gate": "validate_manuscript.gnn_concordance",
+      "id": "wrong_si_ontology_term",
+      "mutation": "map pi to HiddenState instead of PolicyPosterior",
       "observed": "expected_failure",
-      "promoted_track": "dependency",
-      "target_gate": "validate_outputs.validation_dependency_graph_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_semantic_sheaf.py::test_semantic_gluing_rejects_wrong_si_ontology"
     },
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "release_bundle_parity_failure",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.release_bundle_manifest_schema",
-      "id": "release_bundle_parity_failure",
-      "mutation": "release_bundle_parity_failure",
+      "gate": "validate_outputs.si_graph_world_schema",
+      "id": "graph_world_summary_trace_mismatch",
+      "mutation": "change summary step count without changing trace rows",
       "observed": "expected_failure",
-      "promoted_track": "release_bundle",
-      "target_gate": "validate_outputs.release_bundle_manifest_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_semantic_extensions.py::test_validate_outputs_rejects_graph_world_summary_trace_mismatch"
     },
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "replay_mismatch",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.replay_matrix_schema",
-      "id": "replay_mismatch",
-      "mutation": "replay_mismatch",
+      "gate": "validate_manuscript.claim_ledger_valid",
+      "id": "claim_expected_value_mismatch",
+      "mutation": "set typed claim expected value to an impossible number",
       "observed": "expected_failure",
-      "promoted_track": "replay_matrix",
-      "target_gate": "validate_outputs.replay_matrix_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_semantic_sheaf.py::test_typed_claim_evidence_rejects_wrong_expected_value"
     },
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "missing_sensitivity_cell",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.sensitivity_sweep_schema",
-      "id": "missing_sensitivity_cell",
-      "mutation": "missing_sensitivity_cell",
+      "gate": "validate_outputs.artifact_provenance_schema",
+      "id": "stale_provenance_hash",
+      "mutation": "replace a saved artifact sha256 with a fake digest",
       "observed": "expected_failure",
-      "promoted_track": "sensitivity",
-      "target_gate": "validate_outputs.sensitivity_sweep_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_validation_spine.py::test_validation_spine_rejects_stale_provenance_hash"
     },
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "unnormalized_uncertainty_row",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.uncertainty_summary_schema",
-      "id": "unnormalized_uncertainty_row",
-      "mutation": "unnormalized_uncertainty_row",
+      "gate": "validate_outputs.artifact_provenance_schema",
+      "id": "stale_seed_config_provenance",
+      "mutation": "replace deterministic seed and config digest fields",
       "observed": "expected_failure",
-      "promoted_track": "uncertainty",
-      "target_gate": "validate_outputs.uncertainty_summary_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_validation_spine.py::test_validation_spine_rejects_stale_seed_config_provenance"
     },
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "known_bad_counterexample_passed",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.counterexample_matrix_schema",
-      "id": "known_bad_counterexample_passed",
-      "mutation": "known_bad_counterexample_passed",
+      "gate": "validate_outputs.animation_frame_deltas_schema",
+      "id": "static_animation_delta_manifest",
+      "mutation": "mark an adjacent GIF frame delta as static",
       "observed": "expected_failure",
-      "promoted_track": "counterexample",
-      "target_gate": "validate_outputs.counterexample_matrix_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_semantic_extensions.py::test_animation_frame_delta_manifest_rejects_static_manifest"
     },
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "missed_model_checking_counterexample",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.model_checking_witnesses_schema",
-      "id": "missed_model_checking_counterexample",
-      "mutation": "missed_model_checking_counterexample",
+      "gate": "validate_outputs.pymdp_runtime_diagnostics_schema",
+      "id": "unexpected_pymdp_runtime_warning",
+      "mutation": "emit an uncatalogued warning during pymdp Agent construction",
       "observed": "expected_failure",
-      "promoted_track": "model_checking",
-      "target_gate": "validate_outputs.model_checking_witnesses_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_semantic_extensions.py::test_pymdp_runtime_diagnostics_captures_known_warning_and_rejects_unexpected"
     },
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "interop_shape_loss",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.interop_roundtrip_schema",
-      "id": "interop_shape_loss",
-      "mutation": "interop_shape_loss",
+      "gate": "validate_outputs.pymdp_policy_posterior_grid_schema",
+      "id": "unnormalized_policy_posterior",
+      "mutation": "replace a measured q_pi row with an unnormalized vector",
       "observed": "expected_failure",
-      "promoted_track": "interop",
-      "target_gate": "validate_outputs.interop_roundtrip_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_semantic_sheaf.py::test_semantic_gluing_rejects_mutated_policy_posterior"
     },
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "adversarial_known_bad_passes",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.adversarial_audit_schema",
-      "id": "adversarial_known_bad_passes",
-      "mutation": "adversarial_known_bad_passes",
+      "gate": "validate_outputs.si_graph_world_topology_traces_schema",
+      "id": "graph_world_topology_trace_mismatch",
+      "mutation": "change a topology trace length without changing its summary row",
       "observed": "expected_failure",
-      "promoted_track": "adversarial_audit",
-      "target_gate": "validate_outputs.adversarial_audit_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_roadmap_promotion.py::test_toy_sweep_negative_controls"
     },
     {
       "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "theorem_traceability_unlinked",
-        "scope": "deterministic_toy_audit"
-      },
       "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.theorem_traceability_matrix_schema",
-      "id": "theorem_traceability_unlinked",
-      "mutation": "theorem_traceability_unlinked",
+      "gate": "validate_manuscript.manuscript_staleness_report",
+      "id": "stale_hydrated_manuscript_value",
+      "mutation": "replace a saved hydrated token expectation",
       "observed": "expected_failure",
-      "promoted_track": "theorem_traceability",
-      "target_gate": "validate_outputs.theorem_traceability_matrix_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "gate_ergonomics_unindexed",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.validation_gate_index_schema",
-      "id": "gate_ergonomics_unindexed",
-      "mutation": "gate_ergonomics_unindexed",
-      "observed": "expected_failure",
-      "promoted_track": "gate_ergonomics",
-      "target_gate": "validate_outputs.validation_gate_index_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "artifact_diffoscope_missed_hash_drift",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.artifact_diffoscope_schema",
-      "id": "artifact_diffoscope_missed_hash_drift",
-      "mutation": "artifact_diffoscope_missed_hash_drift",
-      "observed": "expected_failure",
-      "promoted_track": "artifact_diffoscope",
-      "target_gate": "validate_outputs.artifact_diffoscope_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "artifact_contract_index_row_only_forgery",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.artifact_contract_index_schema",
-      "id": "artifact_contract_index_row_only_forgery",
-      "mutation": "artifact_contract_index_row_only_forgery",
-      "observed": "expected_failure",
-      "promoted_track": "artifact_contract_index",
-      "target_gate": "validate_outputs.artifact_contract_index_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "missing_scholarship_source_binding",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.scholarship_source_matrix_schema",
-      "id": "missing_scholarship_source_binding",
-      "mutation": "missing_scholarship_source_binding",
-      "observed": "expected_failure",
-      "promoted_track": "scholarship",
-      "target_gate": "validate_outputs.scholarship_source_matrix_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "proof_extraction_missing_statement",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.proof_extraction_index_schema",
-      "id": "proof_extraction_missing_statement",
-      "mutation": "proof_extraction_missing_statement",
-      "observed": "expected_failure",
-      "promoted_track": "proof_extraction",
-      "target_gate": "validate_outputs.proof_extraction_index_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "state_space_catalog_missing_finite_space",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.state_space_catalog_schema",
-      "id": "state_space_catalog_missing_finite_space",
-      "mutation": "state_space_catalog_missing_finite_space",
-      "observed": "expected_failure",
-      "promoted_track": "state_space_catalog",
-      "target_gate": "validate_outputs.state_space_catalog_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "causal_ablation_missing_cell",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.causal_ablation_matrix_schema",
-      "id": "causal_ablation_missing_cell",
-      "mutation": "causal_ablation_missing_cell",
-      "observed": "expected_failure",
-      "promoted_track": "causal_ablation",
-      "target_gate": "validate_outputs.causal_ablation_matrix_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "artifact_license_unsafe_artifact",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.artifact_license_audit_schema",
-      "id": "artifact_license_unsafe_artifact",
-      "mutation": "artifact_license_unsafe_artifact",
-      "observed": "expected_failure",
-      "promoted_track": "artifact_license",
-      "target_gate": "validate_outputs.artifact_license_audit_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "release_notes_claim_failed_gate_passed",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.release_notes_evidence_schema",
-      "id": "release_notes_claim_failed_gate_passed",
-      "mutation": "release_notes_claim_failed_gate_passed",
-      "observed": "expected_failure",
-      "promoted_track": "release_notes",
-      "target_gate": "validate_outputs.release_notes_evidence_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "empirical_adapter_live",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_manuscript.blocked_empirical_adapter",
-      "id": "empirical_adapter_live",
-      "mutation": "empirical_adapter_live",
-      "observed": "expected_failure",
-      "promoted_track": "empirical_adapter",
-      "target_gate": "validate_manuscript.blocked_empirical_adapter",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
-    },
-    {
-      "expected_failure": true,
-      "fixture_payload": {
-        "mutation": "security_posture_aggregate_forgery",
-        "scope": "deterministic_toy_audit"
-      },
-      "fixture_replay_status": "expected_failure_observed",
-      "gate": "validate_outputs.security_posture_audit_schema",
-      "id": "security_posture_aggregate_forgery",
-      "mutation": "security_posture_aggregate_forgery",
-      "observed": "expected_failure",
-      "promoted_track": "security_posture",
-      "target_gate": "validate_outputs.security_posture_audit_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_roadmap_promotion.py::test_integration_audit_negative_controls"
     }
   ],
-  "schema": "template_active_inference.counterexample_matrix.v1",
-  "schema_version": "template_active_inference.canonical_sheaf_tracks.v1"
+  "schema": "template_active_inference.counterexample_matrix.v1"
 }

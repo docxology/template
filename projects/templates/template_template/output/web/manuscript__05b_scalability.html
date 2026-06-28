@@ -184,20 +184,20 @@ code changes, no <code>pyproject.toml</code> modifications, no CI
 configuration updates. The <code>run.sh</code> orchestrator
 automatically discovers new projects and presents them in its
 interactive menu.</p>
-<p>We have validated scaling with 10 canonical exemplars under
+<p>We have validated scaling with 12 canonical exemplars under
 <code>projects/templates/</code>—always present for onboarding and
 tooling—and with this manuscript from
-<code>projects/templates/template_template</code> (89 tests) as a
+<code>projects/templates/template_template</code> (127 tests) as a
 git-tracked public exemplar in the same automated discovery menus.</p>
 <p>Canonical trio:</p>
 <ul>
 <li><strong><code>template_code_project</code></strong>: Numerical
-optimization example with gradient-descent narration, 197 tests, 90%+
+optimization example with gradient-descent narration, 231 tests, 90%+
 coverage. Minimal footprint: compact <code>src/</code>, scripted
 analysis, short manuscript sections.</li>
 <li><strong><code>template_prose_project</code></strong>: Prose-heavy
 manuscript emphasizing narrative structure and bibliography discipline,
-78 tests, 90%+ coverage—tests exercise rendering and Markdown integrity
+120 tests, 90%+ coverage—tests exercise rendering and Markdown integrity
 without heavyweight numerics.</li>
 <li><strong><code>template_autoresearch_project</code></strong>:
 AutoResearch readiness workflow invoking
@@ -214,7 +214,7 @@ analyzes the repository via <code>src/template_template/</code>
 introspection metrics; it now lives alongside the other public exemplars
 under <code>projects/templates/</code>.</p>
 <p>These workspaces share no project-level code—only Layer 1 (23
-infrastructure subdirectories, ~567 Python files)—validating insulation
+infrastructure subdirectories, ~604 Python files)—validating insulation
 between domain repos and reusable services.</p>
 <h3 id="multi-project-orchestration">Multi-Project Orchestration</h3>
 <p>When the <code>--all-projects</code> flag is passed to
@@ -253,14 +253,14 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 <tr>
 <td>Test files</td>
 <td style="text-align: center;">11</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">15</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">17</td>
 </tr>
 <tr>
 <td>Test count</td>
-<td style="text-align: center;">197</td>
-<td style="text-align: center;">78</td>
-<td style="text-align: center;">157</td>
+<td style="text-align: center;">231</td>
+<td style="text-align: center;">120</td>
+<td style="text-align: center;">296</td>
 </tr>
 <tr>
 <td>Manuscript chapters</td>

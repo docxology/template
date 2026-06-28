@@ -175,7 +175,7 @@
       "deferred_candidate_budget_check"
     ],
     "experiment_protocol": "Load the local balanced small MNIST subset, evaluate bounded numpy neural-network candidates without external calls or runtime downloads, select the highest test accuracy with deterministic parameter-count tie-breaking, then require readiness reports and evidence-linked claims to pass.",
-    "project_name": "templates/template_autoresearch_project",
+    "project_name": "template_autoresearch_project",
     "project_root": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoresearch_project",
     "quality_checks": [
       "domain_profile",
@@ -470,7 +470,7 @@
       }
     ]
   },
-  "project_name": "templates/template_autoresearch_project",
+  "project_name": "template_autoresearch_project",
   "summary": {
     "errors": 0,
     "issues": 0,

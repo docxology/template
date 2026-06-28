@@ -1,0 +1,13 @@
+{
+  "mode": "REAL UPLOAD",
+  "timestamp_utc": "2026-06-27T20:52:39Z",
+  "results": {
+    "testpypi": {
+      "status": "ok",
+      "package": "template-gold-refinement",
+      "version": "0.1.0",
+      "url": "https://test.pypi.org/simple/template-gold-refinement/",
+      "error": null
+    }
+  }
+}

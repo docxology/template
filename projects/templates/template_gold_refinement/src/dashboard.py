@@ -13,7 +13,7 @@ from typing import Any
 
 try:
     from .refinery import run_refinery
-except ImportError:  # pragma: no cover
+except ImportError:
     from refinery import run_refinery  # type: ignore[no-redef]
 
 import logging
@@ -26,6 +26,43 @@ def _esc(text: str) -> str:
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
+def _refinery_snapshot(result: Any) -> dict[str, Any]:
+    return {
+        "stage_count": result.stage_count,
+        "final_purity": result.final_purity,
+        "final_karat": result.final_karat.label,
+        "total_purity_gain": result.total_purity_gain,
+        "is_nine_nines_certified": result.is_nine_nines_certified,
+        "purity_sequence": list(result.purity_sequence),
+        "stages": [
+            {
+                "order": stage.order,
+                "name": stage.name,
+                "input_purity": stage.input_purity,
+                "output_purity": stage.output_purity,
+                "karat": stage.karat_grade.label,
+                "metallurgical_operation": stage.metallurgical_operation,
+                "manuscript_operation": stage.manuscript_operation,
+            }
+            for stage in result.stages
+        ],
+    }
+
+
+def _merge_refinery_snapshot(fallback: dict[str, Any], refinement: dict[str, Any] | None) -> dict[str, Any]:
+    if not refinement:
+        return fallback
+    snapshot = dict(fallback)
+    for key, value in refinement.items():
+        if key == "stages" and not value:
+            continue
+        if value is not None:
+            snapshot[key] = value
+    if not isinstance(snapshot.get("stages"), list) or not snapshot["stages"]:
+        snapshot["stages"] = fallback["stages"]
+    return snapshot
+
+
 def build_dashboard_html(
     project_root: Path,
     *,
@@ -34,7 +71,7 @@ def build_dashboard_html(
     evidence_data: dict[str, Any] | None = None,
 ) -> str:
     """Build a self-contained HTML dashboard string."""
-    result = run_refinery()
+    fallback_snapshot = _refinery_snapshot(run_refinery())
 
     # Load data files if not provided
     if refinery_data is None:
@@ -61,16 +98,18 @@ def build_dashboard_html(
         else:
             evidence_data = {}
 
+    refinery_snapshot = _merge_refinery_snapshot(fallback_snapshot, refinery_data)
+
     # Build stage rows
     stage_rows = ""
-    for stage in result.stages:
+    for stage in refinery_snapshot.get("stages", []):
         stage_rows += (
             f"<tr>"
-            f"<td>{stage.order}</td>"
-            f"<td>{_esc(stage.name)}</td>"
-            f"<td>{stage.output_purity:.6f}</td>"
-            f"<td>{_esc(stage.karat_grade.label)}</td>"
-            f"<td>{_esc(stage.metallurgical_operation)}</td>"
+            f"<td>{stage['order']}</td>"
+            f"<td>{_esc(str(stage.get('name', '')))}</td>"
+            f"<td>{float(stage.get('output_purity', 0.0)):.6f}</td>"
+            f"<td>{_esc(str(stage.get('karat', stage.get('karat_grade', ''))))}</td>"
+            f"<td>{_esc(str(stage.get('metallurgical_operation', '')))}</td>"
             f"</tr>"
         )
 
@@ -120,12 +159,12 @@ def build_dashboard_html(
 
 <div>
   <div class="metric">
-    <div class="metric-value">{result.stage_count}</div>
+    <div class="metric-value">{refinery_snapshot["stage_count"]}</div>
     <div class="metric-label">Refinery Stages</div>
   </div>
   <div class="metric">
-    <div class="metric-value">{result.final_purity * 100:.4f}%</div>
-    <div class="metric-label">Final Purity ({result.final_karat.label})</div>
+    <div class="metric-value">{float(refinery_snapshot["final_purity"]) * 100:.4f}%</div>
+    <div class="metric-label">Final Purity ({_esc(str(refinery_snapshot["final_karat"]))})</div>
   </div>
   <div class="metric">
     <div class="metric-value">{(token_data or {}).get("total_tokens", 0)}</div>

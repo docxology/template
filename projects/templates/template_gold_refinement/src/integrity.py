@@ -99,7 +99,7 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
             non_monotone_risk,
             4,
             5,
-            "src/refinery.py::assert_monotone_increase",
+            "src/purity.py::assert_monotone_increase",
             _audit(config, "purity", "tests/test_refinery.py"),
             "source code",
             "source_code",

@@ -71,7 +71,25 @@ class TestDashboardPreloadedData:
         """When all three data args are provided, dashboard skips disk reads."""
         html = build_dashboard_html(
             tmp_path,
-            refinery_data={"stage_count": 5},
+            refinery_data={
+                "stage_count": 1,
+                "final_purity": 0.42,
+                "final_karat": "18K (custom)",
+                "total_purity_gain": 0.32,
+                "is_nine_nines_certified": False,
+                "purity_sequence": [0.1, 0.42],
+                "stages": [
+                    {
+                        "order": 1,
+                        "name": "alchemy",
+                        "input_purity": 0.1,
+                        "output_purity": 0.42,
+                        "karat": "18K (custom)",
+                        "metallurgical_operation": "custom operation",
+                        "manuscript_operation": "custom operation",
+                    }
+                ],
+            },
             token_data={
                 "total_tokens": 8,
                 "section_counts": {"methodology": 5},
@@ -87,6 +105,9 @@ class TestDashboardPreloadedData:
             },
         )
         assert "Gold Refinement Dashboard" in html
+        assert "alchemy" in html
+        assert "42.0000%" in html
+        assert "18K (custom)" in html
         assert "metallurgical_terms" in html
         assert "monotone-purity" in html
         assert "✅" in html

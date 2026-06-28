@@ -1,1 +1,6 @@
-allow_infrastructure_imports: []
+# Declares sanctioned infrastructure imports from this project's domain src/.
+# The drift checker (check_template_drift.py) treats listed files as approved.
+# src/config.py registers this project's config-schema extension with the shared
+# template infrastructure — the intended integration point, not a layer leak.
+allow_infrastructure_imports:
+  - src/config.py

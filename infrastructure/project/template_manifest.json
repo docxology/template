@@ -30,7 +30,7 @@
       "qualified_name": "templates/template_literature_meta_analysis",
       "title": "Literature Meta-Analysis Template",
       "use_when": "Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts.",
-      "test_file_count": 48,
+      "test_file_count": 49,
       "coverage_floor": 90
     },
     {
@@ -70,7 +70,7 @@
       "qualified_name": "templates/template_gold_refinement",
       "title": "Gold Refinement — Metallurgical Manuscript Composition Exemplar",
       "use_when": "Use this template for **analogical manuscript composition research**: projects that map a scientific domain onto a refinement pipeline and generate the manuscript through deterministic mega-madlib token injection.",
-      "test_file_count": 16,
+      "test_file_count": 18,
       "coverage_floor": 90
     },
     {

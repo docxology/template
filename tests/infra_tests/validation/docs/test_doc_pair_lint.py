@@ -55,6 +55,7 @@ def test_generated_and_local_paths_are_excluded() -> None:
     assert is_doc_pair_excluded_path(Path("projects/demo/src/demo.egg-info"))
     assert is_doc_pair_excluded_path(Path("projects/demo/output"))
     assert is_doc_pair_excluded_path(Path(".cursor/hooks/state"))
+    assert is_doc_pair_excluded_path(Path("projects/templates/template_active_inference/.omo"))
     assert is_doc_pair_excluded_path(Path("docs/prompts/_skill-eval/latest/with_skill/outputs"))
     assert not is_doc_pair_excluded_path(Path("tests/fixtures"))
     assert not is_doc_pair_excluded_path(Path("tests/fixtures/real_codebases"))

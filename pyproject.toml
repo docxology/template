@@ -153,6 +153,7 @@ default-groups = ["dev", "rendering", "discopy", "steganography"]
 # pip-api (via pip-audit) pins an older pip; bump so pip-audit passes CVE gates (CVE-2026-3219).
 override-dependencies = [
     "pip>=26.1.1",
+    "msgpack>=1.2.1",
 ]
 
 [tool.uv.workspace]

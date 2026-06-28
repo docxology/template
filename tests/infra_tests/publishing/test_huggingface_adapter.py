@@ -2,6 +2,7 @@
 
 No mocks — the real HTTP path runs against a local ``pytest-httpserver``.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -58,9 +59,9 @@ def test_success_against_local_server(httpserver: HTTPServer, bundle_dir: Path) 
     httpserver.expect_request("/api/repos/create", method="POST").respond_with_json(
         {"url": "http://x/datasets/ns/my-paper", "name": "my-paper"}
     )
-    httpserver.expect_request(
-        "/api/datasets/ns/my-paper/commit/main", method="POST"
-    ).respond_with_json({"commitUrl": "http://x/commit/abc123", "commitOid": "abc123"})
+    httpserver.expect_request("/api/datasets/ns/my-paper/commit/main", method="POST").respond_with_json(
+        {"commitUrl": "http://x/commit/abc123", "commitOid": "abc123"}
+    )
 
     adapter = HuggingFaceHubAdapter(
         HuggingFaceConfig(repo_id="ns/my-paper", token="t", base_url=httpserver.url_for("")),
@@ -72,12 +73,10 @@ def test_success_against_local_server(httpserver: HTTPServer, bundle_dir: Path) 
 
 
 def test_create_conflict_409_is_tolerated(httpserver: HTTPServer, bundle_dir: Path) -> None:
-    httpserver.expect_request("/api/repos/create", method="POST").respond_with_data(
-        "exists", status=409
+    httpserver.expect_request("/api/repos/create", method="POST").respond_with_data("exists", status=409)
+    httpserver.expect_request("/api/datasets/ns/my-paper/commit/main", method="POST").respond_with_json(
+        {"commitOid": "deadbeef"}
     )
-    httpserver.expect_request(
-        "/api/datasets/ns/my-paper/commit/main", method="POST"
-    ).respond_with_json({"commitOid": "deadbeef"})
 
     adapter = HuggingFaceHubAdapter(
         HuggingFaceConfig(repo_id="ns/my-paper", token="t", base_url=httpserver.url_for("")),
@@ -88,9 +87,9 @@ def test_create_conflict_409_is_tolerated(httpserver: HTTPServer, bundle_dir: Pa
 
 def test_commit_http_error_returns_error_receipt(httpserver: HTTPServer, bundle_dir: Path) -> None:
     httpserver.expect_request("/api/repos/create", method="POST").respond_with_json({"name": "x"})
-    httpserver.expect_request(
-        "/api/datasets/ns/my-paper/commit/main", method="POST"
-    ).respond_with_data("boom", status=500)
+    httpserver.expect_request("/api/datasets/ns/my-paper/commit/main", method="POST").respond_with_data(
+        "boom", status=500
+    )
 
     adapter = HuggingFaceHubAdapter(
         HuggingFaceConfig(repo_id="ns/my-paper", token="t", base_url=httpserver.url_for("")),

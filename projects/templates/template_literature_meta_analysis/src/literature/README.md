@@ -20,9 +20,10 @@ Key fields on `Paper`:
 
 ### `corpus.py`
 `Corpus` class: dict-backed collection keyed by `paper.canonical_id`. `add(paper)` merges
-with existing by keeping the version with higher `metadata_completeness`. `merge(other_corpus)`
-incorporates all papers from another corpus. JSONL persistence: each line is a JSON-serialized
-`Paper.to_dict()`.
+with existing by keeping the version with higher `metadata_completeness`. `deduplicate_by_metadata()`
+collapses normalized title+author duplicates after a multi-source run, with optional preprint
+preference. `merge(other_corpus)` incorporates all papers from another corpus. JSONL persistence:
+each line is a JSON-serialized `Paper.to_dict()`.
 
 Key methods:
 - `add(paper)` — deduplication merge
@@ -54,6 +55,17 @@ DOI URL prefixes automatically.
 - `search_openalex(query, max_results, base_url, session) -> list[Paper]`
 - `get_work_by_doi(doi, base_url, session) -> Paper`
 
+### `query_router.py`
+Heuristic query router for the multi-backend search runner. Detects academic, industry, and mixed
+queries; prefers preprint engines for preprint-heavy queries; and returns the engine dispatch order.
+
+- `QueryRouter.route(query, available_sources) -> QueryRoute`
+
+### `evaluation.py`
+Corpus-level metrics and routing summary helper used by the stage-07 evaluation harness.
+
+- `evaluate_corpus(corpus, query=None, claim_verdicts=None) -> dict`
+
 ## Deduplication Strategy
 
 Papers are deduplicated by canonical ID across all three sources. When the same paper appears
@@ -70,6 +82,7 @@ the source-of-record ID so deduplication decisions can be audited.
 ## Output
 
 `output/data/corpus.jsonl` — one JSON object per line, each representing a `Paper`.
+`output/data/literature_evaluation.json` — corpus summary from the stage-07 evaluation harness.
 Current corpus: 849 papers from arXiv, Semantic Scholar, and OpenAlex (2005–2026).
 
 See [AGENTS.md](AGENTS.md) for agent constraints and extension guidance.

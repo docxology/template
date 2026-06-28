@@ -191,6 +191,54 @@ def generate_architecture_overview(
         linespacing=1.4,
     )
 
+    # Documentation-badge legend (left of the DAG arrow): decode the [ARSP]
+    # four-slot badge printed on every infrastructure module box.
+    legend_x = 8
+    legend_y = arrow_bot + 1
+    ax.add_patch(
+        patches.FancyBboxPatch(
+            (legend_x - 1.5, legend_y - 1),
+            34,
+            13,
+            boxstyle="round,pad=0.5",
+            facecolor=ARCH_VIZ_COLORS["white"],
+            edgecolor=ARCH_VIZ_COLORS["divider"],
+            linewidth=1.5,
+            alpha=0.95,
+            zorder=4,
+        )
+    )
+    ax.text(
+        legend_x,
+        legend_y + 10,
+        "Doc badge",
+        ha="left",
+        va="center",
+        fontsize=FONT_FLOOR - 4,
+        fontweight="bold",
+        color=ARCH_VIZ_COLORS["text_dark"],
+        zorder=5,
+    )
+    for row, (glyph, meaning) in enumerate(
+        [
+            ("A", "AGENTS.md"),
+            ("R", "README.md"),
+            ("S", "SKILL.md"),
+            ("P", "PAI.md  ( ·  = absent )"),
+        ]
+    ):
+        ax.text(
+            legend_x,
+            legend_y + 7.5 - row * 2.4,
+            f"{glyph}  ·  {meaning}",
+            ha="left",
+            va="center",
+            fontsize=FONT_FLOOR - 6,
+            fontfamily="monospace",
+            color=ARCH_VIZ_COLORS["neutral"],
+            zorder=5,
+        )
+
     proj_y = 2
     proj_h = 22
     ax.add_patch(

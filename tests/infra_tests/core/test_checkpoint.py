@@ -37,6 +37,11 @@ class TestStageResult:
 
         assert result.completed is True  # Default value
 
+    def test_stage_result_default_context(self):
+        result = StageResult(name="test", exit_code=0, duration=1.0, timestamp="2024-01-01 12:00:00")
+
+        assert result.context == {}
+
 
 class TestPipelineCheckpoint:
     """Test PipelineCheckpoint dataclass."""
@@ -129,12 +134,14 @@ class TestPipelineCheckpoint:
                 exit_code=0,
                 duration=1.0,
                 timestamp="2024-01-01 12:00:00",
+                context={"stage_num": 1},
             ),
             StageResult(
                 name="stage_2",
                 exit_code=0,
                 duration=2.0,
                 timestamp="2024-01-01 12:01:00",
+                context={"stage_num": 2},
             ),
         ]
 
@@ -156,6 +163,29 @@ class TestPipelineCheckpoint:
         assert restored.stage_results[0].name == original.stage_results[0].name
         assert restored.total_stages == original.total_stages
         assert restored.checkpoint_time == original.checkpoint_time
+
+    def test_checkpoint_round_trip_preserves_context(self):
+        stage_results = [
+            StageResult(
+                name="stage_1",
+                exit_code=0,
+                duration=1.0,
+                timestamp="2024-01-01 12:00:00",
+                context={"stage_num": 1, "lessons": ["keep state"]},
+            )
+        ]
+
+        original = PipelineCheckpoint(
+            pipeline_start_time=1000.0,
+            last_stage_completed=1,
+            stage_results=stage_results,
+            total_stages=5,
+            checkpoint_time=1001.0,
+        )
+
+        restored = PipelineCheckpoint.from_dict(original.to_dict())
+
+        assert restored.stage_results[0].context == {"stage_num": 1, "lessons": ["keep state"]}
 
 
 class TestCheckpointManager:

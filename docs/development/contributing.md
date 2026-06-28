@@ -18,6 +18,15 @@ The best way to contribute is to **use this template** for your own research pro
 - **Improvements** to existing functionality
 - **Tests** to ensure code quality
 
+### 🔎 **Before Picking Work**
+
+Start with the contributor strategy guide:
+[`contribution-map.md`](contribution-map.md). It explains how to check whether
+an idea is already built, partially built, proposed, or absent before writing
+code. Use that overlap check to decide whether the contribution should be a doc
+fix, focused test, small bugfix, skill/plugin update, or maintainer-aligned core
+change.
+
 ## 🏗️ **Development Setup**
 
 ### 1. **Fork and Clone**
@@ -112,6 +121,10 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 ## 🎯 **What We're Looking For**
 
+Check [`contribution-map.md`](contribution-map.md) before starting. It captures
+the current small, mergeable contribution shapes and the areas that need
+maintainer alignment first.
+
 ### 🌟 **High Priority**
 - **Bug fixes** that affect template usability
 - **Documentation improvements** for clarity
@@ -152,6 +165,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ## 📚 **Resources**
 
 - **[`../../.github/README.md`](../../.github/README.md)** - GitHub Actions, branch protection, local CI mirror
+- **[`contribution-map.md`](contribution-map.md)** - Overlap checks and practical contribution strategy
 - **[`../core/architecture.md`](../core/architecture.md)** - System design overview
 - **[`../core/workflow.md`](../core/workflow.md)** - Development workflow guide
 - **[`markdown-template-guide.md`](../usage/markdown-template-guide.md)** - Writing and formatting guide

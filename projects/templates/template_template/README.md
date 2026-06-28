@@ -7,9 +7,9 @@ A self-referential research study that programmatically analyzes and documents t
 ## Publication and rendering
 
 - Standalone GitHub: [docxology/template_template](https://github.com/docxology/template_template)
-- Latest GitHub release: [v1.0.8](https://github.com/docxology/template_template/releases/tag/v1.0.8)
+- Latest GitHub release: [v1.0.9](https://github.com/docxology/template_template/releases/tag/v1.0.9)
 - Zenodo concept DOI: [10.5281/zenodo.20419007](https://doi.org/10.5281/zenodo.20419007)
-- Latest Zenodo version DOI: [10.5281/zenodo.20932076](https://doi.org/10.5281/zenodo.20932076) ([record](https://zenodo.org/records/20932076))
+- Latest Zenodo version DOI: [10.5281/zenodo.20976048](https://doi.org/10.5281/zenodo.20976048) ([record](https://zenodo.org/records/20976048))
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_template`
 - Tracked outputs: [`output/`](output/) in this project and `output/templates/template_template/` in the monorepo; public output files above 50 MB stay out of git.
 

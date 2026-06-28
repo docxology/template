@@ -127,7 +127,14 @@ class TestCheckClaimLedgerMismatch:
 
         # A config with a contribution claim that has no ledger match
         cfg = GoldRefinementConfig(
-            contribution_claims=[{"name": "completely-unique-xyz", "claim": "test", "evidence": "", "boundary": "local"}]
+            contribution_claims=[
+                {
+                    "name": "completely-unique-xyz",
+                    "claim": "test",
+                    "evidence": "src/refinery.py::NOT_REAL",
+                    "boundary": "local",
+                }
+            ]
         )
         ledger_path = tmp_path / "claim_ledger.yaml"
         ledger_path.write_text(
@@ -136,7 +143,16 @@ class TestCheckClaimLedgerMismatch:
         )
         mismatches = check_claim_ledger_alignment(cfg, ledger_path)
         assert len(mismatches) >= 1
-        assert "completely-unique-xyz" in mismatches[0]
+        assert "src/refinery.py::NOT_REAL" in mismatches[0]
+
+    def test_path_escape_is_rejected(self, tmp_path):
+        from evidence import _check_evidence_source
+
+        outside = tmp_path.parent / "outside.py"
+        outside.write_text("SECRET = 1\n", encoding="utf-8")
+        ok, msg = _check_evidence_source("../outside.py::SECRET", tmp_path)
+        assert ok is False
+        assert "escapes project root" in msg.lower()
 
 
 # ============================================================================

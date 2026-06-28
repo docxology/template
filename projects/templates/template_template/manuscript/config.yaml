@@ -3,9 +3,9 @@
 
 paper:
   title: "A template/ approach to Reproducible Generative Research"
-  version: "1.0.8"
+  version: "1.0.9"
   subtitle: "Architecture and Ergonomics from Configuration through Publication"
-  date: "2026-06-26"
+  date: "2026-06-27"
 
 authors:
   - name: "Daniel Ari Friedman"
@@ -16,8 +16,8 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.20419007" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20932076" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20932076"
+  version_doi: "10.5281/zenodo.20976048" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/20976048"
   github_repository: "docxology/template_template"
   transmission_bookends:
     enabled: true

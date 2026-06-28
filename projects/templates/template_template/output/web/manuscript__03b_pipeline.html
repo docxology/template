@@ -196,17 +196,17 @@ validation.</li>
 discovery, scaffolding directories, <code>PYTHONPATH</code> wiring.</li>
 <li><strong>Infrastructure Tests</strong>
 (<code>01_run_tests.py --infra-only</code>) — <code>tests/</code> suite
-with infra coverage thresholds (≥60 %).</li>
+with infra coverage thresholds (≥60 %).</li>
 <li><strong>Project Tests</strong>
 (<code>01_run_tests.py --project-only</code>) — per-project suites with
-≥90 % coverage mandate.</li>
+≥90 % coverage mandate.</li>
 <li><strong>Project Analysis</strong> (<code>02_run_analysis.py</code>)
 — lexicographically ordered
 <code>projects/&lt;name&gt;/scripts/*.py</code>, each a thin
 orchestrator (<code>src/</code> does real work).</li>
 <li><strong>PDF Rendering</strong> (<code>03_render_pdf.py</code>) —
-Pandoc → XeLaTeX loop, bibliography assembly, injected variables from
-Stage 02 artefacts.</li>
+Pandoc → XeLaTeX loop, bibliography assembly, injected variables from
+Stage 02 artefacts.</li>
 <li><strong>Output Validation</strong>
 (<code>04_validate_output.py</code>) — PDF structure, manifests,
 Markdown hygiene.</li>
@@ -238,17 +238,20 @@ numbering (e.g., copy executes after validation even though script
 <p><strong>Infrastructure vs project tests.</strong> Splitting pytest
 invocations isolates flaky infra regressions
 (<code>MAX_TEST_FAILURES</code> knobs) from zero-tolerance gates on
-domain code (<code>max_project_test_failures</code> default 0 declared
+domain code (<code>max_project_test_failures</code> default 0 declared
 in YAML front-matter/testing blocks).</p>
-<p><strong>Stage 02 illustration.</strong> Rather than hypothetical
-diagram factories, canonical projects ship concrete
-behaviours—<code>template_autoresearch_project</code> runs readiness
-validation; archived <code>template_search_project</code> merges remote
-literature JSON, scripted figures
-(<code>y_generate_search_figures.py</code>), and manifest writers;
-<code>template_code_project</code> emits optimization plots;
-<code>template_prose_project</code> mainly triggers structural
-validation scaffolding.</p>
+<p><strong>Stage 02 illustration.</strong> The analysis stage is
+deliberately concrete rather than a hypothetical diagram factory: each
+canonical project ships real behaviour at this node.
+<code>template_autoresearch_project</code> runs readiness validation;
+the archived <code>template_search_project</code> merges remote
+literature JSON, generates scripted figures
+(<code>y_generate_search_figures.py</code>), and writes manifests;
+<code>template_code_project</code> emits optimization plots; and
+<code>template_prose_project</code> triggers structural validation
+scaffolding. The pipeline shape is identical across all four—only the
+Stage 02 payload differs—which is exactly what lets one orchestrator
+serve heterogeneous research domains.</p>
 <h3 id="interactive-orchestration">Interactive Orchestration</h3>
 <h4 id="run.sh"><code>run.sh</code></h4>
 <p>Thin wrapper invoking

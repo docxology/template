@@ -8,20 +8,84 @@ manuscript is allowed to render.
 
 from __future__ import annotations
 
+import ast
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
+import re
 
 import yaml
 
 try:
     from .config import GoldRefinementConfig
-except ImportError:  # pragma: no cover
+except ImportError:
     from config import GoldRefinementConfig  # type: ignore[no-redef]
 
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def _resolve_project_file(project_root: Path, file_part: str) -> tuple[Path | None, str]:
+    root = project_root.resolve()
+    candidate = (project_root / file_part).resolve(strict=False)
+    try:
+        candidate.relative_to(root)
+    except ValueError:
+        return None, f"Path escapes project root: {file_part}"
+    if not candidate.exists():
+        return None, f"File not found: {file_part}"
+    return candidate, ""
+
+
+def _python_target_matches(node: ast.AST, symbol_name: str) -> bool:
+    if isinstance(node, ast.Name):
+        return node.id == symbol_name
+    if isinstance(node, (ast.Tuple, ast.List)):
+        return any(_python_target_matches(child, symbol_name) for child in node.elts)
+    return False
+
+
+def _python_symbol_exists(file_path: Path, symbol_name: str) -> bool:
+    try:
+        tree = ast.parse(file_path.read_text(encoding="utf-8"))
+    except SyntaxError:
+        return False
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name == symbol_name:
+            return True
+        if isinstance(node, ast.Assign) and any(_python_target_matches(target, symbol_name) for target in node.targets):
+            return True
+        if isinstance(node, ast.AnnAssign) and _python_target_matches(node.target, symbol_name):
+            return True
+    return False
+
+
+def _yaml_path_exists(file_path: Path, symbol_path: str) -> bool:
+    data = yaml.safe_load(file_path.read_text(encoding="utf-8")) or {}
+    current: object = data
+    for segment in (part.strip() for part in symbol_path.split(".")):
+        if not segment:
+            continue
+        if isinstance(current, dict) and segment in current:
+            current = current[segment]
+            continue
+        return False
+    return True
+
+
+def _symbol_exists(file_path: Path, symbol_part: str) -> bool:
+    if not symbol_part:
+        return True
+    if file_path.suffix in {".yaml", ".yml"}:
+        return _yaml_path_exists(file_path, symbol_part)
+    symbol_name = symbol_part.split("(", 1)[0].split(".", 1)[0].split("[", 1)[0]
+    if not symbol_name:
+        return True
+    if file_path.suffix == ".py":
+        return _python_symbol_exists(file_path, symbol_name)
+    content = file_path.read_text(encoding="utf-8")
+    return re.search(rf"(?<!\\w){re.escape(symbol_name)}(?!\\w)", content) is not None
 
 
 @dataclass(frozen=True)
@@ -86,18 +150,14 @@ def _check_evidence_source(source: str, project_root: Path) -> tuple[bool, str]:
         file_part = source
         symbol_part = ""
 
-    # Check file exists relative to project root
-    file_path = project_root / file_part
-    if not file_path.exists():
+    file_path, error = _resolve_project_file(project_root, file_part)
+    if error:
+        return False, error
+    if file_path is None:
         return False, f"File not found: {file_part}"
 
-    # If symbol specified, check it appears in the file
-    if symbol_part:
-        content = file_path.read_text(encoding="utf-8")
-        # Strip method call part (e.g. _choose_value becomes just the name)
-        symbol_name = symbol_part.split("(")[0].split(".")[0].split("[")[0]
-        if symbol_name and symbol_name not in content:
-            return False, f"Symbol '{symbol_name}' not found in {file_part}"
+    if symbol_part and not _symbol_exists(file_path, symbol_part):
+        return False, f"Symbol '{symbol_part}' not found in {file_part}"
 
     return True, ""
 
@@ -161,10 +221,6 @@ def check_claim_ledger_alignment(
     config: GoldRefinementConfig,
     ledger_path: Path,
 ) -> list[str]:
-    """Check that contribution_claims in config match claim_ledger.yaml entries.
-
-    Returns a list of mismatch descriptions (empty if aligned).
-    """
     mismatches: list[str] = []
 
     if not ledger_path.exists():
@@ -174,26 +230,22 @@ def check_claim_ledger_alignment(
     with ledger_path.open("r") as f:
         ledger = yaml.safe_load(f) or {}
 
-    ledger_claims = {c.get("id", ""): c for c in ledger.get("claims", [])}
+    ledger_sources = {
+        str(entry.get("source", "")).strip()
+        for entry in ledger.get("claims", [])
+        if isinstance(entry, dict) and str(entry.get("source", "")).strip()
+    }
 
     for claim in config.contribution_claims:
         name = claim.get("name", "")
-        # Look for a matching ledger entry by name, ID, or statement overlap
-        found = False
-        for lid, entry in ledger_claims.items():
-            entry_stmt = entry.get("statement", "")
-            # Match by ID (slugified name), by statement content, or by name in statement
-            name_lower = name.lower()
-            if (
-                name_lower in lid.lower()
-                or name_lower in entry_stmt.lower()
-                or any(word in entry_stmt.lower() for word in name_lower.split() if len(word) > 3)
-                or any(word in lid.lower() for word in name_lower.replace("-", "_").split("_") if len(word) > 3)
-            ):
-                found = True
-                break
-        if not found:
-            mismatches.append(f"Config claim '{name}' has no matching claim_ledger.yaml entry")
+        evidence = str(claim.get("evidence", "")).strip()
+        if not evidence:
+            mismatches.append(f"Config claim '{name}' is missing an evidence source")
+            continue
+        if evidence not in ledger_sources:
+            mismatches.append(
+                f"Config claim '{name}' evidence source '{evidence}' has no matching claim_ledger.yaml entry"
+            )
 
     return mismatches
 

@@ -14,7 +14,7 @@ We map five gold-refining stages onto manuscript operations:
 
 {{REFINERY_STAGE_LABELS}}
 
-Each stage has a metallurgical operation, a manuscript operation, an input purity, and an output purity. Purity increases monotonically — a constraint enforced by `src/refinery.py::assert_monotone_increase` and tested in `tests/test_refinery.py`.
+Each stage has a metallurgical operation, a manuscript operation, an input purity, and an output purity. Purity increases monotonically — a constraint enforced by `src/purity.py::assert_monotone_increase` and tested in `tests/test_refinery.py`.
 
 ## Mega-madlib token engine
 

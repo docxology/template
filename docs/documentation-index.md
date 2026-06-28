@@ -25,10 +25,11 @@ This index lists documentation files in the Research Project Template by categor
 ### Contributor / maintainer
 
 1. **[development/contributing.md](development/contributing.md)** - Contribution guidelines
-2. **[rules/AGENTS.md](rules/AGENTS.md)** - Development standards
-3. **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - TDD workflow (Levels 7-9)
-4. **[development/testing/testing-guide.md](development/testing/testing-guide.md)** - Testing requirements
-5. **[development/code-of-conduct.md](development/code-of-conduct.md)** - Community standards
+2. **[development/contribution-map.md](development/contribution-map.md)** - Overlap checks and contribution strategy
+3. **[rules/AGENTS.md](rules/AGENTS.md)** - Development standards
+4. **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - TDD workflow (Levels 7-9)
+5. **[development/testing/testing-guide.md](development/testing/testing-guide.md)** - Testing requirements
+6. **[development/code-of-conduct.md](development/code-of-conduct.md)** - Community standards
 
 ### Troubleshooter
 
@@ -177,6 +178,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 ## Development and maintenance
 
 - **[development/contributing.md](development/contributing.md)** - Contribution guidelines
+- **[development/contribution-map.md](development/contribution-map.md)** - Overlap checks and practical contribution strategy
 - **[development/code-of-conduct.md](development/code-of-conduct.md)** - Community standards
 - **[development/security.md](development/security.md)** - Security policy
 - **[development/roadmap.md](development/roadmap.md)** - Development roadmap

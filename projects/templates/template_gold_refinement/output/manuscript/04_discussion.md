@@ -13,6 +13,7 @@ The added implementation and claim-assay figures sharpen that boundary. They sho
 - **Domain-specific refinement pipelines**: fork the exemplar and remap stages to domain operations (e.g., clinical evidence, legal citation, engineering specification).
 - **Purity measurement**: adopt the purity fraction and karat grade vocabulary for any staged quality process.
 - **Mega-madlib composition**: reuse the deterministic token engine for any config-owned lexical composition task.
+- **Domain adapters**: use `src/domain_adapter.py` and `domain_profile.yaml` to translate a domain's own metrics into the same purity scale before reusing certification language.
 
 ## Misuse modes
 

@@ -26,7 +26,7 @@ Runs used the `./run.sh` interactive orchestrator (“all projects core (fast)�
 *Timing illustrative (Apple Silicon workstation, SSD, fixed seeds).*
 
 
-Search-stage overhead dwarfs the optimization exemplar’s runtime—confirming Stage 02 remains the bottleneck for outbound API traffic while retaining Zero-Mock subprocess + filesystem checks downstream.
+Search-stage overhead dwarfs the optimization exemplar’s runtime—confirming Stage 02 remains the bottleneck for outbound API traffic while retaining Zero-Mock subprocess + filesystem checks downstream.
 
 ## Infrastructure Test Suite
 
@@ -85,28 +85,28 @@ Stages below mirror `pipeline.yaml` (executor-topological order—not strict num
 | `template_prose_project` | ~25 | <0.3 s | <0.05 s | <0.9 s | <0.4 s | <1.6 s |
 | `template_autoresearch_project` | ~25 | <0.2 s | <0.04 s | <0.9 s | <0.3 s | <1.5 s |
 
-Measurements single-thread Apple Silicon; dominated by watermark overlay complexity.
+All measurements use single-threaded execution on Apple Silicon, and the totals are dominated by watermark-overlay complexity rather than by hashing or metadata embedding, which each stay well under one-tenth of a second per document.
 
 ## Self-Referential Analysis
 
 Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `${module_count}`). Architecture figures stem from [`template_template.architecture_viz`](../src/template_template/architecture_viz.py)—font sizes constrained by §QA.
 
 ![Two-Layer Architecture Overview](../output/figures/architecture_overview.png)
-**Figure 1.** Live Two-Layer graph with documentation badges `[ARSP]` and per-module file counts derived from introspection snapshots.
+**Figure 1.** Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `${module_count}` reusable subpackages, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.
 
 ![Pipeline Stage Flow](../output/figures/pipeline_stages.png)
-**Figure 2.** Pipeline DAG with ${pipeline_stages_declared} YAML-declared stages (core, LLM, bundle, archival tags).
+**Figure 2.** Pipeline DAG with ${pipeline_stages_declared} YAML-declared stages (core, LLM, bundle, archival tags).
 
 ![Infrastructure Module Inventory](../output/figures/module_inventory.png)
-**Figure 3.** File-count histogram for each infrastructure subdirectory.
+**Figure 3.** Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first. The long tail of small, single-purpose packages beside a handful of larger ones (`core`, `validation`, `publishing`) is the visual signature of the Unix-philosophy modularity the architecture section argues for—capability concentrated where it compounds, not spread evenly by fiat.
 
 ## Comparative Feature Analysis
 
-Figure 4 summarizes the Appendix F capability matrix.
+Figure 4 summarizes the Appendix F capability matrix.
 
 
 ![Comparative Feature Analysis Heatmap](../output/figures/comparative_feature_matrix.png)
-**Figure 4.** 14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow **◐** partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.
+**Figure 4.** 14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow **◐** partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.
 
 ¹ Nextflow 25.04.0: lineage records exist at workflow scope, not per rendered PDF citation graph.
 

@@ -98,7 +98,7 @@
     "STRIDE",
     "MITRE_ATT&CK_T1195"
   ],
-  "generated_at": "2026-06-26T13:21:26+00:00",
+  "generated_at": "2026-06-28T00:30:53+00:00",
   "not_external_signing": true,
   "not_network_security_assessment": true,
   "not_runtime_monitoring": true,

@@ -582,3 +582,50 @@ class TestProseQualityGate:
         )
         mod.execute_validation_pipeline("test")
         assert calls == ["test"]
+
+
+class TestClaimVerificationGate:
+    def _scaffold(self, tmp_path):
+        project_dir = tmp_path / "projects" / "active" / "test"
+        (project_dir / "output" / "pdf").mkdir(parents=True)
+        (project_dir / "output" / "pdf" / "test.pdf").write_bytes(_minimal_structural_pdf())
+        ms_dir = project_dir / "manuscript"
+        ms_dir.mkdir(parents=True)
+        (ms_dir / "01_intro.md").write_text("We observed 12 participants in the cohort.", encoding="utf-8")
+        (ms_dir / "config.yaml").write_text(
+            "paper:\n  title: Test\nvalidation:\n  claim_verification:\n    enabled: true\n",
+            encoding="utf-8",
+        )
+        return project_dir
+
+    def test_enabled_via_config_adds_claim_verification_summary(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        self._scaffold(tmp_path)
+
+        class _Report:
+            def summary(self):
+                return {
+                    "claim_count": 1,
+                    "verdict_count": 1,
+                    "supported": 1,
+                    "contradicted": 0,
+                    "insufficient": 0,
+                    "skipped": False,
+                    "reason": "",
+                }
+
+        monkeypatch.setattr(mod, "_verify_project_claims", lambda project_root: _Report())
+        captured: dict[str, object] = {}
+        real = mod.generate_validation_report
+
+        def _rec(results, figure_issues, output_statistics, project, *a, **k):
+            captured["results"] = list(results)
+            captured["output_statistics"] = dict(output_statistics)
+            return real(results, figure_issues, output_statistics, project, *a, **k)
+
+        monkeypatch.setattr(mod, "generate_validation_report", _rec)
+        rc = mod.execute_validation_pipeline("test")
+
+        assert rc == 0
+        assert ("Claim verification", True) in captured["results"]
+        assert "claim_verification" in captured["output_statistics"]

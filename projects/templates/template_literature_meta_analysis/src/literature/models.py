@@ -14,6 +14,34 @@ from datetime import date
 from typing import Optional
 
 _DOI_RESOLVER_PREFIX = re.compile(r"^(?:https?://)?(?:dx\.)?doi\.org/", re.IGNORECASE)
+_WHITESPACE_RE = re.compile(r"\s+")
+_NON_ALNUM_RE = re.compile(r"[^a-z0-9]+")
+_PREPRINT_HINTS = (
+    "arxiv",
+    "biorxiv",
+    "medrxiv",
+    "chemrxiv",
+    "ssrn",
+    "preprint",
+    "working paper",
+    "hal",
+)
+
+
+def _normalize_text(value: str | None) -> str:
+    if not value:
+        return ""
+    text = _WHITESPACE_RE.sub(" ", value).strip().lower()
+    return _NON_ALNUM_RE.sub(" ", text).strip()
+
+
+def _normalize_author_signature(authors: list[Author]) -> str:
+    normalized: list[str] = []
+    for author in authors[:3]:
+        name = _normalize_text(author.name)
+        if name:
+            normalized.append(name)
+    return " | ".join(normalized)
 
 
 def normalize_doi(doi: str) -> str:
@@ -128,6 +156,32 @@ class Paper:
         # not a security primitive — collision-resistance is not required.
         digest = hashlib.sha1(self.title.lower().strip().encode("utf-8"), usedforsecurity=False).hexdigest()
         return f"title:{digest[:16]}"
+
+    @property
+    def normalized_title(self) -> str:
+        return _normalize_text(self.title)
+
+    @property
+    def author_signature(self) -> str:
+        return _normalize_author_signature(self.authors)
+
+    @property
+    def publication_signature(self) -> str:
+        parts = [self.normalized_title, self.author_signature]
+        return "|".join(part for part in parts if part)
+
+    @property
+    def is_preprint(self) -> bool:
+        if self.arxiv_id and not self.doi:
+            return True
+        haystacks = [self.full_text_source, self.venue, self.pdf_url]
+        for haystack in haystacks:
+            if not haystack:
+                continue
+            normalized = haystack.lower()
+            if any(hint in normalized for hint in _PREPRINT_HINTS):
+                return True
+        return False
 
     @property
     def metadata_completeness(self) -> int:

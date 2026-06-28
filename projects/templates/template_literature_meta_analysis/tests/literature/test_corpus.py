@@ -234,6 +234,66 @@ class TestCorpusMerge:
         assert len(c1) == 2
 
 
+class TestCorpusMetadataDedup:
+    def test_deduplicate_prefers_published_version(self):
+        preprint = Paper(
+            title="Active inference in practice",
+            abstract="Preprint abstract.",
+            authors=[Author(name="Karl Friston")],
+            year=2022,
+            arxiv_id="2201.00001",
+            pdf_url="https://arxiv.org/pdf/2201.00001.pdf",
+            is_open_access=True,
+            full_text_source="arxiv",
+        )
+        published = Paper(
+            title="Active inference in practice",
+            abstract="Published abstract with DOI.",
+            authors=[Author(name="Karl Friston")],
+            year=2023,
+            doi="10.1234/example.2023.1",
+            venue="Nature",
+            citation_count=12,
+        )
+
+        corpus = Corpus([preprint, published])
+        removed = corpus.deduplicate_by_metadata()
+
+        assert removed == 1
+        assert len(corpus) == 1
+        assert corpus.papers[0].doi == "10.1234/example.2023.1"
+        assert corpus.papers[0].is_preprint is False
+
+    def test_deduplicate_can_prefer_preprints(self):
+        preprint = Paper(
+            title="Active inference in practice",
+            abstract="Preprint abstract.",
+            authors=[Author(name="Karl Friston")],
+            year=2022,
+            arxiv_id="2201.00001",
+            pdf_url="https://arxiv.org/pdf/2201.00001.pdf",
+            is_open_access=True,
+            full_text_source="arxiv",
+        )
+        published = Paper(
+            title="Active inference in practice",
+            abstract="Published abstract with DOI.",
+            authors=[Author(name="Karl Friston")],
+            year=2023,
+            doi="10.1234/example.2023.1",
+            venue="Nature",
+            citation_count=12,
+        )
+
+        corpus = Corpus([preprint, published])
+        removed = corpus.deduplicate_by_metadata(prefer_preprints=True)
+
+        assert removed == 1
+        assert len(corpus) == 1
+        assert corpus.papers[0].arxiv_id == "2201.00001"
+        assert corpus.papers[0].is_preprint is True
+
+
 # ---------------------------------------------------------------------------
 # Corpus filter_by_year
 # ---------------------------------------------------------------------------

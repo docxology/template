@@ -17,7 +17,7 @@
       "id": "generated-002",
       "path": "output/data/autoresearch_evidence_overview.json",
       "required": true,
-      "sha256": "5d9adf26e147803ef4ff5e03b737105188f22d2fa244cc4e1e1f82394d9899e8",
+      "sha256": "e3afe1ceb6b551947c84d8c77f863622c0d7378835e97fee30b6a218b93926af",
       "size_bytes": 4437
     },
     {
@@ -25,7 +25,7 @@
       "id": "generated-003",
       "path": "output/data/autoresearch_loop.json",
       "required": true,
-      "sha256": "8743516e1b85bb9e75ae45dfeb0fbdf58bea6009948e12a45d13158a7bc9a5ce",
+      "sha256": "0a5ba0f2e8f87833df59a44f6b2a606a6c62a446132cba5f364fb7c6d69b9b53",
       "size_bytes": 15988
     },
     {
@@ -41,7 +41,7 @@
       "id": "generated-005",
       "path": "output/data/autoresearch_review_packet.json",
       "required": true,
-      "sha256": "8d0065b44b9f940695fff6a18795fdd3aa22c1b76859a376e9320dd89424ee8d",
+      "sha256": "3950734e648d94b40ab17b4a702ff79f7c03d66af3e6e626abe057714ee16574",
       "size_bytes": 16042
     },
     {
@@ -65,7 +65,7 @@
       "id": "generated-008",
       "path": "output/data/benchmark_scores.json",
       "required": true,
-      "sha256": "b38390a2889ffd46fa2ade04d1b2091fc58f8c39062e76e9d327a42ac7530e17",
+      "sha256": "d1bc86adbfd27e175595e23164d15224c4d20aafe0a46e514dbae1d8fce267f8",
       "size_bytes": 621
     },
     {
@@ -73,7 +73,7 @@
       "id": "generated-009",
       "path": "output/data/figure_quality_report.json",
       "required": true,
-      "sha256": "83ce41dc07dd6cc5800565f4ad86984a6b6098f06d81ee338405368a9b907771",
+      "sha256": "ddebf9d2e910eddf9b57e15e16fbffa135181f970f97bec29ccb9edbc6916eed",
       "size_bytes": 16041
     },
     {
@@ -81,7 +81,7 @@
       "id": "generated-010",
       "path": "output/data/figure_style.json",
       "required": true,
-      "sha256": "adc1b43d83b490952f2dbe66d6c3da7b974722b3b7a56724280337646b7b26bc",
+      "sha256": "5d05181a4da2748f3f6086140531414a98265af847cf9bc1da357b9528b9a603",
       "size_bytes": 1117
     },
     {
@@ -89,7 +89,7 @@
       "id": "generated-011",
       "path": "output/data/idea_ledger.json",
       "required": true,
-      "sha256": "6db81948f72d7a95d703bb57da8ca2dffc20861a54aef0ea28ec8b3d3dbb8870",
+      "sha256": "425c74dede9979e74ec07be251e76e0aa21b0b83bd2a349314ac2a6331d86e0d",
       "size_bytes": 5233
     },
     {
@@ -137,7 +137,7 @@
       "id": "generated-017",
       "path": "output/data/ml_candidate_ledger.json",
       "required": true,
-      "sha256": "6d068229d7b72fafc9fb2329e34704e92463788b9dbb7169769c5777886463d2",
+      "sha256": "ce071d4fc24a6dac3af230768414da3a515e6f4e16d94739d2e79cd2a62f1a0b",
       "size_bytes": 570872
     },
     {
@@ -281,7 +281,7 @@
       "id": "generated-035",
       "path": "output/data/review_decisions.json",
       "required": true,
-      "sha256": "c1c149c44d8fa4fb884f94c0662f99a583c0fd1b7e84f769273fcfa99eb01f2c",
+      "sha256": "fe0708643b838033843e2d85efd9725ff8d9be99d7f486acaa55a0d091ad9696",
       "size_bytes": 669
     },
     {
@@ -497,7 +497,7 @@
       "id": "generated-062",
       "path": "output/reports/autoresearch_loop.json",
       "required": true,
-      "sha256": "8743516e1b85bb9e75ae45dfeb0fbdf58bea6009948e12a45d13158a7bc9a5ce",
+      "sha256": "0a5ba0f2e8f87833df59a44f6b2a606a6c62a446132cba5f364fb7c6d69b9b53",
       "size_bytes": 15988
     },
     {
@@ -537,7 +537,7 @@
       "id": "generated-067",
       "path": "output/reports/evidence_registry.json",
       "required": true,
-      "sha256": "5bc323c4fcf6e1b7efdb22ab09688cae4c63435812ec030a82b7919f1fabd103",
+      "sha256": "dda3aa5a182695d1c8be2fe55e8ef31dee1b343c4f777210a239aa0f0829f41e",
       "size_bytes": 90334
     },
     {
@@ -557,23 +557,23 @@
       "size_bytes": 1687
     }
   ],
-  "generated_at": "2026-06-26T13:21:26+00:00",
+  "generated_at": "2026-06-28T00:30:53+00:00",
   "inputs": [
     {
       "exists": true,
       "id": "root_pyproject",
       "path": "/Users/4d/Documents/GitHub/template/pyproject.toml",
       "required": false,
-      "sha256": "fe8fe477131a6017a226c63e0e8ed90b6f1caed2ef1680627f50d06f3923224e",
-      "size_bytes": 15665
+      "sha256": "98f8d9591b4fbb57f5f714e2219d67c36bf2fb4f01cf3a0a6c50e346d588b1b3",
+      "size_bytes": 15985
     },
     {
       "exists": true,
       "id": "root_uv_lock",
       "path": "/Users/4d/Documents/GitHub/template/uv.lock",
       "required": false,
-      "sha256": "a8be17b03270c8e4f46c537598fdcc643b80e3913d10db0ead8811503d66ca0f",
-      "size_bytes": 782684
+      "sha256": "412de45b1548cee2ad8c279c92989f2ad728b209cbdcd321fd934391eaeb4108",
+      "size_bytes": 798807
     },
     {
       "exists": true,
@@ -668,7 +668,7 @@
       "id": "manuscript_config",
       "path": "manuscript/config.yaml",
       "required": true,
-      "sha256": "1c12f6ac7bfe0fde2a5c7924922908abd68d6c6bca2c85566afac7fbf8fed7d4",
+      "sha256": "6b450f0c6b686ec75d7e9cfeffe55b3057f1e4c30be4971567e0bd19f1837fc5",
       "size_bytes": 2507
     }
   ],

@@ -14,7 +14,7 @@
     }
   ],
   "codeRepository": "https://github.com/docxology/template_template",
-  "dateModified": "2026-05-27",
+  "dateModified": "2026-06-27",
   "identifier": "10.5281/zenodo.20419007",
   "keywords": [
     "reproducible research",
@@ -32,5 +32,5 @@
   ],
   "license": "https://spdx.org/licenses/Apache-2.0",
   "name": "A template/ approach to Reproducible Generative Research",
-  "version": "1.0.6"
+  "version": "1.0.9"
 }

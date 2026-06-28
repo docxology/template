@@ -177,7 +177,7 @@ def run_link_audit(repo_root: Path) -> int:
                     target = target.split("#", 1)[0]
                 if not target or DEFAULT_FILE_REF_POLICY.should_skip(target):
                     continue
-                exists, msg = check_file_reference(target, md_file, repo_root)
+                exists, msg = check_file_reference(target, md_file, repo_root_resolved)
                 if not exists:
                     issues["broken_file_refs"].append(
                         LinkIssue(
@@ -191,10 +191,12 @@ def run_link_audit(repo_root: Path) -> int:
                         ).as_dict()
                     )
 
-            issues["code_block_paths"].extend(validate_file_paths_in_code(content, md_file, repo_root))
-            issues["directory_structures"].extend(validate_directory_structures(content, md_file, repo_root))
-            issues["python_imports"].extend(validate_python_imports(content, md_file, repo_root))
-            issues["placeholder_consistency"].extend(validate_placeholder_consistency(content, md_file, repo_root))
+            issues["code_block_paths"].extend(validate_file_paths_in_code(content, md_file, repo_root_resolved))
+            issues["directory_structures"].extend(validate_directory_structures(content, md_file, repo_root_resolved))
+            issues["python_imports"].extend(validate_python_imports(content, md_file, repo_root_resolved))
+            issues["placeholder_consistency"].extend(
+                validate_placeholder_consistency(content, md_file, repo_root_resolved)
+            )
 
         except (OSError, UnicodeDecodeError) as exc:
             logger.error(f"Error processing {md_file}: {exc}")

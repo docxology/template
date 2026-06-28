@@ -1,6 +1,7 @@
 """PDF Rendering module."""
 
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -38,6 +39,14 @@ class PDFRenderer:
     def __init__(self, config: RenderingConfig):
         """Initialize the PDF renderer with configuration."""
         self.config = config
+
+    def _markdown_pdf_engines(self) -> list[str]:
+        candidates = [self.config.latex_compiler, "xelatex", "lualatex", "pdflatex"]
+        engines: list[str] = []
+        for engine in candidates:
+            if engine and engine not in engines and shutil.which(engine):
+                engines.append(engine)
+        return engines
 
     def render(self, source_file: Path, output_name: str | None = None) -> Path:
         """Render manuscript to PDF.
@@ -89,35 +98,51 @@ class PDFRenderer:
         if figures_dir.exists():
             resource_paths.extend(["--resource-path", str(figures_dir)])
 
-        cmd = [
-            self.config.pandoc_path,
-            str(source_file),
-            "-o",
-            str(output_file),
-            "--pdf-engine=xelatex",
-            "--standalone",
-        ]
-
-        cmd.extend(resource_paths)
-
         logger.debug(f"Rendering markdown to PDF: {source_file.name} -> {output_file.name}")
 
-        try:
-            # cmd is a fixed list built from config paths and flags.
-            subprocess.run(  # nosec B603
-                cmd,
-                check=True,
-                capture_output=True,
-                text=True,
-                timeout=(8 if os.environ.get("PYTEST_CURRENT_TEST") else 600),
-            )
-            return output_file
-
-        except subprocess.CalledProcessError as e:
+        if shutil.which(self.config.pandoc_path) is None:
             raise RenderingError(
-                f"Failed to render markdown to PDF: {e.stderr}",
+                f"Pandoc not found: {self.config.pandoc_path}",
                 context={"source": str(source_file), "target": str(output_file)},
-            ) from e
+            )
+
+        engines = self._markdown_pdf_engines()
+        if not engines:
+            raise RenderingError(
+                "No LaTeX PDF engine found for markdown rendering",
+                context={"source": str(source_file), "target": str(output_file)},
+            )
+
+        errors: list[str] = []
+        timeout = 8 if os.environ.get("PYTEST_CURRENT_TEST") else 600
+        for engine in engines:
+            if output_file.exists():
+                output_file.unlink()
+            cmd = [
+                self.config.pandoc_path,
+                str(source_file),
+                "-o",
+                str(output_file),
+                f"--pdf-engine={engine}",
+                "--standalone",
+            ]
+            cmd.extend(resource_paths)
+            try:
+                subprocess.run(  # nosec B603
+                    cmd,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                )
+                return output_file
+            except subprocess.CalledProcessError as e:
+                errors.append(f"{engine}: {e.stderr.strip() if e.stderr else 'unknown error'}")
+
+        raise RenderingError(
+            "Failed to render markdown to PDF with available engines",
+            context={"source": str(source_file), "target": str(output_file), "engines": engines, "errors": errors},
+        )
 
     def render_combined(
         self,

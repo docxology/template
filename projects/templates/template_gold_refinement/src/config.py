@@ -13,6 +13,13 @@ from typing import Any
 
 import yaml
 
+from infrastructure.core.config.schema import register_project_schema_extension
+
+_PROJECT_SCHEMA_EXTENSION = {"gold_refinement": dict}
+
+register_project_schema_extension("template_gold_refinement", _PROJECT_SCHEMA_EXTENSION)
+register_project_schema_extension("", _PROJECT_SCHEMA_EXTENSION)
+
 REQUIRED_LEXICON_CATEGORIES: tuple[str, ...] = (
     "metallurgical_terms",
     "manuscript_terms",
@@ -215,7 +222,7 @@ def _default_lexicon() -> dict[str, tuple[str, ...]]:
             "cupellation",
             "assaying",
             "smelting",
-            "cupellation",
+            "parting",
             "hallmark",
         ),
         "manuscript_terms": (

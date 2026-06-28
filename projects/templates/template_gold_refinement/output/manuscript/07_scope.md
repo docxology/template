@@ -20,7 +20,8 @@ A fork must:
 2. Update lexicon categories to reflect domain vocabulary
 3. Connect refinery stages to real domain operations
 4. Add domain validators beyond the exemplar's generic gates
-5. Regenerate all outputs through the pipeline
+5. Use `src/domain_adapter.py` and `docs/domain_fork_guide.md` to remap domain metrics and boundary notes
+6. Regenerate all outputs through the pipeline
 
 The formalism registry is local to this exemplar. It states how this project maps refinery stages, token selection, and evidence gates into equations; it does not prove that gold refining is a universal model of scientific writing. Domain forks should replace or narrow the formalism set before reusing the certification language.
 

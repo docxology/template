@@ -75,9 +75,9 @@ The mega-madlib engine generated 24 tokens from seed 431 across 8 lexicon catego
 | METHOD_GATE_TERM_3 | gate_terms | citation validation | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
 | METHOD_MANUSCRIPT_TERM_1 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
 | METHOD_MANUSCRIPT_TERM_2 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
-| METHOD_METAL_TERM_1 | metallurgical_terms | hallmark | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[4] |
-| METHOD_METAL_TERM_2 | metallurgical_terms | cupellation | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[0] |
-| METHOD_METAL_TERM_3 | metallurgical_terms | assaying | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
+| METHOD_METAL_TERM_1 | metallurgical_terms | assaying | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
+| METHOD_METAL_TERM_2 | metallurgical_terms | parting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3] |
+| METHOD_METAL_TERM_3 | metallurgical_terms | smelting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2] |
 | REPRO_EVIDENCE_TERM_1 | evidence_terms | fact registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0] |
 | REPRO_EVIDENCE_TERM_2 | evidence_terms | figure registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
 | RESULTS_EVIDENCE_TERM_1 | evidence_terms | artifact manifest | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1] |
@@ -149,11 +149,11 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 | Claim | Statement | Evidence | Boundary |
 |-------|-----------|----------|----------|
 | Five-stage refinery | The refinery pipeline has 5 canonical stages from ore to nine-nines. | src/refinery.py::CANONICAL_STAGES | local |
-| Monotone purity | Purity increases strictly across all refinery stages. | src/refinery.py::assert_monotone_increase | local |
+| Monotone purity | Purity increases strictly across all refinery stages. | src/purity.py::assert_monotone_increase | local |
 | Nine-nines certification | The certification stage achieves 99.9999999% purity. | src/purity.py::NINE_NINES_PURITY | local |
 | Deterministic tokens | Token selection is deterministic via seeded SHA-256 digest. | src/composition.py::_choose_value | local |
 | Formalism registry | The manuscript exposes 6 source-owned formalisms with equation labels. | src/formalisms.py::FORMALISMS | local |
-| Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | scripts/refinement_analysis.py::claim_support_registry | local |
+| Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME | local |
 | Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures.py::generate_implementation_circuit | local |
 | Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | src/integrity.py::build_integrity_dimensions | local |
 
@@ -180,16 +180,16 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3952x1904 | 0.211 | 0.05899335 | pass |
-| evidence_tier_ladder | yes | yes | 3284x1320 | 0.193 | 0.05469461 | pass |
-| formalism_traceability | yes | yes | 4170x1866 | 0.096 | 0.03186282 | pass |
-| implementation_circuit | yes | yes | 3720x2128 | 0.051 | 0.01688323 | pass |
-| integrity_gate_matrix | yes | yes | 1944x1560 | 0.459 | 0.17763563 | pass |
-| integrity_risk_matrix | yes | yes | 2970x2070 | 0.403 | 0.01449939 | pass |
-| karat_grading | yes | yes | 3242x1824 | 0.286 | 0.07374303 | pass |
-| provenance_sankey | yes | yes | 3570x1400 | 0.059 | 0.01864058 | pass |
-| purity_claim_scatter | yes | yes | 2584x1884 | 0.028 | 0.01227757 | pass |
-| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
-| token_density | yes | yes | 3865x1667 | 0.207 | 0.06142913 | pass |
-| token_heatmap | yes | yes | 2649x2422 | 0.645 | 0.12792323 | pass |
+| claim_evidence_assay | yes | yes | 3947x1904 | 0.211 | 0.05905285 | pass |
+| evidence_tier_ladder | yes | yes | 3338x1332 | 0.197 | 0.05498040 | pass |
+| formalism_traceability | yes | yes | 3315x1630 | 0.133 | 0.04238758 | pass |
+| implementation_circuit | yes | yes | 2966x1846 | 0.071 | 0.02334600 | pass |
+| integrity_gate_matrix | yes | yes | 1842x1424 | 0.435 | 0.17515201 | pass |
+| integrity_risk_matrix | yes | yes | 2499x1909 | 0.386 | 0.01805215 | pass |
+| karat_grading | yes | yes | 2956x1699 | 0.279 | 0.07296687 | pass |
+| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02170098 | pass |
+| purity_claim_scatter | yes | yes | 2347x1745 | 0.032 | 0.01429053 | pass |
+| purity_progression | yes | yes | 3029x2125 | 0.182 | 0.03971092 | pass |
+| token_density | yes | yes | 3288x1858 | 0.234 | 0.06696808 | pass |
+| token_heatmap | yes | yes | 2406x2412 | 0.621 | 0.12867696 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}

@@ -11,6 +11,7 @@ Pipeline output validation helpers.
 - `design.py`
 - `artifacts.py`
 - `prose_quality.py`
+- `claim_verification.py`
 - `no_mock_enforcer.py`
 
 ## See Also

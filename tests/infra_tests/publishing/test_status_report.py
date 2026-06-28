@@ -122,9 +122,7 @@ def test_caller_published_overrides_config(tmp_path: Path) -> None:
         "  published_artifacts:\n"
         '    osf: "https://osf.io/CONFIG/"\n',
     )
-    report = compile_publishing_status(
-        _project(tmp_path, cfg), published={"osf": "https://osf.io/CALLER/"}
-    )
+    report = compile_publishing_status(_project(tmp_path, cfg), published={"osf": "https://osf.io/CALLER/"})
     by_name = {p.name: p for p in report.platforms}
     assert by_name["osf"].reference == "https://osf.io/CALLER/"
 
