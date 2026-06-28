@@ -183,7 +183,7 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 | claim_evidence_assay | yes | yes | 3947x1904 | 0.211 | 0.05905285 | pass |
 | evidence_tier_ladder | yes | yes | 3338x1332 | 0.197 | 0.05498040 | pass |
 | formalism_traceability | yes | yes | 3315x1630 | 0.133 | 0.04238758 | pass |
-| implementation_circuit | yes | yes | 2966x1846 | 0.071 | 0.02334600 | pass |
+| implementation_circuit | yes | yes | 2966x1846 | 0.069 | 0.02257238 | pass |
 | integrity_gate_matrix | yes | yes | 1842x1424 | 0.435 | 0.17515201 | pass |
 | integrity_risk_matrix | yes | yes | 2499x1909 | 0.386 | 0.01805215 | pass |
 | karat_grading | yes | yes | 2956x1699 | 0.279 | 0.07296687 | pass |

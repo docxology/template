@@ -200,3 +200,14 @@ of the orchestrator scripts.
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_prose_project/tests/ --cov=projects/templates/template_prose_project/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [Data Directory Instructions](data/AGENTS.md)
+- [template_prose_project/data](data/README.md)
+
+<!-- foam-orphan-nav:end -->

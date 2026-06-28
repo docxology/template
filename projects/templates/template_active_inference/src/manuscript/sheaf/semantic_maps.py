@@ -58,7 +58,7 @@ ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/reports/stale_artifact_report.json": "generate_integration_audit.py",
     "output/data/cross_track_symbol_table.json": "generate_integration_audit.py",
     "output/data/manuscript_evidence_tables.json": "generate_integration_audit.py",
-    "output/data/manuscript_token_provenance.json": "generate_integration_audit.py",
+    "output/data/manuscript_token_provenance.json": "generate_integration_audit.py",  # nosec B105
     "output/reports/claim_evidence_audit.json": "generate_integration_audit.py",
     "output/data/validation_gate_index.json": "generate_integration_audit.py",
     "output/data/figure_source_map.json": "generate_integration_audit.py",

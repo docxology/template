@@ -115,6 +115,7 @@ class TestGraphTopologyContracts:
         assert graph.number_of_nodes() == 8
         assert graph.number_of_edges() == 9
         assert graph.nodes["figures"]["label"].endswith("PNG + SVG registry")
+        assert all("x" in data and "y" in data for _, data in graph.nodes(data=True))
 
     def test_claim_evidence_topology_shape(self):
         class Entry:
@@ -208,6 +209,23 @@ class TestGenerateAllFigures:
             assert svg_path.exists()
             assert svg_path.stat().st_size > 100
 
+    def test_svg_output_is_repeatable_without_volatile_metadata(self, tmp_path):
+        first_dir = tmp_path / "first" / "figures"
+        second_dir = tmp_path / "second" / "figures"
+
+        first = generate_purity_progression(first_dir).with_suffix(".svg")
+        second = generate_purity_progression(second_dir).with_suffix(".svg")
+
+        first_text = first.read_text(encoding="utf-8")
+        assert "<dc:date>" not in first_text
+        assert "<dc:title>template_gold_refinement</dc:title>" in first_text
+        assert first_text == second.read_text(encoding="utf-8")
+
+    def test_implementation_circuit_svg_is_repeatable(self, tmp_path):
+        first = generate_implementation_circuit(tmp_path / "first").with_suffix(".svg")
+        second = generate_implementation_circuit(tmp_path / "second").with_suffix(".svg")
+        assert first.read_text(encoding="utf-8") == second.read_text(encoding="utf-8")
+
     def test_writes_figure_registry(self, tmp_path):
         _write_representative_config(tmp_path)
         generate_all_figures(tmp_path)
@@ -277,6 +295,7 @@ class TestAdditionalFigures:
 
     def test_provenance_sankey_generates_png(self, tmp_path):
         from figures import generate_provenance_sankey
+
         out = generate_provenance_sankey(tmp_path)
         assert out.exists()
         assert out.suffix == ".png"
@@ -284,6 +303,7 @@ class TestAdditionalFigures:
 
     def test_purity_claim_scatter_generates_png(self, tmp_path):
         from figures import generate_purity_claim_scatter
+
         out = generate_purity_claim_scatter(tmp_path)
         assert out.exists()
         assert out.suffix == ".png"
@@ -291,6 +311,7 @@ class TestAdditionalFigures:
 
     def test_token_heatmap_generates_png(self, tmp_path):
         from figures import generate_token_heatmap
+
         (tmp_path / "manuscript").mkdir()
         out = generate_token_heatmap(tmp_path, project_root=tmp_path)
         assert out.exists()
@@ -300,29 +321,33 @@ class TestAdditionalFigures:
     def test_token_heatmap_with_unused_category(self, tmp_path):
         """Heatmap handles categories with no tokens (vals empty) gracefully."""
         import yaml
+
         (tmp_path / "manuscript").mkdir()
         # Config with a lexicon category that has no matching slot
         (tmp_path / "manuscript" / "config.yaml").write_text(
-            yaml.dump({
-                "gold_refinement": {
-                    "seed": 1,
-                    "composition_depth": "compact",
-                    "lexicon": {
-                        "metallurgical_terms": ["cupellation", "assaying"],
-                        "manuscript_terms": ["draft", "claim"],
-                        "purity_adjectives": ["refined", "pure"],
-                        "refinement_verbs": ["smelt", "certify"],
-                        "unused_category": ["alpha", "beta"],
-                    },
-                    "slots": [
-                        # Only uses metallurgical_terms — unused_category has no slot
-                        {"name": "SLOT_A", "category": "metallurgical_terms", "count": 1, "section": "methodology"},
-                    ],
+            yaml.dump(
+                {
+                    "gold_refinement": {
+                        "seed": 1,
+                        "composition_depth": "compact",
+                        "lexicon": {
+                            "metallurgical_terms": ["cupellation", "assaying"],
+                            "manuscript_terms": ["draft", "claim"],
+                            "purity_adjectives": ["refined", "pure"],
+                            "refinement_verbs": ["smelt", "certify"],
+                            "unused_category": ["alpha", "beta"],
+                        },
+                        "slots": [
+                            # Only uses metallurgical_terms — unused_category has no slot
+                            {"name": "SLOT_A", "category": "metallurgical_terms", "count": 1, "section": "methodology"},
+                        ],
+                    }
                 }
-            }),
+            ),
             encoding="utf-8",
         )
         from figures import generate_token_heatmap
+
         out = generate_token_heatmap(tmp_path, project_root=tmp_path)
         assert out.exists()
         assert out.stat().st_size > 100
@@ -348,9 +373,7 @@ class TestAdditionalFigures:
 
     def test_claim_evidence_assay_generates_png(self, tmp_path):
         (tmp_path / "manuscript").mkdir()
-        (tmp_path / "manuscript" / "config.yaml").write_text(
-            "paper:\n  title: Test\n", encoding="utf-8"
-        )
+        (tmp_path / "manuscript" / "config.yaml").write_text("paper:\n  title: Test\n", encoding="utf-8")
         out = generate_claim_evidence_assay(tmp_path, project_root=tmp_path)
         assert out.exists()
         assert out.suffix == ".png"
@@ -358,9 +381,7 @@ class TestAdditionalFigures:
 
     def test_integrity_risk_matrix_generates_png(self, tmp_path):
         (tmp_path / "manuscript").mkdir()
-        (tmp_path / "manuscript" / "config.yaml").write_text(
-            "paper:\n  title: Test\n", encoding="utf-8"
-        )
+        (tmp_path / "manuscript" / "config.yaml").write_text("paper:\n  title: Test\n", encoding="utf-8")
         out = generate_integrity_risk_matrix(tmp_path, project_root=tmp_path)
         assert out.exists()
         assert out.suffix == ".png"
@@ -368,9 +389,7 @@ class TestAdditionalFigures:
 
     def test_evidence_tier_ladder_generates_png(self, tmp_path):
         (tmp_path / "manuscript").mkdir()
-        (tmp_path / "manuscript" / "config.yaml").write_text(
-            "paper:\n  title: Test\n", encoding="utf-8"
-        )
+        (tmp_path / "manuscript" / "config.yaml").write_text("paper:\n  title: Test\n", encoding="utf-8")
         out = generate_evidence_tier_ladder(tmp_path, project_root=tmp_path)
         assert out.exists()
         assert out.suffix == ".png"

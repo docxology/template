@@ -373,7 +373,7 @@ def build_manuscript_staleness_report(project_root: Path) -> dict[str, Any]:
             rows.append(
                 {
                     "section": path.relative_to(root).as_posix(),
-                    "token": "<missing_source>",
+                    "token": "<missing_source>",  # nosec B105
                     "expected": "source file exists",
                     "resolved_path": resolved_path.relative_to(root).as_posix(),
                     "fresh": False,
@@ -390,7 +390,7 @@ def build_manuscript_staleness_report(project_root: Path) -> dict[str, Any]:
                 continue
             seen.add(key)
             expected = _expected_token_value(token, precision, variables)
-            if token == "manuscript_staleness_all_fresh":
+            if token == "manuscript_staleness_all_fresh":  # nosec B105
                 expected = "true"
             unresolved = match.group(0) in resolved_text
             fresh = resolved_path.is_file() and not unresolved and expected in resolved_text

@@ -152,7 +152,7 @@ def _http_get_json(url: str, headers: dict[str, str]) -> tuple[int, Any]:
 
     request = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT) as resp:  # nosec B310 - scheme/host validated above.
+        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT) as resp:  # nosec B310
             body = resp.read().decode("utf-8", "replace")
             return resp.status, _try_json(body)
     except urllib.error.HTTPError as exc:
@@ -225,7 +225,7 @@ def check_all(
     return [run_probe(p, environ, override_base=override_base) for p in selected]
 
 
-_BADGE = {"pass": "✅", "fail": "❌", "skipped": "⚪", "no-endpoint": "•"}
+_BADGE = {"pass": "✅", "fail": "❌", "skipped": "⚪", "no-endpoint": "•"}  # nosec B105
 
 
 def format_results(results: list[ProbeResult]) -> str:

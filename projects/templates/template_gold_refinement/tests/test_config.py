@@ -83,21 +83,23 @@ class TestLoadConfig:
         config_dir = tmp_path / "manuscript"
         config_dir.mkdir()
         (config_dir / "config.yaml").write_text(
-            yaml.dump({
-                "gold_refinement": {
-                    "seed": 999,
-                    "composition_depth": "standard",
-                    "lexicon": {
-                        "metallurgical_terms": ["a", "b", "c"],
-                        "manuscript_terms": ["d", "e"],
-                        "purity_adjectives": ["f", "g"],
-                        "refinement_verbs": ["h", "i"],
-                    },
-                    "slots": [
-                        {"name": "TEST_SLOT", "category": "metallurgical_terms", "count": 1, "section": "results"},
-                    ],
+            yaml.dump(
+                {
+                    "gold_refinement": {
+                        "seed": 999,
+                        "composition_depth": "standard",
+                        "lexicon": {
+                            "metallurgical_terms": ["a", "b", "c"],
+                            "manuscript_terms": ["d", "e"],
+                            "purity_adjectives": ["f", "g"],
+                            "refinement_verbs": ["h", "i"],
+                        },
+                        "slots": [
+                            {"name": "TEST_SLOT", "category": "metallurgical_terms", "count": 1, "section": "results"},
+                        ],
+                    }
                 }
-            }),
+            ),
             encoding="utf-8",
         )
         cfg = load_gold_refinement_config(tmp_path)
@@ -110,17 +112,19 @@ class TestLoadConfig:
         config_dir = tmp_path / "manuscript"
         config_dir.mkdir()
         (config_dir / "config.yaml").write_text(
-            yaml.dump({
-                "gold_refinement": {
-                    "composition_depth": "invalid",
-                    "lexicon": {
-                        "metallurgical_terms": ["a"],
-                        "manuscript_terms": ["b"],
-                        "purity_adjectives": ["c"],
-                        "refinement_verbs": ["d"],
-                    },
+            yaml.dump(
+                {
+                    "gold_refinement": {
+                        "composition_depth": "invalid",
+                        "lexicon": {
+                            "metallurgical_terms": ["a"],
+                            "manuscript_terms": ["b"],
+                            "purity_adjectives": ["c"],
+                            "refinement_verbs": ["d"],
+                        },
+                    }
                 }
-            }),
+            ),
             encoding="utf-8",
         )
         with pytest.raises(GoldRefinementConfigError, match="composition_depth"):
@@ -130,14 +134,16 @@ class TestLoadConfig:
         config_dir = tmp_path / "manuscript"
         config_dir.mkdir()
         (config_dir / "config.yaml").write_text(
-            yaml.dump({
-                "gold_refinement": {
-                    "lexicon": {
-                        "metallurgical_terms": ["a"],
-                        # missing required categories
-                    },
+            yaml.dump(
+                {
+                    "gold_refinement": {
+                        "lexicon": {
+                            "metallurgical_terms": ["a"],
+                            # missing required categories
+                        },
+                    }
                 }
-            }),
+            ),
             encoding="utf-8",
         )
         with pytest.raises(GoldRefinementConfigError, match="manuscript_terms"):
@@ -147,16 +153,18 @@ class TestLoadConfig:
         config_dir = tmp_path / "manuscript"
         config_dir.mkdir()
         (config_dir / "config.yaml").write_text(
-            yaml.dump({
-                "gold_refinement": {
-                    "lexicon": {
-                        "metallurgical_terms": [],
-                        "manuscript_terms": ["b"],
-                        "purity_adjectives": ["c"],
-                        "refinement_verbs": ["d"],
-                    },
+            yaml.dump(
+                {
+                    "gold_refinement": {
+                        "lexicon": {
+                            "metallurgical_terms": [],
+                            "manuscript_terms": ["b"],
+                            "purity_adjectives": ["c"],
+                            "refinement_verbs": ["d"],
+                        },
+                    }
                 }
-            }),
+            ),
             encoding="utf-8",
         )
         with pytest.raises(GoldRefinementConfigError, match="metallurgical_terms"):
@@ -166,19 +174,21 @@ class TestLoadConfig:
         config_dir = tmp_path / "manuscript"
         config_dir.mkdir()
         (config_dir / "config.yaml").write_text(
-            yaml.dump({
-                "gold_refinement": {
-                    "lexicon": {
-                        "metallurgical_terms": ["a"],
-                        "manuscript_terms": ["b"],
-                        "purity_adjectives": ["c"],
-                        "refinement_verbs": ["d"],
-                    },
-                    "slots": [
-                        {"name": "S", "category": "nonexistent", "count": 1},
-                    ],
+            yaml.dump(
+                {
+                    "gold_refinement": {
+                        "lexicon": {
+                            "metallurgical_terms": ["a"],
+                            "manuscript_terms": ["b"],
+                            "purity_adjectives": ["c"],
+                            "refinement_verbs": ["d"],
+                        },
+                        "slots": [
+                            {"name": "S", "category": "nonexistent", "count": 1},
+                        ],
+                    }
                 }
-            }),
+            ),
             encoding="utf-8",
         )
         with pytest.raises(GoldRefinementConfigError, match="nonexistent"):
@@ -188,17 +198,19 @@ class TestLoadConfig:
         config_dir = tmp_path / "manuscript"
         config_dir.mkdir()
         (config_dir / "config.yaml").write_text(
-            yaml.dump({
-                "gold_refinement": {
-                    "lexicon": {
-                        "metallurgical_terms": ["a"],
-                        "manuscript_terms": ["b"],
-                        "purity_adjectives": ["c"],
-                        "refinement_verbs": ["d"],
-                        "custom_category": ["e", "f"],
-                    },
+            yaml.dump(
+                {
+                    "gold_refinement": {
+                        "lexicon": {
+                            "metallurgical_terms": ["a"],
+                            "manuscript_terms": ["b"],
+                            "purity_adjectives": ["c"],
+                            "refinement_verbs": ["d"],
+                            "custom_category": ["e", "f"],
+                        },
+                    }
                 }
-            }),
+            ),
             encoding="utf-8",
         )
         cfg = load_gold_refinement_config(tmp_path)
@@ -217,17 +229,19 @@ class TestConfigProperties:
         config_dir = tmp_path / "manuscript"
         config_dir.mkdir()
         (config_dir / "config.yaml").write_text(
-            yaml.dump({
-                "gold_refinement": {
-                    "section_conditions": {"abstract": False},
-                    "lexicon": {
-                        "metallurgical_terms": ["a"],
-                        "manuscript_terms": ["b"],
-                        "purity_adjectives": ["c"],
-                        "refinement_verbs": ["d"],
-                    },
+            yaml.dump(
+                {
+                    "gold_refinement": {
+                        "section_conditions": {"abstract": False},
+                        "lexicon": {
+                            "metallurgical_terms": ["a"],
+                            "manuscript_terms": ["b"],
+                            "purity_adjectives": ["c"],
+                            "refinement_verbs": ["d"],
+                        },
+                    }
                 }
-            }),
+            ),
             encoding="utf-8",
         )
         cfg = load_gold_refinement_config(tmp_path)
@@ -284,6 +298,7 @@ class TestConfigBranchEdgeCases:
         }
         base["gold_refinement"].update(extra)
         import yaml
+
         (config_dir / "config.yaml").write_text(yaml.dump(base), encoding="utf-8")
         return tmp_path
 
@@ -292,18 +307,21 @@ class TestConfigBranchEdgeCases:
         cfg_dir = tmp_path / "manuscript"
         cfg_dir.mkdir()
         import yaml
+
         (cfg_dir / "config.yaml").write_text(
-            yaml.dump({
-                "gold_refinement": {
-                    "lexicon": {
-                        "metallurgical_terms": ["a"],
-                        "manuscript_terms": ["b"],
-                        "purity_adjectives": ["c"],
-                        "refinement_verbs": ["d"],
-                        "empty_optional": [],
+            yaml.dump(
+                {
+                    "gold_refinement": {
+                        "lexicon": {
+                            "metallurgical_terms": ["a"],
+                            "manuscript_terms": ["b"],
+                            "purity_adjectives": ["c"],
+                            "refinement_verbs": ["d"],
+                            "empty_optional": [],
+                        }
                     }
                 }
-            }),
+            ),
             encoding="utf-8",
         )
         cfg = load_gold_refinement_config(tmp_path)

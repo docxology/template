@@ -46,6 +46,11 @@ logger = logging.getLogger(__name__)
 FIGURE_DPI = 300
 FIGURE_FORMAT = "png"
 SEED = 431
+SVG_HASH_SALT = "template-gold-refinement-v1"
+SVG_METADATA = {"Date": None, "Creator": "template_gold_refinement"}
+PNG_METADATA = {"Software": "template_gold_refinement"}
+
+matplotlib.rcParams["svg.hashsalt"] = SVG_HASH_SALT
 
 
 @dataclass(frozen=True)
@@ -254,8 +259,8 @@ def _normalize_svg_whitespace(svg_path: Path) -> None:
 
 def _save_figure(fig: plt.Figure, out_path: Path) -> Path:
     svg_path = _svg_path(out_path)
-    fig.savefig(out_path, dpi=FIGURE_DPI, bbox_inches="tight")
-    fig.savefig(svg_path, format="svg", bbox_inches="tight")
+    fig.savefig(out_path, dpi=FIGURE_DPI, bbox_inches="tight", metadata=PNG_METADATA)
+    fig.savefig(svg_path, format="svg", bbox_inches="tight", metadata=SVG_METADATA)
     _normalize_svg_whitespace(svg_path)
     plt.close(fig)
     logger.info("Wrote %s", out_path)
@@ -397,17 +402,17 @@ def build_formalism_traceability_graph() -> nx.DiGraph:
 def build_implementation_circuit_graph() -> nx.DiGraph:
     graph = nx.DiGraph()
     nodes = {
-        "config": ("Config ore\nconfig.yaml", "source", 0),
-        "refinery": ("Refinery code\npurity stages", "code", 1),
-        "tokens": ("Token plan\ndigest selections", "generated", 1),
-        "formalisms": ("Formalisms\nequation labels", "code", 2),
-        "figures": ("Figures\nPNG + SVG registry", "generated", 2),
-        "manuscript": ("Hydrated manuscript\nresolved variables", "manuscript", 3),
-        "validators": ("Validators\npytest/evidence/render", "validation", 4),
-        "publication": ("Publication metal\nPDF + HTML", "publication", 5),
+        "config": ("Config ore\nconfig.yaml", "source", 0, -2.4, 0.0),
+        "refinery": ("Refinery code\npurity stages", "code", 1, -1.45, 0.48),
+        "tokens": ("Token plan\ndigest selections", "generated", 1, -1.45, -0.48),
+        "formalisms": ("Formalisms\nequation labels", "code", 2, -0.35, 0.48),
+        "figures": ("Figures\nPNG + SVG registry", "generated", 2, -0.35, -0.48),
+        "manuscript": ("Hydrated manuscript\nresolved variables", "manuscript", 3, 0.85, 0.0),
+        "validators": ("Validators\npytest/evidence/render", "validation", 4, 1.85, 0.0),
+        "publication": ("Publication metal\nPDF + HTML", "publication", 5, 2.75, 0.0),
     }
-    for node, (label, kind, layer) in nodes.items():
-        graph.add_node(node, label=label, kind=kind, layer=layer)
+    for node, (label, kind, layer, x, y) in nodes.items():
+        graph.add_node(node, label=label, kind=kind, layer=layer, x=x, y=y)
     for source, target, label in (
         ("config", "refinery", "targets"),
         ("config", "tokens", "slots"),
@@ -1017,7 +1022,7 @@ def generate_implementation_circuit(
     _ensure_output_dir(output_dir)
 
     graph = build_implementation_circuit_graph()
-    positions = nx.multipartite_layout(graph, subset_key="layer", align="vertical", scale=2.4)
+    positions = {node: (float(data["x"]), float(data["y"])) for node, data in graph.nodes(data=True)}
 
     fig, ax = plt.subplots(figsize=(12.5, 7.2))
     _draw_labeled_digraph(ax, graph, positions, node_size=2600, font_size=7.4)

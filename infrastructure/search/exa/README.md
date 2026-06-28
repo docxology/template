@@ -90,3 +90,16 @@ higher-quality synthesis. See the guide's Search Type Reference for latencies.
   reject `exclude_domains` and date filters (caught before the request).
 - **No external SDK / no import-time network.** Pure-stdlib transport keeps the
   core pipeline offline-reproducible; tests use `pytest-httpserver`, no mocks.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [exa/answer package (technical)](answer/AGENTS.md)
+- [exa/contents package (technical)](contents/AGENTS.md)
+- [exa/find_similar package (technical)](find_similar/AGENTS.md)
+- [exa/search package (technical)](search/AGENTS.md)
+
+<!-- foam-orphan-nav:end -->

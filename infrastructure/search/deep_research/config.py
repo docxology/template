@@ -78,12 +78,12 @@ def ensure_dotenv_loaded() -> None:
         from infrastructure.core.credentials import CredentialManager
 
         CredentialManager()  # constructor loads .env via python-dotenv if available
-    except Exception:  # noqa: BLE001 - .env loading is best-effort; explicit env still works
-        pass
+    except Exception as exc:  # noqa: BLE001 - .env loading is best-effort; explicit env still works
+        del exc
     try:
         _load_dotenv_fallback()
-    except Exception:  # noqa: BLE001 - never let .env parsing crash provider discovery
-        pass
+    except Exception as exc:  # noqa: BLE001 - never let .env parsing crash provider discovery
+        del exc
     _DOTENV_LOADED = True
 
 

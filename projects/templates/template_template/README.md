@@ -89,3 +89,17 @@ See [`docs/VERIFICATION.md`](docs/VERIFICATION.md) for the full gate checklist.
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_template/tests/ --cov=projects/templates/template_template/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [AGENTS — figures](figures/AGENTS.md)
+- [figures](figures/README.md)
+- [AGENTS: scripts/ — Thin Orchestrator Scripts](scripts/AGENTS.md)
+- [Template Scripts](scripts/README.md)
+- [Template Project Tests](tests/README.md)
+
+<!-- foam-orphan-nav:end -->

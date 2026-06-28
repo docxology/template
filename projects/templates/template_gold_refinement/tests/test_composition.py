@@ -154,6 +154,7 @@ class TestChooseValueEmptyLexicon:
     def test_empty_lexicon_category_raises(self):
         from composition import _choose_value  # type: ignore[attr-defined]
         from config import GoldRefinementConfig, SlotSpec
+
         cfg = GoldRefinementConfig(
             seed=1,
             lexicon={"metallurgical_terms": ()},

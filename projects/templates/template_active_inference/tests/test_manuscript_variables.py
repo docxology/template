@@ -113,7 +113,7 @@ def test_invariant_counts_fall_back_to_si_invariants(project_root: Path, tmp_pat
     try:
         analytical_only = {
             "invariants": json.loads(inv_backup.read_text(encoding="utf-8")).get("invariants") or {},
-            "all_pass": True,
+            "all_pass": True,  # nosec B105
         }
         inv_path.write_text(json.dumps(analytical_only), encoding="utf-8")
         si_data = json.loads(si_backup.read_text(encoding="utf-8"))

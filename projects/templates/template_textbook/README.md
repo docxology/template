@@ -188,3 +188,13 @@ Dual-licensed: **code** (`src/`, `scripts/`, `tests/`) under **Apache-2.0**
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_textbook/tests/ --cov=projects/templates/template_textbook/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [src/ — agent notes](src/AGENTS.md)
+
+<!-- foam-orphan-nav:end -->

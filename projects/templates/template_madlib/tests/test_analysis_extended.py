@@ -118,8 +118,8 @@ def test_generate_artifacts_with_partial_visualizations(tmp_path: Path) -> None:
     payload = base_payload()
     payload["madlib"]["visualizations"] = {
         "enabled": True,
-        "token_injection_flow": True,
-        "section_token_allocation": False,
+        "token_injection_flow": True,  # nosec B105
+        "section_token_allocation": False,  # nosec B105
         "provenance_trace_map": False,
         "quality_gate_matrix": True,
         "configured_field_matrix": False,

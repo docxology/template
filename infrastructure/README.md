@@ -416,3 +416,14 @@ flowchart TB
 - [AGENTS.md](AGENTS.md) - infrastructure documentation
 - [../tests/infra_tests/](../tests/infra_tests/) - Infrastructure test suite
 - [../scripts/](../scripts/) - Orchestration scripts
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [Methods Orchestration](methods/README.md)
+- [Contributors Guide](steganography/kmyth/CONTRIBUTING.md)
+
+<!-- foam-orphan-nav:end -->

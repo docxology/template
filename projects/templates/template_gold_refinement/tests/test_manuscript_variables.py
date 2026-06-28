@@ -43,8 +43,18 @@ def _make_minimal_project(tmp_path: Path) -> Path:
                         "refinement_verbs": ["assaying", "certifying", "refining"],
                     },
                     "slots": [
-                        {"name": "METHOD_METAL_TERM", "category": "metallurgical_terms", "count": 2, "section": "methodology"},
-                        {"name": "RESULTS_PURITY_ADJ", "category": "purity_adjectives", "count": 1, "section": "results"},
+                        {
+                            "name": "METHOD_METAL_TERM",
+                            "category": "metallurgical_terms",
+                            "count": 2,
+                            "section": "methodology",
+                        },
+                        {
+                            "name": "RESULTS_PURITY_ADJ",
+                            "category": "purity_adjectives",
+                            "count": 1,
+                            "section": "results",
+                        },
                     ],
                 },
             }
@@ -226,9 +236,7 @@ def test_figure_quality_variables_read_generated_report(tmp_path):
     assert v["FIGURE_QUALITY_PNG_COUNT"] == "1"
     assert v["FIGURE_QUALITY_SVG_COUNT"] == "1"
     assert v["FIGURE_QUALITY_REGISTRY_PARITY"] == "Yes"
-    assert "| purity_progression | yes | yes | 1800x1200 | 0.123 | 0.01234567 | pass |" in v[
-        "FIGURE_QUALITY_TABLE"
-    ]
+    assert "| purity_progression | yes | yes | 1800x1200 | 0.123 | 0.01234567 | pass |" in v["FIGURE_QUALITY_TABLE"]
 
 
 def test_config_hash_na_when_no_config(tmp_path):
@@ -306,7 +314,6 @@ def test_all_manuscript_tokens_are_generated(tmp_path):
             if token not in produced:
                 unresolved.setdefault(token, []).append(md_file.name)
 
-    assert not unresolved, (
-        "Manuscript tokens not produced by generate_variables():\n"
-        + "\n".join(f"  {{{{{t}}}}}: {files}" for t, files in sorted(unresolved.items()))
+    assert not unresolved, "Manuscript tokens not produced by generate_variables():\n" + "\n".join(
+        f"  {{{{{t}}}}}: {files}" for t, files in sorted(unresolved.items())
     )

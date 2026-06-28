@@ -264,3 +264,31 @@ requires the legacy single pytest coverage process.
 
 The inventory distinguishes inline docstrings from inventory fallbacks, so missing
 docstrings remain visible without bloating internal helper code.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [Data Notes](data/AGENTS.md)
+- [Data](data/README.md)
+- [template_active_inference docs](docs/README.md)
+- [GNN Specification Notes](gnn/AGENTS.md)
+- [GNN model specifications](gnn/README.md)
+- [GNN Example: K=2 Bernoulli / Ising Policy-Entanglement Toy](gnn/bernoulli_toy.gnn.md)
+- [GNN Example: T-maze Sophisticated Inference](gnn/si_tmaze.gnn.md)
+- [Lean Track Notes](lean/AGENTS.md)
+- [Lean Module Notes](lean/TemplateActiveInference/AGENTS.md)
+- [Lean proof modules](lean/TemplateActiveInference/README.md)
+- [Source Module Notes](src/AGENTS.md)
+- [Analytical (closed-form) track](src/analytical/README.md)
+- [GNN (Generalized Notation Notation)](src/gnn/README.md)
+- [Ontology bindings](src/ontology/README.md)
+- [Orchestration Notes](src/orchestration/AGENTS.md)
+- [Orchestration](src/orchestration/README.md)
+- [Simulation (pymdp track)](src/simulation/README.md)
+- [Validation spine package](src/validation_spine/README.md)
+- [Visualizations](src/visualizations/README.md)
+
+<!-- foam-orphan-nav:end -->

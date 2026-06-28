@@ -202,7 +202,7 @@ def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() ->
                 "status": "completed",
                 "artifact_group": "ml",
                 "artifact_count": 8,
-                "readiness_settlement_pass": 1,
+                "readiness_settlement_pass": 1,  # nosec B105
                 "claim_boundary": "local diagnostics only",
             }
         ]

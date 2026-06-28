@@ -316,7 +316,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
         "![Gold karat grading scale with refinery stage markers](../output/figures/karat_grading.png)"
         "{#fig:karat_grading}"
     )
-    variables["FIGURE_TOKEN_DENSITY"] = (
+    variables["FIGURE_TOKEN_DENSITY"] = (  # nosec B105
         "![Mega-madlib token distribution](../output/figures/token_density.png){#fig:token_density}"
     )
     variables["FIGURE_PROVENANCE_SANKEY"] = (
@@ -325,7 +325,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     variables["FIGURE_PURITY_CLAIM_SCATTER"] = (
         "![Purity vs claim support](../output/figures/purity_claim_scatter.png){#fig:purity_claim_scatter}"
     )
-    variables["FIGURE_TOKEN_HEATMAP"] = (
+    variables["FIGURE_TOKEN_HEATMAP"] = (  # nosec B105
         "![Token selection heatmap](../output/figures/token_heatmap.png){#fig:token_heatmap}"
     )
     variables["FIGURE_INTEGRITY_GATE_MATRIX"] = (

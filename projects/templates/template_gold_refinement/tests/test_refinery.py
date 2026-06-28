@@ -83,6 +83,7 @@ class TestRunRefinery:
         """RefineryResult with empty stages tuple returns empty purity_sequence."""
         from refinery import RefineryResult
         from purity import karat_for_purity
+
         result = RefineryResult(
             stages=(),
             final_purity=0.999999999,
@@ -98,12 +99,20 @@ class TestRunRefinery:
     def test_non_monotone_pipeline_raises(self):
         bad_stages = (
             RefinementStage(
-                name="a", metallurgical_operation="op", manuscript_operation="mop",
-                input_purity=0.5, output_purity=0.3, order=1,
+                name="a",
+                metallurgical_operation="op",
+                manuscript_operation="mop",
+                input_purity=0.5,
+                output_purity=0.3,
+                order=1,
             ),
             RefinementStage(
-                name="b", metallurgical_operation="op", manuscript_operation="mop",
-                input_purity=0.3, output_purity=0.9, order=2,
+                name="b",
+                metallurgical_operation="op",
+                manuscript_operation="mop",
+                input_purity=0.3,
+                output_purity=0.9,
+                order=2,
             ),
         )
         with pytest.raises(ValueError, match="must increase monotonically"):
@@ -112,8 +121,12 @@ class TestRunRefinery:
     def test_wrong_order_raises(self):
         bad_stages = (
             RefinementStage(
-                name="a", metallurgical_operation="op", manuscript_operation="mop",
-                input_purity=0.1, output_purity=0.5, order=2,
+                name="a",
+                metallurgical_operation="op",
+                manuscript_operation="mop",
+                input_purity=0.1,
+                output_purity=0.5,
+                order=2,
             ),
         )
         with pytest.raises(ValueError, match="Stage order mismatch"):

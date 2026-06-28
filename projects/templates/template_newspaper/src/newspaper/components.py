@@ -410,7 +410,7 @@ def ad_flowables(ad: Ad, styles: StyleSheet1, fonts: Fonts, *, width: float, pro
                 img.hAlign = "CENTER"
                 inner.append(img)
                 inner.append(Spacer(1, 4))
-            except Exception:  # noqa: BLE001 - final handler: broad by design so any parse/IO/asset failure falls back gracefully; narrowing would create silent gaps
+            except (OSError, TypeError, ValueError, ZeroDivisionError):
                 pass
 
     inner.append(

@@ -123,7 +123,7 @@ uv run python -m infrastructure.publishing.archival_cli \
 uv run python -m infrastructure.publishing.archival_cli \
   --bundle <file-with-repo-url> --providers software_heritage --commit
 
-# TestPyPI (build already verified)
+# TestPyPI (build already verified) — turnkey script wraps run_pypi_release()
 TESTPYPI_TOKEN=... uv run python scripts/publish/upload_gold_refinement.py --commit --only testpypi
 ```
 

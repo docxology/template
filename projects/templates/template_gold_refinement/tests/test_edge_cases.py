@@ -30,24 +30,26 @@ def _minimal_manuscript(tmp_path: Path) -> Path:
     ms = tmp_path / "manuscript"
     ms.mkdir(parents=True)
     (ms / "config.yaml").write_text(
-        yaml.dump({
-            "paper": {"title": "Edge Test", "version": "0.1"},
-            "authors": [{"name": "Bob"}],
-            "keywords": ["gold"],
-            "gold_refinement": {
-                "seed": 1,
-                "composition_depth": "compact",
-                "lexicon": {
-                    "metallurgical_terms": ["cupellation", "assaying"],
-                    "manuscript_terms": ["draft", "claim"],
-                    "purity_adjectives": ["refined", "pure"],
-                    "refinement_verbs": ["smelt", "certify"],
+        yaml.dump(
+            {
+                "paper": {"title": "Edge Test", "version": "0.1"},
+                "authors": [{"name": "Bob"}],
+                "keywords": ["gold"],
+                "gold_refinement": {
+                    "seed": 1,
+                    "composition_depth": "compact",
+                    "lexicon": {
+                        "metallurgical_terms": ["cupellation", "assaying"],
+                        "manuscript_terms": ["draft", "claim"],
+                        "purity_adjectives": ["refined", "pure"],
+                        "refinement_verbs": ["smelt", "certify"],
+                    },
+                    "slots": [
+                        {"name": "SLOT_A", "category": "metallurgical_terms", "count": 1, "section": "methodology"},
+                    ],
                 },
-                "slots": [
-                    {"name": "SLOT_A", "category": "metallurgical_terms", "count": 1, "section": "methodology"},
-                ],
-            },
-        }),
+            }
+        ),
         encoding="utf-8",
     )
     return tmp_path
@@ -63,6 +65,7 @@ class TestCheckEvidenceSourcePaths:
 
     def _check(self, source: str, project_root: Path) -> tuple[bool, str]:
         from evidence import _check_evidence_source  # type: ignore[attr-defined]
+
         return _check_evidence_source(source, project_root)
 
     def test_hash_style_source_existing_file(self, tmp_path):
@@ -109,11 +112,13 @@ class TestEvidenceRegistryZeroClaims:
 
     def test_zero_total_support_rate(self):
         from evidence import EvidenceRegistry
+
         reg = EvidenceRegistry(entries=[], total_claims=0, supported_claims=0, unsupported_claims=0)
         assert reg.support_rate == 0.0
 
     def test_zero_total_is_not_passing(self):
         from evidence import EvidenceRegistry
+
         reg = EvidenceRegistry(entries=[], total_claims=0, supported_claims=0, unsupported_claims=0)
         assert reg.is_passing is False
 
@@ -166,6 +171,7 @@ class TestDashboardWithPopulatedData:
     def test_token_category_rows_rendered(self, tmp_path):
         """Token category count rows appear in dashboard HTML."""
         from dashboard import build_dashboard_html
+
         token_data = {
             "total_tokens": 6,
             "section_counts": {"methodology": 4, "results": 2},
@@ -179,14 +185,23 @@ class TestDashboardWithPopulatedData:
     def test_evidence_entry_rows_rendered(self, tmp_path):
         """Evidence entry rows (✅/❌) appear in dashboard HTML when entries provided."""
         from dashboard import build_dashboard_html
+
         evidence_data = {
             "total_claims": 2,
             "supported_claims": 1,
             "entries": [
-                {"claim_name": "monotone-purity", "evidence_source": "src/refinery.py::CANONICAL_STAGES",
-                 "boundary": "local", "supported": True},
-                {"claim_name": "broken-claim", "evidence_source": "missing/file.py",
-                 "boundary": "local", "supported": False},
+                {
+                    "claim_name": "monotone-purity",
+                    "evidence_source": "src/refinery.py::CANONICAL_STAGES",
+                    "boundary": "local",
+                    "supported": True,
+                },
+                {
+                    "claim_name": "broken-claim",
+                    "evidence_source": "missing/file.py",
+                    "boundary": "local",
+                    "supported": False,
+                },
             ],
         }
         html = build_dashboard_html(tmp_path, evidence_data=evidence_data)
@@ -198,6 +213,7 @@ class TestDashboardWithPopulatedData:
     def test_dashboard_with_all_data_files(self, tmp_path):
         """Dashboard correctly reads and renders all three data files from disk."""
         from dashboard import build_dashboard_html
+
         data_dir = tmp_path / "output" / "data"
         reports_dir = tmp_path / "output" / "reports"
         data_dir.mkdir(parents=True)
@@ -207,22 +223,26 @@ class TestDashboardWithPopulatedData:
             json.dumps({"stage_count": 5, "final_purity": 0.999999999}), encoding="utf-8"
         )
         (reports_dir / "token_plan.json").write_text(
-            json.dumps({
-                "total_tokens": 4,
-                "section_counts": {"methodology": 3},
-                "category_counts": {"metallurgical_terms": 3, "manuscript_terms": 1},
-            }),
+            json.dumps(
+                {
+                    "total_tokens": 4,
+                    "section_counts": {"methodology": 3},
+                    "category_counts": {"metallurgical_terms": 3, "manuscript_terms": 1},
+                }
+            ),
             encoding="utf-8",
         )
         (reports_dir / "claim_support_registry.json").write_text(
-            json.dumps({
-                "total_claims": 2,
-                "supported_claims": 2,
-                "entries": [
-                    {"claim_name": "c1", "evidence_source": "src/x.py", "boundary": "local", "supported": True},
-                    {"claim_name": "c2", "evidence_source": "src/y.py", "boundary": "local", "supported": True},
-                ],
-            }),
+            json.dumps(
+                {
+                    "total_claims": 2,
+                    "supported_claims": 2,
+                    "entries": [
+                        {"claim_name": "c1", "evidence_source": "src/x.py", "boundary": "local", "supported": True},
+                        {"claim_name": "c2", "evidence_source": "src/y.py", "boundary": "local", "supported": True},
+                    ],
+                }
+            ),
             encoding="utf-8",
         )
         html = build_dashboard_html(tmp_path)
@@ -246,6 +266,7 @@ class TestFiguresNonePathFallbacks:
         """When output_dir=None and project_root=None, figures fall back to cwd."""
         monkeypatch.chdir(tmp_path)
         from figures import generate_purity_progression
+
         out = generate_purity_progression(output_dir=None, project_root=None)
         assert out.exists()
         assert out.name == "purity_progression.png"
@@ -254,6 +275,7 @@ class TestFiguresNonePathFallbacks:
         """karat grading chart uses cwd fallback when both args are None."""
         monkeypatch.chdir(tmp_path)
         from figures import generate_karat_grading_chart
+
         out = generate_karat_grading_chart(output_dir=None, project_root=None)
         assert out.exists()
         assert out.name == "karat_grading.png"
@@ -262,6 +284,7 @@ class TestFiguresNonePathFallbacks:
         """karat grading chart uses project_root/output/figures when output_dir=None."""
         (tmp_path / "manuscript").mkdir()
         from figures import generate_karat_grading_chart
+
         out = generate_karat_grading_chart(output_dir=None, project_root=tmp_path)
         assert out.exists()
         assert "figures" in str(out)
@@ -270,6 +293,7 @@ class TestFiguresNonePathFallbacks:
         """Token density chart uses cwd fallback when both args are None."""
         monkeypatch.chdir(tmp_path)
         from figures import generate_token_density_chart
+
         out = generate_token_density_chart(output_dir=None, project_root=None)
         assert out.exists()
         assert out.name == "token_density.png"
@@ -281,13 +305,16 @@ class TestFiguresNonePathFallbacks:
         figures_dir = tmp_path / "output" / "figures"
         figures_dir.mkdir(parents=True)
         (reports_dir / "token_plan.json").write_text(
-            json.dumps({
-                "section_counts": {"methodology": 4, "results": 2},
-                "category_counts": {"metallurgical_terms": 3, "manuscript_terms": 1},
-            }),
+            json.dumps(
+                {
+                    "section_counts": {"methodology": 4, "results": 2},
+                    "category_counts": {"metallurgical_terms": 3, "manuscript_terms": 1},
+                }
+            ),
             encoding="utf-8",
         )
         from figures import generate_token_density_chart
+
         out = generate_token_density_chart(figures_dir)
         assert out.exists()
         assert out.stat().st_size > 100
@@ -296,6 +323,7 @@ class TestFiguresNonePathFallbacks:
         """Provenance sankey uses cwd fallback when output_dir=None."""
         monkeypatch.chdir(tmp_path)
         from figures import generate_provenance_sankey
+
         out = generate_provenance_sankey(output_dir=None, project_root=None)
         assert out.exists()
         assert out.name == "provenance_sankey.png"
@@ -304,6 +332,7 @@ class TestFiguresNonePathFallbacks:
         """Purity-claim scatter uses cwd fallback when output_dir=None."""
         monkeypatch.chdir(tmp_path)
         from figures import generate_purity_claim_scatter
+
         out = generate_purity_claim_scatter(output_dir=None, project_root=None)
         assert out.exists()
         assert out.name == "purity_claim_scatter.png"
@@ -313,10 +342,9 @@ class TestFiguresNonePathFallbacks:
         figures_dir.mkdir(parents=True)
         reports_dir = tmp_path / "output" / "reports"
         reports_dir.mkdir(parents=True)
-        (reports_dir / "claim_support_registry.json").write_text(
-            json.dumps({"support_rate": 0.75}), encoding="utf-8"
-        )
+        (reports_dir / "claim_support_registry.json").write_text(json.dumps({"support_rate": 0.75}), encoding="utf-8")
         from figures import generate_purity_claim_scatter
+
         out = generate_purity_claim_scatter(figures_dir, project_root=tmp_path)
         assert out.exists()
         assert out.stat().st_size > 100
@@ -326,6 +354,7 @@ class TestFiguresNonePathFallbacks:
         monkeypatch.chdir(tmp_path)
         (tmp_path / "manuscript").mkdir()
         from figures import generate_token_heatmap
+
         out = generate_token_heatmap(output_dir=None, project_root=None)
         assert out.exists()
         assert out.name == "token_heatmap.png"
@@ -342,6 +371,7 @@ class TestManuscriptVariablesStalenessDetection:
     def test_stale_when_output_manuscript_missing(self, tmp_path):
         """When output/manuscript/ doesn't exist, status is 'stale'."""
         from manuscript_variables import generate_variables
+
         root = _minimal_manuscript(tmp_path)
         v = generate_variables(root)
         assert v["MANUSCRIPT_STALENESS"].startswith("stale")
@@ -349,6 +379,7 @@ class TestManuscriptVariablesStalenessDetection:
     def test_stale_when_source_file_missing_from_output(self, tmp_path):
         """When a source *.md is missing from output/manuscript/, status is 'stale'."""
         from manuscript_variables import generate_variables
+
         root = _minimal_manuscript(tmp_path)
         # Create source section file
         (root / "manuscript" / "00_abstract.md").write_text("# Abstract\n", encoding="utf-8")
@@ -361,6 +392,7 @@ class TestManuscriptVariablesStalenessDetection:
         """When source file is newer than rendered output, status is 'stale'."""
         import time
         from manuscript_variables import generate_variables
+
         root = _minimal_manuscript(tmp_path)
         src_file = root / "manuscript" / "00_abstract.md"
         out_dir = root / "output" / "manuscript"
@@ -379,6 +411,7 @@ class TestManuscriptVariablesStalenessDetection:
         """When all output files are newer than source files, status is 'fresh'."""
         import time
         from manuscript_variables import generate_variables
+
         root = _minimal_manuscript(tmp_path)
         src_file = root / "manuscript" / "00_abstract.md"
         src_file.write_text("# Abstract\n", encoding="utf-8")
@@ -400,6 +433,7 @@ class TestSourceDateEpoch:
         """When SOURCE_DATE_EPOCH is set, timestamp is deterministic."""
         monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
         from manuscript_variables import _build_timestamp  # type: ignore[attr-defined]
+
         ts = _build_timestamp()
         assert ts == "1970-01-01T00:00:00Z"
 
@@ -407,6 +441,7 @@ class TestSourceDateEpoch:
         """When SOURCE_DATE_EPOCH is unset, timestamp matches current UTC roughly."""
         monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
         from manuscript_variables import _build_timestamp  # type: ignore[attr-defined]
+
         ts = _build_timestamp()
         assert ts.endswith("Z")
         assert len(ts) == 20  # YYYY-MM-DDTHH:MM:SSZ
@@ -422,6 +457,7 @@ class TestPublicAPIImport:
 
     def test_import_run_refinery(self):
         import sys
+
         # Import via the package __init__
         pkg_path = str(_PROJECT_ROOT / "src")
         if pkg_path not in sys.path:
@@ -434,6 +470,7 @@ class TestPublicAPIImport:
         from assay import ClaimRecord
         from evidence import EvidenceRegistry
         from dashboard import build_dashboard_html
+
         # Verify key imports resolve
         assert run_refinery is not None
         assert CANONICAL_STAGES is not None

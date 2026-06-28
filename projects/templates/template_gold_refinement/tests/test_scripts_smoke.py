@@ -3,21 +3,25 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_SCRIPT_ENV = {**os.environ, "SOURCE_DATE_EPOCH": "1782345600"}
 
 
 class TestRefinementAnalysisScript:
     def test_script_exits_zero(self):
         import subprocess
+
         proc = subprocess.run(
             [sys.executable, str(_PROJECT_ROOT / "scripts" / "refinement_analysis.py")],
             capture_output=True,
             text=True,
             timeout=60,
             cwd=str(_PROJECT_ROOT),
+            env=_SCRIPT_ENV,
         )
         assert proc.returncode == 0, proc.stderr or proc.stdout
         # Check output files exist
@@ -37,17 +41,17 @@ class TestRefinementAnalysisScript:
 
     def test_refinery_results_content(self):
         import subprocess
+
         proc = subprocess.run(
             [sys.executable, str(_PROJECT_ROOT / "scripts" / "refinement_analysis.py")],
             capture_output=True,
             text=True,
             timeout=60,
             cwd=str(_PROJECT_ROOT),
+            env=_SCRIPT_ENV,
         )
         assert proc.returncode == 0
-        data = json.loads(
-            (_PROJECT_ROOT / "output" / "data" / "refinery_results.json").read_text()
-        )
+        data = json.loads((_PROJECT_ROOT / "output" / "data" / "refinery_results.json").read_text())
         assert data["stage_count"] == 5
         assert data["is_nine_nines_certified"] is True
         assert data["final_karat"] == "24K (nine-nines certified)"
@@ -57,12 +61,14 @@ class TestManuscriptVariablesScript:
     def test_script_exits_zero_with_analysis(self):
         # Ensure analysis outputs exist first
         import subprocess
+
         proc = subprocess.run(
             [sys.executable, str(_PROJECT_ROOT / "scripts" / "refinement_analysis.py")],
             capture_output=True,
             text=True,
             timeout=60,
             cwd=str(_PROJECT_ROOT),
+            env=_SCRIPT_ENV,
         )
         assert proc.returncode == 0
 
@@ -75,6 +81,7 @@ class TestManuscriptVariablesScript:
             text=True,
             timeout=60,
             cwd=str(_PROJECT_ROOT),
+            env=_SCRIPT_ENV,
         )
         assert proc2.returncode == 0, proc2.stderr or proc2.stdout
         vars_path = _PROJECT_ROOT / "output" / "data" / "manuscript_variables.json"
@@ -98,6 +105,7 @@ class TestManuscriptVariablesScript:
 
     def test_script_draft_mode(self):
         import subprocess
+
         proc = subprocess.run(
             [
                 sys.executable,
@@ -108,5 +116,6 @@ class TestManuscriptVariablesScript:
             text=True,
             timeout=60,
             cwd=str(_PROJECT_ROOT),
+            env=_SCRIPT_ENV,
         )
         assert proc.returncode == 0, proc.stderr or proc.stdout

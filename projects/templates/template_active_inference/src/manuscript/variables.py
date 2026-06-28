@@ -209,7 +209,7 @@ VARIABLE_ARTIFACTS: dict[str, str] = {
     "section_status": "output/data/sheaf_section_status_matrix.json",
     "render_log": "output/reports/sheaf_render_log.json",
     "claim_audit": "output/reports/claim_evidence_audit.json",
-    "token_provenance": "output/data/manuscript_token_provenance.json",
+    "token_provenance": "output/data/manuscript_token_provenance.json",  # nosec B105
     "cross_symbol": "output/data/cross_track_symbol_table.json",
     "assumption": "output/data/analytical_assumption_index.json",
     "animation_delta": "output/data/animation_frame_deltas.json",

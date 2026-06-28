@@ -64,7 +64,9 @@ def test_llm_review_gating_requires_ollama_and_opt_in(tmp_path):
     policy = load_pipeline_policy(root)
 
     assert llm_review_is_enabled(policy.llm_reviews, ollama_available=False, explicit_opt_in=True) is False
-    assert llm_review_gate_reason(policy.llm_reviews, ollama_available=False, explicit_opt_in=True) == "Ollama unavailable"
+    assert (
+        llm_review_gate_reason(policy.llm_reviews, ollama_available=False, explicit_opt_in=True) == "Ollama unavailable"
+    )
     assert llm_review_is_enabled(policy.llm_reviews, ollama_available=True, explicit_opt_in=False) is False
     assert "explicit opt-in required" in llm_review_gate_reason(
         policy.llm_reviews,

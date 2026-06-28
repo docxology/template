@@ -151,3 +151,14 @@ the time `mutate()` is called.
 * `scripts/health-check.sh` — pre-flight tooling check (uv, Python,
   Docker, disk). Doctor's `DOC1xx` family covers the same surface but
   produces structured findings with optional remediation.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [Doctor detectors package](detectors/AGENTS.md)
+- [infrastructure/doctor/detectors/](detectors/README.md)
+
+<!-- foam-orphan-nav:end -->

@@ -64,9 +64,8 @@ class TestFigureRegistryIntegrity:
                 if full_label not in registered_labels:
                     unresolved.setdefault(full_label, []).append(md_file.name)
 
-        assert not unresolved, (
-            "Manuscript figure references not in registry:\n"
-            + "\n".join(f"  {label}: {files}" for label, files in sorted(unresolved.items()))
+        assert not unresolved, "Manuscript figure references not in registry:\n" + "\n".join(
+            f"  {label}: {files}" for label, files in sorted(unresolved.items())
         )
 
     def test_registry_has_all_expected_figures(self):

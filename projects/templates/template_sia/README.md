@@ -72,3 +72,36 @@ Default runs replay fixtures under `src/fixtures/recorded_generations/`. Pass
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_sia/tests/ --cov=projects/templates/template_sia/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [scripts/ — template_sia](scripts/AGENTS.md)
+- [Scripts — template_sia](scripts/README.md)
+- [src/ — template_sia](src/AGENTS.md)
+- [Source — template_sia](src/README.md)
+- [src/figures/](src/figures/AGENTS.md)
+- [Figures — template_sia](src/figures/README.md)
+- [src/fixtures/](src/fixtures/AGENTS.md)
+- [Fixtures — template_sia](src/fixtures/README.md)
+- [Improvement gen 2](src/fixtures/recorded_generations/gen_2/improvement.md)
+- [Improvement gen 3](src/fixtures/recorded_generations/gen_3/improvement.md)
+- [tasks/](tasks/AGENTS.md)
+- [Tasks — template_sia](tasks/README.md)
+- [mini_classify](tasks/mini_classify/README.md)
+- [tasks/mini_classify/data/](tasks/mini_classify/data/AGENTS.md)
+- [Task data — mini_classify](tasks/mini_classify/data/README.md)
+- [data/private/](tasks/mini_classify/data/private/AGENTS.md)
+- [Private task data](tasks/mini_classify/data/private/README.md)
+- [data/public/](tasks/mini_classify/data/public/AGENTS.md)
+- [Public task data](tasks/mini_classify/data/public/README.md)
+- [Mini classify task](tasks/mini_classify/data/public/task.md)
+- [reference/](tasks/mini_classify/reference/AGENTS.md)
+- [Reference agent](tasks/mini_classify/reference/README.md)
+- [tests/ — template_sia](tests/AGENTS.md)
+- [Tests — template_sia](tests/README.md)
+
+<!-- foam-orphan-nav:end -->

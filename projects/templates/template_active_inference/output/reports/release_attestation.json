@@ -1,7 +1,7 @@
 {
   "all_attested": true,
-  "attestation_hash": "80752496eedab1bae87b71a33dbedc5aac157db22c14d2241210c1ab09c6af81",
-  "bundle_hash": "7208c3ba8460740d38215f89a63d2cc68063f29feab55ddba94aefaef05958f5",
+  "attestation_hash": "25bc441e97850839c5cf3f5b2540c5cbb1a0660fa85e2173203e2ddc85864727",
+  "bundle_hash": "dee518b52f88976555b277f1c376a3d03f5432370bcb89ef5c26efa7200f0ee0",
   "row_count": 7,
   "rows": [
     {
@@ -11,7 +11,7 @@
       "source": "output/reports/validation_report.json"
     },
     {
-      "bundle_hash": "7208c3ba8460740d38215f89a63d2cc68063f29feab55ddba94aefaef05958f5",
+      "bundle_hash": "dee518b52f88976555b277f1c376a3d03f5432370bcb89ef5c26efa7200f0ee0",
       "deferred_until_validation": false,
       "id": "release_bundle",
       "passed": true,

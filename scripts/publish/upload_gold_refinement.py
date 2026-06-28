@@ -62,8 +62,8 @@ def _load_dotenv() -> None:
 
         ensure_dotenv_loaded()
         return
-    except Exception:
-        pass
+    except Exception as exc:
+        del exc
     env = REPO / ".env"
     if not env.exists():
         return

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import shutil
-import subprocess  # nosec B404 - fixed-argument wrapper around the local Mermaid CLI
+import subprocess  # nosec B404
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -45,7 +45,7 @@ class MermaidRenderer:
 
         png_path = self.output_dir / f"{name}.png"
         try:  # pragma: no cover - exercised only where mmdc is installed
-            subprocess.run(  # nosec B603 - mmdc resolved from PATH, fixed args
+            subprocess.run(  # nosec B603
                 ["mmdc", "-i", str(mmd_path), "-o", str(png_path)],
                 check=True,
                 capture_output=True,

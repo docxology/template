@@ -274,7 +274,7 @@ def _fetch_json(url: str, timeout: float) -> tuple[str, dict[str, Any]]:
         headers["Authorization"] = f"Bearer {token}"
     request = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:  # noqa: S310  # nosec B310 - fixed public api.github.com and zenodo.org URLs only; scheme is locked by caller
+        with urllib.request.urlopen(request, timeout=timeout) as response:  # noqa: S310  # nosec B310
             payload = json.loads(response.read().decode("utf-8"))
             return str(response.status), payload if isinstance(payload, dict) else {}
     except urllib.error.HTTPError as exc:

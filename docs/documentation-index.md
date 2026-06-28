@@ -392,3 +392,16 @@ flowchart TB
 - Documentation is verified for accuracy and completeness on an ongoing basis.
 
 For the most up-to-date information, see the individual documentation files linked above.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [Capability Surfaces — the agent-operable contract](architecture/capability-surfaces.md)
+- [Publishing readiness — what we can upload today vs. what needs a token](maintenance/publishing-readiness.md)
+- [Software Heritage archival — docxology repositories](maintenance/software-heritage-archival.md)
+- [docs/streams/ — Stream and Talk Notes](streams/AGENTS.md)
+
+<!-- foam-orphan-nav:end -->

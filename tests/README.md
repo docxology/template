@@ -67,3 +67,24 @@ Exclude Ollama-tied tests from a local run: `pytest -m 'not requires_ollama'`.
 - [`AGENTS.md`](AGENTS.md)
 - [`infra_tests/README.md`](infra_tests/README.md)
 - [`integration/README.md`](integration/README.md)
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [tests/fixtures/private_project/cogant/tools/](fixtures/private_project/cogant/tools/AGENTS.md)
+- [COGANT tool scripts (fixture)](fixtures/private_project/cogant/tools/README.md)
+- [Methods Tests](infra_tests/methods/AGENTS.md)
+- [Methods Tests](infra_tests/methods/README.md)
+- [tests/infra_tests/sia/](infra_tests/sia/AGENTS.md)
+- [SIA infrastructure tests](infra_tests/sia/README.md)
+- [tests/infra_tests/validation/docs/consistency/](infra_tests/validation/docs/consistency/AGENTS.md)
+- [Documentation consistency lint tests](infra_tests/validation/docs/consistency/README.md)
+- [template_code_project — figure regression tests](regression/projects/template_code_project/figures/README.md)
+- [template_code_project — table regression tests](regression/projects/template_code_project/tables/README.md)
+- [template_prose_project — figure regression tests](regression/projects/template_prose_project/figures/README.md)
+- [template_prose_project — table regression tests](regression/projects/template_prose_project/tables/README.md)
+
+<!-- foam-orphan-nav:end -->

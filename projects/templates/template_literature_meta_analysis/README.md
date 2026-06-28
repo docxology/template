@@ -125,3 +125,33 @@ data/fixtures/       committed deterministic offline corpus
 
 See [`AGENTS.md`](AGENTS.md) for the full module/API reference and [`docs/`](docs/)
 for architecture, testing philosophy, and the rendering pipeline.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [template_literature_meta_analysis TODO](TODO.md)
+- [data/fixtures/ — agent reference](data/fixtures/AGENTS.md)
+- [data/fixtures/](data/fixtures/README.md)
+- [docs/ - Agent-Facing Documentation Hub](docs/AGENTS.md)
+- [Output Directory Conventions](docs/output_conventions.md)
+- [Rendering Pipeline](docs/rendering_pipeline.md)
+- [Style Guide - Literature Meta-Analysis Exemplar](docs/style_guide.md)
+- [AGENTS.md — scripts/ Directory](scripts/AGENTS.md)
+- [Script Conventions](scripts/CONVENTIONS.md)
+- [Scripts - Literature Meta-Analysis Pipeline](scripts/README.md)
+- [Source Code - Agent Directives](src/AGENTS.md)
+- [Source Modules](src/README.md)
+- [Instructions](src/SKILL.md)
+- [Instructions](src/analysis/SKILL.md)
+- [Instructions](src/knowledge_graph/SKILL.md)
+- [Instructions](src/literature/SKILL.md)
+- [Instructions](src/visualization/SKILL.md)
+- [src/visualization/advanced/ — agent reference](src/visualization/advanced/AGENTS.md)
+- [src/visualization/advanced/](src/visualization/advanced/README.md)
+- [Test Suite Architecture](tests/AGENTS.md)
+- [Tests - Literature Meta-Analysis](tests/README.md)
+
+<!-- foam-orphan-nav:end -->

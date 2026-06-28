@@ -76,7 +76,9 @@ def test_load_domain_profile_parses_stage_map_and_rubric(tmp_path):
     assert "evidence_coverage" in profile.metric_rows()
     assert "The analogy is load-bearing" in profile.boundary_summary()
     assert "The analogy is universal." in profile.boundary_summary()
-    assert profile.purity_from_metrics({"evidence_coverage": 0.9, "citation_accuracy": 0.4}) == pytest.approx(0.7333333333)
+    assert profile.purity_from_metrics({"evidence_coverage": 0.9, "citation_accuracy": 0.4}) == pytest.approx(
+        0.7333333333
+    )
 
 
 def test_load_domain_profile_requires_declared_metrics(tmp_path):

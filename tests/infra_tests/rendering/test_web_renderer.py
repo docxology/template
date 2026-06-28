@@ -11,7 +11,13 @@ import pytest
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import web_renderer
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.web_renderer import WebRenderer
+from infrastructure.rendering.web_renderer import (
+    _MATHJAX_DYNAMIC_PREFIX,
+    _MATHJAX_FONT_URL,
+    _MATHJAX_INTEGRITY,
+    _MATHJAX_URL,
+    WebRenderer,
+)
 
 
 class TestWebRendererCore:
@@ -74,6 +80,23 @@ class TestMathJaxIntegration:
         if hasattr(web_renderer, "get_mathjax_config"):
             config = web_renderer.get_mathjax_config()
             assert config is not None
+
+    def test_harden_mathjax_script_adds_sri_to_pinned_url(self, tmp_path):
+        html = tmp_path / "math.html"
+        html.write_text(
+            f'<html><head><script src="{_MATHJAX_URL}"></script></head><body></body></html>',
+            encoding="utf-8",
+        )
+
+        WebRenderer._harden_mathjax_script(html)
+
+        content = html.read_text(encoding="utf-8")
+        assert f'src="{_MATHJAX_URL}"' in content
+        assert f'integrity="{_MATHJAX_INTEGRITY}"' in content
+        assert 'crossorigin="anonymous"' in content
+        assert _MATHJAX_FONT_URL in content
+        assert _MATHJAX_DYNAMIC_PREFIX in content
+        assert content.index(_MATHJAX_FONT_URL) < content.index(_MATHJAX_URL)
 
 
 class TestCssIntegration:
@@ -415,9 +438,7 @@ class TestTheoremBlocks:
         assert ".definition" in out and ".lemma" in out and ".theorem" in out
 
     def test_unnamed_block_has_no_parenthetical(self):
-        out = WebRenderer._html_theorem_blocks(
-            "\\begin{proposition}\nNo name here.\n\\end{proposition}"
-        )
+        out = WebRenderer._html_theorem_blocks("\\begin{proposition}\nNo name here.\n\\end{proposition}")
         assert "**Proposition 1**." in out
         assert "(" not in out.split("No name")[0].split("Proposition 1")[1]
 

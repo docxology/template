@@ -28,10 +28,7 @@ class TestBuildEvidenceRegistry:
         project_root = Path(__file__).resolve().parent.parent
         cfg = load_gold_refinement_config(project_root)
         registry = build_evidence_registry(cfg, project_root)
-        assert registry.is_passing, (
-            f"Unsupported claims: "
-            f"{[e.claim_name for e in registry.entries if not e.supported]}"
-        )
+        assert registry.is_passing, f"Unsupported claims: {[e.claim_name for e in registry.entries if not e.supported]}"
 
     def test_support_rate(self):
         project_root = Path(__file__).resolve().parent.parent

@@ -23,7 +23,7 @@ from reportlab.lib.colors import Color
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
 from reportlab.lib.styles import ParagraphStyle, StyleSheet1
 from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.ttfonts import TTFont, TTFError
 
 # Ink that is not quite pure black reads as newsprint rather than laser toner.
 INK = Color(0.08, 0.08, 0.09)
@@ -77,7 +77,7 @@ def _try_register(candidates: list[tuple[str, str, int]]) -> str | None:
         try:
             pdfmetrics.registerFont(TTFont(name, path, subfontIndex=subfont))
             return name
-        except Exception:  # noqa: BLE001 - final handler: broad by design so any parse/IO/asset failure falls back gracefully; narrowing would create silent gaps
+        except (OSError, TTFError, ValueError):
             continue
     return None
 
@@ -110,7 +110,7 @@ def register_fonts() -> Fonts:
                 italic=body_italic,
                 boldItalic=body_bolditalic,
             )
-        except Exception:  # noqa: BLE001 - final handler: broad by design so any parse/IO/asset failure falls back gracefully; narrowing would create silent gaps
+        except (KeyError, TypeError, ValueError):
             pass
 
     sans = _try_register(_SANS_CANDIDATES) or "Helvetica"

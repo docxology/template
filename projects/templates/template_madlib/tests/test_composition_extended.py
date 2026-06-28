@@ -57,7 +57,7 @@ def test_methods_figure_markdown_when_visualizations_disabled(tmp_path: Path) ->
 def test_methods_figure_markdown_when_injection_flow_flag_false(tmp_path: Path) -> None:
     """When token_injection_flow=False the methods figure returns a disabled notice."""
     payload = base_payload()
-    payload["madlib"]["visualizations"] = {"enabled": True, "token_injection_flow": False}
+    payload["madlib"]["visualizations"] = {"enabled": True, "token_injection_flow": False}  # nosec B105
     write_config(tmp_path, payload)
     config = load_madlib_config(tmp_path)
 
@@ -113,7 +113,7 @@ def test_results_figure_markdown_optional_flags_individually_disabled(tmp_path: 
     payload = base_payload()
     payload["madlib"]["visualizations"] = {
         "enabled": True,
-        "section_token_allocation": False,
+        "section_token_allocation": False,  # nosec B105
         "provenance_trace_map": False,
     }
     write_config(tmp_path, payload)
@@ -315,8 +315,10 @@ def test_disabled_section_body_names_config_key(tmp_path: Path) -> None:
 
     # discussion is disabled in base_payload
     assert "section_conditions.discussion" in sections["DISCUSSION_BODY"]
-    assert "intentionally disabled" in sections["DISCUSSION_BODY"].lower() or \
-           "disabled" in sections["DISCUSSION_BODY"].lower()
+    assert (
+        "intentionally disabled" in sections["DISCUSSION_BODY"].lower()
+        or "disabled" in sections["DISCUSSION_BODY"].lower()
+    )
 
 
 def test_disabled_section_body_does_not_contain_enabled_section_claims(tmp_path: Path) -> None:

@@ -179,3 +179,24 @@ uv run mypy src/newspaper              # clean
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_newspaper/tests/ --cov=projects/templates/template_newspaper/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [AGENTS — data/](data/AGENTS.md)
+- [data/](data/README.md)
+- [AGENTS — docs/](docs/AGENTS.md)
+- [AGENTS — scripts/](scripts/AGENTS.md)
+- [Script Conventions](scripts/CONVENTIONS.md)
+- [scripts/](scripts/README.md)
+- [AGENTS — src/](src/AGENTS.md)
+- [src/ — the newspaper engine](src/README.md)
+- [src/ Style](src/STYLE.md)
+- [AGENTS — tests/](tests/AGENTS.md)
+- [Test Patterns](tests/PATTERNS.md)
+- [tests/](tests/README.md)
+
+<!-- foam-orphan-nav:end -->

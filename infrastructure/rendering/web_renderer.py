@@ -14,6 +14,19 @@ from infrastructure.rendering.config import RenderingConfig
 
 logger = get_logger(__name__)
 
+_MATHJAX_URL = "https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+_MATHJAX_INTEGRITY = "sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz"
+_MATHJAX_FONT_URL = "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2"
+_MATHJAX_DYNAMIC_PREFIX = "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+_MATHJAX_CONFIG_MARKER = "data-template-mathjax-config"
+_MATHJAX_CONFIG_SCRIPT = f"""<script {_MATHJAX_CONFIG_MARKER}>
+window.MathJax = window.MathJax || {{}};
+window.MathJax.chtml = Object.assign({{}}, window.MathJax.chtml, {{
+  fontURL: "{_MATHJAX_FONT_URL}",
+  dynamicPrefix: "{_MATHJAX_DYNAMIC_PREFIX}"
+}});
+</script>"""
+
 # Shared design-token + dark-mode block embedded ahead of the rendered CSS so
 # the web surface participates in the same design system (one --brand-1 source
 # and a prefers-color-scheme block) as the reporting HTML surfaces. Maps a few
@@ -124,7 +137,7 @@ class WebRenderer:
             "-o",
             str(output_file),
             "--standalone",
-            "--mathjax",
+            f"--mathjax={_MATHJAX_URL}",
         ]
 
         logger.info(f"Generating HTML from {source_file}")
@@ -132,6 +145,7 @@ class WebRenderer:
         try:
             subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
             if output_file.exists():
+                self._harden_mathjax_script(output_file)
                 self._normalize_figure_paths_in_file(output_file)
             return output_file
 
@@ -223,7 +237,7 @@ class WebRenderer:
             "-o",
             str(output_file),
             "--standalone",
-            "--mathjax",
+            f"--mathjax={_MATHJAX_URL}",
             "--toc",
             "--toc-depth=3",
             "--number-sections",
@@ -279,6 +293,7 @@ class WebRenderer:
 
         # Embed CSS styling in the generated HTML
         if output_file.exists():
+            self._harden_mathjax_script(output_file)
             self._embed_css(output_file)
             self._normalize_figure_paths_in_file(output_file)
             logger.info(f"✓ Embedded CSS styling in {output_file.name}")
@@ -526,6 +541,35 @@ class WebRenderer:
         _tmp = html_file.with_suffix(html_file.suffix + ".tmp")
         try:
             _tmp.write_text(normalized, encoding="utf-8")
+            _tmp.replace(html_file)
+        except OSError:
+            _tmp.unlink(missing_ok=True)
+            raise
+
+    @staticmethod
+    def _harden_mathjax_script(html_file: Path) -> None:
+        html_content = html_file.read_text(encoding="utf-8")
+        if _MATHJAX_URL not in html_content:
+            return
+        script_re = re.compile(r'(<script(?=[^>]*\bsrc="' + re.escape(_MATHJAX_URL) + r'")[^>]*)></script>')
+
+        def _replace(match: re.Match[str]) -> str:
+            tag = match.group(1)
+            if "integrity=" not in tag:
+                tag += f' integrity="{_MATHJAX_INTEGRITY}"'
+            if "crossorigin=" not in tag:
+                tag += ' crossorigin="anonymous"'
+            script = f"{tag}></script>"
+            if _MATHJAX_CONFIG_MARKER in html_content:
+                return script
+            return f"{_MATHJAX_CONFIG_SCRIPT}\n{script}"
+
+        hardened = script_re.sub(_replace, html_content, count=1)
+        if hardened == html_content:
+            return
+        _tmp = html_file.with_suffix(html_file.suffix + ".tmp")
+        try:
+            _tmp.write_text(hardened, encoding="utf-8")
             _tmp.replace(html_file)
         except OSError:
             _tmp.unlink(missing_ok=True)

@@ -261,7 +261,7 @@ PROMOTED_ARTIFACTS: dict[str, str] = {
     "manuscript_staleness": "output/reports/manuscript_staleness_report.json",
     "cross_symbols": "output/data/cross_track_symbol_table.json",
     "evidence_tables": "output/data/manuscript_evidence_tables.json",
-    "token_provenance": "output/data/manuscript_token_provenance.json",
+    "token_provenance": "output/data/manuscript_token_provenance.json",  # nosec B105
     "claim_audit": "output/reports/claim_evidence_audit.json",
     "gate_index": "output/data/validation_gate_index.json",
     "section_status": "output/data/sheaf_section_status_matrix.json",

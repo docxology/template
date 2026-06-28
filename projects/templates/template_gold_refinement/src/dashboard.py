@@ -7,6 +7,7 @@ purity progression, token distribution, and evidence registry status.
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -24,6 +25,13 @@ logger = logging.getLogger(__name__)
 def _esc(text: str) -> str:
     """Escape HTML special characters."""
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
+def _build_timestamp() -> str:
+    epoch = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
+    if epoch.isdigit():
+        return datetime.fromtimestamp(int(epoch), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _refinery_snapshot(result: Any) -> dict[str, Any]:
@@ -133,7 +141,7 @@ def build_dashboard_html(
             f"</tr>"
         )
 
-    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    timestamp = _build_timestamp()
 
     return f"""<!DOCTYPE html>
 <html lang="en">

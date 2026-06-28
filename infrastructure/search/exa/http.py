@@ -64,7 +64,7 @@ class UrllibExaHttpClient:
         body = _json.dumps(json).encode("utf-8")
         req = urllib.request.Request(url, data=body, headers=dict(headers), method="POST")
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec B310 - host is configured, not user input
+            with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec B310
                 charset = resp.headers.get_content_charset() or "utf-8"
                 text = resp.read().decode(charset, errors="replace")
                 return ExaResponse(status_code=resp.status, text=text, url=resp.geturl())

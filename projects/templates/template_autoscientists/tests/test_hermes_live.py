@@ -19,7 +19,7 @@ from src.state import Champion, SharedState
 def _ollama_model_available(model: str = "hermes3") -> bool:
     host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
     try:
-        # nosec B310 - host is an operator-configured env var (default localhost), not user input
+        # nosec B310
         with urllib.request.urlopen(f"{host.rstrip('/')}/api/tags", timeout=1.0) as response:  # nosec B310
             payload = json.load(response)
     except Exception:

@@ -23,6 +23,11 @@ class TestBuildDashboardHtml:
         assert "Generated Tokens" in html
         assert "Evidence Claims" in html
 
+    def test_source_date_epoch_pins_generated_footer(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
+        html = build_dashboard_html(tmp_path)
+        assert "Generated: 1970-01-01T00:00:00Z" in html
+
     def test_with_data_files(self, tmp_path):
         """Dashboard should load data files when available."""
         import json
@@ -99,8 +104,12 @@ class TestDashboardPreloadedData:
                 "total_claims": 3,
                 "supported_claims": 3,
                 "entries": [
-                    {"claim_name": "monotone-purity", "evidence_source": "src/refinery.py",
-                     "boundary": "local", "supported": True},
+                    {
+                        "claim_name": "monotone-purity",
+                        "evidence_source": "src/refinery.py",
+                        "boundary": "local",
+                        "supported": True,
+                    },
                 ],
             },
         )

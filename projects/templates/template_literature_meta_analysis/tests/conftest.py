@@ -53,14 +53,14 @@ def _reset_configurable_globals() -> None:
         from analysis.subfield_registry import configure_subfields
 
         configure_subfields(None)
-    except Exception:  # pragma: no cover - defensive
-        pass
+    except Exception as exc:  # pragma: no cover - defensive
+        del exc
     try:
         from knowledge_graph.hypothesis import configure_hypotheses
 
         configure_hypotheses(None)
-    except Exception:  # pragma: no cover - defensive
-        pass
+    except Exception as exc:  # pragma: no cover - defensive
+        del exc
 
 
 @pytest.fixture(autouse=True)

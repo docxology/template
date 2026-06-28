@@ -205,9 +205,7 @@ def test_slot_missing_category_raises(tmp_path: Path) -> None:
 def test_slot_count_less_than_one_raises(tmp_path: Path) -> None:
     """count=0 on a slot must raise."""
     payload = base_payload()
-    payload["madlib"]["slots"].append(
-        {"name": "extra", "category": "adjectives", "section": "abstract", "count": 0}
-    )
+    payload["madlib"]["slots"].append({"name": "extra", "category": "adjectives", "section": "abstract", "count": 0})
     write_config(tmp_path, payload)
 
     with pytest.raises(MadlibConfigError, match=r"count must be >= 1"):
@@ -217,9 +215,7 @@ def test_slot_count_less_than_one_raises(tmp_path: Path) -> None:
 def test_slot_unknown_section_raises(tmp_path: Path) -> None:
     """A slot pointing to an unknown section key must raise."""
     payload = base_payload()
-    payload["madlib"]["slots"].append(
-        {"name": "extra_slot", "category": "adjectives", "section": "appendix"}
-    )
+    payload["madlib"]["slots"].append({"name": "extra_slot", "category": "adjectives", "section": "appendix"})
     write_config(tmp_path, payload)
 
     with pytest.raises(MadlibConfigError, match="section is unknown"):
@@ -524,7 +520,7 @@ def test_visualization_explicit_tracking_for_partial_block(tmp_path: Path) -> No
     payload = base_payload()
     payload["madlib"]["visualizations"] = {
         "enabled": True,
-        "token_injection_flow": False,
+        "token_injection_flow": False,  # nosec B105
         "quality_gate_matrix": True,
     }
     write_config(tmp_path, payload)

@@ -54,3 +54,14 @@ from infrastructure.search.literature import (
 For agent-oriented API examples see [SKILL.md](SKILL.md); for invariants
 and editing rules see the parent module's
 [`AGENTS.md`](../AGENTS.md).
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [Literature backends package](backends/AGENTS.md)
+- [infrastructure/search/literature/backends/](backends/README.md)
+
+<!-- foam-orphan-nav:end -->

@@ -53,10 +53,14 @@ To regenerate this exemplar from the public monorepo:
 git clone https://github.com/docxology/template
 cd template
 uv sync
+export SOURCE_DATE_EPOCH=1782345600  # 2026-06-25T00:00:00Z, matching manuscript/config.yaml
 ./run.sh --project templates/template_gold_refinement --pipeline --core-only
 uv run python scripts/04_validate_output.py --project templates/template_gold_refinement
 uv run python scripts/05_copy_outputs.py --project templates/template_gold_refinement
 ```
+
+Keep `SOURCE_DATE_EPOCH` set when refreshing tracked public outputs so dashboard
+and manuscript timestamps are reproducible instead of wall-clock dependent.
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
 tracked rendered artifacts. Use the monorepo above when you need the full shared
@@ -163,3 +167,21 @@ See [AGENTS.md](AGENTS.md) for technical documentation.
 - Standalone fork guide: [`STANDALONE.md`](STANDALONE.md).
 - Project validation: `uv run pytest projects/templates/template_gold_refinement/tests/ --cov=projects/templates/template_gold_refinement/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [AGENTS.md — template_gold_refinement/data](data/AGENTS.md)
+- [data/](data/README.md)
+- [Agent Instructions](docs/agent_instructions.md)
+- [Architecture](docs/architecture.md)
+- [Output Conventions](docs/output_conventions.md)
+- [Style Guide](docs/style_guide.md)
+- [Syntax Guide](docs/syntax_guide.md)
+- [Testing Philosophy](docs/testing_philosophy.md)
+- [Troubleshooting](docs/troubleshooting.md)
+
+<!-- foam-orphan-nav:end -->

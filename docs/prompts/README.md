@@ -103,3 +103,22 @@ because ARS is CC-BY-NC-4.0 and this repository is Apache-2.0.
 - [`../README.md`](../README.md) — documentation hub
 - [`../../CLAUDE.md`](../../CLAUDE.md) — command cheat sheet
 - [`../guides/new-project-one-shot-prompt.md`](../guides/new-project-one-shot-prompt.md) — one-shot LLM scaffold
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [Academic paper reviewer skill](academic-paper-reviewer/AGENTS.md)
+- [Academic paper reviewer](academic-paper-reviewer/README.md)
+- [Academic paper skill](academic-paper/AGENTS.md)
+- [Academic paper](academic-paper/README.md)
+- [Academic pipeline skill](academic-pipeline/AGENTS.md)
+- [Academic pipeline](academic-pipeline/README.md)
+- [Deep research skill](deep-research/AGENTS.md)
+- [Deep research](deep-research/README.md)
+- [Methods Orchestration Skill](methods-orchestration/AGENTS.md)
+- [Methods Orchestration](methods-orchestration/README.md)
+
+<!-- foam-orphan-nav:end -->

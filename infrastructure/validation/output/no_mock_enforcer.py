@@ -33,7 +33,7 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 # Explicit opt-out token (kept narrow — not a bare ``#``).
-_SUPPRESSION_TOKEN = "# no-mocks-ok:"
+_SUPPRESSION_TOKEN = "# no-mocks-ok:"  # nosec B105
 
 # Modules whose import is, by itself, a no-mocks violation.
 _FORBIDDEN_IMPORT_ROOTS = frozenset({"mock", "pytest_mock"})

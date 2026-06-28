@@ -104,3 +104,23 @@ Stage 03 renders PDF, HTML, and slides from the hydrated manuscript. Stage 04 ve
 - Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
 
 Output Markdown, PDF, HTML, slides, figures, reports, and copied deliverables are disposable. Regenerate them through Stages 02-05 after source edits; do not hand-edit `output/` artifacts to make a method or documentation claim pass review.
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [data](data/AGENTS.md)
+- [Data](data/README.md)
+- [docs](docs/AGENTS.md)
+- [Documentation](docs/README.md)
+- [scripts](scripts/AGENTS.md)
+- [Scripts](scripts/README.md)
+- [src](src/AGENTS.md)
+- [Source Package](src/README.md)
+- [tests](tests/AGENTS.md)
+- [Test Patterns](tests/PATTERNS.md)
+- [Tests](tests/README.md)
+
+<!-- foam-orphan-nav:end -->

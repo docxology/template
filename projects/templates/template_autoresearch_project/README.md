@@ -271,3 +271,17 @@ the full validation registry. Full fact serialization is opt-in with
 ```bash
 uv run python scripts/01_run_tests.py --project templates/template_autoresearch_project --project-only --quiet
 ```
+
+<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+
+## Directory & sub-document map
+
+Navigation links to in-tree documents (keeps them discoverable):
+
+- [Data Notes](data/AGENTS.md)
+- [Data](data/README.md)
+- [Human-authored research program](program.md)
+- [Scripts - Agent Notes](scripts/AGENTS.md)
+- [Scripts](scripts/README.md)
+
+<!-- foam-orphan-nav:end -->

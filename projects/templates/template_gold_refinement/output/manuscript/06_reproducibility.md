@@ -6,7 +6,7 @@ The refinery pipeline is fully deterministic. Given the same `manuscript/config.
 
 - **Seed:** 431
 - **Config hash:** fcf63a15775dffa7
-- **Generation timestamp:** 2026-06-28T00:32:35Z
+- **Generation timestamp:** 2026-06-25T00:00:00Z
 - **Python version:** 3.12.13
 
 ## Artifact inventory

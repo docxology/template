@@ -32,7 +32,7 @@ _DEFAULT_PALETTE: dict[str, str] = {
     "grid": "#d4d4d8",
     "muted": "#64748b",
     "reference": "#52525b",
-    "pass": "#0f766e",
+    "pass": "#0f766e",  # nosec B105
     "fail": "#b91c1c",
     "proved": "#dcfce7",
     "sorry": "#fee2e2",
