@@ -10,6 +10,7 @@ Public surface::
         upload_dist,
         check_dist,
         run_pypi_release,
+        verify_install,
     )
 
 ``dry_run=True`` is the default everywhere — no accidental uploads.
@@ -21,6 +22,7 @@ from .adapter import PyPIAdapter, run_pypi_release
 from .build import build_dist
 from .models import PyPIConfig, PyPIResult
 from .upload import check_dist, upload_dist
+from .verify import verify_install
 
 __all__ = [
     "PyPIAdapter",
@@ -30,4 +32,5 @@ __all__ = [
     "check_dist",
     "run_pypi_release",
     "upload_dist",
+    "verify_install",
 ]

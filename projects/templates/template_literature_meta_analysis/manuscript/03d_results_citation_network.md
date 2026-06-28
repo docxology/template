@@ -41,10 +41,10 @@ cited by other corpus members. Hub papers, which cite many other corpus members,
 integrative reviews or meta-analyses that connect disparate threads of the literature.
 
 <!-- FIGURE: citation_network.png -->
-![Citation network for {{SEARCH_TERM_TITLE}}. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership ({{CITATION_COMMUNITIES}} communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](figures/citation_network.png "Citation Network"){{#fig:citation_network}}
+![Citation network for {{SEARCH_TERM_TITLE}}. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership ({{CITATION_COMMUNITIES}} communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](../output/figures/citation_network.png "Citation Network"){{#fig:citation_network}}
 
 <!-- FIGURE: degree_distribution.png -->
-![Degree distribution for the {{SEARCH_TERM_TITLE}} citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks.](figures/degree_distribution.png "Degree Distribution"){{#fig:degree_distribution}}
+![Degree distribution for the {{SEARCH_TERM_TITLE}} citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks.](../output/figures/degree_distribution.png "Degree Distribution"){{#fig:degree_distribution}}
 
 The heavy-tailed degree distribution is characteristic of citation networks: a small
 number of highly-cited papers anchor the structure, while the long tail of low-degree

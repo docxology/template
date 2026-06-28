@@ -51,4 +51,4 @@ The six hypotheses frame the evidence landscape for {{SEARCH_TERM_TITLE}}:
   acceptability relative to alternative wakefulness agents.
 
 <!-- FIGURE: hypothesis_dashboard.png -->
-![Hypothesis dashboard for {{SEARCH_TERM_TITLE}}. The dashboard summarizes the evidence scores across the {{N_HYPOTHESES}} configured hypotheses, showing the direction and magnitude of citation-weighted assertion evidence.](figures/hypothesis_dashboard.png "Hypothesis Dashboard"){{#fig:hypothesis_dashboard}}
+![Hypothesis dashboard for {{SEARCH_TERM_TITLE}}. The dashboard summarizes the evidence scores across the {{N_HYPOTHESES}} configured hypotheses, showing the direction and magnitude of citation-weighted assertion evidence.](../output/figures/hypothesis_dashboard.png "Hypothesis Dashboard"){{#fig:hypothesis_dashboard}}
