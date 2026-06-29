@@ -115,7 +115,8 @@
         "TelemetryCollector",
         "TelemetryConfig",
         "generate_pipeline_summary",
-        "get_system_resources"
+        "get_system_resources",
+        "stage_label"
       ]
     },
     {

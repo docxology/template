@@ -2,3 +2,4 @@
 allow_infrastructure_imports:
   - src/analysis/_infra.py
   - src/_runtime.py
+  - src/benchmark_support.py

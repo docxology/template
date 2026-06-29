@@ -183,6 +183,7 @@ ever git-tracked/pushed:
 - [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) — deterministic AutoResearch template
 - [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) — deterministic coordination-mechanism testbed exemplar (arXiv:2605.28655 primitives)
 - [`projects/templates/template_code_project/`](projects/templates/template_code_project/) — code-centric template
+- [`projects/templates/template_eda_notebook/`](projects/templates/template_eda_notebook/) — exploratory data analysis exemplar (tabular load, missingness, descriptive stats, per-group means, correlation ranking, diagnostic figures)
 - [`projects/templates/template_gold_refinement/`](projects/templates/template_gold_refinement/) — metallurgical gold-refining analogy for manuscript composition (ore → smelting → assaying → cupellation → nine-nines certification, mega-madlib token injection)
 - [`projects/templates/template_literature_meta_analysis/`](projects/templates/template_literature_meta_analysis/) — generic literature meta-analysis template (multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics; default term `modafinil`)
 - [`projects/templates/template_madlib/`](projects/templates/template_madlib/) — conditional token-injection manuscript template with QA probes and authoring contract

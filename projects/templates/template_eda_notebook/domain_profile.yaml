@@ -1,0 +1,45 @@
+domain: eda_notebook
+display_name: Exploratory Data Analysis Notebook Exemplar
+required_packages:
+  - numpy
+  - pandas
+  - matplotlib
+  - pytest
+preferred_outputs:
+  - pdf
+  - html
+validation_gates:
+  - dataset_integrity
+  - artifact_manifest
+  - evidence_grounding
+  - render_validation
+figure_types:
+  - histogram
+  - correlation_heatmap
+  - group_bar_chart
+citation_policy: official_or_scholarly
+source_policy: "Prefer the shipped dataset, tested src.eda functions, and official numpy/pandas/matplotlib documentation."
+review_gates:
+  - dataset_integrity
+  - render_validation
+artifact_expectations:
+  - output/data/summary_statistics.csv
+  - output/figures/height_histogram.png
+  - output/figures/correlation_heatmap.png
+  - output/figures/group_counts.png
+benchmark_rubric:
+  name: eda-notebook-readiness
+  dimensions:
+    - name: dataset_integrity
+      weight: 1.0
+    - name: reproducibility_bundle
+      weight: 1.0
+    - name: artifact_manifest
+      weight: 1.0
+    - name: evidence_grounding
+      weight: 2.0
+    - name: notebook_src_extraction
+      weight: 1.0
+    - name: render_success
+      weight: 1.0
+llm_prompt_guidance: "Use the generated summary statistics CSV and EDA figures as the evidence source; do not invent numeric results — the notebook calls tested src.eda functions."

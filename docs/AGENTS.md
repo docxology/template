@@ -4,6 +4,17 @@
 
 Technical guide for the `docs/` directory — the central documentation hub for the Research Project Template.
 
+## Agents: Start Here
+
+If you are an AI agent picking up work in this repo, orient through these four doors before touching code or docs:
+
+1. **Discover every skill.** Read [`_generated/skills_index.md`](_generated/skills_index.md) — the generated catalog of every `SKILL.md` found under `infrastructure/`, `projects/`, `docs/prompts/`, and `.cursor/skills/`. It is the single inventory of what this repo can do.
+2. **Find the agent-invocable CLI operations.** The machine-readable catalog of CLI operations (module, invocation, subcommands, exports) lives in [`../.cursor/operations_manifest.json`](../.cursor/operations_manifest.json). Regenerate or verify it with `uv run python -m infrastructure.skills operations-write` (write) and `uv run python -m infrastructure.skills operations-check` (verify against live discovery).
+3. **Route workflow intents.** Send any research/manuscript/pipeline intent through the hub router [`prompts/SKILL.md`](prompts/SKILL.md), then follow the handoffs declared in [`prompts/MODE_REGISTRY.md`](prompts/MODE_REGISTRY.md). One intent → one child skill.
+4. **THE TWO-TREE ROUTING RULE.** To **EDIT/extend an infrastructure module**, use that module's `infrastructure/<module>/SKILL.md`. To **RUN a research workflow**, use `docs/prompts/<skill>/SKILL.md`. Infrastructure skills are for changing the machinery; prompt skills are for operating it.
+
+To compose a **custom** subset of pipeline stages rather than running the whole `--pipeline`, follow the **Workflow Composition Map**: [`prompts/COMPOSITION.md`](prompts/COMPOSITION.md).
+
 ## Directory Structure
 
 | Directory | Purpose |

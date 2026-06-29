@@ -2,81 +2,17 @@
 
 > **Scientific computing best practices and tools**
 
-**Location:** `infrastructure/scientific/` (modular package)
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
-> **Tier: exemplar-support.** Layer-1 by location, but imported only by its
-> scientific exemplar(s) — intentionally not generic-reach across
-> `infrastructure/`. Not dead code, not a general infra dependency.
-
 ---
 
-## Key Features
+## Canonical reference
 
-- **Numerical Stability**: Algorithm stability testing and validation
-- **Performance Benchmarking**: Execution time and memory analysis
-- **Improvement Confirmation**: Confirm a candidate beats a baseline beyond the noise band
+This guide is a thin pointer. The authoritative, always-current
+reference for this module is its colocated agent skill and README:
 
----
-
-## Usage Examples
-
-### Numerical Stability Testing
-
-```python
-from infrastructure.scientific import check_numerical_stability
-
-# Test function stability across input ranges
-def my_algorithm(x):
-    return x**2 / (x + 1e-10)  # Potential numerical issues
-
-stability_report = check_numerical_stability(
-    my_algorithm,
-    test_inputs=[0.0, 1e-8, 1e-6, 0.1, 1.0, 10.0],
-    tolerance=1e-12
-)
-
-print(f"Stability Score: {stability_report.stability_score:.2f}")
-print(f"Input Range: {stability_report.input_range}")
-
-if stability_report.recommendations:
-    print("Recommendations:")
-    for rec in stability_report.recommendations:
-        print(f"- {rec}")
-```
-
-### Performance Benchmarking
-
-```python
-from infrastructure.scientific import benchmark_function
-
-# Benchmark algorithm performance
-result = benchmark_function(
-    my_algorithm,
-    test_inputs=[0.1, 1.0, 10.0, 100.0],
-    iterations=100
-)
-
-print(f"Function: {result.function_name}")
-print(f"Average Execution Time: {result.execution_time:.6f}s")
-print(f"Memory Usage: {result.memory_usage or 'Not measured'} MB")
-```
-
----
-
-## Programmatic API
-
-The scientific module is used as a Python library — it ships no standalone CLI. Import the helpers directly:
-
-```python
-from infrastructure.scientific import (
-    benchmark_function,
-    check_numerical_stability,
-    confirm_improvement,
-)
-```
-
-See the examples above and [`infrastructure/scientific/SKILL.md`](../../../infrastructure/scientific/SKILL.md) for the full exported surface.
+- [`infrastructure/scientific/SKILL.md`](../../../infrastructure/scientific/SKILL.md) — agent-facing capability summary (single source of truth).
+- [`infrastructure/scientific/README.md`](../../../infrastructure/scientific/README.md) — module purpose, public API, and usage.
 
 ---
 

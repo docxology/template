@@ -99,6 +99,19 @@ Stage 03 renders PDF, HTML, and slides from the hydrated manuscript. Stage 04 ve
 ## Boundaries
 
 
+## Variants
+
+[`template_gold_refinement`](../template_gold_refinement/README.md) is a worked
+**domain-specialization** of this exemplar. It reuses the same deterministic
+token-injection composition core (`src/composition.py`, `src/config.py`,
+`src/manuscript_variables.py`, and a near-identical `manuscript/config.yaml`
+schema) and adds a metallurgy domain skin (`src/assay.py`, `src/purity.py`,
+`src/refinery.py`, `src/domain_adapter.py`) that maps the abstract composition
+pipeline onto a concrete refinement sequence: ore → smelting → assaying →
+cupellation → certification. Use it as a reference for how to take this generic
+madlib engine and specialize it to a real domain with its own validators and
+claim ledger.
+
 ## Template integrity
 
 - Forward backlog: [`TODO.md`](TODO.md).

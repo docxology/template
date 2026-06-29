@@ -1,0 +1,20 @@
+authors:
+- affiliation: Your Institution
+  family-names: Author
+  given-names: Template
+  orcid: 0000-0000-0000-0000
+cff-version: 1.2.0
+date-released: "2026-06-29"
+keywords:
+- exploratory data analysis
+- computational notebook
+- reproducible research
+- pandas
+- data cleaning
+- correlation analysis
+license: MIT
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template_eda_notebook
+title: "Exploratory Data Analysis: A Reproducible Notebook Template"
+type: software
+version: "1.0.0"

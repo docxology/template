@@ -1,0 +1,43 @@
+claims:
+  - claim_id: dataset-row-count
+    kind: number
+    value: 120
+    source: projects/templates/template_eda_notebook/data/measurements.csv (data rows)
+    source_tier: project_source
+    freshness: active
+    artifact_path: data/measurements.csv
+  - claim_id: numeric-feature-count
+    kind: number
+    value: 3
+    source: projects/templates/template_eda_notebook/src/eda/dataset.py DatasetSchema.numeric_columns
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/eda/dataset.py
+  - claim_id: group-count
+    kind: number
+    value: 3
+    source: projects/templates/template_eda_notebook/data/measurements.csv (distinct group values)
+    source_tier: project_source
+    freshness: active
+    artifact_path: data/measurements.csv
+  - claim_id: cleaned-rows-dropped
+    kind: number
+    value: 4
+    source: projects/templates/template_eda_notebook/src/eda/cleaning.py clean_dataset on the shipped CSV
+    source_tier: generated_metric
+    freshness: active
+    artifact_path: output/data/summary_statistics.csv
+  - claim_id: histogram-bins
+    kind: number
+    value: 10
+    source: projects/templates/template_eda_notebook/scripts/eda_analysis.py histogram_data bins argument
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/figures/height_histogram.png
+  - claim_id: correlation-top-n
+    kind: number
+    value: 3
+    source: projects/templates/template_eda_notebook/manuscript/03_results.md strongest_pairs top_n
+    source_tier: manuscript_claim
+    freshness: active
+    artifact_path: manuscript/03_results.md

@@ -2,55 +2,14 @@
 
 > **Deterministic readiness planning for research workflows.**
 
-**Location:** `infrastructure/autoresearch/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [AutoResearch Exemplar](../../../projects/templates/template_autoresearch_project/README.md) | [Code Review Checklist](../../development/code-review-checklist.md)
 
 ---
 
-## Key Features
+## Canonical reference
 
-- **Readiness plan** - `build_autoresearch_plan()` composes project profile, experiment plan, pipeline contract, evidence, artifacts, and script-drift checks.
-- **Phase validation** - `validate_autoresearch_plan(..., phase="intrinsic"|"extrinsic"|"all")` separates pre-write structure checks from post-write artifact checks.
-- **File-backed configuration** - project-local `autoresearch.yaml` declares enabled checks, strictness, exact stage gates, and required artifacts.
-- **Reports** - `write_autoresearch_report()` writes JSON and Markdown readiness reports under the project `output/reports/` tree.
-- **Metric extraction** - `parse_metric_lines()` trusts only exact `METRIC name=value` lines, while `mad_confidence()` discloses improvement against a MAD noise floor.
-- **Bounded scope** - no network calls, no LLM calls, no generated-code execution, and no autonomous self-approval loops.
+This guide is a thin pointer. The authoritative, always-current
+reference for this module is its colocated agent skill and README:
 
----
-
-## CLI
-
-```bash
-uv run python -m infrastructure.autoresearch.cli validate \
-  --project templates/template_autoresearch_project \
-  --fail-on-issues
-```
-
----
-
-## Public API
-
-```python
-from infrastructure.autoresearch import (
-    AutoResearchConfig,
-    AutoResearchIssue,
-    AutoResearchPlan,
-    AutoResearchReport,
-    AutoResearchStage,
-    build_autoresearch_plan,
-    load_autoresearch_config,
-    mad_confidence,
-    metric_unit_from_name,
-    parse_metric_lines,
-    validate_autoresearch_plan,
-    write_autoresearch_report,
-)
-```
-
-See `infrastructure/autoresearch/__init__.py` for the authoritative export list.
-
----
-
-## Review Criteria Mapping
-
-The AutoResearch module is reviewed primarily against criteria 2 (Composability - reuse pipeline, project, validation, and reporting modules), 5 (Validation - deterministic readiness defects are explicit), and 8 (Reproducibility - reports are file-backed and inspectable). See [Code Review Checklist](../../development/code-review-checklist.md).
+- [`infrastructure/autoresearch/SKILL.md`](../../../infrastructure/autoresearch/SKILL.md) — agent-facing capability summary (single source of truth).
+- [`infrastructure/autoresearch/README.md`](../../../infrastructure/autoresearch/README.md) — module purpose, public API, and usage.

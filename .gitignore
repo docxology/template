@@ -175,6 +175,8 @@ projects/templates/*
 !projects/templates/template_autoscientists/**
 !projects/templates/template_gold_refinement/
 !projects/templates/template_gold_refinement/**
+!projects/templates/template_eda_notebook/
+!projects/templates/template_eda_notebook/**
 projects/*/.DS_Store
 projects/templates/*/.DS_Store
 # Local code-intelligence indexes and agent scratch state stay ignored even

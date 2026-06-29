@@ -77,6 +77,10 @@ When intent is clear, open the matching child `SKILL.md` directly. When ambiguou
 - Tests: no mocks; infra ≥60%, project ≥90% unless CI documents an exception.
 - Metrics: measure with pytest or cite [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md).
 
+## Composing a custom workflow
+
+To assemble a custom subset of pipeline stages (discover → fetch → synthesize → write → verify → review → validate → publish) instead of running the whole `--pipeline`, follow the [Workflow Composition Map](COMPOSITION.md).
+
 ## Discovery
 
 These skills are indexed in `.cursor/skill_manifest.json` (`uv run python -m infrastructure.skills write`). Human index: [README.md](README.md).

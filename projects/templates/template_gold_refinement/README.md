@@ -1,5 +1,17 @@
 # Gold Refinement — Metallurgical Manuscript Composition Exemplar
 
+> **Domain-skin variant of [`template_madlib`](../template_madlib/README.md).**
+> This exemplar reuses the same deterministic token-injection composition core
+> as `template_madlib` (`src/composition.py`, `src/config.py`,
+> `src/manuscript_variables.py`, and a near-identical `manuscript/config.yaml`
+> schema) and shows how to specialize that mega-madlib engine to a concrete
+> domain. The metallurgy skin (`src/assay.py`, `src/purity.py`,
+> `src/refinery.py`, `src/domain_adapter.py`) maps the abstract composition
+> pipeline onto a real refinement sequence:
+> ore → smelting → assaying → cupellation → certification. Read
+> [`template_madlib`](../template_madlib/README.md) first for the generic engine;
+> read this template to see a worked domain specialization of it.
+
 ## When to use this template
 
 Use this template for **analogical manuscript composition research**: projects

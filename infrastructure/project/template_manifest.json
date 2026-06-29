@@ -22,7 +22,15 @@
       "qualified_name": "templates/template_code_project",
       "title": "Code Project — Optimization Research Exemplar",
       "use_when": "Use this template for **code-driven computational research**: algorithms in `src/`, numerical experiments with deterministic seeds, automated publication-quality figures, and a manuscript that reports the computed results.",
-      "test_file_count": 11,
+      "test_file_count": 12,
+      "coverage_floor": 90
+    },
+    {
+      "name": "template_eda_notebook",
+      "qualified_name": "templates/template_eda_notebook",
+      "title": "EDA Notebook — Exploratory Data Analysis Exemplar",
+      "use_when": "Use this template for **exploratory data analysis on tabular data**: load a dataset, surface missingness, compute descriptive statistics and per-group means, rank features by correlation, and produce a few diagnostic figures.",
+      "test_file_count": 8,
       "coverage_floor": 90
     },
     {
@@ -30,7 +38,7 @@
       "qualified_name": "templates/template_literature_meta_analysis",
       "title": "Literature Meta-Analysis Template",
       "use_when": "Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts.",
-      "test_file_count": 49,
+      "test_file_count": 50,
       "coverage_floor": 90
     },
     {

@@ -42,6 +42,10 @@ Stability score from `infrastructure.scientific.stability`: **{{STABILITY_SCORE}
 
 The stability analysis tested {{CONFIG_STABILITY_CELLS}} parameter combinations ({{CONFIG_NUM_STABILITY_STARTS}} starting points $\times$ {{CONFIG_NUM_STABILITY_STEPS}} step sizes), confirming uniform convergence across the entire parameter space.
 
+### Benchmark Demonstration
+
+This exemplar also demonstrates `infrastructure.benchmark`. The thin orchestrator `scripts/04_benchmark_stage.py` calls `src/benchmark_support.py`, which times the pure `quadratic_function` across a fixed set of input sizes (deterministic seed, no network) and turns the timing facts into boolean rubric checks. Those checks are scored through the shared `infrastructure.benchmark.score_rubric` against a weighted `RubricSet`, and the result is rendered with `scores_to_markdown` into `output/reports/benchmark_report.json` (plus an optional timing figure). This keeps the benchmark API exercised by a real exemplar, not by infrastructure tests alone.
+
 ## Madlib Injection Verification
 
 This manuscript demonstrates the template's "madlib" capability: every quantitative claim is injected from computed data at render time. The substitution system processed the following variables:

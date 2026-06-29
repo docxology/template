@@ -1,0 +1,22 @@
+{
+  "creators": [
+    {
+      "affiliation": "Your Institution",
+      "name": "Author, Template",
+      "orcid": "0000-0000-0000-0000"
+    }
+  ],
+  "description": "An exploratory-data-analysis (EDA) computational-notebook exemplar: a walkthrough notebook that imports a fully-tested EDA library (load, clean, summarize, correlate, prepare figure data).",
+  "keywords": [
+    "exploratory data analysis",
+    "computational notebook",
+    "reproducible research",
+    "pandas",
+    "data cleaning",
+    "correlation analysis"
+  ],
+  "license": "MIT",
+  "title": "Exploratory Data Analysis: A Reproducible Notebook Template",
+  "upload_type": "software",
+  "version": "1.0.0"
+}

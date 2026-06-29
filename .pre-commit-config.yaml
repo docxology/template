@@ -189,6 +189,28 @@ repos:
         always_run: true
         verbose: true
 
+      # Skill-reachability gate (mirrors the CI docs-lint step). Asserts the
+      # docs front door (`docs/AGENTS.md`) carries resolving links to all three
+      # discovery entrypoints (`docs/_generated/skills_index.md`,
+      # `docs/prompts/SKILL.md`, `docs/prompts/COMPOSITION.md`) and that every
+      # discovered `SKILL.md` appears in the generated skills index. Cheap
+      # (~0.3 s); runs on the lint hook stage so index drift is caught locally.
+      - id: skill-reachability-check
+        name: skill-reachability gate (front-door links + index completeness)
+        entry: bash
+        args:
+          - -eo
+          - pipefail
+          - -c
+          - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
+            uv run python scripts/gates/skill_reachability_check.py
+        language: system
+        pass_filenames: false
+        stages: [pre-commit, manual]
+        always_run: true
+        verbose: true
+
       # Strict pass: LOW + MEDIUM + HIGH against `bandit.yaml`'s allow-list.
       # Manual-stage only (run with `pre-commit run --hook-stage manual
       # bandit-low`) — too noisy for every push, but kept here so the

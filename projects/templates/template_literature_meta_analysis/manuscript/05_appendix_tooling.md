@@ -48,6 +48,28 @@ engines degrade to skipped sources. The CLI supports per-engine skip flags:
 `--skip-arxiv`, `--skip-s2`, `--skip-openalex`, `--skip-crossref`, `--skip-pubmed`,
 `--skip-sovietrxiv`, `--skip-chinarxiv`.
 
+## Deep Research (Offline Fixture Replay)
+
+This exemplar also demonstrates the shared `infrastructure.search.deep_research`
+capability — provider-neutral dispatch to OpenAI and Gemini deep-research agents.
+Because deep research is a **paid, non-deterministic** service, the template never
+calls it live in CI. Instead, `src/deep_research/deep_research_adapter.py` wires the
+real infrastructure request/result models (`DeepResearchConfig`, `DeepResearchRequest`,
+`DeepResearchResult`, `DeepResearchClient`) and ships a deterministic, offline path:
+`scripts/08_deep_research_dispatch.py` builds the genuine provider-neutral request and
+then *replays* a recorded report fixture
+(`src/deep_research/fixtures/recorded_report.json`), normalizing it through the real
+`DeepResearchResult` model. Replay fails closed if the fixture is missing — it never
+fabricates a passing run — mirroring the fixture-replay idiom of `template_sia`. The
+same adapter exposes `build_offline_request`, the exact call-site a live `submit` would
+dispatch, so a fork can enable real providers by supplying `OPENAI_API_KEY` /
+`GEMINI_API_KEY`:
+
+```bash
+# Offline (default): replays the recorded report, no key required
+uv run python scripts/08_deep_research_dispatch.py
+```
+
 ## Test Suite
 
 Every stage is covered by a no-mocks test suite (real computation and

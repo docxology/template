@@ -2,110 +2,14 @@
 
 > **Agent skill discovery and manifest generation**
 
-**Location:** `infrastructure/skills/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---
 
-## Key Features
+## Canonical reference
 
-- **SKILL.md Discovery**: Scans configured repository roots for `SKILL.md` files with YAML frontmatter
-- **Manifest Generation**: Writes the default manifest at repo-root `.cursor/skill_manifest.json` when you run `uv run python -m infrastructure.skills write` (the `.cursor/` directory is created if needed)
-- **Index Generation**: Writes [`docs/_generated/skills_index.md`](../../_generated/skills_index.md) with `uv run python -m infrastructure.skills write-index`
-- **Manifest Validation**: Checks if manifest matches current on-disk skills
-- **MCP Alignment**: Skill descriptors use MCP-style metadata for agent routing; this module does not start an MCP server
+This guide is a thin pointer. The authoritative, always-current
+reference for this module is its colocated agent skill and README:
 
-Default discovery roots are `infrastructure/`, `projects/`, `docs/prompts/`,
-and `.cursor/skills/`.
-
----
-
-## Usage Examples
-
-### Discover All Skills
-
-```python
-from pathlib import Path
-from infrastructure.skills import discover_skills, SkillDescriptor
-
-skills: list[SkillDescriptor] = discover_skills(Path("."))
-for skill in skills:
-    print(f"{skill.name}: {skill.description[:60]}...")
-```
-
-### Write Skill Manifest
-
-```python
-from pathlib import Path
-from infrastructure.skills import write_skill_manifest
-
-# Default: <repo>/.cursor/skill_manifest.json
-path = write_skill_manifest(Path("."))
-print(f"Manifest written to {path}")
-```
-
-### Check Manifest Freshness
-
-```python
-from pathlib import Path
-from infrastructure.skills import manifest_matches_discovery
-
-is_fresh, message = manifest_matches_discovery(
-    Path("."),
-    Path(".cursor/skill_manifest.json"),
-)
-if not is_fresh:
-    print(f"{message} — run `uv run python -m infrastructure.skills write`")
-```
-
-**CLI Usage:**
-
-```bash
-# Write/refresh the skill manifest
-uv run python -m infrastructure.skills write
-
-# Write/refresh the human-readable skills index
-uv run python -m infrastructure.skills write-index
-
-# Check if manifest is up to date
-uv run python -m infrastructure.skills check
-```
-
----
-
-## SKILL.md Format
-
-Each infrastructure module's `SKILL.md` uses YAML frontmatter:
-
-```yaml
----
-name: infrastructure-rendering
-description: >
-  Multi-format output generation (PDF, HTML, slides).
-  Use for: Pandoc/XeLaTeX rendering, RenderManager, slide deck generation.
-  Key imports: RenderManager, RenderingConfig from infrastructure.rendering
----
-```
-
-The body contains markdown instructions for AI agents.
-
----
-
-## Public API
-
-| Symbol | Type | Purpose |
-|--------|------|---------|
-| `SkillDescriptor` | Dataclass | Parsed SKILL.md metadata |
-| `discover_skills` | Function | Find all SKILL.md files |
-| `write_skill_manifest` | Function | Generate manifest JSON |
-| `manifest_matches_discovery` | Function | Check manifest freshness |
-| `load_skill_descriptor` | Function | Parse single SKILL.md |
-| `split_yaml_frontmatter` | Function | Extract YAML from markdown |
-
----
-
-## Related Documentation
-
-- **[Modules Guide](../modules-guide.md)** — Module overview
-- **[Infrastructure SKILL.md](../../../infrastructure/SKILL.md)** — Root skill descriptor
-- **[Infrastructure AGENTS.md](../../../infrastructure/skills/AGENTS.md)** — Machine-readable API spec
+- [`infrastructure/skills/SKILL.md`](../../../infrastructure/skills/SKILL.md) — agent-facing capability summary (single source of truth).
+- [`infrastructure/skills/README.md`](../../../infrastructure/skills/README.md) — module purpose, public API, and usage.

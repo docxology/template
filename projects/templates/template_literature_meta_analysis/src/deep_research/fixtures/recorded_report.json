@@ -1,0 +1,44 @@
+{
+  "provider": "openai",
+  "job_id": "resp_recorded_offline_0001",
+  "status": "completed",
+  "output_text": "# Deep Research Report: Modafinil Cognitive-Enhancement Literature\n\n## Executive Summary\n\nModafinil shows a consistent but modest effect on sustained attention and\nwakefulness in sleep-deprived populations, with weaker and more heterogeneous\nevidence for executive-function gains in rested, healthy adults. The strongest\nrandomized trials concentrate in shift-work and narcolepsy cohorts; off-label\ncognitive-enhancement claims rest on smaller, lower-powered studies.\n\n## Findings\n\n- Sustained attention and vigilance improve reliably under sleep deprivation\n  (medium effect sizes across replicated trials).\n- Working-memory and planning effects in rested adults are small and\n  inconsistent, with several null results.\n- Tolerability is favorable at standard doses; headache and insomnia are the\n  most frequently reported adverse events.\n\n## Risks\n\n- Publication bias toward positive cognitive-enhancement results in small\n  samples.\n- Heterogeneous outcome batteries make cross-study synthesis fragile.\n\n## Sources\n\nSee citations below; all retrieved from open bibliographic indices.\n",
+  "citations": [
+    {
+      "title": "Cognitive effects of modafinil in healthy individuals: a systematic review",
+      "url": "https://example.org/modafinil-systematic-review",
+      "start_index": 412,
+      "end_index": 478,
+      "text": "modest effect on sustained attention",
+      "metadata": {"index": "openalex", "year": 2015}
+    },
+    {
+      "title": "Modafinil for shift-work sleep disorder: randomized controlled trial",
+      "url": "https://example.org/modafinil-shift-work-rct",
+      "start_index": 640,
+      "end_index": 712,
+      "text": "improvements in wakefulness and vigilance",
+      "metadata": {"index": "pubmed", "year": 2011}
+    },
+    {
+      "title": "Heterogeneity in executive-function outcomes with modafinil",
+      "url": "https://example.org/modafinil-executive-heterogeneity",
+      "start_index": 980,
+      "end_index": 1044,
+      "text": "small and inconsistent working-memory effects",
+      "metadata": {"index": "crossref", "year": 2018}
+    }
+  ],
+  "trace": [
+    {"type": "web_search"},
+    {"type": "synthesis"}
+  ],
+  "raw": {},
+  "request": {
+    "query": "Survey the cognitive-enhancement evidence for modafinil in healthy and sleep-deprived adults",
+    "provider": "openai",
+    "output_format": "markdown",
+    "sections": ["executive_summary", "findings", "risks", "sources"],
+    "instructions": null
+  }
+}

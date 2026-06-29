@@ -1,0 +1,3 @@
+# EDA notebook exemplar: the src/ library is fully standalone.
+# No src/ module imports infrastructure.* — the allowlist is intentionally empty.
+allow_infrastructure_imports: []

@@ -1,0 +1,25 @@
+conditions:
+  - name: raw_dataset
+    role: reference
+    description: "The dataset as loaded, with missing numeric cells preserved as NaN."
+  - name: cleaned_dataset
+    role: proposed
+    description: "Rows with any missing numeric feature dropped (explicitly reported)."
+  - name: normalized_dataset
+    role: variant
+    description: "Cleaned dataset with numeric columns z-score standardized for cross-feature comparison."
+metrics:
+  primary:
+    name: pairwise_correlation
+    direction: maximize
+protocol: "Load the shipped deterministic CSV, drop incomplete rows, compute summary statistics, the Pearson correlation matrix, and per-group means via the tested src.eda functions; prepare histogram, heatmap, and group-count figure data deterministically."
+expected_figures:
+  - fig:height_histogram
+  - fig:correlation_heatmap
+  - fig:group_counts
+expected_tables:
+  - tbl:summary_statistics
+baselines:
+  - raw_dataset
+ablations:
+  - normalized_dataset
