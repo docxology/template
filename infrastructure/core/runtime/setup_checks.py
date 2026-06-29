@@ -11,6 +11,28 @@ from infrastructure.core.runtime.env_deps import check_dependencies, install_mis
 logger = get_logger(__name__)
 
 
+def aggregate_check_results(
+    results: list[tuple[str, bool]],
+) -> tuple[bool, list[str]]:
+    """Summarise named check results into an ``(all_passed, lines)`` pair.
+
+    Args:
+        results: list of ``(check_name, passed_bool)`` pairs.
+
+    Returns:
+        Tuple of ``(all_passed, lines)`` where ``all_passed`` is True only if
+        every result passed, and ``lines`` is a list of status strings of the
+        form ``"OK: <check_name>"`` or ``"FAIL: <check_name>"``.
+    """
+    all_passed = True
+    lines: list[str] = []
+    for check_name, passed in results:
+        lines.append(("OK" if passed else "FAIL") + ": " + check_name)
+        if not passed:
+            all_passed = False
+    return all_passed, lines
+
+
 def sync_workspace_dependencies(repo_root: Path) -> bool:
     """Run ``uv sync`` with fallback to per-package install."""
     logger.info("Checking for uv package manager...")

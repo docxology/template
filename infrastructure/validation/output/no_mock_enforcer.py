@@ -29,6 +29,7 @@ import tokenize
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.project.public_scope import public_project_infos
 
 logger = get_logger(__name__)
 
@@ -117,6 +118,24 @@ def _code_only_lines(source: str) -> dict[int, str] | None:
     except (tokenize.TokenError, IndentationError, SyntaxError):
         return None
     return {ln: " ".join(parts) for ln, parts in code_by_line.items()}
+
+
+def scan_test_roots(repo_root: Path) -> list[Path]:
+    """Return every tests/ dir the No Mocks Policy must cover.
+
+    Always includes the repository-level ``tests/`` tree and, in addition,
+    each public exemplar project's ``tests/`` directory (resolved via
+    :func:`public_project_infos` so the enforcement surface stays in lockstep
+    with the public CI scope). Project ``tests/`` dirs that do not exist in the
+    current checkout are skipped silently; the repo-level ``tests/`` dir is
+    required and its absence is treated as a failure by the caller.
+    """
+    roots = [repo_root / "tests"]
+    for project in public_project_infos(repo_root):
+        project_tests = (repo_root / project.path / "tests").resolve()
+        if project_tests.exists():
+            roots.append(project_tests)
+    return roots
 
 
 def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:

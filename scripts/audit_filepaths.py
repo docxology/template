@@ -36,6 +36,7 @@ from infrastructure.core.logging.utils import get_logger, setup_logger, log_head
 from infrastructure.validation.repo.audit_orchestrator import (
     run_comprehensive_audit,
     generate_audit_report,
+    format_audit_statistics,
 )
 
 logger = get_logger(__name__)
@@ -116,11 +117,8 @@ Examples:
         logger.info(f"Duration: {scan_results.scan_duration:.2f}s")
         log_success(f"Report saved: {args.output}", logger)
 
-        if total_issues > 0:
-            logger.warning("🚨 Issues found by category:")
-            for category, count in scan_results.statistics.items():
-                if count > 0:
-                    logger.warning(f"   • {category.replace('_', ' ').title()}: {count}")
+        for line in format_audit_statistics(scan_results.statistics):
+            logger.warning(line)
 
         # Exit with appropriate code
         raise SystemExit(0 if total_issues == 0 else 1)

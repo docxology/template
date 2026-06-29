@@ -33,22 +33,12 @@ from infrastructure.core.logging.utils import (  # noqa: E402
     log_success,
 )
 from infrastructure.documentation.stage_table import (  # noqa: E402
+    DEFAULT_STAGE_TABLE_TARGETS,
     build_stage_table,
     inject_stage_table,
 )
 
 logger = get_logger(__name__)
-
-
-_DEFAULT_TARGETS: tuple[str, ...] = (
-    "README.md",
-    "AGENTS.md",
-    "CLAUDE.md",
-    ".github/README.md",
-    "scripts/AGENTS.md",
-    "docs/RUN_GUIDE.md",
-    "docs/core/workflow.md",
-)
 
 
 def _parse_args(argv: list[str] | None) -> argparse.Namespace:
@@ -78,7 +68,7 @@ def main(argv: list[str] | None = None) -> int:
 
     repo_root = Path(__file__).resolve().parents[1]
     yaml_path = args.yaml or (repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml")
-    targets = [Path(t) for t in (args.targets or _DEFAULT_TARGETS)]
+    targets = [Path(t) for t in (args.targets or DEFAULT_STAGE_TABLE_TARGETS)]
 
     changed: list[Path] = []
     unchanged: list[Path] = []

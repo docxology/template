@@ -66,7 +66,7 @@
       "token": "sheaf_law_count"
     },
     {
-      "expected": "25",
+      "expected": "11",
       "fresh": true,
       "resolved_path": "output/manuscript/00_abstract.md",
       "section": "manuscript/00_abstract.md",
@@ -717,21 +717,21 @@
       "token": "security_posture_high_risk_gap_count"
     },
     {
-      "expected": "85",
+      "expected": "34",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "validation_spine_artifact_count"
     },
     {
-      "expected": "5",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "provenance_bundle_count"
     },
     {
-      "expected": "85",
+      "expected": "34",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -745,14 +745,14 @@
       "token": "provenance_all_seeded"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "provenance_bundle_complete"
     },
     {
-      "expected": "25",
+      "expected": "11",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -1431,7 +1431,7 @@
       "token": "sheaf_law_count"
     },
     {
-      "expected": "25",
+      "expected": "11",
       "fresh": true,
       "resolved_path": "output/manuscript/15_discussion_outlook.md",
       "section": "manuscript/15_discussion_outlook.md",
@@ -1620,7 +1620,7 @@
       "token": "interop_all_lossless"
     },
     {
-      "expected": "5",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
@@ -1641,7 +1641,7 @@
       "token": "replay_matrix_all_matched"
     },
     {
-      "expected": "25",
+      "expected": "11",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",

@@ -242,6 +242,27 @@ def _calculate_statistics(scan_results: ScanResults) -> None:
     }
 
 
+def format_audit_statistics(statistics: dict[str, int]) -> list[str]:
+    """Format audit statistics into human-readable warning lines by category.
+
+    Args:
+        statistics: Mapping of category strings to issue counts.
+
+    Returns:
+        Empty list if all counts are zero (or the mapping is empty). Otherwise a
+        header line followed by one ``"   - Category Name: N"`` line per nonzero
+        category, with underscores replaced by spaces and title-cased.
+    """
+    if sum(statistics.values()) <= 0:
+        return []
+
+    lines = ["Issues found by category:"]
+    for category, count in statistics.items():
+        if count > 0:
+            lines.append(f"   - {category.replace('_', ' ').title()}: {count}")
+    return lines
+
+
 def generate_audit_report(
     scan_results: ScanResults,
     output_format: str = "markdown",

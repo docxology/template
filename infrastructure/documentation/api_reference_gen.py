@@ -336,6 +336,27 @@ def _first_doc_line(
 # ---------------------------------------------------------------------------
 
 
+def discover_infrastructure_packages(infra_dir: Path) -> list[Path]:
+    """Return alphabetically-sorted package roots under ``infra_dir``.
+
+    Scans ``infra_dir`` for immediate subdirectories that contain an
+    ``__init__.py`` and whose name does **not** start with an underscore,
+    returning them sorted by name. This is the canonical package-discovery
+    entry point used by ``scripts/generate_api_reference_doc.py``.
+
+    Args:
+        infra_dir: The ``infrastructure/`` directory to scan.
+
+    Returns:
+        Package root directories (each containing an ``__init__.py``),
+        sorted alphabetically by directory name.
+    """
+    return sorted(
+        (p.parent for p in infra_dir.glob("*/__init__.py") if not p.parent.name.startswith("_")),
+        key=lambda p: p.name,
+    )
+
+
 def walk_public_api(package_root: Path) -> list[ModuleAPI]:
     """Walk one package's ``__init__.py`` and return :class:`ModuleAPI` records.
 
@@ -517,6 +538,7 @@ def inject_api_reference(
 
 __all__ = [
     "ModuleAPI",
+    "discover_infrastructure_packages",
     "walk_public_api",
     "build_api_reference_markdown",
     "inject_api_reference",

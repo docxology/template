@@ -175,3 +175,33 @@ class TestInjectStageTable:
         assert "Stage" in text and "Failure mode" in text
         # Idempotence: regenerating with no input change → no diff.
         assert inject_stage_table(target, table) is False
+
+
+class TestDefaultStageTableTargets:
+    """Verify the canonical default-targets constant."""
+
+    def test_is_nonempty_tuple(self) -> None:
+        from infrastructure.documentation.stage_table import DEFAULT_STAGE_TABLE_TARGETS
+
+        assert isinstance(DEFAULT_STAGE_TABLE_TARGETS, tuple)
+        assert len(DEFAULT_STAGE_TABLE_TARGETS) > 0
+
+    def test_contains_readme(self) -> None:
+        from infrastructure.documentation.stage_table import DEFAULT_STAGE_TABLE_TARGETS
+
+        assert "README.md" in DEFAULT_STAGE_TABLE_TARGETS
+
+    def test_all_entries_are_strings(self) -> None:
+        from infrastructure.documentation.stage_table import DEFAULT_STAGE_TABLE_TARGETS
+
+        assert all(isinstance(t, str) for t in DEFAULT_STAGE_TABLE_TARGETS)
+
+    def test_contains_agents_md(self) -> None:
+        from infrastructure.documentation.stage_table import DEFAULT_STAGE_TABLE_TARGETS
+
+        assert "AGENTS.md" in DEFAULT_STAGE_TABLE_TARGETS
+
+    def test_contains_claude_md(self) -> None:
+        from infrastructure.documentation.stage_table import DEFAULT_STAGE_TABLE_TARGETS
+
+        assert "CLAUDE.md" in DEFAULT_STAGE_TABLE_TARGETS

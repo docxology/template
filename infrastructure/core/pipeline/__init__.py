@@ -3,6 +3,7 @@
 Re-exports primary symbols for ``from infrastructure.core.pipeline import …`` usage.
 """
 
+from infrastructure.core.pipeline.dag import stage_label
 from infrastructure.core.pipeline.executor import (
     PipelineConfig,
     PipelineExecutor,
@@ -52,4 +53,5 @@ __all__ = [
     "TelemetryConfig",
     "generate_pipeline_summary",
     "get_system_resources",
+    "stage_label",
 ]

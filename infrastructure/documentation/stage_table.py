@@ -32,6 +32,18 @@ from infrastructure.documentation.glossary_gen import inject_between_markers
 logger = get_logger(__name__)
 
 
+#: Canonical set of Markdown files that embed the stage table.
+DEFAULT_STAGE_TABLE_TARGETS = (
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".github/README.md",
+    "scripts/AGENTS.md",
+    "docs/RUN_GUIDE.md",
+    "docs/core/workflow.md",
+)
+
+
 _DEFAULT_FAILURE_MODES: dict[str, str] = {
     "core": "hard fail",
     "llm": "skipped if Ollama absent",
@@ -208,4 +220,4 @@ def inject_stage_table(
     return True
 
 
-__all__ = ["build_stage_table", "inject_stage_table"]
+__all__ = ["DEFAULT_STAGE_TABLE_TARGETS", "build_stage_table", "inject_stage_table"]

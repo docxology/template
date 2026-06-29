@@ -32,6 +32,7 @@ from infrastructure.core.logging.utils import (  # noqa: E402
 )
 from infrastructure.documentation.api_reference_gen import (  # noqa: E402
     build_api_reference_markdown,
+    discover_infrastructure_packages,
     inject_api_reference,
 )
 from infrastructure.documentation.glossary_gen import inject_between_markers  # noqa: E402
@@ -40,14 +41,6 @@ logger = get_logger(__name__)
 
 
 _DEFAULT_TARGET = Path("docs/reference/api-reference.md")
-
-
-def _discover_packages(infra_dir: Path) -> list[Path]:
-    """Return alphabetically-sorted package roots under ``infra_dir`` with __init__.py."""
-    return sorted(
-        (p.parent for p in infra_dir.glob("*/__init__.py") if not p.parent.name.startswith("_")),
-        key=lambda p: p.name,
-    )
 
 
 def _parse_args(argv: list[str] | None) -> argparse.Namespace:
@@ -79,7 +72,7 @@ def main(argv: list[str] | None = None) -> int:
         logger.error(f"Target not found: {target}")
         return 1
 
-    packages = _discover_packages(infra_dir)
+    packages = discover_infrastructure_packages(infra_dir)
     content = build_api_reference_markdown(packages)
 
     if args.write:

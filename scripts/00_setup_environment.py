@@ -37,6 +37,7 @@ from infrastructure.core.runtime.environment import (
 )
 from infrastructure.core.runtime.env_deps import check_build_tools
 from infrastructure.core.runtime.setup_checks import (
+    aggregate_check_results,
     run_optional_setup_hook,
     sync_workspace_dependencies,
     validate_project_discovery,
@@ -87,14 +88,11 @@ def main() -> int:
             results.append((check_name, False))
 
     # Summary
-    log_header("Setup Summary")
+    log_header("Setup Summary", logger)
 
-    all_passed = True
-    for check_name, result in results:
-        status = "✅ PASS" if result else "❌ FAIL"
-        logger.info(f"{status}: {check_name}")
-        if not result:
-            all_passed = False
+    all_passed, summary_lines = aggregate_check_results(results)
+    for line in summary_lines:
+        logger.info(line)
 
     if all_passed:
         log_success("\n✅ Environment setup complete - ready to proceed")

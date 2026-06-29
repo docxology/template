@@ -712,3 +712,35 @@ class TestModuleStructure:
 
         assert callable(run_comprehensive_audit)
         assert callable(generate_audit_report)
+
+
+class TestFormatAuditStatistics:
+    """Test the format_audit_statistics helper."""
+
+    def test_returns_empty_for_all_zero(self):
+        """All-zero counts produce no lines."""
+        from infrastructure.validation.repo.audit_orchestrator import format_audit_statistics
+
+        assert format_audit_statistics({"link_issues": 0, "quality_issues": 0}) == []
+
+    def test_returns_header_for_nonzero(self):
+        """A nonzero category yields the header plus a formatted line."""
+        from infrastructure.validation.repo.audit_orchestrator import format_audit_statistics
+
+        result = format_audit_statistics({"link_issues": 3, "quality_issues": 0})
+
+        assert result == ["Issues found by category:", "   - Link Issues: 3"]
+
+    def test_formats_underscores_as_spaces_titlecase(self):
+        """Underscores become spaces and categories are title-cased."""
+        from infrastructure.validation.repo.audit_orchestrator import format_audit_statistics
+
+        result = format_audit_statistics({"missing_doc": 2})
+
+        assert result == ["Issues found by category:", "   - Missing Doc: 2"]
+
+    def test_returns_empty_for_empty_dict(self):
+        """An empty mapping produces no lines."""
+        from infrastructure.validation.repo.audit_orchestrator import format_audit_statistics
+
+        assert format_audit_statistics({}) == []

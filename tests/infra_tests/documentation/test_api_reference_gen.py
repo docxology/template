@@ -364,3 +364,56 @@ def test_module_api_is_frozen_dataclass() -> None:
     )
     with pytest.raises(Exception):  # FrozenInstanceError, but kept loose for portability
         rec.name = "y"  # type: ignore[misc]
+
+
+# ---------------------------------------------------------------------------
+# discover_infrastructure_packages
+# ---------------------------------------------------------------------------
+
+
+class TestDiscoverInfrastructurePackages:
+    """Verify package-root discovery under an ``infrastructure/`` directory."""
+
+    def test_returns_sorted_package_roots(self, tmp_path: Path) -> None:
+        from infrastructure.documentation.api_reference_gen import (
+            discover_infrastructure_packages,
+        )
+
+        infra_dir = tmp_path / "infrastructure"
+        # Create out of alphabetical order to prove sorting.
+        for name in ("zebra", "alpha"):
+            pkg = infra_dir / name
+            pkg.mkdir(parents=True)
+            (pkg / "__init__.py").touch()
+
+        result = discover_infrastructure_packages(infra_dir)
+
+        assert [p.name for p in result] == ["alpha", "zebra"]
+
+    def test_excludes_underscore_prefixed_dirs(self, tmp_path: Path) -> None:
+        from infrastructure.documentation.api_reference_gen import (
+            discover_infrastructure_packages,
+        )
+
+        infra_dir = tmp_path / "infrastructure"
+        for name in ("_private", "public_pkg"):
+            pkg = infra_dir / name
+            pkg.mkdir(parents=True)
+            (pkg / "__init__.py").touch()
+
+        result = discover_infrastructure_packages(infra_dir)
+
+        assert [p.name for p in result] == ["public_pkg"]
+
+    def test_excludes_dirs_without_init(self, tmp_path: Path) -> None:
+        from infrastructure.documentation.api_reference_gen import (
+            discover_infrastructure_packages,
+        )
+
+        infra_dir = tmp_path / "infrastructure"
+        no_init = infra_dir / "no_init"
+        no_init.mkdir(parents=True)
+
+        result = discover_infrastructure_packages(infra_dir)
+
+        assert result == []

@@ -115,6 +115,15 @@ not to the contents of any specific workspace.
   `docs/_generated/COUNTS.md`; strengthened `TestLogOperation` with `caplog`
   assertions; surfaced each prompt `references/` doc from its parent README.
 
+### Refactored
+
+- Extract `discover_infrastructure_packages` to `api_reference_gen.py` (SCRIPTS-LOGIC-1)
+- Extract `stage_label` helper to `core/pipeline/dag.py` (SCRIPTS-LOGIC-2)
+- Extract `scan_test_roots` to `no_mock_enforcer.py` (SCRIPTS-LOGIC-3)
+- Extract `format_audit_statistics` to `audit_orchestrator.py` (SCRIPTS-LOGIC-4)
+- Move `DEFAULT_STAGE_TABLE_TARGETS` constant to `stage_table.py` (SCRIPTS-LOGIC-5)
+- Extract `aggregate_check_results` + fix `log_header` missing logger to `setup_checks.py` (SCRIPTS-LOGIC-6)
+
 ### Security
 
 - 🔒 **Dependency CVE remediation (QUALITY-AUDIT-1)** — bumped `pypdf` to

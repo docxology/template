@@ -4,7 +4,7 @@ Tests the no-mock validation utility using real files.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
+from infrastructure.validation.output.no_mock_enforcer import scan_test_roots, validate_no_mocks
 
 
 class TestValidateNoMocks:
@@ -120,3 +120,29 @@ class TestValidateNoMocks:
 
         violations = validate_no_mocks(tests_dir, tmp_path)
         assert violations == []
+
+
+class TestScanTestRoots:
+    """Test scan_test_roots function."""
+
+    def test_includes_repo_level_tests(self, tmp_path):
+        """The repository-level tests/ dir is always included in the roots."""
+        (tmp_path / "tests").mkdir()
+
+        roots = scan_test_roots(tmp_path)
+        assert (tmp_path / "tests") in roots
+
+    def test_returns_list(self, tmp_path):
+        """scan_test_roots always returns a list."""
+        (tmp_path / "tests").mkdir()
+
+        result = scan_test_roots(tmp_path)
+        assert isinstance(result, list)
+
+    def test_all_returned_roots_exist(self, tmp_path):
+        """Every returned tests/ root must exist on disk."""
+        (tmp_path / "tests").mkdir()
+
+        roots = scan_test_roots(tmp_path)
+        for root in roots:
+            assert root.exists()

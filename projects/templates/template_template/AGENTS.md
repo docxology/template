@@ -14,12 +14,18 @@ Programmatic introspection and documentation of the template repository's own ar
 
 ```text
 template_template/
-├── src/template_template/     # Core modules
-│   ├── introspection.py       # YAML + filesystem repository analysis
-│   ├── metrics.py             # Manuscript metrics + token dict
-│   ├── inject_metrics.py      # ${variable} substitution
-│   └── architecture_viz.py    # Publication figures
-├── scripts/                   # Thin orchestrators (metrics, figures)
+├── src/template_template/        # Core modules
+│   ├── introspection.py          # YAML + filesystem repository analysis
+│   ├── metrics.py                # Manuscript metrics + token dict
+│   ├── inject_metrics.py         # ${variable} substitution
+│   ├── architecture_viz.py       # Figure orchestrator (calls figure_* modules)
+│   ├── figure_architecture_overview.py  # Architecture overview figure
+│   ├── figure_pipeline_stages.py        # Pipeline stages figure
+│   ├── figure_module_inventory.py       # Module inventory figure
+│   ├── figure_comparative_matrix.py     # Comparative feature matrix figure
+│   ├── viz_palette.py            # Shared palette + drawing helpers
+│   └── paths.py                  # Repository root discovery
+├── scripts/                      # Thin orchestrators (metrics, figures)
 ├── tests/                     # 90%+ coverage on src/
 ├── manuscript/                # Chapters + config + references
 ├── docs/                      # Project-level technical docs
@@ -58,7 +64,7 @@ template_template/
 
 ### Visualization (`src/template_template/architecture_viz.py`)
 
-Generates architecture overview, pipeline stages, module inventory, and comparative feature matrix figures under `output/figures/`.
+`generate_all_architecture_figures` orchestrates the four dedicated figure modules — `figure_architecture_overview.py`, `figure_pipeline_stages.py`, `figure_module_inventory.py`, and `figure_comparative_matrix.py` (sharing `viz_palette.py` helpers) — to write architecture overview, pipeline stages, module inventory, and comparative feature matrix figures under `output/figures/`.
 
 ## Verification
 

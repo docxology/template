@@ -13,10 +13,46 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.runtime.setup_checks import (
+    aggregate_check_results,
     run_optional_setup_hook,
     sync_workspace_dependencies,
     validate_project_discovery,
 )
+
+
+# ---------------------------------------------------------------------------
+# aggregate_check_results
+# ---------------------------------------------------------------------------
+
+
+class TestAggregateCheckResults:
+    """Tests for the aggregate_check_results function."""
+
+    def test_all_pass_returns_true(self) -> None:
+        """all_passed is True when every result passed."""
+        results = [("Python version", True), ("Build tools", True)]
+        all_passed, lines = aggregate_check_results(results)
+        assert all_passed is True
+        assert len(lines) == 2
+
+    def test_any_fail_returns_false(self) -> None:
+        """all_passed is False when at least one result failed."""
+        results = [("Python version", True), ("Build tools", False), ("Deps", True)]
+        all_passed, lines = aggregate_check_results(results)
+        assert all_passed is False
+        assert len(lines) == 3
+
+    def test_lines_formatted_correctly(self) -> None:
+        """Lines use 'OK: <name>' for pass and 'FAIL: <name>' for fail."""
+        results = [("Python version", True), ("Build tools", False)]
+        _all_passed, lines = aggregate_check_results(results)
+        assert lines == ["OK: Python version", "FAIL: Build tools"]
+
+    def test_empty_results_returns_true_empty_lines(self) -> None:
+        """Empty results yield all_passed True and no lines."""
+        all_passed, lines = aggregate_check_results([])
+        assert all_passed is True
+        assert lines == []
 
 
 # ---------------------------------------------------------------------------

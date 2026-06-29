@@ -309,6 +309,52 @@ class PipelineDAG:
                     )
 
 
+def stage_label(stage_name: str, project_name: str = "project", repo_root: Path | None = None) -> str:
+    """Build a truthful stage label like ``"Stage N/M: <stage_name>"``.
+
+    Reads ``infrastructure/core/pipeline/pipeline.yaml`` (or the project-specific
+    override at ``projects/{project_name}/pipeline.yaml``, resolved relative to
+    ``repo_root``) and looks up the 1-based position of ``stage_name`` in the
+    declared ``stages:`` list. Falls back to ``"<stage_name> stage"`` if the YAML
+    cannot be parsed or the stage is missing — that way the banner never lies
+    about its stage number.
+
+    Args:
+        stage_name: The stage name to locate in the pipeline definition.
+        project_name: Project whose ``pipeline.yaml`` override is checked first.
+        repo_root: Repository root used to resolve the candidate YAML paths. When
+            ``None``, no lookup is attempted and the non-numeric fallback label is
+            returned immediately.
+
+    Returns:
+        ``"Stage N/M: <stage_name>"`` when the stage is found, otherwise
+        ``"<stage_name> stage"``.
+    """
+    if repo_root is None:
+        return f"{stage_name} stage"
+
+    candidates = [
+        repo_root / "projects" / project_name / "pipeline.yaml",
+        repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml",
+    ]
+    try:
+        for yaml_path in candidates:
+            if not yaml_path.exists():
+                continue
+            dag = PipelineDAG.from_yaml(yaml_path)
+            names = [s.name for s in dag.stages]
+            total = len(names)
+            if stage_name in names:
+                idx = names.index(stage_name) + 1
+                return f"Stage {idx}/{total}: {stage_name}"
+            # Stage not found in this YAML — try next candidate
+    except Exception as exc:  # noqa: BLE001 — diagnostic-only; never fatal
+        logger.debug("Could not resolve stage index from pipeline.yaml: %s", exc)
+
+    # Fallback: drop the numeric prefix rather than print a stale "8/9".
+    return f"{stage_name} stage"
+
+
 def load_telemetry_config(yaml_path: Path) -> Any:
     """Load the optional ``telemetry:`` block from a pipeline YAML file.
 

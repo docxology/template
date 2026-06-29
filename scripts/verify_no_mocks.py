@@ -22,28 +22,9 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
-from infrastructure.project.public_scope import public_project_infos
-from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
+from infrastructure.validation.output.no_mock_enforcer import scan_test_roots, validate_no_mocks
 
 logger = get_logger(__name__)
-
-
-def _scan_roots(repo_root: Path) -> list[Path]:
-    """Return every tests/ directory the policy must cover.
-
-    Always includes the repository-level ``tests/`` tree and, in addition,
-    each public exemplar project's ``tests/`` directory (resolved via
-    :func:`public_project_infos` so the enforcement surface stays in lockstep
-    with the public CI scope). Project ``tests/`` dirs that do not exist in the
-    current checkout are skipped silently; the repo-level ``tests/`` dir is
-    required and its absence is treated as a failure by the caller.
-    """
-    roots = [repo_root / "tests"]
-    for project in public_project_infos(repo_root):
-        project_tests = (repo_root / project.path / "tests").resolve()
-        if project_tests.exists():
-            roots.append(project_tests)
-    return roots
 
 
 def main() -> int:
@@ -60,7 +41,7 @@ def main() -> int:
         return 1
 
     violations: list[str] = []
-    for tests_dir in _scan_roots(repo_root):
+    for tests_dir in scan_test_roots(repo_root):
         violations.extend(validate_no_mocks(tests_dir, repo_root))
 
     if violations:
