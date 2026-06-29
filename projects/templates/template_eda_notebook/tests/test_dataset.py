@@ -94,6 +94,20 @@ class TestLoadDataset:
         with pytest.raises(FileNotFoundError, match="dataset CSV not found"):
             load_dataset(tmp_path / "nope.csv")
 
+    def test_absent_numeric_column_is_skipped(self, tmp_path):
+        # A CSV that omits one of the schema's numeric columns must load
+        # cleanly: the coercion loop skips the absent column rather than
+        # raising. Exercises the ``column in frame.columns`` False branch.
+        csv = tmp_path / "partial.csv"
+        csv.write_text(
+            "subject_id,group,height_cm\nA,alpha,180\nB,beta,160\n",
+            encoding="utf-8",
+        )
+        frame = load_dataset(csv)
+        assert list(frame.columns) == ["subject_id", "group", "height_cm"]
+        assert "weight_kg" not in frame.columns
+        assert pd.api.types.is_numeric_dtype(frame["height_cm"])
+
 
 class TestNumericColumns:
     """numeric_columns reflects only schema columns actually present."""
