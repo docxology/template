@@ -83,7 +83,10 @@ class TestFigureSpecContract:
             assert required <= set(record)
             assert record["path"].endswith(".png")
             assert record["svg_path"].endswith(".svg")
-            assert record["generated_by"].startswith("src/figures.py::")
+            # Provenance points into the figures/ subpackage (split from the
+            # former single-file figures.py); every generator names its module.
+            assert record["generated_by"].startswith("src/figures/")
+            assert "::" in record["generated_by"]
 
     def test_graph_figure_specs_name_graph_encodings(self):
         encodings = {spec.name: spec.visual_encoding for spec in FIGURE_SPECS}

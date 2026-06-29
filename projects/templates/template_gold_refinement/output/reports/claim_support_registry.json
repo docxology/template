@@ -56,7 +56,7 @@
     {
       "claim_name": "Implementation-linked visualizations",
       "claim_statement": "The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates.",
-      "evidence_source": "src/figures.py::generate_implementation_circuit",
+      "evidence_source": "src/figures/diagrams.py::generate_implementation_circuit",
       "boundary": "local",
       "supported": true,
       "notes": ""

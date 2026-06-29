@@ -154,7 +154,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 | Deterministic tokens | Token selection is deterministic via seeded SHA-256 digest. | src/composition.py::_choose_value | local |
 | Formalism registry | The manuscript exposes 6 source-owned formalisms with equation labels. | src/formalisms.py::FORMALISMS | local |
 | Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME | local |
-| Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures.py::generate_implementation_circuit | local |
+| Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures/diagrams.py::generate_implementation_circuit | local |
 | Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | src/integrity.py::build_integrity_dimensions | local |
 
 The project-local claim-support assay reports 8 supported claims out of 8 total claims, for 100.00% support. Unsupported claims: 0. The generated project report path is `output/reports/claim_support_registry.json`; the shared template evidence report remains `output/reports/evidence_registry.json`.
@@ -180,16 +180,16 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3947x1904 | 0.211 | 0.05905285 | pass |
-| evidence_tier_ladder | yes | yes | 3338x1332 | 0.197 | 0.05498040 | pass |
-| formalism_traceability | yes | yes | 3315x1630 | 0.133 | 0.04238758 | pass |
-| implementation_circuit | yes | yes | 2966x1846 | 0.069 | 0.02257238 | pass |
-| integrity_gate_matrix | yes | yes | 1842x1424 | 0.435 | 0.17515201 | pass |
-| integrity_risk_matrix | yes | yes | 2499x1909 | 0.386 | 0.01805215 | pass |
-| karat_grading | yes | yes | 2956x1699 | 0.279 | 0.07296687 | pass |
-| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02170098 | pass |
-| purity_claim_scatter | yes | yes | 2347x1745 | 0.032 | 0.01429053 | pass |
-| purity_progression | yes | yes | 3029x2125 | 0.182 | 0.03971092 | pass |
-| token_density | yes | yes | 3288x1858 | 0.234 | 0.06696808 | pass |
-| token_heatmap | yes | yes | 2406x2412 | 0.621 | 0.12867696 | pass |
+| claim_evidence_assay | yes | yes | 3952x1904 | 0.211 | 0.05901302 | pass |
+| evidence_tier_ladder | yes | yes | 3348x1332 | 0.196 | 0.05503309 | pass |
+| formalism_traceability | yes | yes | 3315x1631 | 0.133 | 0.04262721 | pass |
+| implementation_circuit | yes | yes | 2966x1845 | 0.068 | 0.02235231 | pass |
+| integrity_gate_matrix | yes | yes | 1832x1425 | 0.437 | 0.17560313 | pass |
+| integrity_risk_matrix | yes | yes | 2499x1910 | 0.387 | 0.01770377 | pass |
+| karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |
+| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02178809 | pass |
+| purity_claim_scatter | yes | yes | 2340x1744 | 0.032 | 0.01428277 | pass |
+| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
+| token_density | yes | yes | 3289x1856 | 0.234 | 0.06699486 | pass |
+| token_heatmap | yes | yes | 2397x2399 | 0.627 | 0.12908659 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}

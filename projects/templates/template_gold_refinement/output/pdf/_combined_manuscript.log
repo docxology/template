@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  26 JUN 2026 11:19
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  28 JUN 2026 19:40
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -6,9 +6,9 @@ entering extended mode
 (./_combined_manuscript.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/article.cls
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/size10.clo
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/size10.clo
 File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 )
 \c@part=\count271
@@ -23,18 +23,18 @@ File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 \belowcaptionskip=\skip50
 \bibindent=\dimen148
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: xetex.def on input line 274.
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-def/xetex.def
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics-def/xetex.def
 File: xetex.def 2025/11/01 v5.0p Graphics/color driver for xetex
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/mathcolor.ltx)
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
 Package xcolor Info: Model `RGB' extended on input line 1365.
 Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
@@ -44,24 +44,24 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsmath.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2025/07/09 v2.17z AMS math features
 \@mathmargin=\skip51
 
 For additional information on amsmath, use the `?' option.
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2024/11/17 v2.01 AMS text
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks17
 \ex@=\dimen149
 ))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsbsy.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen150
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsopn.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count279
@@ -112,10 +112,10 @@ LaTeX Info: Redefining \Relbar on input line 970.
 LaTeX Info: Redefining \[ on input line 2950.
 LaTeX Info: Redefining \] on input line 2951.
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
@@ -123,14 +123,15 @@ LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
-(/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/unicode-math/unicode-math.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3kernel/expl3.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/unicode-math/unicode-math.st
+y (/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3kernel/expl3.sty
 Package: expl3 2026-01-19 L3 programming layer (loader) 
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3backend/l3backend-xetex.de
+f
 File: l3backend-xetex.def 2025-10-09 L3 backend support: XeTeX
 \g__graphics_track_int=\count291
 \g__pdfannot_backend_int=\count292
@@ -138,19 +139,21 @@ File: l3backend-xetex.def 2025-10-09 L3 backend support: XeTeX
 ))
 Package: unicode-math 2023/08/13 v0.8r Unicode maths in XeLaTeX and LuaLaTeX
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/unicode-math/unicode-math-xetex.s
-ty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/unicode-math/unicode-math-xe
+tex.sty
 Package: unicode-math-xetex 2023/08/13 v0.8r Unicode maths in XeLaTeX and LuaLa
 TeX
- (/usr/local/texlive/2026/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
 Package: xparse 2025-10-09 L3 Experimental document command parser
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e
+.sty
 Package: l3keys2e 2025-10-09 LaTeX2e option processing using LaTeX3 keys
-) (/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.sty
+) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/fontspec/fontspec.sty
 Package: fontspec 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
 Package: fontspec-xetex 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTe
 X
 \l__fontspec_script_int=\count294
@@ -168,14 +171,14 @@ X
 \l__fontspec_tmpb_dim=\dimen159
 \l__fontspec_tmpc_dim=\dimen160
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/fix-cm.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/fix-cm.sty
 Package: fix-cm 2020/11/24 v1.1t fixes to LaTeX
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/ts1enc.def
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/ts1enc.def
 File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding TS1 on input line 47.
 LaTeX Encoding Info:    Redeclaring text command \capitalcedilla (encoding TS1)
@@ -438,22 +441,23 @@ t line 194.
 \l__um_primecount_int=\count307
 \g__um_primekern_muskip=\muskip18
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/unicode-math/unicode-math-table.t
-ex))) (/usr/local/texlive/2026/texmf-dist/tex/latex/upquote/upquote.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/unicode-math/unicode-math-ta
+ble.tex)))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/upquote/upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/textcomp.sty
 Package: textcomp 2024/04/24 v2.1b Standard LaTeX package
 ))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/microtype.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/microtype.sty
 Package: microtype 2026/03/01 v3.2d Micro-typographical refinements (RS)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks22
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count308
 )
@@ -470,32 +474,31 @@ LaTeX Info: Redefining \microtypecontext on input line 2053.
 LaTeX Info: Redefining \textmicrotypecontext on input line 2070.
 \MT@listname@count=\count310
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/microtype-xetex.def
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/microtype-xetex.de
+f
 File: microtype-xetex.def 2026/03/01 v3.2d Definitions specific to xetex (RS)
 LaTeX Info: Redefining \lsstyle on input line 443.
 LaTeX Info: Redefining \lslig on input line 451.
 \MT@outer@space=\skip54
 )
 Package microtype Info: Loading configuration file microtype.cfg.
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/microtype.cfg
+ (/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/microtype.cfg
 File: microtype.cfg 2026/03/01 v3.2d microtype main configuration file (RS)
 )
 LaTeX Info: Redefining \microtypesetup on input line 3065.
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/parskip/parskip.sty
+) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 
-(/usr/local/texlive/2026/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
 Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
 )))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
 Package: fancyvrb 2025/07/28 4.6 verbatim text (tvz,hv)
 \FV@CodeLineNo=\count311
 \FV@InFile=\read2
@@ -504,7 +507,7 @@ Package: fancyvrb 2025/07/28 4.6 verbatim text (tvz,hv)
 \FV@StepNumber=\count313
 \FV@OutFile=\write3
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/longtable.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/tools/longtable.sty
 Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
 \LTleft=\skip55
 \LTright=\skip56
@@ -523,7 +526,7 @@ Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
 \c@LT@chunks=\count318
 \LT@p@ftn=\toks25
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \heavyrulewidth=\dimen163
 \lightrulewidth=\dimen164
@@ -543,7 +546,7 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@lastruleclass=\count322
 \@thisrulewidth=\dimen175
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/array.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/tools/array.sty
 Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 \col@sep=\dimen176
 \ar@mcellbox=\box62
@@ -555,7 +558,7 @@ Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 )
 \c@none=\count323
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/calc.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2025/03/01 v4.3b Infix arithmetic (KKT,FJ)
 \calc@Acount=\count324
 \calc@Bcount=\count325
@@ -568,22 +571,22 @@ LaTeX Info: Redefining \addtolength on input line 87.
 \calc@Ccount=\count326
 \calc@Cskip=\skip63
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/footnotehyper/footnotehyper.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/footnotehyper/footnotehyper.
+sty
 Package: footnotehyper 2025/11/15 v1.1f hyperref aware footnote.sty (JFB)
 \FNH@notes=\box64
 \FNH@width=\dimen180
 \FNH@toks=\toks27
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/graphicx.sty
+) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/graphics.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/trig.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: xetex.def on input line 106.
@@ -592,21 +595,20 @@ Package graphics Info: Driver file: xetex.def on input line 106.
 \Gin@req@width=\dimen182
 )
 \pandoc@box=\box65
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip64
 \bibsep=\skip65
 LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count327
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/subcaption.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/caption/subcaption.sty
 Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/caption/caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 \caption@tempdima=\dimen183
 \captionmargin=\dimen184
@@ -622,7 +624,7 @@ Package caption Info: Standard document class detected.
 \c@continuedfloat=\count329
 Package caption Info: longtable package is loaded.
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/ltcaption.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/caption/ltcaption.sty
 Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 ))
 Package caption Info: New subtype `subfigure' on input line 238.
@@ -632,7 +634,7 @@ Package caption Info: New subtype `subtable' on input line 238.
 )
 \c@pandoccrossref@subfigures@footnote@counter=\count332
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/float/float.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count333
 \float@exts=\toks28
@@ -643,44 +645,45 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@every@codelisting=\toks30
 \c@codelisting=\count334
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2026-01-29 v7.01p Hypertext links for LaTeX
 
-(/usr/local/texlive/2026/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.
+sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
 )
-(/usr/local/texlive/2026/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/pdfescape/pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
 
-(/usr/local/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
 )
 
-(/usr/local/texlive/2026/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/infwarerr/infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode not found.
-))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hycolor/hycolor.sty
+)) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/hycolor/hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2026-01-29 v2.58 Cross-referencing by name of section
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/refcount/refcount.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
-(/usr/local/texlive/2026/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
-ty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/gettitlestring/gettitlestr
+ing.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count335
-) (/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty
+)
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
@@ -688,15 +691,15 @@ Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 \Hy@linkcounter=\count336
 \Hy@pagecounter=\count337
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
 )
-(/usr/local/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
 \Hy@SavedSpaceFactor=\count338
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
 )
 Package hyperref Info: Option `unicode' set `true' on input line 4072.
@@ -709,17 +712,17 @@ Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4468.
 \c@Hy@tempcnt=\count339
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/url/url.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip19
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4807.
 \XeTeXLinkMargin=\dimen192
 
-(/usr/local/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 
-(/usr/local/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
@@ -738,8 +741,7 @@ Package hyperref Info: PDF/A mode OFF on input line 6114.
 \c@Hfootnote=\count343
 )
 Package hyperref Info: Driver (autodetected): hxetex.
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hxetex.def
+ (/usr/local/texlive/2026basic/texmf-dist/tex/latex/hyperref/hxetex.def
 File: hxetex.def 2026-01-29 v7.01p Hyperref driver for XeTeX
 \pdfm@box=\box68
 \c@Hy@AnnotLevel=\count344
@@ -747,30 +749,35 @@ File: hxetex.def 2026-01-29 v7.01p Hyperref driver for XeTeX
 \Fld@listcount=\count346
 \c@bookmark@seq@number=\count347
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/rerunfilecheck/rerunfilechec
+k.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
 
-(/usr/local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/uniquecounter/uniquecounte
+r.sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 84.
 )
 \Hy@SectionHShift=\skip66
-) (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
+)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count348
 ))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/xurl/xurl.sty
-Package: xurl 2022/01/09 v 0.10 modify URL breaks
-)
 Package hyperref Info: Option `colorlinks' set `true' on input line 151.
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/seqsplit/seqsplit.sty
-Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
- etc.) 
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amscls/amsthm.sty
+! Illegal parameter number in definition of \reserved@a.
+<to be read again> 
+                   1
+l.156 ...seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+                                                  
+You meant to type ## instead of #, right?
+Or maybe a } was forgotten somewhere earlier, and things
+are all screwed up? I'm going to assume that you meant ##.
+
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amscls/amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
 \thm@style=\toks31
 \thm@bodyfont=\toks32
@@ -782,10 +789,10 @@ Package: amsthm 2020/05/29 v2.20.6
 \thm@headsep=\skip69
 \dth@everypar=\toks36
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/geometry/geometry.sty
-Package: geometry 2026/03/07 v6.0 Page Geometry
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
 
-(/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
 \Gm@cnth=\count349
@@ -803,889 +810,27 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 189.
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/cleveref/cleveref.sty
-Package: cleveref 2018/03/27 v0.21.4 Intelligent cross-referencing
-Package cleveref Info: `hyperref' support loaded on input line 2370.
-LaTeX Info: Redefining \cref on input line 2370.
-LaTeX Info: Redefining \Cref on input line 2370.
-LaTeX Info: Redefining \crefrange on input line 2370.
-LaTeX Info: Redefining \Crefrange on input line 2370.
-LaTeX Info: Redefining \cpageref on input line 2370.
-LaTeX Info: Redefining \Cpageref on input line 2370.
-LaTeX Info: Redefining \cpagerefrange on input line 2370.
-LaTeX Info: Redefining \Cpagerefrange on input line 2370.
-LaTeX Info: Redefining \labelcref on input line 2370.
-LaTeX Info: Redefining \labelcpageref on input line 2370.
-Package cleveref Info: `amsthm' support loaded on input line 3026.
-Package cleveref Info: always capitalise cross-reference names on input line 78
-25.
-Package cleveref Info: always capitalise cross-reference names on input line 78
-52.
-Package cleveref Info: no abbreviation of names on input line 7852.
-)
-==> First Aid for cleveref.sty applied!
-(./_combined_manuscript.aux)
-\openout1 = `_combined_manuscript.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 193.
-LaTeX Font Info:    ... okay on input line 193.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 193.
-LaTeX Font Info:    ... okay on input line 193.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 193.
-LaTeX Font Info:    ... okay on input line 193.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 193.
-LaTeX Font Info:    ... okay on input line 193.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 193.
-LaTeX Font Info:    ... okay on input line 193.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 193.
-LaTeX Font Info:    ... okay on input line 193.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 193.
-LaTeX Font Info:    ... okay on input line 193.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 193.
-LaTeX Font Info:    ... okay on input line 193.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 193.
-LaTeX Font Info:    ... okay on input line 193.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 193.
-LaTeX Font Info:    ... okay on input line 193.
-LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmr/m/n --> TU/lmr/m/n on input line 193.
-LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/lmr/m/it on input line 193.
-LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/lmr/bx/n on input line 193.
-LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 193.
-LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 193.
-LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 193.
-LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 193.
+! LaTeX Error: File `cleveref.sty' not found.
 
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: sty)
 
+Enter file name: 
+! Emergency stop.
+<read *> 
+         
+l.191 \usepackage
+                 {natbib}^^M
+*** (cannot \read from terminal in nonstop modes)
 
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             Font family 'latinmodern-math.otf(0)' created for font
-(fontspec)             'latinmodern-math.otf' with options
-(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
-allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
-(fontspec)              
-(fontspec)              This font family consists of the following NFSS
-(fontspec)             series/shapes:
-(fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->s*[0.9999964596882403]"[latinmodern-math.otf]/OT:scri
-pt=math;language=dflt;"
-(fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[0.9999964596882403]"[latinmodern-math.otf]/OT:scri
-pt=math;language=dflt;"
-
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 193.
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             Font family 'latinmodern-math.otf(1)' created for font
-(fontspec)             'latinmodern-math.otf' with options
-(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
-allCapsFont={},Script=Math,SizeFeatures={{Size=8.5-},{Size=6-8.5,Font=latinmode
-rn-math.otf,Style=MathScript},{Size=-6,Font=latinmodern-math.otf,Style=MathScri
-ptScript}},BoldFont={latinmodern-math.otf}].
-(fontspec)              
-(fontspec)              This font family consists of the following NFSS
-(fontspec)             series/shapes:
-(fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <8.5->s*[0.9999964596882403]"[latinmodern-math.otf]/OT:s
-cript=math;language=dflt;"<6-8.5>s*[0.9999964596882403]"[latinmodern-math.otf]/
-OT:script=math;language=dflt;+ssty=0;"<-6>s*[0.9999964596882403]"[latinmodern-m
-ath.otf]/OT:script=math;language=dflt;+ssty=1;"
-(fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[0.9999964596882403]"[latinmodern-math.otf]/OT:scri
-pt=math;language=dflt;"
-
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 193.
-LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 193.
-
-LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 193.
-LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 193.
-LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 193.
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.000096459334209.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.000096459334209.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.000096459334209.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.000096459334209.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.000096459334209.
-
-
-Package fontspec Info: 
-(fontspec)             Font family 'latinmodern-math.otf(2)' created for font
-(fontspec)             'latinmodern-math.otf' with options
-(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
-allCapsFont={},Script=Math,SizeFeatures={{Size=8.5-},{Size=6-8.5,Font=latinmode
-rn-math.otf,Style=MathScript},{Size=-6,Font=latinmodern-math.otf,Style=MathScri
-ptScript}},BoldFont={latinmodern-math.otf},ScaleAgain=1.0001,FontAdjustment={\f
-ontdimen
-(fontspec)             8\font =6.77pt\relax \fontdimen 9\font =3.94pt\relax
-(fontspec)             \fontdimen 10\font =4.44pt\relax \fontdimen 11\font
-(fontspec)             =6.86pt\relax \fontdimen 12\font =3.45pt\relax
-(fontspec)             \fontdimen 13\font =3.63pt\relax \fontdimen 14\font
-(fontspec)             =3.63pt\relax \fontdimen 15\font =2.89pt\relax
-(fontspec)             \fontdimen 16\font =2.47pt\relax \fontdimen 17\font
-(fontspec)             =2.47pt\relax \fontdimen 18\font =2.5pt\relax
-(fontspec)             \fontdimen 19\font =2.0pt\relax \fontdimen 22\font
-(fontspec)             =2.5pt\relax \fontdimen 20\font =0pt\relax \fontdimen
-(fontspec)             21\font =0pt\relax }].
-(fontspec)              
-(fontspec)              This font family consists of the following NFSS
-(fontspec)             series/shapes:
-(fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <8.5->s*[1.000096459334209]"[latinmodern-math.otf]/OT:sc
-ript=math;language=dflt;"<6-8.5>s*[1.000096459334209]"[latinmodern-math.otf]/OT
-:script=math;language=dflt;+ssty=0;"<-6>s*[1.000096459334209]"[latinmodern-math
-.otf]/OT:script=math;language=dflt;+ssty=1;"
-(fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[1.000096459334209]"[latinmodern-math.otf]/OT:scrip
-t=math;language=dflt;"
-
-LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 193.
-LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
-(Font)                  OMS/cmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 193.
-LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 193.
-LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
-(Font)                  OMS/cmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 193.
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9998964600422715.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9998964600422715.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9998964600422715.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9998964600422715.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9999964596882403.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 0.9998964600422715.
-
-
-Package fontspec Info: 
-(fontspec)             Font family 'latinmodern-math.otf(3)' created for font
-(fontspec)             'latinmodern-math.otf' with options
-(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
-allCapsFont={},Script=Math,SizeFeatures={{Size=8.5-},{Size=6-8.5,Font=latinmode
-rn-math.otf,Style=MathScript},{Size=-6,Font=latinmodern-math.otf,Style=MathScri
-ptScript}},BoldFont={latinmodern-math.otf},ScaleAgain=0.9999,FontAdjustment={\f
-ontdimen
-(fontspec)             8\font =0.4pt\relax \fontdimen 9\font =2.0pt\relax
-(fontspec)             \fontdimen 10\font =1.67pt\relax \fontdimen 11\font
-(fontspec)             =1.11pt\relax \fontdimen 12\font =6.0pt\relax
-(fontspec)             \fontdimen 13\font =0pt\relax }].
-(fontspec)              
-(fontspec)              This font family consists of the following NFSS
-(fontspec)             series/shapes:
-(fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <8.5->s*[0.9998964600422715]"[latinmodern-math.otf]/OT:s
-cript=math;language=dflt;"<6-8.5>s*[0.9998964600422715]"[latinmodern-math.otf]/
-OT:script=math;language=dflt;+ssty=0;"<-6>s*[0.9998964600422715]"[latinmodern-m
-ath.otf]/OT:script=math;language=dflt;+ssty=1;"
-(fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[0.9998964600422715]"[latinmodern-math.otf]/OT:scri
-pt=math;language=dflt;"
-
-LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `normal' on input line 1
-93.
-LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
-(Font)                  OMX/cmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 193.
-LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 193
-.
-LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
-(Font)                  OMX/cmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 193.
-LaTeX Info: Redefining \microtypecontext on input line 193.
-Package microtype Info: Applying patch `item' on input line 193.
-Package microtype Info: Applying patch `toc' on input line 193.
-Package microtype Info: Applying patch `eqnum' on input line 193.
-Package microtype Info: Applying patch `footnote' on input line 193.
-Package microtype Info: Applying patch `verbatim' on input line 193.
-LaTeX Info: Redefining \microtypesetup on input line 193.
-Package microtype Info: Character protrusion enabled (level 2).
-Package microtype Info: Using protrusion set `basicmath'.
-Package microtype Info: No adjustment of tracking.
-Package microtype Info: No adjustment of spacing.
-Package microtype Info: No adjustment of kerning.
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
-File: mt-LatinModernRoman.cfg 2026/02/26 v1.2 microtype config. file: Latin Mod
-ern Roman (RS)
-)
-Package footnotehyper Info: Using the \@makefntext{} approach (see doc).
-(footnotehyper)    In case of dysfunctional footnote environments, you can
-(footnotehyper)    try sending the author a small illustrative document.
-(footnotehyper)    To turn off this message, add \footnotehyperwarnfalse
-(footnotehyper)    to the preamble.
-Package caption Info: Begin \AtBeginDocument code.
-Package caption Info: float package is loaded.
-Package caption Info: hyperref package is loaded.
-Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring ON on input line 193.
-
-*geometry* driver: auto-detecting
-*geometry* detected driver: xetex
-*geometry* verbose mode - [ preamble ] result:
-* driver: xetex
-* paper: <default>
-* layout: <same size as paper>
-* layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: 
-* h-part:(L,W,R)=(18.06749pt, 578.16002pt, 18.06749pt)
-* v-part:(T,H,B)=(18.06749pt, 758.835pt, 18.06749pt)
-* \paperwidth=614.295pt
-* \paperheight=794.96999pt
-* \textwidth=578.16002pt
-* \textheight=758.835pt
-* \oddsidemargin=-54.2025pt
-* \evensidemargin=-54.2025pt
-* \topmargin=-91.2025pt
-* \headheight=12.0pt
-* \headsep=25.0pt
-* \topskip=10.0pt
-* \footskip=30.0pt
-* \marginparwidth=65.0pt
-* \marginparsep=11.0pt
-* \columnsep=10.0pt
-* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
-* \hoffset=0.0pt
-* \voffset=0.0pt
-* \mag=1000
-* \@twocolumnfalse
-* \@twosidefalse
-* \@mparswitchfalse
-* \@reversemarginfalse
-* (1in=72.27pt=25.4mm, 1cm=28.453pt)
-
-[1
-
-] (./_combined_manuscript.toc
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 3.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 3.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.00092pt on input line 3.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00064pt on input line 3.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 3.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.99893pt on input line 3.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 3.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 3.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
-File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg
-File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) [1])
-\tf@toc=\write4
-\openout4 = `_combined_manuscript.toc'.
-
-
-[2] [3] [4] [5] [6]
-Overfull \hbox (20.66037pt too wide) in paragraph at lines 646--646
-[]|\TU/lmr/m/n/10 manuscript/config.yaml|  
- []
-
-
-Overfull \hbox (4.56999pt too wide) in paragraph at lines 647--647
-[]|\TU/lmr/m/n/10 GoldRefinementConfig|  
- []
-
-
-Overfull \hbox (16.34036pt too wide) in paragraph at lines 648--648
-[]|\TU/lmr/m/n/10 GoldRefinementConfig|  
- []
-
-
-Overfull \hbox (16.34036pt too wide) in paragraph at lines 650--650
-[]|\TU/lmr/m/n/10 GoldRefinementConfig|  
- []
-
-
-Overfull \hbox (15.76036pt too wide) in paragraph at lines 658--659
-[]|\TU/lmr/m/n/10 tests/test_integrity.py|  
- []
-
-
-Overfull \hbox (32.19037pt too wide) in paragraph at lines 659--660
-\TU/lmr/m/n/10 manuscript_variables.json|  
- []
-
-
-Overfull \hbox (0.67036pt too wide) in paragraph at lines 662--662
-[]|\TU/lmr/m/n/10 output/manuscript|  
- []
-
-
-Overfull \hbox (34.92613pt too wide) in paragraph at lines 741--742
-[]|\TU/lmr/m/n/10 tests/test_manuscript_variables.py|  
- []
-
-
-Overfull \hbox (73.61613pt too wide) in paragraph at lines 745--746
-[]|\TU/lmr/m/n/10 output/reports/claim_support_registry.json|  
- []
-
-
-Overfull \hbox (17.40613pt too wide) in paragraph at lines 747--748
-[]|\TU/lmr/m/n/10 tests/test_registry_integrity.py|  
- []
-
-
-Overfull \hbox (15.92613pt too wide) in paragraph at lines 749--750
-[]|\TU/lmr/m/n/10 infrastructure.reference.citation 
- []
-
-
-ignored: Infinite glue shrinkage found in box being split [7] [8]
-File: ../figures/purity_progression.png Graphic file (type bmp)
-<../figures/purity_progression.png>
-
-ignored: Infinite glue shrinkage found in box being split [9]
-File: ../figures/karat_grading.png Graphic file (type bmp)
-<../figures/karat_grading.png>
-File: ../figures/token_density.png Graphic file (type bmp)
-<../figures/token_density.png>
-
-Overfull \hbox (59.84734pt too wide) in paragraph at lines 943--943
-[]|\TU/lmr/m/n/10 AUTHORING_BOUNDARY_TERM_1|  
- []
-
-
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 945--946
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
-[1]|  
- []
-
-
-Overfull \hbox (59.84734pt too wide) in paragraph at lines 946--946
-[]|\TU/lmr/m/n/10 AUTHORING_BOUNDARY_TERM_2|  
- []
-
-
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 948--949
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
-[4]|  
- []
-
-
-Overfull \hbox (57.84734pt too wide) in paragraph at lines 949--949
-[]|\TU/lmr/m/n/10 DISCUSSION_BOUNDARY_TERM_1|  
- []
-
-
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 951--952
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
-[2]|  
- []
-
-
-Overfull \hbox (57.84734pt too wide) in paragraph at lines 952--952
-[]|\TU/lmr/m/n/10 DISCUSSION_BOUNDARY_TERM_2|  
- []
-
-
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 954--955
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
-[3]|  
- []
-
-
-Overfull \hbox (54.10733pt too wide) in paragraph at lines 955--955
-[]|\TU/lmr/m/n/10 DISCUSSION_REFINEMENT_VERB|  
- []
-
-
-Overfull \hbox (209.4205pt too wide) in paragraph at lines 957--958
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.refinement_ver
-bs[3]|  
- []
-
-
-Overfull \hbox (33.33733pt too wide) in paragraph at lines 958--958
-[]|\TU/lmr/m/n/10 EVALUATION_GATE_TERM_1|  
- []
-
-
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 959--960
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0]|
-  
- []
-
-
-Overfull \hbox (33.33733pt too wide) in paragraph at lines 960--960
-[]|\TU/lmr/m/n/10 EVALUATION_GATE_TERM_2|  
- []
-
-
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 962--963
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]|
-  
- []
-
-
-Overfull \hbox (29.42732pt too wide) in paragraph at lines 963--963
-[]|\TU/lmr/m/n/10 INTRO_INTEGRITY_TERM_1|  
- []
-
-
-Overfull \hbox (202.2005pt too wide) in paragraph at lines 965--966
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.integrity_term
-s[1]|  
- []
-
-
-Overfull \hbox (29.42732pt too wide) in paragraph at lines 966--966
-[]|\TU/lmr/m/n/10 INTRO_INTEGRITY_TERM_2|  
- []
-
-
-Overfull \hbox (202.2005pt too wide) in paragraph at lines 968--969
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.integrity_term
-s[0]|  
- []
-
-
-Overfull \hbox (12.22733pt too wide) in paragraph at lines 969--969
-[]|\TU/lmr/m/n/10 METHOD_GATE_TERM_1|  
- []
-
-
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 970--971
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1]|
-  
- []
-
-
-Overfull \hbox (12.22733pt too wide) in paragraph at lines 971--971
-[]|\TU/lmr/m/n/10 METHOD_GATE_TERM_2|  
- []
-
-
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 973--974
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2]|
-  
- []
-
-
-Overfull \hbox (12.22733pt too wide) in paragraph at lines 974--974
-[]|\TU/lmr/m/n/10 METHOD_GATE_TERM_3|  
- []
-
-
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 975--976
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]|
-  
- []
-
-
-Overfull \hbox (53.12733pt too wide) in paragraph at lines 976--976
-[]|\TU/lmr/m/n/10 METHOD_MANUSCRIPT_TERM_1|  
- []
-
-
-Overfull \hbox (213.9205pt too wide) in paragraph at lines 978--979
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.manuscript_ter
-ms[4]|  
- []
-
-
-Overfull \hbox (53.12733pt too wide) in paragraph at lines 979--979
-[]|\TU/lmr/m/n/10 METHOD_MANUSCRIPT_TERM_2|  
- []
-
-
-Overfull \hbox (213.9205pt too wide) in paragraph at lines 981--982
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.manuscript_ter
-ms[4]|  
- []
-
-
-Overfull \hbox (19.79733pt too wide) in paragraph at lines 982--982
-[]|\TU/lmr/m/n/10 METHOD_METAL_TERM_1|  
- []
-
-
-Overfull \hbox (221.9205pt too wide) in paragraph at lines 983--984
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.metallurgical_
-terms[4]|  
- []
-
-
-Overfull \hbox (19.79733pt too wide) in paragraph at lines 984--984
-[]|\TU/lmr/m/n/10 METHOD_METAL_TERM_2|  
- []
-
-
-Overfull \hbox (221.9205pt too wide) in paragraph at lines 986--987
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.metallurgical_
-terms[0]|  
- []
-
-
-Overfull \hbox (19.79733pt too wide) in paragraph at lines 987--987
-[]|\TU/lmr/m/n/10 METHOD_METAL_TERM_3|  
- []
-
-
-Overfull \hbox (221.9205pt too wide) in paragraph at lines 988--989
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.metallurgical_
-terms[1]|  
- []
-
-
-Overfull \hbox (27.29733pt too wide) in paragraph at lines 989--989
-[]|\TU/lmr/m/n/10 REPRO_EVIDENCE_TERM_1|  
- []
-
-
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 991--992
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
-[0]|  
- []
-
-
-Overfull \hbox (27.29733pt too wide) in paragraph at lines 992--992
-[]|\TU/lmr/m/n/10 REPRO_EVIDENCE_TERM_2|  
- []
-
-
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 994--995
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
-[3]|  
- []
-
-
-Overfull \hbox (36.88733pt too wide) in paragraph at lines 995--995
-[]|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_1|  
- []
-
-
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 997--998
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
-[1]|  
- []
-
-
-Overfull \hbox (36.88733pt too wide) in paragraph at lines 998--998
-[]|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_2|  
- []
-
-
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1000--1001
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
-[3]|  
- []
-
-
-Overfull \hbox (36.88733pt too wide) in paragraph at lines 1001--1001
-[]|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_3|  
- []
-
-
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1003--1004
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
-[4]|  
- []
-
-
-Overfull \hbox (12.70734pt too wide) in paragraph at lines 1004--1004
-[]|\TU/lmr/m/n/10 RESULTS_PURITY_ADJ_1|  
- []
-
-
-Overfull \hbox (209.96051pt too wide) in paragraph at lines 1005--1006
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.purity_adjecti
-ves[0]|  
- []
-
-
-Overfull \hbox (12.70734pt too wide) in paragraph at lines 1006--1006
-[]|\TU/lmr/m/n/10 RESULTS_PURITY_ADJ_2|  
- []
-
-
-Overfull \hbox (209.96051pt too wide) in paragraph at lines 1007--1008
-[]|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.purity_adjecti
-ves[1]|  
- []
-
-
-ignored: Infinite glue shrinkage found in box being split [10]
-File: ../figures/provenance_sankey.png Graphic file (type bmp)
-<../figures/provenance_sankey.png>
-File: ../figures/purity_claim_scatter.png Graphic file (type bmp)
-<../figures/purity_claim_scatter.png>
-File: ../figures/token_heatmap.png Graphic file (type bmp)
-<../figures/token_heatmap.png>
-File: ../figures/integrity_gate_matrix.png Graphic file (type bmp)
-<../figures/integrity_gate_matrix.png>
-File: ../figures/formalism_traceability.png Graphic file (type bmp)
-<../figures/formalism_traceability.png>
-File: ../figures/implementation_circuit.png Graphic file (type bmp)
-<../figures/implementation_circuit.png>
-File: ../figures/claim_evidence_assay.png Graphic file (type bmp)
-<../figures/claim_evidence_assay.png>
-File: ../figures/integrity_risk_matrix.png Graphic file (type bmp)
-<../figures/integrity_risk_matrix.png>
-File: ../figures/evidence_tier_ladder.png Graphic file (type bmp)
-<../figures/evidence_tier_ladder.png>
- [11] [12] [13] [14] [15] [16] [17]
-Overfull \hbox (34.76411pt too wide) in paragraph at lines 1175--1175
-[]|\TU/lmr/m/n/10 src/refinery.py::CANONICAL_STAGES|  
- []
-
-
-Overfull \hbox (43.2241pt too wide) in paragraph at lines 1177--1177
-[]|\TU/lmr/m/n/10 src/refinery.py::assert_monotone_increase|  
- []
-
-
-Overfull \hbox (30.7841pt too wide) in paragraph at lines 1179--1179
-[]|\TU/lmr/m/n/10 src/purity.py::NINE_NINES_PURITY|  
- []
-
-
-Overfull \hbox (11.9441pt too wide) in paragraph at lines 1181--1181
-[]|\TU/lmr/m/n/10 src/composition.py::_choose_value|  
- []
-
-
-Overfull \hbox (8.79411pt too wide) in paragraph at lines 1183--1183
-[]|\TU/lmr/m/n/10 src/formalisms.py::FORMALISMS|  
- []
-
-
-Overfull \hbox (102.52411pt too wide) in paragraph at lines 1186--1186
-[]|\TU/lmr/m/n/10 scripts/refinement_analysis.py::claim_support_registry|  
- []
-
-
-Overfull \hbox (69.4841pt too wide) in paragraph at lines 1190--1190
-[]|\TU/lmr/m/n/10 src/figures.py::generate_implementation_circuit|  
- []
-
-
-Overfull \hbox (51.76411pt too wide) in paragraph at lines 1194--1194
-[]|\TU/lmr/m/n/10 src/integrity.py::build_integrity_dimensions|  
- []
-
-
-Overfull \hbox (28.35374pt too wide) in paragraph at lines 1293--1293
-[]|\TU/lmr/m/n/10 claim_evidence_assay|  
- []
-
-
-Overfull \hbox (24.43375pt too wide) in paragraph at lines 1295--1295
-[]|\TU/lmr/m/n/10 evidence_tier_ladder|  
- []
-
-
-Overfull \hbox (30.32375pt too wide) in paragraph at lines 1297--1297
-[]|\TU/lmr/m/n/10 formalism_traceability|  
- []
-
-
-Overfull \hbox (33.57375pt too wide) in paragraph at lines 1299--1299
-[]|\TU/lmr/m/n/10 implementation_circuit|  
- []
-
-
-Overfull \hbox (29.71375pt too wide) in paragraph at lines 1301--1301
-[]|\TU/lmr/m/n/10 integrity_gate_matrix|  
- []
-
-
-Overfull \hbox (27.30374pt too wide) in paragraph at lines 1303--1303
-[]|\TU/lmr/m/n/10 integrity_risk_matrix|  
- []
-
-
-Overfull \hbox (15.56374pt too wide) in paragraph at lines 1306--1306
-[]|\TU/lmr/m/n/10 provenance_sankey|  
- []
-
-
-Overfull \hbox (24.76373pt too wide) in paragraph at lines 1308--1308
-[]|\TU/lmr/m/n/10 purity_claim_scatter|  
- []
-
-
-Overfull \hbox (13.47374pt too wide) in paragraph at lines 1310--1310
-[]|\TU/lmr/m/n/10 purity_progression|  
- []
-
-[18] [19]
-Overfull \hbox (25.95882pt too wide) in paragraph at lines 1391--1391
-[]|\TU/lmr/m/n/10 test_all_manuscript_tokens_are_generated 
- []
-
-[20] [21]
-Overfull \hbox (5.56102pt too wide) in paragraph at lines 1486--1490
-[]\TU/lmr/m/n/10 6 source-owned formalisms with equation labels: eq:purity_func
-tional, eq:monotone_refinery, eq:token_digest, eq:claim_support,
- []
-
-[22] [23] [24]
-Overfull \hbox (4.80272pt too wide) in paragraph at lines 1729--1730
-\TU/lmr/m/n/10 put/data/refinery_results.json|  
- []
-
-
-Overfull \hbox (11.95271pt too wide) in paragraph at lines 1732--1733
-[]|\TU/lmr/m/n/10 output/reports/token_plan.json|  
- []
-
-
-Overfull \hbox (9.77272pt too wide) in paragraph at lines 1739--1741
-\TU/lmr/m/n/10 ures/integrity_risk_matrix.png|  
- []
-
-[25] [26] (./_combined_manuscript.bbl
-
-Package natbib Warning: Empty `thebibliography' environment on input line 8.
-
-) [27
-
-] (./_combined_manuscript.aux)
- ***********
-LaTeX2e <2025-11-01>
-L3 programming layer <2026-01-19>
- ***********
- ) 
+ 
 Here is how much of TeX's memory you used:
- 23217 strings out of 468168
- 433548 string characters out of 5432815
- 1030541 words of memory out of 5000000
- 51656 multiletter control sequences out of 15000+600000
- 630234 words of font info for 75 fonts, out of 8000000 for 9000
- 1348 hyphenation exceptions out of 8191
- 90i,9n,114p,1017b,522s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-Output written on _combined_manuscript.pdf (28 pages).
+ 20414 strings out of 469709
+ 369143 string characters out of 5466024
+ 874903 words of memory out of 5000000
+ 48870 multiletter control sequences out of 15000+600000
+ 628097 words of font info for 43 fonts, out of 8000000 for 9000
+ 319 hyphenation exceptions out of 8191
+ 90i,0n,93p,525b,272s stack positions out of 10000i,1000n,20000p,200000b,200000s
+No pages of output.

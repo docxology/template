@@ -40,5 +40,5 @@ Results and reproducibility sections intentionally describe
 `output/reports/figure_quality_report.json`. That report is generated from
 source-owned figure specs and records PNG/SVG presence, dimensions, nonblank
 pixel checks, color variance, and registry parity. If a fork changes figures,
-update `src/figures.py`, regenerate Stage 02, and let the manuscript consume
+update the `src/figures/` package, regenerate Stage 02, and let the manuscript consume
 the refreshed variables rather than editing rendered Markdown.

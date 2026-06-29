@@ -40,7 +40,10 @@ Use this template when you need **configuration-driven manuscript generation wit
 | `src/config.py` | Validates `madlib:` and rejects malformed sections, empty required lexicons, bad protocol/design/phase/evaluation/probe/failure/obligation rows, malformed visualization controls, and invalid composition depth; records explicit and defaulted config paths. |
 | `src/tokens.py` | Uses seeded digest selection so a fixed config produces a stable token plan and config edits produce reviewable changes. |
 | `src/composition.py` | Builds multi-paragraph IMRAD, evaluation, reproducibility, limitation, scope, and authoring-contract bodies plus Markdown evidence tables and figure groups from config plus token plan. |
-| `src/analysis.py` | Writes token inventory, configured-field inventory, section plan, injection trace, summary reports, figure registry, cover overview, token-density figure, pipeline flow, section allocation, provenance map, quality-gate matrix, configured-field matrix, section heatmap, and origin-summary figure. |
+| `src/analysis.py` | Thin orchestrator: `generate_artifacts` loads config, builds the token plan, and delegates to the sibling `analysis_*` modules, returning the artifact-path map. |
+| `src/analysis_fields.py` | Builds the configured-field inventory and explicit/default origin counts. |
+| `src/analysis_figures.py` | Writes the nine figure PNGs (cover overview, token density, injection flow, section allocation, provenance map, quality-gate matrix, configured-field matrix, section heatmap, origin summary) and the figure registry. |
+| `src/analysis_reports.py` | Writes the JSON data artifacts (token inventory, section plan, configured-field inventory, injection trace) and the Markdown summary/configured-field reports. |
 | `src/manuscript_variables.py` | Emits the flat `{{TOKEN}}` replacement map consumed by manuscript injection. |
 | `manuscript/*.md` | Keeps author-readable section shells; generated prose belongs only under `output/manuscript/`. |
 

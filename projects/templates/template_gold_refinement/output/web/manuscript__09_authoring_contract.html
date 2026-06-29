@@ -290,6 +290,13 @@ evidence pointers</p></li>
 gates</p></li>
 <li><p>Replace or extend <code>src/integrity.py</code> dimensions when
 the fork introduces new failure modes</p></li>
+<li><p>Update <code>domain_profile.yaml</code>,
+<code>src/domain_adapter.py</code>, and
+<code>docs/domain_fork_guide.md</code> when the analogy is forked into a
+new domain</p></li>
+<li><p>Keep <code>steganography</code> and <code>llm</code> policy
+blocks explicit when the secure pipeline or optional review path is
+used</p></li>
 <li><p>Regenerate all outputs through the pipeline:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/refinement_analysis.py</span>

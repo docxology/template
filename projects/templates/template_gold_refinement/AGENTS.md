@@ -33,7 +33,7 @@ and hydrated manuscript output, not in hand-authored prose.
 
 ## Visualization Contract
 
-All 12 public figure labels are owned by `src/figures.py::FIGURE_SPECS`.
+All 12 public figure labels are owned by `src/figures/__init__.py::FIGURE_SPECS`.
 Each spec must declare `name`, `label`, `path`, `svg_path`, `caption`,
 `generated_by`, `data_sources`, and `visual_encoding`. `generate_all_figures()`
 must write PNG and SVG companions plus `output/figures/figure_registry.json`

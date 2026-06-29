@@ -6,6 +6,8 @@ import logging
 import os
 import sys
 
+import pytest
+
 import textbook_io
 import textbook_logging
 import textbook_paths
@@ -33,6 +35,20 @@ def test_write_text_atomic_cleans_up_tmp_on_success(tmp_path):
     target = tmp_path / "data.txt"
     textbook_io.write_text_atomic(target, "abc")
     assert target.read_text(encoding="utf-8") == "abc"
+    assert list(tmp_path.glob("*.tmp")) == []
+
+
+def test_write_text_atomic_cleans_up_tmp_on_failure(tmp_path):
+    """The docstring promises the temp file is removed even when the rename
+    fails. Point the destination at an existing directory: ``os.replace`` of a
+    file onto a directory raises, exercising the ``finally`` cleanup branch
+    with no mocks (real filesystem state only)."""
+    target = tmp_path / "is_a_dir"
+    target.mkdir()
+    with pytest.raises(OSError):
+        textbook_io.write_text_atomic(target, "data")
+    # The directory still exists and the temp file was cleaned up.
+    assert target.is_dir()
     assert list(tmp_path.glob("*.tmp")) == []
 
 

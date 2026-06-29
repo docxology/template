@@ -296,3 +296,70 @@ def test_token_plan_equality(tmp_path: Path) -> None:
 
     assert plan_a == plan_b
     assert hash(plan_a) == hash(plan_b)
+
+
+# ---------------------------------------------------------------------------
+# Ordered-category-inventory invariant: reordering the SAME lexicon values
+# (a permutation, identical set) must change the token plan, because the
+# ordered inventory is one of the five declared digest inputs in
+# _choose_value (src/tokens.py: "\x1f".join(values)). This is distinct from
+# test_token_plan_changes_when_category_inputs_change, which changes the
+# *values*; here the value set is identical and only the order differs.
+# ---------------------------------------------------------------------------
+
+
+def test_reordering_same_lexicon_values_changes_plan(tmp_path: Path) -> None:
+    """A permutation of identical lexicon values changes the selected tokens."""
+    original = base_payload()
+    # Use a wide lexicon so a reorder shifts the digest-derived index.
+    wide = ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel"]
+    original["madlib"]["lexicon"]["nouns"] = list(wide)
+    original["madlib"]["slots"] = [
+        {"name": "noun_run", "category": "nouns", "section": "introduction", "count": 6}
+    ]
+
+    reordered = base_payload()
+    reordered["madlib"]["lexicon"]["nouns"] = list(reversed(wide))
+    reordered["madlib"]["slots"] = [
+        {"name": "noun_run", "category": "nouns", "section": "introduction", "count": 6}
+    ]
+
+    write_config(tmp_path / "original", original)
+    write_config(tmp_path / "reordered", reordered)
+
+    plan_original = generate_token_plan(load_madlib_config(tmp_path / "original"))
+    plan_reordered = generate_token_plan(load_madlib_config(tmp_path / "reordered"))
+
+    original_values = plan_original.values_for_category("nouns")
+    reordered_values = plan_reordered.values_for_category("nouns")
+
+    # Every selected value comes from the shared word set (identical in both configs).
+    assert set(original_values) <= set(wide)
+    assert set(reordered_values) <= set(wide)
+
+    # Selected token sequences must differ: the ordered inventory feeds the digest.
+    assert original_values != reordered_values
+
+
+def test_reordering_single_value_lexicon_does_not_change_plan(tmp_path: Path) -> None:
+    """A single-entry lexicon has only one ordering, so the plan is unchanged."""
+    payload_a = base_payload()
+    payload_a["madlib"]["lexicon"]["adjectives"] = ["only"]
+    payload_a["madlib"]["slots"] = [
+        {"name": "adj", "category": "adjectives", "section": "abstract"}
+    ]
+    # A second identical config — there is no alternative ordering of one value.
+    payload_b = base_payload()
+    payload_b["madlib"]["lexicon"]["adjectives"] = ["only"]
+    payload_b["madlib"]["slots"] = [
+        {"name": "adj", "category": "adjectives", "section": "abstract"}
+    ]
+
+    write_config(tmp_path / "a", payload_a)
+    write_config(tmp_path / "b", payload_b)
+
+    plan_a = generate_token_plan(load_madlib_config(tmp_path / "a"))
+    plan_b = generate_token_plan(load_madlib_config(tmp_path / "b"))
+
+    assert plan_a.values_for_category("adjectives") == ("only",)
+    assert plan_a.values_for_category("adjectives") == plan_b.values_for_category("adjectives")

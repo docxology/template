@@ -159,7 +159,7 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
             "A manuscript figure reference could lack a generated registry entry or PNG.",
             4,
             4,
-            "src/figures.py::generate_all_figures",
+            "src/figures/registry.py::generate_all_figures",
             "tests/test_registry_integrity.py",
             "figure producer",
             "artifact",

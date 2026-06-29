@@ -38,6 +38,19 @@ hard-coded here.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **Modularity + exemplar deepening (2026-06-28, [Unreleased]):** split the
+  oversized `template_gold_refinement/src/figures.py` (1280 lines) into a
+  `figures/` subpackage (`_common`, `graphs`, `charts`, `diagrams`, `registry`
+  + facade `__init__` preserving the exact 25-name public API), clearing the
+  module-line-count gate (every module < 800 lines; 291 exemplar tests green).
+  Updated every `src/figures.py::` provenance/evidence/prose reference to the
+  owning submodule and shipped the required `figures/` `AGENTS.md`+`README.md`
+  doc pair. Removed the redundant flat `infrastructure/publishing/archival.py`
+  shim (subpackage is sole source of truth; 589 publishing tests pass). Deepened
+  `template_madlib` (doc accuracy + determinism tests), `template_template`
+  (workspace-discovery tests), and `template_textbook` (atomic-write test);
+  regenerated `COUNTS.md`, `api-reference.md`, and the exemplar roster
+  manifest/doc. Full infra suite green (7863 passed).
 - **SCRIPTS-LOGIC closeout (2026-06-28, [Unreleased]):** closed SCRIPTS-LOGIC-1 through
   SCRIPTS-LOGIC-6 — extracted six inline algorithms from scripts into tested infra modules:
   discover_infrastructure_packages (api_reference_gen.py), stage_label (pipeline/dag.py),

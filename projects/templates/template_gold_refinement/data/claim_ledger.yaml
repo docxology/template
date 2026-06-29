@@ -47,7 +47,7 @@ claims:
 
   - id: "claim:implementation_linked_visualizations"
     statement: "The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates."
-    source: "src/figures.py::generate_implementation_circuit"
+    source: "src/figures/diagrams.py::generate_implementation_circuit"
     evidence_type: "code"
     boundary: "local"
 
@@ -142,7 +142,7 @@ claims:
     kind: "figure"
     value: "fig:integrity_risk_matrix"
     statement: "The generated manuscript defines the scientific-integrity risk matrix figure label."
-    source: "src/figures.py::generate_integrity_risk_matrix"
+    source: "src/figures/diagrams.py::generate_integrity_risk_matrix"
     artifact_path: "output/figures/integrity_risk_matrix.png"
     source_tier: "claim_ledger"
     freshness: "active"
@@ -151,7 +151,7 @@ claims:
     kind: "figure"
     value: "fig:evidence_tier_ladder"
     statement: "The generated manuscript defines the evidence-tier ladder figure label."
-    source: "src/figures.py::generate_evidence_tier_ladder"
+    source: "src/figures/diagrams.py::generate_evidence_tier_ladder"
     artifact_path: "output/figures/evidence_tier_ladder.png"
     source_tier: "claim_ledger"
     freshness: "active"

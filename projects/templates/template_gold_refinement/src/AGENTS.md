@@ -9,7 +9,7 @@ handles deterministic token injection; `assay.py` validates claims against
 evidence; `formalisms.py` owns equation-backed formal claims; `integrity.py`
 owns source-tiered risk and evidence models; `pipeline_policy.py` owns the
 secure-pipeline and optional LLM-review gates; `domain_adapter.py` translates
-domain metrics into the refinery purity scale; `figures.py` owns all technical
+domain metrics into the refinery purity scale; the `figures/` package owns all technical
 visualization specs and quality reports; and `manuscript_variables.py`
 generates all `{{TOKEN}}` values.
 
@@ -32,7 +32,7 @@ in `scripts/` (thin orchestrators).
 | `integrity.py` | Source-tiered integrity dimensions, residual-risk scores, and evidence-tier rows |
 | `pipeline_policy.py` | Steganography profile parsing and optional LLM-review gating |
 | `domain_adapter.py` | Domain metric translation and stage-remap profile loading |
-| `figures.py` | Shared figure specs, deterministic graph layouts, PNG/SVG save behavior, and quality report |
+| `figures/` | Figure subpackage: `_common` (specs + helpers), `graphs` (DiGraph builders), `charts` (bar/line charts), `diagrams` (graph/matrix diagrams), `registry` (registry + quality report + all-figures orchestrator); facade `__init__` preserves the public API |
 | `manuscript_variables.py` | Generates all `{{TOKEN}}` values for manuscript injection |
 
 ## Key Design Rules

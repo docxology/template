@@ -325,7 +325,7 @@ We map five gold-refining stages onto manuscript operations:
 Each stage has a metallurgical operation, a manuscript operation, an
 input purity, and an output purity. Purity increases monotonically --- a
 constraint enforced by
-\breaktt{src/refinery.py::assert\_monotone\_increase} and tested in
+\breaktt{src/purity.py::assert\_monotone\_increase} and tested in
 \breaktt{tests/test\_refinery.py}.
 
 \subsection{Mega-madlib token engine}\label{mega-madlib-token-engine}
@@ -349,12 +349,12 @@ The metaphor becomes operational only when every transformation has an
 implementation owner. In this exemplar, configuration creates the ore,
 \texttt{src/refinery.py} defines the purity stages,
 \breaktt{src/composition.py} turns slots into deterministic tokens,
-\breaktt{src/formalisms.py} owns the equation registry,
-\texttt{src/figures.py} turns those sources into registered visuals, and
-the template validators decide whether the hydrated manuscript can be
-treated as publication metal. The loop is deliberately closed: failures
-from the validators point back to source files, not to hand-polished
-output.
+\breaktt{src/formalisms.py} owns the equation registry, the
+\texttt{src/figures/} package turns those sources into registered
+visuals, and the template validators decide whether the hydrated
+manuscript can be treated as publication metal. The loop is deliberately
+closed: failures from the validators point back to source files, not to
+hand-polished output.
 
 \subsection{Open question pinned}\label{open-question-pinned}
 
@@ -473,7 +473,7 @@ Source
 F1 & Purity functional & eq.~\ref{eq:purity_functional} &
 \breaktt{src/purity.py::format\_purity} \\
 F2 & Monotone refinement & eq.~\ref{eq:monotone_refinery} &
-\breaktt{src/refinery.py::assert\_monotone\_increase} \\
+\breaktt{src/purity.py::assert\_monotone\_increase} \\
 F3 & Token-selection digest & eq.~\ref{eq:token_digest} &
 \breaktt{src/composition.py::\_choose\_value} \\
 F4 & Claim-support fraction & eq.~\ref{eq:claim_support} &
@@ -502,7 +502,7 @@ stage to improve the previous purity state.
 }\end{equation}
 
 The test suite rejects equal or decreasing stage outputs. Source:
-\breaktt{src/refinery.py::assert\_monotone\_increase}.
+\breaktt{src/purity.py::assert\_monotone\_increase}.
 
 \textbf{F3: Token-selection digest.} Every mega-madlib token is selected
 from config-owned inventory by a deterministic digest.
@@ -556,9 +556,9 @@ categories using a deterministic digest:
 \]
 
 where \(n\) is the size of the lexicon category inventory. Selected
-metallurgical terms: hallmark, cupellation, assaying. Selected
-manuscript terms: evidence, evidence. The same digest rule is formalized
-in eq.~\ref{eq:token_digest}, while the gate vocabulary for this section
+metallurgical terms: assaying, parting, smelting. Selected manuscript
+terms: evidence, evidence. The same digest rule is formalized in
+eq.~\ref{eq:token_digest}, while the gate vocabulary for this section
 binds evidence validation, figure registry check, and citation
 validation to concrete validation surfaces.
 
@@ -979,13 +979,12 @@ manuscript/config.yaml\#gold\_refinement.lexicon.manuscript\_terms{[}4{]} \\
 METHOD\_MANUSCRIPT\_TERM\_2 & manuscript\_terms & evidence & methodology
 &
 manuscript/config.yaml\#gold\_refinement.lexicon.manuscript\_terms{[}4{]} \\
-METHOD\_METAL\_TERM\_1 & metallurgical\_terms & hallmark & methodology &
-manuscript/config.yaml\#gold\_refinement.lexicon.metallurgical\_terms{[}4{]} \\
-METHOD\_METAL\_TERM\_2 & metallurgical\_terms & cupellation &
-methodology &
-manuscript/config.yaml\#gold\_refinement.lexicon.metallurgical\_terms{[}0{]} \\
-METHOD\_METAL\_TERM\_3 & metallurgical\_terms & assaying & methodology &
+METHOD\_METAL\_TERM\_1 & metallurgical\_terms & assaying & methodology &
 manuscript/config.yaml\#gold\_refinement.lexicon.metallurgical\_terms{[}1{]} \\
+METHOD\_METAL\_TERM\_2 & metallurgical\_terms & parting & methodology &
+manuscript/config.yaml\#gold\_refinement.lexicon.metallurgical\_terms{[}3{]} \\
+METHOD\_METAL\_TERM\_3 & metallurgical\_terms & smelting & methodology &
+manuscript/config.yaml\#gold\_refinement.lexicon.metallurgical\_terms{[}2{]} \\
 REPRO\_EVIDENCE\_TERM\_1 & evidence\_terms & fact registry &
 reproducibility &
 manuscript/config.yaml\#gold\_refinement.lexicon.evidence\_terms{[}0{]} \\
@@ -1174,7 +1173,7 @@ Boundary
 Five-stage refinery & The refinery pipeline has 5 canonical stages from
 ore to nine-nines. & src/refinery.py::CANONICAL\_STAGES & local \\
 Monotone purity & Purity increases strictly across all refinery stages.
-& src/refinery.py::assert\_monotone\_increase & local \\
+& src/purity.py::assert\_monotone\_increase & local \\
 Nine-nines certification & The certification stage achieves 99.9999999\%
 purity. & src/purity.py::NINE\_NINES\_PURITY & local \\
 Deterministic tokens & Token selection is deterministic via seeded
@@ -1183,11 +1182,12 @@ Formalism registry & The manuscript exposes 6 source-owned formalisms
 with equation labels. & src/formalisms.py::FORMALISMS & local \\
 Claim-support report separation & The project-local contribution-claim
 report is written to claim\_support\_registry.json. &
-scripts/refinement\_analysis.py::claim\_support\_registry & local \\
+scripts/refinement\_analysis.py::CLAIM\_SUPPORT\_REGISTRY\_NAME &
+local \\
 Implementation-linked visualizations & The manuscript includes generated
 visualizations that link the refinery analogy to source code, variables,
 evidence, and validation gates. &
-src/figures.py::generate\_implementation\_circuit & local \\
+src/figures/diagrams.py::generate\_implementation\_circuit & local \\
 Scientific-integrity risk model & The manuscript includes a source-owned
 integrity risk model linking failure modes, validators, evidence
 surfaces, and fork obligations. &
@@ -1290,27 +1290,27 @@ Status
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-claim\_evidence\_assay & yes & yes & 3947x1904 & 0.211 & 0.05905715 &
+claim\_evidence\_assay & yes & yes & 3952x1904 & 0.211 & 0.05901302 &
 pass \\
-evidence\_tier\_ladder & yes & yes & 3254x1319 & 0.194 & 0.05465268 &
+evidence\_tier\_ladder & yes & yes & 3348x1332 & 0.196 & 0.05503309 &
 pass \\
-formalism\_traceability & yes & yes & 4170x1866 & 0.096 & 0.03165302 &
+formalism\_traceability & yes & yes & 3315x1631 & 0.133 & 0.04262721 &
 pass \\
-implementation\_circuit & yes & yes & 3720x2129 & 0.049 & 0.01648025 &
+implementation\_circuit & yes & yes & 2966x1845 & 0.068 & 0.02235231 &
 pass \\
-integrity\_gate\_matrix & yes & yes & 1953x1559 & 0.457 & 0.17734427 &
+integrity\_gate\_matrix & yes & yes & 1832x1425 & 0.437 & 0.17560313 &
 pass \\
-integrity\_risk\_matrix & yes & yes & 2969x2069 & 0.402 & 0.01475595 &
+integrity\_risk\_matrix & yes & yes & 2499x1910 & 0.387 & 0.01770377 &
 pass \\
-karat\_grading & yes & yes & 3241x1829 & 0.286 & 0.07357948 & pass \\
-provenance\_sankey & yes & yes & 3570x1400 & 0.059 & 0.01855784 &
+karat\_grading & yes & yes & 2961x1698 & 0.279 & 0.07300982 & pass \\
+provenance\_sankey & yes & yes & 2850x1461 & 0.070 & 0.02178809 &
 pass \\
-purity\_claim\_scatter & yes & yes & 2587x1889 & 0.028 & 0.01227429 &
+purity\_claim\_scatter & yes & yes & 2340x1744 & 0.032 & 0.01428277 &
 pass \\
-purity\_progression & yes & yes & 3029x2125 & 0.182 & 0.03971092 &
+purity\_progression & yes & yes & 3024x2125 & 0.182 & 0.03967814 &
 pass \\
-token\_density & yes & yes & 3865x1663 & 0.206 & 0.06115993 & pass \\
-token\_heatmap & yes & yes & 2648x2424 & 0.637 & 0.12747028 & pass \\
+token\_density & yes & yes & 3289x1856 & 0.234 & 0.06699486 & pass \\
+token\_heatmap & yes & yes & 2397x2399 & 0.627 & 0.12908659 & pass \\
 \end{longtable}
 
 \newpage
@@ -1357,6 +1357,10 @@ certification.
 \item
   \textbf{Mega-madlib composition}: reuse the deterministic token engine
   for any config-owned lexical composition task.
+\item
+  \textbf{Domain adapters}: use \breaktt{src/domain\_adapter.py} and
+  \breaktt{domain\_profile.yaml} to translate a domain's own metrics into
+  the same purity scale before reusing certification language.
 \end{itemize}
 
 \subsection{Misuse modes}\label{misuse-modes}
@@ -1481,7 +1485,7 @@ nine-nines certification (99.9999999\% (nine-nines)).
 \item
   24 tokens generated deterministically from seed 431
 \item
-  Config hash: 646d8ce93d6d42bd
+  Config hash: c0c52883efd82461
 \item
   6 source-owned formalisms with equation labels: eq:purity\_functional,
   eq:monotone\_refinery, eq:token\_digest, eq:claim\_support,
@@ -1545,9 +1549,9 @@ produces identical output.
 \item
   \textbf{Seed:} 431
 \item
-  \textbf{Config hash:} 646d8ce93d6d42bd
+  \textbf{Config hash:} c0c52883efd82461
 \item
-  \textbf{Generation timestamp:} 2026-06-26T18:18:44Z
+  \textbf{Generation timestamp:} 2026-06-29T02:40:13Z
 \item
   \textbf{Python version:} 3.12.13
 \end{itemize}
@@ -1586,13 +1590,19 @@ Reports & 11 \\
 
 \subsection{Config ownership}\label{config-ownership}
 
-All vocabulary, slots, and section conditions are declared in
-\breaktt{manuscript/config.yaml} under \breaktt{gold\_refinement:}. The
-config is the source of truth; generated prose is disposable.
+All vocabulary, slots, section conditions, steganography toggles, and
+optional LLM review gates are declared in
+\breaktt{manuscript/config.yaml} under \breaktt{gold\_refinement:},
+\texttt{steganography:}, and \texttt{llm:}. The config is the source of
+truth; generated prose is disposable.
+
+\breaktt{src/pipeline\_policy.py} turns those policy blocks into an
+explicit secure-pipeline hook. That keeps the optional hardening path
+visible before execution instead of burying it in shell glue or prose.
 
 The reproducibility spine uses fact registry and figure registry as
 generated artifacts rather than reader trust signals. Variable
-generation records \breaktt{646d8ce93d6d42bd}; analysis writes refinery,
+generation records \breaktt{c0c52883efd82461}; analysis writes refinery,
 token, claim-support, dashboard, and figure artifacts; validation may
 add the shared evidence registry used by template scientific-integrity
 checks.
@@ -1680,6 +1690,10 @@ A fork must:
   Connect refinery stages to real domain operations
 \item
   Add domain validators beyond the exemplar's generic gates
+\item
+  Use \breaktt{src/domain\_adapter.py} and
+  \breaktt{docs/domain\_fork\_guide.md} to remap domain metrics and
+  boundary notes
 \item
   Regenerate all outputs through the pipeline
 \end{enumerate}
@@ -1849,6 +1863,13 @@ analogy.
 \item
   Replace or extend \breaktt{src/integrity.py} dimensions when the fork
   introduces new failure modes
+\item
+  Update \breaktt{domain\_profile.yaml}, \breaktt{src/domain\_adapter.py},
+  and \breaktt{docs/domain\_fork\_guide.md} when the analogy is forked
+  into a new domain
+\item
+  Keep \texttt{steganography} and \texttt{llm} policy blocks explicit
+  when the secure pipeline or optional review path is used
 \item
   Regenerate all outputs through the pipeline:
 

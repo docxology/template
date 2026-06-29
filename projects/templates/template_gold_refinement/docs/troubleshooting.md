@@ -56,4 +56,4 @@ Add the category or fix the slot's `category` field.
 ### Matplotlib backend issues
 
 **Fix:** Ensure `MPLBACKEND=Agg` is set (conftest.py does this for tests).
-For scripts, `src/figures.py` calls `matplotlib.use("Agg")` before pyplot import.
+For scripts, `src/figures/_common.py` calls `matplotlib.use("Agg")` before pyplot import.

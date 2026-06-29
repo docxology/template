@@ -7,7 +7,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be load
 - 5 refinery stages from ore (9K) to certification (nine-nines)
 - Final purity: 99.9999999% (nine-nines) (24K (nine-nines certified))
 - 24 tokens generated deterministically from seed 431
-- Config hash: fcf63a15775dffa7
+- Config hash: c0c52883efd82461
 - 6 source-owned formalisms with equation labels: eq:purity_functional, eq:monotone_refinery, eq:token_digest, eq:claim_support, eq:integrity_vector, eq:certification_predicate
 - Claim-support status: 8/8 supported (passing)
 - 8 integrity dimensions with residual-risk scoring and owner/validator links.

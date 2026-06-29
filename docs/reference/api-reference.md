@@ -1285,7 +1285,7 @@ Persist *report* as pretty-printed JSON.
 
 ### `ArchivalProvider`
 
-*class — defined in `infrastructure.publishing.archival`*
+*class — defined in `infrastructure.publishing.archival.providers`*
 
 ```python
 class ArchivalProvider(Protocol)
@@ -1295,7 +1295,7 @@ Protocol every archival provider must implement.
 
 ### `ArchivalReceipt`
 
-*class — defined in `infrastructure.publishing.archival`*
+*class — defined in `infrastructure.publishing.archival.models`*
 
 ```python
 class ArchivalReceipt
@@ -1305,7 +1305,7 @@ Structured record of a single archival deposit attempt.
 
 ### `ArchivalRun`
 
-*class — defined in `infrastructure.publishing.archival`*
+*class — defined in `infrastructure.publishing.archival.models`*
 
 ```python
 class ArchivalRun
@@ -1315,7 +1315,7 @@ Aggregate result of an ``archive_publication`` call.
 
 ### `archive_publication`
 
-*function — defined in `infrastructure.publishing.archival`*
+*function — defined in `infrastructure.publishing.archival.orchestrate`*
 
 ```python
 archive_publication(bundle: Path, *, providers: list[ArchivalProvider], dry_run: bool=True, output_receipts_path: Path | None=None) -> ArchivalRun
@@ -1581,7 +1581,7 @@ Return platforms, optionally filtered by tier or tag.
 
 ### `load_credentials`
 
-*function — defined in `infrastructure.publishing.archival`*
+*function — defined in `infrastructure.publishing.archival.orchestrate`*
 
 ```python
 load_credentials(*, env: dict[str, str] | None=None, credentials_path: Path | None=None) -> ArchivalCredentials

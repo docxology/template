@@ -9,7 +9,35 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Changed
+
+- 🧩 **Split `template_gold_refinement/src/figures.py` (1280 lines) into a
+  `figures/` subpackage** — `_common` (matplotlib setup, `FigureSpec`,
+  `FIGURE_SPECS`, helpers), `graphs` (DiGraph builders), `charts` (bar/line
+  charts), `diagrams` (graph/matrix diagrams), and `registry` (registry, quality
+  report, `generate_all_figures` orchestrator); the `__init__.py` facade
+  re-exports the exact 25-name public API. Clears the module-line-count gate
+  (every submodule is < 800 lines) with all 291 exemplar tests green and figure
+  output byte-stable. Provenance pointers (`generated_by`, evidence sources in
+  `config.yaml`/`claim_ledger.yaml`/`integrity.py`) and prose docs were updated
+  from `src/figures.py::` to the owning submodule path so the
+  implementation-linkage thesis stays accurate.
+
 ### Added
+
+- 🧪 **Exemplar deepening** — direct per-file unit tests for the new
+  `figures/` submodules (`tests/test_figures_submodules.py`); real-data tests
+  for `template_madlib` token-plan determinism, `template_template` workspace
+  discovery, and `template_textbook` atomic-write cleanup. Corrected
+  `template_madlib` `README.md`/`AGENTS.md` to describe the already-split
+  `analysis_fields`/`analysis_figures`/`analysis_reports` modules.
+
+### Removed
+
+- 🗑️ **Removed the flat `infrastructure/publishing/archival.py` shim** — the
+  `archival/` subpackage (`models`, `providers`, `orchestrate`) is now the sole
+  source of truth. `import infrastructure.publishing.archival` resolves to the
+  package with the full public surface unchanged; 589 publishing tests pass.
 
 - 🧪 **Coverage sweep — 8 infrastructure modules, 119 new tests** —
   added tests for `rendering/_combined_exports.py` (83%), `project/drift/runner.py` (100%),
@@ -28,8 +56,9 @@ not to the contents of any specific workspace.
     package: `models.py` (`ArchivalReceipt`, `ArchivalRun`, `ArchivalCredentials`,
     `ArchivalError`), `providers.py` (`ZenodoProvider`, `IPFSPinataProvider`,
     `IPFSWeb3StorageProvider`, `SoftwareHeritageProvider`, `ArchivalProvider`
-    protocol), `orchestrate.py` (`archive_publication`, `load_credentials`); flat
-    `archival.py` retained for backwards compatibility.
+    protocol), `orchestrate.py` (`archive_publication`, `load_credentials`). The
+    flat `archival.py` shim was subsequently removed (see Removed) once the
+    subpackage became the sole source of truth.
   - `pypi/` subpackage — `PyPIAdapter` (build → check → upload), `PyPIConfig`,
     `PyPIResult`, `build_dist` (`uv build`), `upload_dist`/`check_dist` (twine),
     `verify_install`; respects `PYPI_TOKEN` / `TESTPYPI_TOKEN` env vars.

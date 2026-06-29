@@ -323,7 +323,7 @@ gold_refinement:
       boundary: "local"
     - name: "Implementation-linked visualizations"
       claim: "The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates."
-      evidence: "src/figures.py::generate_implementation_circuit"
+      evidence: "src/figures/diagrams.py::generate_implementation_circuit"
       boundary: "local"
     - name: "Scientific-integrity risk model"
       claim: "The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations."

@@ -37,7 +37,7 @@ We map five gold-refining stages onto manuscript operations:
 - 4. cupellation (24K)
 - 5. certification (24K (nine-nines certified))
 
-Each stage has a metallurgical operation, a manuscript operation, an input purity, and an output purity. Purity increases monotonically — a constraint enforced by `src/refinery.py::assert_monotone_increase` and tested in `tests/test_refinery.py`.
+Each stage has a metallurgical operation, a manuscript operation, an input purity, and an output purity. Purity increases monotonically — a constraint enforced by `src/purity.py::assert_monotone_increase` and tested in `tests/test_refinery.py`.
 
 ## Mega-madlib token engine
 
@@ -47,7 +47,7 @@ The deeper token inventory is deliberately spread across the paper. Introduction
 
 ## Implementation circuit
 
-The metaphor becomes operational only when every transformation has an implementation owner. In this exemplar, configuration creates the ore, `src/refinery.py` defines the purity stages, `src/composition.py` turns slots into deterministic tokens, `src/formalisms.py` owns the equation registry, `src/figures.py` turns those sources into registered visuals, and the template validators decide whether the hydrated manuscript can be treated as publication metal. The loop is deliberately closed: failures from the validators point back to source files, not to hand-polished output.
+The metaphor becomes operational only when every transformation has an implementation owner. In this exemplar, configuration creates the ore, `src/refinery.py` defines the purity stages, `src/composition.py` turns slots into deterministic tokens, `src/formalisms.py` owns the equation registry, the `src/figures/` package turns those sources into registered visuals, and the template validators decide whether the hydrated manuscript can be treated as publication metal. The loop is deliberately closed: failures from the validators point back to source files, not to hand-polished output.
 
 ## Open question pinned
 
@@ -93,7 +93,7 @@ The formal layer is generated from `src/formalisms.py`, not hand-numbered prose.
 | ID | Formalism | Equation | Source |
 |----|-----------|----------|--------|
 | F1 | Purity functional | [@eq:purity_functional] | `src/purity.py::format_purity` |
-| F2 | Monotone refinement | [@eq:monotone_refinery] | `src/refinery.py::assert_monotone_increase` |
+| F2 | Monotone refinement | [@eq:monotone_refinery] | `src/purity.py::assert_monotone_increase` |
 | F3 | Token-selection digest | [@eq:token_digest] | `src/composition.py::_choose_value` |
 | F4 | Claim-support fraction | [@eq:claim_support] | `src/evidence.py::EvidenceRegistry.support_rate` |
 | F5 | Integrity vector | [@eq:integrity_vector] | `manuscript/config.yaml#gold_refinement.audit_rules` |
@@ -114,7 +114,7 @@ $$
 \pi_0 < \pi_1 < \cdots < \pi_n
 $$ {#eq:monotone_refinery}
 
-The test suite rejects equal or decreasing stage outputs. Source: `src/refinery.py::assert_monotone_increase`.
+The test suite rejects equal or decreasing stage outputs. Source: `src/purity.py::assert_monotone_increase`.
 
 **F3: Token-selection digest.** Every mega-madlib token is selected from config-owned inventory by a deterministic digest.
 
@@ -156,7 +156,7 @@ $$
 \text{index} = \text{int}\left(\text{SHA-256}\left(\text{seed} \mid \text{slot} \mid \text{category} \mid \text{ordinal} \mid \text{inventory}\right)[:12], 16\right) \mod n
 $$
 
-where $n$ is the size of the lexicon category inventory. Selected metallurgical terms: hallmark, cupellation, assaying. Selected manuscript terms: evidence, evidence. The same digest rule is formalized in [@eq:token_digest], while the gate vocabulary for this section binds evidence validation, figure registry check, and citation validation to concrete validation surfaces.
+where $n$ is the size of the lexicon category inventory. Selected metallurgical terms: assaying, parting, smelting. Selected manuscript terms: evidence, evidence. The same digest rule is formalized in [@eq:token_digest], while the gate vocabulary for this section binds evidence validation, figure registry check, and citation validation to concrete validation surfaces.
 
 ## Config-owned lexicon
 
@@ -319,9 +319,9 @@ The mega-madlib engine generated 24 tokens from seed 431 across 8 lexicon catego
 | METHOD_GATE_TERM_3 | gate_terms | citation validation | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
 | METHOD_MANUSCRIPT_TERM_1 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
 | METHOD_MANUSCRIPT_TERM_2 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
-| METHOD_METAL_TERM_1 | metallurgical_terms | hallmark | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[4] |
-| METHOD_METAL_TERM_2 | metallurgical_terms | cupellation | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[0] |
-| METHOD_METAL_TERM_3 | metallurgical_terms | assaying | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
+| METHOD_METAL_TERM_1 | metallurgical_terms | assaying | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
+| METHOD_METAL_TERM_2 | metallurgical_terms | parting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3] |
+| METHOD_METAL_TERM_3 | metallurgical_terms | smelting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2] |
 | REPRO_EVIDENCE_TERM_1 | evidence_terms | fact registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0] |
 | REPRO_EVIDENCE_TERM_2 | evidence_terms | figure registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
 | RESULTS_EVIDENCE_TERM_1 | evidence_terms | artifact manifest | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1] |
@@ -393,12 +393,12 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 | Claim | Statement | Evidence | Boundary |
 |-------|-----------|----------|----------|
 | Five-stage refinery | The refinery pipeline has 5 canonical stages from ore to nine-nines. | src/refinery.py::CANONICAL_STAGES | local |
-| Monotone purity | Purity increases strictly across all refinery stages. | src/refinery.py::assert_monotone_increase | local |
+| Monotone purity | Purity increases strictly across all refinery stages. | src/purity.py::assert_monotone_increase | local |
 | Nine-nines certification | The certification stage achieves 99.9999999% purity. | src/purity.py::NINE_NINES_PURITY | local |
 | Deterministic tokens | Token selection is deterministic via seeded SHA-256 digest. | src/composition.py::_choose_value | local |
 | Formalism registry | The manuscript exposes 6 source-owned formalisms with equation labels. | src/formalisms.py::FORMALISMS | local |
-| Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | scripts/refinement_analysis.py::claim_support_registry | local |
-| Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures.py::generate_implementation_circuit | local |
+| Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME | local |
+| Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures/diagrams.py::generate_implementation_circuit | local |
 | Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | src/integrity.py::build_integrity_dimensions | local |
 
 The project-local claim-support assay reports 8 supported claims out of 8 total claims, for 100.00% support. Unsupported claims: 0. The generated project report path is `output/reports/claim_support_registry.json`; the shared template evidence report remains `output/reports/evidence_registry.json`.
@@ -424,18 +424,18 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3947x1904 | 0.211 | 0.05905715 | pass |
-| evidence_tier_ladder | yes | yes | 3254x1319 | 0.194 | 0.05465268 | pass |
-| formalism_traceability | yes | yes | 4170x1866 | 0.096 | 0.03165302 | pass |
-| implementation_circuit | yes | yes | 3720x2129 | 0.049 | 0.01648025 | pass |
-| integrity_gate_matrix | yes | yes | 1953x1559 | 0.457 | 0.17734427 | pass |
-| integrity_risk_matrix | yes | yes | 2969x2069 | 0.402 | 0.01475595 | pass |
-| karat_grading | yes | yes | 3241x1829 | 0.286 | 0.07357948 | pass |
-| provenance_sankey | yes | yes | 3570x1400 | 0.059 | 0.01855784 | pass |
-| purity_claim_scatter | yes | yes | 2587x1889 | 0.028 | 0.01227429 | pass |
-| purity_progression | yes | yes | 3029x2125 | 0.182 | 0.03971092 | pass |
-| token_density | yes | yes | 3865x1663 | 0.206 | 0.06115993 | pass |
-| token_heatmap | yes | yes | 2648x2424 | 0.637 | 0.12747028 | pass |
+| claim_evidence_assay | yes | yes | 3952x1904 | 0.211 | 0.05901302 | pass |
+| evidence_tier_ladder | yes | yes | 3348x1332 | 0.196 | 0.05503309 | pass |
+| formalism_traceability | yes | yes | 3315x1631 | 0.133 | 0.04262721 | pass |
+| implementation_circuit | yes | yes | 2966x1845 | 0.068 | 0.02235231 | pass |
+| integrity_gate_matrix | yes | yes | 1832x1425 | 0.437 | 0.17560313 | pass |
+| integrity_risk_matrix | yes | yes | 2499x1910 | 0.387 | 0.01770377 | pass |
+| karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |
+| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02178809 | pass |
+| purity_claim_scatter | yes | yes | 2340x1744 | 0.032 | 0.01428277 | pass |
+| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
+| token_density | yes | yes | 3289x1856 | 0.234 | 0.06699486 | pass |
+| token_heatmap | yes | yes | 2397x2399 | 0.627 | 0.12908659 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}
 
 
@@ -460,6 +460,7 @@ The added implementation and claim-assay figures sharpen that boundary. They sho
 - **Domain-specific refinement pipelines**: fork the exemplar and remap stages to domain operations (e.g., clinical evidence, legal citation, engineering specification).
 - **Purity measurement**: adopt the purity fraction and karat grade vocabulary for any staged quality process.
 - **Mega-madlib composition**: reuse the deterministic token engine for any config-owned lexical composition task.
+- **Domain adapters**: use `src/domain_adapter.py` and `domain_profile.yaml` to translate a domain's own metrics into the same purity scale before reusing certification language.
 
 ## Misuse modes
 
@@ -507,7 +508,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be load
 - 5 refinery stages from ore (9K) to certification (nine-nines)
 - Final purity: 99.9999999% (nine-nines) (24K (nine-nines certified))
 - 24 tokens generated deterministically from seed 431
-- Config hash: 646d8ce93d6d42bd
+- Config hash: c0c52883efd82461
 - 6 source-owned formalisms with equation labels: eq:purity_functional, eq:monotone_refinery, eq:token_digest, eq:claim_support, eq:integrity_vector, eq:certification_predicate
 - Claim-support status: 8/8 supported (passing)
 - 8 integrity dimensions with residual-risk scoring and owner/validator links.
@@ -541,8 +542,8 @@ The added integrity model makes the same claim in a stricter form: every high-va
 The refinery pipeline is fully deterministic. Given the same `manuscript/config.yaml` and `src/` code, every run produces identical output.
 
 - **Seed:** 431
-- **Config hash:** 646d8ce93d6d42bd
-- **Generation timestamp:** 2026-06-26T18:18:44Z
+- **Config hash:** c0c52883efd82461
+- **Generation timestamp:** 2026-06-29T02:40:13Z
 - **Python version:** 3.12.13
 
 ## Artifact inventory
@@ -569,9 +570,11 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 
 ## Config ownership
 
-All vocabulary, slots, and section conditions are declared in `manuscript/config.yaml` under `gold_refinement:`. The config is the source of truth; generated prose is disposable.
+All vocabulary, slots, section conditions, steganography toggles, and optional LLM review gates are declared in `manuscript/config.yaml` under `gold_refinement:`, `steganography:`, and `llm:`. The config is the source of truth; generated prose is disposable.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `646d8ce93d6d42bd`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+`src/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
+
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `c0c52883efd82461`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 
@@ -612,7 +615,8 @@ A fork must:
 2. Update lexicon categories to reflect domain vocabulary
 3. Connect refinery stages to real domain operations
 4. Add domain validators beyond the exemplar's generic gates
-5. Regenerate all outputs through the pipeline
+5. Use `src/domain_adapter.py` and `docs/domain_fork_guide.md` to remap domain metrics and boundary notes
+6. Regenerate all outputs through the pipeline
 
 The formalism registry is local to this exemplar. It states how this project maps refinery stages, token selection, and evidence gates into equations; it does not prove that gold refining is a universal model of scientific writing. Domain forks should replace or narrow the formalism set before reusing the certification language.
 
@@ -680,12 +684,14 @@ The authoring boundary tokens for this section are analogy boundary and non-clai
 3. Update `contribution_claims` with domain-specific evidence pointers
 4. Add domain validators beyond the exemplar's generic gates
 5. Replace or extend `src/integrity.py` dimensions when the fork introduces new failure modes
-6. Regenerate all outputs through the pipeline:
+6. Update `domain_profile.yaml`, `src/domain_adapter.py`, and `docs/domain_fork_guide.md` when the analogy is forked into a new domain
+7. Keep `steganography` and `llm` policy blocks explicit when the secure pipeline or optional review path is used
+8. Regenerate all outputs through the pipeline:
    ```bash
    uv run python scripts/refinement_analysis.py
    uv run python scripts/z_generate_manuscript_variables.py
    ```
-7. Do not hand-edit generated manuscript, PDFs, or figures
+9. Do not hand-edit generated manuscript, PDFs, or figures
 
 Do not hard-code equation, figure, or table numbers in prose. Use `[@eq:...]`, `[@fig:...]`, `[@tbl:...]`, and `[@sec:...]` so the renderer owns numbering and the tests can detect dangling references.
 

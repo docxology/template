@@ -24,7 +24,7 @@ scripts/z_generate_manuscript_variables.py
 1. `manuscript/config.yaml` (gold_refinement block) → `config.py::load_gold_refinement_config()`
 2. `config.py` → `composition.py::generate_token_plan()` → TokenPlan
 3. `refinery.py::run_refinery()` → RefineryResult (5 stages, monotone purity)
-4. `figures.py::generate_all_figures()` → PNG files + figure_registry.json
+4. `figures/registry.py::generate_all_figures()` → PNG files + figure_registry.json
 5. `manuscript_variables.py::generate_variables()` → flat dict of {{TOKEN}} values
 6. `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` → output/manuscript/
 7. `infrastructure.rendering.pdf_renderer` → PDF
