@@ -97,11 +97,14 @@ steganography = [
 monitoring = [
   "psutil>=5.9.0",
 ]
-# Optional publishing client: huggingface_hub enables Git-LFS uploads of large/binary
-# artifacts (e.g. PDFs) in infrastructure/publishing/huggingface/adapter.py. The adapter
-# falls back to its dependency-free raw-HTTP path when this group is absent.
+# Optional publishing clients: huggingface_hub enables Git-LFS uploads of large/binary
+# artifacts (e.g. PDFs) in infrastructure/publishing/huggingface/adapter.py (the adapter
+# falls back to its dependency-free raw-HTTP path when this group is absent); twine is
+# the upload backend infrastructure/publishing/pypi/upload.py shells out to via
+# `sys.executable -m twine`.
 publishing = [
   "huggingface-hub>=0.35.0",
+  "twine>=5.0.0",
 ]
 # DisCoPy (string diagrams for projects/cognitive_case_diagrams; in default-groups so
 # `uv sync` at repo root matches CI `uv sync --group discopy` and those tests pass locally)

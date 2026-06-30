@@ -15,6 +15,7 @@ from infrastructure.publishing.upload_runner import (
     run_uploads,
     select_jobs,
     upload_github,
+    upload_github_pages,
     upload_huggingface,
     upload_pinata,
 )
@@ -43,6 +44,7 @@ def test_select_jobs_includes_optional() -> None:
     assert "github" in jobs
     assert "netlify" in jobs
     assert "cloudflare" in jobs
+    assert "github_pages" in jobs
 
 
 def test_select_jobs_only_filter() -> None:
@@ -101,3 +103,17 @@ def test_real_huggingface_uploader_dry_run_no_network(tmp_path: Path) -> None:
     assert result["status"] == "dry-run"
     assert result["url"] and "owner/repo" in result["url"]
     assert result["error"] is None
+
+
+def test_real_github_pages_uploader_dry_run_no_network(tmp_path: Path) -> None:
+    (tmp_path / "web").mkdir()
+    result = upload_github_pages(_targets(tmp_path), False, {"GITHUB_REPO": "owner/repo", "GITHUB_TOKEN": "tok"})
+    assert result["status"] == "dry-run"
+    assert result["url"] == "https://owner.github.io/repo/"
+    assert result["error"] is None
+
+
+def test_real_github_pages_uploader_errors_without_site_dir(tmp_path: Path) -> None:
+    result = upload_github_pages(_targets(tmp_path), False, {"GITHUB_REPO": "owner/repo"})
+    assert result["status"] == "error"
+    assert "does not exist" in (result["error"] or "")

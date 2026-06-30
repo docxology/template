@@ -118,6 +118,19 @@ def upload_cloudflare(targets: UploadTargets, commit: bool, env: Mapping[str, st
     return _deploy_static(targets, "cloudflare", commit)
 
 
+def upload_github_pages(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+    from infrastructure.publishing.static_site import GitHubPagesAdapter, SiteDeployConfig, SiteHosting
+
+    config = SiteDeployConfig(
+        hosting=SiteHosting.GITHUB_PAGES,
+        site_dir=str(targets.web_dir),
+        repo=env.get("GITHUB_REPO", targets.github_repo),
+        token=env.get("GITHUB_TOKEN"),
+    )
+    receipt = GitHubPagesAdapter(config).deploy(dry_run=not commit)
+    return {"status": receipt.status, "url": receipt.url, "error": receipt.error}
+
+
 # Core uploaders run by default; github/static are opt-in (real release / CLI deps).
 CORE_UPLOADERS: dict[str, Uploader] = {
     "pinata": upload_pinata,
@@ -129,6 +142,7 @@ OPTIONAL_UPLOADERS: dict[str, Uploader] = {
     "github": upload_github,
     "netlify": upload_netlify,
     "cloudflare": upload_cloudflare,
+    "github_pages": upload_github_pages,
 }
 
 
@@ -145,6 +159,7 @@ def select_jobs(
     if include_static:
         jobs["netlify"] = OPTIONAL_UPLOADERS["netlify"]
         jobs["cloudflare"] = OPTIONAL_UPLOADERS["cloudflare"]
+        jobs["github_pages"] = OPTIONAL_UPLOADERS["github_pages"]
     if only is not None:
         jobs = {name: fn for name, fn in jobs.items() if name in only}
     return jobs
