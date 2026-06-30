@@ -1,0 +1,47 @@
+{
+  "project": "template_sia",
+  "mode": "REAL UPLOAD",
+  "timestamp_utc": "2026-06-30T22:27:13Z",
+  "results": {
+    "pinata": {
+      "status": "ok",
+      "cid": "QmccbCX9YXJMd3fNfkZ3H59dnWRnB6xgeVCM8kmPGQtaBh",
+      "url": "https://gateway.pinata.cloud/ipfs/QmccbCX9YXJMd3fNfkZ3H59dnWRnB6xgeVCM8kmPGQtaBh",
+      "error": null
+    },
+    "huggingface": {
+      "status": "ok",
+      "url": "https://huggingface.co/datasets/ActiveInference/template_sia",
+      "commit_url": "https://huggingface.co/datasets/ActiveInference/template_sia/commit/69a1db19cfb8d6f86aa2a358e9d66f48e2848d72",
+      "error": null
+    },
+    "osf": {
+      "status": "ok",
+      "node_id": "85bxe",
+      "url": "https://osf.io/85bxe/",
+      "error": null
+    },
+    "testpypi": {
+      "status": "ok",
+      "package": "template-sia",
+      "version": "0.1.2",
+      "url": "https://test.pypi.org/simple/template-sia/",
+      "error": null
+    },
+    "netlify": {
+      "status": "ok",
+      "url": "https://6a4442bb57aaff1e1b2992d1--tranquil-kleicha-0c9203.netlify.app",
+      "error": null
+    },
+    "cloudflare": {
+      "status": "error",
+      "url": null,
+      "error": "wrangler failed: \u001b[31m\u2718 \u001b[41;31m[\u001b[41;97mERROR\u001b[41;31m]\u001b[0m \u001b[1mFailed to automatically retrieve account IDs for the logged in user.\u001b[0m\n\n  You may have incorrect permissions on your API token, or your authentication may have expired. Try running `wrangler login` to re-authenticate. You can also skip this account check by adding an `account_id` in your Wrangler configuration file, or by setting the value of CLOUDFLARE_ACCOUNT_ID\n\n\n\ud83e\udeb5  Logs were written to \"/Users/4d/Library/Preferences/.wrangler/logs/wrangler-2026-06-30_22-27-10_794.log\"\n"
+    },
+    "github_pages": {
+      "status": "ok",
+      "url": "https://docxology.github.io/template_sia/",
+      "error": null
+    }
+  }
+}

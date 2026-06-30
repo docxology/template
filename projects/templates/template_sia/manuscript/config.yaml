@@ -16,6 +16,14 @@ publication:
   version_record: "https://zenodo.org/records/20932066"
   year: "2026"
   github_repository: "docxology/template_sia"
+  published_artifacts:
+    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmccbCX9YXJMd3fNfkZ3H59dnWRnB6xgeVCM8kmPGQtaBh"
+    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_sia"
+    osf: "https://osf.io/85bxe/"
+    pypi: "https://test.pypi.org/project/template-sia/0.1.2/"
+    netlify: "https://6a4442bb57aaff1e1b2992d1--tranquil-kleicha-0c9203.netlify.app"
+    github_pages: "https://docxology.github.io/template_sia/"
+    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_sia"
 
 keywords:
   - "self-improvement agents"

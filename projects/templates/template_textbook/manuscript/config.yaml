@@ -49,6 +49,13 @@ publication:
   repository_url: "https://github.com/docxology/template_textbook"
   repository_label: "Source repository"
   github_repository: "docxology/template_textbook"
+  published_artifacts:
+    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmaTFtcxkdPJGC3HHWVCkQQC81SYTD8Ninu2BB9KxiHxEN"
+    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_textbook"
+    osf: "https://osf.io/8kg5z/"
+    pypi: "https://test.pypi.org/project/template-textbook/0.1.2/"
+    netlify: "https://6a4443ae4a7a3eb5dba63532--tranquil-kleicha-0c9203.netlify.app"
+    github_pages: "https://docxology.github.io/template_textbook/"
   # Deposit abstract: this book uses a front_matter/preface structure rather
   # than a 00_abstract.md, so supply the Zenodo description explicitly.
   zenodo_description: "A modular, fillable scaffold for book-length technical works: a data-driven manuscript (parts/chapters/labs/questions), a tested computational backbone, deterministic figures and Mermaid diagrams, and a content scaffold/validation engine."

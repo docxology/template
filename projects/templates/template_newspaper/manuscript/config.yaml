@@ -36,6 +36,14 @@ publication:
   version_doi: "10.5281/zenodo.20932039" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/20932039"
   year: "2026"  # Zenodo publication_date / deposit description year
+  published_artifacts:
+    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmUsept2d9X3sz42whTgEGM9TjdxjzSqxnuyPCbu3pPwku"
+    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_newspaper"
+    osf: "https://osf.io/tzwf8/"
+    pypi: "https://test.pypi.org/project/template-newspaper/1.0.2/"
+    netlify: "https://6a4441f8d6dc10153d77788d--tranquil-kleicha-0c9203.netlify.app"
+    github_pages: "https://docxology.github.io/template_newspaper/"
+    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_newspaper"
 
 metadata:
   license: "MIT"

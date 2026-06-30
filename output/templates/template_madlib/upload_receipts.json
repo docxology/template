@@ -1,0 +1,47 @@
+{
+  "project": "template_madlib",
+  "mode": "REAL UPLOAD",
+  "timestamp_utc": "2026-06-30T22:22:12Z",
+  "results": {
+    "pinata": {
+      "status": "ok",
+      "cid": "QmcrHEuVYorBXHuLXZRjHQQ7kgKnAJx1MvxNpbyZSrvxNQ",
+      "url": "https://gateway.pinata.cloud/ipfs/QmcrHEuVYorBXHuLXZRjHQQ7kgKnAJx1MvxNpbyZSrvxNQ",
+      "error": null
+    },
+    "huggingface": {
+      "status": "ok",
+      "url": "https://huggingface.co/datasets/ActiveInference/template_madlib",
+      "commit_url": "https://huggingface.co/datasets/ActiveInference/template_madlib/commit/0b84682549232107c3a1e78a783aae1eda0d7903",
+      "error": null
+    },
+    "osf": {
+      "status": "ok",
+      "node_id": "ndpue",
+      "url": "https://osf.io/ndpue/",
+      "error": null
+    },
+    "testpypi": {
+      "status": "ok",
+      "package": "template-madlib",
+      "version": "0.1.1",
+      "url": "https://test.pypi.org/simple/template-madlib/",
+      "error": null
+    },
+    "netlify": {
+      "status": "ok",
+      "url": "https://6a44418df7f6f9fa20037643--tranquil-kleicha-0c9203.netlify.app",
+      "error": null
+    },
+    "cloudflare": {
+      "status": "error",
+      "url": null,
+      "error": "wrangler failed: \u001b[31m\u2718 \u001b[41;31m[\u001b[41;97mERROR\u001b[41;31m]\u001b[0m \u001b[1mFailed to automatically retrieve account IDs for the logged in user.\u001b[0m\n\n  You may have incorrect permissions on your API token, or your authentication may have expired. Try running `wrangler login` to re-authenticate. You can also skip this account check by adding an `account_id` in your Wrangler configuration file, or by setting the value of CLOUDFLARE_ACCOUNT_ID\n\n\n\ud83e\udeb5  Logs were written to \"/Users/4d/Library/Preferences/.wrangler/logs/wrangler-2026-06-30_22-22-09_893.log\"\n"
+    },
+    "github_pages": {
+      "status": "ok",
+      "url": "https://docxology.github.io/template_madlib/",
+      "error": null
+    }
+  }
+}

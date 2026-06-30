@@ -32,6 +32,14 @@ publication:
   version_record: "https://zenodo.org/records/20931927"
   github_repository: "docxology/template_autoscientists"
   year: "2026"
+  published_artifacts:
+    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmX6F3ExeC87DxxH95YgJuHcJmjhXuf1x54BKF6V5bn5z4"
+    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_autoscientists"
+    osf: "https://osf.io/6xcf5/"
+    pypi: "https://test.pypi.org/project/template-autoscientists/1.0.2/"
+    netlify: "https://6a44401a17ba160047501e98--tranquil-kleicha-0c9203.netlify.app"
+    github_pages: "https://docxology.github.io/template_autoscientists/"
+    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_autoscientists"
 
 keywords:
   - "agent coordination"

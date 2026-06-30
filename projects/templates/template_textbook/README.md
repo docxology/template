@@ -35,25 +35,36 @@ hand-edit between the markers; update the config and regenerate (see the legend)
 
 Concept DOI: [10.5281/zenodo.20533125](https://doi.org/10.5281/zenodo.20533125) | Version DOI: [10.5281/zenodo.20932112](https://zenodo.org/records/20932112) | Repository: [docxology/template_textbook](https://github.com/docxology/template_textbook)
 
-Publishing surface — 12 platforms, 2 published:
+Publishing surface — 12 platforms, 8 published:
 
 | Platform | Tier | Status | Reference | Credentials |
 | --- | --- | --- | --- | --- |
 | zenodo | first-class | ✅ published | [10.5281/zenodo.20533125](https://doi.org/10.5281/zenodo.20533125) | `ZENODO_API_TOKEN` |
 | github | first-class | ✅ published | [docxology/template_textbook](https://github.com/docxology/template_textbook) | `GITHUB_TOKEN` |
 | arxiv | first-class | ⚪ available | — | — |
-| pypi | first-class | ⚪ available | — | `PYPI_TOKEN`, `TESTPYPI_TOKEN` |
-| ipfs_pinata | first-class | ⚪ available | — | `PINATA_JWT` |
+| pypi | first-class | ✅ published | [https://test.pypi.org/project/template-textbook/0.1.2/](https://test.pypi.org/project/template-textbook/0.1.2/) | `PYPI_TOKEN`, `TESTPYPI_TOKEN` |
+| ipfs_pinata | first-class | ✅ published | [https://gateway.pinata.cloud/ipfs/QmaTFtcxkdPJGC3HHWVCkQQC81SYTD8Ninu2BB9KxiHxEN](https://gateway.pinata.cloud/ipfs/QmaTFtcxkdPJGC3HHWVCkQQC81SYTD8Ninu2BB9KxiHxEN) | `PINATA_JWT` |
 | ipfs_web3storage | first-class | ⚪ available | — | `WEB3_STORAGE_TOKEN` |
 | software_heritage | first-class | ⚪ available | — | — |
-| github_pages | first-class | ⚪ available | [docxology/template_textbook](https://github.com/docxology/template_textbook) | `GITHUB_TOKEN` |
+| github_pages | first-class | ✅ published | [https://docxology.github.io/template_textbook/](https://docxology.github.io/template_textbook/) | `GITHUB_TOKEN` |
 | cloudflare_pages | first-class | ⚪ available | — | `CLOUDFLARE_API_TOKEN` |
-| netlify | first-class | ⚪ available | — | `NETLIFY_AUTH_TOKEN` |
-| huggingface_hub | first-class | ⚪ available | — | `HUGGINGFACE_TOKEN`, `HF_TOKEN` |
-| osf | first-class | ⚪ available | — | `OSF_TOKEN` |
+| netlify | first-class | ✅ published | [https://6a4443ae4a7a3eb5dba63532--tranquil-kleicha-0c9203.netlify.app](https://6a4443ae4a7a3eb5dba63532--tranquil-kleicha-0c9203.netlify.app) | `NETLIFY_AUTH_TOKEN` |
+| huggingface_hub | first-class | ✅ published | [https://huggingface.co/datasets/ActiveInference/template_textbook](https://huggingface.co/datasets/ActiveInference/template_textbook) | `HUGGINGFACE_TOKEN`, `HF_TOKEN` |
+| osf | first-class | ✅ published | [https://osf.io/8kg5z/](https://osf.io/8kg5z/) | `OSF_TOKEN` |
 
 _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
+
+The platforms still shown ⚪ available are not automatable to "published" with
+current tooling/credentials, not an oversight: **arXiv** has no submission API
+in this codebase (`infrastructure.publishing.arxiv` only prepares a local
+tarball — a human must upload it via arxiv.org and the resulting `arxiv` URL
+would then be added to `publication.published_artifacts`); **Cloudflare
+Pages** needs a `CLOUDFLARE_ACCOUNT_ID` the configured API token cannot
+auto-discover; **IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured;
+**Software Heritage**'s save-code-now request hit a transient `429 Too Many
+Requests` (this session had just made several consecutive requests) — retry
+`uv run python -m infrastructure.publishing.archival_cli --bundle <repo-url-file> --providers software_heritage --commit`.
 
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_textbook`
 - Tracked outputs: [`output/`](output/) in this project and `output/templates/template_textbook/` in the monorepo; public output files above 50 MB stay out of git.

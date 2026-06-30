@@ -27,27 +27,35 @@ hand-edit between the markers; update the config and regenerate (see the legend)
 
 Concept DOI: [10.5281/zenodo.20417104](https://doi.org/10.5281/zenodo.20417104) | Version DOI: [10.5281/zenodo.20932047](https://zenodo.org/records/20932047) | Repository: —
 
-Publishing surface — 12 platforms, 2 published:
+Publishing surface — 12 platforms, 9 published:
 
 | Platform | Tier | Status | Reference | Credentials |
 | --- | --- | --- | --- | --- |
 | zenodo | first-class | ✅ published | [10.5281/zenodo.20417104](https://doi.org/10.5281/zenodo.20417104) | `ZENODO_API_TOKEN` |
 | github | first-class | ✅ published | [docxology/template_prose_project](https://github.com/docxology/template_prose_project) | `GITHUB_TOKEN` |
 | arxiv | first-class | ⚪ available | — | — |
-| pypi | first-class | ⚪ available | — | `PYPI_TOKEN`, `TESTPYPI_TOKEN` |
-| ipfs_pinata | first-class | ⚪ available | — | `PINATA_JWT` |
+| pypi | first-class | ✅ published | [https://test.pypi.org/project/template-prose-project/0.4.2/](https://test.pypi.org/project/template-prose-project/0.4.2/) | `PYPI_TOKEN`, `TESTPYPI_TOKEN` |
+| ipfs_pinata | first-class | ✅ published | [https://gateway.pinata.cloud/ipfs/QmXXUgas1amP7Pd9rRoTdJQiNUzBqKQ4r3Jf85aaGEnjz4](https://gateway.pinata.cloud/ipfs/QmXXUgas1amP7Pd9rRoTdJQiNUzBqKQ4r3Jf85aaGEnjz4) | `PINATA_JWT` |
 | ipfs_web3storage | first-class | ⚪ available | — | `WEB3_STORAGE_TOKEN` |
-| software_heritage | first-class | ⚪ available | — | — |
-| github_pages | first-class | ⚪ available | — | `GITHUB_TOKEN` |
+| software_heritage | first-class | ✅ published | [https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_prose_project](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_prose_project) | — |
+| github_pages | first-class | ✅ published | [https://docxology.github.io/template_prose_project/](https://docxology.github.io/template_prose_project/) | `GITHUB_TOKEN` |
 | cloudflare_pages | first-class | ⚪ available | — | `CLOUDFLARE_API_TOKEN` |
-| netlify | first-class | ⚪ available | — | `NETLIFY_AUTH_TOKEN` |
-| huggingface_hub | first-class | ⚪ available | — | `HUGGINGFACE_TOKEN`, `HF_TOKEN` |
-| osf | first-class | ⚪ available | — | `OSF_TOKEN` |
+| netlify | first-class | ✅ published | [https://6a44425bbd23b314b04b0154--tranquil-kleicha-0c9203.netlify.app](https://6a44425bbd23b314b04b0154--tranquil-kleicha-0c9203.netlify.app) | `NETLIFY_AUTH_TOKEN` |
+| huggingface_hub | first-class | ✅ published | [https://huggingface.co/datasets/ActiveInference/template_prose_project](https://huggingface.co/datasets/ActiveInference/template_prose_project) | `HUGGINGFACE_TOKEN`, `HF_TOKEN` |
+| osf | first-class | ✅ published | [https://osf.io/sh2r3/](https://osf.io/sh2r3/) | `OSF_TOKEN` |
 
 _Keywords: prose analysis, readability, editorial review, reproducible research, manuscript quality._
 
 _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
+
+The 3 platforms still shown ⚪ available are not automatable to "published" with
+current tooling/credentials, not an oversight: **arXiv** has no submission API
+in this codebase (`infrastructure.publishing.arxiv` only prepares a local
+tarball — a human must upload it via arxiv.org and the resulting `arxiv` URL
+would then be added to `publication.published_artifacts`); **Cloudflare
+Pages** needs a `CLOUDFLARE_ACCOUNT_ID` the configured API token cannot
+auto-discover; **IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured.
 
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_prose_project`
 - Tracked outputs: [`output/`](output/) in this project and `output/templates/template_prose_project/` in the monorepo; public output files above 50 MB stay out of git.

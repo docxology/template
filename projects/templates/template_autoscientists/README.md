@@ -33,27 +33,35 @@ hand-edit between the markers; update the config and regenerate (see the legend)
 
 Concept DOI: [10.5281/zenodo.20533669](https://doi.org/10.5281/zenodo.20533669) | Version DOI: [10.5281/zenodo.20931927](https://zenodo.org/records/20931927) | Repository: —
 
-Publishing surface — 12 platforms, 2 published:
+Publishing surface — 12 platforms, 9 published:
 
 | Platform | Tier | Status | Reference | Credentials |
 | --- | --- | --- | --- | --- |
 | zenodo | first-class | ✅ published | [10.5281/zenodo.20533669](https://doi.org/10.5281/zenodo.20533669) | `ZENODO_API_TOKEN` |
 | github | first-class | ✅ published | [docxology/template_autoscientists](https://github.com/docxology/template_autoscientists) | `GITHUB_TOKEN` |
 | arxiv | first-class | ⚪ available | — | — |
-| pypi | first-class | ⚪ available | — | `PYPI_TOKEN`, `TESTPYPI_TOKEN` |
-| ipfs_pinata | first-class | ⚪ available | — | `PINATA_JWT` |
+| pypi | first-class | ✅ published | [https://test.pypi.org/project/template-autoscientists/1.0.2/](https://test.pypi.org/project/template-autoscientists/1.0.2/) | `PYPI_TOKEN`, `TESTPYPI_TOKEN` |
+| ipfs_pinata | first-class | ✅ published | [https://gateway.pinata.cloud/ipfs/QmX6F3ExeC87DxxH95YgJuHcJmjhXuf1x54BKF6V5bn5z4](https://gateway.pinata.cloud/ipfs/QmX6F3ExeC87DxxH95YgJuHcJmjhXuf1x54BKF6V5bn5z4) | `PINATA_JWT` |
 | ipfs_web3storage | first-class | ⚪ available | — | `WEB3_STORAGE_TOKEN` |
-| software_heritage | first-class | ⚪ available | — | — |
-| github_pages | first-class | ⚪ available | — | `GITHUB_TOKEN` |
+| software_heritage | first-class | ✅ published | [https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_autoscientists](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_autoscientists) | — |
+| github_pages | first-class | ✅ published | [https://docxology.github.io/template_autoscientists/](https://docxology.github.io/template_autoscientists/) | `GITHUB_TOKEN` |
 | cloudflare_pages | first-class | ⚪ available | — | `CLOUDFLARE_API_TOKEN` |
-| netlify | first-class | ⚪ available | — | `NETLIFY_AUTH_TOKEN` |
-| huggingface_hub | first-class | ⚪ available | — | `HUGGINGFACE_TOKEN`, `HF_TOKEN` |
-| osf | first-class | ⚪ available | — | `OSF_TOKEN` |
+| netlify | first-class | ✅ published | [https://6a44401a17ba160047501e98--tranquil-kleicha-0c9203.netlify.app](https://6a44401a17ba160047501e98--tranquil-kleicha-0c9203.netlify.app) | `NETLIFY_AUTH_TOKEN` |
+| huggingface_hub | first-class | ✅ published | [https://huggingface.co/datasets/ActiveInference/template_autoscientists](https://huggingface.co/datasets/ActiveInference/template_autoscientists) | `HUGGINGFACE_TOKEN`, `HF_TOKEN` |
+| osf | first-class | ✅ published | [https://osf.io/6xcf5/](https://osf.io/6xcf5/) | `OSF_TOKEN` |
 
 _Keywords: agent coordination, scientific discovery, noise-band confirmation, ablation study, reproducible research, language-model agents._
 
 _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
+
+The 3 platforms still shown ⚪ available are not automatable to "published" with
+current tooling/credentials, not an oversight: **arXiv** has no submission API
+in this codebase (`infrastructure.publishing.arxiv` only prepares a local
+tarball — a human must upload it via arxiv.org and the resulting `arxiv` URL
+would then be added to `publication.published_artifacts`); **Cloudflare
+Pages** needs a `CLOUDFLARE_ACCOUNT_ID` the configured API token cannot
+auto-discover; **IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured.
 
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_autoscientists`
 - Tracked outputs: [`output/`](output/) in this project and `output/templates/template_autoscientists/` in the monorepo; public output files above 50 MB stay out of git.

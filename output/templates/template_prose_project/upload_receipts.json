@@ -1,0 +1,47 @@
+{
+  "project": "template_prose_project",
+  "mode": "REAL UPLOAD",
+  "timestamp_utc": "2026-06-30T22:25:38Z",
+  "results": {
+    "pinata": {
+      "status": "ok",
+      "cid": "QmXXUgas1amP7Pd9rRoTdJQiNUzBqKQ4r3Jf85aaGEnjz4",
+      "url": "https://gateway.pinata.cloud/ipfs/QmXXUgas1amP7Pd9rRoTdJQiNUzBqKQ4r3Jf85aaGEnjz4",
+      "error": null
+    },
+    "huggingface": {
+      "status": "ok",
+      "url": "https://huggingface.co/datasets/ActiveInference/template_prose_project",
+      "commit_url": "https://huggingface.co/datasets/ActiveInference/template_prose_project/commit/6184cd71656b0cddb276914644863b312a8722b7",
+      "error": null
+    },
+    "osf": {
+      "status": "ok",
+      "node_id": "sh2r3",
+      "url": "https://osf.io/sh2r3/",
+      "error": null
+    },
+    "testpypi": {
+      "status": "ok",
+      "package": "template-prose-project",
+      "version": "0.4.2",
+      "url": "https://test.pypi.org/simple/template-prose-project/",
+      "error": null
+    },
+    "netlify": {
+      "status": "ok",
+      "url": "https://6a44425bbd23b314b04b0154--tranquil-kleicha-0c9203.netlify.app",
+      "error": null
+    },
+    "cloudflare": {
+      "status": "error",
+      "url": null,
+      "error": "wrangler failed: \u001b[31m\u2718 \u001b[41;31m[\u001b[41;97mERROR\u001b[41;31m]\u001b[0m \u001b[1mFailed to automatically retrieve account IDs for the logged in user.\u001b[0m\n\n  You may have incorrect permissions on your API token, or your authentication may have expired. Try running `wrangler login` to re-authenticate. You can also skip this account check by adding an `account_id` in your Wrangler configuration file, or by setting the value of CLOUDFLARE_ACCOUNT_ID\n\n\n\ud83e\udeb5  Logs were written to \"/Users/4d/Library/Preferences/.wrangler/logs/wrangler-2026-06-30_22-25-35_082.log\"\n"
+    },
+    "github_pages": {
+      "status": "ok",
+      "url": "https://docxology.github.io/template_prose_project/",
+      "error": null
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "project": "template_autoresearch_project",
+  "mode": "REAL UPLOAD",
+  "timestamp_utc": "2026-06-30T22:13:32Z",
+  "results": {
+    "pinata": {
+      "status": "ok",
+      "cid": "QmZvS2v7ZpqS4T8ZufeW9sA4gNBteAdVfmLH4LcoAqrUhv",
+      "url": "https://gateway.pinata.cloud/ipfs/QmZvS2v7ZpqS4T8ZufeW9sA4gNBteAdVfmLH4LcoAqrUhv",
+      "error": null
+    },
+    "huggingface": {
+      "status": "ok",
+      "url": "https://huggingface.co/datasets/ActiveInference/template_autoresearch_project",
+      "commit_url": "https://huggingface.co/datasets/ActiveInference/template_autoresearch_project/commit/249c00eefbfff03a722fa7edb7be6ba036944c73",
+      "error": null
+    },
+    "osf": {
+      "status": "ok",
+      "node_id": "geykb",
+      "url": "https://osf.io/geykb/",
+      "error": null
+    },
+    "testpypi": {
+      "status": "ok",
+      "package": "template-autoresearch-project",
+      "version": "0.3.2",
+      "url": "https://test.pypi.org/simple/template-autoresearch-project/",
+      "error": null
+    },
+    "netlify": {
+      "status": "ok",
+      "url": "https://6a443f868786d30c7d8ea014--tranquil-kleicha-0c9203.netlify.app",
+      "error": null
+    },
+    "cloudflare": {
+      "status": "error",
+      "url": null,
+      "error": "wrangler failed: \u001b[31m\u2718 \u001b[41;31m[\u001b[41;97mERROR\u001b[41;31m]\u001b[0m \u001b[1mFailed to automatically retrieve account IDs for the logged in user.\u001b[0m\n\n  You may have incorrect permissions on your API token, or your authentication may have expired. Try running `wrangler login` to re-authenticate. You can also skip this account check by adding an `account_id` in your Wrangler configuration file, or by setting the value of CLOUDFLARE_ACCOUNT_ID\n\n\n\ud83e\udeb5  Logs were written to \"/Users/4d/Library/Preferences/.wrangler/logs/wrangler-2026-06-30_22-13-29_779.log\"\n"
+    },
+    "github_pages": {
+      "status": "ok",
+      "url": "https://docxology.github.io/template_autoresearch_project/",
+      "error": null
+    }
+  }
+}
