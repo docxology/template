@@ -147,8 +147,8 @@ class TestCommonHelpers:
         wrapped = _common._short_label("certification nine nines purity output", width=12)
         assert "\n" in wrapped
 
-    def test_svg_path_helper_swaps_suffix(self):
-        assert _common._svg_path(Path("/tmp/fig.png")) == Path("/tmp/fig.svg")
+    def test_svg_path_helper_swaps_suffix(self, tmp_path):
+        assert _common._svg_path(tmp_path / "fig.png") == tmp_path / "fig.svg"
 
     def test_ensure_output_dir_creates_nested(self, tmp_path):
         target = tmp_path / "figs" / "nested"
