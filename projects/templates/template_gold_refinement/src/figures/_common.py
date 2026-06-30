@@ -136,7 +136,13 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "implementation_circuit.png",
         "Implementation circuit from config-owned ore through generated manuscript artifacts and validation feedback.",
         "src/figures/diagrams.py::generate_implementation_circuit",
-        ("manuscript/config.yaml", "src/refinery.py", "src/composition.py", "src/formalisms.py", "src/figures/diagrams.py"),
+        (
+            "manuscript/config.yaml",
+            "src/refinery.py",
+            "src/composition.py",
+            "src/formalisms.py",
+            "src/figures/diagrams.py",
+        ),
         "directed graph encodes source, generated, validation, and publication layers",
     ),
     FigureSpec(

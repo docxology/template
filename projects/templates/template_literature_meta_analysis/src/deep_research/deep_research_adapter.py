@@ -136,9 +136,7 @@ def replay_recorded_report(fixture_path: Path | str | None = None) -> ReplayedRe
         raw=dict(payload.get("raw", {})),
     )
     request_meta = payload.get("request", {}) or {}
-    normalized_citations = tuple(
-        {"title": c.title, "url": c.url} for c in result.citations
-    )
+    normalized_citations = tuple({"title": c.title, "url": c.url} for c in result.citations)
     return ReplayedReport(
         provider=result.provider,
         job_id=result.job_id,
