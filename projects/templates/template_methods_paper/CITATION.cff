@@ -1,0 +1,20 @@
+authors:
+- affiliation: Your Institution
+  family-names: Author
+  given-names: Template
+  orcid: 0000-0000-0000-0000
+cff-version: 1.2.0
+date-released: "2026-06-30"
+keywords:
+- methods paper
+- domain-specific language
+- controlled methods
+- deterministic compilation
+- staged validation
+- dimensional analysis
+license: MIT
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template_methods_paper
+title: "A Domain Language for Specifying Controlled Methods"
+type: software
+version: "1.0.0"

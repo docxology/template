@@ -25,6 +25,24 @@ not to the contents of any specific workspace.
 
 ### Added
 
+- 🆕 **`template_methods_paper` — new public exemplar (methods-paper archetype)** —
+  a small, tested controlled-method specification domain language
+  (`src/methods_dsl/`: units/dimensional-safety, controlled vocabulary, four
+  staged validation gates, a deterministic Kahn's-algorithm compiler with
+  SHA-256 plan hashing, worklist/CSV/Mermaid/JSON exporters, and a
+  hash-chained provenance/trust model) whose manuscript describes the
+  methodology itself rather than results from running it. Vocabulary informed
+  by BPL (Biology Programming Language,
+  https://gitlab.com/bota-biosciences-public/bpl-code) as an upstream
+  domain-language reference, generalized from wet-lab protocols to any
+  controlled procedure via two worked examples (`PBSPreparation`,
+  `SensorCalibrationSweep`). 79 tests, 98.97% coverage, ruff/mypy/bandit
+  clean. Onboarded to public scope: `infrastructure/project/public_scope.py`
+  `PUBLIC_PROJECT_NAMES`, `.gitignore` allowlist (`output/templates/` +
+  `projects/templates/`), `infrastructure/documentation/counts_doc.py`
+  `EXEMPLAR_SNAPSHOT`, and the exemplar-roster tables in `README.md`,
+  `CLAUDE.md`, `AGENTS.md`, and `projects/AGENTS.md` (prose list, table, and
+  mermaid diagram).
 - 🧪 **Exemplar deepening** — direct per-file unit tests for the new
   `figures/` submodules (`tests/test_figures_submodules.py`); real-data tests
   for `template_madlib` token-plan determinism, `template_template` workspace

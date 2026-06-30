@@ -1,0 +1,36 @@
+claims:
+  - claim_id: validation-gate-count
+    kind: number
+    value: 4
+    source: projects/templates/template_methods_paper/src/methods_dsl/validation.py run_all_gates fixed-order gate sequence
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/methods_dsl/validation.py
+  - claim_id: plan-hash-truncation-length
+    kind: number
+    value: 12
+    source: projects/templates/template_methods_paper/src/manuscript_variables.py plan_hash display truncation
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/data/compiled_plans.json
+  - claim_id: genesis-hash-length
+    kind: number
+    value: 64
+    source: projects/templates/template_methods_paper/src/methods_dsl/trust.py _GENESIS_HASH ("0" * 64)
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/methods_dsl/trust.py
+  - claim_id: automated-only-step-kind-count
+    kind: number
+    value: 1
+    source: projects/templates/template_methods_paper/src/methods_dsl/vocabulary.py _AUTOMATED_ONLY frozenset
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/methods_dsl/vocabulary.py
+  - claim_id: demo-trust-chain-length
+    kind: number
+    value: 3
+    source: projects/templates/template_methods_paper/scripts/methods_analysis.py provenance hash-chain demo (DECLARED, CALIBRATED, VERIFIED)
+    source_tier: generated_metric
+    freshness: active
+    artifact_path: output/reports/trust_chain_report.json

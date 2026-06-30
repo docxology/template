@@ -105,6 +105,8 @@ output/templates/*
 !output/templates/template_literature_meta_analysis/**
 !output/templates/template_madlib/
 !output/templates/template_madlib/**
+!output/templates/template_methods_paper/
+!output/templates/template_methods_paper/**
 !output/templates/template_newspaper/
 !output/templates/template_newspaper/**
 !output/templates/template_prose_project/
@@ -177,6 +179,8 @@ projects/templates/*
 !projects/templates/template_gold_refinement/**
 !projects/templates/template_eda_notebook/
 !projects/templates/template_eda_notebook/**
+!projects/templates/template_methods_paper/
+!projects/templates/template_methods_paper/**
 projects/*/.DS_Store
 projects/templates/*/.DS_Store
 # Local code-intelligence indexes and agent scratch state stay ignored even

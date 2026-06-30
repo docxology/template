@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>A Domain Language for Specifying Controlled Methods</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<style>
+:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+}
+/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
+   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
+   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
+   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
+   preamble). */
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  width: 100vw;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  body {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    width: 390px;
+    max-width: 100vw;
+    margin: 0;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: red;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: red;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: red;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">A Domain Language for Specifying Controlled
+Methods</h1>
+<p class="subtitle">Staged Validation and Deterministic Compilation for
+Method Specification, Informed by BPL</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#sec:abstract" id="toc-sec:abstract"><span
+class="toc-section-number">1</span> Abstract</a></li>
+<li><a href="#sec:introduction" id="toc-sec:introduction"><span
+class="toc-section-number">2</span> Introduction</a>
+<ul>
+<li><a href="#why-a-methods-paper-needs-its-own-dsl"
+id="toc-why-a-methods-paper-needs-its-own-dsl"><span
+class="toc-section-number">2.1</span> Why a methods paper needs its own
+DSL</a></li>
+<li><a
+href="#what-this-exemplar-borrows-from-bpl-and-what-it-generalizes"
+id="toc-what-this-exemplar-borrows-from-bpl-and-what-it-generalizes"><span
+class="toc-section-number">2.2</span> What this exemplar borrows from
+BPL, and what it generalizes</a></li>
+<li><a href="#template-architecture-context"
+id="toc-template-architecture-context"><span
+class="toc-section-number">2.3</span> Template architecture
+context</a></li>
+<li><a href="#the-worked-examples" id="toc-the-worked-examples"><span
+class="toc-section-number">2.4</span> The worked examples</a></li>
+<li><a href="#readers-guide-to-the-manuscript"
+id="toc-readers-guide-to-the-manuscript"><span
+class="toc-section-number">2.5</span> Reader’s guide to the
+manuscript</a></li>
+</ul></li>
+<li><a href="#sec:methodology" id="toc-sec:methodology"><span
+class="toc-section-number">3</span> Methodology</a>
+<ul>
+<li><a href="#controlled-vocabulary-vocabulary.py"
+id="toc-controlled-vocabulary-vocabulary.py"><span
+class="toc-section-number">3.1</span> Controlled vocabulary
+(<code>vocabulary.py</code>)</a></li>
+<li><a href="#dimensional-safety-units.py"
+id="toc-dimensional-safety-units.py"><span
+class="toc-section-number">3.2</span> Dimensional safety
+(<code>units.py</code>)</a></li>
+<li><a href="#method-model-model.py"
+id="toc-method-model-model.py"><span
+class="toc-section-number">3.3</span> Method model
+(<code>model.py</code>)</a></li>
+<li><a href="#staged-validation-validation.py"
+id="toc-staged-validation-validation.py"><span
+class="toc-section-number">3.4</span> Staged validation
+(<code>validation.py</code>)</a></li>
+<li><a href="#deterministic-compilation-compiler.py"
+id="toc-deterministic-compilation-compiler.py"><span
+class="toc-section-number">3.5</span> Deterministic compilation
+(<code>compiler.py</code>)</a></li>
+<li><a href="#export-export.py" id="toc-export-export.py"><span
+class="toc-section-number">3.6</span> Export
+(<code>export.py</code>)</a></li>
+<li><a href="#provenance-trust.py" id="toc-provenance-trust.py"><span
+class="toc-section-number">3.7</span> Provenance
+(<code>trust.py</code>)</a></li>
+<li><a href="#zero-mock-testing-methodology"
+id="toc-zero-mock-testing-methodology"><span
+class="toc-section-number">3.8</span> Zero-mock testing
+methodology</a></li>
+</ul></li>
+<li><a href="#sec:results" id="toc-sec:results"><span
+class="toc-section-number">4</span> Results</a>
+<ul>
+<li><a href="#compiled-plan-summary"
+id="toc-compiled-plan-summary"><span
+class="toc-section-number">4.1</span> Compiled-plan summary</a></li>
+<li><a href="#step-count-comparison"
+id="toc-step-count-comparison"><span
+class="toc-section-number">4.2</span> Step-count comparison</a></li>
+<li><a href="#validation-gates" id="toc-validation-gates"><span
+class="toc-section-number">4.3</span> Validation gates</a></li>
+<li><a href="#determinism" id="toc-determinism"><span
+class="toc-section-number">4.4</span> Determinism</a></li>
+<li><a href="#provenance-demonstration"
+id="toc-provenance-demonstration"><span
+class="toc-section-number">4.5</span> Provenance demonstration</a></li>
+<li><a href="#validation" id="toc-validation"><span
+class="toc-section-number">4.6</span> Validation</a></li>
+<li><a href="#discussion" id="toc-discussion"><span
+class="toc-section-number">4.7</span> Discussion</a></li>
+</ul></li>
+<li><a href="#sec:conclusion" id="toc-sec:conclusion"><span
+class="toc-section-number">5</span> Conclusion</a>
+<ul>
+<li><a href="#exemplar-achievements"
+id="toc-exemplar-achievements"><span
+class="toc-section-number">5.1</span> Exemplar achievements</a></li>
+<li><a href="#technical-contributions"
+id="toc-technical-contributions"><span
+class="toc-section-number">5.2</span> Technical contributions</a>
+<ul>
+<li><a href="#controlled-vocabulary-in-code-not-a-parser"
+id="toc-controlled-vocabulary-in-code-not-a-parser"><span
+class="toc-section-number">5.2.1</span> Controlled vocabulary in code,
+not a parser</a></li>
+<li><a href="#honest-handling-of-trust-boundaries"
+id="toc-honest-handling-of-trust-boundaries"><span
+class="toc-section-number">5.2.2</span> Honest handling of trust
+boundaries</a></li>
+</ul></li>
+<li><a href="#key-insights" id="toc-key-insights"><span
+class="toc-section-number">5.3</span> Key insights</a></li>
+<li><a href="#future-extensions" id="toc-future-extensions"><span
+class="toc-section-number">5.4</span> Future extensions</a></li>
+<li><a href="#final-assessment" id="toc-final-assessment"><span
+class="toc-section-number">5.5</span> Final assessment</a></li>
+</ul></li>
+<li><a href="#sec:experimental_setup"
+id="toc-sec:experimental_setup"><span
+class="toc-section-number">6</span> Experimental Setup</a>
+<ul>
+<li><a href="#controlled-vocabulary"
+id="toc-controlled-vocabulary"><span
+class="toc-section-number">6.1</span> Controlled vocabulary</a></li>
+<li><a href="#worked-examples" id="toc-worked-examples"><span
+class="toc-section-number">6.2</span> Worked examples</a></li>
+<li><a href="#pipeline-conditions" id="toc-pipeline-conditions"><span
+class="toc-section-number">6.3</span> Pipeline conditions</a></li>
+<li><a href="#computational-environment"
+id="toc-computational-environment"><span
+class="toc-section-number">6.4</span> Computational environment</a></li>
+<li><a href="#pipeline-ordering" id="toc-pipeline-ordering"><span
+class="toc-section-number">6.5</span> Pipeline ordering</a></li>
+<li><a href="#relation-to-results" id="toc-relation-to-results"><span
+class="toc-section-number">6.6</span> Relation to results</a></li>
+</ul></li>
+<li><a href="#sec:reproducibility" id="toc-sec:reproducibility"><span
+class="toc-section-number">7</span> Reproducibility</a>
+<ul>
+<li><a href="#how-to-regenerate-everything"
+id="toc-how-to-regenerate-everything"><span
+class="toc-section-number">7.1</span> How to regenerate
+everything</a></li>
+<li><a href="#generated-artifact-registry"
+id="toc-generated-artifact-registry"><span
+class="toc-section-number">7.2</span> Generated artifact
+registry</a></li>
+<li><a href="#determinism-1" id="toc-determinism-1"><span
+class="toc-section-number">7.3</span> Determinism</a></li>
+<li><a href="#verification-no-hand-transcribed-numbers"
+id="toc-verification-no-hand-transcribed-numbers"><span
+class="toc-section-number">7.4</span> Verification (no hand-transcribed
+numbers)</a></li>
+</ul></li>
+<li><a href="#sec:scope" id="toc-sec:scope"><span
+class="toc-section-number">8</span> Scope, Related Work, and
+Positioning</a>
+<ul>
+<li><a href="#domain-specific-languages-for-controlled-procedures"
+id="toc-domain-specific-languages-for-controlled-procedures"><span
+class="toc-section-number">8.1</span> Domain-specific languages for
+controlled procedures</a></li>
+<li><a href="#what-this-exemplar-does-not-implement-out-of-scope"
+id="toc-what-this-exemplar-does-not-implement-out-of-scope"><span
+class="toc-section-number">8.2</span> What this exemplar does not
+implement (out of scope)</a></li>
+<li><a href="#what-this-project-proves-about-the-template"
+id="toc-what-this-project-proves-about-the-template"><span
+class="toc-section-number">8.3</span> What this project proves about the
+template</a></li>
+<li><a href="#explicit-limitations" id="toc-explicit-limitations"><span
+class="toc-section-number">8.4</span> Explicit limitations</a></li>
+</ul></li>
+<li><a href="#sec:references" id="toc-sec:references"><span
+class="toc-section-number">9</span> References</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="sec:abstract"><span
+class="header-section-number">1</span> Abstract</h1>
+<p>This paper describes a small, tested <strong>domain language for
+specifying controlled methods</strong> — the <strong>methods-paper
+exemplar</strong> of the <a
+href="https://github.com/docxology/template">Research Project
+Template</a>. Unlike a results paper, this manuscript’s subject is the
+methodology itself: a controlled vocabulary, a unit system with
+dimensional safety, four staged validation gates, and a deterministic
+compiler, implemented in
+<code>projects/templates/template_methods_paper/src/methods_dsl/</code>
+and described section by section in sec. <a
+href="#sec:methodology">3</a>. The domain language’s vocabulary is
+informed by BPL (Biology Programming Language, [bpl2026]), an upstream
+reference that encodes laboratory protocols as programs with
+biology-native types, staged validation, and deterministic compilation;
+this exemplar generalizes BPL’s intent vocabulary and pipeline shape
+from wet-lab protocols to any controlled procedure.</p>
+<p>A <code>Method</code> is a name, a set of typed parameters and
+resources, and an ordered, dependent set of steps — constructed directly
+as frozen Python dataclasses (<code>src/methods_dsl/model.py</code>)
+rather than parsed from new text syntax. Every <code>Quantity</code>
+carries a unit that resolves to one of 18 controlled units across six
+dimensions, and every step names one of 9 controlled-vocabulary intents
+(<code>src/methods_dsl/vocabulary.py</code>), executable on one of 3
+backends. 4 staged gates — structural, semantic, plan, and target —
+validate a method before <code>compile_method</code>
+(<code>src/methods_dsl/compiler.py</code>) deterministically schedules
+it with Kahn’s algorithm [kahn1962topological] and hashes the canonical
+plan with SHA-256.</p>
+<p>We demonstrate the language on 2 worked example methods spanning both
+domains BPL’s design targets and the domains it generalizes to: a manual
+wet-lab preparation (<code>PBSPreparation</code>, 5 steps, target
+<code>human</code>, plan hash <code>313b9b17de98</code>) and an
+automated instrument-calibration procedure
+(<code>SensorCalibrationSweep</code>, 4 steps, target
+<code>automated</code>, plan hash <code>d89cced19be6</code>). Live
+re-compilation determinism check: <strong>Yes</strong>. Across both
+methods, 8 of 8 staged-gate evaluations pass. A demonstration provenance
+hash-chain (<code>src/methods_dsl/trust.py</code>) of length 3 verifies
+as <strong>Yes</strong>.</p>
+<p>Contributions are <strong>methodological</strong> and
+<strong>architectural</strong>. On the methods side, we show that a
+controlled vocabulary expressed as typed dataclasses — not a parsed
+grammar — is sufficient to reproduce BPL’s core safety properties
+(dimensional safety, staged validation, deterministic compilation) at a
+scope appropriate for a template exemplar. On the architecture side, the
+DSL is covered above the 90% project gate by a zero-mock test suite,
+generates 9 artifacts (1 figures, 6 data files, 2 reports) per pipeline
+run, and injects reproducibility metadata (configuration hash
+<code>2107a29383e5e491</code>, build timestamp
+<code>2026-06-30T21:41:36Z</code>) into sec. <a
+href="#sec:reproducibility">7</a>.</p>
+<p><strong>Keywords:</strong> methods paper, domain-specific language,
+controlled methods, deterministic compilation, staged validation,
+dimensional analysis</p>
+<hr />
+<h1 data-number="2" id="sec:introduction"><span
+class="header-section-number">2</span> Introduction</h1>
+<p>This <code>template_methods_paper</code> serves as the
+<strong>methods-paper exemplar</strong> for the <a
+href="https://github.com/docxology/template">Research Project
+Template</a> ecosystem: a manuscript whose subject is a methodology —
+here, a domain language for specifying controlled methods — rather than
+results produced by running one. The prose, the labelled figures, and
+the compiled-plan table are produced through the same auditable custody
+chain every exemplar in this template uses: tested functions in
+<code>src/</code>, a thin analysis script, and
+generated-variable-injected, multi-format rendering.</p>
+<h2 data-number="2.1" id="why-a-methods-paper-needs-its-own-dsl"><span
+class="header-section-number">2.1</span> Why a methods paper needs its
+own DSL</h2>
+<p>A methods section in ordinary prose is ambiguous by construction:
+“add 10 mL of water, then mix” admits multiple readings of order, units,
+and what “mix” means operationally. BPL [bpl2026] makes the case for
+laboratory protocols directly: free-text instructions admit multiple
+interpretations, unit errors and reagent mismatches surface only at the
+bench, and re-executing a protocol on a different operator or instrument
+introduces silent variation. Fowler frames the general remedy as a
+<strong>domain-specific language</strong> [fowler2010dsl]: a small,
+purpose-built notation whose vocabulary is restricted exactly to the
+concepts the domain needs, so that what can be written down is exactly
+what is intended.</p>
+<h2 data-number="2.2"
+id="what-this-exemplar-borrows-from-bpl-and-what-it-generalizes"><span
+class="header-section-number">2.2</span> What this exemplar borrows from
+BPL, and what it generalizes</h2>
+<p>BPL’s architecture is a compiler pipeline — parse, semantic check,
+lower, schedule, execute, export — over a biology-native type system
+(units, dimensional analysis, MW-aware concentration), staged validation
+gates, and deterministic compilation with a stable plan hash. Three
+design choices carry over directly into
+<code>src/methods_dsl/</code>:</p>
+<ol type="1">
+<li><strong>Intent over instruction.</strong> BPL users write high-level
+intents (<code>transfer</code>, <code>add_reagent</code>,
+<code>incubate</code>); a compiler lowers them to backend-specific
+primitives. <code>src/methods_dsl/vocabulary.py</code>’s
+<code>StepKind</code> enum is the same idea, generalized:
+<code>TRANSFER</code>/<code>ADD</code>/<code>MIX</code> name
+<em>what</em> happens, never <em>how</em> a particular backend performs
+it.</li>
+<li><strong>Dimensional safety.</strong> BPL’s type system catches
+<code>mL + g</code> at compile time, not at the bench.
+<code>src/methods_dsl/units.py</code> implements the same guarantee with
+a small <code>Dimension</code>/<code>Quantity</code> system rather than
+a full unit library.</li>
+<li><strong>Deterministic compilation.</strong> Same source, same
+options, same plan hash.
+<code>src/methods_dsl/compiler.py::compile_method</code> reproduces this
+with a canonical-JSON SHA-256 hash over a Kahn’s-algorithm
+[kahn1962topological] schedule.</li>
+</ol>
+<p>What this exemplar does <strong>not</strong> carry over is BPL’s text
+grammar and parser: a <code>Method</code> here is constructed directly
+as frozen Python dataclasses (<code>src/methods_dsl/model.py</code>),
+not parsed from <code>.bpl</code> source. This keeps the DSL’s
+discipline in its typed, validated shape rather than in new concrete
+syntax — appropriate for a template exemplar’s scope — while the
+controlled vocabulary, dimensional safety, and deterministic compilation
+generalize unchanged from wet-lab protocols to any controlled procedure,
+demonstrated in sec. <a href="#sec:results">4</a> by one
+wet-lab-flavored method and one instrument-calibration method.</p>
+<h2 data-number="2.3" id="template-architecture-context"><span
+class="header-section-number">2.3</span> Template architecture
+context</h2>
+<p>The project sits on the repository’s three pillars:</p>
+<ol type="1">
+<li><strong><code>src/methods_dsl/</code> library</strong>: pure,
+side-effect-free dataclasses and functions — no plotting, no file I/O,
+and (with one declared logging exception) no <code>infrastructure</code>
+imports. This purity is what makes the library forkable and trivially
+testable.</li>
+<li><strong><code>tests/</code> framework</strong>: a zero-mock suite
+that exercises every gate, the compiler, and the exporters against real
+<code>Method</code> fixtures covering both the success path and every
+gate-failure mode.</li>
+<li><strong><code>docs/</code> knowledge base</strong>: the
+correspondence with BPL’s pipeline, the testing philosophy, and the
+operational rules that govern agents editing this tree.</li>
+</ol>
+<h2 data-number="2.4" id="the-worked-examples"><span
+class="header-section-number">2.4</span> The worked examples</h2>
+<p>We specify two methods with <code>all_example_methods()</code>
+(<code>src/methods_dsl/examples_methods.py</code>):
+<code>PBSPreparation</code>, an original — not copied from BPL’s shipped
+examples — manual bench preparation in BPL’s own domain, and
+<code>SensorCalibrationSweep</code>, a non-biology controlled procedure
+mixing automated measurement with a human sign-off step. The second
+example exists specifically to demonstrate that the DSL’s vocabulary
+generalizes beyond wet-lab protocols, as sec. <a
+href="#sec:introduction">2</a> claims.</p>
+<h2 data-number="2.5" id="readers-guide-to-the-manuscript"><span
+class="header-section-number">2.5</span> Reader’s guide to the
+manuscript</h2>
+<ul>
+<li><strong>sec. <a href="#sec:methodology">3</a></strong> ties each
+pipeline stage to its module in <code>src/methods_dsl/</code>.</li>
+<li><strong>sec. <a href="#sec:results">4</a></strong> is
+artifact-centric: every reported number names the function or report
+file that produced it.</li>
+<li><strong>sec. <a href="#sec:experimental_setup">6</a></strong> lists
+the controlled vocabulary and software environment.</li>
+<li><strong>sec. <a href="#sec:reproducibility">7</a></strong> records
+the artifact inventory and the exact commands to regenerate
+everything.</li>
+<li><strong>sec. <a href="#sec:scope">8</a></strong> states scope and
+related work so the exemplar is not mistaken for a general-purpose
+protocol-execution system.</li>
+</ul>
+<hr />
+<h1 data-number="3" id="sec:methodology"><span
+class="header-section-number">3</span> Methodology</h1>
+<p>The DSL is implemented as eight cooperating modules under
+<code>src/methods_dsl/</code>, each corresponding to one stage of a
+BPL-inspired pipeline [bpl2026]. This section walks the pipeline stage
+by stage, naming the function or class that implements each design
+decision so every claim below is directly checkable against
+<code>src/methods_dsl/</code>.</p>
+<h2 data-number="3.1" id="controlled-vocabulary-vocabulary.py"><span
+class="header-section-number">3.1</span> Controlled vocabulary
+(<code>vocabulary.py</code>)</h2>
+<p>A <code>StepKind</code> is one of 9 controlled intents —
+<code>TRANSFER</code>, <code>ADD</code>, <code>MIX</code>,
+<code>INCUBATE</code>, <code>MEASURE</code>, <code>WAIT</code>,
+<code>COMPUTE</code>, <code>VALIDATE</code>, <code>ANNOTATE</code> — and
+a <code>Target</code> is one of 3 execution backends —
+<code>HUMAN</code>, <code>AUTOMATED</code>, <code>SIMULATION</code>.
+<code>target_accepts</code> encodes which kinds require an automated
+backend: only <code>COMPUTE</code> has no manual equivalent in this
+DSL’s scope, so <code>HUMAN</code> and <code>SIMULATION</code> accept
+every other kind. This is the domain-neutral generalization of BPL’s
+protocol-level verbs (<code>add_reagent</code>, <code>transfer</code>,
+<code>incubate</code>): a step names <em>what</em> happens, never
+<em>how</em> a particular backend performs it.</p>
+<h2 data-number="3.2" id="dimensional-safety-units.py"><span
+class="header-section-number">3.2</span> Dimensional safety
+(<code>units.py</code>)</h2>
+<p>Every <code>Quantity(value, unit)</code> resolves its
+<code>unit</code> to one of seven <code>Dimension</code> members (mass,
+volume, temperature, time, concentration, count, dimensionless) via
+<code>dimension_of</code>, drawing from a controlled table of 18 unit
+strings. <code>check_compatible</code> raises
+<code>DimensionError</code> the moment two quantities with different
+dimensions are combined — the concrete realization of BPL’s design
+principle that “the type system catches <code>mL + g</code> at compile
+time, not at the bench.” Temperature is tracked as its own dimension
+with no shared base unit (<code>degC</code> and <code>K</code> are never
+auto-converted), since this DSL has no use for that conversion and an
+incorrect affine conversion is worse than refusing one.</p>
+<h2 data-number="3.3" id="method-model-model.py"><span
+class="header-section-number">3.3</span> Method model
+(<code>model.py</code>)</h2>
+<p>A <code>Method</code> is a name, a version, a target, a tuple of
+<code>Resource</code> declarations (anything a step reads from or writes
+to — generalizing BPL’s <code>reagent</code>/<code>labware</code>), a
+tuple of method-level <code>Parameter</code>s, and a tuple of
+<code>Step</code>s. Each <code>Step</code> carries a
+<code>step_id</code>, a <code>StepKind</code>, a <code>Target</code>,
+its own parameters, an optional expected duration (must be a time
+<code>Quantity</code>), and a <code>depends_on</code> tuple of
+prerequisite <code>step_id</code>s — the explicit DAG edges this
+section’s compilation stage resolves. All four dataclasses are frozen;
+<code>__post_init__</code> rejects malformed shapes immediately (empty
+names, self-dependency, a non-time <code>expected_duration</code>) so
+structurally invalid methods cannot even be constructed, collapsing
+BPL’s syntax gate into Python’s own construction-time checks.</p>
+<h2 data-number="3.4" id="staged-validation-validation.py"><span
+class="header-section-number">3.4</span> Staged validation
+(<code>validation.py</code>)</h2>
+<p><code>run_all_gates</code> runs exactly 4 gates in fixed order,
+mirroring BPL’s staged short-circuit (a syntax failure never reaches the
+plan gate):</p>
+<ol type="1">
+<li><strong><code>structural_gate</code></strong> — every
+<code>step_id</code> is unique and every <code>depends_on</code> entry
+resolves to a real step.</li>
+<li><strong><code>semantic_gate</code></strong> — every
+<code>Quantity</code> attached to a resource, a method parameter, a
+step’s expected duration, or a step parameter resolves to a known
+<code>Dimension</code> (catches the unit-vocabulary violation a frozen
+dataclass’s <code>__post_init__</code> cannot, since
+<code>Quantity</code> does not validate its unit eagerly).</li>
+<li><strong><code>plan_gate</code></strong> — the step-dependency graph
+is acyclic, checked by attempting <code>topological_order</code> and
+catching <code>CycleError</code>.</li>
+<li><strong><code>target_gate</code></strong> — every step’s target is
+compatible with the method’s target (<code>HUMAN</code> methods accept
+only <code>HUMAN</code> steps; <code>AUTOMATED</code> methods accept
+both; <code>SIMULATION</code> methods accept only
+<code>SIMULATION</code> steps) and every step’s kind is executable on
+its assigned target.</li>
+</ol>
+<p>If either of the first two gates fails, <code>run_all_gates</code>
+returns early with only those two results — <code>plan_gate</code> and
+<code>target_gate</code> assume a structurally and semantically valid
+method and would otherwise report misleading secondary failures.</p>
+<h2 data-number="3.5" id="deterministic-compilation-compiler.py"><span
+class="header-section-number">3.5</span> Deterministic compilation
+(<code>compiler.py</code>)</h2>
+<p><code>compile_method</code> first calls <code>run_all_gates</code>
+and raises <code>MethodValidationError</code> (carrying every failed
+gate’s issues) if any gate fails. On success,
+<code>topological_order</code> schedules the validated steps with Kahn’s
+algorithm [kahn1962topological]: repeatedly remove a step whose
+dependencies are all already scheduled, breaking ties by ascending
+<code>step_id</code> so the same method always yields the same order —
+Python does not guarantee dict/set iteration order is stable for this
+purpose, so the tie-break is explicit, not incidental. The scheduled
+steps are then encoded as a canonical, sort-keys JSON payload and hashed
+with SHA-256 (<code>_compute_plan_hash</code>) into
+<code>Plan.plan_hash</code>. Because the hash is computed purely from
+<code>method_name</code>, <code>method_version</code>,
+<code>target</code>, and each step’s
+<code>step_id</code>/<code>name</code>/<code>kind</code>/<code>target</code>/scheduled
+<code>order</code> — never from a wall-clock timestamp or a UUID —
+recompiling the same <code>Method</code> object always produces the same
+<code>plan_hash</code>, which sec. <a href="#sec:results">4</a> verifies
+live rather than asserts.</p>
+<h2 data-number="3.6" id="export-export.py"><span
+class="header-section-number">3.6</span> Export
+(<code>export.py</code>)</h2>
+<p>A compiled <code>Plan</code> renders to four formats, mirroring BPL’s
+“CSV/XLSX worklists, workflow graphs” export surface at a scope
+appropriate for a template exemplar: <code>to_worklist_markdown</code>
+(a numbered, human-readable worklist),
+<code>to_csv_rows</code>/<code>write_csv</code> (machine-readable rows),
+<code>to_mermaid</code> (a <code>flowchart TD</code> showing scheduled
+order), and <code>to_json</code>/<code>write_json</code> (the exact
+canonical JSON the plan hash was computed over, so a reader can
+independently verify <code>Plan.plan_hash</code> by re-hashing the
+exported file).</p>
+<h2 data-number="3.7" id="provenance-trust.py"><span
+class="header-section-number">3.7</span> Provenance
+(<code>trust.py</code>)</h2>
+<p><code>ProvenanceTier</code> orders three levels of trust —
+<code>DECLARED</code>, <code>CALIBRATED</code>, <code>VERIFIED</code> —
+generalizing BPL’s audit model. <code>append_record</code> extends an
+immutable hash-chain of <code>StateRecord</code>s, each hashing its own
+<code>key</code>/<code>value</code>/
+<code>tier</code>/<code>prev_hash</code> [merkle1987digital];
+<code>verify_chain</code> recomputes every record’s hash and checks it
+against the recorded <code>prev_hash</code> chain. This is a consistency
+check, not a cryptographic tamper-proof guarantee against an actor with
+write access to the whole stored chain: it detects in-chain tampering
+(any record after a tampered one no longer matches) but cannot detect a
+chain rewritten from record zero, exactly the boundary BPL’s own
+“hash-chained” (not cryptographically signed) audit model claims.</p>
+<h2 data-number="3.8" id="zero-mock-testing-methodology"><span
+class="header-section-number">3.8</span> Zero-mock testing
+methodology</h2>
+<p>The project is governed by a strict zero-mock policy, evaluated by
+running
+<code>uv run pytest projects/templates/template_methods_paper/tests</code>
+during the build.</p>
+<ol type="1">
+<li><strong>Library tests</strong> exercise every gate, the compiler,
+the exporters, and the trust module against real <code>Method</code>
+objects — <code>conftest.py</code> ships one fixture per gate-failure
+mode (unknown dependency, duplicate step id, unknown unit, cyclic
+dependency, target mismatch) plus a linear-chain and a diamond-DAG
+method for scheduling tests. No <code>unittest.mock</code>, no
+<code>MagicMock</code>, no <code>@patch</code>.</li>
+<li><strong>Script test</strong> runs
+<code>run_methods_analysis()</code> against a temporary output root and
+asserts that real worklist/CSV/Mermaid/JSON files, reports, and a real
+PNG figure are written.</li>
+<li><strong>Determinism tests</strong> compile the same
+<code>Method</code> object twice and assert <code>plan_hash</code>
+equality live, rather than asserting against a hardcoded hash literal —
+a literal would silently stop testing the moment the compiler’s hash
+input changed.</li>
+<li><strong>Coverage gate</strong>: CI enforces a ≥90%
+statement-coverage gate on
+<code>projects/templates/template_methods_paper/src/</code>; the live
+figure is tracked in <a
+href="../../../../docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
+</ol>
+<hr />
+<h1 data-number="4" id="sec:results"><span
+class="header-section-number">4</span> Results</h1>
+<p>This section reports the compiled plans for both worked example
+methods. Every number below is produced by the thin analysis script (<a
+href="https://github.com/docxology/template/blob/main/projects/templates/template_methods_paper/scripts/methods_analysis.py"><code>scripts/methods_analysis.py</code></a>),
+which calls <code>run_all_gates</code> and <code>compile_method</code>
+from <code>src/methods_dsl/</code> and writes
+<code>output/data/compiled_plans.json</code>,
+<code>output/reports/gate_report.json</code>, and
+<code>output/reports/trust_chain_report.json</code>. Running the script
+regenerates every artifact this section references.</p>
+<h2 data-number="4.1" id="compiled-plan-summary"><span
+class="header-section-number">4.1</span> Compiled-plan summary</h2>
+<table id="tbl:compiled_plans">
+<caption>Table 1: Compiled-plan summary from
+<code>output/data/compiled_plans.json</code>, generated by
+<code>compile_method</code> for each of 2 worked example
+methods.</caption>
+<thead>
+<tr>
+<th>Method</th>
+<th>Steps</th>
+<th>Target</th>
+<th>Plan hash (first 12 hex chars)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PBSPreparation</code></td>
+<td>5</td>
+<td><code>human</code></td>
+<td><code>313b9b17de98</code></td>
+</tr>
+<tr>
+<td><code>SensorCalibrationSweep</code></td>
+<td>4</td>
+<td><code>automated</code></td>
+<td><code>d89cced19be6</code></td>
+</tr>
+</tbody>
+</table>
+<p>tbl. <a href="#tbl:compiled_plans">1</a> shows
+<code>PBSPreparation</code> (a manual, <code>HUMAN</code>-target bench
+preparation) alongside <code>SensorCalibrationSweep</code> (a mixed
+<code>AUTOMATED</code>/<code>HUMAN</code> instrument-calibration
+procedure) — the second example exists specifically to demonstrate the
+controlled vocabulary generalizing beyond wet-lab protocols, as sec. <a
+href="#sec:introduction">2</a> claims.</p>
+<h2 data-number="4.2" id="step-count-comparison"><span
+class="header-section-number">4.2</span> Step-count comparison</h2>
+<p>fig. <a href="#fig:step_counts">1</a> plots the step count for each
+compiled method.</p>
+<figure id="fig:step_counts">
+<img src="../figures/step_counts.png"
+alt="Figure 1: Steps per example method: a bar chart built from len(plan.steps) for each plan in output/data/compiled_plans.json, plotted by scripts/methods_analysis.py." />
+<figcaption aria-hidden="true">Figure 1: Steps per example method: a bar
+chart built from <code>len(plan.steps)</code> for each plan in
+<code>output/data/compiled_plans.json</code>, plotted by
+<code>scripts/methods_analysis.py</code>.</figcaption>
+</figure>
+<h2 data-number="4.3" id="validation-gates"><span
+class="header-section-number">4.3</span> Validation gates</h2>
+<p>Across both methods, the analysis script tallies 8 of 8 staged-gate
+evaluations passing (<code>run_all_gates</code> × 2 methods × 4 gates
+each). Every gate result is written to
+<code>output/reports/gate_report.json</code> — neither method in this
+manuscript is hand-picked to pass; both worked examples are constructed
+to satisfy the structural, semantic, plan, and target gates by design,
+since <code>compile_method</code> raises
+<code>MethodValidationError</code> and halts the pipeline on any gate
+failure.</p>
+<h2 data-number="4.4" id="determinism"><span
+class="header-section-number">4.4</span> Determinism</h2>
+<p>Recompiling each example method twice and comparing
+<code>plan_hash</code> values yields: <strong>determinism check =
+Yes</strong>. This is a live re-compilation comparison performed by
+<code>src/manuscript_variables.py</code> at manuscript-build time, not a
+value asserted once and then transcribed — the same property sec. <a
+href="#sec:methodology">3</a> claims for <code>compile_method</code> is
+checked again here, independently, against the live build.</p>
+<h2 data-number="4.5" id="provenance-demonstration"><span
+class="header-section-number">4.5</span> Provenance demonstration</h2>
+<p><code>scripts/methods_analysis.py</code> appends a 3-record
+demonstration hash-chain for one value (<code>calibration_offset</code>)
+through <code>DECLARED</code> → <code>CALIBRATED</code> →
+<code>VERIFIED</code> tiers and writes the result of
+<code>verify_chain</code> to
+<code>output/reports/trust_chain_report.json</code>: <strong>chain
+verified = Yes</strong>.</p>
+<h2 data-number="4.6" id="validation"><span
+class="header-section-number">4.6</span> Validation</h2>
+<p>The results were validated through the zero-mock <code>tests/</code>
+suite:</p>
+<ul>
+<li><strong>Library tests</strong> assert exact gate outcomes,
+scheduling order, and plan-hash determinism against real
+<code>Method</code> fixtures, including one fixture per gate-failure
+mode.</li>
+<li><strong>Script test</strong> runs
+<code>run_methods_analysis()</code> against a temporary output root and
+confirms real worklist/CSV/Mermaid/JSON artifacts, reports, and a real
+PNG figure are written.</li>
+<li><strong>Manuscript-variable test</strong> confirms every
+generated-variable name used in <code>manuscript/*.md</code> is emitted
+by <code>generate_variables</code>.</li>
+</ul>
+<p>All tests pass with coverage exceeding the 90% project gate, with no
+mocks.</p>
+<h2 data-number="4.7" id="discussion"><span
+class="header-section-number">4.7</span> Discussion</h2>
+<p>The results confirm the pipeline end to end: both worked examples
+pass every staged gate, compile deterministically, and produce a stable
+plan hash across repeated builds. The same <code>src/methods_dsl/</code>
+functions back the analysis script, the test suite, and this manuscript
+— which is the architectural point of the exemplar. Because every number
+here is produced by a tested function and regenerated on demand, the
+prose describes structure and provenance rather than transcribing values
+that would drift the moment the example methods changed.</p>
+<hr />
+<h1 data-number="5" id="sec:conclusion"><span
+class="header-section-number">5</span> Conclusion</h1>
+<p>This paper presented a small, tested domain language for specifying
+controlled methods, informed by BPL’s [bpl2026] domain-language design
+for laboratory protocols and generalized to any controlled procedure. It
+validates a simple proposition: a controlled vocabulary expressed as
+typed, validated dataclasses — not a parsed text grammar — is sufficient
+to reproduce BPL’s core safety properties at a scope appropriate for a
+template exemplar.</p>
+<h2 data-number="5.1" id="exemplar-achievements"><span
+class="header-section-number">5.1</span> Exemplar achievements</h2>
+<p>Operating as the methods-paper exemplar for the Research Project
+Template methodology, the project deployed the three foundational
+pillars:</p>
+<ol type="1">
+<li><strong><code>src/methods_dsl/</code> library</strong>: a controlled
+vocabulary, a dimensional unit system, four staged validation gates, a
+deterministic compiler, and four export formats — with no plotting, no
+file I/O, and (with one declared logging exception) no
+<code>infrastructure</code> imports.</li>
+<li><strong><code>tests/</code> integrity</strong>: a zero-mock suite
+over real <code>Method</code> fixtures covering the success path and
+every gate-failure mode, under a ≥90% project coverage gate.</li>
+<li><strong><code>docs/</code> knowledge operations</strong>: the
+correspondence with BPL’s pipeline, testing philosophy, and operational
+rules that keep the library, scripts, and manuscript aligned.</li>
+</ol>
+<h2 data-number="5.2" id="technical-contributions"><span
+class="header-section-number">5.2</span> Technical contributions</h2>
+<h3 data-number="5.2.1"
+id="controlled-vocabulary-in-code-not-a-parser"><span
+class="header-section-number">5.2.1</span> Controlled vocabulary in
+code, not a parser</h3>
+<p>The hallmark of this exemplar is the design choice it demonstrates: a
+<code>.bpl</code> file’s text grammar buys generality this template does
+not need, while a frozen-dataclass model buys construction-time
+validation (<code>__post_init__</code>) that a parsed AST would have to
+re-derive. The controlled vocabulary’s discipline lives in the
+<em>types</em>, not in concrete syntax.</p>
+<h3 data-number="5.2.2" id="honest-handling-of-trust-boundaries"><span
+class="header-section-number">5.2.2</span> Honest handling of trust
+boundaries</h3>
+<p><code>trust.py</code>’s hash-chain documents its own limit
+explicitly: it detects in-chain tampering but cannot detect a chain
+rewritten from record zero. This makes the provenance guarantee a
+visible, testable property rather than an implied cryptographic
+guarantee the implementation does not actually provide.</p>
+<h2 data-number="5.3" id="key-insights"><span
+class="header-section-number">5.3</span> Key insights</h2>
+<ol type="1">
+<li><strong>Determinism follows from explicit tie-breaking</strong>:
+Kahn’s algorithm [kahn1962topological] alone does not guarantee a stable
+schedule across runs — the ascending-<code>step_id</code> tie-break is
+what makes <code>plan_hash</code> reproducible, and sec. <a
+href="#sec:results">4</a> checks this live rather than asserting
+it.</li>
+<li><strong>Staged short-circuit avoids misleading errors</strong>:
+running <code>plan_gate</code> and <code>target_gate</code> against a
+structurally invalid method would report noise, not signal —
+<code>run_all_gates</code> short-circuits after the first two gates for
+exactly this reason.</li>
+<li><strong>A controlled vocabulary generalizes by restraint, not by
+expansion</strong>: <code>SensorCalibrationSweep</code> reuses every
+<code>StepKind</code> and <code>Target</code> the wet-lab-flavored
+<code>PBSPreparation</code> example uses; nothing was added to support a
+second domain.</li>
+</ol>
+<h2 data-number="5.4" id="future-extensions"><span
+class="header-section-number">5.4</span> Future extensions</h2>
+<p>This foundation could be extended to:</p>
+<ul>
+<li><strong>A real <code>.bpl</code>-style parser</strong>: add
+<code>grammar/</code>/<code>parser/</code>/<code>transformer/</code>
+stages ahead of the existing <code>model.py</code>, reusing every
+downstream gate and the compiler unchanged.</li>
+<li><strong>More backends</strong>: a <code>robot</code> execution
+target with capability-aware lowering, mirroring BPL’s Biomek
+translation layer.</li>
+<li><strong>A capability registry</strong>: per-target primitive support
+declarations, generalizing BPL’s <code>capabilities/</code> registry and
+<code>bplc capabilities</code> report.</li>
+</ul>
+<h2 data-number="5.5" id="final-assessment"><span
+class="header-section-number">5.5</span> Final assessment</h2>
+<p>The <code>template_methods_paper</code> tree is the canonical
+reference for how a methods paper — a manuscript whose subject is a
+methodology — stays synchronized with the code implementing that
+methodology across rebuilds. The pipeline compiled both worked example
+methods, wrote <code>output/data/compiled_plans.json</code>,
+<code>output/reports/gate_report.json</code>, and
+<code>output/reports/trust_chain_report.json</code>, and rendered this
+markdown together with <code>config.yaml</code> into PDF.</p>
+<hr />
+<h1 data-number="6" id="sec:experimental_setup"><span
+class="header-section-number">6</span> Experimental Setup</h1>
+<p>This section details the controlled vocabulary, worked examples, and
+software environment used to produce the results.</p>
+<h2 data-number="6.1" id="controlled-vocabulary"><span
+class="header-section-number">6.1</span> Controlled vocabulary</h2>
+<p>The DSL’s vocabulary is declared once in code and consulted by every
+gate and the compiler — never re-declared per method:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Module</th>
+<th>Declares</th>
+<th>Cardinality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/methods_dsl/vocabulary.py</code></td>
+<td><code>StepKind</code>, <code>Target</code>,
+<code>target_accepts</code></td>
+<td>9 step kinds, 3 targets</td>
+</tr>
+<tr>
+<td><code>src/methods_dsl/units.py</code></td>
+<td><code>Dimension</code>, <code>Quantity</code>, the unit table</td>
+<td>18 controlled units across 7 dimensions</td>
+</tr>
+<tr>
+<td><code>src/methods_dsl/validation.py</code></td>
+<td>The four staged gates</td>
+<td>4 gates, fixed order</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="6.2" id="worked-examples"><span
+class="header-section-number">6.2</span> Worked examples</h2>
+<p><code>all_example_methods()</code>
+(<code>src/methods_dsl/examples_methods.py</code>) returns 2
+methods:</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Domain</th>
+<th>Target</th>
+<th>Notable structure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PBSPreparation</code></td>
+<td>Wet-lab bench preparation (BPL’s own domain; an original
+example)</td>
+<td><code>HUMAN</code></td>
+<td>A strict 5-step linear chain with a final <code>VALIDATE</code>
+step</td>
+</tr>
+<tr>
+<td><code>SensorCalibrationSweep</code></td>
+<td>Instrument calibration (a non-biology controlled procedure)</td>
+<td><code>AUTOMATED</code></td>
+<td>Mixed automated <code>MEASURE</code>/<code>COMPUTE</code> steps and
+a <code>HUMAN</code> <code>ANNOTATE</code> sign-off step</td>
+</tr>
+</tbody>
+</table>
+<p>The second example exists specifically to demonstrate that the
+controlled vocabulary generalizes beyond wet-lab protocols, as sec. <a
+href="#sec:introduction">2</a> claims.</p>
+<h2 data-number="6.3" id="pipeline-conditions"><span
+class="header-section-number">6.3</span> Pipeline conditions</h2>
+<p>The experiment overlay (<code>experiment_plan.yaml</code>) declares
+three conditions:</p>
+<ul>
+<li><strong>declared_method</strong> (reference) — a method constructed
+directly as Python objects, before any validation gate has run.</li>
+<li><strong>validated_method</strong> (proposed) — the same method after
+passing all four staged gates and deterministic compilation to a
+scheduled <code>Plan</code>.</li>
+<li><strong>automated_target_variant</strong> (variant) —
+<code>PBSPreparation</code>’s steps recompiled against an
+<code>AUTOMATED</code> execution target, ablating the
+target-compatibility gate’s <code>HUMAN</code>/<code>AUTOMATED</code>
+step boundary (a <code>HUMAN</code> method’s steps must all be
+<code>HUMAN</code>-compatible; an <code>AUTOMATED</code> method’s steps
+may be either).</li>
+</ul>
+<p>The primary metric is gate pass rate: the fraction of staged-gate
+evaluations a method’s steps satisfy.</p>
+<h2 data-number="6.4" id="computational-environment"><span
+class="header-section-number">6.4</span> Computational environment</h2>
+<ul>
+<li><strong>Language</strong>: Python 3.12.13 on Darwin arm64 (see root
+<code>pyproject.toml</code> for the supported version range).</li>
+<li><strong>Core dependencies</strong>: <code>pyyaml</code>,
+<code>matplotlib</code> (declared in
+<code>domain_profile.yaml::required_packages</code>); the DSL library
+itself (<code>src/methods_dsl/</code>) has zero third-party dependencies
+beyond the standard library, with one declared
+<code>infrastructure</code> logging exception
+(<code>_logging.py</code>).</li>
+<li><strong>Headless plotting</strong>: the analysis script sets
+<code>MPLBACKEND=Agg</code> before importing matplotlib.</li>
+</ul>
+<h2 data-number="6.5" id="pipeline-ordering"><span
+class="header-section-number">6.5</span> Pipeline ordering</h2>
+<p>The typical analysis order is:</p>
+<ol type="1">
+<li><code>scripts/methods_analysis.py</code> — compiles every example
+method, runs all gates, exports worklist/CSV/Mermaid/JSON per method,
+demonstrates the provenance hash-chain, and writes
+<code>../figures/step_counts.png</code>, printing each output path for
+manifest collection.</li>
+<li><code>scripts/z_generate_manuscript_variables.py</code> — reads
+<code>manuscript/config.yaml</code> and the analysis outputs, then
+resolves every generated variable in <code>manuscript/*.md</code>.</li>
+<li>PDF rendering reads the resolved manuscript tree so figure paths and
+prose match the analysis that just completed.</li>
+</ol>
+<h2 data-number="6.6" id="relation-to-results"><span
+class="header-section-number">6.6</span> Relation to results</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Result (sec. <a href="#sec:results">4</a>)</th>
+<th>Producing function (<code>src/methods_dsl/</code>)</th>
+<th>Primary inputs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compiled-plan summary</td>
+<td><code>compile_method()</code></td>
+<td><code>all_example_methods()</code></td>
+</tr>
+<tr>
+<td>Step-count figure</td>
+<td><code>len(plan.steps)</code> per method</td>
+<td><code>output/data/compiled_plans.json</code></td>
+</tr>
+<tr>
+<td>Gate pass tally</td>
+<td><code>run_all_gates()</code></td>
+<td>Each example method</td>
+</tr>
+<tr>
+<td>Determinism check</td>
+<td><code>compile_method()</code> called twice</td>
+<td><code>all_example_methods()</code></td>
+</tr>
+<tr>
+<td>Trust-chain verification</td>
+<td><code>append_record()</code> / <code>verify_chain()</code></td>
+<td>Demonstration chain in <code>scripts/methods_analysis.py</code></td>
+</tr>
+</tbody>
+</table>
+<p>This table is descriptive documentation only; it is not executed as
+code during the build.</p>
+<hr />
+<h1 data-number="7" id="sec:reproducibility"><span
+class="header-section-number">7</span> Reproducibility</h1>
+<p>This section explains how to regenerate every artifact in the study
+from a clean checkout. The exemplar’s reproducibility guarantee is
+structural: each result is produced by a tested function and a thin
+script, then injected into the manuscript by generated-variable
+substitution — never transcribed by hand.</p>
+<h2 data-number="7.1" id="how-to-regenerate-everything"><span
+class="header-section-number">7.1</span> How to regenerate
+everything</h2>
+<p>From the repository root:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Run the analysis (compiles methods, exports artifacts, writes figure + reports)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_methods_paper/scripts/methods_analysis.py</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Run the test suite with the coverage gate</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_methods_paper/tests <span class="dt">\</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--cov</span><span class="op">=</span>projects/templates/template_methods_paper/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Generate and inject manuscript variables</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Render the manuscript</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_render_pdf.py <span class="at">--project</span> templates/template_methods_paper</span></code></pre></div>
+<p>Or, end to end via the orchestrated pipeline:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/execute_pipeline.py <span class="at">--project</span> templates/template_methods_paper <span class="at">--core-only</span></span></code></pre></div>
+<h2 data-number="7.2" id="generated-artifact-registry"><span
+class="header-section-number">7.2</span> Generated artifact
+registry</h2>
+<p>The analysis script writes the following artifacts under
+<code>projects/templates/template_methods_paper/output/</code>:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Produced by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data/pbspreparation_worklist.md</code>,
+<code>data/pbspreparation_plan.csv</code>,
+<code>data/pbspreparation_graph.mmd</code>,
+<code>data/pbspreparation_plan.json</code></td>
+<td><code>compile_method()</code> + exporters, for
+<code>PBSPreparation</code></td>
+</tr>
+<tr>
+<td><code>data/sensorcalibrationsweep_worklist.md</code>,
+<code>data/sensorcalibrationsweep_plan.csv</code>,
+<code>data/sensorcalibrationsweep_graph.mmd</code>,
+<code>data/sensorcalibrationsweep_plan.json</code></td>
+<td><code>compile_method()</code> + exporters, for
+<code>SensorCalibrationSweep</code></td>
+</tr>
+<tr>
+<td><code>data/compiled_plans.json</code></td>
+<td>Per-method plan summary, consumed by
+<code>src/manuscript_variables.py</code></td>
+</tr>
+<tr>
+<td><code>reports/gate_report.json</code></td>
+<td><code>run_all_gates()</code> tally across both methods</td>
+</tr>
+<tr>
+<td><code>reports/trust_chain_report.json</code></td>
+<td><code>append_record()</code>/<code>verify_chain()</code>
+demonstration chain</td>
+</tr>
+<tr>
+<td><code>figures/step_counts.png</code></td>
+<td>Step-count bar chart</td>
+</tr>
+<tr>
+<td><code>data/manuscript_variables.json</code></td>
+<td>Every generated-variable value, written by
+<code>z_generate_manuscript_variables.py</code></td>
+</tr>
+</tbody>
+</table>
+<p>The <code>output/</code> tree is disposable and regenerated on every
+run; it is not the source of truth.</p>
+<h2 data-number="7.3" id="determinism-1"><span
+class="header-section-number">7.3</span> Determinism</h2>
+<ul>
+<li><code>compile_method()</code> is deterministic by construction: the
+plan hash is computed from a canonical, sort-keys JSON payload over
+<code>method_name</code>, <code>method_version</code>,
+<code>target</code>, and each scheduled step’s identifying fields —
+never from a wall-clock timestamp or a UUID.</li>
+<li><code>topological_order()</code> breaks scheduling ties by ascending
+<code>step_id</code>, so the same <code>Method</code> object always
+yields the same step order across processes and platforms.</li>
+<li>Yes — <code>src/manuscript_variables.py::generate_variables</code>
+recompiles every example method twice at manuscript-build time and
+compares hashes live, so this guarantee is checked on every build, not
+merely asserted once in a test.</li>
+</ul>
+<h2 data-number="7.4"
+id="verification-no-hand-transcribed-numbers"><span
+class="header-section-number">7.4</span> Verification (no
+hand-transcribed numbers)</h2>
+<p>Every quantitative claim in sec. <a href="#sec:results">4</a> is
+either a generated variable sourced from a live analysis output or
+registered in <code>data/claim_ledger.yaml</code> for evidence-registry
+validation. The manuscript intentionally does not hand-transcribe
+volatile values, so prose and artifacts cannot disagree. Configuration
+provenance is itself injected: <code>2107a29383e5e491</code> is the
+SHA-256 of <code>manuscript/config.yaml</code> at build time, and
+<code>2026-06-30T21:41:36Z</code> records when the variables were
+generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
+builds).</p>
+<hr />
+<h1 data-number="8" id="sec:scope"><span
+class="header-section-number">8</span> Scope, Related Work, and
+Positioning</h1>
+<p>This section situates the exemplar and states explicit boundaries.
+The goal is not to compete with BPL’s full compiler pipeline [bpl2026] —
+a ~32,000-line implementation with a Lark grammar, a robot backend, and
+a hash-chained audit/compliance layer — but to show how a minimal,
+test-backed subset of BPL’s domain-language design fits the template’s
+reproducibility and rendering stack [peng2011reproducible], generalized
+from wet-lab protocols to any controlled procedure.</p>
+<h2 data-number="8.1"
+id="domain-specific-languages-for-controlled-procedures"><span
+class="header-section-number">8.1</span> Domain-specific languages for
+controlled procedures</h2>
+<p>Encoding a procedure as a program rather than free text is a
+long-standing software-engineering pattern: Fowler’s treatment of
+domain-specific languages [fowler2010dsl] frames the general case — a
+notation restricted to exactly the concepts a domain needs. BPL
+[bpl2026] applies this specifically to laboratory protocols, adding
+biology-native types (reagents, labware, MW-aware concentrations),
+staged validation, and deterministic compilation to a robot or human
+execution target. The present manuscript restricts attention to the
+parts of that design that generalize beyond biology: a controlled
+vocabulary of step intents, a small dimensional-safety unit system,
+staged validation gates, and deterministic compilation to a hashed
+plan.</p>
+<h2 data-number="8.2"
+id="what-this-exemplar-does-not-implement-out-of-scope"><span
+class="header-section-number">8.2</span> What this exemplar does not
+implement (out of scope)</h2>
+<ol type="1">
+<li><strong>A text grammar and parser.</strong> BPL parses
+<code>.bpl</code> source through a Lark grammar into a typed AST. This
+exemplar constructs a <code>Method</code> directly as frozen Python
+dataclasses — no concrete syntax, no parser, no AST layer.</li>
+<li><strong>Biology-native types.</strong> BPL’s unit system includes
+MW-aware concentration conversions and reagent physical-form metadata
+(<code>cas</code>, <code>physical_form</code>). This exemplar’s
+<code>units.py</code> implements only the dimensional-safety subset
+(mass, volume, temperature, time, concentration, count, dimensionless)
+needed to demonstrate the “the type system catches <code>mL + g</code>”
+guarantee.</li>
+<li><strong>A robot backend.</strong> BPL lowers intents to Biomek i7
+primitives (<code>aspirate</code>, <code>dispense</code>,
+<code>pick_tips</code>). This exemplar’s <code>Target.AUTOMATED</code>
+has no backend-specific lowering stage; it is a scheduling and
+gate-compatibility concept only.</li>
+<li><strong>Cryptographic audit guarantees.</strong>
+<code>trust.py</code>’s hash-chain is deliberately scoped to the same
+honest boundary BPL itself claims: a consistency check against
+accidental corruption, not a tamper-proof guarantee against an actor
+with write access to the entire chain.</li>
+<li><strong>SOP-to-DSL generation.</strong> BPL includes an agentic
+workflow that translates natural-language SOPs into validated
+<code>.bpl</code> programs. This exemplar’s worked examples are
+hand-authored Python, not generated.</li>
+</ol>
+<h2 data-number="8.3"
+id="what-this-project-proves-about-the-template"><span
+class="header-section-number">8.3</span> What this project proves about
+the template</h2>
+<p>The validation and compilation steps here are a deliberately small
+subset of BPL’s. The <strong>non-standard</strong> contribution is
+procedural: the same tested functions in <code>src/methods_dsl/</code>
+back the analysis script, the test suite, and this manuscript, so the
+compiled-plan table and the figure always refer to the same code. That
+pattern — and the specific generalization from a biology-only domain
+language to a domain-neutral one — is what downstream projects should
+copy, whether the controlled procedure is a wet-lab protocol, an
+instrument calibration sweep, or a computational pipeline.</p>
+<h2 data-number="8.4" id="explicit-limitations"><span
+class="header-section-number">8.4</span> Explicit limitations</h2>
+<ol type="1">
+<li><strong>Two worked examples</strong>: <code>PBSPreparation</code>
+and <code>SensorCalibrationSweep</code> exercise every gate-success path
+but are not a corpus; gate-failure coverage instead lives in
+<code>tests/conftest.py</code>’s dedicated fixtures.</li>
+<li><strong>No backend lowering</strong>: <code>Target</code> selects a
+compatibility class, not a concrete execution backend; no robot or
+simulation runtime exists in this exemplar.</li>
+<li><strong>Unit table, not a full unit library</strong>: seven
+dimensions and a fixed unit table, not a general-purpose
+dimensional-analysis library like <code>pint</code>.</li>
+<li><strong>No persistence layer</strong>: <code>trust.py</code>’s
+hash-chain lives in memory for the duration of one script run; this
+exemplar does not implement durable storage for a real audit trail.</li>
+</ol>
+<p>These limitations are intentional: they narrow the surface so that
+the reproducibility concerns — tested functions, a thin script, and
+generated-variable-injected prose — remain visible rather than buried
+under a compiler implementation at BPL’s full scale.</p>
+<hr />
+<h1 data-number="9" id="sec:references"><span
+class="header-section-number">9</span> References</h1>
+<p>Bibliography lives in <a
+href="references.bib"><code>manuscript/references.bib</code></a> and is
+read by Pandoc during PDF render. The build pipeline invokes Pandoc with
+<code>--natbib</code>, so every <code>[key]</code> citation in the
+manuscript is rewritten to the appropriate
+<code>\cite{}</code>/<code>\citep{}</code>/<code>\citet{}</code> LaTeX
+command and resolved against the bib file.</p>
+<p>To validate that <code>references.bib</code> is syntactically clean
+and contains the required fields per entry type:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_methods_paper/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+</body>
+</html>

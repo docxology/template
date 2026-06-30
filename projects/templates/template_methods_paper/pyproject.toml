@@ -1,0 +1,60 @@
+# Methods Paper Configuration
+# Inherits workspace settings from root pyproject.toml
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "template_methods_paper"
+version = "1.0.0"
+description = "A small, tested domain language for specifying controlled methods, with a manuscript describing the methodology itself"
+authors = [
+    {name = "Research Template Author", email = "author@research-template.org"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "matplotlib>=3.7.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.pytest.ini_options]
+# RASP Strict Assertion: Tests must be clearly separated and structurally identifiable
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+# `--strict-markers` prevents typos in marker definitions
+addopts = "-v --tb=short --strict-markers"
+
+[tool.coverage.run]
+# Core Template Rule: We only calculate coverage for primary source code (`src/`),
+# ensuring test code itself does not artificially inflate metric scores.
+source = ["src"]
+branch = true
+omit = [
+    "tests/*",
+    "*/__init__.py",
+    "*/test_*.py",
+]
+
+[tool.coverage.report]
+# ≥90% on src/ is the enforced gate; live coverage % is tracked in
+# docs/_generated/COUNTS.md (do not hardcode it here — it drifts).
+fail_under = 90
+show_missing = true
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+
+[tool.uv]
+# Inherits workspace settings from root pyproject.toml

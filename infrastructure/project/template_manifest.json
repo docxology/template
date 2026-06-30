@@ -82,6 +82,14 @@
       "coverage_floor": 90
     },
     {
+      "name": "template_methods_paper",
+      "qualified_name": "templates/template_methods_paper",
+      "title": "A Domain Language for Specifying Controlled Methods — Methods Paper Exemplar",
+      "use_when": "Use this template when the paper you are writing **describes a methodology** rather than reports results: a procedure, protocol, or specification language, where the contribution is the controlled vocabulary and its guarantees (dimensional safety, staged validation, deterministic compilation) rather than a numeric outcome.",
+      "test_file_count": 11,
+      "coverage_floor": 90
+    },
+    {
       "name": "template_sia",
       "qualified_name": "templates/template_sia",
       "title": "template_sia",

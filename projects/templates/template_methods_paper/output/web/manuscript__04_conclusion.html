@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_conclusion.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:conclusion">Conclusion</h1>
+<p>This paper presented a small, tested domain language for specifying
+controlled methods, informed by BPL’s [bpl2026] domain-language design
+for laboratory protocols and generalized to any controlled procedure. It
+validates a simple proposition: a controlled vocabulary expressed as
+typed, validated dataclasses — not a parsed text grammar — is sufficient
+to reproduce BPL’s core safety properties at a scope appropriate for a
+template exemplar.</p>
+<h2 id="exemplar-achievements">Exemplar achievements</h2>
+<p>Operating as the methods-paper exemplar for the Research Project
+Template methodology, the project deployed the three foundational
+pillars:</p>
+<ol type="1">
+<li><strong><code>src/methods_dsl/</code> library</strong>: a controlled
+vocabulary, a dimensional unit system, four staged validation gates, a
+deterministic compiler, and four export formats — with no plotting, no
+file I/O, and (with one declared logging exception) no
+<code>infrastructure</code> imports.</li>
+<li><strong><code>tests/</code> integrity</strong>: a zero-mock suite
+over real <code>Method</code> fixtures covering the success path and
+every gate-failure mode, under a ≥90% project coverage gate.</li>
+<li><strong><code>docs/</code> knowledge operations</strong>: the
+correspondence with BPL’s pipeline, testing philosophy, and operational
+rules that keep the library, scripts, and manuscript aligned.</li>
+</ol>
+<h2 id="technical-contributions">Technical contributions</h2>
+<h3 id="controlled-vocabulary-in-code-not-a-parser">Controlled
+vocabulary in code, not a parser</h3>
+<p>The hallmark of this exemplar is the design choice it demonstrates: a
+<code>.bpl</code> file’s text grammar buys generality this template does
+not need, while a frozen-dataclass model buys construction-time
+validation (<code>__post_init__</code>) that a parsed AST would have to
+re-derive. The controlled vocabulary’s discipline lives in the
+<em>types</em>, not in concrete syntax.</p>
+<h3 id="honest-handling-of-trust-boundaries">Honest handling of trust
+boundaries</h3>
+<p><code>trust.py</code>’s hash-chain documents its own limit
+explicitly: it detects in-chain tampering but cannot detect a chain
+rewritten from record zero. This makes the provenance guarantee a
+visible, testable property rather than an implied cryptographic
+guarantee the implementation does not actually provide.</p>
+<h2 id="key-insights">Key insights</h2>
+<ol type="1">
+<li><strong>Determinism follows from explicit tie-breaking</strong>:
+Kahn’s algorithm [kahn1962topological] alone does not guarantee a stable
+schedule across runs — the ascending-<code>step_id</code> tie-break is
+what makes <code>plan_hash</code> reproducible, and <span
+class="citation" data-cites="sec:results">[@sec:results]</span> checks
+this live rather than asserting it.</li>
+<li><strong>Staged short-circuit avoids misleading errors</strong>:
+running <code>plan_gate</code> and <code>target_gate</code> against a
+structurally invalid method would report noise, not signal —
+<code>run_all_gates</code> short-circuits after the first two gates for
+exactly this reason.</li>
+<li><strong>A controlled vocabulary generalizes by restraint, not by
+expansion</strong>: <code>SensorCalibrationSweep</code> reuses every
+<code>StepKind</code> and <code>Target</code> the wet-lab-flavored
+<code>PBSPreparation</code> example uses; nothing was added to support a
+second domain.</li>
+</ol>
+<h2 id="future-extensions">Future extensions</h2>
+<p>This foundation could be extended to:</p>
+<ul>
+<li><strong>A real <code>.bpl</code>-style parser</strong>: add
+<code>grammar/</code>/<code>parser/</code>/<code>transformer/</code>
+stages ahead of the existing <code>model.py</code>, reusing every
+downstream gate and the compiler unchanged.</li>
+<li><strong>More backends</strong>: a <code>robot</code> execution
+target with capability-aware lowering, mirroring BPL’s Biomek
+translation layer.</li>
+<li><strong>A capability registry</strong>: per-target primitive support
+declarations, generalizing BPL’s <code>capabilities/</code> registry and
+<code>bplc capabilities</code> report.</li>
+</ul>
+<h2 id="final-assessment">Final assessment</h2>
+<p>The <code>template_methods_paper</code> tree is the canonical
+reference for how a methods paper — a manuscript whose subject is a
+methodology — stays synchronized with the code implementing that
+methodology across rebuilds. The pipeline compiled both worked example
+methods, wrote <code>output/data/compiled_plans.json</code>,
+<code>output/reports/gate_report.json</code>, and
+<code>output/reports/trust_chain_report.json</code>, and rendered this
+markdown together with <code>config.yaml</code> into PDF.</p>
+</body>
+</html>

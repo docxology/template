@@ -1,0 +1,50 @@
+\contentsline {section}{\numberline {1}Abstract}{2}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Why a methods paper needs its own DSL}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}What this exemplar borrows from BPL, and what it generalizes}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Template architecture context}{3}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}The worked examples}{3}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Reader's guide to the manuscript}{3}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Methodology}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Controlled vocabulary (\texttt {vocabulary.py})}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Dimensional safety (\texttt {units.py})}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Method model (\texttt {model.py})}{4}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Staged validation (\texttt {validation.py})}{4}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Deterministic compilation (\texttt {compiler.py})}{4}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Export (\texttt {export.py})}{4}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Provenance (\texttt {trust.py})}{5}{subsection.3.7}%
+\contentsline {subsection}{\numberline {3.8}Zero-mock testing methodology}{5}{subsection.3.8}%
+\contentsline {section}{\numberline {4}Results}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Compiled-plan summary}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Step-count comparison}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Validation gates}{6}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Determinism}{7}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Provenance demonstration}{7}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Validation}{7}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Discussion}{7}{subsection.4.7}%
+\contentsline {section}{\numberline {5}Conclusion}{8}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Exemplar achievements}{8}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Technical contributions}{8}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Controlled vocabulary in code, not a parser}{8}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Honest handling of trust boundaries}{8}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.3}Key insights}{8}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Future extensions}{8}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Final assessment}{8}{subsection.5.5}%
+\contentsline {section}{\numberline {6}Experimental Setup}{9}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Controlled vocabulary}{9}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Worked examples}{9}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Pipeline conditions}{9}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Computational environment}{9}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Pipeline ordering}{9}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Relation to results}{9}{subsection.6.6}%
+\contentsline {section}{\numberline {7}Reproducibility}{11}{section.7}%
+\contentsline {subsection}{\numberline {7.1}How to regenerate everything}{11}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Generated artifact registry}{11}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Determinism}{11}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Verification (no hand-transcribed numbers)}{11}{subsection.7.4}%
+\contentsline {section}{\numberline {8}Scope, Related Work, and Positioning}{12}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Domain-specific languages for controlled procedures}{12}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}What this exemplar does not implement (out of scope)}{12}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}What this project proves about the template}{12}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Explicit limitations}{12}{subsection.8.4}%
+\contentsline {section}{\numberline {9}References}{13}{section.9}%

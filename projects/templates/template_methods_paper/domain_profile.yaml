@@ -1,0 +1,45 @@
+domain: methods_specification
+display_name: Methods Specification DSL Exemplar
+required_packages:
+  - pyyaml
+  - matplotlib
+  - pytest
+preferred_outputs:
+  - pdf
+  - html
+validation_gates:
+  - structural_gate
+  - semantic_gate
+  - plan_gate
+  - target_gate
+figure_types:
+  - bar_chart
+  - dependency_graph
+citation_policy: official_or_scholarly
+source_policy: "Prefer the controlled vocabulary in src.methods_dsl, the tested compiler/validation gates, and the BPL (Biology Programming Language, https://gitlab.com/bota-biosciences-public/bpl-code) upstream reference for domain-language design; do not invent step semantics outside the controlled vocabulary."
+review_gates:
+  - structural_gate
+  - plan_gate
+artifact_expectations:
+  - output/data/compiled_plans.json
+  - output/data/pbspreparation_plan.json
+  - output/data/sensorcalibrationsweep_plan.json
+  - output/reports/gate_report.json
+  - output/reports/trust_chain_report.json
+  - output/figures/step_counts.png
+benchmark_rubric:
+  name: methods-paper-readiness
+  dimensions:
+    - name: structural_integrity
+      weight: 1.0
+    - name: determinism_check
+      weight: 2.0
+    - name: reproducibility_bundle
+      weight: 1.0
+    - name: artifact_manifest
+      weight: 1.0
+    - name: evidence_grounding
+      weight: 2.0
+    - name: render_success
+      weight: 1.0
+llm_prompt_guidance: "Use the generated compiled-plan JSON, gate report, and trust-chain report as the evidence source; do not invent plan hashes, step counts, or gate outcomes — the manuscript calls tested src.methods_dsl functions exclusively."

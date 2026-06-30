@@ -1,0 +1,5 @@
+# Methods-paper exemplar: src/methods_dsl is fully standalone (no infrastructure.*
+# import) except its one sanctioned logging adapter, declared here per the
+# layer-boundary contract infrastructure/project/drift/checks_boundary.py enforces.
+allow_infrastructure_imports:
+  - "src/methods_dsl/_logging.py"

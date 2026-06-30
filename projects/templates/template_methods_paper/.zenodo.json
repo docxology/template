@@ -1,0 +1,22 @@
+{
+  "creators": [
+    {
+      "affiliation": "Your Institution",
+      "name": "Author, Template",
+      "orcid": "0000-0000-0000-0000"
+    }
+  ],
+  "description": "A controlled-methods specification exemplar: a small, tested domain language (methods_dsl) for specifying, validating, and deterministically compiling controlled procedures, with a manuscript describing the methodology itself. Informed by BPL (Biology Programming Language) as an upstream domain-language reference.",
+  "keywords": [
+    "methods paper",
+    "domain-specific language",
+    "controlled methods",
+    "deterministic compilation",
+    "staged validation",
+    "dimensional analysis"
+  ],
+  "license": "MIT",
+  "title": "A Domain Language for Specifying Controlled Methods",
+  "upload_type": "software",
+  "version": "1.0.0"
+}

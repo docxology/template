@@ -1,0 +1,23 @@
+conditions:
+  - name: declared_method
+    role: reference
+    description: "An example method constructed directly as Python objects, before any validation gate has run."
+  - name: validated_method
+    role: proposed
+    description: "The same method after passing all four staged validation gates and deterministic compilation to a scheduled Plan."
+  - name: automated_target_variant
+    role: variant
+    description: "The HUMAN-target PBSPreparation method's steps recompiled against an AUTOMATED execution target, ablating the target-compatibility gate's HUMAN/AUTOMATED step boundary."
+metrics:
+  primary:
+    name: gate_pass_rate
+    direction: maximize
+protocol: "Construct each example method directly as frozen dataclasses (no parser); run the four staged validation gates (structural, semantic, plan, target) in fixed order via run_all_gates; deterministically compile a validated method to a topologically scheduled Plan via Kahn's algorithm with a canonical-JSON SHA-256 plan hash; export the plan to worklist markdown, CSV, Mermaid, and canonical JSON; and verify the plan hash is stable across repeated compilations of the same method."
+expected_figures:
+  - fig:step_counts
+expected_tables:
+  - tbl:compiled_plans
+baselines:
+  - declared_method
+ablations:
+  - automated_target_variant

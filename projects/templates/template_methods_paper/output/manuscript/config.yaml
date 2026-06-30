@@ -1,0 +1,103 @@
+# Methods Paper Configuration — Methods Specification DSL Exemplar
+# Demonstrates the methods-paper archetype: the manuscript's subject is a
+# small, tested domain language for specifying controlled methods, not
+# results produced by running one. This file is the configuration source of
+# truth for manuscript and publication metadata, loaded by `yaml.safe_load`
+# inside `infrastructure/rendering/_pdf_combined_renderer.py`.
+
+# Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_report_model.py`
+paper:
+  # RASP Standard: Title must be descriptive and objective
+  title: "A Domain Language for Specifying Controlled Methods"
+  subtitle: "Staged Validation and Deterministic Compilation for Method Specification, Informed by BPL"
+  version: "1.0.0"
+  date: ""  # Auto-generated via `infrastructure/validation/output/validator.py` if empty
+
+# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
+authors:
+  - name: "Template Author"
+    orcid: "0000-0000-0000-0000"
+    email: "author@example.org"
+    affiliation: "Your Institution"
+    corresponding: true
+
+# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
+publication:
+  doi: ""  # Concept DOI — fill in when minting a Zenodo deposit
+  version_doi: ""  # Latest Zenodo deposit DOI (split layout)
+  version_record: ""  # https://zenodo.org/records/{id}
+  github_repository: ""  # e.g. owner/template_methods_paper
+  transmission_bookends:
+    enabled: false
+    max_prior_releases: 5
+    show_steganography: true
+  deposit_filename:
+    enabled: true
+    topic: ""  # optional; default = first significant title word
+  journal: ""
+  volume: ""
+  pages: ""
+  year: "2026"
+
+keywords:
+  - "methods paper"
+  - "domain-specific language"
+  - "controlled methods"
+  - "deterministic compilation"
+  - "staged validation"
+  - "dimensional analysis"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+# Steganography profile (disabled by default for this exemplar).
+steganography:
+  enabled: false
+  overlays_enabled: true
+  barcodes_enabled: true
+  metadata_enabled: true
+  hashing_enabled: true
+  encryption_enabled: false
+  overlay_mode: "text"
+  overlay_text: "CONFIDENTIAL"
+
+# Render format toggles — gate per-renderer in infrastructure/rendering/pipeline.py.
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: false
+    epub: false
+
+# Consumed by: `infrastructure.llm.LLMClient` (in `infrastructure/llm/core/client.py`)
+llm:
+  reviews:
+    enabled: false
+    types:
+      - executive_summary
+  translations:
+    enabled: false
+    languages:
+      - zh
+
+# Consumed by: `infrastructure/reporting/pipeline_report_model.py` and CI/CD gates
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0
+
+# DSL parameters — the methods library declares its controlled vocabulary in
+# code, not configuration; this block documents that for readers and
+# downstream tooling rather than configuring the DSL itself.
+dsl:
+  example_methods:
+    - "PBSPreparation"
+    - "SensorCalibrationSweep"
+  staged_gates:
+    - "structural"
+    - "semantic"
+    - "plan"
+    - "target"
+  plan_hash_algorithm: "sha256"

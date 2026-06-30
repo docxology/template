@@ -187,6 +187,7 @@ ever git-tracked/pushed:
 - [`projects/templates/template_gold_refinement/`](projects/templates/template_gold_refinement/) — metallurgical gold-refining analogy for manuscript composition (ore → smelting → assaying → cupellation → nine-nines certification, mega-madlib token injection)
 - [`projects/templates/template_literature_meta_analysis/`](projects/templates/template_literature_meta_analysis/) — generic literature meta-analysis template (multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics; default term `modafinil`)
 - [`projects/templates/template_madlib/`](projects/templates/template_madlib/) — conditional token-injection manuscript template with QA probes and authoring contract
+- [`projects/templates/template_methods_paper/`](projects/templates/template_methods_paper/) — methods paper template: a tested controlled-method specification DSL (staged validation gates, deterministic compilation), informed by BPL (Biology Programming Language) as an upstream domain language
 - [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) — data-driven large-format newspaper layout engine (ReportLab broadsheet)
 - [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
 - [`projects/templates/template_sia/`](projects/templates/template_sia/) — SIA self-improvement harness template (fixture replay by default)
