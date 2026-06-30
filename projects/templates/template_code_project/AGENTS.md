@@ -48,7 +48,7 @@ Double publish (Zenodo + GitHub) via `scripts/publish_project_release.py`. Manus
 
 Current release/DOI records are generated from `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, GitHub, and Zenodo into [`docs/_generated/publication_records.md`](../../../docs/_generated/publication_records.md). Do not copy per-version DOI rows here.
 
-Workflow reference: [`docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md) (transmission bookends + deposit filename sections). Render/stego path: [`docs/rendering_pipeline.md`](docs/rendering_pipeline.md).
+Workflow reference: [`docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md) (transmission bookends + deposit filename sections) · [`infrastructure/publishing/README.md`](../../../infrastructure/publishing/README.md) (publishing module reference) · [`docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md) (archival targets). Render/stego path: [`docs/rendering_pipeline.md`](docs/rendering_pipeline.md).
 
 ### Scientific Validation & Analysis
 

@@ -514,6 +514,67 @@ def check_publication_metadata_consistency(project_root: Path, report: Report, p
                 )
 
 
+def check_publishing_status_block_current(project_root: Path, report: Report, project: str) -> None:
+    """README's generated `PUBLISHING-STATUS` block must exist and be in sync.
+
+    `infrastructure.publishing.status_report` compiles `manuscript/config.yaml`
+    + the platform registry into a marker-delimited block; this check is the
+    enforcement that makes that surfacing durable rather than a one-time edit
+    that silently drifts the next time `config.yaml` changes.
+    """
+    config_path = project_root / "manuscript" / "config.yaml"
+    if not config_path.is_file():
+        return
+    readme_path = project_root / "README.md"
+    if not readme_path.is_file():
+        return
+
+    from infrastructure.publishing.status_report import (
+        BLOCK_START,
+        compile_publishing_status,
+        status_report_is_current,
+    )
+
+    readme_text = _read(readme_path)
+    if BLOCK_START not in readme_text:
+        report.add(
+            "WARNING",
+            project,
+            "publishing_status_block_missing",
+            (
+                f"{project}/README.md has no PUBLISHING-STATUS block — run "
+                "`uv run python -m infrastructure.publishing.status_report "
+                f"--project projects/{project} --write "
+                '--init-after "## Publication and rendering"` to surface the '
+                "cross-platform publishing surface (see docs/guides/publishing-guide.md)."
+            ),
+        )
+        return
+
+    try:
+        compiled = compile_publishing_status(project_root)
+    except yaml.YAMLError as exc:
+        report.add(
+            "ERROR",
+            project,
+            "publishing_status_config_unparseable",
+            f"{_rel(config_path, project_root)} is not valid YAML — cannot compile publishing status: {exc}",
+        )
+        return
+
+    if not status_report_is_current(readme_text, compiled):
+        report.add(
+            "WARNING",
+            project,
+            "publishing_status_block_stale",
+            (
+                f"{project}/README.md PUBLISHING-STATUS block is out of sync with manuscript/config.yaml — "
+                "regenerate with `uv run python -m infrastructure.publishing.status_report "
+                f"--project projects/{project} --write`."
+            ),
+        )
+
+
 def check_required_files_exist(project_root: Path, report: Report, project: str) -> None:
     """Exemplar must ship the minimum forkable project layout.
 
@@ -628,6 +689,7 @@ __all__ = [
     "check_no_blanket_except_in_src",
     "check_no_oversize_src_files",
     "check_publication_metadata_consistency",
+    "check_publishing_status_block_current",
     "check_referenced_files_exist",
     "check_required_files_exist",
     "check_template_signpost_contract",

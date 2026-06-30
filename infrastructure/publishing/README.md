@@ -182,11 +182,17 @@ uv run python -m infrastructure.publishing.archival_cli \
   --bundle output/template_code_project/executable_bundle \
   --providers zenodo software_heritage ipfs_pinata ipfs_web3storage
 
-# Compile per-platform publishing status into a project README (regenerable block)
+# Compile per-platform publishing status into a project README (regenerable block).
+# Rolled out across all 13 projects/templates/* exemplars (2026-06-30) -- every
+# one now carries a `## Publication and rendering` section sourced from this CLI.
 uv run python -m infrastructure.publishing.status_report \
   --project projects/templates/template_gold_refinement --write
 uv run python -m infrastructure.publishing.status_report \
-  --project projects/templates/template_gold_refinement --check   # CI drift gate
+  --project projects/templates/template_gold_refinement --check
+# Enforced (not just documented): infrastructure.project.drift.check_publishing_status_block_current
+# runs this same check for every exemplar inside `scripts/check_template_drift.py --strict`,
+# which is wired into CI (.github/workflows/ci.yml) and the pre-push hook -- a stale or
+# missing block fails the gate, it does not silently rot.
 
 # Verify publishing credentials authenticate (read-only, no writes)
 uv run python -m infrastructure.publishing.credential_check --env-file .env

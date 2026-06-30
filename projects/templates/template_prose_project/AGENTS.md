@@ -118,7 +118,7 @@ To target a different manuscript:
 ## See also
 
 * [`README.md`](README.md) — quick reference.
-* [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md)
+* [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)
 * [`docs/architecture.md`](docs/architecture.md) — module dependency graph.
 * [`docs/quickstart.md`](docs/quickstart.md) — getting started.
 * [`infrastructure/prose/AGENTS.md`](../../../infrastructure/prose/AGENTS.md) —

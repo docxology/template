@@ -60,3 +60,7 @@ treat it as a failure, not a warning.
 - **Classifieds must flow unboxed** (`classified` template) to pack densely;
   use the `display` box kind only for boxed house ads.
 - Only `typography.py` may name a font. Everything else uses `Fonts` roles.
+
+## Publishing
+
+- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)

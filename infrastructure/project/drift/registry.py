@@ -21,6 +21,7 @@ from infrastructure.project.drift.checks import (  # noqa: E402 — registry agg
     check_no_oversize_src_files,
     check_project_src_infrastructure_boundary,
     check_publication_metadata_consistency,
+    check_publishing_status_block_current,
     check_referenced_files_exist,
     check_required_files_exist,
     check_shared_template_design_contract,
@@ -47,6 +48,7 @@ PROJECT_CHECKS: tuple[ProjectCheckFn, ...] = (
     check_no_blanket_except_in_src,
     check_mocks_absent_from_tests,
     check_publication_metadata_consistency,
+    check_publishing_status_block_current,
     check_project_src_infrastructure_boundary,
 )
 

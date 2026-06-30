@@ -69,3 +69,7 @@ re-probes. Two figures: `ablation.png` (metric/noise) and
   `src/`, plot, and print output paths for manifest collection.
 - **Qualified-name pipeline invocation**: render via
   `--project templates/template_autoscientists` (see README).
+
+## Publishing
+
+- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)

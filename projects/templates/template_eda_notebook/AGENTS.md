@@ -106,7 +106,7 @@ the numbers here.
 ## See Also
 
 - [Root projects AGENTS.md](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) — public exemplar roster.
-- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md).
+- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md).
 - [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax.
 - [`src/AGENTS.md`](src/AGENTS.md) — EDA library API reference.
 - [`TODO.md`](TODO.md) — template-status gaps and improvement ladder.

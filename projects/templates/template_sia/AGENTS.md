@@ -61,3 +61,7 @@ uv run python scripts/01_run_tests.py --project templates/template_sia --project
 - [`README.md`](README.md)
 - [`manuscript/AGENTS.md`](manuscript/AGENTS.md)
 - [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md)
+
+## Publishing
+
+- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)

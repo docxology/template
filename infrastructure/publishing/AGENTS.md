@@ -177,6 +177,8 @@ first_class = list_platforms(tier=PublishingTier.FIRST_CLASS)
 
 `infrastructure.publishing.status_report` turns the platform registry (which platforms exist) plus a project's `manuscript/config.yaml` (what has been published) into a compact, regenerable Markdown block for the project README. The committed block encodes only **durable** publication state — DOIs, repository, and release identifiers from config — never machine-specific credential presence (that is `credential_check.py`'s job). The block is delimited by stable HTML-comment markers so it can be rewritten without disturbing surrounding prose.
 
+Every `projects/templates/*` exemplar carries this block under a `## Publication and rendering` heading (rolled out 2026-06-30). It is **enforced, not just conventional**: `infrastructure.project.drift.checks_exemplar.check_publishing_status_block_current` runs `status_report_is_current()` for every exemplar inside `scripts/check_template_drift.py`, which CI and the pre-push hook run with `--strict` — a missing or stale block fails the gate.
+
 | Symbol | Role |
 | --- | --- |
 | `compile_publishing_status(project_root, *, config_path=None, published=None)` | Build a `PublishingStatusReport` from `config.yaml` + the registry; `published` is a `{platform: url}` map that upgrades rows to PUBLISHED (it only ever upgrades) |

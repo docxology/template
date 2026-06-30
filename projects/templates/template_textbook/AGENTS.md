@@ -121,3 +121,7 @@ into the repo's public-exemplar rosters — `"templates/template_textbook"` is i
 `templates/template_textbook` is listed in `docs/_generated/active_projects.md`.
 No registration steps are pending; do not re-edit those shared `infrastructure/`
 files for this project.
+
+## Publishing
+
+- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)

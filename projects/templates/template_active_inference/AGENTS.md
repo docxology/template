@@ -90,5 +90,5 @@ uv run python scripts/compute_statistics.py
 ## Parent Docs
 
 - Template root: [`../../../AGENTS.md`](../../../AGENTS.md)
-- Publishing guide: [`../../../docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md)
+- Publishing guide: [`../../../docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md) · Publishing module reference: [`../../../infrastructure/publishing/README.md`](../../../infrastructure/publishing/README.md) · Archival targets: [`../../../docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md)
 - Zenodo DOI strategy: [`../../../docs/guides/zenodo-doi-strategy.md`](../../../docs/guides/zenodo-doi-strategy.md)
