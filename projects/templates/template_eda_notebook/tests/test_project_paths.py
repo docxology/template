@@ -36,12 +36,13 @@ class TestResolveProjectRoot:
         assert isinstance(root, Path)
         assert (root / "src").is_dir()
 
-    def test_uses_module_project_root_attribute(self):
+    def test_uses_module_project_root_attribute(self, tmp_path):
         name = "_eda_fake_module_for_test"
         module = types.ModuleType(name)
-        module.project_root = "/tmp/some/where"  # noqa: S108 - test sentinel path
+        sentinel = tmp_path / "some" / "where"
+        module.project_root = str(sentinel)
         sys.modules[name] = module
         try:
-            assert resolve_project_root(name) == Path("/tmp/some/where")
+            assert resolve_project_root(name) == sentinel
         finally:
             del sys.modules[name]
