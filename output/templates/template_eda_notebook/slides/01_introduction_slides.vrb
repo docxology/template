@@ -1,0 +1,20 @@
+\frametitle{Reader's guide to the manuscript}
+\protect\phantomsection\label{readers-guide-to-the-manuscript}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\breakseq{[@sec:methodology]}} ties each EDA step to its function in
+  \texttt{src/eda/}.
+\item
+  \textbf{\breakseq{[@sec:results]}} is figure-centric: each panel names the
+  figure-data preparer that produced it.
+\item
+  \textbf{\breakseq{[@sec:experimental\_setup]}} lists the dataset schema and
+  software environment.
+\item
+  \textbf{\breakseq{[@sec:reproducibility]}} records the artifact inventory and
+  the exact commands to regenerate everything.
+\item
+  \textbf{\breakseq{[@sec:scope]}} states scope and related literature so the
+  exemplar is not mistaken for a general-purpose EDA toolkit.
+\end{itemize}

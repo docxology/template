@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Exploratory Data Analysis: A Reproducible Notebook
+Template</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<style>
+:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+}
+/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
+   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
+   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
+   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
+   preamble). */
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  width: 100vw;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  body {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    width: 390px;
+    max-width: 100vw;
+    margin: 0;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: red;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: red;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: red;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Exploratory Data Analysis: A Reproducible Notebook
+Template</h1>
+<p class="subtitle">Notebook-to-Tested-Source Extraction for
+Computational Research</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#sec:abstract" id="toc-sec:abstract"><span
+class="toc-section-number">1</span> Abstract</a></li>
+<li><a href="#sec:introduction" id="toc-sec:introduction"><span
+class="toc-section-number">2</span> Introduction</a>
+<ul>
+<li><a href="#why-exploratory-data-analysis"
+id="toc-why-exploratory-data-analysis"><span
+class="toc-section-number">2.1</span> Why exploratory data
+analysis</a></li>
+<li><a href="#the-notebook---tested-src-extraction-workflow"
+id="toc-the-notebook---tested-src-extraction-workflow"><span
+class="toc-section-number">2.2</span> The notebook -&gt; tested src
+extraction workflow</a></li>
+<li><a href="#template-architecture-context"
+id="toc-template-architecture-context"><span
+class="toc-section-number">2.3</span> Template architecture
+context</a></li>
+<li><a href="#the-dataset" id="toc-the-dataset"><span
+class="toc-section-number">2.4</span> The dataset</a></li>
+<li><a href="#readers-guide-to-the-manuscript"
+id="toc-readers-guide-to-the-manuscript"><span
+class="toc-section-number">2.5</span> Reader’s guide to the
+manuscript</a></li>
+</ul></li>
+<li><a href="#sec:methodology" id="toc-sec:methodology"><span
+class="toc-section-number">3</span> Methodology</a>
+<ul>
+<li><a href="#dataset-loading-and-schema"
+id="toc-dataset-loading-and-schema"><span
+class="toc-section-number">3.1</span> Dataset loading and
+schema</a></li>
+<li><a href="#cleaning-explicit-reported-row-removal"
+id="toc-cleaning-explicit-reported-row-removal"><span
+class="toc-section-number">3.2</span> Cleaning: explicit, reported row
+removal</a></li>
+<li><a href="#descriptive-statistics"
+id="toc-descriptive-statistics"><span
+class="toc-section-number">3.3</span> Descriptive statistics</a></li>
+<li><a href="#correlation-structure"
+id="toc-correlation-structure"><span
+class="toc-section-number">3.4</span> Correlation structure</a></li>
+<li><a href="#figure-data-preparers"
+id="toc-figure-data-preparers"><span
+class="toc-section-number">3.5</span> Figure-data preparers</a></li>
+<li><a href="#zero-mock-testing-methodology"
+id="toc-zero-mock-testing-methodology"><span
+class="toc-section-number">3.6</span> Zero-mock testing
+methodology</a></li>
+<li><a href="#figure-generation-contract"
+id="toc-figure-generation-contract"><span
+class="toc-section-number">3.7</span> Figure generation
+contract</a></li>
+</ul></li>
+<li><a href="#sec:results" id="toc-sec:results"><span
+class="toc-section-number">4</span> Results</a>
+<ul>
+<li><a href="#dataset-and-missingness"
+id="toc-dataset-and-missingness"><span
+class="toc-section-number">4.1</span> Dataset and missingness</a></li>
+<li><a href="#distributions" id="toc-distributions"><span
+class="toc-section-number">4.2</span> Distributions</a></li>
+<li><a href="#group-composition" id="toc-group-composition"><span
+class="toc-section-number">4.3</span> Group composition</a></li>
+<li><a href="#correlation-structure-1"
+id="toc-correlation-structure-1"><span
+class="toc-section-number">4.4</span> Correlation structure</a></li>
+<li><a href="#summary-statistics" id="toc-summary-statistics"><span
+class="toc-section-number">4.5</span> Summary statistics</a></li>
+<li><a href="#validation" id="toc-validation"><span
+class="toc-section-number">4.6</span> Validation</a></li>
+<li><a href="#discussion" id="toc-discussion"><span
+class="toc-section-number">4.7</span> Discussion</a></li>
+</ul></li>
+<li><a href="#sec:conclusion" id="toc-sec:conclusion"><span
+class="toc-section-number">5</span> Conclusion</a>
+<ul>
+<li><a href="#exemplar-achievements"
+id="toc-exemplar-achievements"><span
+class="toc-section-number">5.1</span> Exemplar achievements</a></li>
+<li><a href="#technical-contributions"
+id="toc-technical-contributions"><span
+class="toc-section-number">5.2</span> Technical contributions</a>
+<ul>
+<li><a href="#the-notebook---tested-src-extraction-workflow-1"
+id="toc-the-notebook---tested-src-extraction-workflow-1"><span
+class="toc-section-number">5.2.1</span> The notebook -&gt; tested src
+extraction workflow</a></li>
+<li><a href="#honest-handling-of-imperfect-data"
+id="toc-honest-handling-of-imperfect-data"><span
+class="toc-section-number">5.2.2</span> Honest handling of imperfect
+data</a></li>
+</ul></li>
+<li><a href="#key-insights" id="toc-key-insights"><span
+class="toc-section-number">5.3</span> Key insights</a></li>
+<li><a href="#future-extensions" id="toc-future-extensions"><span
+class="toc-section-number">5.4</span> Future extensions</a></li>
+<li><a href="#final-assessment" id="toc-final-assessment"><span
+class="toc-section-number">5.5</span> Final assessment</a></li>
+</ul></li>
+<li><a href="#sec:experimental_setup"
+id="toc-sec:experimental_setup"><span
+class="toc-section-number">6</span> Experimental Setup</a>
+<ul>
+<li><a href="#dataset" id="toc-dataset"><span
+class="toc-section-number">6.1</span> Dataset</a></li>
+<li><a href="#analysis-conditions" id="toc-analysis-conditions"><span
+class="toc-section-number">6.2</span> Analysis conditions</a></li>
+<li><a href="#computational-environment"
+id="toc-computational-environment"><span
+class="toc-section-number">6.3</span> Computational environment</a></li>
+<li><a href="#pipeline-ordering" id="toc-pipeline-ordering"><span
+class="toc-section-number">6.4</span> Pipeline ordering</a></li>
+<li><a href="#relation-to-figures" id="toc-relation-to-figures"><span
+class="toc-section-number">6.5</span> Relation to figures</a></li>
+</ul></li>
+<li><a href="#sec:reproducibility" id="toc-sec:reproducibility"><span
+class="toc-section-number">7</span> Reproducibility</a>
+<ul>
+<li><a href="#how-to-regenerate-everything"
+id="toc-how-to-regenerate-everything"><span
+class="toc-section-number">7.1</span> How to regenerate
+everything</a></li>
+<li><a href="#generated-artifact-registry"
+id="toc-generated-artifact-registry"><span
+class="toc-section-number">7.2</span> Generated artifact
+registry</a></li>
+<li><a href="#determinism" id="toc-determinism"><span
+class="toc-section-number">7.3</span> Determinism</a></li>
+<li><a href="#verification-no-hand-transcribed-numbers"
+id="toc-verification-no-hand-transcribed-numbers"><span
+class="toc-section-number">7.4</span> Verification (no hand-transcribed
+numbers)</a></li>
+</ul></li>
+<li><a href="#sec:scope" id="toc-sec:scope"><span
+class="toc-section-number">8</span> Scope, Related Work, and
+Positioning</a>
+<ul>
+<li><a href="#exploratory-data-analysis"
+id="toc-exploratory-data-analysis"><span
+class="toc-section-number">8.1</span> Exploratory data analysis</a></li>
+<li><a href="#modelling-and-inference-out-of-scope"
+id="toc-modelling-and-inference-out-of-scope"><span
+class="toc-section-number">8.2</span> Modelling and inference (out of
+scope)</a></li>
+<li><a href="#what-this-project-proves-about-the-template"
+id="toc-what-this-project-proves-about-the-template"><span
+class="toc-section-number">8.3</span> What this project proves about the
+template</a></li>
+<li><a href="#explicit-limitations" id="toc-explicit-limitations"><span
+class="toc-section-number">8.4</span> Explicit limitations</a></li>
+</ul></li>
+<li><a href="#sec:references" id="toc-sec:references"><span
+class="toc-section-number">9</span> References</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="sec:abstract"><span
+class="header-section-number">1</span> Abstract</h1>
+<p>Exploratory data analysis (EDA) is the most common entry point in
+applied research, yet it is also where reproducibility most often breaks
+down: logic accumulates in notebook cells that are never tested and
+quietly drift from the prose describing them. This paper presents the
+<strong>computational-notebook exemplar</strong> of the <a
+href="https://github.com/docxology/template">Research Project
+Template</a>: an interactive walkthrough notebook
+(<code>projects/templates/template_eda_notebook/notebooks/eda_walkthrough.ipynb</code>)
+that imports a small, fully-tested EDA library rather than carrying
+logic in its cells.</p>
+<p>We ship a deterministic dataset (<code>data/measurements.csv</code>)
+with a designed correlation structure and a handful of missing values,
+then load, clean, summarize, correlate, and visualize it entirely
+through tested functions in <code>src/eda/</code>. The library is
+side-effect-free — no plotting and no file I/O — and standalone (numpy
+and pandas only), so it is covered above the 90% project gate and reused
+identically from the notebook, the thin analysis script
+(<code>scripts/eda_analysis.py</code>), and this manuscript.</p>
+<p>Contributions are <strong>methodological</strong> and
+<strong>architectural</strong>. On the methods side, we walk the
+canonical first EDA pass: surface missingness explicitly rather than
+imputing it, compute per-column descriptive statistics and per-group
+means, and rank features by Pearson correlation. On the architecture
+side, we demonstrate the notebook-to-tested-source extraction workflow —
+explore fast in a cell, and the moment a computation matters, move it
+into the library behind a failing test — verified by a zero-mock suite
+and a structural notebook-binding check (sec. <a
+href="#sec:reproducibility">7</a>).</p>
+<hr />
+<h1 data-number="2" id="sec:introduction"><span
+class="header-section-number">2</span> Introduction</h1>
+<p>This <code>template_eda_notebook</code> serves as the
+exploratory-data-analysis exemplar for the <a
+href="https://github.com/docxology/template">Research Project
+Template</a> ecosystem, demonstrating how a computational notebook can
+stay reproducible by delegating every computation to a fully-tested
+library. The prose, the labelled figures, and the summary table are all
+produced through an auditable custody chain: a deterministic dataset,
+tested functions in <code>src/eda/</code>, a thin analysis script, and
+multi-format rendering.</p>
+<h2 data-number="2.1" id="why-exploratory-data-analysis"><span
+class="header-section-number">2.1</span> Why exploratory data
+analysis</h2>
+<p>EDA — the work of getting to know a dataset before committing to a
+model — is where most research projects actually begin: load the data,
+see how much is missing, look at distributions, and check which
+variables move together. It is fast and interactive by nature, which is
+exactly why it tends to live in notebooks. The hazard is that the
+interactive convenience of a notebook cell is also a trap: a one-off
+<code>df.groupby(...).mean()</code> becomes load-bearing, never gets a
+test, and silently disagrees with the figure two cells down after the
+data changes.</p>
+<h2 data-number="2.2"
+id="the-notebook---tested-src-extraction-workflow"><span
+class="header-section-number">2.2</span> The notebook -&gt; tested src
+extraction workflow</h2>
+<p>This exemplar teaches one discipline: <strong>explore in a cell, then
+extract to a tested library the moment a computation matters.</strong>
+Concretely:</p>
+<ol type="1">
+<li>The walkthrough notebook
+(<code>notebooks/eda_walkthrough.ipynb</code>) imports from
+<code>src</code> and calls tested functions; it contains no business
+logic of its own.</li>
+<li>Each analytical step — loading, cleaning, summarizing, correlating,
+preparing figure data — is a typed, documented function in
+<code>src/eda/</code> with a test that asserts an exact numeric
+property.</li>
+<li>A thin script (<code>scripts/eda_analysis.py</code>) runs the same
+pipeline headless and writes the figures and a summary CSV to
+<code>output/</code>.</li>
+</ol>
+<h2 data-number="2.3" id="template-architecture-context"><span
+class="header-section-number">2.3</span> Template architecture
+context</h2>
+<p>The project sits on the repository’s three pillars:</p>
+<ol type="1">
+<li><strong><code>src/eda/</code> library</strong>: pure pandas/numpy
+data transforms — no plotting, no file I/O, no
+<code>infrastructure</code> imports. This purity is what makes the
+library forkable and trivially testable.</li>
+<li><strong><code>tests/</code> framework</strong>: a zero-mock suite
+that exercises the library against the shipped CSV and tiny real frames,
+plus a structural check that the notebook’s imports bind to the
+library’s public surface.</li>
+<li><strong><code>docs/</code> knowledge base</strong>: architectural
+guidelines, the testing philosophy, and the operational rules that
+govern agents editing this tree.</li>
+</ol>
+<h2 data-number="2.4" id="the-dataset"><span
+class="header-section-number">2.4</span> The dataset</h2>
+<p>We analyze a small synthetic cohort of subject measurements — height
+(cm), weight (kg), and resting heart rate (bpm) across three groups —
+generated with a fixed seed so every statistic in sec. <a
+href="#sec:results">4</a> is reproducible. The data is shaped so that
+weight depends positively on height (a strong, easy-to-see correlation)
+while resting heart rate is only weakly related, and a few cells are
+left blank to exercise the missing-data path honestly.</p>
+<h2 data-number="2.5" id="readers-guide-to-the-manuscript"><span
+class="header-section-number">2.5</span> Reader’s guide to the
+manuscript</h2>
+<ul>
+<li><strong>sec. <a href="#sec:methodology">3</a></strong> ties each EDA
+step to its function in <code>src/eda/</code>.</li>
+<li><strong>sec. <a href="#sec:results">4</a></strong> is
+figure-centric: each panel names the figure-data preparer that produced
+it.</li>
+<li><strong>sec. <a href="#sec:experimental_setup">6</a></strong> lists
+the dataset schema and software environment.</li>
+<li><strong>sec. <a href="#sec:reproducibility">7</a></strong> records
+the artifact inventory and the exact commands to regenerate
+everything.</li>
+<li><strong>sec. <a href="#sec:scope">8</a></strong> states scope and
+related literature so the exemplar is not mistaken for a general-purpose
+EDA toolkit.</li>
+</ul>
+<hr />
+<h1 data-number="3" id="sec:methodology"><span
+class="header-section-number">3</span> Methodology</h1>
+<p>This section maps each step of the exploratory analysis to the tested
+function that implements it. Every function lives in
+<code>src/eda/</code>, takes a <code>pandas.DataFrame</code> in, and
+returns data out — no plotting, no file I/O — so the notebook, the
+analysis script, and this manuscript all reach the same code.</p>
+<h2 data-number="3.1" id="dataset-loading-and-schema"><span
+class="header-section-number">3.1</span> Dataset loading and schema</h2>
+<p><code>src/eda/dataset.py::load_dataset()</code> reads the shipped CSV
+and coerces the numeric columns with
+<code>pandas.to_numeric(errors="coerce")</code>. Coercion is deliberate:
+a blank or non-numeric cell becomes <code>NaN</code> rather than raising
+or being silently dropped, so missingness is <em>surfaced</em> and
+handled in an explicit later step. The column roles are declared once in
+a frozen <code>DatasetSchema</code> (an identifier column, a categorical
+group column, and three numeric features), which downstream functions
+consult instead of re-sniffing dtypes.</p>
+<h2 data-number="3.2" id="cleaning-explicit-reported-row-removal"><span
+class="header-section-number">3.2</span> Cleaning: explicit, reported
+row removal</h2>
+<p><code>src/eda/cleaning.py::clean_dataset()</code> drops any row
+missing a numeric feature and returns a <code>CleaningReport</code>
+recording how many rows entered, how many remained, and how many were
+dropped. This exemplar makes a deliberate choice — listwise deletion
+with a visible count — rather than imputation, because a first EDA pass
+should <em>see</em> the missingness, not paper over it. A separate
+<code>normalize_numeric()</code> z-score standardizes the numeric
+columns (mean 0, sample standard deviation 1), with a guard that maps a
+constant or single-row column to zeros instead of producing
+<code>inf</code>/<code>NaN</code>.</p>
+<h2 data-number="3.3" id="descriptive-statistics"><span
+class="header-section-number">3.3</span> Descriptive statistics</h2>
+<p><code>src/eda/statistics.py::summary_statistics()</code> returns one
+<code>ColumnSummary</code> per numeric column — count of non-missing
+observations, mean, sample standard deviation, minimum, median, and
+maximum — computed with real pandas aggregation.
+<code>group_means()</code> returns the mean of each numeric feature
+grouped by the categorical column, sorted by group name for
+deterministic output.</p>
+<h2 data-number="3.4" id="correlation-structure"><span
+class="header-section-number">3.4</span> Correlation structure</h2>
+<p><code>src/eda/correlation.py::correlation_matrix()</code> returns the
+Pearson correlation matrix of the numeric columns [tukey1977eda]. The
+companion <code>strongest_pairs(matrix, top_n)</code> ranks the distinct
+off-diagonal feature pairs by absolute correlation while preserving sign
+— usually the single most useful artifact of a first pass, because it
+points directly at the relationships worth investigating. Each unordered
+pair appears exactly once.</p>
+<h2 data-number="3.5" id="figure-data-preparers"><span
+class="header-section-number">3.5</span> Figure-data preparers</h2>
+<p>Plotting is kept out of the library entirely.
+<code>src/eda/figures.py</code> returns <em>plot-ready data
+structures</em> — bin counts and edges for a histogram, a square value
+grid plus labels for a correlation heatmap, and sorted category counts
+for a bar chart — as frozen dataclasses of plain numbers. The thin
+analysis script (<code>scripts/eda_analysis.py</code>) and notebook
+cells consume these structures and call matplotlib. This keeps the
+library importable on a headless machine and makes every preparer
+testable without a display backend.</p>
+<h2 data-number="3.6" id="zero-mock-testing-methodology"><span
+class="header-section-number">3.6</span> Zero-mock testing
+methodology</h2>
+<p>The project is governed by a strict zero-mock policy, evaluated by
+running
+<code>uv run pytest projects/templates/template_eda_notebook/tests</code>
+during the build.</p>
+<ol type="1">
+<li><strong>Library tests</strong> exercise every public function
+against the shipped CSV or a tiny hand-built frame with values chosen so
+the expected statistic is exact (e.g. <code>weight = 2 * height</code>
+gives a correlation of exactly <code>+1.0</code>). No
+<code>unittest.mock</code>, no <code>MagicMock</code>, no
+<code>@patch</code>.</li>
+<li><strong>Script test</strong> runs <code>run_eda()</code> against a
+temporary output root and asserts that real PNG figures and a real
+summary CSV are written.</li>
+<li><strong>Notebook test</strong> parses the real <code>.ipynb</code>
+and asserts it is valid nbformat, that every name imported
+<code>from src</code> exists in the library’s public surface, and that
+no cell defines its own <code>def</code>/<code>class</code>.</li>
+<li><strong>Coverage gate</strong>: CI enforces a ≥90%
+statement-coverage gate on
+<code>projects/templates/template_eda_notebook/src/</code>; the live
+figure is tracked in <a
+href="../../../../docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
+</ol>
+<h2 data-number="3.7" id="figure-generation-contract"><span
+class="header-section-number">3.7</span> Figure generation contract</h2>
+<p>Each figure in <code>03_results.md</code> maps to a figure-data
+preparer in <code>src/eda/figures.py</code>: <code>histogram_data</code>
+→ height histogram, <code>correlation_heatmap_data</code> →
+feature-correlation heatmap, and <code>group_count_data</code> →
+per-group row counts. Captions name the preparer and the key parameters
+(bin count, value range) so reviewers can navigate from the PDF to the
+code without inferring hidden defaults.</p>
+<hr />
+<h1 data-number="4" id="sec:results"><span
+class="header-section-number">4</span> Results</h1>
+<p>This section presents the exploratory analysis of the shipped
+dataset. Every figure and the summary table are produced by the thin
+analysis script (<a
+href="https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py"><code>scripts/eda_analysis.py</code></a>),
+which calls the tested figure-data preparers in
+<code>src/eda/figures.py</code>. Running the script regenerates the
+figures under <code>../figures/</code> and the summary CSV under
+<code>output/data/</code>; the prose below describes what those
+artifacts show.</p>
+<h2 data-number="4.1" id="dataset-and-missingness"><span
+class="header-section-number">4.1</span> Dataset and missingness</h2>
+<p>The dataset contains 120 subject records across three groups
+(<code>alpha</code>, <code>beta</code>, <code>gamma</code>) with three
+numeric features: height (cm), weight (kg), and resting heart rate
+(bpm). A small number of cells are blank by design.
+<code>load_dataset()</code> preserves these as <code>NaN</code>;
+<code>clean_dataset()</code> then drops rows missing any numeric feature
+and reports the count. With the shipped data, four rows are removed,
+leaving a complete-case dataset for the analysis below.</p>
+<h2 data-number="4.2" id="distributions"><span
+class="header-section-number">4.2</span> Distributions</h2>
+<p>fig. <a href="#fig:height_histogram">1</a> shows the distribution of
+height across the complete-case dataset, binned by
+<code>histogram_data()</code> and plotted by the analysis script.</p>
+<figure id="fig:height_histogram">
+<img src="../figures/height_histogram.png"
+alt="Figure 1: Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in src/eda/figures.py and plotted as a bar chart by scripts/eda_analysis.py. The bin counts sum to the number of complete-case rows; the shape is the roughly bell-shaped spread expected from the generating process." />
+<figcaption aria-hidden="true">Figure 1: Height distribution: bin counts
+produced by <code>histogram_data(frame, "height_cm", bins=10)</code> in
+<code>src/eda/figures.py</code> and plotted as a bar chart by
+<code>scripts/eda_analysis.py</code>. The bin counts sum to the number
+of complete-case rows; the shape is the roughly bell-shaped spread
+expected from the generating process.</figcaption>
+</figure>
+<h2 data-number="4.3" id="group-composition"><span
+class="header-section-number">4.3</span> Group composition</h2>
+<p>fig. <a href="#fig:group_counts">2</a> reports how many complete-case
+rows fall in each group, computed by <code>group_count_data()</code>
+(labels sorted for deterministic output).</p>
+<figure id="fig:group_counts">
+<img src="../figures/group_counts.png"
+alt="Figure 2: Rows per group: sorted category labels and aligned counts from group_count_data(). The three groups are of comparable, though not identical, size; the counts sum to the complete-case row total." />
+<figcaption aria-hidden="true">Figure 2: Rows per group: sorted category
+labels and aligned counts from <code>group_count_data()</code>. The
+three groups are of comparable, though not identical, size; the counts
+sum to the complete-case row total.</figcaption>
+</figure>
+<h2 data-number="4.4" id="correlation-structure-1"><span
+class="header-section-number">4.4</span> Correlation structure</h2>
+<p>fig. <a href="#fig:correlation_heatmap">3</a> visualizes the Pearson
+correlation matrix of the three numeric features, computed by
+<code>correlation_matrix()</code> and prepared for the heatmap by
+<code>correlation_heatmap_data()</code>. The diagonal is unity by
+construction and the matrix is symmetric.</p>
+<figure id="fig:correlation_heatmap">
+<img src="../figures/correlation_heatmap.png"
+alt="Figure 3: Feature correlation heatmap: values from correlation_heatmap_data() (which wraps correlation_matrix(method=&quot;pearson&quot;)) rendered with a diverging colour map on the fixed range [-1, 1]. Height and weight are strongly positively correlated; resting heart rate is only weakly related to the other two." />
+<figcaption aria-hidden="true">Figure 3: Feature correlation heatmap:
+values from <code>correlation_heatmap_data()</code> (which wraps
+<code>correlation_matrix(method="pearson")</code>) rendered with a
+diverging colour map on the fixed range <span class="math inline">\([-1,
+1]\)</span>. Height and weight are strongly positively correlated;
+resting heart rate is only weakly related to the other two.</figcaption>
+</figure>
+<p><code>strongest_pairs(matrix, top_n=3)</code> ranks the distinct
+feature pairs by absolute correlation while preserving sign. On the
+shipped data the dominant relationship is <strong>height ~
+weight</strong> (a strong positive correlation, by design), followed by
+the comparatively weak <strong>height ~ resting heart rate</strong>
+(slightly negative) and <strong>weight ~ resting heart rate</strong>.
+This ranking is the single most useful artifact of the first pass: it
+points directly at the relationship worth modelling next.</p>
+<h2 data-number="4.5" id="summary-statistics"><span
+class="header-section-number">4.5</span> Summary statistics</h2>
+<p>The analysis script writes a per-column summary table to
+<code>output/data/summary_statistics.csv</code> from
+<code>summary_statistics()</code>. Each row reports the count of
+non-missing observations, mean, sample standard deviation, minimum,
+median, and maximum for one numeric feature.</p>
+<table id="tbl:summary_statistics">
+<caption>Table 1: Summary-statistics table written by the analysis
+script from <code>src/eda/statistics.py::summary_statistics()</code>.
+The concrete numbers are reproduced verbatim by running the script — the
+manuscript intentionally does not transcribe volatile values, so prose
+and CSV cannot drift.</caption>
+<thead>
+<tr>
+<th>Column</th>
+<th>Reported statistics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>height_cm</code></td>
+<td>count, mean, std, min, median, max</td>
+</tr>
+<tr>
+<td><code>weight_kg</code></td>
+<td>count, mean, std, min, median, max</td>
+</tr>
+<tr>
+<td><code>resting_hr_bpm</code></td>
+<td>count, mean, std, min, median, max</td>
+</tr>
+</tbody>
+</table>
+<p><code>group_means()</code> complements this with the mean of each
+numeric feature within each group; the three group means for height are
+close but not equal, reflecting the mild group structure in the
+generating process.</p>
+<h2 data-number="4.6" id="validation"><span
+class="header-section-number">4.6</span> Validation</h2>
+<p>The analysis was validated through the zero-mock <code>tests/</code>
+suite:</p>
+<ul>
+<li><strong>Library tests</strong> assert exact statistics, correlation
+signs, and bin counts against the shipped CSV and hand-built
+frames.</li>
+<li><strong>Script test</strong> runs <code>run_eda()</code> against a
+temporary output root and confirms real PNG figures and a real summary
+CSV are written.</li>
+<li><strong>Notebook test</strong> confirms the walkthrough notebook
+binds to the library’s public surface and carries no logic in its
+cells.</li>
+</ul>
+<p>All tests pass with coverage exceeding the 90% project gate, with no
+mocks.</p>
+<h2 data-number="4.7" id="discussion"><span
+class="header-section-number">4.7</span> Discussion</h2>
+<p>The results confirm the EDA workflow end to end: missingness is
+surfaced and removed with an explicit count, distributions and group
+composition are read straight from tested preparers, and the correlation
+ranking recovers the designed height–weight relationship. The same
+functions back the interactive notebook, the headless script, and this
+manuscript — which is the architectural point of the exemplar. Because
+every number is produced by a tested function and regenerated on demand,
+the prose here describes structure and provenance rather than
+transcribing values that would drift the moment the data changed.</p>
+<hr />
+<h1 data-number="5" id="sec:conclusion"><span
+class="header-section-number">5</span> Conclusion</h1>
+<p>This study demonstrated a complete, reproducible
+exploratory-data-analysis pipeline driven from a computational notebook
+backed by a tested library. It validates a simple proposition: a
+notebook stays trustworthy when its cells call tested code instead of
+carrying logic.</p>
+<h2 data-number="5.1" id="exemplar-achievements"><span
+class="header-section-number">5.1</span> Exemplar achievements</h2>
+<p>Operating as the EDA exemplar for the Research Project Template
+methodology, the project deployed the three foundational pillars:</p>
+<ol type="1">
+<li><strong><code>src/eda/</code> library</strong>: pure pandas/numpy
+data transforms — loading, cleaning, summary statistics, correlation,
+and figure-data preparation — with no plotting, no file I/O, and no
+<code>infrastructure</code> imports.</li>
+<li><strong><code>tests/</code> integrity</strong>: a zero-mock suite
+over the shipped dataset and hand-built frames, plus a structural
+notebook-binding check, all under a ≥90% project coverage gate.</li>
+<li><strong><code>docs/</code> knowledge operations</strong>:
+architecture, testing philosophy, and operational rules that keep the
+notebook, script, and manuscript aligned.</li>
+</ol>
+<h2 data-number="5.2" id="technical-contributions"><span
+class="header-section-number">5.2</span> Technical contributions</h2>
+<h3 data-number="5.2.1"
+id="the-notebook---tested-src-extraction-workflow-1"><span
+class="header-section-number">5.2.1</span> The notebook -&gt; tested src
+extraction workflow</h3>
+<p>The hallmark of this exemplar is the discipline it teaches: explore
+fast in a cell, and the moment a computation matters, move it into
+<code>src/eda/</code> behind a failing test. The walkthrough notebook
+imports only the library’s public surface and defines no functions of
+its own, a property the test suite enforces structurally so it cannot
+regress.</p>
+<h3 data-number="5.2.2" id="honest-handling-of-imperfect-data"><span
+class="header-section-number">5.2.2</span> Honest handling of imperfect
+data</h3>
+<p>The loader surfaces missing values as <code>NaN</code> instead of
+silently imputing them, and <code>clean_dataset()</code> removes
+incomplete rows with an explicit count. This makes data quality a
+visible, testable property of the first pass rather than a hidden
+assumption.</p>
+<h2 data-number="5.3" id="key-insights"><span
+class="header-section-number">5.3</span> Key insights</h2>
+<ol type="1">
+<li><strong>Reproducibility follows from testing fidelity</strong>:
+every number in sec. <a href="#sec:results">4</a> is produced by a
+tested function and regenerated on demand, so prose and artifacts cannot
+drift.</li>
+<li><strong>Purity enables reuse</strong>: because <code>src/eda/</code>
+returns plot-ready data and never touches a display backend, the same
+functions serve the notebook, the headless script, and the
+manuscript.</li>
+<li><strong>Missingness is information</strong>: reporting dropped rows
+beats imputing them away in an exploratory pass.</li>
+</ol>
+<h2 data-number="5.4" id="future-extensions"><span
+class="header-section-number">5.4</span> Future extensions</h2>
+<p>This foundation could be extended to:</p>
+<ul>
+<li><strong>Richer cleaning</strong>: typed imputation strategies behind
+tested functions, with the report recording which strategy ran.</li>
+<li><strong>More figure preparers</strong>: box plots, pair plots, and
+per-group overlays — each a tested data preparer plus a thin plotting
+call.</li>
+<li><strong>Larger / external datasets</strong>: swap the shipped CSV
+for a real dataset by pointing <code>load_dataset(path=...)</code> at it
+while keeping the schema contract.</li>
+</ul>
+<h2 data-number="5.5" id="final-assessment"><span
+class="header-section-number">5.5</span> Final assessment</h2>
+<p>The <code>template_eda_notebook</code> tree is the canonical
+reference for how an exploratory notebook, a thin analysis script, a
+tested library, and a manuscript stay synchronized across rebuilds. The
+pipeline produced the figures referenced in sec. <a
+href="#sec:results">4</a>, wrote
+<code>output/data/summary_statistics.csv</code>, and rendered this
+markdown together with <code>config.yaml</code> into PDF.</p>
+<hr />
+<h1 data-number="6" id="sec:experimental_setup"><span
+class="header-section-number">6</span> Experimental Setup</h1>
+<p>This section details the dataset, schema, and software environment
+used to produce the results. The exemplar deliberately avoids manuscript
+token injection: concrete numbers are reproduced by running the analysis
+script, and the figures are regenerated from tested code, so nothing
+here can silently drift from a hardcoded value.</p>
+<h2 data-number="6.1" id="dataset"><span
+class="header-section-number">6.1</span> Dataset</h2>
+<p>The analysis uses a shipped, deterministic CSV fixture
+(<code>data/measurements.csv</code>) generated once with a fixed NumPy
+seed. It contains 120 subject records with the following columns:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Role</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>subject_id</code></td>
+<td>per-row identifier</td>
+<td>string</td>
+</tr>
+<tr>
+<td><code>group</code></td>
+<td>categorical group (<code>alpha</code>, <code>beta</code>,
+<code>gamma</code>)</td>
+<td>string</td>
+</tr>
+<tr>
+<td><code>height_cm</code></td>
+<td>numeric feature</td>
+<td>float</td>
+</tr>
+<tr>
+<td><code>weight_kg</code></td>
+<td>numeric feature</td>
+<td>float</td>
+</tr>
+<tr>
+<td><code>resting_hr_bpm</code></td>
+<td>numeric feature</td>
+<td>float</td>
+</tr>
+</tbody>
+</table>
+<p>These roles are declared once in
+<code>src/eda/dataset.py::DatasetSchema</code>, which the statistics,
+correlation, and figure functions consult. The generating process makes
+weight depend positively on height (a strong correlation) while resting
+heart rate is only weakly related, and a few numeric cells are left
+blank to exercise the missing-data path.</p>
+<h2 data-number="6.2" id="analysis-conditions"><span
+class="header-section-number">6.2</span> Analysis conditions</h2>
+<p>The experiment overlay (<code>experiment_plan.yaml</code>) declares
+three conditions:</p>
+<ul>
+<li><strong>raw_dataset</strong> (reference) — as loaded, with missing
+cells as <code>NaN</code>.</li>
+<li><strong>cleaned_dataset</strong> (proposed) — rows with any missing
+numeric feature dropped via <code>clean_dataset()</code>, which reports
+the count removed.</li>
+<li><strong>normalized_dataset</strong> (variant) — the cleaned dataset
+with numeric columns z-score standardized by
+<code>normalize_numeric()</code> for cross-feature comparison.</li>
+</ul>
+<p>The primary descriptive lens is the pairwise Pearson correlation
+among the numeric features.</p>
+<h2 data-number="6.3" id="computational-environment"><span
+class="header-section-number">6.3</span> Computational environment</h2>
+<ul>
+<li><strong>Language</strong>: Python (see root
+<code>pyproject.toml</code> for the supported range).</li>
+<li><strong>Core dependencies</strong>: <code>numpy</code>,
+<code>pandas</code>, <code>matplotlib</code> (declared in
+<code>domain_profile.yaml::required_packages</code>).</li>
+<li><strong>Headless plotting</strong>: the analysis script sets
+<code>MPLBACKEND=Agg</code> before importing matplotlib.</li>
+</ul>
+<h2 data-number="6.4" id="pipeline-ordering"><span
+class="header-section-number">6.4</span> Pipeline ordering</h2>
+<p>The typical analysis order is:</p>
+<ol type="1">
+<li><code>scripts/eda_analysis.py</code> — loads and cleans the dataset,
+then writes <code>../figures/*.png</code> and
+<code>output/data/summary_statistics.csv</code>, printing each output
+path for manifest collection.</li>
+<li>PDF rendering reads <code>manuscript/*.md</code> and
+<code>config.yaml</code> so figure paths and prose match the analysis
+that just completed.</li>
+</ol>
+<h2 data-number="6.5" id="relation-to-figures"><span
+class="header-section-number">6.5</span> Relation to figures</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Figure (sec. <a href="#sec:results">4</a>)</th>
+<th>Figure-data preparer (<code>src/eda/figures.py</code>)</th>
+<th>Primary inputs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Height histogram</td>
+<td><code>histogram_data()</code></td>
+<td><code>height_cm</code> column, 10 bins</td>
+</tr>
+<tr>
+<td>Rows per group</td>
+<td><code>group_count_data()</code></td>
+<td><code>group</code> column</td>
+</tr>
+<tr>
+<td>Correlation heatmap</td>
+<td><code>correlation_heatmap_data()</code></td>
+<td>all numeric features</td>
+</tr>
+</tbody>
+</table>
+<p>This table is descriptive documentation only; it is not executed as
+code during the build.</p>
+<hr />
+<h1 data-number="7" id="sec:reproducibility"><span
+class="header-section-number">7</span> Reproducibility</h1>
+<p>This section explains how to regenerate every artifact in the study
+from a clean checkout. The exemplar’s reproducibility guarantee is
+structural: each result is produced by a tested function and a thin
+script, never transcribed by hand.</p>
+<h2 data-number="7.1" id="how-to-regenerate-everything"><span
+class="header-section-number">7.1</span> How to regenerate
+everything</h2>
+<p>From the repository root:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Run the analysis (writes figures + summary CSV, prints output paths)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_eda_notebook/scripts/eda_analysis.py</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Run the test suite with the coverage gate</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_eda_notebook/tests <span class="dt">\</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--cov</span><span class="op">=</span>projects/templates/template_eda_notebook/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Render the manuscript</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_render_pdf.py <span class="at">--project</span> templates/template_eda_notebook</span></code></pre></div>
+<h2 data-number="7.2" id="generated-artifact-registry"><span
+class="header-section-number">7.2</span> Generated artifact
+registry</h2>
+<p>The analysis script writes the following artifacts under
+<code>projects/templates/template_eda_notebook/output/</code>:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Produced by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>figures/height_histogram.png</code></td>
+<td><code>histogram_data()</code> + analysis script</td>
+</tr>
+<tr>
+<td><code>figures/correlation_heatmap.png</code></td>
+<td><code>correlation_heatmap_data()</code> + analysis script</td>
+</tr>
+<tr>
+<td><code>figures/group_counts.png</code></td>
+<td><code>group_count_data()</code> + analysis script</td>
+</tr>
+<tr>
+<td><code>data/summary_statistics.csv</code></td>
+<td><code>summary_statistics()</code> + analysis script</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>output/</code> tree is disposable and regenerated on every
+run; it is not the source of truth.</p>
+<h2 data-number="7.3" id="determinism"><span
+class="header-section-number">7.3</span> Determinism</h2>
+<ul>
+<li>The dataset (<code>data/measurements.csv</code>) is a static,
+committed fixture generated once with a fixed NumPy seed, so every
+statistic is reproducible bit-for-bit.</li>
+<li>The figure-data preparers are pure transforms with no RNG; the same
+inputs always produce the same bin counts, correlation values, and group
+counts.</li>
+<li><code>clean_dataset()</code> reports exactly how many rows it
+removed, so the complete-case row count is a checkable invariant.</li>
+</ul>
+<h2 data-number="7.4"
+id="verification-no-hand-transcribed-numbers"><span
+class="header-section-number">7.4</span> Verification (no
+hand-transcribed numbers)</h2>
+<p>Every quantitative claim in sec. <a href="#sec:results">4</a> is
+either reproduced by running the analysis script or registered in
+<code>data/claim_ledger.yaml</code> for evidence-registry validation.
+The manuscript intentionally does not embed volatile values, so prose
+and artifacts cannot disagree. The notebook itself is verified
+structurally by <code>tests/test_notebook.py</code>, which confirms it
+is valid nbformat, that its <code>from src</code> imports resolve to the
+library’s public surface, and that no cell defines its own logic.</p>
+<hr />
+<h1 data-number="8" id="sec:scope"><span
+class="header-section-number">8</span> Scope, Related Work, and
+Positioning</h1>
+<p>This section situates the exemplar and states explicit boundaries.
+The goal is not to compete with comprehensive treatments of exploratory
+data analysis [tukey1977eda] or statistical graphics
+[wilkinson2005grammar], but to show how a minimal, test-backed EDA story
+fits the template’s reproducibility and rendering stack
+[peng2011reproducible].</p>
+<h2 data-number="8.1" id="exploratory-data-analysis"><span
+class="header-section-number">8.1</span> Exploratory data analysis</h2>
+<p>The practice of examining a dataset before formal modelling — looking
+at distributions, missingness, and relationships — traces to Tukey’s
+foundational work [tukey1977eda] and is supported in modern practice by
+the pandas data analysis toolkit [mckinney2010pandas] and the broader
+scientific-Python stack [harris2020numpy]. The present manuscript
+restricts attention to a <strong>first pass</strong> on a <strong>small
+tabular dataset</strong>: load, surface missingness, compute descriptive
+statistics and per-group means, and rank features by Pearson
+correlation.</p>
+<h2 data-number="8.2" id="modelling-and-inference-out-of-scope"><span
+class="header-section-number">8.2</span> Modelling and inference (out of
+scope)</h2>
+<p>What comes <em>after</em> a first EDA pass — hypothesis testing,
+regression, dimensionality reduction, or predictive modelling — is
+deliberately <strong>out of scope</strong>. The exemplar keeps the
+analysis minimal so the architectural lesson (notebook -&gt; tested src
+extraction) stays visible rather than buried under statistical
+machinery.</p>
+<h2 data-number="8.3"
+id="what-this-project-proves-about-the-template"><span
+class="header-section-number">8.3</span> What this project proves about
+the template</h2>
+<p>The analytical steps here are standard. The
+<strong>non-standard</strong> contribution is procedural: the same
+tested functions in <code>src/eda/</code> back the interactive notebook,
+the headless analysis script, and this manuscript, so the figures and
+the summary table always refer to the same code. That pattern is what
+downstream projects should copy — whether the domain is survey data,
+sensor logs, or experimental measurements.</p>
+<h2 data-number="8.4" id="explicit-limitations"><span
+class="header-section-number">8.4</span> Explicit limitations</h2>
+<ol type="1">
+<li><strong>Dataset size</strong>: a single small synthetic cohort (120
+rows) is used for transparent, fast reproduction; no large-scale or
+streaming data is handled.</li>
+<li><strong>Cleaning policy</strong>: only listwise deletion is
+implemented; imputation is left as a documented extension.</li>
+<li><strong>Correlation method</strong>: only Pearson correlation is
+computed; rank-based (Spearman) or non-linear association measures are
+out of scope.</li>
+<li><strong>Statics only</strong>: the library returns plot-ready data;
+interactive widgets and dashboards are not part of the exemplar.</li>
+</ol>
+<p>These limitations are intentional: they narrow the surface so that
+the reproducibility concerns — tested functions, a thin script, and a
+structurally verified notebook — remain visible rather than buried under
+analytical complexity.</p>
+<hr />
+<h1 data-number="9" id="sec:references"><span
+class="header-section-number">9</span> References</h1>
+<p>Bibliography lives in <a
+href="references.bib"><code>manuscript/references.bib</code></a> and is
+read by Pandoc during PDF render. The build pipeline invokes Pandoc with
+<code>--natbib</code>, so every <code>[key]</code> citation in the
+manuscript is rewritten to the appropriate
+<code>\cite{}</code>/<code>\citep{}</code>/<code>\citet{}</code> LaTeX
+command and resolved against the bib file.</p>
+<p>To validate that <code>references.bib</code> is syntactically clean
+and contains the required fields per entry type:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_eda_notebook/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+</body>
+</html>

@@ -1,0 +1,384 @@
+{
+  "timestamp": "2026-06-30T15:43:48.383338",
+  "total_duration": 63.38464689254761,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.0029718875885009766,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 3.628727912902832,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Infrastructure Tests",
+      "exit_code": 0,
+      "duration": 7.207010984420776,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 22.720803022384644,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 0.7842020988464355,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 27.93375587463379,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 0.5780999660491943,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.5290751457214355,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 10,
+        "size_mb": "0.31",
+        "total_size_bytes": 330074,
+        "largest_files": [
+          {
+            "name": "template_eda_notebook_combined.pdf",
+            "size_mb": "0.15",
+            "path": "pdf/template_eda_notebook_combined.pdf"
+          },
+          {
+            "name": "_combined_manuscript.log",
+            "size_mb": "0.06",
+            "path": "pdf/_combined_manuscript.log"
+          },
+          {
+            "name": "_combined_manuscript.tex",
+            "size_mb": "0.04",
+            "path": "pdf/_combined_manuscript.tex"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".log": 2,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".tex": 1,
+          ".toc": 1,
+          ".bbl": 1,
+          ".pdf": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 11,
+        "size_mb": "0.15",
+        "total_size_bytes": 159574,
+        "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.05",
+            "path": "web/index.html"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.03",
+            "path": "web/_combined_manuscript.md"
+          },
+          {
+            "name": "manuscript__03_results.html",
+            "size_mb": "0.01",
+            "path": "web/manuscript__03_results.html"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".html": 10
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 73,
+        "size_mb": "0.94",
+        "total_size_bytes": 989432,
+        "largest_files": [
+          {
+            "name": "03_results_slides.pdf",
+            "size_mb": "0.08",
+            "path": "slides/03_results_slides.pdf"
+          },
+          {
+            "name": "03_results_slides.log",
+            "size_mb": "0.07",
+            "path": "slides/03_results_slides.log"
+          },
+          {
+            "name": "06_reproducibility_slides.log",
+            "size_mb": "0.06",
+            "path": "slides/06_reproducibility_slides.log"
+          }
+        ],
+        "extensions": {
+          ".nav": 9,
+          ".pdf": 9,
+          ".log": 9,
+          ".toc": 9,
+          ".tex": 10,
+          ".snm": 9,
+          ".aux": 9,
+          ".vrb": 9
+        }
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 3,
+        "size_mb": "0.04",
+        "total_size_bytes": 45962,
+        "largest_files": [
+          {
+            "name": "correlation_heatmap.png",
+            "size_mb": "0.02",
+            "path": "figures/correlation_heatmap.png"
+          },
+          {
+            "name": "height_histogram.png",
+            "size_mb": "0.01",
+            "path": "figures/height_histogram.png"
+          },
+          {
+            "name": "group_counts.png",
+            "size_mb": "0.01",
+            "path": "figures/group_counts.png"
+          }
+        ],
+        "extensions": {
+          ".png": 3
+        }
+      },
+      "data": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 243,
+        "largest_files": [
+          {
+            "name": "summary_statistics.csv",
+            "size_mb": "0.00",
+            "path": "data/summary_statistics.csv"
+          }
+        ],
+        "extensions": {
+          ".csv": 1
+        }
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 23,
+        "size_mb": "0.13",
+        "total_size_bytes": 138095,
+        "largest_files": [
+          {
+            "name": "evidence_registry.json",
+            "size_mb": "0.07",
+            "path": "reports/evidence_registry.json"
+          },
+          {
+            "name": "artifact_manifest.json",
+            "size_mb": "0.01",
+            "path": "reports/artifact_manifest.json"
+          },
+          {
+            "name": "output_statistics.json",
+            "size_mb": "0.01",
+            "path": "reports/output_statistics.json"
+          }
+        ],
+        "extensions": {
+          ".json": 16,
+          ".jsonl": 1,
+          ".txt": 2,
+          ".md": 4
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 161,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 122,
+    "total_size_mb": 1.5864763259887695,
+    "largest_files": [
+      {
+        "name": "template_eda_notebook_combined.pdf",
+        "size_mb": "0.15",
+        "category": "pdf",
+        "path": "pdf/template_eda_notebook_combined.pdf"
+      },
+      {
+        "name": "03_results_slides.pdf",
+        "size_mb": "0.08",
+        "category": "slides",
+        "path": "slides/03_results_slides.pdf"
+      },
+      {
+        "name": "03_results_slides.log",
+        "size_mb": "0.07",
+        "category": "slides",
+        "path": "slides/03_results_slides.log"
+      },
+      {
+        "name": "evidence_registry.json",
+        "size_mb": "0.07",
+        "category": "reports",
+        "path": "reports/evidence_registry.json"
+      },
+      {
+        "name": "_combined_manuscript.log",
+        "size_mb": "0.06",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.log"
+      },
+      {
+        "name": "06_reproducibility_slides.log",
+        "size_mb": "0.06",
+        "category": "slides",
+        "path": "slides/06_reproducibility_slides.log"
+      },
+      {
+        "name": "index.html",
+        "size_mb": "0.05",
+        "category": "web",
+        "path": "web/index.html"
+      },
+      {
+        "name": "_combined_manuscript.tex",
+        "size_mb": "0.04",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.tex"
+      },
+      {
+        "name": "_combined_manuscript.md",
+        "size_mb": "0.03",
+        "category": "web",
+        "path": "web/_combined_manuscript.md"
+      },
+      {
+        "name": "correlation_heatmap.png",
+        "size_mb": "0.02",
+        "category": "figures",
+        "path": "figures/correlation_heatmap.png"
+      }
+    ],
+    "missing_expected_files": [],
+    "sizes_by_category": {
+      "pdf": 0.31478309631347656,
+      "web": 0.15218162536621094,
+      "slides": 0.9435958862304688,
+      "figures": 0.04383277893066406,
+      "data": 0.00023174285888671875,
+      "reports": 0.1316976547241211,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.00015354156494140625
+    },
+    "file_counts_by_type": {
+      ".md": 6,
+      ".log": 12,
+      ".aux": 10,
+      ".blg": 1,
+      ".bib": 1,
+      ".tex": 11,
+      ".toc": 10,
+      ".bbl": 1,
+      ".pdf": 10,
+      ".html": 10,
+      ".nav": 9,
+      ".snm": 9,
+      ".vrb": 9,
+      ".png": 3,
+      ".csv": 1,
+      ".json": 16,
+      ".jsonl": 1,
+      ".txt": 2
+    },
+    "log_file": {
+      "exists": true,
+      "size": 161,
+      "path": "output/logs/pipeline.log"
+    }
+  }
+}

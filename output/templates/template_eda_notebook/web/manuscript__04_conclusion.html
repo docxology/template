@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_conclusion.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:conclusion">Conclusion</h1>
+<p>This study demonstrated a complete, reproducible
+exploratory-data-analysis pipeline driven from a computational notebook
+backed by a tested library. It validates a simple proposition: a
+notebook stays trustworthy when its cells call tested code instead of
+carrying logic.</p>
+<h2 id="exemplar-achievements">Exemplar achievements</h2>
+<p>Operating as the EDA exemplar for the Research Project Template
+methodology, the project deployed the three foundational pillars:</p>
+<ol type="1">
+<li><strong><code>src/eda/</code> library</strong>: pure pandas/numpy
+data transforms — loading, cleaning, summary statistics, correlation,
+and figure-data preparation — with no plotting, no file I/O, and no
+<code>infrastructure</code> imports.</li>
+<li><strong><code>tests/</code> integrity</strong>: a zero-mock suite
+over the shipped dataset and hand-built frames, plus a structural
+notebook-binding check, all under a ≥90% project coverage gate.</li>
+<li><strong><code>docs/</code> knowledge operations</strong>:
+architecture, testing philosophy, and operational rules that keep the
+notebook, script, and manuscript aligned.</li>
+</ol>
+<h2 id="technical-contributions">Technical contributions</h2>
+<h3 id="the-notebook---tested-src-extraction-workflow">The notebook
+-&gt; tested src extraction workflow</h3>
+<p>The hallmark of this exemplar is the discipline it teaches: explore
+fast in a cell, and the moment a computation matters, move it into
+<code>src/eda/</code> behind a failing test. The walkthrough notebook
+imports only the library’s public surface and defines no functions of
+its own, a property the test suite enforces structurally so it cannot
+regress.</p>
+<h3 id="honest-handling-of-imperfect-data">Honest handling of imperfect
+data</h3>
+<p>The loader surfaces missing values as <code>NaN</code> instead of
+silently imputing them, and <code>clean_dataset()</code> removes
+incomplete rows with an explicit count. This makes data quality a
+visible, testable property of the first pass rather than a hidden
+assumption.</p>
+<h2 id="key-insights">Key insights</h2>
+<ol type="1">
+<li><strong>Reproducibility follows from testing fidelity</strong>:
+every number in <span class="citation"
+data-cites="sec:results">[@sec:results]</span> is produced by a tested
+function and regenerated on demand, so prose and artifacts cannot
+drift.</li>
+<li><strong>Purity enables reuse</strong>: because <code>src/eda/</code>
+returns plot-ready data and never touches a display backend, the same
+functions serve the notebook, the headless script, and the
+manuscript.</li>
+<li><strong>Missingness is information</strong>: reporting dropped rows
+beats imputing them away in an exploratory pass.</li>
+</ol>
+<h2 id="future-extensions">Future extensions</h2>
+<p>This foundation could be extended to:</p>
+<ul>
+<li><strong>Richer cleaning</strong>: typed imputation strategies behind
+tested functions, with the report recording which strategy ran.</li>
+<li><strong>More figure preparers</strong>: box plots, pair plots, and
+per-group overlays — each a tested data preparer plus a thin plotting
+call.</li>
+<li><strong>Larger / external datasets</strong>: swap the shipped CSV
+for a real dataset by pointing <code>load_dataset(path=...)</code> at it
+while keeping the schema contract.</li>
+</ul>
+<h2 id="final-assessment">Final assessment</h2>
+<p>The <code>template_eda_notebook</code> tree is the canonical
+reference for how an exploratory notebook, a thin analysis script, a
+tested library, and a manuscript stay synchronized across rebuilds. The
+pipeline produced the figures referenced in <span class="citation"
+data-cites="sec:results">[@sec:results]</span>, wrote
+<code>output/data/summary_statistics.csv</code>, and rendered this
+markdown together with <code>config.yaml</code> into PDF.</p>
+</body>
+</html>

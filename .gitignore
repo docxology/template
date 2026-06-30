@@ -99,6 +99,8 @@ output/templates/*
 !output/templates/template_autoscientists/**
 !output/templates/template_code_project/
 !output/templates/template_code_project/**
+!output/templates/template_eda_notebook/
+!output/templates/template_eda_notebook/**
 !output/templates/template_gold_refinement/
 !output/templates/template_gold_refinement/**
 !output/templates/template_literature_meta_analysis/

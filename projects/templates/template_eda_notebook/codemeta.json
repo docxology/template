@@ -3,14 +3,14 @@
   "@type": "SoftwareSourceCode",
   "author": [
     {
-      "@id": "https://orcid.org/0000-0000-0000-0000",
+      "@id": "https://orcid.org/0000-0001-6232-9096",
       "@type": "Person",
       "affiliation": {
         "@type": "Organization",
-        "name": "Your Institution"
+        "name": "Active Inference Institute"
       },
-      "familyName": "Author",
-      "givenName": "Template"
+      "familyName": "Friedman",
+      "givenName": "Daniel Ari"
     }
   ],
   "codeRepository": "https://github.com/docxology/template_eda_notebook",

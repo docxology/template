@@ -14,18 +14,26 @@ paper:
 
 # Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
 authors:
-  - name: "Template Author"
-    orcid: "0000-0000-0000-0000"
-    email: "author@example.org"
-    affiliation: "Your Institution"
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
     corresponding: true
 
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
-  doi: ""  # Concept DOI — fill in when minting a Zenodo deposit
-  version_doi: ""  # Latest Zenodo deposit DOI (split layout)
-  version_record: ""  # https://zenodo.org/records/{id}
-  github_repository: ""  # e.g. owner/template_eda_notebook
+  doi: "10.5281/zenodo.21086292" # Concept DOI — stable citation
+  version_doi: "10.5281/zenodo.21086293" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/21086293"
+  github_repository: "docxology/template_eda_notebook"
+  published_artifacts:
+    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmSsHhWo2JC76gQSy6rQuN6uKTP1gH9vtj3kGKLgY5oU4E"
+    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_eda_notebook"
+    osf: "https://osf.io/ycwsk/"
+    pypi: "https://test.pypi.org/project/template-eda-notebook/1.0.0/"
+    netlify: "https://6a444920f59418acc0357e9f--tranquil-kleicha-0c9203.netlify.app"
+    github_pages: "https://docxology.github.io/template_eda_notebook/"
+    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_eda_notebook"
   transmission_bookends:
     enabled: false
     max_prior_releases: 5

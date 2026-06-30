@@ -15,17 +15,17 @@ paper:
 
 # Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
 authors:
-  - name: "Template Author"
-    orcid: "0000-0000-0000-0000"
-    email: "author@example.org"
-    affiliation: "Your Institution"
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
     corresponding: true
 
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
-  doi: ""  # Concept DOI — fill in when minting a Zenodo deposit
-  version_doi: ""  # Latest Zenodo deposit DOI (split layout)
-  version_record: ""  # https://zenodo.org/records/{id}
+  doi: "10.5281/zenodo.21086548" # Concept DOI — fill in when minting a Zenodo deposit
+  version_doi: "10.5281/zenodo.21086549" # Latest Zenodo deposit DOI (split layout)
+  version_record: "https://zenodo.org/records/21086549" # https://zenodo.org/records/{id}
   github_repository: ""  # e.g. owner/template_methods_paper
   transmission_bookends:
     enabled: false

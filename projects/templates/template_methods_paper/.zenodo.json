@@ -1,9 +1,9 @@
 {
   "creators": [
     {
-      "affiliation": "Your Institution",
-      "name": "Author, Template",
-      "orcid": "0000-0000-0000-0000"
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
     }
   ],
   "description": "A controlled-methods specification exemplar: a small, tested domain language (methods_dsl) for specifying, validating, and deterministically compiling controlled procedures, with a manuscript describing the methodology itself. Informed by BPL (Biology Programming Language) as an upstream domain-language reference.",
@@ -16,6 +16,13 @@
     "dimensional analysis"
   ],
   "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.21086548",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
   "title": "A Domain Language for Specifying Controlled Methods",
   "upload_type": "software",
   "version": "1.0.0"

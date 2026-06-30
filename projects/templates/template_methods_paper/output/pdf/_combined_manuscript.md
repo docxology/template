@@ -45,11 +45,11 @@ not a parsed grammar — is sufficient to reproduce BPL's core safety
 properties (dimensional safety, staged validation, deterministic
 compilation) at a scope appropriate for a template exemplar. On the
 architecture side, the DSL is covered above the 90% project gate by a
-zero-mock test suite, generates 9 artifacts
+zero-mock test suite, generates 13 artifacts
 (1 figures, 6 data files,
-2 reports) per pipeline run, and injects reproducibility
-metadata (configuration hash `2107a29383e5e491`, build timestamp
-`2026-06-30T21:41:36Z`) into [@sec:reproducibility].
+6 reports) per pipeline run, and injects reproducibility
+metadata (configuration hash `23b5981d45bdc598`, build timestamp
+`2026-06-30T23:02:10Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
 
@@ -651,9 +651,9 @@ Every quantitative claim in [@sec:results] is either a generated variable
 sourced from a live analysis output or registered in `data/claim_ledger.yaml` for
 evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
-Configuration provenance is itself injected: `2107a29383e5e491` is the
+Configuration provenance is itself injected: `23b5981d45bdc598` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-06-30T21:41:36Z` records when the variables were generated
+`2026-06-30T23:02:10Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
 

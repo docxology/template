@@ -157,7 +157,7 @@
 \protected\def\breakseq#1{\seqsplit{#1}}
 \protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
 \title{A Domain Language for Specifying Controlled Methods}
-\author{Template Author\\\footnotesize{Your Institution}\\\footnotesize{\texttt{author@example.org}}\\\footnotesize{\href{https://orcid.org/0000-0000-0000-0000}{ORCID: 0000-0000-0000-0000}}}
+\author{Daniel Ari Friedman\\\footnotesize{Active Inference Institute}\\\footnotesize{\texttt{daniel@activeinference.institute}}\\\footnotesize{\href{https://orcid.org/0000-0001-6232-9096}{ORCID: 0000-0001-6232-9096}} \\ \footnotesize{DOI: \href{https://doi.org/10.5281/zenodo.21086548}{10.5281/zenodo.21086548}}}
 \date{\today}
 
 % Core mathematics
@@ -295,10 +295,10 @@ typed dataclasses --- not a parsed grammar --- is sufficient to
 reproduce BPL's core safety properties (dimensional safety, staged
 validation, deterministic compilation) at a scope appropriate for a
 template exemplar. On the architecture side, the DSL is covered above
-the 90\% project gate by a zero-mock test suite, generates 9 artifacts
-(1 figures, 6 data files, 2 reports) per pipeline run, and injects
-reproducibility metadata (configuration hash \breaktt{2107a29383e5e491},
-build timestamp \breaktt{2026-06-30T21:41:36Z}) into
+the 90\% project gate by a zero-mock test suite, generates 13 artifacts
+(1 figures, 6 data files, 6 reports) per pipeline run, and injects
+reproducibility metadata (configuration hash \breaktt{23b5981d45bdc598},
+build timestamp \breaktt{2026-06-30T23:02:10Z}) into
 sec.~\ref{sec:reproducibility}.
 
 \textbf{Keywords:} methods paper, domain-specific language, controlled
@@ -1152,9 +1152,9 @@ variable sourced from a live analysis output or registered in
 \breaktt{data/claim\_ledger.yaml} for evidence-registry validation. The
 manuscript intentionally does not hand-transcribe volatile values, so
 prose and artifacts cannot disagree. Configuration provenance is itself
-injected: \breaktt{2107a29383e5e491} is the SHA-256 of
+injected: \breaktt{23b5981d45bdc598} is the SHA-256 of
 \breaktt{manuscript/config.yaml} at build time, and
-\breaktt{2026-06-30T21:41:36Z} records when the variables were generated
+\breaktt{2026-06-30T23:02:10Z} records when the variables were generated
 (honoring \breaktt{SOURCE\_DATE\_EPOCH} for byte-reproducible builds).
 
 \newpage

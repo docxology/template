@@ -1,9 +1,9 @@
 {
   "creators": [
     {
-      "affiliation": "Your Institution",
-      "name": "Author, Template",
-      "orcid": "0000-0000-0000-0000"
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
     }
   ],
   "description": "An exploratory-data-analysis (EDA) computational-notebook exemplar: a walkthrough notebook that imports a fully-tested EDA library (load, clean, summarize, correlate, prepare figure data).",
@@ -16,6 +16,13 @@
     "correlation analysis"
   ],
   "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.21086292",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
   "title": "Exploratory Data Analysis: A Reproducible Notebook Template",
   "upload_type": "software",
   "version": "1.0.0"

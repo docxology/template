@@ -1,0 +1,29 @@
+\frametitle{Relation to figures}
+\protect\phantomsection\label{relation-to-figures}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Figure (\breakseq{[@sec:results]})
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Figure-data preparer (\breaktt{src/eda/figures.py})
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Primary inputs
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Height histogram & \breaktt{histogram\_data()} & \texttt{height\_cm}
+column, 10 bins \\
+Rows per group & \breaktt{group\_count\_data()} & \texttt{group}
+column \\
+Correlation heatmap & \breaktt{correlation\_heatmap\_data()} & all
+numeric features \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+This table is descriptive documentation only; it is not executed as code
+during the build.

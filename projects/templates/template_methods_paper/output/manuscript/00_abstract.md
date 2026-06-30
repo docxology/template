@@ -45,10 +45,10 @@ not a parsed grammar — is sufficient to reproduce BPL's core safety
 properties (dimensional safety, staged validation, deterministic
 compilation) at a scope appropriate for a template exemplar. On the
 architecture side, the DSL is covered above the 90% project gate by a
-zero-mock test suite, generates 9 artifacts
+zero-mock test suite, generates 13 artifacts
 (1 figures, 6 data files,
-2 reports) per pipeline run, and injects reproducibility
-metadata (configuration hash `2107a29383e5e491`, build timestamp
-`2026-06-30T21:41:36Z`) into [@sec:reproducibility].
+6 reports) per pipeline run, and injects reproducibility
+metadata (configuration hash `23b5981d45bdc598`, build timestamp
+`2026-06-30T23:02:10Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis

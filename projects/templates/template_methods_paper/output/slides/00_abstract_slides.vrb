@@ -45,10 +45,10 @@ typed dataclasses --- not a parsed grammar --- is sufficient to
 reproduce BPL's core safety properties (dimensional safety, staged
 validation, deterministic compilation) at a scope appropriate for a
 template exemplar. On the architecture side, the DSL is covered above
-the 90\% project gate by a zero-mock test suite, generates 9 artifacts
-(1 figures, 6 data files, 2 reports) per pipeline run, and injects
-reproducibility metadata (configuration hash \breaktt{2107a29383e5e491},
-build timestamp \breaktt{2026-06-30T21:41:36Z}) into
+the 90\% project gate by a zero-mock test suite, generates 13 artifacts
+(1 figures, 6 data files, 6 reports) per pipeline run, and injects
+reproducibility metadata (configuration hash \breaktt{23b5981d45bdc598},
+build timestamp \breaktt{2026-06-30T23:02:10Z}) into
 \breakseq{[@sec:reproducibility]}.
 
 \textbf{Keywords:} methods paper, domain-specific language, controlled

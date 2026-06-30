@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_methodology.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:methodology">Methodology</h1>
+<p>This section maps each step of the exploratory analysis to the tested
+function that implements it. Every function lives in
+<code>src/eda/</code>, takes a <code>pandas.DataFrame</code> in, and
+returns data out — no plotting, no file I/O — so the notebook, the
+analysis script, and this manuscript all reach the same code.</p>
+<h2 id="dataset-loading-and-schema">Dataset loading and schema</h2>
+<p><code>src/eda/dataset.py::load_dataset()</code> reads the shipped CSV
+and coerces the numeric columns with
+<code>pandas.to_numeric(errors="coerce")</code>. Coercion is deliberate:
+a blank or non-numeric cell becomes <code>NaN</code> rather than raising
+or being silently dropped, so missingness is <em>surfaced</em> and
+handled in an explicit later step. The column roles are declared once in
+a frozen <code>DatasetSchema</code> (an identifier column, a categorical
+group column, and three numeric features), which downstream functions
+consult instead of re-sniffing dtypes.</p>
+<h2 id="cleaning-explicit-reported-row-removal">Cleaning: explicit,
+reported row removal</h2>
+<p><code>src/eda/cleaning.py::clean_dataset()</code> drops any row
+missing a numeric feature and returns a <code>CleaningReport</code>
+recording how many rows entered, how many remained, and how many were
+dropped. This exemplar makes a deliberate choice — listwise deletion
+with a visible count — rather than imputation, because a first EDA pass
+should <em>see</em> the missingness, not paper over it. A separate
+<code>normalize_numeric()</code> z-score standardizes the numeric
+columns (mean 0, sample standard deviation 1), with a guard that maps a
+constant or single-row column to zeros instead of producing
+<code>inf</code>/<code>NaN</code>.</p>
+<h2 id="descriptive-statistics">Descriptive statistics</h2>
+<p><code>src/eda/statistics.py::summary_statistics()</code> returns one
+<code>ColumnSummary</code> per numeric column — count of non-missing
+observations, mean, sample standard deviation, minimum, median, and
+maximum — computed with real pandas aggregation.
+<code>group_means()</code> returns the mean of each numeric feature
+grouped by the categorical column, sorted by group name for
+deterministic output.</p>
+<h2 id="correlation-structure">Correlation structure</h2>
+<p><code>src/eda/correlation.py::correlation_matrix()</code> returns the
+Pearson correlation matrix of the numeric columns [tukey1977eda]. The
+companion <code>strongest_pairs(matrix, top_n)</code> ranks the distinct
+off-diagonal feature pairs by absolute correlation while preserving sign
+— usually the single most useful artifact of a first pass, because it
+points directly at the relationships worth investigating. Each unordered
+pair appears exactly once.</p>
+<h2 id="figure-data-preparers">Figure-data preparers</h2>
+<p>Plotting is kept out of the library entirely.
+<code>src/eda/figures.py</code> returns <em>plot-ready data
+structures</em> — bin counts and edges for a histogram, a square value
+grid plus labels for a correlation heatmap, and sorted category counts
+for a bar chart — as frozen dataclasses of plain numbers. The thin
+analysis script (<code>scripts/eda_analysis.py</code>) and notebook
+cells consume these structures and call matplotlib. This keeps the
+library importable on a headless machine and makes every preparer
+testable without a display backend.</p>
+<h2 id="zero-mock-testing-methodology">Zero-mock testing
+methodology</h2>
+<p>The project is governed by a strict zero-mock policy, evaluated by
+running
+<code>uv run pytest projects/templates/template_eda_notebook/tests</code>
+during the build.</p>
+<ol type="1">
+<li><strong>Library tests</strong> exercise every public function
+against the shipped CSV or a tiny hand-built frame with values chosen so
+the expected statistic is exact (e.g. <code>weight = 2 * height</code>
+gives a correlation of exactly <code>+1.0</code>). No
+<code>unittest.mock</code>, no <code>MagicMock</code>, no
+<code>@patch</code>.</li>
+<li><strong>Script test</strong> runs <code>run_eda()</code> against a
+temporary output root and asserts that real PNG figures and a real
+summary CSV are written.</li>
+<li><strong>Notebook test</strong> parses the real <code>.ipynb</code>
+and asserts it is valid nbformat, that every name imported
+<code>from src</code> exists in the library’s public surface, and that
+no cell defines its own <code>def</code>/<code>class</code>.</li>
+<li><strong>Coverage gate</strong>: CI enforces a ≥90%
+statement-coverage gate on
+<code>projects/templates/template_eda_notebook/src/</code>; the live
+figure is tracked in <a
+href="../../../../docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
+</ol>
+<h2 id="figure-generation-contract">Figure generation contract</h2>
+<p>Each figure in <code>03_results.md</code> maps to a figure-data
+preparer in <code>src/eda/figures.py</code>: <code>histogram_data</code>
+→ height histogram, <code>correlation_heatmap_data</code> →
+feature-correlation heatmap, and <code>group_count_data</code> →
+per-group row counts. Captions name the preparer and the key parameters
+(bin count, value range) so reviewers can navigate from the PDF to the
+code without inferring hidden defaults.</p>
+</body>
+</html>

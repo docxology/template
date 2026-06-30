@@ -1,0 +1,20 @@
+\frametitle{Validation}
+\protect\phantomsection\label{validation}
+The analysis was validated through the zero-mock \texttt{tests/} suite:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Library tests} assert exact statistics, correlation signs, and
+  bin counts against the shipped CSV and hand-built frames.
+\item
+  \textbf{Script test} runs \texttt{run\_eda()} against a temporary
+  output root and confirms real PNG figures and a real summary CSV are
+  written.
+\item
+  \textbf{Notebook test} confirms the walkthrough notebook binds to the
+  library's public surface and carries no logic in its cells.
+\end{itemize}
+
+All tests pass with coverage exceeding the 90\% project gate, with no
+mocks.
