@@ -6,9 +6,9 @@
 
 This directory is **intentionally empty** at the moment. Per-project
 plans live under `projects/{name}/docs/` (active) or
-`projects/archive/{name}/docs/` (historical). Repo-wide audit snapshots
-live under [`../audit/archived/`](../audit/archived/) with
-`-YYYY-MM-DD.md` date suffixes.
+`projects/archive/{name}/docs/` (historical). Historical repo-wide audit
+snapshots were retired from the public docs archive; use git history for
+dated point-in-time reports.
 
 A project-specific review that had been parked in this directory was
 relocated to its own (private) project repository during the May 2026

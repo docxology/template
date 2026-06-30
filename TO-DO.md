@@ -178,13 +178,12 @@ Keep this section short. Details live in release notes or archived audits.
   [`CHANGELOG.md`](CHANGELOG.md).
 - **Thermo-nuclear infra/docs audit (2026-06-08):** Waves A–E closed — doc contract,
   READFILE-SAFE-1 CLI, AGENTS v3.3 completeness, evidence-graph SUPPORTS/registry
-  bridge, autoresearch validation split. Approve — see
-  [`docs/audit/archived/thermo-nuclear-code-quality-2026-06-08.md`](docs/audit/archived/thermo-nuclear-code-quality-2026-06-08.md).
+  bridge, autoresearch validation split. The dated point-in-time audit snapshots
+  were retired with the public `docs/audit/` archive; use git history for those
+  reports.
 - **Thermo-nuclear remediation waves:** 2026-05-29 and 2026-05-30 blockers and
-  branch deltas are closed. See
-  [`docs/audit/archived/thermo-nuclear-code-quality-2026-05-29.md`](docs/audit/archived/thermo-nuclear-code-quality-2026-05-29.md)
-  and
-  [`docs/audit/archived/thermo-nuclear-code-quality-2026-05-30.md`](docs/audit/archived/thermo-nuclear-code-quality-2026-05-30.md).
+  branch deltas are closed. Dated point-in-time reports were retired with the
+  public audit archive.
 
 ---
 

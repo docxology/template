@@ -786,14 +786,13 @@ Steganography, hashing, and secure execution.
 | [hashing_and_manifests.md](../docs/security/hashing_and_manifests.md) | SHA-256/512 hash manifests and tamper detection |
 | [secure_execution.md](../docs/security/secure_execution.md) | `secure_run.sh`, steganography config, output files |
 
-### 🔍 Audit (`docs/audit/`)
+### 🔍 Audit And Documentation Gates
 
-Documentation review reports and filepath audits.
+Live documentation review and filepath gates.
 
 | File | Purpose |
 | --- | --- |
 | [Live doc linter](../scripts/lint_docs.py) | `uv run python scripts/lint_docs.py` — mermaid + cross-link + consistency (replaces stale audit snapshots) |
-| [audit/archived/](../docs/audit/archived/) | Historical audit snapshots with `-YYYY-MM-DD.md` suffix (point-in-time, not current state) |
 
 ### 🚀 Top-Level Docs
 

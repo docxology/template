@@ -65,11 +65,11 @@ uv run python -m infrastructure.publishing.archival_cli \
 
 Pipeline stage: `uv run python scripts/09_archive_publication.py --project <name>` (expects Stage 10 bundle).
 
-## Backwards compatibility
+## Import path
 
-`from infrastructure.publishing.archival import ...` continues to work via the flat
-[`../archival.py`](../archival.py) re-export. Prefer importing from this subpackage
-for new code.
+`from infrastructure.publishing.archival import ...` is the supported import path.
+The former flat `infrastructure.publishing.archival.py` shim has been retired;
+update old imports to the subpackage.
 
 ## Related
 

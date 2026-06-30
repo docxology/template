@@ -59,12 +59,12 @@ overlay_bytes = create_watermark_overlay(page_width=612, page_height=792, text="
 >
 > - 📚 **Core**: [docs/README.md](../../docs/README.md), [docs/AGENTS.md](../../docs/AGENTS.md), [docs/documentation-index.md](../../docs/documentation-index.md)
 > - 🏛️ **Architecture**: [docs/architecture/](../../docs/architecture/), [docs/core/](../../docs/core/), [docs/modules/](../../docs/modules/)
-> - 🔒 **Security & Audit**: [docs/security/](../../docs/security/), [docs/audit/](../../docs/audit/), [docs/best-practices/](../../docs/best-practices/)
+> - 🔒 **Security & Provenance**: [docs/security/](../../docs/security/), [docs/best-practices/](../../docs/best-practices/)
 > - 🛠️ **Usage & Ops**: [docs/usage/](../../docs/usage/), [docs/operational/](../../docs/operational/), [docs/development/](../../docs/development/), [docs/guides/](../../docs/guides/), [docs/prompts/](../../docs/prompts/), [docs/reference/](../../docs/reference/)
 
 ## Documentation Hub
 For detailed documentation on the entire system, refer to the central documentation hub:
 - **Core**: [docs/README.md](../../docs/README.md), [docs/AGENTS.md](../../docs/AGENTS.md), [docs/documentation-index.md](../../docs/documentation-index.md)
 - **Architecture**: [docs/architecture/](../../docs/architecture/), [docs/core/](../../docs/core/), [docs/modules/](../../docs/modules/)
-- **Security & Audit**: [docs/security/](../../docs/security/), [docs/audit/](../../docs/audit/), [docs/best-practices/](../../docs/best-practices/)
+- **Security & Provenance**: [docs/security/](../../docs/security/), [docs/best-practices/](../../docs/best-practices/)
 - **Usage & Ops**: [docs/usage/](../../docs/usage/), [docs/operational/](../../docs/operational/), [docs/development/](../../docs/development/), [docs/guides/](../../docs/guides/), [docs/prompts/](../../docs/prompts/), [docs/reference/](../../docs/reference/)

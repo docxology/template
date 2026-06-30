@@ -4,9 +4,8 @@ Multi-target archival mirror for long-horizon redundancy (Stage 11). Deposits an
 executable bundle or publication artifact to independent providers so no single
 provider policy change erases the record.
 
-The canonical implementation now lives in this subpackage. The sibling
-[`../archival.py`](../archival.py) is kept for backwards compatibility and
-re-exports all public symbols from here.
+The canonical implementation lives in this subpackage. Import from
+`infrastructure.publishing.archival` in new and existing code.
 
 ## Public API
 

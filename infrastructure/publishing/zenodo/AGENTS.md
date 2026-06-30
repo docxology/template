@@ -131,4 +131,4 @@ uv run pytest tests/infra_tests/publishing/test_zenodo_client.py tests/infra_tes
 
 - [`README.md`](README.md)
 - [`../AGENTS.md`](../AGENTS.md)
-- [`../archival.py`](../archival.py) — `ZenodoProvider` delegates to `ZenodoClient`
+- [`../archival/`](../archival/) — `ZenodoProvider` delegates to `ZenodoClient`

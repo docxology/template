@@ -90,7 +90,6 @@ graph TD
 | [`best-practices/`](best-practices/) | Best practices | version-control, migration, multi-project, backup-recovery |
 | [`prompts/`](prompts/) | AI prompt templates (see [prompts/AGENTS.md](prompts/AGENTS.md)) | manuscript, registry cross-refs, literature synthesis, code, test, feature, refactor, docs, infra, validation, assessment |
 | [`security/`](security/) | Security & provenance | steganography, hashing, secure execution |
-| [`audit/`](audit/) | Audit reports | documentation-review, filepath-audit |
 | [`rules/`](rules/) | Project Rules | AGENTS, README, testing, manuscript, etc. |
 | [`streams/`](streams/) | Livestream & talk notes | timestamped session notes tied to releases or papers |
 | [`_generated/`](_generated/) | Generated snippets | `AGENTS.md`, `active_projects.md` (discover_projects roster) |
@@ -135,7 +134,7 @@ graph TD
 | Understand modules | [`modules/modules-guide.md`](modules/modules-guide.md) |
 | Best practices | [`best-practices/best-practices.md`](best-practices/best-practices.md) |
 | Security policies | [`security/README.md`](security/README.md) |
-| Audit reports | [`audit/README.md`](audit/README.md) |
+| Validate docs | [`../scripts/lint_docs.py`](../scripts/lint_docs.py) |
 
 ## Topic routing (canonical → deep dives)
 

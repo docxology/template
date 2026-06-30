@@ -13,7 +13,7 @@ creating stale ledgers that compete with generated facts.
 | Counterintuitive local choice | `WHY:` comment beside the artifact | Explain why this shape exists or what failed before; avoid comments that restate code. |
 | Repository architecture or workflow rule | ADR under `docs/architecture/adrs/` | New constitutional rules need context, decision, consequences, alternatives, and references. |
 | Project plan or invariant | Project `TODO.md`, `ISA.md`, or `docs/` note | Keep the scope local to the project unless it changes the template contract. |
-| Real failure lesson | Failure-autopsy note in project docs or `docs/audit/archived/` | Record what broke, why it hurt, and what to do differently. |
+| Real failure lesson | Failure-autopsy note in project docs or git history | Record what broke, why it hurt, and what to do differently. |
 | Agent preference or local workspace fact | `.cursor/hooks/state/continual-learning-memory.json` | Gitignored and local only; do not treat it as public repository truth. |
 | Low-stakes reversible choice | No durable record | If it can be undone quickly and affects no public contract, skip the archive. |
 
