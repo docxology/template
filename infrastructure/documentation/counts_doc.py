@@ -41,10 +41,10 @@ from infrastructure.project.public_scope import public_project_names
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-06-21"
+GENERATED_DATE = "2026-06-30"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-06-27"
+EXEMPLAR_SNAPSHOT_DATE = "2026-06-30"
 
 
 @dataclass(frozen=True)
@@ -70,6 +70,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_autoresearch_project", 220, "92.81 %"),
     ExemplarSnapshot("template_autoscientists", 87, "99.60 %"),
     ExemplarSnapshot("template_code_project", 197, "96.96 %"),
+    ExemplarSnapshot("template_eda_notebook", 62, "100.00 %"),
     ExemplarSnapshot("template_gold_refinement", 248, "97.55 %"),
     ExemplarSnapshot("template_literature_meta_analysis", 772, "96.74 %"),
     ExemplarSnapshot("template_madlib", 37, "93.96 %"),

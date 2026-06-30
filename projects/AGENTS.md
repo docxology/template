@@ -47,6 +47,7 @@ Thirteen projects under `projects/templates/` are **permanent canonical exemplar
 | [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) | AutoResearch-centric (plan/evidence/claim/artifact/readiness loop) | yes (`src/loop.py`) | curated read-only (validated, never written) | 0 | see canonical facts | see canonical facts |
 | [`templates/template_autoscientists/`](templates/template_autoscientists/) | AutoScientists coordination-mechanism testbed (champion log + dead-end registry + effect-size ranking + confirmation + reorg) | yes (`src/coordination/*`) | curated read-only | see canonical facts | see canonical facts | see canonical facts |
 | [`templates/template_code_project/`](templates/template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/optimizer.py`, `src/invariants.py`) | curated read-only | 6 figures | see canonical facts | see canonical facts |
+| [`templates/template_eda_notebook/`](templates/template_eda_notebook/) | Exploratory data analysis notebook exemplar (notebook imports tested `src/eda/*`, no notebook-owned business logic) | yes (`src/eda/*`) | n/a | 2 figures | see canonical facts | see canonical facts |
 | [`templates/template_gold_refinement/`](templates/template_gold_refinement/) | Metallurgical gold-refining analogy for manuscript composition (ore → smelting → assaying → cupellation → nine-nines certification, mega-madlib token injection) | yes (`src/refinery.py`, `src/composition.py`) | curated read-only | 6 (purity progression, karat grading, token density, provenance Sankey, purity-claim scatter, token heatmap) | see canonical facts | see canonical facts |
 | [`templates/template_literature_meta_analysis/`](templates/template_literature_meta_analysis/) | Literature meta-analysis (multi-engine retrieval, de-duplication, bibliometrics, embeddings, optional KG) | yes (`src/literature/*`, `src/analysis/*`, `src/knowledge_graph/*`) | curated + fixture-backed | registry-backed | see canonical facts | see canonical facts |
 | [`templates/template_madlib/`](templates/template_madlib/) | Conditional token-injection manuscript generator (config-owned lexicon, QA probes, authoring contract, and IMRAD hydration) | yes (`src/tokens.py`, `src/composition.py`) | curated read-only | token-density figure | see canonical facts | see canonical facts |
@@ -127,6 +128,7 @@ graph TD
         P9[templates/template_textbook<br/>Textbook scaffold exemplar · see canonical facts]
         P10[templates/template_literature_meta_analysis<br/>Literature meta-analysis exemplar · see canonical facts]
         P11[templates/template_gold_refinement<br/>Gold-refining analogy exemplar · see canonical facts]
+        P12[templates/template_eda_notebook<br/>EDA notebook exemplar · see canonical facts]
         Pn[active/* rotating hot-seat workspaces<br/>see docs/_generated/active_projects.md]
     end
 
