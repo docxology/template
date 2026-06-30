@@ -100,7 +100,7 @@ graph TD
     SC --> OUT[output/figures + output/data]
 ```
 
-## Publication and boundaries
+## Publication and rendering
 
 - Standalone GitHub mirror: [docxology/template_eda_notebook](https://github.com/docxology/template_eda_notebook)
 - Zenodo DOI: fill in `publication.doi` in `config.yaml` when minting a deposit

@@ -12,7 +12,7 @@ metadata:
   last_updated: "2026-06-30"
   status: active
   data_access_level: raw
-  task_type: setup-and-validation
+  task_type: outcome-gradable
   modes:
     - install
     - validate
