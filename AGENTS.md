@@ -1502,7 +1502,6 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 Navigation links to in-tree documents (keeps them discoverable):
 
 - [ISA — HumOS Template Package: Agentic Operability](ISA.md)
-- [LectureCreate — Structured Audio-Visual Lecture Generator](Plans/hazy-singing-crab.md)
 - [Public Template Exemplars Knowledge Base](projects/templates/AGENTS.md)
 - [Public Template Design System](projects/templates/DESIGN.md)
 - [Publishing Scripts](scripts/publish/README.md)

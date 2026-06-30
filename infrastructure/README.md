@@ -424,6 +424,6 @@ flowchart TB
 Navigation links to in-tree documents (keeps them discoverable):
 
 - [Methods Orchestration](methods/README.md)
-- [Contributors Guide](steganography/kmyth/CONTRIBUTING.md)
+- [Steganography Module](steganography/README.md)
 
 <!-- foam-orphan-nav:end -->
