@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-21T14:15:44.433618",
+  "timestamp": "2026-06-30T05:08:48.338835",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -13,61 +13,7 @@
   "figure_issues": [],
   "output_statistics": {
     "artifact_manifest_issues": [
-      "changed artifact: output/figures/performance_benchmark.png",
-      "changed artifact: output/reports/performance_benchmark.json",
-      "changed artifact: output/data/dashboard_payload.json",
-      "changed artifact: output/data/manuscript_variables.json",
-      "changed artifact: output/data/transmission_manifest.json",
-      "changed artifact: output/figures/figure_registry.json",
-      "changed artifact: output/figures/transmission_pairing.png",
-      "changed artifact: output/manuscript/05_experimental_setup.md",
-      "changed artifact: output/manuscript/06_reproducibility.md",
-      "changed artifact: output/manuscript/config.yaml",
-      "changed artifact: output/reports/dashboard_invariants.txt",
-      "changed artifact: output/reports/dashboard_summary.txt",
-      "changed artifact: output/reports/output_validation.json",
-      "missing artifact: output/web/dashboard.html",
-      "changed artifact: output/docx/templates/template_code_project_combined.docx",
-      "changed artifact: output/epub/templates/template_code_project_combined.epub",
-      "changed artifact: output/figures/transmission_integrity_strip.png",
-      "changed artifact: output/manuscript/00_00_transmission_begin.md",
-      "changed artifact: output/manuscript/99_zz_transmission_end.md",
-      "changed artifact: output/pdf/_combined_manuscript.md",
-      "changed artifact: output/pdf/_combined_manuscript.tex",
-      "changed artifact: output/pdf/template_code_project_combined.pdf",
-      "changed artifact: output/slides/00_abstract_slides.pdf",
-      "changed artifact: output/slides/00_abstract_slides.tex",
-      "changed artifact: output/slides/01_introduction_slides.pdf",
-      "changed artifact: output/slides/01_introduction_slides.tex",
-      "changed artifact: output/slides/02_methodology_slides.pdf",
-      "changed artifact: output/slides/02_methodology_slides.tex",
-      "changed artifact: output/slides/03_results_slides.pdf",
-      "changed artifact: output/slides/03_results_slides.tex",
-      "changed artifact: output/slides/04_conclusion_slides.pdf",
-      "changed artifact: output/slides/04_conclusion_slides.tex",
-      "changed artifact: output/slides/05_experimental_setup_slides.pdf",
-      "changed artifact: output/slides/05_experimental_setup_slides.tex",
-      "changed artifact: output/slides/06_reproducibility_slides.pdf",
-      "changed artifact: output/slides/06_reproducibility_slides.tex",
-      "changed artifact: output/slides/07_scope_and_related_work_slides.pdf",
-      "changed artifact: output/slides/07_scope_and_related_work_slides.tex",
-      "changed artifact: output/slides/99_references_slides.pdf",
-      "changed artifact: output/slides/99_references_slides.tex",
-      "changed artifact: output/web/_combined_manuscript.md",
-      "changed artifact: output/web/index.html",
-      "changed artifact: output/web/manuscript__00_abstract.html",
-      "changed artifact: output/web/manuscript__01_introduction.html",
-      "changed artifact: output/web/manuscript__02_methodology.html",
-      "changed artifact: output/web/manuscript__03_results.html",
-      "changed artifact: output/web/manuscript__04_conclusion.html",
-      "changed artifact: output/web/manuscript__05_experimental_setup.html",
-      "changed artifact: output/web/manuscript__06_reproducibility.html",
-      "changed artifact: output/web/manuscript__07_scope_and_related_work.html",
-      "changed artifact: output/web/manuscript__99_references.html",
-      "changed artifact: output/reports/validation_report.json",
-      "changed artifact: output/reports/validation_report.md",
-      "changed artifact: output/reports/output_statistics.json",
-      "changed artifact: output/reports/output_statistics.txt"
+      "missing artifact: output/web/dashboard.html"
     ],
     "detailed_validation": {
       "structure": {
@@ -79,48 +25,48 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 1.65,
+            "size_mb": 2.05,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.89,
+            "size_mb": 2.3,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 11,
-            "size_mb": 0.23,
+            "size_mb": 0.25,
             "readable": true,
             "optional": false
           },
           "slides": {
             "exists": true,
             "files": 73,
-            "size_mb": 2.5,
+            "size_mb": 2.9,
             "readable": true,
             "optional": false
           },
           "figures": {
             "exists": true,
-            "files": 9,
-            "size_mb": 1.51,
+            "files": 10,
+            "size_mb": 1.96,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 6,
+            "files": 5,
             "size_mb": 0.18,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 31,
-            "size_mb": 0.19,
+            "files": 15,
+            "size_mb": 0.05,
             "readable": true,
             "optional": false
           },
@@ -151,38 +97,38 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.89",
+          "size_mb": "2.30",
           "largest_file": "template_code_project_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 11,
-          "size_mb": "0.23",
+          "size_mb": "0.25",
           "largest_file": "index.html"
         },
         "slides": {
           "exists": true,
           "file_count": 73,
-          "size_mb": "2.50",
+          "size_mb": "2.90",
           "largest_file": "03_results_slides.pdf"
         },
         "figures": {
           "exists": true,
-          "file_count": 9,
-          "size_mb": "1.51",
+          "file_count": 10,
+          "size_mb": "1.96",
           "largest_file": "algorithm_complexity.png"
         },
         "data": {
           "exists": true,
-          "file_count": 6,
+          "file_count": 5,
           "size_mb": "0.18",
           "largest_file": "dashboard_payload.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 31,
-          "size_mb": "0.19",
-          "largest_file": "evidence_registry.json"
+          "file_count": 15,
+          "size_mb": "0.05",
+          "largest_file": "artifact_manifest.json"
         },
         "simulations": {
           "exists": true,
@@ -207,14 +153,14 @@
         "pdf": 10,
         "web": 11,
         "slides": 73,
-        "figures": 9,
-        "data": 6,
-        "reports": 31,
+        "figures": 10,
+        "data": 5,
+        "reports": 15,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 6.491074562072754,
+      "total_size_mb": 7.631390571594238,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -224,15 +170,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.8894453048706055
+      "size_mb": 2.295644760131836
     },
     "figures": {
-      "files": 9,
-      "size_mb": 1.5069828033447266
+      "files": 10,
+      "size_mb": 1.9557905197143555
     },
     "data": {
-      "files": 6,
-      "size_mb": 0.17741012573242188
+      "files": 5,
+      "size_mb": 0.1767902374267578
     }
   },
   "summary": {

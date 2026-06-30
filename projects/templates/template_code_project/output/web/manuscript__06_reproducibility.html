@@ -173,9 +173,16 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 </head>
 <body>
 <h1 id="sec:reproducibility">Reproducibility Certification</h1>
@@ -238,15 +245,15 @@ validated by
 </tr>
 <tr>
 <td>Structured data files (CSV/JSON)</td>
-<td>6</td>
+<td>5</td>
 </tr>
 <tr>
 <td>Analysis reports</td>
-<td>22</td>
+<td>9</td>
 </tr>
 <tr>
 <td><strong>Total artifacts</strong></td>
-<td><strong>36</strong></td>
+<td><strong>22</strong></td>
 </tr>
 </tbody>
 </table>
@@ -272,6 +279,20 @@ class="math inline">\(\alpha = 0.01\)</span>)</li>
 <p>The stability analysis tested 48 parameter combinations (8 starting
 points <span class="math inline">\(\times\)</span> 6 step sizes),
 confirming uniform convergence across the entire parameter space.</p>
+<h3 id="benchmark-demonstration">Benchmark Demonstration</h3>
+<p>This exemplar also demonstrates
+<code>infrastructure.benchmark</code>. The thin orchestrator
+<code>scripts/04_benchmark_stage.py</code> calls
+<code>src/benchmark_support.py</code>, which times the pure
+<code>quadratic_function</code> across a fixed set of input sizes
+(deterministic seed, no network) and turns the timing facts into boolean
+rubric checks. Those checks are scored through the shared
+<code>infrastructure.benchmark.score_rubric</code> against a weighted
+<code>RubricSet</code>, and the result is rendered with
+<code>scores_to_markdown</code> into
+<code>output/reports/benchmark_report.json</code> (plus an optional
+timing figure). This keeps the benchmark API exercised by a real
+exemplar, not by infrastructure tests alone.</p>
 <h2 id="madlib-injection-verification">Madlib Injection
 Verification</h2>
 <p>This manuscript demonstrates the template’s “madlib” capability:

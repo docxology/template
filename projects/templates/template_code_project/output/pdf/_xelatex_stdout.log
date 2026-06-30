@@ -118,6 +118,10 @@ Package siunitx Warning: Option "binary-units" has been removed in this
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translations/translations-basic-d
 ictionary-english.trsl)
+Missing character: There is no ✗ (U+2717) in font [lmroman7-regular]:mapping=te
+x-text;!
+Missing character: There is no ✗ (U+2717) in font [lmroman7-regular]:mapping=te
+x-text;!
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd)
@@ -129,8 +133,12 @@ Overfull \hbox (787.78047pt too wide) in paragraph at lines 898--899
 2272295676536457470613583575384064.0000|  
 
 Overfull \vbox (325.998pt too high) has occurred while \output is active
-[9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21]
-(./_combined_manuscript.bbl) [22] [23] (./_combined_manuscript.aux) )
+[9] [10]
+
+LaTeX Warning: Float too large for page by 23.25415pt on input line 1107.
+
+[11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21] [22]
+(./_combined_manuscript.bbl) [23] [24] (./_combined_manuscript.aux) )
 (see the transcript file for additional information)
-Output written on _combined_manuscript.pdf (25 pages).
+Output written on _combined_manuscript.pdf (26 pages).
 Transcript written on _combined_manuscript.log.

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  26 JUN 2026 06:57
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  30 JUN 2026 05:08
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1540,28 +1540,34 @@ nslations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
 or `english'. on input line 229.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 265.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 265.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00064pt on input line 265.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 265.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 265.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 265.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 265
-.
 
+Missing character: There is no ✗ (U+2717) in font [lmroman7-regular]:mapping=te
+x-text;!
+LaTeX Font Info:    Font shape `TU/JuliaMono-Regular(0)/m/n' will be
+(Font)              scaled to size 5.48541pt on input line 243.
+Missing character: There is no ✗ (U+2717) in font [lmroman7-regular]:mapping=te
+x-text;!
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.0pt on input line 266.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.0pt on input line 266.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 7.00064pt on input line 266.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 5.00046pt on input line 266.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 6.99925pt on input line 266.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 4.99947pt on input line 266.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 266
+.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 265
+LaTeX Font Info:    Trying to load font information for U+msb on input line 266
 .
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1570,8 +1576,6 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Font shape `TU/JuliaMono-Regular(0)/m/n' will be
-(Font)              scaled to size 5.48541pt on input line 267.
 File: ../figures/transmission_integrity_strip.png Graphic file (type bmp)
 <../figures/transmission_integrity_strip.png>
 File: ../figures/transmission_pairing.png Graphic file (type bmp)
@@ -1618,22 +1622,26 @@ Overfull \vbox (325.998pt too high) has occurred while \output is active []
 [9] [10]
 File: ../figures/algorithm_complexity.png Graphic file (type bmp)
 <../figures/algorithm_complexity.png>
+
+
+LaTeX Warning: Float too large for page by 23.25415pt on input line 1107.
+
 File: ../figures/performance_benchmark.png Graphic file (type bmp)
 <../figures/performance_benchmark.png>
 File: ../figures/stability_analysis.png Graphic file (type bmp)
 <../figures/stability_analysis.png>
- [11] [12] [13]
+[11] [12] [13]
 LaTeX Font Info:    Font shape `TU/JuliaMono-Regular(0)/m/it' will be
 (Font)              scaled to size 7.8363pt on input line 1255.
  [14] [15] [16]
 ignored: Infinite glue shrinkage found in box being split [17] [18] [19] 
-[20] [21]
-(./_combined_manuscript.bbl) [22
+[20] [21] [22]
+(./_combined_manuscript.bbl) [23
 
 ]
 File: ../figures/transmission_integrity_strip.png Graphic file (type bmp)
 <../figures/transmission_integrity_strip.png>
- [23
+ [24
 
 ] (./_combined_manuscript.aux)
  ***********
@@ -1642,12 +1650,12 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 29321 strings out of 468168
- 593773 string characters out of 5432815
+ 29328 strings out of 468168
+ 593939 string characters out of 5432815
  1173433 words of memory out of 5000000
- 57709 multiletter control sequences out of 15000+600000
- 630306 words of font info for 84 fonts, out of 8000000 for 9000
+ 57714 multiletter control sequences out of 15000+600000
+ 630314 words of font info for 85 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  90i,11n,117p,1447b,1103s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (25 pages).
+Output written on _combined_manuscript.pdf (26 pages).

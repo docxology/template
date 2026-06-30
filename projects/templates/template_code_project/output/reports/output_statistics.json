@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.89",
-      "total_size_bytes": 1980207,
+      "size_mb": "2.30",
+      "total_size_bytes": 2407158,
       "largest_files": [
         {
           "name": "template_code_project_combined.pdf",
-          "size_mb": "1.65",
+          "size_mb": "2.05",
           "path": "pdf/template_code_project_combined.pdf"
         },
         {
@@ -37,8 +37,8 @@
     "web": {
       "exists": true,
       "file_count": 11,
-      "size_mb": "0.24",
-      "total_size_bytes": 251848,
+      "size_mb": "0.25",
+      "total_size_bytes": 258717,
       "largest_files": [
         {
           "name": "index.html",
@@ -64,12 +64,12 @@
     "slides": {
       "exists": true,
       "file_count": 73,
-      "size_mb": "2.50",
-      "total_size_bytes": 2618966,
+      "size_mb": "2.90",
+      "total_size_bytes": 3045577,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "1.53",
+          "size_mb": "1.93",
           "path": "slides/03_results_slides.pdf"
         },
         {
@@ -96,13 +96,13 @@
     },
     "figures": {
       "exists": true,
-      "file_count": 9,
-      "size_mb": "1.51",
-      "total_size_bytes": 1581326,
+      "file_count": 10,
+      "size_mb": "1.96",
+      "total_size_bytes": 2050795,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
-          "size_mb": "0.38",
+          "size_mb": "0.81",
           "path": "figures/algorithm_complexity.png"
         },
         {
@@ -117,15 +117,15 @@
         }
       ],
       "extensions": {
-        ".png": 8,
+        ".png": 9,
         ".json": 1
       }
     },
     "data": {
       "exists": true,
-      "file_count": 6,
+      "file_count": 5,
       "size_mb": "0.18",
-      "total_size_bytes": 186481,
+      "total_size_bytes": 185378,
       "largest_files": [
         {
           "name": "dashboard_payload.json",
@@ -144,15 +144,15 @@
         }
       ],
       "extensions": {
-        ".json": 5,
+        ".json": 4,
         ".csv": 1
       }
     },
     "reports": {
       "exists": true,
-      "file_count": 31,
-      "size_mb": "0.19",
-      "total_size_bytes": 203295,
+      "file_count": 19,
+      "size_mb": "0.15",
+      "total_size_bytes": 155781,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -165,17 +165,15 @@
           "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "stage-08-copy-outputs.json",
+          "name": "stage-07-output-validation.json",
           "size_mb": "0.01",
-          "path": "reports/snapshots/stage-08-copy-outputs.json"
+          "path": "reports/snapshots/stage-07-output-validation.json"
         }
       ],
       "extensions": {
-        ".json": 19,
-        ".jsonl": 1,
-        ".txt": 5,
-        ".md": 5,
-        ".html": 1
+        ".json": 15,
+        ".txt": 2,
+        ".md": 2
       }
     },
     "simulations": {
@@ -211,24 +209,24 @@
       }
     }
   },
-  "total_files": 141,
-  "total_size_mb": 6.506237030029297,
+  "total_files": 129,
+  "total_size_mb": 7.728163719177246,
   "largest_files": [
     {
       "name": "template_code_project_combined.pdf",
-      "size_mb": "1.65",
+      "size_mb": "2.05",
       "category": "pdf",
       "path": "pdf/template_code_project_combined.pdf"
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "1.53",
+      "size_mb": "1.93",
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
     {
       "name": "algorithm_complexity.png",
-      "size_mb": "0.38",
+      "size_mb": "0.81",
       "category": "figures",
       "path": "figures/algorithm_complexity.png"
     },
@@ -277,19 +275,19 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.888472557067871,
-    "web": 0.24018096923828125,
-    "slides": 2.497640609741211,
-    "figures": 1.5080699920654297,
-    "data": 0.1778421401977539,
-    "reports": 0.1938772201538086,
+    "pdf": 2.295644760131836,
+    "web": 0.24673175811767578,
+    "slides": 2.9044885635375977,
+    "figures": 1.9557905197143555,
+    "data": 0.1767902374267578,
+    "reports": 0.14856433868408203,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.00015354156494140625
   },
   "file_counts_by_type": {
     ".pdf": 10,
-    ".md": 7,
+    ".md": 4,
     ".log": 12,
     ".aux": 10,
     ".blg": 1,
@@ -297,14 +295,13 @@
     ".tex": 11,
     ".toc": 10,
     ".bbl": 1,
-    ".html": 11,
+    ".html": 10,
     ".nav": 9,
     ".snm": 9,
     ".vrb": 9,
-    ".png": 8,
-    ".json": 25,
+    ".png": 9,
+    ".json": 20,
     ".csv": 1,
-    ".jsonl": 1,
-    ".txt": 5
+    ".txt": 2
   }
 }

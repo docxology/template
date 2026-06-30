@@ -1,70 +1,78 @@
 {
-  "timestamp": "2026-06-14T11:37:53.268860",
-  "total_duration": 109.2073757648468,
+  "timestamp": "2026-06-30T05:08:48.989957",
+  "total_duration": 101.67867136001587,
   "stages": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.033125877380371094,
+      "duration": 0.03072190284729004,
       "timestamp": "",
       "completed": true,
-      "status": "passed"
+      "status": "passed",
+      "context": {}
     },
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 1.3763320446014404,
+      "duration": 2.4646811485290527,
       "timestamp": "",
       "completed": true,
-      "status": "passed"
+      "status": "passed",
+      "context": {}
     },
     {
       "name": "Infrastructure Tests",
       "exit_code": 0,
-      "duration": 8.009286880493164,
+      "duration": 17.918590784072876,
       "timestamp": "",
       "completed": true,
-      "status": "passed"
+      "status": "passed",
+      "context": {}
     },
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 29.83751678466797,
+      "duration": 28.080484867095947,
       "timestamp": "",
       "completed": true,
-      "status": "passed"
+      "status": "passed",
+      "context": {}
     },
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 4.140538215637207,
+      "duration": 4.0758068561553955,
       "timestamp": "",
       "completed": true,
-      "status": "passed"
+      "status": "passed",
+      "context": {}
     },
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 63.451382875442505,
+      "duration": 47.60255169868469,
       "timestamp": "",
       "completed": true,
-      "status": "passed"
+      "status": "passed",
+      "context": {}
     },
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 1.2101821899414062,
+      "duration": 0.9961001873016357,
       "timestamp": "",
       "completed": true,
-      "status": "passed"
+      "status": "passed",
+      "context": {}
     },
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 1.1490108966827393,
+      "duration": 0.5097339153289795,
       "timestamp": "",
       "completed": true,
-      "status": "passed"
+      "status": "passed",
+      "context": {}
     }
   ],
   "test_results": null,
@@ -76,12 +84,12 @@
       "pdf": {
         "exists": true,
         "file_count": 10,
-        "size_mb": "1.88",
-        "total_size_bytes": 1976003,
+        "size_mb": "2.30",
+        "total_size_bytes": 2407158,
         "largest_files": [
           {
             "name": "template_code_project_combined.pdf",
-            "size_mb": "1.65",
+            "size_mb": "2.05",
             "path": "pdf/template_code_project_combined.pdf"
           },
           {
@@ -110,8 +118,8 @@
       "web": {
         "exists": true,
         "file_count": 11,
-        "size_mb": "0.23",
-        "total_size_bytes": 236559,
+        "size_mb": "0.25",
+        "total_size_bytes": 258717,
         "largest_files": [
           {
             "name": "index.html",
@@ -120,7 +128,7 @@
           },
           {
             "name": "_combined_manuscript.md",
-            "size_mb": "0.04",
+            "size_mb": "0.05",
             "path": "web/_combined_manuscript.md"
           },
           {
@@ -137,12 +145,12 @@
       "slides": {
         "exists": true,
         "file_count": 73,
-        "size_mb": "2.49",
-        "total_size_bytes": 2612881,
+        "size_mb": "2.90",
+        "total_size_bytes": 3045577,
         "largest_files": [
           {
             "name": "03_results_slides.pdf",
-            "size_mb": "1.52",
+            "size_mb": "1.93",
             "path": "slides/03_results_slides.pdf"
           },
           {
@@ -169,13 +177,13 @@
       },
       "figures": {
         "exists": true,
-        "file_count": 9,
-        "size_mb": "1.50",
-        "total_size_bytes": 1575424,
+        "file_count": 10,
+        "size_mb": "1.96",
+        "total_size_bytes": 2050795,
         "largest_files": [
           {
             "name": "algorithm_complexity.png",
-            "size_mb": "0.38",
+            "size_mb": "0.81",
             "path": "figures/algorithm_complexity.png"
           },
           {
@@ -190,7 +198,7 @@
           }
         ],
         "extensions": {
-          ".png": 8,
+          ".png": 9,
           ".json": 1
         }
       },
@@ -223,9 +231,9 @@
       },
       "reports": {
         "exists": true,
-        "file_count": 27,
-        "size_mb": "0.17",
-        "total_size_bytes": 183100,
+        "file_count": 28,
+        "size_mb": "0.18",
+        "total_size_bytes": 184808,
         "largest_files": [
           {
             "name": "evidence_registry.json",
@@ -244,7 +252,7 @@
           }
         ],
         "extensions": {
-          ".json": 18,
+          ".json": 19,
           ".jsonl": 1,
           ".txt": 4,
           ".md": 4
@@ -283,24 +291,24 @@
         }
       }
     },
-    "total_files": 136,
-    "total_size_mb": 6.455904006958008,
+    "total_files": 138,
+    "total_size_mb": 7.75584602355957,
     "largest_files": [
       {
         "name": "template_code_project_combined.pdf",
-        "size_mb": "1.65",
+        "size_mb": "2.05",
         "category": "pdf",
         "path": "pdf/template_code_project_combined.pdf"
       },
       {
         "name": "03_results_slides.pdf",
-        "size_mb": "1.52",
+        "size_mb": "1.93",
         "category": "slides",
         "path": "slides/03_results_slides.pdf"
       },
       {
         "name": "algorithm_complexity.png",
-        "size_mb": "0.38",
+        "size_mb": "0.81",
         "category": "figures",
         "path": "figures/algorithm_complexity.png"
       },
@@ -349,12 +357,12 @@
     ],
     "missing_expected_files": [],
     "sizes_by_category": {
-      "pdf": 1.8844633102416992,
-      "web": 0.2256002426147461,
-      "slides": 2.491837501525879,
-      "figures": 1.50244140625,
+      "pdf": 2.295644760131836,
+      "web": 0.24673175811767578,
+      "slides": 2.9044885635375977,
+      "figures": 1.9557905197143555,
       "data": 0.1767902374267578,
-      "reports": 0.17461776733398438,
+      "reports": 0.17624664306640625,
       "simulations": 0.0,
       "llm": 0.0,
       "logs": 0.00015354156494140625
@@ -373,8 +381,8 @@
       ".nav": 9,
       ".snm": 9,
       ".vrb": 9,
-      ".png": 8,
-      ".json": 23,
+      ".png": 9,
+      ".json": 24,
       ".csv": 1,
       ".jsonl": 1,
       ".txt": 4
@@ -382,7 +390,7 @@
     "log_file": {
       "exists": true,
       "size": 161,
-      "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_code_project/output/logs/pipeline.log"
+      "path": "output/logs/pipeline.log"
     }
   }
 }

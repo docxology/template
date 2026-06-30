@@ -7,6 +7,8 @@ No mocking framework — real files, subprocesses, and RenderManager subclasses.
 
 from __future__ import annotations
 
+import os
+import sys
 from pathlib import Path
 
 import pytest
@@ -23,6 +25,7 @@ from infrastructure.rendering.pipeline import (
     _render_individual_files,
     _render_pipeline_impl,
     _resolve_manuscript_dir,
+    _run_manuscript_variable_script,
     _run_override_script,
     _validate_latex_packages,
     execute_render_pipeline,
@@ -234,6 +237,40 @@ def test_run_override_script_missing_file(tmp_path: Path) -> None:
     result = _run_override_script(tmp_path, missing)
 
     assert result != 0
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    script = project / "scripts" / "z_generate_manuscript_variables.py"
+    script.parent.mkdir(parents=True)
+    script.write_text(
+        "\n".join(
+            [
+                "import os",
+                "import sys",
+                "from pathlib import Path",
+                'Path("hydration_result.txt").write_text(',
+                '    sys.executable + "\\n" + os.environ.get("TEMPLATE_REPO_ROOT", ""),',
+                '    encoding="utf-8",',
+                ")",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    venv_python = project / ".venv" / "bin" / "python"
+    venv_python.parent.mkdir(parents=True)
+    venv_python.symlink_to(sys.executable)
+    template_root = tmp_path / "template"
+    template_root.mkdir()
+
+    result = _run_manuscript_variable_script(project, template_repo_root=template_root)
+
+    assert result == 0
+    executable, injected_template_root = (project / "hydration_result.txt").read_text(encoding="utf-8").splitlines()
+    assert executable == str(venv_python)
+    assert injected_template_root == str(template_root)
 
 
 # ---------------------------------------------------------------------------
@@ -560,9 +597,7 @@ def _make_project_with_manuscript(project_root: Path, *, n_md: int = 1, n_figure
     (project_root / "src" / "__init__.py").write_text("", encoding="utf-8")
     (project_root / "tests" / "__init__.py").write_text("", encoding="utf-8")
     for i in range(1, n_md + 1):
-        (project_root / "manuscript" / f"0{i}_section.md").write_text(
-            f"# Section {i}\n\nContent.\n", encoding="utf-8"
-        )
+        (project_root / "manuscript" / f"0{i}_section.md").write_text(f"# Section {i}\n\nContent.\n", encoding="utf-8")
     for j in range(n_figures):
         fig = project_root / "output" / "figures" / f"fig_{j:02d}.png"
         fig.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 64)
@@ -580,9 +615,6 @@ def test_render_pipeline_impl_missing_manuscript_dir_returns_zero(
         "infrastructure.rendering.pipeline.resolve_project_root",
         lambda _repo_root, name: project,
     )
-    # Patch latex validation to skip real kpsewhich
-    from infrastructure.rendering.latex_validation import ValidationReport as _VR
-
     monkeypatch.setattr(
         "infrastructure.rendering.pipeline._validate_latex_packages",
         lambda report=None: 0,
@@ -672,9 +704,7 @@ def test_render_pipeline_impl_render_manager_init_raises_exits_one(
         lambda project_root, template_repo_root=None: 0,
     )
 
-    original_render_manager = __import__(
-        "infrastructure.rendering", fromlist=["RenderManager"]
-    ).RenderManager
+    original_render_manager = __import__("infrastructure.rendering", fromlist=["RenderManager"]).RenderManager
 
     class _FailingRenderManager(original_render_manager):
         def __init__(self, *args, **kwargs):
@@ -712,6 +742,7 @@ def test_render_pipeline_impl_failed_files_exits_one(
         for sf in source_files:
             if sf.suffix == ".md":
                 from infrastructure.core.logging.diagnostic import DiagnosticEvent, DiagnosticSeverity
+
                 reporter.events.append(
                     DiagnosticEvent(
                         category="RenderingError",
@@ -734,8 +765,6 @@ def test_render_pipeline_impl_reporter_events_triggers_print_save(
     caplog: pytest.LogCaptureFixture,
 ) -> None:
     """When reporter.events is non-empty both print_report and save_report are called."""
-    import logging
-
     project = tmp_path / "reporter_events_proj"
     _make_project_with_manuscript(project, n_md=1)
 
@@ -783,7 +812,7 @@ def test_render_pipeline_impl_reporter_events_triggers_print_save(
 
     monkeypatch.setattr("infrastructure.rendering.pipeline._render_individual_files", _inject_event_and_succeed)
 
-    rc = _render_pipeline_impl("reporter_events_proj")
+    _render_pipeline_impl("reporter_events_proj")
 
     assert print_called, "reporter.print_report() was not called when events were present"
     assert save_called, "reporter.save_report() was not called when events were present"
@@ -838,6 +867,7 @@ def test_render_pipeline_impl_no_figures_warning(
     _make_project_with_manuscript(project, n_md=1, n_figures=0)
     # Remove figures dir so verify_figures_exist returns empty found_figures
     import shutil
+
     shutil.rmtree(project / "output" / "figures", ignore_errors=True)
 
     monkeypatch.setattr(
@@ -858,7 +888,7 @@ def test_render_pipeline_impl_no_figures_warning(
     )
 
     with caplog.at_level(logging.WARNING, logger="infrastructure.rendering.pipeline"):
-        rc = _render_pipeline_impl("no_fig_proj")
+        _render_pipeline_impl("no_fig_proj")
 
     no_fig_warned = any("No figures found" in record.message for record in caplog.records)
     assert no_fig_warned, "Expected warning about no figures found"
@@ -890,8 +920,6 @@ def test_render_pipeline_impl_transmission_bookend_exception_logged(
 
     import infrastructure.publishing.transmission_bookends as _tb_module
 
-    original_write = getattr(_tb_module, "write_transmission_bookends", None)
-
     def _raise(*args, **kwargs):
         raise RuntimeError("simulated bookend failure")
 
@@ -906,8 +934,7 @@ def test_render_pipeline_impl_transmission_bookend_exception_logged(
         rc = _render_pipeline_impl("bookend_exc_proj")
 
     bookend_warned = any(
-        "Transmission bookend" in record.message or "bookend" in record.message.lower()
-        for record in caplog.records
+        "Transmission bookend" in record.message or "bookend" in record.message.lower() for record in caplog.records
     )
     assert bookend_warned, "Expected warning about skipped transmission bookends"
     assert rc == 0

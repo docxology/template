@@ -1,17 +1,17 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 230,
+  "fact_count": 258,
   "freshness_warnings": [],
   "kind_counts": {
     "artifact": 75,
-    "citation": 5,
+    "citation": 33,
     "equation": 7,
     "figure": 27,
     "number": 100,
     "section": 10,
     "table": 6
   },
-  "omitted_fact_count": 30,
+  "omitted_fact_count": 58,
   "sample_facts": [
     {
       "active": true,
@@ -299,7 +299,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "90"
+      "value": "90%"
     },
     {
       "active": true,
@@ -311,7 +311,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "90%"
+      "value": "90"
     },
     {
       "active": true,
@@ -347,7 +347,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "10%"
+      "value": "10"
     },
     {
       "active": true,
@@ -359,7 +359,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "10%"
+      "value": "10"
     },
     {
       "active": true,
@@ -371,7 +371,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "10"
+      "value": "10%"
     },
     {
       "active": true,
@@ -383,7 +383,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "10"
+      "value": "10%"
     },
     {
       "active": true,
@@ -431,7 +431,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.38"
+      "value": "0.4"
     },
     {
       "active": true,
@@ -443,7 +443,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.38"
+      "value": "0.4"
     },
     {
       "active": true,
@@ -455,43 +455,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.38"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[1] (numeric variant)",
-      "source_field": "$.purity_sequence[1]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "37.5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[0].output_purity (numeric variant)",
-      "source_field": "$.stages[0].output_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "37.5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[1].input_purity (numeric variant)",
-      "source_field": "$.stages[1].input_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "37.5"
+      "value": "0.4"
     },
     {
       "active": true,
@@ -539,7 +503,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.4"
+      "value": "37.5"
     },
     {
       "active": true,
@@ -551,7 +515,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.4"
+      "value": "37.5"
     },
     {
       "active": true,
@@ -563,7 +527,43 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.4"
+      "value": "37.5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-26T14:10:01+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[1] (numeric variant)",
+      "source_field": "$.purity_sequence[1]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.38"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-26T14:10:01+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[0].output_purity (numeric variant)",
+      "source_field": "$.stages[0].output_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.38"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-26T14:10:01+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[1].input_purity (numeric variant)",
+      "source_field": "$.stages[1].input_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.38"
     },
     {
       "active": true,
@@ -611,6 +611,42 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
+      "value": "75"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-26T14:10:01+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[1].output_purity (numeric variant)",
+      "source_field": "$.stages[1].output_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "75"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-26T14:10:01+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[2].input_purity (numeric variant)",
+      "source_field": "$.stages[2].input_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "75"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-26T14:10:01+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[2] (numeric variant)",
+      "source_field": "$.purity_sequence[2]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
       "value": "75%"
     },
     {
@@ -672,42 +708,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.8"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[2] (numeric variant)",
-      "source_field": "$.purity_sequence[2]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "75"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[1].output_purity (numeric variant)",
-      "source_field": "$.stages[1].output_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "75"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[2].input_purity (numeric variant)",
-      "source_field": "$.stages[2].input_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "75"
     },
     {
       "active": true,
@@ -791,6 +791,42 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
+      "value": "0.92"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-26T14:10:01+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
+      "source_field": "$.stages[2].output_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.92"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-26T14:10:01+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
+      "source_field": "$.stages[3].input_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.92"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-26T14:10:01+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
+      "source_field": "$.purity_sequence[3]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
       "value": "0.917"
     },
     {
@@ -924,42 +960,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "91.67"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
-      "source_field": "$.purity_sequence[3]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.92"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
-      "source_field": "$.stages[2].output_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.92"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
-      "source_field": "$.stages[3].input_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.92"
     },
     {
       "active": true,
@@ -1301,7 +1301,7 @@
       "active": true,
       "checked_at": "2026-06-26T16:53:51+00:00",
       "kind": "figure",
-      "source": "src/figures.py::generate_integrity_risk_matrix",
+      "source": "src/figures/diagrams.py::generate_integrity_risk_matrix",
       "source_field": "fact:fig_integrity_risk_matrix",
       "source_path": "output/figures/integrity_risk_matrix.png",
       "source_tier": "claim_ledger",
@@ -1337,7 +1337,7 @@
       "active": true,
       "checked_at": "2026-06-26T16:53:51+00:00",
       "kind": "figure",
-      "source": "src/figures.py::generate_evidence_tier_ladder",
+      "source": "src/figures/diagrams.py::generate_evidence_tier_ladder",
       "source_field": "fact:fig_evidence_tier_ladder",
       "source_path": "output/figures/evidence_tier_ladder.png",
       "source_tier": "claim_ledger",
@@ -1623,7 +1623,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
+      "checked_at": "2026-06-30T03:37:49+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1631,11 +1631,11 @@
       "source_tier": "bibliography",
       "stale": false,
       "tolerance": 0.0,
-      "value": "gold_refining_2024"
+      "value": "marsden_house_2006"
     },
     {
       "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
+      "checked_at": "2026-06-30T03:37:49+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1643,7 +1643,355 @@
       "source_tier": "bibliography",
       "stale": false,
       "tolerance": 0.0,
-      "value": "manuscript_purity_2025"
+      "value": "hallmarking_convention_1972"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "lbma_good_delivery_rules"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "gentner1983structure"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "hesse1966models"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "holyoak_thagard_1995"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "knuth1984literate"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "leisch2002sweave"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "buckheit_donoho_1995"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "peng2011reproducible"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sandve2013ten"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "wilkinson2016fair"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "moreau2013prov"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "marwick2018packaging"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "belhajjame2015ontologies"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "rule2019jupyter"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "stodden2011default"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T04:05:48+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "nuest2017erc"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T04:05:48+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "lasser2020executable"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T04:05:48+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "chen2021metadata"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T04:05:48+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "smith2016softwarecitation"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:37:49+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "ioannidis2005false"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:54:50+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "schulz2010consort"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:54:50+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "vonelm2007strobe"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:54:50+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "page2021prisma"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:54:50+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "percie_du_sert2020arrive"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:54:50+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "equator_network_reporting_guidelines"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:54:50+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "nosek2015top"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:54:50+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "unesco2021_open_science"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:54:50+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "icmje2026recommendations"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T03:54:50+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "cope2023ai"
     },
     {
       "active": true,
@@ -1659,7 +2007,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
+      "checked_at": "2026-06-30T03:37:49+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1667,19 +2015,7 @@
       "source_tier": "bibliography",
       "stale": false,
       "tolerance": 0.0,
-      "value": "madlib_composition"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "citation",
-      "source": "manuscript/references.bib",
-      "source_field": "",
-      "source_path": "manuscript/references.bib",
-      "source_tier": "bibliography",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "nine_nines"
+      "value": "template_madlib"
     },
     {
       "active": true,
@@ -2076,348 +2412,12 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "output/web/manuscript__07_scope.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/manuscript__01_introduction.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/manuscript__01_introduction.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/manuscript__05_conclusion.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/manuscript__05_conclusion.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/manuscript__09_authoring_contract.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/manuscript__09_authoring_contract.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/manuscript__03_results.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/manuscript__03_results.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/manuscript__00_abstract.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/manuscript__00_abstract.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/manuscript__02_methodology.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/manuscript__02_methodology.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/manuscript__08_evaluation.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/manuscript__08_evaluation.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/manuscript__04_discussion.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/manuscript__04_discussion.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/manuscript__06_reproducibility.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/manuscript__06_reproducibility.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/pdf/_combined_manuscript.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/pdf/_combined_manuscript.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/pdf/_combined_manuscript.log",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/pdf/_combined_manuscript.log"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/pdf/_combined_manuscript.aux",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/pdf/_combined_manuscript.aux"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/pdf/_combined_manuscript.blg",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/pdf/_combined_manuscript.blg"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/pdf/_xelatex_stdout.log",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/pdf/_xelatex_stdout.log"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/pdf/references.bib",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/pdf/references.bib"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/pdf/_combined_manuscript.tex",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/pdf/_combined_manuscript.tex"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/pdf/_combined_manuscript.toc",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/pdf/_combined_manuscript.toc"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/pdf/_combined_manuscript.bbl",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/pdf/_combined_manuscript.bbl"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/pdf/template_gold_refinement_combined.pdf",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/pdf/template_gold_refinement_combined.pdf"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T17:39:04+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/figures/token_density.svg",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/figures/token_density.svg"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T17:39:04+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/figures/implementation_circuit.svg",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/figures/implementation_circuit.svg"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T17:39:04+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/figures/purity_progression.svg",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/figures/purity_progression.svg"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T17:39:04+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/figures/purity_claim_scatter.svg",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/figures/purity_claim_scatter.svg"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T17:39:04+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/figures/formalism_traceability.svg",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/figures/formalism_traceability.svg"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T16:34:22+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/figures/claim_evidence_assay.png",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/figures/claim_evidence_assay.png"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T17:39:04+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/figures/evidence_tier_ladder.svg",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/figures/evidence_tier_ladder.svg"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/figures/figure_registry.json",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/figures/figure_registry.json"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T16:11:42+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/figures/integrity_gate_matrix.png",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/figures/integrity_gate_matrix.png"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
     "artifact": 117,
-    "bibliography": 5,
+    "bibliography": 33,
     "claim_ledger": 14,
     "generated_metric": 94
   }

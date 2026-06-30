@@ -1,72 +1,160 @@
 {
-  "pipeline_start_time": 1781462163.9452858,
+  "pipeline_start_time": 1782821227.220267,
   "last_stage_completed": 8,
   "stage_results": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.033125877380371094,
-      "timestamp": "2026-06-14 11:37:53",
+      "duration": 0.03072190284729004,
+      "timestamp": "2026-06-30 05:08:48",
       "completed": true,
-      "status": ""
+      "status": "passed",
+      "context": {
+        "stage_num": 1,
+        "stage_name": "Clean Output Directories",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
     },
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 1.3763320446014404,
-      "timestamp": "2026-06-14 11:37:53",
+      "duration": 2.4646811485290527,
+      "timestamp": "2026-06-30 05:08:48",
       "completed": true,
-      "status": ""
+      "status": "passed",
+      "context": {
+        "stage_num": 2,
+        "stage_name": "Environment Setup",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
     },
     {
       "name": "Infrastructure Tests",
       "exit_code": 0,
-      "duration": 8.009286880493164,
-      "timestamp": "2026-06-14 11:37:53",
+      "duration": 17.918590784072876,
+      "timestamp": "2026-06-30 05:08:48",
       "completed": true,
-      "status": ""
+      "status": "passed",
+      "context": {
+        "stage_num": 3,
+        "stage_name": "Infrastructure Tests",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
     },
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 29.83751678466797,
-      "timestamp": "2026-06-14 11:37:53",
+      "duration": 28.080484867095947,
+      "timestamp": "2026-06-30 05:08:48",
       "completed": true,
-      "status": ""
+      "status": "passed",
+      "context": {
+        "stage_num": 4,
+        "stage_name": "Project Tests",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
     },
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 4.140538215637207,
-      "timestamp": "2026-06-14 11:37:53",
+      "duration": 4.0758068561553955,
+      "timestamp": "2026-06-30 05:08:48",
       "completed": true,
-      "status": ""
+      "status": "passed",
+      "context": {
+        "stage_num": 5,
+        "stage_name": "Project Analysis",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
     },
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 63.451382875442505,
-      "timestamp": "2026-06-14 11:37:53",
+      "duration": 47.60255169868469,
+      "timestamp": "2026-06-30 05:08:48",
       "completed": true,
-      "status": ""
+      "status": "passed",
+      "context": {
+        "stage_num": 6,
+        "stage_name": "PDF Rendering",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
     },
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 1.2101821899414062,
-      "timestamp": "2026-06-14 11:37:53",
+      "duration": 0.9961001873016357,
+      "timestamp": "2026-06-30 05:08:48",
       "completed": true,
-      "status": ""
+      "status": "passed",
+      "context": {
+        "stage_num": 7,
+        "stage_name": "Output Validation",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
     },
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 1.1490108966827393,
-      "timestamp": "2026-06-14 11:37:53",
+      "duration": 0.5097339153289795,
+      "timestamp": "2026-06-30 05:08:48",
       "completed": true,
-      "status": ""
+      "status": "passed",
+      "context": {
+        "stage_num": 8,
+        "stage_name": "Copy Outputs",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
     }
   ],
   "total_stages": 10,
-  "checkpoint_time": 1781462273.2555158
+  "checkpoint_time": 1782821328.976568
 }

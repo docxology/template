@@ -12,11 +12,11 @@
 \section*{END OF TRANSMISSION}\label{end-of-transmission}
 ```
 
-**Release:** v2.5.2 · DOI `10.5281/zenodo.20417136` · SHA-256 `cd54b9589350…` · pairing complete
+**Release:** v2.5.2 · DOI `10.5281/zenodo.20417136` · SHA-256 `pending…` · pairing pending
 
 ![Integrity QR strip](../figures/transmission_integrity_strip.png){width=88%}
 
-**Prior:** `v2.5.1` · `10.5281/zenodo.20417136` · `33ceeb67…`
+**Prior:** _No prior releases._
 
 ```{=latex}
 \end{samepage}

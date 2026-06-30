@@ -58,7 +58,7 @@ _PANDOC_FRONTMATTER_KEYS = frozenset(
         "fail_on_missing",
     }
 )
-_PUBLIC_EXEMPLAR_CONFIG_KEYS = frozenset({"madlib"})
+_PUBLIC_EXEMPLAR_CONFIG_KEYS = frozenset({"gold_refinement", "madlib"})
 
 try:
     import yaml

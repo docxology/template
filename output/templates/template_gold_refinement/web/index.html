@@ -239,9 +239,16 @@ Manuscript Composition</title>
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <style>
 :root {
@@ -608,24 +615,34 @@ class="header-section-number">1</span> Abstract</h1>
 <p>This paper presents a metallurgical analogy for scientific manuscript
 composition, mapping gold-refining stages onto the template
 infrastructure pipeline. The refinery processes manuscript ore through 5
-stages — from raw draft (9K, ~37.5% purity) through smelting, assaying,
-and cupellation — to nine-nines certification (99.9999999%), the
-ultra-high-purity standard of electronics-grade gold.</p>
+stages - from raw draft (9K, ~37.5% purity) through smelting, assaying,
+and cupellation - to an internal nine-nines certification target
+(99.9999999%). The source domain is grounded in gold extraction,
+assaying, fineness, and hallmarking practice [marsden_house_2006;
+hallmarking_convention_1972], while the target domain is a reproducible
+computational manuscript rather than a claim about universal writing
+quality.</p>
 <p>The analogy is <strong>load-bearing</strong>, not merely rhetorical:
 each metallurgical stage corresponds to a real template-infrastructure
-operation. Smelting removes dross (filler, unsupported claims); assaying
-tests claims against evidence; cupellation resolves cross-references;
+operation. This makes the paper an explicit structure-mapping exercise
+rather than a loose metaphor [gentner1983structure; hesse1966models].
+Smelting removes dross (filler, unsupported claims); assaying tests
+claims against evidence; cupellation resolves cross-references;
 certification validates the full pipeline. The mega-madlib token engine
 selects 24 domain tokens deterministically via seeded SHA-256 digest
 over category inventories, ensuring every prose element is traceable and
 reproducible.</p>
 <p>The contribution is also formalized: 6 equation-backed formalisms
 define purity, monotone refinement, token selection, claim support, gate
-vectors, and certification. The project-local claim assay reports 8/8
-supported contribution claims (100.00%, passing), while the integrity
-model exposes 8 source-owned risk dimensions and the shared template
-evidence registry contributes 230 source-tiered facts when the
-validation gate has run.</p>
+vectors, and certification. This positions the manuscript as a
+research-compendium artifact in the lineage of literate programming,
+dynamic reports, and reproducible computational research
+[knuth1984literate; leisch2002sweave; peng2011reproducible;
+sandve2013ten]. The project-local claim assay reports 8/8 supported
+contribution claims (100.00%, passing), while the integrity model
+exposes 8 source-owned risk dimensions and the shared template evidence
+registry contributes 258 source-tiered facts when the validation gate
+has run.</p>
 <p><strong>Results:</strong> The refinery achieves final purity of
 99.9999999% (nine-nines) (24K (nine-nines certified)) with a total
 purity gain of 90.00% across all stages. Nine-nines certification: Yes.
@@ -640,27 +657,37 @@ grading</p>
 class="header-section-number">2</span> Introduction: Ore to
 Nine-Nines</h1>
 <p>Gold refining is one of humanity’s oldest purification technologies.
-From ancient cupellation to modern nine-nines electrolysis, the process
-of separating noble metal from base ore has evolved into a rigorous,
-staged pipeline with measurable purity at every step. This paper asks:
-can that pipeline serve as a <strong>load-bearing</strong> operational
-model for scientific manuscript composition — not merely a decorative
-analogy, but a real mapping from metallurgical stages to
+From cupellation and fire assay to chemical and electrolytic refining,
+the process of separating noble metal from base ore has evolved into a
+staged pipeline with measurement and certification checkpoints
+[marsden_house_2006]. Hallmarking regimes make the verification layer
+socially and legally visible: the mark is not the metal itself, but an
+auditable assertion about fineness and control
+[hallmarking_convention_1972; lbma_good_delivery_rules]. This paper
+asks: can that pipeline serve as a <strong>load-bearing</strong>
+operational model for scientific manuscript composition - not merely a
+decorative analogy, but a real mapping from metallurgical stages to
 template-infrastructure operations?</p>
 <h2 data-number="2.1" id="the-problem"><span
 class="header-section-number">2.1</span> The problem</h2>
 <p>A scientific manuscript accumulates impurities through its drafting
 lifecycle: unsupported claims, unresolved references, redundant prose,
 and citation gaps. The template repository provides infrastructure to
-detect and remove these impurities — validation gates, cross-reference
-checks, evidence registries, and coverage enforcement. What it lacks is
-a unifying model that names the purification stages and measures purity
-progression.</p>
+detect and remove these impurities - validation gates, cross-reference
+checks, evidence registries, and coverage enforcement. This aligns with
+a broader reproducible-research literature that treats code, data,
+environment, and provenance as first-class scientific materials
+[buckheit_donoho_1995; peng2011reproducible; stodden2011default;
+sandve2013ten]. What this exemplar adds is a unifying model that names
+the purification stages and measures local purity progression.</p>
 <p>This exemplar treats source tier and evidence spine as first-class
 manuscript objects. A claim is not considered refined because it sounds
 plausible; it is refined when its source path, generated variable,
-figure label, citation key, and validation gate can all be
-inspected.</p>
+figure label, citation key, and validation gate can all be inspected.
+That is a narrower claim than empirical truth: reproducibility can set a
+minimum computational standard without replacing independent
+replication, domain expertise, or peer review [peng2011reproducible;
+ioannidis2005false].</p>
 <h2 data-number="2.2" id="the-analogy-as-pipeline"><span
 class="header-section-number">2.2</span> The analogy as pipeline</h2>
 <p>We map five gold-refining stages onto manuscript operations:</p>
@@ -684,7 +711,7 @@ class="header-section-number">2.2</span> The analogy as pipeline</h2>
 <p>Each stage has a metallurgical operation, a manuscript operation, an
 input purity, and an output purity. Purity increases monotonically — a
 constraint enforced by
-<code>src/refinery.py::assert_monotone_increase</code> and tested in
+<code>src/purity.py::assert_monotone_increase</code> and tested in
 <code>tests/test_refinery.py</code>.</p>
 <h2 data-number="2.3" id="mega-madlib-token-engine"><span
 class="header-section-number">2.3</span> Mega-madlib token engine</h2>
@@ -692,7 +719,11 @@ class="header-section-number">2.3</span> Mega-madlib token engine</h2>
 config-owned lexical data, selected deterministically by a seeded
 SHA-256 digest. The engine generates 24 tokens across 11 slots and 8
 lexicon categories. Every token choice is reproducible, traceable to its
-config key, and bound to a manuscript section.</p>
+config key, and bound to a manuscript section. In this respect the
+exemplar extends literate programming and dynamic statistical reporting:
+code, data, and prose are kept synchronized, but the prose-level choices
+are also made inspectable [knuth1984literate; leisch2002sweave;
+marwick2018packaging].</p>
 <p>The deeper token inventory is deliberately spread across the paper.
 Introduction tokens name the integrity frame; methods tokens bind
 evidence validation, figure registry check, and citation validation to
@@ -705,19 +736,23 @@ class="header-section-number">2.4</span> Implementation circuit</h2>
 an implementation owner. In this exemplar, configuration creates the
 ore, <code>src/refinery.py</code> defines the purity stages,
 <code>src/composition.py</code> turns slots into deterministic tokens,
-<code>src/formalisms.py</code> owns the equation registry,
-<code>src/figures.py</code> turns those sources into registered visuals,
-and the template validators decide whether the hydrated manuscript can
-be treated as publication metal. The loop is deliberately closed:
-failures from the validators point back to source files, not to
+<code>src/formalisms.py</code> owns the equation registry, the
+<code>src/figures/</code> package turns those sources into registered
+visuals, and the template validators decide whether the hydrated
+manuscript can be treated as publication metal. The loop is deliberately
+closed: failures from the validators point back to source files, not to
 hand-polished output.</p>
 <h2 data-number="2.5" id="open-question-pinned"><span
 class="header-section-number">2.5</span> Open question pinned</h2>
 <p>Is the analogy load-bearing or rhetorical? We assert it is
 <strong>both</strong>: it frames the methods paper (rhetorical) and
 operationalizes each stage against real infrastructure (load-bearing).
-The open question is not whether to use the analogy, but where the
-mapping breaks — a question the discussion addresses.</p>
+Analogy theory gives the discipline for that claim: preserve relational
+structure, declare negative analogies, and do not transfer unsupported
+source-domain properties into the target domain [gentner1983structure;
+hesse1966models; holyoak_thagard_1995]. The open question is not whether
+to use the analogy, but where the mapping breaks - a question the
+discussion addresses.</p>
 <hr />
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology: The Refinery
@@ -725,9 +760,30 @@ Pipeline</h1>
 <p>The refinery pipeline consists of 5 canonical stages, each mapping a
 metallurgical operation to a manuscript-composition operation. The
 pipeline is implemented in <code>src/refinery.py</code> and validated by
-<code>src/purity.py</code>. The methods surface now has three coupled
-layers: the refinery stages, the mega-madlib token plan, and the
-generated formalism registry.</p>
+<code>src/purity.py</code>. The methods surface now has four coupled
+layers: the refinery stages, the mega-madlib token plan, the generated
+formalism registry, and the scholarship boundary that determines which
+claims may be generalized beyond this exemplar.</p>
+<p>Methodologically, the paper treats composition as part of a research
+compendium: authored sources, executable scripts, generated reports,
+figures, and rendered manuscript outputs are separated but linked
+[marwick2018packaging]. That design follows the executable-paper and
+notebook traditions in which narrative is coupled to runnable analysis
+rather than copied from it [leisch2002sweave; rule2019jupyter]. The
+novelty claimed here is narrower: the token-level narrative choices are
+deterministic and provenance-bearing, not that a template can validate
+scientific truth.</p>
+<p>Structured reporting guidelines provide the closest scholarly
+analogue for the gate layer, but they also set its limit. CONSORT,
+STROBE, PRISMA, ARRIVE, and the EQUATOR Network define field-specific
+reporting items so a manuscript can be inspected, appraised, and in some
+cases replicated more easily [schulz2010consort; vonelm2007strobe;
+page2021prisma; percie_du_sert2020arrive;
+equator_network_reporting_guidelines]. In this exemplar, token coverage,
+evidence registration, and render validation play a similar internal
+role: they make omissions visible and bind declarations to artifacts.
+They do not test whether an external study was designed well, executed
+correctly, or substantively true.</p>
 <h2 data-number="3.1" id="stage-definitions"><span
 class="header-section-number">3.1</span> Stage definitions</h2>
 <table>
@@ -837,7 +893,7 @@ below are auto-numbered by the renderer.</p>
 <td>F2</td>
 <td>Monotone refinement</td>
 <td>eq. <a href="#eq:monotone_refinery">2</a></td>
-<td><code>src/refinery.py::assert_monotone_increase</code></td>
+<td><code>src/purity.py::assert_monotone_increase</code></td>
 </tr>
 <tr>
 <td>F3</td>
@@ -879,7 +935,7 @@ requires every stage to improve the previous purity state.</p>
 \pi_0 &lt; \pi_1 &lt; \cdots &lt; \pi_n
 \qquad{(2)}\]</span></span></p>
 <p>The test suite rejects equal or decreasing stage outputs. Source:
-<code>src/refinery.py::assert_monotone_increase</code>.</p>
+<code>src/purity.py::assert_monotone_increase</code>.</p>
 <p><strong>F3: Token-selection digest.</strong> Every mega-madlib token
 is selected from config-owned inventory by a deterministic digest.</p>
 <p><span id="eq:token_digest"><span class="math display">\[
@@ -927,12 +983,12 @@ categories using a deterministic digest:</p>
 \text{inventory}\right)[:12], 16\right) \mod n
 \]</span></p>
 <p>where <span class="math inline">\(n\)</span> is the size of the
-lexicon category inventory. Selected metallurgical terms: hallmark,
-cupellation, assaying. Selected manuscript terms: evidence, evidence.
-The same digest rule is formalized in eq. <a
-href="#eq:token_digest">3</a>, while the gate vocabulary for this
-section binds evidence validation, figure registry check, and citation
-validation to concrete validation surfaces.</p>
+lexicon category inventory. Selected metallurgical terms: assaying,
+parting, smelting. Selected manuscript terms: evidence, evidence. The
+same digest rule is formalized in eq. <a href="#eq:token_digest">3</a>,
+while the gate vocabulary for this section binds evidence validation,
+figure registry check, and citation validation to concrete validation
+surfaces.</p>
 <h2 data-number="3.5" id="config-owned-lexicon"><span
 class="header-section-number">3.5</span> Config-owned lexicon</h2>
 <table>
@@ -993,7 +1049,9 @@ class="header-section-number">3.5</span> Config-owned lexicon</h2>
 </table>
 <h2 data-number="3.6" id="karat-grading"><span
 class="header-section-number">3.6</span> Karat grading</h2>
-<p>Karat grades map purity fractions to standard gold fineness:</p>
+<p>Karat grades map purity fractions to a gold-fineness vocabulary used
+here as an analogy surface [marsden_house_2006;
+lbma_good_delivery_rules]:</p>
 <ul>
 <li>9K = 37.5% (ore stage)</li>
 <li>18K = 75.0% (smelting stage)</li>
@@ -1002,8 +1060,11 @@ class="header-section-number">3.6</span> Karat grading</h2>
 <li>Nine-nines = 99.9999999% (certification stage)</li>
 </ul>
 <p>The mapping is implemented in
-<code>src/purity.py::karat_for_purity()</code>. The karat grading chart
-is shown in fig. <a href="#fig:karat_grading">2</a> (see sec. <a
+<code>src/purity.py::karat_for_purity()</code>. The final nine-nines
+target is a deliberately stringent local certification predicate, not an
+assertion that all gold markets or manuscript-quality regimes use that
+threshold. The karat grading chart is shown in fig. <a
+href="#fig:karat_grading">2</a> (see sec. <a
 href="#sec:results">4</a>).</p>
 <h2 data-number="3.7" id="pipeline-phases"><span
 class="header-section-number">3.7</span> Pipeline phases</h2>
@@ -1093,7 +1154,11 @@ generated artifacts own observation: token plans, figures, resolved
 Markdown, reports, and dashboards are rebuilt rather than edited. Third,
 template gates own permission to promote the manuscript: unresolved
 tokens, unsupported facts, missing citations, broken references, and
-invalid PDFs block certification.</p>
+invalid PDFs block certification. This is the manuscript analogue of
+provenance-aware workflow design: entities, activities, agents, and
+generated outputs are kept traceable so readers can assess reliability
+rather than infer it from polished prose [moreau2013prov;
+belhajjame2015ontologies].</p>
 <p>This split keeps the gold metaphor honest. A fork is allowed to
 change the ore, the furnace, or the assay, but it must do so in the
 source layer and then let the generated and validation layers expose the
@@ -1539,23 +1604,23 @@ class="header-section-number">4.4.3</span> Provenance trace</h3>
 <tr>
 <td>METHOD_METAL_TERM_1</td>
 <td>metallurgical_terms</td>
-<td>hallmark</td>
+<td>assaying</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[4]</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1]</td>
 </tr>
 <tr>
 <td>METHOD_METAL_TERM_2</td>
 <td>metallurgical_terms</td>
-<td>cupellation</td>
+<td>parting</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[0]</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3]</td>
 </tr>
 <tr>
 <td>METHOD_METAL_TERM_3</td>
 <td>metallurgical_terms</td>
-<td>assaying</td>
+<td>smelting</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1]</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2]</td>
 </tr>
 <tr>
 <td>REPRO_EVIDENCE_TERM_1</td>
@@ -1750,14 +1815,14 @@ registry when available.</caption>
 <td>Numbers regenerated from project analysis</td>
 </tr>
 <tr>
+<td>bibliography</td>
+<td>33</td>
+<td>Reference records and citation metadata</td>
+</tr>
+<tr>
 <td>claim_ledger</td>
 <td>14</td>
 <td>Source-owned claim and fact declarations</td>
-</tr>
-<tr>
-<td>bibliography</td>
-<td>5</td>
-<td>Reference records and citation metadata</td>
 </tr>
 </tbody>
 </table>
@@ -1789,7 +1854,7 @@ nine-nines.</td>
 <tr>
 <td>Monotone purity</td>
 <td>Purity increases strictly across all refinery stages.</td>
-<td>src/refinery.py::assert_monotone_increase</td>
+<td>src/purity.py::assert_monotone_increase</td>
 <td>local</td>
 </tr>
 <tr>
@@ -1815,7 +1880,7 @@ labels.</td>
 <td>Claim-support report separation</td>
 <td>The project-local contribution-claim report is written to
 claim_support_registry.json.</td>
-<td>scripts/refinement_analysis.py::claim_support_registry</td>
+<td>scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME</td>
 <td>local</td>
 </tr>
 <tr>
@@ -1823,7 +1888,7 @@ claim_support_registry.json.</td>
 <td>The manuscript includes generated visualizations that link the
 refinery analogy to source code, variables, evidence, and validation
 gates.</td>
-<td>src/figures.py::generate_implementation_circuit</td>
+<td>src/figures/diagrams.py::generate_implementation_circuit</td>
 <td>local</td>
 </tr>
 <tr>
@@ -1846,7 +1911,7 @@ class="header-section-number">4.15</span> Shared evidence registry
 summary</h2>
 <p>When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 230.</p>
+available to this variable pass: 258.</p>
 <table id="tbl:shared_evidence_kinds">
 <caption>Table 5: Shared evidence-registry fact kinds when
 available.</caption>
@@ -1863,7 +1928,7 @@ available.</caption>
 </tr>
 <tr>
 <td>citation</td>
-<td>5</td>
+<td>33</td>
 </tr>
 <tr>
 <td>equation</td>
@@ -1926,108 +1991,108 @@ figure specs.</caption>
 <td>claim_evidence_assay</td>
 <td>yes</td>
 <td>yes</td>
-<td>3947x1904</td>
+<td>3952x1904</td>
 <td>0.211</td>
-<td>0.05905715</td>
+<td>0.05901302</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>evidence_tier_ladder</td>
 <td>yes</td>
 <td>yes</td>
-<td>3254x1319</td>
-<td>0.194</td>
-<td>0.05465268</td>
+<td>3348x1332</td>
+<td>0.217</td>
+<td>0.05647730</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>formalism_traceability</td>
 <td>yes</td>
 <td>yes</td>
-<td>4170x1866</td>
-<td>0.096</td>
-<td>0.03165302</td>
+<td>3315x1631</td>
+<td>0.133</td>
+<td>0.04262721</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>implementation_circuit</td>
 <td>yes</td>
 <td>yes</td>
-<td>3720x2129</td>
-<td>0.049</td>
-<td>0.01648025</td>
+<td>2966x1845</td>
+<td>0.068</td>
+<td>0.02235231</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_gate_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>1953x1559</td>
-<td>0.457</td>
-<td>0.17734427</td>
+<td>1829x1933</td>
+<td>0.410</td>
+<td>0.16336351</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_risk_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>2969x2069</td>
-<td>0.402</td>
-<td>0.01475595</td>
+<td>2499x1910</td>
+<td>0.387</td>
+<td>0.01770377</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>karat_grading</td>
 <td>yes</td>
 <td>yes</td>
-<td>3241x1829</td>
-<td>0.286</td>
-<td>0.07357948</td>
+<td>2961x1698</td>
+<td>0.279</td>
+<td>0.07300982</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>provenance_sankey</td>
 <td>yes</td>
 <td>yes</td>
-<td>3570x1400</td>
-<td>0.059</td>
-<td>0.01855784</td>
+<td>2850x1461</td>
+<td>0.070</td>
+<td>0.02178809</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_claim_scatter</td>
 <td>yes</td>
 <td>yes</td>
-<td>2587x1889</td>
-<td>0.028</td>
-<td>0.01227429</td>
+<td>2340x1744</td>
+<td>0.032</td>
+<td>0.01428277</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_progression</td>
 <td>yes</td>
 <td>yes</td>
-<td>3029x2125</td>
+<td>3024x2125</td>
 <td>0.182</td>
-<td>0.03971092</td>
+<td>0.03967814</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_density</td>
 <td>yes</td>
 <td>yes</td>
-<td>3865x1663</td>
-<td>0.206</td>
-<td>0.06115993</td>
+<td>3289x1856</td>
+<td>0.234</td>
+<td>0.06699486</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_heatmap</td>
 <td>yes</td>
 <td>yes</td>
-<td>2648x2424</td>
-<td>0.637</td>
-<td>0.12747028</td>
+<td>2397x2399</td>
+<td>0.627</td>
+<td>0.12908659</td>
 <td>pass</td>
 </tr>
 </tbody>
@@ -2042,10 +2107,13 @@ class="header-section-number">5.1</span> Load-bearing vs rhetorical</h2>
 <strong>Rhetorically</strong>, it provides a memorable framing for a
 methods paper: purity progression, karat grading, and certification are
 vivid metaphors for manuscript quality. <strong>Operationally</strong>,
-each stage maps to a real template-infrastructure operation — smelting
+each stage maps to a real template-infrastructure operation - smelting
 to claim removal, assaying to evidence validation, cupellation to
 cross-reference resolution, and certification to full pipeline
-validation.</p>
+validation. The scholarship makes the test sharper: the analogy is
+useful only where the relation among stages is preserved, not where
+surface language makes writing sound like metallurgy
+[gentner1983structure; hesse1966models].</p>
 <p>The analogy is smelting the manuscript: it performs the refinement it
 describes. Its fork obligation is equally important. Gold refining can
 model staged purification, but it cannot certify domain truth unless the
@@ -2057,7 +2125,20 @@ generated artifacts, claim ledgers, figure registries, and validation
 commands agree. The figures therefore make a negative claim as important
 as the positive one: when a fork lacks a validator, a ledger, or a
 source artifact, the metaphor must stop at analogy and cannot be
-promoted to certification.</p>
+promoted to certification. That boundary follows reproducibility
+scholarship as much as metaphor theory: formal traceability can support
+rerunning and auditing, but it cannot by itself establish external
+validity [peng2011reproducible; wilkinson2016fair;
+ioannidis2005false].</p>
+<p>The same caution applies to checklist-shaped infrastructure.
+Reporting guidelines improve the inspectability of research reports by
+naming information that should be present, but checklist completion is
+not the same as methodological quality, absence of bias, or truth of
+results [equator_network_reporting_guidelines; schulz2010consort;
+page2021prisma]. The gold-refinement gates should therefore be read as
+completeness and traceability checks. They can expose a missing
+citation, an unresolved token, or an unsupported local claim; they
+cannot convert weak domain evidence into strong domain evidence.</p>
 <h2 data-number="5.2" id="useful-adaptation-cases"><span
 class="header-section-number">5.2</span> Useful adaptation cases</h2>
 <ul>
@@ -2068,6 +2149,14 @@ legal citation, engineering specification).</li>
 karat grade vocabulary for any staged quality process.</li>
 <li><strong>Mega-madlib composition</strong>: reuse the deterministic
 token engine for any config-owned lexical composition task.</li>
+<li><strong>Domain adapters</strong>: use
+<code>src/domain_adapter.py</code> and <code>domain_profile.yaml</code>
+to translate a domain’s own metrics into the same purity scale before
+reusing certification language.</li>
+<li><strong>Research compendia</strong>: package manuscript shells,
+token rules, analysis outputs, figures, and validation reports as a
+single reproducible object rather than a loose bundle of supplementary
+files [marwick2018packaging].</li>
 </ul>
 <h2 data-number="5.3" id="misuse-modes"><span
 class="header-section-number">5.3</span> Misuse modes</h2>
@@ -2120,6 +2209,34 @@ validator, and evidence surface.</td>
 <td>Add or revise the source-owned integrity dimension before promoting
 the manuscript.</td>
 </tr>
+<tr>
+<td>Citation laundering</td>
+<td>A real citation is used to make a stronger claim than the source
+supports.</td>
+<td>Scope and evaluation prose separate analogy support, reproducibility
+support, and domain-evidence support.</td>
+<td>Lower the claim boundary or add a source-owned validator before
+using certification language.</td>
+</tr>
+<tr>
+<td>Checklist theater</td>
+<td>A fork treats filled reporting rows or passed template gates as
+proof of scientific validity.</td>
+<td>Methods, scope, discussion, and evaluation prose separate
+completeness, traceability, and reproducibility from domain truth.</td>
+<td>Add the field’s reporting guideline, domain validators, and
+independent evidence before making compliance or validity claims.</td>
+</tr>
+<tr>
+<td>Executable-package ambiguity</td>
+<td>A fork publishes a rendered manuscript without enough software,
+metadata, or version identity to rebuild the object.</td>
+<td>Reproducibility, scope, evaluation, and authoring-contract prose
+require source-owned metadata, exact release citation, and regenerated
+output reports.</td>
+<td>Record software/template release identity, preserve source-owned
+metadata, and rerun the full pipeline before publishing.</td>
+</tr>
 </tbody>
 </table>
 <h2 data-number="5.4" id="design-principles"><span
@@ -2161,6 +2278,24 @@ generation.</td>
 <td>The durable artifact is the regeneration contract, not hand-edited
 output.</td>
 </tr>
+<tr>
+<td>Scholarship sets boundaries</td>
+<td>External sources can anchor analogy, reproducibility, and provenance
+claims, but they cannot expand local certification beyond what the
+source-owned evidence supports.</td>
+</tr>
+<tr>
+<td>Completeness is not validity</td>
+<td>Checklist-shaped gates can show that required reporting surfaces are
+present and traceable, but they do not certify domain truth, study
+design quality, or absence of bias.</td>
+</tr>
+<tr>
+<td>Executable package is the object</td>
+<td>Narrative, config, code, metadata, figures, reports, and rendered
+outputs must travel as a rebuildable package rather than as detached
+static prose.</td>
+</tr>
 </tbody>
 </table>
 <h2 data-number="5.5" id="analogy-break-boundary"><span
@@ -2189,7 +2324,16 @@ manuscripts: treating generated artifacts as if they were independent
 evidence. A generated metric can support an internal consistency claim,
 but a domain claim needs a domain source tier. The ladder makes that
 distinction visible without pretending that a large fact count is the
-same as stronger external validity.</p>
+same as stronger external validity. In FAIR and PROV terms, richer
+metadata improves findability, reuse, and traceability, but it does not
+convert weak evidence into strong evidence [wilkinson2016fair;
+moreau2013prov].</p>
+<p>Open-science standards push in the same direction. The TOP Guidelines
+and UNESCO Recommendation on Open Science emphasize transparency,
+scrutiny, reproducibility, accountability, and shared research objects
+[nosek2015top; unesco2021_open_science]. This exemplar implements a
+small local version of those values; it does not claim that openness
+alone resolves study design, fairness, or domain-validity problems.</p>
 <hr />
 <h1 data-number="6" id="sec:conclusion"><span
 class="header-section-number">6</span> Conclusion: Certification and
@@ -2205,7 +2349,7 @@ class="header-section-number">6.1</span> Summary</h2>
 <li>Final purity: 99.9999999% (nine-nines) (24K (nine-nines
 certified))</li>
 <li>24 tokens generated deterministically from seed 431</li>
-<li>Config hash: 646d8ce93d6d42bd</li>
+<li>Config hash: 2411971d39e10f3d</li>
 <li>6 source-owned formalisms with equation labels:
 eq:purity_functional, eq:monotone_refinery, eq:token_digest,
 eq:claim_support, eq:integrity_vector, eq:certification_predicate</li>
@@ -2232,11 +2376,17 @@ and validation reports from source.</p>
 <p>That contract is the paper’s central contribution. It demonstrates
 how an analogy can be useful without being loose: every metaphorical
 move either points to a source-owned implementation surface or stays
-explicitly inside the discussion boundary.</p>
+explicitly inside the discussion boundary. The paper therefore
+contributes a reproducible-composition pattern, not a universal theory
+of manuscript quality.</p>
 <p>The added integrity model makes the same claim in a stricter form:
 every high-value visual or formal statement should have an owner, an
 evidence tier, and a validator. Without those three surfaces, the right
-outcome is not a more polished metaphor; it is a narrower claim.</p>
+outcome is not a more polished metaphor; it is a narrower claim. This
+keeps the final certification claim aligned with reproducible-research
+norms: the artifact is stronger when it can be regenerated and audited,
+but still bounded by the evidence its sources actually contain
+[sandve2013ten; marwick2018packaging].</p>
 <hr />
 <h1 data-number="7" id="sec:reproducibility"><span
 class="header-section-number">7</span> Reproducibility: Seeded
@@ -2245,11 +2395,22 @@ Regeneration</h1>
 class="header-section-number">7.1</span> Deterministic regeneration</h2>
 <p>The refinery pipeline is fully deterministic. Given the same
 <code>manuscript/config.yaml</code> and <code>src/</code> code, every
-run produces identical output.</p>
+run produces identical output. This is the local version of a
+reproducible computational research norm: the reader should be able to
+inspect the source, rerun the workflow, and recover the same derived
+artifacts [peng2011reproducible; sandve2013ten].</p>
+<p>Executable-publication scholarship sharpens that norm. Executable
+research compendia and executable papers treat an article as a package
+of narrative, code, data, environment, and rendered outputs rather than
+as a static document with detachable supplements [nuest2017erc;
+lasser2020executable]. The present exemplar is smaller and more
+template-specific: it does not provide a universal executable-paper
+format, but it does make the manuscript variables, figures, reports, and
+rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
-<li><strong>Config hash:</strong> 646d8ce93d6d42bd</li>
-<li><strong>Generation timestamp:</strong> 2026-06-26T18:18:44Z</li>
+<li><strong>Config hash:</strong> 2411971d39e10f3d</li>
+<li><strong>Generation timestamp:</strong> 2026-06-25T00:00:00Z</li>
 <li><strong>Python version:</strong> 3.12.13</li>
 </ul>
 <h2 data-number="7.2" id="artifact-inventory"><span
@@ -2293,12 +2454,18 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span> <span class="at">--project</span> templates/template_gold_refinement <span class="at">--pipeline</span> <span class="at">--core-only</span></span></code></pre></div>
 <h2 data-number="7.4" id="config-ownership"><span
 class="header-section-number">7.4</span> Config ownership</h2>
-<p>All vocabulary, slots, and section conditions are declared in
-<code>manuscript/config.yaml</code> under <code>gold_refinement:</code>.
-The config is the source of truth; generated prose is disposable.</p>
+<p>All vocabulary, slots, section conditions, steganography toggles, and
+optional LLM review gates are declared in
+<code>manuscript/config.yaml</code> under <code>gold_refinement:</code>,
+<code>steganography:</code>, and <code>llm:</code>. The config is the
+source of truth; generated prose is disposable.</p>
+<p><code>src/pipeline_policy.py</code> turns those policy blocks into an
+explicit secure-pipeline hook. That keeps the optional hardening path
+visible before execution instead of burying it in shell glue or
+prose.</p>
 <p>The reproducibility spine uses fact registry and figure registry as
 generated artifacts rather than reader trust signals. Variable
-generation records <code>646d8ce93d6d42bd</code>; analysis writes
+generation records <code>2411971d39e10f3d</code>; analysis writes
 refinery, token, claim-support, dashboard, and figure artifacts;
 validation may add the shared evidence registry used by template
 scientific-integrity checks.</p>
@@ -2308,6 +2475,15 @@ claim, follow it to a generated variable or report, follow that artifact
 to <code>src/</code> or <code>manuscript/config.yaml</code>, and rerun
 the same stage command. If that path is broken, the fork has produced a
 static illustration rather than a reproducible refinement pipeline.</p>
+<p>Metadata is part of that path, not administrative garnish. Work on
+reproducible computational metadata argues that data, tools, workflows,
+environments, and reports need machine-readable descriptors before
+re-execution and reuse can be automated reliably [chen2021metadata].
+Here, the evidence registry, token plan, figure registry, output
+statistics, and config hash are the local metadata stack. They make the
+object inspectable, but they remain descriptive: they identify what was
+generated and from where, not whether a domain conclusion is
+correct.</p>
 <p>The same rule applies to visual polish. The figure registry is
 source-owned, every registered PNG now has a companion SVG, and
 <code>output/reports/figure_quality_report.json</code> records 12 PNG
@@ -2326,7 +2502,10 @@ project-local contribution-claim assay consumed by the dashboard and
 claim-support figure. <code>output/reports/evidence_registry.json</code>
 is reserved for the shared template evidence validator, which registers
 numbers, citations, equations, sections, figures, tables, generated
-data, and claim-ledger facts.</p>
+data, and claim-ledger facts. The split mirrors provenance standards:
+different entities can be generated by different activities and still
+belong to one accountable research object [moreau2013prov;
+belhajjame2015ontologies].</p>
 <p>The evidence-tier ladder in fig. <a
 href="#fig:evidence_tier_ladder">12</a> is the reproducibility
 counterpart to that separation. It does not merely count files. It shows
@@ -2355,10 +2534,64 @@ judgement</li>
 class="header-section-number">8.2</span> Related work</h2>
 <p>The mega-madlib token injection pattern follows
 <code>template_madlib</code>’s deterministic lexical composition
-approach. The pipeline-staging model draws on
-<code>template_code_project</code>’s thin-orchestrator pattern. The
-refinement analogy is novel to this exemplar but builds on the template
-repository’s existing validation and rendering infrastructure.</p>
+approach [template_madlib]. The pipeline-staging model draws on
+<code>template_code_project</code>’s thin-orchestrator pattern and the
+wider template repository’s validation and rendering infrastructure
+[template_repo]. The refinement analogy is novel to this exemplar, but
+the surrounding scholarship is not.</p>
+<p>Analogy theory supplies the first boundary. Structure-mapping treats
+analogy as a transfer of relational organization rather than surface
+resemblance [gentner1983structure], while philosophy of science
+distinguishes positive, negative, and still-open analogy regions
+[hesse1966models]. The paper therefore claims that the refinery stages
+organize a reproducible manuscript workflow. It does not claim that
+metallurgical purity is an empirical measure of prose quality.</p>
+<p>Reproducible-research scholarship supplies the second boundary.
+Literate programming, Sweave, and notebook-based analysis show that
+code, results, and narrative can be co-developed in executable documents
+[knuth1984literate; leisch2002sweave; rule2019jupyter]. Research
+compendia and workflow-centric research objects show how code, data,
+text, environment, and provenance can be packaged as durable units
+[marwick2018packaging; belhajjame2015ontologies]. This exemplar extends
+those ideas to deterministic token selection, but it remains an internal
+consistency and provenance demonstration.</p>
+<p>FAIR and PROV supply the third boundary. Rich metadata and provenance
+improve findability, interoperability, reuse, and auditability
+[wilkinson2016fair; moreau2013prov]. They do not guarantee that a
+substantive scientific claim is true. The evidence ladder in this paper
+is therefore an honesty device: source-code facts, generated metrics,
+bibliography records, and domain evidence must not be collapsed into one
+undifferentiated support score.</p>
+<p>The metallurgy literature supplies the fourth boundary. Gold
+extraction, assaying, fineness, and hallmarking provide the
+source-domain vocabulary for staged refinement and independent
+certification [marsden_house_2006; hallmarking_convention_1972;
+lbma_good_delivery_rules]. This paper imports that relational structure.
+It does not import market rules, assay tolerances, or regulatory
+authority into manuscript review.</p>
+<p>Structured reporting and open-science standards supply the fifth
+boundary. CONSORT, STROBE, PRISMA, ARRIVE, and EQUATOR show how research
+communities turn recurring omissions into explicit reporting items
+[schulz2010consort; vonelm2007strobe; page2021prisma;
+percie_du_sert2020arrive; equator_network_reporting_guidelines]. The TOP
+Guidelines and UNESCO Recommendation on Open Science broaden that logic
+toward transparency, sharing, accountability, and reproducibility
+[nosek2015top; unesco2021_open_science]. This exemplar is
+guideline-shaped, but it is not a replacement for discipline-specific
+reporting compliance: forks must choose the appropriate external
+checklist and add domain validators before claiming compliance with any
+field standard.</p>
+<p>Executable-publication and software-citation work supply the sixth
+boundary. Executable research compendia, executable papers, and
+analytic-stack metadata show how publication objects can bind narrative,
+code, data, environments, and outputs into a reusable package
+[nuest2017erc; lasser2020executable; chen2021metadata].
+Software-citation principles add that code and template releases should
+be credited with enough specificity, persistence, and accessibility that
+readers can identify the version used [smith2016softwarecitation]. This
+exemplar aligns with those norms, but it does not claim that a
+regenerated PDF is itself an archival preservation system or that a
+repository URL substitutes for versioned software citation.</p>
 <h2 data-number="8.3" id="responsible-forking"><span
 class="header-section-number">8.3</span> Responsible forking</h2>
 <p>A fork must:</p>
@@ -2367,6 +2600,11 @@ class="header-section-number">8.3</span> Responsible forking</h2>
 <li>Update lexicon categories to reflect domain vocabulary</li>
 <li>Connect refinery stages to real domain operations</li>
 <li>Add domain validators beyond the exemplar’s generic gates</li>
+<li>Use <code>src/domain_adapter.py</code> and
+<code>docs/domain_fork_guide.md</code> to remap domain metrics and
+boundary notes</li>
+<li>Cite the exact software/template release and environment used for
+the fork</li>
 <li>Regenerate all outputs through the pipeline</li>
 </ol>
 <p>The formalism registry is local to this exemplar. It states how this
@@ -2429,6 +2667,38 @@ validator or artifact that detects them?</td>
 scores, and evidence-tier rows.</td>
 <td>src/integrity.py and ../figures/integrity_risk_matrix.png</td>
 </tr>
+<tr>
+<td>Scholarship boundary</td>
+<td>Do external references support the analogy, reproducibility,
+provenance, and metallurgy framing without being used as evidence for
+universal manuscript-quality claims?</td>
+<td>The scope, discussion, and evaluation sections cite the scholarship
+while keeping certification local to source-owned gates.</td>
+<td>manuscript/references.bib and manuscript/07_scope.md</td>
+</tr>
+<tr>
+<td>Reporting-guideline completeness</td>
+<td>Does the manuscript distinguish checklist-style completeness from
+methodological validity?</td>
+<td>The methods, scope, discussion, and evaluation sections cite
+reporting-guideline scholarship while explicitly limiting what the local
+gates prove.</td>
+<td>manuscript/02_methodology.md, manuscript/04_discussion.md,
+manuscript/07_scope.md, and manuscript/08_evaluation.md</td>
+</tr>
+<tr>
+<td>Executable-compendium identity</td>
+<td>Can a reader identify the executable package, metadata stack,
+software release, and generated artifacts needed to rebuild the
+manuscript?</td>
+<td>The reproducibility, scope, evaluation, and authoring-contract
+sections cite executable-publication and software-citation scholarship
+while keeping preservation and portability claims bounded.</td>
+<td>manuscript/06_reproducibility.md, manuscript/07_scope.md,
+manuscript/08_evaluation.md, manuscript/09_authoring_contract.md,
+output/reports/evidence_registry.json, and
+output/reports/output_statistics.json</td>
+</tr>
 </tbody>
 </table>
 <p>The selected evaluation gate terms are prerender and citation
@@ -2483,12 +2753,65 @@ class="header-section-number">9.2</span> Audit rules</h2>
 evidence surfaces</td>
 <td>tests/test_integrity.py</td>
 </tr>
+<tr>
+<td>Scholarship boundary</td>
+<td>Citations must anchor framing and limitations without substituting
+for domain validation</td>
+<td>prerender citation/evidence validation plus human source review</td>
+</tr>
+<tr>
+<td>Reporting-guideline boundary</td>
+<td>Checklist-style completeness must not be represented as
+methodological validity or external reporting compliance</td>
+<td>prerender citation/evidence validation plus human source review</td>
+</tr>
+<tr>
+<td>AI/template accountability</td>
+<td>Tool assistance must not be represented as authorship or independent
+responsibility</td>
+<td>authoring-contract source review plus publication-ethics citation
+check</td>
+</tr>
+<tr>
+<td>Executable-package identity</td>
+<td>The manuscript must distinguish a regenerated local package from
+long-term archival preservation or universal executable-paper
+compliance</td>
+<td>reproducibility source review plus output statistics and
+evidence-registry validation</td>
+</tr>
 </tbody>
 </table>
 <p>The audit rules are summarized visually in fig. <a
 href="#fig:integrity_gate_matrix">7</a> and algebraically in eq. <a
 href="#eq:integrity_vector">5</a>. A failed audit rule should block
 certification language even if the PDF renders.</p>
+<p>Scholarship adds one more gate: citation validity and claim-boundary
+discipline. A source can support a relation, a practice, or a caution
+without supporting every attractive extrapolation from that source. The
+evaluation surface therefore treats analogy theory, reproducibility
+literature, provenance standards, and metallurgy references as
+boundary-setting evidence, not as decorations added after the pipeline
+already decided the claim [gentner1983structure; peng2011reproducible;
+wilkinson2016fair; marsden_house_2006].</p>
+<p>The reporting-guideline literature keeps that gate modest. A passed
+checklist row certifies that a required reporting surface is present and
+traceable; it does not certify that the study behind the report is
+unbiased, sufficiently powered, or externally valid
+[equator_network_reporting_guidelines; vonelm2007strobe;
+percie_du_sert2020arrive]. The same rule governs the quality probes
+here. Passing them supports local claims about source ownership,
+artifact completeness, and reproducible rendering, not universal claims
+about manuscript quality.</p>
+<p>Executable-compendium scholarship adds a more operational evaluation
+target: can a reader identify the paper object, its source code, its
+generated artifacts, its metadata, and the software version needed to
+rebuild it [nuest2017erc; chen2021metadata; smith2016softwarecitation]?
+The current gates answer that question locally through variable
+hydration, artifact counts, evidence facts, figure registration, and
+PDF/HTML validation. They do not measure long-term preservation,
+cross-platform portability, reviewer workload, or reader comprehension;
+those would require separate empirical studies.</p>
 <p>The risk model adds prioritization to the gate list. fig. <a
 href="#fig:integrity_risk_matrix">11</a> separates easy-to-detect
 implementation failures from severe boundary failures that need clearer
@@ -2532,12 +2855,45 @@ exemplar.</td>
 <td>Treat high-residual-risk integrity dimensions as fork obligations
 before publication claims are expanded.</td>
 </tr>
+<tr>
+<td>Tool disclosure</td>
+<td>Disclose AI, template, and automation assistance when it materially
+affects writing, analysis, or review.</td>
+</tr>
+<tr>
+<td>Software citation</td>
+<td>Cite the exact software, template release, and executable package
+used to generate the manuscript.</td>
+</tr>
 </tbody>
 </table>
 <p>The authoring boundary tokens for this section are analogy boundary
 and non-claim. They mark the point where an author must either add new
 evidence and validators or lower the claim from certification to
 analogy.</p>
+<p>Authorship remains accountable even when composition is
+deterministic. The token plan can explain which configured phrase
+entered which section, but it cannot take responsibility for whether the
+resulting claim is fair, cited, or appropriately bounded. Human authors
+must review the generated text against the source evidence, especially
+when the prose imports metaphorical force from metallurgy or borrows
+authority from reproducibility standards.</p>
+<p>That accountability rule follows current publication-ethics guidance.
+ICMJE’s 2026 Recommendations include a dedicated section on artificial
+intelligence in publishing, and COPE’s authorship guidance states that
+AI tools cannot be listed as authors because they cannot accept
+responsibility for a manuscript [icmje2026recommendations; cope2023ai].
+A deterministic template is different from a generative AI system, but
+the obligation is parallel: tooling may assist composition and
+validation, while named human authors remain responsible for disclosure,
+accuracy, evidence boundaries, and final claims.</p>
+<p>Software citation closes the same accountability loop for executable
+materials. The code, template, and release that generated a manuscript
+should be treated as research products with credit, attribution,
+persistent identification, accessibility, and version specificity
+[smith2016softwarecitation]. A fork should therefore cite the release it
+used and record enough metadata for readers to distinguish “same
+template family” from “same executable object.”</p>
 <h2 data-number="10.2" id="fork-checklist"><span
 class="header-section-number">10.2</span> Fork checklist</h2>
 <ol type="1">
@@ -2551,6 +2907,15 @@ evidence pointers</p></li>
 gates</p></li>
 <li><p>Replace or extend <code>src/integrity.py</code> dimensions when
 the fork introduces new failure modes</p></li>
+<li><p>Update <code>domain_profile.yaml</code>,
+<code>src/domain_adapter.py</code>, and
+<code>docs/domain_fork_guide.md</code> when the analogy is forked into a
+new domain</p></li>
+<li><p>Keep <code>steganography</code> and <code>llm</code> policy
+blocks explicit when the secure pipeline or optional review path is
+used</p></li>
+<li><p>Cite the exact template/software release and record environment
+metadata for the executable package</p></li>
 <li><p>Regenerate all outputs through the pipeline:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/refinement_analysis.py</span>

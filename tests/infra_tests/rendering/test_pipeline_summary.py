@@ -65,6 +65,9 @@ class TestCheckCitationsUsed:
         [
             (r"\citet{doe2022} showed that.", True),
             ("According to @smith2020 the results.", True),
+            ("See [@friston2015; @smith2020] for the model.", True),
+            ("See [@fig:gnnmodel] and [@tbl:results] for generated evidence.", False),
+            ("Compare [@sec:methods] and [@eq:efe] in this manuscript.", False),
         ],
     )
     def test_detects_additional_citation_forms(self, tmp_path: Path, content: str, expected: bool) -> None:

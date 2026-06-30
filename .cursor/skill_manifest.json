@@ -28,6 +28,7 @@
           "router"
         ],
         "related_skills": [
+          "template-startup",
           "template-deep-research",
           "template-academic-paper",
           "template-academic-paper-reviewer",
@@ -438,6 +439,28 @@
         "related_skills": [
           "template-manuscript-claim-verification",
           "template-validation-quality"
+        ]
+      }
+    },
+    {
+      "name": "template-startup",
+      "description": "Full installation and validation workflow for a fresh clone of the Research Project\nTemplate. Installs dependencies, runs pre-commit hooks, executes the core pipeline\nagainst template_code_project, validates outputs, and reports a structured\nPASS / FAIL for each checkpoint. USE WHEN the user says \"start\", \"set up the repo\",\n\"install and validate\", \"does everything work\", \"first time setup\", or any variant\nof bootstrapping a fresh or unknown checkout.\n",
+      "path": "docs/prompts/startup/SKILL.md",
+      "cursor_at": "docs/prompts/startup/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-06-30",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "setup-and-validation",
+        "modes": [
+          "install",
+          "validate"
+        ],
+        "related_skills": [
+          "template-pipeline-debugging",
+          "template-reproducibility-audit",
+          "template-comprehensive-assessment"
         ]
       }
     },

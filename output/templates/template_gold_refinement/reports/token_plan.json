@@ -43,28 +43,28 @@
       "variable_name": "METHOD_METAL_TERM_1",
       "slot_name": "METHOD_METAL_TERM",
       "category": "metallurgical_terms",
-      "value": "hallmark",
+      "value": "assaying",
       "section": "methodology",
       "ordinal": 1,
-      "source_key": "manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[4]"
+      "source_key": "manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1]"
     },
     {
       "variable_name": "METHOD_METAL_TERM_2",
       "slot_name": "METHOD_METAL_TERM",
       "category": "metallurgical_terms",
-      "value": "cupellation",
+      "value": "parting",
       "section": "methodology",
       "ordinal": 2,
-      "source_key": "manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[0]"
+      "source_key": "manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3]"
     },
     {
       "variable_name": "METHOD_METAL_TERM_3",
       "slot_name": "METHOD_METAL_TERM",
       "category": "metallurgical_terms",
-      "value": "assaying",
+      "value": "smelting",
       "section": "methodology",
       "ordinal": 3,
-      "source_key": "manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1]"
+      "source_key": "manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2]"
     },
     {
       "variable_name": "METHOD_MANUSCRIPT_TERM_1",

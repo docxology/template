@@ -189,9 +189,30 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <p>The refinery pipeline consists of 5 canonical stages, each mapping a
 metallurgical operation to a manuscript-composition operation. The
 pipeline is implemented in <code>src/refinery.py</code> and validated by
-<code>src/purity.py</code>. The methods surface now has three coupled
-layers: the refinery stages, the mega-madlib token plan, and the
-generated formalism registry.</p>
+<code>src/purity.py</code>. The methods surface now has four coupled
+layers: the refinery stages, the mega-madlib token plan, the generated
+formalism registry, and the scholarship boundary that determines which
+claims may be generalized beyond this exemplar.</p>
+<p>Methodologically, the paper treats composition as part of a research
+compendium: authored sources, executable scripts, generated reports,
+figures, and rendered manuscript outputs are separated but linked
+[marwick2018packaging]. That design follows the executable-paper and
+notebook traditions in which narrative is coupled to runnable analysis
+rather than copied from it [leisch2002sweave; rule2019jupyter]. The
+novelty claimed here is narrower: the token-level narrative choices are
+deterministic and provenance-bearing, not that a template can validate
+scientific truth.</p>
+<p>Structured reporting guidelines provide the closest scholarly
+analogue for the gate layer, but they also set its limit. CONSORT,
+STROBE, PRISMA, ARRIVE, and the EQUATOR Network define field-specific
+reporting items so a manuscript can be inspected, appraised, and in some
+cases replicated more easily [schulz2010consort; vonelm2007strobe;
+page2021prisma; percie_du_sert2020arrive;
+equator_network_reporting_guidelines]. In this exemplar, token coverage,
+evidence registration, and render validation play a similar internal
+role: they make omissions visible and bind declarations to artifacts.
+They do not test whether an external study was designed well, executed
+correctly, or substantively true.</p>
 <h2 id="stage-definitions">Stage definitions</h2>
 <table>
 <colgroup>
@@ -459,7 +480,9 @@ check, and citation validation to concrete validation surfaces.</p>
 </tbody>
 </table>
 <h2 id="karat-grading">Karat grading</h2>
-<p>Karat grades map purity fractions to standard gold fineness:</p>
+<p>Karat grades map purity fractions to a gold-fineness vocabulary used
+here as an analogy surface [marsden_house_2006;
+lbma_good_delivery_rules]:</p>
 <ul>
 <li>9K = 37.5% (ore stage)</li>
 <li>18K = 75.0% (smelting stage)</li>
@@ -468,8 +491,10 @@ check, and citation validation to concrete validation surfaces.</p>
 <li>Nine-nines = 99.9999999% (certification stage)</li>
 </ul>
 <p>The mapping is implemented in
-<code>src/purity.py::karat_for_purity()</code>. The karat grading chart
-is shown in <span class="citation"
+<code>src/purity.py::karat_for_purity()</code>. The final nine-nines
+target is a deliberately stringent local certification predicate, not an
+assertion that all gold markets or manuscript-quality regimes use that
+threshold. The karat grading chart is shown in <span class="citation"
 data-cites="fig:karat_grading">[@fig:karat_grading]</span> (see <span
 class="citation" data-cites="sec:results">[@sec:results]</span>).</p>
 <h2 id="pipeline-phases">Pipeline phases</h2>
@@ -558,7 +583,11 @@ registers evidence facts. Second, generated artifacts own observation:
 token plans, figures, resolved Markdown, reports, and dashboards are
 rebuilt rather than edited. Third, template gates own permission to
 promote the manuscript: unresolved tokens, unsupported facts, missing
-citations, broken references, and invalid PDFs block certification.</p>
+citations, broken references, and invalid PDFs block certification. This
+is the manuscript analogue of provenance-aware workflow design:
+entities, activities, agents, and generated outputs are kept traceable
+so readers can assess reliability rather than infer it from polished
+prose [moreau2013prov; belhajjame2015ontologies].</p>
 <p>This split keeps the gold metaphor honest. A fork is allowed to
 change the ore, the furnace, or the assay, but it must do so in the
 source layer and then let the generated and validation layers expose the

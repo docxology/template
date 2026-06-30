@@ -206,7 +206,7 @@ def _check_citations_used(manuscript_dir: Path) -> bool:
         r"\\citet\{[^}]+\}",
         r"\\citeauthor\{[^}]+\}",
         r"\\citeyear\{[^}]+\}",
-        r"@[^@\s]+\s",
+        r"(?<![A-Za-z0-9_])@(?!(?:fig|tbl|sec|eq):)[A-Za-z0-9_][A-Za-z0-9_:.#$%&+?<>~/-]*",
     ]
 
     manuscript_files = list(manuscript_dir.glob("*.md"))

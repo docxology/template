@@ -75,9 +75,9 @@ The mega-madlib engine generated 24 tokens from seed 431 across 8 lexicon catego
 | METHOD_GATE_TERM_3 | gate_terms | citation validation | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
 | METHOD_MANUSCRIPT_TERM_1 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
 | METHOD_MANUSCRIPT_TERM_2 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
-| METHOD_METAL_TERM_1 | metallurgical_terms | hallmark | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[4] |
-| METHOD_METAL_TERM_2 | metallurgical_terms | cupellation | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[0] |
-| METHOD_METAL_TERM_3 | metallurgical_terms | assaying | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
+| METHOD_METAL_TERM_1 | metallurgical_terms | assaying | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
+| METHOD_METAL_TERM_2 | metallurgical_terms | parting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3] |
+| METHOD_METAL_TERM_3 | metallurgical_terms | smelting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2] |
 | REPRO_EVIDENCE_TERM_1 | evidence_terms | fact registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0] |
 | REPRO_EVIDENCE_TERM_2 | evidence_terms | figure registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
 | RESULTS_EVIDENCE_TERM_1 | evidence_terms | artifact manifest | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1] |
@@ -140,8 +140,8 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 |-------------|-------|------|
 | artifact | 117 | Generated artifacts exposed to readers |
 | generated_metric | 94 | Numbers regenerated from project analysis |
+| bibliography | 33 | Reference records and citation metadata |
 | claim_ledger | 14 | Source-owned claim and fact declarations |
-| bibliography | 5 | Reference records and citation metadata |
 : Evidence tiers used by the integrity model and shared registry when available. {#tbl:evidence_tiers}
 
 ## Contribution claims
@@ -149,24 +149,24 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 | Claim | Statement | Evidence | Boundary |
 |-------|-----------|----------|----------|
 | Five-stage refinery | The refinery pipeline has 5 canonical stages from ore to nine-nines. | src/refinery.py::CANONICAL_STAGES | local |
-| Monotone purity | Purity increases strictly across all refinery stages. | src/refinery.py::assert_monotone_increase | local |
+| Monotone purity | Purity increases strictly across all refinery stages. | src/purity.py::assert_monotone_increase | local |
 | Nine-nines certification | The certification stage achieves 99.9999999% purity. | src/purity.py::NINE_NINES_PURITY | local |
 | Deterministic tokens | Token selection is deterministic via seeded SHA-256 digest. | src/composition.py::_choose_value | local |
 | Formalism registry | The manuscript exposes 6 source-owned formalisms with equation labels. | src/formalisms.py::FORMALISMS | local |
-| Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | scripts/refinement_analysis.py::claim_support_registry | local |
-| Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures.py::generate_implementation_circuit | local |
+| Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME | local |
+| Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures/diagrams.py::generate_implementation_circuit | local |
 | Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | src/integrity.py::build_integrity_dimensions | local |
 
 The project-local claim-support assay reports 8 supported claims out of 8 total claims, for 100.00% support. Unsupported claims: 0. The generated project report path is `output/reports/claim_support_registry.json`; the shared template evidence report remains `output/reports/evidence_registry.json`.
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 230.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 258.
 
 | Fact kind | Count |
 |-----------|-------|
 | artifact | 75 |
-| citation | 5 |
+| citation | 33 |
 | equation | 7 |
 | figure | 27 |
 | number | 100 |
@@ -180,16 +180,16 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3947x1904 | 0.211 | 0.05905715 | pass |
-| evidence_tier_ladder | yes | yes | 3254x1319 | 0.194 | 0.05465268 | pass |
-| formalism_traceability | yes | yes | 4170x1866 | 0.096 | 0.03165302 | pass |
-| implementation_circuit | yes | yes | 3720x2129 | 0.049 | 0.01648025 | pass |
-| integrity_gate_matrix | yes | yes | 1953x1559 | 0.457 | 0.17734427 | pass |
-| integrity_risk_matrix | yes | yes | 2969x2069 | 0.402 | 0.01475595 | pass |
-| karat_grading | yes | yes | 3241x1829 | 0.286 | 0.07357948 | pass |
-| provenance_sankey | yes | yes | 3570x1400 | 0.059 | 0.01855784 | pass |
-| purity_claim_scatter | yes | yes | 2587x1889 | 0.028 | 0.01227429 | pass |
-| purity_progression | yes | yes | 3029x2125 | 0.182 | 0.03971092 | pass |
-| token_density | yes | yes | 3865x1663 | 0.206 | 0.06115993 | pass |
-| token_heatmap | yes | yes | 2648x2424 | 0.637 | 0.12747028 | pass |
+| claim_evidence_assay | yes | yes | 3952x1904 | 0.211 | 0.05901302 | pass |
+| evidence_tier_ladder | yes | yes | 3348x1332 | 0.217 | 0.05647730 | pass |
+| formalism_traceability | yes | yes | 3315x1631 | 0.133 | 0.04262721 | pass |
+| implementation_circuit | yes | yes | 2966x1845 | 0.068 | 0.02235231 | pass |
+| integrity_gate_matrix | yes | yes | 1829x1933 | 0.410 | 0.16336351 | pass |
+| integrity_risk_matrix | yes | yes | 2499x1910 | 0.387 | 0.01770377 | pass |
+| karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |
+| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02178809 | pass |
+| purity_claim_scatter | yes | yes | 2340x1744 | 0.032 | 0.01428277 | pass |
+| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
+| token_density | yes | yes | 3289x1856 | 0.234 | 0.06699486 | pass |
+| token_heatmap | yes | yes | 2397x2399 | 0.627 | 0.12908659 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}

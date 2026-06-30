@@ -154,7 +154,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 | Deterministic tokens | Token selection is deterministic via seeded SHA-256 digest. | src/composition.py::_choose_value | local |
 | Formalism registry | The manuscript exposes 6 source-owned formalisms with equation labels. | src/formalisms.py::FORMALISMS | local |
 | Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME | local |
-| Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures/diagrams.py::generate_implementation_circuit | local |
+| Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures.py::generate_implementation_circuit | local |
 | Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | src/integrity.py::build_integrity_dimensions | local |
 
 The project-local claim-support assay reports 8 supported claims out of 8 total claims, for 100.00% support. Unsupported claims: 0. The generated project report path is `output/reports/claim_support_registry.json`; the shared template evidence report remains `output/reports/evidence_registry.json`.
@@ -180,10 +180,10 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3952x1904 | 0.211 | 0.05901302 | pass |
+| claim_evidence_assay | yes | yes | 3952x1904 | 0.211 | 0.05899116 | pass |
 | evidence_tier_ladder | yes | yes | 3348x1332 | 0.196 | 0.05503309 | pass |
 | formalism_traceability | yes | yes | 3315x1631 | 0.133 | 0.04262721 | pass |
-| implementation_circuit | yes | yes | 2966x1845 | 0.068 | 0.02235231 | pass |
+| implementation_circuit | yes | yes | 2966x1845 | 0.071 | 0.02313166 | pass |
 | integrity_gate_matrix | yes | yes | 1832x1425 | 0.437 | 0.17560313 | pass |
 | integrity_risk_matrix | yes | yes | 2499x1910 | 0.387 | 0.01770377 | pass |
 | karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |

@@ -10,9 +10,11 @@
 \section*{BEGINNING OF TRANSMISSION}\label{beginning-of-transmission}
 ```
 
-**State:** published
+**State:** unpublished / pending pairing
 
-**Pairing:** complete (DOI, GitHub, SHA-256, Zenodo URL)
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
 
 ```{=latex}
 \subsubsection*{Release metadata}
@@ -24,9 +26,9 @@
 | Version | 2.5.2 |
 | Concept DOI | 10.5281/zenodo.20417136 |
 | Version DOI | 10.5281/zenodo.20931934 |
-| GitHub | [https://github.com/docxology/template_code_project/releases/tag/v2.5.2](https://github.com/docxology/template_code_project/releases/tag/v2.5.2) |
+| GitHub | docxology/template_code_project |
 | Zenodo | [https://zenodo.org/records/20417136](https://zenodo.org/records/20417136) |
-| SHA-256 | `cd54b95893501467…` |
+| SHA-256 | pending |
 | SHA-512 | pending |
 
 ```{=latex}
@@ -519,14 +521,14 @@ To validate robustness, the optimizer is exercised across a grid of 8 starting p
 
 ## Dimensional Scaling
 
-Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}$, from the scalar case ($d = 1$) to moderate dimensionality ($d = 50$), using identity-Hessian quadratics to isolate algorithmic scaling from problem conditioning effects. Representative single-call execution time from the last benchmark run: **2.8 μs** (recorded in `output/reports/performance_benchmark.json`).
+Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}$, from the scalar case ($d = 1$) to moderate dimensionality ($d = 50$), using identity-Hessian quadratics to isolate algorithmic scaling from problem conditioning effects. Representative single-call execution time from the last benchmark run: **1.9 μs** (recorded in `output/reports/performance_benchmark.json`).
 
 ## Computational Environment
 
 - **Python**: 3.12.13
-- **NumPy**: 2.4.1
+- **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-06-26T13:57:11Z
+- **Generated**: 2026-06-30T12:08:00Z
 
 ## Pipeline ordering
 
@@ -579,9 +581,9 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |
 | Publication-quality figures        | 8   |
-| Structured data files (CSV/JSON)   | 6 |
-| Analysis reports                   | 22   |
-| **Total artifacts**                | **36** |
+| Structured data files (CSV/JSON)   | 5 |
+| Analysis reports                   | 9   |
+| **Total artifacts**                | **22** |
 
 ## Numerical Validation Summary
 
@@ -600,6 +602,10 @@ Within the configured grid, **4** of **6** runs satisfied `gradient_descent()` c
 Stability score from `infrastructure.scientific.stability`: **1.00** (out of 1.00)
 
 The stability analysis tested 48 parameter combinations (8 starting points $\times$ 6 step sizes), confirming uniform convergence across the entire parameter space.
+
+### Benchmark Demonstration
+
+This exemplar also demonstrates `infrastructure.benchmark`. The thin orchestrator `scripts/04_benchmark_stage.py` calls `src/benchmark_support.py`, which times the pure `quadratic_function` across a fixed set of input sizes (deterministic seed, no network) and turns the timing facts into boolean rubric checks. Those checks are scored through the shared `infrastructure.benchmark.score_rubric` against a weighted `RubricSet`, and the result is rendered with `scores_to_markdown` into `output/reports/benchmark_report.json` (plus an optional timing figure). This keeps the benchmark API exercised by a real exemplar, not by infrastructure tests alone.
 
 ## Madlib Injection Verification
 
@@ -680,11 +686,11 @@ uv run python -m infrastructure.reference.citation.cli validate \
 \section*{END OF TRANSMISSION}\label{end-of-transmission}
 ```
 
-**Release:** v2.5.2 · DOI `10.5281/zenodo.20417136` · SHA-256 `cd54b9589350…` · pairing complete
+**Release:** v2.5.2 · DOI `10.5281/zenodo.20417136` · SHA-256 `pending…` · pairing pending
 
 ![Integrity QR strip](../figures/transmission_integrity_strip.png){width=88%}
 
-**Prior:** `v2.5.1` · `10.5281/zenodo.20417136` · `33ceeb67…`
+**Prior:** _No prior releases._
 
 ```{=latex}
 \end{samepage}

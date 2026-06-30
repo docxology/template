@@ -80,17 +80,18 @@ def run_manuscript_variable_script(
     """Hydrate project manuscript variables before rendering, when available."""
     import os
 
-    from infrastructure.core.runtime.environment import get_python_command
+    from infrastructure.core.runtime.environment import resolve_test_python
 
     script = project_root / "scripts" / "z_generate_manuscript_variables.py"
     if not script.is_file():
         return 0
 
     logger.info("Hydrating manuscript variables before render: %s", script.name)
-    cmd = get_python_command() + [str(script)]
+    cmd = resolve_test_python(project_root / ".venv") + [str(script)]
+    logger.info("Using manuscript hydration interpreter: %s", cmd[0])
     env = os.environ.copy()
     if template_repo_root is not None:
-        env.setdefault("TEMPLATE_REPO_ROOT", str(template_repo_root))
+        env["TEMPLATE_REPO_ROOT"] = str(template_repo_root)
     try:
         result = subprocess.run(  # nosec B603
             cmd,

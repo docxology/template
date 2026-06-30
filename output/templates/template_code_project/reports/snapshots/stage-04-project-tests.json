@@ -1,20 +1,20 @@
 {
-  "artifact_manifest_hash": "2c58bd7ca8dfcf69a581feb9cb81904f5a7dc18ee4e990b81eb8e0af9c2119c6",
+  "artifact_manifest_hash": "a284d84f79a38e0be84fd68c5acff18fad37b11c96c976bfd5b297e6f251608a",
   "artifacts": {
-    "output/docs/api_glossary.md": "4d47cd4ccfd9ae7ddc0f484e32f6c6ad9a00ddd4514afd00613939d239954134",
+    "output/docs/api_glossary.md": "85519a841c7b683dd83d42114f8666c6a74ae2677da20333fb8b4058333e941a",
     "output/docs/api_reference.md": "0803e31fd3165119ec2b83f7c49544389793bd1bdd7de586930a6f6af3376d2e",
-    "output/figures/performance_benchmark.png": "391afdffd846896a57c38de3f5f087faabd6485115129abd87eee010f240211b",
+    "output/figures/performance_benchmark.png": "57ae2c3c2d17b346894ddf57906fc02ab1c52cd5cd2f443e73252999dc13905c",
     "output/figures/stability_analysis.png": "1e42d3b3df747d6f2da12e3cad891e8b5fe7d70bcdb8e224997e9b22cae0d31e",
-    "output/reports/performance_benchmark.json": "8c5674f1cb62bcd2c73872d7e4138fb1eb8d3f2cea1bebacb771dc4621d58753",
+    "output/reports/performance_benchmark.json": "25e0bf925e3f42bcdb21cf28042229f1db736c093e308233afab57820f12d6d1",
     "output/reports/stability_analysis.json": "965a796f593504fc06d931a5314e00275c427466982ade2f4f57b2710ab3e9da",
-    "output/reports/test_results.json": "b278ec7452958c5e7566183a8235e2b93828ad6a848b15b7f3882b5eb7998ce2",
-    "output/reports/test_results.md": "59c21db5e269fedf8b0f18c7e59349911954edc4d95318dda633491bd0ad783e"
+    "output/reports/test_results.json": "3e13988ef84af59680264f43b23393d40fcd3d37ac7bc0f4e9881566d21afbb2",
+    "output/reports/test_results.md": "b551447388f64cf5fe6b14504aae16294296df9e75d897cadc0399d20e1065ed"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_code_project/output/reports/snapshots/stage-04-project-tests.json",
+  "path": "output/reports/snapshots/stage-04-project-tests.json",
   "stage_name": "Project Tests",
   "stage_num": 4,
-  "timestamp": "2026-06-14T18:36:43+00:00",
+  "timestamp": "2026-06-30T12:07:55+00:00",
   "validation_summary": {
     "checks": {},
     "summary": {}

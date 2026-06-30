@@ -1,7 +1,7 @@
 # Pipeline Execution Report
 
-**Generated:** 2026-06-14T11:37:53.268860
-**Total Duration:** 1m 49s
+**Generated:** 2026-06-30T05:08:48.989957
+**Total Duration:** 1m 41s
 
 ## Summary
 
@@ -15,13 +15,13 @@
 | Stage | Status | Duration | Exit Code |
 |-------|--------|----------|-----------|
 | Clean Output Directories | ✅ passed | 0s | 0 |
-| Environment Setup | ✅ passed | 1s | 0 |
-| Infrastructure Tests | ✅ passed | 8s | 0 |
-| Project Tests | ✅ passed | 29s | 0 |
+| Environment Setup | ✅ passed | 2s | 0 |
+| Infrastructure Tests | ✅ passed | 17s | 0 |
+| Project Tests | ✅ passed | 28s | 0 |
 | Project Analysis | ✅ passed | 4s | 0 |
-| PDF Rendering | ✅ passed | 1m 3s | 0 |
-| Output Validation | ✅ passed | 1s | 0 |
-| Copy Outputs | ✅ passed | 1s | 0 |
+| PDF Rendering | ✅ passed | 47s | 0 |
+| Output Validation | ✅ passed | 0s | 0 |
+| Copy Outputs | ✅ passed | 0s | 0 |
 
 ## Output Statistics
 

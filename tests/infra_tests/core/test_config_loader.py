@@ -757,6 +757,7 @@ class TestConfigKeyValidation:
             "content_notes": {"audience": "graduate"},
             "chapter_metadata": {"unit_1": {"title": "Unit 1"}},
             "export": {"formats": ["pdf"]},
+            "gold_refinement": {"seed": 431},
         }
         config_file = tmp_path / "valid_config.yaml"
         with open(config_file, "w") as f:

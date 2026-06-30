@@ -237,9 +237,10 @@
 \section*{BEGINNING OF TRANSMISSION}
 \phantomsection\label{beginning-of-transmission}
 
-\textbf{State:} published
+\textbf{State:} unpublished / pending pairing
 
-\textbf{Pairing:} complete (DOI, GitHub, SHA-256, Zenodo URL)
+\textbf{Pairing:} pending --- unresolved: - ✗ GitHub release URL:
+\texttt{pending} - ✗ PDF SHA-256: \texttt{pending}
 
 \subsubsection*{Release metadata}
 
@@ -261,10 +262,9 @@ Title & Convergence Analysis of Gradient Descent Optimization \\
 Version & 2.5.2 \\
 Concept DOI & 10.5281/zenodo.20417136 \\
 Version DOI & 10.5281/zenodo.20931934 \\
-GitHub &
-\url{https://github.com/docxology/template_code_project/releases/tag/v2.5.2} \\
+GitHub & docxology/template\_code\_project \\
 Zenodo & \url{https://zenodo.org/records/20417136} \\
-SHA-256 & \breaktt{cd54b95893501467…} \\
+SHA-256 & pending \\
 SHA-512 & pending \\
 \end{longtable}
 }
@@ -1473,7 +1473,7 @@ Performance benchmarking spans problem dimensions
 moderate dimensionality (\(d = 50\)), using identity-Hessian quadratics
 to isolate algorithmic scaling from problem conditioning effects.
 Representative single-call execution time from the last benchmark run:
-\textbf{2.8 \texorpdfstring{\ensuremath{\mu}}{mu}s} (recorded in
+\textbf{1.9 \texorpdfstring{\ensuremath{\mu}}{mu}s} (recorded in
 \breaktt{output/reports/performance\_benchmark.json}).
 
 \subsection{Computational Environment}\label{computational-environment}
@@ -1483,11 +1483,11 @@ Representative single-call execution time from the last benchmark run:
 \item
   \textbf{Python}: 3.12.13
 \item
-  \textbf{NumPy}: 2.4.1
+  \textbf{NumPy}: 2.4.2
 \item
   \textbf{Platform}: Darwin arm64
 \item
-  \textbf{Generated}: 2026-06-26T13:57:11Z
+  \textbf{Generated}: 2026-06-30T12:08:00Z
 \end{itemize}
 
 \subsection{Pipeline ordering}\label{pipeline-ordering}
@@ -1604,9 +1604,9 @@ Category & Count \\
 \bottomrule\noalign{}
 \endlastfoot
 Publication-quality figures & 8 \\
-Structured data files (CSV/JSON) & 6 \\
-Analysis reports & 22 \\
-\textbf{Total artifacts} & \textbf{36} \\
+Structured data files (CSV/JSON) & 5 \\
+Analysis reports & 9 \\
+\textbf{Total artifacts} & \textbf{22} \\
 \end{longtable}
 }
 
@@ -1641,6 +1641,21 @@ Stability score from \breaktt{infrastructure.scientific.stability}:
 The stability analysis tested 48 parameter combinations (8 starting
 points \(\times\) 6 step sizes), confirming uniform convergence across
 the entire parameter space.
+
+\subsubsection{Benchmark Demonstration}\label{benchmark-demonstration}
+
+This exemplar also demonstrates \breaktt{infrastructure.benchmark}. The
+thin orchestrator \breaktt{scripts/04\_benchmark\_stage.py} calls
+\breaktt{src/benchmark\_support.py}, which times the pure
+\breaktt{quadratic\_function} across a fixed set of input sizes
+(deterministic seed, no network) and turns the timing facts into boolean
+rubric checks. Those checks are scored through the shared
+\breaktt{infrastructure.benchmark.score\_rubric} against a weighted
+\texttt{RubricSet}, and the result is rendered with
+\breaktt{scores\_to\_markdown} into
+\breaktt{output/reports/benchmark\_report.json} (plus an optional timing
+figure). This keeps the benchmark API exercised by a real exemplar, not
+by infrastructure tests alone.
 
 \subsection{Madlib Injection
 Verification}\label{madlib-injection-verification}
@@ -1786,7 +1801,7 @@ contains the required fields per entry type:
 \phantomsection\label{end-of-transmission}
 
 \textbf{Release:} v2.5.2 \texorpdfstring{\ensuremath{\cdot}}{.} DOI \breaktt{10.5281/zenodo.20417136} \texorpdfstring{\ensuremath{\cdot}}{.}
-SHA-256 \texttt{cd54b9589350…} \texorpdfstring{\ensuremath{\cdot}}{.} pairing complete
+SHA-256 \texttt{pending…} \texorpdfstring{\ensuremath{\cdot}}{.} pairing pending
 
 \begin{figure}
 \centering
@@ -1794,8 +1809,7 @@ SHA-256 \texttt{cd54b9589350…} \texorpdfstring{\ensuremath{\cdot}}{.} pairing 
 \caption{Integrity QR strip}
 \end{figure}
 
-\textbf{Prior:} \texttt{v2.5.1} \texorpdfstring{\ensuremath{\cdot}}{.} \breaktt{10.5281/zenodo.20417136} \texorpdfstring{\ensuremath{\cdot}}{.}
-\texttt{33ceeb67…}
+\textbf{Prior:} \emph{No prior releases.}
 
 \end{samepage}
 

@@ -85,8 +85,8 @@ uv sync
 ./run.sh
 
 # Open the result (example project template_code_project)
-open output/template_code_project/pdf/template_code_project_combined.pdf  # macOS
-xdg-open output/template_code_project/pdf/template_code_project_combined.pdf  # Linux
+open output/templates/template_code_project/pdf/template_code_project_combined.pdf  # macOS
+xdg-open output/templates/template_code_project/pdf/template_code_project_combined.pdf  # Linux
 ```
 
 **🎉 Success!** You should see a professional PDF document.
@@ -198,7 +198,7 @@ flowchart TB
 2. **View the result**
 
    ```bash
-   open output/template_code_project/pdf/template_code_project_combined.pdf  # After copy outputs: output/{name}/pdf/
+   open output/templates/template_code_project/pdf/template_code_project_combined.pdf  # After copy outputs: output/templates/{name}/pdf/
    ```
 
 **What You Get**:

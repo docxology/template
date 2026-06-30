@@ -10,7 +10,19 @@ This exemplar demonstrates the gold-refining analogy as a **methods paper**. It 
 
 ## Related work
 
-The mega-madlib token injection pattern follows `template_madlib`'s deterministic lexical composition approach. The pipeline-staging model draws on `template_code_project`'s thin-orchestrator pattern. The refinement analogy is novel to this exemplar but builds on the template repository's existing validation and rendering infrastructure.
+The mega-madlib token injection pattern follows `template_madlib`'s deterministic lexical composition approach [@template_madlib]. The pipeline-staging model draws on `template_code_project`'s thin-orchestrator pattern and the wider template repository's validation and rendering infrastructure [@template_repo]. The refinement analogy is novel to this exemplar, but the surrounding scholarship is not.
+
+Analogy theory supplies the first boundary. Structure-mapping treats analogy as a transfer of relational organization rather than surface resemblance [@gentner1983structure], while philosophy of science distinguishes positive, negative, and still-open analogy regions [@hesse1966models]. The paper therefore claims that the refinery stages organize a reproducible manuscript workflow. It does not claim that metallurgical purity is an empirical measure of prose quality.
+
+Reproducible-research scholarship supplies the second boundary. Literate programming, Sweave, and notebook-based analysis show that code, results, and narrative can be co-developed in executable documents [@knuth1984literate; @leisch2002sweave; @rule2019jupyter]. Research compendia and workflow-centric research objects show how code, data, text, environment, and provenance can be packaged as durable units [@marwick2018packaging; @belhajjame2015ontologies]. This exemplar extends those ideas to deterministic token selection, but it remains an internal consistency and provenance demonstration.
+
+FAIR and PROV supply the third boundary. Rich metadata and provenance improve findability, interoperability, reuse, and auditability [@wilkinson2016fair; @moreau2013prov]. They do not guarantee that a substantive scientific claim is true. The evidence ladder in this paper is therefore an honesty device: source-code facts, generated metrics, bibliography records, and domain evidence must not be collapsed into one undifferentiated support score.
+
+The metallurgy literature supplies the fourth boundary. Gold extraction, assaying, fineness, and hallmarking provide the source-domain vocabulary for staged refinement and independent certification [@marsden_house_2006; @hallmarking_convention_1972; @lbma_good_delivery_rules]. This paper imports that relational structure. It does not import market rules, assay tolerances, or regulatory authority into manuscript review.
+
+Structured reporting and open-science standards supply the fifth boundary. CONSORT, STROBE, PRISMA, ARRIVE, and EQUATOR show how research communities turn recurring omissions into explicit reporting items [@schulz2010consort; @vonelm2007strobe; @page2021prisma; @percie_du_sert2020arrive; @equator_network_reporting_guidelines]. The TOP Guidelines and UNESCO Recommendation on Open Science broaden that logic toward transparency, sharing, accountability, and reproducibility [@nosek2015top; @unesco2021_open_science]. This exemplar is guideline-shaped, but it is not a replacement for discipline-specific reporting compliance: forks must choose the appropriate external checklist and add domain validators before claiming compliance with any field standard.
+
+Executable-publication and software-citation work supply the sixth boundary. Executable research compendia, executable papers, and analytic-stack metadata show how publication objects can bind narrative, code, data, environments, and outputs into a reusable package [@nuest2017erc; @lasser2020executable; @chen2021metadata]. Software-citation principles add that code and template releases should be credited with enough specificity, persistence, and accessibility that readers can identify the version used [@smith2016softwarecitation]. This exemplar aligns with those norms, but it does not claim that a regenerated PDF is itself an archival preservation system or that a repository URL substitutes for versioned software citation.
 
 ## Responsible forking
 
@@ -20,7 +32,9 @@ A fork must:
 2. Update lexicon categories to reflect domain vocabulary
 3. Connect refinery stages to real domain operations
 4. Add domain validators beyond the exemplar's generic gates
-5. Regenerate all outputs through the pipeline
+5. Use `src/domain_adapter.py` and `docs/domain_fork_guide.md` to remap domain metrics and boundary notes
+6. Cite the exact software/template release and environment used for the fork
+7. Regenerate all outputs through the pipeline
 
 The formalism registry is local to this exemplar. It states how this project maps refinery stages, token selection, and evidence gates into equations; it does not prove that gold refining is a universal model of scientific writing. Domain forks should replace or narrow the formalism set before reusing the certification language.
 

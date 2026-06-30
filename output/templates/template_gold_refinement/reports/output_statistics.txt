@@ -5,21 +5,21 @@ OUTPUT STATISTICS REPORT
 Output Directory: output
 
 Total Files: 61
-Total Size: 7.44 MB
+Total Size: 7.80 MB
 
 Files by Category:
-  • pdf: 10 files (3.28 MB)
-  • web: 12 files (0.23 MB)
-  • figures: 25 files (3.80 MB)
+  • pdf: 10 files (3.49 MB)
+  • web: 12 files (0.29 MB)
+  • figures: 25 files (3.89 MB)
   • data: 3 files (0.03 MB)
   • reports: 11 files (0.10 MB)
 
 Largest Files:
-  • template_gold_refinement_combined.pdf: 3.06 MB (pdf)
-  • claim_evidence_assay.png: 0.58 MB (figures)
-  • formalism_traceability.png: 0.41 MB (figures)
-  • implementation_circuit.png: 0.32 MB (figures)
-  • index.html: 0.08 MB (web)
+  • template_gold_refinement_combined.pdf: 3.20 MB (pdf)
+  • claim_evidence_assay.png: 0.59 MB (figures)
+  • formalism_traceability.png: 0.36 MB (figures)
+  • purity_progression.png: 0.32 MB (figures)
+  • index.html: 0.10 MB (web)
 
 Missing Expected Files:
   ⚠  slides/ directory

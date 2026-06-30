@@ -5,7 +5,7 @@
       "label": "fig:purity_progression",
       "path": "purity_progression.png",
       "caption": "Purity progression across the five refinery stages from ore (9K) to nine-nines certification.",
-      "generated_by": "src/figures.py::generate_purity_progression",
+      "generated_by": "src/figures/charts.py::generate_purity_progression",
       "data_sources": [
         "src/refinery.py::run_refinery",
         "src/purity.py::purity_to_nines"
@@ -18,7 +18,7 @@
       "label": "fig:karat_grading",
       "path": "karat_grading.png",
       "caption": "Gold karat grading scale (9K–24K + nine-nines) with refinery stage markers.",
-      "generated_by": "src/figures.py::generate_karat_grading_chart",
+      "generated_by": "src/figures/charts.py::generate_karat_grading_chart",
       "data_sources": [
         "src/purity.py::KARAT_GRADES",
         "src/refinery.py::run_refinery"
@@ -31,7 +31,7 @@
       "label": "fig:token_density",
       "path": "token_density.png",
       "caption": "Mega-madlib token distribution across manuscript sections and lexicon categories.",
-      "generated_by": "src/figures.py::generate_token_density_chart",
+      "generated_by": "src/figures/charts.py::generate_token_density_chart",
       "data_sources": [
         "output/reports/token_plan.json",
         "src/composition.py::generate_token_plan"
@@ -44,7 +44,7 @@
       "label": "fig:provenance_sankey",
       "path": "provenance_sankey.png",
       "caption": "Provenance trace: ore → stages → certification purity flow.",
-      "generated_by": "src/figures.py::generate_provenance_sankey",
+      "generated_by": "src/figures/diagrams.py::generate_provenance_sankey",
       "data_sources": [
         "src/refinery.py::run_refinery"
       ],
@@ -56,7 +56,7 @@
       "label": "fig:purity_claim_scatter",
       "path": "purity_claim_scatter.png",
       "caption": "Purity vs claim support rate scatter plot.",
-      "generated_by": "src/figures.py::generate_purity_claim_scatter",
+      "generated_by": "src/figures/diagrams.py::generate_purity_claim_scatter",
       "data_sources": [
         "output/reports/claim_support_registry.json",
         "src/refinery.py::run_refinery"
@@ -69,7 +69,7 @@
       "label": "fig:token_heatmap",
       "path": "token_heatmap.png",
       "caption": "Token selection heatmap: seed × category → selected index.",
-      "generated_by": "src/figures.py::generate_token_heatmap",
+      "generated_by": "src/figures/diagrams.py::generate_token_heatmap",
       "data_sources": [
         "manuscript/config.yaml#gold_refinement.lexicon",
         "src/composition.py::generate_token_plan"
@@ -82,7 +82,7 @@
       "label": "fig:integrity_gate_matrix",
       "path": "integrity_gate_matrix.png",
       "caption": "Integrity-gate matrix linking audit rules to tests, manuscript surfaces, and generated artifacts.",
-      "generated_by": "src/figures.py::generate_integrity_gate_matrix",
+      "generated_by": "src/figures/diagrams.py::generate_integrity_gate_matrix",
       "data_sources": [
         "manuscript/config.yaml#gold_refinement.audit_rules"
       ],
@@ -94,7 +94,7 @@
       "label": "fig:formalism_traceability",
       "path": "formalism_traceability.png",
       "caption": "Formalism traceability from source-owned equation identifiers to source evidence.",
-      "generated_by": "src/figures.py::generate_formalism_traceability",
+      "generated_by": "src/figures/diagrams.py::generate_formalism_traceability",
       "data_sources": [
         "src/formalisms.py::FORMALISMS"
       ],
@@ -106,13 +106,13 @@
       "label": "fig:implementation_circuit",
       "path": "implementation_circuit.png",
       "caption": "Implementation circuit from config-owned ore through generated manuscript artifacts and validation feedback.",
-      "generated_by": "src/figures.py::generate_implementation_circuit",
+      "generated_by": "src/figures/diagrams.py::generate_implementation_circuit",
       "data_sources": [
         "manuscript/config.yaml",
         "src/refinery.py",
         "src/composition.py",
         "src/formalisms.py",
-        "src/figures.py"
+        "src/figures/diagrams.py"
       ],
       "visual_encoding": "directed graph encodes source, generated, validation, and publication layers",
       "svg_path": "implementation_circuit.svg"
@@ -122,7 +122,7 @@
       "label": "fig:claim_evidence_assay",
       "path": "claim_evidence_assay.png",
       "caption": "Claim-evidence assay showing supported contribution claims, evidence surfaces, and boundary classifications.",
-      "generated_by": "src/figures.py::generate_claim_evidence_assay",
+      "generated_by": "src/figures/diagrams.py::generate_claim_evidence_assay",
       "data_sources": [
         "manuscript/config.yaml#gold_refinement.contribution_claims",
         "src/evidence.py::build_evidence_registry"
@@ -135,7 +135,7 @@
       "label": "fig:integrity_risk_matrix",
       "path": "integrity_risk_matrix.png",
       "caption": "Scientific-integrity risk matrix plotting severity, detectability, residual risk, and owning evidence surface.",
-      "generated_by": "src/figures.py::generate_integrity_risk_matrix",
+      "generated_by": "src/figures/diagrams.py::generate_integrity_risk_matrix",
       "data_sources": [
         "src/integrity.py::build_integrity_dimensions"
       ],
@@ -147,7 +147,7 @@
       "label": "fig:evidence_tier_ladder",
       "path": "evidence_tier_ladder.png",
       "caption": "Evidence-tier ladder summarizing source tiers available to the shared template evidence registry.",
-      "generated_by": "src/figures.py::generate_evidence_tier_ladder",
+      "generated_by": "src/figures/diagrams.py::generate_evidence_tier_ladder",
       "data_sources": [
         "output/reports/evidence_registry.json",
         "src/integrity.py::build_evidence_tiers"

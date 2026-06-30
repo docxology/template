@@ -3,23 +3,23 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "3.28",
-      "total_size_bytes": 3443901,
+      "size_mb": "3.49",
+      "total_size_bytes": 3660190,
       "largest_files": [
         {
           "name": "template_gold_refinement_combined.pdf",
-          "size_mb": "3.06",
+          "size_mb": "3.20",
           "path": "pdf/template_gold_refinement_combined.pdf"
         },
         {
           "name": "_combined_manuscript.tex",
-          "size_mb": "0.07",
+          "size_mb": "0.09",
           "path": "pdf/_combined_manuscript.tex"
         },
         {
-          "name": "_combined_manuscript.log",
+          "name": "_combined_manuscript.md",
           "size_mb": "0.06",
-          "path": "pdf/_combined_manuscript.log"
+          "path": "pdf/_combined_manuscript.md"
         }
       ],
       "extensions": {
@@ -37,17 +37,17 @@
     "web": {
       "exists": true,
       "file_count": 12,
-      "size_mb": "0.23",
-      "total_size_bytes": 241104,
+      "size_mb": "0.29",
+      "total_size_bytes": 301498,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.08",
+          "size_mb": "0.10",
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
-          "size_mb": "0.04",
+          "size_mb": "0.06",
           "path": "web/_combined_manuscript.md"
         },
         {
@@ -70,23 +70,23 @@
     "figures": {
       "exists": true,
       "file_count": 25,
-      "size_mb": "3.80",
-      "total_size_bytes": 3986690,
+      "size_mb": "3.89",
+      "total_size_bytes": 4076679,
       "largest_files": [
         {
           "name": "claim_evidence_assay.png",
-          "size_mb": "0.58",
+          "size_mb": "0.59",
           "path": "figures/claim_evidence_assay.png"
         },
         {
           "name": "formalism_traceability.png",
-          "size_mb": "0.41",
+          "size_mb": "0.36",
           "path": "figures/formalism_traceability.png"
         },
         {
-          "name": "implementation_circuit.png",
+          "name": "purity_progression.png",
           "size_mb": "0.32",
-          "path": "figures/implementation_circuit.png"
+          "path": "figures/purity_progression.png"
         }
       ],
       "extensions": {
@@ -99,11 +99,11 @@
       "exists": true,
       "file_count": 3,
       "size_mb": "0.03",
-      "total_size_bytes": 27145,
+      "total_size_bytes": 31061,
       "largest_files": [
         {
           "name": "manuscript_variables.json",
-          "size_mb": "0.02",
+          "size_mb": "0.03",
           "path": "data/manuscript_variables.json"
         },
         {
@@ -125,7 +125,7 @@
       "exists": true,
       "file_count": 11,
       "size_mb": "0.10",
-      "total_size_bytes": 106538,
+      "total_size_bytes": 106209,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -169,41 +169,41 @@
     }
   },
   "total_files": 61,
-  "total_size_mb": 7.443788528442383,
+  "total_size_mb": 7.7968950271606445,
   "largest_files": [
     {
       "name": "template_gold_refinement_combined.pdf",
-      "size_mb": "3.06",
+      "size_mb": "3.20",
       "category": "pdf",
       "path": "pdf/template_gold_refinement_combined.pdf"
     },
     {
       "name": "claim_evidence_assay.png",
-      "size_mb": "0.58",
+      "size_mb": "0.59",
       "category": "figures",
       "path": "figures/claim_evidence_assay.png"
     },
     {
       "name": "formalism_traceability.png",
-      "size_mb": "0.41",
+      "size_mb": "0.36",
       "category": "figures",
       "path": "figures/formalism_traceability.png"
     },
     {
-      "name": "implementation_circuit.png",
+      "name": "purity_progression.png",
       "size_mb": "0.32",
       "category": "figures",
-      "path": "figures/implementation_circuit.png"
+      "path": "figures/purity_progression.png"
     },
     {
       "name": "index.html",
-      "size_mb": "0.08",
+      "size_mb": "0.10",
       "category": "web",
       "path": "web/index.html"
     },
     {
       "name": "_combined_manuscript.tex",
-      "size_mb": "0.07",
+      "size_mb": "0.09",
       "category": "pdf",
       "path": "pdf/_combined_manuscript.tex"
     },
@@ -214,22 +214,22 @@
       "path": "reports/evidence_registry.json"
     },
     {
-      "name": "_combined_manuscript.log",
+      "name": "_combined_manuscript.md",
       "size_mb": "0.06",
       "category": "pdf",
-      "path": "pdf/_combined_manuscript.log"
+      "path": "pdf/_combined_manuscript.md"
     },
     {
       "name": "_combined_manuscript.md",
-      "size_mb": "0.04",
+      "size_mb": "0.06",
       "category": "web",
       "path": "web/_combined_manuscript.md"
     },
     {
-      "name": "manuscript__03_results.html",
-      "size_mb": "0.02",
-      "category": "web",
-      "path": "web/manuscript__03_results.html"
+      "name": "manuscript_variables.json",
+      "size_mb": "0.03",
+      "category": "data",
+      "path": "data/manuscript_variables.json"
     }
   ],
   "missing_expected_files": [
@@ -239,11 +239,11 @@
     "logs/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 3.284359931945801,
-    "web": 0.2299346923828125,
-    "figures": 3.802003860473633,
-    "data": 0.025887489318847656,
-    "reports": 0.10160255432128906
+    "pdf": 3.490629196166992,
+    "web": 0.28753089904785156,
+    "figures": 3.887824058532715,
+    "data": 0.02962207794189453,
+    "reports": 0.1012887954711914
   },
   "file_counts_by_type": {
     ".md": 4,

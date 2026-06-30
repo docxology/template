@@ -185,9 +185,9 @@ Category & Count \\
 \midrule\noalign{}
 \endhead
 Publication-quality figures & 8 \\
-Structured data files (CSV/JSON) & 6 \\
-Analysis reports & 22 \\
-\textbf{Total artifacts} & \textbf{36} \\
+Structured data files (CSV/JSON) & 5 \\
+Analysis reports & 9 \\
+\textbf{Total artifacts} & \textbf{22} \\
 \bottomrule\noalign{}
 \end{longtable}
 }
@@ -224,6 +224,22 @@ Stability score from \breaktt{infrastructure.scientific.stability}:
 The stability analysis tested 48 parameter combinations (8 starting
 points \(\times\) 6 step sizes), confirming uniform convergence across
 the entire parameter space.
+\end{block}
+
+\begin{block}{Benchmark Demonstration}
+\protect\phantomsection\label{benchmark-demonstration}
+This exemplar also demonstrates \breaktt{infrastructure.benchmark}. The
+thin orchestrator \breaktt{scripts/04\_benchmark\_stage.py} calls
+\breaktt{src/benchmark\_support.py}, which times the pure
+\breaktt{quadratic\_function} across a fixed set of input sizes
+(deterministic seed, no network) and turns the timing facts into boolean
+rubric checks. Those checks are scored through the shared
+\breaktt{infrastructure.benchmark.score\_rubric} against a weighted
+\texttt{RubricSet}, and the result is rendered with
+\breaktt{scores\_to\_markdown} into
+\breaktt{output/reports/benchmark\_report.json} (plus an optional timing
+figure). This keeps the benchmark API exercised by a real exemplar, not
+by infrastructure tests alone.
 \end{block}
 \end{frame}
 

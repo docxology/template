@@ -1,10 +1,10 @@
 {
   "doi": "10.5281/zenodo.20417136",
-  "github_release_url": "https://github.com/docxology/template_code_project/releases/tag/v2.5.2",
+  "github_release_url": null,
   "github_repository": "docxology/template_code_project",
-  "pdf_sha256": "cd54b95893501467503fab2c4b432573306bc94f7040085550beb87d094b4e50",
+  "pdf_sha256": null,
   "pdf_sha512": null,
-  "published": true,
+  "published": false,
   "title": "Convergence Analysis of Gradient Descent Optimization",
   "version": "2.5.2",
   "zenodo_record_url": "https://zenodo.org/records/20417136"

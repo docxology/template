@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-26T11:19:53.584347",
+  "timestamp": "2026-06-30T05:06:52.712562",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -24,20 +24,20 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 3.06,
+            "size_mb": 3.2,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 3.28,
+            "size_mb": 3.49,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 12,
-            "size_mb": 0.23,
+            "size_mb": 0.29,
             "readable": true,
             "optional": false
           },
@@ -50,7 +50,7 @@
           "figures": {
             "exists": true,
             "files": 25,
-            "size_mb": 3.8,
+            "size_mb": 3.89,
             "readable": true,
             "optional": false
           },
@@ -92,13 +92,13 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "3.28",
+          "size_mb": "3.49",
           "largest_file": "template_gold_refinement_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 12,
-          "size_mb": "0.23",
+          "size_mb": "0.29",
           "largest_file": "index.html"
         },
         "slides": {
@@ -109,7 +109,7 @@
         "figures": {
           "exists": true,
           "file_count": 25,
-          "size_mb": "3.80",
+          "size_mb": "3.89",
           "largest_file": "claim_evidence_assay.png"
         },
         "data": {
@@ -147,7 +147,7 @@
         "data": 3,
         "reports": 11
       },
-      "total_size_mb": 7.443788528442383,
+      "total_size_mb": 7.796895980834961,
       "issues_by_severity": {
         "critical": [],
         "warning": [
@@ -162,15 +162,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 3.284359931945801
+      "size_mb": 3.490629196166992
     },
     "figures": {
       "files": 25,
-      "size_mb": 3.802003860473633
+      "size_mb": 3.887824058532715
     },
     "data": {
       "files": 3,
-      "size_mb": 0.025887489318847656
+      "size_mb": 0.02962207794189453
     }
   },
   "summary": {

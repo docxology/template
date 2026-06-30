@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-14T18:37:53+00:00",
+  "generated_at": "2026-06-30T12:08:48+00:00",
   "recommendations": [
     {
       "evidence": [
@@ -12,11 +12,11 @@
       "stage_name": "Artifact manifest",
       "stage_num": 0,
       "suggested_action": "review before continuing",
-      "timestamp": "2026-06-14T18:37:53+00:00"
+      "timestamp": "2026-06-30T12:08:48+00:00"
     },
     {
       "evidence": [
-        "slow_telemetry: Stage 'PDF Rendering' took 63.5s (2.0\u00d7 the average 13.7s)"
+        "slow_telemetry: Stage 'PDF Rendering' took 47.6s (2.0\u00d7 the average 12.7s)"
       ],
       "reason_codes": [
         "slow_telemetry"
@@ -25,11 +25,11 @@
       "stage_name": "PDF Rendering",
       "stage_num": 0,
       "suggested_action": "review before continuing",
-      "timestamp": "2026-06-14T18:37:53+00:00"
+      "timestamp": "2026-06-30T12:08:48+00:00"
     },
     {
       "evidence": [
-        "slow_telemetry: Stage 'Project Tests' took 29.8s (2.0\u00d7 the average 13.7s)"
+        "slow_telemetry: Stage 'Project Tests' took 28.1s (2.0\u00d7 the average 12.7s)"
       ],
       "reason_codes": [
         "slow_telemetry"
@@ -38,7 +38,7 @@
       "stage_name": "Project Tests",
       "stage_num": 0,
       "suggested_action": "review before continuing",
-      "timestamp": "2026-06-14T18:37:53+00:00"
+      "timestamp": "2026-06-30T12:08:48+00:00"
     }
   ]
 }

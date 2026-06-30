@@ -64,10 +64,11 @@
 \contentsline {subsection}{\numberline {7.3}Numerical Validation Summary}{19}{subsection.7.3}%
 \contentsline {subsubsection}{\numberline {7.3.1}Convergence Verification}{19}{subsubsection.7.3.1}%
 \contentsline {subsubsection}{\numberline {7.3.2}Numerical Stability}{19}{subsubsection.7.3.2}%
+\contentsline {subsubsection}{\numberline {7.3.3}Benchmark Demonstration}{19}{subsubsection.7.3.3}%
 \contentsline {subsection}{\numberline {7.4}Madlib Injection Verification}{19}{subsection.7.4}%
-\contentsline {section}{\numberline {8}Scope, Related Work, and Positioning}{20}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Classical gradient methods}{20}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Adaptive and stochastic extensions}{20}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}What this project proves about the template}{20}{subsection.8.3}%
-\contentsline {subsection}{\numberline {8.4}Explicit limitations}{20}{subsection.8.4}%
-\contentsline {section}{\numberline {9}References}{21}{section.9}%
+\contentsline {section}{\numberline {8}Scope, Related Work, and Positioning}{21}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Classical gradient methods}{21}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Adaptive and stochastic extensions}{21}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}What this project proves about the template}{21}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Explicit limitations}{21}{subsection.8.4}%
+\contentsline {section}{\numberline {9}References}{22}{section.9}%

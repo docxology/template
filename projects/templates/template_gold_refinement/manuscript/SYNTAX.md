@@ -4,9 +4,9 @@
 
 Use Pandoc-crossref and natbib:
 
-- `[@gold_refining_2024]` — parenthetical citation
-- `@gold_refining_2024` — narrative citation
-- `[@smith2024; @doe2025]` — multiple citations
+- `[@marsden_house_2006]` — parenthetical citation
+- `@marsden_house_2006` — narrative citation
+- `[@gentner1983structure; @peng2011reproducible]` — multiple citations
 
 ## Cross-references
 

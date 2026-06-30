@@ -467,23 +467,23 @@ distribution</figcaption>
 <tr>
 <td>METHOD_METAL_TERM_1</td>
 <td>metallurgical_terms</td>
-<td>hallmark</td>
+<td>assaying</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[4]</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1]</td>
 </tr>
 <tr>
 <td>METHOD_METAL_TERM_2</td>
 <td>metallurgical_terms</td>
-<td>cupellation</td>
+<td>parting</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[0]</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3]</td>
 </tr>
 <tr>
 <td>METHOD_METAL_TERM_3</td>
 <td>metallurgical_terms</td>
-<td>assaying</td>
+<td>smelting</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1]</td>
+<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2]</td>
 </tr>
 <tr>
 <td>REPRO_EVIDENCE_TERM_1</td>
@@ -663,14 +663,14 @@ when available.</caption>
 <td>Numbers regenerated from project analysis</td>
 </tr>
 <tr>
+<td>bibliography</td>
+<td>33</td>
+<td>Reference records and citation metadata</td>
+</tr>
+<tr>
 <td>claim_ledger</td>
 <td>14</td>
 <td>Source-owned claim and fact declarations</td>
-</tr>
-<tr>
-<td>bibliography</td>
-<td>5</td>
-<td>Reference records and citation metadata</td>
 </tr>
 </tbody>
 </table>
@@ -701,7 +701,7 @@ nine-nines.</td>
 <tr>
 <td>Monotone purity</td>
 <td>Purity increases strictly across all refinery stages.</td>
-<td>src/refinery.py::assert_monotone_increase</td>
+<td>src/purity.py::assert_monotone_increase</td>
 <td>local</td>
 </tr>
 <tr>
@@ -727,7 +727,7 @@ labels.</td>
 <td>Claim-support report separation</td>
 <td>The project-local contribution-claim report is written to
 claim_support_registry.json.</td>
-<td>scripts/refinement_analysis.py::claim_support_registry</td>
+<td>scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME</td>
 <td>local</td>
 </tr>
 <tr>
@@ -735,7 +735,7 @@ claim_support_registry.json.</td>
 <td>The manuscript includes generated visualizations that link the
 refinery analogy to source code, variables, evidence, and validation
 gates.</td>
-<td>src/figures.py::generate_implementation_circuit</td>
+<td>src/figures/diagrams.py::generate_implementation_circuit</td>
 <td>local</td>
 </tr>
 <tr>
@@ -757,7 +757,7 @@ template evidence report remains
 summary</h2>
 <p>When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 230.</p>
+available to this variable pass: 258.</p>
 <table id="tbl:shared_evidence_kinds">
 <caption>Shared evidence-registry fact kinds when available.</caption>
 <thead>
@@ -773,7 +773,7 @@ available to this variable pass: 230.</p>
 </tr>
 <tr>
 <td>citation</td>
-<td>5</td>
+<td>33</td>
 </tr>
 <tr>
 <td>equation</td>
@@ -836,108 +836,108 @@ specs.</caption>
 <td>claim_evidence_assay</td>
 <td>yes</td>
 <td>yes</td>
-<td>3947x1904</td>
+<td>3952x1904</td>
 <td>0.211</td>
-<td>0.05905715</td>
+<td>0.05901302</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>evidence_tier_ladder</td>
 <td>yes</td>
 <td>yes</td>
-<td>3254x1319</td>
-<td>0.194</td>
-<td>0.05465268</td>
+<td>3348x1332</td>
+<td>0.217</td>
+<td>0.05647730</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>formalism_traceability</td>
 <td>yes</td>
 <td>yes</td>
-<td>4170x1866</td>
-<td>0.096</td>
-<td>0.03165302</td>
+<td>3315x1631</td>
+<td>0.133</td>
+<td>0.04262721</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>implementation_circuit</td>
 <td>yes</td>
 <td>yes</td>
-<td>3720x2129</td>
-<td>0.049</td>
-<td>0.01648025</td>
+<td>2966x1845</td>
+<td>0.068</td>
+<td>0.02235231</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_gate_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>1953x1559</td>
-<td>0.457</td>
-<td>0.17734427</td>
+<td>1829x1933</td>
+<td>0.410</td>
+<td>0.16336351</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_risk_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>2969x2069</td>
-<td>0.402</td>
-<td>0.01475595</td>
+<td>2499x1910</td>
+<td>0.387</td>
+<td>0.01770377</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>karat_grading</td>
 <td>yes</td>
 <td>yes</td>
-<td>3241x1829</td>
-<td>0.286</td>
-<td>0.07357948</td>
+<td>2961x1698</td>
+<td>0.279</td>
+<td>0.07300982</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>provenance_sankey</td>
 <td>yes</td>
 <td>yes</td>
-<td>3570x1400</td>
-<td>0.059</td>
-<td>0.01855784</td>
+<td>2850x1461</td>
+<td>0.070</td>
+<td>0.02178809</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_claim_scatter</td>
 <td>yes</td>
 <td>yes</td>
-<td>2587x1889</td>
-<td>0.028</td>
-<td>0.01227429</td>
+<td>2340x1744</td>
+<td>0.032</td>
+<td>0.01428277</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_progression</td>
 <td>yes</td>
 <td>yes</td>
-<td>3029x2125</td>
+<td>3024x2125</td>
 <td>0.182</td>
-<td>0.03971092</td>
+<td>0.03967814</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_density</td>
 <td>yes</td>
 <td>yes</td>
-<td>3865x1663</td>
-<td>0.206</td>
-<td>0.06115993</td>
+<td>3289x1856</td>
+<td>0.234</td>
+<td>0.06699486</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_heatmap</td>
 <td>yes</td>
 <td>yes</td>
-<td>2648x2424</td>
-<td>0.637</td>
-<td>0.12747028</td>
+<td>2397x2399</td>
+<td>0.627</td>
+<td>0.12908659</td>
 <td>pass</td>
 </tr>
 </tbody>

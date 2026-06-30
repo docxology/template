@@ -220,6 +220,38 @@ validator or artifact that detects them?</td>
 scores, and evidence-tier rows.</td>
 <td>src/integrity.py and ../figures/integrity_risk_matrix.png</td>
 </tr>
+<tr>
+<td>Scholarship boundary</td>
+<td>Do external references support the analogy, reproducibility,
+provenance, and metallurgy framing without being used as evidence for
+universal manuscript-quality claims?</td>
+<td>The scope, discussion, and evaluation sections cite the scholarship
+while keeping certification local to source-owned gates.</td>
+<td>manuscript/references.bib and manuscript/07_scope.md</td>
+</tr>
+<tr>
+<td>Reporting-guideline completeness</td>
+<td>Does the manuscript distinguish checklist-style completeness from
+methodological validity?</td>
+<td>The methods, scope, discussion, and evaluation sections cite
+reporting-guideline scholarship while explicitly limiting what the local
+gates prove.</td>
+<td>manuscript/02_methodology.md, manuscript/04_discussion.md,
+manuscript/07_scope.md, and manuscript/08_evaluation.md</td>
+</tr>
+<tr>
+<td>Executable-compendium identity</td>
+<td>Can a reader identify the executable package, metadata stack,
+software release, and generated artifacts needed to rebuild the
+manuscript?</td>
+<td>The reproducibility, scope, evaluation, and authoring-contract
+sections cite executable-publication and software-citation scholarship
+while keeping preservation and portability claims bounded.</td>
+<td>manuscript/06_reproducibility.md, manuscript/07_scope.md,
+manuscript/08_evaluation.md, manuscript/09_authoring_contract.md,
+output/reports/evidence_registry.json, and
+output/reports/output_statistics.json</td>
+</tr>
 </tbody>
 </table>
 <p>The selected evaluation gate terms are prerender and citation
@@ -273,6 +305,33 @@ analogy.</p>
 evidence surfaces</td>
 <td>tests/test_integrity.py</td>
 </tr>
+<tr>
+<td>Scholarship boundary</td>
+<td>Citations must anchor framing and limitations without substituting
+for domain validation</td>
+<td>prerender citation/evidence validation plus human source review</td>
+</tr>
+<tr>
+<td>Reporting-guideline boundary</td>
+<td>Checklist-style completeness must not be represented as
+methodological validity or external reporting compliance</td>
+<td>prerender citation/evidence validation plus human source review</td>
+</tr>
+<tr>
+<td>AI/template accountability</td>
+<td>Tool assistance must not be represented as authorship or independent
+responsibility</td>
+<td>authoring-contract source review plus publication-ethics citation
+check</td>
+</tr>
+<tr>
+<td>Executable-package identity</td>
+<td>The manuscript must distinguish a regenerated local package from
+long-term archival preservation or universal executable-paper
+compliance</td>
+<td>reproducibility source review plus output statistics and
+evidence-registry validation</td>
+</tr>
 </tbody>
 </table>
 <p>The audit rules are summarized visually in <span class="citation"
@@ -281,6 +340,32 @@ and algebraically in <span class="citation"
 data-cites="eq:integrity_vector">[@eq:integrity_vector]</span>. A failed
 audit rule should block certification language even if the PDF
 renders.</p>
+<p>Scholarship adds one more gate: citation validity and claim-boundary
+discipline. A source can support a relation, a practice, or a caution
+without supporting every attractive extrapolation from that source. The
+evaluation surface therefore treats analogy theory, reproducibility
+literature, provenance standards, and metallurgy references as
+boundary-setting evidence, not as decorations added after the pipeline
+already decided the claim [gentner1983structure; peng2011reproducible;
+wilkinson2016fair; marsden_house_2006].</p>
+<p>The reporting-guideline literature keeps that gate modest. A passed
+checklist row certifies that a required reporting surface is present and
+traceable; it does not certify that the study behind the report is
+unbiased, sufficiently powered, or externally valid
+[equator_network_reporting_guidelines; vonelm2007strobe;
+percie_du_sert2020arrive]. The same rule governs the quality probes
+here. Passing them supports local claims about source ownership,
+artifact completeness, and reproducible rendering, not universal claims
+about manuscript quality.</p>
+<p>Executable-compendium scholarship adds a more operational evaluation
+target: can a reader identify the paper object, its source code, its
+generated artifacts, its metadata, and the software version needed to
+rebuild it [nuest2017erc; chen2021metadata; smith2016softwarecitation]?
+The current gates answer that question locally through variable
+hydration, artifact counts, evidence facts, figure registration, and
+PDF/HTML validation. They do not measure long-term preservation,
+cross-platform portability, reviewer workload, or reader comprehension;
+those would require separate empirical studies.</p>
 <p>The risk model adds prioritization to the gate list. <span
 class="citation"
 data-cites="fig:integrity_risk_matrix">[@fig:integrity_risk_matrix]</span>

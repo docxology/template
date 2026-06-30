@@ -22,6 +22,7 @@ metadata:
   modes:
     - router
   related_skills:
+    - template-startup
     - template-deep-research
     - template-academic-paper
     - template-academic-paper-reviewer
@@ -37,6 +38,7 @@ When intent is clear, open the matching child `SKILL.md` directly. When ambiguou
 
 ## Ambiguous routing
 
+- **"start" / "set up" / fresh clone / "does this work"** → [startup/SKILL.md](startup/SKILL.md). Installs deps, runs core pipeline on template_code_project, validates outputs end-to-end.
 - **Broken refs / "manuscript wrong"** — ask whether the failure is pipeline (validate/render) or prose (tokens/registry). Route to [manuscript-cross-references](manuscript-cross-references/SKILL.md), [validation-quality](validation-quality/SKILL.md), or [manuscript-claim-verification](manuscript-claim-verification/SKILL.md). Do **not** open [code-development](code-development/SKILL.md).
 - **Example:** "refs broken, not sure if pipeline or prose" → clarify stage vs registry; default to cross-refs when `[[FIG:]]` / `labels.yaml` mentioned.
 - **Full health check with no symptom** → [comprehensive-assessment](comprehensive-assessment/SKILL.md).
@@ -47,6 +49,7 @@ When intent is clear, open the matching child `SKILL.md` directly. When ambiguou
 
 | Symptom or goal | Child skill |
 | --- | --- |
+| Fresh clone, "start", "set up the repo", first-time install + validation | [startup/SKILL.md](startup/SKILL.md) |
 | Research question, literature review, fact check, systematic review | [deep-research/SKILL.md](deep-research/SKILL.md) |
 | Draft, outline, revise, format, or disclose AI use in a manuscript | [academic-paper/SKILL.md](academic-paper/SKILL.md) |
 | Peer review, methodology review, re-review, or calibration | [academic-paper-reviewer/SKILL.md](academic-paper-reviewer/SKILL.md) |

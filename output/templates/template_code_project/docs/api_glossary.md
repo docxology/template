@@ -17,6 +17,11 @@
 | `analysis.scientific_reports` | `validate_generated_outputs` | function | Validate integrity of generated analysis outputs. |
 | `analysis.workflow` | `main` | function | Run the full optimization analysis pipeline. |
 | `analysis.workflow` | `run_analysis_pipeline` | function | Execute the full optimization analysis workflow. |
+| `benchmark_support` | `BenchmarkRun` | class | Full benchmark run: measurements plus infra-scored rubric result. |
+| `benchmark_support` | `TimingMeasurement` | class | One deterministic timing of ``quadratic_function`` at a fixed size. |
+| `benchmark_support` | `benchmark_payload` | function | Convert a benchmark run into a JSON-safe payload (infra-shaped). |
+| `benchmark_support` | `run_quadratic_benchmark` | function | Time the pure quadratic objective and score it with the infra rubric. |
+| `benchmark_support` | `write_benchmark_report` | function | Write the benchmark payload as JSON and return the path. |
 | `dashboard` | `build_dashboard_html` | function | Build the dashboard with config defaults and write HTML to ``output/web/``. |
 | `dashboard` | `cli_main` | function | Build dashboard artifacts from CLI arguments. |
 | `dashboard` | `parse_dashboard_args` | function | Parse CLI arguments for the dashboard builder. |

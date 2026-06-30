@@ -20,9 +20,9 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |
 | Publication-quality figures        | 8   |
-| Structured data files (CSV/JSON)   | 6 |
-| Analysis reports                   | 22   |
-| **Total artifacts**                | **36** |
+| Structured data files (CSV/JSON)   | 5 |
+| Analysis reports                   | 9   |
+| **Total artifacts**                | **22** |
 
 ## Numerical Validation Summary
 
@@ -41,6 +41,10 @@ Within the configured grid, **4** of **6** runs satisfied `gradient_descent()` c
 Stability score from `infrastructure.scientific.stability`: **1.00** (out of 1.00)
 
 The stability analysis tested 48 parameter combinations (8 starting points $\times$ 6 step sizes), confirming uniform convergence across the entire parameter space.
+
+### Benchmark Demonstration
+
+This exemplar also demonstrates `infrastructure.benchmark`. The thin orchestrator `scripts/04_benchmark_stage.py` calls `src/benchmark_support.py`, which times the pure `quadratic_function` across a fixed set of input sizes (deterministic seed, no network) and turns the timing facts into boolean rubric checks. Those checks are scored through the shared `infrastructure.benchmark.score_rubric` against a weighted `RubricSet`, and the result is rendered with `scores_to_markdown` into `output/reports/benchmark_report.json` (plus an optional timing figure). This keeps the benchmark API exercised by a real exemplar, not by infrastructure tests alone.
 
 ## Madlib Injection Verification
 
