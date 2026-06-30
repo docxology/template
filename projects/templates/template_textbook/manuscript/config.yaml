@@ -56,6 +56,7 @@ publication:
     pypi: "https://test.pypi.org/project/template-textbook/0.1.2/"
     netlify: "https://6a4443ae4a7a3eb5dba63532--tranquil-kleicha-0c9203.netlify.app"
     github_pages: "https://docxology.github.io/template_textbook/"
+    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_textbook"
   # Deposit abstract: this book uses a front_matter/preface structure rather
   # than a 00_abstract.md, so supply the Zenodo description explicitly.
   zenodo_description: "A modular, fillable scaffold for book-length technical works: a data-driven manuscript (parts/chapters/labs/questions), a tested computational backbone, deterministic figures and Mermaid diagrams, and a content scaffold/validation engine."

@@ -34,6 +34,7 @@ publication:
     pypi: "https://test.pypi.org/project/template-methods-paper/1.0.0/"
     netlify: "https://6a444b88aa6e4e3c5d216e16--tranquil-kleicha-0c9203.netlify.app"
     github_pages: "https://docxology.github.io/template_methods_paper/"
+    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_methods_paper"
   transmission_bookends:
     enabled: false
     max_prior_releases: 5
