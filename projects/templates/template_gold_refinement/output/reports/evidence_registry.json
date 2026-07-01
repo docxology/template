@@ -1,17 +1,17 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 258,
+  "fact_count": 281,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 75,
-    "citation": 33,
-    "equation": 7,
-    "figure": 27,
-    "number": 100,
+    "artifact": 78,
+    "citation": 47,
+    "equation": 8,
+    "figure": 29,
+    "number": 102,
     "section": 10,
-    "table": 6
+    "table": 7
   },
-  "omitted_fact_count": 58,
+  "omitted_fact_count": 81,
   "sample_facts": [
     {
       "active": true,
@@ -39,6 +39,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "number",
+      "source": "src/security_assay.py::build_security_assay",
+      "source_field": "fact:security_assay_count",
+      "source_path": "src/security_assay.py",
+      "source_tier": "claim_ledger",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
+    },
+    {
+      "active": true,
       "checked_at": "2026-06-26T14:10:01+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stage_count (numeric variant)",
@@ -57,6 +69,18 @@
       "source_field": "$.stages[4].order",
       "source_path": "output/data/refinery_results.json",
       "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "number",
+      "source": "src/security_assay.py::build_security_assay (numeric variant)",
+      "source_field": "fact:security_assay_count",
+      "source_path": "src/security_assay.py",
+      "source_tier": "claim_ledger",
       "stale": false,
       "tolerance": 0.0,
       "value": "0.05"
@@ -299,7 +323,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "90%"
+      "value": "90"
     },
     {
       "active": true,
@@ -311,7 +335,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "90"
+      "value": "90%"
     },
     {
       "active": true,
@@ -347,7 +371,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "10"
+      "value": "10%"
     },
     {
       "active": true,
@@ -359,7 +383,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "10"
+      "value": "10%"
     },
     {
       "active": true,
@@ -371,7 +395,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "10%"
+      "value": "10"
     },
     {
       "active": true,
@@ -383,7 +407,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "10%"
+      "value": "10"
     },
     {
       "active": true,
@@ -755,7 +779,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.67%"
+      "value": "91.7"
     },
     {
       "active": true,
@@ -767,7 +791,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.67%"
+      "value": "91.7"
     },
     {
       "active": true,
@@ -779,7 +803,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.67%"
+      "value": "91.7"
     },
     {
       "active": true,
@@ -827,7 +851,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.917"
+      "value": "91.67%"
     },
     {
       "active": true,
@@ -839,7 +863,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.917"
+      "value": "91.67%"
     },
     {
       "active": true,
@@ -851,7 +875,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.917"
+      "value": "91.67%"
     },
     {
       "active": true,
@@ -899,7 +923,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.7"
+      "value": "91.67"
     },
     {
       "active": true,
@@ -911,7 +935,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.7"
+      "value": "91.67"
     },
     {
       "active": true,
@@ -923,7 +947,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.7"
+      "value": "91.67"
     },
     {
       "active": true,
@@ -935,7 +959,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.67"
+      "value": "0.917"
     },
     {
       "active": true,
@@ -947,7 +971,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.67"
+      "value": "0.917"
     },
     {
       "active": true,
@@ -959,7 +983,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.67"
+      "value": "0.917"
     },
     {
       "active": true,
@@ -1007,7 +1031,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "99.9%"
+      "value": "99.9"
     },
     {
       "active": true,
@@ -1019,7 +1043,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "99.9%"
+      "value": "99.9"
     },
     {
       "active": true,
@@ -1031,7 +1055,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "99.9%"
+      "value": "99.9"
     },
     {
       "active": true,
@@ -1043,7 +1067,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "99.9"
+      "value": "99.9%"
     },
     {
       "active": true,
@@ -1055,7 +1079,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "99.9"
+      "value": "99.9%"
     },
     {
       "active": true,
@@ -1067,7 +1091,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "99.9"
+      "value": "99.9%"
     },
     {
       "active": true,
@@ -1191,7 +1215,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-26T16:53:51+00:00",
+      "checked_at": "2026-06-30T21:29:26+00:00",
       "kind": "number",
       "source": "src/integrity.py::build_integrity_dimensions",
       "source_field": "fact:integrity_dimension_count",
@@ -1199,11 +1223,11 @@
       "source_tier": "claim_ledger",
       "stale": false,
       "tolerance": 0.0,
-      "value": "8"
+      "value": "9"
     },
     {
       "active": true,
-      "checked_at": "2026-06-26T16:53:51+00:00",
+      "checked_at": "2026-06-30T21:29:26+00:00",
       "kind": "number",
       "source": "src/integrity.py::build_integrity_dimensions (numeric variant)",
       "source_field": "fact:integrity_dimension_count",
@@ -1211,7 +1235,7 @@
       "source_tier": "claim_ledger",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.08"
+      "value": "0.09"
     },
     {
       "active": true,
@@ -1284,6 +1308,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "eq:certification_predicate"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "equation",
+      "source": "src/formalisms.py::FORMALISMS",
+      "source_field": "fact:eq_adversarial_assay",
+      "source_path": "src/formalisms.py",
+      "source_tier": "claim_ledger",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "eq:adversarial_assay"
     },
     {
       "active": true,
@@ -1515,6 +1551,30 @@
     },
     {
       "active": true,
+      "checked_at": "2026-06-30T21:58:12+00:00",
+      "kind": "figure",
+      "source": "output/figures/cover_visualization.svg",
+      "source_field": "",
+      "source_path": "output/figures/cover_visualization.svg",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:cover_visualization"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:58:12+00:00",
+      "kind": "figure",
+      "source": "output/figures/cover_visualization.png",
+      "source_field": "",
+      "source_path": "output/figures/cover_visualization.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:cover_visualization"
+    },
+    {
+      "active": true,
       "checked_at": "2026-06-26T14:10:01+00:00",
       "kind": "figure",
       "source": "output/figures/figure_registry.json",
@@ -1632,6 +1692,78 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "marsden_house_2006"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-01T13:53:15+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "pliny_natural_history_33"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-01T13:53:15+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "biringuccio_pirotechnia_1540"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-01T13:53:15+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "agricola_de_re_metallica_1556"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-01T13:53:15+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "badcock_touchstone_1678"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-01T13:53:15+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "cramer_assaying_metals_1741"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-01T13:53:15+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "goldsmiths_hallmarking_history"
     },
     {
       "active": true,
@@ -2019,6 +2151,102 @@
     },
     {
       "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "nist_sp800_207_zero_trust"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "nist_sp800_218_ssdf"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "slsa_v1_2"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sigstore_docs"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "mitre_attack"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "cyclonedx_spec"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "spdx_spec"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "citation",
+      "source": "manuscript/references.bib",
+      "source_field": "",
+      "source_path": "manuscript/references.bib",
+      "source_tier": "bibliography",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "cisa_secure_by_design"
+    },
+    {
+      "active": true,
       "checked_at": "2026-06-26T16:53:51+00:00",
       "kind": "table",
       "source": "manuscript/03_results.md",
@@ -2028,6 +2256,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "tbl:evidence_tiers"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-06-30T21:29:26+00:00",
+      "kind": "table",
+      "source": "manuscript/03_results.md",
+      "source_field": "",
+      "source_path": "manuscript/03_results.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "tbl:security_assay"
     },
     {
       "active": true,
@@ -2172,253 +2412,13 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "sec:discussion"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "section",
-      "source": "manuscript/09_authoring_contract.md",
-      "source_field": "",
-      "source_path": "manuscript/09_authoring_contract.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:authoring_contract"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "section",
-      "source": "manuscript/08_evaluation.md",
-      "source_field": "",
-      "source_path": "manuscript/08_evaluation.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:evaluation"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "section",
-      "source": "manuscript/07_scope.md",
-      "source_field": "",
-      "source_path": "manuscript/07_scope.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:scope"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/dashboard.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/dashboard.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/03_results.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/03_results.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/05_conclusion.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/05_conclusion.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/references.bib",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/references.bib"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/01_introduction.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/01_introduction.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/00_abstract.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/00_abstract.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/config.yaml",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/config.yaml"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/02_methodology.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/02_methodology.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/06_reproducibility.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/06_reproducibility.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/preamble.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/preamble.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/04_discussion.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/04_discussion.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/09_authoring_contract.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/09_authoring_contract.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/08_evaluation.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/08_evaluation.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/manuscript/07_scope.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/manuscript/07_scope.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/_combined_manuscript.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/_combined_manuscript.md"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/index.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/index.html"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-26T14:10:01+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/web/manuscript__07_scope.html",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/web/manuscript__07_scope.html"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 117,
-    "bibliography": 33,
-    "claim_ledger": 14,
+    "artifact": 123,
+    "bibliography": 47,
+    "claim_ledger": 17,
     "generated_metric": 94
   }
 }

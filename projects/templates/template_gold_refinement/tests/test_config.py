@@ -9,6 +9,7 @@ from pathlib import Path
 from config import (
     COMPOSITION_DEPTHS,
     DEFAULT_SECTION_TITLES,
+    GOLD_REFINEMENT_SCHEMA_FIELDS,
     GoldRefinementConfigError,
     REQUIRED_LEXICON_CATEGORIES,
     SECTION_KEYS,
@@ -53,6 +54,23 @@ class TestLoadConfig:
         assert cfg.composition_depth == "deep"
         assert "metallurgical_terms" in cfg.lexicon
         assert len(cfg.slots) > 0
+
+    def test_project_configured_rows_survive_parsing(self):
+        project_root = Path(__file__).resolve().parent.parent
+        config_path = project_root / "manuscript" / "config.yaml"
+        raw = yaml.safe_load(config_path.read_text(encoding="utf-8"))["gold_refinement"]
+        cfg = load_gold_refinement_config(project_root)
+        for field in (
+            "design_principles",
+            "quality_probes",
+            "failure_modes",
+            "authoring_obligations",
+            "contribution_claims",
+            "pipeline_phases",
+            "audit_rules",
+            "security_assay",
+        ):
+            assert getattr(cfg, field) == raw[field]
 
     def test_infrastructure_loader_accepts_gold_refinement_extension(self, caplog):
         from infrastructure.core.config.loader import load_config
@@ -273,6 +291,9 @@ class TestConstants:
     def test_default_section_titles(self):
         assert DEFAULT_SECTION_TITLES["abstract"] == "Abstract"
 
+    def test_schema_fields_include_security_assay(self):
+        assert "security_assay" in GOLD_REFINEMENT_SCHEMA_FIELDS
+
     def test_project_lexicon_terms_are_unique(self):
         project_root = Path(__file__).resolve().parent.parent
         cfg = load_gold_refinement_config(project_root)
@@ -373,3 +394,41 @@ class TestConfigBranchEdgeCases:
         root = self._make_cfg_yaml(tmp_path, {"section_titles": {"unknown_section": "Title"}})
         cfg = load_gold_refinement_config(root)
         assert "abstract" in cfg.section_titles
+
+    def test_incomplete_security_assay_row_raises(self, tmp_path):
+        root = self._make_cfg_yaml(
+            tmp_path,
+            {
+                "security_assay": [
+                    {
+                        "threat": "implicit trust",
+                        "standard": "NIST SP 800-207",
+                        "evidence_surface": "output/reports/evidence_registry.json",
+                        "validator": "evidence gate",
+                    }
+                ]
+            },
+        )
+        with pytest.raises(GoldRefinementConfigError, match="security_assay\\[1\\].*claim_boundary"):
+            load_gold_refinement_config(root)
+
+    def test_incomplete_existing_config_row_raises(self, tmp_path):
+        root = self._make_cfg_yaml(
+            tmp_path,
+            {
+                "quality_probes": [
+                    {
+                        "name": "probe",
+                        "question": "question",
+                        "passing_signal": "signal",
+                    }
+                ]
+            },
+        )
+        with pytest.raises(GoldRefinementConfigError, match="quality_probes\\[1\\].*artifact"):
+            load_gold_refinement_config(root)
+
+    def test_config_row_must_be_mapping(self, tmp_path):
+        root = self._make_cfg_yaml(tmp_path, {"audit_rules": ["not_a_mapping"]})
+        with pytest.raises(GoldRefinementConfigError, match="audit_rules\\[1\\] must be a mapping"):
+            load_gold_refinement_config(root)

@@ -218,13 +218,21 @@ substantive scientific claim is true. The evidence ladder in this paper
 is therefore an honesty device: source-code facts, generated metrics,
 bibliography records, and domain evidence must not be collapsed into one
 undifferentiated support score.</p>
-<p>The metallurgy literature supplies the fourth boundary. Gold
-extraction, assaying, fineness, and hallmarking provide the
-source-domain vocabulary for staged refinement and independent
-certification [marsden_house_2006; hallmarking_convention_1972;
-lbma_good_delivery_rules]. This paper imports that relational structure.
-It does not import market rules, assay tolerances, or regulatory
-authority into manuscript review.</p>
+<p>The metallurgy literature supplies the fourth boundary. This pass
+grounds the source domain primarily in pre-1800 texts: Pliny for metals,
+extraction, and touchstone testing; Biringuccio and Agricola for printed
+descriptions of mining, smelting, parting, and assay; Badcock’s
+<em>Touch-stone</em> and the Goldsmiths’ Company chronology for
+standards, statutes, and marks; and Cramer for eighteenth-century assay
+as a theory/practice discipline [pliny_natural_history_33;
+biringuccio_pirotechnia_1540; agricola_de_re_metallica_1556;
+badcock_touchstone_1678; goldsmiths_hallmarking_history;
+cramer_assaying_metals_1741]. Modern gold-extraction and hallmarking
+sources remain useful as contrast and current vocabulary
+[marsden_house_2006; hallmarking_convention_1972;
+lbma_good_delivery_rules]. This paper imports relational structure. It
+does not import market rules, assay tolerances, local guild authority,
+mint authority, or regulatory power into manuscript review.</p>
 <p>Structured reporting and open-science standards supply the fifth
 boundary. CONSORT, STROBE, PRISMA, ARRIVE, and EQUATOR show how research
 communities turn recurring omissions into explicit reporting items
@@ -248,6 +256,15 @@ readers can identify the version used [smith2016softwarecitation]. This
 exemplar aligns with those norms, but it does not claim that a
 regenerated PDF is itself an archival preservation system or that a
 repository URL substitutes for versioned software citation.</p>
+<p>Security and supply-chain guidance supply the seventh boundary.
+Zero-trust architecture, SSDF, SLSA, Sigstore, MITRE ATT&amp;CK,
+CycloneDX, SPDX, and Secure by Design each name useful threat or
+provenance surfaces [nist_sp800_207_zero_trust; nist_sp800_218_ssdf;
+slsa_v1_2; sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
+cisa_secure_by_design]. This exemplar uses those sources to structure an
+adversarial assay. It does not claim compliance with those standards, it
+does not claim a signed SBOM or provenance bundle, and it does not claim
+a Codex Security or Deep Security Scan has been run.</p>
 <h2 id="responsible-forking">Responsible forking</h2>
 <p>A fork must:</p>
 <ol type="1">
@@ -260,6 +277,8 @@ repository URL substitutes for versioned software citation.</p>
 boundary notes</li>
 <li>Cite the exact software/template release and environment used for
 the fork</li>
+<li>Update the adversarial security assay when the fork changes threat
+scope or supply-chain evidence</li>
 <li>Regenerate all outputs through the pipeline</li>
 </ol>
 <p>The formalism registry is local to this exemplar. It states how this
@@ -268,12 +287,17 @@ equations; it does not prove that gold refining is a universal model of
 scientific writing. Domain forks should replace or narrow the formalism
 set before reusing the certification language.</p>
 <p>The same limitation applies to the integrity risk model. The current
-8 dimensions are tuned to a template exemplar: token hydration, figure
+9 dimensions are tuned to a template exemplar: token hydration, figure
 registration, claim support, citation hygiene, render readiness, and
 analogy boundaries. A fork that studies a real domain must add
 domain-specific risks, domain evidence tiers, and validators before
 treating <span class="citation"
 data-cites="fig:integrity_risk_matrix">[@fig:integrity_risk_matrix]</span>
 as a publication-readiness claim.</p>
+<p>The adversarial assay is similarly local. It records 5 rows that make
+security scope inspectable, but it is not a security attestation. A fork
+that wants secure-by-design, zero-trust, supply-chain, or
+vulnerability-scan claims must add the missing artifacts, validators,
+receipts, and external review before reusing that language.</p>
 </body>
 </html>

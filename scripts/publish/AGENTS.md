@@ -33,7 +33,7 @@ This ensures the runtime environment matches the project's dependency resolution
 
 ### Output
 
-Scripts are verbose by design, printing each command executed and streaming subprocess output. This makes logs self-documenting for agent audit trails.
+Scripts are verbose by design, printing each non-secret command executed and streaming subprocess output. Token-bearing values must stay in environment variables or trusted-publishing credentials and must never be printed in command logs.
 
 ## Scripts
 
@@ -52,7 +52,7 @@ uv run python scripts/publish/test_pypi.py
 
 1. Clean `dist/` directory (remove old builds)
 2. `uv build` → produces `dist/*.whl` and `dist/*.tar.gz`
-3. `twine upload --repository testpypi ...` → pushes to TestPyPI
+3. `twine upload --repository testpypi ...` with `TWINE_USERNAME` / `TWINE_PASSWORD` in the subprocess environment → pushes to TestPyPI
 4. Create temp virtual environment
 5. `pip install <package> --index-url https://test.pypi.org/simple/`
 6. Run `<venv>/bin/template doctor`
@@ -105,6 +105,9 @@ Example GitHub Actions step:
 
 - name: Upload to PyPI
   if: success() && github.ref == 'refs/tags/v*'
+  env:
+    TWINE_USERNAME: __token__
+    TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
   run: |
     uv build
     twine upload dist/*

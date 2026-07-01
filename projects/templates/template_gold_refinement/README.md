@@ -12,6 +12,8 @@
 > [`template_madlib`](../template_madlib/README.md) first for the generic engine;
 > read this template to see a worked domain specialization of it.
 
+![Cover visualization: faceted gold certification under source-owned adversarial assay](output/figures/cover_visualization.png)
+
 ## When to use this template
 
 Use this template for **analogical manuscript composition research**: projects
@@ -51,7 +53,7 @@ Publishing surface — 12 platforms, 7 published:
 | huggingface_hub | first-class | ✅ published | [https://huggingface.co/datasets/ActiveInference/template_gold_refinement](https://huggingface.co/datasets/ActiveInference/template_gold_refinement) | `HUGGINGFACE_TOKEN`, `HF_TOKEN` |
 | osf | first-class | ✅ published | [https://osf.io/u485p/](https://osf.io/u485p/) | `OSF_TOKEN` |
 
-_Keywords: gold refining, manuscript composition, mega-madlib, token injection, scientific purity, assaying, karat grading._
+_Keywords: gold refining, manuscript composition, mega-madlib, token injection, scientific purity, assaying, karat grading, security assay, supply-chain provenance._
 
 _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
@@ -105,6 +107,8 @@ All rendered artifacts are source-owned and disposable. Do not hand-edit
 | `output/reports/evidence_registry.json` | template evidence validator | Shared evidence facts consumed by validation gates |
 | `output/figures/figure_registry.json` | `src/figures/__init__.py::FIGURE_SPECS` | Figure label/path/caption/source registry |
 | `output/reports/figure_quality_report.json` | `src/figures/registry.py::write_figure_quality_report` | PNG/SVG existence, dimensions, nonblank pixels, color variance, and registry parity |
+| `output/figures/cover_visualization.png` | `src/cover_visualization.py::generate_cover_visualization` | Standalone publication cover visual; not part of the stable 12-figure manuscript registry |
+| `output/reports/cover_visualization.json` | `src/cover_visualization.py::write_cover_visualization` | Cover dimensions, byte sizes, nonwhite fraction, and color variance |
 
 ## Visualization and scientific-integrity surface
 

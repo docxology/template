@@ -84,6 +84,13 @@ from .refinery import (
     stage_by_name,
     stage_by_order,
 )
+from .security_assay import (
+    SecurityAssayRecord,
+    build_security_assay,
+    security_assay_records,
+    security_assay_summary_line,
+    security_assay_table_rows,
+)
 from .assay import (
     AssayReport,
     ClaimRecord,
@@ -99,6 +106,11 @@ __all__ = [
     "run_refinery",
     "stage_by_name",
     "stage_by_order",
+    "SecurityAssayRecord",
+    "build_security_assay",
+    "security_assay_records",
+    "security_assay_summary_line",
+    "security_assay_table_rows",
     # Purity
     "KARAT_GRADES",
     "NINE_NINES_PURITY",

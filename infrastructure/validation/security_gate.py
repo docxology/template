@@ -11,13 +11,15 @@ from typing import Any
 from infrastructure.core.logging.constants import BANNER_WIDTH
 
 SEVERITY_LEVELS = ("LOW", "MEDIUM", "HIGH")
-TOOLS = ("bandit", "safety", "pip_audit")
+REQUIRED_TOOLS = ("bandit", "pip_audit")
+OPTIONAL_TOOLS = ("safety",)
+TOOLS = (*REQUIRED_TOOLS, *OPTIONAL_TOOLS)
 
 
 def _run_bandit(repo_root: Path) -> dict[str, Any]:
     try:
         subprocess.run(
-            ["bandit", "--version"],
+            ["uv", "run", "bandit", "--version"],
             capture_output=True,
             text=True,
             check=True,
@@ -27,16 +29,19 @@ def _run_bandit(repo_root: Path) -> dict[str, Any]:
         return {"status": "skipped", "reason": "bandit not installed", "tool": "bandit"}
 
     cmd = [
+        "uv",
+        "run",
         "bandit",
+        "-c",
+        str(repo_root / "bandit.yaml"),
         "-r",
+        "-ll",
         "-f",
         "json",
         "-q",
-        "--severity-level",
-        "LOW",
-        "--exclude",
-        ".venv,venv,env,.git,__pycache__,.cache,build,dist",
-        str(repo_root),
+        str(repo_root / "infrastructure"),
+        str(repo_root / "scripts"),
+        str(repo_root / "projects"),
     ]
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
@@ -101,7 +106,7 @@ def _run_safety(repo_root: Path) -> dict[str, Any]:
 def _run_pip_audit(repo_root: Path) -> dict[str, Any]:
     try:
         subprocess.run(
-            ["pip-audit", "--version"],
+            ["uv", "run", "pip-audit", "--version"],
             capture_output=True,
             text=True,
             check=True,
@@ -111,14 +116,15 @@ def _run_pip_audit(repo_root: Path) -> dict[str, Any]:
         return {"status": "skipped", "reason": "pip-audit not installed", "tool": "pip_audit"}
 
     cmd = [
+        "uv",
+        "run",
         "pip-audit",
         "--format",
         "json",
-        "--requirement",
-        str(repo_root / "pyproject.toml"),
         "--progress-spinner",
         "off",
         "--desc",
+        *_pip_audit_ignore_args(repo_root),
     ]
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
@@ -130,7 +136,7 @@ def _run_pip_audit(repo_root: Path) -> dict[str, Any]:
             except json.JSONDecodeError:
                 print("WARNING: pip-audit output not valid JSON")
                 return {"status": "skipped", "reason": "pip-audit output not valid JSON", "tool": "pip_audit"}
-        vulns = data.get("vulnerabilities", [])
+        vulns = _pip_audit_vulnerabilities(data)
         summary: dict[str, int] = {"total": len(vulns)}
         for severity in SEVERITY_LEVELS:
             summary[severity.lower()] = sum(1 for v in vulns if v.get("severity", "").lower() == severity.lower())
@@ -144,20 +150,62 @@ def _run_pip_audit(repo_root: Path) -> dict[str, Any]:
         return {"status": "skipped", "reason": str(exc), "tool": "pip_audit"}
 
 
+def _pip_audit_ignore_args(repo_root: Path) -> list[str]:
+    ignore_file = repo_root / ".github" / "pip-audit-ignore.txt"
+    if not ignore_file.exists():
+        return []
+    args: list[str] = []
+    for raw in ignore_file.read_text(encoding="utf-8").splitlines():
+        line = raw.split("#", 1)[0].strip()
+        if line:
+            args.extend(["--ignore-vuln", line])
+    return args
+
+
+def _pip_audit_vulnerabilities(data: dict[str, Any]) -> list[dict[str, Any]]:
+    top_level = data.get("vulnerabilities")
+    if isinstance(top_level, list):
+        return [v for v in top_level if isinstance(v, dict)]
+    dependencies = data.get("dependencies")
+    if not isinstance(dependencies, list):
+        return []
+    vulns: list[dict[str, Any]] = []
+    for dependency in dependencies:
+        if not isinstance(dependency, dict):
+            continue
+        for vuln in dependency.get("vulns", []):
+            if isinstance(vuln, dict):
+                vulns.append(vuln)
+    return vulns
+
+
 def aggregate_security_findings(results: list[dict[str, Any]]) -> dict[str, Any]:
     aggregated: dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "severity_counts": {s: 0 for s in SEVERITY_LEVELS},
         "tool_counts": {t: 0 for t in TOOLS},
+        "required_tools": list(REQUIRED_TOOLS),
+        "optional_tools": list(OPTIONAL_TOOLS),
         "tools_run": [],
         "skipped_tools": [],
+        "failed_tools": [],
+        "blocking_findings": [],
         "total_findings": 0,
         "has_high_severity": False,
+        "has_required_tool_failures": False,
+        "has_blocking_findings": False,
     }
     for result in results:
         tool = result.get("tool", "unknown")
         if result.get("status") == "skipped":
-            aggregated["skipped_tools"].append({"tool": tool, "reason": result.get("reason", "unknown")})
+            skipped = {
+                "tool": tool,
+                "reason": result.get("reason", "unknown"),
+                "required": tool in REQUIRED_TOOLS,
+            }
+            aggregated["skipped_tools"].append(skipped)
+            if tool in REQUIRED_TOOLS:
+                aggregated["failed_tools"].append(skipped)
             continue
         aggregated["tools_run"].append(tool)
         summary = result.get("summary", {})
@@ -165,7 +213,11 @@ def aggregate_security_findings(results: list[dict[str, Any]]) -> dict[str, Any]
             aggregated["severity_counts"][severity] += summary.get(severity.lower(), 0)
         aggregated["tool_counts"][tool] = summary.get("total", 0)
         aggregated["total_findings"] += summary.get("total", 0)
+        if tool in REQUIRED_TOOLS and summary.get("total", 0) > 0:
+            aggregated["blocking_findings"].append({"tool": tool, "count": summary.get("total", 0)})
     aggregated["has_high_severity"] = aggregated["severity_counts"]["HIGH"] > 0
+    aggregated["has_required_tool_failures"] = bool(aggregated["failed_tools"])
+    aggregated["has_blocking_findings"] = bool(aggregated["blocking_findings"])
     return aggregated
 
 
@@ -210,12 +262,25 @@ def run_security_scan(repo_root: Path) -> tuple[dict[str, Any], int]:
     print("\nTool breakdown:")
     for tool, count in report["tool_counts"].items():
         print(f"  {tool}: {count}")
+    if report["skipped_tools"]:
+        print("\nSkipped tools:")
+        for row in report["skipped_tools"]:
+            requirement = "required" if row["required"] else "optional"
+            print(f"  {row['tool']} ({requirement}): {row['reason']}")
 
     report_path = repo_root / ".cache" / "template" / "security_report.json"
     write_security_report(report, report_path)
 
+    if report["has_required_tool_failures"]:
+        failed = ", ".join(row["tool"] for row in report["failed_tools"])
+        print(f"\nFAILURE: Required security tools did not complete: {failed}")
+        return report, 1
+    if report["has_blocking_findings"]:
+        failed = ", ".join(f"{row['tool']} ({row['count']})" for row in report["blocking_findings"])
+        print(f"\nFAILURE: Required security tools reported blocking findings: {failed}")
+        return report, 1
     if report["has_high_severity"]:
         print("\nFAILURE: HIGH severity security issues detected!")
         return report, 1
-    print("\nSUCCESS: No HIGH severity issues found.")
+    print("\nSUCCESS: No blocking security issues found.")
     return report, 0

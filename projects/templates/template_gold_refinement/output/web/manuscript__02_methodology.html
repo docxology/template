@@ -213,6 +213,23 @@ evidence registration, and render validation play a similar internal
 role: they make omissions visible and bind declarations to artifacts.
 They do not test whether an external study was designed well, executed
 correctly, or substantively true.</p>
+<p>The metallurgical side of the method is deliberately historical
+rather than modern-industrial. Pre-1800 sources support the relational
+structure - extraction, smelting or refining, assay,
+parting/cupellation, fineness, and public marking - but not a claim that
+all regions used the same sequence or that early practitioners held
+modern chemical theories. Pliny is useful for extraction and touchstone
+context; Biringuccio and Agricola are useful for staged metallurgical
+operations; Badcock’s <em>Touch-stone</em> and the Goldsmiths’ Company
+chronology are useful for standards, weights, statutes, and marks;
+Cramer is useful for eighteenth-century assay discipline
+[pliny_natural_history_33; biringuccio_pirotechnia_1540;
+agricola_de_re_metallica_1556; badcock_touchstone_1678;
+goldsmiths_hallmarking_history; cramer_assaying_metals_1741]. The
+normalized five-stage pipeline below is therefore an analogy-preserving
+abstraction, not a historical claim that “ore -&gt; smelting -&gt;
+assaying -&gt; cupellation -&gt; certification” was a universal pre-1800
+production recipe.</p>
 <h2 id="stage-definitions">Stage definitions</h2>
 <table>
 <colgroup>
@@ -353,6 +370,13 @@ data-cites="eq:integrity_vector">[@eq:integrity_vector]</span></td>
 data-cites="eq:certification_predicate">[@eq:certification_predicate]</span></td>
 <td><code>src/refinery.py::RefineryResult.is_nine_nines_certified</code></td>
 </tr>
+<tr>
+<td>F7</td>
+<td>Adversarial assay</td>
+<td><span class="citation"
+data-cites="eq:adversarial_assay">[@eq:adversarial_assay]</span></td>
+<td><code>src/security_assay.py::build_security_assay</code></td>
+</tr>
 </tbody>
 </table>
 <p><strong>F1: Purity functional.</strong> Manuscript purity is treated
@@ -393,7 +417,7 @@ represented as a vector of gate outcomes rather than one scalar
 badge.</p>
 <p><span class="math display">\[
 \mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render},
-v_{references})
+v_{references}, v_{security})
 \]</span> {#eq:integrity_vector}</p>
 <p>A publication claim is only as strong as the weakest required gate.
 Source:
@@ -407,6 +431,17 @@ gates(r)
 <p>The predicate binds the nine-nines metaphor to the actual validation
 chain. Source:
 <code>src/refinery.py::RefineryResult.is_nine_nines_certified</code>.</p>
+<p><strong>F7: Adversarial assay.</strong> Certification requires an
+explicit adversarial and supply-chain scope, not only ordinary gate
+success.</p>
+<p><span class="math display">\[
+\operatorname{certified}_{adv}(r) \iff \operatorname{certified}(r) \land
+\forall a \in A_r:\ threat(a) \land standard(a) \land evidence(a) \land
+validator(a) \land boundary(a)
+\]</span> {#eq:adversarial_assay}</p>
+<p>The adversarial assay defines scope and evidence requirements; it is
+not proof of compliance or live scan findings. Source:
+<code>src/security_assay.py::build_security_assay</code>.</p>
 <h2 id="token-selection">Token selection</h2>
 <p>The mega-madlib engine selects tokens from config-owned lexicon
 categories using a deterministic digest:</p>
@@ -481,8 +516,11 @@ check, and citation validation to concrete validation surfaces.</p>
 </table>
 <h2 id="karat-grading">Karat grading</h2>
 <p>Karat grades map purity fractions to a gold-fineness vocabulary used
-here as an analogy surface [marsden_house_2006;
-lbma_good_delivery_rules]:</p>
+here as an analogy surface. The pre-1800 evidence supports fineness as a
+regulated testing and marking problem, but not the modern nine-nines
+target used by this local software predicate [badcock_touchstone_1678;
+goldsmiths_hallmarking_history; cramer_assaying_metals_1741;
+marsden_house_2006; lbma_good_delivery_rules]:</p>
 <ul>
 <li>9K = 37.5% (ore stage)</li>
 <li>18K = 75.0% (smelting stage)</li>
@@ -554,6 +592,14 @@ registry</td>
 <td>tests/test_integrity.py</td>
 </tr>
 <tr>
+<td>Security assay</td>
+<td>gold_refinement.security_assay</td>
+<td>Map adversarial threats and standards to source-owned evidence and
+claim boundaries</td>
+<td>security assay table and variables</td>
+<td>tests/test_security_assay.py</td>
+</tr>
+<tr>
 <td>Manuscript hydration</td>
 <td>manuscript shells and manuscript_variables.json</td>
 <td>Resolve {{TOKEN}} placeholders into output/manuscript/</td>
@@ -592,13 +638,37 @@ prose [moreau2013prov; belhajjame2015ontologies].</p>
 change the ore, the furnace, or the assay, but it must do so in the
 source layer and then let the generated and validation layers expose the
 consequences.</p>
+<h2 id="adversarial-assay-layer">Adversarial assay layer</h2>
+<p>The implementation trace handles accidental drift: missing tokens,
+unsupported claims, malformed citations, stale figures, or broken
+renders. A security assay adds a different question: could the
+manuscript sound certified while omitting threat scope, supply-chain
+provenance, or scan evidence? The assay therefore treats zero trust,
+secure software development, supply-chain provenance, attack-path
+modeling, SBOM standards, and secure-by-design guidance as
+boundary-setting standards rather than proof of compliance
+[nist_sp800_207_zero_trust; nist_sp800_218_ssdf; slsa_v1_2;
+sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
+cisa_secure_by_design].</p>
+<p>This pass implements that layer as source-owned rows in
+<code>gold_refinement.security_assay</code> and generated variables from
+<code>src/security_assay.py</code>. It does not run Codex Security or
+Deep Security Scan, and it does not report vulnerability findings.
+Instead, <span class="citation"
+data-cites="eq:adversarial_assay">[@eq:adversarial_assay]</span>
+requires every adversarial assay row to name a threat, standard or
+guidance source, local evidence surface, validator, and claim boundary
+before certification language is allowed to expand beyond ordinary
+template gates. The generated assay table appears in <span
+class="citation"
+data-cites="tbl:security_assay">[@tbl:security_assay]</span>.</p>
 <h2 id="scientific-integrity-model">Scientific integrity model</h2>
 <p>The integrity model converts manuscript risks into source-owned
 dimensions. It does not replace peer review or domain validation. It
 names the failure class, severity, detectability, evidence surface,
 owner, and validator so the manuscript can distinguish “the analogy is
 vivid” from “the claim is backed by a regenerable check.” The current
-pass reports 8 integrity dimensions; highest residual risk is I4
+pass reports 9 integrity dimensions; highest residual risk is I4
 (Analogy boundary) at 15.</p>
 <table id="tbl:integrity_dimensions">
 <caption>Source-owned scientific-integrity dimensions.</caption>
@@ -675,6 +745,13 @@ pass reports 8 integrity dimensions; highest residual risk is I4
 <td>template pipeline</td>
 <td>template pipeline render and validate stages</td>
 </tr>
+<tr>
+<td>I9</td>
+<td>Adversarial security assay</td>
+<td>15</td>
+<td>security assay</td>
+<td>tests/test_security_assay.py and manuscript source review</td>
+</tr>
 </tbody>
 </table>
 <p>The residual-risk score is deliberately simple: high severity and low
@@ -712,6 +789,10 @@ validators before expanding claims.</p>
 </tr>
 <tr>
 <td>generated variables</td>
+<td>1</td>
+</tr>
+<tr>
+<td>security assay</td>
 <td>1</td>
 </tr>
 <tr>

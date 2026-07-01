@@ -63,7 +63,7 @@ FORMALISMS: tuple[Formalism, ...] = (
         equation_label="eq:integrity_vector",
         source="manuscript/config.yaml#gold_refinement.audit_rules",
         statement="Scientific integrity is represented as a vector of gate outcomes rather than one scalar badge.",
-        formula=r"\mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render}, v_{references})",
+        formula=r"\mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render}, v_{references}, v_{security})",
         interpretation="A publication claim is only as strong as the weakest required gate.",
     ),
     Formalism(
@@ -74,6 +74,19 @@ FORMALISMS: tuple[Formalism, ...] = (
         statement="Certification is a predicate over final purity and validation readiness.",
         formula=r"\operatorname{certified}(r) \iff \pi_{final}(r) \geq 0.999999999 \land gates(r)",
         interpretation="The predicate binds the nine-nines metaphor to the actual validation chain.",
+    ),
+    Formalism(
+        formalism_id="F7",
+        title="Adversarial assay",
+        equation_label="eq:adversarial_assay",
+        source="src/security_assay.py::build_security_assay",
+        statement="Certification requires an explicit adversarial and supply-chain scope, not only ordinary gate success.",
+        formula=(
+            r"\operatorname{certified}_{adv}(r) \iff \operatorname{certified}(r) "
+            r"\land \forall a \in A_r:\ threat(a) \land standard(a) \land evidence(a) "
+            r"\land validator(a) \land boundary(a)"
+        ),
+        interpretation="The adversarial assay defines scope and evidence requirements; it is not proof of compliance or live scan findings.",
     ),
 )
 

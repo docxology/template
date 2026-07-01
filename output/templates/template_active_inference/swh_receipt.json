@@ -1,0 +1,21 @@
+{
+  "all_ok": true,
+  "bundle_path": "output/templates/template_active_inference/swh_repo_url.txt",
+  "finished_utc": "2026-06-30T21:45:46Z",
+  "receipts": [
+    {
+      "bundle_sha256": "1a29906231850f0c65b7f463eee672f08241a9afa3b41d9a19bcd818bd2091ef",
+      "error": null,
+      "extra": {
+        "repo_url": "https://github.com/docxology/template_active_inference",
+        "save_request_status": "accepted"
+      },
+      "identifier": "2379346",
+      "provider": "software_heritage",
+      "status": "ok",
+      "timestamp_utc": "2026-06-30T21:45:46Z",
+      "url": "https://archive.softwareheritage.org/api/1/origin/save/git/url/https://github.com/docxology/template_active_inference/"
+    }
+  ],
+  "started_utc": "2026-06-30T21:45:45Z"
+}

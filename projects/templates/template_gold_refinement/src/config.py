@@ -73,7 +73,19 @@ GOLD_REFINEMENT_SCHEMA_FIELDS: tuple[str, ...] = (
     "contribution_claims",
     "pipeline_phases",
     "audit_rules",
+    "security_assay",
 )
+
+REQUIRED_ROW_FIELDS: dict[str, tuple[str, ...]] = {
+    "design_principles": ("name", "rationale"),
+    "quality_probes": ("name", "question", "passing_signal", "artifact"),
+    "failure_modes": ("name", "risk", "detection", "mitigation"),
+    "authoring_obligations": ("name", "obligation"),
+    "contribution_claims": ("name", "claim", "evidence", "boundary"),
+    "pipeline_phases": ("name", "input_artifact", "transformation", "output_artifact", "guard"),
+    "audit_rules": ("name", "check", "test"),
+    "security_assay": ("threat", "standard", "evidence_surface", "validator", "claim_boundary"),
+}
 
 DEFAULT_NARRATIVE_MOVES: dict[str, tuple[str, ...]] = {
     "abstract": (
@@ -169,6 +181,7 @@ class GoldRefinementConfig:
     contribution_claims: list[dict[str, str]] = field(default_factory=list)
     pipeline_phases: list[dict[str, str]] = field(default_factory=list)
     audit_rules: list[dict[str, str]] = field(default_factory=list)
+    security_assay: list[dict[str, str]] = field(default_factory=list)
 
     @property
     def enabled_sections(self) -> tuple[str, ...]:
@@ -258,6 +271,40 @@ def _default_slots() -> tuple[SlotSpec, ...]:
     )
 
 
+def _load_required_rows(
+    gr: dict[str, Any],
+    field_name: str,
+    required_fields: tuple[str, ...],
+) -> list[dict[str, str]]:
+    value = gr.get(field_name, [])
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise GoldRefinementConfigError(f"{field_name} must be a list of mappings")
+
+    rows: list[dict[str, str]] = []
+    for index, item in enumerate(value, start=1):
+        if not isinstance(item, dict):
+            raise GoldRefinementConfigError(f"{field_name}[{index}] must be a mapping, got {type(item)}")
+        row: dict[str, str] = {}
+        missing: list[str] = []
+        for required in required_fields:
+            raw_value = item.get(required)
+            if raw_value is None or str(raw_value).strip() == "":
+                missing.append(required)
+                continue
+            row[required] = str(raw_value).strip()
+        if missing:
+            missing_list = ", ".join(missing)
+            raise GoldRefinementConfigError(f"{field_name}[{index}] missing required field(s): {missing_list}")
+        for key, raw_value in item.items():
+            if key in row:
+                continue
+            row[str(key)] = "" if raw_value is None else str(raw_value).strip()
+        rows.append(row)
+    return rows
+
+
 def _parse_config(gr: dict[str, Any]) -> GoldRefinementConfig:
     seed = int(gr.get("seed", 431))
     depth = str(gr.get("composition_depth", "deep"))
@@ -330,13 +377,22 @@ def _parse_config(gr: dict[str, Any]) -> GoldRefinementConfig:
         slots=slots_tuple,
         refinement_stages=gr.get("refinement_stages", []),
         visualizations=gr.get("visualizations", {}),
-        design_principles=gr.get("design_principles", []),
-        quality_probes=gr.get("quality_probes", []),
-        failure_modes=gr.get("failure_modes", []),
-        authoring_obligations=gr.get("authoring_obligations", []),
-        contribution_claims=gr.get("contribution_claims", []),
-        pipeline_phases=gr.get("pipeline_phases", []),
-        audit_rules=gr.get("audit_rules", []),
+        design_principles=_load_required_rows(gr, "design_principles", REQUIRED_ROW_FIELDS["design_principles"]),
+        quality_probes=_load_required_rows(gr, "quality_probes", REQUIRED_ROW_FIELDS["quality_probes"]),
+        failure_modes=_load_required_rows(gr, "failure_modes", REQUIRED_ROW_FIELDS["failure_modes"]),
+        authoring_obligations=_load_required_rows(
+            gr,
+            "authoring_obligations",
+            REQUIRED_ROW_FIELDS["authoring_obligations"],
+        ),
+        contribution_claims=_load_required_rows(
+            gr,
+            "contribution_claims",
+            REQUIRED_ROW_FIELDS["contribution_claims"],
+        ),
+        pipeline_phases=_load_required_rows(gr, "pipeline_phases", REQUIRED_ROW_FIELDS["pipeline_phases"]),
+        audit_rules=_load_required_rows(gr, "audit_rules", REQUIRED_ROW_FIELDS["audit_rules"]),
+        security_assay=_load_required_rows(gr, "security_assay", REQUIRED_ROW_FIELDS["security_assay"]),
     )
 
 
@@ -348,6 +404,7 @@ __all__ = [
     "GoldRefinementConfig",
     "GoldRefinementConfigError",
     "REQUIRED_LEXICON_CATEGORIES",
+    "REQUIRED_ROW_FIELDS",
     "SECTION_KEYS",
     "SlotSpec",
     "load_gold_refinement_config",

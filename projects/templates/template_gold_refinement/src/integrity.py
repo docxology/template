@@ -53,6 +53,10 @@ _FALLBACK_FAILURES = {
         "The analogy is decorative with no operational mapping.",
         "Connect stages to template pipeline operations.",
     ),
+    "Security theater": (
+        "Security language is presented as compliance or scan evidence without generated artifacts.",
+        "Keep security claims bounded to the configured assay unless validated scan receipts exist.",
+    ),
 }
 
 _TIER_ROLES = {
@@ -91,6 +95,7 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
     lexicon_risk, lexicon_mitigation = _failure(config, "Empty lexicon category")
     token_risk, token_mitigation = _failure(config, "Unresolved token")
     analogy_risk, analogy_mitigation = _failure(config, "Rhetorical-only analogy")
+    security_risk, security_mitigation = _failure(config, "Security theater")
     claim_count = len(_records(config, "contribution_claims"))
     return (
         IntegrityDimension(
@@ -188,6 +193,18 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
             "template pipeline",
             "validation",
             "Treat render output as disposable until the validation stage passes.",
+        ),
+        IntegrityDimension(
+            "I9",
+            "Adversarial security assay",
+            security_risk,
+            5,
+            3,
+            "src/security_assay.py::build_security_assay",
+            _audit(config, "security assay", "tests/test_security_assay.py"),
+            "security assay",
+            "source_code",
+            security_mitigation,
         ),
     )
 

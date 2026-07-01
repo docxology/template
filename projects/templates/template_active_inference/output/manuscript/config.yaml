@@ -16,6 +16,14 @@ publication:
   version_doi: "10.5281/zenodo.20931870" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/20931870"
   github_repository: "docxology/template_active_inference"
+  published_artifacts:
+    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmRRKmm7XCHTE78fs21dYwM7tKwv8HK2g4bynhtds75Rb9"
+    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_active_inference"
+    osf: "https://osf.io/hdxr2/"
+    pypi: "https://test.pypi.org/project/template-active-inference/0.3.2/"
+    netlify: "https://6a4433498786d3e4e58ea021--tranquil-kleicha-0c9203.netlify.app"
+    github_pages: "https://docxology.github.io/template_active_inference/"
+    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_active_inference"
   transmission_bookends:
     enabled: true
     max_prior_releases: 5

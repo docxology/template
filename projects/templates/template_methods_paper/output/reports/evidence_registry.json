@@ -1,16 +1,16 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 243,
+  "fact_count": 248,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 120,
+    "artifact": 125,
     "citation": 6,
     "figure": 5,
     "number": 91,
     "section": 18,
     "table": 3
   },
-  "omitted_fact_count": 43,
+  "omitted_fact_count": 48,
   "sample_facts": [
     {
       "active": true,
@@ -442,7 +442,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -454,7 +454,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -466,7 +466,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -478,7 +478,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -490,7 +490,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -502,7 +502,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -514,7 +514,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -526,7 +526,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -538,7 +538,7 @@
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -550,7 +550,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -562,7 +562,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -574,7 +574,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -586,7 +586,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -598,7 +598,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -610,7 +610,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -622,7 +622,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -634,7 +634,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -646,7 +646,7 @@
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -2415,7 +2415,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 146,
+    "artifact": 151,
     "bibliography": 6,
     "generated_metric": 82,
     "project_source": 9

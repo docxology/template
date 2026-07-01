@@ -99,301 +99,325 @@ ty)) (/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg) [1])
-[2] [3] [4] [5] [6]
-Overfull \hbox (20.66037pt too wide) in paragraph at lines 711--711
-[]|\TU/lmr/m/n/10 manuscript/config.yaml|
+[2] [3] [4] [5] [6] [7]
+Overfull \hbox (20.66037pt too wide) in paragraph at lines 748--748
+[]|\TU/lmr/m/n/10 manuscript/config.yaml|  
 
-Overfull \hbox (4.56999pt too wide) in paragraph at lines 712--712
-[]|\TU/lmr/m/n/10 GoldRefinementConfig|
+Overfull \hbox (4.56999pt too wide) in paragraph at lines 749--749
+[]|\TU/lmr/m/n/10 GoldRefinementConfig|  
 
-Overfull \hbox (16.34036pt too wide) in paragraph at lines 713--713
-[]|\TU/lmr/m/n/10 GoldRefinementConfig|
+Overfull \hbox (16.34036pt too wide) in paragraph at lines 750--750
+[]|\TU/lmr/m/n/10 GoldRefinementConfig|  
 
-Overfull \hbox (16.34036pt too wide) in paragraph at lines 715--715
-[]|\TU/lmr/m/n/10 GoldRefinementConfig|
+Overfull \hbox (16.34036pt too wide) in paragraph at lines 752--752
+[]|\TU/lmr/m/n/10 GoldRefinementConfig|  
 
-Overfull \hbox (15.76036pt too wide) in paragraph at lines 723--724
-[]|\TU/lmr/m/n/10 tests/test_integrity.py|
+Overfull \hbox (15.76036pt too wide) in paragraph at lines 760--761
+[]|\TU/lmr/m/n/10 tests/test_integrity.py|  
 
-Overfull \hbox (32.19037pt too wide) in paragraph at lines 724--725
-\TU/lmr/m/n/10 manuscript_variables.json|
+Overfull \hbox (56.34036pt too wide) in paragraph at lines 761--761
+[]|\TU/lmr/m/n/10 gold_refinement.security_assay|  
 
-Overfull \hbox (0.67036pt too wide) in paragraph at lines 727--727
-[]|\TU/lmr/m/n/10 output/manuscript|
-[7]
-Overfull \hbox (34.92613pt too wide) in paragraph at lines 810--811
-[]|\TU/lmr/m/n/10 tests/test_manuscript_variables.py|
+Overfull \hbox (43.13037pt too wide) in paragraph at lines 763--764
+[]|\TU/lmr/m/n/10 tests/test_security_assay.py|  
 
-Overfull \hbox (73.61613pt too wide) in paragraph at lines 814--815
-[]|\TU/lmr/m/n/10 output/reports/claim_support_registry.json|
+Overfull \hbox (32.19037pt too wide) in paragraph at lines 764--765
+\TU/lmr/m/n/10 manuscript_variables.json|  
 
-Overfull \hbox (17.40613pt too wide) in paragraph at lines 816--817
-[]|\TU/lmr/m/n/10 tests/test_registry_integrity.py|
+Overfull \hbox (0.67036pt too wide) in paragraph at lines 767--767
+[]|\TU/lmr/m/n/10 output/manuscript|  
+ [8]
+Overfull \hbox (34.92613pt too wide) in paragraph at lines 872--873
+[]|\TU/lmr/m/n/10 tests/test_manuscript_variables.py|  
 
-Overfull \hbox (15.92613pt too wide) in paragraph at lines 818--819
-[]|\TU/lmr/m/n/10 infrastructure.reference.citation
-[8] [9]
-Overfull \hbox (59.84734pt too wide) in paragraph at lines 1012--1012
-[]|\TU/lmr/m/n/10 AUTHORING_BOUNDARY_TERM_1|
+Overfull \hbox (73.61613pt too wide) in paragraph at lines 876--877
+[]|\TU/lmr/m/n/10 output/reports/claim_support_registry.json|  
 
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 1014--1015
+Overfull \hbox (17.40613pt too wide) in paragraph at lines 878--879
+[]|\TU/lmr/m/n/10 tests/test_registry_integrity.py|  
+
+Overfull \hbox (15.92613pt too wide) in paragraph at lines 880--881
+[]|\TU/lmr/m/n/10 infrastructure.reference.citation 
+
+Overfull \hbox (3.73615pt too wide) in paragraph at lines 884--885
+[]|\TU/lmr/m/n/10 tests/test_security_assay.py 
+ [9] [10] [11]
+Overfull \hbox (59.84734pt too wide) in paragraph at lines 1077--1077
+[]|\TU/lmr/m/n/10 AUTHORING_BOUNDARY_TERM_1|  
+
+Overfull \hbox (206.94052pt too wide) in paragraph at lines 1079--1080
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
-[1]|
+[1]|  
 
-Overfull \hbox (59.84734pt too wide) in paragraph at lines 1015--1015
-[]|\TU/lmr/m/n/10 AUTHORING_BOUNDARY_TERM_2|
+Overfull \hbox (59.84734pt too wide) in paragraph at lines 1080--1080
+[]|\TU/lmr/m/n/10 AUTHORING_BOUNDARY_TERM_2|  
 
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 1017--1018
+Overfull \hbox (206.94052pt too wide) in paragraph at lines 1082--1083
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
-[4]|
+[4]|  
 
-Overfull \hbox (57.84734pt too wide) in paragraph at lines 1018--1018
-[]|\TU/lmr/m/n/10 DISCUSSION_BOUNDARY_TERM_1|
+Overfull \hbox (57.84734pt too wide) in paragraph at lines 1083--1083
+[]|\TU/lmr/m/n/10 DISCUSSION_BOUNDARY_TERM_1|  
 
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 1020--1021
+Overfull \hbox (206.94052pt too wide) in paragraph at lines 1085--1086
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
-[2]|
+[2]|  
 
-Overfull \hbox (57.84734pt too wide) in paragraph at lines 1021--1021
-[]|\TU/lmr/m/n/10 DISCUSSION_BOUNDARY_TERM_2|
+Overfull \hbox (57.84734pt too wide) in paragraph at lines 1086--1086
+[]|\TU/lmr/m/n/10 DISCUSSION_BOUNDARY_TERM_2|  
 
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 1023--1024
+Overfull \hbox (206.94052pt too wide) in paragraph at lines 1088--1089
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
-[3]|
+[3]|  
 
-Overfull \hbox (54.10733pt too wide) in paragraph at lines 1024--1024
-[]|\TU/lmr/m/n/10 DISCUSSION_REFINEMENT_VERB|
+Overfull \hbox (54.10733pt too wide) in paragraph at lines 1089--1089
+[]|\TU/lmr/m/n/10 DISCUSSION_REFINEMENT_VERB|  
 
-Overfull \hbox (209.4205pt too wide) in paragraph at lines 1026--1027
+Overfull \hbox (209.4205pt too wide) in paragraph at lines 1091--1092
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.refinement_ver
-bs[3]|
+bs[3]|  
 
-Overfull \hbox (33.33733pt too wide) in paragraph at lines 1027--1027
-[]|\TU/lmr/m/n/10 EVALUATION_GATE_TERM_1|
+Overfull \hbox (33.33733pt too wide) in paragraph at lines 1092--1092
+[]|\TU/lmr/m/n/10 EVALUATION_GATE_TERM_1|  
 
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 1028--1029
+Overfull \hbox (183.5505pt too wide) in paragraph at lines 1093--1094
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0]|
+  
 
+Overfull \hbox (33.33733pt too wide) in paragraph at lines 1094--1094
+[]|\TU/lmr/m/n/10 EVALUATION_GATE_TERM_2|  
 
-Overfull \hbox (33.33733pt too wide) in paragraph at lines 1029--1029
-[]|\TU/lmr/m/n/10 EVALUATION_GATE_TERM_2|
-
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 1031--1032
+Overfull \hbox (183.5505pt too wide) in paragraph at lines 1096--1097
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]|
+  
 
+Overfull \hbox (29.42732pt too wide) in paragraph at lines 1097--1097
+[]|\TU/lmr/m/n/10 INTRO_INTEGRITY_TERM_1|  
 
-Overfull \hbox (29.42732pt too wide) in paragraph at lines 1032--1032
-[]|\TU/lmr/m/n/10 INTRO_INTEGRITY_TERM_1|
-
-Overfull \hbox (202.2005pt too wide) in paragraph at lines 1034--1035
+Overfull \hbox (202.2005pt too wide) in paragraph at lines 1099--1100
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.integrity_term
-s[1]|
+s[1]|  
 
-Overfull \hbox (29.42732pt too wide) in paragraph at lines 1035--1035
-[]|\TU/lmr/m/n/10 INTRO_INTEGRITY_TERM_2|
+Overfull \hbox (29.42732pt too wide) in paragraph at lines 1100--1100
+[]|\TU/lmr/m/n/10 INTRO_INTEGRITY_TERM_2|  
 
-Overfull \hbox (202.2005pt too wide) in paragraph at lines 1037--1038
+Overfull \hbox (202.2005pt too wide) in paragraph at lines 1102--1103
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.integrity_term
-s[0]|
+s[0]|  
 
-Overfull \hbox (12.22733pt too wide) in paragraph at lines 1038--1038
-[]|\TU/lmr/m/n/10 METHOD_GATE_TERM_1|
+Overfull \hbox (12.22733pt too wide) in paragraph at lines 1103--1103
+[]|\TU/lmr/m/n/10 METHOD_GATE_TERM_1|  
 
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 1039--1040
+Overfull \hbox (183.5505pt too wide) in paragraph at lines 1104--1105
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1]|
+  
 
+Overfull \hbox (12.22733pt too wide) in paragraph at lines 1105--1105
+[]|\TU/lmr/m/n/10 METHOD_GATE_TERM_2|  
 
-Overfull \hbox (12.22733pt too wide) in paragraph at lines 1040--1040
-[]|\TU/lmr/m/n/10 METHOD_GATE_TERM_2|
-
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 1042--1043
+Overfull \hbox (183.5505pt too wide) in paragraph at lines 1107--1108
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2]|
+  
 
+Overfull \hbox (12.22733pt too wide) in paragraph at lines 1108--1108
+[]|\TU/lmr/m/n/10 METHOD_GATE_TERM_3|  
 
-Overfull \hbox (12.22733pt too wide) in paragraph at lines 1043--1043
-[]|\TU/lmr/m/n/10 METHOD_GATE_TERM_3|
-
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 1044--1045
+Overfull \hbox (183.5505pt too wide) in paragraph at lines 1109--1110
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]|
+  
 
+Overfull \hbox (53.12733pt too wide) in paragraph at lines 1110--1110
+[]|\TU/lmr/m/n/10 METHOD_MANUSCRIPT_TERM_1|  
 
-Overfull \hbox (53.12733pt too wide) in paragraph at lines 1045--1045
-[]|\TU/lmr/m/n/10 METHOD_MANUSCRIPT_TERM_1|
-
-Overfull \hbox (213.9205pt too wide) in paragraph at lines 1047--1048
+Overfull \hbox (213.9205pt too wide) in paragraph at lines 1112--1113
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.manuscript_ter
-ms[4]|
+ms[4]|  
 
-Overfull \hbox (53.12733pt too wide) in paragraph at lines 1048--1048
-[]|\TU/lmr/m/n/10 METHOD_MANUSCRIPT_TERM_2|
+Overfull \hbox (53.12733pt too wide) in paragraph at lines 1113--1113
+[]|\TU/lmr/m/n/10 METHOD_MANUSCRIPT_TERM_2|  
 
-Overfull \hbox (213.9205pt too wide) in paragraph at lines 1050--1051
+Overfull \hbox (213.9205pt too wide) in paragraph at lines 1115--1116
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.manuscript_ter
-ms[4]|
+ms[4]|  
 
-Overfull \hbox (19.79733pt too wide) in paragraph at lines 1051--1051
-[]|\TU/lmr/m/n/10 METHOD_METAL_TERM_1|
+Overfull \hbox (19.79733pt too wide) in paragraph at lines 1116--1116
+[]|\TU/lmr/m/n/10 METHOD_METAL_TERM_1|  
 
-Overfull \hbox (221.9205pt too wide) in paragraph at lines 1052--1053
+Overfull \hbox (221.9205pt too wide) in paragraph at lines 1117--1118
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.metallurgical_
-terms[1]|
+terms[1]|  
 
-Overfull \hbox (19.79733pt too wide) in paragraph at lines 1053--1053
-[]|\TU/lmr/m/n/10 METHOD_METAL_TERM_2|
+Overfull \hbox (19.79733pt too wide) in paragraph at lines 1118--1118
+[]|\TU/lmr/m/n/10 METHOD_METAL_TERM_2|  
 
-Overfull \hbox (221.9205pt too wide) in paragraph at lines 1054--1055
+Overfull \hbox (221.9205pt too wide) in paragraph at lines 1119--1120
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.metallurgical_
-terms[3]|
+terms[3]|  
 
-Overfull \hbox (19.79733pt too wide) in paragraph at lines 1055--1055
-[]|\TU/lmr/m/n/10 METHOD_METAL_TERM_3|
+Overfull \hbox (19.79733pt too wide) in paragraph at lines 1120--1120
+[]|\TU/lmr/m/n/10 METHOD_METAL_TERM_3|  
 
-Overfull \hbox (221.9205pt too wide) in paragraph at lines 1056--1057
+Overfull \hbox (221.9205pt too wide) in paragraph at lines 1121--1122
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.metallurgical_
-terms[2]|
+terms[2]|  
 
-Overfull \hbox (27.29733pt too wide) in paragraph at lines 1057--1057
-[]|\TU/lmr/m/n/10 REPRO_EVIDENCE_TERM_1|
+Overfull \hbox (27.29733pt too wide) in paragraph at lines 1122--1122
+[]|\TU/lmr/m/n/10 REPRO_EVIDENCE_TERM_1|  
 
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1059--1060
+Overfull \hbox (202.16052pt too wide) in paragraph at lines 1124--1125
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
-[0]|
+[0]|  
 
-Overfull \hbox (27.29733pt too wide) in paragraph at lines 1060--1060
-[]|\TU/lmr/m/n/10 REPRO_EVIDENCE_TERM_2|
+Overfull \hbox (27.29733pt too wide) in paragraph at lines 1125--1125
+[]|\TU/lmr/m/n/10 REPRO_EVIDENCE_TERM_2|  
 
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1062--1063
+Overfull \hbox (202.16052pt too wide) in paragraph at lines 1127--1128
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
-[3]|
+[3]|  
 
-Overfull \hbox (36.88733pt too wide) in paragraph at lines 1063--1063
-[]|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_1|
+Overfull \hbox (36.88733pt too wide) in paragraph at lines 1128--1128
+[]|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_1|  
 
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1065--1066
+Overfull \hbox (202.16052pt too wide) in paragraph at lines 1130--1131
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
-[1]|
+[1]|  
 
-Overfull \hbox (36.88733pt too wide) in paragraph at lines 1066--1066
-[]|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_2|
+Overfull \hbox (36.88733pt too wide) in paragraph at lines 1131--1131
+[]|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_2|  
 
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1068--1069
+Overfull \hbox (202.16052pt too wide) in paragraph at lines 1133--1134
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
-[3]|
+[3]|  
 
-Overfull \hbox (36.88733pt too wide) in paragraph at lines 1069--1069
-[]|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_3|
+Overfull \hbox (36.88733pt too wide) in paragraph at lines 1134--1134
+[]|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_3|  
 
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1071--1072
+Overfull \hbox (202.16052pt too wide) in paragraph at lines 1136--1137
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
-[4]|
+[4]|  
 
-Overfull \hbox (12.70734pt too wide) in paragraph at lines 1072--1072
-[]|\TU/lmr/m/n/10 RESULTS_PURITY_ADJ_1|
+Overfull \hbox (12.70734pt too wide) in paragraph at lines 1137--1137
+[]|\TU/lmr/m/n/10 RESULTS_PURITY_ADJ_1|  
 
-Overfull \hbox (209.96051pt too wide) in paragraph at lines 1073--1074
+Overfull \hbox (209.96051pt too wide) in paragraph at lines 1138--1139
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.purity_adjecti
-ves[0]|
+ves[0]|  
 
-Overfull \hbox (12.70734pt too wide) in paragraph at lines 1074--1074
-[]|\TU/lmr/m/n/10 RESULTS_PURITY_ADJ_2|
+Overfull \hbox (12.70734pt too wide) in paragraph at lines 1139--1139
+[]|\TU/lmr/m/n/10 RESULTS_PURITY_ADJ_2|  
 
-Overfull \hbox (209.96051pt too wide) in paragraph at lines 1075--1076
+Overfull \hbox (209.96051pt too wide) in paragraph at lines 1140--1141
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.purity_adjecti
-ves[1]|
- [10] [11] [12]
-Overfull \hbox (34.76411pt too wide) in paragraph at lines 1243--1243
-[]|\TU/lmr/m/n/10 src/refinery.py::CANONICAL_STAGES|
+ves[1]|  
+ [12] [13] [14] [15] [16] [17] [18] [19] [20] [21]
+Overfull \hbox (60.32585pt too wide) in paragraph at lines 1511--1511
+[]|\TU/lmr/m/n/10 output/reports/evidence_registry.json 
 
-Overfull \hbox (36.8141pt too wide) in paragraph at lines 1245--1245
-[]|\TU/lmr/m/n/10 src/purity.py::assert_monotone_increase|
+Overfull \hbox (5.34436pt too wide) in paragraph at lines 1512--1512
+[]|\TU/lmr/m/n/10 infrastructure.validation.cli 
 
-Overfull \hbox (30.7841pt too wide) in paragraph at lines 1247--1247
-[]|\TU/lmr/m/n/10 src/purity.py::NINE_NINES_PURITY|
+Overfull \hbox (6.78175pt too wide) in paragraph at lines 1514--1514
+\TU/lmr/m/n/10 development 
 
-Overfull \hbox (11.9441pt too wide) in paragraph at lines 1249--1249
-[]|\TU/lmr/m/n/10 src/composition.py::_choose_value|
+Overfull \hbox (2.90176pt too wide) in paragraph at lines 1523--1523
+[]|\TU/lmr/m/n/10 unvalidated 
+ [22]
+Overfull \hbox (34.76411pt too wide) in paragraph at lines 1557--1557
+[]|\TU/lmr/m/n/10 src/refinery.py::CANONICAL_STAGES|  
 
-Overfull \hbox (8.79411pt too wide) in paragraph at lines 1251--1251
-[]|\TU/lmr/m/n/10 src/formalisms.py::FORMALISMS|
+Overfull \hbox (36.8141pt too wide) in paragraph at lines 1559--1559
+[]|\TU/lmr/m/n/10 src/purity.py::assert_monotone_increase|  
 
-Overfull \hbox (185.19412pt too wide) in paragraph at lines 1254--1254
-[]|\TU/lmr/m/n/10 scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME|
+Overfull \hbox (30.7841pt too wide) in paragraph at lines 1561--1561
+[]|\TU/lmr/m/n/10 src/purity.py::NINE_NINES_PURITY|  
 
+Overfull \hbox (11.9441pt too wide) in paragraph at lines 1563--1563
+[]|\TU/lmr/m/n/10 src/composition.py::_choose_value|  
 
-Overfull \hbox (114.0141pt too wide) in paragraph at lines 1259--1259
-[]|\TU/lmr/m/n/10 src/figures/diagrams.py::generate_implementation_circuit|
+Overfull \hbox (8.79411pt too wide) in paragraph at lines 1565--1565
+[]|\TU/lmr/m/n/10 src/formalisms.py::FORMALISMS|  
 
-Overfull \hbox (51.76411pt too wide) in paragraph at lines 1263--1263
-[]|\TU/lmr/m/n/10 src/integrity.py::build_integrity_dimensions|
- [13]
-Overfull \hbox (28.35374pt too wide) in paragraph at lines 1362--1362
-[]|\TU/lmr/m/n/10 claim_evidence_assay|
+Overfull \hbox (185.19412pt too wide) in paragraph at lines 1568--1568
+[]|\TU/lmr/m/n/10 scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME| 
+ 
 
-Overfull \hbox (24.43375pt too wide) in paragraph at lines 1364--1364
-[]|\TU/lmr/m/n/10 evidence_tier_ladder|
+Overfull \hbox (114.0141pt too wide) in paragraph at lines 1573--1573
+[]|\TU/lmr/m/n/10 src/figures/diagrams.py::generate_implementation_circuit|  
 
-Overfull \hbox (30.32375pt too wide) in paragraph at lines 1366--1366
-[]|\TU/lmr/m/n/10 formalism_traceability|
+Overfull \hbox (51.76411pt too wide) in paragraph at lines 1577--1577
+[]|\TU/lmr/m/n/10 src/integrity.py::build_integrity_dimensions|  
 
-Overfull \hbox (33.57375pt too wide) in paragraph at lines 1368--1368
-[]|\TU/lmr/m/n/10 implementation_circuit|
+Overfull \hbox (51.1141pt too wide) in paragraph at lines 1581--1581
+[]|\TU/lmr/m/n/10 src/security_assay.py::build_security_assay|  
+ [23]
+Overfull \hbox (28.35374pt too wide) in paragraph at lines 1680--1680
+[]|\TU/lmr/m/n/10 claim_evidence_assay|  
 
-Overfull \hbox (29.71375pt too wide) in paragraph at lines 1370--1370
-[]|\TU/lmr/m/n/10 integrity_gate_matrix|
+Overfull \hbox (24.43375pt too wide) in paragraph at lines 1682--1682
+[]|\TU/lmr/m/n/10 evidence_tier_ladder|  
 
-Overfull \hbox (27.30374pt too wide) in paragraph at lines 1372--1372
-[]|\TU/lmr/m/n/10 integrity_risk_matrix|
+Overfull \hbox (30.32375pt too wide) in paragraph at lines 1684--1684
+[]|\TU/lmr/m/n/10 formalism_traceability|  
 
-Overfull \hbox (15.56374pt too wide) in paragraph at lines 1375--1375
-[]|\TU/lmr/m/n/10 provenance_sankey|
+Overfull \hbox (33.57375pt too wide) in paragraph at lines 1686--1686
+[]|\TU/lmr/m/n/10 implementation_circuit|  
 
-Overfull \hbox (24.76373pt too wide) in paragraph at lines 1377--1377
-[]|\TU/lmr/m/n/10 purity_claim_scatter|
+Overfull \hbox (29.71375pt too wide) in paragraph at lines 1688--1688
+[]|\TU/lmr/m/n/10 integrity_gate_matrix|  
 
-Overfull \hbox (13.47374pt too wide) in paragraph at lines 1379--1379
-[]|\TU/lmr/m/n/10 purity_progression|
-[14] [15] [16] [17] [18]
-Overfull \hbox (25.95882pt too wide) in paragraph at lines 1485--1485
-[]|\TU/lmr/m/n/10 test_all_manuscript_tokens_are_generated
-[19] [20] [21] [22]
-Overfull \hbox (5.56102pt too wide) in paragraph at lines 1617--1621
-[]\TU/lmr/m/n/10 6 source-owned formalisms with equation labels: eq:purity_func
+Overfull \hbox (27.30374pt too wide) in paragraph at lines 1690--1690
+[]|\TU/lmr/m/n/10 integrity_risk_matrix|  
+
+Overfull \hbox (15.56374pt too wide) in paragraph at lines 1693--1693
+[]|\TU/lmr/m/n/10 provenance_sankey|  
+
+Overfull \hbox (24.76373pt too wide) in paragraph at lines 1695--1695
+[]|\TU/lmr/m/n/10 purity_claim_scatter|  
+
+Overfull \hbox (13.47374pt too wide) in paragraph at lines 1697--1697
+[]|\TU/lmr/m/n/10 purity_progression|  
+[24]
+Overfull \hbox (25.95882pt too wide) in paragraph at lines 1814--1814
+[]|\TU/lmr/m/n/10 test_all_manuscript_tokens_are_generated 
+ [25] [26] [27]
+Overfull \hbox (5.31102pt too wide) in paragraph at lines 1970--1975
+[]\TU/lmr/m/n/10 7 source-owned formalisms with equation labels: eq:purity_func
 tional, eq:monotone_refinery, eq:token_digest, eq:claim_support,
-[23] [24] [25] [26] [27]
-Overfull \hbox (4.80272pt too wide) in paragraph at lines 1963--1964
-\TU/lmr/m/n/10 put/data/refinery_results.json|
+[28] [29] [30] [31] [32]
+Overfull \hbox (4.80272pt too wide) in paragraph at lines 2344--2345
+\TU/lmr/m/n/10 put/data/refinery_results.json|  
 
-Overfull \hbox (11.95271pt too wide) in paragraph at lines 1966--1967
-[]|\TU/lmr/m/n/10 output/reports/token_plan.json|
+Overfull \hbox (11.95271pt too wide) in paragraph at lines 2347--2348
+[]|\TU/lmr/m/n/10 output/reports/token_plan.json|  
 
-Overfull \hbox (9.77272pt too wide) in paragraph at lines 1973--1975
-\TU/lmr/m/n/10 ures/integrity_risk_matrix.png|
+Overfull \hbox (9.77272pt too wide) in paragraph at lines 2354--2356
+\TU/lmr/m/n/10 ures/integrity_risk_matrix.png|  
 
-Overfull \hbox (15.46272pt too wide) in paragraph at lines 1985--1988
-[]|\TU/lmr/m/n/10 manuscript/02_methodology.md,
+Overfull \hbox (15.46272pt too wide) in paragraph at lines 2366--2369
+[]|\TU/lmr/m/n/10 manuscript/02_methodology.md, 
 
-Overfull \hbox (3.67271pt too wide) in paragraph at lines 1985--1988
-\TU/lmr/m/n/10 manuscript/04_discussion.md,
+Overfull \hbox (3.67271pt too wide) in paragraph at lines 2366--2369
+\TU/lmr/m/n/10 manuscript/04_discussion.md, 
 
-Overfull \hbox (3.51273pt too wide) in paragraph at lines 1985--1988
-\TU/lmr/m/n/10 manuscript/08_evaluation.md|
+Overfull \hbox (3.51273pt too wide) in paragraph at lines 2366--2369
+\TU/lmr/m/n/10 manuscript/08_evaluation.md|  
 
-Overfull \hbox (23.59273pt too wide) in paragraph at lines 1993--1998
-[]|\TU/lmr/m/n/10 manuscript/06_reproducibility.md,
+Overfull \hbox (23.59273pt too wide) in paragraph at lines 2374--2379
+[]|\TU/lmr/m/n/10 manuscript/06_reproducibility.md, 
 
-Overfull \hbox (4.90273pt too wide) in paragraph at lines 1993--1998
-\TU/lmr/m/n/10 manuscript/08_evaluation.md,
+Overfull \hbox (4.90273pt too wide) in paragraph at lines 2374--2379
+\TU/lmr/m/n/10 manuscript/08_evaluation.md, 
 
-Overfull \hbox (45.80272pt too wide) in paragraph at lines 1993--1998
-\TU/lmr/m/n/10 manuscript/09_authoring_contract.md,
+Overfull \hbox (45.80272pt too wide) in paragraph at lines 2374--2379
+\TU/lmr/m/n/10 manuscript/09_authoring_contract.md, 
 
-Overfull \hbox (25.38272pt too wide) in paragraph at lines 1993--1998
-\TU/lmr/m/n/10 put/reports/evidence_registry.json,
+Overfull \hbox (25.38272pt too wide) in paragraph at lines 2374--2379
+\TU/lmr/m/n/10 put/reports/evidence_registry.json, 
 
-Overfull \hbox (22.66272pt too wide) in paragraph at lines 1993--1998
-\TU/lmr/m/n/10 put/reports/output_statistics.json|
- [28] [29] [30] (./_combined_manuscript.bbl [31]) [32]
+Overfull \hbox (22.66272pt too wide) in paragraph at lines 2374--2379
+\TU/lmr/m/n/10 put/reports/output_statistics.json|  
+ [33] [34] [35] [36] (./_combined_manuscript.bbl [37] [38]) [39]
 (./_combined_manuscript.aux) )
 (see the transcript file for additional information)
-Output written on _combined_manuscript.pdf (33 pages).
+Output written on _combined_manuscript.pdf (40 pages).
 Transcript written on _combined_manuscript.log.

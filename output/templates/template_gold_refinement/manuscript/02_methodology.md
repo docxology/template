@@ -6,6 +6,8 @@ Methodologically, the paper treats composition as part of a research compendium:
 
 Structured reporting guidelines provide the closest scholarly analogue for the gate layer, but they also set its limit. CONSORT, STROBE, PRISMA, ARRIVE, and the EQUATOR Network define field-specific reporting items so a manuscript can be inspected, appraised, and in some cases replicated more easily [@schulz2010consort; @vonelm2007strobe; @page2021prisma; @percie_du_sert2020arrive; @equator_network_reporting_guidelines]. In this exemplar, token coverage, evidence registration, and render validation play a similar internal role: they make omissions visible and bind declarations to artifacts. They do not test whether an external study was designed well, executed correctly, or substantively true.
 
+The metallurgical side of the method is deliberately historical rather than modern-industrial. Pre-1800 sources support the relational structure - extraction, smelting or refining, assay, parting/cupellation, fineness, and public marking - but not a claim that all regions used the same sequence or that early practitioners held modern chemical theories. Pliny is useful for extraction and touchstone context; Biringuccio and Agricola are useful for staged metallurgical operations; Badcock's *Touch-stone* and the Goldsmiths' Company chronology are useful for standards, weights, statutes, and marks; Cramer is useful for eighteenth-century assay discipline [@pliny_natural_history_33; @biringuccio_pirotechnia_1540; @agricola_de_re_metallica_1556; @badcock_touchstone_1678; @goldsmiths_hallmarking_history; @cramer_assaying_metals_1741]. The normalized five-stage pipeline below is therefore an analogy-preserving abstraction, not a historical claim that "ore -> smelting -> assaying -> cupellation -> certification" was a universal pre-1800 production recipe.
+
 ## Stage definitions
 
 | # | Stage | Output purity | Karat | Metallurgical operation |
@@ -40,6 +42,7 @@ The formal layer is generated from `src/formalisms.py`, not hand-numbered prose.
 | F4 | Claim-support fraction | [@eq:claim_support] | `src/evidence.py::EvidenceRegistry.support_rate` |
 | F5 | Integrity vector | [@eq:integrity_vector] | `manuscript/config.yaml#gold_refinement.audit_rules` |
 | F6 | Certification predicate | [@eq:certification_predicate] | `src/refinery.py::RefineryResult.is_nine_nines_certified` |
+| F7 | Adversarial assay | [@eq:adversarial_assay] | `src/security_assay.py::build_security_assay` |
 : Source-owned formalism registry. {#tbl:formalism_registry}
 
 **F1: Purity functional.** Manuscript purity is treated as a bounded fraction mapped to a reader-facing grade.
@@ -77,7 +80,7 @@ The numerator and denominator come from the project-local claim-support registry
 **F5: Integrity vector.** Scientific integrity is represented as a vector of gate outcomes rather than one scalar badge.
 
 $$
-\mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render}, v_{references})
+\mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render}, v_{references}, v_{security})
 $$ {#eq:integrity_vector}
 
 A publication claim is only as strong as the weakest required gate. Source: `manuscript/config.yaml#gold_refinement.audit_rules`.
@@ -89,6 +92,14 @@ $$
 $$ {#eq:certification_predicate}
 
 The predicate binds the nine-nines metaphor to the actual validation chain. Source: `src/refinery.py::RefineryResult.is_nine_nines_certified`.
+
+**F7: Adversarial assay.** Certification requires an explicit adversarial and supply-chain scope, not only ordinary gate success.
+
+$$
+\operatorname{certified}_{adv}(r) \iff \operatorname{certified}(r) \land \forall a \in A_r:\ threat(a) \land standard(a) \land evidence(a) \land validator(a) \land boundary(a)
+$$ {#eq:adversarial_assay}
+
+The adversarial assay defines scope and evidence requirements; it is not proof of compliance or live scan findings. Source: `src/security_assay.py::build_security_assay`.
 
 ## Token selection
 
@@ -115,7 +126,7 @@ where $n$ is the size of the lexicon category inventory. Selected metallurgical 
 
 ## Karat grading
 
-Karat grades map purity fractions to a gold-fineness vocabulary used here as an analogy surface [@marsden_house_2006; @lbma_good_delivery_rules]:
+Karat grades map purity fractions to a gold-fineness vocabulary used here as an analogy surface. The pre-1800 evidence supports fineness as a regulated testing and marking problem, but not the modern nine-nines target used by this local software predicate [@badcock_touchstone_1678; @goldsmiths_hallmarking_history; @cramer_assaying_metals_1741; @marsden_house_2006; @lbma_good_delivery_rules]:
 
 - 9K = 37.5% (ore stage)
 - 18K = 75.0% (smelting stage)
@@ -134,6 +145,7 @@ The mapping is implemented in `src/purity.py::karat_for_purity()`. The final nin
 | Token planning | GoldRefinementConfig | Expand slots into deterministic token choices | TokenPlan | seed-stability tests |
 | Figure generation | RefineryResult and TokenPlan | Generate purity progression, karat grading, and token density figures | output/figures/*.png | nonblank figure tests |
 | Integrity risk modeling | audit rules, failure modes, claims, and shared evidence registry | Score integrity dimensions and summarize evidence tiers | integrity tables and risk visualizations | tests/test_integrity.py |
+| Security assay | gold_refinement.security_assay | Map adversarial threats and standards to source-owned evidence and claim boundaries | security assay table and variables | tests/test_security_assay.py |
 | Manuscript hydration | manuscript shells and manuscript_variables.json | Resolve {{TOKEN}} placeholders into output/manuscript/ | hydrated Markdown manuscript | unresolved-token scan |
 | Render and validate | output/manuscript | Render PDF, HTML through shared template pipeline | output/pdf and output/web | render command |
 
@@ -145,9 +157,15 @@ The implementation circuit shown in [@fig:implementation_circuit] is the method'
 
 This split keeps the gold metaphor honest. A fork is allowed to change the ore, the furnace, or the assay, but it must do so in the source layer and then let the generated and validation layers expose the consequences.
 
+## Adversarial assay layer
+
+The implementation trace handles accidental drift: missing tokens, unsupported claims, malformed citations, stale figures, or broken renders. A security assay adds a different question: could the manuscript sound certified while omitting threat scope, supply-chain provenance, or scan evidence? The assay therefore treats zero trust, secure software development, supply-chain provenance, attack-path modeling, SBOM standards, and secure-by-design guidance as boundary-setting standards rather than proof of compliance [@nist_sp800_207_zero_trust; @nist_sp800_218_ssdf; @slsa_v1_2; @sigstore_docs; @mitre_attack; @cyclonedx_spec; @spdx_spec; @cisa_secure_by_design].
+
+This pass implements that layer as source-owned rows in `gold_refinement.security_assay` and generated variables from `src/security_assay.py`. It does not run Codex Security or Deep Security Scan, and it does not report vulnerability findings. Instead, [@eq:adversarial_assay] requires every adversarial assay row to name a threat, standard or guidance source, local evidence surface, validator, and claim boundary before certification language is allowed to expand beyond ordinary template gates. The generated assay table appears in [@tbl:security_assay].
+
 ## Scientific integrity model
 
-The integrity model converts manuscript risks into source-owned dimensions. It does not replace peer review or domain validation. It names the failure class, severity, detectability, evidence surface, owner, and validator so the manuscript can distinguish "the analogy is vivid" from "the claim is backed by a regenerable check." The current pass reports 8 integrity dimensions; highest residual risk is I4 (Analogy boundary) at 15.
+The integrity model converts manuscript risks into source-owned dimensions. It does not replace peer review or domain validation. It names the failure class, severity, detectability, evidence surface, owner, and validator so the manuscript can distinguish "the analogy is vivid" from "the claim is backed by a regenerable check." The current pass reports 9 integrity dimensions; highest residual risk is I4 (Analogy boundary) at 15.
 
 | ID | Dimension | Residual risk | Owner | Validator |
 |----|-----------|---------------|-------|-----------|
@@ -159,6 +177,7 @@ The integrity model converts manuscript risks into source-owned dimensions. It d
 | I6 | Figure registry | 8 | figure producer | tests/test_registry_integrity.py |
 | I7 | Citation hygiene | 4 | bibliography | infrastructure.reference.citation validate |
 | I8 | Render readiness | 8 | template pipeline | template pipeline render and validate stages |
+| I9 | Adversarial security assay | 15 | security assay | tests/test_security_assay.py and manuscript source review |
 : Source-owned scientific-integrity dimensions. {#tbl:integrity_dimensions}
 
 The residual-risk score is deliberately simple: high severity and low detectability raise priority. The score is not a universal risk model; it is a local audit heuristic used to decide where a fork must add validators before expanding claims.
@@ -171,6 +190,7 @@ The residual-risk score is deliberately simple: high severity and low detectabil
 | evidence assay | 1 |
 | figure producer | 1 |
 | generated variables | 1 |
+| security assay | 1 |
 | source code | 1 |
 | template pipeline | 1 |
 : Integrity dimensions by owning surface. {#tbl:integrity_owners}

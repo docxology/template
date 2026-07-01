@@ -282,6 +282,11 @@ affects writing, analysis, or review.</td>
 <td>Cite the exact software, template release, and executable package
 used to generate the manuscript.</td>
 </tr>
+<tr>
+<td>Security evidence boundary</td>
+<td>Treat security standards and Codex Security scan phases as scoped
+guidance unless generated scan artifacts and receipts are present.</td>
+</tr>
 </tbody>
 </table>
 <p>The authoring boundary tokens for this section are analogy boundary
@@ -311,32 +316,41 @@ persistent identification, accessibility, and version specificity
 [smith2016softwarecitation]. A fork should therefore cite the release it
 used and record enough metadata for readers to distinguish “same
 template family” from “same executable object.”</p>
+<p>Security authorship has the same rule. Standards and guidance can
+shape the threat model, but they cannot be cited as proof that this
+manuscript is compliant or secure. Future Codex Security or Deep
+Security Scan reports should enter the manuscript only as generated
+artifacts with validator receipts, evidence-ledger alignment, and a
+clear boundary between findings, mitigations, and remaining scope.</p>
 <h2 id="fork-checklist">Fork checklist</h2>
 <ol type="1">
-<li><p>Remap metallurgical stages to domain operations in
-<code>src/refinery.py</code></p></li>
-<li><p>Update lexicon categories in <code>manuscript/config.yaml</code>
-under <code>gold_refinement.lexicon</code></p></li>
-<li><p>Update <code>contribution_claims</code> with domain-specific
-evidence pointers</p></li>
-<li><p>Add domain validators beyond the exemplar’s generic
-gates</p></li>
-<li><p>Replace or extend <code>src/integrity.py</code> dimensions when
-the fork introduces new failure modes</p></li>
-<li><p>Update <code>domain_profile.yaml</code>,
+<li>Remap metallurgical stages to domain operations in
+<code>src/refinery.py</code></li>
+<li>Update lexicon categories in <code>manuscript/config.yaml</code>
+under <code>gold_refinement.lexicon</code></li>
+<li>Update <code>contribution_claims</code> with domain-specific
+evidence pointers</li>
+<li>Add domain validators beyond the exemplar’s generic gates</li>
+<li>Replace or extend <code>src/integrity.py</code> dimensions when the
+fork introduces new failure modes</li>
+<li>Update <code>domain_profile.yaml</code>,
 <code>src/domain_adapter.py</code>, and
 <code>docs/domain_fork_guide.md</code> when the analogy is forked into a
-new domain</p></li>
-<li><p>Keep <code>steganography</code> and <code>llm</code> policy
-blocks explicit when the secure pipeline or optional review path is
-used</p></li>
-<li><p>Cite the exact template/software release and record environment
-metadata for the executable package</p></li>
-<li><p>Regenerate all outputs through the pipeline:</p>
+new domain</li>
+<li>Keep <code>steganography</code> and <code>llm</code> policy blocks
+explicit when the secure pipeline or optional review path is used</li>
+<li>Cite the exact template/software release and record environment
+metadata for the executable package</li>
+<li>Update <code>gold_refinement.security_assay</code> and add scan
+artifacts before making secure-by-design, supply-chain, or vulnerability
+findings claims</li>
+<li>Regenerate all outputs through the pipeline:</li>
+</ol>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/refinement_analysis.py</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/z_generate_manuscript_variables.py</span></code></pre></div></li>
-<li><p>Do not hand-edit generated manuscript, PDFs, or figures</p></li>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/z_generate_manuscript_variables.py</span></code></pre></div>
+<ol start="11" type="1">
+<li>Do not hand-edit generated manuscript, PDFs, or figures</li>
 </ol>
 <p>Do not hard-code equation, figure, or table numbers in prose. Use
 <code>[@eq:...]</code>, <code>[@fig:...]</code>,
@@ -347,5 +361,9 @@ not as a retrospective dashboard. If a fork cannot name who owns a
 high-severity integrity dimension, which validator detects it, and which
 evidence tier supports it, the fork should lower the claim boundary
 until that missing surface exists.</p>
+<p>The same rule applies to the adversarial assay. If a fork cannot name
+the threat, standard, local evidence surface, validator, and claim
+boundary for a security claim, the fork should keep the language as
+scoped guidance rather than certification.</p>
 </body>
 </html>

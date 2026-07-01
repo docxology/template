@@ -46,6 +46,11 @@ try:
     )
     from .purity import format_purity, purity_to_nines
     from .refinery import run_refinery
+    from .security_assay import (
+        build_security_assay,
+        security_assay_summary_line,
+        security_assay_table_rows,
+    )
 except ImportError:  # pragma: no cover
     from composition import generate_token_plan  # type: ignore[no-redef]
     from config import load_gold_refinement_config  # type: ignore[no-redef]
@@ -67,6 +72,11 @@ except ImportError:  # pragma: no cover
     )
     from purity import format_purity, purity_to_nines  # type: ignore[no-redef]
     from refinery import run_refinery  # type: ignore[no-redef]
+    from security_assay import (  # type: ignore[no-redef]
+        build_security_assay,
+        security_assay_summary_line,
+        security_assay_table_rows,
+    )
 
 import logging
 
@@ -401,6 +411,15 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
             f"| {fm.get('name', '')} | {fm.get('risk', '')} | {fm.get('detection', '')} | {fm.get('mitigation', '')} |"
         )
     variables["FAILURE_MODES_TABLE"] = "\n".join(failure_rows)
+
+    security_records = build_security_assay(gr_config)
+    variables["SECURITY_ASSAY_COUNT"] = str(len(security_records))
+    variables["SECURITY_ASSAY_SUMMARY"] = security_assay_summary_line(security_records)
+    variables["SECURITY_ASSAY_TABLE"] = security_assay_table_rows(security_records)
+    variables["SECURITY_ASSAY_BOUNDARY"] = (
+        "No Codex Security or Deep Security Scan findings are claimed unless a scan artifact is generated, "
+        "validated, and cited."
+    )
 
     labels = equation_labels()
     variables["FORMALISM_COUNT"] = str(formalism_count())

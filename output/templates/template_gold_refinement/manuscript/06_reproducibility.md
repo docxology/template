@@ -7,7 +7,7 @@ The refinery pipeline is fully deterministic. Given the same `manuscript/config.
 Executable-publication scholarship sharpens that norm. Executable research compendia and executable papers treat an article as a package of narrative, code, data, environment, and rendered outputs rather than as a static document with detachable supplements [@nuest2017erc; @lasser2020executable]. The present exemplar is smaller and more template-specific: it does not provide a universal executable-paper format, but it does make the manuscript variables, figures, reports, and rendered PDF/HTML products rebuildable from source-owned inputs.
 
 - **Seed:** 431
-- **Config hash:** 2411971d39e10f3d
+- **Config hash:** 8d3efef5bcbe8b23
 - **Generation timestamp:** 2026-06-25T00:00:00Z
 - **Python version:** 3.12.13
 
@@ -15,10 +15,10 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 
 | Category | Count |
 |----------|-------|
-| Figures | 24 |
+| Figures | 26 |
 | Data files | 3 |
-| Reports | 11 |
-| **Total** | 38 |
+| Reports | 12 |
+| **Total** | 41 |
 
 ## Regeneration commands
 
@@ -39,7 +39,7 @@ All vocabulary, slots, section conditions, steganography toggles, and optional L
 
 `src/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `2411971d39e10f3d`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `8d3efef5bcbe8b23`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 

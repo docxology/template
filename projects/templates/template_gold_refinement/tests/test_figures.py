@@ -109,9 +109,9 @@ class TestGraphTopologyContracts:
 
     def test_formalism_traceability_graph_shape(self):
         graph = build_formalism_traceability_graph()
-        assert graph.number_of_nodes() == 18
-        assert graph.number_of_edges() == 12
-        assert sum(1 for _, data in graph.nodes(data=True) if data["kind"] == "formalism") == 6
+        assert graph.number_of_nodes() == 21
+        assert graph.number_of_edges() == 14
+        assert sum(1 for _, data in graph.nodes(data=True) if data["kind"] == "formalism") == 7
 
     def test_implementation_circuit_graph_shape(self):
         graph = build_implementation_circuit_graph()

@@ -155,6 +155,7 @@ def test_table_variables_present(tmp_path):
     assert "INTEGRITY_DIMENSION_TABLE" in v
     assert "INTEGRITY_OWNER_TABLE" in v
     assert "EVIDENCE_TIER_TABLE" in v
+    assert "SECURITY_ASSAY_TABLE" in v
     assert "FIGURE_QUALITY_TABLE" in v
 
 
@@ -186,8 +187,9 @@ def test_real_project_expanded_token_surface():
 def test_formalism_and_claim_support_variables_present(tmp_path):
     root = _make_minimal_project(tmp_path)
     v = generate_variables(root)
-    assert v["FORMALISM_COUNT"] == "6"
+    assert v["FORMALISM_COUNT"] == "7"
     assert "eq:certification_predicate" in v["FORMALISM_EQUATION_LABELS"]
+    assert "eq:adversarial_assay" in v["FORMALISM_EQUATION_LABELS"]
     assert v["CLAIM_SUPPORT_REGISTRY_PATH"] == "output/reports/claim_support_registry.json"
     assert v["FIGURE_QUALITY_REPORT_PATH"] == "output/reports/figure_quality_report.json"
     assert "FIGURE_QUALITY_STATUS" in v
@@ -197,8 +199,19 @@ def test_formalism_and_claim_support_variables_present(tmp_path):
     assert "fig:claim_evidence_assay" in v["FIGURE_CLAIM_EVIDENCE_ASSAY"]
     assert "fig:integrity_risk_matrix" in v["FIGURE_INTEGRITY_RISK_MATRIX"]
     assert "fig:evidence_tier_ladder" in v["FIGURE_EVIDENCE_TIER_LADDER"]
-    assert v["INTEGRITY_DIMENSION_COUNT"] == "8"
+    assert v["INTEGRITY_DIMENSION_COUNT"] == "9"
     assert "highest residual risk" in v["INTEGRITY_RISK_SUMMARY"]
+
+
+def test_real_project_security_assay_variables_present():
+    project_root = Path(__file__).resolve().parent.parent
+    v = generate_variables(project_root)
+    assert v["SECURITY_ASSAY_COUNT"] == "5"
+    assert "5 adversarial assay rows" in v["SECURITY_ASSAY_SUMMARY"]
+    assert "NIST SP 800-207" in v["SECURITY_ASSAY_TABLE"]
+    assert "MITRE ATT&CK" in v["SECURITY_ASSAY_TABLE"]
+    assert "Codex Security" in v["SECURITY_ASSAY_TABLE"]
+    assert "No Codex Security or Deep Security Scan findings are claimed" in v["SECURITY_ASSAY_BOUNDARY"]
 
 
 def test_figure_quality_variables_read_generated_report(tmp_path):

@@ -10,6 +10,7 @@
 | Risk review | Treat high-residual-risk integrity dimensions as fork obligations before publication claims are expanded. |
 | Tool disclosure | Disclose AI, template, and automation assistance when it materially affects writing, analysis, or review. |
 | Software citation | Cite the exact software, template release, and executable package used to generate the manuscript. |
+| Security evidence boundary | Treat security standards and Codex Security scan phases as scoped guidance unless generated scan artifacts and receipts are present. |
 
 The authoring boundary tokens for this section are analogy boundary and non-claim. They mark the point where an author must either add new evidence and validators or lower the claim from certification to analogy.
 
@@ -18,6 +19,8 @@ Authorship remains accountable even when composition is deterministic. The token
 That accountability rule follows current publication-ethics guidance. ICMJE's 2026 Recommendations include a dedicated section on artificial intelligence in publishing, and COPE's authorship guidance states that AI tools cannot be listed as authors because they cannot accept responsibility for a manuscript [@icmje2026recommendations; @cope2023ai]. A deterministic template is different from a generative AI system, but the obligation is parallel: tooling may assist composition and validation, while named human authors remain responsible for disclosure, accuracy, evidence boundaries, and final claims.
 
 Software citation closes the same accountability loop for executable materials. The code, template, and release that generated a manuscript should be treated as research products with credit, attribution, persistent identification, accessibility, and version specificity [@smith2016softwarecitation]. A fork should therefore cite the release it used and record enough metadata for readers to distinguish "same template family" from "same executable object."
+
+Security authorship has the same rule. Standards and guidance can shape the threat model, but they cannot be cited as proof that this manuscript is compliant or secure. Future Codex Security or Deep Security Scan reports should enter the manuscript only as generated artifacts with validator receipts, evidence-ledger alignment, and a clear boundary between findings, mitigations, and remaining scope.
 
 ## Fork checklist
 
@@ -29,13 +32,16 @@ Software citation closes the same accountability loop for executable materials. 
 6. Update `domain_profile.yaml`, `src/domain_adapter.py`, and `docs/domain_fork_guide.md` when the analogy is forked into a new domain
 7. Keep `steganography` and `llm` policy blocks explicit when the secure pipeline or optional review path is used
 8. Cite the exact template/software release and record environment metadata for the executable package
-9. Regenerate all outputs through the pipeline:
+9. Update `gold_refinement.security_assay` and add scan artifacts before making secure-by-design, supply-chain, or vulnerability findings claims
+10. Regenerate all outputs through the pipeline:
    ```bash
    uv run python scripts/refinement_analysis.py
    uv run python scripts/z_generate_manuscript_variables.py
    ```
-10. Do not hand-edit generated manuscript, PDFs, or figures
+11. Do not hand-edit generated manuscript, PDFs, or figures
 
 Do not hard-code equation, figure, or table numbers in prose. Use `[@eq:...]`, `[@fig:...]`, `[@tbl:...]`, and `[@sec:...]` so the renderer owns numbering and the tests can detect dangling references.
 
 The authoring contract treats the risk matrix as a source checklist, not as a retrospective dashboard. If a fork cannot name who owns a high-severity integrity dimension, which validator detects it, and which evidence tier supports it, the fork should lower the claim boundary until that missing surface exists.
+
+The same rule applies to the adversarial assay. If a fork cannot name the threat, standard, local evidence surface, validator, and claim boundary for a security claim, the fork should keep the language as scoped guidance rather than certification.

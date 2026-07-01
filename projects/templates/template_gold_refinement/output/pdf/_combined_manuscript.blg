@@ -3,44 +3,48 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: _combined_manuscript.aux
 The style file: plainnat.bst
 Database file #1: references.bib
-You've used 33 entries,
+Warning--can't use both author and editor fields in cramer_assaying_metals_1741
+Warning--empty publisher in pliny_natural_history_33
+Warning--empty publisher in badcock_touchstone_1678
+You've used 47 entries,
             2773 wiz_defined-function locations,
-            814 strings with 13123 characters,
-and the built_in function-call counts, 19657 in all, are:
-= -- 1607
-> -- 1737
-< -- 20
-+ -- 591
-- -- 557
-* -- 1782
-:= -- 3220
-add.period$ -- 127
-call.type$ -- 33
-change.case$ -- 277
-chr.to.int$ -- 32
-cite$ -- 66
-duplicate$ -- 642
-empty$ -- 1215
-format.name$ -- 597
-if$ -- 3949
+            893 strings with 15719 characters,
+and the built_in function-call counts, 23989 in all, are:
+= -- 2000
+> -- 1877
+< -- 36
++ -- 647
+- -- 599
+* -- 2019
+:= -- 3922
+add.period$ -- 188
+call.type$ -- 47
+change.case$ -- 328
+chr.to.int$ -- 46
+cite$ -- 97
+duplicate$ -- 879
+empty$ -- 1645
+format.name$ -- 653
+if$ -- 4861
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 27
-newline$ -- 200
-num.names$ -- 134
-pop$ -- 551
+missing$ -- 37
+newline$ -- 289
+num.names$ -- 190
+pop$ -- 692
 preamble$ -- 1
-purify$ -- 246
+purify$ -- 288
 quote$ -- 0
-skip$ -- 593
+skip$ -- 766
 stack$ -- 0
-substring$ -- 446
-swap$ -- 42
-text.length$ -- 1
+substring$ -- 474
+swap$ -- 57
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 348
-warning$ -- 0
-while$ -- 129
+type$ -- 477
+warning$ -- 3
+while$ -- 171
 width$ -- 0
-write$ -- 484
+write$ -- 694
+(There were 3 warnings)

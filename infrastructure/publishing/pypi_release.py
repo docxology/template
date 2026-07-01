@@ -2,18 +2,47 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 import tempfile
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 
-def run_command(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subprocess.CompletedProcess[str]:
+def _redact(text: str, sensitive_values: Sequence[str] = ()) -> str:
+    redacted = text
+    for value in sensitive_values:
+        if value:
+            redacted = redacted.replace(value, "<redacted>")
+    return redacted
+
+
+def _display_command(cmd: Sequence[str], sensitive_values: Sequence[str] = ()) -> str:
+    return _redact(" ".join(cmd), sensitive_values)
+
+
+def _twine_token_env(token: str) -> dict[str, str]:
+    env = os.environ.copy()
+    env["TWINE_USERNAME"] = "__token__"
+    env["TWINE_PASSWORD"] = token
+    return env
+
+
+def run_command(
+    cmd: list[str],
+    cwd: Path | None = None,
+    check: bool = True,
+    *,
+    env: Mapping[str, str] | None = None,
+    sensitive_values: Sequence[str] = (),
+) -> subprocess.CompletedProcess[str]:
     """Run a command and stream output."""
-    print(f"> {' '.join(cmd)}")
-    result = subprocess.run(cmd, cwd=cwd, text=True)
+    display = _display_command(cmd, sensitive_values)
+    print(f"> {display}")
+    result = subprocess.run(cmd, cwd=cwd, env=dict(env) if env is not None else None, text=True)
     if check and result.returncode != 0:
-        raise RuntimeError(f"Command failed: {' '.join(cmd)}")
+        raise RuntimeError(f"Command failed: {display}")
     return result
 
 
@@ -37,18 +66,21 @@ def upload_to_testpypi(dist_dir: Path, token: str) -> None:
     """Upload distributions to TestPyPI using twine."""
     print("\n=== Uploading to TestPyPI ===")
     run_command([sys.executable, "-m", "pip", "install", "twine", "-q"])
+    dist_files = sorted(dist_dir.glob("*.whl")) + sorted(dist_dir.glob("*.tar.gz"))
+    if not dist_files:
+        raise RuntimeError(f"No distribution files found in {dist_dir}")
     run_command(
         [
+            sys.executable,
+            "-m",
             "twine",
             "upload",
             "--repository",
             "testpypi",
-            "--username",
-            "__token__",
-            "--password",
-            token,
-            str(dist_dir / "*"),
-        ]
+            *[str(path) for path in dist_files],
+        ],
+        env=_twine_token_env(token),
+        sensitive_values=(token,),
     )
     print("Uploaded to TestPyPI")
 

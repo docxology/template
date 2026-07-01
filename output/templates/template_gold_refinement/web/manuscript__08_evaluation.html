@@ -222,11 +222,12 @@ scores, and evidence-tier rows.</td>
 </tr>
 <tr>
 <td>Scholarship boundary</td>
-<td>Do external references support the analogy, reproducibility,
-provenance, and metallurgy framing without being used as evidence for
-universal manuscript-quality claims?</td>
-<td>The scope, discussion, and evaluation sections cite the scholarship
-while keeping certification local to source-owned gates.</td>
+<td>Do pre-1800 metallurgy references support the analogy,
+reproducibility, provenance, and source-domain framing without being
+used as evidence for universal manuscript-quality claims?</td>
+<td>The scope, discussion, and evaluation sections cite historically
+bounded metallurgy scholarship while keeping certification local to
+source-owned gates.</td>
 <td>manuscript/references.bib and manuscript/07_scope.md</td>
 </tr>
 <tr>
@@ -251,6 +252,16 @@ while keeping preservation and portability claims bounded.</td>
 manuscript/08_evaluation.md, manuscript/09_authoring_contract.md,
 output/reports/evidence_registry.json, and
 output/reports/output_statistics.json</td>
+</tr>
+<tr>
+<td>Adversarial assay boundary</td>
+<td>Does security language distinguish declared threat scope from real
+scan evidence and external compliance?</td>
+<td>The security assay emits threats, standards, evidence surfaces,
+validators, and claim boundaries without claiming Codex Security
+findings.</td>
+<td>src/security_assay.py, manuscript/config.yaml, and
+manuscript/03_results.md</td>
 </tr>
 </tbody>
 </table>
@@ -307,8 +318,8 @@ evidence surfaces</td>
 </tr>
 <tr>
 <td>Scholarship boundary</td>
-<td>Citations must anchor framing and limitations without substituting
-for domain validation</td>
+<td>Pre-1800 metallurgy citations must anchor framing and limitations
+without substituting for domain validation</td>
 <td>prerender citation/evidence validation plus human source review</td>
 </tr>
 <tr>
@@ -332,6 +343,12 @@ compliance</td>
 <td>reproducibility source review plus output statistics and
 evidence-registry validation</td>
 </tr>
+<tr>
+<td>Security assay boundary</td>
+<td>Security standards and scan phases must be represented as scoped
+guidance unless generated scan artifacts exist</td>
+<td>tests/test_security_assay.py and manuscript source review</td>
+</tr>
 </tbody>
 </table>
 <p>The audit rules are summarized visually in <span class="citation"
@@ -344,10 +361,14 @@ renders.</p>
 discipline. A source can support a relation, a practice, or a caution
 without supporting every attractive extrapolation from that source. The
 evaluation surface therefore treats analogy theory, reproducibility
-literature, provenance standards, and metallurgy references as
+literature, provenance standards, and pre-1800 metallurgy references as
 boundary-setting evidence, not as decorations added after the pipeline
 already decided the claim [gentner1983structure; peng2011reproducible;
-wilkinson2016fair; marsden_house_2006].</p>
+wilkinson2016fair; biringuccio_pirotechnia_1540;
+agricola_de_re_metallica_1556; badcock_touchstone_1678;
+cramer_assaying_metals_1741]. A passing source review must preserve the
+distinction between historically documented assay/marking practices and
+this exemplar’s local software certification predicate.</p>
 <p>The reporting-guideline literature keeps that gate modest. A passed
 checklist row certifies that a required reporting surface is present and
 traceable; it does not certify that the study behind the report is
@@ -366,6 +387,17 @@ hydration, artifact counts, evidence facts, figure registration, and
 PDF/HTML validation. They do not measure long-term preservation,
 cross-platform portability, reviewer workload, or reader comprehension;
 those would require separate empirical studies.</p>
+<p>The adversarial assay adds a security-specific evaluation target: can
+a reader distinguish declared threat scope from actual scan evidence?
+<span class="citation"
+data-cites="tbl:security_assay">[@tbl:security_assay]</span> maps
+zero-trust, secure-development, supply-chain, SBOM, attack-path, and
+secure-by-design guidance to local evidence surfaces and validators
+[nist_sp800_207_zero_trust; nist_sp800_218_ssdf; slsa_v1_2;
+sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
+cisa_secure_by_design]. The passing condition is bounded: the table must
+be complete and the prose must not claim compliance or Codex Security
+findings unless future scan artifacts are generated and integrated.</p>
 <p>The risk model adds prioritization to the gate list. <span
 class="citation"
 data-cites="fig:integrity_risk_matrix">[@fig:integrity_risk_matrix]</span>

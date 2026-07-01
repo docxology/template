@@ -9,10 +9,12 @@ token, empty dist_dir).
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
 
+from infrastructure.publishing.pypi_release import _display_command, _twine_token_env
 from infrastructure.publishing.pypi.models import PyPIConfig, PyPIResult
 from infrastructure.publishing.pypi.upload import (
     _infer_package_name,
@@ -139,6 +141,74 @@ def test_upload_dist_no_files_returns_error(tmp_path: Path) -> None:
     assert "No distribution files" in result.error or "dist" in result.error.lower()
 
 
+def test_upload_dist_uses_twine_env_without_token_argv(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    capture_path = tmp_path / "twine_capture.json"
+    shim_dir = tmp_path / "shim"
+    shim_dir.mkdir()
+    (shim_dir / "twine.py").write_text(
+        "\n".join(
+            [
+                "import json",
+                "import os",
+                "import sys",
+                "capture = os.environ['TWINE_CAPTURE_PATH']",
+                "payload = {",
+                "    'argv': sys.argv,",
+                "    'username': os.environ.get('TWINE_USERNAME'),",
+                "    'password': os.environ.get('TWINE_PASSWORD'),",
+                "}",
+                "open(capture, 'w', encoding='utf-8').write(json.dumps(payload))",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("PYTHONPATH", str(shim_dir))
+    monkeypatch.setenv("TWINE_CAPTURE_PATH", str(capture_path))
+    dist_dir = _make_dist_dir(tmp_path, "my_pkg-2.0.0-py3-none-any.whl")
+    token = "pypi-sensitive-token"
+
+    result = upload_dist(dist_dir, PyPIConfig(token=token), dry_run=False)
+
+    assert result.status == "ok"
+    payload = json.loads(capture_path.read_text(encoding="utf-8"))
+    assert payload["username"] == "__token__"
+    assert payload["password"] == token
+    assert token not in " ".join(payload["argv"])
+    assert "--password" not in payload["argv"]
+
+
+def test_upload_dist_redacts_token_from_twine_errors(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    shim_dir = tmp_path / "shim"
+    shim_dir.mkdir()
+    (shim_dir / "twine.py").write_text(
+        "import os, sys\n"
+        "print('upload failed for ' + os.environ['TWINE_PASSWORD'], file=sys.stderr)\n"
+        "raise SystemExit(1)\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("PYTHONPATH", str(shim_dir))
+    dist_dir = _make_dist_dir(tmp_path, "my_pkg-2.0.0-py3-none-any.whl")
+    token = "pypi-sensitive-token"
+
+    result = upload_dist(dist_dir, PyPIConfig(token=token), dry_run=False)
+
+    assert result.status == "error"
+    assert result.error is not None
+    assert token not in result.error
+    assert "<redacted>" in result.error
+
+
+def test_testpypi_release_helpers_keep_token_out_of_displayed_command() -> None:
+    token = "pypi-sensitive-token"
+    env = _twine_token_env(token)
+    displayed = _display_command(["python", "-m", "twine", "upload", token], (token,))
+
+    assert env["TWINE_USERNAME"] == "__token__"
+    assert env["TWINE_PASSWORD"] == token
+    assert token not in displayed
+    assert "<redacted>" in displayed
+
+
 # ---------------------------------------------------------------------------
 # _infer_package_name / _infer_version -- pure filename parsing
 # ---------------------------------------------------------------------------
@@ -227,11 +297,7 @@ def test_check_dist_no_files_returns_issues(tmp_path: Path) -> None:
     assert isinstance(issues, list)
     assert len(issues) > 0
     combined = " ".join(issues).lower()
-    assert (
-        "no distribution" in combined
-        or "no dist" in combined
-        or "found" in combined
-    )
+    assert "no distribution" in combined or "no dist" in combined or "found" in combined
 
 
 def test_check_dist_nonexistent_dir_returns_issues(tmp_path: Path) -> None:

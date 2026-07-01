@@ -1,6 +1,6 @@
 {
-  "total_claims": 8,
-  "supported_claims": 8,
+  "total_claims": 9,
+  "supported_claims": 9,
   "unsupported_claims": 0,
   "support_rate": 1.0,
   "is_passing": true,
@@ -39,7 +39,7 @@
     },
     {
       "claim_name": "Formalism registry",
-      "claim_statement": "The manuscript exposes 6 source-owned formalisms with equation labels.",
+      "claim_statement": "The manuscript exposes 7 source-owned formalisms with equation labels.",
       "evidence_source": "src/formalisms.py::FORMALISMS",
       "boundary": "local",
       "supported": true,
@@ -65,6 +65,14 @@
       "claim_name": "Scientific-integrity risk model",
       "claim_statement": "The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations.",
       "evidence_source": "src/integrity.py::build_integrity_dimensions",
+      "boundary": "local",
+      "supported": true,
+      "notes": ""
+    },
+    {
+      "claim_name": "Adversarial security assay",
+      "claim_statement": "The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries.",
+      "evidence_source": "src/security_assay.py::build_security_assay",
       "boundary": "local",
       "supported": true,
       "notes": ""

@@ -6,6 +6,8 @@ paper:
   subtitle: "Optional Subtitle"
   version: "1.0"
   date: ""
+  cover:
+    image: "figures/cover_visualization.png"
 
 authors:
   - name: "Your Name"
@@ -236,7 +238,7 @@ gold_refinement:
       evidence: "src/composition.py::_choose_value"
       boundary: "local"
     - name: "Formalism registry"
-      claim: "The manuscript exposes 6 source-owned formalisms with equation labels."
+      claim: "The manuscript exposes 7 source-owned formalisms with equation labels."
       evidence: "src/formalisms.py::FORMALISMS"
       boundary: "local"
     - name: "Claim-support report separation"
@@ -250,6 +252,10 @@ gold_refinement:
     - name: "Scientific-integrity risk model"
       claim: "The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations."
       evidence: "src/integrity.py::build_integrity_dimensions"
+      boundary: "local"
+    - name: "Adversarial security assay"
+      claim: "The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries."
+      evidence: "src/security_assay.py::build_security_assay"
       boundary: "local"
   pipeline_phases:
     - name: "Schema intake"
@@ -277,6 +283,11 @@ gold_refinement:
       transformation: "Score integrity dimensions and summarize evidence tiers"
       output_artifact: "integrity tables and risk visualizations"
       guard: "tests/test_integrity.py"
+    - name: "Security assay"
+      input_artifact: "gold_refinement.security_assay"
+      transformation: "Map adversarial threats and standards to source-owned evidence and claim boundaries"
+      output_artifact: "security assay table and variables"
+      guard: "tests/test_security_assay.py"
     - name: "Manuscript hydration"
       input_artifact: "manuscript shells and manuscript_variables.json"
       transformation: "Resolve {{TOKEN}} placeholders into output/manuscript/"
@@ -306,3 +317,12 @@ gold_refinement:
     - name: "Integrity model coverage"
       check: "Integrity dimensions must have unique IDs, owners, validators, and evidence surfaces"
       test: "tests/test_integrity.py"
+    - name: "Security assay boundary"
+      check: "Security standards and scan phases must be represented as scoped guidance unless generated scan artifacts exist"
+      test: "tests/test_security_assay.py and manuscript source review"
+  security_assay:
+    - threat: "implicit trust in generated artifacts"
+      standard: "NIST SP 800-207 zero trust"
+      evidence_surface: "output/reports/evidence_registry.json and src/security_assay.py"
+      validator: "infrastructure.validation.cli evidence --fail-on-issues"
+      claim_boundary: "documents a verification posture, not a deployed zero-trust architecture"

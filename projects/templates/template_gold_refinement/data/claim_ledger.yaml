@@ -34,7 +34,7 @@ claims:
     boundary: "local"
 
   - id: "claim:formalism_registry"
-    statement: "The manuscript exposes 6 source-owned formalisms with equation labels."
+    statement: "The manuscript exposes 7 source-owned formalisms with equation labels."
     source: "src/formalisms.py::FORMALISMS"
     evidence_type: "code"
     boundary: "local"
@@ -54,6 +54,12 @@ claims:
   - id: "claim:scientific_integrity_risk_model"
     statement: "The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations."
     source: "src/integrity.py::build_integrity_dimensions"
+    evidence_type: "code"
+    boundary: "local"
+
+  - id: "claim:adversarial_security_assay"
+    statement: "The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries."
+    source: "src/security_assay.py::build_security_assay"
     evidence_type: "code"
     boundary: "local"
 
@@ -111,6 +117,15 @@ claims:
     source_tier: "claim_ledger"
     freshness: "active"
 
+  - id: "fact:eq_adversarial_assay"
+    kind: "equation"
+    value: "eq:adversarial_assay"
+    statement: "The generated manuscript defines the adversarial assay equation label."
+    source: "src/formalisms.py::FORMALISMS"
+    artifact_path: "src/formalisms.py"
+    source_tier: "claim_ledger"
+    freshness: "active"
+
   - id: "fact:token_digest_prefix_length"
     kind: "number"
     value: 12
@@ -131,10 +146,19 @@ claims:
 
   - id: "fact:integrity_dimension_count"
     kind: "number"
-    value: 8
-    statement: "The source-owned integrity model emits 8 integrity dimensions."
+    value: 9
+    statement: "The source-owned integrity model emits 9 integrity dimensions."
     source: "src/integrity.py::build_integrity_dimensions"
     artifact_path: "src/integrity.py"
+    source_tier: "claim_ledger"
+    freshness: "active"
+
+  - id: "fact:security_assay_count"
+    kind: "number"
+    value: 5
+    statement: "The source-owned adversarial security assay emits 5 configured rows."
+    source: "src/security_assay.py::build_security_assay"
+    artifact_path: "src/security_assay.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -162,4 +186,10 @@ non_claims:
     boundary: "local"
   - id: "nonclaim:domain_generalizability"
     statement: "Specific purity fractions are not generalized to all scientific domains."
+    boundary: "local"
+  - id: "nonclaim:security_compliance"
+    statement: "The manuscript does not claim NIST, SLSA, Sigstore, MITRE, CycloneDX, SPDX, or CISA compliance."
+    boundary: "local"
+  - id: "nonclaim:codex_security_scan"
+    statement: "The manuscript does not claim that a Codex Security or Deep Security Scan has been run."
     boundary: "local"

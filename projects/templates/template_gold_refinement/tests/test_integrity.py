@@ -20,8 +20,9 @@ def test_integrity_dimensions_are_unique_and_source_owned():
     cfg = load_gold_refinement_config(Path(__file__).resolve().parent.parent)
     dimensions = build_integrity_dimensions(cfg)
     ids = [item.dimension_id for item in dimensions]
-    assert len(dimensions) == 8
+    assert len(dimensions) == 9
     assert len(ids) == len(set(ids))
+    assert "Adversarial security assay" in {item.name for item in dimensions}
     assert all(item.evidence_surface for item in dimensions)
     assert all(item.validator for item in dimensions)
     assert all(1 <= item.severity <= 5 for item in dimensions)
@@ -36,6 +37,8 @@ def test_integrity_tables_include_risk_and_owners():
     summary = integrity_summary_line(dimensions)
     assert "I4" in dimension_rows
     assert "Analogy boundary" in dimension_rows
+    assert "I9" in dimension_rows
+    assert "security assay" in owner_rows
     assert "claim ledger" in owner_rows
     assert "highest residual risk" in summary
 

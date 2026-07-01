@@ -9,6 +9,7 @@ Design constraints:
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -57,6 +58,19 @@ def _infer_version(files: list[Path]) -> str | None:
         if len(parts) >= 2:
             return parts[1]
     return None
+
+
+def _twine_env(token: str) -> dict[str, str]:
+    env = os.environ.copy()
+    env["TWINE_USERNAME"] = "__token__"
+    env["TWINE_PASSWORD"] = token
+    return env
+
+
+def _redact_token(text: str, token: str) -> str:
+    if not token:
+        return text
+    return text.replace(token, "<redacted>")
 
 
 # ---------------------------------------------------------------------------
@@ -164,20 +178,17 @@ def upload_dist(
         "upload",
         "--repository",
         config.upload_repository,
-        "--username",
-        "__token__",
-        "--password",
-        config.token,
         "--non-interactive",
     ] + [str(f) for f in sorted(all_files)]
 
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, env=_twine_env(config.token), text=True)
     if result.returncode != 0:
+        output = result.stderr.strip() or result.stdout.strip()
         return PyPIResult(
             status="error",
             package_name=package_name,
             version=version,
-            error=f"twine upload failed: {result.stderr.strip() or result.stdout.strip()}",
+            error=f"twine upload failed: {_redact_token(output, config.token)}",
             timestamp_utc=_now_utc(),
         )
 

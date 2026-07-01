@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-30T14:42:08.754194",
+  "timestamp": "2026-06-30T16:10:39.176124",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -66,15 +66,15 @@
           },
           "data": {
             "exists": true,
-            "files": 10,
+            "files": 11,
             "size_mb": 0.0,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 3,
-            "size_mb": 0.0,
+            "files": 7,
+            "size_mb": 0.08,
             "readable": true,
             "optional": false
           },
@@ -125,15 +125,15 @@
         },
         "data": {
           "exists": true,
-          "file_count": 10,
+          "file_count": 11,
           "size_mb": "0.00",
           "largest_file": "manuscript_variables.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 3,
-          "size_mb": "0.00",
-          "largest_file": "diagnostics.json"
+          "file_count": 7,
+          "size_mb": "0.08",
+          "largest_file": "evidence_registry.json"
         },
         "simulations": {
           "exists": false,
@@ -156,10 +156,10 @@
         "web": 11,
         "slides": 73,
         "figures": 1,
-        "data": 10,
-        "reports": 3
+        "data": 11,
+        "reports": 7
       },
-      "total_size_mb": 1.498626708984375,
+      "total_size_mb": 1.5799036026000977,
       "issues_by_severity": {
         "critical": [],
         "warning": [
@@ -173,15 +173,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 0.3196859359741211
+      "size_mb": 0.3216514587402344
     },
     "figures": {
       "files": 1,
       "size_mb": 0.015630722045898438
     },
     "data": {
-      "files": 10,
-      "size_mb": 0.0044269561767578125
+      "files": 11,
+      "size_mb": 0.004931449890136719
     }
   },
   "summary": {

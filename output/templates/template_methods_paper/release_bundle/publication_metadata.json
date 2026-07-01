@@ -1,0 +1,38 @@
+{
+  "abstract": "This paper describes a small, tested domain language for specifying\ncontrolled methods \u2014 the methods-paper exemplar of the\nResearch Project Template (https://github.com/docxology/template). Unlike a\nresults paper, this manuscript's subject is the methodology itself: a\ncontrolled vocabulary, a unit system with dimensional safety, four staged\nvalidation gates, and a deterministic compiler, implemented in\nprojects/templates/template_methods_paper/src/methods_dsl/ and described\nsection by section in . The domain language's vocabulary is\ninformed by BPL (Biology Programming Language,\n), an upstream reference that encodes laboratory protocols as\nprograms with biology-native types, staged validation, and deterministic\ncompilation; this exemplar generalizes BPL's intent vocabulary and pipeline\nshape from wet-lab protocols to any controlled procedure.\n\nA Method is a name, a set of typed parameters and resources, and an\nordered, dependent set of steps \u2014 constructed directly as frozen Python\ndataclasses (src/methods_dsl/model.py) rather than parsed from new text\nsyntax. Every Quantity carries a unit that resolves to one of\n18 controlled units across six dimensions, and every step\nnames one of 9 controlled-vocabulary intents\n(src/methods_dsl/vocabulary.py), executable on one of 3\nbackends. 4 staged gates \u2014 structural, semantic, plan, and\ntarget \u2014 validate a method before compile_method\n(src/methods_dsl/compiler.py) deterministically schedules it with Kahn's\nalgorithm  and hashes the canonical plan with SHA-256.\n\nWe demonstrate the language on 2 worked example\nmethods spanning both domains BPL's design targets and the domains it\ngeneralizes to: a manual wet-lab preparation\n(PBSPreparation, 5 steps, target human,\nplan hash 313b9b17de98) and an automated instrument-calibration\nprocedure (SensorCalibrationSweep, 4 steps,\ntarget automated, plan hash d89cced19be6).\nLive re-compilation determinism check: Yes. Across both\nmethods, 8 of 8 staged-gate\nevaluations pass. A demonstration provenance hash-chain\n(src/methods_dsl/trust.py) of length 3 verifies as\nYes.\n\nContributions are methodological and architectural. On the methods\nside, we show that a controlled vocabulary expressed as typed dataclasses \u2014\nnot a parsed grammar \u2014 is sufficient to reproduce BPL's core safety\nproperties (dimensional safety, staged validation, deterministic\ncompilation) at a scope appropriate for a template exemplar. On the\narchitecture side, the DSL is covered above the 90% project gate by a\nzero-mock test suite, generates 13 artifacts\n(1 figures, 6 data files,\n6 reports) per pipeline run, and injects reproducibility\nmetadata (configuration hash 23b5981d45bdc598, build timestamp\n2026-06-30T23:02:10Z) into .\n\nKeywords: methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis",
+  "author_records": [
+    {
+      "affiliation": "Active Inference Institute",
+      "email": "daniel@activeinference.institute",
+      "name": "Daniel Ari Friedman",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "authors": [
+    "Daniel Ari Friedman"
+  ],
+  "citation_count": 0,
+  "conference": null,
+  "deposit_description": "This paper describes a small, tested domain language for specifying\ncontrolled methods \u2014 the methods-paper exemplar of the\nResearch Project Template (https://github.com/docxology/template). Unlike a\nresults paper, this manuscript's subject is the methodology itself: a\ncontrolled vocabulary, a unit system with dimensional safety, four staged\nvalidation gates, and a deterministic compiler, implemented in\nprojects/templates/template_methods_paper/src/methods_dsl/ and described\nsection by section in . The domain language's vocabulary is\ninformed by BPL (Biology Programming Language,\n), an upstream reference that encodes laboratory protocols as\nprograms with biology-native types, staged validation, and deterministic\ncompilation; this exemplar generalizes BPL's intent vocabulary and pipeline\nshape from wet-lab protocols to any controlled procedure.\n\nA Method is a name, a set of typed parameters and resources, and an\nordered, dependent set of steps \u2014 constructed directly as frozen Python\ndataclasses (src/methods_dsl/model.py) rather than parsed from new text\nsyntax. Every Quantity carries a unit that resolves to one of\n18 controlled units across six dimensions, and every step\nnames one of 9 controlled-vocabulary intents\n(src/methods_dsl/vocabulary.py), executable on one of 3\nbackends. 4 staged gates \u2014 structural, semantic, plan, and\ntarget \u2014 validate a method before compile_method\n(src/methods_dsl/compiler.py) deterministically schedules it with Kahn's\nalgorithm  and hashes the canonical plan with SHA-256.\n\nWe demonstrate the language on 2 worked example\nmethods spanning both domains BPL's design targets and the domains it\ngeneralizes to: a manual wet-lab preparation\n(PBSPreparation, 5 steps, target human,\nplan hash 313b9b17de98) and an automated instrument-calibration\nprocedure (SensorCalibrationSweep, 4 steps,\ntarget automated, plan hash d89cced19be6).\nLive re-compilation determinism check: Yes. Across both\nmethods, 8 of 8 staged-gate\nevaluations pass. A demonstration provenance hash-chain\n(src/methods_dsl/trust.py) of length 3 verifies as\nYes.\n\nContributions are methodological and architectural. On the methods\nside, we show that a controlled vocabulary expressed as typed dataclasses \u2014\nnot a parsed grammar \u2014 is sufficient to reproduce BPL's core safety\nproperties (dimensional safety, staged validation, deterministic\ncompilation) at a scope appropriate for a template exemplar. On the\narchitecture side, the DSL is covered above the 90% project gate by a\nzero-mock test suite, generates 13 artifacts\n(1 figures, 6 data files,\n6 reports) per pipeline run, and injects reproducibility\nmetadata (configuration hash 23b5981d45bdc598, build timestamp\n2026-06-30T23:02:10Z) into .\n\nKeywords: methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis\n\n---\nAssociated artifacts\nGitHub release: v1.0.0 (https://github.com/docxology/template_methods_paper/releases/tag/v1.0.0)\nDOI: https://doi.org/10.5281/zenodo.21086549\nZenodo: https://zenodo.org/records/21086549\nPDF SHA-256: ecd8519fc2a9a674bd8a4cf89f96122af76529c913e32bf880a7c842da08771a",
+  "doi": "10.5281/zenodo.21086548",
+  "download_count": 0,
+  "github_release_url": "https://github.com/docxology/template_methods_paper/releases/tag/v1.0.0",
+  "journal": null,
+  "keywords": [
+    "methods paper",
+    "domain-specific language",
+    "controlled methods",
+    "deterministic compilation",
+    "staged validation",
+    "dimensional analysis"
+  ],
+  "license": "MIT",
+  "paper_version": "1.0.0",
+  "pdf_sha256": "ecd8519fc2a9a674bd8a4cf89f96122af76529c913e32bf880a7c842da08771a",
+  "publication_date": "2026",
+  "publisher": null,
+  "release_tag": "v1.0.0",
+  "repository_url": null,
+  "title": "A Domain Language for Specifying Controlled Methods",
+  "zenodo_description_override": null
+}

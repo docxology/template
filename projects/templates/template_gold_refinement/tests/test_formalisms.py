@@ -22,6 +22,7 @@ def test_equation_labels_are_unique_and_expected():
         "eq:claim_support",
         "eq:integrity_vector",
         "eq:certification_predicate",
+        "eq:adversarial_assay",
     }
 
 
@@ -47,3 +48,4 @@ def test_traceability_rows_include_sources():
 def test_formalism_records_are_json_serializable():
     payload = json.dumps(formalism_records())
     assert "purity_functional" in payload
+    assert "adversarial_assay" in payload

@@ -469,9 +469,12 @@ class="toc-section-number">3.6</span> Karat grading</a></li>
 class="toc-section-number">3.7</span> Pipeline phases</a></li>
 <li><a href="#implementation-trace" id="toc-implementation-trace"><span
 class="toc-section-number">3.8</span> Implementation trace</a></li>
+<li><a href="#adversarial-assay-layer"
+id="toc-adversarial-assay-layer"><span
+class="toc-section-number">3.9</span> Adversarial assay layer</a></li>
 <li><a href="#scientific-integrity-model"
 id="toc-scientific-integrity-model"><span
-class="toc-section-number">3.9</span> Scientific integrity
+class="toc-section-number">3.10</span> Scientific integrity
 model</a></li>
 </ul></li>
 <li><a href="#sec:results" id="toc-sec:results"><span
@@ -521,15 +524,19 @@ class="toc-section-number">4.12</span> Scientific-integrity risk
 matrix</a></li>
 <li><a href="#evidence-tier-ladder" id="toc-evidence-tier-ladder"><span
 class="toc-section-number">4.13</span> Evidence-tier ladder</a></li>
+<li><a href="#adversarial-security-assay"
+id="toc-adversarial-security-assay"><span
+class="toc-section-number">4.14</span> Adversarial security
+assay</a></li>
 <li><a href="#contribution-claims" id="toc-contribution-claims"><span
-class="toc-section-number">4.14</span> Contribution claims</a></li>
+class="toc-section-number">4.15</span> Contribution claims</a></li>
 <li><a href="#shared-evidence-registry-summary"
 id="toc-shared-evidence-registry-summary"><span
-class="toc-section-number">4.15</span> Shared evidence registry
+class="toc-section-number">4.16</span> Shared evidence registry
 summary</a></li>
 <li><a href="#figure-quality-report"
 id="toc-figure-quality-report"><span
-class="toc-section-number">4.16</span> Figure quality report</a></li>
+class="toc-section-number">4.17</span> Figure quality report</a></li>
 </ul></li>
 <li><a href="#sec:discussion" id="toc-sec:discussion"><span
 class="toc-section-number">5</span> Discussion: Load-Bearing vs
@@ -617,9 +624,11 @@ composition, mapping gold-refining stages onto the template
 infrastructure pipeline. The refinery processes manuscript ore through 5
 stages - from raw draft (9K, ~37.5% purity) through smelting, assaying,
 and cupellation - to an internal nine-nines certification target
-(99.9999999%). The source domain is grounded in gold extraction,
-assaying, fineness, and hallmarking practice [marsden_house_2006;
-hallmarking_convention_1972], while the target domain is a reproducible
+(99.9999999%). The source domain is grounded in pre-1800 accounts of
+metals, assaying, parting, fineness, and marking
+[pliny_natural_history_33; biringuccio_pirotechnia_1540;
+agricola_de_re_metallica_1556; badcock_touchstone_1678;
+cramer_assaying_metals_1741], while the target domain is a reproducible
 computational manuscript rather than a claim about universal writing
 quality.</p>
 <p>The analogy is <strong>load-bearing</strong>, not merely rhetorical:
@@ -632,16 +641,16 @@ certification validates the full pipeline. The mega-madlib token engine
 selects 24 domain tokens deterministically via seeded SHA-256 digest
 over category inventories, ensuring every prose element is traceable and
 reproducible.</p>
-<p>The contribution is also formalized: 6 equation-backed formalisms
+<p>The contribution is also formalized: 7 equation-backed formalisms
 define purity, monotone refinement, token selection, claim support, gate
 vectors, and certification. This positions the manuscript as a
 research-compendium artifact in the lineage of literate programming,
 dynamic reports, and reproducible computational research
 [knuth1984literate; leisch2002sweave; peng2011reproducible;
-sandve2013ten]. The project-local claim assay reports 8/8 supported
+sandve2013ten]. The project-local claim assay reports 9/9 supported
 contribution claims (100.00%, passing), while the integrity model
-exposes 8 source-owned risk dimensions and the shared template evidence
-registry contributes 258 source-tiered facts when the validation gate
+exposes 9 source-owned risk dimensions and the shared template evidence
+registry contributes 281 source-tiered facts when the validation gate
 has run.</p>
 <p><strong>Results:</strong> The refinery achieves final purity of
 99.9999999% (nine-nines) (24K (nine-nines certified)) with a total
@@ -651,23 +660,32 @@ href="#fig:purity_progression">1</a>, and the karat grading scale in
 fig. <a href="#fig:karat_grading">2</a>.</p>
 <p><strong>Keywords:</strong> gold refining, manuscript composition,
 mega-madlib, token injection, scientific purity, assaying, karat
-grading</p>
+grading, security assay, supply-chain provenance</p>
 <hr />
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction: Ore to
 Nine-Nines</h1>
 <p>Gold refining is one of humanity’s oldest purification technologies.
-From cupellation and fire assay to chemical and electrolytic refining,
-the process of separating noble metal from base ore has evolved into a
-staged pipeline with measurement and certification checkpoints
-[marsden_house_2006]. Hallmarking regimes make the verification layer
-socially and legally visible: the mark is not the metal itself, but an
-auditable assertion about fineness and control
-[hallmarking_convention_1972; lbma_good_delivery_rules]. This paper
-asks: can that pipeline serve as a <strong>load-bearing</strong>
-operational model for scientific manuscript composition - not merely a
-decorative analogy, but a real mapping from metallurgical stages to
-template-infrastructure operations?</p>
+The pre-1800 record is not a single modern pipeline, but it gives the
+analogy a real source domain: Pliny’s Book XXXIII treats metals, gold
+extraction, and touchstone testing as recognizable ancient practices;
+Biringuccio’s <em>De la Pirotechnia</em> and Agricola’s <em>De re
+metallica</em> turn mining, smelting, cupellation, assaying, and parting
+into printed technical sequences; Cramer’s assay manual codifies the
+theory/practice split of metal testing [pliny_natural_history_33;
+biringuccio_pirotechnia_1540; agricola_de_re_metallica_1556;
+cramer_assaying_metals_1741]. Hallmarking regimes make the verification
+layer socially and legally visible: a seventeenth-century manual for
+goldsmiths frames “true standard allay,” statutes, weights, and
+counterfeit coin detection as public controls, while the Goldsmiths’
+Company Assay Office traces the London leopard’s-head mark, maker’s
+mark, and date-letter system through pre-1800 milestones
+[badcock_touchstone_1678; goldsmiths_hallmarking_history]. This paper
+asks: can that historically plural pipeline serve as a
+<strong>load-bearing</strong> operational model for scientific
+manuscript composition - not merely a decorative analogy, but a real
+mapping from metallurgical stages to template-infrastructure
+operations?</p>
 <h2 data-number="2.1" id="the-problem"><span
 class="header-section-number">2.1</span> The problem</h2>
 <p>A scientific manuscript accumulates impurities through its drafting
@@ -784,6 +802,23 @@ evidence registration, and render validation play a similar internal
 role: they make omissions visible and bind declarations to artifacts.
 They do not test whether an external study was designed well, executed
 correctly, or substantively true.</p>
+<p>The metallurgical side of the method is deliberately historical
+rather than modern-industrial. Pre-1800 sources support the relational
+structure - extraction, smelting or refining, assay,
+parting/cupellation, fineness, and public marking - but not a claim that
+all regions used the same sequence or that early practitioners held
+modern chemical theories. Pliny is useful for extraction and touchstone
+context; Biringuccio and Agricola are useful for staged metallurgical
+operations; Badcock’s <em>Touch-stone</em> and the Goldsmiths’ Company
+chronology are useful for standards, weights, statutes, and marks;
+Cramer is useful for eighteenth-century assay discipline
+[pliny_natural_history_33; biringuccio_pirotechnia_1540;
+agricola_de_re_metallica_1556; badcock_touchstone_1678;
+goldsmiths_hallmarking_history; cramer_assaying_metals_1741]. The
+normalized five-stage pipeline below is therefore an analogy-preserving
+abstraction, not a historical claim that “ore -&gt; smelting -&gt;
+assaying -&gt; cupellation -&gt; certification” was a universal pre-1800
+production recipe.</p>
 <h2 data-number="3.1" id="stage-definitions"><span
 class="header-section-number">3.1</span> Stage definitions</h2>
 <table>
@@ -919,6 +954,12 @@ below are auto-numbered by the renderer.</p>
 <td>eq. <a href="#eq:certification_predicate">6</a></td>
 <td><code>src/refinery.py::RefineryResult.is_nine_nines_certified</code></td>
 </tr>
+<tr>
+<td>F7</td>
+<td>Adversarial assay</td>
+<td>eq. <a href="#eq:adversarial_assay">7</a></td>
+<td><code>src/security_assay.py::build_security_assay</code></td>
+</tr>
 </tbody>
 </table>
 <p><strong>F1: Purity functional.</strong> Manuscript purity is treated
@@ -959,7 +1000,7 @@ represented as a vector of gate outcomes rather than one scalar
 badge.</p>
 <p><span id="eq:integrity_vector"><span class="math display">\[
 \mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render},
-v_{references})
+v_{references}, v_{security})
 \qquad{(5)}\]</span></span></p>
 <p>A publication claim is only as strong as the weakest required gate.
 Source:
@@ -973,6 +1014,17 @@ gates(r)
 <p>The predicate binds the nine-nines metaphor to the actual validation
 chain. Source:
 <code>src/refinery.py::RefineryResult.is_nine_nines_certified</code>.</p>
+<p><strong>F7: Adversarial assay.</strong> Certification requires an
+explicit adversarial and supply-chain scope, not only ordinary gate
+success.</p>
+<p><span id="eq:adversarial_assay"><span class="math display">\[
+\operatorname{certified}_{adv}(r) \iff \operatorname{certified}(r) \land
+\forall a \in A_r:\ threat(a) \land standard(a) \land evidence(a) \land
+validator(a) \land boundary(a)
+\qquad{(7)}\]</span></span></p>
+<p>The adversarial assay defines scope and evidence requirements; it is
+not proof of compliance or live scan findings. Source:
+<code>src/security_assay.py::build_security_assay</code>.</p>
 <h2 data-number="3.4" id="token-selection"><span
 class="header-section-number">3.4</span> Token selection</h2>
 <p>The mega-madlib engine selects tokens from config-owned lexicon
@@ -1050,8 +1102,11 @@ class="header-section-number">3.5</span> Config-owned lexicon</h2>
 <h2 data-number="3.6" id="karat-grading"><span
 class="header-section-number">3.6</span> Karat grading</h2>
 <p>Karat grades map purity fractions to a gold-fineness vocabulary used
-here as an analogy surface [marsden_house_2006;
-lbma_good_delivery_rules]:</p>
+here as an analogy surface. The pre-1800 evidence supports fineness as a
+regulated testing and marking problem, but not the modern nine-nines
+target used by this local software predicate [badcock_touchstone_1678;
+goldsmiths_hallmarking_history; cramer_assaying_metals_1741;
+marsden_house_2006; lbma_good_delivery_rules]:</p>
 <ul>
 <li>9K = 37.5% (ore stage)</li>
 <li>18K = 75.0% (smelting stage)</li>
@@ -1124,6 +1179,14 @@ registry</td>
 <td>tests/test_integrity.py</td>
 </tr>
 <tr>
+<td>Security assay</td>
+<td>gold_refinement.security_assay</td>
+<td>Map adversarial threats and standards to source-owned evidence and
+claim boundaries</td>
+<td>security assay table and variables</td>
+<td>tests/test_security_assay.py</td>
+</tr>
+<tr>
 <td>Manuscript hydration</td>
 <td>manuscript shells and manuscript_variables.json</td>
 <td>Resolve {{TOKEN}} placeholders into output/manuscript/</td>
@@ -1163,14 +1226,38 @@ belhajjame2015ontologies].</p>
 change the ore, the furnace, or the assay, but it must do so in the
 source layer and then let the generated and validation layers expose the
 consequences.</p>
-<h2 data-number="3.9" id="scientific-integrity-model"><span
-class="header-section-number">3.9</span> Scientific integrity model</h2>
+<h2 data-number="3.9" id="adversarial-assay-layer"><span
+class="header-section-number">3.9</span> Adversarial assay layer</h2>
+<p>The implementation trace handles accidental drift: missing tokens,
+unsupported claims, malformed citations, stale figures, or broken
+renders. A security assay adds a different question: could the
+manuscript sound certified while omitting threat scope, supply-chain
+provenance, or scan evidence? The assay therefore treats zero trust,
+secure software development, supply-chain provenance, attack-path
+modeling, SBOM standards, and secure-by-design guidance as
+boundary-setting standards rather than proof of compliance
+[nist_sp800_207_zero_trust; nist_sp800_218_ssdf; slsa_v1_2;
+sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
+cisa_secure_by_design].</p>
+<p>This pass implements that layer as source-owned rows in
+<code>gold_refinement.security_assay</code> and generated variables from
+<code>src/security_assay.py</code>. It does not run Codex Security or
+Deep Security Scan, and it does not report vulnerability findings.
+Instead, eq. <a href="#eq:adversarial_assay">7</a> requires every
+adversarial assay row to name a threat, standard or guidance source,
+local evidence surface, validator, and claim boundary before
+certification language is allowed to expand beyond ordinary template
+gates. The generated assay table appears in tbl. <a
+href="#tbl:security_assay">5</a>.</p>
+<h2 data-number="3.10" id="scientific-integrity-model"><span
+class="header-section-number">3.10</span> Scientific integrity
+model</h2>
 <p>The integrity model converts manuscript risks into source-owned
 dimensions. It does not replace peer review or domain validation. It
 names the failure class, severity, detectability, evidence surface,
 owner, and validator so the manuscript can distinguish “the analogy is
 vivid” from “the claim is backed by a regenerable check.” The current
-pass reports 8 integrity dimensions; highest residual risk is I4
+pass reports 9 integrity dimensions; highest residual risk is I4
 (Analogy boundary) at 15.</p>
 <table id="tbl:integrity_dimensions">
 <caption>Table 2: Source-owned scientific-integrity
@@ -1248,6 +1335,13 @@ dimensions.</caption>
 <td>template pipeline</td>
 <td>template pipeline render and validate stages</td>
 </tr>
+<tr>
+<td>I9</td>
+<td>Adversarial security assay</td>
+<td>15</td>
+<td>security assay</td>
+<td>tests/test_security_assay.py and manuscript source review</td>
+</tr>
 </tbody>
 </table>
 <p>The residual-risk score is deliberately simple: high severity and low
@@ -1285,6 +1379,10 @@ validators before expanding claims.</p>
 </tr>
 <tr>
 <td>generated variables</td>
+<td>1</td>
+</tr>
+<tr>
+<td>security assay</td>
 <td>1</td>
 </tr>
 <tr>
@@ -1678,6 +1776,22 @@ Selected evidence terms: artifact manifest, figure registry, token
 provenance.</p>
 <h2 data-number="4.5" id="provenance-flow"><span
 class="header-section-number">4.5</span> Provenance flow</h2>
+<p>The provenance flow in fig. <a href="#fig:provenance_sankey">4</a>
+makes the refinement analogy auditable as a directed source path rather
+than a decorative metaphor. The graph starts from the same stage
+sequence used in the purity table and carries that sequence forward to
+certification, with edge width proportional to the purity gain owned by
+<code>src/refinery.py::run_refinery</code>. A reader can therefore ask
+where each improvement enters the pipeline and whether it is supported
+by the same source that generated the reported purity numbers.</p>
+<p>The main result is structural: certification is not allowed to appear
+as a terminal label detached from the intermediate stages. It is only
+reached after the upstream transformations have been generated, ordered,
+and connected. This matters for the manuscript contract because
+provenance is doing more than recording file paths. It is preserving
+causal custody from raw material through assay and final certification,
+so a later change to the stage model must move through the same graph,
+table, and validation surfaces.</p>
 <figure id="fig:provenance_sankey">
 <img src="../figures/provenance_sankey.png"
 alt="Figure 4: Provenance flow diagram" />
@@ -1686,6 +1800,22 @@ diagram</figcaption>
 </figure>
 <h2 data-number="4.6" id="purity-vs-claim-support"><span
 class="header-section-number">4.6</span> Purity vs claim support</h2>
+<p>The purity-versus-claim-support view in fig. <a
+href="#fig:purity_claim_scatter">5</a> places the metallurgical purity
+sequence beside the contribution ledger. This prevents the paper from
+treating purity as an isolated aesthetic score. A point can advance only
+when two surfaces agree: the refinery computation supplies the stage
+purity, and the claim-support registry supplies the cumulative evidence
+exposure for the claims being made at that level of refinement.</p>
+<p>In the current generated assay, 9 of 9 contribution claims are
+supported (100.00%). The figure is useful because it would make a weaker
+state visible immediately: a manuscript could still show late-stage
+material purity while failing to carry its claims along the evidence
+axis. In that case, the visual story would split, and the reader would
+see that certification prose had outrun claim support. Here the two axes
+are deliberately co-present, so the results section cannot celebrate
+purity while hiding unsupported contribution language in a separate
+paragraph.</p>
 <figure id="fig:purity_claim_scatter">
 <img src="../figures/purity_claim_scatter.png"
 alt="Figure 5: Purity vs claim support" />
@@ -1695,6 +1825,27 @@ support</figcaption>
 <h2 data-number="4.7" id="token-selection-sensitivity"><span
 class="header-section-number">4.7</span> Token selection
 sensitivity</h2>
+<p>The token selection heatmap in fig. <a
+href="#fig:token_heatmap">6</a> turns the mega-madlib engine into an
+inspectable sensitivity surface. The manuscript uses seed 431 for the
+reported token plan, but the figure asks a neighboring question: how do
+selected inventory indices move when seeds and lexicon categories vary?
+This is not a stochastic robustness claim. It is a deterministic audit
+of the digest rule in
+<code>src/composition.py::generate_token_plan</code> against the
+configured lexicon inventories in
+<code>manuscript/config.yaml</code>.</p>
+<p>This view separates three issues that prose alone tends to blur.
+First, token injection is reproducible: the same seed and inventory
+generate the same choices. Second, the available vocabulary is a real
+input surface: a thin or unbalanced category would be visible as a
+constrained selection band. Third, render-time hydration is not silently
+sampling new language. The heatmap therefore protects the manuscript
+from a common generative-writing failure mode, where a polished section
+appears stable but its wording is actually controlled by hidden or
+late-bound choices. The result is a sensitivity check on authoring
+machinery, not a claim that any particular synonym is scientifically
+superior.</p>
 <figure id="fig:token_heatmap">
 <img src="../figures/token_heatmap.png"
 alt="Figure 6: Token selection heatmap" />
@@ -1707,6 +1858,25 @@ class="header-section-number">4.8</span> Integrity gate matrix</h2>
 href="#fig:integrity_gate_matrix">7</a> makes the validation story
 visible: audit rules are not prose promises unless they connect to
 tests, manuscript surfaces, and generated artifacts.</p>
+<p>Each row begins as a configured audit rule, but the matrix asks
+whether that rule has enough contact with the project to matter. A rule
+that names a risk but does not touch tests, manuscript text, or
+generated outputs remains advisory. A rule that reaches all three
+surfaces becomes enforceable: tests can fail, manuscript hydration can
+expose stale or missing variables, and generated reports can show
+whether the artifact exists. The matrix is therefore a map of
+operational coverage, not a checklist of intentions.</p>
+<p>This is the validation story that supports the broader purity
+analogy. Smelting can remove obvious dross, but scientific-integrity
+failures often survive as well-written unsupported claims, stale tables,
+or figures that no longer match their source data. By separating
+missing, partial, and full coverage across gate surfaces, fig. <a
+href="#fig:integrity_gate_matrix">7</a> identifies where a future author
+would need to add a test, generated artifact, or manuscript variable
+before strengthening a claim. The result is intentionally local to this
+exemplar: coverage is measured against the specific audit rules
+configured here, not against a universal publication-readiness
+standard.</p>
 <figure id="fig:integrity_gate_matrix">
 <img src="../figures/integrity_gate_matrix.png"
 alt="Figure 7: Integrity-gate matrix" />
@@ -1719,6 +1889,24 @@ class="header-section-number">4.9</span> Formalism traceability</h2>
 href="#fig:formalism_traceability">8</a> links each equation-backed
 formalism to the source surface that owns it. This is the visual
 counterpart to tbl. <a href="#tbl:formalism_registry">1</a>.</p>
+<p>The registry currently exposes 7 source-owned formalisms. The figure
+makes their ownership legible by linking each formalism to its equation
+identifier and to the source surface that emits it. That linkage is
+important because equation labels can otherwise create a false sense of
+rigor: a numbered equation looks formal even when its assumptions,
+variables, and implementation owner are not recoverable. Here the formal
+object must remain connected to <code>src/formalisms.py</code>, the
+generated registry table, and the manuscript reference that consumes
+it.</p>
+<p>The graph also helps distinguish formal support from decorative
+notation. A formalism earns a place in the manuscript only when it names
+a claim boundary or computation that the source can regenerate. If an
+equation is added without a source owner, it should fail this
+traceability pattern before it becomes part of the results narrative.
+Conversely, if the source registry changes, the visual traceability
+layer should change with it. That is the desired behavior: the formal
+layer is a generated contract, not hand-maintained mathematical
+ornamentation.</p>
 <figure id="fig:formalism_traceability">
 <img src="../figures/formalism_traceability.png"
 alt="Figure 8: Formalism traceability" />
@@ -1736,6 +1924,23 @@ figure is intentionally circular because the artifact is not complete
 after prose generation. It is complete only after the validation return
 path has no blocking evidence, citation, reference, or render
 failures.</p>
+<p>The circuit is the results section’s strongest guard against a
+prose-only interpretation of the template. It shows four layers that
+must remain connected: configuration, project code, generated artifacts,
+and validation feedback. A change in <code>manuscript/config.yaml</code>
+is not complete when the file is saved. It must pass through source
+functions, generate updated variables and figures, hydrate the
+manuscript, and survive the validator return path. The circular layout
+is therefore a process claim: the manuscript is complete only when the
+loop closes without unresolved failures.</p>
+<p>This view also explains why the exemplar treats generated output as
+disposable but not optional. Output files are not edited by hand, yet
+they are the evidence surface through which the reader and validators
+inspect the source contract. When a validator reports a broken citation,
+missing figure, stale variable, or unsupported claim, the circuit points
+backward to the owning source surface rather than encouraging local
+patching of rendered Markdown. That direction of repair is central to
+the manuscript’s definition of refinement.</p>
 <figure id="fig:implementation_circuit">
 <img src="../figures/implementation_circuit.png"
 alt="Figure 9: Gold-refinement implementation circuit" />
@@ -1752,6 +1957,22 @@ source file or symbol used to support it. This makes the contribution
 ledger inspectable at the same level as the purity plots: unsupported
 claims would appear as failed assays rather than remaining hidden in
 prose.</p>
+<p>The generated assay currently reports 9 supported claims out of 9.
+The value of the figure is not the perfect score by itself; it is the
+way the score is forced to name its evidence surface and boundary. A
+contribution claim is not merely present in prose. It must be
+registered, matched to supporting evidence, and assigned a boundary that
+tells the reader what the support does not cover. This keeps
+contribution language from drifting beyond the local evidence available
+in the project.</p>
+<p>The bar-plus-topology design makes two failure modes visible. If a
+claim lacks support, the bar view would show the failed assay directly.
+If a claim is supported only within a narrow scope, the graph side still
+preserves the boundary classification rather than flattening the result
+into a binary pass. That matters for the security and integrity
+extensions in this manuscript: a claim can be source-owned without
+becoming a compliance claim, and a generated assay can confirm local
+evidence without pretending to certify the wider supply chain.</p>
 <figure id="fig:claim_evidence_assay">
 <img src="../figures/claim_evidence_assay.png"
 alt="Figure 10: Claim-evidence assay" />
@@ -1763,7 +1984,7 @@ class="header-section-number">4.12</span> Scientific-integrity risk
 matrix</h2>
 <p>The integrity risk matrix in fig. <a
 href="#fig:integrity_risk_matrix">11</a> plots severity against
-detectability for the 8 integrity dimensions in tbl. <a
+detectability for the 9 integrity dimensions in tbl. <a
 href="#tbl:integrity_dimensions">2</a>. Bubble size encodes residual
 risk, while color encodes the source tier that owns the evidence
 surface. This makes boundary failures more visible than cosmetic source
@@ -1772,6 +1993,24 @@ code, claim ledger, generated metric, artifact, bibliography, or
 validation gate. The matrix is intentionally local: it prioritizes where
 this exemplar needs source ownership, not where every future manuscript
 should focus.</p>
+<p>The generated summary is: 9 integrity dimensions; highest residual
+risk is I4 (Analogy boundary) at 15. The matrix turns that summary into
+a triage surface. Severity asks how damaging a failure would be if it
+entered the manuscript. Detectability asks how readily the current
+project would catch it. Residual risk then becomes visible as size
+rather than being buried in a paragraph. A large point in a
+hard-to-detect region is a signal that the authoring contract needs
+stronger source ownership or a clearer boundary, even if the current
+text renders successfully.</p>
+<p>Color is equally important because not all evidence tiers have the
+same authority. A bibliography-backed statement, a source-code
+computation, a claim ledger row, and a validation-gate result can all
+support prose, but they support different kinds of claims. The risk
+matrix keeps that distinction visible. It does not collapse integrity
+into a single score, and it does not imply that every high-severity
+issue has already been eliminated. It shows which risks this exemplar
+has made inspectable and where future work would need to add stronger
+measurement before using stronger language.</p>
 <figure id="fig:integrity_risk_matrix">
 <img src="../figures/integrity_risk_matrix.png"
 alt="Figure 11: Scientific-integrity risk matrix" />
@@ -1787,6 +2026,23 @@ has run, the fallback source tiers from the integrity model. It gives a
 quick view of whether the manuscript is leaning on generated metrics,
 claim-ledger facts, bibliography records, source code, or disposable
 artifacts.</p>
+<p>The ladder complements the risk matrix by counting source tiers
+rather than plotting risks. When the shared evidence registry is
+available, the manuscript can report 281 source-tiered facts to the
+validation surface. When that registry is not available, the same figure
+falls back to the integrity model’s configured tiers. Either way, the
+reader sees the evidentiary mix instead of receiving an undifferentiated
+assurance that evidence exists.</p>
+<p>This matters because evidence balance is itself an integrity signal.
+A manuscript that leans only on generated artifacts may be reproducible
+but weakly grounded in source rationale. A manuscript that leans only on
+bibliography may be well-cited but not locally executable. A manuscript
+that leans only on tests may catch regressions while still failing to
+explain claim boundaries to readers. The ladder gives a compact audit of
+that mix, while tbl. <a href="#tbl:evidence_tiers">4</a> keeps the
+counts visible in tabular form. Together they close the figure sequence
+by showing not only that the 12 public figures render, but also which
+source tiers make their claims inspectable.</p>
 <figure id="fig:evidence_tier_ladder">
 <img src="../figures/evidence_tier_ladder.png"
 alt="Figure 12: Evidence-tier ladder" />
@@ -1806,7 +2062,7 @@ registry when available.</caption>
 <tbody>
 <tr>
 <td>artifact</td>
-<td>117</td>
+<td>123</td>
 <td>Generated artifacts exposed to readers</td>
 </tr>
 <tr>
@@ -1816,18 +2072,97 @@ registry when available.</caption>
 </tr>
 <tr>
 <td>bibliography</td>
-<td>33</td>
+<td>47</td>
 <td>Reference records and citation metadata</td>
 </tr>
 <tr>
 <td>claim_ledger</td>
-<td>14</td>
+<td>17</td>
 <td>Source-owned claim and fact declarations</td>
 </tr>
 </tbody>
 </table>
-<h2 data-number="4.14" id="contribution-claims"><span
-class="header-section-number">4.14</span> Contribution claims</h2>
+<h2 data-number="4.14" id="adversarial-security-assay"><span
+class="header-section-number">4.14</span> Adversarial security
+assay</h2>
+<p>The adversarial assay reports 5 adversarial assay rows mapping
+threats and standards to local evidence surfaces, validators, and claim
+boundaries; they are scope controls, not completed scan findings. No
+Codex Security or Deep Security Scan findings are claimed unless a scan
+artifact is generated, validated, and cited. The rows are generated from
+<code>gold_refinement.security_assay</code> and are intentionally
+tabular rather than a new public figure, so the visual registry remains
+the stable 12-figure contract.</p>
+<table id="tbl:security_assay">
+<caption>Table 5: Source-owned adversarial security assay.</caption>
+<colgroup>
+<col style="width: 4%" />
+<col style="width: 9%" />
+<col style="width: 25%" />
+<col style="width: 20%" />
+<col style="width: 21%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Standard or guidance</th>
+<th>Evidence surface</th>
+<th>Validator or gate</th>
+<th>Claim boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>implicit trust in generated artifacts</td>
+<td>NIST SP 800-207 zero trust</td>
+<td>output/reports/evidence_registry.json and src/security_assay.py</td>
+<td>infrastructure.validation.cli evidence –fail-on-issues</td>
+<td>documents a verification posture, not a deployed zero-trust
+architecture</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>incomplete secure-development evidence</td>
+<td>NIST SP 800-218 secure software development framework</td>
+<td>tests/, pre-render validation, and claim ledger</td>
+<td>project test suite and template validation gates</td>
+<td>maps local practices to SSDF concepts without claiming SSDF
+compliance</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>supply-chain or build provenance compromise</td>
+<td>SLSA v1.2, Sigstore, SPDX, and CycloneDX</td>
+<td>config hash, artifact counts, and publication metadata</td>
+<td>pipeline regeneration and artifact registry checks</td>
+<td>identifies provenance requirements but does not assert signed SBOM
+or provenance is present</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>unvalidated vulnerability narrative</td>
+<td>MITRE ATT&amp;CK and Codex Security scan phases</td>
+<td>security assay table and future scan artifacts</td>
+<td>Codex Security threat-model, discovery, validation, and attack-path
+receipts when run</td>
+<td>no real scan finding is claimed in this manuscript pass</td>
+</tr>
+<tr>
+<td>S5</td>
+<td>secure-by-design overclaim</td>
+<td>CISA Secure by Design</td>
+<td>authoring contract and scope limitations</td>
+<td>human source review plus citation and evidence validation</td>
+<td>uses guidance to bound responsibilities, not to certify product
+security</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="4.15" id="contribution-claims"><span
+class="header-section-number">4.15</span> Contribution claims</h2>
 <table>
 <colgroup>
 <col style="width: 18%" />
@@ -1871,7 +2206,7 @@ nine-nines.</td>
 </tr>
 <tr>
 <td>Formalism registry</td>
-<td>The manuscript exposes 6 source-owned formalisms with equation
+<td>The manuscript exposes 7 source-owned formalisms with equation
 labels.</td>
 <td>src/formalisms.py::FORMALISMS</td>
 <td>local</td>
@@ -1898,22 +2233,30 @@ failure modes, validators, evidence surfaces, and fork obligations.</td>
 <td>src/integrity.py::build_integrity_dimensions</td>
 <td>local</td>
 </tr>
+<tr>
+<td>Adversarial security assay</td>
+<td>The manuscript includes a source-owned security assay mapping
+adversarial threats and standards to local evidence surfaces,
+validators, and claim boundaries.</td>
+<td>src/security_assay.py::build_security_assay</td>
+<td>local</td>
+</tr>
 </tbody>
 </table>
-<p>The project-local claim-support assay reports 8 supported claims out
-of 8 total claims, for 100.00% support. Unsupported claims: 0. The
+<p>The project-local claim-support assay reports 9 supported claims out
+of 9 total claims, for 100.00% support. Unsupported claims: 0. The
 generated project report path is
 <code>output/reports/claim_support_registry.json</code>; the shared
 template evidence report remains
 <code>output/reports/evidence_registry.json</code>.</p>
-<h2 data-number="4.15" id="shared-evidence-registry-summary"><span
-class="header-section-number">4.15</span> Shared evidence registry
+<h2 data-number="4.16" id="shared-evidence-registry-summary"><span
+class="header-section-number">4.16</span> Shared evidence registry
 summary</h2>
 <p>When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 258.</p>
+available to this variable pass: 281.</p>
 <table id="tbl:shared_evidence_kinds">
-<caption>Table 5: Shared evidence-registry fact kinds when
+<caption>Table 6: Shared evidence-registry fact kinds when
 available.</caption>
 <thead>
 <tr>
@@ -1924,23 +2267,23 @@ available.</caption>
 <tbody>
 <tr>
 <td>artifact</td>
-<td>75</td>
+<td>78</td>
 </tr>
 <tr>
 <td>citation</td>
-<td>33</td>
+<td>47</td>
 </tr>
 <tr>
 <td>equation</td>
-<td>7</td>
+<td>8</td>
 </tr>
 <tr>
 <td>figure</td>
-<td>27</td>
+<td>29</td>
 </tr>
 <tr>
 <td>number</td>
-<td>100</td>
+<td>102</td>
 </tr>
 <tr>
 <td>section</td>
@@ -1948,12 +2291,12 @@ available.</caption>
 </tr>
 <tr>
 <td>table</td>
-<td>6</td>
+<td>7</td>
 </tr>
 </tbody>
 </table>
-<h2 data-number="4.16" id="figure-quality-report"><span
-class="header-section-number">4.16</span> Figure quality report</h2>
+<h2 data-number="4.17" id="figure-quality-report"><span
+class="header-section-number">4.17</span> Figure quality report</h2>
 <p>The visualization registry is paired with
 <code>output/reports/figure_quality_report.json</code>, a generated QA
 report that checks PNG and SVG existence, file dimensions, nonblank
@@ -1961,10 +2304,10 @@ pixel mass, color variance, and registry parity. Current status: passing
 with 12/12 registered figures passing and registry parity reported as
 Yes. PNG remains the manuscript render path; SVG is the companion
 technical artifact for inspection, reuse, and source-level debugging.
-tbl. <a href="#tbl:figure_quality">6</a> summarizes the generated
+tbl. <a href="#tbl:figure_quality">7</a> summarizes the generated
 surface.</p>
 <table id="tbl:figure_quality">
-<caption>Table 6: Figure-quality report generated from source-owned
+<caption>Table 7: Figure-quality report generated from source-owned
 figure specs.</caption>
 <colgroup>
 <col style="width: 13%" />
@@ -1991,63 +2334,63 @@ figure specs.</caption>
 <td>claim_evidence_assay</td>
 <td>yes</td>
 <td>yes</td>
-<td>3952x1904</td>
-<td>0.211</td>
-<td>0.05901302</td>
+<td>3947x2038</td>
+<td>0.218</td>
+<td>0.06041014</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>evidence_tier_ladder</td>
 <td>yes</td>
 <td>yes</td>
-<td>3348x1332</td>
-<td>0.217</td>
-<td>0.05647730</td>
+<td>3338x1332</td>
+<td>0.220</td>
+<td>0.05591035</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>formalism_traceability</td>
 <td>yes</td>
 <td>yes</td>
-<td>3315x1631</td>
-<td>0.133</td>
-<td>0.04262721</td>
+<td>3315x1797</td>
+<td>0.140</td>
+<td>0.04409869</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>implementation_circuit</td>
 <td>yes</td>
 <td>yes</td>
-<td>2966x1845</td>
-<td>0.068</td>
-<td>0.02235231</td>
+<td>2966x1846</td>
+<td>0.069</td>
+<td>0.02257238</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_gate_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>1829x1933</td>
-<td>0.410</td>
-<td>0.16336351</td>
+<td>1833x2060</td>
+<td>0.406</td>
+<td>0.16147143</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_risk_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>2499x1910</td>
-<td>0.387</td>
-<td>0.01770377</td>
+<td>2499x1909</td>
+<td>0.379</td>
+<td>0.01892053</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>karat_grading</td>
 <td>yes</td>
 <td>yes</td>
-<td>2961x1698</td>
+<td>2956x1699</td>
 <td>0.279</td>
-<td>0.07300982</td>
+<td>0.07296687</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -2056,43 +2399,43 @@ figure specs.</caption>
 <td>yes</td>
 <td>2850x1461</td>
 <td>0.070</td>
-<td>0.02178809</td>
+<td>0.02170098</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_claim_scatter</td>
 <td>yes</td>
 <td>yes</td>
-<td>2340x1744</td>
+<td>2347x1745</td>
 <td>0.032</td>
-<td>0.01428277</td>
+<td>0.01429053</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_progression</td>
 <td>yes</td>
 <td>yes</td>
-<td>3024x2125</td>
+<td>3029x2125</td>
 <td>0.182</td>
-<td>0.03967814</td>
+<td>0.03971092</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_density</td>
 <td>yes</td>
 <td>yes</td>
-<td>3289x1856</td>
+<td>3288x1858</td>
 <td>0.234</td>
-<td>0.06699486</td>
+<td>0.06696808</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_heatmap</td>
 <td>yes</td>
 <td>yes</td>
-<td>2397x2399</td>
-<td>0.627</td>
-<td>0.12908659</td>
+<td>2406x2412</td>
+<td>0.621</td>
+<td>0.12867696</td>
 <td>pass</td>
 </tr>
 </tbody>
@@ -2114,6 +2457,18 @@ validation. The scholarship makes the test sharper: the analogy is
 useful only where the relation among stages is preserved, not where
 surface language makes writing sound like metallurgy
 [gentner1983structure; hesse1966models].</p>
+<p>The pre-1800 metallurgy sources strengthen the analogy by making that
+relation historically concrete, but they also narrow it. They show
+several traditions of staged work - ancient extraction and testing,
+Renaissance printed metallurgy, seventeenth-century goldsmith standards,
+and eighteenth-century assay manuals - rather than one timeless method
+[pliny_natural_history_33; biringuccio_pirotechnia_1540;
+agricola_de_re_metallica_1556; badcock_touchstone_1678;
+cramer_assaying_metals_1741]. The manuscript therefore imports
+structure, not authority: cupellation does not make citation review
+chemical, a hallmark does not make a rendered PDF legally certified, and
+a karat scale does not make local validation equivalent to external
+truth.</p>
 <p>The analogy is smelting the manuscript: it performs the refinement it
 describes. Its fork obligation is equally important. Gold refining can
 model staged purification, but it cannot certify domain truth unless the
@@ -2237,6 +2592,25 @@ output reports.</td>
 <td>Record software/template release identity, preserve source-owned
 metadata, and rerun the full pipeline before publishing.</td>
 </tr>
+<tr>
+<td>Security theater</td>
+<td>Security language is presented as compliance, secure-by-design
+proof, or scan evidence without generated artifacts.</td>
+<td>Security assay rows require a threat, standard, evidence surface,
+validator, and claim boundary.</td>
+<td>Keep security claims bounded to the configured assay unless
+validated scan receipts exist.</td>
+</tr>
+<tr>
+<td>Scan result laundering</td>
+<td>A future scan summary is imported as prose without the artifact,
+receipt, and validator that produced it.</td>
+<td>Authoring-contract and evaluation prose require scan artifacts
+before real Codex Security or Deep Security Scan findings are
+claimed.</td>
+<td>Integrate only generated scan reports with evidence-registry
+alignment and explicit claim boundaries.</td>
+</tr>
 </tbody>
 </table>
 <h2 data-number="5.4" id="design-principles"><span
@@ -2296,6 +2670,12 @@ design quality, or absence of bias.</td>
 outputs must travel as a rebuildable package rather than as detached
 static prose.</td>
 </tr>
+<tr>
+<td>Adversarial purity is bounded</td>
+<td>Security standards frame threats and evidence requirements, but
+local certification cannot claim compliance or scan results without
+source-owned artifacts.</td>
+</tr>
 </tbody>
 </table>
 <h2 data-number="5.5" id="analogy-break-boundary"><span
@@ -2334,6 +2714,16 @@ scrutiny, reproducibility, accountability, and shared research objects
 [nosek2015top; unesco2021_open_science]. This exemplar implements a
 small local version of those values; it does not claim that openness
 alone resolves study design, fairness, or domain-validity problems.</p>
+<p>Security guidance adds an adversarial version of the same brake. Zero
+trust, secure development, supply-chain provenance, signing, SBOM,
+attack-path, and secure-by-design frameworks are useful because they ask
+who or what should not be trusted by default [nist_sp800_207_zero_trust;
+nist_sp800_218_ssdf; slsa_v1_2; sigstore_docs; mitre_attack;
+cyclonedx_spec; spdx_spec; cisa_secure_by_design]. In this manuscript
+they do not certify security. They make overclaiming harder: a security
+claim must point to tbl. <a href="#tbl:security_assay">5</a>, and a real
+scan claim must point to scan artifacts that this pass does not
+produce.</p>
 <hr />
 <h1 data-number="6" id="sec:conclusion"><span
 class="header-section-number">6</span> Conclusion: Certification and
@@ -2349,12 +2739,13 @@ class="header-section-number">6.1</span> Summary</h2>
 <li>Final purity: 99.9999999% (nine-nines) (24K (nine-nines
 certified))</li>
 <li>24 tokens generated deterministically from seed 431</li>
-<li>Config hash: 2411971d39e10f3d</li>
-<li>6 source-owned formalisms with equation labels:
+<li>Config hash: 8d3efef5bcbe8b23</li>
+<li>7 source-owned formalisms with equation labels:
 eq:purity_functional, eq:monotone_refinery, eq:token_digest,
-eq:claim_support, eq:integrity_vector, eq:certification_predicate</li>
-<li>Claim-support status: 8/8 supported (passing)</li>
-<li>8 integrity dimensions with residual-risk scoring and
+eq:claim_support, eq:integrity_vector, eq:certification_predicate,
+eq:adversarial_assay</li>
+<li>Claim-support status: 9/9 supported (passing)</li>
+<li>9 integrity dimensions with residual-risk scoring and
 owner/validator links.</li>
 <li>Registered visual evidence spans purity progression, token coverage,
 formalism traceability, implementation flow, claim-evidence assay,
@@ -2409,8 +2800,8 @@ format, but it does make the manuscript variables, figures, reports, and
 rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
-<li><strong>Config hash:</strong> 2411971d39e10f3d</li>
-<li><strong>Generation timestamp:</strong> 2026-06-25T00:00:00Z</li>
+<li><strong>Config hash:</strong> 8d3efef5bcbe8b23</li>
+<li><strong>Generation timestamp:</strong> 2026-07-01T13:53:47Z</li>
 <li><strong>Python version:</strong> 3.12.13</li>
 </ul>
 <h2 data-number="7.2" id="artifact-inventory"><span
@@ -2425,7 +2816,7 @@ class="header-section-number">7.2</span> Artifact inventory</h2>
 <tbody>
 <tr>
 <td>Figures</td>
-<td>24</td>
+<td>26</td>
 </tr>
 <tr>
 <td>Data files</td>
@@ -2433,11 +2824,11 @@ class="header-section-number">7.2</span> Artifact inventory</h2>
 </tr>
 <tr>
 <td>Reports</td>
-<td>11</td>
+<td>12</td>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td>38</td>
+<td>41</td>
 </tr>
 </tbody>
 </table>
@@ -2465,7 +2856,7 @@ visible before execution instead of burying it in shell glue or
 prose.</p>
 <p>The reproducibility spine uses fact registry and figure registry as
 generated artifacts rather than reader trust signals. Variable
-generation records <code>2411971d39e10f3d</code>; analysis writes
+generation records <code>8d3efef5bcbe8b23</code>; analysis writes
 refinery, token, claim-support, dashboard, and figure artifacts;
 validation may add the shared evidence registry used by template
 scientific-integrity checks.</p>
@@ -2489,7 +2880,7 @@ source-owned, every registered PNG now has a companion SVG, and
 <code>output/reports/figure_quality_report.json</code> records 12 PNG
 files, 12 SVG files, and 12 passing visual-quality checks for the
 current variable pass. A fork should treat tbl. <a
-href="#tbl:figure_quality">6</a> as the figure-layer analogue of the
+href="#tbl:figure_quality">7</a> as the figure-layer analogue of the
 claim-support registry: it proves that the visuals are regenerated,
 present in both raster and vector forms, nonblank, and aligned with the
 registry before prose promotes them.</p>
@@ -2562,13 +2953,21 @@ substantive scientific claim is true. The evidence ladder in this paper
 is therefore an honesty device: source-code facts, generated metrics,
 bibliography records, and domain evidence must not be collapsed into one
 undifferentiated support score.</p>
-<p>The metallurgy literature supplies the fourth boundary. Gold
-extraction, assaying, fineness, and hallmarking provide the
-source-domain vocabulary for staged refinement and independent
-certification [marsden_house_2006; hallmarking_convention_1972;
-lbma_good_delivery_rules]. This paper imports that relational structure.
-It does not import market rules, assay tolerances, or regulatory
-authority into manuscript review.</p>
+<p>The metallurgy literature supplies the fourth boundary. This pass
+grounds the source domain primarily in pre-1800 texts: Pliny for metals,
+extraction, and touchstone testing; Biringuccio and Agricola for printed
+descriptions of mining, smelting, parting, and assay; Badcock’s
+<em>Touch-stone</em> and the Goldsmiths’ Company chronology for
+standards, statutes, and marks; and Cramer for eighteenth-century assay
+as a theory/practice discipline [pliny_natural_history_33;
+biringuccio_pirotechnia_1540; agricola_de_re_metallica_1556;
+badcock_touchstone_1678; goldsmiths_hallmarking_history;
+cramer_assaying_metals_1741]. Modern gold-extraction and hallmarking
+sources remain useful as contrast and current vocabulary
+[marsden_house_2006; hallmarking_convention_1972;
+lbma_good_delivery_rules]. This paper imports relational structure. It
+does not import market rules, assay tolerances, local guild authority,
+mint authority, or regulatory power into manuscript review.</p>
 <p>Structured reporting and open-science standards supply the fifth
 boundary. CONSORT, STROBE, PRISMA, ARRIVE, and EQUATOR show how research
 communities turn recurring omissions into explicit reporting items
@@ -2592,6 +2991,15 @@ readers can identify the version used [smith2016softwarecitation]. This
 exemplar aligns with those norms, but it does not claim that a
 regenerated PDF is itself an archival preservation system or that a
 repository URL substitutes for versioned software citation.</p>
+<p>Security and supply-chain guidance supply the seventh boundary.
+Zero-trust architecture, SSDF, SLSA, Sigstore, MITRE ATT&amp;CK,
+CycloneDX, SPDX, and Secure by Design each name useful threat or
+provenance surfaces [nist_sp800_207_zero_trust; nist_sp800_218_ssdf;
+slsa_v1_2; sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
+cisa_secure_by_design]. This exemplar uses those sources to structure an
+adversarial assay. It does not claim compliance with those standards, it
+does not claim a signed SBOM or provenance bundle, and it does not claim
+a Codex Security or Deep Security Scan has been run.</p>
 <h2 data-number="8.3" id="responsible-forking"><span
 class="header-section-number">8.3</span> Responsible forking</h2>
 <p>A fork must:</p>
@@ -2605,6 +3013,8 @@ class="header-section-number">8.3</span> Responsible forking</h2>
 boundary notes</li>
 <li>Cite the exact software/template release and environment used for
 the fork</li>
+<li>Update the adversarial security assay when the fork changes threat
+scope or supply-chain evidence</li>
 <li>Regenerate all outputs through the pipeline</li>
 </ol>
 <p>The formalism registry is local to this exemplar. It states how this
@@ -2613,12 +3023,17 @@ equations; it does not prove that gold refining is a universal model of
 scientific writing. Domain forks should replace or narrow the formalism
 set before reusing the certification language.</p>
 <p>The same limitation applies to the integrity risk model. The current
-8 dimensions are tuned to a template exemplar: token hydration, figure
+9 dimensions are tuned to a template exemplar: token hydration, figure
 registration, claim support, citation hygiene, render readiness, and
 analogy boundaries. A fork that studies a real domain must add
 domain-specific risks, domain evidence tiers, and validators before
 treating fig. <a href="#fig:integrity_risk_matrix">11</a> as a
 publication-readiness claim.</p>
+<p>The adversarial assay is similarly local. It records 5 rows that make
+security scope inspectable, but it is not a security attestation. A fork
+that wants secure-by-design, zero-trust, supply-chain, or
+vulnerability-scan claims must add the missing artifacts, validators,
+receipts, and external review before reusing that language.</p>
 <hr />
 <h1 data-number="9" id="sec:evaluation"><span
 class="header-section-number">9</span> Quality Probes</h1>
@@ -2669,11 +3084,12 @@ scores, and evidence-tier rows.</td>
 </tr>
 <tr>
 <td>Scholarship boundary</td>
-<td>Do external references support the analogy, reproducibility,
-provenance, and metallurgy framing without being used as evidence for
-universal manuscript-quality claims?</td>
-<td>The scope, discussion, and evaluation sections cite the scholarship
-while keeping certification local to source-owned gates.</td>
+<td>Do pre-1800 metallurgy references support the analogy,
+reproducibility, provenance, and source-domain framing without being
+used as evidence for universal manuscript-quality claims?</td>
+<td>The scope, discussion, and evaluation sections cite historically
+bounded metallurgy scholarship while keeping certification local to
+source-owned gates.</td>
 <td>manuscript/references.bib and manuscript/07_scope.md</td>
 </tr>
 <tr>
@@ -2698,6 +3114,16 @@ while keeping preservation and portability claims bounded.</td>
 manuscript/08_evaluation.md, manuscript/09_authoring_contract.md,
 output/reports/evidence_registry.json, and
 output/reports/output_statistics.json</td>
+</tr>
+<tr>
+<td>Adversarial assay boundary</td>
+<td>Does security language distinguish declared threat scope from real
+scan evidence and external compliance?</td>
+<td>The security assay emits threats, standards, evidence surfaces,
+validators, and claim boundaries without claiming Codex Security
+findings.</td>
+<td>src/security_assay.py, manuscript/config.yaml, and
+manuscript/03_results.md</td>
 </tr>
 </tbody>
 </table>
@@ -2755,8 +3181,8 @@ evidence surfaces</td>
 </tr>
 <tr>
 <td>Scholarship boundary</td>
-<td>Citations must anchor framing and limitations without substituting
-for domain validation</td>
+<td>Pre-1800 metallurgy citations must anchor framing and limitations
+without substituting for domain validation</td>
 <td>prerender citation/evidence validation plus human source review</td>
 </tr>
 <tr>
@@ -2780,6 +3206,12 @@ compliance</td>
 <td>reproducibility source review plus output statistics and
 evidence-registry validation</td>
 </tr>
+<tr>
+<td>Security assay boundary</td>
+<td>Security standards and scan phases must be represented as scoped
+guidance unless generated scan artifacts exist</td>
+<td>tests/test_security_assay.py and manuscript source review</td>
+</tr>
 </tbody>
 </table>
 <p>The audit rules are summarized visually in fig. <a
@@ -2790,10 +3222,14 @@ certification language even if the PDF renders.</p>
 discipline. A source can support a relation, a practice, or a caution
 without supporting every attractive extrapolation from that source. The
 evaluation surface therefore treats analogy theory, reproducibility
-literature, provenance standards, and metallurgy references as
+literature, provenance standards, and pre-1800 metallurgy references as
 boundary-setting evidence, not as decorations added after the pipeline
 already decided the claim [gentner1983structure; peng2011reproducible;
-wilkinson2016fair; marsden_house_2006].</p>
+wilkinson2016fair; biringuccio_pirotechnia_1540;
+agricola_de_re_metallica_1556; badcock_touchstone_1678;
+cramer_assaying_metals_1741]. A passing source review must preserve the
+distinction between historically documented assay/marking practices and
+this exemplar’s local software certification predicate.</p>
 <p>The reporting-guideline literature keeps that gate modest. A passed
 checklist row certifies that a required reporting surface is present and
 traceable; it does not certify that the study behind the report is
@@ -2812,6 +3248,16 @@ hydration, artifact counts, evidence facts, figure registration, and
 PDF/HTML validation. They do not measure long-term preservation,
 cross-platform portability, reviewer workload, or reader comprehension;
 those would require separate empirical studies.</p>
+<p>The adversarial assay adds a security-specific evaluation target: can
+a reader distinguish declared threat scope from actual scan evidence?
+tbl. <a href="#tbl:security_assay">5</a> maps zero-trust,
+secure-development, supply-chain, SBOM, attack-path, and
+secure-by-design guidance to local evidence surfaces and validators
+[nist_sp800_207_zero_trust; nist_sp800_218_ssdf; slsa_v1_2;
+sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
+cisa_secure_by_design]. The passing condition is bounded: the table must
+be complete and the prose must not claim compliance or Codex Security
+findings unless future scan artifacts are generated and integrated.</p>
 <p>The risk model adds prioritization to the gate list. fig. <a
 href="#fig:integrity_risk_matrix">11</a> separates easy-to-detect
 implementation failures from severe boundary failures that need clearer
@@ -2865,6 +3311,11 @@ affects writing, analysis, or review.</td>
 <td>Cite the exact software, template release, and executable package
 used to generate the manuscript.</td>
 </tr>
+<tr>
+<td>Security evidence boundary</td>
+<td>Treat security standards and Codex Security scan phases as scoped
+guidance unless generated scan artifacts and receipts are present.</td>
+</tr>
 </tbody>
 </table>
 <p>The authoring boundary tokens for this section are analogy boundary
@@ -2894,33 +3345,42 @@ persistent identification, accessibility, and version specificity
 [smith2016softwarecitation]. A fork should therefore cite the release it
 used and record enough metadata for readers to distinguish “same
 template family” from “same executable object.”</p>
+<p>Security authorship has the same rule. Standards and guidance can
+shape the threat model, but they cannot be cited as proof that this
+manuscript is compliant or secure. Future Codex Security or Deep
+Security Scan reports should enter the manuscript only as generated
+artifacts with validator receipts, evidence-ledger alignment, and a
+clear boundary between findings, mitigations, and remaining scope.</p>
 <h2 data-number="10.2" id="fork-checklist"><span
 class="header-section-number">10.2</span> Fork checklist</h2>
 <ol type="1">
-<li><p>Remap metallurgical stages to domain operations in
-<code>src/refinery.py</code></p></li>
-<li><p>Update lexicon categories in <code>manuscript/config.yaml</code>
-under <code>gold_refinement.lexicon</code></p></li>
-<li><p>Update <code>contribution_claims</code> with domain-specific
-evidence pointers</p></li>
-<li><p>Add domain validators beyond the exemplar’s generic
-gates</p></li>
-<li><p>Replace or extend <code>src/integrity.py</code> dimensions when
-the fork introduces new failure modes</p></li>
-<li><p>Update <code>domain_profile.yaml</code>,
+<li>Remap metallurgical stages to domain operations in
+<code>src/refinery.py</code></li>
+<li>Update lexicon categories in <code>manuscript/config.yaml</code>
+under <code>gold_refinement.lexicon</code></li>
+<li>Update <code>contribution_claims</code> with domain-specific
+evidence pointers</li>
+<li>Add domain validators beyond the exemplar’s generic gates</li>
+<li>Replace or extend <code>src/integrity.py</code> dimensions when the
+fork introduces new failure modes</li>
+<li>Update <code>domain_profile.yaml</code>,
 <code>src/domain_adapter.py</code>, and
 <code>docs/domain_fork_guide.md</code> when the analogy is forked into a
-new domain</p></li>
-<li><p>Keep <code>steganography</code> and <code>llm</code> policy
-blocks explicit when the secure pipeline or optional review path is
-used</p></li>
-<li><p>Cite the exact template/software release and record environment
-metadata for the executable package</p></li>
-<li><p>Regenerate all outputs through the pipeline:</p>
+new domain</li>
+<li>Keep <code>steganography</code> and <code>llm</code> policy blocks
+explicit when the secure pipeline or optional review path is used</li>
+<li>Cite the exact template/software release and record environment
+metadata for the executable package</li>
+<li>Update <code>gold_refinement.security_assay</code> and add scan
+artifacts before making secure-by-design, supply-chain, or vulnerability
+findings claims</li>
+<li>Regenerate all outputs through the pipeline:</li>
+</ol>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/refinement_analysis.py</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/z_generate_manuscript_variables.py</span></code></pre></div></li>
-<li><p>Do not hand-edit generated manuscript, PDFs, or figures</p></li>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/z_generate_manuscript_variables.py</span></code></pre></div>
+<ol start="11" type="1">
+<li>Do not hand-edit generated manuscript, PDFs, or figures</li>
 </ol>
 <p>Do not hard-code equation, figure, or table numbers in prose. Use
 <code>[@eq:...]</code>, <code>[@fig:...]</code>,
@@ -2931,5 +3391,9 @@ not as a retrospective dashboard. If a fork cannot name who owns a
 high-severity integrity dimension, which validator detects it, and which
 evidence tier supports it, the fork should lower the claim boundary
 until that missing surface exists.</p>
+<p>The same rule applies to the adversarial assay. If a fork cannot name
+the threat, standard, local evidence surface, validator, and claim
+boundary for a security claim, the fork should keep the language as
+scoped guidance rather than certification.</p>
 </body>
 </html>

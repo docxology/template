@@ -4,22 +4,22 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 61
-Total Size: 7.80 MB
+Total Files: 64
+Total Size: 11.80 MB
 
 Files by Category:
-  • pdf: 10 files (3.49 MB)
-  • web: 12 files (0.29 MB)
-  • figures: 25 files (3.89 MB)
+  • pdf: 10 files (5.05 MB)
+  • web: 12 files (0.36 MB)
+  • figures: 27 files (6.26 MB)
   • data: 3 files (0.03 MB)
-  • reports: 11 files (0.10 MB)
+  • reports: 12 files (0.10 MB)
 
 Largest Files:
-  • template_gold_refinement_combined.pdf: 3.20 MB (pdf)
-  • claim_evidence_assay.png: 0.59 MB (figures)
-  • formalism_traceability.png: 0.36 MB (figures)
-  • purity_progression.png: 0.32 MB (figures)
-  • index.html: 0.10 MB (web)
+  • template_gold_refinement_combined.pdf: 4.69 MB (pdf)
+  • cover_visualization.png: 1.71 MB (figures)
+  • claim_evidence_assay.png: 0.67 MB (figures)
+  • cover_visualization.svg: 0.48 MB (figures)
+  • index.html: 0.13 MB (web)
 
 Missing Expected Files:
   ⚠  slides/ directory
@@ -28,9 +28,9 @@ Missing Expected Files:
   ⚠  logs/ directory
 
 File Types:
-  • .svg: 12 file(s)
-  • .png: 12 file(s)
-  • .json: 12 file(s)
+  • .svg: 13 file(s)
+  • .png: 13 file(s)
+  • .json: 13 file(s)
   • .html: 11 file(s)
   • .md: 4 file(s)
   • .log: 2 file(s)

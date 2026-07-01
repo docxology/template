@@ -189,6 +189,18 @@ validation. The scholarship makes the test sharper: the analogy is
 useful only where the relation among stages is preserved, not where
 surface language makes writing sound like metallurgy
 [gentner1983structure; hesse1966models].</p>
+<p>The pre-1800 metallurgy sources strengthen the analogy by making that
+relation historically concrete, but they also narrow it. They show
+several traditions of staged work - ancient extraction and testing,
+Renaissance printed metallurgy, seventeenth-century goldsmith standards,
+and eighteenth-century assay manuals - rather than one timeless method
+[pliny_natural_history_33; biringuccio_pirotechnia_1540;
+agricola_de_re_metallica_1556; badcock_touchstone_1678;
+cramer_assaying_metals_1741]. The manuscript therefore imports
+structure, not authority: cupellation does not make citation review
+chemical, a hallmark does not make a rendered PDF legally certified, and
+a karat scale does not make local validation equivalent to external
+truth.</p>
 <p>The analogy is smelting the manuscript: it performs the refinement it
 describes. Its fork obligation is equally important. Gold refining can
 model staged purification, but it cannot certify domain truth unless the
@@ -310,6 +322,25 @@ output reports.</td>
 <td>Record software/template release identity, preserve source-owned
 metadata, and rerun the full pipeline before publishing.</td>
 </tr>
+<tr>
+<td>Security theater</td>
+<td>Security language is presented as compliance, secure-by-design
+proof, or scan evidence without generated artifacts.</td>
+<td>Security assay rows require a threat, standard, evidence surface,
+validator, and claim boundary.</td>
+<td>Keep security claims bounded to the configured assay unless
+validated scan receipts exist.</td>
+</tr>
+<tr>
+<td>Scan result laundering</td>
+<td>A future scan summary is imported as prose without the artifact,
+receipt, and validator that produced it.</td>
+<td>Authoring-contract and evaluation prose require scan artifacts
+before real Codex Security or Deep Security Scan findings are
+claimed.</td>
+<td>Integrate only generated scan reports with evidence-registry
+alignment and explicit claim boundaries.</td>
+</tr>
 </tbody>
 </table>
 <h2 id="design-principles">Design principles</h2>
@@ -368,6 +399,12 @@ design quality, or absence of bias.</td>
 outputs must travel as a rebuildable package rather than as detached
 static prose.</td>
 </tr>
+<tr>
+<td>Adversarial purity is bounded</td>
+<td>Security standards frame threats and evidence requirements, but
+local certification cannot claim compliance or scan results without
+source-owned artifacts.</td>
+</tr>
 </tbody>
 </table>
 <h2 id="analogy-break-boundary">Analogy-break boundary</h2>
@@ -409,5 +446,16 @@ scrutiny, reproducibility, accountability, and shared research objects
 [nosek2015top; unesco2021_open_science]. This exemplar implements a
 small local version of those values; it does not claim that openness
 alone resolves study design, fairness, or domain-validity problems.</p>
+<p>Security guidance adds an adversarial version of the same brake. Zero
+trust, secure development, supply-chain provenance, signing, SBOM,
+attack-path, and secure-by-design frameworks are useful because they ask
+who or what should not be trusted by default [nist_sp800_207_zero_trust;
+nist_sp800_218_ssdf; slsa_v1_2; sigstore_docs; mitre_attack;
+cyclonedx_spec; spdx_spec; cisa_secure_by_design]. In this manuscript
+they do not certify security. They make overclaiming harder: a security
+claim must point to <span class="citation"
+data-cites="tbl:security_assay">[@tbl:security_assay]</span>, and a real
+scan claim must point to scan artifacts that this pass does not
+produce.</p>
 </body>
 </html>

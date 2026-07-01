@@ -39,15 +39,15 @@ If this succeeds, your package is ready for production publish.
 Upload to the real PyPI:
 
 ```bash
-# Using twine directly (recommended after test passes)
-twine upload dist/*
-
-# Or use uv build + twine upload
-uv build
+# Prefer PyPI Trusted Publishing/OIDC from CI when available.
+# For local manual upload, keep the token out of argv and shell history:
+export TWINE_USERNAME="__token__"
+export TWINE_PASSWORD="$PYPI_TOKEN"
 twine upload dist/*
 ```
 
-You will be prompted for your PyPI API token (or use `--username __token__ --password <token>`).
+Never pass API tokens as command-line password arguments; command arguments can
+be visible in process listings and copied into logs.
 
 ### 3. Post-Publish Verification
 
